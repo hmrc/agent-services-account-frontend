@@ -1,0 +1,77 @@
+@import layouts.{govuk_template => hmrcGovUkTemplate}
+@import uk.gov.hmrc.play.views.html.{helpers => uiHelpers, layouts => uiLayouts}
+@import play.api.Configuration
+@(title: String,
+        mainClass: Option[String] = None,
+        mainDataAttributes: Option[Html] = None,
+        bodyClasses: Option[String] = None,
+        sidebar: Html = HtmlFormat.empty,
+        contentHeader: Option[Html] = None,
+        mainContent: Html = HtmlFormat.empty,
+        serviceInfoContent: Html = HtmlFormat.empty,
+        scriptElem: Option[Html] = None,
+        gaCode: Seq[String] = Seq.empty)(implicit messages: Messages, configuration: Configuration)
+
+@head = {
+@uiLayouts.head(
+    linkElem = None,
+    headScripts = None)
+    <meta name="format-detection" content="telephone=no"/>
+}
+
+@headerNavLinks = {}
+
+@insideHeader = {
+@uiLayouts.header_nav(
+    navTitle = configuration.getString("appName"),
+    navTitleLink = None,
+    showBetaLink = false,
+    navLinks = Some(headerNavLinks))
+}
+
+@afterHeader = {}
+
+@gaJS = {
+@gaCode.map(Html(_))
+}
+
+@bodyEnd = {
+@uiLayouts.footer(analyticsToken = configuration.getString("google-analytics.token"),
+    analyticsHost = configuration.getString("google-analytics.host").get,
+    ssoUrl = None,
+    scriptElem = scriptElem,
+    gaCalls = None,
+    analyticsAdditionalJs = Some(gaJS))
+}
+
+@footerTop = {}
+@footerLinks = {}
+
+@serviceInfo = {
+@uiLayouts.serviceInfo(
+    betaBanner = HtmlFormat.empty,
+    includeGridWrapper = false,
+    Some(serviceInfoContent))
+}
+
+@mainContentHeader = {
+@if(contentHeader.isDefined) {
+    @uiLayouts.main_content_header(contentHeader.get)
+}
+}
+
+@getHelpForm = @{
+    uiHelpers.reportAProblemLink(configuration.getString("reportAProblemPartialUrl").get, configuration.getString("reportAProblemNonJSUrl").get)
+}
+
+@content = {
+@uiLayouts.main_content(article = mainContent,
+    mainClass = mainClass,
+    mainDataAttributes = mainDataAttributes,
+    mainContentHeader = mainContentHeader,
+    serviceInfo = serviceInfo,
+    getHelpForm = getHelpForm,
+    sidebar = sidebar)
+}
+
+@hmrcGovUkTemplate(Some(title), bodyClasses)(head, bodyEnd, insideHeader, afterHeader, footerTop, Some(uiLayouts.footer_links()), nav = true)(content)

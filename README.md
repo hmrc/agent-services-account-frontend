@@ -1,6 +1,6 @@
 # agent-services-account-frontend
 
-[![Build Status](https://travis-ci.org/hmrc/agent-services-account-frontend.svg)](https://travis-ci.org/hmrc/agent-services-account-frontend) [ ![Download](https://api.bintray.com/packages/hmrc/releases/agent-services-account-frontend/images/download.svg) ](https://bintray.com/hmrc/releases/agent-services-account-frontend/_latestVersion)
+[ ![Download](https://api.bintray.com/packages/hmrc/releases/agent-services-account-frontend/images/download.svg) ](https://bintray.com/hmrc/releases/agent-services-account-frontend/_latestVersion)
 
 This is a placeholder README.md for a new repository
 

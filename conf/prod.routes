@@ -1,6 +1,7 @@
-# Add all the application routes to the app.routes file
-->         /agent-services-account-frontend              app.Routes
-->         /                          health.Routes
-->     	   /template                  template.Routes
+->         /agent-services-account-frontend               app.Routes
 
-GET        /admin/metrics             @com.kenshoo.play.metrics.MetricsController.metrics
+->         /                     health.Routes
+->         /template             template.Routes
+
+GET        /admin/metrics        @com.kenshoo.play.metrics.MetricsController.metrics
+
