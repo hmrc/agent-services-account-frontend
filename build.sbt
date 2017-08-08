@@ -52,7 +52,8 @@ lazy val root = (project in file("."))
     libraryDependencies ++= compileDeps ++ testDeps("test") ++ testDeps("it"),
     publishingSettings,
     scoverageSettings,
-    unmanagedResourceDirectories in Compile += baseDirectory.value / "resources"
+    unmanagedResourceDirectories in Compile += baseDirectory.value / "resources",
+    PlayKeys.playDefaultPort := 9401
   )
   .configs(IntegrationTest)
   .settings(
