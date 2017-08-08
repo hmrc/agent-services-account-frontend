@@ -10,21 +10,22 @@ import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
-class HelloWorldControllerSpec extends PlaySpec with MockitoSugar with GuiceOneAppPerSuite with BeforeAndAfterEach {
+class AgentServicesControllerSpec extends PlaySpec with MockitoSugar with GuiceOneAppPerSuite with BeforeAndAfterEach {
 
   val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   val mockConfig: Configuration = app.injector.instanceOf[Configuration]
   val backendConnector: BackendConnector = mock[BackendConnector]
 
-  val mockHelloWorldController = new HelloWorldController(messagesApi, backendConnector, mockConfig)
+  val controller = new AgentServicesController(messagesApi, backendConnector, mockConfig)
 
-  "HelloWorldController" should {
+  "AgentServicesController" should {
     "return Status: OK Body: empty" in {
-      val response = mockHelloWorldController.helloWorld()(FakeRequest("GET", "/hello-world"))
+      val response = controller.root()(FakeRequest("GET", "/"))
 
       status(response) mustBe OK
       contentType(response).get mustBe HTML
       contentAsString(response) must include(messagesApi("app.name"))
+      contentAsString(response) must include("HELLO WORLD")
     }
   }
 }
