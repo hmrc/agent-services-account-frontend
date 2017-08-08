@@ -1,0 +1,9 @@
+@import play.api.Configuration
+@()(implicit messages: Messages, request: Request[_], configuration: Configuration)
+
+@views.html.main_template(title = Messages("app.name")) {
+    <h1>@Messages("app.name")</h1>
+
+    <p>HELLO WORLD</p>
+
+}
