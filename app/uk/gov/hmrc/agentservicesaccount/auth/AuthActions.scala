@@ -22,12 +22,14 @@ import play.api.mvc.Results._
 import play.api.mvc._
 import play.api.{Configuration, LoggerLike}
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
+import uk.gov.hmrc.agentservicesaccount.config.RequiredConfigString
 import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
 import uk.gov.hmrc.auth.core.Retrievals.{affinityGroup, allEnrolments}
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext.fromLoggingDetails
 import uk.gov.hmrc.agentservicesaccount.controllers.routes
+
 import scala.concurrent.Future
 
 case class AgentInfo(arn: Arn)
@@ -35,9 +37,7 @@ case class AgentInfo(arn: Arn)
 case class AgentRequest[A](arn: Arn, request: Request[A]) extends WrappedRequest[A](request)
 
 @Singleton
-class AuthActions @Inject() (logger: LoggerLike, configuration: Configuration, override val authConnector: PlayAuthConnector) extends AuthorisedFunctions {
-
-  private def getConfigString(path: String): String = configuration.getString(path, None).getOrElse(throw new RuntimeException(s"Required configuration property at path $path not present"))
+class AuthActions @Inject() (logger: LoggerLike, override val configuration: Configuration, override val authConnector: PlayAuthConnector) extends AuthorisedFunctions with RequiredConfigString {
 
   def signInBaseUrl = getConfigString("authentication.government-gateway.sign-in.base-url")
   def signInPath = getConfigString("authentication.government-gateway.sign-in.path")

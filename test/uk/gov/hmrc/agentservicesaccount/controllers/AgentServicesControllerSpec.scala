@@ -19,22 +19,39 @@ package uk.gov.hmrc.agentservicesaccount.controllers
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfterEach, Matchers, OptionValues, WordSpec}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.Configuration
 import play.api.i18n.MessagesApi
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.{Action, AnyContent, Results}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import play.api.{Application, Configuration}
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
-import uk.gov.hmrc.agentservicesaccount.auth.{AgentRequest, AuthActions}
+import uk.gov.hmrc.agentservicesaccount.auth.{AgentRequest, AuthActions, SignOutUrl}
+import views.html.helper.urlEncode
 
 class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValues with MockitoSugar with GuiceOneAppPerSuite with BeforeAndAfterEach {
 
+  val ggSignOutBaseUrl = "http://gg-sign-in-host:1234"
+  val ggSignOutPath = "/blah/sign-out"
+  val ggSignOutContinueUrl = "http://www.example.com/foo"
+  val completeGgSignOutUrl = s"$ggSignOutBaseUrl$ggSignOutPath?continue=${urlEncode(ggSignOutContinueUrl)}"
+
+  override def fakeApplication(): Application =
+    new GuiceApplicationBuilder()
+      .configure(
+        "authentication.government-gateway.sign-out.base-url" -> ggSignOutBaseUrl,
+        "authentication.government-gateway.sign-out.path" -> ggSignOutPath,
+        "authentication.government-gateway.sign-out.continue-url" -> ggSignOutContinueUrl
+      )
+      .build()
+
   val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
-  val mockConfig: Configuration = app.injector.instanceOf[Configuration]
+  val configuration: Configuration = app.injector.instanceOf[Configuration]
+  val signOutUrl: SignOutUrl = app.injector.instanceOf[SignOutUrl]
 
 
-  "AgentServicesController" should {
-    "return Status: OK and body should contain correct content" in {
+  "root" should {
+    "return Status: OK and body containing correct content" in {
       val arn = "TARN0000001"
       val authActions = new AuthActions(null, null, null) {
         override def AuthorisedWithAgentAsync(body: AsyncPlayUserRequest): Action[AnyContent] =
@@ -43,17 +60,19 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
           }
       }
 
-      val controller = new AgentServicesController(messagesApi, mockConfig, authActions)
+      val controller = new AgentServicesController(messagesApi, authActions, configuration, signOutUrl)
 
       val response = controller.root()(FakeRequest("GET", "/"))
 
       status(response) shouldBe OK
       contentType(response).get shouldBe HTML
-      contentAsString(response) should include(messagesApi("agent.services.account.heading"))
-      contentAsString(response) should include(messagesApi("agent.services.account.heading.summary"))
-      contentAsString(response) should include(messagesApi("agent.services.account.subHeading"))
-      contentAsString(response) should include(messagesApi("agent.services.account.subHeading.summary"))
-      contentAsString(response) should include(arn)
+      val content = contentAsString(response)
+      content should include(messagesApi("agent.services.account.heading"))
+      content should include(messagesApi("agent.services.account.heading.summary"))
+      content should include(messagesApi("agent.services.account.subHeading"))
+      content should include(messagesApi("agent.services.account.subHeading.summary"))
+      content should include(arn)
+      content should include(completeGgSignOutUrl)
     }
 
     "return the redirect returned by authActions when authActions denies access" in {
@@ -64,7 +83,7 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
           }
       }
 
-      val controller = new AgentServicesController(messagesApi, mockConfig, authActions)
+      val controller = new AgentServicesController(messagesApi, authActions, configuration, signOutUrl)
 
       val response = controller.root()(FakeRequest("GET", "/"))
 

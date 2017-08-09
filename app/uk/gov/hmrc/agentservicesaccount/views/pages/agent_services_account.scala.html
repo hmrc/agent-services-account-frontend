@@ -16,9 +16,14 @@
 
 @import play.api.Configuration
 @import uk.gov.hmrc.agentmtdidentifiers.model.Arn
-@(arn: Arn)(implicit messages: Messages, request: Request[_], configuration: Configuration)
+@import uk.gov.hmrc.agentservicesaccount.auth.SignOutUrl
+@(arn: Arn)(implicit messages: Messages, request: Request[_], configuration: Configuration, signOutUrl: SignOutUrl)
 
-@uk.gov.hmrc.agentservicesaccount.views.html.main_template(title = Messages("app.name"),mainClass = Some("full-width")) {
+@navLinks = {
+    <li><a href="@{signOutUrl.signOutUrl}" id="signOut">@Messages("common.sign-out")</a></li>
+}
+
+@uk.gov.hmrc.agentservicesaccount.views.html.main_template(title = Messages("app.name"), navLinks = Some(navLinks), mainClass = Some("full-width")) {
     <div class = "grid-layout grid-layout--no-gutter">
         <div class = "grid-layout__column grid-layout__column--2-3">
             <h1>@Messages("agent.services.account.heading")</h1>

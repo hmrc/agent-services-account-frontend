@@ -19,6 +19,7 @@
   mainClass: Option[String] = None,
   mainDataAttributes: Option[Html] = None,
   bodyClasses: Option[String] = None,
+  navLinks: Option[Html] = None,
   sidebar: Html = HtmlFormat.empty,
   contentHeader: Option[Html] = None,
   mainContent: Html = HtmlFormat.empty,
@@ -36,16 +37,12 @@
     <meta name="format-detection" content="telephone=no" />
 }
 
-@headerNavLinks = {
-    <li><a href="/sign-out" id="signOut">@Messages("common.sign-out")</a></li>
-}
-
 @insideHeader = {
     @uiLayouts.header_nav(
       navTitle = Some(Messages("app.name")),
       navTitleLink = None,
       showBetaLink = false,
-      navLinks = Some(headerNavLinks))
+      navLinks = navLinks)
 }
 
     @betaBanner = {
