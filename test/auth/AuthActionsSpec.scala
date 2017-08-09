@@ -16,6 +16,7 @@
 
 package auth
 
+import controllers.routes
 import org.mockito.ArgumentMatchers.{any, eq => eqs}
 import org.mockito.Mockito.{verify, when}
 import org.slf4j.Logger
@@ -34,6 +35,7 @@ import play.api.test.Helpers._
 
 import scala.concurrent.Future
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext.fromLoggingDetails
+import views.html.helper.urlEncode
 
 class AuthActionsSpec extends UnitSpec with ResettingMockitoSugar with AkkaMaterializerSpec {
 
@@ -63,7 +65,8 @@ class AuthActionsSpec extends UnitSpec with ResettingMockitoSugar with AkkaMater
   // deliberately different to the values in application.conf to test that the code reads the configuration rather than hard coding values
   val ggSignInBaseUrl = "http://gg-sign-in-host:1234"
   val ggSignInPath = "/blah/sign-in"
-  val completeGgSignInUrl = ggSignInBaseUrl + ggSignInPath
+  val externalUrl = "https://localhost:9401"
+  val completeGgSignInUrl = s"$ggSignInBaseUrl$ggSignInPath?continue=${urlEncode(externalUrl + routes.AgentServicesController.root())}"
 
   val configuration = resettingMock[Configuration]
 
@@ -89,25 +92,29 @@ class AuthActionsSpec extends UnitSpec with ResettingMockitoSugar with AkkaMater
     "redirect to GG sign in if agent is not logged in" in {
       mockAuthNotLoggedIn()
 
-      mockConfigString("authentication.government-gateway.sign-in.base-url", ggSignInBaseUrl)
-      mockConfigString("authentication.government-gateway.sign-in.path", ggSignInPath)
+      mockSignInConfig()
 
       val result: Future[Result] = testAuthImpl.testAuthActions().apply(FakeRequest())
       status(result) shouldBe 303
-      redirectLocation(result) should contain(completeGgSignInUrl)
+      redirectLocation(result) shouldBe Some(completeGgSignInUrl)
 
     }
 
     "redirect to GG sign in if logged in user is not an HMRC-AS-AGENT agent" in {
       mockAuth(enrolment = Set(otherEnrolment))
 
-      mockConfigString("authentication.government-gateway.sign-in.base-url", ggSignInBaseUrl)
-      mockConfigString("authentication.government-gateway.sign-in.path", ggSignInPath)
+      mockSignInConfig()
 
       val result: Future[Result] = testAuthImpl.testAuthActions().apply(FakeRequest())
       status(result) shouldBe 303
-      redirectLocation(result) should contain(completeGgSignInUrl)
+      redirectLocation(result) shouldBe Some(completeGgSignInUrl)
     }
+  }
+
+  private def mockSignInConfig(): Unit = {
+    mockConfigString("authentication.government-gateway.sign-in.base-url", ggSignInBaseUrl)
+    mockConfigString("authentication.government-gateway.sign-in.path", ggSignInPath)
+    mockConfigString("microservice.services.agent-services-account-frontend.external-url", externalUrl)
   }
 
   private def mockConfigString(path: String, configValue: String) = {

@@ -19,11 +19,7 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
   val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   val mockConfig: Configuration = app.injector.instanceOf[Configuration]
   val backendConnector: BackendConnector = mock[BackendConnector]
-  //val mockAuthActions: AuthActions = mock[AuthActions]
 
-
-//  def authActionsWillAllowAccessWithArn(arn: Arn) = ???
-//  def authActionsWillRedirectToSignInPage(): Unit = ???
 
   "AgentServicesController" should {
     "return Status: OK Body: empty" in {
