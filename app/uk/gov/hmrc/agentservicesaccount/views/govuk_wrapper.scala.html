@@ -36,15 +36,26 @@
     <meta name="format-detection" content="telephone=no" />
 }
 
-@headerNavLinks = {}
+@headerNavLinks = {
+    <li><a href="/sign-out" id="signOut">@Messages("common.sign-out")</a></li>
+}
 
 @insideHeader = {
     @uiLayouts.header_nav(
-      navTitle = Some("agent-services-account"),
+      navTitle = Some(Messages("app.name")),
       navTitleLink = None,
       showBetaLink = false,
       navLinks = Some(headerNavLinks))
 }
+
+    @betaBanner = {
+    @uiLayouts.betaBanner(
+        userLoggedIn = false,
+        betaFeedbackUrl = "",
+        betaFeedbackUnauthenticatedUrl = "",
+        showFeedbackLinkInBetaBanner = false
+    )
+    }
 
 @afterHeader = {}
 
@@ -62,7 +73,7 @@
 
 @serviceInfo = {
     @uiLayouts.serviceInfo(
-      betaBanner = HtmlFormat.empty,
+      betaBanner = betaBanner,
       includeGridWrapper = false,
       serviceInfoContent = Some(serviceInfoContent))
 }
@@ -82,7 +93,6 @@
       mainDataAttributes = mainDataAttributes,
       mainContentHeader = mainContentHeader,
       serviceInfo = serviceInfo,
-      getHelpForm = getHelpForm,
       sidebar = sidebar)
 }
 

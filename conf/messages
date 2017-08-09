@@ -6,3 +6,5 @@ agent.services.account.subHeading.summary=If your agency uses more than one Gove
 existing.client.relationships.link=Access existing client relationsips
 agent.references=Your references
 agent.accountNumber=Account number: {0}
+
+common.sign-out=Sign out
