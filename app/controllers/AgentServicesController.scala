@@ -18,7 +18,7 @@ class AgentServicesController @Inject()(val messagesApi: MessagesApi,
                                         authActions: AuthActions) extends FrontendController with I18nSupport {
 
   val root: Action[AnyContent] = authActions.AuthorisedWithAgentAsync {
-    implicit request => Future successful Ok(views.html.pages.agent_services_homepage())
+    implicit request => Future successful Ok(views.html.pages.agent_services_account())
   }
 
 }
