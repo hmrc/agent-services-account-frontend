@@ -1,10 +1,7 @@
-package controllers
+package uk.gov.hmrc.agentservicesaccount.controllers
 
-import auth.{AgentRequest, AuthActions}
-import connectors.BackendConnector
-import org.scalatest.{BeforeAndAfterEach, Matchers, OptionValues, WordSpec}
 import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.PlaySpec
+import org.scalatest.{BeforeAndAfterEach, Matchers, OptionValues, WordSpec}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Configuration
 import play.api.i18n.MessagesApi
@@ -12,13 +9,12 @@ import play.api.mvc.{Action, AnyContent, Results}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
-import uk.gov.hmrc.play.http.HeaderCarrier
+import uk.gov.hmrc.agentservicesaccount.auth.{AgentRequest, AuthActions}
 
 class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValues with MockitoSugar with GuiceOneAppPerSuite with BeforeAndAfterEach {
 
   val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   val mockConfig: Configuration = app.injector.instanceOf[Configuration]
-  val backendConnector: BackendConnector = mock[BackendConnector]
 
 
   "AgentServicesController" should {
@@ -30,7 +26,7 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
           }
       }
 
-      val controller = new AgentServicesController(messagesApi, mockConfig, backendConnector, authActions)
+      val controller = new AgentServicesController(messagesApi, mockConfig, authActions)
 
       val response = controller.root()(FakeRequest("GET", "/"))
 
@@ -48,7 +44,7 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
           }
       }
 
-      val controller = new AgentServicesController(messagesApi, mockConfig, backendConnector, authActions)
+      val controller = new AgentServicesController(messagesApi, mockConfig, authActions)
 
       val response = controller.root()(FakeRequest("GET", "/"))
 

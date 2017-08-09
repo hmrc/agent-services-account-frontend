@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package auth
+package uk.gov.hmrc.agentservicesaccount.auth
 
 import javax.inject.{Inject, Singleton}
 
@@ -27,7 +27,7 @@ import uk.gov.hmrc.auth.core.Retrievals.{affinityGroup, allEnrolments}
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext.fromLoggingDetails
-import controllers.routes
+import uk.gov.hmrc.agentservicesaccount.controllers.routes
 import scala.concurrent.Future
 
 case class AgentInfo(arn: Arn)

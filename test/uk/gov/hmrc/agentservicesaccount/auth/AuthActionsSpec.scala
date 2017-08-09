@@ -14,28 +14,27 @@
  * limitations under the License.
  */
 
-package auth
+package uk.gov.hmrc.agentservicesaccount.auth
 
-import controllers.routes
 import org.mockito.ArgumentMatchers.{any, eq => eqs}
 import org.mockito.Mockito.{verify, when}
 import org.slf4j.Logger
-import play.api.{Configuration, LoggerLike}
 import play.api.http.Status.OK
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import play.api.mvc.Results.Ok
 import play.api.test.FakeRequest
-import support.{AkkaMaterializerSpec, ResettingMockitoSugar}
+import play.api.test.Helpers._
+import play.api.{Configuration, LoggerLike}
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
+import uk.gov.hmrc.agentservicesaccount.controllers.routes
+import uk.gov.hmrc.agentservicesaccount.support.{AkkaMaterializerSpec, ResettingMockitoSugar}
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.test.UnitSpec
-import play.api.test.Helpers._
+import views.html.helper.urlEncode
 
 import scala.concurrent.Future
-import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext.fromLoggingDetails
-import views.html.helper.urlEncode
 
 class AuthActionsSpec extends UnitSpec with ResettingMockitoSugar with AkkaMaterializerSpec {
 
