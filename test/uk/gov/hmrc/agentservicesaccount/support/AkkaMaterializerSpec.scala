@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package support
+package uk.gov.hmrc.agentservicesaccount.support
 
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
