@@ -61,6 +61,7 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
 
       status(response) shouldBe 303
       redirectLocation(response) shouldBe Some("/gg/sign-in")
+
     }
   }
 }
