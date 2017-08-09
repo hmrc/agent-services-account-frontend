@@ -16,6 +16,8 @@
 
 package auth
 
+import javax.inject.{Inject, Singleton}
+
 import play.api.mvc.Results._
 import play.api.mvc._
 import play.api.{Configuration, LoggerLike}
@@ -32,7 +34,8 @@ case class AgentInfo(arn: Arn)
 
 case class AgentRequest[A](arn: Arn, request: Request[A]) extends WrappedRequest[A](request)
 
-class AuthActions(logger: LoggerLike, configuration: Configuration, override val authConnector: PlayAuthConnector) extends AuthorisedFunctions {
+@Singleton
+class AuthActions @Inject() (logger: LoggerLike, configuration: Configuration, override val authConnector: PlayAuthConnector) extends AuthorisedFunctions {
 
   private def getConfigString(path: String): String = configuration.getString(path, None).getOrElse(throw new RuntimeException(s"Required configuration property at path $path not present"))
 
@@ -40,12 +43,14 @@ class AuthActions(logger: LoggerLike, configuration: Configuration, override val
   def signInPath = getConfigString("authentication.government-gateway.sign-in.path")
   def signInUrl: String = signInBaseUrl + signInPath
 
-  protected type AsyncPlayUserRequest = Request[AnyContent] => AgentRequest[AnyContent] => Future[Result]
+  protected type AsyncPlayUserRequest = AgentRequest[AnyContent] => Future[Result]
 
-  def AuthorisedWithAgentAsync(body: AsyncPlayUserRequest)(implicit hc: HeaderCarrier): Action[AnyContent] = {
+  implicit def hc(implicit request: Request[_]): HeaderCarrier = HeaderCarrier.fromHeadersAndSession(request.headers, Some(request.session))
+
+  def AuthorisedWithAgentAsync(body: AsyncPlayUserRequest): Action[AnyContent] = {
     Action.async { implicit request =>
       authorisedWithAgent[Result] { agentInfo =>
-        body(request)(AgentRequest(agentInfo.arn, request))
+        body(AgentRequest(agentInfo.arn, request))
       } map { maybeResult =>
         maybeResult.getOrElse(redirectToGgSignIn)
       } recover {
