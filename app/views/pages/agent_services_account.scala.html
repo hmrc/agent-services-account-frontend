@@ -1,0 +1,15 @@
+@import play.api.Configuration
+@()(implicit messages: Messages, request: Request[_], configuration: Configuration)
+
+@views.html.main_template(title = Messages("app.name")) {
+    <h1>@Messages("agent.services.account.heading")</h1>
+    <p>@Messages("agent.services.account.heading.summary")</p>
+    <h2>@Messages("agent.services.account.subHeading")</h2>
+    <p>@Messages("agent.services.account.subHeading.summary")</p>
+
+    <a href="#">@Messages("existing.client.relationships.link")</a>
+
+    <h3>@Messages("agent.references")</h3>
+    <p>@Messages("agent.accountNumber") ARN123098-12</p>
+
+}

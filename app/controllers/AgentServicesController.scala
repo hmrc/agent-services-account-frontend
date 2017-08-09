@@ -12,7 +12,7 @@ class AgentServicesController @Inject()(val messagesApi: MessagesApi, backendCon
                                         implicit val configuration: Configuration) extends Controller with I18nSupport {
 
   def root(): Action[AnyContent] = Action {
-    implicit request => Ok(views.html.pages.agent_services_homepage())
+    implicit request => Ok(views.html.pages.agent_services_account())
   }
 
 }

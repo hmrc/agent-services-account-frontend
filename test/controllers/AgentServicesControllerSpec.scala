@@ -19,13 +19,16 @@ class AgentServicesControllerSpec extends PlaySpec with MockitoSugar with GuiceO
   val controller = new AgentServicesController(messagesApi, backendConnector, mockConfig)
 
   "AgentServicesController" should {
-    "return Status: OK Body: empty" in {
+    "return Status: OK Body and body should contain correct content" in {
       val response = controller.root()(FakeRequest("GET", "/"))
 
       status(response) mustBe OK
       contentType(response).get mustBe HTML
-      contentAsString(response) must include(messagesApi("app.name"))
-      contentAsString(response) must include("HELLO WORLD")
+      contentAsString(response) must include(messagesApi("agent.services.account.heading"))
+      contentAsString(response) must include(messagesApi("agent.services.account.heading.summary"))
+      contentAsString(response) must include(messagesApi("agent.services.account.subHeading"))
+      contentAsString(response) must include(messagesApi("agent.services.account.subHeading.summary"))
+      contentAsString(response) must include("ARN123098-12")
     }
   }
 }
