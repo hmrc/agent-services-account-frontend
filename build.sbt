@@ -17,7 +17,7 @@ lazy val compileDeps = Seq(
   ws,
   "uk.gov.hmrc" %% "http-verbs" % "6.4.0",
   "uk.gov.hmrc" %% "play-auditing" % "2.10.0",
-  "uk.gov.hmrc" %% "play-auth" % "1.1.0",
+  "uk.gov.hmrc" %% "play-auth" % "1.3.0",
   "uk.gov.hmrc" %% "play-config" % "4.3.0",
   "uk.gov.hmrc" %% "play-graphite" % "3.2.0",
   "uk.gov.hmrc" %% "play-health" % "2.1.0",
@@ -25,9 +25,9 @@ lazy val compileDeps = Seq(
   "de.threedimensions" %% "metrics-play" % "2.5.13",
   "uk.gov.hmrc" %% "frontend-bootstrap" % "7.26.0",
   "uk.gov.hmrc" %% "play-partials" % "5.4.0",
-  "uk.gov.hmrc" %% "play-authorised-frontend" % "6.4.0",
   "uk.gov.hmrc" %% "govuk-template" % "5.3.0",
-  "uk.gov.hmrc" %% "play-ui" % "7.4.0"
+  "uk.gov.hmrc" %% "play-ui" % "7.4.0",
+  "uk.gov.hmrc" %% "agent-mtd-identifiers" % "0.5.0"
 )
 
 def testDeps(scope: String) = Seq(
