@@ -39,9 +39,9 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
   override def fakeApplication(): Application =
     new GuiceApplicationBuilder()
       .configure(
-        "authentication.government-gateway.sign-out.base-url" -> ggSignOutBaseUrl,
-        "authentication.government-gateway.sign-out.path" -> ggSignOutPath,
-        "authentication.government-gateway.sign-out.continue-url" -> ggSignOutContinueUrl
+        "microservice.services.company-auth-frontend.external-url" -> ggSignOutBaseUrl,
+        "microservice.services.company-auth-frontend.sign-out.path" -> ggSignOutPath,
+        "microservice.services.company-auth-frontend.sign-out.continue-url" -> ggSignOutContinueUrl
       )
       .build()
 

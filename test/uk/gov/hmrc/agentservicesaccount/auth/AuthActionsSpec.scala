@@ -111,8 +111,8 @@ class AuthActionsSpec extends UnitSpec with ResettingMockitoSugar with AkkaMater
   }
 
   private def mockSignInConfig(): Unit = {
-    mockConfigString("authentication.government-gateway.sign-in.base-url", ggSignInBaseUrl)
-    mockConfigString("authentication.government-gateway.sign-in.path", ggSignInPath)
+    mockConfigString("microservice.services.company-auth-frontend.external-url", ggSignInBaseUrl)
+    mockConfigString("microservice.services.company-auth-frontend.sign-in.path", ggSignInPath)
     mockConfigString("microservice.services.agent-services-account-frontend.external-url", externalUrl)
   }
 

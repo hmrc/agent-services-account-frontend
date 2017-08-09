@@ -39,10 +39,10 @@ case class AgentRequest[A](arn: Arn, request: Request[A]) extends WrappedRequest
 @Singleton
 class AuthActions @Inject() (logger: LoggerLike, override val configuration: Configuration, override val authConnector: PlayAuthConnector) extends AuthorisedFunctions with RequiredConfigString {
 
-  def signInBaseUrl = getConfigString("authentication.government-gateway.sign-in.base-url")
-  def signInPath = getConfigString("authentication.government-gateway.sign-in.path")
-  def signInUrl: String = signInBaseUrl + signInPath
-  def externalUrl: String = getConfigString("microservice.services.agent-services-account-frontend.external-url")
+  def signInBaseExternalUrl = getConfigString("microservice.services.company-auth-frontend.external-url")
+  def signInPath = getConfigString("microservice.services.company-auth-frontend.sign-in.path")
+  def signInUrl: String = signInBaseExternalUrl + signInPath
+  def ourBaseExternalUrl: String = getConfigString("microservice.services.agent-services-account-frontend.external-url")
   protected type AsyncPlayUserRequest = AgentRequest[AnyContent] => Future[Result]
 
   implicit def hc(implicit request: Request[_]): HeaderCarrier = HeaderCarrier.fromHeadersAndSession(request.headers, Some(request.session))
@@ -61,7 +61,7 @@ class AuthActions @Inject() (logger: LoggerLike, override val configuration: Con
   }
 
   private def redirectToGgSignIn: Result = Redirect(signInUrl, Map(
-    "continue" -> Seq(externalUrl + routes.AgentServicesController.root().url)
+    "continue" -> Seq(ourBaseExternalUrl + routes.AgentServicesController.root().url)
   ))
 
   def authorisedWithAgent[R](body: (AgentInfo) => Future[R])(implicit hc: HeaderCarrier): Future[Option[R]] =

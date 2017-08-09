@@ -24,9 +24,9 @@ import views.html.helper.urlEncode
 
 @Singleton
 class SignOutUrl @Inject() (override val configuration: Configuration) extends RequiredConfigString {
-  private def signOutBaseUrl = getConfigString("authentication.government-gateway.sign-out.base-url")
-  private def signOutPath = getConfigString("authentication.government-gateway.sign-out.path")
-  private def signOutContinueUrl = getConfigString("authentication.government-gateway.sign-out.continue-url")
+  private def signOutBaseExternalUrl = getConfigString("microservice.services.company-auth-frontend.external-url")
+  private def signOutPath = getConfigString("microservice.services.company-auth-frontend.sign-out.path")
+  private def signOutContinueUrl = getConfigString("microservice.services.company-auth-frontend.sign-out.continue-url")
 
-  def signOutUrl: String = s"$signOutBaseUrl$signOutPath?continue=${urlEncode(signOutContinueUrl)}"
+  def signOutUrl: String = s"$signOutBaseExternalUrl$signOutPath?continue=${urlEncode(signOutContinueUrl)}"
 }
