@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package auth
+package uk.gov.hmrc.agentservicesaccount.auth
 
 import javax.inject.{Inject, Singleton}
 
@@ -27,7 +27,7 @@ import uk.gov.hmrc.auth.core.Retrievals.{affinityGroup, allEnrolments}
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext.fromLoggingDetails
-
+import uk.gov.hmrc.agentservicesaccount.controllers.routes
 import scala.concurrent.Future
 
 case class AgentInfo(arn: Arn)
@@ -42,7 +42,7 @@ class AuthActions @Inject() (logger: LoggerLike, configuration: Configuration, o
   def signInBaseUrl = getConfigString("authentication.government-gateway.sign-in.base-url")
   def signInPath = getConfigString("authentication.government-gateway.sign-in.path")
   def signInUrl: String = signInBaseUrl + signInPath
-
+  def externalUrl: String = getConfigString("microservice.services.agent-services-account-frontend.external-url")
   protected type AsyncPlayUserRequest = AgentRequest[AnyContent] => Future[Result]
 
   implicit def hc(implicit request: Request[_]): HeaderCarrier = HeaderCarrier.fromHeadersAndSession(request.headers, Some(request.session))
@@ -60,7 +60,9 @@ class AuthActions @Inject() (logger: LoggerLike, configuration: Configuration, o
     }
   }
 
-  private def redirectToGgSignIn: Result = Redirect(signInUrl, 303)
+  private def redirectToGgSignIn: Result = Redirect(signInUrl, Map(
+    "continue" -> Seq(externalUrl + routes.AgentServicesController.root().url)
+  ))
 
   def authorisedWithAgent[R](body: (AgentInfo) => Future[R])(implicit hc: HeaderCarrier): Future[Option[R]] =
     authorised(AuthProviders(GovernmentGateway)).retrieve(allEnrolments and affinityGroup) {
