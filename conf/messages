@@ -5,4 +5,4 @@ agent.services.account.subHeading=Services you might need
 agent.services.account.subHeading.summary=If your agency uses more than one Government Gateway you will need to copy your existing client relationships from each of your Government Gateway IDs into this account.
 existing.client.relationships.link=Access existing client relationsips
 agent.references=Your references
-agent.accountNumber=Account number:
+agent.accountNumber=Account number: {0}

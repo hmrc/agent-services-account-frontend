@@ -35,10 +35,11 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
 
   "AgentServicesController" should {
     "return Status: OK and body should contain correct content" in {
+      val arn = "TARN0000001"
       val authActions = new AuthActions(null, null, null) {
         override def AuthorisedWithAgentAsync(body: AsyncPlayUserRequest): Action[AnyContent] =
           Action.async { implicit request =>
-            body(AgentRequest(Arn("TARN0000001"), request))
+            body(AgentRequest(Arn(arn), request))
           }
       }
 
@@ -52,7 +53,7 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
       contentAsString(response) should include(messagesApi("agent.services.account.heading.summary"))
       contentAsString(response) should include(messagesApi("agent.services.account.subHeading"))
       contentAsString(response) should include(messagesApi("agent.services.account.subHeading.summary"))
-      contentAsString(response) should include("ARN123098-12")
+      contentAsString(response) should include(arn)
     }
 
     "return the redirect returned by authActions when authActions denies access" in {
