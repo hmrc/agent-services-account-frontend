@@ -19,12 +19,12 @@ package uk.gov.hmrc.agentservicesaccount.controllers
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfterEach, Matchers, OptionValues, WordSpec}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.Application
 import play.api.i18n.MessagesApi
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.{Action, AnyContent, Results}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import play.api.{Application, Configuration}
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.auth.{AgentRequest, AuthActions, SignOutUrl}
 import views.html.helper.urlEncode
@@ -46,7 +46,6 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
       .build()
 
   val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
-  val configuration: Configuration = app.injector.instanceOf[Configuration]
   val signOutUrl: SignOutUrl = app.injector.instanceOf[SignOutUrl]
 
 
@@ -60,7 +59,7 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
           }
       }
 
-      val controller = new AgentServicesController(messagesApi, authActions, configuration, signOutUrl)
+      val controller = new AgentServicesController(messagesApi, authActions, signOutUrl)
 
       val response = controller.root()(FakeRequest("GET", "/"))
 
@@ -83,7 +82,7 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
           }
       }
 
-      val controller = new AgentServicesController(messagesApi, authActions, configuration, signOutUrl)
+      val controller = new AgentServicesController(messagesApi, authActions, signOutUrl)
 
       val response = controller.root()(FakeRequest("GET", "/"))
 

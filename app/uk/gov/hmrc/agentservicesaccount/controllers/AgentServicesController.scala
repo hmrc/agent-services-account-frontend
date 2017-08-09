@@ -18,7 +18,6 @@ package uk.gov.hmrc.agentservicesaccount.controllers
 
 import javax.inject._
 
-import play.api.Configuration
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.agentservicesaccount.auth.{AuthActions, SignOutUrl}
@@ -31,7 +30,6 @@ import scala.concurrent.Future
 class AgentServicesController @Inject()(
   val messagesApi: MessagesApi,
   authActions: AuthActions,
-  implicit val configuration: Configuration,
   implicit val signOutUrl: SignOutUrl) extends FrontendController with I18nSupport {
 
   val root: Action[AnyContent] = authActions.AuthorisedWithAgentAsync {
