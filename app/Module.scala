@@ -7,7 +7,8 @@ import com.codahale.metrics.{MetricFilter, SharedMetricRegistries}
 import com.google.inject.AbstractModule
 import org.slf4j.MDC
 import play.api.inject.ApplicationLifecycle
-import play.api.{Configuration, Environment, Logger}
+import play.api.{Configuration, Environment, Logger, LoggerLike}
+import uk.gov.hmrc.auth.core.PlayAuthConnector
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -22,6 +23,8 @@ class Module(environment: Environment, configuration: Configuration) extends Abs
     loggerDateFormat.foreach(str => MDC.put("logger.json.dateformat", str))
 
     bind(classOf[GraphiteStartUp]).asEagerSingleton()
+    bind(classOf[LoggerLike]).toInstance(Logger)
+    bind(classOf[PlayAuthConnector]).to(classOf[AuthConn])
   }
 }
 

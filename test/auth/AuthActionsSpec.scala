@@ -71,9 +71,8 @@ class AuthActionsSpec extends UnitSpec with ResettingMockitoSugar with AkkaMater
 
   class TestAuth() {
     def testAuthActions() = authActions.AuthorisedWithAgentAsync {
-      implicit request =>
-        implicit agentRequest =>
-          Future.successful(Ok(Json.toJson(agentRequest.arn)))
+      implicit agentRequest =>
+        Future.successful(Ok(Json.toJson(agentRequest.arn)))
     }
   }
 
@@ -95,7 +94,7 @@ class AuthActionsSpec extends UnitSpec with ResettingMockitoSugar with AkkaMater
 
       val result: Future[Result] = testAuthImpl.testAuthActions().apply(FakeRequest())
       status(result) shouldBe 303
-      redirectLocation(result) should contain (completeGgSignInUrl)
+      redirectLocation(result) should contain(completeGgSignInUrl)
 
     }
 
@@ -107,7 +106,7 @@ class AuthActionsSpec extends UnitSpec with ResettingMockitoSugar with AkkaMater
 
       val result: Future[Result] = testAuthImpl.testAuthActions().apply(FakeRequest())
       status(result) shouldBe 303
-      redirectLocation(result) should contain (completeGgSignInUrl)
+      redirectLocation(result) should contain(completeGgSignInUrl)
     }
   }
 
