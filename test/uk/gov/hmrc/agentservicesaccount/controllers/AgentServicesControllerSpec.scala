@@ -34,7 +34,7 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
 
 
   "AgentServicesController" should {
-    "return Status: OK Body: empty" in {
+    "return Status: OK and body should contain correct content" in {
       val authActions = new AuthActions(null, null, null) {
         override def AuthorisedWithAgentAsync(body: AsyncPlayUserRequest): Action[AnyContent] =
           Action.async { implicit request =>
@@ -48,8 +48,11 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
 
       status(response) shouldBe OK
       contentType(response).get shouldBe HTML
-      contentAsString(response) should include(messagesApi("app.name"))
-      contentAsString(response) should include("HELLO WORLD")
+      contentAsString(response) should include(messagesApi("agent.services.account.heading"))
+      contentAsString(response) should include(messagesApi("agent.services.account.heading.summary"))
+      contentAsString(response) should include(messagesApi("agent.services.account.subHeading"))
+      contentAsString(response) should include(messagesApi("agent.services.account.subHeading.summary"))
+      contentAsString(response) should include("ARN123098-12")
     }
 
     "return the redirect returned by authActions when authActions denies access" in {
@@ -66,6 +69,7 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
 
       status(response) shouldBe 303
       redirectLocation(response) shouldBe Some("/gg/sign-in")
+
     }
   }
 }
