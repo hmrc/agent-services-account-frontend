@@ -68,8 +68,6 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
       val content = contentAsString(response)
       content should include(messagesApi("agent.services.account.heading"))
       content should include(messagesApi("agent.services.account.heading.summary"))
-      content should include(messagesApi("agent.services.account.subHeading"))
-      content should include(messagesApi("agent.services.account.subHeading.summary"))
       content should include(arn)
       content should include(completeGgSignOutUrl)
     }
