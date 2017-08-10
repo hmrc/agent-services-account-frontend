@@ -2,7 +2,7 @@
 
 [ ![Download](https://api.bintray.com/packages/hmrc/releases/agent-services-account-frontend/images/download.svg) ](https://bintray.com/hmrc/releases/agent-services-account-frontend/_latestVersion)
 
-This is a placeholder README.md for a new repository
+This is the frontend for the Agent Services account page - which is available to agents who have the new-for-2017 HMRC-AS-AGENT enrolment.
 
 ### License
 
