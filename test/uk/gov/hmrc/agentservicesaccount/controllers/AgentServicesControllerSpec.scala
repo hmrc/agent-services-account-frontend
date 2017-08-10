@@ -53,6 +53,8 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
       status(response) shouldBe OK
       contentType(response).get shouldBe HTML
       val content = contentAsString(response)
+      content should include("Agent Services account")
+      content should not include("Agent Services Account")
       content should include(messagesApi("agent.services.account.heading"))
       content should include(messagesApi("agent.services.account.heading.summary"))
       content should include(arn)
