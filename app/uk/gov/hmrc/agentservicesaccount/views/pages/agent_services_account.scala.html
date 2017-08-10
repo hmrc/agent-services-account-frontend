@@ -15,11 +15,11 @@
  *@
 
 @import uk.gov.hmrc.agentmtdidentifiers.model.Arn
-@import uk.gov.hmrc.agentservicesaccount.auth.SignOutUrl
-@(arn: Arn)(implicit messages: Messages, request: Request[_], signOutUrl: SignOutUrl)
+@import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
+@(arn: Arn)(implicit messages: Messages, request: Request[_], externalUrls: ExternalUrls)
 
 @navLinks = {
-    <li><a href="@{signOutUrl.signOutUrl}" id="signOut">@Messages("common.sign-out")</a></li>
+    <li><a href="@{externalUrls.signOutUrl}" id="signOut">@Messages("common.sign-out")</a></li>
 }
 
 @uk.gov.hmrc.agentservicesaccount.views.html.main_template(title = Messages("app.name"), navLinks = Some(navLinks), mainClass = Some("full-width")) {

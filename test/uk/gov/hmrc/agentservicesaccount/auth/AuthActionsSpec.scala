@@ -19,20 +19,19 @@ package uk.gov.hmrc.agentservicesaccount.auth
 import org.mockito.ArgumentMatchers.{any, eq => eqs}
 import org.mockito.Mockito.{verify, when}
 import org.slf4j.Logger
+import play.api.LoggerLike
 import play.api.http.Status.OK
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import play.api.mvc.Results.Ok
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import play.api.{Configuration, LoggerLike}
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
-import uk.gov.hmrc.agentservicesaccount.controllers.routes
+import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
 import uk.gov.hmrc.agentservicesaccount.support.{AkkaMaterializerSpec, ResettingMockitoSugar}
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.test.UnitSpec
-import views.html.helper.urlEncode
 
 import scala.concurrent.Future
 
@@ -61,15 +60,11 @@ class AuthActionsSpec extends UnitSpec with ResettingMockitoSugar with AkkaMater
 
   val otherEnrolment = agentEnrolment.copy(key = "IR-PAYE")
 
-  // deliberately different to the values in application.conf to test that the code reads the configuration rather than hard coding values
-  val ggSignInBaseUrl = "http://gg-sign-in-host:1234"
-  val ggSignInPath = "/blah/sign-in"
-  val externalUrl = "https://localhost:9401"
-  val completeGgSignInUrl = s"$ggSignInBaseUrl$ggSignInPath?continue=${urlEncode(externalUrl + routes.AgentServicesController.root())}"
+  val externalUrls: ExternalUrls = mock[ExternalUrls]
+  val completeGgSignInUrl = "http://example.com/gg-sign-in?continue=back-to-us"
+  when(externalUrls.signInUrl).thenReturn(completeGgSignInUrl)
 
-  val configuration = resettingMock[Configuration]
-
-  val authActions = new AuthActions(logger, configuration, mockAuthConnector)
+  val authActions = new AuthActions(logger, externalUrls, mockAuthConnector)
 
   class TestAuth() {
     def testAuthActions() = authActions.AuthorisedWithAgentAsync {
@@ -91,8 +86,6 @@ class AuthActionsSpec extends UnitSpec with ResettingMockitoSugar with AkkaMater
     "redirect to GG sign in if agent is not logged in" in {
       mockAuthNotLoggedIn()
 
-      mockSignInConfig()
-
       val result: Future[Result] = testAuthImpl.testAuthActions().apply(FakeRequest())
       status(result) shouldBe 303
       redirectLocation(result) shouldBe Some(completeGgSignInUrl)
@@ -102,23 +95,10 @@ class AuthActionsSpec extends UnitSpec with ResettingMockitoSugar with AkkaMater
     "redirect to GG sign in if logged in user is not an HMRC-AS-AGENT agent" in {
       mockAuth(enrolment = Set(otherEnrolment))
 
-      mockSignInConfig()
-
       val result: Future[Result] = testAuthImpl.testAuthActions().apply(FakeRequest())
       status(result) shouldBe 303
       redirectLocation(result) shouldBe Some(completeGgSignInUrl)
     }
-  }
-
-  private def mockSignInConfig(): Unit = {
-    mockConfigString("microservice.services.company-auth-frontend.external-url", ggSignInBaseUrl)
-    mockConfigString("microservice.services.company-auth-frontend.sign-in.path", ggSignInPath)
-    mockConfigString("microservice.services.agent-services-account-frontend.external-url", externalUrl)
-  }
-
-  private def mockConfigString(path: String, configValue: String) = {
-    when(configuration.getString(eqs(path), any[Option[Set[String]]]))
-      .thenReturn(Some(configValue))
   }
 
   "authorisedWithAgent" should {

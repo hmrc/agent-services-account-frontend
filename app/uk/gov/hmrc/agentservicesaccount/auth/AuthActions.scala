@@ -18,17 +18,16 @@ package uk.gov.hmrc.agentservicesaccount.auth
 
 import javax.inject.{Inject, Singleton}
 
+import play.api.LoggerLike
 import play.api.mvc.Results._
 import play.api.mvc._
-import play.api.{Configuration, LoggerLike}
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
-import uk.gov.hmrc.agentservicesaccount.config.RequiredConfigString
+import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
 import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
 import uk.gov.hmrc.auth.core.Retrievals.{affinityGroup, allEnrolments}
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext.fromLoggingDetails
-import uk.gov.hmrc.agentservicesaccount.controllers.routes
 
 import scala.concurrent.Future
 
@@ -37,12 +36,8 @@ case class AgentInfo(arn: Arn)
 case class AgentRequest[A](arn: Arn, request: Request[A]) extends WrappedRequest[A](request)
 
 @Singleton
-class AuthActions @Inject() (logger: LoggerLike, override val configuration: Configuration, override val authConnector: PlayAuthConnector) extends AuthorisedFunctions with RequiredConfigString {
+class AuthActions @Inject() (logger: LoggerLike, externalUrls: ExternalUrls, override val authConnector: PlayAuthConnector) extends AuthorisedFunctions {
 
-  def signInBaseExternalUrl = getConfigString("microservice.services.company-auth-frontend.external-url")
-  def signInPath = getConfigString("microservice.services.company-auth-frontend.sign-in.path")
-  def signInUrl: String = signInBaseExternalUrl + signInPath
-  def ourBaseExternalUrl: String = getConfigString("microservice.services.agent-services-account-frontend.external-url")
   protected type AsyncPlayUserRequest = AgentRequest[AnyContent] => Future[Result]
 
   implicit def hc(implicit request: Request[_]): HeaderCarrier = HeaderCarrier.fromHeadersAndSession(request.headers, Some(request.session))
@@ -60,9 +55,7 @@ class AuthActions @Inject() (logger: LoggerLike, override val configuration: Con
     }
   }
 
-  private def redirectToGgSignIn: Result = Redirect(signInUrl, Map(
-    "continue" -> Seq(ourBaseExternalUrl + routes.AgentServicesController.root().url)
-  ))
+  private def redirectToGgSignIn: Result = Redirect(externalUrls.signInUrl)
 
   def authorisedWithAgent[R](body: (AgentInfo) => Future[R])(implicit hc: HeaderCarrier): Future[Option[R]] =
     authorised(AuthProviders(GovernmentGateway)).retrieve(allEnrolments and affinityGroup) {

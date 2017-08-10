@@ -16,37 +16,24 @@
 
 package uk.gov.hmrc.agentservicesaccount.controllers
 
+import org.mockito.Mockito.when
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfterEach, Matchers, OptionValues, WordSpec}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.Application
 import play.api.i18n.MessagesApi
-import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.{Action, AnyContent, Results}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
-import uk.gov.hmrc.agentservicesaccount.auth.{AgentRequest, AuthActions, SignOutUrl}
-import views.html.helper.urlEncode
+import uk.gov.hmrc.agentservicesaccount.auth.{AgentRequest, AuthActions}
+import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
 
 class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValues with MockitoSugar with GuiceOneAppPerSuite with BeforeAndAfterEach {
 
-  val ggSignOutBaseUrl = "http://gg-sign-in-host:1234"
-  val ggSignOutPath = "/blah/sign-out"
-  val ggSignOutContinueUrl = "http://www.example.com/foo"
-  val completeGgSignOutUrl = s"$ggSignOutBaseUrl$ggSignOutPath?continue=${urlEncode(ggSignOutContinueUrl)}"
-
-  override def fakeApplication(): Application =
-    new GuiceApplicationBuilder()
-      .configure(
-        "microservice.services.company-auth-frontend.external-url" -> ggSignOutBaseUrl,
-        "microservice.services.company-auth-frontend.sign-out.path" -> ggSignOutPath,
-        "microservice.services.company-auth-frontend.sign-out.continue-url" -> ggSignOutContinueUrl
-      )
-      .build()
-
   val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
-  val signOutUrl: SignOutUrl = app.injector.instanceOf[SignOutUrl]
+  val externalUrls: ExternalUrls = mock[ExternalUrls]
+  val signOutUrl = "http://example.com/gg/sign-out?continue=http://example.com/go-here-after-sign-out"
+  when(externalUrls.signOutUrl).thenReturn(signOutUrl)
 
 
   "root" should {
@@ -59,7 +46,7 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
           }
       }
 
-      val controller = new AgentServicesController(messagesApi, authActions, signOutUrl)
+      val controller = new AgentServicesController(messagesApi, authActions, externalUrls)
 
       val response = controller.root()(FakeRequest("GET", "/"))
 
@@ -69,7 +56,7 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
       content should include(messagesApi("agent.services.account.heading"))
       content should include(messagesApi("agent.services.account.heading.summary"))
       content should include(arn)
-      content should include(completeGgSignOutUrl)
+      content should include(signOutUrl)
     }
 
     "return the redirect returned by authActions when authActions denies access" in {
@@ -80,13 +67,12 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
           }
       }
 
-      val controller = new AgentServicesController(messagesApi, authActions, signOutUrl)
+      val controller = new AgentServicesController(messagesApi, authActions, externalUrls)
 
       val response = controller.root()(FakeRequest("GET", "/"))
 
       status(response) shouldBe 303
       redirectLocation(response) shouldBe Some("/gg/sign-in")
-
     }
   }
 }

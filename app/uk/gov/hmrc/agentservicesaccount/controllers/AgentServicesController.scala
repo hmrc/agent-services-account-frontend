@@ -20,7 +20,8 @@ import javax.inject._
 
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent}
-import uk.gov.hmrc.agentservicesaccount.auth.{AuthActions, SignOutUrl}
+import uk.gov.hmrc.agentservicesaccount.auth.AuthActions
+import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
 import uk.gov.hmrc.agentservicesaccount.views
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 
@@ -30,7 +31,7 @@ import scala.concurrent.Future
 class AgentServicesController @Inject()(
   val messagesApi: MessagesApi,
   authActions: AuthActions,
-  implicit val signOutUrl: SignOutUrl) extends FrontendController with I18nSupport {
+  implicit val externalUrls: ExternalUrls) extends FrontendController with I18nSupport {
 
   val root: Action[AnyContent] = authActions.AuthorisedWithAgentAsync {
     implicit request => Future successful Ok(views.html.pages.agent_services_account(request.arn))
