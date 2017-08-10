@@ -15,6 +15,7 @@
  *@
 
 @(title: String,
+  navLinks: Option[Html] = None,
   sidebarLinks: Option[Html] = None,
   contentHeader: Option[Html] = None,
   bodyClasses: Option[String] = None,
@@ -24,7 +25,8 @@
 @import uk.gov.hmrc.play.views.html.layouts
 
 
-@serviceInfoContent = {}
+@serviceInfoContent = {
+}
 
 @sidebar = {
     @if(sidebarLinks.isDefined) {
@@ -37,6 +39,7 @@
                title = title,
                mainClass = mainClass,
                bodyClasses = bodyClasses,
+               navLinks = navLinks,
                sidebar = sidebar,
                contentHeader = contentHeader,
                mainContent = layouts.article(mainContent),

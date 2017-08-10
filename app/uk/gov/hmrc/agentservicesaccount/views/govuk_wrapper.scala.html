@@ -19,6 +19,7 @@
   mainClass: Option[String] = None,
   mainDataAttributes: Option[Html] = None,
   bodyClasses: Option[String] = None,
+  navLinks: Option[Html] = None,
   sidebar: Html = HtmlFormat.empty,
   contentHeader: Option[Html] = None,
   mainContent: Html = HtmlFormat.empty,
@@ -36,15 +37,22 @@
     <meta name="format-detection" content="telephone=no" />
 }
 
-@headerNavLinks = {}
-
 @insideHeader = {
     @uiLayouts.header_nav(
-      navTitle = Some("agent-services-account"),
+      navTitle = Some(Messages("app.name")),
       navTitleLink = None,
       showBetaLink = false,
-      navLinks = Some(headerNavLinks))
+      navLinks = navLinks)
 }
+
+    @betaBanner = {
+    @uiLayouts.betaBanner(
+        userLoggedIn = false,
+        betaFeedbackUrl = "",
+        betaFeedbackUnauthenticatedUrl = "",
+        showFeedbackLinkInBetaBanner = false
+    )
+    }
 
 @afterHeader = {}
 
@@ -62,7 +70,7 @@
 
 @serviceInfo = {
     @uiLayouts.serviceInfo(
-      betaBanner = HtmlFormat.empty,
+      betaBanner = betaBanner,
       includeGridWrapper = false,
       serviceInfoContent = Some(serviceInfoContent))
 }
@@ -82,7 +90,6 @@
       mainDataAttributes = mainDataAttributes,
       mainContentHeader = mainContentHeader,
       serviceInfo = serviceInfo,
-      getHelpForm = getHelpForm,
       sidebar = sidebar)
 }
 

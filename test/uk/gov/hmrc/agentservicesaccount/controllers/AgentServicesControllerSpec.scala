@@ -16,25 +16,28 @@
 
 package uk.gov.hmrc.agentservicesaccount.controllers
 
+import org.mockito.Mockito.when
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfterEach, Matchers, OptionValues, WordSpec}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.Configuration
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, Results}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.auth.{AgentRequest, AuthActions}
+import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
 
 class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValues with MockitoSugar with GuiceOneAppPerSuite with BeforeAndAfterEach {
 
   val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
-  val mockConfig: Configuration = app.injector.instanceOf[Configuration]
+  val externalUrls: ExternalUrls = mock[ExternalUrls]
+  val signOutUrl = "http://example.com/gg/sign-out?continue=http://example.com/go-here-after-sign-out"
+  when(externalUrls.signOutUrl).thenReturn(signOutUrl)
 
 
-  "AgentServicesController" should {
-    "return Status: OK and body should contain correct content" in {
+  "root" should {
+    "return Status: OK and body containing correct content" in {
       val arn = "TARN0000001"
       val authActions = new AuthActions(null, null, null) {
         override def AuthorisedWithAgentAsync(body: AsyncPlayUserRequest): Action[AnyContent] =
@@ -43,17 +46,17 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
           }
       }
 
-      val controller = new AgentServicesController(messagesApi, mockConfig, authActions)
+      val controller = new AgentServicesController(messagesApi, authActions, externalUrls)
 
       val response = controller.root()(FakeRequest("GET", "/"))
 
       status(response) shouldBe OK
       contentType(response).get shouldBe HTML
-      contentAsString(response) should include(messagesApi("agent.services.account.heading"))
-      contentAsString(response) should include(messagesApi("agent.services.account.heading.summary"))
-      contentAsString(response) should include(messagesApi("agent.services.account.subHeading"))
-      contentAsString(response) should include(messagesApi("agent.services.account.subHeading.summary"))
-      contentAsString(response) should include(arn)
+      val content = contentAsString(response)
+      content should include(messagesApi("agent.services.account.heading"))
+      content should include(messagesApi("agent.services.account.heading.summary"))
+      content should include(arn)
+      content should include(signOutUrl)
     }
 
     "return the redirect returned by authActions when authActions denies access" in {
@@ -64,13 +67,12 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
           }
       }
 
-      val controller = new AgentServicesController(messagesApi, mockConfig, authActions)
+      val controller = new AgentServicesController(messagesApi, authActions, externalUrls)
 
       val response = controller.root()(FakeRequest("GET", "/"))
 
       status(response) shouldBe 303
       redirectLocation(response) shouldBe Some("/gg/sign-in")
-
     }
   }
 }

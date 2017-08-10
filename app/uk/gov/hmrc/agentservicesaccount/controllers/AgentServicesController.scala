@@ -18,19 +18,20 @@ package uk.gov.hmrc.agentservicesaccount.controllers
 
 import javax.inject._
 
-import play.api.Configuration
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.agentservicesaccount.auth.AuthActions
+import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
 import uk.gov.hmrc.agentservicesaccount.views
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 
 import scala.concurrent.Future
 
 @Singleton
-class AgentServicesController @Inject()(val messagesApi: MessagesApi,
-                                        implicit val configuration: Configuration,
-                                        authActions: AuthActions) extends FrontendController with I18nSupport {
+class AgentServicesController @Inject()(
+  val messagesApi: MessagesApi,
+  authActions: AuthActions,
+  implicit val externalUrls: ExternalUrls) extends FrontendController with I18nSupport {
 
   val root: Action[AnyContent] = authActions.AuthorisedWithAgentAsync {
     implicit request => Future successful Ok(views.html.pages.agent_services_account(request.arn))
