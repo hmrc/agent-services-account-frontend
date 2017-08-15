@@ -34,17 +34,18 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
   val externalUrls: ExternalUrls = mock[ExternalUrls]
   val signOutUrl = "http://example.com/gg/sign-out?continue=http://example.com/go-here-after-sign-out"
   when(externalUrls.signOutUrl).thenReturn(signOutUrl)
+  val arn = "TARN0000001"
 
+  val authActions = new AuthActions(null, null, null) {
+    override def AuthorisedWithAgentAsync(body: AsyncPlayUserRequest): Action[AnyContent] =
+      Action.async { implicit request =>
+        body(AgentRequest(Arn(arn), request))
+      }
+  }
 
   "root" should {
     "return Status: OK and body containing correct content" in {
-      val arn = "TARN0000001"
-      val authActions = new AuthActions(null, null, null) {
-        override def AuthorisedWithAgentAsync(body: AsyncPlayUserRequest): Action[AnyContent] =
-          Action.async { implicit request =>
-            body(AgentRequest(Arn(arn), request))
-          }
-      }
+
 
       val controller = new AgentServicesController(messagesApi, authActions, externalUrls)
 
@@ -75,6 +76,18 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
 
       status(response) shouldBe 303
       redirectLocation(response) shouldBe Some("/gg/sign-in")
+    }
+
+    "supply provide continue button if valid continue URL is provided" in {
+
+      val controller = new AgentServicesController(messagesApi, authActions, externalUrls)
+      val response = controller.root().apply(FakeRequest("GET", "/"))
+      status(response) shouldBe OK
+      contentType(response).get should include("What ever the bu")
+
+
+
+
     }
   }
 }
