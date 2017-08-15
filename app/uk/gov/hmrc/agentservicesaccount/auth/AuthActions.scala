@@ -38,14 +38,11 @@ case class AgentRequest[A](arn: Arn, request: Request[A]) extends WrappedRequest
 @Singleton
 class AuthActions @Inject() (logger: LoggerLike, externalUrls: ExternalUrls, override val authConnector: PlayAuthConnector) extends AuthorisedFunctions {
 
-  protected type AsyncPlayUserRequest = AgentRequest[AnyContent] => Future[Result]
-
-  implicit def hc(implicit request: Request[_]): HeaderCarrier = HeaderCarrier.fromHeadersAndSession(request.headers, Some(request.session))
-
-  def AuthorisedWithAgentAsync(body: AsyncPlayUserRequest): Action[AnyContent] = {
-    Action.async { implicit request =>
+  def AuthorisedWithAgentAsync = new ActionBuilder[AgentRequest] {
+    override def invokeBlock[A](request: Request[A], block: (AgentRequest[A]) => Future[Result]): Future[Result] = {
+      implicit val hc =  HeaderCarrier.fromHeadersAndSession(request.headers, Some(request.session))
       authorisedWithAgent[Result] { agentInfo =>
-        body(AgentRequest(agentInfo.arn, request))
+        block(AgentRequest(agentInfo.arn, request))
       } map { maybeResult =>
         maybeResult.getOrElse(redirectToGgSignIn)
       } recover {

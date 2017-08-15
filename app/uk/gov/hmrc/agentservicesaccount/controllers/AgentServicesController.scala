@@ -31,10 +31,15 @@ import scala.concurrent.Future
 class AgentServicesController @Inject()(
   val messagesApi: MessagesApi,
   authActions: AuthActions,
+  continueUrlActions: ContinueUrlActions,
   implicit val externalUrls: ExternalUrls) extends FrontendController with I18nSupport {
 
-  val root: Action[AnyContent] = authActions.AuthorisedWithAgentAsync {
-    implicit request => Future successful Ok(views.html.pages.agent_services_account(request.arn))
+  import authActions._
+  import continueUrlActions._
+
+  val root: Action[AnyContent] = (AuthorisedWithAgentAsync andThen WithMaybeContinueUrl).async {
+    implicit request =>
+      Future successful Ok(views.html.pages.agent_services_account(request.arn, request.continueUrlOpt))
   }
 
 }

@@ -18,8 +18,8 @@ package uk.gov.hmrc.agentservicesaccount
 
 import java.net.URL
 
-import com.google.inject.{AbstractModule, Provider}
 import com.google.inject.name.Names
+import com.google.inject.{AbstractModule, Provider}
 import play.api.{Logger, LoggerLike}
 import uk.gov.hmrc.auth.core.PlayAuthConnector
 import uk.gov.hmrc.play.config.ServicesConfig
@@ -29,6 +29,7 @@ class GuiceModule extends AbstractModule with ServicesConfig {
 
   override def configure(): Unit = {
     bind(classOf[PlayAuthConnector]).to(classOf[FrontendAuthConnector])
+    bind(classOf[AppConfig]).toInstance(FrontendAppConfig)
     bind(classOf[HttpGet]).toInstance(WSHttp)
     bind(classOf[HttpPost]).toInstance(WSHttp)
     bind(classOf[LoggerLike]).toInstance(Logger)
