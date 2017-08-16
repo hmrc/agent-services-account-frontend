@@ -18,6 +18,7 @@ package uk.gov.hmrc.agentservicesaccount.controllers
 
 import java.net.URLEncoder
 
+import akka.util.Timeout
 import org.mockito.Mockito.when
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfterEach, Matchers, OptionValues, WordSpec}
