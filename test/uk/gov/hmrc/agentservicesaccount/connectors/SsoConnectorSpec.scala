@@ -57,6 +57,12 @@ class SsoConnectorSpec extends UnitSpec with GuiceOneAppPerTest with WireMockSup
       val result = await(connector.validateExternalDomain("Imnotvalid.com"))
       result shouldBe false
     }
+
+    "return false when request fails" in {
+      SsoStubs.givenDomainCheckFails("foo.com")
+      val result = await(connector.validateExternalDomain("foo.com"))
+      result shouldBe false
+    }
   }
 
   "AgentServicesController" should {
