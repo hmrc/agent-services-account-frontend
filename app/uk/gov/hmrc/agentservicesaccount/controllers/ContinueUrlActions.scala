@@ -22,7 +22,7 @@ import play.api.Logger
 import play.api.mvc._
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.auth.AgentRequest
-import uk.gov.hmrc.agentservicesaccount.services.WhiteListService
+import uk.gov.hmrc.agentservicesaccount.services.HostnameWhiteListService
 import uk.gov.hmrc.play.binders.ContinueUrl
 import uk.gov.hmrc.play.http.HeaderCarrier
 
@@ -33,7 +33,7 @@ import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 import scala.util.control.NonFatal
 
 @Singleton
-class ContinueUrlActions @Inject()(whiteListService: WhiteListService) {
+class ContinueUrlActions @Inject()(whiteListService: HostnameWhiteListService) {
 
   def isRelativeOrAbsoluteWhiteListed(continueUrl: ContinueUrl)(implicit hc: HeaderCarrier): Future[Boolean] = {
     if (!continueUrl.isRelativeUrl) whiteListService.isAbsoluteUrlWhiteListed(continueUrl)
@@ -45,7 +45,7 @@ class ContinueUrlActions @Inject()(whiteListService: WhiteListService) {
     def arn: Arn = request.arn
   }
 
-  def WithMaybeContinueUrl = new ActionRefiner[AgentRequest,RequestWithMaybeContinueUrl] {
+  val WithMaybeContinueUrl = new ActionRefiner[AgentRequest,RequestWithMaybeContinueUrl] {
     override protected def refine[A](request: AgentRequest[A]): Future[Either[Result, RequestWithMaybeContinueUrl[A]]] = {
       implicit val hc = HeaderCarrier.fromHeadersAndSession(request.headers, None)
       request.getQueryString("continue").fold(

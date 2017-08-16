@@ -25,32 +25,22 @@ import uk.gov.hmrc.play.binders.ContinueUrl
 import uk.gov.hmrc.play.http.HeaderCarrier
 
 import scala.concurrent.Future
-import scala.util.{Success, Try}
+import scala.util.Try
 
 @Singleton
-class WhiteListService @Inject()(appConfig: AppConfig, ssoConnector: SsoConnector) {
+class HostnameWhiteListService @Inject()(appConfig: AppConfig, ssoConnector: SsoConnector) {
 
   val domainWhiteList: Set[String] = appConfig.domainWhiteList
 
-  def hasExternalDomain(continueUrl: ContinueUrl)(implicit hc: HeaderCarrier): Future[Boolean] = {
-    parseURL(continueUrl.url) match {
-      case Success(url) => ssoConnector.validateExternalDomain(url.getHost)
-      case _ => Future.successful(false)
-    }
-  }
+  def hasExternalDomain(continueUrl: ContinueUrl)(implicit hc: HeaderCarrier): Future[Boolean] =
+    ssoConnector.validateExternalDomain(getHost(continueUrl))
 
-  def isAbsoluteUrlWhiteListed(continueUrl: ContinueUrl)(implicit hc: HeaderCarrier): Future[Boolean] = {
+
+  def isAbsoluteUrlWhiteListed(continueUrl: ContinueUrl)(implicit hc: HeaderCarrier): Future[Boolean] =
     if (!hasInternalDomain(continueUrl)) hasExternalDomain(continueUrl)
     else Future.successful(true)
-  }
 
-  def hasInternalDomain(continueUrl: ContinueUrl): Boolean = {
-    if (continueUrl.isAbsoluteUrl) {
-      parseURL(continueUrl.url) match {
-        case Success(url) => domainWhiteList.contains(url.getHost)
-        case _ => false
-      }
-    } else false  }
+  def hasInternalDomain(continueUrl: ContinueUrl): Boolean = domainWhiteList.contains(getHost(continueUrl))
 
-  private def parseURL(url: String): Try[URL] = Try(new URL(url))
+  private def getHost(continueUrl: ContinueUrl): String = Try(new URL(continueUrl.url).getHost).getOrElse("invalid")
 }
