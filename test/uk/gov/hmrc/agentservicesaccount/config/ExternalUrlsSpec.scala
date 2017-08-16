@@ -33,7 +33,6 @@ class ExternalUrlsSpec extends UnitSpec with ResettingMockitoSugar {
   val ggSignOutContinueUrl = "http://www.example.com/foo"
   val externalUrl = "https://localhost:9401"
   val completeGgSignInUrl = s"$companyAuthFrontendExternalBaseUrl$ggSignInPath?continue=${urlEncode(externalUrl + routes.AgentServicesController.root())}"
-  def completeGgSignInUrlWithExternalContinue(url: String) = s"$companyAuthFrontendExternalBaseUrl$ggSignInPath?continue=${urlEncode(externalUrl + routes.AgentServicesController.root() + "?continue="+urlEncode(url))}"
   val completeGgSignOutUrl = s"$companyAuthFrontendExternalBaseUrl$ggSignOutPath?continue=${urlEncode(ggSignOutContinueUrl)}"
 
   val configuration = resettingMock[Configuration]
@@ -42,12 +41,7 @@ class ExternalUrlsSpec extends UnitSpec with ResettingMockitoSugar {
   "signInUrl" should {
     "return the sign in URL including continue parameter" in {
       mockConfig()
-      externalUrls.signInUrl() shouldBe completeGgSignInUrl
-    }
-
-    "return the sign in URL including continue parameter with external continue param" in {
-      mockConfig()
-      externalUrls.signInUrl(Some("/baz-foo/bar?abc=xyz")) shouldBe completeGgSignInUrlWithExternalContinue("/baz-foo/bar?abc=xyz")
+      externalUrls.signInUrl shouldBe completeGgSignInUrl
     }
   }
 

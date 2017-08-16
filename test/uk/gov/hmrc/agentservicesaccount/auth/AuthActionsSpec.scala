@@ -62,7 +62,7 @@ class AuthActionsSpec extends UnitSpec with ResettingMockitoSugar with AkkaMater
 
   val externalUrls: ExternalUrls = mock[ExternalUrls]
   val completeGgSignInUrl = "http://example.com/gg-sign-in?continue=back-to-us"
-  when(externalUrls.signInUrl(None)).thenReturn(completeGgSignInUrl)
+  when(externalUrls.signInUrl).thenReturn(completeGgSignInUrl)
 
   val authActions = new AuthActions(logger, externalUrls, mockAuthConnector)
 

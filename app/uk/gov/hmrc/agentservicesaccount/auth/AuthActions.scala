@@ -44,16 +44,15 @@ class AuthActions @Inject() (logger: LoggerLike, externalUrls: ExternalUrls, ove
       authorisedWithAgent[Result] { agentInfo =>
         block(AgentRequest(agentInfo.arn, request))
       } map { maybeResult =>
-        maybeResult.getOrElse(redirectToGgSignIn(request))
+        maybeResult.getOrElse(redirectToGgSignIn)
       } recover {
         case _: NoActiveSession =>
-          redirectToGgSignIn(request)
+          redirectToGgSignIn
       }
     }
   }
 
-  private def redirectToGgSignIn[A](request: Request[A]): Result =
-    Redirect(externalUrls.signInUrl(request.getQueryString("continue")))
+  private def redirectToGgSignIn: Result = Redirect(externalUrls.signInUrl)
 
   def authorisedWithAgent[R](body: (AgentInfo) => Future[R])(implicit hc: HeaderCarrier): Future[Option[R]] =
     authorised(AuthProviders(GovernmentGateway)).retrieve(allEnrolments and affinityGroup) {

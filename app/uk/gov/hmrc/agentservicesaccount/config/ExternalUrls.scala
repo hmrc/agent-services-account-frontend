@@ -34,11 +34,5 @@ class ExternalUrls @Inject() (override val configuration: Configuration) extends
 
   private lazy val signInPath = getConfigString("microservice.services.company-auth-frontend.sign-in.path")
   private lazy val ourBaseExternalUrl: String = getConfigString("microservice.services.agent-services-account-frontend.external-url")
-
-  def signInUrl(continueUrlOpt: Option[String] = None): String =
-    s"$companyAuthFrontendExternalUrl$signInPath?continue=${urlEncode(
-      ourBaseExternalUrl +
-      routes.AgentServicesController.root().url +
-      continueUrlOpt.map(url => s"?continue="+urlEncode(url)).getOrElse("")
-    )}"
+  lazy val signInUrl: String = s"$companyAuthFrontendExternalUrl$signInPath?continue=${urlEncode(ourBaseExternalUrl + routes.AgentServicesController.root().url)}"
 }
