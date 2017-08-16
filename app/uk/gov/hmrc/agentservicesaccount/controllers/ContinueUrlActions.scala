@@ -25,12 +25,12 @@ import uk.gov.hmrc.agentservicesaccount.auth.AgentRequest
 import uk.gov.hmrc.agentservicesaccount.services.HostnameWhiteListService
 import uk.gov.hmrc.play.binders.ContinueUrl
 import uk.gov.hmrc.play.http.HeaderCarrier
-
-import scala.concurrent.Future
-import scala.util.{Failure, Success, Try}
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 
+import scala.concurrent.Future
 import scala.util.control.NonFatal
+import scala.util.{Failure, Success, Try}
+
 
 @Singleton
 class ContinueUrlActions @Inject()(whiteListService: HostnameWhiteListService) {
@@ -45,28 +45,25 @@ class ContinueUrlActions @Inject()(whiteListService: HostnameWhiteListService) {
     def arn: Arn = request.arn
   }
 
-  val WithMaybeContinueUrl = new ActionRefiner[AgentRequest,RequestWithMaybeContinueUrl] {
+  val WithMaybeContinueUrl = new ActionRefiner[AgentRequest, RequestWithMaybeContinueUrl] {
     override protected def refine[A](request: AgentRequest[A]): Future[Either[Result, RequestWithMaybeContinueUrl[A]]] = {
       implicit val hc = HeaderCarrier.fromHeadersAndSession(request.headers, None)
-      request.getQueryString("continue").fold(
-        Future.successful(RequestWithMaybeContinueUrl(None, request))
-      )
-      { continueParam =>
+      val continueUrl = request.getQueryString("continue").fold[Future[Option[ContinueUrl]]](
+        Future.successful(None)
+      ) { continueParam =>
         Try(ContinueUrl(continueParam)) match {
           case Success(url) =>
-            isRelativeOrAbsoluteWhiteListed(url).map(
-              if (_) RequestWithMaybeContinueUrl(Some(url), request)
-              else RequestWithMaybeContinueUrl(None, request)
-            ).recover {
-              case NonFatal(e) =>
-                Logger.warn(s"isAbsoluteWhitelisted continue url check failed", e)
-                RequestWithMaybeContinueUrl(None, request)
-            }
-          case Failure(_)   =>
-            Future.successful(RequestWithMaybeContinueUrl(None, request))
+            isRelativeOrAbsoluteWhiteListed(url).
+              map(if (_) Some(url) else None).
+              recover {
+                case NonFatal(e) =>
+                  Logger.warn(s"Check for whitelisted hostname failed", e)
+                  None
+              }
+          case Failure(_)   => Future.successful(None)
         }
       }
-        .map(Right(_))
+      continueUrl.map(urlOpt => Right(RequestWithMaybeContinueUrl(urlOpt, request)))
     }
   }
 }
