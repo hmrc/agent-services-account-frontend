@@ -16,8 +16,6 @@
 
 package uk.gov.hmrc.agentservicesaccount
 
-import java.util.Collections
-
 import play.api.Play.{configuration, current}
 import uk.gov.hmrc.play.config.ServicesConfig
 
@@ -31,8 +29,6 @@ trait AppConfig {
 
 object FrontendAppConfig extends AppConfig with ServicesConfig {
 
-  import scala.collection.JavaConversions._
-
   private def loadConfig(key: String) = configuration.getString(key).getOrElse(throw new Exception(s"Missing configuration key: $key"))
 
   private lazy val contactHost = configuration.getString(s"contact-frontend.host").getOrElse("")
@@ -43,6 +39,6 @@ object FrontendAppConfig extends AppConfig with ServicesConfig {
   override lazy val reportAProblemPartialUrl = s"$contactHost/contact/problem_reports_ajax?service=$contactFormServiceIdentifier"
   override lazy val reportAProblemNonJSUrl = s"$contactHost/contact/problem_reports_nonjs?service=$contactFormServiceIdentifier"
 
-  override lazy val domainWhiteList = runModeConfiguration.getStringList("continueUrl.domainWhiteList").getOrElse(Collections.emptyList()).toSet
+  override lazy val domainWhiteList = runModeConfiguration.getStringSeq("continueUrl.domainWhiteList")
 
 }

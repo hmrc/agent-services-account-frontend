@@ -27,7 +27,7 @@ import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 import scala.concurrent.Future
 
 @Singleton
-class SsoConnector @Inject()(http: HttpGet, @Named("sso-baseUrl") baseUrl: URL) extends GGRegistrationFEHttpMonitor {
+class SsoConnector @Inject()(http: HttpGet, @Named("sso-baseUrl") baseUrl: URL) extends AgentsHttpErrorMonitor {
 
   def validateExternalDomain(domain: String)(implicit hc: HeaderCarrier): Future[Boolean] = {
     val url = new URL(baseUrl, s"/sso/validate/domain/$domain")
