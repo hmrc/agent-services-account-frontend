@@ -1,8 +1,6 @@
 app.name=Agent Services account
 agent.services.account.heading=Welcome to your Agent Services account
 agent.services.account.heading.summary=Your new Agent Services account will give your organisation access to a range of new HM Revenue and Customs digital services.
-agent.services.account.subHeading=Services you might need
-agent.services.account.subHeading.summary=If your agency uses more than one Government Gateway you will need to copy your existing client relationships from each of your Government Gateway IDs into this account.
 agent.services.account.new_account.continue=Continue with your journey
 existing.client.relationships.link=Access existing client relationships
 agent.references=Your references
