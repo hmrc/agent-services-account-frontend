@@ -16,37 +16,69 @@
 
 package uk.gov.hmrc.agentservicesaccount.controllers
 
+import java.net.URLEncoder
+
 import org.mockito.Mockito.when
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfterEach, Matchers, OptionValues, WordSpec}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.Application
 import play.api.i18n.MessagesApi
-import play.api.mvc.{Action, AnyContent, Results}
+import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.mvc.Results._
+import play.api.mvc.{ActionBuilder, _}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
+import uk.gov.hmrc.agentservicesaccount.GuiceModule
 import uk.gov.hmrc.agentservicesaccount.auth.{AgentRequest, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
+import uk.gov.hmrc.agentservicesaccount.connectors.SsoConnector
+import uk.gov.hmrc.play.http.HeaderCarrier
+import uk.gov.hmrc.play.test.UnitSpec
 
-class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValues with MockitoSugar with GuiceOneAppPerSuite with BeforeAndAfterEach {
+import scala.concurrent.Future
+
+
+class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValues with MockitoSugar with GuiceOneAppPerSuite with BeforeAndAfterEach with UnitSpec{
+
+  override implicit lazy val app: Application = appBuilder
+    .build()
+
+  protected def appBuilder: GuiceApplicationBuilder =
+    new GuiceApplicationBuilder().overrides(new GuiceModule(){
+      override def configure(): Unit = {
+        bind(classOf[SsoConnector]).toInstance(new SsoConnector(null, null) {
+          val whitelistedSSODomains = Set("www.foo.com", "foo.org")
+
+          override def validateExternalDomain(domain: String)(implicit hc: HeaderCarrier): Future[Boolean] = {
+            Future.successful(whitelistedSSODomains.contains(domain))
+          }
+        })
+      }
+    })
 
   val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   val externalUrls: ExternalUrls = mock[ExternalUrls]
   val signOutUrl = "http://example.com/gg/sign-out?continue=http://example.com/go-here-after-sign-out"
   when(externalUrls.signOutUrl).thenReturn(signOutUrl)
+  val arn = "TARN0000001"
 
+  val authActions = new AuthActions(null, null, null) {
+    override def AuthorisedWithAgentAsync = new ActionBuilder[AgentRequest] {
+      override def invokeBlock[A](request: Request[A], block: (AgentRequest[A]) => Future[Result]): Future[Result] = {
+        block(AgentRequest(Arn(arn), request))
+      }
+    }
+  }
+
+  lazy val continueUrlActions: ContinueUrlActions = app.injector.instanceOf[ContinueUrlActions]
 
   "root" should {
     "return Status: OK and body containing correct content" in {
-      val arn = "TARN0000001"
-      val authActions = new AuthActions(null, null, null) {
-        override def AuthorisedWithAgentAsync(body: AsyncPlayUserRequest): Action[AnyContent] =
-          Action.async { implicit request =>
-            body(AgentRequest(Arn(arn), request))
-          }
-      }
 
-      val controller = new AgentServicesController(messagesApi, authActions, externalUrls)
+
+      val controller = new AgentServicesController(messagesApi, authActions, continueUrlActions, externalUrls)
 
       val response = controller.root()(FakeRequest("GET", "/"))
 
@@ -54,7 +86,7 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
       contentType(response).get shouldBe HTML
       val content = contentAsString(response)
       content should include("Agent Services account")
-      content should not include("Agent Services Account")
+      content should not include "Agent Services Account"
       content should include(messagesApi("agent.services.account.heading"))
       content should include(messagesApi("agent.services.account.heading.summary"))
       content should include(arn)
@@ -62,20 +94,82 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
     }
 
     "return the redirect returned by authActions when authActions denies access" in {
-      val authActions = new AuthActions(null, null, null) with Results {
-        override def AuthorisedWithAgentAsync(body: AsyncPlayUserRequest): Action[AnyContent] =
-          Action { implicit request =>
-            Redirect("/gg/sign-in", 303)
+
+      val authActions = new AuthActions(null, null, null) {
+        override def AuthorisedWithAgentAsync = new ActionBuilder[AgentRequest] {
+          override def invokeBlock[A](request: Request[A], block: (AgentRequest[A]) => Future[Result]): Future[Result] = {
+            Future.successful(Redirect("/gg/sign-in", 303))
           }
+        }
       }
 
-      val controller = new AgentServicesController(messagesApi, authActions, externalUrls)
+      val controller = new AgentServicesController(messagesApi, authActions, continueUrlActions, externalUrls)
 
       val response = controller.root()(FakeRequest("GET", "/"))
 
       status(response) shouldBe 303
       redirectLocation(response) shouldBe Some("/gg/sign-in")
     }
+
+    "do not fail without continue url parameter" in {
+      val controller = new AgentServicesController(messagesApi, authActions, continueUrlActions, externalUrls)
+      val response = controller.root().apply(FakeRequest("GET", "/"))
+      status(response) shouldBe OK
+      contentType(response).get should not include "<button class=\"btn button\" type=\"continue\""
+    }
+
+    "support relative continue url parameter" in {
+      val controller = new AgentServicesController(messagesApi, authActions, continueUrlActions, externalUrls)
+      val response = controller.root().apply(FakeRequest("GET", "/?continue=/foo"))
+      status(response) shouldBe OK
+      contentAsString(response) should {
+        include ("<a href=\"/foo\">") and
+        include ("<button class=\"btn button\" type=\"continue\"")
+      }
+    }
+
+    "support absolute localhost continue url parameter" in {
+      val controller = new AgentServicesController(messagesApi, authActions, continueUrlActions, externalUrls)
+      val response = controller.root().apply(FakeRequest("GET", "/?continue=http://localhost/foobar/"))
+      status(response) shouldBe OK
+      contentAsString(response) should {
+        include ("<a href=\"http://localhost/foobar/\">") and
+          include ("<button class=\"btn button\" type=\"continue\"")
+      }
+    }
+
+    "support absolute www.tax.service.gov.uk continue url parameter" in {
+      val controller = new AgentServicesController(messagesApi, authActions, continueUrlActions, externalUrls)
+      val response = controller.root().apply(FakeRequest("GET", s"/?continue=${URLEncoder.encode("http://www.tax.service.gov.uk/foo/bar?some=true", "UTF-8")}"))
+      status(response) shouldBe OK
+      contentAsString(response) should {
+        include ("<a href=\"http://www.tax.service.gov.uk/foo/bar?some=true\">") and
+          include ("<button class=\"btn button\" type=\"continue\"")
+      }
+    }
+
+    "support whitelisted absolute external continue url parameter" in {
+      val controller = new AgentServicesController(messagesApi, authActions, continueUrlActions, externalUrls)
+      val response = controller.root().apply(FakeRequest("GET", s"/?continue=${URLEncoder.encode("http://www.foo.com/bar?some=false", "UTF-8")}"))
+      status(response) shouldBe OK
+      contentAsString(response) should {
+        include ("<a href=\"http://www.foo.com/bar?some=false\">") and
+          include ("<button class=\"btn button\" type=\"continue\"")
+      }
+    }
+
+    "silently reject not-whitelisted absolute external continue url parameter" in {
+      val controller = new AgentServicesController(messagesApi, authActions, continueUrlActions, externalUrls)
+      val response = controller.root().apply(FakeRequest("GET", s"/?continue=${URLEncoder.encode("http://www.foo.org/bar?some=false", "UTF-8")}"))
+      status(response) shouldBe OK
+      contentAsString(response) should {
+        not include "<a href=\"http://www.foo.org/bar?some=false\">" and
+          not include "<button class=\"btn button\" type=\"continue\""
+      }
+    }
+
+
+
   }
 }
 

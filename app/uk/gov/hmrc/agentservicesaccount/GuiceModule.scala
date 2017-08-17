@@ -16,18 +16,31 @@
 
 package uk.gov.hmrc.agentservicesaccount
 
-import com.google.inject.AbstractModule
+import java.net.URL
+
+import com.google.inject.name.Names
+import com.google.inject.{AbstractModule, Provider}
 import play.api.{Logger, LoggerLike}
 import uk.gov.hmrc.auth.core.PlayAuthConnector
+import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.http.{HttpGet, HttpPost}
 
-class GuiceModule extends AbstractModule {
+class GuiceModule extends AbstractModule with ServicesConfig {
 
   override def configure(): Unit = {
     bind(classOf[PlayAuthConnector]).to(classOf[FrontendAuthConnector])
+    bind(classOf[AppConfig]).toInstance(FrontendAppConfig)
     bind(classOf[HttpGet]).toInstance(WSHttp)
     bind(classOf[HttpPost]).toInstance(WSHttp)
     bind(classOf[LoggerLike]).toInstance(Logger)
+    bindBaseUrl("sso")
+  }
+
+  private def bindBaseUrl(serviceName: String) =
+    bind(classOf[URL]).annotatedWith(Names.named(s"$serviceName-baseUrl")).toProvider(new BaseUrlProvider(serviceName))
+
+  private class BaseUrlProvider(serviceName: String) extends Provider[URL] {
+    override lazy val get = new URL(baseUrl(serviceName))
   }
 
 }
