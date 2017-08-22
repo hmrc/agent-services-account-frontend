@@ -35,7 +35,11 @@ class ExternalUrlsSpec extends UnitSpec with ResettingMockitoSugar {
   val completeGgSignInUrl = s"$companyAuthFrontendExternalBaseUrl$ggSignInPath?continue=${urlEncode(externalUrl + routes.AgentServicesController.root())}"
   val completeGgSignOutUrl = s"$companyAuthFrontendExternalBaseUrl$ggSignOutPath?continue=${urlEncode(ggSignOutContinueUrl)}"
 
-  val configuration = resettingMock[Configuration]
+  val mappingExternalUrl = "http://www.example.com/foo"
+  val mappingStartPath = "/foo"
+  val agentMappingUrl: String = s"$mappingExternalUrl$mappingStartPath"
+
+  val configuration: Configuration = resettingMock[Configuration]
   val externalUrls = new ExternalUrls(configuration)
 
   "signInUrl" should {
@@ -52,12 +56,21 @@ class ExternalUrlsSpec extends UnitSpec with ResettingMockitoSugar {
     }
   }
 
+  "agentMappingUrl" should {
+    "return the agent mapping frontend URl" in {
+      mockConfig()
+      externalUrls.agentMappingUrl shouldBe agentMappingUrl
+    }
+  }
+
   private def mockConfig(): Unit = {
     mockConfigString("microservice.services.company-auth-frontend.external-url", companyAuthFrontendExternalBaseUrl)
     mockConfigString("microservice.services.company-auth-frontend.sign-in.path", ggSignInPath)
     mockConfigString("microservice.services.company-auth-frontend.sign-out.path", ggSignOutPath)
     mockConfigString("microservice.services.company-auth-frontend.sign-out.continue-url", ggSignOutContinueUrl)
     mockConfigString("microservice.services.agent-services-account-frontend.external-url", externalUrl)
+    mockConfigString("microservice.services.agent-mapping-frontend.external-url", mappingExternalUrl)
+    mockConfigString("microservice.services.agent-mapping-frontend.start.path", mappingStartPath)
   }
 
   private def mockConfigString(path: String, configValue: String) = {

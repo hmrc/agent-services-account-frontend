@@ -77,7 +77,6 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
   "root" should {
     "return Status: OK and body containing correct content" in {
 
-
       val controller = new AgentServicesController(messagesApi, authActions, continueUrlActions, externalUrls)
 
       val response = controller.root()(FakeRequest("GET", "/"))
@@ -89,6 +88,9 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
       content should not include "Agent Services Account"
       content should include(messagesApi("agent.services.account.heading"))
       content should include(messagesApi("agent.services.account.heading.summary"))
+      content should include(messagesApi("agent.services.account.additional.links.title"))
+      content should include(messagesApi("agent.services.account.additional.links.mapping.body"))
+      content should include(messagesApi("agent.services.account.additional.links.mapping.url"))
       content should include(arn)
       content should include(signOutUrl)
     }
