@@ -62,6 +62,8 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
   val externalUrls: ExternalUrls = mock[ExternalUrls]
   val signOutUrl = "http://example.com/gg/sign-out?continue=http://example.com/go-here-after-sign-out"
   when(externalUrls.signOutUrl).thenReturn(signOutUrl)
+  val mappingUrl = "http://example.com/agent-mapping/start"
+  when(externalUrls.agentMappingUrl).thenReturn(mappingUrl)
   val arn = "TARN0000001"
 
   val authActions = new AuthActions(null, null, null) {
@@ -93,6 +95,7 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
       content should include(messagesApi("agent.services.account.additional.links.mapping.url"))
       content should include(arn)
       content should include(signOutUrl)
+      content should include(mappingUrl)
     }
 
     "return the redirect returned by authActions when authActions denies access" in {

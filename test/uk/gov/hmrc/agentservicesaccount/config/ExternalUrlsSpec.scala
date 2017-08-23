@@ -30,7 +30,7 @@ class ExternalUrlsSpec extends UnitSpec with ResettingMockitoSugar {
   val companyAuthFrontendExternalBaseUrl = "http://gg-sign-in-host:1234"
   val ggSignInPath = "/blah/sign-in"
   val ggSignOutPath = "/blah/sign-out"
-  val ggSignOutContinueUrl = "http://www.example.com/foo"
+  val ggSignOutContinueUrl = "http://www.example.com"
   val externalUrl = "https://localhost:9401"
   val completeGgSignInUrl = s"$companyAuthFrontendExternalBaseUrl$ggSignInPath?continue=${urlEncode(externalUrl + routes.AgentServicesController.root())}"
   val completeGgSignOutUrl = s"$companyAuthFrontendExternalBaseUrl$ggSignOutPath?continue=${urlEncode(ggSignOutContinueUrl)}"
