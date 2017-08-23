@@ -22,7 +22,7 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.agentservicesaccount.auth.AuthActions
 import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
-import uk.gov.hmrc.agentservicesaccount.views
+import uk.gov.hmrc.agentservicesaccount.views.html.pages._
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 
 import scala.concurrent.Future
@@ -39,7 +39,7 @@ class AgentServicesController @Inject()(
 
   val root: Action[AnyContent] = (AuthorisedWithAgentAsync andThen WithMaybeContinueUrl).async {
     implicit request =>
-      Future successful Ok(views.html.pages.agent_services_account(request.arn, request.continueUrlOpt))
+      Future successful Ok(agent_services_account(request.arn, request.continueUrlOpt, Some(externalUrls.agentMappingUrl)))
   }
 
 }
