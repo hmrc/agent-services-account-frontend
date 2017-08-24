@@ -76,8 +76,7 @@ class SsoConnectorSpec extends UnitSpec with GuiceOneAppPerTest with WireMockSup
 
       status(response) shouldBe 200
       contentAsString(response) should {
-        include("<a href=\"http://www.foo.com/bar?some=false\">") and
-          include("<button class=\"btn button\" type=\"continue\"")
+        include("<a href=\"http://www.foo.com/bar?some=false\" class=\"btn button\" id=\"continue\">")
       }
     }
 
@@ -90,11 +89,9 @@ class SsoConnectorSpec extends UnitSpec with GuiceOneAppPerTest with WireMockSup
 
       status(response) shouldBe 200
       contentAsString(response) should {
-        not include ("<a href=\"http://www.foo.com/bar?some=false\">") and
-          not include ("<button class=\"btn button\" type=\"continue\"")
+        not include ("<a href=\"http://www.foo.com/bar?some=false\" class=\"btn button\" id=\"continue\">")
       }
     }
   }
 
 }
-

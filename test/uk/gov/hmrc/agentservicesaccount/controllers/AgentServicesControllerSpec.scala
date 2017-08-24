@@ -23,7 +23,7 @@ import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfterEach, Matchers, OptionValues, WordSpec}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
-import play.api.i18n.MessagesApi
+import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.Results._
 import play.api.mvc.{ActionBuilder, _}
@@ -36,7 +36,7 @@ import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
 import uk.gov.hmrc.agentservicesaccount.connectors.SsoConnector
 import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.test.UnitSpec
-
+import play.twirl.api.HtmlFormat
 import scala.concurrent.Future
 
 
@@ -58,11 +58,16 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
       }
     })
 
+
+
   val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   val externalUrls: ExternalUrls = mock[ExternalUrls]
   val signOutUrl = "http://example.com/gg/sign-out?continue=http://example.com/go-here-after-sign-out"
   when(externalUrls.signOutUrl).thenReturn(signOutUrl)
   val arn = "TARN0000001"
+
+  private implicit val messages: Messages = messagesApi.preferred(Seq.empty[Lang])
+  protected def htmlEscapedMessage(key: String): String = HtmlFormat.escape(Messages(key)).toString
 
   val authActions = new AuthActions(null, null, null) {
     override def AuthorisedWithAgentAsync = new ActionBuilder[AgentRequest] {
@@ -87,10 +92,13 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
       content should include("Agent Services account")
       content should not include "Agent Services Account"
       content should include(messagesApi("agent.services.account.heading"))
-      content should include(messagesApi("agent.services.account.heading.summary"))
+      content should include(htmlEscapedMessage(messagesApi("agent.services.account.heading.summary")))
       content should include(messagesApi("agent.services.account.additional.links.title"))
-      content should include(messagesApi("agent.services.account.additional.links.mapping.body"))
-      content should include(messagesApi("agent.services.account.additional.links.mapping.url"))
+      content should include(messagesApi("agent.services.account.additional.links.mapping.body1", "null", "agentMappingLinkId"))
+      content should include(messagesApi("agent.services.account.additional.links.mapping.body2"))
+      content should include(messagesApi("agent.services.account.additional.links.mapping.l1"))
+      content should include(messagesApi("agent.services.account.additional.links.mapping.l2"))
+      content should include(messagesApi("agent.services.account.additional.links.mapping.l3"))
       content should include(arn)
       content should include(signOutUrl)
     }
@@ -117,7 +125,7 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
       val controller = new AgentServicesController(messagesApi, authActions, continueUrlActions, externalUrls)
       val response = controller.root().apply(FakeRequest("GET", "/"))
       status(response) shouldBe OK
-      contentType(response).get should not include "<button class=\"btn button\" type=\"continue\""
+      contentType(response).get should not include "<a href=\"/\" class=\"btn button\" id=\"continue\">"
     }
 
     "support relative continue url parameter" in {
@@ -125,8 +133,7 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
       val response = controller.root().apply(FakeRequest("GET", "/?continue=/foo"))
       status(response) shouldBe OK
       contentAsString(response) should {
-        include ("<a href=\"/foo\">") and
-        include ("<button class=\"btn button\" type=\"continue\"")
+        include ("<a href=\"/foo\" class=\"btn button\" id=\"continue\">")
       }
     }
 
@@ -135,8 +142,7 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
       val response = controller.root().apply(FakeRequest("GET", "/?continue=http://localhost/foobar/"))
       status(response) shouldBe OK
       contentAsString(response) should {
-        include ("<a href=\"http://localhost/foobar/\">") and
-          include ("<button class=\"btn button\" type=\"continue\"")
+        include ("<a href=\"http://localhost/foobar/\" class=\"btn button\" id=\"continue\">")
       }
     }
 
@@ -145,8 +151,7 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
       val response = controller.root().apply(FakeRequest("GET", s"/?continue=${URLEncoder.encode("http://www.tax.service.gov.uk/foo/bar?some=true", "UTF-8")}"))
       status(response) shouldBe OK
       contentAsString(response) should {
-        include ("<a href=\"http://www.tax.service.gov.uk/foo/bar?some=true\">") and
-          include ("<button class=\"btn button\" type=\"continue\"")
+        include ("<a href=\"http://www.tax.service.gov.uk/foo/bar?some=true\" class=\"btn button\" id=\"continue\">")
       }
     }
 
@@ -155,8 +160,7 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
       val response = controller.root().apply(FakeRequest("GET", s"/?continue=${URLEncoder.encode("http://www.foo.com/bar?some=false", "UTF-8")}"))
       status(response) shouldBe OK
       contentAsString(response) should {
-        include ("<a href=\"http://www.foo.com/bar?some=false\">") and
-          include ("<button class=\"btn button\" type=\"continue\"")
+        include ("<a href=\"http://www.foo.com/bar?some=false\" class=\"btn button\" id=\"continue\">")
       }
     }
 
@@ -165,8 +169,7 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
       val response = controller.root().apply(FakeRequest("GET", s"/?continue=${URLEncoder.encode("http://www.foo.org/bar?some=false", "UTF-8")}"))
       status(response) shouldBe OK
       contentAsString(response) should {
-        not include "<a href=\"http://www.foo.org/bar?some=false\">" and
-          not include "<button class=\"btn button\" type=\"continue\""
+        not include "<a href=\"http://www.foo.org/bar?some=false\" class=\"btn button\" id=\"continue\">"
       }
     }
 
@@ -174,5 +177,3 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
 
   }
 }
-
-
