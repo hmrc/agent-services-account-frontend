@@ -25,42 +25,45 @@
 }
 
 @uk.gov.hmrc.agentservicesaccount.views.html.main_template(title = Messages("app.name"), navLinks = Some(navLinks), mainClass = Some("full-width")) {
-    <div class = "grid-layout grid-layout--no-gutter">
+    <div class = "grid-layout grid-layout--no-gutter grid-layout--stacked">
         <div class = "grid-layout__column grid-layout__column--2-3">
-            <h1>@Messages("agent.services.account.heading")</h1>
-
+            <header class="page-header">
+                <h1>@Messages("agent.services.account.heading")</h1>
+            </header>
             <p class = "panel-indent">@Messages("agent.services.account.heading.summary")</p>
-
-            @newAccountHasBeenCreated(continueUrlOpt)
-
-            @agentMappingLink(agentMappingUrl)
-
+            <section class="section">
+                @newAccountHasBeenCreated(continueUrlOpt)
+                @agentMappingLink(agentMappingUrl)
+            </section>
         </div>
-        <div class ="grid-layout__column grid-layout__column--1-3 sidebar-links brand-border--top align-with-body">
-            <h3>@Messages("agent.references")</h3>
-            <p>@Messages("agent.accountNumber", arn.value)</p>
+        <div class ="grid-layout__column grid-layout__column--1-3">
+            <section class="section subsection section--blue-top">
+                <h2>@Messages("agent.references")</h2>
+                <p>@Messages("agent.accountNumber", arn.value)</p>
+            <section>
         </div>
     </div>
 }
 
 @newAccountHasBeenCreated(continueUrlOpt: Option[ContinueUrl]) = {
     @if(continueUrlOpt.isDefined){
-        <div class="panel panel-border-wide" id="returnText">
-            <a href="@{continueUrlOpt.get.url}">
-                <button class="btn button" type="continue" id="continue">
-                @Messages("agent.services.account.new_account.continue")
-                </button>
-            </a>
-        </div>
+        <a href="@{continueUrlOpt.get.url}" class="btn button" id="continue">
+            @Messages("agent.services.account.new_account.continue")
+        </a>
+        <br /><br />
     }
 }
 
 @agentMappingLink(agentMappingUrl: Option[String]) = {
     @if(agentMappingUrl.isDefined){
-        <div>
-            <h2 class="divider--bottom">@Messages("agent.services.account.additional.links.title")</h2>
-            <p>@Messages("agent.services.account.additional.links.mapping.body")</p>
-            <a href="@{agentMappingUrl.get}">@Messages("agent.services.account.additional.links.mapping.url")</a>
-        </div>
+        <h2>@Messages("agent.services.account.additional.links.title")</h2>
+        <hr />
+        <p>@Html(Messages("agent.services.account.additional.links.mapping.body1", agentMappingUrl.get, "agentMappingLinkId"))</p>
+        <p>@Messages("agent.services.account.additional.links.mapping.body2")</p>
+        <ul class="list list-bullet">
+            <li>@Messages("agent.services.account.additional.links.mapping.l1")</li>
+            <li>@Messages("agent.services.account.additional.links.mapping.l2")</li>
+            <li>@Messages("agent.services.account.additional.links.mapping.l3")</li>
+        </ul>
     }
 }
