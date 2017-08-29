@@ -46,8 +46,8 @@
 }
 
 @newAccountHasBeenCreated(continueUrlOpt: Option[ContinueUrl]) = {
-    @if(continueUrlOpt.isDefined){
-        <a href="@{continueUrlOpt.get.url}" class="btn button" id="continue">
+    @continueUrlOpt.map { continueUrl =>
+        <a href="@{continueUrl.url}" class="btn button" id="continue">
             @Messages("agent.services.account.new_account.continue")
         </a>
         <br /><br />
