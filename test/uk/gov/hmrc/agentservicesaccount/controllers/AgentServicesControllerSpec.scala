@@ -96,7 +96,7 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
       content should include(messagesApi("agent.services.account.heading"))
       content should include(htmlEscapedMessage(messagesApi("agent.services.account.heading.summary")))
       content should include(messagesApi("agent.services.account.additional.links.title"))
-      content should include(messagesApi("agent.services.account.additional.links.mapping.body1", "null", "agentMappingLinkId"))
+      content should include(messagesApi("agent.services.account.additional.links.mapping.body1", mappingUrl, "agentMappingLinkId"))
       content should include(messagesApi("agent.services.account.additional.links.mapping.body2"))
       content should include(messagesApi("agent.services.account.additional.links.mapping.l1"))
       content should include(messagesApi("agent.services.account.additional.links.mapping.l2"))
