@@ -60,11 +60,11 @@ class AuthActionsSpec extends UnitSpec with ResettingMockitoSugar with AkkaMater
   val agentEnrolment = Enrolment("HMRC-AS-AGENT", Seq(EnrolmentIdentifier("AgentReferenceNumber", arn)), confidenceLevel = ConfidenceLevel.L200,
     state = "Activated", delegatedAuthRule = None)
 
-  val otherEnrolment = agentEnrolment.copy(key = "IR-PAYE")
+  val otherEnrolment: Enrolment = agentEnrolment.copy(key = "IR-PAYE")
 
   val externalUrls: ExternalUrls = mock[ExternalUrls]
-  val completeGgSignInUrl = "http://example.com/gg-sign-in?continue=back-to-us"
-  when(externalUrls.signInUrl).thenReturn(completeGgSignInUrl)
+  val completeGgSignInUrl = "http://example.com/agent-subscription"
+  when(externalUrls.agentSubscriptionUrl).thenReturn(completeGgSignInUrl)
 
   val authActions = new AuthActions(logger, externalUrls, mockAuthConnector)
 

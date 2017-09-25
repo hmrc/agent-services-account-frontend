@@ -32,31 +32,32 @@ import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext.fromLoggingDetails
 
 import scala.concurrent.Future
+
 case class AgentInfo(arn: Arn)
 
 case class AgentRequest[A](arn: Arn, request: Request[A]) extends WrappedRequest[A](request)
 
 @Singleton
-class AuthActions @Inject() (logger: LoggerLike, externalUrls: ExternalUrls, override val authConnector: PlayAuthConnector) extends AuthorisedFunctions {
+class AuthActions @Inject()(logger: LoggerLike, externalUrls: ExternalUrls, override val authConnector: PlayAuthConnector) extends AuthorisedFunctions {
 
   def AuthorisedWithAgentAsync = new ActionBuilder[AgentRequest] {
     override def invokeBlock[A](request: Request[A], block: (AgentRequest[A]) => Future[Result]): Future[Result] = {
-      implicit val hc =  HeaderCarrier.fromHeadersAndSession(request.headers, Some(request.session))
+      implicit val hc = HeaderCarrier.fromHeadersAndSession(request.headers, Some(request.session))
       authorisedWithAgent[Result] { agentInfo =>
         block(AgentRequest(agentInfo.arn, request))
       } map { maybeResult =>
-        maybeResult.getOrElse(redirectToGgSignIn)
+        maybeResult.getOrElse(redirectToAgentSubscriptionGgSignIn)
       } recover {
         case _: NoActiveSession =>
-          redirectToGgSignIn
+          redirectToAgentSubscriptionGgSignIn
       }
     }
   }
 
-  private def redirectToGgSignIn: Result = Redirect(externalUrls.signInUrl)
+  private def redirectToAgentSubscriptionGgSignIn: Result = Redirect(externalUrls.agentSubscriptionUrl)
 
   def authorisedWithAgent[R](body: (AgentInfo) => Future[R])(implicit hc: HeaderCarrier): Future[Option[R]] =
-    authorised(AuthProviders(GovernmentGateway)).retrieve(allEnrolments and  affinityGroup) {
+    authorised(AuthProviders(GovernmentGateway)).retrieve(allEnrolments and affinityGroup) {
       case enrol ~ affinityG =>
         (enrol.getEnrolment("HMRC-AS-AGENT"), affinityG) match {
           case (Some(agentEnrolment), Some(AffinityGroup.Agent)) if agentEnrolment.isActivated =>
@@ -70,6 +71,7 @@ class AuthActions @Inject() (logger: LoggerLike, externalUrls: ExternalUrls, ove
             Future successful None
         }
     }
+
   private def getArn(enrolment: Enrolment): Option[Arn] = {
     enrolment.getIdentifier("AgentReferenceNumber").map(enrolmentIdentifier => Arn(enrolmentIdentifier.value))
   }
