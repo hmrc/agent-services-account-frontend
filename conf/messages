@@ -1,15 +1,11 @@
 app.name=Agent Services account
-agent.services.account.heading=Explore your Agent Services account
-agent.services.account.heading.summary=Access new HM Revenue & Customs (HMRC) digital services here as they become available.
+agent.services.account.heading=Welcome to your Agent Services account
+agent.services.account.heading.summary=Your new Agent Services account will give your organisation access to a range of new HM Revenue & Customs digital services.
 agent.services.account.new_account.continue=Continue with your journey
 existing.client.relationships.link=Access existing client relationships
 agent.references=Your references
 agent.accountNumber=Account number: {0}
 agent.services.account.additional.links.title=Services you might need
-agent.services.account.additional.links.mapping.body1=<a href="{0}" id="{1}">Copy existing client information to your new Agent Services account</a> from every Government Gateway (GG) account your business uses.
-agent.services.account.additional.links.mapping.body2=For example, your business might have a GG account for:
-agent.services.account.additional.links.mapping.l1=each office or department
-agent.services.account.additional.links.mapping.l2=each tax it deals with
-agent.services.account.additional.links.mapping.l3=different types of client
-
+agent.services.account.additional.links.mapping.body1=If your agency uses more than one Government Gateway you will need to copy your existing client relationships from each of your Government Gateway IDs into this account.
+agent.services.account.additional.links.mapping.body2=<a href="{0}" id="{1}">Allow this account to access existing client relationships</a>
 common.sign-out=Sign out
