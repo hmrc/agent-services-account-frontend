@@ -56,14 +56,9 @@
 
 @agentMappingLink(agentMappingUrl: Option[String]) = {
     @if(agentMappingUrl.isDefined){
-        <h2>@Messages("agent.services.account.additional.links.title")</h2>
-        <hr />
-        <p>@Html(Messages("agent.services.account.additional.links.mapping.body1", agentMappingUrl.get, "agentMappingLinkId"))</p>
-        <p>@Messages("agent.services.account.additional.links.mapping.body2")</p>
-        <ul class="list list-bullet">
-            <li>@Messages("agent.services.account.additional.links.mapping.l1")</li>
-            <li>@Messages("agent.services.account.additional.links.mapping.l2")</li>
-            <li>@Messages("agent.services.account.additional.links.mapping.l3")</li>
-        </ul>
+        <h2 class="header-large divider--bottom">@Messages("agent.services.account.additional.links.title")</h2>
+
+        <p>@Messages("agent.services.account.additional.links.mapping.body1")</p>
+        <p>@Html(Messages("agent.services.account.additional.links.mapping.body2", agentMappingUrl.get, "agentMappingLinkId"))</p>
     }
 }
