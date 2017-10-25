@@ -18,8 +18,8 @@ package uk.gov.hmrc.agentservicesaccount.controllers
 
 import java.net.URLEncoder
 
-import org.mockito.Mockito._
 import org.mockito.ArgumentMatchers.{any => anyArg, eq => eqArg}
+import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfterEach, Matchers, OptionValues, WordSpec}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
@@ -30,14 +30,14 @@ import play.api.mvc.Results._
 import play.api.mvc.{ActionBuilder, _}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.GuiceModule
 import uk.gov.hmrc.agentservicesaccount.auth.{AgentRequest, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
 import uk.gov.hmrc.agentservicesaccount.connectors.{DesConnector, SsoConnector}
-import uk.gov.hmrc.play.http.{HeaderCarrier, Upstream5xxResponse}
+import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.test.UnitSpec
-import play.twirl.api.HtmlFormat
 
 import scala.concurrent.Future
 

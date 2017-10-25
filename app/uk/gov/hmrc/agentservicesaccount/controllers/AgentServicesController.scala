@@ -20,16 +20,11 @@ import javax.inject._
 
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent}
-import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.auth.AuthActions
 import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
 import uk.gov.hmrc.agentservicesaccount.connectors.DesConnector
 import uk.gov.hmrc.agentservicesaccount.views.html.pages._
 import uk.gov.hmrc.play.frontend.controller.FrontendController
-import uk.gov.hmrc.play.http.{NotAcceptableException, NotFoundException, Upstream4xxResponse}
-
-import scala.concurrent.Future
-import scala.util.Try
 
 @Singleton
 class AgentServicesController @Inject()(
@@ -44,9 +39,9 @@ class AgentServicesController @Inject()(
 
   val root: Action[AnyContent] = (AuthorisedWithAgentAsync andThen WithMaybeContinueUrl).async {
     implicit request =>
-      (for{
+      for {
         maybeAgencyName <- desConnector.getAgencyName(request.arn)
-      } yield Ok(agent_services_account(request.arn, maybeAgencyName, request.continueUrlOpt, Some(externalUrls.agentMappingUrl))))
+      } yield Ok(agent_services_account(request.arn, maybeAgencyName, request.continueUrlOpt, Some(externalUrls.agentMappingUrl)))
   }
 
 }

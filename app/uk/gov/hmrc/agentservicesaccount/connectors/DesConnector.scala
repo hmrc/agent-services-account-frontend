@@ -19,15 +19,14 @@ package uk.gov.hmrc.agentservicesaccount.connectors
 import java.net.URL
 import javax.inject.{Inject, Named, Singleton}
 
-import com.kenshoo.play.metrics.Metrics
-import play.api.libs.json.{JsPath, Json, Reads}
+import play.api.libs.json.{Json, Reads}
 import play.utils.UriEncoding
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
-import uk.gov.hmrc.play.http.logging.Authorization
 import uk.gov.hmrc.play.http._
+import uk.gov.hmrc.play.http.logging.Authorization
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
 case class AgentRecordDetails(agencyDetails: Option[AgencyDetails])
 case class AgencyDetails(agencyName: String)

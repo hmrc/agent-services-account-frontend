@@ -16,21 +16,18 @@
 
 package uk.gov.hmrc.agentservicesaccount.connectors
 
-import uk.gov.hmrc.agentservicesaccount.WSHttp
-import java.net.{URL, URLEncoder}
+import java.net.URL
 
-import play.api.test.Helpers._
 import org.scalatestplus.play.guice.GuiceOneAppPerTest
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.{JsSuccess, Json}
-import play.api.test.FakeRequest
-import play.api.test.Helpers.contentAsString
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
+import uk.gov.hmrc.agentservicesaccount.WSHttp
+import uk.gov.hmrc.agentservicesaccount.stubs.DesStubs
 import uk.gov.hmrc.agentservicesaccount.support.WireMockSupport
 import uk.gov.hmrc.play.http._
 import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.agentservicesaccount.stubs.{AuthStubs, DesStubs, SsoStubs}
 
 class DesConnectorSpec extends UnitSpec with GuiceOneAppPerTest with WireMockSupport {
 
