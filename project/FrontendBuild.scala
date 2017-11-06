@@ -11,7 +11,7 @@ object FrontendBuild extends Build with MicroService {
 
   override lazy val appDependencies: Seq[ModuleID] = compile ++ test()
 
-  val compile = Seq(
+  /*val compile = Seq(
     ws,
     "uk.gov.hmrc" %% "frontend-bootstrap" % "7.26.0",
     "uk.gov.hmrc" %% "play-partials" % "5.4.0",
@@ -32,6 +32,24 @@ object FrontendBuild extends Build with MicroService {
     "org.mockito" % "mockito-core" % "2.8.9" % scope,
     "org.scalatestplus.play" %% "scalatestplus-play" % "2.0.0" % scope,
     "com.github.tomakehurst" % "wiremock" % "2.3.1" % scope
+  )*/
+
+  lazy val compile = Seq(
+    ws,
+    "uk.gov.hmrc" %% "frontend-bootstrap" % "8.10.0",
+    "uk.gov.hmrc" %% "auth-client" % "2.3.0",
+    "uk.gov.hmrc" %% "play-partials" % "6.1.0",
+    "uk.gov.hmrc" %% "agent-kenshoo-monitoring" % "2.4.0",
+    "uk.gov.hmrc" %% "agent-mtd-identifiers" % "0.5.0",
+    "de.threedimensions" %% "metrics-play" % "2.5.13"
+  )
+
+  def test(scope: String = "test") = Seq(
+    "uk.gov.hmrc" %% "hmrctest" % "2.3.0" % scope,
+    "org.scalatest" %% "scalatest" % "3.0.4" % scope,
+    "org.mockito" % "mockito-core" % "2.11.0" % scope,
+    "org.scalatestplus.play" %% "scalatestplus-play" % "2.0.0" % scope,
+    "com.github.tomakehurst" % "wiremock" % "2.10.1" % scope
   )
 
 }

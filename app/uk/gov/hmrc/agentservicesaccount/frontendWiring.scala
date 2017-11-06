@@ -16,22 +16,26 @@
 
 package uk.gov.hmrc.agentservicesaccount
 
-import javax.inject.{Inject, Singleton}
+import javax.inject.{Inject, Named, Singleton}
 
 import uk.gov.hmrc.auth.core.PlayAuthConnector
-import uk.gov.hmrc.play.audit.http.config.LoadAuditingConfig
+import uk.gov.hmrc.http._
+import uk.gov.hmrc.play.audit.http.HttpAuditing
 import uk.gov.hmrc.play.audit.http.connector.{AuditConnector => Auditing}
+import uk.gov.hmrc.play.config.AppName
 import uk.gov.hmrc.play.config.inject.DefaultServicesConfig
-import uk.gov.hmrc.play.config.{AppName, RunMode}
-import uk.gov.hmrc.play.http.HttpPost
-import uk.gov.hmrc.play.http.ws.{WSDelete, WSGet, WSPost, WSPut}
+import uk.gov.hmrc.play.frontend.config.LoadAuditingConfig
+import uk.gov.hmrc.play.http.ws.WSHttp
 
 object FrontendAuditConnector extends Auditing with AppName {
   override lazy val auditingConfig = LoadAuditingConfig(s"auditing")
 }
 
-object WSHttp extends WSGet with WSPut with WSPost with WSDelete with AppName with RunMode {
-  override val hooks = NoneRequired
+@Singleton
+class HttpVerbs @Inject() (val auditConnector: Auditing, @Named("appName") val appName: String)
+  extends HttpGet with HttpPost with HttpPut with HttpPatch with HttpDelete with WSHttp
+    with HttpAuditing {
+  override val hooks = Seq(AuditingHook)
 }
 
 class FrontendAuthConnector @Inject()(

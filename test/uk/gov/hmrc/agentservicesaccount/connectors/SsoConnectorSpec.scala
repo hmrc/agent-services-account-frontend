@@ -16,9 +16,9 @@
 
 package uk.gov.hmrc.agentservicesaccount.connectors
 
-import uk.gov.hmrc.agentservicesaccount.WSHttp
 import java.net.{URL, URLEncoder}
 
+import com.kenshoo.play.metrics.Metrics
 import play.api.test.Helpers._
 import org.scalatestplus.play.guice.GuiceOneAppPerTest
 import play.api.Application
@@ -27,9 +27,9 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers.contentAsString
 import uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController
 import uk.gov.hmrc.agentservicesaccount.support.WireMockSupport
-import uk.gov.hmrc.play.http._
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.agentservicesaccount.stubs.{AuthStubs, SsoStubs}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpGet}
 
 class SsoConnectorSpec extends UnitSpec with GuiceOneAppPerTest with WireMockSupport {
 
@@ -42,7 +42,9 @@ class SsoConnectorSpec extends UnitSpec with GuiceOneAppPerTest with WireMockSup
         "microservice.services.auth.port" -> wireMockPort
       )
 
-  private lazy val connector = new SsoConnector(WSHttp, new URL(s"http://localhost:$wireMockPort"))
+  import scala.concurrent.ExecutionContext.Implicits.global
+
+  private lazy val connector = new SsoConnector(app.injector.instanceOf[HttpGet], new URL(s"http://localhost:$wireMockPort"), app.injector.instanceOf[Metrics])
   private implicit val hc = HeaderCarrier()
 
   "SsoConnector" should {

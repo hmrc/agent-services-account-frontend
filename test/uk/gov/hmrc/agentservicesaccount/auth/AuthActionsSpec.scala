@@ -30,12 +30,11 @@ import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
 import uk.gov.hmrc.agentservicesaccount.support.{AkkaMaterializerSpec, ResettingMockitoSugar}
 import uk.gov.hmrc.auth.core._
-import uk.gov.hmrc.auth.core.authorise._
 import uk.gov.hmrc.auth.core.retrieve.{Retrieval, ~}
-import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.Future
+import uk.gov.hmrc.http.HeaderCarrier
 
 class AuthActionsSpec extends UnitSpec with ResettingMockitoSugar with AkkaMaterializerSpec {
 
@@ -49,16 +48,15 @@ class AuthActionsSpec extends UnitSpec with ResettingMockitoSugar with AkkaMater
   }
 
   def mockAuth(affinityGroup: AffinityGroup = AffinityGroup.Agent, enrolment: Set[Enrolment]) =
-    when(mockAuthConnector.authorise(any(), any[Retrieval[~[Enrolments, Option[AffinityGroup]]]]())(any()))
+    when(mockAuthConnector.authorise(any(), any[Retrieval[~[Enrolments, Option[AffinityGroup]]]]())(any(), any()))
       .thenReturn(Future successful new ~[Enrolments, Option[AffinityGroup]](Enrolments(enrolment), Some(affinityGroup)))
 
   def mockAuthNotLoggedIn(): Unit =
-    when(mockAuthConnector.authorise(any(), any[Retrieval[~[Enrolments, Option[AffinityGroup]]]]())(any()))
+    when(mockAuthConnector.authorise(any(), any[Retrieval[~[Enrolments, Option[AffinityGroup]]]]())(any(), any()))
       .thenReturn(Future.failed(new MissingBearerToken))
 
   val arn = "TARN0000001"
-  val agentEnrolment = Enrolment("HMRC-AS-AGENT", Seq(EnrolmentIdentifier("AgentReferenceNumber", arn)), confidenceLevel = ConfidenceLevel.L200,
-    state = "Activated", delegatedAuthRule = None)
+  val agentEnrolment = Enrolment("HMRC-AS-AGENT", Seq(EnrolmentIdentifier("AgentReferenceNumber", arn)), state = "Activated", delegatedAuthRule = None)
 
   val otherEnrolment: Enrolment = agentEnrolment.copy(key = "IR-PAYE")
 

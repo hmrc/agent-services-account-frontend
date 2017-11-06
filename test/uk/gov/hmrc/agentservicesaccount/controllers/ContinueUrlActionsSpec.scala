@@ -18,6 +18,7 @@ package uk.gov.hmrc.agentservicesaccount.controllers
 
 import java.net.URLEncoder
 
+import com.kenshoo.play.metrics.Metrics
 import org.scalatest.{Matchers, WordSpec}
 import play.api.mvc.Request
 import play.api.mvc.Results._
@@ -28,9 +29,9 @@ import uk.gov.hmrc.agentservicesaccount.AppConfig
 import uk.gov.hmrc.agentservicesaccount.auth.AgentRequest
 import uk.gov.hmrc.agentservicesaccount.connectors.SsoConnector
 import uk.gov.hmrc.agentservicesaccount.services.HostnameWhiteListService
-import uk.gov.hmrc.play.http.HeaderCarrier
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
+import uk.gov.hmrc.http.HeaderCarrier
 
 class ContinueUrlActionsSpec extends WordSpec with Matchers {
 
@@ -109,15 +110,21 @@ class ContinueUrlActionsSpec extends WordSpec with Matchers {
     override def featureSwitch(featureName: String) = true
   }
 
-  val successfulSsoConnector = new SsoConnector(null,null){
+  val successfulSsoConnector = new SsoConnector(null,null,new Metrics() {
+    override def defaultRegistry = null
+    override def toJson = null
+  }){
     override def validateExternalDomain(domain: String)
-                                       (implicit hc: HeaderCarrier): Future[Boolean] =
+                                       (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Boolean] =
       Future.successful(validExternalDomains.contains(domain))
   }
 
-  val failingSsoConnector = new SsoConnector(null,null){
+  val failingSsoConnector = new SsoConnector(null,null,new Metrics() {
+    override def defaultRegistry = null
+    override def toJson = null
+  }){
     override def validateExternalDomain(domain: String)
-                                       (implicit hc: HeaderCarrier): Future[Boolean] =
+                                       (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Boolean] =
       Future.failed(new Exception("some reason"))
   }
 
