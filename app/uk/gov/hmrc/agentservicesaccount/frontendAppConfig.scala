@@ -25,6 +25,7 @@ trait AppConfig {
   val reportAProblemPartialUrl: String
   val reportAProblemNonJSUrl: String
   def domainWhiteList: Set[String]
+  def featureSwitch(featureName: String): Boolean
 }
 
 object FrontendAppConfig extends AppConfig with ServicesConfig {
@@ -40,5 +41,9 @@ object FrontendAppConfig extends AppConfig with ServicesConfig {
   override lazy val reportAProblemNonJSUrl = s"$contactHost/contact/problem_reports_nonjs?service=$contactFormServiceIdentifier"
 
   override lazy val domainWhiteList = runModeConfiguration.getStringSeq("continueUrl.domainWhiteList").map(_.toSet).getOrElse(Set())
+
+  override def featureSwitch(featureName: String): Boolean =
+    configuration.getBoolean(featureName).getOrElse(false)
+
 
 }
