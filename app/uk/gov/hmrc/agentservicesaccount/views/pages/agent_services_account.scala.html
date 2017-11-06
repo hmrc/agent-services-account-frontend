@@ -18,7 +18,9 @@
 @import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
 @import uk.gov.hmrc.play.binders.ContinueUrl
 
-@(arn: Arn, agencyNameOpt: Option[String], continueUrlOpt: Option[ContinueUrl], agentMappingUrl: Option[String])(implicit messages: Messages, request: Request[_], externalUrls: ExternalUrls)
+@import uk.gov.hmrc.play.config.ServicesConfig
+@import uk.gov.hmrc.agentservicesaccount.AppConfig
+@(arn: Arn, agencyNameOpt: Option[String], continueUrlOpt: Option[ContinueUrl])(implicit messages: Messages, request: Request[_], externalUrls: ExternalUrls, appConfig: AppConfig)
 
 @navLinks = {
     <li><a href="@{externalUrls.signOutUrl}" id="signOut">@Messages("common.sign-out")</a></li>
@@ -33,7 +35,7 @@
             <p class = "panel-indent">@Messages("agent.services.account.heading.summary")</p>
             <section class="section">
                 @newAccountHasBeenCreated(continueUrlOpt)
-                @agentMappingLink(agentMappingUrl)
+                @additionalServices()
             </section>
         </div>
         <div class ="grid-layout__column grid-layout__column--1-3">
@@ -61,11 +63,24 @@
     }
 }
 
-@agentMappingLink(agentMappingUrl: Option[String]) = {
-    @if(agentMappingUrl.isDefined){
+@additionalServices() = {
+
+    @featureSwitch("features.showAdditionalServicesSection") {
+
         <h2 class="header-large divider--bottom">@Messages("agent.services.account.additional.links.title")</h2>
 
-        <p>@Messages("agent.services.account.additional.links.mapping.body1")</p>
-        <p>@Html(Messages("agent.services.account.additional.links.mapping.body2", agentMappingUrl.get, "agentMappingLinkId"))</p>
+        @featureSwitch("features.showAgentMappingLink") {
+            <p>@Messages("agent.services.account.additional.links.mapping.body1")</p>
+            <p>@Html(Messages("agent.services.account.additional.links.mapping.body2", externalUrls.agentMappingUrl, "agentMappingLinkId"))</p>
+        }
+
+        @featureSwitch("features.showAgentInvitationsLink") {
+            <p>@Messages("agent.services.account.additional.links.invitations.body1")</p>
+            <p>@Html(Messages("agent.services.account.additional.links.invitations.body2", externalUrls.agentInvitationsUrl, "agentInvitationsLinkId"))</p>
+        }
     }
+}
+
+@featureSwitch(featureName: String)(content: Html) = {
+    @if(appConfig.featureSwitch(featureName)) { @content } else { <span></span> }
 }

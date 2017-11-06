@@ -17,12 +17,17 @@
 package uk.gov.hmrc.agentservicesaccount.views
 
 import org.scalatestplus.play.MixedPlaySpec
+import play.api.Configuration
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.twirl.api.Html
+import uk.gov.hmrc.agentmtdidentifiers.model.Arn
+import uk.gov.hmrc.agentservicesaccount.AppConfig
+import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
 import uk.gov.hmrc.agentservicesaccount.views.html.error_template_Scope0.error_template
 import uk.gov.hmrc.agentservicesaccount.views.html.main_template_Scope0.main_template
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.agent_services_account_Scope0.agent_services_account_Scope1.agent_services_account
 
 class ViewsSpec extends MixedPlaySpec {
 
@@ -87,6 +92,55 @@ class ViewsSpec extends MixedPlaySpec {
       hmtl2 must be(html)
     }
 
+  }
+
+  "agent_services_account view" should {
+
+    "render additional services section with mapping and invitations link when respective feature switches are on" in new App {
+      val configuration: Configuration = app.configuration
+      val externalUrls = app.injector.instanceOf[ExternalUrls]
+      val appConfig = new AppConfig {
+        override def domainWhiteList: Set[String] = Set()
+        override def featureSwitch(featureName: String): Boolean = true
+        override val reportAProblemNonJSUrl: String = "reportAProblemNonJSUrlFoo"
+        override val reportAProblemPartialUrl: String = "reportAProblemPartialUrlFoo"
+        override val analyticsToken: String = "analyticsTokenFoo"
+        override val analyticsHost: String = "analyticsHostFoo"
+      }
+      val view = new agent_services_account()
+      val html = view.render(Arn("ARN0001"), Some("AgencyName"),None, Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, appConfig)
+      contentAsString(html) must {
+        include("Services you might need") and
+        include("Allow this account to access existing client relationships") and
+          include("If your agency uses more than one Government Gateway you will need to copy your existing client relationships from each of your Government Gateway IDs into this account.") and
+          include("Authorise a client for Online Reporting") and
+          include("Authorise a client to report their Income Tax using software, if they&#x27;ve signed up to do so.") and
+          include("href=\"http://localhost:9438/agent-mapping/start\"") and
+          include("href=\"http://localhost:9448/agent-invitations/agents\"")
+      }
+    }
+
+    "not render additional services section, nor mapping link, nor invitations link when respective feature switches are off" in new App {
+      val configuration: Configuration = app.configuration
+      val externalUrls = app.injector.instanceOf[ExternalUrls]
+      val appConfig = new AppConfig {
+        override def domainWhiteList: Set[String] = Set()
+        override def featureSwitch(featureName: String): Boolean = false
+        override val reportAProblemNonJSUrl: String = "reportAProblemNonJSUrlFoo"
+        override val reportAProblemPartialUrl: String = "reportAProblemPartialUrlFoo"
+        override val analyticsToken: String = "analyticsTokenFoo"
+        override val analyticsHost: String = "analyticsHostFoo"
+      }
+      val view = new agent_services_account()
+      val html = view.render(Arn("ARN0001"), Some("AgencyName"),None, Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, appConfig)
+      contentAsString(html) must not {
+        include("Services you might need") or
+          include("Allow this account to access existing client relationships") or
+          include("If your agency uses more than one Government Gateway you will need to copy your existing client relationships from each of your Government Gateway IDs into this account.") or
+          include("Authorise a client for Online Reporting") or
+          include("Authorise a client to report their Income Tax using software, if they&#x27;ve signed up to do so.")
+      }
+    }
   }
 
 }

@@ -106,6 +106,7 @@ class ContinueUrlActionsSpec extends WordSpec with Matchers {
     override val reportAProblemPartialUrl = ""
     override val reportAProblemNonJSUrl = ""
     override def domainWhiteList = validInternalDomains
+    override def featureSwitch(featureName: String) = true
   }
 
   val successfulSsoConnector = new SsoConnector(null,null){

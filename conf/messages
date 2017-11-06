@@ -8,4 +8,6 @@ agent.accountNumber=Account number: {0}
 agent.services.account.additional.links.title=Services you might need
 agent.services.account.additional.links.mapping.body1=If your agency uses more than one Government Gateway you will need to copy your existing client relationships from each of your Government Gateway IDs into this account.
 agent.services.account.additional.links.mapping.body2=<a href="{0}" id="{1}">Allow this account to access existing client relationships</a>
+agent.services.account.additional.links.invitations.body1=Authorise a client to report their Income Tax using software, if they''ve signed up to do so.
+agent.services.account.additional.links.invitations.body2=<a href="{0}" id="{1}">Authorise a client for Online Reporting</a>
 common.sign-out=Sign out
