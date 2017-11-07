@@ -22,21 +22,21 @@ import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.agentservicesaccount.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.SsoConnector
 import uk.gov.hmrc.play.binders.ContinueUrl
-import uk.gov.hmrc.play.http.HeaderCarrier
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Try
+import uk.gov.hmrc.http.HeaderCarrier
 
 @Singleton
 class HostnameWhiteListService @Inject()(appConfig: AppConfig, ssoConnector: SsoConnector) {
 
   val domainWhiteList: Set[String] = appConfig.domainWhiteList
 
-  def hasExternalDomain(continueUrl: ContinueUrl)(implicit hc: HeaderCarrier): Future[Boolean] =
+  def hasExternalDomain(continueUrl: ContinueUrl)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Boolean] =
     ssoConnector.validateExternalDomain(getHost(continueUrl))
 
 
-  def isAbsoluteUrlWhiteListed(continueUrl: ContinueUrl)(implicit hc: HeaderCarrier): Future[Boolean] =
+  def isAbsoluteUrlWhiteListed(continueUrl: ContinueUrl)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Boolean] =
     if (!hasInternalDomain(continueUrl)) hasExternalDomain(continueUrl)
     else Future.successful(true)
 

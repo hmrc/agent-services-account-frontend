@@ -19,17 +19,21 @@ package uk.gov.hmrc.agentservicesaccount.connectors
 import java.net.URL
 import javax.inject.{Inject, Singleton}
 
+import com.codahale.metrics.MetricRegistry
 import com.google.inject.name.Named
+import com.kenshoo.play.metrics.Metrics
 import play.api.Logger
-import uk.gov.hmrc.play.http._
-import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
+import uk.gov.hmrc.agent.kenshoo.monitoring.HttpAPIMonitor
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
+import uk.gov.hmrc.http.{BadRequestException, HeaderCarrier, HttpGet}
 
 @Singleton
-class SsoConnector @Inject()(http: HttpGet, @Named("sso-baseUrl") baseUrl: URL) extends AgentsHttpErrorMonitor {
+class SsoConnector @Inject()(http: HttpGet, @Named("sso-baseUrl") baseUrl: URL, metrics: Metrics) extends HttpAPIMonitor {
 
-  def validateExternalDomain(domain: String)(implicit hc: HeaderCarrier): Future[Boolean] = {
+  override val kenshooRegistry: MetricRegistry = metrics.defaultRegistry
+
+  def validateExternalDomain(domain: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Boolean] = {
     val url = new URL(baseUrl, s"/sso/validate/domain/$domain")
     http.GET(url.toString)
       .map(_ => true)

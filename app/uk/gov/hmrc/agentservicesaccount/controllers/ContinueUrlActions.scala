@@ -24,12 +24,13 @@ import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.auth.AgentRequest
 import uk.gov.hmrc.agentservicesaccount.services.HostnameWhiteListService
 import uk.gov.hmrc.play.binders.ContinueUrl
-import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 
 import scala.concurrent.Future
 import scala.util.control.NonFatal
 import scala.util.{Failure, Success, Try}
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.HeaderCarrierConverter
 
 
 @Singleton
@@ -47,7 +48,7 @@ class ContinueUrlActions @Inject()(whiteListService: HostnameWhiteListService) {
 
   val WithMaybeContinueUrl = new ActionRefiner[AgentRequest, RequestWithMaybeContinueUrl] {
     override protected def refine[A](request: AgentRequest[A]): Future[Either[Result, RequestWithMaybeContinueUrl[A]]] = {
-      implicit val hc = HeaderCarrier.fromHeadersAndSession(request.headers, None)
+      implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(request.headers, None)
       val continueUrl = request.getQueryString("continue").fold[Future[Option[ContinueUrl]]](
         Future.successful(None)
       ) { continueParam =>

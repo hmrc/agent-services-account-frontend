@@ -20,23 +20,28 @@ import java.net.URL
 
 import com.google.inject.name.Names
 import com.google.inject.{AbstractModule, Provider}
-import play.api.{Logger, LoggerLike}
+import play.api.{Configuration, Environment, Logger, LoggerLike}
 import uk.gov.hmrc.auth.core.PlayAuthConnector
+import uk.gov.hmrc.http.{HttpGet, HttpPost}
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.config.ServicesConfig
-import uk.gov.hmrc.play.http.{HttpGet, HttpPost}
 
-class GuiceModule extends AbstractModule with ServicesConfig {
+class GuiceModule(val environment: Environment, val configuration: Configuration) extends AbstractModule with ServicesConfig {
+
+  override val runModeConfiguration: Configuration = configuration
 
   override def configure(): Unit = {
+    bindProperty("appName")
     bind(classOf[PlayAuthConnector]).to(classOf[FrontendAuthConnector])
     bind(classOf[AppConfig]).toInstance(FrontendAppConfig)
-    bind(classOf[HttpGet]).toInstance(WSHttp)
-    bind(classOf[HttpPost]).toInstance(WSHttp)
+    bind(classOf[HttpGet]).to(classOf[HttpVerbs])
+    bind(classOf[HttpPost]).to(classOf[HttpVerbs])
     bind(classOf[LoggerLike]).toInstance(Logger)
+    bind(classOf[AuditConnector]).toInstance(FrontendAuditConnector)
     bindBaseUrl("sso")
     bindBaseUrl("des")
-    bindConfigProperty("des.authorization-token")
-    bindConfigProperty("des.environment")
+    bindServiceProperty("des.authorization-token")
+    bindServiceProperty("des.environment")
   }
 
   private def bindBaseUrl(serviceName: String) =
@@ -46,11 +51,19 @@ class GuiceModule extends AbstractModule with ServicesConfig {
     override lazy val get = new URL(baseUrl(serviceName))
   }
 
-  private def bindConfigProperty(propertyName: String) =
-    bind(classOf[String]).annotatedWith(Names.named(s"$propertyName")).toProvider(new ConfigPropertyProvider(propertyName))
+  private def bindServiceProperty(propertyName: String) =
+    bind(classOf[String]).annotatedWith(Names.named(s"$propertyName")).toProvider(new ServicePropertyProvider(propertyName))
 
-  private class ConfigPropertyProvider(propertyName: String) extends Provider[String] {
+  private class ServicePropertyProvider(propertyName: String) extends Provider[String] {
     override lazy val get = getConfString(propertyName, throw new RuntimeException(s"No configuration value found for '$propertyName'"))
+  }
+
+  private def bindProperty(propertyName: String) =
+    bind(classOf[String]).annotatedWith(Names.named(propertyName)).toProvider(new PropertyProvider(propertyName))
+
+  private class PropertyProvider(confKey: String) extends Provider[String] {
+    override lazy val get = configuration.getString(confKey)
+      .getOrElse(throw new IllegalStateException(s"No value found for configuration property $confKey"))
   }
 
 }

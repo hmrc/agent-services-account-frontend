@@ -23,15 +23,15 @@ import play.api.mvc.Results._
 import play.api.mvc._
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
+import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
 import uk.gov.hmrc.auth.core._
-import uk.gov.hmrc.auth.core.authorise.{AffinityGroup, Enrolment}
-import uk.gov.hmrc.auth.core.retrieve.AuthProvider.GovernmentGateway
 import uk.gov.hmrc.auth.core.retrieve.Retrievals.{affinityGroup, allEnrolments}
-import uk.gov.hmrc.auth.core.retrieve.{AuthProviders, ~}
-import uk.gov.hmrc.play.http.HeaderCarrier
+import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext.fromLoggingDetails
 
 import scala.concurrent.Future
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.HeaderCarrierConverter
 
 case class AgentInfo(arn: Arn)
 
@@ -42,7 +42,7 @@ class AuthActions @Inject()(logger: LoggerLike, externalUrls: ExternalUrls, over
 
   def AuthorisedWithAgentAsync = new ActionBuilder[AgentRequest] {
     override def invokeBlock[A](request: Request[A], block: (AgentRequest[A]) => Future[Result]): Future[Result] = {
-      implicit val hc = HeaderCarrier.fromHeadersAndSession(request.headers, Some(request.session))
+      implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
       authorisedWithAgent[Result] { agentInfo =>
         block(AgentRequest(agentInfo.arn, request))
       } map { maybeResult =>

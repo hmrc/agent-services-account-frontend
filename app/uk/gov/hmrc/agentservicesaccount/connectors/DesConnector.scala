@@ -19,14 +19,16 @@ package uk.gov.hmrc.agentservicesaccount.connectors
 import java.net.URL
 import javax.inject.{Inject, Named, Singleton}
 
+import com.codahale.metrics.MetricRegistry
+import com.kenshoo.play.metrics.Metrics
 import play.api.libs.json.{Json, Reads}
 import play.utils.UriEncoding
+import uk.gov.hmrc.agent.kenshoo.monitoring.HttpAPIMonitor
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
-import uk.gov.hmrc.play.http._
-import uk.gov.hmrc.play.http.logging.Authorization
-import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpReads}
+import uk.gov.hmrc.http.logging.Authorization
 
 case class AgentRecordDetails(agencyDetails: Option[AgencyDetails])
 case class AgencyDetails(agencyName: String)
@@ -41,10 +43,13 @@ object AgentRecordDetails {
 class DesConnector @Inject()(@Named("des-baseUrl") baseUrl: URL,
                              @Named("des.authorization-token") authorizationToken: String,
                              @Named("des.environment") environment: String,
-                             httpGet: HttpGet)
-  extends AgentsHttpErrorMonitor {
+                             httpGet: HttpGet,
+                             metrics: Metrics)
+  extends HttpAPIMonitor {
 
-  def getAgencyName(arn: Arn)(implicit hc: HeaderCarrier): Future[Option[String]] = {
+  override val kenshooRegistry: MetricRegistry = metrics.defaultRegistry
+
+  def getAgencyName(arn: Arn)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[String]] = {
 
     val encodedArn = UriEncoding.encodePathSegment(arn.value, "UTF-8")
     val url = new URL(baseUrl, s"/registration/personal-details/arn/$encodedArn")
@@ -57,14 +62,14 @@ class DesConnector @Inject()(@Named("des-baseUrl") baseUrl: URL,
       }
   }
 
-  private def getWithDesHeaders[A: HttpReads](apiName: String, url: URL)(implicit hc: HeaderCarrier): Future[A] = {
+  private def getWithDesHeaders[A: HttpReads](apiName: String, url: URL)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[A] = {
     val desHeaderCarrier = hc.copy(
       authorization = Some(Authorization(s"Bearer $authorizationToken")),
       extraHeaders = hc.extraHeaders :+ "Environment" -> environment)
 
     // TODO: After the great library upgrade, consider using kenshoo monitoring to monitor all calls, not just errors
     monitor(s"ConsumedAPI-DES-$apiName-GET") {
-      httpGet.GET[A](url.toString)(implicitly[HttpReads[A]], desHeaderCarrier)
+      httpGet.GET[A](url.toString)(implicitly[HttpReads[A]], desHeaderCarrier, ec)
     }
   }
 }
