@@ -40,6 +40,7 @@ class GuiceModule(val environment: Environment, val configuration: Configuration
     bind(classOf[AuditConnector]).toInstance(FrontendAuditConnector)
     bindBaseUrl("sso")
     bindBaseUrl("des")
+    bindBaseUrl("agent-subscription")
     bindServiceProperty("des.authorization-token")
     bindServiceProperty("des.environment")
   }
