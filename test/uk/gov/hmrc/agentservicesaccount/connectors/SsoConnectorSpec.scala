@@ -18,6 +18,7 @@ package uk.gov.hmrc.agentservicesaccount.connectors
 
 import java.net.{URL, URLEncoder}
 
+import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, post, stubFor, urlEqualTo}
 import com.kenshoo.play.metrics.Metrics
 import play.api.test.Helpers._
 import org.scalatestplus.play.guice.GuiceOneAppPerTest
@@ -28,7 +29,7 @@ import play.api.test.Helpers.contentAsString
 import uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController
 import uk.gov.hmrc.agentservicesaccount.support.WireMockSupport
 import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.agentservicesaccount.stubs.{AuthStubs, SsoStubs}
+import uk.gov.hmrc.agentservicesaccount.stubs.{AgentSubscriptionStubs, AuthStubs, SsoStubs}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpGet}
 
 class SsoConnectorSpec extends UnitSpec with GuiceOneAppPerTest with WireMockSupport {
@@ -39,7 +40,8 @@ class SsoConnectorSpec extends UnitSpec with GuiceOneAppPerTest with WireMockSup
     new GuiceApplicationBuilder()
       .configure(
         "microservice.services.sso.port" -> wireMockPort,
-        "microservice.services.auth.port" -> wireMockPort
+        "microservice.services.auth.port" -> wireMockPort,
+        "microservice.services.agent-subscription.port" -> wireMockPort
       )
 
   import scala.concurrent.ExecutionContext.Implicits.global
@@ -68,10 +70,10 @@ class SsoConnectorSpec extends UnitSpec with GuiceOneAppPerTest with WireMockSup
   }
 
   "AgentServicesController" should {
-
     "render continue button if url is whitelisted in SSO" in {
       SsoStubs.givenDomainIsWhitelisted("www.foo.com")
       AuthStubs.givenAuthorisedAsAgentWith("ARN123456")
+      AgentSubscriptionStubs.givenAgentSubscriptionRespondsWithAgencyName("ARN123456", "ACME")
       val controller: AgentServicesController = app.injector.instanceOf[AgentServicesController]
 
       val response = await(controller.root().apply(FakeRequest("GET", s"/?continue=${URLEncoder.encode("http://www.foo.com/bar?some=false", "UTF-8")}")))
@@ -85,6 +87,7 @@ class SsoConnectorSpec extends UnitSpec with GuiceOneAppPerTest with WireMockSup
     "not render continue button if url is not whitelisted in SSO" in {
       SsoStubs.givenDomainIsNotWhitelisted("www.foo.com")
       AuthStubs.givenAuthorisedAsAgentWith("ARN123456")
+      AgentSubscriptionStubs.givenAgentSubscriptionRespondsWithAgencyName("ARN123456", "ACME")
       val controller: AgentServicesController = app.injector.instanceOf[AgentServicesController]
 
       val response = await(controller.root().apply(FakeRequest("GET", s"/?continue=${URLEncoder.encode("http://www.foo.com/bar?some=false", "UTF-8")}")))
