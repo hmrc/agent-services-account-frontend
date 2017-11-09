@@ -35,7 +35,7 @@ import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.auth.{AgentRequest, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
-import uk.gov.hmrc.agentservicesaccount.connectors.{DesConnector, SsoConnector}
+import uk.gov.hmrc.agentservicesaccount.connectors.{AgentSubscriptionConnector, SsoConnector}
 import uk.gov.hmrc.agentservicesaccount.{AppConfig, GuiceModule, HttpVerbs}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.test.UnitSpec
@@ -66,7 +66,7 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
                 }
               })
 
-              bind(classOf[DesConnector]).toInstance(desConnector)
+              bind(classOf[AgentSubscriptionConnector]).toInstance(agentSubscriptionConnector)
             }
           })
 
@@ -84,8 +84,8 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
   val invitationsUrl = "http://example.com/agent-invitations/agents"
   when(externalUrls.agentInvitationsUrl).thenReturn(invitationsUrl)
   val arn = "TARN0000001"
-  lazy val desConnector = mock[DesConnector]
-  when(desConnector.getAgencyName(eqArg(Arn(arn)))(anyArg[HeaderCarrier], anyArg[ExecutionContext])).thenReturn(Future.successful(None))
+  lazy val agentSubscriptionConnector = mock[AgentSubscriptionConnector]
+  when(agentSubscriptionConnector.getAgencyName(eqArg(Arn(arn)))(anyArg[HeaderCarrier])).thenReturn(Future.successful(None))
 
   private implicit val messages: Messages = messagesApi.preferred(Seq.empty[Lang])
 
@@ -103,7 +103,7 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
 
   "root" should {
     "return Status: OK and body containing correct content" in {
-      val controller = new AgentServicesController(messagesApi, authActions, continueUrlActions, desConnector)
+      val controller = new AgentServicesController(messagesApi, authActions, continueUrlActions, agentSubscriptionConnector)
 
       val response = controller.root()(FakeRequest("GET", "/"))
 
@@ -133,7 +133,7 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
         }
       }
 
-      val controller = new AgentServicesController(messagesApi, authActions, continueUrlActions, desConnector)
+      val controller = new AgentServicesController(messagesApi, authActions, continueUrlActions, agentSubscriptionConnector)
 
       val response = controller.root()(FakeRequest("GET", "/"))
 
@@ -142,7 +142,7 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
     }
 
     "do not fail without continue url parameter" in {
-      val controller = new AgentServicesController(messagesApi, authActions, continueUrlActions, desConnector)
+      val controller = new AgentServicesController(messagesApi, authActions, continueUrlActions, agentSubscriptionConnector)
       val response = controller.root().apply(FakeRequest("GET", "/"))
       status(response) shouldBe OK
       contentAsString(response) should {
@@ -151,7 +151,7 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
     }
 
     "support relative continue url parameter" in {
-      val controller = new AgentServicesController(messagesApi, authActions, continueUrlActions, desConnector)
+      val controller = new AgentServicesController(messagesApi, authActions, continueUrlActions, agentSubscriptionConnector)
       val response = controller.root().apply(FakeRequest("GET", "/?continue=/foo"))
       status(response) shouldBe OK
       contentAsString(response) should {
@@ -160,7 +160,7 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
     }
 
     "support absolute localhost continue url parameter" in {
-      val controller = new AgentServicesController(messagesApi, authActions, continueUrlActions, desConnector)
+      val controller = new AgentServicesController(messagesApi, authActions, continueUrlActions, agentSubscriptionConnector)
       val response = controller.root().apply(FakeRequest("GET", "/?continue=http://localhost/foobar/"))
       status(response) shouldBe OK
       contentAsString(response) should {
@@ -169,7 +169,7 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
     }
 
     "support absolute www.tax.service.gov.uk continue url parameter" in {
-      val controller = new AgentServicesController(messagesApi, authActions, continueUrlActions, desConnector)
+      val controller = new AgentServicesController(messagesApi, authActions, continueUrlActions, agentSubscriptionConnector)
       val response = controller.root().apply(FakeRequest("GET", s"/?continue=${URLEncoder.encode("http://www.tax.service.gov.uk/foo/bar?some=true", "UTF-8")}"))
       status(response) shouldBe OK
       contentAsString(response) should {
@@ -178,7 +178,7 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
     }
 
     "support whitelisted absolute external continue url parameter" in {
-      val controller = new AgentServicesController(messagesApi, authActions, continueUrlActions, desConnector)
+      val controller = new AgentServicesController(messagesApi, authActions, continueUrlActions, agentSubscriptionConnector)
       val response = controller.root().apply(FakeRequest("GET", s"/?continue=${URLEncoder.encode("http://www.foo.com/bar?some=false", "UTF-8")}"))
       status(response) shouldBe OK
       contentAsString(response) should {
@@ -187,7 +187,7 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
     }
 
     "silently reject not-whitelisted absolute external continue url parameter" in {
-      val controller = new AgentServicesController(messagesApi, authActions, continueUrlActions, desConnector)
+      val controller = new AgentServicesController(messagesApi, authActions, continueUrlActions, agentSubscriptionConnector)
       val response = controller.root().apply(FakeRequest("GET", s"/?continue=${URLEncoder.encode("http://www.foo.org/bar?some=false", "UTF-8")}"))
       status(response) shouldBe OK
       contentAsString(response) should {
@@ -196,9 +196,9 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
     }
 
     "show the agency name when it is present in DES" in {
-      when(desConnector.getAgencyName(eqArg(Arn(arn)))(anyArg[HeaderCarrier], anyArg[ExecutionContext])).thenReturn(Future.successful(Some("Test Agency Name")))
+      when(agentSubscriptionConnector.getAgencyName(eqArg(Arn(arn)))(anyArg[HeaderCarrier])).thenReturn(Future.successful(Some("Test Agency Name")))
 
-      val controller = new AgentServicesController(messagesApi, authActions, continueUrlActions, desConnector)
+      val controller = new AgentServicesController(messagesApi, authActions, continueUrlActions, agentSubscriptionConnector)
       val response = controller.root().apply(FakeRequest("GET", "/"))
       status(response) shouldBe OK
       contentAsString(response) should {
@@ -208,9 +208,9 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
     }
 
     "not fail when the agency name is not present in DES" in {
-      when(desConnector.getAgencyName(eqArg(Arn(arn)))(anyArg[HeaderCarrier], anyArg[ExecutionContext])).thenReturn(Future.successful(None))
+      when(agentSubscriptionConnector.getAgencyName(eqArg(Arn(arn)))(anyArg[HeaderCarrier])).thenReturn(Future.successful(None))
 
-      val controller = new AgentServicesController(messagesApi, authActions, continueUrlActions, desConnector)
+      val controller = new AgentServicesController(messagesApi, authActions, continueUrlActions, agentSubscriptionConnector)
       val response = controller.root().apply(FakeRequest("GET", "/"))
       status(response) shouldBe OK
       contentAsString(response) should {
