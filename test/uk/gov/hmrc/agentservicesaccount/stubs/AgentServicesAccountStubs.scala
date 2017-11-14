@@ -26,13 +26,13 @@ object AgentServicesAccountStubs {
         aResponse()
           .withStatus(200)
           .withBody(s"""{ "agencyName" : "$agencyName" }""")))
-    }
+  }
 
-    def givenNoAgencyNameFromASA = {
-      stubFor(get(urlEqualTo("/agent-services-account/agent/agency-name"))
-        .willReturn(
-          aResponse()
-            .withStatus(204)))
+  def givenNoAgencyNameFromASA = {
+    stubFor(get(urlEqualTo("/agent-services-account/agent/agency-name"))
+      .willReturn(
+        aResponse()
+          .withStatus(204)))
   }
 
   def givenErrorFromASA(responseCode: Int) = {
