@@ -23,7 +23,7 @@ import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.agentservicesaccount.AppConfig
 import uk.gov.hmrc.agentservicesaccount.auth.AuthActions
 import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
-import uk.gov.hmrc.agentservicesaccount.connectors.DesConnector
+import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
 import uk.gov.hmrc.agentservicesaccount.views.html.pages._
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 
@@ -32,17 +32,16 @@ class AgentServicesController @Inject()(
                                          val messagesApi: MessagesApi,
                                          authActions: AuthActions,
                                          continueUrlActions: ContinueUrlActions,
-                                         desConnector: DesConnector)
+                                         asaConnector: AgentServicesAccountConnector)
                                        (implicit val externalUrls: ExternalUrls, appConfig: AppConfig) extends FrontendController with I18nSupport {
 
   import authActions._
   import continueUrlActions._
 
-  val root: Action[AnyContent] = (AuthorisedWithAgentAsync andThen WithMaybeContinueUrl).async {
-    implicit request =>
-      for {
-        maybeAgencyName <- desConnector.getAgencyName(request.arn)
-      } yield Ok(agent_services_account(request.arn, maybeAgencyName, request.continueUrlOpt))
+  val root: Action[AnyContent] = (AuthorisedWithAgentAsync andThen WithMaybeContinueUrl).async { implicit request =>
+    asaConnector.getAgencyName(request.arn).map { maybeAgencyName =>
+      Ok(agent_services_account(request.arn, maybeAgencyName, request.continueUrlOpt))
+    }
   }
 
 }

@@ -39,9 +39,7 @@ class GuiceModule(val environment: Environment, val configuration: Configuration
     bind(classOf[LoggerLike]).toInstance(Logger)
     bind(classOf[AuditConnector]).toInstance(FrontendAuditConnector)
     bindBaseUrl("sso")
-    bindBaseUrl("des")
-    bindServiceProperty("des.authorization-token")
-    bindServiceProperty("des.environment")
+    bindBaseUrl("agent-services-account")
   }
 
   private def bindBaseUrl(serviceName: String) =

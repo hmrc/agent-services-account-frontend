@@ -35,7 +35,7 @@ import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.auth.{AgentRequest, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
-import uk.gov.hmrc.agentservicesaccount.connectors.{DesConnector, SsoConnector}
+import uk.gov.hmrc.agentservicesaccount.connectors.{AgentServicesAccountConnector, SsoConnector}
 import uk.gov.hmrc.agentservicesaccount.{AppConfig, GuiceModule, HttpVerbs}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.test.UnitSpec
@@ -66,7 +66,7 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
                 }
               })
 
-              bind(classOf[DesConnector]).toInstance(desConnector)
+              bind(classOf[AgentServicesAccountConnector]).toInstance(desConnector)
             }
           })
 
@@ -84,7 +84,7 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
   val invitationsUrl = "http://example.com/agent-invitations/agents"
   when(externalUrls.agentInvitationsUrl).thenReturn(invitationsUrl)
   val arn = "TARN0000001"
-  lazy val desConnector = mock[DesConnector]
+  lazy val desConnector = mock[AgentServicesAccountConnector]
   when(desConnector.getAgencyName(eqArg(Arn(arn)))(anyArg[HeaderCarrier], anyArg[ExecutionContext])).thenReturn(Future.successful(None))
 
   private implicit val messages: Messages = messagesApi.preferred(Seq.empty[Lang])
@@ -195,7 +195,7 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
       }
     }
 
-    "show the agency name when it is present in DES" in {
+    "show the agency name when it is available from the backend" in {
       when(desConnector.getAgencyName(eqArg(Arn(arn)))(anyArg[HeaderCarrier], anyArg[ExecutionContext])).thenReturn(Future.successful(Some("Test Agency Name")))
 
       val controller = new AgentServicesController(messagesApi, authActions, continueUrlActions, desConnector)
@@ -207,7 +207,7 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
       }
     }
 
-    "not fail when the agency name is not present in DES" in {
+    "not fail when the agency name is not available from the backend" in {
       when(desConnector.getAgencyName(eqArg(Arn(arn)))(anyArg[HeaderCarrier], anyArg[ExecutionContext])).thenReturn(Future.successful(None))
 
       val controller = new AgentServicesController(messagesApi, authActions, continueUrlActions, desConnector)

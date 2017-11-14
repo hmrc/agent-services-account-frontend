@@ -18,73 +18,54 @@ package uk.gov.hmrc.agentservicesaccount.connectors
 
 import java.net.URL
 
-import com.kenshoo.play.metrics.Metrics
 import org.scalatestplus.play.guice.GuiceOneAppPerTest
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.libs.json.{JsSuccess, Json}
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
-import uk.gov.hmrc.agentservicesaccount.stubs.DesStubs
+import uk.gov.hmrc.agentservicesaccount.stubs.AgentServicesAccountStubs._
 import uk.gov.hmrc.agentservicesaccount.support.WireMockSupport
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.http.{HeaderCarrier, HttpGet}
 
-class DesConnectorSpec extends UnitSpec with GuiceOneAppPerTest with WireMockSupport {
+class AgentServicesAccountConnectorSpec extends UnitSpec with GuiceOneAppPerTest with WireMockSupport {
 
   override def fakeApplication(): Application = appBuilder.build()
 
   protected def appBuilder: GuiceApplicationBuilder =
     new GuiceApplicationBuilder()
       .configure(
-        "microservice.services.des.port" -> wireMockPort,
+        "microservice.services.agent-services-account.port" -> wireMockPort,
         "microservice.services.auth.port" -> wireMockPort
       )
 
   import scala.concurrent.ExecutionContext.Implicits.global
 
-  private lazy val connector = new DesConnector(new URL(s"http://localhost:$wireMockPort"), "authToken", "testEnv", app.injector.instanceOf[HttpGet], app.injector.instanceOf[Metrics])
+  private lazy val connector = new AgentServicesAccountConnector(new URL(s"http://localhost:$wireMockPort"), app.injector.instanceOf[HttpGet])
   private implicit val hc = HeaderCarrier()
 
-  "AgentRecordDetails" should {
-    "parse empty json " in {
-      AgentRecordDetails.agentRecordDetailsRead.reads(Json.parse("""{}""")) shouldBe JsSuccess(AgentRecordDetails(None))
-    }
-
-    "parse json with agencyDetails and agencyName" in {
-      AgentRecordDetails.agentRecordDetailsRead.reads(Json.parse(
-        """
-          |{
-          |   "agencyDetails" : {
-          |      "agencyName" : "Agency Test"
-          |   }
-          |}
-        """.stripMargin)).get shouldBe AgentRecordDetails(Some(AgencyDetails("Agency Test")))
-    }
-  }
-
-  "DesConnector" should {
-    "return agency name when DES returns 200 and agency name is present" in {
-      DesStubs.givenDESRespondsWithAgencyName("TestARN", "ACME")
+  "getAgencyName" should {
+    "return Some agency name when backend returns 200 with agency name" in {
+      givenAgencyNameFromASA("TestARN", "ACME")
       await(connector.getAgencyName(Arn("TestARN"))) shouldBe Some("ACME")
     }
 
-    "return None when DES returns 200 but agencyDetails is not present" in {
-      DesStubs.givenDESRespondsWithoutAgencyDetails("TestARN")
+    "return None when backend returns 204 with no agency name" in {
+      givenNoAgencyNameFromASA
       await(connector.getAgencyName(Arn("TestARN"))) shouldBe None
     }
 
-    "return None when DES returns 404" in {
-      DesStubs.givenDESReturnsError("TestARN", 404)
+    "return None when backend returns 404" in {
+      givenErrorFromASA(404)
       await(connector.getAgencyName(Arn("TestARN"))) shouldBe None
     }
 
-    "return None when DES returns 400" in {
-      DesStubs.givenDESReturnsError("TestARN", 400)
+    "return None when backend returns 400" in {
+      givenErrorFromASA(400)
       await(connector.getAgencyName(Arn("TestARN"))) shouldBe None
     }
 
-    "return None when DES returns 500 response" in {
-      DesStubs.givenDESReturnsError("TestARN", 500)
+    "return None when backend returns 500 response" in {
+      givenErrorFromASA(500)
       await(connector.getAgencyName(Arn("TestARN"))) shouldBe None
     }
   }
