@@ -83,6 +83,8 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
   when(externalUrls.agentMappingUrl).thenReturn(mappingUrl)
   val invitationsUrl = "http://example.com/agent-invitations/agents"
   when(externalUrls.agentInvitationsUrl).thenReturn(invitationsUrl)
+  val agentAfiUrl = "http://example.com/agent-services/individuals"
+  when(externalUrls.agentAfiUrl).thenReturn(agentAfiUrl)
   val arn = "TARN0000001"
   lazy val desConnector = mock[AgentServicesAccountConnector]
   when(desConnector.getAgencyName(eqArg(Arn(arn)))(anyArg[HeaderCarrier], anyArg[ExecutionContext])).thenReturn(Future.successful(None))
@@ -117,7 +119,10 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
       content should include(messagesApi("agent.services.account.additional.links.title"))
       content should include(messagesApi("agent.services.account.additional.links.mapping.body1"))
       content should include(messagesApi("agent.services.account.additional.links.mapping.body2", mappingUrl, "agentMappingLinkId"))
+      content should include(htmlEscapedMessage(messagesApi("agent.services.account.additional.links.invitations.body1")))
       content should include(messagesApi("agent.services.account.additional.links.invitations.body2", invitationsUrl, "agentInvitationsLinkId"))
+      content should include(htmlEscapedMessage(messagesApi("agent.services.account.additional.links.agent-afi.body1")))
+      content should include(messagesApi("agent.services.account.additional.links.agent-afi.body2", agentAfiUrl, "agentAfiLinkId"))
       content should include(arn)
       content should include(signOutUrl)
       content should include(mappingUrl)

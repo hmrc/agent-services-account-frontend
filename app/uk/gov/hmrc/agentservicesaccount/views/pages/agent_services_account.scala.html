@@ -78,6 +78,11 @@
             <p>@Messages("agent.services.account.additional.links.invitations.body1")</p>
             <p>@Html(Messages("agent.services.account.additional.links.invitations.body2", externalUrls.agentInvitationsUrl, "agentInvitationsLinkId"))</p>
         }
+
+      @featureSwitch("features.showAgentAfiLink") {
+        <p>@Messages("agent.services.account.additional.links.agent-afi.body1")</p>
+        <p>@Html(Messages("agent.services.account.additional.links.agent-afi.body2", externalUrls.agentAfiUrl, "agentAfiLinkId"))</p>
+      }
     }
 }
 

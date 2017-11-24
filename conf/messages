@@ -10,4 +10,6 @@ agent.services.account.additional.links.mapping.body1=If your agency uses more t
 agent.services.account.additional.links.mapping.body2=<a href="{0}" id="{1}">Allow this account to access existing client relationships</a>
 agent.services.account.additional.links.invitations.body1=Authorise a client to report their Income Tax using software, if they''ve signed up to do so.
 agent.services.account.additional.links.invitations.body2=<a href="{0}" id="{1}">Authorise a client for Online Reporting</a>
+agent.services.account.additional.links.agent-afi.body1=View a client''s Income Tax, benefits and pension record if they''ve authorised you to do so.
+agent.services.account.additional.links.agent-afi.body2=<a href="{0}" id="{1}">View a client's income record</a>
 common.sign-out=Sign out
