@@ -40,6 +40,14 @@ class ExternalUrlsSpec extends UnitSpec with ResettingMockitoSugar {
   val mappingStartPath = "/foo"
   val agentMappingUrl: String = s"$mappingExternalUrl$mappingStartPath"
 
+  val agentInvitationsExternalUrl = "http://www.example.com/invitations"
+  val agentInvitationsStartPath = "/foo"
+  val agentInvitationsUrl: String = s"$agentInvitationsExternalUrl$agentInvitationsStartPath"
+
+  val agentAfiExternalUrl = "http://www.example.com/afi"
+  val agentAfiStartPath = "/foo"
+  val agentAfiUrl: String = s"$agentAfiExternalUrl$agentAfiStartPath"
+
   val configuration: Configuration = resettingMock[Configuration]
   val externalUrls = new ExternalUrls(configuration)
 
@@ -64,6 +72,20 @@ class ExternalUrlsSpec extends UnitSpec with ResettingMockitoSugar {
     }
   }
 
+  "agentInvitationsUrl" should {
+    "return the agent invitation frontend URl" in {
+      mockConfig()
+      externalUrls.agentInvitationsUrl shouldBe agentInvitationsUrl
+    }
+  }
+
+  "agentAfiUrl" should {
+    "return the agent for individuals frontend URl" in {
+      mockConfig()
+      externalUrls.agentAfiUrl shouldBe agentAfiUrl
+    }
+  }
+
   private def mockConfig(): Unit = {
     mockConfigString("microservice.services.company-auth-frontend.external-url", companyAuthFrontendExternalBaseUrl)
     mockConfigString("microservice.services.company-auth-frontend.sign-in.path", subscriptionPath)
@@ -71,6 +93,10 @@ class ExternalUrlsSpec extends UnitSpec with ResettingMockitoSugar {
     mockConfigString("microservice.services.company-auth-frontend.sign-out.continue-url", ggSignOutContinueUrl)
     mockConfigString("microservice.services.agent-mapping-frontend.external-url", mappingExternalUrl)
     mockConfigString("microservice.services.agent-mapping-frontend.start.path", mappingStartPath)
+    mockConfigString("microservice.services.agent-invitations-frontend.external-url", agentInvitationsExternalUrl)
+    mockConfigString("microservice.services.agent-invitations-frontend.start.path", agentInvitationsStartPath)
+    mockConfigString("microservice.services.agent-fi-agent-frontend.external-url", agentAfiExternalUrl)
+    mockConfigString("microservice.services.agent-fi-agent-frontend.start.path", agentAfiStartPath)
     mockConfigString("microservice.services.agent-subscription-frontend.external-url", externalUrl)
     mockConfigString("microservice.services.agent-subscription-frontend.start.path", subscriptionPath)
   }

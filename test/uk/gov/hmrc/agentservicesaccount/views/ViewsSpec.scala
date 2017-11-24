@@ -116,7 +116,8 @@ class ViewsSpec extends MixedPlaySpec {
           include("Authorise a client for Online Reporting") and
           include("Authorise a client to report their Income Tax using software, if they&#x27;ve signed up to do so.") and
           include("href=\"http://localhost:9438/agent-mapping/start\"") and
-          include("href=\"http://localhost:9448/invitations/agents/\"")
+          include("href=\"http://localhost:9448/invitations/agents/\"") and
+          include("href=\"http://localhost:9428/agent-services/individuals\"")
       }
     }
 
