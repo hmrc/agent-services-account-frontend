@@ -12,4 +12,5 @@ agent.services.account.additional.links.invitations.body1=Authorise a client to 
 agent.services.account.additional.links.invitations.body2=<a href="{0}" id="{1}">Authorise a client for Online Reporting</a>
 agent.services.account.additional.links.agent-afi.body1=View a client''s Income Tax, benefits and pension record if they''ve authorised you to do so.
 agent.services.account.additional.links.agent-afi.body2=<a href="{0}" id="{1}">View a client''s income record</a>
+agent.invitations.links.start=<a href="{0}" id="{1}">Add new clients</a>
 common.sign-out=Sign out

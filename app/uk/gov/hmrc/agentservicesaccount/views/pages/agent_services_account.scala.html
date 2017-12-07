@@ -42,7 +42,11 @@
             <section class="section subsection section--blue-top">
                 <h2>@Messages("agent.references")</h2>
                 <p>@Messages("agent.accountNumber", arn.value)</p>
-            <section>
+
+              @featureSwitch("features.showAddClient") {
+                <p>@Html(Messages("agent.invitations.links.start", externalUrls.agentInvitationsUrl, "agentAddClient"))</p>
+              }
+            </section>
         </div>
     </div>
 }
