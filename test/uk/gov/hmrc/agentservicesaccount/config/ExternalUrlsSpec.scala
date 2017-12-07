@@ -66,21 +66,21 @@ class ExternalUrlsSpec extends UnitSpec with ResettingMockitoSugar {
   }
 
   "agentMappingUrl" should {
-    "return the agent mapping frontend URl" in {
+    "return the agent mapping frontend URL" in {
       mockConfig()
       externalUrls.agentMappingUrl shouldBe agentMappingUrl
     }
   }
 
   "agentInvitationsUrl" should {
-    "return the agent invitation frontend URl" in {
+    "return the agent invitation frontend URL" in {
       mockConfig()
       externalUrls.agentInvitationsUrl shouldBe agentInvitationsUrl
     }
   }
 
   "agentAfiUrl" should {
-    "return the agent for individuals frontend URl" in {
+    "return the agent for individuals frontend URL" in {
       mockConfig()
       externalUrls.agentAfiUrl shouldBe agentAfiUrl
     }
