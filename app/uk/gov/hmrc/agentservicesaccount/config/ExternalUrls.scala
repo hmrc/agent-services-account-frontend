@@ -19,7 +19,6 @@ package uk.gov.hmrc.agentservicesaccount.config
 import javax.inject.{Inject, Singleton}
 
 import play.api.Configuration
-import uk.gov.hmrc.agentservicesaccount.controllers.routes
 import views.html.helper.urlEncode
 
 /**
@@ -44,7 +43,7 @@ class ExternalUrls @Inject() (override val configuration: Configuration) extends
   private lazy val invitationsStartPath = getConfigString("microservice.services.agent-invitations-frontend.start.path")
   lazy val agentInvitationsUrl: String = s"$invitationsExternalUrl$invitationsStartPath"
 
-  private lazy val agentAfiExternalUrl = getConfigString("microservice.services.agent-fi-agent-frontend.external-url")
-  private lazy val agentAfiStartPath = getConfigString("microservice.services.agent-fi-agent-frontend.start.path")
+  private lazy val agentAfiExternalUrl = getConfigString("microservice.services.tax-history-frontend.external-url")
+  private lazy val agentAfiStartPath = getConfigString("microservice.services.tax-history-frontend.start.path")
   lazy val agentAfiUrl: String = s"$agentAfiExternalUrl$agentAfiStartPath"
 }
