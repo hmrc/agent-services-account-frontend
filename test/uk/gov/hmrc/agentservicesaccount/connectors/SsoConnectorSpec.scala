@@ -28,7 +28,7 @@ import play.api.test.Helpers.contentAsString
 import uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController
 import uk.gov.hmrc.agentservicesaccount.support.WireMockSupport
 import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.agentservicesaccount.stubs.{AuthStubs, SsoStubs}
+import uk.gov.hmrc.agentservicesaccount.stubs.{AgentServicesAccountStubs, AuthStubs, SsoStubs}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpGet}
 
 class SsoConnectorSpec extends UnitSpec with GuiceOneAppPerTest with WireMockSupport {
@@ -38,6 +38,7 @@ class SsoConnectorSpec extends UnitSpec with GuiceOneAppPerTest with WireMockSup
   protected def appBuilder: GuiceApplicationBuilder =
     new GuiceApplicationBuilder()
       .configure(
+        "microservice.services.agent-services-account.port" -> wireMockPort,
         "microservice.services.sso.port" -> wireMockPort,
         "microservice.services.auth.port" -> wireMockPort
       )
