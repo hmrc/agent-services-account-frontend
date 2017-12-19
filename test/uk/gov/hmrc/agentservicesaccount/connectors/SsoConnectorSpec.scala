@@ -19,17 +19,16 @@ package uk.gov.hmrc.agentservicesaccount.connectors
 import java.net.{URL, URLEncoder}
 
 import com.kenshoo.play.metrics.Metrics
-import play.api.test.Helpers._
 import org.scalatestplus.play.guice.GuiceOneAppPerTest
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
-import play.api.test.Helpers.contentAsString
+import play.api.test.Helpers.{contentAsString, _}
 import uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController
-import uk.gov.hmrc.agentservicesaccount.support.WireMockSupport
-import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.agentservicesaccount.stubs.{AuthStubs, SsoStubs}
+import uk.gov.hmrc.agentservicesaccount.support.WireMockSupport
 import uk.gov.hmrc.http.{HeaderCarrier, HttpGet}
+import uk.gov.hmrc.play.test.UnitSpec
 
 class SsoConnectorSpec extends UnitSpec with GuiceOneAppPerTest with WireMockSupport {
 
@@ -38,6 +37,7 @@ class SsoConnectorSpec extends UnitSpec with GuiceOneAppPerTest with WireMockSup
   protected def appBuilder: GuiceApplicationBuilder =
     new GuiceApplicationBuilder()
       .configure(
+        "microservice.services.agent-services-account.port" -> wireMockPort,
         "microservice.services.sso.port" -> wireMockPort,
         "microservice.services.auth.port" -> wireMockPort
       )

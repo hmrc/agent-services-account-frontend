@@ -95,8 +95,8 @@ class ExternalUrlsSpec extends UnitSpec with ResettingMockitoSugar {
     mockConfigString("microservice.services.agent-mapping-frontend.start.path", mappingStartPath)
     mockConfigString("microservice.services.agent-invitations-frontend.external-url", agentInvitationsExternalUrl)
     mockConfigString("microservice.services.agent-invitations-frontend.start.path", agentInvitationsStartPath)
-    mockConfigString("microservice.services.agent-fi-agent-frontend.external-url", agentAfiExternalUrl)
-    mockConfigString("microservice.services.agent-fi-agent-frontend.start.path", agentAfiStartPath)
+    mockConfigString("microservice.services.tax-history-frontend.external-url", agentAfiExternalUrl)
+    mockConfigString("microservice.services.tax-history-frontend.start.path", agentAfiStartPath)
     mockConfigString("microservice.services.agent-subscription-frontend.external-url", externalUrl)
     mockConfigString("microservice.services.agent-subscription-frontend.start.path", subscriptionPath)
   }

@@ -116,7 +116,7 @@ class ViewsSpec extends MixedPlaySpec {
           include("Allow this account to access existing client relationships") and
           include("If your agency uses more than one Government Gateway you will need to copy your existing client relationships from each of your Government Gateway IDs into this account.") and
           include("href=\"http://localhost:9438/agent-mapping/start\"") and
-          include("href=\"http://localhost:9428/agent-services/individuals\"") and
+          include("href=\"http://localhost:9996/tax-history/select-client\"") and
           include("Manage your clients") and
           include("Request authorisation to view an individual's data") and
           include("href=\"http://localhost:9448/invitations/agents/\"")
