@@ -51,7 +51,11 @@
     </div>
 }
 
-@agencyName(agencyNameOpt: Option[String]) = {@agencyNameOpt.map { name => <span class="pre-heading" id="agency-name">@name</span>}}
+@agencyName(agencyNameOpt: Option[String]) = {
+    @agencyNameOpt.map { name =>
+        <span class="pre-heading" id="agency-name">@name</span>
+    }
+}
 
 @newAccountHasBeenCreated(continueUrlOpt: Option[ContinueUrl]) = {
     @continueUrlOpt.map { continueUrl =>
