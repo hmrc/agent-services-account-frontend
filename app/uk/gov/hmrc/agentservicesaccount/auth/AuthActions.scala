@@ -41,7 +41,7 @@ case class AgentRequest[A](arn: Arn, request: Request[A]) extends WrappedRequest
 class AuthActions @Inject()(logger: LoggerLike, externalUrls: ExternalUrls, override val authConnector: AuthConnector) extends AuthorisedFunctions {
 
   def redirectToAgentSubscriptionGgSignIn[A](implicit request: Request[A]): Result =
-    Redirect(externalUrls.agentSubscriptionUrl + request.session.get(SessionKeys.otacToken).map(p => s"?p=${URLEncoder.encode(p,"utf-8")}").getOrElse(""))
+    Redirect(externalUrls.agentSubscriptionUrl + request.session.get("otacQueryParam").map(p => s"?p=${URLEncoder.encode(p,"utf-8")}").getOrElse(""))
 
   def authorisedWithAgent[A,R](body: (AgentInfo) => Future[R])(implicit headerCarrier: HeaderCarrier): Future[Option[R]] =
     authorised(AuthProviders(GovernmentGateway)).retrieve(allEnrolments and affinityGroup) {
