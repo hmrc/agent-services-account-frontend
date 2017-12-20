@@ -19,6 +19,7 @@ package uk.gov.hmrc.agentservicesaccount
 import javax.inject.{Inject, Named, Singleton}
 
 import uk.gov.hmrc.auth.core.PlayAuthConnector
+import uk.gov.hmrc.auth.otac.PlayOtacAuthConnector
 import uk.gov.hmrc.http._
 import uk.gov.hmrc.play.audit.http.HttpAuditing
 import uk.gov.hmrc.play.audit.http.connector.{AuditConnector => Auditing}
@@ -40,7 +41,7 @@ class HttpVerbs @Inject() (val auditConnector: Auditing, @Named("appName") val a
 
 class FrontendAuthConnector @Inject()(
   defaultServicesConfig: DefaultServicesConfig,
-  val http: HttpPost) extends PlayAuthConnector {
+  val http: HttpPost with HttpGet) extends PlayAuthConnector with PlayOtacAuthConnector {
 
   override val serviceUrl: String = defaultServicesConfig.baseUrl("auth")
 }

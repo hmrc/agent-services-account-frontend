@@ -21,7 +21,9 @@ import java.net.URL
 import com.google.inject.name.Names
 import com.google.inject.{AbstractModule, Provider}
 import play.api.{Configuration, Environment, Logger, LoggerLike}
-import uk.gov.hmrc.auth.core.PlayAuthConnector
+import uk.gov.hmrc.agentservicesaccount.auth.{FrontendPasscodeVerification, PasscodeVerification}
+import uk.gov.hmrc.auth.core.{AuthConnector, PlayAuthConnector}
+import uk.gov.hmrc.auth.otac.OtacAuthConnector
 import uk.gov.hmrc.http.{HttpGet, HttpPost}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.config.ServicesConfig
@@ -32,7 +34,9 @@ class GuiceModule(val environment: Environment, val configuration: Configuration
 
   override def configure(): Unit = {
     bindProperty("appName")
-    bind(classOf[PlayAuthConnector]).to(classOf[FrontendAuthConnector])
+    bind(classOf[AuthConnector]).to(classOf[FrontendAuthConnector])
+    bind(classOf[OtacAuthConnector]).to(classOf[FrontendAuthConnector])
+    bind(classOf[PasscodeVerification]).to(classOf[FrontendPasscodeVerification])
     bind(classOf[AppConfig]).toInstance(FrontendAppConfig)
     bind(classOf[HttpGet]).to(classOf[HttpVerbs])
     bind(classOf[HttpPost]).to(classOf[HttpVerbs])

@@ -40,7 +40,8 @@ class SsoConnectorSpec extends UnitSpec with GuiceOneAppPerTest with WireMockSup
         "microservice.services.agent-services-account.port" -> wireMockPort,
         "microservice.services.sso.port" -> wireMockPort,
         "microservice.services.auth.port" -> wireMockPort,
-        "auditing.enabled" -> false
+        "auditing.enabled" -> false,
+        "passcodeAuthentication.enabled" -> true
       )
 
   import scala.concurrent.ExecutionContext.Implicits.global
