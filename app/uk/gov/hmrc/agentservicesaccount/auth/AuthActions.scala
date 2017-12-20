@@ -27,11 +27,10 @@ import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.retrieve.Retrievals.{affinityGroup, allEnrolments}
 import uk.gov.hmrc.auth.core.retrieve.~
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext.fromLoggingDetails
 
 import scala.concurrent.Future
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.HeaderCarrierConverter
 
 case class AgentInfo(arn: Arn)
 
@@ -40,23 +39,9 @@ case class AgentRequest[A](arn: Arn, request: Request[A]) extends WrappedRequest
 @Singleton
 class AuthActions @Inject()(logger: LoggerLike, externalUrls: ExternalUrls, override val authConnector: AuthConnector) extends AuthorisedFunctions {
 
-  def AuthorisedWithAgentAsync = new ActionBuilder[AgentRequest] {
-    override def invokeBlock[A](request: Request[A], block: (AgentRequest[A]) => Future[Result]): Future[Result] = {
-      implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
-      authorisedWithAgent[Result] { agentInfo =>
-        block(AgentRequest(agentInfo.arn, request))
-      } map { maybeResult =>
-        maybeResult.getOrElse(redirectToAgentSubscriptionGgSignIn)
-      } recover {
-        case _: NoActiveSession =>
-          redirectToAgentSubscriptionGgSignIn
-      }
-    }
-  }
+  def redirectToAgentSubscriptionGgSignIn: Result = Redirect(externalUrls.agentSubscriptionUrl)
 
-  private def redirectToAgentSubscriptionGgSignIn: Result = Redirect(externalUrls.agentSubscriptionUrl)
-
-  def authorisedWithAgent[R](body: (AgentInfo) => Future[R])(implicit hc: HeaderCarrier): Future[Option[R]] =
+  def authorisedWithAgent[A,R](body: (AgentInfo) => Future[R])(implicit headerCarrier: HeaderCarrier): Future[Option[R]] =
     authorised(AuthProviders(GovernmentGateway)).retrieve(allEnrolments and affinityGroup) {
       case enrol ~ affinityG =>
         (enrol.getEnrolment("HMRC-AS-AGENT"), affinityG) match {

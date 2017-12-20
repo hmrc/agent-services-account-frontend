@@ -35,6 +35,8 @@ import uk.gov.hmrc.http.HeaderCarrier
 
 class ContinueUrlActionsSpec extends WordSpec with Matchers {
 
+  implicit val hc = new HeaderCarrier()
+
   "ContinueUrlActions" should {
 
     "refine action with Some(continueUrl)" when {
@@ -136,22 +138,18 @@ class ContinueUrlActionsSpec extends WordSpec with Matchers {
 
   trait Fixture1 {
 
-    def call(request: Request[Any]) = underTest1.WithMaybeContinueUrl.
-      invokeBlock(AgentRequest(Arn("ARN12346"), request),
-        (request: underTest1.RequestWithMaybeContinueUrl[Any]) => {
-          Future.successful(Ok(request.continueUrlOpt.map(_.url).getOrElse("")))
-        }
-      )
+    def call(implicit request: Request[Any]) = underTest1.withMaybeContinueUrl {
+      continueUrlOpt =>
+        Future.successful(Ok(continueUrlOpt.map(_.url).getOrElse("")))
+    }
   }
 
   trait Fixture2 {
 
-    def call(request: Request[Any]) = underTest2.WithMaybeContinueUrl.
-      invokeBlock(AgentRequest(Arn("ARN12346"), request),
-        (request: underTest2.RequestWithMaybeContinueUrl[Any]) => {
-          Future.successful(Ok(request.continueUrlOpt.map(_.url).getOrElse("")))
-        }
-      )
+    def call(implicit request: Request[Any]) = underTest2.withMaybeContinueUrl {
+      continueUrlOpt =>
+        Future.successful(Ok(continueUrlOpt.map(_.url).getOrElse("")))
+    }
   }
 
 }

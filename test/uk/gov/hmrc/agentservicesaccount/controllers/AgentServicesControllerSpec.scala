@@ -33,13 +33,15 @@ import play.api.test.Helpers._
 import play.api.{Application, Configuration, Environment}
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
-import uk.gov.hmrc.agentservicesaccount.auth.{AgentRequest, AuthActions, PasscodeVerification}
+import uk.gov.hmrc.agentservicesaccount.auth.{AgentInfo, AgentRequest, AuthActions, PasscodeVerification}
 import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
 import uk.gov.hmrc.agentservicesaccount.connectors.{AgentServicesAccountConnector, SsoConnector}
 import uk.gov.hmrc.agentservicesaccount.{AppConfig, GuiceModule}
+import uk.gov.hmrc.auth.core.{InvalidBearerToken, NoActiveSession}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.test.UnitSpec
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 
 
@@ -94,11 +96,11 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
   protected def htmlEscapedMessage(key: String): String = HtmlFormat.escape(Messages(key)).toString
 
   val authActions = new AuthActions(null, null, null) {
-    override def AuthorisedWithAgentAsync = new ActionBuilder[AgentRequest] {
-      override def invokeBlock[A](request: Request[A], block: (AgentRequest[A]) => Future[Result]): Future[Result] = {
-        block(AgentRequest(Arn(arn), request))
-      }
+
+    override def authorisedWithAgent[A, R](body: AgentInfo => Future[R])(implicit headerCarrier: HeaderCarrier): Future[Option[R]] = {
+      body(AgentInfo(Arn(arn))) map Option.apply
     }
+
   }
 
   lazy val continueUrlActions: ContinueUrlActions = app.injector.instanceOf[ContinueUrlActions]
@@ -134,11 +136,14 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
 
     "return the redirect returned by authActions when authActions denies access" in {
 
-      val authActions = new AuthActions(null, null, null) {
-        override def AuthorisedWithAgentAsync = new ActionBuilder[AgentRequest] {
-          override def invokeBlock[A](request: Request[A], block: (AgentRequest[A]) => Future[Result]): Future[Result] = {
-            Future.successful(Redirect("/gg/sign-in", 303))
-          }
+      implicit val externalUrls = new ExternalUrls(Configuration.from(Map())){
+        override lazy val agentSubscriptionUrl: String = "foo"
+      }
+
+      val authActions = new AuthActions(null, externalUrls, null) {
+
+        override def authorisedWithAgent[A, R](body: AgentInfo => Future[R])(implicit headerCarrier: HeaderCarrier): Future[Option[R]] = {
+          Future failed new InvalidBearerToken("")
         }
       }
 
@@ -147,7 +152,7 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
       val response = controller.root()(FakeRequest("GET", "/"))
 
       status(response) shouldBe 303
-      redirectLocation(response) shouldBe Some("/gg/sign-in")
+      redirectLocation(response) shouldBe Some("foo")
     }
 
     "do not fail without continue url parameter" in {

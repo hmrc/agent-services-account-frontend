@@ -22,7 +22,7 @@ import org.slf4j.Logger
 import play.api.LoggerLike
 import play.api.http.Status.OK
 import play.api.libs.json.Json
-import play.api.mvc.Result
+import play.api.mvc.{Action, AnyContent, Result}
 import play.api.mvc.Results.Ok
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -35,6 +35,7 @@ import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.Future
 import uk.gov.hmrc.http.HeaderCarrier
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class AuthActionsSpec extends UnitSpec with ResettingMockitoSugar with AkkaMaterializerSpec {
 
@@ -67,9 +68,16 @@ class AuthActionsSpec extends UnitSpec with ResettingMockitoSugar with AkkaMater
   val authActions = new AuthActions(logger, externalUrls, mockAuthConnector)
 
   class TestAuth() {
-    def testAuthActions() = authActions.AuthorisedWithAgentAsync {
-      implicit agentRequest =>
-        Future.successful(Ok(Json.toJson(agentRequest.arn)))
+    def testAuthActions(): Action[AnyContent] = Action.async {
+      implicit request =>
+        authActions.authorisedWithAgent { agent =>
+            Future.successful(Ok(Json.toJson(agent.arn)))
+        } map { maybeResult =>
+          maybeResult.getOrElse(authActions.redirectToAgentSubscriptionGgSignIn)
+        } recover {
+          case _: NoActiveSession =>
+            authActions.redirectToAgentSubscriptionGgSignIn
+        }
     }
   }
 
