@@ -56,7 +56,7 @@ class FrontendPasscodeVerification @Inject()(configuration: Configuration,
 
   def addRedirectUrl[A](queryParam: String)(implicit request: Request[A]): Result => Result = e =>
     e.addingToSession(SessionKeys.redirect -> buildRedirectUrl(request))
-      .addingToSession("otacQueryParam" -> queryParam)
+      .addingToSession("otacToken" -> queryParam)
 
   def buildRedirectUrl[A](req: Request[A]): String =
     if (env != "Prod") s"http${if (req.secure) "s" else ""}://${req.host}${req.path}" else req.path
@@ -64,8 +64,11 @@ class FrontendPasscodeVerification @Inject()(configuration: Configuration,
   def apply[A](body: Boolean => Future[Result])(implicit request: Request[A], headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[Result] = {
     if (passcodeEnabled) {
       request.session.get(SessionKeys.otacToken).fold(
-        tokenQueryParam match {
-          case Some(queryParam) => Future.successful(Redirect(loginUrl(queryParam))) map addRedirectUrl(queryParam)(request)
+        request.getQueryString(tokenParam) match {
+          case Some(token) => {
+            val queryParam = s"?$tokenParam=$token"
+            Future.successful(Redirect(loginUrl(queryParam))) map addRedirectUrl(queryParam)(request)
+          }
           case _ => body(false)
         }
       ) {
