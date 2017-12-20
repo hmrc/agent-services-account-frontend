@@ -30,7 +30,7 @@
     <div class = "grid-layout grid-layout--no-gutter grid-layout--stacked">
         <div class = "grid-layout__column grid-layout__column--2-3">
             <header class="page-header">
-                <h1>@agencyName(agencyNameOpt)</h1>
+                <h1>@agencyName(agencyNameOpt)@Messages("agent.services.account.heading")</h1>
             </header>
             <p>@Messages("agent.services.account.heading.summary")</p>
             <section class="section">
@@ -51,7 +51,7 @@
     </div>
 }
 
-@agencyName(agencyNameOpt: Option[String]) = {@agencyNameOpt.map { name => <span class="pre-heading" id="agency-name">@name</span>@Messages("agent.services.account.heading")}}
+@agencyName(agencyNameOpt: Option[String]) = {@agencyNameOpt.map { name => <span class="pre-heading" id="agency-name">@name</span>}}
 
 @newAccountHasBeenCreated(continueUrlOpt: Option[ContinueUrl]) = {
     @continueUrlOpt.map { continueUrl =>
