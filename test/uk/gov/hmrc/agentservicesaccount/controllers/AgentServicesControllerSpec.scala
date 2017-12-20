@@ -26,19 +26,18 @@ import org.scalatest.{BeforeAndAfterEach, Matchers, OptionValues, WordSpec}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.inject.guice.{BinderOption, GuiceApplicationBuilder, GuiceableModule}
-import play.api.mvc.Results._
-import play.api.mvc.{ActionBuilder, _}
+import play.api.mvc._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.api.{Application, Configuration, Environment}
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
-import uk.gov.hmrc.agentservicesaccount.auth.{AgentInfo, AgentRequest, AuthActions, PasscodeVerification}
+import uk.gov.hmrc.agentservicesaccount.auth.{AgentInfo, AuthActions, PasscodeVerification}
 import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
 import uk.gov.hmrc.agentservicesaccount.connectors.{AgentServicesAccountConnector, SsoConnector}
 import uk.gov.hmrc.agentservicesaccount.{AppConfig, GuiceModule}
-import uk.gov.hmrc.auth.core.{InvalidBearerToken, NoActiveSession}
-import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.auth.core.InvalidBearerToken
+import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
 import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -149,10 +148,10 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
 
       val controller = new AgentServicesController(messagesApi, authActions, continueUrlActions, desConnector, NoPasscodeVerification)
 
-      val response = controller.root()(FakeRequest("GET", "/"))
+      val response = controller.root()(FakeRequest("GET", "/").withSession((SessionKeys.otacToken,"BAR1 23/")))
 
       status(response) shouldBe 303
-      redirectLocation(response) shouldBe Some("foo")
+      redirectLocation(response) shouldBe Some("foo?p=BAR1+23%2F")
     }
 
     "do not fail without continue url parameter" in {

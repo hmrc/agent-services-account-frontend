@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.agentservicesaccount.auth
 
+import java.net.URLEncoder
 import javax.inject.{Inject, Singleton}
 
 import play.api.LoggerLike
@@ -27,7 +28,7 @@ import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.retrieve.Retrievals.{affinityGroup, allEnrolments}
 import uk.gov.hmrc.auth.core.retrieve.~
-import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext.fromLoggingDetails
 
 import scala.concurrent.Future
@@ -39,7 +40,8 @@ case class AgentRequest[A](arn: Arn, request: Request[A]) extends WrappedRequest
 @Singleton
 class AuthActions @Inject()(logger: LoggerLike, externalUrls: ExternalUrls, override val authConnector: AuthConnector) extends AuthorisedFunctions {
 
-  def redirectToAgentSubscriptionGgSignIn: Result = Redirect(externalUrls.agentSubscriptionUrl)
+  def redirectToAgentSubscriptionGgSignIn[A](implicit request: Request[A]): Result =
+    Redirect(externalUrls.agentSubscriptionUrl + request.session.get(SessionKeys.otacToken).map(p => s"?p=${URLEncoder.encode(p,"utf-8")}").getOrElse(""))
 
   def authorisedWithAgent[A,R](body: (AgentInfo) => Future[R])(implicit headerCarrier: HeaderCarrier): Future[Option[R]] =
     authorised(AuthProviders(GovernmentGateway)).retrieve(allEnrolments and affinityGroup) {
