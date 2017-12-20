@@ -24,11 +24,12 @@ import play.api.mvc.Results._
 import play.api.mvc._
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
+import uk.gov.hmrc.agentservicesaccount.controllers.routes
 import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.retrieve.Retrievals.{affinityGroup, allEnrolments}
 import uk.gov.hmrc.auth.core.retrieve.~
-import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext.fromLoggingDetails
 
 import scala.concurrent.Future
@@ -41,7 +42,18 @@ case class AgentRequest[A](arn: Arn, request: Request[A]) extends WrappedRequest
 class AuthActions @Inject()(logger: LoggerLike, externalUrls: ExternalUrls, override val authConnector: AuthConnector) extends AuthorisedFunctions {
 
   def redirectToAgentSubscriptionGgSignIn[A](implicit request: Request[A]): Result =
-    Redirect(externalUrls.agentSubscriptionUrl + request.session.get("otacQueryParam").map(p => s"?p=${URLEncoder.encode(p,"utf-8")}").getOrElse(""))
+    Redirect(externalUrls.agentSubscriptionUrl + encodeContinueUrl)
+
+  def encodeContinueUrl[A](implicit request: Request[A]): String = {
+    import CallOps._
+    request.session.get("otacQueryParam") match {
+      case Some(p) =>
+        val selfURL = routes.AgentServicesController.root().toURLWithParams("p" -> Some(p))
+        "?continue="+URLEncoder.encode(selfURL,"utf-8")
+      case None => ""
+    }
+
+  }
 
   def authorisedWithAgent[A,R](body: (AgentInfo) => Future[R])(implicit headerCarrier: HeaderCarrier): Future[Option[R]] =
     authorised(AuthProviders(GovernmentGateway)).retrieve(allEnrolments and affinityGroup) {

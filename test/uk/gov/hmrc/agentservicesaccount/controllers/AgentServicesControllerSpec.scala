@@ -151,7 +151,7 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
       val response = controller.root()(FakeRequest("GET", "/").withSession(("otacQueryParam","BAR1 23/")))
 
       status(response) shouldBe 303
-      redirectLocation(response) shouldBe Some("foo?p=BAR1+23%2F")
+      redirectLocation(response) shouldBe Some("foo?continue=%2Fagent-services-account%3Fp%3DBAR1%2B23%252F")
     }
 
     "do not fail without continue url parameter" in {
