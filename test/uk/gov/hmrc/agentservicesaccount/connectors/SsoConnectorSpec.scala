@@ -25,7 +25,7 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{contentAsString, _}
 import uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController
-import uk.gov.hmrc.agentservicesaccount.stubs.{AuthStubs, SsoStubs}
+import uk.gov.hmrc.agentservicesaccount.stubs.{AgentServicesAccountStubs, AuthStubs, SsoStubs}
 import uk.gov.hmrc.agentservicesaccount.support.WireMockSupport
 import uk.gov.hmrc.http.{HeaderCarrier, HttpGet}
 import uk.gov.hmrc.play.test.UnitSpec
@@ -39,7 +39,9 @@ class SsoConnectorSpec extends UnitSpec with GuiceOneAppPerTest with WireMockSup
       .configure(
         "microservice.services.agent-services-account.port" -> wireMockPort,
         "microservice.services.sso.port" -> wireMockPort,
-        "microservice.services.auth.port" -> wireMockPort
+        "microservice.services.auth.port" -> wireMockPort,
+        "auditing.enabled" -> false,
+        "passcodeAuthentication.enabled" -> true
       )
 
   import scala.concurrent.ExecutionContext.Implicits.global
@@ -72,6 +74,7 @@ class SsoConnectorSpec extends UnitSpec with GuiceOneAppPerTest with WireMockSup
     "render continue button if url is whitelisted in SSO" in {
       SsoStubs.givenDomainIsWhitelisted("www.foo.com")
       AuthStubs.givenAuthorisedAsAgentWith("ARN123456")
+      AgentServicesAccountStubs.givenAgencyNameFromASA("TARN0000001","SomeAgency")
       val controller: AgentServicesController = app.injector.instanceOf[AgentServicesController]
 
       val response = await(controller.root().apply(FakeRequest("GET", s"/?continue=${URLEncoder.encode("http://www.foo.com/bar?some=false", "UTF-8")}")))
@@ -85,6 +88,7 @@ class SsoConnectorSpec extends UnitSpec with GuiceOneAppPerTest with WireMockSup
     "not render continue button if url is not whitelisted in SSO" in {
       SsoStubs.givenDomainIsNotWhitelisted("www.foo.com")
       AuthStubs.givenAuthorisedAsAgentWith("ARN123456")
+      AgentServicesAccountStubs.givenAgencyNameFromASA("TARN0000001","SomeAgency")
       val controller: AgentServicesController = app.injector.instanceOf[AgentServicesController]
 
       val response = await(controller.root().apply(FakeRequest("GET", s"/?continue=${URLEncoder.encode("http://www.foo.com/bar?some=false", "UTF-8")}")))

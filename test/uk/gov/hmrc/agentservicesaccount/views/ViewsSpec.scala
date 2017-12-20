@@ -110,7 +110,7 @@ class ViewsSpec extends MixedPlaySpec {
         override val analyticsHost: String = "analyticsHostFoo"
       }
       val view = new agent_services_account()
-      val html = view.render(Arn("ARN0001"), Some("AgencyName"), None, Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, appConfig)
+      val html = view.render(Arn("ARN0001"), Some("AgencyName"), None, true, Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, appConfig)
       contentAsString(html) must {
         include("Services you might need") and
           include("Allow this account to access existing client relationships") and
@@ -137,7 +137,7 @@ class ViewsSpec extends MixedPlaySpec {
         override val analyticsHost: String = "analyticsHostFoo"
       }
       val view = new agent_services_account()
-      val html = view.render(Arn("ARN0001"), Some("AgencyName"), None, Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, appConfig)
+      val html = view.render(Arn("ARN0001"), Some("AgencyName"), None, true, Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, appConfig)
       contentAsString(html) must not {
         include("Services you might need") or
           include("Allow this account to access existing client relationships") or
@@ -146,6 +146,32 @@ class ViewsSpec extends MixedPlaySpec {
           include("Manage your clients") or
           include("Request authorisation to view an individual's data") or
           include("href=\"http://localhost:9448/invitations/agents/\"")
+      }
+    }
+
+    "not render invitations and income viewer links when not whitelisted" in new App {
+      val configuration: Configuration = app.configuration
+      val externalUrls = app.injector.instanceOf[ExternalUrls]
+      val appConfig = new AppConfig {
+        override def domainWhiteList: Set[String] = Set()
+
+        override def featureSwitch(featureName: String): Boolean = true
+
+        override val reportAProblemNonJSUrl: String = "reportAProblemNonJSUrlFoo"
+        override val reportAProblemPartialUrl: String = "reportAProblemPartialUrlFoo"
+        override val analyticsToken: String = "analyticsTokenFoo"
+        override val analyticsHost: String = "analyticsHostFoo"
+      }
+      val view = new agent_services_account()
+      val html = view.render(Arn("ARN0001"), Some("AgencyName"), None, false, Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, appConfig)
+      contentAsString(html) must not {
+          include("href=\"http://localhost:9996/tax-history/select-client\"") or
+          include("href=\"http://localhost:9448/invitations/agents/\"")
+      }
+      contentAsString(html) must {
+        include("Services you might need") and
+          include("If your agency uses more than one Government Gateway you will need to copy your existing client relationships from each of your Government Gateway IDs into this account.") and
+          include("href=\"http://localhost:9438/agent-mapping/start\"")
       }
     }
   }

@@ -38,7 +38,7 @@ case class AgentInfo(arn: Arn)
 case class AgentRequest[A](arn: Arn, request: Request[A]) extends WrappedRequest[A](request)
 
 @Singleton
-class AuthActions @Inject()(logger: LoggerLike, externalUrls: ExternalUrls, override val authConnector: PlayAuthConnector) extends AuthorisedFunctions {
+class AuthActions @Inject()(logger: LoggerLike, externalUrls: ExternalUrls, override val authConnector: AuthConnector) extends AuthorisedFunctions {
 
   def AuthorisedWithAgentAsync = new ActionBuilder[AgentRequest] {
     override def invokeBlock[A](request: Request[A], block: (AgentRequest[A]) => Future[Result]): Future[Result] = {

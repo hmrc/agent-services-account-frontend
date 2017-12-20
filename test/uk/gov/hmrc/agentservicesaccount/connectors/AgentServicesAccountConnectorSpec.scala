@@ -35,7 +35,8 @@ class AgentServicesAccountConnectorSpec extends UnitSpec with GuiceOneAppPerTest
     new GuiceApplicationBuilder()
       .configure(
         "microservice.services.agent-services-account.port" -> wireMockPort,
-        "microservice.services.auth.port" -> wireMockPort
+        "microservice.services.auth.port" -> wireMockPort,
+        "auditing.enabled" -> false
       )
 
   import scala.concurrent.ExecutionContext.Implicits.global
