@@ -25,6 +25,7 @@ import uk.gov.hmrc.agentservicesaccount.auth.{AuthActions, PasscodeVerification}
 import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
 import uk.gov.hmrc.agentservicesaccount.views.html.pages._
+import uk.gov.hmrc.auth.core.NoActiveSession
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 
 @Singleton
@@ -37,13 +38,20 @@ class AgentServicesController @Inject()(
                                        )
                                        (implicit val externalUrls: ExternalUrls, appConfig: AppConfig) extends FrontendController with I18nSupport {
 
-  import authActions._
-  import continueUrlActions._
 
-  val root: Action[AnyContent] = (AuthorisedWithAgentAsync andThen WithMaybeContinueUrl).async { implicit request =>
+  val root: Action[AnyContent] = Action.async { implicit request =>
     withMaybePasscode { isWhitelisted =>
-      asaConnector.getAgencyName(request.arn).map { maybeAgencyName =>
-        Ok(agent_services_account(request.arn, maybeAgencyName, request.continueUrlOpt, isWhitelisted))
+      authActions.authorisedWithAgent { agent =>
+        continueUrlActions.withMaybeContinueUrl { continueUrlOpt =>
+          asaConnector.getAgencyName(agent.arn).map { maybeAgencyName =>
+            Ok(agent_services_account(agent.arn, maybeAgencyName, continueUrlOpt, isWhitelisted))
+          }
+        }
+      } map { maybeResult =>
+        maybeResult.getOrElse(authActions.redirectToAgentSubscriptionGgSignIn)
+      } recover {
+        case _: NoActiveSession =>
+          authActions.redirectToAgentSubscriptionGgSignIn
       }
     }
   }

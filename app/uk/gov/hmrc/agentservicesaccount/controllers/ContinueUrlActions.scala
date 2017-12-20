@@ -23,14 +23,14 @@ import play.api.mvc._
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.auth.AgentRequest
 import uk.gov.hmrc.agentservicesaccount.services.HostnameWhiteListService
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.HeaderCarrierConverter
 import uk.gov.hmrc.play.binders.ContinueUrl
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 
 import scala.concurrent.Future
 import scala.util.control.NonFatal
 import scala.util.{Failure, Success, Try}
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.HeaderCarrierConverter
 
 
 @Singleton
@@ -41,32 +41,25 @@ class ContinueUrlActions @Inject()(whiteListService: HostnameWhiteListService) {
     else Future.successful(true)
   }
 
-  case class RequestWithMaybeContinueUrl[A](continueUrlOpt: Option[ContinueUrl], request: AgentRequest[A])
-    extends WrappedRequest[A](request) {
-    def arn: Arn = request.arn
-  }
-
-  val WithMaybeContinueUrl = new ActionRefiner[AgentRequest, RequestWithMaybeContinueUrl] {
-    override protected def refine[A](request: AgentRequest[A]): Future[Either[Result, RequestWithMaybeContinueUrl[A]]] = {
-      implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(request.headers, None)
-      val continueUrl = request.getQueryString("continue").fold[Future[Option[ContinueUrl]]](
-        Future.successful(None)
-      ) { continueParam =>
-        Try(ContinueUrl(continueParam)) match {
-          case Success(url) =>
-            isRelativeOrAbsoluteWhiteListed(url).
-              map(if (_) Some(url) else None).
-              recover {
-                case NonFatal(e) =>
-                  Logger.warn(s"Check for whitelisted hostname failed", e)
-                  None
-              }
-          case Failure(_)   => Future.successful(None)
-        }
+  def withMaybeContinueUrl[A,R](body: (Option[ContinueUrl]) => Future[R])(implicit request: Request[A], headerCarrier: HeaderCarrier): Future[R] = {
+    request.getQueryString("continue").fold[Future[R]](
+      body(None)
+    ) { continueParam =>
+      val continueUrlOpt: Future[Option[ContinueUrl]] = Try(ContinueUrl(continueParam)) match {
+        case Success(url) =>
+          isRelativeOrAbsoluteWhiteListed(url).
+            map(if (_) Some(url) else None).
+            recover {
+              case NonFatal(e) =>
+                Logger.warn(s"Check for whitelisted hostname failed", e)
+                None
+            }
+        case Failure(_) => Future successful None
       }
-      continueUrl.map(urlOpt => Right(RequestWithMaybeContinueUrl(urlOpt, request)))
+      continueUrlOpt.flatMap(body)
     }
   }
+
 }
 
 
