@@ -46,7 +46,7 @@ class AuthActions @Inject()(logger: LoggerLike, externalUrls: ExternalUrls, over
 
   def encodeContinueUrl[A](implicit request: Request[A]): String = {
     import CallOps._
-    request.session.get("otacToken") match {
+    request.session.get("otacTokenParam") match {
       case Some(p) =>
         val selfURL = routes.AgentServicesController.root().toURLWithParams("p" -> Some(p))
         "?continue="+URLEncoder.encode(selfURL,"utf-8")

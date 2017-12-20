@@ -54,9 +54,9 @@ class FrontendPasscodeVerification @Inject()(configuration: Configuration,
 
   def throwConfigNotFound(configKey: String) = throw new PasscodeVerificationException(s"The value for the key '$configKey' should be setup in the config file.")
 
-  def addRedirectUrl[A](queryParam: String)(implicit request: Request[A]): Result => Result = e =>
+  def addRedirectUrl[A](token: String)(implicit request: Request[A]): Result => Result = e =>
     e.addingToSession(SessionKeys.redirect -> buildRedirectUrl(request))
-      .addingToSession("otacToken" -> queryParam)
+      .addingToSession("otacTokenParam" -> token)
 
   def buildRedirectUrl[A](req: Request[A]): String =
     if (env != "Prod") s"http${if (req.secure) "s" else ""}://${req.host}${req.path}" else req.path
@@ -67,7 +67,7 @@ class FrontendPasscodeVerification @Inject()(configuration: Configuration,
         request.getQueryString(tokenParam) match {
           case Some(token) => {
             val queryParam = s"?$tokenParam=$token"
-            Future.successful(Redirect(loginUrl(queryParam))) map addRedirectUrl(queryParam)(request)
+            Future.successful(Redirect(loginUrl(queryParam))) map addRedirectUrl(token)(request)
           }
           case _ => body(false)
         }

@@ -148,7 +148,7 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
 
       val controller = new AgentServicesController(messagesApi, authActions, continueUrlActions, desConnector, NoPasscodeVerification)
 
-      val response = controller.root()(FakeRequest("GET", "/").withSession(("otacToken","BAR1 23/")))
+      val response = controller.root()(FakeRequest("GET", "/").withSession(("otacTokenParam","BAR1 23/")))
 
       status(response) shouldBe 303
       redirectLocation(response) shouldBe Some("foo?continue=%2Fagent-services-account%3Fp%3DBAR1%2B23%252F")
