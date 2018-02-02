@@ -125,11 +125,9 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
       content should include(messagesApi("agent.services.account.additional.links.mapping.body1"))
       content should include(messagesApi("agent.services.account.additional.links.mapping.body2", mappingUrl, "agentMappingLinkId"))
       content should include(messagesApi("agent.manageClients"))
-      content should include(messagesApi("agent.invitations.links.start", invitationsUrl, "agentInvitationsLinkId",
-        "ga('send', 'event', 'Manage your clients', 'Click', 'Request authorisation to view an individual’s data')"))
+      content should include(messagesApi("agent.invitations.links.start", invitationsUrl, "agentInvitationsLinkId"))
       content should include(htmlEscapedMessage(messagesApi("agent.services.account.additional.links.agent-afi.body1")))
-      content should include(messagesApi("agent.services.account.additional.links.agent-afi.body2", agentAfiUrl, "agentAfiLinkId",
-        "ga('send', 'event', 'Services you might need', 'Click', 'View a client’s income record')"))
+      content should include(messagesApi("agent.services.account.additional.links.agent-afi.body2", agentAfiUrl, "agentAfiLinkId"))
       content should include(arn)
       content should include(signOutUrl)
       content should include(mappingUrl)
