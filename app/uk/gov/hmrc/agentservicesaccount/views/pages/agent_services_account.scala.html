@@ -42,7 +42,8 @@
             <section class="section subsection section--blue-top">
                 @featureSwitch("features.showAgentInvitationsLink", isWhitelisted) {
                     <h2>@Messages("agent.manageClients")</h2>
-                    <p>@Html(Messages("agent.invitations.links.start", externalUrls.agentInvitationsUrl, "agentInvitationsLinkId"))</p>
+                    <p>@Html(Messages("agent.invitations.links.start", externalUrls.agentInvitationsUrl, "agentInvitationsLinkId",
+                        "ga('send', 'event', 'Manage your clients', 'Click', 'Request authorisation to view an individual’s data')"))</p>
                 }
                 <h2>@Messages("agent.references")</h2>
                 <p>@Messages("agent.accountNumber", arn.value)</p>
@@ -79,7 +80,8 @@
 
       @featureSwitch("features.showAgentAfiLink", isWhitelisted) {
         <p>@Messages("agent.services.account.additional.links.agent-afi.body1")</p>
-        <p>@Html(Messages("agent.services.account.additional.links.agent-afi.body2", externalUrls.agentAfiUrl, "agentAfiLinkId"))</p>
+        <p>@Html(Messages("agent.services.account.additional.links.agent-afi.body2", externalUrls.agentAfiUrl, "agentAfiLinkId",
+            "ga('send', 'event', 'Services you might need', 'Click', 'View a client’s income record')"))</p>
       }
     }
 }
