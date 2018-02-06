@@ -27,6 +27,6 @@ import scala.concurrent.Future
 class SignOutController @Inject()(externalUrls: ExternalUrls) extends FrontendController {
 
   val signOut: Action[AnyContent] = Action.async { implicit request =>
-      Future successful Redirect(externalUrls.signOutUrl).withNewSession
+      Future successful Redirect(externalUrls.signOutUrl).removingFromSession("otacTokenParam")
   }
 }
