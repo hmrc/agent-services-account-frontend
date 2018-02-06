@@ -78,7 +78,7 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
   val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
   implicit val externalUrls: ExternalUrls = mock[ExternalUrls]
-  val signOutUrl = "http://example.com/gg/sign-out?continue=http://example.com/go-here-after-sign-out"
+  val signOutUrl = routes.SignOutController.signOut().url
   when(externalUrls.signOutUrl).thenReturn(signOutUrl)
   val mappingUrl = "http://example.com/agent-mapping/start"
   when(externalUrls.agentMappingUrl).thenReturn(mappingUrl)

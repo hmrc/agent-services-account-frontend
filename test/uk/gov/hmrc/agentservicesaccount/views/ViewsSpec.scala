@@ -110,7 +110,7 @@ class ViewsSpec extends MixedPlaySpec {
         override val analyticsHost: String = "analyticsHostFoo"
       }
       val view = new agent_services_account()
-      val html = view.render(Arn("ARN0001"), Some("AgencyName"), None, true, Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, appConfig)
+      val html = view.render(Arn("ARN0001"), Some("AgencyName"), None, true, externalUrls.signOutUrl, Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, appConfig)
       contentAsString(html) must {
         include("Services you might need") and
           include("Allow this account to access existing client relationships") and
@@ -137,7 +137,7 @@ class ViewsSpec extends MixedPlaySpec {
         override val analyticsHost: String = "analyticsHostFoo"
       }
       val view = new agent_services_account()
-      val html = view.render(Arn("ARN0001"), Some("AgencyName"), None, true, Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, appConfig)
+      val html = view.render(Arn("ARN0001"), Some("AgencyName"), None, true, externalUrls.signOutUrl,  Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, appConfig)
       contentAsString(html) must not {
         include("Services you might need") or
           include("Allow this account to access existing client relationships") or
@@ -163,7 +163,7 @@ class ViewsSpec extends MixedPlaySpec {
         override val analyticsHost: String = "analyticsHostFoo"
       }
       val view = new agent_services_account()
-      val html = view.render(Arn("ARN0001"), Some("AgencyName"), None, false, Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, appConfig)
+      val html = view.render(Arn("ARN0001"), Some("AgencyName"), None, false, externalUrls.signOutUrl, Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, appConfig)
       contentAsString(html) must not {
           include("href=\"http://localhost:9996/tax-history/select-client\"") or
           include("href=\"http://localhost:9448/invitations/agents/\"")

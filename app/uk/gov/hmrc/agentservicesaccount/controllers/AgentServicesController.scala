@@ -44,7 +44,7 @@ class AgentServicesController @Inject()(
       authActions.authorisedWithAgent { agent =>
         continueUrlActions.withMaybeContinueUrl { continueUrlOpt =>
           asaConnector.getAgencyName(agent.arn).map { maybeAgencyName =>
-            Ok(agent_services_account(agent.arn, maybeAgencyName, continueUrlOpt, isWhitelisted))
+            Ok(agent_services_account(agent.arn, maybeAgencyName, continueUrlOpt, isWhitelisted, routes.SignOutController.signOut().url))
           }
         }
       } map { maybeResult =>

@@ -1,3 +1,4 @@
 # microservice specific routes
 
-GET        /                        @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController.root()
+GET        /                @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController.root()
+GET        /sign-out        @uk.gov.hmrc.agentservicesaccount.controllers.SignOutController.signOut
