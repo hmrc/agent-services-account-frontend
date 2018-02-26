@@ -149,7 +149,7 @@ class ViewsSpec extends MixedPlaySpec {
       }
     }
 
-    "not render invitations and income viewer links when not whitelisted" in new App {
+    "render invitations link but not income viewer link when not whitelisted" in new App {
       val configuration: Configuration = app.configuration
       val externalUrls = app.injector.instanceOf[ExternalUrls]
       val appConfig = new AppConfig {
@@ -163,15 +163,13 @@ class ViewsSpec extends MixedPlaySpec {
         override val analyticsHost: String = "analyticsHostFoo"
       }
       val view = new agent_services_account()
-      val html = view.render(Arn("ARN0001"), Some("AgencyName"), None, false, externalUrls.signOutUrl, Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, appConfig)
-      contentAsString(html) must not {
-          include("href=\"http://localhost:9996/tax-history/select-client\"") or
-          include("href=\"http://localhost:9448/invitations/agents/\"")
-      }
+      val html = view.render(Arn("ARN0001"), Some("AgencyName"), None, isWhitelisted = false, externalUrls.signOutUrl, Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, appConfig)
+      contentAsString(html) must not include("href=\"http://localhost:9996/tax-history/select-client\"")
       contentAsString(html) must {
         include("Services you might need") and
-          include("If your agency uses more than one Government Gateway you will need to copy your existing client relationships from each of your Government Gateway IDs into this account.") and
-          include("href=\"http://localhost:9438/agent-mapping/start\"")
+        include("If your agency uses more than one Government Gateway you will need to copy your existing client relationships from each of your Government Gateway IDs into this account.") and
+        include("href=\"http://localhost:9438/agent-mapping/start\"")
+        include("href=\"http://localhost:9448/invitations/agents/\"")
       }
     }
   }
