@@ -39,17 +39,19 @@
         </div>
         <div class ="grid-layout__column grid-layout__column--1-3">
             <section class="section subsection section--blue-top">
-                @featureSwitch("features.showAgentInvitationsLink", isWhitelisted) {
-                    <script>
-                            function gaEvent() {
-                                ga('send', 'event', {
-                                    'eventCategory': '@Messages("agent.services.account.additional.links.agent-afi.ga.link-view")',
-                                    'eventAction': '@Messages("agent.services.account.additional.links.agent-afi.ga.manage-clients")',
-                                    'eventLabel': '@Messages("agent.services.account.additional.links.agent-afi.ga.request-auth")'
+                @featureSwitch("features.showAgentInvitationsLink") {
+                    @if(isWhitelisted) {
+                        <script>
+                                function gaEvent() {
+                                    ga('send', 'event', {
+                                        'eventCategory': '@Messages("agent.services.account.additional.links.agent-afi.ga.link-view")',
+                                        'eventAction': '@Messages("agent.services.account.additional.links.agent-afi.ga.manage-clients")',
+                                        'eventLabel': '@Messages("agent.services.account.additional.links.agent-afi.ga.request-auth")'
+                                    });
                                 });
-                            });
-                            gaEvent();
-                    </script>
+                                gaEvent();
+                        </script>
+                    }
                     <h2>@Messages("agent.manageClients")</h2>
                     <p>@Html(Messages("agent.invitations.links.start", externalUrls.agentInvitationsUrl, "agentInvitationsLinkId"))</p>
                 }
