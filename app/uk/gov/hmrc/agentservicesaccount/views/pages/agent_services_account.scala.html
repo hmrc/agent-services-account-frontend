@@ -41,13 +41,14 @@
             <section class="section subsection section--blue-top">
                 @featureSwitch("features.showAgentInvitationsLink", isWhitelisted) {
                     <script>
-                            $(document).ready(function () {
+                            function gaEvent() {
                                 ga('send', 'event', {
                                     'eventCategory': '@Messages("agent.services.account.additional.links.agent-afi.ga.link-view")',
                                     'eventAction': '@Messages("agent.services.account.additional.links.agent-afi.ga.manage-clients")',
                                     'eventLabel': '@Messages("agent.services.account.additional.links.agent-afi.ga.request-auth")'
                                 });
                             });
+                            gaEvent();
                     </script>
                     <h2>@Messages("agent.manageClients")</h2>
                     <p>@Html(Messages("agent.invitations.links.start", externalUrls.agentInvitationsUrl, "agentInvitationsLinkId"))</p>
@@ -87,13 +88,14 @@
 
       @featureSwitch("features.showAgentAfiLink", isWhitelisted) {
         <script>
-                $(document).ready(function () {
+                function gaEvent() {
                     ga('send', 'event', {
                         'eventCategory': '@Messages("agent.services.account.additional.links.agent-afi.ga.link-view")',
                         'eventAction': '@Messages("agent.services.account.additional.links.agent-afi.ga.services-you-need")',
                         'eventLabel': '@Messages("agent.services.account.additional.links.agent-afi.ga.view-income-record")'
                     });
                 });
+                gaEvent();
         </script>
         <p>@Messages("agent.services.account.additional.links.agent-afi.body1")</p>
         <p>@Html(Messages("agent.services.account.additional.links.agent-afi.body2", externalUrls.agentAfiUrl, "agentAfiLinkId"))</p>
