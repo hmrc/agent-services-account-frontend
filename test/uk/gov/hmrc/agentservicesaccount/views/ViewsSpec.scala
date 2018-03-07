@@ -66,7 +66,8 @@ class ViewsSpec extends MixedPlaySpec {
         scriptElem = Some(Html("scriptElem")),
         mainContent = Html("mainContent"),
         request = FakeRequest(),
-        messages = Messages.Implicits.applicationMessages
+        messages = Messages.Implicits.applicationMessages,
+        analyticsAdditionalJs = None
       )
 
       contentAsString(html) must {
@@ -87,7 +88,8 @@ class ViewsSpec extends MixedPlaySpec {
         Some(Html("contentHeader")),
         Some("bodyClasses"),
         Some("mainClass"),
-        Some(Html("scriptElem"))
+        Some(Html("scriptElem")),
+        None
       )(Html("mainContent"))(FakeRequest(), Messages.Implicits.applicationMessages)
       hmtl2 must be(html)
     }
