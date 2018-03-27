@@ -38,8 +38,9 @@
         });
     }
 
-}
+    ga('send', { 'dimension5': '@if(isWhitelisted) { 'Whitelisted' } else { 'Non-Whitelisted' }' });
 
+}
 
 @navLinks = {
     <li><a href="@{signOutUrl}" id="signOut">@Messages("common.sign-out")</a></li>
