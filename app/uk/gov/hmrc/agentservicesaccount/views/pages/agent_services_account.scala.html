@@ -23,14 +23,14 @@
 
 @analyticsAdditionalJs = {
 
-    @featureSwitchJs("features.showAgentInvitationsLink", isWhitelisted) {
+    @featureSwitch("features.showAgentInvitationsLink", isWhitelisted) {
         ga('send', 'event', {
             'eventCategory': '@Messages("agent.services.account.additional.links.agent-afi.ga.link-view")',
             'eventAction': '@Messages("agent.services.account.additional.links.agent-afi.ga.manage-clients")',
             'eventLabel': '@Messages("agent.services.account.additional.links.agent-afi.ga.request-auth")'
         });
     }
-    @featureSwitchJs("features.showAgentAfiLink", isWhitelisted) {
+    @featureSwitch("features.showAgentAfiLink", isWhitelisted) {
         ga('send', 'event', {
             'eventCategory': '@Messages("agent.services.account.additional.links.agent-afi.ga.link-view")',
             'eventAction': '@Messages("agent.services.account.additional.links.agent-afi.ga.services-you-need")',
@@ -105,9 +105,5 @@
 }
 
 @featureSwitch(featureName: String, toggle: Boolean = true)(content: Html) = {
-    @if(toggle && appConfig.featureSwitch(featureName)) { @content } else { <span></span> }
-}
-
-@featureSwitchJs(featureName: String, toggle: Boolean = true)(content: Html) = {
-    @if(toggle && appConfig.featureSwitch(featureName)) { @content } else { ; }
+    @if(toggle && appConfig.featureSwitch(featureName)) { @content }
 }
