@@ -34,7 +34,8 @@ class AgentServicesController @Inject()(
                                          authActions: AuthActions,
                                          continueUrlActions: ContinueUrlActions,
                                          asaConnector: AgentServicesAccountConnector,
-                                         val withMaybePasscode: PasscodeVerification
+                                         val withMaybePasscode: PasscodeVerification,
+                                         @Named("customDimension") customDimension: String
                                        )
                                        (implicit val externalUrls: ExternalUrls, appConfig: AppConfig) extends FrontendController with I18nSupport {
 
@@ -44,7 +45,7 @@ class AgentServicesController @Inject()(
       authActions.authorisedWithAgent { agent =>
         continueUrlActions.withMaybeContinueUrl { continueUrlOpt =>
           asaConnector.getAgencyName(agent.arn).map { maybeAgencyName =>
-            Ok(agent_services_account(agent.arn, maybeAgencyName, continueUrlOpt, isWhitelisted, routes.SignOutController.signOut().url))
+            Ok(agent_services_account(agent.arn, maybeAgencyName, continueUrlOpt, isWhitelisted, routes.SignOutController.signOut().url, customDimension))
           }
         }
       } map { maybeResult =>
