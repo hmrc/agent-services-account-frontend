@@ -104,6 +104,7 @@
     }
 }
 
+
 @featureSwitch(featureName: String, toggle: Boolean = true)(content: String) = {
     @if(toggle && appConfig.featureSwitch(featureName)) { @content } else { "" }
 }
