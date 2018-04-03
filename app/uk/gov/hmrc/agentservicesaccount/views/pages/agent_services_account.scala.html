@@ -109,5 +109,5 @@
 }
 
 @featureSwitchJs(featureName: String, toggle: Boolean = true)(content: Html) = {
-    @if(toggle && appConfig.featureSwitch(featureName)) { @content } else { //customDimension }
+    @if(toggle && appConfig.featureSwitch(featureName)) { @content } else {  }
 }
