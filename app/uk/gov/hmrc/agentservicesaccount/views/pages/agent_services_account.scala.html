@@ -105,5 +105,5 @@
 }
 
 @featureSwitch(featureName: String, toggle: Boolean = true)(content: Html) = {
-    @if(toggle && appConfig.featureSwitch(featureName)) { @content } else { <span></span> }
+    @if(toggle && appConfig.featureSwitch(featureName)) { @content } else {  }
 }
