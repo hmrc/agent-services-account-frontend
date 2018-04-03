@@ -112,3 +112,7 @@
 @featureSwitchJs(featureName: String, toggle: Boolean = true)(content: Html) = {
     @if(toggle && appConfig.featureSwitch(featureName)) { @content } else { "" }
 }
+
+@featureSwitchJs(featureName: String, toggle: Boolean = true)(content: Html) = {
+    @if(toggle && appConfig.featureSwitch(featureName)) { @content } else {  }
+}
