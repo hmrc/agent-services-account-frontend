@@ -34,6 +34,7 @@ class GuiceModule(val environment: Environment, val configuration: Configuration
 
   override def configure(): Unit = {
     bindProperty("appName")
+    bindProperty("customDimension")
     bind(classOf[AuthConnector]).to(classOf[FrontendAuthConnector])
     bind(classOf[OtacAuthConnector]).to(classOf[FrontendAuthConnector])
     bind(classOf[PasscodeVerification]).to(classOf[FrontendPasscodeVerification])
