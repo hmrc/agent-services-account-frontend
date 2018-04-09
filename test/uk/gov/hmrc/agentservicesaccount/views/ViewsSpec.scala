@@ -120,7 +120,7 @@ class ViewsSpec extends MixedPlaySpec {
           include("href=\"http://localhost:9438/agent-mapping/start\"") and
           include("href=\"http://localhost:9996/tax-history/select-client\"") and
           include("Manage your clients") and
-          include("Request authorisation to view an individual's data") and
+          include("Ask a client to authorise you") and
           include("href=\"http://localhost:9448/invitations/agents/\"")
       }
     }
@@ -146,7 +146,7 @@ class ViewsSpec extends MixedPlaySpec {
           include("If your agency uses more than one Government Gateway you will need to copy your existing client relationships from each of your Government Gateway IDs into this account.") or
           include("Authorise a client to report their Income Tax using software, if they&#x27;ve signed up to do so.") or
           include("Manage your clients") or
-          include("Request authorisation to view an individual's data") or
+          include("Ask a client to authorise you") or
           include("href=\"http://localhost:9448/invitations/agents/\"")
       }
     }

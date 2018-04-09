@@ -11,10 +11,10 @@ agent.services.account.additional.links.mapping.body1=If your agency uses more t
 agent.services.account.additional.links.mapping.body2=<a href="{0}" id="{1}">Allow this account to access existing client relationships</a>
 agent.services.account.additional.links.agent-afi.body1=View a client''s Income Tax, benefits and pension record if they''ve authorised you to do so.
 agent.services.account.additional.links.agent-afi.body2=<a href="{0}" id="{1}" data-journey-click=''link - click :Services you might need :View a clients income record''>View a client''s income record</a>
-agent.invitations.links.start=<a href="{0}" id="{1}" data-journey-click=''link - click :Manage your clients :Request authorisation to view an individuals data''>Request authorisation to view an individual''s data</a>
+agent.invitations.links.start=<a href="{0}" id="{1}" data-journey-click=''link - click :Manage your clients :Ask a client to authorise you''>Ask a client to authorise you''s data</a>
 common.sign-out=Sign out
 agent.services.account.additional.links.agent-afi.ga.link-view=link - view
 agent.services.account.additional.links.agent-afi.ga.manage-clients=Manage your clients
 agent.services.account.additional.links.agent-afi.ga.services-you-need=Services you might need
-agent.services.account.additional.links.agent-afi.ga.request-auth=Request authorisation to view an individuals data
+agent.services.account.additional.links.agent-afi.ga.request-auth=Ask a client to authorise you
 agent.services.account.additional.links.agent-afi.ga.view-income-record=View a clients income record
