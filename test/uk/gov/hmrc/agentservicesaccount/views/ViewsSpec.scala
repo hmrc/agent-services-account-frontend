@@ -121,7 +121,7 @@ class ViewsSpec extends MixedPlaySpec {
           include("href=\"http://localhost:9438/agent-mapping/start\"") and
           include("href=\"http://localhost:9996/tax-history/select-client\"") and
           include("Manage your clients") and
-          include("Request authorisation to view an individual's data") and
+          include("Ask a client to authorise you") and
           include("href=\"http://localhost:9448/invitations/agents/\"") and
           include("Manage your users") and
           include("Control who can access your agent services account") and
@@ -144,15 +144,15 @@ class ViewsSpec extends MixedPlaySpec {
       }
       val isAgent = true
       val view = new agent_services_account()
-      val html = view.render(Arn("ARN0001"), isAgent, Some("AgencyName"), None, true, externalUrls.signOutUrl, "",  Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, appConfig)
+      val html = view.render(Arn("ARN0001"), isAgent, Some("AgencyName"), None, true, externalUrls.signOutUrl, "", Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, appConfig)
       contentAsString(html) must not {
         include("Services you might need") or
           include("Allow this account to access existing client relationships") or
           include("If your agency uses more than one Government Gateway you will need to copy your existing client relationships from each of your Government Gateway IDs into this account.") or
           include("Authorise a client to report their Income Tax using software, if they&#x27;ve signed up to do so.") or
           include("Manage your clients") or
-          include("Request authorisation to view an individual's data") or
-          include("href=\"http://localhost:9448/invitations/agents/\"")
+          include("Ask a client to authorise you") or
+          include("href=\"http://localhost:9448/invitations/agents/\"") or
           include("Manage your users") or
           include("Control who can access your agent services account") or
           include("href=\"http://localhost:9851/user-delegation/manage-users\"")
@@ -175,12 +175,12 @@ class ViewsSpec extends MixedPlaySpec {
       val isAgent = true
       val view = new agent_services_account()
       val html = view.render(Arn("ARN0001"), isAgent, Some("AgencyName"), None, isWhitelisted = false, externalUrls.signOutUrl, "", Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, appConfig)
-      contentAsString(html) must not include("href=\"http://localhost:9996/tax-history/select-client\"")
+      contentAsString(html) must not include ("href=\"http://localhost:9996/tax-history/select-client\"")
       contentAsString(html) must {
         include("Services you might need") and
-        include("If your agency uses more than one Government Gateway you will need to copy your existing client relationships from each of your Government Gateway IDs into this account.") and
-        include("href=\"http://localhost:9438/agent-mapping/start\"")
-        include("href=\"http://localhost:9448/invitations/agents/\"")
+          include("If your agency uses more than one Government Gateway you will need to copy your existing client relationships from each of your Government Gateway IDs into this account.") and
+          include("href=\"http://localhost:9438/agent-mapping/start\"") and
+          include("href=\"http://localhost:9448/invitations/agents/\"")
       }
     }
 

@@ -4,7 +4,7 @@ agent.services.account.heading.summary=Your new Agent Services account will give
 agent.services.account.new_account.continue=Continue with your journey
 existing.client.relationships.link=Access existing client relationships
 agent.manageClients=Manage your clients
-agent.invitations.links.start=<a href="{0}" id="{1}" data-journey-click=''link - click :Manage your clients :Request authorisation to view an individuals data''>Request authorisation to view an individual''s data</a>
+agent.invitations.links.start=<a href="{0}" id="{1}" data-journey-click=''link - click :Manage your clients :Ask a client to authorise you''>Ask a client to authorise you</a>
 agent.manageYourUsers=Manage your users
 agent.manageYourUsers.links.start=<a href="{0}" id="{1}" data-journey-click=''link - click :Manage your users :Control who can access your agent services account''>Control who can access your agent services account</a>
 agent.references=Your references
@@ -18,5 +18,5 @@ common.sign-out=Sign out
 agent.services.account.additional.links.agent-afi.ga.link-view=link - view
 agent.services.account.additional.links.agent-afi.ga.manage-clients=Manage your clients
 agent.services.account.additional.links.agent-afi.ga.services-you-need=Services you might need
-agent.services.account.additional.links.agent-afi.ga.request-auth=Request authorisation to view an individuals data
+agent.services.account.additional.links.agent-afi.ga.request-auth=Ask a client to authorise you
 agent.services.account.additional.links.agent-afi.ga.view-income-record=View a clients income record
