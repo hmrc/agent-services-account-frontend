@@ -19,7 +19,7 @@
 @import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
 @import uk.gov.hmrc.play.binders.ContinueUrl
 
-@(arn: Arn, agencyNameOpt: Option[String], continueUrlOpt: Option[ContinueUrl], isWhitelisted: Boolean, signOutUrl: String, customDimension: String)(implicit messages: Messages, request: Request[_], externalUrls: ExternalUrls, appConfig: AppConfig)
+@(arn: Arn, isAdmin: Boolean, agencyNameOpt: Option[String], continueUrlOpt: Option[ContinueUrl], isWhitelisted: Boolean, signOutUrl: String, customDimension: String)(implicit messages: Messages, request: Request[_], externalUrls: ExternalUrls, appConfig: AppConfig)
 
 @analyticsAdditionalJs = {
 
@@ -63,6 +63,12 @@
                 @featureSwitch("features.showAgentInvitationsLink") {
                     <h2>@Messages("agent.manageClients")</h2>
                     <p>@Html(Messages("agent.invitations.links.start", externalUrls.agentInvitationsUrl, "agentInvitationsLinkId"))</p>
+                }
+                @featureSwitch("features.showManageUsersLink") {
+                  @if(isAdmin) {
+                    <h2>@Messages("agent.manageYourUsers")</h2>
+                    <p>@Html(Messages("agent.manageYourUsers.links.start", externalUrls.manageUsersUrl, "manageYourUsersLinkId"))</p>
+                  }
                 }
                 <h2>@Messages("agent.references")</h2>
                 <p>@Messages("agent.accountNumber", arn.value)</p>

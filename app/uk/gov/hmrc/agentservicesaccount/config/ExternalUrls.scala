@@ -46,4 +46,8 @@ class ExternalUrls @Inject() (override val configuration: Configuration) extends
   private lazy val agentAfiExternalUrl = getConfigString("microservice.services.tax-history-frontend.external-url")
   private lazy val agentAfiStartPath = getConfigString("microservice.services.tax-history-frontend.start.path")
   lazy val agentAfiUrl: String = s"$agentAfiExternalUrl$agentAfiStartPath"
+
+  private lazy val manageUsersExternalUrl = getConfigString("microservice.services.user-delegation-frontend.external-url")
+  private lazy val manageUsersStartPath = getConfigString("microservice.services.user-delegation-frontend.start.path")
+  lazy val manageUsersUrl: String = s"$manageUsersExternalUrl$manageUsersStartPath"
 }

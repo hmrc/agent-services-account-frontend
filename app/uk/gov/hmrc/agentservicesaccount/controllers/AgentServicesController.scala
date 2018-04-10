@@ -42,10 +42,10 @@ class AgentServicesController @Inject()(
 
   val root: Action[AnyContent] = Action.async { implicit request =>
     withMaybePasscode { isWhitelisted =>
-      authActions.authorisedWithAgent { agent =>
+      authActions.authorisedWithAgent { agentInfo =>
         continueUrlActions.withMaybeContinueUrl { continueUrlOpt =>
-          asaConnector.getAgencyName(agent.arn).map { maybeAgencyName =>
-            Ok(agent_services_account(agent.arn, maybeAgencyName, continueUrlOpt, isWhitelisted, routes.SignOutController.signOut().url, customDimension))
+          asaConnector.getAgencyName(agentInfo.arn).map { maybeAgencyName =>
+            Ok(agent_services_account(agentInfo.arn, agentInfo.isAdmin, maybeAgencyName, continueUrlOpt, isWhitelisted, routes.SignOutController.signOut().url, customDimension))
           }
         }
       } map { maybeResult =>

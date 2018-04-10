@@ -97,7 +97,7 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
   val authActions = new AuthActions(null, null, null) {
 
     override def authorisedWithAgent[A, R](body: AgentInfo => Future[R])(implicit headerCarrier: HeaderCarrier): Future[Option[R]] = {
-      body(AgentInfo(Arn(arn))) map Option.apply
+      body(AgentInfo(Arn(arn), None)) map Option.apply
     }
 
   }
