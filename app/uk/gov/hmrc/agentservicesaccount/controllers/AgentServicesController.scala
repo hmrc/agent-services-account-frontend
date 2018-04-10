@@ -25,7 +25,7 @@ import uk.gov.hmrc.agentservicesaccount.auth.{AuthActions, PasscodeVerification}
 import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
 import uk.gov.hmrc.agentservicesaccount.views.html.pages._
-import uk.gov.hmrc.auth.core.NoActiveSession
+import uk.gov.hmrc.auth.core.{Admin, CredentialRole, NoActiveSession}
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 
 @Singleton
@@ -42,10 +42,16 @@ class AgentServicesController @Inject()(
 
   val root: Action[AnyContent] = Action.async { implicit request =>
     withMaybePasscode { isWhitelisted =>
-      authActions.authorisedWithAgent { agent =>
+      authActions.authorisedWithAgent { agentInfo =>
         continueUrlActions.withMaybeContinueUrl { continueUrlOpt =>
-          asaConnector.getAgencyName(agent.arn).map { maybeAgencyName =>
-            Ok(agent_services_account(agent.arn, maybeAgencyName, continueUrlOpt, isWhitelisted, routes.SignOutController.signOut().url, customDimension))
+          asaConnector.getAgencyName(agentInfo.arn).map { maybeAgencyName =>
+
+            val isAdmin = agentInfo.credentialRole match {
+              case Some(Admin) => true
+              case _ => false
+            }
+
+            Ok(agent_services_account(agentInfo.arn, isAdmin, maybeAgencyName, continueUrlOpt, isWhitelisted, routes.SignOutController.signOut().url, customDimension))
           }
         }
       } map { maybeResult =>

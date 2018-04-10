@@ -27,14 +27,14 @@ import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
 import uk.gov.hmrc.agentservicesaccount.controllers.routes
 import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
 import uk.gov.hmrc.auth.core._
-import uk.gov.hmrc.auth.core.retrieve.Retrievals.{affinityGroup, allEnrolments}
+import uk.gov.hmrc.auth.core.retrieve.Retrievals.{affinityGroup, allEnrolments, credentialRole}
 import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext.fromLoggingDetails
 
 import scala.concurrent.Future
 
-case class AgentInfo(arn: Arn)
+case class AgentInfo(arn: Arn, credentialRole: Option[CredentialRole])
 
 case class AgentRequest[A](arn: Arn, request: Request[A]) extends WrappedRequest[A](request)
 
@@ -56,11 +56,11 @@ class AuthActions @Inject()(logger: LoggerLike, externalUrls: ExternalUrls, over
   }
 
   def authorisedWithAgent[A,R](body: (AgentInfo) => Future[R])(implicit headerCarrier: HeaderCarrier): Future[Option[R]] =
-    authorised(AuthProviders(GovernmentGateway)).retrieve(allEnrolments and affinityGroup) {
-      case enrol ~ affinityG =>
-        (enrol.getEnrolment("HMRC-AS-AGENT"), affinityG) match {
-          case (Some(agentEnrolment), Some(AffinityGroup.Agent)) if agentEnrolment.isActivated =>
-            getArn(agentEnrolment).map { arn => body(AgentInfo(arn)).map(result => Some(result)) }
+    authorised(AuthProviders(GovernmentGateway)).retrieve(allEnrolments and affinityGroup and credentialRole) {
+      case enrol ~ affinityG ~ credentialRole =>
+        (enrol.getEnrolment("HMRC-AS-AGENT"), affinityG, credentialRole) match {
+          case (Some(agentEnrolment), Some(AffinityGroup.Agent), _) if agentEnrolment.isActivated =>
+            getArn(agentEnrolment).map { arn => body(AgentInfo(arn, credentialRole)).map(result => Some(result)) }
               .getOrElse {
                 logger.warn("No AgentReferenceNumber found in HMRC-AS-AGENT enrolment - this should not happen. Denying access.")
                 Future successful None
