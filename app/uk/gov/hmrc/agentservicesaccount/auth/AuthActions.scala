@@ -34,7 +34,12 @@ import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext.fromLoggingDetai
 
 import scala.concurrent.Future
 
-case class AgentInfo(arn: Arn, credentialRole: Option[CredentialRole])
+case class AgentInfo(arn: Arn, credentialRole: Option[CredentialRole]) {
+  val isAdmin: Boolean = credentialRole match {
+    case Some(Admin) => true
+    case _ => false
+  }
+}
 
 case class AgentRequest[A](arn: Arn, request: Request[A]) extends WrappedRequest[A](request)
 

@@ -49,5 +49,5 @@ class ExternalUrls @Inject() (override val configuration: Configuration) extends
 
   private lazy val manageUsersExternalUrl = getConfigString("microservice.services.user-delegation-frontend.external-url")
   private lazy val manageUsersStartPath = getConfigString("microservice.services.user-delegation-frontend.start.path")
-  lazy val managerUsersUrl: String = s"$manageUsersExternalUrl$manageUsersStartPath"
+  lazy val manageUsersUrl: String = s"$manageUsersExternalUrl$manageUsersStartPath"
 }

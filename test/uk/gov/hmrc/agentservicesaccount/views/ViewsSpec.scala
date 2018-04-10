@@ -184,7 +184,7 @@ class ViewsSpec extends MixedPlaySpec {
       }
     }
 
-    "render does not feature manage your users link because Agent is Assistant" in new App {
+    "render does not show manage your users link because Agent is Assistant" in new App {
       val configuration: Configuration = app.configuration
       val externalUrls = app.injector.instanceOf[ExternalUrls]
       val appConfig = new AppConfig {
