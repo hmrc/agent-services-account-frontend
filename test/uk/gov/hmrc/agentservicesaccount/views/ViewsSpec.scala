@@ -98,7 +98,7 @@ class ViewsSpec extends MixedPlaySpec {
 
   "agent_services_account view" should {
 
-    "render additional services section and manage client section with mapping, afi, and invitations links when respective feature switches are on" in new App {
+    "render additional services section and manage client section with mapping, afi, invitations and manage users links when respective feature switches are on" in new App {
       val configuration: Configuration = app.configuration
       val externalUrls = app.injector.instanceOf[ExternalUrls]
       val appConfig = new AppConfig {
@@ -111,8 +111,9 @@ class ViewsSpec extends MixedPlaySpec {
         override val analyticsToken: String = "analyticsTokenFoo"
         override val analyticsHost: String = "analyticsHostFoo"
       }
+      val isAgent = true
       val view = new agent_services_account()
-      val html = view.render(Arn("ARN0001"), Some("AgencyName"), None, true, externalUrls.signOutUrl, "", Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, appConfig)
+      val html = view.render(Arn("ARN0001"), isAgent, Some("AgencyName"), None, true, externalUrls.signOutUrl, "", Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, appConfig)
       contentAsString(html) must {
         include("Services you might need") and
           include("Allow this account to access existing client relationships") and
@@ -121,11 +122,14 @@ class ViewsSpec extends MixedPlaySpec {
           include("href=\"http://localhost:9996/tax-history/select-client\"") and
           include("Manage your clients") and
           include("Request authorisation to view an individual's data") and
-          include("href=\"http://localhost:9448/invitations/agents/\"")
+          include("href=\"http://localhost:9448/invitations/agents/\"") and
+          include("Manage your users") and
+          include("Control who can access your agent services account") and
+          include("href=\"http://localhost:9851/user-delegation/manage-users\"")
       }
     }
 
-    "not render additional services section, nor manage clients section, nor mapping link, nor invitations link, when respective feature switches are off" in new App {
+    "not render additional services section, nor manage clients section, nor mapping link, nor invitations and manage users link, when respective feature switches are off" in new App {
       val configuration: Configuration = app.configuration
       val externalUrls = app.injector.instanceOf[ExternalUrls]
       val appConfig = new AppConfig {
@@ -138,8 +142,9 @@ class ViewsSpec extends MixedPlaySpec {
         override val analyticsToken: String = "analyticsTokenFoo"
         override val analyticsHost: String = "analyticsHostFoo"
       }
+      val isAgent = true
       val view = new agent_services_account()
-      val html = view.render(Arn("ARN0001"), Some("AgencyName"), None, true, externalUrls.signOutUrl, "",  Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, appConfig)
+      val html = view.render(Arn("ARN0001"), isAgent, Some("AgencyName"), None, true, externalUrls.signOutUrl, "",  Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, appConfig)
       contentAsString(html) must not {
         include("Services you might need") or
           include("Allow this account to access existing client relationships") or
@@ -148,6 +153,9 @@ class ViewsSpec extends MixedPlaySpec {
           include("Manage your clients") or
           include("Request authorisation to view an individual's data") or
           include("href=\"http://localhost:9448/invitations/agents/\"")
+          include("Manage your users") or
+          include("Control who can access your agent services account") or
+          include("href=\"http://localhost:9851/user-delegation/manage-users\"")
       }
     }
 
@@ -164,14 +172,38 @@ class ViewsSpec extends MixedPlaySpec {
         override val analyticsToken: String = "analyticsTokenFoo"
         override val analyticsHost: String = "analyticsHostFoo"
       }
+      val isAgent = true
       val view = new agent_services_account()
-      val html = view.render(Arn("ARN0001"), Some("AgencyName"), None, isWhitelisted = false, externalUrls.signOutUrl, "", Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, appConfig)
+      val html = view.render(Arn("ARN0001"), isAgent, Some("AgencyName"), None, isWhitelisted = false, externalUrls.signOutUrl, "", Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, appConfig)
       contentAsString(html) must not include("href=\"http://localhost:9996/tax-history/select-client\"")
       contentAsString(html) must {
         include("Services you might need") and
         include("If your agency uses more than one Government Gateway you will need to copy your existing client relationships from each of your Government Gateway IDs into this account.") and
         include("href=\"http://localhost:9438/agent-mapping/start\"")
         include("href=\"http://localhost:9448/invitations/agents/\"")
+      }
+    }
+
+    "render does not feature manage your users link because Agent is Assistant" in new App {
+      val configuration: Configuration = app.configuration
+      val externalUrls = app.injector.instanceOf[ExternalUrls]
+      val appConfig = new AppConfig {
+        override def domainWhiteList: Set[String] = Set()
+
+        override def featureSwitch(featureName: String): Boolean = true
+
+        override val reportAProblemNonJSUrl: String = "reportAProblemNonJSUrlFoo"
+        override val reportAProblemPartialUrl: String = "reportAProblemPartialUrlFoo"
+        override val analyticsToken: String = "analyticsTokenFoo"
+        override val analyticsHost: String = "analyticsHostFoo"
+      }
+      val isAgent = false
+      val view = new agent_services_account()
+      val html = view.render(Arn("ARN0001"), isAgent, Some("AgencyName"), None, true, externalUrls.signOutUrl, "", Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, appConfig)
+      contentAsString(html) must not {
+        include("Manage your users") or
+          include("Control who can access your agent services account") or
+          include("href=\"http://localhost:9851/user-delegation/manage-users\"")
       }
     }
   }

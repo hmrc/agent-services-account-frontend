@@ -48,9 +48,9 @@ class AuthActionsSpec extends UnitSpec with ResettingMockitoSugar with AkkaMater
     override val logger: Logger = slf4jLogger
   }
 
-  def mockAuth(affinityGroup: AffinityGroup = AffinityGroup.Agent, enrolment: Set[Enrolment]) =
-    when(mockAuthConnector.authorise(any(), any[Retrieval[~[Enrolments, Option[AffinityGroup]]]]())(any(), any()))
-      .thenReturn(Future successful new ~[Enrolments, Option[AffinityGroup]](Enrolments(enrolment), Some(affinityGroup)))
+  def mockAuth(affinityGroup: AffinityGroup = AffinityGroup.Agent, enrolment: Set[Enrolment], credentialRole: CredentialRole = Admin) =
+    when(mockAuthConnector.authorise(any(), any[Retrieval[~[~[Enrolments, Option[AffinityGroup]], Option[CredentialRole]]]]())(any(), any()))
+      .thenReturn(Future successful new ~[~[Enrolments, Option[AffinityGroup]], Option[CredentialRole]](new ~(Enrolments(enrolment), Some(affinityGroup)), Some(credentialRole)))
 
   def mockAuthNotLoggedIn(): Unit =
     when(mockAuthConnector.authorise(any(), any[Retrieval[~[Enrolments, Option[AffinityGroup]]]]())(any(), any()))

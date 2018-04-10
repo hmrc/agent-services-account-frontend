@@ -57,10 +57,10 @@ class AuthActions @Inject()(logger: LoggerLike, externalUrls: ExternalUrls, over
 
   def authorisedWithAgent[A,R](body: (AgentInfo) => Future[R])(implicit headerCarrier: HeaderCarrier): Future[Option[R]] =
     authorised(AuthProviders(GovernmentGateway)).retrieve(allEnrolments and affinityGroup and credentialRole) {
-      case enrol ~ affinityG ~ credentialRole =>
-        (enrol.getEnrolment("HMRC-AS-AGENT"), affinityG, credentialRole) match {
+      case enrol ~ affinityG ~ credRole =>
+        (enrol.getEnrolment("HMRC-AS-AGENT"), affinityG, credRole) match {
           case (Some(agentEnrolment), Some(AffinityGroup.Agent), _) if agentEnrolment.isActivated =>
-            getArn(agentEnrolment).map { arn => body(AgentInfo(arn, credentialRole)).map(result => Some(result)) }
+            getArn(agentEnrolment).map { arn => body(AgentInfo(arn, credRole)).map(result => Some(result)) }
               .getOrElse {
                 logger.warn("No AgentReferenceNumber found in HMRC-AS-AGENT enrolment - this should not happen. Denying access.")
                 Future successful None
