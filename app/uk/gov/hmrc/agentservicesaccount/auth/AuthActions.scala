@@ -36,7 +36,7 @@ import scala.concurrent.Future
 
 case class AgentInfo(arn: Arn, credentialRole: Option[CredentialRole]) {
   val isAdmin: Boolean = credentialRole match {
-    case Some(Admin) => true
+    case Some(User) => true
     case _ => false
   }
 }
