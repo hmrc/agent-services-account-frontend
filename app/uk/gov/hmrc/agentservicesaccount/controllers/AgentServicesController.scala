@@ -18,6 +18,7 @@ package uk.gov.hmrc.agentservicesaccount.controllers
 
 import javax.inject._
 
+import play.api.Logger
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.agentservicesaccount.AppConfig
@@ -45,6 +46,7 @@ class AgentServicesController @Inject()(
       authActions.authorisedWithAgent { agentInfo =>
         continueUrlActions.withMaybeContinueUrl { continueUrlOpt =>
           asaConnector.getAgencyName(agentInfo.arn).map { maybeAgencyName =>
+            Logger.info(s"${agentInfo.arn} isAdmin: ${agentInfo.isAdmin}")
             Ok(agent_services_account(agentInfo.arn, agentInfo.isAdmin, maybeAgencyName, continueUrlOpt, isWhitelisted, routes.SignOutController.signOut().url, customDimension))
           }
         }
