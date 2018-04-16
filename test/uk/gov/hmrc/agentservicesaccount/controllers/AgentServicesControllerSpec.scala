@@ -32,10 +32,10 @@ import play.api.test.Helpers._
 import play.api.{Application, Configuration, Environment}
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
+import uk.gov.hmrc.agentservicesaccount.FrontendModule
 import uk.gov.hmrc.agentservicesaccount.auth.{AgentInfo, AuthActions, PasscodeVerification}
 import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
 import uk.gov.hmrc.agentservicesaccount.connectors.{AgentServicesAccountConnector, SsoConnector}
-import uk.gov.hmrc.agentservicesaccount.{AppConfig, GuiceModule}
 import uk.gov.hmrc.auth.core.InvalidBearerToken
 import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
 import uk.gov.hmrc.play.test.UnitSpec
@@ -53,7 +53,7 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
     new GuiceApplicationBuilder()
       .overrides(new GuiceableModule {
         override def guiced(env: Environment, conf: Configuration, binderOptions: Set[BinderOption]) = Seq(
-          new GuiceModule(env, conf) {
+          new FrontendModule(env, conf) {
             override def configure(): Unit = {
 
               bind(classOf[SsoConnector]).toInstance(new SsoConnector(null,null, new Metrics() {
@@ -76,7 +76,6 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
 
 
   val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
-  implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
   implicit val externalUrls: ExternalUrls = mock[ExternalUrls]
   val signOutUrl = routes.SignOutController.signOut().url
   when(externalUrls.signOutUrl).thenReturn(signOutUrl)
@@ -91,6 +90,8 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
   when(desConnector.getAgencyName(eqArg(Arn(arn)))(anyArg[HeaderCarrier], anyArg[ExecutionContext])).thenReturn(Future.successful(None))
 
   private implicit val messages: Messages = messagesApi.preferred(Seq.empty[Lang])
+
+  private implicit val configuration = app.injector.instanceOf[Configuration]
 
   protected def htmlEscapedMessage(key: String): String = HtmlFormat.escape(Messages(key)).toString
 

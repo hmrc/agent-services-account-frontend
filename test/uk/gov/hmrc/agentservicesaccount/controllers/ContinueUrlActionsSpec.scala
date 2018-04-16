@@ -20,12 +20,14 @@ import java.net.URLEncoder
 
 import com.kenshoo.play.metrics.Metrics
 import org.scalatest.{Matchers, WordSpec}
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.{Application, Configuration}
 import play.api.mvc.Request
 import play.api.mvc.Results._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
-import uk.gov.hmrc.agentservicesaccount.AppConfig
 import uk.gov.hmrc.agentservicesaccount.auth.AgentRequest
 import uk.gov.hmrc.agentservicesaccount.connectors.SsoConnector
 import uk.gov.hmrc.agentservicesaccount.services.HostnameWhiteListService
@@ -33,9 +35,17 @@ import uk.gov.hmrc.agentservicesaccount.services.HostnameWhiteListService
 import scala.concurrent.{ExecutionContext, Future}
 import uk.gov.hmrc.http.HeaderCarrier
 
-class ContinueUrlActionsSpec extends WordSpec with Matchers {
+class ContinueUrlActionsSpec extends WordSpec with Matchers with GuiceOneAppPerSuite {
 
   implicit val hc = new HeaderCarrier()
+
+  override implicit lazy val app: Application = appBuilder.build()
+
+  protected def appBuilder: GuiceApplicationBuilder =
+    new GuiceApplicationBuilder()
+      .configure(
+      "continueUrl.domainWhiteList" -> Seq("foo.com","bar.org")
+    )
 
   "ContinueUrlActions" should {
 
@@ -103,14 +113,7 @@ class ContinueUrlActionsSpec extends WordSpec with Matchers {
   val validInternalDomains = Set("bar.org")
   val validExternalDomains = Set("www.foo.com")
 
-  val appConfig = new AppConfig(){
-    override val analyticsToken = ""
-    override val analyticsHost = ""
-    override val reportAProblemPartialUrl = ""
-    override val reportAProblemNonJSUrl = ""
-    override def domainWhiteList = validInternalDomains
-    override def featureSwitch(featureName: String) = true
-  }
+  private val configuration = app.injector.instanceOf[Configuration]
 
   val successfulSsoConnector = new SsoConnector(null,null,new Metrics() {
     override def defaultRegistry = null
@@ -130,8 +133,8 @@ class ContinueUrlActionsSpec extends WordSpec with Matchers {
       Future.failed(new Exception("some reason"))
   }
 
-  val underTest1 = new ContinueUrlActions(new HostnameWhiteListService(appConfig, successfulSsoConnector))
-  val underTest2 = new ContinueUrlActions(new HostnameWhiteListService(appConfig, failingSsoConnector))
+  val underTest1 = new ContinueUrlActions(new HostnameWhiteListService(configuration, successfulSsoConnector))
+  val underTest2 = new ContinueUrlActions(new HostnameWhiteListService(configuration, failingSsoConnector))
 
   def requestWithContinue(continueUrl: String) =
     FakeRequest("GET","/some/endpoint?continue="+URLEncoder.encode(continueUrl,"UTF-8"))
