@@ -14,5 +14,3 @@ addSbtPlugin("uk.gov.hmrc" % "sbt-distributables" % "1.0.0")
 addSbtPlugin("uk.gov.hmrc" % "sbt-git-versioning" % "0.9.0")
 
 addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.5.0")
-
-addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.5.3")

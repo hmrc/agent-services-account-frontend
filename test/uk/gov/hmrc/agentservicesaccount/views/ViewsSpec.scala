@@ -159,7 +159,7 @@ class ViewsSpec extends UnitSpec with GuiceOneAppPerTest {
           include("href=\"http://localhost:9448/invitations/agents/\"") or
           include("Manage your users") or
           include("Control who can access your agent services account") or
-          include("href=\"httpt://localhost:9851/user-delegation/manage-users\"")
+          include("href=\"http://localhost:9851/user-delegation/manage-users\"")
       }
     }
 
