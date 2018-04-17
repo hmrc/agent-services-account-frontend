@@ -21,3 +21,8 @@ agent.services.account.additional.links.agent-afi.ga.manage-clients=Manage your 
 agent.services.account.additional.links.agent-afi.ga.services-you-need=Services you might need
 agent.services.account.additional.links.agent-afi.ga.request-auth=Ask a client to authorise you
 agent.services.account.additional.links.agent-afi.ga.view-income-record=View a clients income record
+
+# Error messages for digital services
+global.error.500.title=Sorry, we are experiencing technical difficulties - 500
+global.error.500.heading=Sorry, we’re experiencing technical difficulties
+global.error.500.message=Please try again in a few minutes.

@@ -68,7 +68,7 @@ class ErrorHandler @Inject() (
 object EventTypes {
 
   val RequestReceived: String = "RequestReceived"
-  val TransactionFailureReason: String = "transactionFailureReason"
+  val TransactionFailureReason: String = "TransactionFailureReason"
   val ServerInternalError: String = "ServerInternalError"
   val ResourceNotFound: String = "ResourceNotFound"
   val ServerValidationError: String = "ServerValidationError"
