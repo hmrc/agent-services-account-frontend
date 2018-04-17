@@ -18,16 +18,15 @@ package uk.gov.hmrc.agentservicesaccount.controllers
 
 import javax.inject._
 
-import play.api.Logger
+import play.api.{Configuration, Logger}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent}
-import uk.gov.hmrc.agentservicesaccount.AppConfig
 import uk.gov.hmrc.agentservicesaccount.auth.{AuthActions, PasscodeVerification}
 import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
 import uk.gov.hmrc.agentservicesaccount.views.html.pages._
 import uk.gov.hmrc.auth.core.NoActiveSession
-import uk.gov.hmrc.play.frontend.controller.FrontendController
+import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 
 @Singleton
 class AgentServicesController @Inject()(
@@ -38,7 +37,7 @@ class AgentServicesController @Inject()(
                                          val withMaybePasscode: PasscodeVerification,
                                          @Named("customDimension") customDimension: String
                                        )
-                                       (implicit val externalUrls: ExternalUrls, appConfig: AppConfig) extends FrontendController with I18nSupport {
+                                       (implicit val externalUrls: ExternalUrls, configuration: Configuration) extends FrontendController with I18nSupport {
 
 
   val root: Action[AnyContent] = Action.async { implicit request =>

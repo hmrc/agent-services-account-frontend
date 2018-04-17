@@ -14,8 +14,8 @@
  * limitations under the License.
  *@
 
-@(appConfig: uk.gov.hmrc.agentservicesaccount.AppConfig,
-  title: String,
+@import play.api.Configuration
+@(title: String,
   mainClass: Option[String] = None,
   mainDataAttributes: Option[Html] = None,
   bodyClasses: Option[String] = None,
@@ -25,7 +25,7 @@
   mainContent: Html = HtmlFormat.empty,
   serviceInfoContent: Html = HtmlFormat.empty,
   scriptElem: Option[Html] = None,
-  analyticsAdditionalJs: Option[Html] = None)(implicit request: Request[_], messages: Messages)
+  analyticsAdditionalJs: Option[Html] = None)(implicit request: Request[_], messages: Messages, configuration: Configuration)
 
 @import layouts.{govuk_template => hmrcGovUkTemplate}
 @import uk.gov.hmrc.play.views.html.{layouts => uiLayouts}
@@ -59,8 +59,8 @@
 
 @bodyEnd = {
     @uiLayouts.footer(
-      analyticsToken = Some(appConfig.analyticsToken),
-      analyticsHost = appConfig.analyticsHost,
+      analyticsToken = configuration.getString("google-analytics.token"),
+      analyticsHost = configuration.getString("google-analytics.host").get,
       ssoUrl = None,
       scriptElem = scriptElem,
       gaCalls = None,
@@ -83,7 +83,7 @@
     }
 }
 
-@getHelpForm = @{uiHelpers.reportAProblemLink(appConfig.reportAProblemPartialUrl, appConfig.reportAProblemNonJSUrl)}
+@getHelpForm = @{uiHelpers.reportAProblemLink(configuration.getString("reportAProblemPartialUrl").get, configuration.getString("reportAProblemNonJSUrl").get)}
 
 @content = {
     @uiLayouts.main_content(

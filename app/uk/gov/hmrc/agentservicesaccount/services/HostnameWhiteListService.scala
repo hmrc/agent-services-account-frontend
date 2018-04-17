@@ -19,7 +19,7 @@ package uk.gov.hmrc.agentservicesaccount.services
 import java.net.URL
 import javax.inject.{Inject, Singleton}
 
-import uk.gov.hmrc.agentservicesaccount.AppConfig
+import play.api.Configuration
 import uk.gov.hmrc.agentservicesaccount.connectors.SsoConnector
 import uk.gov.hmrc.play.binders.ContinueUrl
 
@@ -28,9 +28,9 @@ import scala.util.Try
 import uk.gov.hmrc.http.HeaderCarrier
 
 @Singleton
-class HostnameWhiteListService @Inject()(appConfig: AppConfig, ssoConnector: SsoConnector) {
+class HostnameWhiteListService @Inject()(configuration: Configuration, ssoConnector: SsoConnector) {
 
-  val domainWhiteList: Set[String] = appConfig.domainWhiteList
+  val domainWhiteList: Set[String] = configuration.getStringSeq("continueUrl.domainWhiteList").map(_.toSet).getOrElse(Set.empty)
 
   def hasExternalDomain(continueUrl: ContinueUrl)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Boolean] =
     ssoConnector.validateExternalDomain(getHost(continueUrl))

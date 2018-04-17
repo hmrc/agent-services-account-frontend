@@ -14,19 +14,23 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.agentservicesaccount.controllers
+package uk.gov.hmrc.agentservicesaccount.connectors
 
-import javax.inject.Inject
+import java.net.URL
+import javax.inject.{Inject, Named, Singleton}
 
-import play.api.mvc.{Action, AnyContent}
-import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
-import uk.gov.hmrc.play.bootstrap.controller.FrontendController
+import uk.gov.hmrc.auth.core._
+import uk.gov.hmrc.auth.otac.PlayOtacAuthConnector
+import uk.gov.hmrc.http.{HttpGet, HttpPost}
+import uk.gov.hmrc.play.http.ws.{WSGet, WSPost}
 
-import scala.concurrent.Future
+@Singleton
+class FrontendAuthConnector @Inject() (@Named("auth-baseUrl") baseUrl: URL)
+  extends PlayAuthConnector with PlayOtacAuthConnector {
 
-class SignOutController @Inject()(externalUrls: ExternalUrls) extends FrontendController {
+  override val serviceUrl = baseUrl.toString
 
-  val signOut: Action[AnyContent] = Action.async { implicit request =>
-      Future successful Redirect(externalUrls.signOutUrl).removingFromSession("otacTokenParam")
+  override def http = new HttpPost with HttpGet with WSPost with WSGet {
+    override val hooks = NoneRequired
   }
 }

@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import play.api.Configuration
 @(title: String,
   navLinks: Option[Html] = None,
   sidebarLinks: Option[Html] = None,
@@ -21,7 +22,7 @@
   bodyClasses: Option[String] = None,
   mainClass: Option[String] = None,
   scriptElem: Option[Html] = None,
-  analyticsAdditionalJs: Option[Html] = None)(mainContent: Html)(implicit request : Request[_], messages: Messages)
+  analyticsAdditionalJs: Option[Html] = None)(mainContent: Html)(implicit request : Request[_], messages: Messages, configuration: Configuration)
 
 @import uk.gov.hmrc.play.views.html.layouts
 
@@ -36,8 +37,7 @@
 }
 
 
-@govuk_wrapper(appConfig = uk.gov.hmrc.agentservicesaccount.FrontendAppConfig,
-               title = title,
+@govuk_wrapper(title = title,
                mainClass = mainClass,
                bodyClasses = bodyClasses,
                navLinks = navLinks,
