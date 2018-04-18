@@ -46,7 +46,7 @@
     <li><a href="@{signOutUrl}" id="signOut">@Messages("common.sign-out")</a></li>
 }
 
-@uk.gov.hmrc.agentservicesaccount.views.html.main_template(title = Messages("agent.services.account.tab-title", Messages("agent.services.account.heading"), Messages("app.name")), navLinks = Some(navLinks), mainClass = Some("full-width"), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
+@uk.gov.hmrc.agentservicesaccount.views.html.main_template(title = Messages("agent.services.account.heading"), navLinks = Some(navLinks), mainClass = Some("full-width"), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
     <div class = "grid-layout grid-layout--no-gutter grid-layout--stacked">
         <div class = "grid-layout__column grid-layout__column--2-3">
             <header class="page-header">

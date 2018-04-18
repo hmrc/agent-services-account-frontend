@@ -1,7 +1,7 @@
-app.name=Agent Services account
-agent.services.account.tab-title={0} - {1} - GOV.UK
-agent.services.account.heading=Welcome to your Agent Services account
-agent.services.account.heading.summary=Your new Agent Services account will give your organisation access to a range of new HM Revenue & Customs digital services.
+app.name=Agent services account
+servicename.titleSuffix=- Agent services account - GOV.UK
+agent.services.account.heading=Welcome to your Agent services account
+agent.services.account.heading.summary=Your new Agent services account will give your organisation access to a range of new HM Revenue & Customs digital services.
 agent.services.account.new_account.continue=Continue with your journey
 existing.client.relationships.link=Access existing client relationships
 agent.manageClients=Manage your clients
