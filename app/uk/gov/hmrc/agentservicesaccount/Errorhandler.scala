@@ -17,7 +17,6 @@
 package uk.gov.hmrc.agentservicesaccount
 
 import javax.inject.{Inject, Singleton}
-
 import com.google.inject.name.Named
 import play.api.http.HeaderNames.CACHE_CONTROL
 import play.api.http.HttpErrorHandler
@@ -43,6 +42,8 @@ class ErrorHandler @Inject() (
                                @Named("appName") val appName: String)(implicit val config: Configuration, ec: ExecutionContext)
   extends FrontendErrorHandler with AuthRedirects with ErrorAuditing {
 
+  private val isDevEnv = if (env.mode.equals(Mode.Test)) false else config.getString("run.mode").forall(Mode.Dev.toString.equals)
+
   override def onClientError(request: RequestHeader, statusCode: Int, message: String): Future[Result] = {
     auditClientError(request, statusCode, message)
     super.onClientError(request,statusCode,message)
@@ -51,7 +52,7 @@ class ErrorHandler @Inject() (
   override def resolveError(request: RequestHeader, exception: Throwable) = {
     auditServerError(request,exception)
     exception match {
-      case _: NoActiveSession => toGGLogin(if (env.mode.equals(Mode.Dev)) s"http://${request.host}${request.uri}" else s"${request.uri}")
+      case _: NoActiveSession => toGGLogin(if (isDevEnv) s"http://${request.host}${request.uri}" else s"${request.uri}")
       case _: InsufficientEnrolments => Forbidden
       case _ => super.resolveError(request, exception)
     }
@@ -59,9 +60,9 @@ class ErrorHandler @Inject() (
 
   override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit request: Request[_]) = {
     error_template(
-      Messages("global.error.500.title"),
-      Messages("global.error.500.heading"),
-      Messages("global.error.500.message"))
+      Messages(pageTitle),
+      Messages(heading),
+      Messages(message))
   }
 }
 
