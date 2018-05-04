@@ -1,8 +1,28 @@
 # agent-services-account-frontend
 
 [ ![Download](https://api.bintray.com/packages/hmrc/releases/agent-services-account-frontend/images/download.svg) ](https://bintray.com/hmrc/releases/agent-services-account-frontend/_latestVersion)
+## What the service does
 
-This is the frontend for the Agent Services account page - which is available to agents who have the new-for-2017 HMRC-AS-AGENT enrolment.
+This is the frontend for the Agent Services account page. It is available to agents who have the HMRC-AS-AGENT enrolment, 
+allowing them to access to a range of HMRC digital services.
+
+### Running the tests
+
+    sbt test
+
+### Running the tests with coverage
+
+    sbt clean coverageOn test coverageReport
+
+### Running the app locally
+
+    sm --start AGENT_MTD -f
+    sm --stop AGENT_SERVICES_ACCOUNT_FRONTEND
+    sbt run
+
+It should then be listening on port 9401
+
+    browse http://localhost:9401/agent-services-account
 
 ### License
 
