@@ -14,3 +14,5 @@ addSbtPlugin("uk.gov.hmrc" % "sbt-distributables" % "1.0.0")
 addSbtPlugin("uk.gov.hmrc" % "sbt-git-versioning" % "0.9.0")
 
 addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.5.0")
+
+addSbtPlugin("org.irundaia.sbt" % "sbt-sassify" % "1.4.8")

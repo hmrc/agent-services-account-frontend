@@ -121,17 +121,20 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
       content should include(messagesApi("agent.services.account.heading", "servicename.titleSuffix"))
       content should not include "Agent Services Account"
       content should include(messagesApi("agent.services.account.heading"))
-      content should include(htmlEscapedMessage(messagesApi("agent.services.account.heading.summary")))
-      content should include(messagesApi("agent.services.account.additional.links.title"))
-      content should include(messagesApi("agent.services.account.additional.links.mapping.body1"))
       content should include(messagesApi("agent.services.account.additional.links.mapping.body2", mappingUrl, "agentMappingLinkId"))
-      content should include(messagesApi("agent.manageClients"))
       content should include(messagesApi("agent.invitations.links.start", invitationsUrl, "agentInvitationsLinkId"))
-      content should include(htmlEscapedMessage(messagesApi("agent.services.account.additional.links.agent-afi.body1")))
       content should include(messagesApi("agent.services.account.additional.links.agent-afi.body2", agentAfiUrl, "agentAfiLinkId"))
       content should include(arn)
       content should include(signOutUrl)
       content should include(mappingUrl)
+      content should include(messagesApi("agent.services.account.h2.your-clients"))
+      content should include(messagesApi("agent.services.account.h3.agent-services"))
+      content should include(messagesApi("agent.services.account.p.agent-services"))
+      content should include(messagesApi("agent.services.account.h3.client-authorisations"))
+      content should include(messagesApi("agent.services.account.p.client-authorisations"))
+      content should include(messagesApi("agent.services.account.h3.manage"))
+      content should include(messagesApi("agent.services.account.p.manage"))
+      content should include(htmlEscapedMessage(messagesApi("agent.services.sccount.h2.client")))
     }
 
     "return the redirect returned by authActions when authActions denies access" in {
@@ -216,7 +219,7 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
       val response = controller.root().apply(FakeRequest("GET", "/"))
       status(response) shouldBe OK
       contentAsString(response) should {
-        include("""id="agency-name"""")
+        include("id=\"agency-name\"")
         include("Test Agency Name")
       }
     }
@@ -228,7 +231,7 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
       val response = controller.root().apply(FakeRequest("GET", "/"))
       status(response) shouldBe OK
       contentAsString(response) should {
-        not include """id="agency-name""""
+        not include "id=\"agency-name\""
       }
     }
   }

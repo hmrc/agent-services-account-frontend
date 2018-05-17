@@ -1,20 +1,27 @@
 app.name=Agent services account
 servicename.titleSuffix=- Agent services account - GOV.UK
 agent.services.account.heading=Welcome to your agent services account
-agent.services.account.heading.summary=Your new agent services account will give your organisation access to a range of new HM Revenue & Customs digital services.
 agent.services.account.new_account.continue=Continue with your journey
 existing.client.relationships.link=Access existing client relationships
-agent.manageClients=Manage your clients
+
+agent.services.account.h2.your-clients=Your clients
+agent.services.account.h3.agent-services=Agent services
+agent.services.account.p.agent-services=Access services for clients that have already authorised you to act on their behalf.
+
+agent.services.account.h3.client-authorisations=Client authorisations
+agent.services.account.p.client-authorisations=Start a new authorisation request or add existing clients to your account.
+
+agent.services.account.h3.manage=Manage your account
+agent.services.account.p.manage=Allow other users in your organisation to access this agent services account, or restrict their access.
+
 agent.invitations.links.start=<a href="{0}" id="{1}" data-journey-click=''link - click :Manage your clients :Ask a client to authorise you''>Ask a client to authorise you</a>
-agent.manageYourUsers=Manage your users
-agent.manageYourUsers.links.start=<a href="{0}" id="{1}" data-journey-click=''link - click :Manage your users :Control who can access your agent services account''>Control who can access your agent services account</a>
-agent.references=Your references
+agent.manageYourUsers.links.start=<a href="{0}" id="{1}" data-journey-click=''link - click :Manage your users :Link your existing client authorisations to this account''>Link your existing client authorisations to this account</a>
 agent.accountNumber=Account number: {0}
-agent.services.account.additional.links.title=Services you might need
-agent.services.account.additional.links.mapping.body1=If your agency uses more than one Government Gateway you will need to copy your existing client relationships from each of your Government Gateway IDs into this account.
-agent.services.account.additional.links.mapping.body2=<a href="{0}" id="{1}">Allow this account to access existing client relationships</a>
-agent.services.account.additional.links.agent-afi.body1=View a client''s Income Tax, benefits and pension record if they''ve authorised you to do so.
-agent.services.account.additional.links.agent-afi.body2=<a href="{0}" id="{1}" data-journey-click=''link - click :Services you might need :View a clients income record''>View a client''s income record</a>
+
+agent.services.sccount.h2.client=''s account
+
+agent.services.account.additional.links.mapping.body2=<a href="{0}" id="{1}">Manage user access to your agent services account</a>
+agent.services.account.additional.links.agent-afi.body2=<a href="{0}" id="{1}" data-journey-click=''link - click :Services you might need :View a clients PAYE income record''>View a client''s PAYE income record</a>
 common.sign-out=Sign out
 agent.services.account.additional.links.agent-afi.ga.link-view=link - view
 agent.services.account.additional.links.agent-afi.ga.manage-clients=Manage your clients
