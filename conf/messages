@@ -15,12 +15,12 @@ agent.services.account.h3.manage=Manage your account
 agent.services.account.p.manage=Allow other users in your organisation to access this agent services account, or restrict their access.
 
 agent.invitations.links.start=<a href="{0}" id="{1}" data-journey-click=''link - click :Manage your clients :Ask a client to authorise you''>Ask a client to authorise you</a>
-agent.manageYourUsers.links.start=<a href="{0}" id="{1}" data-journey-click=''link - click :Manage your users :Link your existing client authorisations to this account''>Link your existing client authorisations to this account</a>
+agent.services.account.additional.links.mapping.body2=<a href="{0}" id="{1}" data-journey-click=''link - click :Manage your users :Link your existing client authorisations to this account''>Link your existing client authorisations to this account</a>
 agent.accountNumber=Account number: {0}
 
 agent.services.sccount.h2.client=''s account
 
-agent.services.account.additional.links.mapping.body2=<a href="{0}" id="{1}">Manage user access to your agent services account</a>
+agent.manageYourUsers.links.start=<a href="{0}" id="{1}">Manage user access to your agent services account</a>
 agent.services.account.additional.links.agent-afi.body2=<a href="{0}" id="{1}" data-journey-click=''link - click :Services you might need :View a clients PAYE income record''>View a client''s PAYE income record</a>
 common.sign-out=Sign out
 agent.services.account.additional.links.agent-afi.ga.link-view=link - view
