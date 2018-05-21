@@ -110,11 +110,12 @@
                         @featureSwitch("features.showAgentInvitationsLink") {
                             <li>@Html(Messages("agent.invitations.links.start", externalUrls.agentInvitationsUrl, "agentInvitationsLinkId"))</li>
                         }
-                        @featureSwitch("features.showManageUsersLink") {
-                            @if(isAdmin) {
-                                <li>@Html(Messages("agent.manageYourUsers.links.start", externalUrls.manageUsersUrl, "manageYourUsersLinkId"))</li>
+                        @featureSwitch("features.showAdditionalServicesSection") {
+                            @featureSwitch("features.showAgentMappingLink") {
+                                <li>@Html(Messages("agent.services.account.additional.links.mapping.body2", externalUrls.agentMappingUrl, "agentMappingLinkId"))</li>
                             }
                         }
+
                     </ul>
                 </div>
             </div>
@@ -134,11 +135,12 @@
                 </div>
                 <div class="card-action">
                     <ul>
-                        @featureSwitch("features.showAdditionalServicesSection") {
-                            @featureSwitch("features.showAgentMappingLink") {
-                                <li>@Html(Messages("agent.services.account.additional.links.mapping.body2", externalUrls.agentMappingUrl, "agentMappingLinkId"))</li>
+                        @featureSwitch("features.showManageUsersLink") {
+                            @if(isAdmin) {
+                                <li>@Html(Messages("agent.manageYourUsers.links.start", externalUrls.manageUsersUrl, "manageYourUsersLinkId"))</li>
                             }
                         }
+
                   </ul>
                 </div>
             </div>
