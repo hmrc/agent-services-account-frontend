@@ -65,14 +65,17 @@
     @if(toggle && configuration.getBoolean(featureName).getOrElse(false)) { @content }
 }
 
+
 @uk.gov.hmrc.agentservicesaccount.views.html.main_template(title = Messages("agent.services.account.heading"), mainClass = Some("full-width"), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
 
     <h1 class="heading-xlarge">@agencyName(agencyNameOpt)
         <span class="pre-heading">@Messages("agent.accountNumber", arn.value)</span>
     </h1>
 
-    <h2 class="heading-medium divider--bottom">@Messages("agent.services.account.h2.your-clients")</h2>
 
+@if(configuration.getBoolean("features.showAgentAfiLink").getOrElse(false) || configuration.getBoolean("features.showAgentInvitationsLink").getOrElse(false) || configuration.getBoolean("features.showAgentMappingLink").getOrElse(false)){
+    <h2 class="heading-medium divider--bottom">@Messages("agent.services.account.h2.your-clients")</h2>
+}
     <div class="grid-row">
 
         <div class="column-one-half">
@@ -98,27 +101,30 @@
                 </div>
 
         <div class="column-one-half">
-            <div class="card">
-                <div class="card-body non-active">
-                    <h3 class="heading-small card-heading">
-                        @Messages("agent.services.account.h3.client-authorisations")
-                    </h3>
-                    <p>@Messages("agent.services.account.p.client-authorisations")</p>
-                </div>
-                <div class="card-action">
-                    <ul>
-                        @featureSwitch("features.showAgentInvitationsLink") {
-                            <li>@Html(Messages("agent.invitations.links.start", externalUrls.agentInvitationsUrl, "agentInvitationsLinkId"))</li>
-                        }
-                        @featureSwitch("features.showAdditionalServicesSection") {
+
+            @if(configuration.getBoolean("features.showAgentInvitationsLink").getOrElse(false) || configuration.getBoolean("features.showAgentMappingLink").getOrElse(false)){
+
+                <div class="card">
+                    <div class="card-body non-active">
+                        <h3 class="heading-small card-heading">
+                            @Messages("agent.services.account.h3.client-authorisations")
+                        </h3>
+                        <p>@Messages("agent.services.account.p.client-authorisations")</p>
+                    </div>
+                    <div class="card-action">
+                        <ul>
+                            @featureSwitch("features.showAgentInvitationsLink") {
+                                <li>@Html(Messages("agent.invitations.links.start", externalUrls.agentInvitationsUrl, "agentInvitationsLinkId"))</li>
+                            }
+
                             @featureSwitch("features.showAgentMappingLink") {
                                 <li>@Html(Messages("agent.services.account.additional.links.mapping.body2", externalUrls.agentMappingUrl, "agentMappingLinkId"))</li>
                             }
-                        }
 
-                    </ul>
+                        </ul>
+                    </div>
                 </div>
-            </div>
+            }
         </div>
     </div>
 
