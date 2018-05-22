@@ -30,6 +30,10 @@
 @import layouts.{govuk_template => hmrcGovUkTemplate}
 @import uk.gov.hmrc.play.views.html.{layouts => uiLayouts}
 @import uk.gov.hmrc.play.views.html.{helpers => uiHelpers}
+@import uk.gov.hmrc.agentservicesaccount.controllers._
+@import uk.gov.hmrc.play.views.html.layouts
+@import play.api.Configuration
+
 
 @headScripts = {
     <link href="@controllers.routes.Assets.at("stylesheets/styles.css")" media="screen" rel="stylesheet" type="text/css">
@@ -50,14 +54,17 @@
       navLinks = navLinks)
 }
 
-    @betaBanner = {
-    @uiLayouts.betaBanner(
-        userLoggedIn = false,
-        betaFeedbackUrl = "",
-        betaFeedbackUnauthenticatedUrl = "",
-        showFeedbackLinkInBetaBanner = false
-    )
-    }
+
+@betaBanner = {
+    <div class="phase-banner-low">
+        @uiLayouts.betaBanner(
+            userLoggedIn = true,
+            betaFeedbackUrl = configuration.getString("betaFeedbackUrl").get,
+            betaFeedbackUnauthenticatedUrl = "",
+            showFeedbackLinkInBetaBanner = true
+        )
+    </div>
+}
 
 @afterHeader = {}
 
@@ -74,11 +81,17 @@
 @footerTop = {}
 @footerLinks = {}
 
-@serviceInfo = {
-    @uiLayouts.serviceInfo(
-      betaBanner = betaBanner,
-      includeGridWrapper = false,
-      serviceInfoContent = Some(serviceInfoContent))
+@serviceInfo  = {
+    <div class="service-info">
+        <nav id="secondary-nav" class="account-menu" role="navigation">
+            <a href="@routes.AgentServicesController.root().url" class="account-menu__link account-menu__link--active account-menu__link--home "><span class="account-icon account-icon--home">Account home</span></a>
+            <a href="#" class="account-menu__link account-menu__link--menu js-hidden js-visible" aria-hidden="true" aria-expanded="false">Account menu</a>
+            <ul class="account-menu__main">
+                <li class="account-menu__link--back hidden" aria-hidden="true"><a href="#" class="account-menu__link">Back</a></li>
+                <li><a href="@routes.SignOutController.signOut().url" class="account-menu__link">@Messages("common.sign-out")</a></li>
+            </ul>
+        </nav>
+    </div>
 }
 
 @mainContentHeader = {
@@ -92,13 +105,15 @@
 @titleSuffix = @{ Messages("servicename.titleSuffix") }
 
 @content = {
-    @uiLayouts.main_content(
+    @main_content_custom(
       article = mainContent,
       mainClass = mainClass,
       mainDataAttributes = mainDataAttributes,
       mainContentHeader = mainContentHeader,
       serviceInfo = serviceInfo,
-      sidebar = sidebar)
+      sidebar = sidebar,
+      getHelpForm = getHelpForm,
+      lowerBetaBanner = betaBanner)
 }
 
 @hmrcGovUkTemplate(Some(title + " " + titleSuffix), bodyClasses)(head, bodyEnd, insideHeader, afterHeader, footerTop, Some(uiLayouts.footer_links()), true)(content)

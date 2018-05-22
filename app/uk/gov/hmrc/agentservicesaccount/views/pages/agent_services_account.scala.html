@@ -19,7 +19,7 @@
 @import uk.gov.hmrc.play.binders.ContinueUrl
 @import play.api.Configuration
 
-@(arn: Arn, isAdmin: Boolean, agencyNameOpt: Option[String], continueUrlOpt: Option[ContinueUrl], isWhitelisted: Boolean, signOutUrl: String, customDimension: String)(implicit messages: Messages, request: Request[_], externalUrls: ExternalUrls, configuration: Configuration)
+@(arn: Arn, isAdmin: Boolean, agencyNameOpt: Option[String], continueUrlOpt: Option[ContinueUrl], isWhitelisted: Boolean, customDimension: String)(implicit messages: Messages, request: Request[_], externalUrls: ExternalUrls, configuration: Configuration)
 
 @analyticsAdditionalJs = {
 
@@ -42,9 +42,6 @@
 
 }
 
-@navLinks = {
-    <li><a href="@{signOutUrl}" id="signOut">@Messages("common.sign-out")</a></li>
-}
 
 @agencyName(agencyNameOpt: Option[String]) = {
     @agencyNameOpt.map { name =>
@@ -68,7 +65,7 @@
     @if(toggle && configuration.getBoolean(featureName).getOrElse(false)) { @content }
 }
 
-@uk.gov.hmrc.agentservicesaccount.views.html.main_template(title = Messages("agent.services.account.heading"), navLinks = Some(navLinks), mainClass = Some("full-width"), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
+@uk.gov.hmrc.agentservicesaccount.views.html.main_template(title = Messages("agent.services.account.heading"), mainClass = Some("full-width"), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
 
     <h1 class="heading-xlarge">@agencyName(agencyNameOpt)
         <span class="pre-heading">@Messages("agent.accountNumber", arn.value)</span>
@@ -77,25 +74,28 @@
     <h2 class="heading-medium divider--bottom">@Messages("agent.services.account.h2.your-clients")</h2>
 
     <div class="grid-row">
+
         <div class="column-one-half">
-            <div class="card">
-                <div class="card-body non-active">
-                    <h3 class="heading-small card-heading">
-                        @Messages("agent.services.account.h3.agent-services")
-                    </h3>
-                    <p>@Messages("agent.services.account.p.agent-services")</p>
-                </div>
-                <div class="card-action">
-                    <ul>
-                        @featureSwitch("features.showAdditionalServicesSection") {
-                            @featureSwitch("features.showAgentAfiLink", isWhitelisted) {
-                                <li>@Html(Messages("agent.services.account.additional.links.agent-afi.body2", externalUrls.agentAfiUrl, "agentAfiLinkId"))</li>
-                            }
+            @featureSwitch("features.showAdditionalServicesSection") {
+                @featureSwitch("features.showAgentAfiLink", isWhitelisted) {
+                    <div class="card">
+                        <div class="card-body non-active">
+                            <h3 class="heading-small card-heading">
+                                @Messages("agent.services.account.h3.agent-services")
+                            </h3>
+                            <p>@Messages("agent.services.account.p.agent-services")</p>
+                        </div>
+                        <div class="card-action">
+                            <ul>
+
+                                        <li>@Html(Messages("agent.services.account.additional.links.agent-afi.body2", externalUrls.agentAfiUrl, "agentAfiLinkId"))</li>
+
+                            </ul>
+                        </div>
+                    </div>
                         }
-                    </ul>
+                    }
                 </div>
-            </div>
-        </div>
 
         <div class="column-one-half">
             <div class="card">
@@ -122,31 +122,32 @@
         </div>
     </div>
 
-    <h2 class="heading-medium divider--bottom">@agencyName(agencyNameOpt)@Messages("agent.services.sccount.h2.client")</h2>
+    @featureSwitch("features.showManageUsersLink") {
+        @if(isAdmin) {
 
-    <div class="grid-row">
-        <div class="column-one-half">
-            <div class="card">
-                <div class="card-body non-active">
-                    <h3 class="heading-small card-heading">
-                        @Messages("agent.services.account.h3.manage")
-                    </h3>
-                    <p>@Messages("agent.services.account.p.manage")</p>
-                </div>
-                <div class="card-action">
-                    <ul>
-                        @featureSwitch("features.showManageUsersLink") {
-                            @if(isAdmin) {
+            <h2 class="heading-medium divider--bottom">@agencyName(agencyNameOpt)@Messages("agent.services.sccount.h2.client")</h2>
+
+            <div class="grid-row">
+                <div class="column-one-half">
+                    <div class="card">
+                        <div class="card-body non-active">
+                            <h3 class="heading-small card-heading">
+                                @Messages("agent.services.account.h3.manage")
+                            </h3>
+                            <p>@Messages("agent.services.account.p.manage")</p>
+                        </div>
+                        <div class="card-action">
+                            <ul>
                                 <li>@Html(Messages("agent.manageYourUsers.links.start", externalUrls.manageUsersUrl, "manageYourUsersLinkId"))</li>
-                            }
-                        }
-
-                  </ul>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
+                <div class="column-one-half"></div>
             </div>
-        </div>
-        <div class="column-one-half"></div>
-    </div>
+
+        }
+    }
 
     @newAccountHasBeenCreated(continueUrlOpt)
 }

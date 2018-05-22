@@ -46,7 +46,7 @@ class AgentServicesController @Inject()(
         continueUrlActions.withMaybeContinueUrl { continueUrlOpt =>
           asaConnector.getAgencyName(agentInfo.arn).map { maybeAgencyName =>
             Logger.info(s"isAdmin: ${agentInfo.isAdmin}")
-            Ok(agent_services_account(agentInfo.arn, agentInfo.isAdmin, maybeAgencyName, continueUrlOpt, isWhitelisted, routes.SignOutController.signOut().url, customDimension))
+            Ok(agent_services_account(agentInfo.arn, agentInfo.isAdmin, maybeAgencyName, continueUrlOpt, isWhitelisted, customDimension))
           }
         }
       } map { maybeResult =>
