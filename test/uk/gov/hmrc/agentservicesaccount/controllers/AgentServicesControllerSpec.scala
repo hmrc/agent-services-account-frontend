@@ -132,9 +132,6 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
       content should include(messagesApi("agent.services.account.p.agent-services"))
       content should include(messagesApi("agent.services.account.h3.client-authorisations"))
       content should include(messagesApi("agent.services.account.p.client-authorisations"))
-      content should include(messagesApi("agent.services.account.h3.manage"))
-      content should include(messagesApi("agent.services.account.p.manage"))
-      content should include(htmlEscapedMessage(messagesApi("agent.services.sccount.h2.client")))
     }
 
     "return the redirect returned by authActions when authActions denies access" in {

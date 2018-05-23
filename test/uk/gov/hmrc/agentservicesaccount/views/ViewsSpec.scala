@@ -113,7 +113,7 @@ class ViewsSpec extends UnitSpec with GuiceOneAppPerTest {
 
       val isAgent = true
       val view = new agent_services_account()
-      val html = view.render(Arn("ARN0001"), isAgent, Some("AgencyName"), None, true, externalUrls.signOutUrl, "", Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, configuration)
+      val html = view.render(Arn("ARN0001"), isAgent, Some("AgencyName"), None, true, "", Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, configuration)
       contentAsString(html) should {
         include("Services you might need") and
           include("Allow this account to access existing client relationships") and
@@ -148,7 +148,7 @@ class ViewsSpec extends UnitSpec with GuiceOneAppPerTest {
 
       val isAgent = true
       val view = new agent_services_account()
-      val html = view.render(Arn("ARN0001"), isAgent, Some("AgencyName"), None, true, externalUrls.signOutUrl, "", Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, configuration)
+      val html = view.render(Arn("ARN0001"), isAgent, Some("AgencyName"), None, true, "", Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, configuration)
       contentAsString(html) should not {
         include("Services you might need") or
           include("Allow this account to access existing client relationships") or
@@ -170,7 +170,7 @@ class ViewsSpec extends UnitSpec with GuiceOneAppPerTest {
 
       val isAgent = true
       val view = new agent_services_account()
-      val html = view.render(Arn("ARN0001"), isAgent, Some("AgencyName"), None, isWhitelisted = false, externalUrls.signOutUrl, "", Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, configuration)
+      val html = view.render(Arn("ARN0001"), isAgent, Some("AgencyName"), None, isWhitelisted = false, "", Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, configuration)
       contentAsString(html) should not include ("href=\"http://localhost:9996/tax-history/select-client\"")
       contentAsString(html) should {
         include("Services you might need") and
@@ -187,7 +187,7 @@ class ViewsSpec extends UnitSpec with GuiceOneAppPerTest {
 
       val isAgent = false
       val view = new agent_services_account()
-      val html = view.render(Arn("ARN0001"), isAgent, Some("AgencyName"), None, true, externalUrls.signOutUrl, "", Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, configuration)
+      val html = view.render(Arn("ARN0001"), isAgent, Some("AgencyName"), None, true, "", Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, configuration)
       contentAsString(html) should not {
         include("Manage your users") or
           include("Control who can access your agent services account") or
