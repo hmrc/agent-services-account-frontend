@@ -32,7 +32,6 @@ import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 class AgentServicesController @Inject()(
                                          val messagesApi: MessagesApi,
                                          authActions: AuthActions,
-                                         continueUrlActions: ContinueUrlActions,
                                          asaConnector: AgentServicesAccountConnector,
                                          val withMaybePasscode: PasscodeVerification,
                                          @Named("customDimension") customDimension: String
@@ -43,12 +42,10 @@ class AgentServicesController @Inject()(
   val root: Action[AnyContent] = Action.async { implicit request =>
     withMaybePasscode { isWhitelisted =>
       authActions.authorisedWithAgent { agentInfo =>
-        continueUrlActions.withMaybeContinueUrl { continueUrlOpt =>
           asaConnector.getAgencyName(agentInfo.arn).map { maybeAgencyName =>
             Logger.info(s"isAdmin: ${agentInfo.isAdmin}")
-            Ok(agent_services_account(agentInfo.arn, agentInfo.isAdmin, maybeAgencyName, continueUrlOpt, isWhitelisted, customDimension))
+            Ok(agent_services_account(agentInfo.arn, agentInfo.isAdmin, maybeAgencyName, isWhitelisted, customDimension))
           }
-        }
       } map { maybeResult =>
         maybeResult.getOrElse(authActions.redirectToAgentSubscriptionGgSignIn)
       } recover {

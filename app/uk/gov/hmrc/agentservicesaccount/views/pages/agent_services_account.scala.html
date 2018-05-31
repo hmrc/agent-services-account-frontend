@@ -16,10 +16,9 @@
 
 @import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 @import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
-@import uk.gov.hmrc.play.binders.ContinueUrl
 @import play.api.Configuration
 
-@(arn: Arn, isAdmin: Boolean, agencyNameOpt: Option[String], continueUrlOpt: Option[ContinueUrl], isWhitelisted: Boolean, customDimension: String)(implicit messages: Messages, request: Request[_], externalUrls: ExternalUrls, configuration: Configuration)
+@(arn: Arn, isAdmin: Boolean, agencyNameOpt: Option[String], isWhitelisted: Boolean, customDimension: String)(implicit messages: Messages, request: Request[_], externalUrls: ExternalUrls, configuration: Configuration)
 
 @analyticsAdditionalJs = {
 
@@ -46,18 +45,6 @@
 @agencyName(agencyNameOpt: Option[String]) = {
     @agencyNameOpt.map { name =>
         <span id="agency-name">@name</span>
-    }
-}
-
-@newAccountHasBeenCreated(continueUrlOpt: Option[ContinueUrl]) = {
-    @continueUrlOpt.map { continueUrl =>
-        <div class="grid-row">
-            <div class="column-one-half">
-                <a href="@{continueUrl.url}" class="btn button" id="continue">
-                    @Messages("agent.services.account.new_account.continue")
-                </a>
-            </div>
-        </div>
     }
 }
 
@@ -154,6 +141,4 @@
 
         }
     }
-
-    @newAccountHasBeenCreated(continueUrlOpt)
 }
