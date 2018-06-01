@@ -1,7 +1,6 @@
 app.name=Agent services account
 servicename.titleSuffix=- Agent services account - GOV.UK
 agent.services.account.heading=Welcome to your agent services account
-agent.services.account.new_account.continue=Continue with your journey
 existing.client.relationships.link=Access existing client relationships
 
 agent.services.account.h2.your-clients=Your clients
