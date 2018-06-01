@@ -16,16 +16,13 @@
 
 package uk.gov.hmrc.agentservicesaccount.connectors
 
-import java.net.{URL, URLEncoder}
+import java.net.URL
 
 import com.kenshoo.play.metrics.Metrics
 import org.scalatestplus.play.guice.GuiceOneAppPerTest
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.test.FakeRequest
-import play.api.test.Helpers.{contentAsString, _}
-import uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController
-import uk.gov.hmrc.agentservicesaccount.stubs.{AgentServicesAccountStubs, AuthStubs, SsoStubs}
+import uk.gov.hmrc.agentservicesaccount.stubs.SsoStubs
 import uk.gov.hmrc.agentservicesaccount.support.WireMockSupport
 import uk.gov.hmrc.http.{HeaderCarrier, HttpGet}
 import uk.gov.hmrc.play.test.UnitSpec
@@ -68,36 +65,4 @@ class SsoConnectorSpec extends UnitSpec with GuiceOneAppPerTest with WireMockSup
       result shouldBe false
     }
   }
-
-  "AgentServicesController" should {
-
-    "render continue button if url is whitelisted in SSO" in {
-      SsoStubs.givenDomainIsWhitelisted("www.foo.com")
-      AuthStubs.givenAuthorisedAsAgentWith("ARN123456")
-      AgentServicesAccountStubs.givenAgencyNameFromASA("TARN0000001","SomeAgency")
-      val controller: AgentServicesController = app.injector.instanceOf[AgentServicesController]
-
-      val response = await(controller.root().apply(FakeRequest("GET", s"/?continue=${URLEncoder.encode("http://www.foo.com/bar?some=false", "UTF-8")}")))
-
-      status(response) shouldBe 200
-      contentAsString(response) should {
-        include("<a href=\"http://www.foo.com/bar?some=false\" class=\"btn button\" id=\"continue\">")
-      }
-    }
-
-    "not render continue button if url is not whitelisted in SSO" in {
-      SsoStubs.givenDomainIsNotWhitelisted("www.foo.com")
-      AuthStubs.givenAuthorisedAsAgentWith("ARN123456")
-      AgentServicesAccountStubs.givenAgencyNameFromASA("TARN0000001","SomeAgency")
-      val controller: AgentServicesController = app.injector.instanceOf[AgentServicesController]
-
-      val response = await(controller.root().apply(FakeRequest("GET", s"/?continue=${URLEncoder.encode("http://www.foo.com/bar?some=false", "UTF-8")}")))
-
-      status(response) shouldBe 200
-      contentAsString(response) should {
-        not include ("<a href=\"http://www.foo.com/bar?some=false\" class=\"btn button\" id=\"continue\">")
-      }
-    }
-  }
-
 }
