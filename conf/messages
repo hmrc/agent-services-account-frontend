@@ -8,7 +8,7 @@ agent.services.account.h3.agent-services=Agent services
 agent.services.account.p.agent-services=Access services for clients that have already authorised you to act on their behalf.
 
 agent.services.account.h3.client-authorisations=Client authorisations
-agent.services.account.p.client-authorisations=Start a new authorisation request or add existing clients to your account.
+agent.services.account.p.client-authorisations=Start a new authorisation request or link your current clients to your account.
 
 agent.services.account.h3.manage=Manage your account
 agent.services.account.p.manage=Allow other users in your organisation to access this agent services account, or restrict their access.
