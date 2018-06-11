@@ -19,7 +19,7 @@ agent.accountNumber=Account number: {0}
 
 agent.services.sccount.h2.client=''s account
 
-agent.manageYourUsers.links.start=<a href="{0}" id="{1}">Manage user access to your agent services account</a>
+agent.manageYourUsers.links.start=<a href="{0}" target="_blank" rel="noopener noreferrer" id="{1}">Manage user access to your agent services account</a>
 agent.services.account.additional.links.agent-afi.body2=<a href="{0}" id="{1}" data-journey-click=''link - click :Services you might need :View a clients PAYE income record''>View a client''s PAYE income record</a>
 common.sign-out=Sign out
 agent.services.account.additional.links.agent-afi.ga.link-view=link - view
