@@ -39,6 +39,10 @@
     <link href="@controllers.routes.Assets.at("stylesheets/styles.css")" media="screen" rel="stylesheet" type="text/css">
 }
 
+@scriptElement = {
+    <script src="@controllers.routes.Assets.at("javascripts/ga-events.js")" type="text/javascript"></script>
+}
+
 @head = {
     @uiLayouts.head(
       linkElem = None,
@@ -73,7 +77,7 @@
       analyticsToken = configuration.getString("google-analytics.token"),
       analyticsHost = configuration.getString("google-analytics.host").get,
       ssoUrl = None,
-      scriptElem = scriptElem,
+      scriptElem = Some(scriptElement),
       gaCalls = None,
       analyticsAdditionalJs = analyticsAdditionalJs)
 }
