@@ -14,7 +14,7 @@ agent.services.account.h3.manage=Manage your account
 agent.services.account.p.manage=Allow other users in your organisation to access this agent services account, or restrict their access.
 
 agent.invitations.links.start=<a href="{0}" id="{1}" data-journey-click=''link - click :Manage your clients :Ask a client to authorise you''>Ask a client to authorise you</a>
-agent.invitations.links.track=<a href="{0}" id="{1}" data-journey-click=''link - click :Manage your clients :Ask a client to authorise you''>Track your recent authorisation requests</a>
+agent.invitations.links.track=<a href="{0}" id="{1}" data-journey-click=''link - click :Manage your clients :Track your recent authorisation requests''>Track your recent authorisation requests</a>
 agent.services.account.additional.links.mapping.body2=<a href="{0}" id="{1}" data-journey-click=''link - click :Manage your users :Link your current Self Assessment and VAT clients to this account''>Link your current Self Assessment and VAT clients to this account</a>
 agent.accountNumber=Account number: {0}
 
