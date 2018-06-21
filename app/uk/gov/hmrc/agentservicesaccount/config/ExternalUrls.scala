@@ -41,7 +41,9 @@ class ExternalUrls @Inject() (override val configuration: Configuration) extends
 
   private lazy val invitationsExternalUrl = getConfigString("microservice.services.agent-invitations-frontend.external-url")
   private lazy val invitationsStartPath = getConfigString("microservice.services.agent-invitations-frontend.start.path")
+  private lazy val invitationsTrackPath = getConfigString("microservice.services.agent-invitations-frontend.track.path")
   lazy val agentInvitationsUrl: String = s"$invitationsExternalUrl$invitationsStartPath"
+  lazy val agentInvitationsTrackUrl: String = s"$invitationsExternalUrl$invitationsTrackPath"
 
   private lazy val agentAfiExternalUrl = getConfigString("microservice.services.tax-history-frontend.external-url")
   private lazy val agentAfiStartPath = getConfigString("microservice.services.tax-history-frontend.start.path")
