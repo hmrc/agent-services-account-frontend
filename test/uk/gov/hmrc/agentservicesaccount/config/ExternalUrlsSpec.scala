@@ -44,6 +44,9 @@ class ExternalUrlsSpec extends UnitSpec with ResettingMockitoSugar {
   val agentInvitationsStartPath = "/foo"
   val agentInvitationsUrl: String = s"$agentInvitationsExternalUrl$agentInvitationsStartPath"
 
+  val agentInvitationsTrackPath = "/track/"
+  val agentInvitationsTrackUrl: String = s"$agentInvitationsExternalUrl$agentInvitationsTrackPath"
+
   val agentAfiExternalUrl = "http://www.example.com/afi"
   val agentAfiStartPath = "/foo"
   val agentAfiUrl: String = s"$agentAfiExternalUrl$agentAfiStartPath"
@@ -79,6 +82,13 @@ class ExternalUrlsSpec extends UnitSpec with ResettingMockitoSugar {
     }
   }
 
+  "agentInvitationsTrackUrl" should {
+    "return the agent invitation frontend track URL" in {
+      mockConfig()
+      externalUrls.agentInvitationsTrackUrl shouldBe agentInvitationsTrackUrl
+    }
+  }
+
   "agentAfiUrl" should {
     "return the agent for individuals frontend URL" in {
       mockConfig()
@@ -95,6 +105,7 @@ class ExternalUrlsSpec extends UnitSpec with ResettingMockitoSugar {
     mockConfigString("microservice.services.agent-mapping-frontend.start.path", mappingStartPath)
     mockConfigString("microservice.services.agent-invitations-frontend.external-url", agentInvitationsExternalUrl)
     mockConfigString("microservice.services.agent-invitations-frontend.start.path", agentInvitationsStartPath)
+    mockConfigString("microservice.services.agent-invitations-frontend.track.path", agentInvitationsTrackPath)
     mockConfigString("microservice.services.tax-history-frontend.external-url", agentAfiExternalUrl)
     mockConfigString("microservice.services.tax-history-frontend.start.path", agentAfiStartPath)
     mockConfigString("microservice.services.agent-subscription-frontend.external-url", externalUrl)

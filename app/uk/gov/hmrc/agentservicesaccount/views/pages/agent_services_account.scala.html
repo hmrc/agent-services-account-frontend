@@ -104,6 +104,11 @@
                                 <li>@Html(Messages("agent.invitations.links.start", externalUrls.agentInvitationsUrl, "agentInvitationsLinkId"))</li>
                             }
 
+                            @featureSwitch("features.showAgentInvitationsTrackLink") {
+                                <li>@Html(Messages("agent.invitations.links.track", externalUrls.agentInvitationsTrackUrl, "agentInvitationsTrackLinkId"))</li>
+
+                            }
+
                             @featureSwitch("features.showAgentMappingLink") {
                                 <li>@Html(Messages("agent.services.account.additional.links.mapping.body2", externalUrls.agentMappingUrl, "agentMappingLinkId"))</li>
                             }

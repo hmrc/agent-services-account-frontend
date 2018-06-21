@@ -82,6 +82,8 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
   when(externalUrls.agentMappingUrl).thenReturn(mappingUrl)
   val invitationsUrl = "http://example.com/agent-invitations/agents"
   when(externalUrls.agentInvitationsUrl).thenReturn(invitationsUrl)
+  val invitationsTrackUrl = "http://example.com/agent-invitations/track"
+  when(externalUrls.agentInvitationsTrackUrl).thenReturn(invitationsTrackUrl)
   val agentAfiUrl = "http://example.com/agent-services/individuals"
   when(externalUrls.agentAfiUrl).thenReturn(agentAfiUrl)
   val arn = "TARN0000001"
@@ -120,6 +122,7 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
       content should include(messagesApi("agent.services.account.heading"))
       content should include(messagesApi("agent.services.account.additional.links.mapping.body2", mappingUrl, "agentMappingLinkId"))
       content should include(messagesApi("agent.invitations.links.start", invitationsUrl, "agentInvitationsLinkId"))
+      content should include(messagesApi("agent.invitations.links.track", invitationsTrackUrl, "agentInvitationsTrackLinkId"))
       content should include(messagesApi("agent.services.account.additional.links.agent-afi.body2", agentAfiUrl, "agentAfiLinkId"))
       content should include(arn)
       content should include(signOutUrl)

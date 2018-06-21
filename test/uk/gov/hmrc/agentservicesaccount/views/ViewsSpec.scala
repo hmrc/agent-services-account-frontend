@@ -123,6 +123,8 @@ class ViewsSpec extends UnitSpec with GuiceOneAppPerTest {
           include("Manage your clients") and
           include("Ask a client to authorise you") and
           include("href=\"http://localhost:9448/invitations/agents/\"") and
+          include("Track your recent authorisation requests") and
+          include("href=\"http://localhost:9448/invitations/track/\"") and
           include("Manage your users") and
           include("Control who can access your agent services account") and
           include("href=\"http://localhost:9851/user-delegation/manage-users\"")
