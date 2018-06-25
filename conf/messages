@@ -13,15 +13,15 @@ agent.services.account.p.client-authorisations=Start a new authorisation request
 agent.services.account.h3.manage=Manage your account
 agent.services.account.p.manage=Allow other users in your organisation to access this agent services account, or restrict their access.
 
-agent.invitations.links.start=<a href="{0}" id="{1}" data-journey-click=''link - click :Manage your clients :Ask a client to authorise you''>Ask a client to authorise you</a>
-agent.invitations.links.track=<a href="{0}" id="{1}" data-journey-click=''link - click :Manage your clients :Track your recent authorisation requests''>Track your recent authorisation requests</a>
-agent.services.account.additional.links.mapping.body2=<a href="{0}" id="{1}" data-journey-click=''link - click :Manage your users :Link your current Self Assessment and VAT clients to this account''>Link your current Self Assessment and VAT clients to this account</a>
+agent.invitations.links.start=<a href="{0}" id="{1}" >Ask a client to authorise you</a>
+agent.invitations.links.track=<a href="{0}" id="{1}" >Track your recent authorisation requests</a>
+agent.services.account.additional.links.mapping.body2=<a href="{0}" id="{1}" >Link your current Self Assessment and VAT clients to this account</a>
 agent.accountNumber=Account number: {0}
 
 agent.services.sccount.h2.client=''s account
 
 agent.manageYourUsers.links.start=<a href="{0}" target="_blank" rel="noopener noreferrer" id="{1}">Manage user access to your agent services account<span class="visuallyhidden"> (Opens in a new window)</span></a>
-agent.services.account.additional.links.agent-afi.body2=<a href="{0}" id="{1}" data-journey-click=''link - click :Services you might need :View a clients PAYE income record''>View a client''s PAYE income record</a>
+agent.services.account.additional.links.agent-afi.body2=<a href="{0}" id="{1}">View a client''s PAYE income record</a>
 common.sign-out=Sign out
 agent.services.account.additional.links.agent-afi.ga.link-view=link - view
 agent.services.account.additional.links.agent-afi.ga.manage-clients=Manage your clients
