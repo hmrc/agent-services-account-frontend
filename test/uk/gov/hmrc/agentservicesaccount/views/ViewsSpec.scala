@@ -31,13 +31,15 @@ import uk.gov.hmrc.agentservicesaccount.views.html.pages.agent_services_account_
 import uk.gov.hmrc.play.test.UnitSpec
 
 class ViewsSpec extends UnitSpec with GuiceOneAppPerTest {
+  trait PlainAppConfig {
+    implicit lazy val app: Application = new GuiceApplicationBuilder().build()
+    lazy val configuration = app.injector.instanceOf[Configuration]
+    lazy val externalUrls = app.injector.instanceOf[ExternalUrls]
+  }
 
   "error_template view" should {
 
-    "render title, heading and message" in new App {
-      implicit lazy val app: Application = new GuiceApplicationBuilder().build()
-      val configuration = app.injector.instanceOf[Configuration]
-
+    "render title, heading and message" in new App with PlainAppConfig {
       val view = new error_template()
       val html = view.render(
         "My custom page title", "My custom heading", "My custom message",
@@ -58,10 +60,7 @@ class ViewsSpec extends UnitSpec with GuiceOneAppPerTest {
 
   "main_template view" should {
 
-    "render title, header, sidebar and main content" in new App {
-      implicit lazy val app: Application = new GuiceApplicationBuilder().build()
-      val configuration = app.injector.instanceOf[Configuration]
-
+    "render title, header, sidebar and main content" in new App with PlainAppConfig {
       val view = new main_template()
       val html = view.render(
         title = "My custom page title",
@@ -105,15 +104,26 @@ class ViewsSpec extends UnitSpec with GuiceOneAppPerTest {
   }
 
   "agent_services_account view" should {
-
-    "render additional services section and manage client section with mapping, afi, invitations and manage users links when respective feature switches are on" in new App {
-      implicit lazy val app: Application = new GuiceApplicationBuilder().build()
-      val configuration = app.injector.instanceOf[Configuration]
-      val externalUrls = app.injector.instanceOf[ExternalUrls]
-
-      val isAgent = true
+    "render ARN in the format the format 'XARN-123-4567'" in new App with PlainAppConfig {
       val view = new agent_services_account()
-      val html = view.render(Arn("ARN0001"), isAgent, Some("AgencyName"), true, "", Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, configuration)
+      val html = view.render(
+        arn = Arn("XARN1234567"),
+        isAdmin = true,
+        agencyNameOpt = None,
+        isWhitelisted = false,
+        customDimension = "",
+        messages = Messages.Implicits.applicationMessages,
+        request = FakeRequest(),
+        externalUrls,
+        configuration)
+
+      contentAsString(html) should include("XARN-123-4567")
+    }
+
+    "render additional services section and manage client section with mapping, afi, invitations and manage users links when respective feature switches are on" in new App with PlainAppConfig {
+      val isAdmin = true
+      val view = new agent_services_account()
+      val html = view.render(Arn("ARN0001"), isAdmin, Some("AgencyName"), true, "", Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, configuration)
       contentAsString(html) should {
         include("Services you might need") and
           include("Allow this account to access existing client relationships") and
@@ -131,9 +141,7 @@ class ViewsSpec extends UnitSpec with GuiceOneAppPerTest {
       }
     }
 
-    "not render additional services section, nor manage clients section, nor mapping link, nor invitations and manage users link, when respective feature switches are off" in new App {
-      implicit lazy val app: Application = appBuilder.build()
-
+    "not render additional services section, nor manage clients section, nor mapping link, nor invitations and manage users link, when respective feature switches are off" in new App with PlainAppConfig {
       protected def appBuilder: GuiceApplicationBuilder =
         new GuiceApplicationBuilder()
           .configure(
@@ -144,13 +152,9 @@ class ViewsSpec extends UnitSpec with GuiceOneAppPerTest {
             "features.showManageUsersLink" -> false
           )
 
-      private val configuration = app.injector.instanceOf[Configuration]
-
-      val externalUrls = app.injector.instanceOf[ExternalUrls]
-
-      val isAgent = true
+      val isAdmin = true
       val view = new agent_services_account()
-      val html = view.render(Arn("ARN0001"), isAgent, Some("AgencyName"), true, "", Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, configuration)
+      val html = view.render(Arn("ARN0001"), isAdmin, Some("AgencyName"), true, "", Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, configuration)
       contentAsString(html) should not {
         include("Services you might need") or
           include("Allow this account to access existing client relationships") or
@@ -165,14 +169,10 @@ class ViewsSpec extends UnitSpec with GuiceOneAppPerTest {
       }
     }
 
-    "render invitations link but not income viewer link when not whitelisted" in new App {
-      implicit lazy val app: Application = new GuiceApplicationBuilder().build()
-      val configuration = app.injector.instanceOf[Configuration]
-      val externalUrls = app.injector.instanceOf[ExternalUrls]
-
-      val isAgent = true
+    "render invitations link but not income viewer link when not whitelisted" in new App with PlainAppConfig {
+      val isAdmin = true
       val view = new agent_services_account()
-      val html = view.render(Arn("ARN0001"), isAgent, Some("AgencyName"), isWhitelisted = false, "", Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, configuration)
+      val html = view.render(Arn("ARN0001"), isAdmin, Some("AgencyName"), isWhitelisted = false, "", Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, configuration)
       contentAsString(html) should not include ("href=\"http://localhost:9996/tax-history/select-client\"")
       contentAsString(html) should {
         include("Services you might need") and
@@ -182,14 +182,10 @@ class ViewsSpec extends UnitSpec with GuiceOneAppPerTest {
       }
     }
 
-    "render does not show manage your users link because Agent is Assistant" in new App {
-      implicit lazy val app: Application = new GuiceApplicationBuilder().build()
-      val configuration = app.injector.instanceOf[Configuration]
-      val externalUrls = app.injector.instanceOf[ExternalUrls]
-
-      val isAgent = false
+    "render does not show manage your users link because Agent is Assistant" in new App with PlainAppConfig {
+      val isAdmin = false
       val view = new agent_services_account()
-      val html = view.render(Arn("ARN0001"), isAgent, Some("AgencyName"), true, "", Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, configuration)
+      val html = view.render(Arn("ARN0001"), isAdmin, Some("AgencyName"), true, "", Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, configuration)
       contentAsString(html) should not {
         include("Manage your users") or
           include("Control who can access your agent services account") or
