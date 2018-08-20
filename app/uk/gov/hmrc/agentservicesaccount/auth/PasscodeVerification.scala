@@ -17,7 +17,6 @@
 package uk.gov.hmrc.agentservicesaccount.auth
 
 import javax.inject.Inject
-
 import play.api.mvc.Results._
 import play.api.mvc.{Request, Result}
 import play.api.{Configuration, Environment, Mode}
@@ -47,36 +46,33 @@ class FrontendPasscodeVerification @Inject()(configuration: Configuration,
   lazy val verificationURL: String = configuration.getString(s"govuk-tax.$env.url.verification-frontend.redirect").getOrElse("/verification")
   lazy val logoutUrl = s"$verificationURL/otac/logout/$passcodeRegime"
 
-  def loginUrl[A](queryParam: String) = s"$verificationURL/otac/login$queryParam"
+  private def redirectToLoginWithToken[A](implicit request: Request[A], ec: ExecutionContext): Option[Future[Result]] = {
+    request.getQueryString(tokenParam).map { nonUrlEncodedToken =>
+      val redirectUrl = CallOps.addParamsToUrl(s"$verificationURL/otac/login", tokenParam -> Some(nonUrlEncodedToken))
 
-  def tokenQueryParam[A](implicit request: Request[A]): Option[String] =
-    request.getQueryString(tokenParam).map(token => s"?$tokenParam=$token")
+      Future.successful(Redirect(redirectUrl)) map addRedirectUrl(nonUrlEncodedToken)(request)
+    }
+  }
 
-  def throwConfigNotFound(configKey: String) = throw new PasscodeVerificationException(s"The value for the key '$configKey' should be setup in the config file.")
+  private def throwConfigNotFound(configKey: String) = throw new PasscodeVerificationException(s"The value for the key '$configKey' should be setup in the config file.")
 
-  def addRedirectUrl[A](token: String)(implicit request: Request[A]): Result => Result = e =>
+  private def addRedirectUrl[A](token: String)(implicit request: Request[A]): Result => Result = e =>
     e.addingToSession(SessionKeys.redirect -> buildRedirectUrl(request))
       .addingToSession("otacTokenParam" -> token)
 
-  def buildRedirectUrl[A](req: Request[A]): String =
+  private def buildRedirectUrl[A](req: Request[A]): String =
     if (env != "Prod") s"http${if (req.secure) "s" else ""}://${req.host}${req.path}" else req.path
 
   def apply[A](body: Boolean => Future[Result])(implicit request: Request[A], headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[Result] = {
     if (passcodeEnabled) {
-      request.session.get(SessionKeys.otacToken).fold(
-        request.getQueryString(tokenParam) match {
-          case Some(token) => {
-            val queryParam = s"?$tokenParam=$token"
-            Future.successful(Redirect(loginUrl(queryParam))) map addRedirectUrl(token)(request)
-          }
-          case _ => body(false)
-        }
-      ) {
-        otacToken =>
+      request.session.get(SessionKeys.otacToken) match {
+        case Some(otacToken) =>
           otacAuthConnector.authorise(passcodeRegime, headerCarrier, Option(otacToken)).flatMap {
             case Authorised => body(true)
             case _ => body(false)
           }
+        case None =>
+          redirectToLoginWithToken.getOrElse(body(false))
       }
     } else {
       body(true)
