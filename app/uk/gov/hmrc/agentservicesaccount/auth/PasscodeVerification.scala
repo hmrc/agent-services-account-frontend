@@ -46,11 +46,11 @@ class FrontendPasscodeVerification @Inject()(configuration: Configuration,
   lazy val verificationURL: String = configuration.getString(s"govuk-tax.$env.url.verification-frontend.redirect").getOrElse("/verification")
   lazy val logoutUrl = s"$verificationURL/otac/logout/$passcodeRegime"
 
-  private def redirectToLoginWithToken[A](implicit request: Request[A], ec: ExecutionContext): Option[Future[Result]] = {
+  private def redirectToLoginWithToken[A](implicit request: Request[A], ec: ExecutionContext): Option[Result] = {
     request.getQueryString(tokenParam).map { nonUrlEncodedToken =>
       val redirectUrl = CallOps.addParamsToUrl(s"$verificationURL/otac/login", tokenParam -> Some(nonUrlEncodedToken))
 
-      Future.successful(Redirect(redirectUrl)) map addRedirectUrl(nonUrlEncodedToken)(request)
+      addRedirectUrl(nonUrlEncodedToken)(request)(Redirect(redirectUrl))
     }
   }
 
@@ -72,7 +72,7 @@ class FrontendPasscodeVerification @Inject()(configuration: Configuration,
             case _ => body(false)
           }
         case None =>
-          redirectToLoginWithToken.getOrElse(body(false))
+          redirectToLoginWithToken.map(Future.successful).getOrElse(body(false))
       }
     } else {
       body(true)
