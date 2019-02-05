@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +29,10 @@ import uk.gov.hmrc.http.{HeaderCarrier, HttpGet}
 
 class AgentServicesAccountConnectorSpec extends UnitSpec with GuiceOneAppPerTest with WireMockSupport {
 
+  override protected def beforeEach(): Unit = {
+    super.beforeEach()
+  }
+
   override def fakeApplication(): Application = appBuilder.build()
 
   protected def appBuilder: GuiceApplicationBuilder =
@@ -41,31 +45,34 @@ class AgentServicesAccountConnectorSpec extends UnitSpec with GuiceOneAppPerTest
 
   import scala.concurrent.ExecutionContext.Implicits.global
 
-  private lazy val connector = new AgentServicesAccountConnector(new URL(s"http://localhost:$wireMockPort"), app.injector.instanceOf[HttpGet])
   private implicit val hc = HeaderCarrier()
 
   "getAgencyName" should {
-    "return Some agency name when backend returns 200 with agency name" in {
+    trait Setup {
+      val connector = new AgentServicesAccountConnector(new URL(s"http://localhost:$wireMockPort"), app.injector.instanceOf[HttpGet])
+    }
+
+    "return Some agency name when backend returns 200 with agency name" in new Setup {
       givenAgencyNameFromASA("TestARN", "ACME")
       await(connector.getAgencyName(Arn("TestARN"))) shouldBe Some("ACME")
     }
 
-    "return None when backend returns 204 with no agency name" in {
-      givenNoAgencyNameFromASA
+    "return None when backend returns 204 with no agency name" in new Setup {
+      givenNoAgencyNameFromASA()
       await(connector.getAgencyName(Arn("TestARN"))) shouldBe None
     }
 
-    "return None when backend returns 404" in {
+    "return None when backend returns 404" in new Setup {
       givenErrorFromASA(404)
       await(connector.getAgencyName(Arn("TestARN"))) shouldBe None
     }
 
-    "return None when backend returns 400" in {
+    "return None when backend returns 400" in new Setup {
       givenErrorFromASA(400)
       await(connector.getAgencyName(Arn("TestARN"))) shouldBe None
     }
 
-    "return None when backend returns 500 response" in {
+    "return None when backend returns 500 response" in new Setup {
       givenErrorFromASA(500)
       await(connector.getAgencyName(Arn("TestARN"))) shouldBe None
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ object AgentServicesAccountStubs {
           .withBody(s"""{ "agencyName" : "$agencyName" }""")))
   }
 
-  def givenNoAgencyNameFromASA = {
+  def givenNoAgencyNameFromASA() = {
     stubFor(get(urlEqualTo("/agent-services-account/agent/agency-name"))
       .willReturn(
         aResponse()
