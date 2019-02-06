@@ -90,7 +90,7 @@
 
         <div class="column-one-half">
 
-            @if(configuration.getBoolean("features.showAgentInvitationsLink").getOrElse(false) || configuration.getBoolean("features.showAgentMappingLink").getOrElse(false)){
+            @if(configuration.getBoolean("features.showAgentInvitationsLink").getOrElse(false) || configuration.getBoolean("features.showAgentMappingLink").getOrElse(false) || configuration.getBoolean("features.showAgentLedDeAuthLink").getOrElse(false)){
 
                 <div class="card">
                     <div class="card-body non-active">
@@ -112,6 +112,10 @@
 
                             @featureSwitch("features.showAgentMappingLink") {
                                 <li>@Html(Messages("agent.services.account.additional.links.mapping.body2", externalUrls.agentMappingUrl, "agentMappingLinkId"))</li>
+                            }
+
+                            @featureSwitch("features.showAgentLedDeAuthLink") {
+                            <li>@Html(Messages("agent.invitations.links.cancel-auth", externalUrls.agentCancelAuthUrl, "agentCancelAuthLinkId"))</li>
                             }
 
                         </ul>

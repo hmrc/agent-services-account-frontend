@@ -87,6 +87,8 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
   when(externalUrls.agentInvitationsTrackUrl).thenReturn(invitationsTrackUrl)
   val agentAfiUrl = "http://example.com/agent-services/individuals"
   when(externalUrls.agentAfiUrl).thenReturn(agentAfiUrl)
+  val agentCancelAuthUrl = "http://example.com/agent-invitations/cancel-authorisation"
+  when(externalUrls.agentCancelAuthUrl).thenReturn(agentCancelAuthUrl)
   val arn = "TARN0000001"
   lazy val desConnector = mock[AgentServicesAccountConnector]
   when(desConnector.getAgencyName(eqArg(Arn(arn)))(anyArg[HeaderCarrier], anyArg[ExecutionContext])).thenReturn(Future.successful(None))
@@ -124,6 +126,7 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
       content should include(messagesApi("agent.services.account.additional.links.mapping.body2", mappingUrl, "agentMappingLinkId"))
       content should include(messagesApi("agent.invitations.links.start", invitationsUrl, "agentInvitationsLinkId"))
       content should include(messagesApi("agent.invitations.links.track", invitationsTrackUrl, "agentInvitationsTrackLinkId"))
+      content should include(messagesApi("agent.invitations.links.cancel-auth", agentCancelAuthUrl, "agentCancelAuthLinkId"))
       content should include(messagesApi("agent.services.account.additional.links.agent-afi.body2", agentAfiUrl, "agentAfiLinkId"))
       content should include("TARN-000-0001")
       content should include(signOutUrl)

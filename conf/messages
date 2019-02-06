@@ -16,6 +16,7 @@ agent.services.account.p.manage=Allow other users in your organisation to access
 agent.invitations.links.start=<a href="{0}" id="{1}" >Ask a client to authorise you</a>
 agent.invitations.links.track=<a href="{0}" id="{1}" >Track your recent authorisation requests</a>
 agent.services.account.additional.links.mapping.body2=<a href="{0}" id="{1}" >Link your current Self Assessment and VAT clients to this account</a>
+agent.invitations.links.cancel-auth=<a href="{0}" id="{1}" >Cancel a client''s authorisation</a>
 agent.accountNumber=Account number: {0}
 
 agent.services.sccount.h2.client=''s account
