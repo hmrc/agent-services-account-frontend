@@ -126,7 +126,6 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
       content should include(messagesApi("agent.services.account.additional.links.mapping.body2", mappingUrl, "agentMappingLinkId"))
       content should include(messagesApi("agent.invitations.links.start", invitationsUrl, "agentInvitationsLinkId"))
       content should include(messagesApi("agent.invitations.links.track", invitationsTrackUrl, "agentInvitationsTrackLinkId"))
-      content should include(messagesApi("agent.invitations.links.cancel-auth", agentCancelAuthUrl, "agentCancelAuthLinkId"))
       content should include(messagesApi("agent.services.account.additional.links.agent-afi.body2", agentAfiUrl, "agentAfiLinkId"))
       content should include("TARN-000-0001")
       content should include(signOutUrl)
