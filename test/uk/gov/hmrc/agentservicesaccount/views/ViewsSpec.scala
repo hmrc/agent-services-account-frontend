@@ -137,7 +137,9 @@ class ViewsSpec extends UnitSpec with GuiceOneAppPerTest {
           include("href=\"http://localhost:9448/invitations/track/\"") and
           include("Manage your users") and
           include("Control who can access your agent services account") and
-          include("href=\"http://localhost:9851/user-delegation/manage-users\"")
+          include("href=\"http://localhost/tax-and-scheme-management/users?origin=Agent\"")
+          include("Add a new user")
+          include("href=\"http://localhost/user-profile-redirect-frontend/group-profile-management\"")
       }
     }
 
@@ -149,7 +151,9 @@ class ViewsSpec extends UnitSpec with GuiceOneAppPerTest {
             "features.showAgentMappingLink" -> false,
             "features.showAgentInvitationsLink" -> false,
             "features.showAgentAfiLink" -> false,
-            "features.showManageUsersLink" -> false
+            "features.showUserManagement" -> false,
+            "features.showManageUsersLink" -> false,
+            "features.showAddUserLink" -> false
           )
 
       val isAdmin = true
@@ -165,7 +169,9 @@ class ViewsSpec extends UnitSpec with GuiceOneAppPerTest {
           include("href=\"http://localhost:9448/invitations/agents/\"") or
           include("Manage your users") or
           include("Control who can access your agent services account") or
-          include("href=\"http://localhost:9851/user-delegation/manage-users\"")
+          include("href=\"http://localhost:9851/user-delegation/manage-users\"") or
+          include("Add a new user") or
+          include("href=\"http://localhost/user-profile-redirect-frontend/group-profile-management\"")
       }
     }
 
