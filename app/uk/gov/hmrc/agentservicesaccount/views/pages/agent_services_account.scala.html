@@ -125,7 +125,7 @@
         </div>
     </div>
 
-    @featureSwitch("features.showManageUsersLink") {
+    @featureSwitch("features.showUserManagement") {
         @if(isAdmin) {
 
             <h2 class="heading-medium divider--bottom">@agencyName(agencyNameOpt)@Messages("agent.services.sccount.h2.client")</h2>
@@ -141,7 +141,8 @@
                         </div>
                         <div class="card-action">
                             <ul>
-                                <li>@Html(Messages("agent.manageYourUsers.links.start", externalUrls.manageUsersUrl, "manageYourUsersLinkId"))</li>
+                                @featureSwitch("features.showAddUserLink") { <li>@Html(Messages("agent.addNewUser.links.start", externalUrls.addUserUrl, "addUserLinkId"))</li> }
+                                @featureSwitch("features.showManageUsersLink") { <li>@Html(Messages("agent.manageYourUsers.links.start", externalUrls.manageUsersUrl, "manageYourUsersLinkId"))</li> }
                             </ul>
                         </div>
                     </div>
