@@ -34,7 +34,6 @@ import uk.gov.hmrc.agentservicesaccount.FrontendModule
 import uk.gov.hmrc.agentservicesaccount.auth.{AgentInfo, AuthActions, PasscodeVerification}
 import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
 import uk.gov.hmrc.agentservicesaccount.connectors.{AgentServicesAccountConnector, SsoConnector}
-import uk.gov.hmrc.agentservicesaccount.views.ViewOps
 import uk.gov.hmrc.auth.core.InvalidBearerToken
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.test.UnitSpec
@@ -127,7 +126,7 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
       content should include(messagesApi("agent.invitations.links.start", invitationsUrl, "agentInvitationsLinkId"))
       content should include(messagesApi("agent.invitations.links.track", invitationsTrackUrl, "agentInvitationsTrackLinkId"))
       content should include(messagesApi("agent.services.account.additional.links.agent-afi.body2", agentAfiUrl, "agentAfiLinkId"))
-      content should include("TARN-000-0001")
+      content should include("TARN0000001")
       content should include(signOutUrl)
       content should include(mappingUrl)
       content should include(messagesApi("agent.services.account.h2.your-clients"))

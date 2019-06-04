@@ -17,7 +17,6 @@
 @import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 @import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
 @import play.api.Configuration
-@import uk.gov.hmrc.agentservicesaccount.views.ViewOps._
 
 @(arn: Arn, isAdmin: Boolean, agencyNameOpt: Option[String], isWhitelisted: Boolean, customDimension: String)(implicit messages: Messages, request: Request[_], externalUrls: ExternalUrls, configuration: Configuration)
 
@@ -57,7 +56,7 @@
 @uk.gov.hmrc.agentservicesaccount.views.html.main_template(title = Messages("agent.services.account.heading"), mainClass = Some("full-width"), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
 
     <h1 class="heading-xlarge">@agencyName(agencyNameOpt)
-        <span class="pre-heading">@Messages("agent.accountNumber", arn.prettify)</span>
+        <span class="pre-heading">@Messages("agent.accountNumber", arn.value)</span>
     </h1>
 
 
