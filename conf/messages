@@ -3,6 +3,33 @@ servicename.titleSuffix=- Agent services account - GOV.UK
 agent.services.account.heading=Welcome to your agent services account
 existing.client.relationships.link=Access existing client relationships
 
+serviceinfo.home=Account home
+serviceinfo.manage=Manage account
+serviceinfo.signout=Sign out
+
+agent.services.account.inset=You cannot view your client lists in your agent services account. You can use your account to view and manage an individual client's VAT details.
+agent.services.account.section1.h2=Making Tax Digital for VAT
+agent.services.account.section1.col1.h3=Sign clients up for Making Tax Digital for VAT
+agent.services.account.section1.col1.p=You copied across existing client authorisations to your agent services account. This means you can now sign these clients up to Making Tax Digital.
+agent.services.account.section1.col1.link=Sign clients up for Making Tax Digital for VAT (opens in a new window or tab).
+agent.services.account.section1.col2.h3=Manage your client''s VAT details
+agent.services.account.section1.col2.p=Use this service to update your client’s VAT registration status, business name (if they are a limited company), principal place of business and VAT stagger.
+agent.services.account.section1.col2.link=Manage your client''s VAT details
+
+agent.services.account.section2.h2=View a client''s PAYE income record
+agent.services.account.section2.col1.p=Access a client''s PAYE income record to help you complete their Self Assessment tax return.
+agent.services.account.section2.col1.link=View a client''s PAYE income record
+
+agent.services.account.section3.h2=Client authorisations
+agent.services.account.section3.col1.h3=Ask a client to authorise you
+agent.services.account.section3.col1.p=You only need to do this if you have not copied across an existing authorisation from the client.
+agent.services.account.section3.col1.link=Ask a client to authorise you
+
+agent.services.account.section3.col2.h3=Manage authorisations
+agent.services.account.section3.col2.link1=Track your recent authorisation requests
+agent.services.account.section3.col2.link2=Copy across more VAT and Self Assessment client authorisations
+agent.services.account.section3.col2.link3=Cancel a client''s authorisation
+
 agent.services.account.h2.your-clients=Your clients
 agent.services.account.h3.agent-services=Agent services
 agent.services.account.p.agent-services=Access services for clients that have already authorised you to act on their behalf.

@@ -7,5 +7,13 @@
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   justify-content: flex-start;
-  padding: 0 15px;
+  padding: 0 15px 0 0;
+}
+
+.account-menu__link  {
+  color: $govuk-blue;
+}
+
+.account-icon {
+  color: $govuk-blue;
 }
