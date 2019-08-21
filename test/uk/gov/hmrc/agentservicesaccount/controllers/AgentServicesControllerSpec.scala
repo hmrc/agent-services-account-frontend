@@ -120,20 +120,34 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
       contentType(response).get shouldBe HTML
       val content = contentAsString(response)
       content should include(messagesApi("agent.services.account.heading", "servicename.titleSuffix"))
-      content should not include "Agent Services Account"
       content should include(messagesApi("agent.services.account.heading"))
-      content should include(messagesApi("agent.services.account.additional.links.mapping.body2", mappingUrl, "agentMappingLinkId"))
-      content should include(messagesApi("agent.invitations.links.start", invitationsUrl, "agentInvitationsLinkId"))
-      content should include(messagesApi("agent.invitations.links.track", invitationsTrackUrl, "agentInvitationsTrackLinkId"))
-      content should include(messagesApi("agent.services.account.additional.links.agent-afi.body2", agentAfiUrl, "agentAfiLinkId"))
-      content should include("TARN0000001")
-      content should include(signOutUrl)
+      content should include(messagesApi("app.name"))
+      content should include(messagesApi("agent.accountNumber","TARN0000001"))
+      content should include(messagesApi("agent.services.account.inset"))
+      content should include(messagesApi("agent.services.account.section1.h2"))
+      content should include(messagesApi("agent.services.account.section1.col1.h3"))
+      content should include(messagesApi("agent.services.account.section1.col1.link"))
+      content should include("https://www.gov.uk/guidance/sign-up-for-making-tax-digital-for-vat")
+      content should include(htmlEscapedMessage("agent.services.account.section1.col2.h3"))
+      content should include(messagesApi("agent.services.account.section1.col2.p"))
+      content should include(htmlEscapedMessage("agent.services.account.section1.col2.link"))
+      content should include(htmlEscapedMessage("agent.services.account.section2.h2"))
+      content should include(htmlEscapedMessage("agent.services.account.section2.col1.p"))
+      content should include(htmlEscapedMessage("agent.services.account.section2.col1.link"))
+      content should include(agentAfiUrl)
+      content should include(messagesApi("agent.services.account.section3.h2"))
+      content should include(messagesApi("agent.services.account.section3.col1.h3"))
+      content should include(messagesApi("agent.services.account.section3.col1.p"))
+      content should include(messagesApi("agent.services.account.section3.col1.link"))
+      content should include(invitationsUrl)
+      content should include(messagesApi("agent.services.account.section3.col2.h3"))
+      content should include(messagesApi("agent.services.account.section3.col2.link1"))
+      content should include(messagesApi("agent.services.account.section3.col2.link2"))
+      content should include(htmlEscapedMessage("agent.services.account.section3.col2.link3"))
+      content should include(invitationsTrackUrl)
       content should include(mappingUrl)
-      content should include(messagesApi("agent.services.account.h2.your-clients"))
-      content should include(messagesApi("agent.services.account.h3.agent-services"))
-      content should include(messagesApi("agent.services.account.p.agent-services"))
-      content should include(messagesApi("agent.services.account.h3.client-authorisations"))
-      content should include(messagesApi("agent.services.account.p.client-authorisations"))
+      content should include(agentCancelAuthUrl)
+
     }
 
     "return the redirect returned by authActions when authActions denies access" in {
@@ -166,27 +180,5 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
       }
     }
 
-    "show the agency name when it is available from the backend" in {
-      when(desConnector.getAgencyName(eqArg(Arn(arn)))(anyArg[HeaderCarrier], anyArg[ExecutionContext])).thenReturn(Future.successful(Some("Test Agency Name")))
-
-      val controller = new AgentServicesController(messagesApi, authActions, desConnector, NoPasscodeVerification, "")
-      val response = controller.root().apply(FakeRequest("GET", "/"))
-      status(response) shouldBe OK
-      contentAsString(response) should {
-        include("id=\"agency-name\"")
-        include("Test Agency Name")
-      }
-    }
-
-    "not fail when the agency name is not available from the backend" in {
-      when(desConnector.getAgencyName(eqArg(Arn(arn)))(anyArg[HeaderCarrier], anyArg[ExecutionContext])).thenReturn(Future.successful(None))
-
-      val controller = new AgentServicesController(messagesApi, authActions, desConnector, NoPasscodeVerification, "")
-      val response = controller.root().apply(FakeRequest("GET", "/"))
-      status(response) shouldBe OK
-      contentAsString(response) should {
-        not include "id=\"agency-name\""
-      }
-    }
   }
 }

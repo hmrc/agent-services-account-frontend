@@ -4,6 +4,12 @@
   margin-bottom: 2em;
 }
 
+.tile-container{
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 80px;
+}
+
 @media screen and (min-width:600px) and (max-width:900px) {
   .card {
     flex-basis: 45.99%;
@@ -17,6 +23,7 @@
     }
   }
 }
+
 
 @media screen and (min-width:900px) {
   .card {
@@ -37,6 +44,13 @@
   }
 }
 
+.padding-top40px{
+  padding-top: 40px
+}
+
+.padding-bottom40px {
+  padding-bottom: 40px;
+}
 
 html[data-useragent*='MSIE 10.0'] .flex-container {
   .card {
@@ -44,6 +58,7 @@ html[data-useragent*='MSIE 10.0'] .flex-container {
     margin: 3%;
   }
 }
+
 
 .card {
   border: 1px solid $panel-colour;

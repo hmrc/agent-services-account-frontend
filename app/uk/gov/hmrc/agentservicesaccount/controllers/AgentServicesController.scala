@@ -17,7 +17,6 @@
 package uk.gov.hmrc.agentservicesaccount.controllers
 
 import javax.inject._
-
 import play.api.{Configuration, Logger}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent}
@@ -27,6 +26,8 @@ import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
 import uk.gov.hmrc.agentservicesaccount.views.html.pages._
 import uk.gov.hmrc.auth.core.NoActiveSession
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
+
+import scala.concurrent.Future
 
 @Singleton
 class AgentServicesController @Inject()(
@@ -54,5 +55,11 @@ class AgentServicesController @Inject()(
       }
     }
   }
+
+  def manageAccount: Action[AnyContent] = Action.async { implicit request =>
+    Future.successful(Ok("manage account page"))
+
+    }
+
 
 }

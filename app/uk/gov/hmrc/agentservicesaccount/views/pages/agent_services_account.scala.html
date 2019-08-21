@@ -51,86 +51,91 @@
 }
 
 
-@uk.gov.hmrc.agentservicesaccount.views.html.main_template(title = Messages("agent.services.account.heading"), mainClass = Some("full-width"), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
-
-    <h1 class="heading-xlarge">@agencyName(agencyNameOpt)
-        <span class="pre-heading">@Messages("agent.accountNumber", arn.value)</span>
+@uk.gov.hmrc.agentservicesaccount.views.html.main_template(title = Messages("agent.services.account.heading"), mainClass = Some("govuk-main-wrapper"), analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
+<div class="padding-top40px padding-bottom40px account-services-home">
+    <h1 class="govuk-heading-xl welcome-heading">@Messages("app.name")
+        <span class="govuk-hint">@Messages("agent.accountNumber", arn.value)</span>
     </h1>
 
-
-    <h2 class="heading-medium divider--bottom">@Messages("agent.services.account.h2.your-clients")</h2>
-
-    <div class="grid-row">
-
-        <div class="column-one-half">
-                    <div class="card">
-                        <div class="card-body non-active">
-                            <h3 class="heading-small card-heading">
-                                @Messages("agent.services.account.h3.agent-services")
-                            </h3>
-                            <p>@Messages("agent.services.account.p.agent-services")</p>
-                        </div>
-                        <div class="card-action">
-                            <p>@Html(Messages("agent.services.account.additional.links.agent-afi.body2", externalUrls.agentAfiUrl, "agentAfiLinkId"))</p>
-                        </div>
-                    </div>
-                </div>
-
-        <div class="column-one-half">
-
-
-                <div class="card">
-                    <div class="card-body non-active">
-                        <h3 class="heading-small card-heading">
-                            @Messages("agent.services.account.h3.client-authorisations")
-                        </h3>
-                        <p>@Messages("agent.services.account.p.client-authorisations")</p>
-                    </div>
-                    <div class="card-action">
-                        <ul>
-
-                                <li>@Html(Messages("agent.invitations.links.start", externalUrls.agentInvitationsUrl, "agentInvitationsLinkId"))</li>
-
-
-                                <li>@Html(Messages("agent.invitations.links.track", externalUrls.agentInvitationsTrackUrl, "agentInvitationsTrackLinkId"))</li>
-
-
-                                <li>@Html(Messages("agent.services.account.additional.links.mapping.body2", externalUrls.agentMappingUrl, "agentMappingLinkId"))</li>
-
-                            @featureSwitch("features.showAgentLedDeAuthLink") {
-                            <li>@Html(Messages("agent.invitations.links.cancel-auth", externalUrls.agentCancelAuthUrl, "agentCancelAuthLinkId"))</li>
-                            }
-
-                        </ul>
-                    </div>
-                </div>
-            }
-        </div>
+    <div class="govuk-inset-text govuk-!-width-two-thirds">
+        <p class="">
+            @Messages("agent.services.account.inset")
+        </p>
     </div>
+
+    <section class="tile-container" style="margin-bottom: 0">
+        <div class="tile">
+            <div class="govuk-grid-column-one-half" id="tileS1C1">
+                <h2 class="govuk-heading-m" style="margin: 0px 0 10px">@Messages("agent.services.account.section1.h2")</h2>
+                <h3 class="govuk-heading-s" style="margin: 0px 0 10px">@Messages("agent.services.account.section1.col1.h3")</h3>
+                <p>@Messages("agent.services.account.section1.col1.p")</p>
+                <p><a href="https://www.gov.uk/guidance/sign-up-for-making-tax-digital-for-vat" target="_blank">@Messages("agent.services.account.section1.col1.link")</a></p>
+            </div>
+            <div class="govuk-grid-column-one-half" id="tileS1C2">
+                <h3 class="govuk-heading-s" style="margin: 40px 0 10px">@Messages("agent.services.account.section1.col2.h3")</h3>
+                <p>@Messages("agent.services.account.section1.col2.p")</p>
+                <p><a href="#">@Messages("agent.services.account.section1.col2.link")</a></p>
+            </div>
+        </div>
+    </section>
+    <section class="tile-container" style="margin-bottom: 0">
+        <div class="tile">
+            <div class="govuk-grid-column-one-half" id="tileS2C1">
+                <h2 class="govuk-heading-m" style="margin: 0px 0 10px">@Messages("agent.services.account.section2.h2")</h2>
+                <p>@Messages("agent.services.account.section2.col1.p")</p>
+                <p><a href="@externalUrls.agentAfiUrl">@Messages("agent.services.account.section2.col1.link")</a></p>
+            </div>
+        </div>
+    </section>
+    <section class="tile-container" style="margin-bottom: 0">
+        <div class="tile">
+            <div class="govuk-grid-column-one-half" id="tileS3C1">
+                <h2 class="govuk-heading-m" style="margin: 0px 0 5px">@Messages("agent.services.account.section3.h2")</h2>
+                <h3 class="govuk-heading-s" style="margin: 0px 0 5px">@Messages("agent.services.account.section3.col1.h3")</h3>
+                <p>@Messages("agent.services.account.section3.col1.p")</p>
+                <p><a href="@externalUrls.agentInvitationsUrl">@Messages("agent.services.account.section3.col1.link")</a></p>
+            </div>
+            <div class="govuk-grid-column-one-half" id="tileS3C2">
+                <h3 class="govuk-heading-s" style="margin: 35px 0 5px">@Messages("agent.services.account.section3.col2.h3")</h3>
+                <p><a href="@externalUrls.agentInvitationsTrackUrl">@Messages("agent.services.account.section3.col2.link1")</a></p>
+                <p><a href="@externalUrls.agentMappingUrl">@Messages("agent.services.account.section3.col2.link2")</a></p>
+                <p><a href="@externalUrls.agentCancelAuthUrl">@Messages("agent.services.account.section3.col2.link3")</a></p>
+            </div>
+        </div>
+    </section>
+</div>
+
+
+
+
+
+
+
 
         @if(isAdmin) {
 
-    <h2 class="heading-medium divider--bottom">@agencyName(agencyNameOpt)@Messages("agent.services.sccount.h2.client")</h2>
+        <h2 class="heading-medium divider--bottom">@agencyName(agencyNameOpt)@Messages("agent.services.sccount.h2.client")</h2>
 
-    <div class="grid-row">
-        <div class="column-one-half">
-            <div class="card">
-                <div class="card-body non-active">
-                    <h3 class="heading-small card-heading">
-                    @Messages("agent.services.account.h3.manage")
-                    </h3>
-                    <p>@Messages("agent.services.account.p.manage")</p>
+                <div class="grid-row">
+                    <div class="column-one-half">
+                        <div class="card">
+                            <div class="card-body non-active">
+                                <h3 class="heading-small card-heading">
+                                    @Messages("agent.services.account.h3.manage")
+                                </h3>
+                                <p>@Messages("agent.services.account.p.manage")</p>
+                            </div>
+                            <div class="card-action">
+                                <ul>
+                                    <li>@Html(Messages("agent.addNewUser.links.start", externalUrls.addUserUrl, "addUserLinkId"))</li>
+                                    <li>@Html(Messages("agent.manageYourUsers.links.start", externalUrls.manageUsersUrl, "manageYourUsersLinkId"))</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column-one-half"></div>
                 </div>
-                <div class="card-action">
-                    <ul>
-                        <li>@Html(Messages("agent.addNewUser.links.start", externalUrls.addUserUrl, "addUserLinkId"))</li>
-                        <li>@Html(Messages("agent.manageYourUsers.links.start", externalUrls.manageUsersUrl, "manageYourUsersLinkId"))</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <div class="column-one-half"></div>
-    </div>
+    }
 
 
 

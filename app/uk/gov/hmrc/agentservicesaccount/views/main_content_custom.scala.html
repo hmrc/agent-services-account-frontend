@@ -19,16 +19,21 @@
   mainDataAttributes: Option[Html] = None,
   mainContentHeader: Html = HtmlFormat.empty,
   serviceInfo: Html = HtmlFormat.empty,
+        betaBanner: Html = HtmlFormat.empty,
   actingAttorneyBanner: Html = HtmlFormat.empty,
   sidebar: Html = HtmlFormat.empty,
-  getHelpForm: Html = HtmlFormat.empty,
-  lowerBetaBanner: Html = HtmlFormat.empty)
+  getHelpForm: Html = HtmlFormat.empty
+        )
 
 <main id="wrapper" role="main" @if(mainClass.isDefined) { class="@{mainClass.get}" } @mainDataAttributes>
     <div class="centered-content">
         @serviceInfo
     </div>
+
+
+
     <div id="content">
+        @betaBanner
 
         @actingAttorneyBanner
 
@@ -40,7 +45,6 @@
 
         @getHelpForm
 
-        @lowerBetaBanner
 
     </div>
 </main>

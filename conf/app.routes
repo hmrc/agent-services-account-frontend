@@ -4,3 +4,4 @@ GET         /assets/*file             controllers.Assets.at(path="/public", file
 
 GET        /                @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController.root()
 GET        /sign-out        @uk.gov.hmrc.agentservicesaccount.controllers.SignOutController.signOut
+GET         /manage-account @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController.manageAccount

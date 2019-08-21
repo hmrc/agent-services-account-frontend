@@ -60,13 +60,12 @@
 
 
 @betaBanner = {
-    <div class="phase-banner-low">
-        @uiLayouts.betaBanner(
-            userLoggedIn = true,
-            betaFeedbackUrl = configuration.getString("betaFeedbackUrl").get,
-            betaFeedbackUnauthenticatedUrl = "",
-            showFeedbackLinkInBetaBanner = true
-        )
+    <div class="govuk-phase-banner govuk-phase-banner-agent">
+        <p class="govuk-phase-banner__content"><strong class="govuk-tag govuk-phase-banner__content__tag "> beta </strong> <span class="govuk-phase-banner__text">
+            This is a new service – your
+            <a class="govuk-link" href='@configuration.getString("betaFeedbackUrl").get'>feedback</a> will help us to improve it.
+        </span>
+        </p>
     </div>
 }
 
@@ -87,13 +86,10 @@
 
 @serviceInfo  = {
     <div class="service-info">
-        <nav id="secondary-nav" class="account-menu" role="navigation">
-            <a href="@routes.AgentServicesController.root().url" class="account-menu__link account-menu__link--active account-menu__link--home "><span class="account-icon account-icon--home">Account home</span></a>
-            <a href="#" class="account-menu__link account-menu__link--menu js-hidden js-visible" aria-hidden="true" aria-expanded="false">Account menu</a>
-            <ul class="account-menu__main">
-                <li class="account-menu__link--back hidden" aria-hidden="true"><a href="#" class="account-menu__link">Back</a></li>
-                <li><a href="@routes.SignOutController.signOut().url" class="account-menu__link">@Messages("common.sign-out")</a></li>
-            </ul>
+        <nav id="secondary-nav" class="account-menu flex-container" role="navigation">
+            <a href="@routes.AgentServicesController.root().url" class="account-menu__link account-menu__link--home "><span class="account-icon account-icon--home">@Messages("serviceinfo.home")</span></a>
+            <a href="@routes.AgentServicesController.manageAccount().url" class="account-menu__link"><span>@Messages("serviceinfo.manage")</span></a>
+            <a href="@routes.SignOutController.signOut().url" class="account-menu__link"><span>@Messages("common.sign-out")</span></a>
         </nav>
     </div>
 }
@@ -115,9 +111,10 @@
       mainDataAttributes = mainDataAttributes,
       mainContentHeader = mainContentHeader,
       serviceInfo = serviceInfo,
+        betaBanner = betaBanner,
       sidebar = sidebar,
-      getHelpForm = getHelpForm,
-      lowerBetaBanner = betaBanner)
+      getHelpForm = getHelpForm
+    )
 }
 
 @hmrcGovUkTemplate(Some(title + " " + titleSuffix), bodyClasses)(head, bodyEnd, insideHeader, afterHeader, footerTop, Some(uiLayouts.footer_links()), true)(content)
