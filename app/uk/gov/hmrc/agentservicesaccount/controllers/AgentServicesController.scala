@@ -45,7 +45,7 @@ class AgentServicesController @Inject()(
       authActions.authorisedWithAgent { agentInfo =>
         asaConnector.getAgencyName(agentInfo.arn).map { maybeAgencyName =>
           Logger.info(s"isAdmin: ${agentInfo.isAdmin}")
-          Ok(agent_services_account(agentInfo.arn, maybeAgencyName, isWhitelisted, customDimension))
+          Ok(agent_services_account(agentInfo.arn, maybeAgencyName, isWhitelisted, customDimension, agentInfo.isAdmin))
         }
       } map { maybeResult =>
         maybeResult.getOrElse(authActions.redirectToAgentSubscriptionGgSignIn)
