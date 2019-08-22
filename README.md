@@ -16,7 +16,7 @@ allowing them to access to a range of HMRC digital services.
 
 ### Running the app locally
 
-    sm --start AGENT_MTD -f
+    sm --start AGENT_ONBOARDING -r
     sm --stop AGENT_SERVICES_ACCOUNT_FRONTEND
     sbt run
 
