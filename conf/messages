@@ -30,6 +30,11 @@ agent.services.account.section3.col2.link1=Track your recent authorisation reque
 agent.services.account.section3.col2.link2=Copy across more VAT and Self Assessment client authorisations
 agent.services.account.section3.col2.link3=Cancel a client''s authorisation
 
+manage.account.heading=Manage account
+manage.account.p=You can allow other users in your organisation to access this agent services account, and manage their access.
+manage.account.add-user=Add a new user
+manage.account.manage-user-access=Manage user access to your agent services account (Opens in a new window or tab).
+
 agent.services.account.h2.your-clients=Your clients
 agent.services.account.h3.agent-services=Agent services
 agent.services.account.p.agent-services=Access services for clients that have already authorised you to act on their behalf.

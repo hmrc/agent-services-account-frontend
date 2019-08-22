@@ -34,7 +34,8 @@ import uk.gov.hmrc.agentservicesaccount.FrontendModule
 import uk.gov.hmrc.agentservicesaccount.auth.{AgentInfo, AuthActions, PasscodeVerification}
 import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
 import uk.gov.hmrc.agentservicesaccount.connectors.{AgentServicesAccountConnector, SsoConnector}
-import uk.gov.hmrc.auth.core.InvalidBearerToken
+import uk.gov.hmrc.agentservicesaccount.support.ResettingMockitoSugar
+import uk.gov.hmrc.auth.core.{Admin, Enrolment, EnrolmentIdentifier, InvalidBearerToken, User}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.test.UnitSpec
 
@@ -42,7 +43,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 
 
-class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValues with MockitoSugar with GuiceOneAppPerSuite with BeforeAndAfterEach with UnitSpec {
+class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValues with MockitoSugar with GuiceOneAppPerSuite with BeforeAndAfterEach with UnitSpec with ResettingMockitoSugar{
 
   override implicit lazy val app: Application = appBuilder
     .build()
@@ -89,6 +90,7 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
   val agentCancelAuthUrl = "http://example.com/agent-invitations/cancel-authorisation"
   when(externalUrls.agentCancelAuthUrl).thenReturn(agentCancelAuthUrl)
   val arn = "TARN0000001"
+  val agentEnrolment = Enrolment("HMRC-AS-AGENT", Seq(EnrolmentIdentifier("AgentReferenceNumber", arn)), state = "Activated", delegatedAuthRule = None)
   lazy val desConnector = mock[AgentServicesAccountConnector]
   when(desConnector.getAgencyName(eqArg(Arn(arn)))(anyArg[HeaderCarrier], anyArg[ExecutionContext])).thenReturn(Future.successful(None))
 
@@ -101,7 +103,7 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
   val authActions = new AuthActions(null, null, null) {
 
     override def authorisedWithAgent[A, R](body: AgentInfo => Future[R])(implicit headerCarrier: HeaderCarrier): Future[Option[R]] = {
-      body(AgentInfo(Arn(arn), None)) map Option.apply
+      body(AgentInfo(Arn(arn), Some(User))) map Option.apply
     }
 
   }
@@ -119,6 +121,7 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
       status(response) shouldBe OK
       contentType(response).get shouldBe HTML
       val content = contentAsString(response)
+
       content should include(messagesApi("agent.services.account.heading", "servicename.titleSuffix"))
       content should include(messagesApi("agent.services.account.heading"))
       content should include(messagesApi("app.name"))
@@ -180,5 +183,25 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
       }
     }
 
+  }
+
+
+
+  "manage-account" should {
+
+    "return Status: OK and body containing correct content" in {
+      val controller = new AgentServicesController(messagesApi, authActions, desConnector, NoPasscodeVerification, "")
+
+      val response = controller.manageAccount().apply(FakeRequest("GET", "/manage-account"))
+
+      status(response) shouldBe OK
+      contentType(response).get shouldBe HTML
+      val content = contentAsString(response)
+      content should include(messagesApi("manage.account.heading"))
+      content should include(messagesApi("manage.account.p"))
+      content should include(messagesApi("manage.account.add-user"))
+      content should include(messagesApi("manage.account.manage-user-access"))
+
+    }
   }
 }

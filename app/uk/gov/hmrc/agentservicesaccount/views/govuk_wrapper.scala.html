@@ -25,7 +25,8 @@
   mainContent: Html = HtmlFormat.empty,
   serviceInfoContent: Html = HtmlFormat.empty,
   scriptElem: Option[Html] = None,
-  analyticsAdditionalJs: Option[Html] = None)(implicit request: Request[_], messages: Messages, configuration: Configuration)
+  analyticsAdditionalJs: Option[Html] = None,
+        isAdmin: Boolean = false)(implicit request: Request[_], messages: Messages, configuration: Configuration)
 
 @import layouts.{govuk_template => hmrcGovUkTemplate}
 @import uk.gov.hmrc.play.views.html.{layouts => uiLayouts}
@@ -88,7 +89,7 @@
     <div class="service-info">
         <nav id="secondary-nav" class="account-menu flex-container" role="navigation">
             <a href="@routes.AgentServicesController.root().url" class="account-menu__link account-menu__link--home "><span class="account-icon account-icon--home">@Messages("serviceinfo.home")</span></a>
-            <a href="@routes.AgentServicesController.manageAccount().url" class="account-menu__link"><span>@Messages("serviceinfo.manage")</span></a>
+            @if(isAdmin) { <a href="@routes.AgentServicesController.manageAccount().url" class="account-menu__link"><span>@Messages("serviceinfo.manage")</span></a> }
             <a href="@routes.SignOutController.signOut().url" class="account-menu__link"><span>@Messages("common.sign-out")</span></a>
         </nav>
     </div>

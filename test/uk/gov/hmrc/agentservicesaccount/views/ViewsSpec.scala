@@ -74,7 +74,8 @@ class ViewsSpec extends UnitSpec with GuiceOneAppPerTest {
         request = FakeRequest(),
         messages = Messages.Implicits.applicationMessages,
         configuration = configuration,
-        analyticsAdditionalJs = None
+        analyticsAdditionalJs = None,
+        isAdmin = false
       )
 
       contentAsString(html) should {
@@ -96,7 +97,7 @@ class ViewsSpec extends UnitSpec with GuiceOneAppPerTest {
         Some("bodyClasses"),
         Some("mainClass"),
         Some(Html("scriptElem")),
-        None
+        None, false
       )(Html("mainContent"))(FakeRequest(), Messages.Implicits.applicationMessages, configuration)
       hmtl2 should be(html)
     }
@@ -108,7 +109,6 @@ class ViewsSpec extends UnitSpec with GuiceOneAppPerTest {
       val view = new agent_services_account()
       val html = view.render(
         arn = Arn("XARN1234567"),
-        isAdmin = true,
         agencyNameOpt = None,
         isWhitelisted = false,
         customDimension = "",
@@ -121,9 +121,8 @@ class ViewsSpec extends UnitSpec with GuiceOneAppPerTest {
     }
 
     "render additional services section and manage client section with mapping, afi, invitations and manage users links when respective feature switches are on" in new App with PlainAppConfig {
-      val isAdmin = true
       val view = new agent_services_account()
-      val html = view.render(Arn("ARN0001"), isAdmin, Some("AgencyName"), true, "", Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, configuration)
+      val html = view.render(Arn("ARN0001"), Some("AgencyName"), true, "", Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, configuration)
       contentAsString(html) should {
         include("Services you might need") and
           include("Allow this account to access existing client relationships") and
@@ -156,9 +155,8 @@ class ViewsSpec extends UnitSpec with GuiceOneAppPerTest {
             "features.showAddUserLink" -> false
           )
 
-      val isAdmin = true
       val view = new agent_services_account()
-      val html = view.render(Arn("ARN0001"), isAdmin, Some("AgencyName"), true, "", Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, configuration)
+      val html = view.render(Arn("ARN0001"), Some("AgencyName"), true, "", Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, configuration)
       contentAsString(html) should not {
         include("Services you might need") or
           include("Allow this account to access existing client relationships") or
@@ -176,9 +174,8 @@ class ViewsSpec extends UnitSpec with GuiceOneAppPerTest {
     }
 
     "render invitations link but not income viewer link when not whitelisted" in new App with PlainAppConfig {
-      val isAdmin = true
       val view = new agent_services_account()
-      val html = view.render(Arn("ARN0001"), isAdmin, Some("AgencyName"), isWhitelisted = false, "", Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, configuration)
+      val html = view.render(Arn("ARN0001"), Some("AgencyName"), isWhitelisted = false, "", Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, configuration)
       contentAsString(html) should not include ("href=\"http://localhost:9996/tax-history/select-client\"")
       contentAsString(html) should {
         include("Services you might need") and
@@ -189,9 +186,8 @@ class ViewsSpec extends UnitSpec with GuiceOneAppPerTest {
     }
 
     "render does not show manage your users link because Agent is Assistant" in new App with PlainAppConfig {
-      val isAdmin = false
       val view = new agent_services_account()
-      val html = view.render(Arn("ARN0001"), isAdmin, Some("AgencyName"), true, "", Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, configuration)
+      val html = view.render(Arn("ARN0001"), Some("AgencyName"), true, "", Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, configuration)
       contentAsString(html) should not {
         include("Manage your users") or
           include("Control who can access your agent services account") or
