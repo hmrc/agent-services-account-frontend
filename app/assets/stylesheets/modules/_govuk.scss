@@ -194,6 +194,20 @@
   text-transform: uppercase;
 }
 
+@media (min-width: 40.0625em) {
+  .govuk-\!-margin-bottom-2 {
+    margin-bottom: 10px !important;
+  }
+}
+
+@media (min-width: 641px) {
+  ul li, nav ul li {
+    font-size: 19px;
+    line-height: 1.31579;
+  }
+}
+
+
 
 
 

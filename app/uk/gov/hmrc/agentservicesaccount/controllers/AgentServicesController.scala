@@ -17,9 +17,9 @@
 package uk.gov.hmrc.agentservicesaccount.controllers
 
 import javax.inject._
-import play.api.{Configuration, Logger}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent}
+import play.api.{Configuration, Logger}
 import uk.gov.hmrc.agentservicesaccount.auth.{AuthActions, PasscodeVerification}
 import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
@@ -45,7 +45,7 @@ class AgentServicesController @Inject()(
       authActions.authorisedWithAgent { agentInfo =>
         asaConnector.getAgencyName(agentInfo.arn).map { maybeAgencyName =>
           Logger.info(s"isAdmin: ${agentInfo.isAdmin}")
-          Ok(agent_services_account(agentInfo.arn, agentInfo.isAdmin, maybeAgencyName, isWhitelisted, customDimension))
+          Ok(agent_services_account(agentInfo.arn, maybeAgencyName, isWhitelisted, customDimension))
         }
       } map { maybeResult =>
         maybeResult.getOrElse(authActions.redirectToAgentSubscriptionGgSignIn)
@@ -56,10 +56,19 @@ class AgentServicesController @Inject()(
     }
   }
 
-  def manageAccount: Action[AnyContent] = Action.async { implicit request =>
-    Future.successful(Ok("manage account page"))
-
+  val manageAccount: Action[AnyContent] = Action.async { implicit request =>
+    withMaybePasscode { _ =>
+      authActions.authorisedWithAgent { agentInfo =>
+          if (agentInfo.isAdmin) {
+            Future.successful(Ok(manage_account()))
+          } else {
+            Future.successful(Forbidden)
+          }
+        }map(maybeResult => maybeResult.getOrElse(authActions.redirectToAgentSubscriptionGgSignIn))
+      } recover {
+        case _: NoActiveSession =>
+          authActions.redirectToAgentSubscriptionGgSignIn
+      }
     }
-
 
 }

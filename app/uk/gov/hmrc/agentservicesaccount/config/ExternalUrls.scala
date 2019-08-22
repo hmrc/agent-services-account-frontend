@@ -57,4 +57,8 @@ class ExternalUrls @Inject() (override val configuration: Configuration) extends
 
   private lazy val addUserStartPath = getConfigString("user-management.add-user")
   lazy val addUserUrl: String = s"$userManangementExternalUrl$addUserStartPath"
+
+  private lazy val vatThroughSoftwareExternalUrl = getConfigString("microservice.services.vat-agent-client-lookup-frontend.external-url")
+  private lazy val vatThroughSoftwareStartPath = getConfigString("microservice.services.vat-agent-client-lookup-frontend.start.path")
+  lazy val vatThroughSoftwareUrl: String = s"$vatThroughSoftwareExternalUrl$vatThroughSoftwareStartPath"
 }

@@ -1,0 +1,43 @@
+@*
+ * Copyright 2019 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import uk.gov.hmrc.agentmtdidentifiers.model.Arn
+@import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
+@import play.api.Configuration
+
+@()(implicit messages: Messages, request: Request[_], externalUrls: ExternalUrls, configuration: Configuration)
+
+
+@uk.gov.hmrc.agentservicesaccount.views.html.main_template(title = Messages("manage.account.heading"), mainClass = Some("govuk-main-wrapper"), analyticsAdditionalJs = None, isAdmin = true) {
+
+ <div class="padding-top-40 padding-bottom-40 account-services-home">
+  <div class="grid-row">
+   <div class="column-two-thirds">
+    <h1 class="govuk-heading-xl">@Messages("manage.account.heading")</h1>
+    <p>@Messages("manage.account.p")</p>
+    <ul>
+     <li class="govuk-!-margin-bottom-2">
+      <a href="@externalUrls.addUserUrl">@Messages("manage.account.add-user")</a>
+     </li>
+     <li>
+      <a href="@externalUrls.manageUsersUrl">@Messages("manage.account.manage-user-access")</a>
+     </li>
+    </ul>
+   </div>
+  </div>
+ </div>
+
+}
