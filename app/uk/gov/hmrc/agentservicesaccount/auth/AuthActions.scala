@@ -36,7 +36,8 @@ import scala.concurrent.Future
 
 case class AgentInfo(arn: Arn, credentialRole: Option[CredentialRole]) {
   val isAdmin: Boolean = credentialRole match {
-    case Some(Admin) => true
+    case Some(Assistant) => false
+    case Some(_) => true
     case _ => false
   }
 }
@@ -65,7 +66,6 @@ class AuthActions @Inject()(logger: LoggerLike, externalUrls: ExternalUrls, over
       case enrol ~ affinityG ~ credRole =>
         (enrol.getEnrolment("HMRC-AS-AGENT"), affinityG, credRole) match {
           case (Some(agentEnrolment), Some(AffinityGroup.Agent), _) if agentEnrolment.isActivated =>
-            println(s"admin role $credRole")
             getArn(agentEnrolment).map { arn => body(AgentInfo(arn, credRole)).map(result => Some(result)) }
               .getOrElse {
                 logger.warn("No AgentReferenceNumber found in HMRC-AS-AGENT enrolment - this should not happen. Denying access.")
