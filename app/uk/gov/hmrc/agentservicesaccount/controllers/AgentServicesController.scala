@@ -20,6 +20,7 @@ import javax.inject._
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent}
 import play.api.{Configuration, Logger}
+import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.auth.{AuthActions, PasscodeVerification}
 import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
@@ -43,10 +44,8 @@ class AgentServicesController @Inject()(
   val root: Action[AnyContent] = Action.async { implicit request =>
     withMaybePasscode { isWhitelisted =>
       authActions.authorisedWithAgent { agentInfo =>
-        asaConnector.getAgencyName(agentInfo.arn).map { maybeAgencyName =>
-          Logger.info(s"isAdmin: ${agentInfo.isAdmin}")
-          Ok(agent_services_account(agentInfo.arn, maybeAgencyName, isWhitelisted, customDimension, agentInfo.isAdmin))
-        }
+        Logger.info(s"isAdmin: ${agentInfo.isAdmin}")
+        Future.successful(Ok(agent_services_account(formatArn(agentInfo.arn), isWhitelisted, customDimension, agentInfo.isAdmin)))
       } map { maybeResult =>
         maybeResult.getOrElse(authActions.redirectToAgentSubscriptionGgSignIn)
       } recover {
@@ -55,6 +54,7 @@ class AgentServicesController @Inject()(
       }
     }
   }
+
 
   val manageAccount: Action[AnyContent] = Action.async { implicit request =>
     withMaybePasscode { _ =>
@@ -70,5 +70,10 @@ class AgentServicesController @Inject()(
           authActions.redirectToAgentSubscriptionGgSignIn
       }
     }
+
+  private def formatArn(arn: Arn): String = {
+    val arnStr = arn.value
+    s"${arnStr.take(4)} ${arnStr.slice(4,7)} ${arnStr.drop(7)}"
+  }
 
 }

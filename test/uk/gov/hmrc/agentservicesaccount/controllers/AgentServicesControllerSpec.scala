@@ -125,7 +125,7 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
       content should include(messagesApi("agent.services.account.heading", "servicename.titleSuffix"))
       content should include(messagesApi("agent.services.account.heading"))
       content should include(messagesApi("app.name"))
-      content should include(messagesApi("agent.accountNumber","TARN0000001"))
+      content should include(messagesApi("agent.accountNumber","TARN 000 0001"))
       content should include(messagesApi("agent.services.account.inset"))
       content should include(messagesApi("agent.services.account.section1.h2"))
       content should include(messagesApi("agent.services.account.section1.col1.h3"))
@@ -182,10 +182,7 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
         not include "<a href=\"/\" class=\"btn button\" id=\"continue\">"
       }
     }
-
   }
-
-
 
   "manage-account" should {
 
