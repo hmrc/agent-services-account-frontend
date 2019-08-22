@@ -16,6 +16,14 @@ html{
   display: none;
 }
 
+#skiplink-container .skiplink {
+    font-size: 16px;
+}
+
+.skiplink:focus, .skiplink:visited {
+    color: #0b0c0c;
+}
+
 .clearer {
   clear: both;
 }
