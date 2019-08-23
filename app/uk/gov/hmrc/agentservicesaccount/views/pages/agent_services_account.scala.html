@@ -40,11 +40,6 @@
 }
 
 
-@featureSwitch(featureName: String, toggle: Boolean = true)(content: Html) = {
-    @if(toggle && configuration.getBoolean(featureName).getOrElse(false)) { @content }
-}
-
-
 @uk.gov.hmrc.agentservicesaccount.views.html.main_template(title = Messages("agent.services.account.heading"), mainClass = Some("govuk-main-wrapper"), isAdmin = isAdmin, analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
 <div class="padding-top-40 padding-bottom-40 account-services-home">
     <h1 class="govuk-heading-xl welcome-heading">@Messages("app.name")
