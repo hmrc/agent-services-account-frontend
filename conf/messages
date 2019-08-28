@@ -67,3 +67,9 @@ agent.services.account.additional.links.agent-afi.ga.view-income-record=View a c
 global.error.500.title=Sorry, we are experiencing technical difficulties - 500
 global.error.500.heading=Sorry, we’re experiencing technical difficulties
 global.error.500.message=Please try again in a few minutes.
+
+# Accessibility link
+footer.links.accessibility.text=Accessibility
+footer.links.accessibility.url=/agent-services-account/accessibility
+
+
