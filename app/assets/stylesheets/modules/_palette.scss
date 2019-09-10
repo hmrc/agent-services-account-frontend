@@ -234,13 +234,15 @@ button:active,
   box-shadow: 0 0 0 #d4351c;
 }
 .email-form-errors .error-notification,
+.error-notification,
 .annual-summaries--group .alert--text,
 .sent-in-error,
 .business-tax .content__body .flag.flag--urgent,
 .error-message,
 .error-summary .error-summary-list a,
 .error-summary .error-summary-list .link-style,
-.error-summary .error-summary-list .button--link-style {
+.error-summary .error-summary-list .button--link-style,
+.flash.error-summary a, .flash.error-summary .link-style, .flash.error-summary .button--link-style  {
   color: #d4351c;
 }
 .email-form-errors .error-notification,
