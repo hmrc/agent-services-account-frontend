@@ -119,7 +119,7 @@ class ViewsSpec extends UnitSpec with GuiceOneAppPerTest {
           include("Making Tax Digital for VAT") and
           include("Sign clients up for Making Tax Digital for VAT") and
           include("You copied across existing client authorisations to your agent services account. This means you can now sign these clients up to Making Tax Digital.") and
-          include("Sign clients up for Making Tax Digital for VAT (opens in a new window or tab).") and
+          include("Sign clients up for Making Tax Digital for VAT (opens in a new window or tab)") and
           include("Manage your client&#x27;s VAT details") and
           include("Use this service to update your client’s VAT registration status, business name (if they are a limited company), principal place of business and VAT stagger.") and
           include("View a client&#x27;s PAYE income record") and
