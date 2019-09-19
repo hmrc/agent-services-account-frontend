@@ -16,45 +16,44 @@
 
 package uk.gov.hmrc.agentservicesaccount.auth
 
-import org.mockito.ArgumentMatchers.{any, eq => eqs}
-import org.mockito.Mockito.{verify, when}
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
 import org.slf4j.Logger
 import play.api.LoggerLike
 import play.api.http.Status.OK
 import play.api.libs.json.Json
-import play.api.mvc.{Action, AnyContent, Result}
-import play.api.mvc.Results.Ok
+import play.api.mvc.Results._
+import play.api.mvc.{Action, AnyContent, Request, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
-import uk.gov.hmrc.agentservicesaccount.support.{AkkaMaterializerSpec, ResettingMockitoSugar}
+import uk.gov.hmrc.agentservicesaccount.support.{AkkaMaterializerSpec, BaseUnitSpec}
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.retrieve.{Retrieval, ~}
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.Future
-import uk.gov.hmrc.http.HeaderCarrier
-import scala.concurrent.ExecutionContext.Implicits.global
 
-class AuthActionsSpec extends UnitSpec with ResettingMockitoSugar with AkkaMaterializerSpec {
+class AuthActionsSpec extends BaseUnitSpec with AkkaMaterializerSpec {
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
 
   val mockAuthConnector = resettingMock[PlayAuthConnector]
 
   val slf4jLogger = resettingMock[Logger]
+
   val logger = new LoggerLike {
     override val logger: Logger = slf4jLogger
   }
 
-  def mockAuth(affinityGroup: AffinityGroup = AffinityGroup.Agent, enrolment: Set[Enrolment], credentialRole: CredentialRole = User) =
-    when(mockAuthConnector.authorise(any(), any[Retrieval[~[~[Enrolments, Option[AffinityGroup]], Option[CredentialRole]]]]())(any(), any()))
-      .thenReturn(Future successful new ~[~[Enrolments, Option[AffinityGroup]], Option[CredentialRole]](new ~(Enrolments(enrolment), Some(affinityGroup)), Some(credentialRole)))
+  def mockAuth(enrolment: Set[Enrolment], credentialRole: CredentialRole = User) =
+    when(mockAuthConnector.authorise(any(), any[Retrieval[~[Enrolments, Option[CredentialRole]]]]())(any(), any()))
+      .thenReturn(Future successful new ~(Enrolments(enrolment), Some(credentialRole)))
 
-  def mockAuthNotLoggedIn(): Unit =
+  def mockAuthFailWith(reason: String): Unit =
     when(mockAuthConnector.authorise(any(), any[Retrieval[~[Enrolments, Option[AffinityGroup]]]]())(any(), any()))
-      .thenReturn(Future.failed(new MissingBearerToken))
+      .thenReturn(Future.failed(AuthorisationException.fromString(reason)))
 
   val arn = "TARN0000001"
   val agentEnrolment = Enrolment("HMRC-AS-AGENT", Seq(EnrolmentIdentifier("AgentReferenceNumber", arn)), state = "Activated", delegatedAuthRule = None)
@@ -62,21 +61,16 @@ class AuthActionsSpec extends UnitSpec with ResettingMockitoSugar with AkkaMater
   val otherEnrolment: Enrolment = agentEnrolment.copy(key = "IR-PAYE")
 
   val externalUrls: ExternalUrls = mock[ExternalUrls]
-  val completeGgSignInUrl = "http://example.com/agent-subscription"
+  val completeGgSignInUrl = "/gg/sign-in?continue=&origin=agent-services-account-frontend"
   when(externalUrls.agentSubscriptionUrl).thenReturn(completeGgSignInUrl)
 
-  val authActions = new AuthActions(logger, externalUrls, mockAuthConnector)
+  val authActions = new AuthActions(logger, externalUrls, mockAuthConnector, env, configuration)
 
   class TestAuth() {
     def testAuthActions(): Action[AnyContent] = Action.async {
       implicit request =>
         authActions.authorisedWithAgent { agent =>
             Future.successful(Ok(Json.toJson(agent.arn)))
-        } map { maybeResult =>
-          maybeResult.getOrElse(authActions.redirectToAgentSubscriptionGgSignIn)
-        } recover {
-          case _: NoActiveSession =>
-            authActions.redirectToAgentSubscriptionGgSignIn
         }
     }
   }
@@ -92,7 +86,7 @@ class AuthActionsSpec extends UnitSpec with ResettingMockitoSugar with AkkaMater
     }
 
     "redirect to GG sign in if agent is not logged in" in {
-      mockAuthNotLoggedIn()
+      mockAuthFailWith("MissingBearerToken")
 
       val result: Future[Result] = testAuthImpl.testAuthActions().apply(FakeRequest())
       status(result) shouldBe 303
@@ -104,48 +98,33 @@ class AuthActionsSpec extends UnitSpec with ResettingMockitoSugar with AkkaMater
       mockAuth(enrolment = Set(otherEnrolment))
 
       val result: Future[Result] = testAuthImpl.testAuthActions().apply(FakeRequest())
-      status(result) shouldBe 303
-      redirectLocation(result) shouldBe Some(completeGgSignInUrl)
+      status(result) shouldBe 403
     }
   }
 
   "authorisedWithAgent" should {
-    "call body if the user has an Activated HMRC-AS-AGENT enrolment" in {
-      mockAuth(AffinityGroup.Agent, Set(agentEnrolment))
+    implicit val request: Request[_] = FakeRequest()
 
-      await(authActions.authorisedWithAgent(_ => Future successful "OK")) shouldBe Some("OK")
+    "call body if the user has an Activated HMRC-AS-AGENT enrolment" in {
+      mockAuth(Set(agentEnrolment))
+      await(authActions.authorisedWithAgent(_ => Future successful Ok)) shouldBe Ok
     }
 
     "supply the ARN to the body in an AgentInfo if the user has an Activated HMRC-AS-AGENT enrolment" in {
-      mockAuth(AffinityGroup.Agent, Set(agentEnrolment))
-      await(authActions.authorisedWithAgent(agentInfo => Future successful agentInfo.arn)) shouldBe Some(Arn(arn))
+      mockAuth(Set(agentEnrolment))
+      await(authActions.authorisedWithAgent(agentInfo => Future.successful(Ok(Json.toJson(agentInfo.arn))))) shouldBe Ok(Json.toJson(arn))
     }
 
-    "return None if the user has a Pending HMRC-AS-AGENT enrolment" in {
-      mockAuth(AffinityGroup.Agent, Set(agentEnrolment.copy(state = "Pending")))
+    "return Forbidden if the user has no HMRC-AS-AGENT enrolment" in {
+      mockAuth(Set(otherEnrolment))
 
-      await(authActions.authorisedWithAgent(_ => Future successful "OK")) shouldBe None
+      await(authActions.authorisedWithAgent(_ => Future successful Ok)) shouldBe Forbidden
     }
 
-    "return None if the user has no HMRC-AS-AGENT enrolment" in {
-      mockAuth(AffinityGroup.Agent, Set(otherEnrolment))
+    "return Forbidden if the user has affinity group != Agent" in {
+      mockAuthFailWith("UnsupportedAffinityGroup")
 
-      await(authActions.authorisedWithAgent(_ => Future successful "OK")) shouldBe None
-    }
-
-    "return None and log a warning if the user has an Activated HMRC-AS-AGENT enrolment with no AgentReferenceNumber identifier" in {
-      mockAuth(AffinityGroup.Agent, Set(agentEnrolment.copy(identifiers = Seq())))
-      when(slf4jLogger.isWarnEnabled).thenReturn(true)
-
-      await(authActions.authorisedWithAgent(agentInfo => Future successful agentInfo.arn)) shouldBe None
-
-      verify(slf4jLogger).warn("No AgentReferenceNumber found in HMRC-AS-AGENT enrolment - this should not happen. Denying access.")
-    }
-
-    "return None if the user has affinity group != Agent" in {
-      mockAuth(AffinityGroup.Individual, Set(agentEnrolment))
-
-      await(authActions.authorisedWithAgent(_ => Future successful "OK")) shouldBe None
+      await(authActions.authorisedWithAgent(_ => Future successful Ok)) shouldBe Forbidden
     }
 
   }

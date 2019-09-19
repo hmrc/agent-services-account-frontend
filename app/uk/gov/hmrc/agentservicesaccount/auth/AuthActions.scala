@@ -17,19 +17,20 @@
 package uk.gov.hmrc.agentservicesaccount.auth
 
 import java.net.URLEncoder
-import javax.inject.{Inject, Singleton}
 
-import play.api.LoggerLike
+import javax.inject.{Inject, Singleton}
 import play.api.mvc.Results._
 import play.api.mvc._
+import play.api.{Configuration, Environment, LoggerLike}
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
 import uk.gov.hmrc.agentservicesaccount.controllers.routes
 import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
 import uk.gov.hmrc.auth.core._
-import uk.gov.hmrc.auth.core.retrieve.Retrievals.{affinityGroup, allEnrolments, credentialRole}
+import uk.gov.hmrc.auth.core.retrieve.Retrievals.{allEnrolments, credentialRole}
 import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.bootstrap.config.AuthRedirects
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext.fromLoggingDetails
 
 import scala.concurrent.Future
@@ -45,12 +46,39 @@ case class AgentInfo(arn: Arn, credentialRole: Option[CredentialRole]) {
 case class AgentRequest[A](arn: Arn, request: Request[A]) extends WrappedRequest[A](request)
 
 @Singleton
-class AuthActions @Inject()(logger: LoggerLike, externalUrls: ExternalUrls, override val authConnector: AuthConnector) extends AuthorisedFunctions {
+class AuthActions @Inject()(logger: LoggerLike,
+                            externalUrls: ExternalUrls,
+                            override val authConnector: AuthConnector,
+                            val env: Environment,
+                            val config: Configuration) extends AuthorisedFunctions with AuthRedirects {
 
-  def redirectToAgentSubscriptionGgSignIn[A](implicit request: Request[A]): Result =
-    Redirect(externalUrls.agentSubscriptionUrl + encodeContinueUrl)
+  def authorisedWithAgent(body: AgentInfo => Future[Result])(implicit headerCarrier: HeaderCarrier, request: Request[_]): Future[Result] =
+    authorised(AuthProviders(GovernmentGateway) and AffinityGroup.Agent)
+      .retrieve(allEnrolments and credentialRole) {
+      case enrols ~ credRole =>
+        getArn(enrols) match {
+          case Some(arn) =>
+            body(AgentInfo(arn, credRole))
+          case None =>
+            logger.warn("No AgentReferenceNumber found in HMRC-AS-AGENT enrolment - this should not happen. Denying access.")
+            Future successful Forbidden
+        }
+    }.recover(handleFailure)
 
-  def encodeContinueUrl[A](implicit request: Request[A]): String = {
+  def handleFailure(implicit request: Request[_]): PartialFunction[Throwable, Result] = {
+    case _: NoActiveSession ⇒
+      Redirect(externalUrls.agentSubscriptionUrl + encodeContinueUrl)
+
+    case _: UnsupportedAuthProvider ⇒
+      logger.warn(s"user logged in with unsupported auth provider")
+      Forbidden
+
+    case _: UnsupportedAffinityGroup ⇒
+      logger.warn(s"user logged in with unsupported affinity group")
+      Forbidden
+  }
+
+  private def encodeContinueUrl(implicit request: Request[_]): String = {
     import CallOps._
     request.session.get("otacTokenParam") match {
       case Some(p) =>
@@ -58,27 +86,14 @@ class AuthActions @Inject()(logger: LoggerLike, externalUrls: ExternalUrls, over
         "?continue="+URLEncoder.encode(selfURL,"utf-8")
       case None => ""
     }
-
   }
 
-  def authorisedWithAgent[A,R](body: (AgentInfo) => Future[R])(implicit headerCarrier: HeaderCarrier): Future[Option[R]] =
-    authorised(AuthProviders(GovernmentGateway)).retrieve(allEnrolments and affinityGroup and credentialRole) {
-      case enrol ~ affinityG ~ credRole =>
-        (enrol.getEnrolment("HMRC-AS-AGENT"), affinityG, credRole) match {
-          case (Some(agentEnrolment), Some(AffinityGroup.Agent), _) if agentEnrolment.isActivated =>
-            getArn(agentEnrolment).map { arn => body(AgentInfo(arn, credRole)).map(result => Some(result)) }
-              .getOrElse {
-                logger.warn("No AgentReferenceNumber found in HMRC-AS-AGENT enrolment - this should not happen. Denying access.")
-                Future successful None
-              }
-
-          case _ =>
-            Future successful None
-        }
+  private def getArn(enrolments: Enrolments): Option[Arn] = {
+    for {
+      agentEnrol <- enrolments.getEnrolment("HMRC-AS-AGENT")
+      enrolId <- agentEnrol.getIdentifier("AgentReferenceNumber")
+    } yield {
+      Arn(enrolId.value)
     }
-
-  private def getArn(enrolment: Enrolment): Option[Arn] = {
-    enrolment.getIdentifier("AgentReferenceNumber").map(enrolmentIdentifier => Arn(enrolmentIdentifier.value))
   }
-
 }

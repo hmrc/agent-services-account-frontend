@@ -11,10 +11,10 @@ agent.services.account.inset=You cannot view your client lists in your agent ser
 agent.services.account.section1.h2=Making Tax Digital for VAT
 agent.services.account.section1.col1.h3=Sign clients up for Making Tax Digital for VAT
 agent.services.account.section1.col1.p=You copied across existing client authorisations to your agent services account. This means you can now sign these clients up to Making Tax Digital.
-agent.services.account.section1.col1.link=Sign clients up for Making Tax Digital for VAT (opens in a new window or tab).
+agent.services.account.section1.col1.link=Sign clients up for Making Tax Digital for VAT (opens in a new window or tab)
 agent.services.account.section1.col2.h3=Manage your client''s VAT details
 agent.services.account.section1.col2.p=Use this service to update your client’s VAT registration status, business name (if they are a limited company), principal place of business and VAT stagger.
-agent.services.account.section1.col2.link=Manage your client''s VAT details
+agent.services.account.section1.col2.link=Manage your client''s VAT details (opens in a new window or tab)
 
 agent.services.account.section2.h2=View a client''s PAYE income record
 agent.services.account.section2.col1.p=Access a client''s PAYE income record to help you complete their Self Assessment tax return.

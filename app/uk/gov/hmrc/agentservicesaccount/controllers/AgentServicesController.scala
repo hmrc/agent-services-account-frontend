@@ -25,7 +25,6 @@ import uk.gov.hmrc.agentservicesaccount.auth.{AuthActions, PasscodeVerification}
 import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
 import uk.gov.hmrc.agentservicesaccount.views.html.pages._
-import uk.gov.hmrc.auth.core.NoActiveSession
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 
 import scala.concurrent.Future
@@ -36,8 +35,7 @@ class AgentServicesController @Inject()(
                                          authActions: AuthActions,
                                          asaConnector: AgentServicesAccountConnector,
                                          val withMaybePasscode: PasscodeVerification,
-                                         @Named("customDimension") customDimension: String
-                                       )
+                                         @Named("customDimension") customDimension: String)
                                        (implicit val externalUrls: ExternalUrls, configuration: Configuration) extends FrontendController with I18nSupport {
 
 
@@ -46,11 +44,6 @@ class AgentServicesController @Inject()(
       authActions.authorisedWithAgent { agentInfo =>
         Logger.info(s"isAdmin: ${agentInfo.isAdmin}")
         Future.successful(Ok(agent_services_account(formatArn(agentInfo.arn), isWhitelisted, customDimension, agentInfo.isAdmin)))
-      } map { maybeResult =>
-        maybeResult.getOrElse(authActions.redirectToAgentSubscriptionGgSignIn)
-      } recover {
-        case _: NoActiveSession =>
-          authActions.redirectToAgentSubscriptionGgSignIn
       }
     }
   }
@@ -59,17 +52,14 @@ class AgentServicesController @Inject()(
   val manageAccount: Action[AnyContent] = Action.async { implicit request =>
     withMaybePasscode { _ =>
       authActions.authorisedWithAgent { agentInfo =>
-          if (agentInfo.isAdmin) {
-            Future.successful(Ok(manage_account()))
-          } else {
-            Future.successful(Forbidden)
-          }
-        }map(maybeResult => maybeResult.getOrElse(authActions.redirectToAgentSubscriptionGgSignIn))
-      } recover {
-        case _: NoActiveSession =>
-          authActions.redirectToAgentSubscriptionGgSignIn
+        if (agentInfo.isAdmin) {
+          Future.successful(Ok(manage_account()))
+        } else {
+          Future.successful(Forbidden)
+        }
       }
     }
+  }
 
   private def formatArn(arn: Arn): String = {
     val arnStr = arn.value

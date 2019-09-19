@@ -16,64 +16,24 @@
 
 package uk.gov.hmrc.agentservicesaccount.controllers
 
-import com.kenshoo.play.metrics.Metrics
 import org.mockito.ArgumentMatchers.{any => anyArg, eq => eqArg}
 import org.mockito.Mockito._
-import org.scalatest.mockito.MockitoSugar
-import org.scalatest.{BeforeAndAfterEach, Matchers, OptionValues, WordSpec}
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.Configuration
 import play.api.i18n.{Lang, Messages, MessagesApi}
-import play.api.inject.guice.{BinderOption, GuiceApplicationBuilder, GuiceableModule}
 import play.api.mvc._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import play.api.{Application, Configuration, Environment}
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
-import uk.gov.hmrc.agentservicesaccount.FrontendModule
 import uk.gov.hmrc.agentservicesaccount.auth.{AgentInfo, AuthActions, PasscodeVerification}
 import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
-import uk.gov.hmrc.agentservicesaccount.connectors.{AgentServicesAccountConnector, SsoConnector}
-import uk.gov.hmrc.agentservicesaccount.support.ResettingMockitoSugar
-import uk.gov.hmrc.auth.core.{Admin, Enrolment, EnrolmentIdentifier, InvalidBearerToken, User}
+import uk.gov.hmrc.agentservicesaccount.support.BaseUnitSpec
+import uk.gov.hmrc.auth.core.{Admin, Enrolment, EnrolmentIdentifier, InvalidBearerToken}
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.test.UnitSpec
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 
-
-class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValues with MockitoSugar with GuiceOneAppPerSuite with BeforeAndAfterEach with UnitSpec with ResettingMockitoSugar{
-
-  override implicit lazy val app: Application = appBuilder
-    .build()
-
-  protected def appBuilder: GuiceApplicationBuilder =
-    new GuiceApplicationBuilder()
-      .overrides(new GuiceableModule {
-        override def guiced(env: Environment, conf: Configuration, binderOptions: Set[BinderOption]) = Seq(
-          new FrontendModule(env, conf) {
-            override def configure(): Unit = {
-
-              bind(classOf[SsoConnector]).toInstance(new SsoConnector(null, null, new Metrics() {
-                override def defaultRegistry = null
-
-                override def toJson = null
-              }) {
-                val whitelistedSSODomains = Set("www.foo.com", "foo.org")
-
-                override def validateExternalDomain(domain: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Boolean] = {
-                  Future.successful(whitelistedSSODomains.contains(domain))
-                }
-              })
-
-              bind(classOf[AgentServicesAccountConnector]).toInstance(desConnector)
-            }
-          })
-
-        override def disable(classes: Seq[Class[_]]) = this
-      })
-
+class AgentServicesControllerSpec extends BaseUnitSpec {
 
   val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   implicit val externalUrls: ExternalUrls = mock[ExternalUrls]
@@ -91,21 +51,17 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
   when(externalUrls.agentCancelAuthUrl).thenReturn(agentCancelAuthUrl)
   val arn = "TARN0000001"
   val agentEnrolment = Enrolment("HMRC-AS-AGENT", Seq(EnrolmentIdentifier("AgentReferenceNumber", arn)), state = "Activated", delegatedAuthRule = None)
-  lazy val desConnector = mock[AgentServicesAccountConnector]
+
   when(desConnector.getAgencyName(eqArg(Arn(arn)))(anyArg[HeaderCarrier], anyArg[ExecutionContext])).thenReturn(Future.successful(None))
 
   private implicit val messages: Messages = messagesApi.preferred(Seq.empty[Lang])
 
-  private implicit val configuration = app.injector.instanceOf[Configuration]
-
   protected def htmlEscapedMessage(key: String): String = HtmlFormat.escape(Messages(key)).toString
 
-  val authActions = new AuthActions(null, null, null) {
-
-    override def authorisedWithAgent[A, R](body: AgentInfo => Future[R])(implicit headerCarrier: HeaderCarrier): Future[Option[R]] = {
-      body(AgentInfo(Arn(arn), Some(Admin))) map Option.apply
+  val authActions = new AuthActions(null, null, null, env, configuration) {
+    override def authorisedWithAgent(body: AgentInfo => Future[Result])(implicit headerCarrier: HeaderCarrier, request: Request[_]): Future[Result] = {
+      body(AgentInfo(Arn(arn), Some(Admin)))
     }
-
   }
 
   object NoPasscodeVerification extends PasscodeVerification {
@@ -159,10 +115,9 @@ class AgentServicesControllerSpec extends WordSpec with Matchers with OptionValu
         override lazy val agentSubscriptionUrl: String = "foo"
       }
 
-      val authActions = new AuthActions(null, externalUrls, null) {
-
-        override def authorisedWithAgent[A, R](body: AgentInfo => Future[R])(implicit headerCarrier: HeaderCarrier): Future[Option[R]] = {
-          Future failed new InvalidBearerToken("")
+      val authActions = new AuthActions(null, null, null, env, configuration) {
+        override def authorisedWithAgent(body: AgentInfo => Future[Result])(implicit headerCarrier: HeaderCarrier, request: Request[_]): Future[Result] = {
+          Future successful Results.SeeOther("foo?continue=%2Fagent-services-account%3Fp%3DBAR1%2B23%252F")
         }
       }
 
