@@ -88,10 +88,9 @@ accessibility.statement.using.p4=<a class="govuk-link" href="https://mcmw.abilit
 
 accessibility.statement.accessible.heading=How accessible this service is
 accessibility.statement.accessible.p1=This service is partially compliant with the <a class="govuk-link" href="https://www.w3.org/TR/WCAG21/">Web Content Accessibility Guidelines version 2.1 AA standard</a>.
-accessibility.statement.accessible.p2=Some people may find parts of this service difficult to use:
 
 accessibility.statement.whattodo.heading=What to do if you have difficulty using this service
-accessibility.statement.whattodo.p1=If you need any part of this service in a different format like large print, audio recording or braille, contact <a href="mailto:different.format@hmrc.gov.uk">different.format@hmrc.gov.uk</a>.
+accessibility.statement.whattodo.p1=If you have difficulty using this service, use the 'Get help with this page' link on the page in the online service.
 
 accessibility.statement.reporting.heading=Reporting accessibility problems with this service
 accessibility.statement.reporting.p1=We are always looking to improve the accessibility of this service. If you find any problems that are not listed on this page or think we are not meeting accessibility requirements, contact <a href="mailto:accessibility.problem@hmrc.gov.uk">accessibility.problem@hmrc.gov.uk</a>.
@@ -107,17 +106,14 @@ accessibility.statement.contacting.p3=Find out how to <a href="https://www.gov.u
 accessibility.statement.technical.heading=Technical information about this service’s accessibility
 accessibility.statement.technical.p1=HMRC is committed to making this service accessible, in accordance with the Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018.
 accessibility.statement.technical.p2=This service is partially compliant with the <a href="https://www.w3.org/TR/WCAG21/">Web Content Accessibility Guidelines version 2.1 AA standard</a>, due to the non-compliances listed below.
-
-accessibility.statement.nonaccessible.heading=Non accessible content
-accessibility.statement.nonaccessible.p1=The content listed below is non-accessible for the following reasons.
-
-accessibility.statement.noncompliance.heading=Non compliance with the accessibility regulations
+accessibility.statement.technical.p3=We have carried out an in-house expert review of the service and fixed all known accessibility issues. 
+accessibility.statement.technical.p4=We will arrange a formal external audit of the full service as soon as possible, as part of our roadmap for making sure the service is fully compliant.
 
 accessibility.statement.howtested.heading=How we tested this service
-accessibility.statement.howtested.p1=The service was last tested on [date] and was checked for compliance with WCAG 2.1 AA.
+accessibility.statement.howtested.p1=The service was last tested on 22 August 2019 and was checked for compliance with WCAG 2.1 AA.
 accessibility.statement.howtested.p2=The service was built using parts that were tested by the <a href="http://www.digitalaccessibilitycentre.org/">Digital Accessibility Centre</a>. The full service was tested by HMRC and included disabled users.
 accessibility.statement.howtested.p3=You can read the full accessibility audit report [add link to report if you have one]
-accessibility.statement.howtested.p4=This page was prepared on [date when it was first published]. It was last updated on [date when it was last updated].
+accessibility.statement.howtested.p4=This page was prepared on 23 September 2019. It was last updated on 23 September 2019.
 
 
 # Accessibility link
