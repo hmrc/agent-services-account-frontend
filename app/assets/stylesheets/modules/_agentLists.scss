@@ -1426,7 +1426,7 @@ input[type=number] {
 }
 
 .form-control-error {
-  border: 4px solid #b10e1e
+  border: 4px solid #d4351c
 }
 
 .error-message {
@@ -1435,7 +1435,7 @@ input[type=number] {
   text-transform: none;
   font-size: 16px;
   line-height: 1.25;
-  color: #b10e1e;
+  color: #d4351c;
   display: block;
   clear: both;
   margin: 0;
@@ -1455,7 +1455,7 @@ input[type=number] {
 }
 
 .error-summary {
-  border: 4px solid #b10e1e;
+  border: 4px solid #d4351c;
   margin-top: 15px;
   margin-bottom: 15px;
   padding: 15px 10px
@@ -1463,7 +1463,7 @@ input[type=number] {
 
 @media (min-width: 641px) {
   .error-summary {
-    border: 5px solid #b10e1e;
+    border: 5px solid #d4351c;
     margin-top: 30px;
     margin-bottom: 30px;
     padding: 20px 15px 15px
@@ -1493,7 +1493,7 @@ input[type=number] {
 }
 
 .error-summary .error-summary-list a {
-  color: #b10e1e;
+  color: #d4351c;
   font-weight: bold;
   text-decoration: underline
 }
@@ -1609,7 +1609,7 @@ input[type=number] {
 .validation-message {
   padding-top: 15px;
   padding-bottom: 15px;
-  color: #b10e1e;
+  color: #d4351c;
   font-weight: bold
 }
 

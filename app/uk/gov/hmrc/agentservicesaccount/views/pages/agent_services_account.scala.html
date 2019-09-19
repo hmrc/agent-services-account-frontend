@@ -18,7 +18,7 @@
 @import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
 @import play.api.Configuration
 
-@(arn: Arn, agencyNameOpt: Option[String], isWhitelisted: Boolean, customDimension: String, isAdmin: Boolean = false)(implicit messages: Messages, request: Request[_], externalUrls: ExternalUrls, configuration: Configuration)
+@(arn: String, isWhitelisted: Boolean, customDimension: String, isAdmin: Boolean = false)(implicit messages: Messages, request: Request[_], externalUrls: ExternalUrls, configuration: Configuration)
 
 @analyticsAdditionalJs = {
 
@@ -40,21 +40,10 @@
 }
 
 
-@agencyName(agencyNameOpt: Option[String]) = {
-    @agencyNameOpt.map { name =>
-        <span id="agency-name">@name</span>
-    }
-}
-
-@featureSwitch(featureName: String, toggle: Boolean = true)(content: Html) = {
-    @if(toggle && configuration.getBoolean(featureName).getOrElse(false)) { @content }
-}
-
-
 @uk.gov.hmrc.agentservicesaccount.views.html.main_template(title = Messages("agent.services.account.heading"), mainClass = Some("govuk-main-wrapper"), isAdmin = isAdmin, analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
 <div class="padding-top-40 padding-bottom-40 account-services-home">
     <h1 class="govuk-heading-xl welcome-heading">@Messages("app.name")
-        <span class="govuk-hint">@Messages("agent.accountNumber", arn.value)</span>
+        <span class="govuk-hint">@Messages("agent.accountNumber", arn)</span>
     </h1>
 
     <div class="govuk-inset-text govuk-!-width-two-thirds">
@@ -74,19 +63,21 @@
             <div class="govuk-grid-column-one-half" id="tileS1C2">
                 <h3 class="govuk-heading-s" style="margin: 40px 0 10px">@Messages("agent.services.account.section1.col2.h3")</h3>
                 <p>@Messages("agent.services.account.section1.col2.p")</p>
-                <p><a href="@externalUrls.vatThroughSoftwareUrl">@Messages("agent.services.account.section1.col2.link")</a></p>
+                <p><a href="@externalUrls.vatThroughSoftwareUrl" target="_blank">@Messages("agent.services.account.section1.col2.link")</a></p>
             </div>
         </div>
     </section>
+    @if(isWhitelisted) {
     <section class="tile-container" style="margin-bottom: 0">
-        <div class="tile">
-            <div class="govuk-grid-column-one-half" id="tileS2C1">
-                <h2 class="govuk-heading-m" style="margin: 0px 0 10px">@Messages("agent.services.account.section2.h2")</h2>
-                <p>@Messages("agent.services.account.section2.col1.p")</p>
-                <p><a href="@externalUrls.agentAfiUrl">@Messages("agent.services.account.section2.col1.link")</a></p>
-            </div>
+    <div class="tile">
+        <div class="govuk-grid-column-one-half" id="tileS2C1">
+            <h2 class="govuk-heading-m" style="margin: 0px 0 10px">@Messages("agent.services.account.section2.h2")</h2>
+            <p>@Messages("agent.services.account.section2.col1.p")</p>
+            <p><a href="@externalUrls.agentAfiUrl">@Messages("agent.services.account.section2.col1.link")</a></p>
         </div>
+    </div>
     </section>
+    }
     <section class="tile-container" style="margin-bottom: 0">
         <div class="tile">
             <div class="govuk-grid-column-one-half" id="tileS3C1">
