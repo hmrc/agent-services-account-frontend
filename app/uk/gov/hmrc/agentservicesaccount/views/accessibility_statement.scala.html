@@ -20,6 +20,8 @@
 
 @uk.gov.hmrc.agentservicesaccount.views.html.main_template(title = Messages("accessibility.statement.title")) {
 
+    <div class="content__body_accessibility">
+
     <h1 class="heading-xlarge">@Messages("accessibility.statement.h1")</h1>
     <p class="govuk-body-l">@Messages("accessibility.statement.intro.p1")</p>
     <p>@Html(Messages("accessibility.statement.intro.p2"))</p>
@@ -42,7 +44,6 @@
 
     <h2 class="govuk-heading-l">@Messages("accessibility.statement.accessible.heading")</h2>
     <p>@Html(Messages("accessibility.statement.accessible.p1"))</p>
-    <p>@Messages("accessibility.statement.accessible.p2")</p>
 
     <h2 class="govuk-heading-l">@Messages("accessibility.statement.whattodo.heading")</h2>
     <p>@Html(Messages("accessibility.statement.whattodo.p1"))</p>
@@ -68,5 +69,7 @@
     <p>@Messages("accessibility.statement.howtested.p1")</p>
     <p>@Html(Messages("accessibility.statement.howtested.p2"))<p>
     <p>@Messages("accessibility.statement.howtested.p3")</p>
+
+    </div>
 
 }

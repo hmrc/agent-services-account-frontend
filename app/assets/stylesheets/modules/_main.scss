@@ -137,8 +137,15 @@ ACCOUNT SERVICES HOME
   padding-bottom: 0;
 }
 
-.content__body{
+.content__body, .content__body_accessibility {
   width: 100%;
+}
+
+@media (min-width: 641px) {
+  .content__body_accessibility {
+    float: left;
+    width: 61.666667%;
+  }
 }
 
 @media (min-width: 40.0625em) {

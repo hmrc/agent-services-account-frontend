@@ -105,7 +105,7 @@ accessibility.statement.contacting.p3=Find out how to <a href="https://www.gov.u
 
 accessibility.statement.technical.heading=Technical information about this service’s accessibility
 accessibility.statement.technical.p1=HMRC is committed to making this service accessible, in accordance with the Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018.
-accessibility.statement.technical.p2=This service is partially compliant with the <a href="https://www.w3.org/TR/WCAG21/">Web Content Accessibility Guidelines version 2.1 AA standard</a>, due to the non-compliances listed below.
+accessibility.statement.technical.p2=This service is partially compliant with the <a href="https://www.w3.org/TR/WCAG21/">Web Content Accessibility Guidelines version 2.1 AA standard</a>.
 accessibility.statement.technical.p3=We have carried out an in-house expert review of the service and fixed all known accessibility issues. 
 accessibility.statement.technical.p4=We will arrange a formal external audit of the full service as soon as possible, as part of our roadmap for making sure the service is fully compliant.
 
