@@ -127,4 +127,4 @@
     )
 }
 
-@hmrcGovUkTemplate(Some(title + " " + titleSuffix), bodyClasses)(head, bodyEnd, insideHeader, afterHeader, footerTop, Some(uiLayouts.footer_links(additionalLinks = None)), true)(content)
+@hmrcGovUkTemplate(Some(title + " " + titleSuffix), bodyClasses)(head, bodyEnd, insideHeader, afterHeader, footerTop, Some(uiLayouts.footer_links(additionalLinks = Some(footerLinks))), true)(content)
