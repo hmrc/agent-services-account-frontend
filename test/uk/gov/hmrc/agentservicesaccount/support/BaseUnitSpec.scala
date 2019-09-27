@@ -17,7 +17,7 @@
 package uk.gov.hmrc.agentservicesaccount.support
 
 import com.kenshoo.play.metrics.Metrics
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfterEach, Matchers, OptionValues}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.inject.guice.{BinderOption, GuiceApplicationBuilder, GuiceableModule}

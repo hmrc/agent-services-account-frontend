@@ -18,6 +18,7 @@ package uk.gov.hmrc.agentservicesaccount.config
 
 import org.mockito.ArgumentMatchers.{any, eq => eqs}
 import org.mockito.Mockito.when
+import org.mockito.stubbing.OngoingStubbing
 import play.api.Configuration
 import uk.gov.hmrc.agentservicesaccount.support.ResettingMockitoSugar
 import uk.gov.hmrc.play.test.UnitSpec
@@ -96,7 +97,7 @@ class ExternalUrlsSpec extends UnitSpec with ResettingMockitoSugar {
     }
   }
 
-  private def mockConfig(): Unit = {
+  private def mockConfig(): OngoingStubbing[Option[String]] = {
     mockConfigString("microservice.services.company-auth-frontend.external-url", companyAuthFrontendExternalBaseUrl)
     mockConfigString("microservice.services.company-auth-frontend.sign-in.path", subscriptionPath)
     mockConfigString("microservice.services.company-auth-frontend.sign-out.path", ggSignOutPath)

@@ -32,6 +32,7 @@ import uk.gov.hmrc.auth.core.{Admin, Enrolment, EnrolmentIdentifier, InvalidBear
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class AgentServicesControllerSpec extends BaseUnitSpec {
 
@@ -58,8 +59,8 @@ class AgentServicesControllerSpec extends BaseUnitSpec {
 
   protected def htmlEscapedMessage(key: String): String = HtmlFormat.escape(Messages(key)).toString
 
-  val authActions = new AuthActions(null, null, null, env, configuration) {
-    override def authorisedWithAgent(body: AgentInfo => Future[Result])(implicit headerCarrier: HeaderCarrier, request: Request[_]): Future[Result] = {
+  val authActions = new AuthActions(null, null, null, env, configuration)(global) {
+    override def authorisedWithAgent(body: AgentInfo => Future[Result])(implicit request: Request[_]): Future[Result] = {
       body(AgentInfo(Arn(arn), Some(Admin)))
     }
   }
@@ -115,8 +116,8 @@ class AgentServicesControllerSpec extends BaseUnitSpec {
         override lazy val agentSubscriptionUrl: String = "foo"
       }
 
-      val authActions = new AuthActions(null, null, null, env, configuration) {
-        override def authorisedWithAgent(body: AgentInfo => Future[Result])(implicit headerCarrier: HeaderCarrier, request: Request[_]): Future[Result] = {
+      val authActions = new AuthActions(null, null, null, env, configuration)(global) {
+        override def authorisedWithAgent(body: AgentInfo => Future[Result])(implicit request: Request[_]): Future[Result] = {
           Future successful Results.SeeOther("foo?continue=%2Fagent-services-account%3Fp%3DBAR1%2B23%252F")
         }
       }

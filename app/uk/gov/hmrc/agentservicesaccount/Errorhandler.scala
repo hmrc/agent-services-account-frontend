@@ -16,10 +16,8 @@
 
 package uk.gov.hmrc.agentservicesaccount
 
-import javax.inject.{Inject, Singleton}
 import com.google.inject.name.Named
-import play.api.http.HeaderNames.CACHE_CONTROL
-import play.api.http.HttpErrorHandler
+import javax.inject.{Inject, Singleton}
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.mvc.Results._
 import play.api.mvc.{Request, RequestHeader, Result}
@@ -28,9 +26,9 @@ import uk.gov.hmrc.agentservicesaccount.views.html.error_template
 import uk.gov.hmrc.auth.core.{InsufficientEnrolments, NoActiveSession}
 import uk.gov.hmrc.http.{JsValidationException, NotFoundException}
 import uk.gov.hmrc.play.HeaderCarrierConverter
-import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import uk.gov.hmrc.play.bootstrap.http.FrontendErrorHandler
+import uk.gov.hmrc.play.audit.http.connector.{AuditConnector, AuditResult}
 import uk.gov.hmrc.play.bootstrap.config.{AuthRedirects, HttpAuditEvent}
+import uk.gov.hmrc.play.bootstrap.http.FrontendErrorHandler
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -85,7 +83,7 @@ trait ErrorAuditing extends HttpAuditEvent {
   private val notFoundError = "Resource Endpoint Not Found"
   private val badRequestError = "Request bad format exception"
 
-  def auditServerError(request: RequestHeader, ex: Throwable)(implicit ec: ExecutionContext): Unit = {
+  def auditServerError(request: RequestHeader, ex: Throwable)(implicit ec: ExecutionContext): Future[AuditResult] = {
     val eventType = ex match {
       case _: NotFoundException => ResourceNotFound
       case _: JsValidationException => ServerValidationError
@@ -101,8 +99,8 @@ trait ErrorAuditing extends HttpAuditEvent {
   def auditClientError(request: RequestHeader, statusCode: Int, message: String)(implicit ec: ExecutionContext): Unit = {
     import play.api.http.Status._
     statusCode match {
-      case NOT_FOUND => auditConnector.sendEvent(dataEvent(ResourceNotFound, notFoundError, request, Map(TransactionFailureReason -> message))(HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))))
-      case BAD_REQUEST => auditConnector.sendEvent(dataEvent(ServerValidationError, badRequestError, request, Map(TransactionFailureReason -> message))(HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))))
+      case NOT_FOUND => auditConnector.sendEvent(dataEvent(ResourceNotFound, notFoundError, request, Map(TransactionFailureReason -> message))(HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session)))); ()
+      case BAD_REQUEST => auditConnector.sendEvent(dataEvent(ServerValidationError, badRequestError, request, Map(TransactionFailureReason -> message))(HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session)))); ()
       case _ =>
     }
   }
