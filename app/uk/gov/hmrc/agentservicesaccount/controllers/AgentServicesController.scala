@@ -25,9 +25,9 @@ import uk.gov.hmrc.agentservicesaccount.auth.{AuthActions, PasscodeVerification}
 import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
 import uk.gov.hmrc.agentservicesaccount.views.html.pages._
-import uk.gov.hmrc.play.bootstrap.controller.FrontendController
+import uk.gov.hmrc.play.bootstrap.controller.BaseController
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class AgentServicesController @Inject()(
@@ -36,7 +36,7 @@ class AgentServicesController @Inject()(
                                          asaConnector: AgentServicesAccountConnector,
                                          val withMaybePasscode: PasscodeVerification,
                                          @Named("customDimension") customDimension: String)
-                                       (implicit val externalUrls: ExternalUrls, configuration: Configuration) extends FrontendController with I18nSupport {
+                                       (implicit val externalUrls: ExternalUrls, configuration: Configuration, ec: ExecutionContext) extends BaseController with I18nSupport {
 
 
   val root: Action[AnyContent] = Action.async { implicit request =>

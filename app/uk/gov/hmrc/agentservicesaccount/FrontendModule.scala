@@ -59,6 +59,7 @@ class FrontendModule(val environment: Environment, val configuration: Configurat
     bindBaseUrl("auth")
     bindBaseUrl("sso")
     bindBaseUrl("agent-services-account")
+    ()
   }
 
   private def bindBaseUrl(serviceName: String) =
@@ -78,11 +79,6 @@ class FrontendModule(val environment: Environment, val configuration: Configurat
 
   import com.google.inject.binder.ScopedBindingBuilder
   import com.google.inject.name.Names.named
-
-  import scala.reflect.ClassTag
-
-  private def bindServiceConfigProperty[A](propertyName: String)(implicit classTag: ClassTag[A], ct: ServiceConfigPropertyType[A]): ScopedBindingBuilder =
-    ct.bindServiceConfigProperty(classTag.runtimeClass.asInstanceOf[Class[A]])(propertyName)
 
   sealed trait ServiceConfigPropertyType[A] {
     def bindServiceConfigProperty(clazz: Class[A])(propertyName: String): ScopedBindingBuilder

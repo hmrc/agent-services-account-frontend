@@ -19,7 +19,6 @@ package uk.gov.hmrc.agentservicesaccount.auth
 import java.net.URLEncoder
 
 import javax.inject.{Inject, Singleton}
-import play.api.mvc.Results._
 import play.api.mvc._
 import play.api.{Configuration, Environment, LoggerLike}
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
@@ -27,13 +26,11 @@ import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
 import uk.gov.hmrc.agentservicesaccount.controllers.routes
 import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
 import uk.gov.hmrc.auth.core._
-import uk.gov.hmrc.auth.core.retrieve.Retrievals.{allEnrolments, credentialRole}
+import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals.{allEnrolments, credentialRole}
 import uk.gov.hmrc.auth.core.retrieve.~
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.bootstrap.config.AuthRedirects
-import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext.fromLoggingDetails
+import uk.gov.hmrc.play.bootstrap.controller.BaseController
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 case class AgentInfo(arn: Arn, credentialRole: Option[CredentialRole]) {
   val isAdmin: Boolean = credentialRole match {
@@ -50,9 +47,9 @@ class AuthActions @Inject()(logger: LoggerLike,
                             externalUrls: ExternalUrls,
                             override val authConnector: AuthConnector,
                             val env: Environment,
-                            val config: Configuration) extends AuthorisedFunctions with AuthRedirects {
+                            val config: Configuration)(implicit val ec: ExecutionContext) extends AuthorisedFunctions with BaseController {
 
-  def authorisedWithAgent(body: AgentInfo => Future[Result])(implicit headerCarrier: HeaderCarrier, request: Request[_]): Future[Result] =
+  def authorisedWithAgent(body: AgentInfo => Future[Result])(implicit request: Request[_]): Future[Result] =
     authorised(AuthProviders(GovernmentGateway) and AffinityGroup.Agent)
       .retrieve(allEnrolments and credentialRole) {
       case enrols ~ credRole =>

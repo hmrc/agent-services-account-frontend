@@ -8,9 +8,58 @@ lazy val scoverageSettings = {
     // Semicolon-separated list of regexs matching classes to exclude
     ScoverageKeys.coverageExcludedPackages := """uk\.gov\.hmrc\.BuildInfo;.*\.Routes;.*\.RoutesPrefix;.*Filters?;MicroserviceAuditConnector;Module;GraphiteStartUp;.*\.Reverse[^.]*""",
     ScoverageKeys.coverageMinimum := 80.00,
-    ScoverageKeys.coverageFailOnMinimum := false,
+    ScoverageKeys.coverageFailOnMinimum := true,
     ScoverageKeys.coverageHighlighting := true,
     parallelExecution in Test := false
+  )
+}
+
+lazy val wartRemoverSettings = {
+  val wartRemoverWarning = {
+    val warningWarts = Seq(
+      Wart.JavaSerializable,
+      //Wart.StringPlusAny,
+      Wart.AsInstanceOf,
+      Wart.IsInstanceOf
+      //Wart.Any
+    )
+    wartremoverWarnings in (Compile, compile) ++= warningWarts
+  }
+
+  val wartRemoverError = {
+    // Error
+    val errorWarts = Seq(
+      Wart.ArrayEquals,
+      Wart.AnyVal,
+      Wart.EitherProjectionPartial,
+      Wart.Enumeration,
+      Wart.ExplicitImplicitTypes,
+      Wart.FinalVal,
+      Wart.JavaConversions,
+      Wart.JavaSerializable,
+      //Wart.LeakingSealed,
+      Wart.MutableDataStructures,
+      Wart.Null,
+      //Wart.OptionPartial,
+      Wart.Recursion,
+      Wart.Return,
+      //Wart.TraversableOps,
+      Wart.TryPartial,
+      Wart.Var,
+      Wart.While)
+
+    wartremoverErrors in (Compile, compile) ++= errorWarts
+  }
+
+  Seq(
+    wartRemoverError,
+    wartRemoverWarning,
+    wartremoverErrors in (Test, compile) --= Seq(Wart.Any, Wart.Equals, Wart.Null, Wart.NonUnitStatements, Wart.PublicInference),
+    wartremoverExcluded ++=
+      routes.in(Compile).value ++
+        (baseDirectory.value / "it").get ++
+        (baseDirectory.value / "test").get ++
+        Seq(sourceManaged.value / "main" / "sbt-buildinfo" / "BuildInfo.scala")
   )
 }
 
@@ -38,6 +87,16 @@ lazy val root = (project in file("."))
     name := "agent-services-account-frontend",
     organization := "uk.gov.hmrc",
     scalaVersion := "2.11.11",
+    scalacOptions ++= Seq(
+      "-Xfatal-warnings",
+      "-Xlint:-missing-interpolator,_",
+      "-Yno-adapted-args",
+      "-Ywarn-value-discard",
+      "-Ywarn-dead-code",
+      "-deprecation",
+      "-feature",
+      "-unchecked",
+      "-language:implicitConversions"),
     PlayKeys.playDefaultPort := 9401,
     resolvers := Seq(
       Resolver.bintrayRepo("hmrc", "releases"),
@@ -56,13 +115,7 @@ lazy val root = (project in file("."))
     Keys.fork in IntegrationTest := false,
     Defaults.itSettings,
     unmanagedSourceDirectories in IntegrationTest += baseDirectory(_ / "it").value,
-    parallelExecution in IntegrationTest := false,
-    testGrouping in IntegrationTest := oneForkedJvmPerTest((definedTests in IntegrationTest).value)
+    parallelExecution in IntegrationTest := false
   )
+  .settings(wartRemoverSettings: _*)
   .enablePlugins(PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin, SbtArtifactory)
-
-def oneForkedJvmPerTest(tests: Seq[TestDefinition]) = {
-  tests.map { test =>
-    new Group(test.name, Seq(test), SubProcess(ForkOptions(runJVMOptions = Seq(s"-Dtest.name=${test.name}"))))
-  }
-}

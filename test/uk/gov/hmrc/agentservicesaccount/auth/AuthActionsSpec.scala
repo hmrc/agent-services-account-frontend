@@ -18,6 +18,7 @@ package uk.gov.hmrc.agentservicesaccount.auth
 
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
+import org.mockito.stubbing.OngoingStubbing
 import org.slf4j.Logger
 import play.api.LoggerLike
 import play.api.http.Status.OK
@@ -30,29 +31,32 @@ import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
 import uk.gov.hmrc.agentservicesaccount.support.{AkkaMaterializerSpec, BaseUnitSpec}
 import uk.gov.hmrc.auth.core._
+import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve.{Retrieval, ~}
 import uk.gov.hmrc.http.HeaderCarrier
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class AuthActionsSpec extends BaseUnitSpec with AkkaMaterializerSpec {
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
 
-  val mockAuthConnector = resettingMock[PlayAuthConnector]
+  val mockAuthConnector: PlayAuthConnector = resettingMock[PlayAuthConnector]
 
-  val slf4jLogger = resettingMock[Logger]
+  val slf4jLogger: Logger = resettingMock[Logger]
 
-  val logger = new LoggerLike {
+  val logger: LoggerLike = new LoggerLike {
     override val logger: Logger = slf4jLogger
   }
 
-  def mockAuth(enrolment: Set[Enrolment], credentialRole: CredentialRole = User) =
-    when(mockAuthConnector.authorise(any(), any[Retrieval[~[Enrolments, Option[CredentialRole]]]]())(any(), any()))
+  def mockAuth(enrolment: Set[Enrolment], credentialRole: CredentialRole = User): OngoingStubbing[Future[Enrolments ~ Option[CredentialRole]]] =
+    when(mockAuthConnector.authorise(
+      any[Predicate](), any[Retrieval[~[Enrolments, Option[CredentialRole]]]]())(any[HeaderCarrier](), any[ExecutionContext]()))
       .thenReturn(Future successful new ~(Enrolments(enrolment), Some(credentialRole)))
 
-  def mockAuthFailWith(reason: String): Unit =
-    when(mockAuthConnector.authorise(any(), any[Retrieval[~[Enrolments, Option[AffinityGroup]]]]())(any(), any()))
+  def mockAuthFailWith(reason: String): OngoingStubbing[Future[Enrolments ~ Option[AffinityGroup]]] =
+    when(mockAuthConnector.authorise(any[Predicate](), any[Retrieval[~[Enrolments, Option[AffinityGroup]]]]())(any[HeaderCarrier](), any[ExecutionContext]()))
       .thenReturn(Future.failed(AuthorisationException.fromString(reason)))
 
   val arn = "TARN0000001"
@@ -62,6 +66,8 @@ class AuthActionsSpec extends BaseUnitSpec with AkkaMaterializerSpec {
 
   val externalUrls: ExternalUrls = mock[ExternalUrls]
   val completeGgSignInUrl = "/gg/sign-in?continue=&origin=agent-services-account-frontend"
+  def completeGgSignInUrlWithOtac(otacToken: String) =
+    s"/gg/sign-in?continue=&origin=agent-services-account-frontend?continue=%2Fagent-services-account%3Fp%3D$otacToken"
   when(externalUrls.agentSubscriptionUrl).thenReturn(completeGgSignInUrl)
 
   val authActions = new AuthActions(logger, externalUrls, mockAuthConnector, env, configuration)
@@ -91,6 +97,16 @@ class AuthActionsSpec extends BaseUnitSpec with AkkaMaterializerSpec {
       val result: Future[Result] = testAuthImpl.testAuthActions().apply(FakeRequest())
       status(result) shouldBe 303
       redirectLocation(result) shouldBe Some(completeGgSignInUrl)
+
+    }
+
+    "redirect to GG sign in if agent is not logged in with otac parameter" in {
+      mockAuthFailWith("MissingBearerToken")
+
+      val result: Future[Result] = testAuthImpl.testAuthActions().apply(FakeRequest().withSession(
+        "otacTokenParam" -> "foo"))
+      status(result) shouldBe 303
+      redirectLocation(result) shouldBe Some(completeGgSignInUrlWithOtac("foo"))
 
     }
 
@@ -127,5 +143,10 @@ class AuthActionsSpec extends BaseUnitSpec with AkkaMaterializerSpec {
       await(authActions.authorisedWithAgent(_ => Future successful Ok)) shouldBe Forbidden
     }
 
+    "return Forbidden if the user has an unsupported auth provider" in {
+      mockAuthFailWith("UnsupportedAuthProvider")
+
+      await(authActions.authorisedWithAgent(_ => Ok)) shouldBe Forbidden
+    }
   }
 }

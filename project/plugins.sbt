@@ -11,4 +11,6 @@ addSbtPlugin("uk.gov.hmrc" % "sbt-distributables" % "1.2.0")
 
 addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.5.0")
 
+addSbtPlugin("org.wartremover" % "sbt-wartremover" % "2.3.7")
+
 addSbtPlugin("org.irundaia.sbt" % "sbt-sassify" % "1.4.8")
