@@ -38,27 +38,23 @@ class AgentServicesController @Inject()(
                                          @Named("customDimension") customDimension: String)
                                        (implicit val externalUrls: ExternalUrls, configuration: Configuration, ec: ExecutionContext) extends BaseController with I18nSupport {
 
+  import authActions._
 
-  val root: Action[AnyContent] = Action.async { implicit request =>
+  val root: Action[AnyContent] = withAuthorisedAsAgent { implicit request =>agentInfo =>
     withMaybePasscode { isWhitelisted =>
-      authActions.authorisedWithAgent { agentInfo =>
         Logger.info(s"isAdmin: ${agentInfo.isAdmin}")
         Future.successful(Ok(agent_services_account(formatArn(agentInfo.arn), isWhitelisted, customDimension, agentInfo.isAdmin)))
       }
     }
-  }
 
-
-  val manageAccount: Action[AnyContent] = Action.async { implicit request =>
+  val manageAccount: Action[AnyContent] = withAuthorisedAsAgent { implicit request =>agentInfo =>
     withMaybePasscode { _ =>
-      authActions.authorisedWithAgent { agentInfo =>
         if (agentInfo.isAdmin) {
           Future.successful(Ok(manage_account()))
         } else {
           Future.successful(Forbidden)
         }
       }
-    }
   }
 
   private def formatArn(arn: Arn): String = {

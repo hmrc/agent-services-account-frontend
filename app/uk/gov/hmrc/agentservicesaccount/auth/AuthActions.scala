@@ -20,15 +20,19 @@ import java.net.URLEncoder
 
 import javax.inject.{Inject, Singleton}
 import play.api.mvc._
+import play.api.mvc.Results._
 import play.api.{Configuration, Environment, LoggerLike}
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
+import uk.gov.hmrc.agentservicesaccount.auth.AuthActions.AgentAuthAction
 import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
 import uk.gov.hmrc.agentservicesaccount.controllers.routes
 import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals.{allEnrolments, credentialRole}
 import uk.gov.hmrc.auth.core.retrieve.~
-import uk.gov.hmrc.play.bootstrap.controller.BaseController
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.HeaderCarrierConverter
+import uk.gov.hmrc.play.bootstrap.config.AuthRedirects
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -47,20 +51,22 @@ class AuthActions @Inject()(logger: LoggerLike,
                             externalUrls: ExternalUrls,
                             override val authConnector: AuthConnector,
                             val env: Environment,
-                            val config: Configuration)(implicit val ec: ExecutionContext) extends AuthorisedFunctions with BaseController {
+                            val config: Configuration) extends AuthorisedFunctions with AuthRedirects {
 
-  def authorisedWithAgent(body: AgentInfo => Future[Result])(implicit request: Request[_]): Future[Result] =
+  def withAuthorisedAsAgent(body: AgentAuthAction)(implicit ec: ExecutionContext): Action[AnyContent] = Action.async { implicit request =>
+    implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
     authorised(AuthProviders(GovernmentGateway) and AffinityGroup.Agent)
       .retrieve(allEnrolments and credentialRole) {
-      case enrols ~ credRole =>
-        getArn(enrols) match {
-          case Some(arn) =>
-            body(AgentInfo(arn, credRole))
-          case None =>
-            logger.warn("No AgentReferenceNumber found in HMRC-AS-AGENT enrolment - this should not happen. Denying access.")
-            Future successful Forbidden
-        }
-    }.recover(handleFailure)
+        case enrols ~ credRole =>
+          getArn(enrols) match {
+            case Some(arn) =>
+              body(request)(AgentInfo(arn, credRole))
+            case None =>
+              logger.warn("No AgentReferenceNumber found in HMRC-AS-AGENT enrolment - this should not happen. Denying access.")
+              Future successful Forbidden
+          }
+      }.recover(handleFailure)
+  }
 
   def handleFailure(implicit request: Request[_]): PartialFunction[Throwable, Result] = {
     case _: NoActiveSession ⇒
@@ -80,7 +86,7 @@ class AuthActions @Inject()(logger: LoggerLike,
     request.session.get("otacTokenParam") match {
       case Some(p) =>
         val selfURL = routes.AgentServicesController.root().toURLWithParams("p" -> Some(p))
-        "?continue="+URLEncoder.encode(selfURL,"utf-8")
+        "?continue=" + URLEncoder.encode(selfURL, "utf-8")
       case None => ""
     }
   }
@@ -93,4 +99,8 @@ class AuthActions @Inject()(logger: LoggerLike,
       Arn(enrolId.value)
     }
   }
+}
+
+object AuthActions {
+  type AgentAuthAction = Request[AnyContent] => AgentInfo => Future[Result]
 }

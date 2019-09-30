@@ -25,10 +25,11 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
+import uk.gov.hmrc.agentservicesaccount.auth.AuthActions.AgentAuthAction
 import uk.gov.hmrc.agentservicesaccount.auth.{AgentInfo, AuthActions, PasscodeVerification}
 import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
 import uk.gov.hmrc.agentservicesaccount.support.BaseUnitSpec
-import uk.gov.hmrc.auth.core.{Admin, Enrolment, EnrolmentIdentifier, InvalidBearerToken}
+import uk.gov.hmrc.auth.core.{Admin, Enrolment, EnrolmentIdentifier}
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -59,9 +60,9 @@ class AgentServicesControllerSpec extends BaseUnitSpec {
 
   protected def htmlEscapedMessage(key: String): String = HtmlFormat.escape(Messages(key)).toString
 
-  val authActions = new AuthActions(null, null, null, env, configuration)(global) {
-    override def authorisedWithAgent(body: AgentInfo => Future[Result])(implicit request: Request[_]): Future[Result] = {
-      body(AgentInfo(Arn(arn), Some(Admin)))
+  val authActions = new AuthActions(null, null, null, env, configuration) {
+    override def withAuthorisedAsAgent(body: AgentAuthAction)(implicit ec: ExecutionContext): Action[AnyContent] = Action.async { implicit request =>
+      body(FakeRequest())(AgentInfo(Arn(arn), Some(Admin)))
     }
   }
 
@@ -116,9 +117,9 @@ class AgentServicesControllerSpec extends BaseUnitSpec {
         override lazy val agentSubscriptionUrl: String = "foo"
       }
 
-      val authActions = new AuthActions(null, null, null, env, configuration)(global) {
-        override def authorisedWithAgent(body: AgentInfo => Future[Result])(implicit request: Request[_]): Future[Result] = {
-          Future successful Results.SeeOther("foo?continue=%2Fagent-services-account%3Fp%3DBAR1%2B23%252F")
+      val authActions = new AuthActions(null, null, null, env, configuration) {
+        override def withAuthorisedAsAgent(body: AgentAuthAction)(implicit ec: ExecutionContext): Action[AnyContent] = Action.async { implicit request =>
+          Future.successful(Results.SeeOther("foo?continue=%2Fagent-services-account%3Fp%3DBAR1%2B23%252F"))
         }
       }
 
