@@ -40,14 +40,14 @@ class AgentServicesController @Inject()(
 
   import authActions._
 
-  val root: Action[AnyContent] = withAuthorisedAsAgent { implicit request =>agentInfo =>
+  val root: Action[AnyContent] = withAuthorisedAsAgent { implicit request => agentInfo =>
     withMaybePasscode { isWhitelisted =>
         Logger.info(s"isAdmin: ${agentInfo.isAdmin}")
         Future.successful(Ok(agent_services_account(formatArn(agentInfo.arn), isWhitelisted, customDimension, agentInfo.isAdmin)))
       }
     }
 
-  val manageAccount: Action[AnyContent] = withAuthorisedAsAgent { implicit request =>agentInfo =>
+  val manageAccount: Action[AnyContent] = withAuthorisedAsAgent { implicit request => agentInfo =>
     withMaybePasscode { _ =>
         if (agentInfo.isAdmin) {
           Future.successful(Ok(manage_account()))
