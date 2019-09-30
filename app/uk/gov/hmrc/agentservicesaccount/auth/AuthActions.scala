@@ -53,20 +53,19 @@ class AuthActions @Inject()(logger: LoggerLike,
                             val env: Environment,
                             val config: Configuration) extends AuthorisedFunctions with AuthRedirects {
 
-  def withAuthorisedAsAgent(body: AgentAuthAction)(implicit ec: ExecutionContext): Action[AnyContent] = Action.async { implicit request =>
-    implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
+  def withAuthorisedAsAgent(body: AgentInfo => Future[Result])(implicit ec: ExecutionContext, hc: HeaderCarrier, request: Request[AnyContent]): Future[Result] =
     authorised(AuthProviders(GovernmentGateway) and AffinityGroup.Agent)
       .retrieve(allEnrolments and credentialRole) {
         case enrols ~ credRole =>
           getArn(enrols) match {
             case Some(arn) =>
-              body(request)(AgentInfo(arn, credRole))
+              body(AgentInfo(arn, credRole))
             case None =>
               logger.warn("No AgentReferenceNumber found in HMRC-AS-AGENT enrolment - this should not happen. Denying access.")
               Future successful Forbidden
           }
       }.recover(handleFailure)
-  }
+
 
   def handleFailure(implicit request: Request[_]): PartialFunction[Throwable, Result] = {
     case _: NoActiveSession ⇒

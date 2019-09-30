@@ -73,10 +73,12 @@ class AuthActionsSpec extends BaseUnitSpec with AkkaMaterializerSpec {
   val authActions = new AuthActions(logger, externalUrls, mockAuthConnector, env, configuration)
 
   class TestAuth() {
-    def testAuthActions(): Action[AnyContent] =
-        authActions.withAuthorisedAsAgent { implicit request =>agent =>
-            Future.successful(Ok(Json.toJson(agent.arn)))
-        }
+    def testAuthActions(): Action[AnyContent] = Action.async {
+      implicit request =>
+      authActions.withAuthorisedAsAgent { agent =>
+        Future.successful(Ok(Json.toJson(agent.arn)))
+      }
+    }
   }
 
   val testAuthImpl = new TestAuth()
