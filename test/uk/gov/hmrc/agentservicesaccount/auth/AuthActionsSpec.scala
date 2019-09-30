@@ -75,9 +75,9 @@ class AuthActionsSpec extends BaseUnitSpec with AkkaMaterializerSpec {
   class TestAuth() {
     def testAuthActions(): Action[AnyContent] = Action.async {
       implicit request =>
-        authActions.authorisedWithAgent { agent =>
-            Future.successful(Ok(Json.toJson(agent.arn)))
-        }
+      authActions.withAuthorisedAsAgent { agent =>
+        Future.successful(Ok(Json.toJson(agent.arn)))
+      }
     }
   }
 
@@ -97,7 +97,6 @@ class AuthActionsSpec extends BaseUnitSpec with AkkaMaterializerSpec {
       val result: Future[Result] = testAuthImpl.testAuthActions().apply(FakeRequest())
       status(result) shouldBe 303
       redirectLocation(result) shouldBe Some(completeGgSignInUrl)
-
     }
 
     "redirect to GG sign in if agent is not logged in with otac parameter" in {
@@ -107,7 +106,6 @@ class AuthActionsSpec extends BaseUnitSpec with AkkaMaterializerSpec {
         "otacTokenParam" -> "foo"))
       status(result) shouldBe 303
       redirectLocation(result) shouldBe Some(completeGgSignInUrlWithOtac("foo"))
-
     }
 
     "redirect to GG sign in if logged in user is not an HMRC-AS-AGENT agent" in {
@@ -116,37 +114,19 @@ class AuthActionsSpec extends BaseUnitSpec with AkkaMaterializerSpec {
       val result: Future[Result] = testAuthImpl.testAuthActions().apply(FakeRequest())
       status(result) shouldBe 403
     }
-  }
 
-  "authorisedWithAgent" should {
-    implicit val request: Request[_] = FakeRequest()
-
-    "call body if the user has an Activated HMRC-AS-AGENT enrolment" in {
-      mockAuth(Set(agentEnrolment))
-      await(authActions.authorisedWithAgent(_ => Future successful Ok)) shouldBe Ok
-    }
-
-    "supply the ARN to the body in an AgentInfo if the user has an Activated HMRC-AS-AGENT enrolment" in {
-      mockAuth(Set(agentEnrolment))
-      await(authActions.authorisedWithAgent(agentInfo => Future.successful(Ok(Json.toJson(agentInfo.arn))))) shouldBe Ok(Json.toJson(arn))
-    }
-
-    "return Forbidden if the user has no HMRC-AS-AGENT enrolment" in {
-      mockAuth(Set(otherEnrolment))
-
-      await(authActions.authorisedWithAgent(_ => Future successful Ok)) shouldBe Forbidden
-    }
-
-    "return Forbidden if the user has affinity group != Agent" in {
-      mockAuthFailWith("UnsupportedAffinityGroup")
-
-      await(authActions.authorisedWithAgent(_ => Future successful Ok)) shouldBe Forbidden
-    }
-
-    "return Forbidden if the user has an unsupported auth provider" in {
+    "return forbidden if the auth provider is not supported" in {
       mockAuthFailWith("UnsupportedAuthProvider")
 
-      await(authActions.authorisedWithAgent(_ => Ok)) shouldBe Forbidden
+      val result: Future[Result] = testAuthImpl.testAuthActions().apply(FakeRequest())
+      status(result) shouldBe 403
+    }
+
+    "return forbidden if the affinity group is not supported" in {
+      mockAuthFailWith("UnsupportedAffinityGroup")
+
+      val result: Future[Result] = testAuthImpl.testAuthActions().apply(FakeRequest())
+      status(result) shouldBe 403
     }
   }
 }

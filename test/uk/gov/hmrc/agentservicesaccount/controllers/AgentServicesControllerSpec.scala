@@ -28,7 +28,7 @@ import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.auth.{AgentInfo, AuthActions, PasscodeVerification}
 import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
 import uk.gov.hmrc.agentservicesaccount.support.BaseUnitSpec
-import uk.gov.hmrc.auth.core.{Admin, Enrolment, EnrolmentIdentifier, InvalidBearerToken}
+import uk.gov.hmrc.auth.core.{Admin, Enrolment, EnrolmentIdentifier}
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -36,7 +36,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 class AgentServicesControllerSpec extends BaseUnitSpec {
 
-  val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+  implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   implicit val externalUrls: ExternalUrls = mock[ExternalUrls]
   val signOutUrl = routes.SignOutController.signOut().url
   when(externalUrls.signOutUrl).thenReturn(signOutUrl)
@@ -59,8 +59,8 @@ class AgentServicesControllerSpec extends BaseUnitSpec {
 
   protected def htmlEscapedMessage(key: String): String = HtmlFormat.escape(Messages(key)).toString
 
-  val authActions = new AuthActions(null, null, null, env, configuration)(global) {
-    override def authorisedWithAgent(body: AgentInfo => Future[Result])(implicit request: Request[_]): Future[Result] = {
+  val authActions: AuthActions = new AuthActions(null, null, null, env, configuration) {
+    override def withAuthorisedAsAgent(body: AgentInfo => Future[Result])(implicit ec: ExecutionContext, hc: HeaderCarrier, request: Request[AnyContent]): Future[Result] = {
       body(AgentInfo(Arn(arn), Some(Admin)))
     }
   }
@@ -71,7 +71,7 @@ class AgentServicesControllerSpec extends BaseUnitSpec {
 
   "root" should {
     "return Status: OK and body containing correct content" in {
-      val controller = new AgentServicesController(messagesApi, authActions, desConnector, NoPasscodeVerification, "")
+      val controller = new AgentServicesController(authActions, desConnector, NoPasscodeVerification, "")
 
       val response = controller.root()(FakeRequest("GET", "/"))
 
@@ -116,13 +116,12 @@ class AgentServicesControllerSpec extends BaseUnitSpec {
         override lazy val agentSubscriptionUrl: String = "foo"
       }
 
-      val authActions = new AuthActions(null, null, null, env, configuration)(global) {
-        override def authorisedWithAgent(body: AgentInfo => Future[Result])(implicit request: Request[_]): Future[Result] = {
-          Future successful Results.SeeOther("foo?continue=%2Fagent-services-account%3Fp%3DBAR1%2B23%252F")
+      val authActions = new AuthActions(null, null, null, env, configuration) {
+        override def withAuthorisedAsAgent(body: AgentInfo => Future[Result])(implicit ec: ExecutionContext, hc: HeaderCarrier, request: Request[AnyContent]): Future[Result] =
+          Future.successful(Results.SeeOther("foo?continue=%2Fagent-services-account%3Fp%3DBAR1%2B23%252F"))
         }
-      }
 
-      val controller = new AgentServicesController(messagesApi, authActions, desConnector, NoPasscodeVerification, "")
+      val controller = new AgentServicesController(authActions, desConnector, NoPasscodeVerification, "")
 
       val response = controller.root()(FakeRequest("GET", "/").withSession(("otacTokenParam", "BAR1 23/")))
 
@@ -131,7 +130,7 @@ class AgentServicesControllerSpec extends BaseUnitSpec {
     }
 
     "do not fail without continue url parameter" in {
-      val controller = new AgentServicesController(messagesApi, authActions, desConnector, NoPasscodeVerification, "")
+      val controller = new AgentServicesController(authActions, desConnector, NoPasscodeVerification, "")
       val response = controller.root().apply(FakeRequest("GET", "/"))
       status(response) shouldBe OK
       contentAsString(response) should {
@@ -143,7 +142,7 @@ class AgentServicesControllerSpec extends BaseUnitSpec {
   "manage-account" should {
 
     "return Status: OK and body containing correct content" in {
-      val controller = new AgentServicesController(messagesApi, authActions, desConnector, NoPasscodeVerification, "")
+      val controller = new AgentServicesController(authActions, desConnector, NoPasscodeVerification, "")
 
       val response = controller.manageAccount().apply(FakeRequest("GET", "/manage-account"))
 
