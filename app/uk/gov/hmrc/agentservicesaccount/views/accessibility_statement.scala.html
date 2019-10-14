@@ -51,7 +51,7 @@
     <p>@Html(Messages("accessibility.statement.whattodo.p1"))</p>
 
     <h2 class="govuk-heading-l">@Messages("accessibility.statement.reporting.heading")</h2>
-    <p>@Html(Messages("accessibility.statement.reporting.p1", s"${configuration.getString("accessibilityUrl").get}$userAction"))</p>
+    <p>@Html(Messages("accessibility.statement.reporting.p1", s"${configuration.getString("accessibilityUrl").getOrElse("")}$userAction"))</p>
 
     <h2 class="govuk-heading-l">@Messages("accessibility.statement.enforcement.heading")</h2>
     <p>@Html(Messages("accessibility.statement.enforcement.p1"))</p>
