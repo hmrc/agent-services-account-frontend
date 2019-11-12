@@ -18,12 +18,12 @@ package uk.gov.hmrc.agentservicesaccount.controllers
 
 import javax.inject._
 import play.api.i18n.MessagesApi
-import play.api.mvc.{Action, AnyContent}
+import play.api.mvc.{Action, AnyContent, Flash}
 import play.api.{Configuration, Logger}
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.auth.{AuthActions, PasscodeVerification}
 import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
-import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
+import uk.gov.hmrc.agentservicesaccount.connectors.{AgentServicesAccountConnector, AgentSuspensionConnector, AgentSuspensionResponse}
 import uk.gov.hmrc.agentservicesaccount.views.html.pages._
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -32,6 +32,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class AgentServicesController @Inject()(
                                          authActions: AuthActions,
                                          asaConnector: AgentServicesAccountConnector,
+                                         agentSuspensionConnector: AgentSuspensionConnector,
                                          val withMaybePasscode: PasscodeVerification,
                                          @Named("customDimension") customDimension: String)
                                        (implicit val externalUrls: ExternalUrls,
@@ -41,6 +42,16 @@ class AgentServicesController @Inject()(
   import authActions._
 
   val root: Action[AnyContent] = Action.async { implicit request =>
+    withAuthorisedAsAgent { agentInfo =>
+      agentSuspensionConnector.getSuspensionStatus(agentInfo.arn).map {
+        case AgentSuspensionResponse("Suspended", Some(ss)) => Redirect(routes.AgentServicesController.showSuspendedWarning())
+          .flashing("suspendedServices" -> ss.mkString(","))
+        case AgentSuspensionResponse("NotSuspended", _) => Redirect(routes.AgentServicesController.showAgentServicesAccount())
+      }
+    }
+  }
+
+  val showAgentServicesAccount: Action[AnyContent] = Action.async { implicit request =>
     withMaybePasscode { isWhitelisted =>
       withAuthorisedAsAgent { agentInfo =>
         Logger.info(s"isAdmin: ${agentInfo.isAdmin}")
@@ -48,6 +59,12 @@ class AgentServicesController @Inject()(
       }
     }
   }
+
+  val showSuspendedWarning: Action[AnyContent] = Action.async { implicit request =>
+    withAuthorisedAsAgent { agentInfo =>
+        Future successful Ok(suspension_warning(agentInfo.isAdmin))
+      }
+    }
 
   val manageAccount: Action[AnyContent] = Action.async { implicit request =>
     withMaybePasscode { _ =>

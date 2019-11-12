@@ -23,7 +23,7 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.inject.guice.{BinderOption, GuiceApplicationBuilder, GuiceableModule}
 import play.api.{Application, Configuration, Environment}
 import uk.gov.hmrc.agentservicesaccount.FrontendModule
-import uk.gov.hmrc.agentservicesaccount.connectors.{AgentServicesAccountConnector, SsoConnector}
+import uk.gov.hmrc.agentservicesaccount.connectors.{AgentServicesAccountConnector, AgentSuspensionConnector, SsoConnector}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.test.UnitSpec
 
@@ -36,6 +36,7 @@ class BaseUnitSpec
   override implicit lazy val app: Application = appBuilder.build()
 
   lazy val desConnector = mock[AgentServicesAccountConnector]
+  lazy val mockSuspensionConnector = mock[AgentSuspensionConnector]
 
   lazy implicit val configuration = app.injector.instanceOf[Configuration]
   lazy implicit val env = app.injector.instanceOf[Environment]

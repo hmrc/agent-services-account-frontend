@@ -63,6 +63,20 @@ agent.services.account.additional.links.agent-afi.ga.services-you-need=Services 
 agent.services.account.additional.links.agent-afi.ga.request-auth=Ask a client to authorise you
 agent.services.account.additional.links.agent-afi.ga.view-income-record=View a clients income record
 
+#suspension warning
+suspension-warning.header=We have temporarily limited your use of this service
+suspension-warning.p1=We did this because we have suspended your agent code. We sent you a letter to confirm this.
+suspension-warning.p2.single=This means you will not be able to use this service to ask for authorisation to {0}.
+suspension-warning.p2.multi=This means you will not be able to use this service to ask for authorisation to:
+suspension-warning.HMRC-MTD-IT=send their Income Tax updates through software
+suspension-warning.PERSONAL-INCOME-RECORD=view their PAYE income record
+suspension-warning.HMRC-MTD-VAT=submit their VAT returns through software
+suspension-warning.HMRC-TERS-ORG=maintain a trust or an estate
+suspension-warning.HMRC-CGT-PD=manage their Capital Gains Tax on UK property disposals
+suspension-warning.p3=You can still access any other service available to you.
+suspension-warning.p4=If you did not receive our letter, or think we have made a mistake, use the ''get help with this page'' link.
+suspension-warning.button=Continue
+
 # Error messages for digital services
 global.error.500.title=Sorry, we are experiencing technical difficulties - 500
 global.error.500.heading=Sorry, we’re experiencing technical difficulties
