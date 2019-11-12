@@ -34,7 +34,8 @@ class AgentServicesController @Inject()(
                                          asaConnector: AgentServicesAccountConnector,
                                          agentSuspensionConnector: AgentSuspensionConnector,
                                          val withMaybePasscode: PasscodeVerification,
-                                         @Named("customDimension") customDimension: String)
+                                         @Named("customDimension") customDimension: String,
+                                         @Named("features.enable-agent-suspension") agentSuspensionEnabled: Boolean)
                                        (implicit val externalUrls: ExternalUrls,
                                         configuration: Configuration, ec: ExecutionContext, messagesApi: MessagesApi)
   extends AgentServicesBaseController {
@@ -43,10 +44,14 @@ class AgentServicesController @Inject()(
 
   val root: Action[AnyContent] = Action.async { implicit request =>
     withAuthorisedAsAgent { agentInfo =>
-      agentSuspensionConnector.getSuspensionStatus(agentInfo.arn).map {
-        case AgentSuspensionResponse("Suspended", Some(ss)) => Redirect(routes.AgentServicesController.showSuspendedWarning())
-          .flashing("suspendedServices" -> ss.mkString(","))
-        case AgentSuspensionResponse("NotSuspended", _) => Redirect(routes.AgentServicesController.showAgentServicesAccount())
+      if(agentSuspensionEnabled) {
+        agentSuspensionConnector.getSuspensionStatus(agentInfo.arn).map {
+          case AgentSuspensionResponse("Suspended", Some(ss)) => Redirect(routes.AgentServicesController.showSuspendedWarning())
+            .flashing("suspendedServices" -> ss.mkString(","))
+          case AgentSuspensionResponse("NotSuspended", _) => Redirect(routes.AgentServicesController.showAgentServicesAccount())
+        }
+      }else {
+        Future successful Redirect(routes.AgentServicesController.showAgentServicesAccount())
       }
     }
   }

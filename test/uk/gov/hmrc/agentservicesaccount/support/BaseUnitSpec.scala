@@ -31,12 +31,12 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class BaseUnitSpec
     extends UnitSpec with Matchers with OptionValues with MockitoSugar with GuiceOneAppPerSuite with BeforeAndAfterEach
-    with ResettingMockitoSugar {
+    with ResettingMockitoSugar with WireMockSupport {
 
   override implicit lazy val app: Application = appBuilder.build()
 
   lazy val desConnector = mock[AgentServicesAccountConnector]
-  lazy val mockSuspensionConnector = mock[AgentSuspensionConnector]
+  lazy val suspensionConnector = app.injector.instanceOf[AgentSuspensionConnector]
 
   lazy implicit val configuration = app.injector.instanceOf[Configuration]
   lazy implicit val env = app.injector.instanceOf[Environment]
@@ -66,4 +66,10 @@ class BaseUnitSpec
 
         override def disable(classes: Seq[Class[_]]) = this
       })
+      .configure(
+        "microservice.services.agent-services-account.port" -> wireMockPort,
+        "microservice.services.auth.port" -> wireMockPort,
+        "microservice.services.agent-suspension.port" -> wireMockPort,
+        "auditing.enabled" -> false
+      )
 }
