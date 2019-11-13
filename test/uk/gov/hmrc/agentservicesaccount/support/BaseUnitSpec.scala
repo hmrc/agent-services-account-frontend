@@ -23,7 +23,7 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.inject.guice.{BinderOption, GuiceApplicationBuilder, GuiceableModule}
 import play.api.{Application, Configuration, Environment}
 import uk.gov.hmrc.agentservicesaccount.FrontendModule
-import uk.gov.hmrc.agentservicesaccount.connectors.{AgentServicesAccountConnector, SsoConnector}
+import uk.gov.hmrc.agentservicesaccount.connectors.{AgentServicesAccountConnector, AgentSuspensionConnector, SsoConnector}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.test.UnitSpec
 
@@ -31,11 +31,12 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class BaseUnitSpec
     extends UnitSpec with Matchers with OptionValues with MockitoSugar with GuiceOneAppPerSuite with BeforeAndAfterEach
-    with ResettingMockitoSugar {
+    with ResettingMockitoSugar with WireMockSupport {
 
   override implicit lazy val app: Application = appBuilder.build()
 
   lazy val desConnector = mock[AgentServicesAccountConnector]
+  lazy val suspensionConnector = app.injector.instanceOf[AgentSuspensionConnector]
 
   lazy implicit val configuration = app.injector.instanceOf[Configuration]
   lazy implicit val env = app.injector.instanceOf[Environment]
@@ -65,4 +66,10 @@ class BaseUnitSpec
 
         override def disable(classes: Seq[Class[_]]) = this
       })
+      .configure(
+        "microservice.services.agent-services-account.port" -> wireMockPort,
+        "microservice.services.auth.port" -> wireMockPort,
+        "microservice.services.agent-suspension.port" -> wireMockPort,
+        "auditing.enabled" -> false
+      )
 }

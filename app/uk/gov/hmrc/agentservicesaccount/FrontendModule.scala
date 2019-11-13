@@ -47,6 +47,7 @@ class FrontendModule(val environment: Environment, val configuration: Configurat
 
     bindProperty("appName")
     bindProperty("customDimension")
+    bindBooleanProperty("features.enable-agent-suspension")
 
     bind(classOf[HttpGet]).to(classOf[DefaultHttpClient])
     bind(classOf[HttpPost]).to(classOf[DefaultHttpClient])
@@ -59,6 +60,7 @@ class FrontendModule(val environment: Environment, val configuration: Configurat
     bindBaseUrl("auth")
     bindBaseUrl("sso")
     bindBaseUrl("agent-services-account")
+    bindBaseUrl("agent-suspension")
     ()
   }
 
@@ -77,40 +79,14 @@ class FrontendModule(val environment: Environment, val configuration: Configurat
       .getOrElse(throw new IllegalStateException(s"No value found for configuration property $confKey"))
   }
 
-  import com.google.inject.binder.ScopedBindingBuilder
-  import com.google.inject.name.Names.named
+  private def bindBooleanProperty(propertyName: String) =
+    bind(classOf[Boolean])
+      .annotatedWith(Names.named(propertyName))
+      .toProvider(new BooleanPropertyProvider(propertyName))
 
-  sealed trait ServiceConfigPropertyType[A] {
-    def bindServiceConfigProperty(clazz: Class[A])(propertyName: String): ScopedBindingBuilder
-  }
-
-  object ServiceConfigPropertyType {
-
-    implicit val stringServiceConfigProperty: ServiceConfigPropertyType[String] = new ServiceConfigPropertyType[String] {
-      def bindServiceConfigProperty(clazz: Class[String])(propertyName: String): ScopedBindingBuilder =
-        bind(clazz).annotatedWith(named(s"$propertyName")).toProvider(new StringServiceConfigPropertyProvider(propertyName))
-
-      private class StringServiceConfigPropertyProvider(propertyName: String) extends Provider[String] {
-        override lazy val get = getConfString(propertyName, throw new RuntimeException(s"No service configuration value found for '$propertyName'"))
-      }
-    }
-
-    implicit val intServiceConfigProperty: ServiceConfigPropertyType[Int] = new ServiceConfigPropertyType[Int] {
-      def bindServiceConfigProperty(clazz: Class[Int])(propertyName: String): ScopedBindingBuilder =
-        bind(clazz).annotatedWith(named(s"$propertyName")).toProvider(new IntServiceConfigPropertyProvider(propertyName))
-
-      private class IntServiceConfigPropertyProvider(propertyName: String) extends Provider[Int] {
-        override lazy val get = getConfInt(propertyName, throw new RuntimeException(s"No service configuration value found for '$propertyName'"))
-      }
-    }
-
-    implicit val booleanServiceConfigProperty: ServiceConfigPropertyType[Boolean] = new ServiceConfigPropertyType[Boolean] {
-      def bindServiceConfigProperty(clazz: Class[Boolean])(propertyName: String): ScopedBindingBuilder =
-        bind(clazz).annotatedWith(named(s"$propertyName")).toProvider(new BooleanServiceConfigPropertyProvider(propertyName))
-
-      private class BooleanServiceConfigPropertyProvider(propertyName: String) extends Provider[Boolean] {
-        override lazy val get = getConfBool(propertyName, false)
-      }
-    }
+  private class BooleanPropertyProvider(confKey: String) extends Provider[Boolean] {
+    override lazy val get: Boolean = configuration
+      .getBoolean(confKey)
+      .getOrElse(throw new IllegalStateException(s"No value found for configuration property $confKey"))
   }
 }
