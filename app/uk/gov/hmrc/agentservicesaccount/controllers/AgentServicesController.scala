@@ -47,7 +47,7 @@ class AgentServicesController @Inject()(
       if(agentSuspensionEnabled) {
         agentSuspensionConnector.getSuspensionStatus(agentInfo.arn).map {
           case AgentSuspensionResponse("Suspended", Some(ss)) => Redirect(routes.AgentServicesController.showSuspendedWarning())
-            .flashing("suspendedServices" -> ss.mkString(","))
+            .addingToSession("suspendedServices" -> ss.mkString(","))
           case AgentSuspensionResponse("NotSuspended", _) => Redirect(routes.AgentServicesController.showAgentServicesAccount())
         }
       }else {
