@@ -18,9 +18,9 @@
 @import play.api.Configuration
 @import uk.gov.hmrc.agentservicesaccount.controllers.routes
 
-@(isAdmin: Boolean)(implicit messages: Messages, flash: Flash, request: Request[_], externalUrls: ExternalUrls, configuration: Configuration)
+@(isAdmin: Boolean)(implicit messages: Messages, request: Request[_], externalUrls: ExternalUrls, configuration: Configuration)
 
-@suspendedServices = @{flash.get("suspendedServices").getOrElse("").split(',').toSet}
+@suspendedServices = @{request.session.get("suspendedServices").getOrElse("").split(',').toSet}
 
 @uk.gov.hmrc.agentservicesaccount.views.html.main_template(title = Messages("suspension-warning.header"), mainClass = Some("govuk-main-wrapper"), analyticsAdditionalJs = None, isAdmin = isAdmin) {
 
@@ -29,14 +29,14 @@
 
     @if(suspendedServices.size == 1) {
         <p>
-            @Messages("suspension-warning.p2.single", Messages(s"suspension-warning.${suspendedServices.head}"))
+            @Messages("suspension-warning.p2.single", Messages(s"suspension-warning.single.${suspendedServices.head}"))
         </p>
 
     } else {
         <p>@Messages("suspension-warning.p2.multi")</p>
         <ul class="list list-bullet">
             @for(suspendedService <- suspendedServices) {
-                <li>@Messages(s"suspension-warning.${suspendedService}")</li>
+                <li>@Messages(s"suspension-warning.multi.${suspendedService}")</li>
             }
         </ul>
     }

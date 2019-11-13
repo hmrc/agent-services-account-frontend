@@ -176,7 +176,7 @@ class AgentServicesControllerSpec extends BaseUnitSpec {
     "return Ok and show the suspension warning page" in {
       val controller = new AgentServicesController(authActions, desConnector, suspensionConnector, NoPasscodeVerification, "", true)
 
-      val response = controller.showSuspendedWarning()(FakeRequest("GET", "/home").withFlash("suspendedServices" -> "HMRC-MTD-IT,HMRC-MTD-VAT"))
+      val response = controller.showSuspendedWarning()(FakeRequest("GET", "/home").withSession("suspendedServices" -> "HMRC-MTD-IT,HMRC-MTD-VAT"))
 
       status(response) shouldBe OK
       contentType(response).get shouldBe HTML
@@ -185,8 +185,8 @@ class AgentServicesControllerSpec extends BaseUnitSpec {
       content should include(messagesApi("suspension-warning.header"))
       content should include(messagesApi("suspension-warning.p1"))
       content should include(messagesApi("suspension-warning.p2.multi"))
-      content should include(messagesApi("suspension-warning.HMRC-MTD-IT"))
-      content should include(messagesApi("suspension-warning.HMRC-MTD-VAT"))
+      content should include(messagesApi("suspension-warning.multi.HMRC-MTD-IT"))
+      content should include(messagesApi("suspension-warning.multi.HMRC-MTD-VAT"))
       content should include(messagesApi("suspension-warning.p3"))
       content should include(htmlEscapedMessage("suspension-warning.p4"))
       content should include(messagesApi("suspension-warning.button"))
