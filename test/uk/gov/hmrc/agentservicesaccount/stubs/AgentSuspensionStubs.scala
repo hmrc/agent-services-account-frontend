@@ -24,12 +24,12 @@ import uk.gov.hmrc.agentservicesaccount.models.SuspensionResponse
 
 object AgentSuspensionStubs {
 
-  def givenSuspensionStatus(arn: Arn, suspendedServices: SuspensionResponse): StubMapping =
+  def givenSuspensionStatus(arn: Arn, suspensionResponse: SuspensionResponse): StubMapping =
     stubFor(get(urlEqualTo(s"/agent-suspension/status/arn/${arn.value}"))
     .willReturn(
       aResponse()
         .withStatus(200)
-        .withBody(Json.toJson(suspendedServices).toString())
+        .withBody(Json.toJson(suspensionResponse).toString())
     ))
 
   def givenSuspensionStatusNotFound(arn: Arn): StubMapping =
