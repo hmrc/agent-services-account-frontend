@@ -20,25 +20,19 @@ import java.net.URL
 
 import javax.inject.{Inject, Named}
 import play.api.Logger
-import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
+import uk.gov.hmrc.agentservicesaccount.models.SuspensionResponse
 import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, NotFoundException}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-case class AgentSuspensionResponse(status: String, suspendedServices: Option[Set[String]] = None)
-
-object AgentSuspensionResponse {
-  implicit val formats: OFormat[AgentSuspensionResponse] = Json.format
-}
-
 class AgentSuspensionConnector @Inject()(@Named("agent-suspension-baseUrl") baseUrl: URL, http: HttpGet) {
 
-  def getSuspensionStatus(arn: Arn)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AgentSuspensionResponse] = {
-    http.GET[AgentSuspensionResponse](new URL(baseUrl, s"/agent-suspension/status/arn/${arn.value}").toString)
+  def getSuspensionStatus(arn: Arn)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[SuspensionResponse] = {
+    http.GET[SuspensionResponse](new URL(baseUrl, s"/agent-suspension/status/arn/${arn.value}").toString)
   } recoverWith {
     case ex: NotFoundException =>
       Logger.warn("unable to retrieve suspension status")
-      throw ex
+      Future successful SuspensionResponse(Set.empty)
   }
 }
