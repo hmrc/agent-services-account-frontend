@@ -27,9 +27,9 @@ import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.auth.{AgentInfo, AuthActions, PasscodeVerification}
 import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
-import uk.gov.hmrc.agentservicesaccount.connectors.AgentSuspensionResponse
-import uk.gov.hmrc.agentservicesaccount.support.BaseUnitSpec
+import uk.gov.hmrc.agentservicesaccount.models.SuspensionResponse
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentSuspensionStubs._
+import uk.gov.hmrc.agentservicesaccount.support.BaseUnitSpec
 import uk.gov.hmrc.auth.core.{Admin, Enrolment, EnrolmentIdentifier}
 import uk.gov.hmrc.http.HeaderCarrier
 
@@ -82,7 +82,7 @@ class AgentServicesControllerSpec extends BaseUnitSpec {
     }
 
     "redirect to agent service account when suspension is enabled but user is not suspended" in {
-      givenSuspensionStatus(Arn(arn), AgentSuspensionResponse("NotSuspended"))
+      givenSuspensionStatus(Arn(arn), SuspensionResponse(Set.empty))
       val controller = new AgentServicesController(authActions, desConnector, suspensionConnector, NoPasscodeVerification, "", true)
 
       val response = controller.root()(FakeRequest("GET", "/"))
@@ -92,7 +92,7 @@ class AgentServicesControllerSpec extends BaseUnitSpec {
     }
 
     "redirect to suspended warning when suspension is enables and user is suspended" in {
-      givenSuspensionStatus(Arn(arn), AgentSuspensionResponse("Suspended", Some(Set("HMRC-MTD-IT"))))
+      givenSuspensionStatus(Arn(arn), SuspensionResponse(Set("HMRC-MTD-IT")))
       val controller = new AgentServicesController(authActions, desConnector, suspensionConnector, NoPasscodeVerification, "", true)
 
       val response = controller.root()(FakeRequest("GET", "/"))

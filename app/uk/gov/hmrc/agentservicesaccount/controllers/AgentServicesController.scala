@@ -18,12 +18,12 @@ package uk.gov.hmrc.agentservicesaccount.controllers
 
 import javax.inject._
 import play.api.i18n.MessagesApi
-import play.api.mvc.{Action, AnyContent, Flash}
+import play.api.mvc.{Action, AnyContent}
 import play.api.{Configuration, Logger}
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.auth.{AuthActions, PasscodeVerification}
 import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
-import uk.gov.hmrc.agentservicesaccount.connectors.{AgentServicesAccountConnector, AgentSuspensionConnector, AgentSuspensionResponse}
+import uk.gov.hmrc.agentservicesaccount.connectors.{AgentServicesAccountConnector, AgentSuspensionConnector}
 import uk.gov.hmrc.agentservicesaccount.views.html.pages._
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -44,13 +44,14 @@ class AgentServicesController @Inject()(
 
   val root: Action[AnyContent] = Action.async { implicit request =>
     withAuthorisedAsAgent { agentInfo =>
-      if(agentSuspensionEnabled) {
+      if (agentSuspensionEnabled) {
         agentSuspensionConnector.getSuspensionStatus(agentInfo.arn).map {
-          case AgentSuspensionResponse("Suspended", Some(ss)) => Redirect(routes.AgentServicesController.showSuspendedWarning())
-            .addingToSession("suspendedServices" -> ss.mkString(","))
-          case AgentSuspensionResponse("NotSuspended", _) => Redirect(routes.AgentServicesController.showAgentServicesAccount())
+          suspendedServices =>
+            if (suspendedServices.isEmpty) Redirect(routes.AgentServicesController.showAgentServicesAccount())
+            else Redirect(routes.AgentServicesController.showSuspendedWarning())
+              .addingToSession("suspendedServices" -> suspendedServices.toString)
         }
-      }else {
+      } else {
         Future successful Redirect(routes.AgentServicesController.showAgentServicesAccount())
       }
     }
@@ -67,9 +68,9 @@ class AgentServicesController @Inject()(
 
   val showSuspendedWarning: Action[AnyContent] = Action.async { implicit request =>
     withAuthorisedAsAgent { agentInfo =>
-        Future successful Ok(suspension_warning(agentInfo.isAdmin))
-      }
+      Future successful Ok(suspension_warning(agentInfo.isAdmin))
     }
+  }
 
   val manageAccount: Action[AnyContent] = Action.async { implicit request =>
     withMaybePasscode { _ =>
