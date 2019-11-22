@@ -22,7 +22,7 @@
 
 @suspendedServices = @{request.session.get("suspendedServices").getOrElse("").split(',').toSet}
 
-@uk.gov.hmrc.agentservicesaccount.views.html.main_template(title = Messages("suspension-warning.header"), mainClass = Some("govuk-main-wrapper"), analyticsAdditionalJs = None, isAdmin = isAdmin) {
+@uk.gov.hmrc.agentservicesaccount.views.html.main_template(title = Messages("suspension-warning.header"), mainClass = Some("govuk-main-wrapper two-thirds"), analyticsAdditionalJs = None, isAdmin = isAdmin, hasCustomContent = false) {
 
     <h1 class="heading-xlarge">@Messages("suspension-warning.header")</h1>
     <p>@Messages("suspension-warning.p1")</p>

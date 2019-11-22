@@ -75,7 +75,8 @@ class ViewsSpec extends UnitSpec with GuiceOneAppPerTest {
         messages = Messages.Implicits.applicationMessages,
         configuration = configuration,
         analyticsAdditionalJs = None,
-        isAdmin = false
+        isAdmin = false,
+        hasCustomContent = true
       )
 
       contentAsString(html) should {
@@ -96,7 +97,7 @@ class ViewsSpec extends UnitSpec with GuiceOneAppPerTest {
         Some("bodyClasses"),
         Some("mainClass"),
         None,
-        None, false
+        None, false, true
       )(Html("mainContent"))(FakeRequest(), Messages.Implicits.applicationMessages, configuration)
       hmtl2 should be(html)
     }

@@ -26,7 +26,8 @@
   serviceInfoContent: Html = HtmlFormat.empty,
   scriptElem: Option[Html] = None,
   analyticsAdditionalJs: Option[Html] = None,
-        isAdmin: Boolean = false)(implicit request: Request[_], messages: Messages, configuration: Configuration)
+        isAdmin: Boolean = false,
+        hasCustomContent: Boolean = true)(implicit request: Request[_], messages: Messages, configuration: Configuration)
 
 @import layouts.{govuk_template => hmrcGovUkTemplate}
 @import uk.gov.hmrc.play.views.html.{layouts => uiLayouts}
@@ -94,7 +95,7 @@
 }
 
 
-@serviceInfo  = {
+@customServiceInfo  = {
     <div class="service-info">
         <nav id="secondary-nav" class="account-menu flex-container" role="navigation">
             <a href="@routes.AgentServicesController.root().url" class="account-menu__link account-menu__link--home "><span class="account-icon account-icon--home">@Messages("serviceinfo.home")</span></a>
@@ -102,6 +103,13 @@
             <a href="@routes.SignOutController.signOut().url" class="account-menu__link"><span>@Messages("common.sign-out")</span></a>
         </nav>
     </div>
+}
+
+@serviceInfo = {
+@uiLayouts.serviceInfo(
+    betaBanner = HtmlFormat.empty,
+    includeGridWrapper = false,
+    Some(serviceInfoContent))
 }
 
 @mainContentHeader = {
@@ -114,17 +122,32 @@
 
 @titleSuffix = @{ Messages("servicename.titleSuffix") }
 
-@content = {
+@customContent = {
     @main_content_custom(
       article = mainContent,
       mainClass = mainClass,
       mainDataAttributes = mainDataAttributes,
       mainContentHeader = mainContentHeader,
-      serviceInfo = serviceInfo,
+      serviceInfo = customServiceInfo,
         betaBanner = betaBanner,
       sidebar = sidebar,
       getHelpForm = getHelpForm
     )
 }
 
-@hmrcGovUkTemplate(Some(title + " " + titleSuffix), bodyClasses)(head, bodyEnd, insideHeader, afterHeader, footerTop, Some(uiLayouts.footer_links(additionalLinks = Some(footerLinks))), true)(content)
+@content = {
+@uiLayouts.main_content(
+    article = mainContent,
+    mainClass = mainClass,
+    mainDataAttributes = mainDataAttributes,
+    mainContentHeader = mainContentHeader,
+    serviceInfo = serviceInfo,
+    getHelpForm = getHelpForm,
+    sidebar = sidebar)
+}
+
+    @if(hasCustomContent) {
+    @hmrcGovUkTemplate(Some(title + " " + titleSuffix), bodyClasses)(head, bodyEnd, insideHeader, afterHeader, footerTop, Some(uiLayouts.footer_links(additionalLinks = Some(footerLinks))), true)(customContent)
+}else {
+    @hmrcGovUkTemplate(Some(title + " " + titleSuffix), bodyClasses)(head, bodyEnd, insideHeader, afterHeader, footerTop, Some(uiLayouts.footer_links(additionalLinks = Some(footerLinks))), true)(content)
+}
