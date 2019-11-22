@@ -23,7 +23,7 @@
   mainClass: Option[String] = None,
   scriptElem: Option[Html] = None,
   analyticsAdditionalJs: Option[Html] = None,
-        isAdmin: Boolean = false)(mainContent: Html)(implicit request : Request[_], messages: Messages, configuration: Configuration)
+        isAdmin: Boolean = false, hasCustomContent: Boolean = true)(mainContent: Html)(implicit request : Request[_], messages: Messages, configuration: Configuration)
 
 @import uk.gov.hmrc.play.views.html.layouts
 
@@ -48,5 +48,6 @@
                serviceInfoContent = serviceInfoContent,
                scriptElem = scriptElem,
                analyticsAdditionalJs = analyticsAdditionalJs,
-                isAdmin = isAdmin)
+                isAdmin = isAdmin,
+    hasCustomContent = hasCustomContent)
 
