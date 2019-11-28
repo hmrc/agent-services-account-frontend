@@ -30,7 +30,7 @@ import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
 import uk.gov.hmrc.agentservicesaccount.models.SuspensionResponse
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentSuspensionStubs._
 import uk.gov.hmrc.agentservicesaccount.support.BaseUnitSpec
-import uk.gov.hmrc.auth.core.{Admin, Enrolment, EnrolmentIdentifier}
+import uk.gov.hmrc.auth.core.{Admin, Enrolment, EnrolmentIdentifier, User}
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -63,7 +63,7 @@ class AgentServicesControllerSpec extends BaseUnitSpec {
 
   val authActions: AuthActions = new AuthActions(null, null, null, env, configuration) {
     override def withAuthorisedAsAgent(body: AgentInfo => Future[Result])(implicit ec: ExecutionContext, hc: HeaderCarrier, request: Request[AnyContent]): Future[Result] = {
-      body(AgentInfo(Arn(arn), Some(Admin)))
+      body(AgentInfo(Arn(arn), Some(User)))
     }
   }
 
