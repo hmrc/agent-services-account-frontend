@@ -15,6 +15,10 @@
  *@
 
 @import play.api.Configuration
+@import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
+@import uk.gov.hmrc.play.views.html.layouts
+@import uk.gov.hmrc.agentservicesaccount.controllers.routes
+
 @(title: String,
   navLinks: Option[Html] = None,
   sidebarLinks: Option[Html] = None,
@@ -23,12 +27,34 @@
   mainClass: Option[String] = None,
   scriptElem: Option[Html] = None,
   analyticsAdditionalJs: Option[Html] = None,
-        isAdmin: Boolean = false, hasCustomContent: Boolean = true)(mainContent: Html)(implicit request : Request[_], messages: Messages, configuration: Configuration)
+        isAdmin: Boolean = false,
+        hasCustomContent: Boolean = true,
+        hasTimeout: Boolean = true)(mainContent: Html)(implicit request : Request[_], messages: Messages, configuration: Configuration, externalUrls: ExternalUrls)
 
-@import uk.gov.hmrc.play.views.html.layouts
+
 
 
 @serviceInfoContent = {
+}
+
+@scriptElement = {
+@scriptElem
+@if(hasTimeout) {
+    <script id="timeoutDialog">
+            $.timeoutDialog({
+                timeout: @externalUrls.timeout,
+                countdown: @externalUrls.countdown,
+                keep_alive_url: '@routes.SignOutController.keepAlive()',
+                title: "@Messages("timeout-dialog.title")",
+                messageSeconds: "@Messages("timeout-dialog.seconds")",
+                messageMinutes: "@Messages("timeout-dialog.minutes")",
+                messageMinute: "@Messages("timeout-dialog.minute")",
+                logout_url: '@routes.SignOutController.signOut(timeout = Some("t"))',
+                message: "@Messages("timeout-dialog.p1")",
+                keep_alive_button_text: "@Messages("timeout-dialog.button")"
+            });
+    </script>
+}
 }
 
 @sidebar = {
@@ -46,7 +72,7 @@
                contentHeader = contentHeader,
                mainContent = layouts.article(mainContent),
                serviceInfoContent = serviceInfoContent,
-               scriptElem = scriptElem,
+               scriptElem = Some(scriptElement),
                analyticsAdditionalJs = analyticsAdditionalJs,
                 isAdmin = isAdmin,
     hasCustomContent = hasCustomContent)

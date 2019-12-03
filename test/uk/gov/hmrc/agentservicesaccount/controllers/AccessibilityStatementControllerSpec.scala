@@ -16,16 +16,20 @@
 
 package uk.gov.hmrc.agentservicesaccount.controllers
 
+import play.api.Configuration
 import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import uk.gov.hmrc.agentservicesaccount.support.BaseUnitSpec
 import play.api.test.Helpers._
 import play.mvc.Http.HeaderNames
+import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
 
 class AccessibilityStatementControllerSpec extends BaseUnitSpec {
 
-  val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
-  val controller: AccessibilityStatementController = new AccessibilityStatementController(messagesApi)
+  implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+  implicit val externalUrls: ExternalUrls = app.injector.instanceOf[ExternalUrls]
+
+  val controller: AccessibilityStatementController = new AccessibilityStatementController()(configuration, messagesApi, externalUrls)
 
   "display the accessibility statement with a link to contact frontend to report problem" in {
     val result = controller.showAccessibilityStatement()(FakeRequest().withHeaders(HeaderNames.REFERER -> "foo"))

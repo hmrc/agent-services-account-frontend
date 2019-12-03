@@ -18,9 +18,12 @@ package uk.gov.hmrc.agentservicesaccount.config
 
 import play.api.Configuration
 
-trait RequiredConfigString {
+trait RequiredConfig {
   def configuration: Configuration
 
   protected def getConfigString(path: String): String = configuration.getString(path, None)
     .getOrElse(throw new RuntimeException(s"Required configuration property at path $path not present"))
+
+  protected def getConfigInteger(path: String): Int = configuration.getInt(path).getOrElse(throw new RuntimeException(s"required"))
 }
+

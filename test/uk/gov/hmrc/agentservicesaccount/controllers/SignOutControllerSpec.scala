@@ -19,7 +19,8 @@ package uk.gov.hmrc.agentservicesaccount.controllers
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.Application
+import play.api.i18n.MessagesApi
+import play.api.{Application, Configuration}
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.RequestHeader
 import play.api.test.FakeRequest
@@ -36,14 +37,16 @@ class SignOutControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Mocki
 
   implicit val externalUrls: ExternalUrls = mock[ExternalUrls]
   implicit val requestHeader = RequestHeader
+  implicit val config: Configuration = mock[Configuration]
+  implicit val messagesApi: MessagesApi = mock[MessagesApi]
 
   "SignOutController" should {
     "remove session and redirect to /gg/sign-out" in {
-      val signOutController = new SignOutController(externalUrls)
+      val signOutController = new SignOutController()(externalUrls,config, messagesApi)
       val signOutUrl = "http://example.com/gg/sign-out?continue=http://example.com/go-here-after-sign-out"
       when(externalUrls.signOutUrl).thenReturn(signOutUrl)
 
-      val request = signOutController.signOut(FakeRequest("GET", "/")).withSession("otacTokenParam" -> "token")
+      val request = signOutController.signOut(timeout = None)(FakeRequest("GET","/")).withSession("otacTokenParam" -> "token")
 
       status(request) shouldBe 303
       redirectLocation(request).get shouldBe externalUrls.signOutUrl
