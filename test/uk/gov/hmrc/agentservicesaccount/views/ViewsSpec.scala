@@ -58,19 +58,6 @@ class ViewsSpec extends UnitSpec with GuiceOneAppPerTest {
     }
   }
 
- /* (title: String,
-    navLinks: Option[Html] = None,
-  sidebarLinks: Option[Html] = None,
-  contentHeader: Option[Html] = None,
-  bodyClasses: Option[String] = None,
-  mainClass: Option[String] = None,
-  scriptElem: Option[Html] = None,
-  analyticsAdditionalJs: Option[Html] = None,
-  isAdmin: Boolean = false,
-  hasCustomContent: Boolean = true,
-  hasTimeout: Boolean = true)(mainContent: Html)(implicit request : Request[_], messages: Messages, configuration: Configuration, externalUrls: ExternalUrls)
-
-*/
   "main_template view" should {
 
     "render title, header, sidebar and main content" in new PlainAppConfig {
