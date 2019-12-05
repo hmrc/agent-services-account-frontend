@@ -42,7 +42,7 @@
             time: strings.time[lang],
             timeSingular: strings.time_singular[lang],
             title: strings.title[lang],
-            message: '',
+            message: strings.message[lang],
             timed_out_url: '',
             keep_alive_url: '',
             logout_url: '',
