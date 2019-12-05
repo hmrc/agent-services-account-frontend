@@ -44,12 +44,12 @@ class SignOutControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Mocki
     "remove session and redirect to /gg/sign-out" in {
       val signOutController = new SignOutController()(externalUrls,config, messagesApi)
       val signOutUrl = "http://example.com/gg/sign-out?continue=http://example.com/go-here-after-sign-out"
-      when(externalUrls.signOutUrl).thenReturn(signOutUrl)
+      when(externalUrls.signOutUrlWithSurvey).thenReturn(signOutUrl)
 
       val request = signOutController.signOut(timeout = None)(FakeRequest("GET","/")).withSession("otacTokenParam" -> "token")
 
       status(request) shouldBe 303
-      redirectLocation(request).get shouldBe externalUrls.signOutUrl
+      redirectLocation(request).get shouldBe externalUrls.signOutUrlWithSurvey
       request.header.headers.get("otacTokenParam") shouldBe empty
     }
   }

@@ -29,11 +29,16 @@ import scala.concurrent.Future
 class SignOutController @Inject()(implicit val externalUrls: ExternalUrls, configuration: Configuration, val messagesApi: MessagesApi)
   extends FrontendController with I18nSupport {
 
-  def signOut(timeout: Option[String]): Action[AnyContent] = Action.async { implicit request =>
-    timeout.fold {
-      Future successful Redirect(externalUrls.signOutUrl).removingFromSession("otacTokenParam")
-    } { _ => Future successful Forbidden(signed_out(s"${externalUrls.continueFromGGSignIn}")).withNewSession
-    }
+  def signOut: Action[AnyContent] = Action.async { implicit request =>
+      Future successful Redirect(externalUrls.signOutUrlWithSurvey).removingFromSession("otacTokenParam")
+  }
+
+  def signedOut = Action.async { implicit request =>
+    Future successful Redirect(externalUrls.continueFromGGSignIn).withNewSession
+  }
+
+  def timedOut = Action.async { implicit request =>
+    Future successful Forbidden(signed_out(externalUrls.continueFromGGSignIn)).withNewSession
   }
 
   def keepAlive: Action[AnyContent] = Action.async { implicit request =>

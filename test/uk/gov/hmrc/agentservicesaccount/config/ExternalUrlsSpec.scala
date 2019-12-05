@@ -65,7 +65,7 @@ class ExternalUrlsSpec extends UnitSpec with ResettingMockitoSugar {
   "signOutUrl" should {
     "return the sign out URL including continue parameter" in {
       mockConfig()
-      externalUrls.signOutUrl shouldBe completeGgSignOutUrl
+      externalUrls.getSignOutUrlWithSurvey shouldBe completeGgSignOutUrl
     }
   }
 

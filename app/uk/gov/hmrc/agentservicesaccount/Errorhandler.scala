@@ -22,6 +22,7 @@ import play.api.i18n.{Messages, MessagesApi}
 import play.api.mvc.Results._
 import play.api.mvc.{Request, RequestHeader, Result}
 import play.api.{Configuration, Environment, Mode}
+import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
 import uk.gov.hmrc.agentservicesaccount.views.html.error_template
 import uk.gov.hmrc.auth.core.{InsufficientEnrolments, NoActiveSession}
 import uk.gov.hmrc.http.{JsValidationException, NotFoundException}
@@ -37,7 +38,7 @@ class ErrorHandler @Inject() (
                                val env: Environment,
                                val messagesApi: MessagesApi,
                                val auditConnector: AuditConnector,
-                               @Named("appName") val appName: String)(implicit val config: Configuration, ec: ExecutionContext)
+                               @Named("appName") val appName: String)(implicit val config: Configuration, ec: ExecutionContext, externalUrls: ExternalUrls)
   extends FrontendErrorHandler with AuthRedirects with ErrorAuditing {
 
   private val isDevEnv = if (env.mode.equals(Mode.Test)) false else config.getString("run.mode").forall(Mode.Dev.toString.equals)
