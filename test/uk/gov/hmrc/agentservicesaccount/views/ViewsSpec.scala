@@ -16,11 +16,11 @@
 
 package uk.gov.hmrc.agentservicesaccount.views
 
+import org.jsoup.Jsoup
 import org.scalatestplus.play.guice.GuiceOneAppPerTest
 import play.api.i18n.Messages
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
-import org.jsoup.Jsoup
 import play.api.test.Helpers._
 import play.api.{Application, Configuration}
 import play.twirl.api.Html
@@ -29,6 +29,7 @@ import uk.gov.hmrc.agentservicesaccount.views.html.error_template_Scope0.error_t
 import uk.gov.hmrc.agentservicesaccount.views.html.main_template_Scope0.main_template_Scope1.main_template
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.agent_services_account_Scope0.agent_services_account_Scope1.agent_services_account
 import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.agentservicesaccount.views.html.govuk_wrapper_Scope0.govuk_wrapper_Scope1.govuk_wrapper
 
 class ViewsSpec extends UnitSpec with GuiceOneAppPerTest {
   trait PlainAppConfig {
@@ -43,7 +44,7 @@ class ViewsSpec extends UnitSpec with GuiceOneAppPerTest {
       val view = new error_template()
       val html = view.render(
         "My custom page title", "My custom heading", "My custom message",
-        FakeRequest(), Messages.Implicits.applicationMessages, config)
+        FakeRequest(), Messages.Implicits.applicationMessages, config, _externalUrls)
 
       contentAsString(html) should {
         include("My custom page title") and
@@ -52,9 +53,42 @@ class ViewsSpec extends UnitSpec with GuiceOneAppPerTest {
       }
 
       val hmtl2 = view.f("My custom page title", "My custom heading", "My custom message")(
-        FakeRequest(), Messages.Implicits.applicationMessages, config
+        FakeRequest(), Messages.Implicits.applicationMessages, config, _externalUrls
       )
       hmtl2 should be(html)
+    }
+  }
+
+  "govuk_wrapper view" should {
+    "render content" in new PlainAppConfig {
+      val view = new govuk_wrapper()
+
+      val html = view.render(
+        title = "My custom page title", mainClass = Some("main class"), mainDataAttributes = Some(Html("main data attributes")),
+        bodyClasses = Some("body-classes"), navLinks = Some(Html("nav_links")), sidebar = Html("sideBar"),
+        contentHeader = Some(Html("content-header")), mainContent = Html("mainContent"), serviceInfoContent = Html("serviceInfoContent"),
+        scriptElem = Some(Html("scriptElem")), analyticsAdditionalJs = Option(Html("additional-js")), isAdmin = false,
+        hasCustomContent = false, hasTimeout = true, request = FakeRequest(), messages = Messages.Implicits.applicationMessages,
+        configuration = config, externalUrls = _externalUrls
+      )
+
+      contentAsString(html) should {
+        include("My custom page title")
+        include("main class") and
+          include("main data attributes") and
+          include("body-classes") and
+          include("nav_links")
+        include("sideBar") and
+          include("content-header") and
+          include("mainContent") and
+          include("serviceInfoContent") and
+          include("scriptElem")
+      }
+
+
+      val doc = Jsoup.parse(contentAsString(html))
+
+      doc.getElementById("timeoutDialog").isBlock shouldBe true
     }
   }
 
@@ -93,10 +127,6 @@ class ViewsSpec extends UnitSpec with GuiceOneAppPerTest {
           include("bodyClasses") and
           include("mainClass")
       }
-
-      val doc = Jsoup.parse(contentAsString(html))
-
-      doc.getElementById("timeoutDialog").isBlock shouldBe true
 
       val hmtl2 = view.f(
         "My custom page title",

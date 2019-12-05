@@ -46,10 +46,22 @@ class SignOutControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Mocki
       val signOutUrl = "http://example.com/gg/sign-out?continue=http://example.com/go-here-after-sign-out"
       when(externalUrls.signOutUrlWithSurvey).thenReturn(signOutUrl)
 
-      val request = signOutController.signOut(timeout = None)(FakeRequest("GET","/")).withSession("otacTokenParam" -> "token")
+      val request = signOutController.signOut(FakeRequest("GET","/")).withSession("otacTokenParam" -> "token")
 
       status(request) shouldBe 303
       redirectLocation(request).get shouldBe externalUrls.signOutUrlWithSurvey
+      request.header.headers.get("otacTokenParam") shouldBe empty
+    }
+
+    "/signed-out redirect to GG sign in with continue url back to /agent-services-account" in {
+      val signOutController = new SignOutController()(externalUrls, config, messagesApi)
+      val signedOutUrl = "http://example.com/gg/sign-out?continue=http://example.com/go-here-after-sign-out"
+      when(externalUrls.continueFromGGSignIn).thenReturn(signedOutUrl)
+
+      val request = signOutController.signedOut(FakeRequest("GET","/")).withSession("otacTokenParam" -> "token")
+
+      status(request) shouldBe 303
+      redirectLocation(request).get shouldBe externalUrls.continueFromGGSignIn
       request.header.headers.get("otacTokenParam") shouldBe empty
     }
   }
