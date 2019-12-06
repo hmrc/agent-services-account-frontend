@@ -135,11 +135,6 @@ accessibility.statement.howtested.p2=The full service was tested by HMRC and inc
 accessibility.statement.howtested.p3=This page was prepared on 23 September 2019. It was last updated on 23 September 2019.
 
 #session time out
-timeout-dialog.title=You are about to be signed out
-timeout-dialog.seconds=seconds
-timeout-dialog.minutes=minutes
-timeout-dialog.minute=minute
-timeout-dialog.button=Stay signed in
 timeout-dialog.p1=For security reasons, you will be signed out of your Agent services account in
 
 #signed-out

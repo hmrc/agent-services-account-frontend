@@ -35,7 +35,7 @@ class ViewsSpec extends UnitSpec with GuiceOneAppPerTest {
   trait PlainAppConfig {
     implicit lazy val app: Application = new GuiceApplicationBuilder().configure("metrics.jvm" -> false, "metrics.logback" -> false).build()
     lazy val config = app.injector.instanceOf[Configuration]
-    lazy val _externalUrls = app.injector.instanceOf[ExternalUrls]
+    lazy val externalUrls = app.injector.instanceOf[ExternalUrls]
   }
 
   "error_template view" should {
@@ -44,16 +44,16 @@ class ViewsSpec extends UnitSpec with GuiceOneAppPerTest {
       val view = new error_template()
       val html = view.render(
         "My custom page title", "My custom heading", "My custom message",
-        FakeRequest(), Messages.Implicits.applicationMessages, config, _externalUrls)
+        FakeRequest(), Messages.Implicits.applicationMessages, config, externalUrls)
 
       contentAsString(html) should {
-        include("My custom page title") and
+          include("My custom page title") and
           include("My custom heading") and
           include("My custom message")
       }
 
       val hmtl2 = view.f("My custom page title", "My custom heading", "My custom message")(
-        FakeRequest(), Messages.Implicits.applicationMessages, config, _externalUrls
+        FakeRequest(), Messages.Implicits.applicationMessages, config, externalUrls
       )
       hmtl2 should be(html)
     }
@@ -69,16 +69,16 @@ class ViewsSpec extends UnitSpec with GuiceOneAppPerTest {
         contentHeader = Some(Html("content-header")), mainContent = Html("mainContent"), serviceInfoContent = Html("serviceInfoContent"),
         scriptElem = Some(Html("scriptElem")), analyticsAdditionalJs = Option(Html("additional-js")), isAdmin = false,
         hasCustomContent = false, hasTimeout = true, request = FakeRequest(), messages = Messages.Implicits.applicationMessages,
-        configuration = config, externalUrls = _externalUrls
+        configuration = config, externalUrls = externalUrls
       )
 
       contentAsString(html) should {
-        include("My custom page title")
-        include("main class") and
+          include("My custom page title")
+          include("main class") and
           include("main data attributes") and
           include("body-classes") and
           include("nav_links")
-        include("sideBar") and
+          include("sideBar") and
           include("content-header") and
           include("mainContent") and
           include("serviceInfoContent") and
@@ -113,13 +113,13 @@ class ViewsSpec extends UnitSpec with GuiceOneAppPerTest {
         request = FakeRequest(),
         messages = Messages.Implicits.applicationMessages,
         configuration = config,
-        externalUrls = _externalUrls
+        externalUrls = externalUrls
       )
 
       val content = contentAsString(html)
 
       content should {
-        include("My custom page title")
+          include("My custom page title")
           include("sidebarLinks") and
           include("navLinks") and
           include("contentHeader") and
@@ -140,7 +140,7 @@ class ViewsSpec extends UnitSpec with GuiceOneAppPerTest {
         false,
         false,
         true
-      )(Html("mainContent"))(FakeRequest(), Messages.Implicits.applicationMessages, config, _externalUrls)
+      )(Html("mainContent"))(FakeRequest(), Messages.Implicits.applicationMessages, config, externalUrls)
       hmtl2 should be(html)
     }
   }
@@ -149,9 +149,9 @@ class ViewsSpec extends UnitSpec with GuiceOneAppPerTest {
 
     "render the content including the 'Manage account' navbar menu item if the user has the Admin Credential Role" in new PlainAppConfig {
       val view = new agent_services_account()
-      val html = view.render(arn = "ARN0001", isWhitelisted = true, customDimension =  "", isAdmin = true, Messages.Implicits.applicationMessages, FakeRequest(), _externalUrls, config)
+      val html = view.render(arn = "ARN0001", isWhitelisted = true, customDimension =  "", isAdmin = true, Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, config)
       contentAsString(html) should {
-        include("Account home") and
+          include("Account home") and
           include("Manage account") and
           include("Sign out") and
           include("href='http://localhost:9250/contact/beta-feedback?service=AOSS'") and
@@ -165,8 +165,7 @@ class ViewsSpec extends UnitSpec with GuiceOneAppPerTest {
           include("Manage your client&#x27;s VAT details") and
           include("Use this service to update your client’s VAT registration status, business name (if they are a limited company), principal place of business and VAT stagger.") and
           include("View a client&#x27;s PAYE income record") and
-          include("Access a client&#x27;s PAYE income record to help you complete their Self Assessment tax return.") and
-            include("http://localhost:9996/tax-history/select-client") and
+          include("Access a client&#x27;s PAYE income record to help you complete their Self Assessment tax return.") and include("http://localhost:9996/tax-history/select-client") and
           include("Client authorisations") and
           include("Ask a client to authorise you") and
           include("You only need to do this if you have not copied across an existing authorisation from the client.") and
@@ -182,7 +181,7 @@ class ViewsSpec extends UnitSpec with GuiceOneAppPerTest {
 
     "not render the 'Manage account' navbar menu item if the user does not have the Admin Credential Role" in new PlainAppConfig {
       val view = new agent_services_account()
-      val html = view.render(arn = "ARN0001", isWhitelisted = true, customDimension = "", isAdmin = false,  Messages.Implicits.applicationMessages, FakeRequest(), _externalUrls, config)
+      val html = view.render(arn = "ARN0001", isWhitelisted = true, customDimension = "", isAdmin = false,  Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, config)
       contentAsString(html) should not {
         include("Manage account") and
         include("http://localhost:9401/agent-services-account/manage-account")
@@ -191,10 +190,10 @@ class ViewsSpec extends UnitSpec with GuiceOneAppPerTest {
 
     "render invitations link but not income viewer link when not whitelisted" in new PlainAppConfig {
       val view = new agent_services_account()
-      val html = view.render(arn = "ARN0001", isWhitelisted = false, customDimension = "", isAdmin = true, Messages.Implicits.applicationMessages, FakeRequest(), _externalUrls, config)
+      val html = view.render(arn = "ARN0001", isWhitelisted = false, customDimension = "", isAdmin = true, Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, config)
       contentAsString(html) should not include ("http://localhost:9996/tax-history/select-client")
       contentAsString(html) should {
-        include("Track your recent authorisation requests") and
+          include("Track your recent authorisation requests") and
           include("http://localhost:9448/invitations/track")
 
       }
@@ -202,7 +201,7 @@ class ViewsSpec extends UnitSpec with GuiceOneAppPerTest {
 
     "render does not show manage your users link because Agent is Assistant" in new PlainAppConfig {
       val view = new agent_services_account()
-      val html = view.render(arn = "ARN0001", isWhitelisted = true, customDimension =  "", isAdmin = true, Messages.Implicits.applicationMessages, FakeRequest(), _externalUrls, config)
+      val html = view.render(arn = "ARN0001", isWhitelisted = true, customDimension =  "", isAdmin = true, Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, config)
       contentAsString(html) should not {
         include("Manage your users") or
           include("Control who can access your agent services account") or
