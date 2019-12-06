@@ -15,6 +15,7 @@
  *@
 
 @import play.api.Configuration
+@import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
 @(title: String,
   mainClass: Option[String] = None,
   mainDataAttributes: Option[Html] = None,
@@ -27,7 +28,8 @@
   scriptElem: Option[Html] = None,
   analyticsAdditionalJs: Option[Html] = None,
         isAdmin: Boolean = false,
-        hasCustomContent: Boolean = true)(implicit request: Request[_], messages: Messages, configuration: Configuration)
+        hasCustomContent: Boolean = true,
+        hasTimeout: Boolean = true)(implicit request: Request[_], messages: Messages, configuration: Configuration, externalUrls: ExternalUrls)
 
 @import layouts.{govuk_template => hmrcGovUkTemplate}
 @import uk.gov.hmrc.play.views.html.{layouts => uiLayouts}
@@ -42,10 +44,32 @@
 }
 
 @scriptElement = {
+    @scriptElem
     <script src="@controllers.routes.Assets.at("javascripts/ga-events.js")" type="text/javascript"></script>
+            <script src="@controllers.routes.Assets.at("javascripts/session-timeout.js")" type="text/javascript"></script>
+            <script src="@controllers.routes.Assets.at("javascripts/asa-fe.js")" type="text/javascript"></script>
 }
 
 @head = {
+    <script>
+            window.getCookie = function (name) {
+                var match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+                if (match) return match[2];
+            };
+            window.jsConfig = window.jsConfig || {};
+            window.jsConfig.lang = window.getCookie("PLAY_LANG") || "en";
+    </script>
+@if(hasTimeout) {
+    <script id="timeoutDialog">
+            window.jsConfig.timeoutEnabled = true;
+            window.jsConfig.timeout = @{externalUrls.timeout};
+            window.jsConfig.countdown = @{externalUrls.countdown};
+            window.jsConfig.keep_alive_url = "@{routes.SignOutController.keepAlive().url}";
+            window.jsConfig.message = "@{Messages("timeout-dialog.p1")}"
+            window.jsConfig.timed_out_url = "@{routes.SignOutController.timedOut().url}";
+            window.jsConfig.logout_url = "@{routes.SignOutController.signedOut().url}";
+    </script>
+}
     @uiLayouts.head(
       linkElem = None,
       headScripts = Some(headScripts))

@@ -15,6 +15,10 @@
  *@
 
 @import play.api.Configuration
+@import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
+@import uk.gov.hmrc.play.views.html.layouts
+@import uk.gov.hmrc.agentservicesaccount.controllers.routes
+
 @(title: String,
   navLinks: Option[Html] = None,
   sidebarLinks: Option[Html] = None,
@@ -23,12 +27,17 @@
   mainClass: Option[String] = None,
   scriptElem: Option[Html] = None,
   analyticsAdditionalJs: Option[Html] = None,
-        isAdmin: Boolean = false, hasCustomContent: Boolean = true)(mainContent: Html)(implicit request : Request[_], messages: Messages, configuration: Configuration)
+        isAdmin: Boolean = false,
+        hasCustomContent: Boolean = true,
+        hasTimeout: Boolean = true)(mainContent: Html)(implicit request : Request[_], messages: Messages, configuration: Configuration, externalUrls: ExternalUrls)
 
-@import uk.gov.hmrc.play.views.html.layouts
 
 
 @serviceInfoContent = {
+}
+
+@scriptElement = {
+@scriptElem
 }
 
 @sidebar = {
@@ -46,8 +55,9 @@
                contentHeader = contentHeader,
                mainContent = layouts.article(mainContent),
                serviceInfoContent = serviceInfoContent,
-               scriptElem = scriptElem,
+               scriptElem = Some(scriptElement),
                analyticsAdditionalJs = analyticsAdditionalJs,
                 isAdmin = isAdmin,
-    hasCustomContent = hasCustomContent)
+    hasCustomContent = hasCustomContent,
+    hasTimeout = hasTimeout)
 

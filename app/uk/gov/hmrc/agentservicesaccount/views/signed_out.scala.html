@@ -14,16 +14,20 @@
  * limitations under the License.
  *@
 
-@import play.api.Configuration
 @import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
-@(pageTitle: String, heading: String, message: String)(implicit request: Request[_], messages: Messages, configuration: Configuration, externalUrls: ExternalUrls)
 
-@contentHeader = {
-  <h1>@heading</h1>
+@import play.api.Configuration
+@(redirectUrl: String)(implicit request: Request[_], messages: Messages, configuration: Configuration, externalUrls: ExternalUrls)
+
+@timeString=@{
+    val timeout = externalUrls.timeout
+    if(timeout < 60) s"$timeout seconds" else s"${timeout/60} minutes"
 }
 
-@mainContent = {
-  <p>@message</p>
-}
+@uk.gov.hmrc.agentservicesaccount.views.html.main_template(title = Messages("signed-out.header"), hasTimeout = false) {
 
-@govuk_wrapper(title = pageTitle, contentHeader = Some(contentHeader), mainContent = mainContent)
+    <h1 class="heading-xlarge margin-bottom-30">@Messages("signed-out.header")</h1>
+    <p>@Messages("signed-out.p1", timeString)</p>
+
+    <p>@Html(Messages("signed-out.p2", s"${redirectUrl}"))</p>
+}

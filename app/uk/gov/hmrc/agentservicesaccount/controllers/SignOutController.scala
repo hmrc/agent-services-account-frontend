@@ -17,16 +17,31 @@
 package uk.gov.hmrc.agentservicesaccount.controllers
 
 import javax.inject.Inject
-
+import play.api.Configuration
+import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
+import uk.gov.hmrc.agentservicesaccount.views.html.signed_out
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 
 import scala.concurrent.Future
 
-class SignOutController @Inject()(externalUrls: ExternalUrls) extends FrontendController {
+class SignOutController @Inject()(implicit val externalUrls: ExternalUrls, configuration: Configuration, val messagesApi: MessagesApi)
+  extends FrontendController with I18nSupport {
 
-  val signOut: Action[AnyContent] = Action.async { implicit request =>
-      Future successful Redirect(externalUrls.signOutUrl).removingFromSession("otacTokenParam")
+  def signOut: Action[AnyContent] = Action.async { implicit request =>
+      Future successful Redirect(externalUrls.signOutUrlWithSurvey).removingFromSession("otacTokenParam")
+  }
+
+  def signedOut = Action.async { implicit request =>
+    Future successful Redirect(externalUrls.continueFromGGSignIn).withNewSession
+  }
+
+  def timedOut = Action.async { implicit request =>
+    Future successful Forbidden(signed_out(externalUrls.continueFromGGSignIn)).withNewSession
+  }
+
+  def keepAlive: Action[AnyContent] = Action.async { implicit request =>
+    Future successful Ok("OK")
   }
 }

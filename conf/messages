@@ -134,6 +134,14 @@ accessibility.statement.howtested.p1=The service was last tested on 22 August 20
 accessibility.statement.howtested.p2=The full service was tested by HMRC and included disabled users.
 accessibility.statement.howtested.p3=This page was prepared on 23 September 2019. It was last updated on 23 September 2019.
 
+#session time out
+timeout-dialog.p1=For security reasons, you will be signed out of your Agent services account in
+
+#signed-out
+signed-out.header=You have been signed out
+signed-out.p1=You have not done anything for {0}, so we have signed you out to keep your account secure.
+signed-out.p2=<a href="{0}">Sign in again</a> to use this service.
+
 
 # Accessibility link
 footer.links.accessibility.text=Accessibility

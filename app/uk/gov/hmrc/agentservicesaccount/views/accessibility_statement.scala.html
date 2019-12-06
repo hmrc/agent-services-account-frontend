@@ -16,7 +16,8 @@
 
 @import play.api.Configuration
 
-@()(implicit messages: Messages, request: Request[_], configuration: Configuration)
+@import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
+@()(implicit messages: Messages, request: Request[_], configuration: Configuration, externalUrls: ExternalUrls)
 
 @userAction = @{request.headers.get("referer").getOrElse("")}
 

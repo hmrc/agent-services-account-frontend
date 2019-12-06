@@ -20,10 +20,12 @@ import javax.inject.Inject
 import play.api.Configuration
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent}
+import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
 import uk.gov.hmrc.agentservicesaccount.views.html._
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 
-class AccessibilityStatementController @Inject()(val messagesApi: MessagesApi)(implicit val configuration: Configuration) extends FrontendController with I18nSupport {
+class AccessibilityStatementController @Inject()
+(implicit val configuration: Configuration, val messagesApi: MessagesApi, externalUrls: ExternalUrls) extends FrontendController with I18nSupport {
 
   def showAccessibilityStatement: Action[AnyContent] = Action { implicit request =>
     Ok(accessibility_statement())

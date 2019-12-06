@@ -5,6 +5,10 @@ GET        /assets/*file                   controllers.Assets.at(path="/public",
 GET        /                               @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController.root()
 GET        /home                           @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController.showAgentServicesAccount()
 GET        /access-removed                 @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController.showSuspendedWarning()
-GET        /sign-out                       @uk.gov.hmrc.agentservicesaccount.controllers.SignOutController.signOut
+GET        /sign-out                       @uk.gov.hmrc.agentservicesaccount.controllers.SignOutController.signOut()
+
+GET        /signed-out                     @uk.gov.hmrc.agentservicesaccount.controllers.SignOutController.signedOut()
+GET        /timed-out                      @uk.gov.hmrc.agentservicesaccount.controllers.SignOutController.timedOut()
+GET        /keep-alive                     @uk.gov.hmrc.agentservicesaccount.controllers.SignOutController.keepAlive
 GET        /manage-account                 @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController.manageAccount
 GET        /accessibility-statement        @uk.gov.hmrc.agentservicesaccount.controllers.AccessibilityStatementController.showAccessibilityStatement
