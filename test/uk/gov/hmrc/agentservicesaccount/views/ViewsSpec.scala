@@ -30,10 +30,11 @@ import uk.gov.hmrc.agentservicesaccount.views.html.main_template_Scope0.main_tem
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.agent_services_account_Scope0.agent_services_account_Scope1.agent_services_account
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.agentservicesaccount.views.html.govuk_wrapper_Scope0.govuk_wrapper_Scope1.govuk_wrapper
+import uk.gov.hmrc.agentservicesaccount.views.html.signed_out_Scope0.signed_out_Scope1.signed_out
 
 class ViewsSpec extends UnitSpec with GuiceOneAppPerTest {
   trait PlainAppConfig {
-    implicit lazy val app: Application = new GuiceApplicationBuilder().configure("metrics.jvm" -> false, "metrics.logback" -> false).build()
+    implicit lazy val app: Application = new GuiceApplicationBuilder().configure("metrics.jvm" -> false, "metrics.logback" -> false, "timeoutDialog.timeout-seconds" -> 900).build()
     lazy val config = app.injector.instanceOf[Configuration]
     lazy val externalUrls = app.injector.instanceOf[ExternalUrls]
   }
@@ -142,6 +143,22 @@ class ViewsSpec extends UnitSpec with GuiceOneAppPerTest {
         true
       )(Html("mainContent"))(FakeRequest(), Messages.Implicits.applicationMessages, config, externalUrls)
       hmtl2 should be(html)
+    }
+  }
+
+  "signed_out view" should {
+    "render the content based on the timeout config" in new PlainAppConfig {
+      val view = new signed_out()
+      val timeout = externalUrls.timeout
+      val html = view.render(redirectUrl = "/redirect", request = FakeRequest(), messages = Messages.Implicits.applicationMessages, configuration = config, externalUrls = externalUrls)
+
+      val content = contentAsString(html)
+
+      content should {
+        include("You have been signed out") and
+        include("You have not done anything for 15 minutes, so we have signed you out to keep your account secure.") and
+        include("<a href=\"/redirect\">Sign in again</a> to use this service.")
+      }
     }
   }
 
