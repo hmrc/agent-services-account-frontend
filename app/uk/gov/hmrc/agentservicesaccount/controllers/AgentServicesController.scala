@@ -23,7 +23,7 @@ import play.api.{Configuration, Logger}
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.auth.{AuthActions, PasscodeVerification}
 import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
-import uk.gov.hmrc.agentservicesaccount.connectors.{AgentServicesAccountConnector, AgentSuspensionConnector}
+import uk.gov.hmrc.agentservicesaccount.connectors.AgentSuspensionConnector
 import uk.gov.hmrc.agentservicesaccount.views.html.pages._
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -31,7 +31,6 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class AgentServicesController @Inject()(
                                          authActions: AuthActions,
-                                         asaConnector: AgentServicesAccountConnector,
                                          agentSuspensionConnector: AgentSuspensionConnector,
                                          val withMaybePasscode: PasscodeVerification,
                                          @Named("customDimension") customDimension: String,
