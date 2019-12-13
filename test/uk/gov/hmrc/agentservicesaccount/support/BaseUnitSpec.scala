@@ -17,13 +17,13 @@
 package uk.gov.hmrc.agentservicesaccount.support
 
 import com.kenshoo.play.metrics.Metrics
-import org.scalatestplus.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfterEach, Matchers, OptionValues}
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.inject.guice.{BinderOption, GuiceApplicationBuilder, GuiceableModule}
 import play.api.{Application, Configuration, Environment}
 import uk.gov.hmrc.agentservicesaccount.FrontendModule
-import uk.gov.hmrc.agentservicesaccount.connectors.{AgentServicesAccountConnector, AgentSuspensionConnector, SsoConnector}
+import uk.gov.hmrc.agentservicesaccount.connectors.{AgentSuspensionConnector, SsoConnector}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.test.UnitSpec
 
@@ -35,7 +35,6 @@ class BaseUnitSpec
 
   override implicit lazy val app: Application = appBuilder.build()
 
-  lazy val desConnector = mock[AgentServicesAccountConnector]
   lazy val suspensionConnector = app.injector.instanceOf[AgentSuspensionConnector]
 
   lazy implicit val configuration = app.injector.instanceOf[Configuration]
@@ -59,15 +58,12 @@ class BaseUnitSpec
                   domain: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Boolean] =
                   Future.successful(whitelistedSSODomains.contains(domain))
               })
-
-              bind(classOf[AgentServicesAccountConnector]).toInstance(desConnector)
             }
           })
 
         override def disable(classes: Seq[Class[_]]) = this
       })
       .configure(
-        "microservice.services.agent-services-account.port" -> wireMockPort,
         "microservice.services.auth.port" -> wireMockPort,
         "microservice.services.agent-suspension.port" -> wireMockPort,
         "auditing.enabled" -> false
