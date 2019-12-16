@@ -37,7 +37,6 @@ class AgentSuspensionControllerSpec extends UnitSpec with GuiceOneAppPerSuite wi
   protected def appBuilder: GuiceApplicationBuilder =
     new GuiceApplicationBuilder()
       .configure(
-        "microservice.services.agent-services-account.port" -> wireMockPort,
         "microservice.services.auth.port" -> wireMockPort,
         "microservice.services.agent-suspension.port" -> wireMockPort,
         "auditing.enabled" -> false
