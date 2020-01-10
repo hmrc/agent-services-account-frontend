@@ -23,7 +23,7 @@ import play.api.{Configuration, Logger}
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.auth.{AuthActions, PasscodeVerification}
 import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
-import uk.gov.hmrc.agentservicesaccount.connectors.AgentSuspensionConnector
+import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
 import uk.gov.hmrc.agentservicesaccount.views.html.pages._
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -31,7 +31,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class AgentServicesController @Inject()(
                                          authActions: AuthActions,
-                                         agentSuspensionConnector: AgentSuspensionConnector,
+                                         agentClientAuthorisationConnector: AgentClientAuthorisationConnector,
                                          val withMaybePasscode: PasscodeVerification,
                                          @Named("customDimension") customDimension: String,
                                          @Named("features.enable-agent-suspension") agentSuspensionEnabled: Boolean)
@@ -44,11 +44,11 @@ class AgentServicesController @Inject()(
   val root: Action[AnyContent] = Action.async { implicit request =>
     withAuthorisedAsAgent { agentInfo =>
       if (agentSuspensionEnabled) {
-        agentSuspensionConnector.getSuspensionStatus(agentInfo.arn).map {
-          suspendedServices =>
-            if (suspendedServices.isEmpty) Redirect(routes.AgentServicesController.showAgentServicesAccount())
+        agentClientAuthorisationConnector.getSuspensionDetails().map {
+          suspensionDetails =>
+            if (!suspensionDetails.suspensionStatus) Redirect(routes.AgentServicesController.showAgentServicesAccount())
             else Redirect(routes.AgentServicesController.showSuspendedWarning())
-              .addingToSession("suspendedServices" -> suspendedServices.toString)
+              .addingToSession("suspendedServices" -> suspensionDetails.toString)
         }
       } else {
         Future successful Redirect(routes.AgentServicesController.showAgentServicesAccount())

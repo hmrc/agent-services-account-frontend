@@ -18,6 +18,7 @@ package uk.gov.hmrc.agentservicesaccount.connectors
 
 import java.net.URL
 
+import com.kenshoo.play.metrics.Metrics
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
@@ -25,12 +26,13 @@ import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.models.SuspensionDetails
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentSuspensionStubs._
 import uk.gov.hmrc.agentservicesaccount.support.WireMockSupport
-import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, NotFoundException}
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class AgentSuspensionControllerSpec extends UnitSpec with GuiceOneAppPerSuite with WireMockSupport {
+class AgentClientAuthorisationControllerSpec extends UnitSpec with GuiceOneAppPerSuite with WireMockSupport {
 
   override def fakeApplication(): Application = appBuilder.build()
 
@@ -42,21 +44,22 @@ class AgentSuspensionControllerSpec extends UnitSpec with GuiceOneAppPerSuite wi
         "auditing.enabled" -> false
       )
 
-  private lazy val connector = new AgentSuspensionConnector(new URL(s"http://localhost:$wireMockPort"), app.injector.instanceOf[HttpGet])
+  private lazy val connector = new AgentClientAuthorisationConnector(new URL(s"http://localhost:$wireMockPort"), app.injector.instanceOf[HttpClient])
   private implicit val hc: HeaderCarrier = HeaderCarrier()
+  private implicit val metrics: Metrics = app.injector.instanceOf[Metrics]
 
   val arn = Arn("TARN0000001")
 
-  "getSuspensionStatus" should {
-    "return the suspension status for a given agent" in {
-      val suspendedServices = SuspensionDetails(Set("HMRC-MTD-IT"))
-      givenSuspensionStatus(arn, suspendedServices)
-      await(connector.getSuspensionStatus(arn)) shouldBe suspendedServices
+  "getSuspensionDetails" should {
+    "return the suspension details for a given agent" in {
+      val suspensionDetails = SuspensionDetails(suspensionStatus = true, Some(Set("ITSA")))
+      givenSuspensionStatus(arn, suspensionDetails)
+      await(connector.getSuspensionDetails()) shouldBe suspensionDetails
     }
 
-    "return empty Set when no status is found" in {
+    "return false suspension details when no status is found" in {
       givenSuspensionStatusNotFound(arn)
-      await(connector.getSuspensionStatus(arn)) shouldBe SuspensionDetails(Set.empty)
+      await(connector.getSuspensionDetails()) shouldBe SuspensionDetails(suspensionStatus = false, None)
     }
   }
 
