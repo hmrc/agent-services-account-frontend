@@ -20,11 +20,11 @@ import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.libs.json.Json
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
-import uk.gov.hmrc.agentservicesaccount.models.SuspensionResponse
+import uk.gov.hmrc.agentservicesaccount.models.SuspensionDetails
 
 object AgentSuspensionStubs {
 
-  def givenSuspensionStatus(arn: Arn, suspensionResponse: SuspensionResponse): StubMapping =
+  def givenSuspensionStatus(arn: Arn, suspensionResponse: SuspensionDetails): StubMapping =
     stubFor(get(urlEqualTo(s"/agent-suspension/status/arn/${arn.value}"))
     .willReturn(
       aResponse()

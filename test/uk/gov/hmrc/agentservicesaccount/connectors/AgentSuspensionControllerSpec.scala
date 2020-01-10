@@ -22,7 +22,7 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
-import uk.gov.hmrc.agentservicesaccount.models.SuspensionResponse
+import uk.gov.hmrc.agentservicesaccount.models.SuspensionDetails
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentSuspensionStubs._
 import uk.gov.hmrc.agentservicesaccount.support.WireMockSupport
 import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, NotFoundException}
@@ -49,14 +49,14 @@ class AgentSuspensionControllerSpec extends UnitSpec with GuiceOneAppPerSuite wi
 
   "getSuspensionStatus" should {
     "return the suspension status for a given agent" in {
-      val suspendedServices = SuspensionResponse(Set("HMRC-MTD-IT"))
+      val suspendedServices = SuspensionDetails(Set("HMRC-MTD-IT"))
       givenSuspensionStatus(arn, suspendedServices)
       await(connector.getSuspensionStatus(arn)) shouldBe suspendedServices
     }
 
     "return empty Set when no status is found" in {
       givenSuspensionStatusNotFound(arn)
-      await(connector.getSuspensionStatus(arn)) shouldBe SuspensionResponse(Set.empty)
+      await(connector.getSuspensionStatus(arn)) shouldBe SuspensionDetails(Set.empty)
     }
   }
 

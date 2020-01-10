@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,14 +19,11 @@ package uk.gov.hmrc.agentservicesaccount.models
 import play.api.libs.json.{Json, OFormat}
 
 
-case class SuspensionResponse(services: Set[String]) {
+case class SuspensionDetails(suspensionStatus: Boolean, regimes: Option[Set[String]])
 
-  def isEmpty: Boolean = services.isEmpty
+case class SuspensionDetailsNotFound(message: String) extends Exception(message)
 
-  override def toString: String = services.mkString(",")
-}
-
-object SuspensionResponse {
-  implicit val formats: OFormat[SuspensionResponse] = Json.format
+object SuspensionDetails {
+  implicit val formats: OFormat[SuspensionDetails] = Json.format
 }
 
