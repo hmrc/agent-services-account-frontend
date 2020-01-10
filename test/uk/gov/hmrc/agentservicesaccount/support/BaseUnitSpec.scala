@@ -65,7 +65,7 @@ class BaseUnitSpec
       })
       .configure(
         "microservice.services.auth.port" -> wireMockPort,
-        "microservice.services.agent-suspension.port" -> wireMockPort,
+        "microservice.services.agent-client-authorisation.port" -> wireMockPort,
         "auditing.enabled" -> false
       )
 }

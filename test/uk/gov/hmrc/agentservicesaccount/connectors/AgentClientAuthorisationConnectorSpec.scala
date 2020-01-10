@@ -23,8 +23,8 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
-import uk.gov.hmrc.agentservicesaccount.models.SuspensionDetails
-import uk.gov.hmrc.agentservicesaccount.stubs.AgentSuspensionStubs._
+import uk.gov.hmrc.agentservicesaccount.models.{SuspensionDetails, SuspensionDetailsNotFound}
+import uk.gov.hmrc.agentservicesaccount.stubs.AgentClientAuthorisationStubs._
 import uk.gov.hmrc.agentservicesaccount.support.WireMockSupport
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
@@ -32,7 +32,7 @@ import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class AgentClientAuthorisationControllerSpec extends UnitSpec with GuiceOneAppPerSuite with WireMockSupport {
+class AgentClientAuthorisationConnectorSpec extends UnitSpec with GuiceOneAppPerSuite with WireMockSupport {
 
   override def fakeApplication(): Application = appBuilder.build()
 
@@ -53,13 +53,20 @@ class AgentClientAuthorisationControllerSpec extends UnitSpec with GuiceOneAppPe
   "getSuspensionDetails" should {
     "return the suspension details for a given agent" in {
       val suspensionDetails = SuspensionDetails(suspensionStatus = true, Some(Set("ITSA")))
-      givenSuspensionStatus(arn, suspensionDetails)
+      givenSuspensionStatus(suspensionDetails)
       await(connector.getSuspensionDetails()) shouldBe suspensionDetails
     }
 
     "return false suspension details when no status is found" in {
-      givenSuspensionStatusNotFound(arn)
+      givenSuspensionStatusNotFound
       await(connector.getSuspensionDetails()) shouldBe SuspensionDetails(suspensionStatus = false, None)
+    }
+
+    "return not found error response when no agent record is found" in {
+      givenAgentRecordNotFound
+      intercept[SuspensionDetailsNotFound] {
+        await(connector.getSuspensionDetails())
+      }.getMessage shouldBe "No record found for this agent"
     }
   }
 

@@ -28,7 +28,7 @@ import uk.gov.hmrc.agentservicesaccount.auth.{AgentInfo, AuthActions, PasscodeVe
 import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
 import uk.gov.hmrc.agentservicesaccount.models.SuspensionDetails
-import uk.gov.hmrc.agentservicesaccount.stubs.AgentSuspensionStubs._
+import uk.gov.hmrc.agentservicesaccount.stubs.AgentClientAuthorisationStubs._
 import uk.gov.hmrc.agentservicesaccount.support.BaseUnitSpec
 import uk.gov.hmrc.auth.core.{Enrolment, EnrolmentIdentifier, User}
 import uk.gov.hmrc.http.HeaderCarrier
@@ -80,7 +80,7 @@ class AgentServicesControllerSpec extends BaseUnitSpec {
     }
 
     "redirect to agent service account when suspension is enabled but user is not suspended" in {
-      givenSuspensionStatus(Arn(arn), SuspensionDetails(suspensionStatus = false, None))
+      givenSuspensionStatus(SuspensionDetails(suspensionStatus = false, None))
       val controller = new AgentServicesController(authActions, agentClientAuthorisationConnector, NoPasscodeVerification, "", true)
 
       val response = controller.root()(FakeRequest("GET", "/"))
@@ -90,7 +90,7 @@ class AgentServicesControllerSpec extends BaseUnitSpec {
     }
 
     "redirect to suspended warning when suspension is enables and user is suspended" in {
-      givenSuspensionStatus(Arn(arn), SuspensionDetails(suspensionStatus = true, Some(Set("ITSA"))))
+      givenSuspensionStatus(SuspensionDetails(suspensionStatus = true, Some(Set("ITSA"))))
       val controller = new AgentServicesController(authActions, agentClientAuthorisationConnector, NoPasscodeVerification, "", true)
 
       val response = controller.root()(FakeRequest("GET", "/"))
