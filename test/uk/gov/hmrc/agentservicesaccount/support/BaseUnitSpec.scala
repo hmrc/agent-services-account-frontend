@@ -23,7 +23,7 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.inject.guice.{BinderOption, GuiceApplicationBuilder, GuiceableModule}
 import play.api.{Application, Configuration, Environment}
 import uk.gov.hmrc.agentservicesaccount.FrontendModule
-import uk.gov.hmrc.agentservicesaccount.connectors.{AgentSuspensionConnector, SsoConnector}
+import uk.gov.hmrc.agentservicesaccount.connectors.{AgentClientAuthorisationConnector, SsoConnector}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.test.UnitSpec
 
@@ -35,7 +35,7 @@ class BaseUnitSpec
 
   override implicit lazy val app: Application = appBuilder.build()
 
-  lazy val suspensionConnector = app.injector.instanceOf[AgentSuspensionConnector]
+  lazy val agentClientAuthorisationConnector = app.injector.instanceOf[AgentClientAuthorisationConnector]
 
   lazy implicit val configuration = app.injector.instanceOf[Configuration]
   lazy implicit val env = app.injector.instanceOf[Environment]
@@ -65,7 +65,7 @@ class BaseUnitSpec
       })
       .configure(
         "microservice.services.auth.port" -> wireMockPort,
-        "microservice.services.agent-suspension.port" -> wireMockPort,
+        "microservice.services.agent-client-authorisation.port" -> wireMockPort,
         "auditing.enabled" -> false
       )
 }

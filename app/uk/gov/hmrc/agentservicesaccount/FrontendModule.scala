@@ -62,7 +62,7 @@ class FrontendModule(val environment: Environment, val configuration: Configurat
 
     bindBaseUrl("auth")
     bindBaseUrl("sso")
-    bindBaseUrl("agent-suspension")
+    bindBaseUrl("agent-client-authorisation")
     ()
   }
 

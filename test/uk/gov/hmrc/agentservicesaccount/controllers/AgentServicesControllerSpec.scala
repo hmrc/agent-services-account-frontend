@@ -26,8 +26,9 @@ import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.auth.{AgentInfo, AuthActions, PasscodeVerification}
 import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
-import uk.gov.hmrc.agentservicesaccount.models.SuspensionResponse
-import uk.gov.hmrc.agentservicesaccount.stubs.AgentSuspensionStubs._
+import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
+import uk.gov.hmrc.agentservicesaccount.models.SuspensionDetails
+import uk.gov.hmrc.agentservicesaccount.stubs.AgentClientAuthorisationStubs._
 import uk.gov.hmrc.agentservicesaccount.support.BaseUnitSpec
 import uk.gov.hmrc.auth.core.{Enrolment, EnrolmentIdentifier, User}
 import uk.gov.hmrc.http.HeaderCarrier
@@ -70,7 +71,7 @@ class AgentServicesControllerSpec extends BaseUnitSpec {
 
   "root" should {
     "redirect to agent services account when suspension is disabled" in {
-      val controller = new AgentServicesController(authActions, suspensionConnector, NoPasscodeVerification, "", false)
+      val controller = new AgentServicesController(authActions, agentClientAuthorisationConnector, NoPasscodeVerification, "", false)
 
       val response = controller.root()(FakeRequest("GET", "/"))
 
@@ -79,8 +80,8 @@ class AgentServicesControllerSpec extends BaseUnitSpec {
     }
 
     "redirect to agent service account when suspension is enabled but user is not suspended" in {
-      givenSuspensionStatus(Arn(arn), SuspensionResponse(Set.empty))
-      val controller = new AgentServicesController(authActions, suspensionConnector, NoPasscodeVerification, "", true)
+      givenSuspensionStatus(SuspensionDetails(suspensionStatus = false, None))
+      val controller = new AgentServicesController(authActions, agentClientAuthorisationConnector, NoPasscodeVerification, "", true)
 
       val response = controller.root()(FakeRequest("GET", "/"))
 
@@ -89,8 +90,8 @@ class AgentServicesControllerSpec extends BaseUnitSpec {
     }
 
     "redirect to suspended warning when suspension is enables and user is suspended" in {
-      givenSuspensionStatus(Arn(arn), SuspensionResponse(Set("HMRC-MTD-IT")))
-      val controller = new AgentServicesController(authActions, suspensionConnector, NoPasscodeVerification, "", true)
+      givenSuspensionStatus(SuspensionDetails(suspensionStatus = true, Some(Set("ITSA"))))
+      val controller = new AgentServicesController(authActions, agentClientAuthorisationConnector, NoPasscodeVerification, "", true)
 
       val response = controller.root()(FakeRequest("GET", "/"))
 
@@ -101,7 +102,7 @@ class AgentServicesControllerSpec extends BaseUnitSpec {
 
   "home" should {
     "return Status: OK and body containing correct content" in {
-      val controller = new AgentServicesController(authActions, suspensionConnector, NoPasscodeVerification, "", true)
+      val controller = new AgentServicesController(authActions, agentClientAuthorisationConnector, NoPasscodeVerification, "", true)
 
       val response = controller.showAgentServicesAccount()(FakeRequest("GET", "/home"))
 
@@ -151,7 +152,7 @@ class AgentServicesControllerSpec extends BaseUnitSpec {
           Future.successful(Results.SeeOther("foo?continue=%2Fagent-services-account%3Fp%3DBAR1%2B23%252F"))
         }
 
-      val controller = new AgentServicesController(authActions, suspensionConnector, NoPasscodeVerification, "", true)
+      val controller = new AgentServicesController(authActions, agentClientAuthorisationConnector, NoPasscodeVerification, "", true)
 
       val response = controller.root()(FakeRequest("GET", "/").withSession(("otacTokenParam", "BAR1 23/")))
 
@@ -160,7 +161,7 @@ class AgentServicesControllerSpec extends BaseUnitSpec {
     }
 
     "do not fail without continue url parameter" in {
-      val controller = new AgentServicesController(authActions, suspensionConnector, NoPasscodeVerification, "", true)
+      val controller = new AgentServicesController(authActions, agentClientAuthorisationConnector, NoPasscodeVerification, "", true)
       val response = controller.showAgentServicesAccount().apply(FakeRequest("GET", "/home"))
       status(response) shouldBe OK
       contentAsString(response) should {
@@ -171,7 +172,7 @@ class AgentServicesControllerSpec extends BaseUnitSpec {
 
   "showSuspensionWarning" should {
     "return Ok and show the suspension warning page" in {
-      val controller = new AgentServicesController(authActions, suspensionConnector, NoPasscodeVerification, "", true)
+      val controller = new AgentServicesController(authActions, agentClientAuthorisationConnector, NoPasscodeVerification, "", true)
 
       val response = controller.showSuspendedWarning()(FakeRequest("GET", "/home").withSession("suspendedServices" -> "HMRC-MTD-IT,HMRC-MTD-VAT"))
 
@@ -193,7 +194,7 @@ class AgentServicesControllerSpec extends BaseUnitSpec {
   "manage-account" should {
 
     "return Status: OK and body containing correct content" in {
-      val controller = new AgentServicesController(authActions, suspensionConnector, NoPasscodeVerification, "", true)
+      val controller = new AgentServicesController(authActions, agentClientAuthorisationConnector, NoPasscodeVerification, "", true)
 
       val response = controller.manageAccount().apply(FakeRequest("GET", "/manage-account"))
 
