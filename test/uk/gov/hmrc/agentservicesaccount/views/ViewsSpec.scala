@@ -225,6 +225,20 @@ class ViewsSpec extends UnitSpec with GuiceOneAppPerTest {
           include("href=\"http://localhost:9851/user-delegation/manage-users\"")
       }
     }
+
+    "render should replace the regular VAT content with suspended content when user is suspended for VATC" in new PlainAppConfig {
+      val view = new agent_services_account()
+      val html = view.render(arn = "ARN0001", isWhitelisted = true, customDimension =  "", isAdmin = true, isSuspendedForVat = true, Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, config)
+      contentAsString(html) should {
+        include("We have temporarily limited your use of this service")
+        include("We did this because we have suspended your agent code. We sent you a letter to confirm this.")
+        include("This means you will not be able to use this service.")
+      }
+      contentAsString(html) should not {
+        include("Sign clients up for Making Tax Digital for VAT") or
+          include("Manage your client''s VAT details")
+      }
+    }
   }
 
 }
