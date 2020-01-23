@@ -60,7 +60,7 @@ class AgentServicesController @Inject()(
         Logger.info(s"isAdmin: ${agentInfo.isAdmin}")
         if (agentSuspensionEnabled) {
           request.session.get("isSuspendedForVat") match {
-            case Some(suspendedForVat) => Future successful Ok(agent_services_account(formatArn(agentInfo.arn), isWhitelisted, customDimension, agentInfo.isAdmin, suspendedForVat.toBoolean))
+            case Some(isSuspendedForVat) => Future successful Ok(agent_services_account(formatArn(agentInfo.arn), isWhitelisted, customDimension, agentInfo.isAdmin, isSuspendedForVat.toBoolean))
 
             case None => agentClientAuthorisationConnector.getSuspensionDetails().map {
               suspensionDetails =>
