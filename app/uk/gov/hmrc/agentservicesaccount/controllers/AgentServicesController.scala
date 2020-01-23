@@ -42,17 +42,15 @@ class AgentServicesController @Inject()(
   import authActions._
 
   val root: Action[AnyContent] = Action.async { implicit request =>
-    withAuthorisedAsAgent { agentInfo =>
+    withAuthorisedAsAgent { _ =>
       if (agentSuspensionEnabled) {
         agentClientAuthorisationConnector.getSuspensionDetails().map {
           suspensionDetails =>
             if (!suspensionDetails.suspensionStatus) Redirect(routes.AgentServicesController.showAgentServicesAccount())
             else Redirect(routes.AgentServicesController.showSuspendedWarning())
-              .addingToSession("suspendedServices" -> suspensionDetails.toString)
+              .addingToSession("suspendedServices" -> suspensionDetails.toString, "suspendedForVat" -> suspensionDetails.suspendedRegimes.contains("VATC").toString)
         }
-      } else {
-        Future successful Redirect(routes.AgentServicesController.showAgentServicesAccount())
-      }
+      } else Future successful Redirect(routes.AgentServicesController.showAgentServicesAccount())
     }
   }
 
@@ -60,7 +58,16 @@ class AgentServicesController @Inject()(
     withMaybePasscode { isWhitelisted =>
       withAuthorisedAsAgent { agentInfo =>
         Logger.info(s"isAdmin: ${agentInfo.isAdmin}")
-        Future.successful(Ok(agent_services_account(formatArn(agentInfo.arn), isWhitelisted, customDimension, agentInfo.isAdmin)))
+        if (agentSuspensionEnabled) {
+          request.session.get("suspendedForVat") match {
+            case Some(suspendedForVat) => Future successful Ok(agent_services_account(formatArn(agentInfo.arn), isWhitelisted, customDimension, agentInfo.isAdmin, suspendedForVat.toBoolean))
+
+            case None => agentClientAuthorisationConnector.getSuspensionDetails().map {
+              suspensionDetails =>
+                Ok(agent_services_account(formatArn(agentInfo.arn), isWhitelisted, customDimension, agentInfo.isAdmin, suspensionDetails.suspendedRegimes.contains("VATC")))
+            }
+          }
+        } else Future successful Ok(agent_services_account(formatArn(agentInfo.arn), isWhitelisted, customDimension, agentInfo.isAdmin, isSuspendedForVat = false))
       }
     }
   }
