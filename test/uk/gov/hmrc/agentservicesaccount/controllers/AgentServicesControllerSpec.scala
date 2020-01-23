@@ -26,7 +26,6 @@ import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.auth.{AgentInfo, AuthActions, PasscodeVerification}
 import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
-import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
 import uk.gov.hmrc.agentservicesaccount.models.SuspensionDetails
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentClientAuthorisationStubs._
 import uk.gov.hmrc.agentservicesaccount.support.BaseUnitSpec
@@ -102,8 +101,9 @@ class AgentServicesControllerSpec extends BaseUnitSpec {
 
   "home" should {
     "return Status: OK and body containing correct content" in {
-      val controller = new AgentServicesController(authActions, agentClientAuthorisationConnector, NoPasscodeVerification, "", true)
+      givenSuspensionStatus(SuspensionDetails(suspensionStatus = false, None))
 
+      val controller = new AgentServicesController(authActions, agentClientAuthorisationConnector, NoPasscodeVerification, "", true)
       val response = controller.showAgentServicesAccount()(FakeRequest("GET", "/home"))
 
       status(response) shouldBe OK
@@ -138,7 +138,38 @@ class AgentServicesControllerSpec extends BaseUnitSpec {
       content should include(invitationsTrackUrl)
       content should include(mappingUrl)
       content should include(agentCancelAuthUrl)
+    }
 
+    "return Status: OK and body containing correct content when suspension details are in the session and agent is suspended for VATC" in {
+
+      val controller = new AgentServicesController(authActions, agentClientAuthorisationConnector, NoPasscodeVerification, "", true)
+      val response = controller.showAgentServicesAccount()(FakeRequest("GET", "/home").withSession("isSuspendedForVat" -> "true"))
+
+      status(response) shouldBe OK
+      contentType(response).get shouldBe HTML
+      val content = contentAsString(response)
+
+      content should include(messagesApi("agent.services.account.section1.h2"))
+      content should include(messagesApi("agent.services.account.section1.suspended.h3"))
+      content should include(messagesApi("agent.services.account.section1.suspended.p1"))
+      content should include(messagesApi("agent.services.account.section1.suspended.p2"))
+
+      content should not include(messagesApi("agent.services.account.section1.col1.h3"))
+      content should not include(messagesApi("agent.services.account.section1.col1.link"))
+      content should not include("https://www.gov.uk/guidance/sign-up-for-making-tax-digital-for-vat")
+    }
+
+    "return Status: OK and body containing correct content when agent suspension is not enabled" in {
+      val controller = new AgentServicesController(authActions, agentClientAuthorisationConnector, NoPasscodeVerification, "", false)
+      val response = controller.showAgentServicesAccount()(FakeRequest("GET", "/home"))
+
+      status(response) shouldBe OK
+      contentType(response).get shouldBe HTML
+      val content = contentAsString(response)
+
+      content should include(messagesApi("agent.services.account.heading", "servicename.titleSuffix"))
+      content should include(messagesApi("agent.services.account.heading"))
+      content should include(messagesApi("app.name"))
     }
 
     "return the redirect returned by authActions when authActions denies access" in {
@@ -161,6 +192,8 @@ class AgentServicesControllerSpec extends BaseUnitSpec {
     }
 
     "do not fail without continue url parameter" in {
+      givenSuspensionStatus(SuspensionDetails(suspensionStatus = false, None))
+
       val controller = new AgentServicesController(authActions, agentClientAuthorisationConnector, NoPasscodeVerification, "", true)
       val response = controller.showAgentServicesAccount().apply(FakeRequest("GET", "/home"))
       status(response) shouldBe OK

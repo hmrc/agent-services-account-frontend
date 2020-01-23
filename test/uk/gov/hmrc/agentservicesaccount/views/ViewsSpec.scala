@@ -166,7 +166,7 @@ class ViewsSpec extends UnitSpec with GuiceOneAppPerTest {
 
     "render the content including the 'Manage account' navbar menu item if the user has the Admin Credential Role" in new PlainAppConfig {
       val view = new agent_services_account()
-      val html = view.render(arn = "ARN0001", isWhitelisted = true, customDimension =  "", isAdmin = true, Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, config)
+      val html = view.render(arn = "ARN0001", isWhitelisted = true, customDimension =  "", isAdmin = true, isSuspendedForVat = false, Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, config)
       contentAsString(html) should {
           include("Account home") and
           include("Manage account") and
@@ -198,7 +198,7 @@ class ViewsSpec extends UnitSpec with GuiceOneAppPerTest {
 
     "not render the 'Manage account' navbar menu item if the user does not have the Admin Credential Role" in new PlainAppConfig {
       val view = new agent_services_account()
-      val html = view.render(arn = "ARN0001", isWhitelisted = true, customDimension = "", isAdmin = false,  Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, config)
+      val html = view.render(arn = "ARN0001", isWhitelisted = true, customDimension = "", isAdmin = false, isSuspendedForVat = false,  Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, config)
       contentAsString(html) should not {
         include("Manage account") and
         include("http://localhost:9401/agent-services-account/manage-account")
@@ -207,7 +207,7 @@ class ViewsSpec extends UnitSpec with GuiceOneAppPerTest {
 
     "render invitations link but not income viewer link when not whitelisted" in new PlainAppConfig {
       val view = new agent_services_account()
-      val html = view.render(arn = "ARN0001", isWhitelisted = false, customDimension = "", isAdmin = true, Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, config)
+      val html = view.render(arn = "ARN0001", isWhitelisted = false, customDimension = "", isAdmin = true, isSuspendedForVat = false, Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, config)
       contentAsString(html) should not include ("http://localhost:9996/tax-history/select-client")
       contentAsString(html) should {
           include("Track your recent authorisation requests") and
@@ -218,11 +218,25 @@ class ViewsSpec extends UnitSpec with GuiceOneAppPerTest {
 
     "render does not show manage your users link because Agent is Assistant" in new PlainAppConfig {
       val view = new agent_services_account()
-      val html = view.render(arn = "ARN0001", isWhitelisted = true, customDimension =  "", isAdmin = true, Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, config)
+      val html = view.render(arn = "ARN0001", isWhitelisted = true, customDimension =  "", isAdmin = true, isSuspendedForVat = false, Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, config)
       contentAsString(html) should not {
         include("Manage your users") or
           include("Control who can access your agent services account") or
           include("href=\"http://localhost:9851/user-delegation/manage-users\"")
+      }
+    }
+
+    "render should replace the regular VAT content with suspended content when user is suspended for VATC" in new PlainAppConfig {
+      val view = new agent_services_account()
+      val html = view.render(arn = "ARN0001", isWhitelisted = true, customDimension =  "", isAdmin = true, isSuspendedForVat = true, Messages.Implicits.applicationMessages, FakeRequest(), externalUrls, config)
+      contentAsString(html) should {
+        include("We have temporarily limited your use of this service")
+        include("We did this because we have suspended your agent code. We sent you a letter to confirm this.")
+        include("This means you will not be able to use this service.")
+      }
+      contentAsString(html) should not {
+        include("Sign clients up for Making Tax Digital for VAT") or
+          include("Manage your client''s VAT details")
       }
     }
   }
