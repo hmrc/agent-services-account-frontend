@@ -48,7 +48,7 @@ class AgentServicesController @Inject()(
           suspensionDetails =>
             if (!suspensionDetails.suspensionStatus) Redirect(routes.AgentServicesController.showAgentServicesAccount())
             else Redirect(routes.AgentServicesController.showSuspendedWarning())
-              .addingToSession("suspendedServices" -> suspensionDetails.toString, "suspendedForVat" -> suspensionDetails.suspendedRegimes.contains("VATC").toString)
+              .addingToSession("suspendedServices" -> suspensionDetails.toString, "isSuspendedForVat" -> suspensionDetails.suspendedRegimes.contains("VATC").toString)
         }
       } else Future successful Redirect(routes.AgentServicesController.showAgentServicesAccount())
     }
@@ -59,7 +59,7 @@ class AgentServicesController @Inject()(
       withAuthorisedAsAgent { agentInfo =>
         Logger.info(s"isAdmin: ${agentInfo.isAdmin}")
         if (agentSuspensionEnabled) {
-          request.session.get("suspendedForVat") match {
+          request.session.get("isSuspendedForVat") match {
             case Some(suspendedForVat) => Future successful Ok(agent_services_account(formatArn(agentInfo.arn), isWhitelisted, customDimension, agentInfo.isAdmin, suspendedForVat.toBoolean))
 
             case None => agentClientAuthorisationConnector.getSuspensionDetails().map {

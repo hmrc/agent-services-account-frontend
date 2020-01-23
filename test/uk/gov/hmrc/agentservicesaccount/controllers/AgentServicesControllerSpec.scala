@@ -143,7 +143,7 @@ class AgentServicesControllerSpec extends BaseUnitSpec {
     "return Status: OK and body containing correct content when suspension details are in the session and agent is suspended for VATC" in {
 
       val controller = new AgentServicesController(authActions, agentClientAuthorisationConnector, NoPasscodeVerification, "", true)
-      val response = controller.showAgentServicesAccount()(FakeRequest("GET", "/home").withSession("suspendedForVat" -> "true"))
+      val response = controller.showAgentServicesAccount()(FakeRequest("GET", "/home").withSession("isSuspendedForVat" -> "true"))
 
       status(response) shouldBe OK
       contentType(response).get shouldBe HTML
@@ -159,7 +159,7 @@ class AgentServicesControllerSpec extends BaseUnitSpec {
       content should not include("https://www.gov.uk/guidance/sign-up-for-making-tax-digital-for-vat")
     }
 
-    "return Status: OK and body containing correct content when agent suspension is not enables" in {
+    "return Status: OK and body containing correct content when agent suspension is not enabled" in {
       val controller = new AgentServicesController(authActions, agentClientAuthorisationConnector, NoPasscodeVerification, "", false)
       val response = controller.showAgentServicesAccount()(FakeRequest("GET", "/home"))
 
