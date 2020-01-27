@@ -66,9 +66,11 @@ class AuthActionsSpec extends BaseUnitSpec with AkkaMaterializerSpec {
 
   val externalUrls: ExternalUrls = mock[ExternalUrls]
   val completeGgSignInUrl = "/gg/sign-in?continue=&origin=agent-services-account-frontend"
+  val agentSubscriptionUrl = "/agent-subscription/start"
   def completeGgSignInUrlWithOtac(otacToken: String) =
     s"/gg/sign-in?continue=&origin=agent-services-account-frontend?continue=%2Fagent-services-account%3Fp%3D$otacToken"
-  when(externalUrls.agentSubscriptionUrl).thenReturn(completeGgSignInUrl)
+  when(externalUrls.agentSubscriptionUrl).thenReturn(agentSubscriptionUrl)
+  when(externalUrls.continueFromGGSignIn).thenReturn(completeGgSignInUrl)
 
   val authActions = new AuthActions(logger, externalUrls, mockAuthConnector, env, configuration)
 
@@ -108,11 +110,12 @@ class AuthActionsSpec extends BaseUnitSpec with AkkaMaterializerSpec {
       redirectLocation(result) shouldBe Some(completeGgSignInUrlWithOtac("foo"))
     }
 
-    "redirect to GG sign in if logged in user is not an HMRC-AS-AGENT agent" in {
+    "redirect to agent subscription start if logged in user is not an HMRC-AS-AGENT agent" in {
       mockAuth(enrolment = Set(otherEnrolment))
 
       val result: Future[Result] = testAuthImpl.testAuthActions().apply(FakeRequest())
-      status(result) shouldBe 403
+      status(result) shouldBe 303
+      redirectLocation(result) shouldBe Some("/agent-subscription/start")
     }
 
     "return forbidden if the auth provider is not supported" in {

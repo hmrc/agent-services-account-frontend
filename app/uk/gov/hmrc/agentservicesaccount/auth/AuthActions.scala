@@ -61,15 +61,15 @@ class AuthActions @Inject()(logger: LoggerLike,
             case Some(arn) =>
               body(AgentInfo(arn, credRole))
             case None =>
-              logger.warn("No AgentReferenceNumber found in HMRC-AS-AGENT enrolment - this should not happen. Denying access.")
-              Future successful Forbidden
+              logger.warn("No AgentReferenceNumber found in HMRC-AS-AGENT enrolment -- redirecting to /agent-subscription/start.")
+              Future successful Redirect(externalUrls.agentSubscriptionUrl)
           }
       }.recover(handleFailure)
 
 
   def handleFailure(implicit request: Request[_]): PartialFunction[Throwable, Result] = {
     case _: NoActiveSession ⇒
-      Redirect(externalUrls.agentSubscriptionUrl + encodeContinueUrl)
+      Redirect(externalUrls.continueFromGGSignIn + encodeContinueUrl)
 
     case _: UnsupportedAuthProvider ⇒
       logger.warn(s"user logged in with unsupported auth provider")
