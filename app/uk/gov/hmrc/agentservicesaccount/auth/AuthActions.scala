@@ -61,7 +61,7 @@ class AuthActions @Inject()(logger: LoggerLike,
             case Some(arn) =>
               body(AgentInfo(arn, credRole))
             case None =>
-              logger.warn("No AgentReferenceNumber found in HMRC-AS-AGENT enrolment -- redirecting to /agent-subscription/start.")
+              logger.warn("No HMRC-AS-AGENT enrolment found -- redirecting to /agent-subscription/start.")
               Future successful Redirect(externalUrls.agentSubscriptionUrl)
           }
       }.recover(handleFailure)
