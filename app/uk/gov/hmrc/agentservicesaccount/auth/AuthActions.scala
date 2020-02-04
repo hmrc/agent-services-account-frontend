@@ -95,16 +95,6 @@ class AuthActions @Inject()(logger: LoggerLike,
       Forbidden
   }
 
-  private def encodeContinueUrl(implicit request: Request[_]): String = {
-    import CallOps._
-    request.session.get("otacTokenParam") match {
-      case Some(p) =>
-        val selfURL = addParamsToUrl(request.uri,"p" -> Some(p))
-        URLEncoder.encode(selfURL, "utf-8")
-      case None => ""
-    }
-  }
-
   private def getArn(enrolments: Enrolments): Option[Arn] = {
     for {
       agentEnrol <- enrolments.getEnrolment("HMRC-AS-AGENT")
