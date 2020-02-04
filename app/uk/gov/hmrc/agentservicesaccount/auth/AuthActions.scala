@@ -21,7 +21,7 @@ import java.net.URLEncoder
 import javax.inject.{Inject, Singleton}
 import play.api.mvc._
 import play.api.mvc.Results._
-import play.api.{Configuration, Environment, LoggerLike}
+import play.api.{Configuration, Environment, LoggerLike, Mode}
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.auth.AuthActions.AgentAuthAction
 import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
@@ -66,10 +66,25 @@ class AuthActions @Inject()(logger: LoggerLike,
           }
       }.recover(handleFailure)
 
+  lazy val isDevEnv: Boolean =
+    if (env.mode.equals(Mode.Test)) false
+    else config.getString("run.mode").forall(Mode.Dev.toString.equals)
+
 
   def handleFailure(implicit request: Request[_]): PartialFunction[Throwable, Result] = {
-    case _: NoActiveSession ⇒
-      Redirect(externalUrls.continueFromGGSignIn + encodeContinueUrl)
+    case _: NoActiveSession ⇒ {
+      import CallOps._
+      val url: String =
+        if (isDevEnv) s"http://${request.host}${request.uri}"
+        else s"${request.uri}"
+      val requestWithMaybeOtac = request.session.get("otacTokenParam") match {
+        case Some(p) =>
+          val selfURL = addParamsToUrl(url, "p" -> Some(p))
+          URLEncoder.encode(selfURL, "utf-8")
+        case None => url
+      }
+      toGGLogin(requestWithMaybeOtac)
+    }
 
     case _: UnsupportedAuthProvider ⇒
       logger.warn(s"user logged in with unsupported auth provider")
@@ -84,8 +99,8 @@ class AuthActions @Inject()(logger: LoggerLike,
     import CallOps._
     request.session.get("otacTokenParam") match {
       case Some(p) =>
-        val selfURL = routes.AgentServicesController.root().toURLWithParams("p" -> Some(p))
-        "?continue=" + URLEncoder.encode(selfURL, "utf-8")
+        val selfURL = addParamsToUrl(request.uri,"p" -> Some(p))
+        URLEncoder.encode(selfURL, "utf-8")
       case None => ""
     }
   }

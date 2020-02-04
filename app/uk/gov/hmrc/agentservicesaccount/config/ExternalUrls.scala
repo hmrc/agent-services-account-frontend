@@ -30,7 +30,7 @@ class ExternalUrls @Inject() (override val configuration: Configuration) extends
   private lazy val companyAuthFrontendExternalUrl = getConfigString("microservice.services.company-auth-frontend.external-url")
   private lazy val signOutPath = getConfigString("microservice.services.company-auth-frontend.sign-out.path")
   private lazy val signInPath = getConfigString("microservice.services.company-auth-frontend.sign-in.path")
-  lazy val continueFromGGSignIn = s"$companyAuthFrontendExternalUrl$signInPath?continue=$agentServicesAccountBaseUrl/agent-services-account"
+  lazy val continueFromGGSignIn = s"$companyAuthFrontendExternalUrl$signInPath?continue=${urlEncode(s"$agentServicesAccountBaseUrl/agent-services-account")}"
   private lazy val signOutContinueUrl = getConfigString("microservice.services.company-auth-frontend.sign-out.continue-url")
   lazy val signOutUrlWithSurvey: String = s"$companyAuthFrontendExternalUrl$signOutPath?continue=${urlEncode(signOutContinueUrl)}"
   lazy val signOut: String = s"$companyAuthFrontendExternalUrl$signOutPath"
