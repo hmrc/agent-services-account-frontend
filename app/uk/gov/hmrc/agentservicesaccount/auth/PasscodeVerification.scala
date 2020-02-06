@@ -19,7 +19,7 @@ package uk.gov.hmrc.agentservicesaccount.auth
 import javax.inject.Inject
 import play.api.mvc.Results._
 import play.api.mvc.{Request, Result}
-import play.api.{Configuration, Environment, Mode}
+import play.api.{Configuration, Environment, Logger, Mode}
 import uk.gov.hmrc.auth.otac.{Authorised, OtacAuthConnector}
 import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
 
@@ -70,6 +70,10 @@ class FrontendPasscodeVerification @Inject()(configuration: Configuration,
           otacAuthConnector.authorise(passcodeRegime, headerCarrier, Option(otacToken)).flatMap {
             case Authorised => body(true)
             case _ => body(false)
+          }.recoverWith {
+            case ex =>
+              Logger.warn("error during PassCodeVerification: IRV option may not be visible to the agents", ex)
+              body(false)
           }
         case None =>
           redirectToLoginWithToken.map(Future.successful).getOrElse(body(false))
