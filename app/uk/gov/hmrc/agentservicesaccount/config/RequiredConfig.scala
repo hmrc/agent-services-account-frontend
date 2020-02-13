@@ -25,5 +25,7 @@ trait RequiredConfig {
     .getOrElse(throw new RuntimeException(s"Required configuration property at path $path not present"))
 
   protected def getConfigInteger(path: String): Int = configuration.getInt(path).getOrElse(throw new RuntimeException(s"required"))
+
+  protected def getConfigBoolean(path: String): Boolean = configuration.getBoolean(path).getOrElse(throw new RuntimeException(s"required boolean config not found"))
 }
 

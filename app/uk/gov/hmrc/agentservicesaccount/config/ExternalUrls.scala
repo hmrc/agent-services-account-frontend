@@ -17,8 +17,9 @@
 package uk.gov.hmrc.agentservicesaccount.config
 
 import javax.inject.{Inject, Singleton}
-
 import play.api.Configuration
+import play.api.i18n.Lang
+import uk.gov.hmrc.agentservicesaccount.controllers.routes
 import views.html.helper.urlEncode
 
 /**
@@ -68,4 +69,13 @@ class ExternalUrls @Inject() (override val configuration: Configuration) extends
 
   lazy val timeout: Int = getConfigInteger("timeoutDialog.timeout-seconds")
   lazy val countdown: Int = getConfigInteger("timeoutDialog.timeout-countdown-seconds")
+
+  lazy val languageToggle: Boolean = getConfigBoolean("features.enable-welsh-toggle")
+
+  def languageMap: Map[String, Lang] = Map(
+    "english" -> Lang("en"),
+    "cymraeg" -> Lang("cy")
+  )
+
+  def routeToSwitchLanguage = (lang: String) => routes.AgentServicesLanguageController.switchToLanguage(lang)
 }

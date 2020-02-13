@@ -10,7 +10,11 @@
         },
         time: {
             en: "minutes",
-            cy: "munud"
+            cy: "munud" //word for 1 or 3 or more minutes
+        },
+        time_welshy: {
+            en: "minutes",
+            cy: "funud"  // word for 2 minutes
         },
         time_singular: {
             en: "minute",
