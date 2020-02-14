@@ -55,8 +55,6 @@ agent.services.account.additional.links.mapping.body2=<a href="{0}" id="{1}">Cop
 agent.invitations.links.cancel-auth=<a href="{0}" id="{1}" >Canslo awdurdodiad cleient</a>
 agent.accountNumber=Rhif y cyfrif: {0}
 
-agent.services.sccount.h2.client=
-
 agent.manageYourUsers.links.start=<a href="{0}" target="_blank" rel="noopener noreferrer" id="{1}">Rheoli mynediad defnyddwyr at eich cyfrif gwasanaethau asiant<span class="visuallyhidden"> (Yn agor ffenestr newydd)</span></a>
 agent.addNewUser.links.start=<a href="{0}" rel="noopener noreferrer" id="{1}">Ychwanegu defnyddiwr newydd</a>
 agent.services.account.additional.links.agent-afi.body2=<a href="{0}" id="{1}">Bwrw golwg dros gofnod incwm TWE cleient</a>
@@ -149,4 +147,10 @@ signed-out.p2=<a href="{0}">Mewngofnodwch eto</a> i ddefnyddio’r gwasanaeth hw
 footer.links.accessibility.text=Hygyrchedd
 footer.links.accessibility.url=/agent-services-account/accessibility-statement
 
+# BETA header
+label.beta=BETA
+label.beta.newservice=Mae hwn yn wasanaeth newydd
+label.beta.improve=yn ein helpu i’w wella.
+label.beta.feedback=adborth
+label.beta.yours=– bydd eich
 

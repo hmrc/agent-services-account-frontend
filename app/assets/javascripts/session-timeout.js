@@ -44,6 +44,7 @@
             timeout: 900,
             countdown: 120,
             time: strings.time[lang],
+            timeWelshy: strings.time_welshy[lang],
             timeSingular: strings.time_singular[lang],
             title: strings.title[lang],
             message: strings.message[lang],
@@ -184,6 +185,8 @@
                 var minutesMessage = ' ' + settings.time;
                 if (newCounter === 1) {
                     minutesMessage = ' ' + settings.timeSingular
+                } else if (newCounter < 3) {
+                    minutesMessage = ' ' + settings.timeWelshy
                 }
                 if (newCounter < currentMin) {
                     currentMin = newCounter;
