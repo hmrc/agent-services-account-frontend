@@ -89,7 +89,7 @@ class ViewsSpec extends UnitSpec with GuiceOneAppPerTest {
 
       val doc = Jsoup.parse(contentAsString(html))
 
-     // doc.getElementById("timeoutDialog").isBlock shouldBe true
+      doc.getElementById("timeoutDialog").isBlock shouldBe true
     }
   }
 
