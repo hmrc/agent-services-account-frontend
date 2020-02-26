@@ -65,7 +65,6 @@
             window.jsConfig.timeout = @{externalUrls.timeout};
             window.jsConfig.countdown = @{externalUrls.countdown};
             window.jsConfig.keep_alive_url = "@{routes.SignOutController.keepAlive().url}";
-            window.jsConfig.message = "@{Messages("timeout-dialog.p1")}"
             window.jsConfig.timed_out_url = "@{routes.SignOutController.timedOut().url}";
             window.jsConfig.logout_url = "@{routes.SignOutController.signedOut().url}";
     </script>
@@ -73,23 +72,35 @@
     @uiLayouts.head(
       linkElem = None,
       headScripts = Some(headScripts))
-    <meta name="format-detection" content="telephone=no" />
+    <meta name="format-detection" content="telephone=no"/>
 }
+
+    @insideHeaderNavLinks = {
+        @navLinks
+    @if(externalUrls.languageToggle){
+        <div class="text--right">@views.html.language_selection(
+            externalUrls.languageMap,
+            externalUrls.routeToSwitchLanguage,
+            customClass = Some("welsh-toggle")
+        )</div>
+    }
+    }
 
 @insideHeader = {
     @uiLayouts.header_nav(
       navTitle = Some(Messages("app.name")),
       navTitleLink = None,
       showBetaLink = false,
-      navLinks = navLinks)
+      navLinks = Some(insideHeaderNavLinks))
 }
 
 
 @betaBanner = {
     <div class="govuk-phase-banner govuk-phase-banner-agent">
-        <p class="govuk-phase-banner__content"><strong class="govuk-tag govuk-phase-banner__content__tag "> beta </strong> <span class="govuk-phase-banner__text">
-            This is a new service – your
-            <a class="govuk-link" href='@configuration.getString("betaFeedbackUrl").get'>feedback</a> will help us to improve it.
+        <p class="govuk-phase-banner__content"><strong class="govuk-tag govuk-phase-banner__content__tag "> @Messages("label.beta") </strong> <span class="govuk-phase-banner__text">
+            @Messages("label.beta.newservice")
+            @Messages("label.beta.yours")
+            <a class="govuk-link" href='@configuration.getString("betaFeedbackUrl").get'>@Messages("label.beta.feedback")</a> @Messages("label.beta.improve")
         </span>
         </p>
     </div>
@@ -137,6 +148,7 @@
 }
 
 @mainContentHeader = {
+
     @if(contentHeader.isDefined) {
         @uiLayouts.main_content_header(contentHeader = contentHeader.get)
     }

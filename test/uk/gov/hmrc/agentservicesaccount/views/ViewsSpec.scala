@@ -74,11 +74,11 @@ class ViewsSpec extends UnitSpec with GuiceOneAppPerTest {
       )
 
       contentAsString(html) should {
-          include("My custom page title")
-          include("main class") and
+          include("My custom page title") and
+          include("main class")
           include("main data attributes") and
           include("body-classes") and
-          include("nav_links")
+          include("nav_links") and
           include("sideBar") and
           include("content-header") and
           include("mainContent") and

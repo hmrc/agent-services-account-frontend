@@ -55,8 +55,6 @@ agent.services.account.additional.links.mapping.body2=<a href="{0}" id="{1}" >Co
 agent.invitations.links.cancel-auth=<a href="{0}" id="{1}" >Cancel a client''s authorisation</a>
 agent.accountNumber=Account number: {0}
 
-agent.services.sccount.h2.client=''s account
-
 agent.manageYourUsers.links.start=<a href="{0}" target="_blank" rel="noopener noreferrer" id="{1}">Manage user access to your agent services account<span class="visuallyhidden"> (Opens in a new window)</span></a>
 agent.addNewUser.links.start=<a href="{0}" rel="noopener noreferrer" id="{1}">Add a new user</a>
 agent.services.account.additional.links.agent-afi.body2=<a href="{0}" id="{1}">View a client''s PAYE income record</a>
@@ -84,7 +82,7 @@ suspension-warning.p3=You can still access any other service available to you.
 suspension-warning.p4=If you did not receive our letter, or think we have made a mistake, use the ''get help with this page'' link.
 suspension-warning.button=Continue
 
-# Error messages for digital services
+# Error messages.en for digital services
 global.error.500.title=Sorry, we are experiencing technical difficulties - 500
 global.error.500.heading=Sorry, we’re experiencing technical difficulties
 global.error.500.message=Please try again in a few minutes.
@@ -149,4 +147,10 @@ signed-out.p2=<a href="{0}">Sign in again</a> to use this service.
 footer.links.accessibility.text=Accessibility
 footer.links.accessibility.url=/agent-services-account/accessibility-statement
 
+# BETA header
+label.beta=BETA
+label.beta.newservice= This is a new service
+label.beta.improve=will help us to improve it.
+label.beta.feedback=feedback
+label.beta.yours=– your
 
