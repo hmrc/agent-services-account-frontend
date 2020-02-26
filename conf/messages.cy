@@ -17,7 +17,7 @@ agent.services.account.section1.col2.p=Defnyddiwch y gwasanaeth hwn i ddiweddaru
 agent.services.account.section1.col2.link=Rheoli manylion TAW eich cleient (yn agor ffenestr neu dab newydd)
 agent.services.account.section1.suspended.h3=Rydym wedi cyfyngu ar eich defnydd o’r gwasanaeth hwn dros dro
 agent.services.account.section1.suspended.p1=Gwnaethom hyn oherwydd ein bod wedi gohirio eich cod asiant. Rydym wedi anfon llythyr atoch yn cadarnhau hyn.
-agent.services.account.section1.suspended.p2=
+agent.services.account.section1.suspended.p2=Mae hyn yn golygu na fyddwch yn gallu defnyddio’r gwasanaeth hwn.
 
 
 agent.services.account.section2.h2=Bwrw golwg dros gofnod incwm TWE cleient

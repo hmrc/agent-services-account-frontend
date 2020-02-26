@@ -260,6 +260,16 @@ input.form-control-error[type="password"],
   border-color: #d4351c;
 }
 .welsh-toggle {
-  color: grey;
+  padding-right: 15px;
+  float: right;
+  color: #626A6E;
   font-weight: bold;
+  margin-bottom: 0;
+  text-decoration: none
 }
+
+#cymraeg-switch:hover, #english-switch:hover{
+  color: white;
+  text-decoration: underline;
+}
+

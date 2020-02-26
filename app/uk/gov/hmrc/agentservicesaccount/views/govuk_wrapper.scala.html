@@ -60,7 +60,7 @@
             window.jsConfig.lang = window.getCookie("PLAY_LANG") || "en";
     </script>
 @if(hasTimeout) {
-    <script id="">
+    <script id="timeoutDialog">
             window.jsConfig.timeoutEnabled = true;
             window.jsConfig.timeout = @{externalUrls.timeout};
             window.jsConfig.countdown = @{externalUrls.countdown};
@@ -72,10 +72,11 @@
     @uiLayouts.head(
       linkElem = None,
       headScripts = Some(headScripts))
-    <meta name="format-detection" content="telephone=no" />
+    <meta name="format-detection" content="telephone=no"/>
 }
 
     @insideHeaderNavLinks = {
+        @navLinks
     @if(externalUrls.languageToggle){
         <div class="text--right">@views.html.language_selection(
             externalUrls.languageMap,
