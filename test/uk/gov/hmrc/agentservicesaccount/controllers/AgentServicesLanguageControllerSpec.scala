@@ -33,8 +33,6 @@ class AgentServicesLanguageControllerSpec extends BaseUnitSpec {
 
   val timeout = 3.seconds
 
-println(s"language utils is ${languageUtils}")
-
   implicit val request = FakeRequest()
 
   val controller = new AgentServicesLanguageController(configuration,languageUtils,messagesApi, externalUrls)
