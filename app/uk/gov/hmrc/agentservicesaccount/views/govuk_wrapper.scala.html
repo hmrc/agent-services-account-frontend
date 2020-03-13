@@ -78,11 +78,11 @@
     @insideHeaderNavLinks = {
         @navLinks
     @if(externalUrls.languageToggle){
-        <div class="text--right">@views.html.language_selection(
+        <li class="text--right" style="list-style-type:none;">@views.html.language_selection(
             externalUrls.languageMap,
             externalUrls.routeToSwitchLanguage,
             customClass = Some("welsh-toggle")
-        )</div>
+        )</li>
     }
     }
 
