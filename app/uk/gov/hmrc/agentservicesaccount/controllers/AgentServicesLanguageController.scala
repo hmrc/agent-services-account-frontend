@@ -32,6 +32,6 @@ class AgentServicesLanguageController @Inject() (
 
   override def languageMap: Map[String, Lang] = externalUrls.languageMap
 
-  override def fallbackURL: String = "https://www.gov.uk/fallback"
+  override def fallbackURL: String = "https://www.tax.service.gov.uk/agent-services-account"
 
 }
