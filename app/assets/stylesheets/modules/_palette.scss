@@ -259,17 +259,13 @@ input.form-control-error[type="password"],
 .error-summary {
   border-color: #d4351c;
 }
-.welsh-toggle {
-  padding-right: 15px;
-  float: right;
-  color: #b1b4b6;
-  font-weight: bold;
-  margin-bottom: 0;
-  text-decoration: none;
-}
 
-#cymraeg-switch:hover, #english-switch:hover{
-  color: white;
-  text-decoration: underline;
+
+p.welsh-toggle{
+  color: #B1B4B6;
+  text-decoration: none;
+  font-family: "nta", Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 700;
 }
 
