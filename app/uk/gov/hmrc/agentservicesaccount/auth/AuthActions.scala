@@ -83,7 +83,7 @@ class AuthActions @Inject()(logger: LoggerLike,
           URLEncoder.encode(selfURL, "utf-8")
         case None => url
       }
-      Logger.info(s"requestwithMaybeOtac.url: $requestWithMaybeOtac")
+      Logger.warn(s"requestwithMaybeOtac.url: $requestWithMaybeOtac")
       toGGLogin(requestWithMaybeOtac)
     }
 
