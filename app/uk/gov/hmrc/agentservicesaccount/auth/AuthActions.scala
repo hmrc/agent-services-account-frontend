@@ -16,22 +16,17 @@
 
 package uk.gov.hmrc.agentservicesaccount.auth
 
-import java.net.URLEncoder
-
 import javax.inject.{Inject, Singleton}
-import play.api.mvc._
 import play.api.mvc.Results._
+import play.api.mvc._
 import play.api.{Configuration, Environment, LoggerLike, Mode}
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
-import uk.gov.hmrc.agentservicesaccount.auth.AuthActions.AgentAuthAction
 import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
-import uk.gov.hmrc.agentservicesaccount.controllers.routes
 import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals.{allEnrolments, credentialRole}
 import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.HeaderCarrierConverter
 import uk.gov.hmrc.play.bootstrap.config.AuthRedirects
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -79,8 +74,7 @@ class AuthActions @Inject()(logger: LoggerLike,
         else s"${request.uri}"
       val requestWithMaybeOtac = request.session.get("otacTokenParam") match {
         case Some(p) =>
-          val selfURL = addParamsToUrl(url, "p" -> Some(p))
-          URLEncoder.encode(selfURL, "utf-8")
+          addParamsToUrl(url, "p" -> Some(p))
         case None => url
       }
       toGGLogin(requestWithMaybeOtac)
