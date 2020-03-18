@@ -68,7 +68,7 @@ class AuthActionsSpec extends BaseUnitSpec with AkkaMaterializerSpec {
   val completeGgSignInUrl = "/gg/sign-in?continue=%2F&origin=agent-services-account-frontend"
   val agentSubscriptionUrl = "/agent-subscription/start"
   def completeGgSignInUrlWithOtac(otacToken: String) =
-    s"/gg/sign-in?continue=%252F%253Fp%253D$otacToken&origin=agent-services-account-frontend"
+    s"/gg/sign-in?continue=%2F%3Fp%3D$otacToken&origin=agent-services-account-frontend"
   when(externalUrls.agentSubscriptionUrl).thenReturn(agentSubscriptionUrl)
   when(externalUrls.continueFromGGSignIn).thenReturn(completeGgSignInUrl)
 
