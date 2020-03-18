@@ -79,8 +79,7 @@ class AuthActions @Inject()(logger: LoggerLike,
         else s"${request.uri}"
       val requestWithMaybeOtac: String = request.session.get("otacTokenParam") match {
         case Some(p) =>
-          val selfURL = addParamsToUrl(url, "p" -> Some(p))
-          URLEncoder.encode(selfURL, "utf-8")
+          addParamsToUrl(url, "p" -> Some(p))
         case None => url
       }
       Logger.warn(s"requestwithMaybeOtac.url: $requestWithMaybeOtac")
