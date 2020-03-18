@@ -82,7 +82,6 @@ class AuthActions @Inject()(logger: LoggerLike,
           addParamsToUrl(url, "p" -> Some(p))
         case None => url
       }
-      Logger.warn(s"requestwithMaybeOtac.url: $requestWithMaybeOtac")
       toGGLogin(requestWithMaybeOtac)
     }
 
