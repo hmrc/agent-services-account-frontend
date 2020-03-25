@@ -89,14 +89,29 @@
             <div class="govuk-grid-column-one-half" id="tileS3C1">
                 <h2 class="govuk-heading-m" style="margin: 0px 0 5px">@Messages("agent.services.account.section3.h2")</h2>
                 <h3 class="govuk-heading-s" style="margin: 0px 0 5px">@Messages("agent.services.account.section3.col1.h3")</h3>
-                <p>@Messages("agent.services.account.section3.col1.p")</p>
-                <p><a href="@externalUrls.agentInvitationsUrl">@Messages("agent.services.account.section3.col1.link")</a></p>
+                <p>@Html(Messages("agent.services.account.section3.col1.link1",Messages("agent.services.account.section3.col1.link1.href")))</p>
+                <p>@Html(Messages("agent.services.account.section3.col1.link2",Messages("agent.services.account.section3.col1.link2.href")))</p>
             </div>
             <div class="govuk-grid-column-one-half" id="tileS3C2">
                 <h3 class="govuk-heading-s" style="margin: 35px 0 5px">@Messages("agent.services.account.section3.col2.h3")</h3>
-                <p><a href="@externalUrls.agentInvitationsTrackUrl">@Messages("agent.services.account.section3.col2.link1")</a></p>
-                <p><a href="@externalUrls.agentMappingUrl">@Messages("agent.services.account.section3.col2.link2")</a></p>
-                <p><a href="@externalUrls.agentCancelAuthUrl">@Messages("agent.services.account.section3.col2.link3")</a></p>
+                <p>@Messages("agent.services.account.section3.col2.p")</p>
+                <p>@Html(Messages("agent.services.account.section3.col2.link1",Messages("agent.services.account.section3.col2.link1.href")))</p>
+            </div>
+        </div>
+    </section>
+    <section class="tile-container" style="margin-bottom: 0">
+        <div class="tile">
+            <div class="govuk-grid-column-one-half" id="tileS4C1">
+                <h2 class="govuk-heading-m" style="margin: 0px 0 5px">@Messages("agent.services.account.section4.h2")</h2>
+                <h3 class="govuk-heading-s" style="margin: 0px 0 5px">@Messages("agent.services.account.section4.col1.h3")</h3>
+                <p>@Messages("agent.services.account.section4.col1.p")</p>
+                <p><a href="@externalUrls.agentInvitationsUrl">@Messages("agent.services.account.section4.col1.link")</a></p>
+            </div>
+            <div class="govuk-grid-column-one-half" id="tileS4C2">
+                <h3 class="govuk-heading-s" style="margin: 35px 0 5px">@Messages("agent.services.account.section4.col2.h3")</h3>
+                <p><a href="@externalUrls.agentInvitationsTrackUrl">@Messages("agent.services.account.section4.col2.link1")</a></p>
+                <p><a href="@externalUrls.agentMappingUrl">@Messages("agent.services.account.section4.col2.link2")</a></p>
+                <p><a href="@externalUrls.agentCancelAuthUrl">@Messages("agent.services.account.section4.col2.link3")</a></p>
             </div>
         </div>
     </section>
