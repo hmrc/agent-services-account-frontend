@@ -114,7 +114,6 @@ class AgentServicesControllerSpec extends BaseUnitSpec {
       content should include(messagesApi("agent.services.account.heading"))
       content should include(messagesApi("app.name"))
       content should include(messagesApi("agent.accountNumber","TARN 000 0001"))
-      content should include(messagesApi("agent.services.account.inset"))
       content should include(messagesApi("agent.services.account.section1.h2"))
       content should include(messagesApi("agent.services.account.section1.col1.h3"))
       content should include(messagesApi("agent.services.account.section1.col1.link"))

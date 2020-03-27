@@ -46,11 +46,23 @@
         <span class="govuk-hint">@Messages("agent.accountNumber", arn)</span>
     </h1>
 
-    <div class="govuk-inset-text govuk-!-width-two-thirds">
-        <p class="">
-            @Messages("agent.services.account.inset")
+    <section class="app-c-banner">
+        <h2 class="app-c-banner__title">@Messages("covid19VatDeferral.header")</h2>
+        <div class="app-c-banner-desc">
+        <p class="govuk-body">
+            @Messages("covid19VatDeferral.p1")
         </p>
-    </div>
+            <ul class="govuk-list govuk-list--bullet">
+                <li>@Messages("covid19VatDeferral.bullet1")</li>
+                <li>@Messages("covid19VatDeferral.bullet2")</li>
+            </ul>
+        <p class="govuk-body">@Messages("covid19VatDeferral.p2")</p>
+        <p class="govuk-body">@Messages("covid19VatDeferral.p3")</p>
+        <p class="govuk-body">@Messages("covid19VatDeferral.p4")</p>
+        <p class="govuk-body">@Messages("covid19VatDeferral.p5")</p>
+        </div>
+
+    </section>
 
     <section class="tile-container" style="margin-bottom: 0">
         <div class="tile">
