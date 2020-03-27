@@ -25,6 +25,38 @@
   box-sizing: border-box;
 }
 
+.govuk-list {
+  font-size: 16px;
+  line-height: 1.25;
+}
+@media (min-width: 40.0625em) {
+  .govuk-list {
+    font-size: 19px;
+    line-height: 1.31579;
+  }
+}
+
+.govuk-list--bullet {
+  padding-left: 20px;
+  list-style-type: disc;
+  border: none;
+  margin: 0;
+  margin-bottom: 20px;
+}
+
+.govuk-body-m, .govuk-body, .app-prose-scope p {
+  font-size: 16px;
+  line-height: 1.25;
+  margin-bottom: 15px;
+}
+@media (min-width: 40.0625em){
+  .govuk-body-m, .govuk-body, .app-prose-scope p {
+    font-size: 19px;
+    line-height: 1.31579;
+    margin-bottom: 20px;
+  }
+}
+
 @media (min-width: 40.0625em) {
   .govuk-inset-text {
     margin-bottom: 30px;
