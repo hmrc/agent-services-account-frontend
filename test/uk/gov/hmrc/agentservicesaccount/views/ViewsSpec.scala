@@ -172,8 +172,7 @@ class ViewsSpec extends UnitSpec with GuiceOneAppPerTest {
           include("Sign out") and
           include("href='http://localhost:9250/contact/beta-feedback?service=AOSS'") and
           include("Agent services account") and
-          include("Account number: ARN0001")
-          include("You cannot view your client lists in your agent services account. You can use your account to view and manage an individual clients VAT details.") and
+          include("Account number: ARN0001") and
           include("Making Tax Digital for VAT") and
           include("Sign clients up for Making Tax Digital for VAT") and
           include("You copied across existing client authorisations to your agent services account. This means you can now sign these clients up to Making Tax Digital.") and
