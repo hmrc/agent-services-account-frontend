@@ -24,16 +24,15 @@ agent.services.account.section2.h2=View a client''s PAYE income record
 agent.services.account.section2.col1.p=Access a client''s PAYE income record to help you complete their Self Assessment tax return.
 agent.services.account.section2.col1.link=View a client''s PAYE income record
 
-agent.services.account.section3.h2=Capital Gains Tax on UK property account
-agent.services.account.section3.col1.h3=Guidance on managing a client’s account
+agent.services.account.section3.col1.h2=Report and pay a client’s Capital Gains Tax on UK property
 agent.services.account.section3.col1.link1=<a target="_blank" href="{0}">How to manage your client’s account (opens in a new window or tab)</a>
 agent.services.account.section3.col1.link1.href=https://www.tax.service.gov.uk/capital-gains-tax-uk-property/start
 agent.services.account.section3.col1.link2=<a target="_blank" href="{0}">What you’ll need to report the tax (opens in a new window or tab)</a>
 agent.services.account.section3.col1.link2.href=
 
-agent.services.account.section3.col2.h3=Manage your client’s details or returns
-agent.services.account.section3.col2.p=Report your client’s Capital Gains Tax on UK property disposals. View, amend and send returns. See your client’s payment penalties
-agent.services.account.section3.col2.link1=<a target="_blank" href="{0}">Manage a client’s Capital Gains Tax on UK property account</a>
+agent.services.account.section3.col2.h3=Report and pay Capital Gains Tax on UK property
+agent.services.account.section3.col2.p=Use this service to report your client’s Capital Gains Tax on UK property disposals, manage their returns, and view their payments and penalties.
+agent.services.account.section3.col2.link1=<a target="_blank" href="{0}">Report and pay a client’s Capital Gains Tax on UK property</a>
 agent.services.account.section3.col2.link1.href=
 
 agent.services.account.section4.h2=Client authorisations
