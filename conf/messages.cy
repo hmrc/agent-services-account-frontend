@@ -24,12 +24,10 @@ agent.services.account.section2.h2=Bwrw golwg dros gofnod incwm TWE cleient
 agent.services.account.section2.col1.p=Cael mynediad at gofnod incwm TWE cleient i’ch helpu i lenwi ei Ffurflen Dreth Hunanasesiad.
 agent.services.account.section2.col1.link=Bwrw golwg dros gofnod incwm TWE cleient
 
-agent.services.account.section3.h2=Cyfrif Treth Enillion Cyfalaf ar eiddo yn y DU
-agent.services.account.section3.col1.h3=Arweiniad ynghylch rheoli cyfrif cleient
-agent.services.account.section3.col1.link1=<a target="_blank" href="{0}">Sut i reoli cyfrif eich cleient (yn agor ffenestr neu dab newydd)</a>
+agent.services.account.section3.col1.h2=
+agent.services.account.section3.col1.p=
+agent.services.account.section3.col1.link1=
 agent.services.account.section3.col1.link1.href=
-agent.services.account.section3.col1.link2=<a target="_blank" href="{0}">Yr hyn y bydd ei angen arnoch er mwyn rhoi gwybod i ni am y dreth (yn agor ffenestr neu dab newydd)</a>
-agent.services.account.section3.col1.link2.href=
 
 agent.services.account.section3.col2.h3=Rheoli manylion neu Ffurflenni Treth eich cleient
 agent.services.account.section3.col2.p=Rhoi gwybod am Dreth Enillion Cyfalaf eich cleient ar warediadau eiddo yn y DU. Bwrw golwg dros Ffurflenni Treth, a’u diwygio a’u hanfon. Gweld cosbau talu eich cleient
