@@ -24,15 +24,25 @@ agent.services.account.section2.h2=Bwrw golwg dros gofnod incwm TWE cleient
 agent.services.account.section2.col1.p=Cael mynediad at gofnod incwm TWE cleient i’ch helpu i lenwi ei Ffurflen Dreth Hunanasesiad.
 agent.services.account.section2.col1.link=Bwrw golwg dros gofnod incwm TWE cleient
 
-agent.services.account.section3.h2=Awdurdodiadau cleientiaid
-agent.services.account.section3.col1.h3=Gofyn i gleient eich awdurdodi
-agent.services.account.section3.col1.p=Dim ond os nad ydych wedi copïo awdurdodiad presennol gan y cleient ar draws y mae angen i chi wneud hyn.
-agent.services.account.section3.col1.link=Gofyn i gleient eich awdurdodi
+agent.services.account.section3.col1.h2=
+agent.services.account.section3.col1.p=
+agent.services.account.section3.col1.link1=
+agent.services.account.section3.col1.link1.href=
 
-agent.services.account.section3.col2.h3=Rheoli awdurdodiadau
-agent.services.account.section3.col2.link1=Olrhain eich ceisiadau awdurdodi diweddar
-agent.services.account.section3.col2.link2=Copïo rhagor o awdurdodiadau cleientiaid TAW a Hunanasesiad ar draws
-agent.services.account.section3.col2.link3=Canslo awdurdodiad cleient
+agent.services.account.section3.col2.h3=Rheoli manylion neu Ffurflenni Treth eich cleient
+agent.services.account.section3.col2.p=Rhoi gwybod am Dreth Enillion Cyfalaf eich cleient ar warediadau eiddo yn y DU. Bwrw golwg dros Ffurflenni Treth, a’u diwygio a’u hanfon. Gweld cosbau talu eich cleient
+agent.services.account.section3.col2.link1=<a target="_blank" href="{0}">Rheoli cyfrif Treth Enillion Cyfalaf cleient ar gyfrif eiddo yn y DU</a>
+agent.services.account.section3.col2.link1.href=
+
+agent.services.account.section4.h2=Awdurdodiadau cleientiaid
+agent.services.account.section4.col1.h3=Gofyn i gleient eich awdurdodi
+agent.services.account.section4.col1.p=Dim ond os nad ydych wedi copïo awdurdodiad presennol gan y cleient ar draws y mae angen i chi wneud hyn.
+agent.services.account.section4.col1.link=Gofyn i gleient eich awdurdodi
+
+agent.services.account.section4.col2.h3=Rheoli awdurdodiadau
+agent.services.account.section4.col2.link1=Olrhain eich ceisiadau awdurdodi diweddar
+agent.services.account.section4.col2.link2=Copïo rhagor o awdurdodiadau cleientiaid TAW a Hunanasesiad ar draws
+agent.services.account.section4.col2.link3=Canslo awdurdodiad cleient
 
 manage.account.heading=Rheoli’r cyfrif
 manage.account.p=Gallwch ganiatáu i ddefnyddwyr eraill yn eich sefydliad gael mynediad at y cyfrif gwasanaethau asiant hwn, a rheoli eu mynediad.

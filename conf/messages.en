@@ -24,15 +24,20 @@ agent.services.account.section2.h2=View a client''s PAYE income record
 agent.services.account.section2.col1.p=Access a client''s PAYE income record to help you complete their Self Assessment tax return.
 agent.services.account.section2.col1.link=View a client''s PAYE income record
 
-agent.services.account.section3.h2=Client authorisations
-agent.services.account.section3.col1.h3=Ask a client to authorise you
-agent.services.account.section3.col1.p=You only need to do this if you have not copied across an existing authorisation from the client.
-agent.services.account.section3.col1.link=Ask a client to authorise you
+agent.services.account.section3.col1.h2=Report and pay a client’s Capital Gains Tax on UK property
+agent.services.account.section3.col1.p=Use this service to report your client’s Capital Gains Tax on UK property disposals, manage their returns, and view their payments and penalties.
+agent.services.account.section3.col1.link1=<a href="{0}">Report and pay a client’s Capital Gains Tax on UK property</a>
+agent.services.account.section3.col1.link1.href=https://www.tax.service.gov.uk/capital-gains-tax-uk-property/start
 
-agent.services.account.section3.col2.h3=Manage authorisations
-agent.services.account.section3.col2.link1=Track your recent authorisation requests
-agent.services.account.section3.col2.link2=Copy across more VAT and Self Assessment client authorisations
-agent.services.account.section3.col2.link3=Cancel a client''s authorisation
+agent.services.account.section4.h2=Client authorisations
+agent.services.account.section4.col1.h3=Ask a client to authorise you
+agent.services.account.section4.col1.p=You only need to do this if you have not copied across an existing authorisation from the client.
+agent.services.account.section4.col1.link=Ask a client to authorise you
+
+agent.services.account.section4.col2.h3=Manage authorisations
+agent.services.account.section4.col2.link1=Track your recent authorisation requests
+agent.services.account.section4.col2.link2=Copy across more VAT and Self Assessment client authorisations
+agent.services.account.section4.col2.link3=Cancel a client''s authorisation
 
 manage.account.heading=Manage account
 manage.account.p=You can allow other users in your organisation to access this agent services account, and manage their access.
