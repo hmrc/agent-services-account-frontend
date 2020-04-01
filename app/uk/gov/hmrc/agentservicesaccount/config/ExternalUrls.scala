@@ -72,6 +72,10 @@ class ExternalUrls @Inject() (override val configuration: Configuration) extends
 
   lazy val languageToggle: Boolean = getConfigBoolean("features.enable-welsh-toggle")
 
+  private lazy val cgtPropertyDisposalsExternalUrl = getConfigString("microservice.services.capital-gains-tax-uk-property.external-url")
+  private lazy val cgtPropertyDisposalsStartPath = getConfigString("microservice.services.capital-gains-tax-uk-property.start.path")
+  lazy val cgtPropertyDisposalsUrl = s"$cgtPropertyDisposalsExternalUrl$cgtPropertyDisposalsStartPath"
+
   def languageMap: Map[String, Lang] = Map(
     "english" -> Lang("en"),
     "cymraeg" -> Lang("cy")
