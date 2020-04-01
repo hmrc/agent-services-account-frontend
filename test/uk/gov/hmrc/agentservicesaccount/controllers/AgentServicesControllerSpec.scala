@@ -51,6 +51,8 @@ class AgentServicesControllerSpec extends BaseUnitSpec {
   when(externalUrls.agentAfiUrl).thenReturn(agentAfiUrl)
   val agentCancelAuthUrl = "http://example.com/agent-invitations/cancel-authorisation"
   when(externalUrls.agentCancelAuthUrl).thenReturn(agentCancelAuthUrl)
+  val cgtPropertyDisposalsStartUrl = "http://example.com/capital-gains-tax-uk-property/start"
+  when(externalUrls.cgtPropertyDisposalsUrl).thenReturn(cgtPropertyDisposalsStartUrl)
   val arn = "TARN0000001"
   val agentEnrolment = Enrolment("HMRC-AS-AGENT", Seq(EnrolmentIdentifier("AgentReferenceNumber", arn)), state = "Activated", delegatedAuthRule = None)
 
@@ -127,8 +129,7 @@ class AgentServicesControllerSpec extends BaseUnitSpec {
       content should include(agentAfiUrl)
       content should include(messagesApi("agent.services.account.section3.col1.h2"))
       content should include(messagesApi("agent.services.account.section3.col1.p"))
-      content should include("<p><a href=\"https://www.tax.service.gov.uk/capital-gains-tax-uk-property/start\">Report and pay a client’s Capital Gains Tax on UK property</a></p>")
-      content should include(messagesApi("agent.services.account.section3.col1.link1.href"))
+      content should include("<p><a href=\"http://example.com/capital-gains-tax-uk-property/start\">Report and pay a client’s Capital Gains Tax on UK property</a></p>")
       content should include(messagesApi("agent.services.account.section4.h2"))
       content should include(messagesApi("agent.services.account.section4.col1.h3"))
       content should include(messagesApi("agent.services.account.section4.col1.p"))
