@@ -25,14 +25,14 @@ agent.services.account.section2.col1.p=Cael mynediad at gofnod incwm TWE cleient
 agent.services.account.section2.col1.link=Bwrw golwg dros gofnod incwm TWE cleient
 
 agent.services.account.section3.col1.h2=
-agent.services.account.section3.col1.p=
-agent.services.account.section3.col1.link1=
-agent.services.account.section3.col1.link1.href=
-
-agent.services.account.section3.col2.h3=Rheoli manylion neu Ffurflenni Treth eich cleient
-agent.services.account.section3.col2.p=Rhoi gwybod am Dreth Enillion Cyfalaf eich cleient ar warediadau eiddo yn y DU. Bwrw golwg dros Ffurflenni Treth, a’u diwygio a’u hanfon. Gweld cosbau talu eich cleient
-agent.services.account.section3.col2.link1=<a target="_blank" href="{0}">Rheoli cyfrif Treth Enillion Cyfalaf cleient ar gyfrif eiddo yn y DU</a>
-agent.services.account.section3.col2.link1.href=
+agent.services.account.section3.col1.link1=<a href="{0}" target="_blank"></a>
+agent.services.account.section3.col1.link1.href=https://tax.service.gov.uk/capital-gains-tax-uk-property/manage-clients-capital-gains-tax-on-uk-property-account#how-to-manage-your-clients-account
+agent.services.account.section3.col1.link2=<a href="{0}" target="_blank"></a>
+agent.services.account.section3.col1.link2.href=https://tax.service.gov.uk/capital-gains-tax-uk-property/manage-clients-capital-gains-tax-on-uk-property-account#what-youll-need-to-report-the-tax
+agent.services.account.section3.col2.h3=
+agent.services.account.section3.col2.p=
+agent.services.account.section3.col2.link1=<a href="{0}"></a>
+agent.services.account.section3.col2.link1.href=https://www.tax.service.gov.uk/capital-gains-tax-uk-property/start
 
 agent.services.account.section4.h2=Awdurdodiadau cleientiaid
 agent.services.account.section4.col1.h3=Gofyn i gleient eich awdurdodi
