@@ -17,6 +17,7 @@
 package uk.gov.hmrc.agentservicesaccount.controllers
 
 import akka.stream.Materializer
+import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
@@ -55,12 +56,13 @@ class SignOutControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Mocki
     }
 
     "show the sign out form" in {
+      when(config.getString(anyString(), any[Option[Set[String]]]())).thenReturn(Some("dummy"))
       val signOutController = new SignOutController()(externalUrls, config, messagesApi)
 
       val result = signOutController.showSurvey(FakeRequest("GET", "/"))
 
       status(result) shouldBe 200
-      bodyOf(result).toString.contains("Feedback") shouldBe true
+      await(bodyOf(result)).contains("Feedback") shouldBe true
     }
 
     "redirect to survey" in {
