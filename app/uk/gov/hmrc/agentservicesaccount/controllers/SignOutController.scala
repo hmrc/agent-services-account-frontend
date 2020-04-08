@@ -18,19 +18,41 @@ package uk.gov.hmrc.agentservicesaccount.controllers
 
 import javax.inject.Inject
 import play.api.Configuration
+import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
+import uk.gov.hmrc.agentservicesaccount.forms.SignOutForm
 import uk.gov.hmrc.agentservicesaccount.views.html.signed_out
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.survey
 
 import scala.concurrent.Future
 
 class SignOutController @Inject()(implicit val externalUrls: ExternalUrls, configuration: Configuration, val messagesApi: MessagesApi)
   extends FrontendController with I18nSupport {
 
+  def showSurvey: Action[AnyContent] = Action.async { implicit request =>
+    Future successful Ok(survey(SignOutForm.form))
+  }
+
+  def submitSurvey: Action[AnyContent] = Action.async { implicit request =>
+    val errorFunction = { formWithErrors: Form[String] =>
+      Future successful BadRequest(survey(formWithErrors))
+    }
+
+    val successFunction = { key: String =>
+      Future successful Redirect(externalUrls.signOutUrlWithSurvey(key))
+    }
+
+    SignOutForm.form.bindFromRequest().fold(
+      errorFunction,
+      successFunction
+    )
+  }
+
   def signOut: Action[AnyContent] = Action.async { implicit request =>
-      Future successful Redirect(externalUrls.signOutUrlWithSurvey).removingFromSession("otacTokenParam")
+    Future successful Redirect(routes.SignOutController.showSurvey()).withNewSession
   }
 
   def signedOut = Action.async { implicit request =>

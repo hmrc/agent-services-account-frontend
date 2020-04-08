@@ -35,7 +35,7 @@ class ExternalUrlsSpec extends UnitSpec with ResettingMockitoSugar {
 
   val completeAgentSubscriptionGgSignInUrl = s"$externalUrl$subscriptionPath"
 
-  val completeGgSignOutUrl = s"$companyAuthFrontendExternalBaseUrl$ggSignOutPath?continue=${urlEncode(ggSignOutContinueUrl)}"
+  def completeGgSignOutUrl(key: String) = s"$companyAuthFrontendExternalBaseUrl$ggSignOutPath?continue=${urlEncode(ggSignOutContinueUrl + key)}"
 
   val mappingExternalUrl = "http://www.example.com/foo"
   val mappingStartPath = "/foo"
@@ -65,7 +65,7 @@ class ExternalUrlsSpec extends UnitSpec with ResettingMockitoSugar {
   "signOutUrl" should {
     "return the sign out URL including continue parameter" in {
       mockConfig()
-      externalUrls.signOutUrlWithSurvey shouldBe completeGgSignOutUrl
+      externalUrls.signOutUrlWithSurvey("key") shouldBe completeGgSignOutUrl("key")
     }
   }
 
