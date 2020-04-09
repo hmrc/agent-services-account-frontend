@@ -27,9 +27,9 @@
   serviceInfoContent: Html = HtmlFormat.empty,
   scriptElem: Option[Html] = None,
   analyticsAdditionalJs: Option[Html] = None,
-        isAdmin: Boolean = false,
-        hasCustomContent: Boolean = true,
-        hasTimeout: Boolean = true)(implicit request: Request[_], messages: Messages, configuration: Configuration, externalUrls: ExternalUrls)
+  isAdmin: Boolean = false,
+  hasCustomContent: Boolean = true,
+  hasTimeout: Boolean = true)(implicit request: Request[_], messages: Messages, configuration: Configuration, externalUrls: ExternalUrls)
 
 @import layouts.{govuk_template => hmrcGovUkTemplate}
 @import uk.gov.hmrc.play.views.html.{layouts => uiLayouts}

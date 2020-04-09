@@ -40,7 +40,7 @@ class AgentServicesControllerSpec extends BaseUnitSpec {
   implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   implicit val externalUrls: ExternalUrls = mock[ExternalUrls]
   val signOutUrl = routes.SignOutController.signOut().url
-  when(externalUrls.signOutUrlWithSurvey).thenReturn(signOutUrl)
+  when(externalUrls.signOutUrlWithSurvey("key")).thenReturn(signOutUrl)
   val mappingUrl = "http://example.com/agent-mapping/start"
   when(externalUrls.agentMappingUrl).thenReturn(mappingUrl)
   val invitationsUrl = "http://example.com/agent-invitations/agents"

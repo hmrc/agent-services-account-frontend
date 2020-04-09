@@ -147,6 +147,17 @@ accessibility.statement.howtested.p3=Paratowyd y dudalen hon ar 23 Medi 2019. Ca
 #session time out
 timeout-dialog.p1=Am resymau diogelwch, cewch eich allgofnodi o’ch cyfrif gwasanaethau asiant ymhen
 
+#survey
+survey.title=Adborth
+survey.h2=Beth oeddech yn ei wneud heddiw?
+survey.hint=Byddwn yn gofyn ambell gwestiwn i chi ynglŷn â’r gwasanaeth gwnaethoch ddefnyddio.
+survey.error.summary=Mae problem wedi codi
+survey.form.label.agentsub=Creu cyfrif gwasanaethau asiant
+survey.form.label.agenthome=Mynediad i fy nghyfrif gwasanaethau asiant
+survey.form.label.invitagent=Gofyn i gleient am awdurdodiad
+survey.button=Yn eich blaen
+survey.empty=Please select an option
+
 #signed-out
 signed-out.header=Rydych wedi cael eich allgofnodi
 signed-out.p1=Nid ydych wedi gwneud dim byd ers {0}, felly rydym wedi’ch allgofnodi er mwyn cadw’ch cyfrif yn ddiogel.

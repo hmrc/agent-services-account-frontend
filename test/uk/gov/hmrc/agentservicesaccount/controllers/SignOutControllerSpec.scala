@@ -16,6 +16,8 @@
 
 package uk.gov.hmrc.agentservicesaccount.controllers
 
+import akka.stream.Materializer
+import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
@@ -38,19 +40,41 @@ class SignOutControllerSpec extends UnitSpec with GuiceOneAppPerSuite with Mocki
   implicit val externalUrls: ExternalUrls = mock[ExternalUrls]
   implicit val requestHeader = RequestHeader
   implicit val config: Configuration = mock[Configuration]
-  implicit val messagesApi: MessagesApi = mock[MessagesApi]
+  implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+  implicit val materializer: Materializer = app.materializer
 
   "SignOutController" should {
-    "remove session and redirect to /gg/sign-out" in {
+    "remove session and redirect to /home/survey" in {
       val signOutController = new SignOutController()(externalUrls,config, messagesApi)
-      val signOutUrl = "http://example.com/gg/sign-out?continue=http://example.com/go-here-after-sign-out"
-      when(externalUrls.signOutUrlWithSurvey).thenReturn(signOutUrl)
+      val signOutUrl = "/agent-services-account/home/survey"
+      when(externalUrls.signOutUrlWithSurvey("key")).thenReturn(signOutUrl)
 
       val request = signOutController.signOut(FakeRequest("GET","/")).withSession("otacTokenParam" -> "token")
 
       status(request) shouldBe 303
-      redirectLocation(request).get shouldBe externalUrls.signOutUrlWithSurvey
       request.header.headers.get("otacTokenParam") shouldBe empty
+    }
+
+    "show the sign out form" in {
+      when(config.getString(anyString(), any[Option[Set[String]]]())).thenReturn(Some("dummy"))
+      val signOutController = new SignOutController()(externalUrls, config, messagesApi)
+
+      val result = signOutController.showSurvey(FakeRequest("GET", "/"))
+
+      status(result) shouldBe 200
+      await(bodyOf(result)).contains("Feedback") shouldBe true
+    }
+
+    "redirect to survey" in {
+      val signOutController = new SignOutController()(externalUrls, config, messagesApi)
+      val signOutUrl = "http://example.com/gg/sign-out?continue=http://example.com/go-here-after-sign-outAGENTSUB"
+
+      when(externalUrls.signOutUrlWithSurvey("AGENTSUB")).thenReturn(signOutUrl)
+
+      val result = signOutController.submitSurvey(FakeRequest("POST", "/").withFormUrlEncodedBody("surveyKey" -> "AGENTSUB"))
+
+      status(result) shouldBe 303
+      redirectLocation(result).get shouldBe externalUrls.signOutUrlWithSurvey("AGENTSUB")
     }
 
     "/signed-out redirect to GG sign in with continue url back to /agent-services-account" in {
