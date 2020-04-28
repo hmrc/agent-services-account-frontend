@@ -24,13 +24,13 @@ agent.services.account.section2.h2=Bwrw golwg dros gofnod incwm TWE cleient
 agent.services.account.section2.col1.p=Cael mynediad at gofnod incwm TWE cleient i’ch helpu i lenwi ei Ffurflen Dreth Hunanasesiad.
 agent.services.account.section2.col1.link=Bwrw golwg dros gofnod incwm TWE cleient
 
-agent.services.account.section3.col1.h2=
+agent.services.account.section3.col1.h2=Rhoi gwybod am a thalu Treth Enillion Cyfalaf cleient ar eiddo yn y DU
 agent.services.account.section3.col1.link1=<a href="{0}" target="_blank"></a>
 agent.services.account.section3.col1.link1.href=https://tax.service.gov.uk/capital-gains-tax-uk-property/manage-clients-capital-gains-tax-on-uk-property-account#how-to-manage-your-clients-account
 agent.services.account.section3.col1.link2=<a href="{0}" target="_blank"></a>
 agent.services.account.section3.col1.link2.href=https://tax.service.gov.uk/capital-gains-tax-uk-property/manage-clients-capital-gains-tax-on-uk-property-account#what-youll-need-to-report-the-tax
-agent.services.account.section3.col2.h3=
-agent.services.account.section3.col2.p=
+agent.services.account.section3.col2.h3=Rhoi gwybod am a thalu Treth Enillion Cyfalaf ar eiddo yn y DU
+agent.services.account.section3.col2.p=Defnyddiwch y gwasanaeth hwn i roi gwybod am Dreth Enillion Cyfalaf eich cleient ar warediadau eiddo yn y DU, rheoli ei Ffurflenni Treth, a bwrw golwg dros ei daliadau a chosbau.
 agent.services.account.section3.col2.link1=<a href="{0}"></a>
 agent.services.account.section3.col2.link1.href=https://www.tax.service.gov.uk/capital-gains-tax-uk-property/start
 
