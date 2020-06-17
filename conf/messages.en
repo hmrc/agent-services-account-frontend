@@ -177,10 +177,8 @@ label.beta.yours=– your
 
 #COVID-19
 covid19VatDeferral.header=Coronavirus (COVID 19) VAT deferral
-covid19VatDeferral.p1=If your client has VAT payments that are due between 20 March and 30 June 2020, they can choose to:
-covid19VatDeferral.bullet1=defer them without paying interest or penalties
-covid19VatDeferral.bullet2=pay the VAT due as normal
-covid19VatDeferral.p2=They must continue to submit their returns as normal.
-covid19VatDeferral.p3=If they choose to defer their VAT payment, the VAT due must be paid on or before 31 March 2021.
-covid19VatDeferral.p4=They do not need to tell HMRC that they are deferring VAT payments.
-covid19VatDeferral.p5=If your client normally pays by Direct Debit, they must contact their bank to cancel it as soon as possible.
+covid19VatDeferral.p1=Reminder: the VAT payments deferral scheme will end on 30 June as previously set out
+covid19VatDeferral.p2=VAT payments with a due date after 30 June must be paid on time and in full.
+covid19VatDeferral.p3=If your client cancelled their Direct Debit, they need to set it up again, so they don’t miss a payment. HMRC’s Time To Pay is still available for businesses struggling to pay their tax bills and they should contact us as soon as possible if they cannot pay.
+covid19VatDeferral.p4=Businesses should still need to submit VAT Returns, even if their business has temporarily closed.
+covid19VatDeferral.p5=Businesses have until 31 March 2021 to pay any VAT payments deferred through this scheme.
