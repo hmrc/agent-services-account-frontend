@@ -176,9 +176,9 @@ label.beta.feedback=adborth
 label.beta.yours=– bydd eich
 
 #COVID-19
-covid19VatDeferral.header=Coronavirus (COVID 19) VAT deferral
-covid19VatDeferral.p1=Reminder: the VAT payments deferral scheme will end on 30 June as previously set out
-covid19VatDeferral.p2=VAT payments with a due date after 30 June must be paid on time and in full.
-covid19VatDeferral.p3=If your client cancelled their Direct Debit, they need to set it up again, so they don’t miss a payment. HMRC’s Time To Pay is still available for businesses struggling to pay their tax bills and they should contact us as soon as possible if they cannot pay.
-covid19VatDeferral.p4=Businesses should still need to submit VAT Returns, even if their business has temporarily closed.
-covid19VatDeferral.p5=Businesses have until 31 March 2021 to pay any VAT payments deferred through this scheme.
+covid19VatDeferral.header=Gohirio TAW yn sgil coronafeirws (COVID-19)
+covid19VatDeferral.p1=Nodyn atgoffa: bydd y cynllun gohirio taliadau TAW yn dod i ben ar 30 Mehefin fel y nodwyd yn flaenorol
+covid19VatDeferral.p2=Mae’n rhaid i daliadau TAW sydd â dyddiad dyledus ar ôl 30 Mehefin gael eu talu’n llawn ac mewn pryd.
+covid19VatDeferral.p3=Os yw’ch cleient wedi canslo’i Ddebyd Uniongyrchol, dylai ei ailsefydlu er mwyn iddo beidio â methu taliad. Mae cynllun Amser i Dalu CThEM yn dal i fod ar gael ar gyfer busnesau sy’n ei chael hi’n anodd talu eu biliau treth, a dylent gysylltu â ni cyn gynted â phosibl os na allant dalu.
+covid19VatDeferral.p4=Hyd yn oed os yw eu busnes wedi cau dros dro, dylai busnesau gyflwyno Ffurflenni TAW o hyd.
+covid19VatDeferral.p5=Mae gan fusnesau hyd at 31 Mawrth 2021 i dalu unrhyw daliadau TAW sy’n cael eu gohirio drwy’r cynllun hwn.
