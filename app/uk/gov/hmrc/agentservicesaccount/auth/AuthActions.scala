@@ -19,9 +19,9 @@ package uk.gov.hmrc.agentservicesaccount.auth
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.Results._
 import play.api.mvc._
-import play.api.{Configuration, Environment, LoggerLike, Mode}
+import play.api.{Configuration, Environment, Logger, Mode}
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
-import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
+import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals.{allEnrolments, credentialRole}
@@ -42,11 +42,12 @@ case class AgentInfo(arn: Arn, credentialRole: Option[CredentialRole]) {
 case class AgentRequest[A](arn: Arn, request: Request[A]) extends WrappedRequest[A](request)
 
 @Singleton
-class AuthActions @Inject()(logger: LoggerLike,
-                            externalUrls: ExternalUrls,
+class AuthActions @Inject()(appConfig: AppConfig,
                             override val authConnector: AuthConnector,
                             val env: Environment,
                             val config: Configuration) extends AuthorisedFunctions with AuthRedirects {
+
+  val logger = Logger(AuthActions.getClass)
 
   def withAuthorisedAsAgent(body: AgentInfo => Future[Result])(implicit ec: ExecutionContext, hc: HeaderCarrier, request: Request[AnyContent]): Future[Result] =
     authorised(AuthProviders(GovernmentGateway) and AffinityGroup.Agent)
@@ -57,7 +58,7 @@ class AuthActions @Inject()(logger: LoggerLike,
               body(AgentInfo(arn, credRole))
             case None =>
               logger.warn("No HMRC-AS-AGENT enrolment found -- redirecting to /agent-subscription/start.")
-              Future successful Redirect(externalUrls.agentSubscriptionUrl)
+              Future successful Redirect(appConfig.agentSubscriptionFrontendUrl)
           }
       }.recover(handleFailure)
 

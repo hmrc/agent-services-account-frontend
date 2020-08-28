@@ -15,7 +15,28 @@
  *@
 
 @import play.api.Configuration
-@import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
+@import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+@import layouts.{govuk_template => hmrcGovUkTemplate}
+@import uk.gov.hmrc.play.views.html.{layouts => uiLayouts}
+@import uk.gov.hmrc.play.views.html.{helpers => uiHelpers}
+@import uk.gov.hmrc.play.views.html.layouts
+@import play.twirl.api.HtmlFormat
+@import uk.gov.hmrc.agentservicesaccount.controllers.routes
+
+@this(
+    govUkTemplate: views.html.layouts.GovUkTemplate,
+    uiHead: uk.gov.hmrc.play.views.html.layouts.Head,
+    uiHeaderNav: uk.gov.hmrc.play.views.html.layouts.HeaderNav,
+    uiFooter: uk.gov.hmrc.play.views.html.layouts.Footer,
+    uiServiceInfo: uk.gov.hmrc.play.views.html.layouts.ServiceInfo,
+    uiMainContentHeader: uk.gov.hmrc.play.views.html.layouts.MainContentHeader,
+    uiMainContent: uk.gov.hmrc.play.views.html.layouts.MainContent,
+    uiFooterLinks: uk.gov.hmrc.play.views.html.layouts.FooterLinks,
+    helperReportAProblemLink: uk.gov.hmrc.play.views.html.helpers.ReportAProblemLink,
+    uiBetaBanner: uk.gov.hmrc.play.views.html.layouts.BetaBanner,
+    mainContentCustom: main_content_custom
+)
+
 @(title: String,
   mainClass: Option[String] = None,
   mainDataAttributes: Option[Html] = None,
@@ -29,15 +50,7 @@
   analyticsAdditionalJs: Option[Html] = None,
   isAdmin: Boolean = false,
   hasCustomContent: Boolean = true,
-  hasTimeout: Boolean = true)(implicit request: Request[_], messages: Messages, configuration: Configuration, externalUrls: ExternalUrls)
-
-@import layouts.{govuk_template => hmrcGovUkTemplate}
-@import uk.gov.hmrc.play.views.html.{layouts => uiLayouts}
-@import uk.gov.hmrc.play.views.html.{helpers => uiHelpers}
-@import uk.gov.hmrc.agentservicesaccount.controllers._
-@import uk.gov.hmrc.play.views.html.layouts
-@import play.api.Configuration
-
+  hasTimeout: Boolean = true)(implicit request: Request[_], messages: Messages, configuration: Configuration, appConfig: AppConfig)
 
 @headScripts = {
     <link href="@controllers.routes.Assets.at("stylesheets/styles.css")" media="screen" rel="stylesheet" type="text/css">
@@ -62,14 +75,14 @@
 @if(hasTimeout) {
     <script id="timeoutDialog">
             window.jsConfig.timeoutEnabled = true;
-            window.jsConfig.timeout = @{externalUrls.timeout};
-            window.jsConfig.countdown = @{externalUrls.countdown};
+            window.jsConfig.timeout = @{appConfig.timeoutSeconds};
+            window.jsConfig.countdown = @{appConfig.timeoutCountdownSeconds};
             window.jsConfig.keep_alive_url = "@{routes.SignOutController.keepAlive().url}";
             window.jsConfig.timed_out_url = "@{routes.SignOutController.timedOut().url}";
             window.jsConfig.logout_url = "@{routes.SignOutController.signedOut().url}";
     </script>
 }
-    @uiLayouts.head(
+    @uiHead(
       linkElem = None,
       headScripts = Some(headScripts))
     <meta name="format-detection" content="telephone=no"/>
@@ -77,17 +90,17 @@
 
     @insideHeaderNavLinks = {
         @navLinks
-    @if(externalUrls.languageToggle){
+    @if(appConfig.welshToggleEnabled){
         <li class="text--right" style="list-style-type:none;">@views.html.language_selection(
-            externalUrls.languageMap,
-            externalUrls.routeToSwitchLanguage,
+            appConfig.languageMap,
+            appConfig.routeToSwitchLanguage,
             customClass = Some("welsh-toggle")
         )</li>
     }
     }
 
 @insideHeader = {
-    @uiLayouts.header_nav(
+    @uiHeaderNav(
       navTitle = Some(Messages("app.name")),
       navTitleLink = None,
       showBetaLink = false,
@@ -109,7 +122,7 @@
 @afterHeader = {}
 
 @bodyEnd = {
-    @uiLayouts.footer(
+    @uiFooter(
       analyticsToken = configuration.getString("google-analytics.token"),
       analyticsHost = configuration.getString("google-analytics.host").get,
       ssoUrl = None,
@@ -141,7 +154,7 @@
 }
 
 @serviceInfo = {
-@uiLayouts.serviceInfo(
+@uiServiceInfo(
     betaBanner = HtmlFormat.empty,
     includeGridWrapper = false,
     Some(serviceInfoContent))
@@ -150,29 +163,29 @@
 @mainContentHeader = {
 
     @if(contentHeader.isDefined) {
-        @uiLayouts.main_content_header(contentHeader = contentHeader.get)
+        @uiMainContentHeader(contentHeader = contentHeader.get)
     }
 }
 
-@getHelpForm = @{uiHelpers.reportAProblemLink(configuration.getString("reportAProblemPartialUrl").get, configuration.getString("reportAProblemNonJSUrl").get)}
+@getHelpForm = @{helperReportAProblemLink(configuration.getString("reportAProblemPartialUrl").get, configuration.getString("reportAProblemNonJSUrl").get)}
 
 @titleSuffix = @{ Messages("servicename.titleSuffix") }
 
 @customContent = {
-    @main_content_custom(
+    @mainContentCustom(
       article = mainContent,
       mainClass = mainClass,
       mainDataAttributes = mainDataAttributes,
       mainContentHeader = mainContentHeader,
       serviceInfo = customServiceInfo,
-        betaBanner = betaBanner,
+      betaBanner = betaBanner,
       sidebar = sidebar,
       getHelpForm = getHelpForm
     )
 }
 
 @content = {
-@uiLayouts.main_content(
+@uiMainContent(
     article = mainContent,
     mainClass = mainClass,
     mainDataAttributes = mainDataAttributes,
@@ -183,7 +196,7 @@
 }
 
     @if(hasCustomContent) {
-    @hmrcGovUkTemplate(Some(title + " " + titleSuffix), bodyClasses)(head, bodyEnd, insideHeader, afterHeader, footerTop, Some(uiLayouts.footer_links(additionalLinks = Some(footerLinks))), true)(customContent)
-}else {
-    @hmrcGovUkTemplate(Some(title + " " + titleSuffix), bodyClasses)(head, bodyEnd, insideHeader, afterHeader, footerTop, Some(uiLayouts.footer_links(additionalLinks = Some(footerLinks))), true)(content)
-}
+        @govUkTemplate(Some(title + " " + titleSuffix), bodyClasses)(head, bodyEnd, insideHeader, afterHeader, footerTop, Some(uiFooterLinks(additionalLinks = Some(footerLinks))), true)(customContent)
+    }else {
+        @govUkTemplate(Some(title + " " + titleSuffix), bodyClasses)(head, bodyEnd, insideHeader, afterHeader, footerTop, Some(uiFooterLinks(additionalLinks = Some(footerLinks))), true)(content)
+    }

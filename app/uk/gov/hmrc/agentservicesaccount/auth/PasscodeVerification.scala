@@ -16,10 +16,12 @@
 
 package uk.gov.hmrc.agentservicesaccount.auth
 
+import com.google.inject.{ImplementedBy, Singleton}
 import javax.inject.Inject
 import play.api.mvc.Results._
 import play.api.mvc.{Request, Result}
 import play.api.{Configuration, Environment, Logger, Mode}
+import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.auth.otac.{Authorised, OtacAuthConnector}
 import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
 
@@ -27,21 +29,23 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class PasscodeVerificationException(msg: String) extends RuntimeException(msg)
 
+@ImplementedBy(classOf[FrontendPasscodeVerification])
 trait PasscodeVerification {
   def apply[A](body: Boolean => Future[Result])(implicit request: Request[A], headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[Result]
 }
 
+@Singleton
 class FrontendPasscodeVerification @Inject()(configuration: Configuration,
                                              environment: Environment,
-                                             otacAuthConnector: OtacAuthConnector)
+                                             otacAuthConnector: OtacAuthConnector,
+                                            appConfig: AppConfig)
   extends PasscodeVerification {
 
   val tokenParam = "p"
-  val passcodeEnabledKey = "passcodeAuthentication.enabled"
-  val passcodeRegimeKey = "passcodeAuthentication.regime"
 
-  lazy val passcodeEnabled: Boolean = configuration.getBoolean(passcodeEnabledKey).getOrElse(throwConfigNotFound(passcodeEnabledKey))
-  lazy val passcodeRegime: String = configuration.getString(passcodeRegimeKey).getOrElse(throwConfigNotFound(passcodeRegimeKey))
+  lazy val passcodeEnabled: Boolean = appConfig.passcodeAuthEnabled
+  lazy val passcodeRegime: String = appConfig.passcodeAuthRegime
+
   lazy val env: String = if (environment.mode.equals(Mode.Test)) "Test" else configuration.getString("run.mode").getOrElse("Dev")
   lazy val verificationURL: String = configuration.getString(s"govuk-tax.$env.url.verification-frontend.redirect").getOrElse("/verification")
   lazy val logoutUrl = s"$verificationURL/otac/logout/$passcodeRegime"
@@ -53,8 +57,6 @@ class FrontendPasscodeVerification @Inject()(configuration: Configuration,
       addRedirectUrl(nonUrlEncodedToken)(request)(Redirect(redirectUrl))
     }
   }
-
-  private def throwConfigNotFound(configKey: String) = throw new PasscodeVerificationException(s"The value for the key '$configKey' should be setup in the config file.")
 
   private def addRedirectUrl[A](token: String)(implicit request: Request[A]): Result => Result = e =>
     e.addingToSession(SessionKeys.redirect -> buildRedirectUrl(request))

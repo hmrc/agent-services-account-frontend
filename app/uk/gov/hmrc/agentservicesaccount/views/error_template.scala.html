@@ -15,8 +15,11 @@
  *@
 
 @import play.api.Configuration
-@import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
-@(pageTitle: String, heading: String, message: String)(implicit request: Request[_], messages: Messages, configuration: Configuration, externalUrls: ExternalUrls)
+@import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+
+@this(govUkWrapper: govuk_wrapper)
+
+@(pageTitle: String, heading: String, message: String)(implicit request: Request[_], messages: Messages, configuration: Configuration, appConfig: AppConfig)
 
 @contentHeader = {
   <h1>@heading</h1>
@@ -26,4 +29,4 @@
   <p>@message</p>
 }
 
-@govuk_wrapper(title = pageTitle, contentHeader = Some(contentHeader), mainContent = mainContent)
+@govUkWrapper(title = pageTitle, contentHeader = Some(contentHeader), mainContent = mainContent)

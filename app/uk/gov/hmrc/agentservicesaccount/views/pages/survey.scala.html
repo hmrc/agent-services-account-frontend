@@ -14,26 +14,32 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
+@import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import play.api.Configuration
 @import uk.gov.hmrc.agentservicesaccount.views.html.main_template
 @import uk.gov.hmrc.play.views.html.helpers.{errorSummary, form, input_radio_group}
 @import uk.gov.hmrc.agentservicesaccount.controllers.routes
-
 @import uk.gov.hmrc.agentservicesaccount.forms.SignOutForm
-@(surveyForm: Form[String])(implicit messages: Messages, request: Request[_], externalUrls: ExternalUrls, configuration: Configuration)
 
-@main_template(Messages("survey.title"), hasCustomContent = false) {
+@this(mainTemplate: main_template,
+      uiErrorSummary: uk.gov.hmrc.play.views.html.helpers.ErrorSummary,
+      uiFormHelper: uk.gov.hmrc.play.views.html.helpers.FormWithCSRF,
+      uiInputRadioGroup: uk.gov.hmrc.play.views.html.helpers.InputRadioGroup
+)
+
+@(surveyForm: Form[String])(implicit messages: Messages, request: Request[_], appConfig: AppConfig, configuration: Configuration)
+
+@mainTemplate(Messages("survey.title"), hasCustomContent = false) {
 
  @if(surveyForm.hasErrors) {
-  @errorSummary(Messages("survey.error.summary"), surveyForm, Seq.empty, Some("survey"))
+  @uiErrorSummary(Messages("survey.error.summary"), surveyForm, Seq.empty, Some("survey"))
  }
 
- @form(
+ @uiFormHelper(
   action = routes.SignOutController.submitSurvey(),
   'class -> "form js-form") {
 
-  @input_radio_group(
+  @uiInputRadioGroup(
    surveyForm("surveyKey"),
    SignOutForm.surveyKeys,
    '_legend -> Html(s"""<h1 class="heading-xlarge margin-bottom-20">${Messages("survey.title")}</h1>

@@ -15,13 +15,15 @@
  *@
 
 @import play.api.Configuration
+@import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 
-@import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
-@()(implicit messages: Messages, request: Request[_], configuration: Configuration, externalUrls: ExternalUrls)
+@this(mainTemplate: main_template)
+
+@()(implicit messages: Messages, request: Request[_], configuration: Configuration, appConfig: AppConfig)
 
 @userAction = @{request.headers.get("referer").getOrElse("")}
 
-@uk.gov.hmrc.agentservicesaccount.views.html.main_template(title = Messages("accessibility.statement.title")) {
+@mainTemplate(title = Messages("accessibility.statement.title")) {
 
     <div class="content__body_accessibility">
 

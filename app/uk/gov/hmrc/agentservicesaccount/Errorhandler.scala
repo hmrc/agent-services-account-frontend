@@ -16,20 +16,19 @@
 
 package uk.gov.hmrc.agentservicesaccount
 
-import com.google.inject.name.Named
 import javax.inject.{Inject, Singleton}
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.mvc.Results._
 import play.api.mvc.{Request, RequestHeader, Result}
 import play.api.{Configuration, Environment, Mode}
-import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
+import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.views.html.error_template
 import uk.gov.hmrc.auth.core.{InsufficientEnrolments, NoActiveSession}
 import uk.gov.hmrc.http.{JsValidationException, NotFoundException}
 import uk.gov.hmrc.play.HeaderCarrierConverter
 import uk.gov.hmrc.play.audit.http.connector.{AuditConnector, AuditResult}
 import uk.gov.hmrc.play.bootstrap.config.{AuthRedirects, HttpAuditEvent}
-import uk.gov.hmrc.play.bootstrap.http.FrontendErrorHandler
+import uk.gov.hmrc.play.bootstrap.frontend.http.FrontendErrorHandler
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -37,11 +36,13 @@ import scala.concurrent.{ExecutionContext, Future}
 class ErrorHandler @Inject() (
                                val env: Environment,
                                val messagesApi: MessagesApi,
-                               val auditConnector: AuditConnector,
-                               @Named("appName") val appName: String)(implicit val config: Configuration, ec: ExecutionContext, externalUrls: ExternalUrls)
+  errorTemplateView: error_template,
+                               val auditConnector: AuditConnector)(implicit val config: Configuration, ec: ExecutionContext, appConfig: AppConfig)
   extends FrontendErrorHandler with AuthRedirects with ErrorAuditing {
 
   private val isDevEnv = if (env.mode.equals(Mode.Test)) false else config.getString("run.mode").forall(Mode.Dev.toString.equals)
+
+  override def appName: String = appConfig.appName
 
   override def onClientError(request: RequestHeader, statusCode: Int, message: String): Future[Result] = {
     auditClientError(request, statusCode, message)
@@ -58,7 +59,7 @@ class ErrorHandler @Inject() (
   }
 
   override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit request: Request[_]) = {
-    error_template(
+    errorTemplateView(
       Messages(pageTitle),
       Messages(heading),
       Messages(message))

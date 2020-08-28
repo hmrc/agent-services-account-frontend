@@ -20,35 +20,43 @@ import javax.inject.Inject
 import play.api.Configuration
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent}
-import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.forms.SignOutForm
-import uk.gov.hmrc.agentservicesaccount.views.html.signed_out
-import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.survey
+import uk.gov.hmrc.agentservicesaccount.views.html.signed_out
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import scala.concurrent.Future
 
-class SignOutController @Inject()(implicit val externalUrls: ExternalUrls, configuration: Configuration, val messagesApi: MessagesApi)
-  extends FrontendController with I18nSupport {
+class SignOutController @Inject()(
+  implicit val appConfig: AppConfig,
+  configuration: Configuration,
+  override val messagesApi: MessagesApi,
+  cc: MessagesControllerComponents,
+  surveyView: survey,
+  signedOutView: signed_out)
+    extends FrontendController(cc) with I18nSupport {
 
   def showSurvey: Action[AnyContent] = Action.async { implicit request =>
-    Future successful Ok(survey(SignOutForm.form))
+    Future successful Ok(surveyView(SignOutForm.form))
   }
 
   def submitSurvey: Action[AnyContent] = Action.async { implicit request =>
     val errorFunction = { formWithErrors: Form[String] =>
-      Future successful BadRequest(survey(formWithErrors))
+      Future successful BadRequest(surveyView(formWithErrors))
     }
 
     val successFunction = { key: String =>
-      Future successful Redirect(externalUrls.signOutUrlWithSurvey(key))
+      Future successful Redirect(appConfig.signOutUrlWithSurvey(key))
     }
 
-    SignOutForm.form.bindFromRequest().fold(
-      errorFunction,
-      successFunction
-    )
+    SignOutForm.form
+      .bindFromRequest()
+      .fold(
+        errorFunction,
+        successFunction
+      )
   }
 
   def signOut: Action[AnyContent] = Action.async { implicit request =>
@@ -56,11 +64,11 @@ class SignOutController @Inject()(implicit val externalUrls: ExternalUrls, confi
   }
 
   def signedOut = Action.async { implicit request =>
-    Future successful Redirect(externalUrls.continueFromGGSignIn).withNewSession
+    Future successful Redirect(appConfig.continueFromGGSignIn).withNewSession
   }
 
   def timedOut = Action.async { implicit request =>
-    Future successful Forbidden(signed_out(externalUrls.continueFromGGSignIn)).withNewSession
+    Future successful Forbidden(signedOutView(appConfig.continueFromGGSignIn)).withNewSession
   }
 
   def keepAlive: Action[AnyContent] = Action.async { implicit request =>
