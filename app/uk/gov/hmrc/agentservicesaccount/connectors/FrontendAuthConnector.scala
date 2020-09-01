@@ -16,27 +16,13 @@
 
 package uk.gov.hmrc.agentservicesaccount.connectors
 
-import akka.actor.ActorSystem
-import com.typesafe.config.Config
 import javax.inject.{Inject, Singleton}
-import play.api.{Configuration, Environment}
+import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.auth.otac.PlayOtacAuthConnector
-import uk.gov.hmrc.http.{HttpGet, HttpPost}
-import uk.gov.hmrc.play.bootstrap.auth.DefaultAuthConnector
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
-import uk.gov.hmrc.play.http.ws.{WSGet, WSPost}
 
 @Singleton
-class FrontendAuthConnector @Inject()(
-                                           val httpClient: HttpClient,
-                                           override val runModeConfiguration: Configuration,
-                                           override val environment: Environment,
-                                           val _actorSystem: ActorSystem)
-  extends DefaultAuthConnector(httpClient, runModeConfiguration, environment)
-  with PlayOtacAuthConnector {
-  override def http = new HttpPost with HttpGet with WSPost with WSGet {
-    override val hooks = NoneRequired
-    override protected def configuration: Option[Config] = Some(runModeConfiguration.underlying)
-    override protected def actorSystem: ActorSystem = _actorSystem
-  }
+class FrontendAuthConnector @Inject()(val httpClient: HttpClient, appConfig: AppConfig) extends PlayOtacAuthConnector {
+  override val http = httpClient
+  override val serviceUrl: String = appConfig.authBaseUrl
 }

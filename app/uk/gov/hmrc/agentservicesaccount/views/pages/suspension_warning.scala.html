@@ -14,15 +14,18 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
+@import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import play.api.Configuration
 @import uk.gov.hmrc.agentservicesaccount.controllers.routes
+@import uk.gov.hmrc.agentservicesaccount.views.html.main_template
 
-@(isAdmin: Boolean)(implicit messages: Messages, request: Request[_], externalUrls: ExternalUrls, configuration: Configuration)
+@this(mainTemplate: main_template)
+
+@(isAdmin: Boolean)(implicit messages: Messages, request: Request[_], appConfig: AppConfig, configuration: Configuration)
 
 @suspendedServices = @{request.session.get("suspendedServices").getOrElse("").split(',').toSet}
 
-@uk.gov.hmrc.agentservicesaccount.views.html.main_template(title = Messages("suspension-warning.header"), mainClass = Some("govuk-main-wrapper two-thirds"), analyticsAdditionalJs = None, isAdmin = isAdmin, hasCustomContent = false) {
+@mainTemplate(title = Messages("suspension-warning.header"), mainClass = Some("govuk-main-wrapper two-thirds"), analyticsAdditionalJs = None, isAdmin = isAdmin, hasCustomContent = false) {
 
     <h1 class="heading-xlarge">@Messages("suspension-warning.header")</h1>
     <p>@Messages("suspension-warning.p1")</p>

@@ -19,23 +19,21 @@ package uk.gov.hmrc.agentservicesaccount.controllers
 import play.api.http.Status
 import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
-import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
-import uk.gov.hmrc.agentservicesaccount.support.BaseUnitSpec
-import uk.gov.hmrc.play.language.LanguageUtils
 import play.api.test.Helpers.cookies
+import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
+
 import scala.concurrent.duration._
 
-class AgentServicesLanguageControllerSpec extends BaseUnitSpec {
+class AgentServicesLanguageControllerSpec extends BaseISpec {
 
   implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
-  implicit val externalUrls: ExternalUrls = app.injector.instanceOf[ExternalUrls]
-  val languageUtils: LanguageUtils = app.injector.instanceOf[LanguageUtils]
+  implicit val appConfig = app.injector.instanceOf[AppConfig]
+  val controller = app.injector.instanceOf[AgentServicesLanguageController]
 
   val timeout = 3.seconds
 
   implicit val request = FakeRequest()
-
-  val controller = new AgentServicesLanguageController(configuration,languageUtils,messagesApi, externalUrls)
 
   "Calling the .switchToLanguage function" when {
 

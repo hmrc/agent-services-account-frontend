@@ -18,7 +18,7 @@ package uk.gov.hmrc.agentservicesaccount.stubs
 
 import com.github.tomakehurst.wiremock.client.WireMock._
 
-object AuthStubs {
+trait AuthStubs {
 
   def givenAuthorisedAsAgentWith(arn: String) = {
     stubFor(post(urlEqualTo("/auth/authorise"))
@@ -28,6 +28,7 @@ object AuthStubs {
           s"""{
             |  "internalId": "some-id",
             |  "affinityGroup": "Agent",
+            |  "credentialRole": "Admin",
             |  "allEnrolments": [{
             |    "key": "HMRC-AS-AGENT",
             |    "identifiers": [{ "key": "AgentReferenceNumber", "value": "$arn" }]
@@ -36,5 +37,27 @@ object AuthStubs {
             |}""".stripMargin
         )))
   }
+
+  def GivenIsNotLoggedIn() = {
+    stubFor(post(urlPathEqualTo(s"/auth/authorise"))
+      .willReturn(aResponse()
+        .withHeader("WWW-Authenticate", """MDTP detail="BearerTokenExpired"""")
+        .withStatus(401)))
+    this
+  }
+
+  def givenOtacAuthorised(): Unit =
+    stubFor(
+      get(urlEqualTo("/authorise/read/fooRegime"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)))
+
+  def givenOtacUnAuthorised(): Unit =
+    stubFor(
+      get(urlEqualTo("/authorise/read/fooRegime"))
+        .willReturn(
+          aResponse()
+            .withStatus(401)))
 
 }

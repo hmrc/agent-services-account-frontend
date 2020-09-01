@@ -16,37 +16,19 @@
 
 package uk.gov.hmrc.agentservicesaccount.connectors
 
-import java.net.URL
-
-import com.kenshoo.play.metrics.Metrics
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.Application
-import play.api.inject.guice.GuiceApplicationBuilder
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.models.{SuspensionDetails, SuspensionDetailsNotFound}
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentClientAuthorisationStubs._
-import uk.gov.hmrc.agentservicesaccount.support.WireMockSupport
+import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
-import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class AgentClientAuthorisationConnectorSpec extends UnitSpec with GuiceOneAppPerSuite with WireMockSupport {
+class AgentClientAuthorisationConnectorSpec extends BaseISpec {
 
-  override def fakeApplication(): Application = appBuilder.build()
+  private lazy val connector = app.injector.instanceOf[AgentClientAuthorisationConnector]
 
-  protected def appBuilder: GuiceApplicationBuilder =
-    new GuiceApplicationBuilder()
-      .configure(
-        "microservice.services.auth.port" -> wireMockPort,
-        "microservice.services.agent-suspension.port" -> wireMockPort,
-        "auditing.enabled" -> false
-      )
-
-  private lazy val connector = new AgentClientAuthorisationConnector(new URL(s"http://localhost:$wireMockPort"), app.injector.instanceOf[HttpClient])
   private implicit val hc: HeaderCarrier = HeaderCarrier()
-  private implicit val metrics: Metrics = app.injector.instanceOf[Metrics]
 
   val arn = Arn("TARN0000001")
 

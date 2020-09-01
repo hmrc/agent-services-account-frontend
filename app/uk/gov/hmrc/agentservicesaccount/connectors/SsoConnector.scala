@@ -17,25 +17,26 @@
 package uk.gov.hmrc.agentservicesaccount.connectors
 
 import java.net.URL
-import javax.inject.{Inject, Singleton}
 
 import com.codahale.metrics.MetricRegistry
-import com.google.inject.name.Named
 import com.kenshoo.play.metrics.Metrics
+import javax.inject.{Inject, Singleton}
 import play.api.Logger
 import uk.gov.hmrc.agent.kenshoo.monitoring.HttpAPIMonitor
+import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+import uk.gov.hmrc.http.{BadRequestException, HeaderCarrier}
+import uk.gov.hmrc.play.bootstrap.http.HttpClient
 
 import scala.concurrent.{ExecutionContext, Future}
-import uk.gov.hmrc.http.{BadRequestException, HeaderCarrier, HttpGet}
 
 @Singleton
-class SsoConnector @Inject()(http: HttpGet, @Named("sso-baseUrl") baseUrl: URL, metrics: Metrics) extends HttpAPIMonitor {
+class SsoConnector @Inject()(httpClient: HttpClient, metrics: Metrics)(implicit val appConfig: AppConfig) extends HttpAPIMonitor {
 
   override val kenshooRegistry: MetricRegistry = metrics.defaultRegistry
 
   def validateExternalDomain(domain: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Boolean] = {
-    val url = new URL(baseUrl, s"/sso/validate/domain/$domain")
-    http.GET(url.toString)
+    val url = new URL(s"${appConfig.ssoBaseUrl}/sso/validate/domain/$domain")
+    httpClient.GET(url.toString)
       .map(_ => true)
       .recover {
         case e: BadRequestException => false

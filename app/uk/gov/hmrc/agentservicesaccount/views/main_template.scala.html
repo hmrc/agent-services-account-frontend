@@ -15,9 +15,17 @@
  *@
 
 @import play.api.Configuration
-@import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
+@import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.play.views.html.layouts
 @import uk.gov.hmrc.agentservicesaccount.controllers.routes
+
+@this(
+    appConfig: AppConfig,
+    govukWrapper: govuk_wrapper,
+    uiSidebar: uk.gov.hmrc.play.views.html.layouts.Sidebar,
+    uiArticle: uk.gov.hmrc.play.views.html.layouts.Article
+)
+
 
 @(title: String,
   navLinks: Option[Html] = None,
@@ -29,7 +37,7 @@
   analyticsAdditionalJs: Option[Html] = None,
         isAdmin: Boolean = false,
         hasCustomContent: Boolean = true,
-        hasTimeout: Boolean = true)(mainContent: Html)(implicit request : Request[_], messages: Messages, configuration: Configuration, externalUrls: ExternalUrls)
+        hasTimeout: Boolean = true)(mainContent: Html)(implicit request : Request[_], messages: Messages, configuration: Configuration, appConfig: AppConfig)
 
 
 
@@ -42,12 +50,12 @@
 
 @sidebar = {
     @if(sidebarLinks.isDefined) {
-        @layouts.sidebar(sidebarLinks.get, Some("sidebar"))
+        @uiSidebar(sidebarLinks.get, Some("sidebar"))
     }
 }
 
 
-@govuk_wrapper(title = title,
+@govukWrapper(title = title,
                mainClass = mainClass,
                bodyClasses = bodyClasses,
                navLinks = navLinks,
@@ -57,7 +65,7 @@
                serviceInfoContent = serviceInfoContent,
                scriptElem = Some(scriptElement),
                analyticsAdditionalJs = analyticsAdditionalJs,
-                isAdmin = isAdmin,
-    hasCustomContent = hasCustomContent,
-    hasTimeout = hasTimeout)
+               isAdmin = isAdmin,
+               hasCustomContent = hasCustomContent,
+               hasTimeout = hasTimeout)
 

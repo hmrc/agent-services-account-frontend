@@ -16,41 +16,28 @@
 
 package uk.gov.hmrc.agentservicesaccount.controllers
 
-import org.mockito.Mockito._
-import play.api.Configuration
 import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.mvc._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.agentmtdidentifiers.model.Arn
-import uk.gov.hmrc.agentservicesaccount.auth.{AgentInfo, AuthActions, PasscodeVerification}
-import uk.gov.hmrc.agentservicesaccount.config.ExternalUrls
+import uk.gov.hmrc.agentservicesaccount.auth.PasscodeVerification
+import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models.SuspensionDetails
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentClientAuthorisationStubs._
-import uk.gov.hmrc.agentservicesaccount.support.BaseUnitSpec
-import uk.gov.hmrc.auth.core.{Enrolment, EnrolmentIdentifier, User}
+import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
+import uk.gov.hmrc.auth.core.{Enrolment, EnrolmentIdentifier}
 import uk.gov.hmrc.http.HeaderCarrier
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 
-class AgentServicesControllerSpec extends BaseUnitSpec {
+class AgentServicesControllerSpec extends BaseISpec {
 
+  implicit val lang = Lang("en")
   implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
-  implicit val externalUrls: ExternalUrls = mock[ExternalUrls]
-  val signOutUrl = routes.SignOutController.signOut().url
-  when(externalUrls.signOutUrlWithSurvey("key")).thenReturn(signOutUrl)
-  val mappingUrl = "http://example.com/agent-mapping/start"
-  when(externalUrls.agentMappingUrl).thenReturn(mappingUrl)
-  val invitationsUrl = "http://example.com/agent-invitations/agents"
-  when(externalUrls.agentInvitationsUrl).thenReturn(invitationsUrl)
-  val invitationsTrackUrl = "http://example.com/agent-invitations/track"
-  when(externalUrls.agentInvitationsTrackUrl).thenReturn(invitationsTrackUrl)
-  val agentAfiUrl = "http://example.com/agent-services/individuals"
-  when(externalUrls.agentAfiUrl).thenReturn(agentAfiUrl)
-  val agentCancelAuthUrl = "http://example.com/agent-invitations/cancel-authorisation"
-  when(externalUrls.agentCancelAuthUrl).thenReturn(agentCancelAuthUrl)
+  val controller = app.injector.instanceOf[AgentServicesController]
+  val appConfig = app.injector.instanceOf[AppConfig]
+
   val arn = "TARN0000001"
   val agentEnrolment = Enrolment("HMRC-AS-AGENT", Seq(EnrolmentIdentifier("AgentReferenceNumber", arn)), state = "Activated", delegatedAuthRule = None)
 
@@ -58,20 +45,13 @@ class AgentServicesControllerSpec extends BaseUnitSpec {
 
   protected def htmlEscapedMessage(key: String): String = HtmlFormat.escape(Messages(key)).toString
 
-  val authActions: AuthActions = new AuthActions(null, null, null, env, configuration) {
-    override def withAuthorisedAsAgent(body: AgentInfo => Future[Result])(implicit ec: ExecutionContext, hc: HeaderCarrier, request: Request[AnyContent]): Future[Result] = {
-      body(AgentInfo(Arn(arn), Some(User)))
-    }
-  }
-
   object NoPasscodeVerification extends PasscodeVerification {
     override def apply[A](body: Boolean => Future[Result])(implicit request: Request[A], headerCarrier: HeaderCarrier, ec: ExecutionContext) = body(true)
   }
 
   "root" should {
     "redirect to agent services account when suspension is disabled" in {
-      val controller = new AgentServicesController(authActions, agentClientAuthorisationConnector, NoPasscodeVerification, "", false)
-
+      givenAuthorisedAsAgentWith(arn)
       val response = controller.root()(FakeRequest("GET", "/"))
 
       status(response) shouldBe SEE_OTHER
@@ -79,20 +59,29 @@ class AgentServicesControllerSpec extends BaseUnitSpec {
     }
 
     "redirect to agent service account when suspension is enabled but user is not suspended" in {
+      val controllerWithSuspensionEnabled =
+        appBuilder(Map("features.enable-agent-suspension" -> true))
+          .build()
+          .injector.instanceOf[AgentServicesController]
+      givenAuthorisedAsAgentWith(arn)
       givenSuspensionStatus(SuspensionDetails(suspensionStatus = false, None))
-      val controller = new AgentServicesController(authActions, agentClientAuthorisationConnector, NoPasscodeVerification, "", true)
 
-      val response = controller.root()(FakeRequest("GET", "/"))
+      val response = controllerWithSuspensionEnabled.root()(FakeRequest("GET", "/"))
 
       status(response) shouldBe SEE_OTHER
       redirectLocation(response) shouldBe Some(routes.AgentServicesController.showAgentServicesAccount().url)
     }
 
-    "redirect to suspended warning when suspension is enables and user is suspended" in {
-      givenSuspensionStatus(SuspensionDetails(suspensionStatus = true, Some(Set("ITSA"))))
-      val controller = new AgentServicesController(authActions, agentClientAuthorisationConnector, NoPasscodeVerification, "", true)
+    "redirect to suspended warning when suspension is enabled and user is suspended" in {
+     val controllerWithSuspensionEnabled =
+       appBuilder(Map("features.enable-agent-suspension" -> true))
+         .build()
+         .injector.instanceOf[AgentServicesController]
 
-      val response = controller.root()(FakeRequest("GET", "/"))
+      givenAuthorisedAsAgentWith(arn)
+      givenSuspensionStatus(SuspensionDetails(suspensionStatus = true, Some(Set("ITSA"))))
+
+      val response = controllerWithSuspensionEnabled.root()(FakeRequest("GET", "/"))
 
       status(response) shouldBe SEE_OTHER
       redirectLocation(response) shouldBe Some(routes.AgentServicesController.showSuspendedWarning().url)
@@ -101,9 +90,9 @@ class AgentServicesControllerSpec extends BaseUnitSpec {
 
   "home" should {
     "return Status: OK and body containing correct content" in {
+      givenAuthorisedAsAgentWith(arn)
       givenSuspensionStatus(SuspensionDetails(suspensionStatus = false, None))
 
-      val controller = new AgentServicesController(authActions, agentClientAuthorisationConnector, NoPasscodeVerification, "", true)
       val response = controller.showAgentServicesAccount()(FakeRequest("GET", "/home"))
 
       status(response) shouldBe OK
@@ -124,7 +113,7 @@ class AgentServicesControllerSpec extends BaseUnitSpec {
       content should include(htmlEscapedMessage("agent.services.account.section2.h2"))
       content should include(htmlEscapedMessage("agent.services.account.section2.col1.p"))
       content should include(htmlEscapedMessage("agent.services.account.section2.col1.link"))
-      content should include(agentAfiUrl)
+      content should include(appConfig.taxHistoryFrontendUrl)
       content should include(messagesApi("agent.services.account.section3.col1.h2"))
       content should include(messagesApi("agent.services.account.section3.col1.link1", messagesApi("agent.services.account.section3.col1.link1.href")))
       content should include(messagesApi("agent.services.account.section3.col1.link2", messagesApi("agent.services.account.section3.col1.link2.href")))
@@ -135,20 +124,24 @@ class AgentServicesControllerSpec extends BaseUnitSpec {
       content should include(messagesApi("agent.services.account.section4.col1.h3"))
       content should include(messagesApi("agent.services.account.section4.col1.p"))
       content should include(messagesApi("agent.services.account.section4.col1.link"))
-      content should include(invitationsUrl)
+      content should include(appConfig.agentInvitationsFrontendUrl)
       content should include(messagesApi("agent.services.account.section4.col2.h3"))
       content should include(messagesApi("agent.services.account.section4.col2.link1"))
       content should include(messagesApi("agent.services.account.section4.col2.link2"))
       content should include(htmlEscapedMessage("agent.services.account.section4.col2.link3"))
-      content should include(invitationsTrackUrl)
-      content should include(mappingUrl)
-      content should include(agentCancelAuthUrl)
+      content should include(appConfig.agentInvitationsTrackUrl)
+      content should include(appConfig.agentMappingUrl)
+      content should include(appConfig.agentInvitationsCancelAuthUrl)
     }
 
     "return Status: OK and body containing correct content when suspension details are in the session and agent is suspended for VATC" in {
-
-      val controller = new AgentServicesController(authActions, agentClientAuthorisationConnector, NoPasscodeVerification, "", true)
-      val response = controller.showAgentServicesAccount()(FakeRequest("GET", "/home").withSession("isSuspendedForVat" -> "true"))
+      val controllerWithSuspensionEnabled =
+        appBuilder(Map("features.enable-agent-suspension" -> true))
+          .build()
+          .injector.instanceOf[AgentServicesController]
+      givenSuspensionStatus(SuspensionDetails(suspensionStatus = true, Some(Set("VATC"))))
+      givenAuthorisedAsAgentWith(arn)
+      val response = controllerWithSuspensionEnabled.showAgentServicesAccount()(FakeRequest("GET", "/home"))
 
       status(response) shouldBe OK
       contentType(response).get shouldBe HTML
@@ -165,7 +158,7 @@ class AgentServicesControllerSpec extends BaseUnitSpec {
     }
 
     "return Status: OK and body containing correct content when agent suspension is not enabled" in {
-      val controller = new AgentServicesController(authActions, agentClientAuthorisationConnector, NoPasscodeVerification, "", false)
+      givenAuthorisedAsAgentWith(arn)
       val response = controller.showAgentServicesAccount()(FakeRequest("GET", "/home"))
 
       status(response) shouldBe OK
@@ -178,28 +171,17 @@ class AgentServicesControllerSpec extends BaseUnitSpec {
     }
 
     "return the redirect returned by authActions when authActions denies access" in {
-
-      implicit val externalUrls = new ExternalUrls(Configuration.from(Map())) {
-        override lazy val agentSubscriptionUrl: String = "foo"
-      }
-
-      val authActions = new AuthActions(null, null, null, env, configuration) {
-        override def withAuthorisedAsAgent(body: AgentInfo => Future[Result])(implicit ec: ExecutionContext, hc: HeaderCarrier, request: Request[AnyContent]): Future[Result] =
-          Future.successful(Results.SeeOther("foo?continue=%2Fagent-services-account%3Fp%3DBAR1%2B23%252F"))
-        }
-
-      val controller = new AgentServicesController(authActions, agentClientAuthorisationConnector, NoPasscodeVerification, "", true)
-
+      GivenIsNotLoggedIn()
       val response = controller.root()(FakeRequest("GET", "/").withSession(("otacTokenParam", "BAR1 23/")))
 
       status(response) shouldBe 303
-      redirectLocation(response) shouldBe Some("foo?continue=%2Fagent-services-account%3Fp%3DBAR1%2B23%252F")
+      redirectLocation(response) shouldBe Some("/gg/sign-in?continue=%2F%3Fp%3DBAR1%2B23%252F&origin=agent-services-account-frontend")
     }
 
     "do not fail without continue url parameter" in {
+      givenAuthorisedAsAgentWith(arn)
       givenSuspensionStatus(SuspensionDetails(suspensionStatus = false, None))
 
-      val controller = new AgentServicesController(authActions, agentClientAuthorisationConnector, NoPasscodeVerification, "", true)
       val response = controller.showAgentServicesAccount().apply(FakeRequest("GET", "/home"))
       status(response) shouldBe OK
       contentAsString(response) should {
@@ -210,8 +192,7 @@ class AgentServicesControllerSpec extends BaseUnitSpec {
 
   "showSuspensionWarning" should {
     "return Ok and show the suspension warning page" in {
-      val controller = new AgentServicesController(authActions, agentClientAuthorisationConnector, NoPasscodeVerification, "", true)
-
+      givenAuthorisedAsAgentWith(arn)
       val response = controller.showSuspendedWarning()(FakeRequest("GET", "/home").withSession("suspendedServices" -> "HMRC-MTD-IT,HMRC-MTD-VAT"))
 
       status(response) shouldBe OK
@@ -232,8 +213,7 @@ class AgentServicesControllerSpec extends BaseUnitSpec {
   "manage-account" should {
 
     "return Status: OK and body containing correct content" in {
-      val controller = new AgentServicesController(authActions, agentClientAuthorisationConnector, NoPasscodeVerification, "", true)
-
+      givenAuthorisedAsAgentWith(arn)
       val response = controller.manageAccount().apply(FakeRequest("GET", "/manage-account"))
 
       status(response) shouldBe OK
