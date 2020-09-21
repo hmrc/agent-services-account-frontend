@@ -133,13 +133,6 @@
 
 @footerTop = {}
 @footerLinks = {
-    <li>
-        <a href='@Messages("footer.links.accessibility.url")'
-           data-sso="false"
-           data-journey-click="footer:Click:Accessibility">
-            @Messages("footer.links.accessibility.text")
-        </a>
-    </li>
 }
 
 
@@ -196,7 +189,7 @@
 }
 
     @if(hasCustomContent) {
-        @govUkTemplate(Some(title + " " + titleSuffix), bodyClasses)(head, bodyEnd, insideHeader, afterHeader, footerTop, Some(uiFooterLinks(additionalLinks = Some(footerLinks))), true)(customContent)
+        @govUkTemplate(Some(title + " " + titleSuffix), bodyClasses)(head, bodyEnd, insideHeader, afterHeader, footerTop, Some(uiFooterLinks()), true)(customContent)
     }else {
-        @govUkTemplate(Some(title + " " + titleSuffix), bodyClasses)(head, bodyEnd, insideHeader, afterHeader, footerTop, Some(uiFooterLinks(additionalLinks = Some(footerLinks))), true)(content)
+        @govUkTemplate(Some(title + " " + titleSuffix), bodyClasses)(head, bodyEnd, insideHeader, afterHeader, footerTop, Some(uiFooterLinks()), true)(content)
     }
