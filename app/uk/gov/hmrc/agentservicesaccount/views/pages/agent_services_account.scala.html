@@ -57,7 +57,7 @@
 
     <section class="tile-container" style="margin-bottom: 0">
         <div class="tile">
-            <div class="govuk-grid-column-one-half" id="tileS1C1">
+            <div class="govuk-grid-column-one-half">
                 <h2 class="govuk-heading-m" style="margin: 0px 0 10px">@Messages("agent.services.account.section1.h2")</h2>
                 @if(isSuspendedForVat) {
                 <h3 class="govuk-heading-s" style="margin: 0px 0 10px">@Messages("agent.services.account.section1.suspended.h3")</h3>
@@ -68,7 +68,7 @@
                 <p>@Messages("agent.services.account.section1.col1.p")</p>
                 <p><a href="https://www.gov.uk/guidance/sign-up-for-making-tax-digital-for-vat" target="_blank">@Messages("agent.services.account.section1.col1.link")</a></p>
             </div>
-            <div class="govuk-grid-column-one-half" id="tileS1C2">
+            <div class="govuk-grid-column-one-half">
                 <h3 class="govuk-heading-s" style="margin: 40px 0 10px">@Messages("agent.services.account.section1.col2.h3")</h3>
                 <p>@Messages("agent.services.account.section1.col2.p")</p>
                 <p><a href="@appConfig.vatUrl" target="_blank">@Messages("agent.services.account.section1.col2.link")</a></p>
@@ -76,13 +76,31 @@
             </div>
         </div>
     </section>
+    <section class="tile-container"  style="margin-bottom: 0">
+        <div class="tile">
+            <div class="govuk-grid-column-one-half">
+                <h2 class="govuk-heading-m" style="margin: 0px 0 10px">@Messages("agent.services.account.trusts-section.h2")</h2>
+                <h3 class="govuk-heading-s" style="margin: 0px 0 10px">@Messages("agent.services.account.trusts-section.col1.h3")</h3>
+                <p><a target="_blank" href="https://www.gov.uk/guidance/register-your-clients-trust">@Messages("agent.services.account.trusts-section.col1.register-trust-link.text")</a></p>
+                <p><a target="_blank" href="https://www.gov.uk/guidance/register-your-clients-estate">@Messages("agent.services.account.trusts-section.col1.register-estate-link.text")</a></p>
+            </div>
+            <div class="govuk-grid-column-one-half">
+                <h3 class="govuk-heading-s" style="margin: 40px 0 10px">@Messages("agent.services.account.trusts-section.col2.h3")</h3>
+                <p>@Messages("agent.services.account.trusts-section.col2.p")</p>
+                <p><a href="https://www.gov.uk/guidance/manage-your-trusts-registration-service">@Messages("agent.services.account.trusts-section.col2.register-trust-link.text")</a></p>
+                <p><a href="https://tax.service.gov.uk/register-an-estate">@Messages("agent.services.account.trusts-section.col2.register-estate-link.text")</a></p>
+            </div>
+
+        </div>
+
+    </section>
     @if(isWhitelisted) {
     <section class="tile-container" style="margin-bottom: 0">
     <div class="tile">
-        <div class="govuk-grid-column-one-half" id="tileS2C1">
-            <h2 class="govuk-heading-m" style="margin: 0px 0 10px">@Messages("agent.services.account.section2.h2")</h2>
-            <p>@Messages("agent.services.account.section2.col1.p")</p>
-            <p><a href="@appConfig.taxHistoryFrontendUrl">@Messages("agent.services.account.section2.col1.link")</a></p>
+        <div class="govuk-grid-column-one-half">
+            <h2 class="govuk-heading-m" style="margin: 0px 0 10px">@Messages("agent.services.account.paye-section.h2")</h2>
+            <p>@Messages("agent.services.account.paye-section.col1.p")</p>
+            <p><a href="@appConfig.taxHistoryFrontendUrl">@Messages("agent.services.account.paye-section.col1.link")</a></p>
         </div>
     </div>
     </section>
