@@ -110,9 +110,9 @@ class AgentServicesControllerSpec extends BaseISpec {
       content should include(htmlEscapedMessage("agent.services.account.section1.col2.h3"))
       content should include(messagesApi("agent.services.account.section1.col2.p"))
       content should include(htmlEscapedMessage("agent.services.account.section1.col2.link"))
-      content should include(htmlEscapedMessage("agent.services.account.section2.h2"))
-      content should include(htmlEscapedMessage("agent.services.account.section2.col1.p"))
-      content should include(htmlEscapedMessage("agent.services.account.section2.col1.link"))
+      content should include(htmlEscapedMessage("agent.services.account.paye-section.h2"))
+      content should include(htmlEscapedMessage("agent.services.account.paye-section.col1.p"))
+      content should include(htmlEscapedMessage("agent.services.account.paye-section.col1.link"))
       content should include(appConfig.taxHistoryFrontendUrl)
       content should include(messagesApi("agent.services.account.section3.col1.h2"))
       content should include(messagesApi("agent.services.account.section3.col1.link1", messagesApi("agent.services.account.section3.col1.link1.href")))
@@ -132,6 +132,14 @@ class AgentServicesControllerSpec extends BaseISpec {
       content should include(appConfig.agentInvitationsTrackUrl)
       content should include(appConfig.agentMappingUrl)
       content should include(appConfig.agentInvitationsCancelAuthUrl)
+      content should include(messagesApi("agent.services.account.trusts-section.h2"))
+      content should include(messagesApi("agent.services.account.trusts-section.col1.h3"))
+      content should include(messagesApi("agent.services.account.trusts-section.col1.register-trust-link.text"))
+      content should include(messagesApi("agent.services.account.trusts-section.col1.register-estate-link.text"))
+      content should include(messagesApi("agent.services.account.trusts-section.col2.h3"))
+      content should include(messagesApi("agent.services.account.trusts-section.col2.p"))
+      content should include(messagesApi("agent.services.account.trusts-section.col2.register-trust-link.text"))
+      content should include(messagesApi("agent.services.account.trusts-section.col2.register-estate-link.text"))
     }
 
     "return Status: OK and body containing correct content when suspension details are in the session and agent is suspended for VATC" in {

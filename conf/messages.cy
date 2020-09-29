@@ -19,10 +19,18 @@ agent.services.account.section1.suspended.h3=Rydym wedi cyfyngu ar eich defnydd 
 agent.services.account.section1.suspended.p1=Gwnaethom hyn oherwydd ein bod wedi gohirio eich cod asiant. Rydym wedi anfon llythyr atoch yn cadarnhau hyn.
 agent.services.account.section1.suspended.p2=Mae hyn yn golygu na fyddwch yn gallu defnyddio’r gwasanaeth hwn.
 
+agent.services.account.trusts-section.h2=Trusts and estates
+agent.services.account.trusts-section.col1.h3=Find guidance on registering a trust or an estate
+agent.services.account.trusts-section.col1.register-trust-link.text=How to register your client’s trust (opens in a new tab)
+agent.services.account.trusts-section.col1.register-estate-link.text=How to register your client’s estate (opens in a new tab)
+agent.services.account.trusts-section.col2.h3=Register or maintain your client’s trust or estate
+agent.services.account.trusts-section.col2.p=Use the following services for trusts and estates.
+agent.services.account.trusts-section.col2.register-trust-link.text=Register or maintain a client’s trust
+agent.services.account.trusts-section.col2.register-estate-link.text=Register or maintain a client's estate
 
-agent.services.account.section2.h2=Bwrw golwg dros gofnod incwm TWE cleient
-agent.services.account.section2.col1.p=Cael mynediad at gofnod incwm TWE cleient i’ch helpu i lenwi ei Ffurflen Dreth Hunanasesiad.
-agent.services.account.section2.col1.link=Bwrw golwg dros gofnod incwm TWE cleient
+agent.services.account.paye-section.h2=Bwrw golwg dros gofnod incwm TWE cleient
+agent.services.account.paye-section.col1.p=Cael mynediad at gofnod incwm TWE cleient i’ch helpu i lenwi ei Ffurflen Dreth Hunanasesiad.
+agent.services.account.paye-section.col1.link=Bwrw golwg dros gofnod incwm TWE cleient
 
 agent.services.account.section3.col1.h2=Rhoi gwybod am a thalu Treth Enillion Cyfalaf cleient ar eiddo yn y DU
 agent.services.account.section3.col1.link1=<a href="{0}" target="_blank">Sut i reoli cyfrif eich cleient (yn agor ffenestr neu dab newydd)</a>
