@@ -19,14 +19,14 @@ agent.services.account.section1.suspended.h3=Rydym wedi cyfyngu ar eich defnydd 
 agent.services.account.section1.suspended.p1=Gwnaethom hyn oherwydd ein bod wedi gohirio eich cod asiant. Rydym wedi anfon llythyr atoch yn cadarnhau hyn.
 agent.services.account.section1.suspended.p2=Mae hyn yn golygu na fyddwch yn gallu defnyddio’r gwasanaeth hwn.
 
-agent.services.account.trusts-section.h2=Trusts and estates
-agent.services.account.trusts-section.col1.h3=Find guidance on registering a trust or an estate
-agent.services.account.trusts-section.col1.register-trust-link.text=How to register your client’s trust (opens in a new tab)
-agent.services.account.trusts-section.col1.register-estate-link.text=How to register your client’s estate (opens in a new tab)
-agent.services.account.trusts-section.col2.h3=Register or maintain your client’s trust or estate
-agent.services.account.trusts-section.col2.p=Use the following services for trusts and estates.
-agent.services.account.trusts-section.col2.register-trust-link.text=Register or maintain a client’s trust
-agent.services.account.trusts-section.col2.register-estate-link.text=Register or maintain a client's estate
+agent.services.account.trusts-section.h2=Ymddiriedolaethau ac ystadau
+agent.services.account.trusts-section.col1.h3=Dod o hyd i arweiniad ar sut i gofrestru ymddiriedolaeth neu ystâd
+agent.services.account.trusts-section.col1.register-trust-link.text=Sut i gofrestru ymddiriedolaeth eich cleient (yn agor ffenestr neu dab newydd)
+agent.services.account.trusts-section.col1.register-estate-link.text=Sut i gofrestru ystâd eich cleient (yn agor ffenestr neu dab newydd)
+agent.services.account.trusts-section.col2.h3=Cofrestru neu gynnal ymddiriedolaeth neu ystâd eich cleient
+agent.services.account.trusts-section.col2.p=Defnyddiwch y gwasanaethau canlynol ar gyfer ymddiriedolaethau ac ystadau.
+agent.services.account.trusts-section.col2.register-trust-link.text=Cofrestru neu gynnal ymddiriedolaeth eich cleient
+agent.services.account.trusts-section.col2.register-estate-link.text=Cofrestru neu gynnal ystâd eich cleient
 
 agent.services.account.paye-section.h2=Bwrw golwg dros gofnod incwm TWE cleient
 agent.services.account.paye-section.col1.p=Cael mynediad at gofnod incwm TWE cleient i’ch helpu i lenwi ei Ffurflen Dreth Hunanasesiad.
