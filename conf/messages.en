@@ -11,10 +11,10 @@ agent.services.account.inset=You cannot view your client lists in your agent ser
 agent.services.account.section1.h2=Making Tax Digital for VAT
 agent.services.account.section1.col1.h3=Sign clients up for Making Tax Digital for VAT
 agent.services.account.section1.col1.p=You copied across existing client authorisations to your agent services account. This means you can now sign these clients up to Making Tax Digital.
-agent.services.account.section1.col1.link=Sign clients up for Making Tax Digital for VAT (opens in a new window or tab)
+agent.services.account.section1.col1.link=Sign clients up for Making Tax Digital for VAT (opens in a new tab)
 agent.services.account.section1.col2.h3=Manage your client’s VAT details
 agent.services.account.section1.col2.p=Use this service to update your client’s VAT registration status, business name (if they are a limited company), principal place of business and VAT stagger.
-agent.services.account.section1.col2.link=Manage your client''s VAT details (opens in a new window or tab)
+agent.services.account.section1.col2.link=Manage your client''s VAT details (opens in a new tab)
 agent.services.account.section1.suspended.h3=We have temporarily limited your use of this service
 agent.services.account.section1.suspended.p1=We did this because we have suspended your agent code. We sent you a letter to confirm this.
 agent.services.account.section1.suspended.p2=This means you will not be able to use this service.
@@ -33,9 +33,9 @@ agent.services.account.paye-section.col1.p=Access a client’s PAYE income recor
 agent.services.account.paye-section.col1.link=View a client’s PAYE income record
 
 agent.services.account.section3.col1.h2=Report and pay a client’s Capital Gains Tax on UK property
-agent.services.account.section3.col1.link1=<a href="{0}" target="_blank">How to manage your client’s account (opens in a new window or tab)</a>
+agent.services.account.section3.col1.link1=<a href="{0}" target="_blank">How to manage your client’s account (opens in a new tab)</a>
 agent.services.account.section3.col1.link1.href=https://tax.service.gov.uk/capital-gains-tax-uk-property/manage-clients-capital-gains-tax-on-uk-property-account#how-to-manage-your-clients-account
-agent.services.account.section3.col1.link2=<a href="{0}" target="_blank">What you’ll need to report the tax (opens in a new window or tab)</a>
+agent.services.account.section3.col1.link2=<a href="{0}" target="_blank">What you’ll need to report the tax (opens in a new tab)</a>
 agent.services.account.section3.col1.link2.href=https://tax.service.gov.uk/capital-gains-tax-uk-property/manage-clients-capital-gains-tax-on-uk-property-account#what-youll-need-to-report-the-tax
 agent.services.account.section3.col2.h3=Report and pay Capital Gains Tax on UK property
 agent.services.account.section3.col2.p=Use this service to report your client’s Capital Gains Tax on UK property disposals, manage their returns, and view their payments and penalties.
@@ -55,7 +55,7 @@ agent.services.account.section4.col2.link3=Cancel a client''s authorisation
 manage.account.heading=Manage account
 manage.account.p=You can allow other users in your organisation to access this agent services account, and manage their access.
 manage.account.add-user=Add a new user
-manage.account.manage-user-access=Manage user access to your agent services account (Opens in a new window or tab).
+manage.account.manage-user-access=Manage user access to your agent services account (opens in a new tab).
 
 agent.services.account.h2.your-clients=Your clients
 agent.services.account.h3.agent-services=Agent services
@@ -73,7 +73,7 @@ agent.services.account.additional.links.mapping.body2=<a href="{0}" id="{1}" >Co
 agent.invitations.links.cancel-auth=<a href="{0}" id="{1}" >Cancel a client''s authorisation</a>
 agent.accountNumber=Account number: {0}
 
-agent.manageYourUsers.links.start=<a href="{0}" target="_blank" rel="noopener noreferrer" id="{1}">Manage user access to your agent services account<span class="visuallyhidden"> (Opens in a new window)</span></a>
+agent.manageYourUsers.links.start=<a href="{0}" target="_blank" rel="noopener noreferrer" id="{1}">Manage user access to your agent services account<span class="visuallyhidden"> (Opens in a new tab)</span></a>
 agent.addNewUser.links.start=<a href="{0}" rel="noopener noreferrer" id="{1}">Add a new user</a>
 agent.services.account.additional.links.agent-afi.body2=<a href="{0}" id="{1}">View a client''s PAYE income record</a>
 common.sign-out=Sign out
@@ -130,7 +130,7 @@ accessibility.statement.whattodo.heading=What to do if you have difficulty using
 accessibility.statement.whattodo.p1=If you have difficulty using this service, use the ‘Get help with this page’ link on the page in the online service.
 
 accessibility.statement.reporting.heading=Reporting accessibility problems with this service
-accessibility.statement.reporting.p1=We are always looking to improve the accessibility of this service. If you find any problems that are not listed on this page or think we are not meeting accessibility requirements, report the <a href="{0}" target="_blank">accessibility problem (opens in new window or tab)</a>.
+accessibility.statement.reporting.p1=We are always looking to improve the accessibility of this service. If you find any problems that are not listed on this page or think we are not meeting accessibility requirements, report the <a href="{0}" target="_blank">accessibility problem (opens in new tab)</a>.
 
 accessibility.statement.enforcement.heading=What to do if you are not happy with how we respond to your complaint
 accessibility.statement.enforcement.p1=The Equality and Human Rights Commission (EHRC) is responsible for enforcing the Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018 (the ‘accessibility regulations’). If you are not happy with how we respond to your complaint, <a href="https://www.equalityadvisoryservice.com/">contact the Equality Advisory and Support Service</a> (EASS), or the <a href="https://www.equalityni.org/Home">Equality Commission for Northern Ireland</a> (ECNI) if you live in Northern Ireland.
