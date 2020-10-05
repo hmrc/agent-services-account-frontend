@@ -11,18 +11,18 @@ agent.services.account.inset=Ni allwch fwrw golwg dros eich rhestrau o gleientia
 agent.services.account.section1.h2=Troi Treth yn Ddigidol ar gyfer TAW
 agent.services.account.section1.col1.h3=Cofrestru cleientiaid ar gyfer y cynllun Troi Treth yn Ddigidol ar gyfer TAW
 agent.services.account.section1.col1.p=Rydych wedi copïo awdurdodiadau cleientiaid presennol ar draws i’ch cyfrif gwasanaethau asiant. Mae hyn yn golygu y gallwch nawr gofrestru’r cleientiaid hyn ar gyfer Troi Treth yn Ddigidol.
-agent.services.account.section1.col1.link=Cofrestru cleientiaid ar gyfer Troi Treth yn Ddigidol ar gyfer TAW (yn agor ffenestr neu dab newydd)
+agent.services.account.section1.col1.link=Cofrestru cleientiaid ar gyfer Troi Treth yn Ddigidol ar gyfer TAW (yn agor tab newydd)
 agent.services.account.section1.col2.h3=Rheoli manylion TAW eich cleient
 agent.services.account.section1.col2.p=Defnyddiwch y gwasanaeth hwn i ddiweddaru statws cofrestru TAW, enw busnes (os yw’n gwmni cyfyngedig), prif leoliad busnes a chyfnodau TAW eich cleient.
-agent.services.account.section1.col2.link=Rheoli manylion TAW eich cleient (yn agor ffenestr neu dab newydd)
+agent.services.account.section1.col2.link=Rheoli manylion TAW eich cleient (yn agor tab newydd)
 agent.services.account.section1.suspended.h3=Rydym wedi cyfyngu ar eich defnydd o’r gwasanaeth hwn dros dro
 agent.services.account.section1.suspended.p1=Gwnaethom hyn oherwydd ein bod wedi gohirio eich cod asiant. Rydym wedi anfon llythyr atoch yn cadarnhau hyn.
 agent.services.account.section1.suspended.p2=Mae hyn yn golygu na fyddwch yn gallu defnyddio’r gwasanaeth hwn.
 
 agent.services.account.trusts-section.h2=Ymddiriedolaethau ac ystadau
 agent.services.account.trusts-section.col1.h3=Dod o hyd i arweiniad ar sut i gofrestru ymddiriedolaeth neu ystâd
-agent.services.account.trusts-section.col1.register-trust-link.text=Sut i gofrestru ymddiriedolaeth eich cleient (yn agor ffenestr neu dab newydd)
-agent.services.account.trusts-section.col1.register-estate-link.text=Sut i gofrestru ystâd eich cleient (yn agor ffenestr neu dab newydd)
+agent.services.account.trusts-section.col1.register-trust-link.text=Sut i gofrestru ymddiriedolaeth eich cleient (yn agor tab newydd)
+agent.services.account.trusts-section.col1.register-estate-link.text=Sut i gofrestru ystâd eich cleient (yn agor tab newydd)
 agent.services.account.trusts-section.col2.h3=Cofrestru neu gynnal ymddiriedolaeth neu ystâd eich cleient
 agent.services.account.trusts-section.col2.p=Defnyddiwch y gwasanaethau canlynol ar gyfer ymddiriedolaethau ac ystadau.
 agent.services.account.trusts-section.col2.register-trust-link.text=Cofrestru neu gynnal ymddiriedolaeth eich cleient
@@ -33,9 +33,9 @@ agent.services.account.paye-section.col1.p=Cael mynediad at gofnod incwm TWE cle
 agent.services.account.paye-section.col1.link=Bwrw golwg dros gofnod incwm TWE cleient
 
 agent.services.account.section3.col1.h2=Rhoi gwybod am a thalu Treth Enillion Cyfalaf cleient ar eiddo yn y DU
-agent.services.account.section3.col1.link1=<a href="{0}" target="_blank">Sut i reoli cyfrif eich cleient (yn agor ffenestr neu dab newydd)</a>
+agent.services.account.section3.col1.link1=<a href="{0}" target="_blank">Sut i reoli cyfrif eich cleient (yn agor tab newydd)</a>
 agent.services.account.section3.col1.link1.href=https://tax.service.gov.uk/capital-gains-tax-uk-property/manage-clients-capital-gains-tax-on-uk-property-account#how-to-manage-your-clients-account
-agent.services.account.section3.col1.link2=<a href="{0}" target="_blank">Yr hyn y bydd ei angen arnoch i roi gwybod am y dreth (yn agor ffenestr neu dab newydd)</a>
+agent.services.account.section3.col1.link2=<a href="{0}" target="_blank">Yr hyn y bydd ei angen arnoch i roi gwybod am y dreth (yn agor tab newydd)</a>
 agent.services.account.section3.col1.link2.href=https://tax.service.gov.uk/capital-gains-tax-uk-property/manage-clients-capital-gains-tax-on-uk-property-account#what-youll-need-to-report-the-tax
 agent.services.account.section3.col2.h3=Rhoi gwybod am a thalu Treth Enillion Cyfalaf ar eiddo yn y DU
 agent.services.account.section3.col2.p=Defnyddiwch y gwasanaeth hwn i roi gwybod am Dreth Enillion Cyfalaf eich cleient ar warediadau eiddo yn y DU, rheoli ei Ffurflenni Treth, a bwrw golwg dros ei daliadau a chosbau.
@@ -55,7 +55,7 @@ agent.services.account.section4.col2.link3=Canslo awdurdodiad cleient
 manage.account.heading=Rheoli’r cyfrif
 manage.account.p=Gallwch ganiatáu i ddefnyddwyr eraill yn eich sefydliad gael mynediad at y cyfrif gwasanaethau asiant hwn, a rheoli eu mynediad.
 manage.account.add-user=Ychwanegu defnyddiwr newydd
-manage.account.manage-user-access=Rheoli mynediad defnyddwyr at eich cyfrif gwasanaethau asiant (yn agor ffenestr neu dab newydd).
+manage.account.manage-user-access=Rheoli mynediad defnyddwyr at eich cyfrif gwasanaethau asiant (yn agor tab newydd).
 
 agent.services.account.h2.your-clients=Eich cleientiaid
 agent.services.account.h3.agent-services=Gwasanaethau asiant
@@ -73,7 +73,7 @@ agent.services.account.additional.links.mapping.body2=<a href="{0}" id="{1}">Cop
 agent.invitations.links.cancel-auth=<a href="{0}" id="{1}" >Canslo awdurdodiad cleient</a>
 agent.accountNumber=Rhif y cyfrif: {0}
 
-agent.manageYourUsers.links.start=<a href="{0}" target="_blank" rel="noopener noreferrer" id="{1}">Rheoli mynediad defnyddwyr at eich cyfrif gwasanaethau asiant<span class="visuallyhidden"> (Yn agor ffenestr newydd)</span></a>
+agent.manageYourUsers.links.start=<a href="{0}" target="_blank" rel="noopener noreferrer" id="{1}">Rheoli mynediad defnyddwyr at eich cyfrif gwasanaethau asiant<span class="visuallyhidden"> (yn agor tab newydd)</span></a>
 agent.addNewUser.links.start=<a href="{0}" rel="noopener noreferrer" id="{1}">Ychwanegu defnyddiwr newydd</a>
 agent.services.account.additional.links.agent-afi.body2=<a href="{0}" id="{1}">Bwrw golwg dros gofnod incwm TWE cleient</a>
 common.sign-out=Allgofnodi
@@ -130,7 +130,7 @@ accessibility.statement.whattodo.heading=Beth i’w wneud os ydych yn cael anhaw
 accessibility.statement.whattodo.p1=Os ydych yn cael anhawster wrth ddefnyddio’r gwasanaeth hwn, defnyddiwch y cysylltiad ‘Help gyda’r dudalen hon’ ar y dudalen yn y gwasanaeth ar-lein.
 
 accessibility.statement.reporting.heading=Rhoi gwybod am broblemau hygyrchedd gyda’r gwasanaeth hwn
-accessibility.statement.reporting.p1=Rydym bob amser yn ceisio gwella hygyrchedd y gwasanaeth hwn. Os byddwch yn dod o hyd i unrhyw broblemau nad ydynt wedi’u rhestru ar y dudalen hon, neu os ydych o’r farn nad ydym yn bodloni gofynion hygyrchedd, rhowch wybod am y <a href="{0}" target="_blank">broblem hygyrchedd (yn agor ffenestr neu dab newydd)</a>.
+accessibility.statement.reporting.p1=Rydym bob amser yn ceisio gwella hygyrchedd y gwasanaeth hwn. Os byddwch yn dod o hyd i unrhyw broblemau nad ydynt wedi’u rhestru ar y dudalen hon, neu os ydych o’r farn nad ydym yn bodloni gofynion hygyrchedd, rhowch wybod am y <a href="{0}" target="_blank">broblem hygyrchedd (yn agor tab newydd)</a>.
 
 accessibility.statement.enforcement.heading=Beth i’w wneud os nad ydych yn hapus â sut rydym yn ateb eich cwyn
 accessibility.statement.enforcement.p1=Mae’r Comisiwn Cydraddoldeb a Hawliau Dynol (EHRC) yn gyfrifol am orfodi Rheoliadau Hygyrchedd Cyrff Sector Cyhoeddus (Gwefannau a Chymwysiadau Symudol) (Rhif 2) 2018 (y ‘rheoliadau hygyrchedd’). Os nad ydych yn hapus â sut rydym yn ateb eich cwyn,  <a href="https://www.equalityadvisoryservice.com/">cysylltwch â’r Gwasanaeth Cynghori a Chymorth Cydraddoldeb</a> (EASS), neu’r <a href="https://www.equalityni.org/Home">Equality Commission for Northern Ireland</a> (ECNI) os ydych yn byw yng Ngogledd Iwerddon.
