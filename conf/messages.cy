@@ -32,15 +32,17 @@ agent.services.account.paye-section.h2=Bwrw golwg dros gofnod incwm TWE cleient
 agent.services.account.paye-section.col1.p=Cael mynediad at gofnod incwm TWE cleient i’ch helpu i lenwi ei Ffurflen Dreth Hunanasesiad.
 agent.services.account.paye-section.col1.link=Bwrw golwg dros gofnod incwm TWE cleient
 
-agent.services.account.section3.col1.h2=Rhoi gwybod am a thalu Treth Enillion Cyfalaf cleient ar eiddo yn y DU
-agent.services.account.section3.col1.link1=<a href="{0}" target="_blank">Sut i reoli cyfrif eich cleient (yn agor tab newydd)</a>
-agent.services.account.section3.col1.link1.href=https://tax.service.gov.uk/capital-gains-tax-uk-property/manage-clients-capital-gains-tax-on-uk-property-account#how-to-manage-your-clients-account
-agent.services.account.section3.col1.link2=<a href="{0}" target="_blank">Yr hyn y bydd ei angen arnoch i roi gwybod am y dreth (yn agor tab newydd)</a>
-agent.services.account.section3.col1.link2.href=https://tax.service.gov.uk/capital-gains-tax-uk-property/manage-clients-capital-gains-tax-on-uk-property-account#what-youll-need-to-report-the-tax
-agent.services.account.section3.col2.h3=Rhoi gwybod am a thalu Treth Enillion Cyfalaf ar eiddo yn y DU
-agent.services.account.section3.col2.p=Defnyddiwch y gwasanaeth hwn i roi gwybod am Dreth Enillion Cyfalaf eich cleient ar warediadau eiddo yn y DU, rheoli ei Ffurflenni Treth, a bwrw golwg dros ei daliadau a chosbau.
-agent.services.account.section3.col2.link1=<a href="{0}">Rhoi gwybod am Dreth Enillion Cyfalaf cleient ar eiddo yn y DU a’i thalu</a>
+agent.services.account.section3.col1.h2=###Capital Gains Tax on UK property
+agent.services.account.section3.col1.link1=<a href="{0}" target="_blank">###set up a Capital Gains Tax on UK property account (opens in a new tab)</a>
+agent.services.account.section3.col1.link1.href=https://www.gov.uk/guidance/managing-your-clients-capital-gains-tax-on-uk-property-account#before-you-start
+agent.services.account.section3.col1.link2=<a href="{0}" target="_blank">###authorise you to act on their behalf (opens in a new tab)</a>
+agent.services.account.section3.col1.link2.href=https://www.gov.uk/guidance/managing-your-clients-capital-gains-tax-on-uk-property-account#get-authorisation
+agent.services.account.section3.col2.h3=###Manage a client’s Capital Gains Tax on UK property
+agent.services.account.section3.col2.link1=<a href="{0}">###Report your client's Capital Gains Tax on UK property and view payments and penalties</a>
 agent.services.account.section3.col2.link1.href=https://www.tax.service.gov.uk/capital-gains-tax-uk-property/start
+agent.services.account.section3.col1.h3=###Before you start
+agent.services.account.section3.col1.text1=###Your client must first
+agent.services.account.section3.col1.text2=###They must then
 
 agent.services.account.section4.h2=Awdurdodiadau cleientiaid
 agent.services.account.section4.col1.h3=Gofyn i gleient eich awdurdodi

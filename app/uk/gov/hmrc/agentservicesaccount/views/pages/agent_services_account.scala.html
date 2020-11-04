@@ -109,12 +109,18 @@
         <div class="tile">
             <div class="govuk-grid-column-one-half" id="tileS3C1">
                 <h2 class="govuk-heading-m" style="margin: 0px 0 10px">@Messages("agent.services.account.section3.col1.h2")</h2>
-                <p>@Html(Messages("agent.services.account.section3.col1.link1", Messages("agent.services.account.section3.col1.link1.href")))</p>
-                <p>@Html(Messages("agent.services.account.section3.col1.link2", Messages("agent.services.account.section3.col1.link2.href")))</p>
+                <h3 class="govuk-heading-s" style="margin: 0px 0 10px">@Messages("agent.services.account.section3.col1.h3")</h3>
+                <p>
+                    @Messages("agent.services.account.section3.col1.text1")
+                    @Html(Messages("agent.services.account.section3.col1.link1", Messages("agent.services.account.section3.col1.link1.href"))).
+                </p>
+                <p>
+                    @Messages("agent.services.account.section3.col1.text2")
+                    @Html(Messages("agent.services.account.section3.col1.link2", Messages("agent.services.account.section3.col1.link2.href"))).
+                </p>
             </div>
             <div class="govuk-grid-column-one-half" id="tileS3C2">
                 <h3 class="govuk-heading-s" style="margin: 40px 0 10px">@Messages("agent.services.account.section3.col2.h3")</h3>
-                <p>@Messages("agent.services.account.section3.col2.p")</p>
                 <p>@Html(Messages("agent.services.account.section3.col2.link1", Messages("agent.services.account.section3.col2.link1.href")))</p>
             </div>
         </div>
