@@ -32,17 +32,17 @@ agent.services.account.paye-section.h2=Bwrw golwg dros gofnod incwm TWE cleient
 agent.services.account.paye-section.col1.p=Cael mynediad at gofnod incwm TWE cleient i’ch helpu i lenwi ei Ffurflen Dreth Hunanasesiad.
 agent.services.account.paye-section.col1.link=Bwrw golwg dros gofnod incwm TWE cleient
 
-agent.services.account.section3.col1.h2=###Capital Gains Tax on UK property
-agent.services.account.section3.col1.link1=<a href="{0}" target="_blank">###set up a Capital Gains Tax on UK property account (opens in a new tab)</a>
+agent.services.account.section3.col1.h2=Treth Enillion Cyfalaf ar eiddo yn y DU
+agent.services.account.section3.col1.link1=<a href="{0}" target="_blank">sefydlu cyfrif Treth Enillion Cyfalaf ar eiddo yn y DU (yn agor tab newydd)</a>
 agent.services.account.section3.col1.link1.href=https://www.gov.uk/guidance/managing-your-clients-capital-gains-tax-on-uk-property-account#before-you-start
-agent.services.account.section3.col1.link2=<a href="{0}" target="_blank">###authorise you to act on their behalf (opens in a new tab)</a>
+agent.services.account.section3.col1.link2=<a href="{0}" target="_blank">eich awdurdodi i weithredu ar ei ran (yn agor tab newydd)</a>
 agent.services.account.section3.col1.link2.href=https://www.gov.uk/guidance/managing-your-clients-capital-gains-tax-on-uk-property-account#get-authorisation
-agent.services.account.section3.col2.h3=###Manage a client’s Capital Gains Tax on UK property
-agent.services.account.section3.col2.link1=<a href="{0}">###Report your client's Capital Gains Tax on UK property and view payments and penalties</a>
+agent.services.account.section3.col2.h3=Rheoli Treth Enillion Cyfalaf cleient ar eiddo yn y DU
+agent.services.account.section3.col2.link1=<a href="{0}">Rhoi gwybod am Dreth Enillion Cyfalaf eich cleient ar eiddo yn y DU a bwrw golwg dros daliadau a chosbau</a>
 agent.services.account.section3.col2.link1.href=https://www.tax.service.gov.uk/capital-gains-tax-uk-property/start
-agent.services.account.section3.col1.h3=###Before you start
-agent.services.account.section3.col1.text1=###Your client must first
-agent.services.account.section3.col1.text2=###They must then
+agent.services.account.section3.col1.h3=Cyn i chi ddechrau
+agent.services.account.section3.col1.text1=Yn gyntaf mae’n rhaid i’ch cleient wneud y canlynol:
+agent.services.account.section3.col1.text2=Yna mae’n rhaid iddo wneud y canlynol:
 
 agent.services.account.section4.h2=Awdurdodiadau cleientiaid
 agent.services.account.section4.col1.h3=Gofyn i gleient eich awdurdodi
