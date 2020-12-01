@@ -41,8 +41,8 @@ agent.services.account.section3.col2.h3=Rheoli Treth Enillion Cyfalaf cleient ar
 agent.services.account.section3.col2.link1=<a href="{0}">Rhoi gwybod am Dreth Enillion Cyfalaf eich cleient ar eiddo yn y DU a bwrw golwg dros daliadau a chosbau</a>
 agent.services.account.section3.col2.link1.href=https://www.tax.service.gov.uk/capital-gains-tax-uk-property/start
 agent.services.account.section3.col1.h3=Cyn i chi ddechrau
-agent.services.account.section3.col1.text1=Yn gyntaf mae’n rhaid i’ch cleient wneud y canlynol:
-agent.services.account.section3.col1.text2=Yna mae’n rhaid iddo wneud y canlynol:
+agent.services.account.section3.col1.text1=Yn gyntaf mae’n rhaid i’ch cleient:
+agent.services.account.section3.col1.text2=Yna mae’n rhaid iddo:
 
 agent.services.account.section4.h2=Awdurdodiadau cleientiaid
 agent.services.account.section4.col1.h3=Gofyn i gleient eich awdurdodi
