@@ -20,7 +20,7 @@ import com.google.inject.{ImplementedBy, Singleton}
 import javax.inject.Inject
 import play.api.mvc.Results._
 import play.api.mvc.{Request, Result}
-import play.api.{Configuration, Environment, Logger, Mode}
+import play.api.{Configuration, Environment, Logging, Mode}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.auth.otac.{Authorised, OtacAuthConnector}
 import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
@@ -30,7 +30,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class PasscodeVerificationException(msg: String) extends RuntimeException(msg)
 
 @ImplementedBy(classOf[FrontendPasscodeVerification])
-trait PasscodeVerification {
+trait PasscodeVerification extends Logging {
   def apply[A](body: Boolean => Future[Result])(implicit request: Request[A], headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[Result]
 }
 
@@ -46,11 +46,11 @@ class FrontendPasscodeVerification @Inject()(configuration: Configuration,
   lazy val passcodeEnabled: Boolean = appConfig.passcodeAuthEnabled
   lazy val passcodeRegime: String = appConfig.passcodeAuthRegime
 
-  lazy val env: String = if (environment.mode.equals(Mode.Test)) "Test" else configuration.getString("run.mode").getOrElse("Dev")
-  lazy val verificationURL: String = configuration.getString(s"govuk-tax.$env.url.verification-frontend.redirect").getOrElse("/verification")
+  lazy val env: String = if (environment.mode.equals(Mode.Test)) "Test" else configuration.getOptional[String]("run.mode").getOrElse("Dev")
+  lazy val verificationURL: String = configuration.getOptional[String](s"govuk-tax.$env.url.verification-frontend.redirect").getOrElse("/verification")
   lazy val logoutUrl = s"$verificationURL/otac/logout/$passcodeRegime"
 
-  private def redirectToLoginWithToken[A](implicit request: Request[A], ec: ExecutionContext): Option[Result] = {
+  private def redirectToLoginWithToken[A](implicit request: Request[A]): Option[Result] = {
     request.getQueryString(tokenParam).map { nonUrlEncodedToken =>
       val redirectUrl = CallOps.addParamsToUrl(s"$verificationURL/otac/login", tokenParam -> Some(nonUrlEncodedToken))
 
@@ -74,7 +74,7 @@ class FrontendPasscodeVerification @Inject()(configuration: Configuration,
             case _ => body(false)
           }.recoverWith {
             case ex =>
-              Logger.warn("error during PassCodeVerification: IRV option may not be visible to the agents", ex)
+              logger.warn("error during PassCodeVerification: IRV option may not be visible to the agents", ex)
               body(false)
           }
         case None =>

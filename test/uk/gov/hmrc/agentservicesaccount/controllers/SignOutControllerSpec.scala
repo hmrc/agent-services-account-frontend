@@ -16,9 +16,7 @@
 
 package uk.gov.hmrc.agentservicesaccount.controllers
 
-import play.api.Application
 import play.api.i18n.MessagesApi
-import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.RequestHeader
 import play.api.test.FakeRequest
 import play.api.test.Helpers._

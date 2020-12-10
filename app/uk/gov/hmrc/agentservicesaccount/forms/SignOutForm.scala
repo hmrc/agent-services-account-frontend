@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.agentservicesaccount.forms
 
-import controllers.routes
 import play.api.data.Forms._
 import play.api.data._
 import play.api.data.format.Formats._

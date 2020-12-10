@@ -20,8 +20,9 @@ import com.google.inject.AbstractModule
 import uk.gov.hmrc.agentservicesaccount.connectors.FrontendAuthConnector
 import uk.gov.hmrc.auth.otac.OtacAuthConnector
 
-class FrontendModule() extends AbstractModule {
+class FrontendModule extends AbstractModule {
 
-  override def configure(): Unit =
+  override protected def configure():Unit = {
     bind(classOf[OtacAuthConnector]).to(classOf[FrontendAuthConnector])
+  }
 }

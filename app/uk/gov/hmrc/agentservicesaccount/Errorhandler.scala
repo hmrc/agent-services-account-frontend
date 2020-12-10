@@ -40,7 +40,7 @@ class ErrorHandler @Inject() (
                                val auditConnector: AuditConnector)(implicit val config: Configuration, ec: ExecutionContext, appConfig: AppConfig)
   extends FrontendErrorHandler with AuthRedirects with ErrorAuditing {
 
-  private val isDevEnv = if (env.mode.equals(Mode.Test)) false else config.getString("run.mode").forall(Mode.Dev.toString.equals)
+  private val isDevEnv = if (env.mode.equals(Mode.Test)) false else config.get[String]("run.mode").forall(Mode.Dev.toString.equals)
 
   override def appName: String = appConfig.appName
 

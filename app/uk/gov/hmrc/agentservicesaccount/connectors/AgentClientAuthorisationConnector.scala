@@ -19,12 +19,13 @@ package uk.gov.hmrc.agentservicesaccount.connectors
 import com.codahale.metrics.MetricRegistry
 import com.kenshoo.play.metrics.Metrics
 import javax.inject.Inject
+import play.api.http.Status._
 import play.api.libs.json.Json
 import uk.gov.hmrc.agent.kenshoo.monitoring.HttpAPIMonitor
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models.{SuspensionDetails, SuspensionDetailsNotFound}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, NotFoundException}
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
+import uk.gov.hmrc.http.HttpReads.Implicits._
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -39,10 +40,9 @@ class AgentClientAuthorisationConnector @Inject()(http: HttpClient)(implicit val
         .GET[HttpResponse](s"${appConfig.acaBaseUrl}/agent-client-authorisation/agent/suspension-details")
         .map(response =>
           response.status match {
-            case 200 => Json.parse(response.body).as[SuspensionDetails]
-            case 204 => SuspensionDetails(suspensionStatus = false, None)
+            case OK => Json.parse(response.body).as[SuspensionDetails]
+            case NO_CONTENT => SuspensionDetails(suspensionStatus = false, None)
+            case NOT_FOUND => throw SuspensionDetailsNotFound("No record found for this agent")
           })
-    } recoverWith {
-      case _: NotFoundException => Future failed SuspensionDetailsNotFound("No record found for this agent")
     }
 }
