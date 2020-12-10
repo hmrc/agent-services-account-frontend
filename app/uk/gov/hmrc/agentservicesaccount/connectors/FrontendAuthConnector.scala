@@ -19,7 +19,7 @@ package uk.gov.hmrc.agentservicesaccount.connectors
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.auth.otac.PlayOtacAuthConnector
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
+import uk.gov.hmrc.http.HttpClient
 
 @Singleton
 class FrontendAuthConnector @Inject()(val httpClient: HttpClient, appConfig: AppConfig) extends PlayOtacAuthConnector {

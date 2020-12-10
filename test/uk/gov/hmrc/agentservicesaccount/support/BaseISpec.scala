@@ -18,8 +18,8 @@ package uk.gov.hmrc.agentservicesaccount.support
 
 import org.scalatest.{BeforeAndAfterEach, Matchers, OptionValues}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.{Application, Configuration, Environment}
 import uk.gov.hmrc.agentservicesaccount.stubs.AuthStubs
 import uk.gov.hmrc.play.test.UnitSpec
 

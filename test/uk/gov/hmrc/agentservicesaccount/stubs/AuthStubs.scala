@@ -46,14 +46,14 @@ trait AuthStubs {
     this
   }
 
-  def givenOtacAuthorised(): Unit =
+  def givenOtacAuthorised() =
     stubFor(
       get(urlEqualTo("/authorise/read/fooRegime"))
         .willReturn(
           aResponse()
             .withStatus(200)))
 
-  def givenOtacUnAuthorised(): Unit =
+  def givenOtacUnAuthorised() =
     stubFor(
       get(urlEqualTo("/authorise/read/fooRegime"))
         .willReturn(

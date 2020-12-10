@@ -19,7 +19,6 @@ package uk.gov.hmrc.agentservicesaccount.stubs
 import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.libs.json.Json
-import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.models.SuspensionDetails
 
 object AgentClientAuthorisationStubs {

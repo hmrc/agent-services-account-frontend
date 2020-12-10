@@ -21,28 +21,35 @@ import java.net.URL
 import com.codahale.metrics.MetricRegistry
 import com.kenshoo.play.metrics.Metrics
 import javax.inject.{Inject, Singleton}
-import play.api.Logger
+import play.api.Logging
+import play.api.http.Status._
 import uk.gov.hmrc.agent.kenshoo.monitoring.HttpAPIMonitor
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.http.{BadRequestException, HeaderCarrier}
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
+import uk.gov.hmrc.http.HttpErrorFunctions._
+import uk.gov.hmrc.http.HttpReads.Implicits._
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class SsoConnector @Inject()(httpClient: HttpClient, metrics: Metrics)(implicit val appConfig: AppConfig) extends HttpAPIMonitor {
+class SsoConnector @Inject()(httpClient: HttpClient, metrics: Metrics)(implicit val appConfig: AppConfig) extends HttpAPIMonitor with Logging{
 
   override val kenshooRegistry: MetricRegistry = metrics.defaultRegistry
 
   def validateExternalDomain(domain: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Boolean] = {
     val url = new URL(s"${appConfig.ssoBaseUrl}/sso/validate/domain/$domain")
-    httpClient.GET(url.toString)
-      .map(_ => true)
-      .recover {
-        case e: BadRequestException => false
-        case e: Exception =>
-          Logger.error(s"Unable to validate domain $domain", e)
+    httpClient.GET[HttpResponse](url.toString)
+      .map(response => response.status
+      match {
+        case s if is2xx(s) => true
+        case BAD_REQUEST => false
+        case s =>
+          logger.error(s"Unable to validate domain $domain, http statusCode: $s")
           false
-      }
+      }).recover{
+      case e: Exception =>
+        logger.error(s"Failed to validate domain $domain", e)
+        false
+    }
   }
 }

@@ -59,11 +59,11 @@ class SignOutController @Inject()(
       )
   }
 
-  def signOut: Action[AnyContent] = Action.async { implicit request =>
+  def signOut: Action[AnyContent] = Action.async {
     Future successful Redirect(routes.SignOutController.showSurvey()).withNewSession
   }
 
-  def signedOut = Action.async { implicit request =>
+  def signedOut = Action.async {
     Future successful Redirect(appConfig.continueFromGGSignIn).withNewSession
   }
 
@@ -71,7 +71,7 @@ class SignOutController @Inject()(
     Future successful Forbidden(signedOutView(appConfig.continueFromGGSignIn)).withNewSession
   }
 
-  def keepAlive: Action[AnyContent] = Action.async { implicit request =>
+  def keepAlive: Action[AnyContent] = Action.async {
     Future successful Ok("OK")
   }
 }

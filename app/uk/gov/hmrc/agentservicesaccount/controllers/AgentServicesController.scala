@@ -19,7 +19,7 @@ package uk.gov.hmrc.agentservicesaccount.controllers
 import javax.inject._
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import play.api.{Configuration, Logger}
+import play.api.{Configuration, Logging}
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.auth.{AuthActions, PasscodeVerification}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
@@ -41,7 +41,7 @@ class AgentServicesController @Inject()(
   configuration: Configuration,
   ec: ExecutionContext,
   messagesApi: MessagesApi)
-    extends AgentServicesBaseController {
+    extends AgentServicesBaseController with Logging {
 
   import authActions._
 
@@ -66,7 +66,7 @@ class AgentServicesController @Inject()(
   val showAgentServicesAccount: Action[AnyContent] = Action.async { implicit request =>
     withMaybePasscode { isWhitelisted =>
       withAuthorisedAsAgent { agentInfo =>
-        Logger.info(s"isAdmin: ${agentInfo.isAdmin}")
+        logger.info(s"isAdmin: ${agentInfo.isAdmin}")
         if (agentSuspensionEnabled) {
           request.session.get("isSuspendedForVat") match {
             case Some(isSuspendedForVat) =>

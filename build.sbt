@@ -1,6 +1,5 @@
-import sbt.Tests.{Group, SubProcess}
-import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin._
 import uk.gov.hmrc.SbtAutoBuildPlugin
+import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin._
 
 lazy val scoverageSettings = {
   import scoverage.ScoverageKeys
@@ -65,18 +64,18 @@ lazy val wartRemoverSettings = {
 
 lazy val compileDeps = Seq(
   ws,
-  "uk.gov.hmrc" %% "bootstrap-frontend-play-27" % "2.24.0",
-  "uk.gov.hmrc" %% "govuk-template" % "5.55.0-play-27",
-  "uk.gov.hmrc" %% "play-ui" % "8.12.0-play-27",
-  "uk.gov.hmrc" %% "auth-client" % "3.0.0-play-27",
-  "uk.gov.hmrc" %% "play-partials" % "6.11.0-play-27",
+  "uk.gov.hmrc" %% "bootstrap-frontend-play-27" % "3.2.0",
+  "uk.gov.hmrc" %% "govuk-template" % "5.60.0-play-27",
+  "uk.gov.hmrc" %% "play-ui" % "8.18.0-play-27",
+  "uk.gov.hmrc" %% "auth-client" % "3.2.0-play-27",
+  "uk.gov.hmrc" %% "play-partials" % "7.1.0-play-27",
   "uk.gov.hmrc" %% "agent-kenshoo-monitoring" % "4.4.0",
   "uk.gov.hmrc" %% "agent-mtd-identifiers" % "0.19.0-play-27",
-  "uk.gov.hmrc" %% "play-language" % "4.3.0-play-27"
+  "uk.gov.hmrc" %% "play-language" % "4.5.0-play-27"
 )
 
 def testDeps(scope: String) = Seq(
-  "uk.gov.hmrc" %% "hmrctest" % "3.9.0-play-26" % scope,
+  "uk.gov.hmrc" %% "hmrctest" % "3.10.0-play-26" % scope,
   "org.scalatest" %% "scalatest" % "3.0.8" % scope,
   "org.mockito" % "mockito-core" % "3.2.0" % scope,
   "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.3" % scope,
@@ -90,7 +89,7 @@ lazy val root = (project in file("."))
     organization := "uk.gov.hmrc",
     scalaVersion := "2.12.10",
     scalacOptions ++= Seq(
-      //"-Xfatal-warnings",
+      "-Xfatal-warnings",
       "-Xlint:-missing-interpolator,_",
       "-Yno-adapted-args",
       "-Ywarn-value-discard",
@@ -98,7 +97,8 @@ lazy val root = (project in file("."))
       "-deprecation",
       "-feature",
       "-unchecked",
-      "-language:implicitConversions"),
+      "-language:implicitConversions",
+      "-P:silencer:pathFilters=views;routes;uk/gov/hmrc/agentservicesaccount/FrontendModule"),
     PlayKeys.playDefaultPort := 9401,
     resolvers := Seq(
       Resolver.bintrayRepo("hmrc", "releases"),
@@ -107,6 +107,10 @@ lazy val root = (project in file("."))
       Resolver.jcenterRepo
     ),
     libraryDependencies ++= compileDeps ++ testDeps("test") ++ testDeps("it"),
+    libraryDependencies ++= Seq(
+      compilerPlugin("com.github.ghik" % "silencer-plugin" % "1.4.4" cross CrossVersion.full),
+      "com.github.ghik" % "silencer-lib" % "1.4.4" % Provided cross CrossVersion.full
+    ),
     publishingSettings,
     scoverageSettings,
     unmanagedResourceDirectories in Compile += baseDirectory.value / "resources"

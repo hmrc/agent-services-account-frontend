@@ -64,7 +64,7 @@ class AuthActions @Inject()(appConfig: AppConfig,
 
   lazy val isDevEnv: Boolean =
     if (env.mode.equals(Mode.Test)) false
-    else config.getString("run.mode").forall(Mode.Dev.toString.equals)
+    else config.get[String]("run.mode").forall(Mode.Dev.toString.equals)
 
 
   def handleFailure(implicit request: Request[_]): PartialFunction[Throwable, Result] = {
