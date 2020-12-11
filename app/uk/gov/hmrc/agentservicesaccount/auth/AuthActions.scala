@@ -19,7 +19,7 @@ package uk.gov.hmrc.agentservicesaccount.auth
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.Results._
 import play.api.mvc._
-import play.api.{Configuration, Environment, Logger, Mode}
+import play.api.{Configuration, Environment, Logger}
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
@@ -62,16 +62,11 @@ class AuthActions @Inject()(appConfig: AppConfig,
           }
       }.recover(handleFailure)
 
-  lazy val isDevEnv: Boolean =
-    if (env.mode.equals(Mode.Test)) false
-    else config.get[String]("run.mode").forall(Mode.Dev.toString.equals)
-
-
   def handleFailure(implicit request: Request[_]): PartialFunction[Throwable, Result] = {
     case _: NoActiveSession ⇒ {
       import CallOps._
       val url: String =
-        if (isDevEnv) s"http://${request.host}${request.uri}"
+        if (appConfig.isDevEnv) s"http://${request.host}${request.uri}"
         else s"${request.uri}"
       val requestWithMaybeOtac = request.session.get("otacTokenParam") match {
         case Some(p) =>
