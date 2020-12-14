@@ -20,7 +20,7 @@ import com.google.inject.{ImplementedBy, Singleton}
 import javax.inject.Inject
 import play.api.mvc.Results._
 import play.api.mvc.{Request, Result}
-import play.api.{Configuration, Environment, Logging, Mode}
+import play.api.{Configuration, Environment, Logging}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.auth.otac.{Authorised, OtacAuthConnector}
 import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
@@ -46,7 +46,7 @@ class FrontendPasscodeVerification @Inject()(configuration: Configuration,
   lazy val passcodeEnabled: Boolean = appConfig.passcodeAuthEnabled
   lazy val passcodeRegime: String = appConfig.passcodeAuthRegime
 
-  lazy val env: String = if (environment.mode.equals(Mode.Test)) "Test" else configuration.getOptional[String]("run.mode").getOrElse("Dev")
+  lazy val env: String = environment.mode.toString
   lazy val verificationURL: String = configuration.getOptional[String](s"govuk-tax.$env.url.verification-frontend.redirect").getOrElse("/verification")
   lazy val logoutUrl = s"$verificationURL/otac/logout/$passcodeRegime"
 
