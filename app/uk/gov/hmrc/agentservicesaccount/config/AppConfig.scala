@@ -95,9 +95,8 @@ class AppConfig @Inject() (servicesConfig: ServicesConfig, env:Environment) exte
   val passcodeAuthRegime = getString("passcodeAuthentication.regime")
   val passcodeAuthEnabled = getBoolean("passcodeAuthentication.enabled")
 
-  val isDevEnv = if (env.mode.equals(Mode.Test)) false else servicesConfig.getConfString("run.mode","Dev") == Mode.Dev.toString
-  //val isDevEnv = env.mode.equals(Mode.Dev)   //TODO Replace to this if "run.mode" is not used
-  logger.warn("runMode: " + servicesConfig.getConfString("run.mode","RUNMODE_NOT_FOUND"))
+  val isDevEnv = env.mode.equals(Mode.Dev)
+  logger.warn(s"runMode: ${env.mode} isDevEnv: $isDevEnv")
 
   def signOutUrlWithSurvey(surveyKey: String): String = s"$companyAuthFrontendExternalUrl$signOutPath?continue=${urlEncode(signOutContinueUrl + surveyKey)}"
 
