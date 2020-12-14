@@ -95,7 +95,7 @@ class AppConfig @Inject() (servicesConfig: ServicesConfig, env:Environment) exte
   val passcodeAuthRegime = getString("passcodeAuthentication.regime")
   val passcodeAuthEnabled = getBoolean("passcodeAuthentication.enabled")
 
-  val isDevEnv = env.mode.equals(Mode.Dev)
+  val isDevEnv = env.mode.equals(Mode.Dev) || env.mode.equals(Mode.Prod)
 
   def signOutUrlWithSurvey(surveyKey: String): String = s"$companyAuthFrontendExternalUrl$signOutPath?continue=${urlEncode(signOutContinueUrl + surveyKey)}"
 
