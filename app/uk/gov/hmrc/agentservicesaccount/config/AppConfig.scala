@@ -17,7 +17,7 @@
 package uk.gov.hmrc.agentservicesaccount.config
 
 import com.google.inject.{Inject, Singleton}
-import play.api.{Environment, Logging, Mode}
+import play.api.{Configuration, Environment, Logging, Mode}
 import play.api.i18n.Lang
 import play.api.mvc.Call
 import uk.gov.hmrc.agentservicesaccount.controllers.routes
@@ -25,7 +25,7 @@ import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import views.html.helper.urlEncode
 
 @Singleton
-class AppConfig @Inject() (servicesConfig: ServicesConfig, env:Environment) extends Logging{
+class AppConfig @Inject() (servicesConfig: ServicesConfig, config: Configuration, env:Environment) extends Logging{
 
   val appName = "agent-services-account-frontend"
 
@@ -96,6 +96,11 @@ class AppConfig @Inject() (servicesConfig: ServicesConfig, env:Environment) exte
   val passcodeAuthEnabled = getBoolean("passcodeAuthentication.enabled")
 
   val isDevEnv = env.mode.equals(Mode.Dev) || env.mode.equals(Mode.Prod)
+  val runMode = config.get[String]("run.mode")
+  val runModeForAll = runMode.forall(Mode.Dev.toString.equals)
+  val runModeOption = config.getOptional[String]("run.mode")
+  val runModeService = servicesConfig.getConfString("run.mode", "NO_RUN_MODE")
+  logger.warn(s"env.mode: ${env.mode}, isDevEnv: $isDevEnv, runMode: $runMode, runModeOption: $runModeOption, runModeService: $runModeService, runModeForAll: $runModeForAll")
 
   def signOutUrlWithSurvey(surveyKey: String): String = s"$companyAuthFrontendExternalUrl$signOutPath?continue=${urlEncode(signOutContinueUrl + surveyKey)}"
 
