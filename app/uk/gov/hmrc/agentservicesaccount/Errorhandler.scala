@@ -40,6 +40,10 @@ class ErrorHandler @Inject() (
                                val auditConnector: AuditConnector)(implicit val config: Configuration, ec: ExecutionContext, appConfig: AppConfig)
   extends FrontendErrorHandler with AuthRedirects with ErrorAuditing with Logging{
 
+  val runModeOption = config.getOptional[String]("run.mode")
+  val runModeForAll = runModeOption.forall(play.api.Mode.Dev.toString.equals)
+  logger.warn(s"env.mode: ${env.mode}, isDevEnv: ${appConfig.isDevEnv}, runModeOption: $runModeOption runModeForAll: $runModeForAll, runModeSC: ${appConfig.runModeSC}")
+
   override def appName: String = appConfig.appName
 
   override def onClientError(request: RequestHeader, statusCode: Int, message: String): Future[Result] = {
@@ -48,11 +52,6 @@ class ErrorHandler @Inject() (
   }
 
   override def resolveError(request: RequestHeader, exception: Throwable) = {
-      val runMode = config.get[String]("run.mode")
-      val runModeForAll = runMode.forall(play.api.Mode.Dev.toString.equals)
-      val runModeOption = config.getOptional[String]("run.mode")
-      logger.warn(s"env.mode: ${env.mode}, isDevEnv: ${appConfig.isDevEnv}, runMode: $runMode, runModeOption: $runModeOption runModeForAll: $runModeForAll")
-
     auditServerError(request,exception)
     exception match {
       case _: NoActiveSession => toGGLogin(if (appConfig.isDevEnv) s"http://${request.host}${request.uri}" else s"${request.uri}")
