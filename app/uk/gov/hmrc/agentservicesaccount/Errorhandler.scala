@@ -20,7 +20,7 @@ import javax.inject.{Inject, Singleton}
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.mvc.Results._
 import play.api.mvc.{Request, RequestHeader, Result}
-import play.api.{Configuration, Environment}
+import play.api.{Configuration, Environment, Logging}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.views.html.error_template
 import uk.gov.hmrc.auth.core.{InsufficientEnrolments, NoActiveSession}
@@ -38,7 +38,7 @@ class ErrorHandler @Inject() (
                                val messagesApi: MessagesApi,
   errorTemplateView: error_template,
                                val auditConnector: AuditConnector)(implicit val config: Configuration, ec: ExecutionContext, appConfig: AppConfig)
-  extends FrontendErrorHandler with AuthRedirects with ErrorAuditing {
+  extends FrontendErrorHandler with AuthRedirects with ErrorAuditing with Logging{
 
   override def appName: String = appConfig.appName
 
@@ -48,6 +48,11 @@ class ErrorHandler @Inject() (
   }
 
   override def resolveError(request: RequestHeader, exception: Throwable) = {
+      val runMode = config.get[String]("run.mode")
+      val runModeForAll = runMode.forall(play.api.Mode.Dev.toString.equals)
+      val runModeOption = config.getOptional[String]("run.mode")
+      logger.warn(s"env.mode: ${env.mode}, isDevEnv: ${appConfig.isDevEnv}, runMode: $runMode, runModeOption: $runModeOption runModeForAll: $runModeForAll")
+
     auditServerError(request,exception)
     exception match {
       case _: NoActiveSession => toGGLogin(if (appConfig.isDevEnv) s"http://${request.host}${request.uri}" else s"${request.uri}")
