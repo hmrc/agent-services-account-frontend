@@ -66,7 +66,6 @@ class AuthActions @Inject()(appConfig: AppConfig,
     case _: NoActiveSession ⇒ {
       import CallOps._
       val url: String = if (appConfig.isDevEnv) s"http://${request.host}${request.uri}" else s"${request.uri}"
-      logger.warn(s"devenv: ${appConfig.isDevEnv}, request.uri:${request.uri}, request.host:${request.host}, url:$url")
       val requestWithMaybeOtac = request.session.get("otacTokenParam") match {
         case Some(p) =>
           addParamsToUrl(url, "p" -> Some(p))

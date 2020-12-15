@@ -97,7 +97,6 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
 
   val runMode = config.getOptional[String]("run.mode")
   val isDevEnv = if (env.mode.equals(Mode.Test)) false else runMode.forall(Mode.Dev.toString.equals)
-  logger.warn(s"env.mode: ${env.mode}, isDevEnv: ${isDevEnv}, runMode: $runMode ")
 
   def signOutUrlWithSurvey(surveyKey: String): String = s"$companyAuthFrontendExternalUrl$signOutPath?continue=${urlEncode(signOutContinueUrl + surveyKey)}"
 
