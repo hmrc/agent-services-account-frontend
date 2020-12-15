@@ -40,10 +40,6 @@ class ErrorHandler @Inject() (
                                val auditConnector: AuditConnector)(implicit val config: Configuration, ec: ExecutionContext, appConfig: AppConfig)
   extends FrontendErrorHandler with AuthRedirects with ErrorAuditing with Logging{
 
-  val runModeOption = config.getOptional[String]("run.mode")
-  val runModeForAll = runModeOption.forall(play.api.Mode.Dev.toString.equals)
-  logger.warn(s"env.mode: ${env.mode}, isDevEnv: ${appConfig.isDevEnv}, runModeOption: $runModeOption runModeForAll: $runModeForAll, runModeSC: ${appConfig.runModeSC}")
-
   override def appName: String = appConfig.appName
 
   override def onClientError(request: RequestHeader, statusCode: Int, message: String): Future[Result] = {
