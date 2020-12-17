@@ -54,13 +54,19 @@
 
 @headScripts = {
     <link href="@controllers.routes.Assets.at("stylesheets/styles.css")" media="screen" rel="stylesheet" type="text/css">
+    <link href="@controllers.routes.Assets.at("stylesheets/govuk-frontend-ie8-3.10.1.min.css")" media="screen" rel="stylesheet" type="text/css">
+    <link href="@controllers.routes.Assets.at("stylesheets/govuk-frontend-3.10.1.min.css")" media="screen" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="https://www.tax.service.gov.uk/assets/hmrc-frontend/1.23.0/hmrc-frontend-1.23.0.min.css">
+    <link rel="stylesheet" type="text/css" href="https://www.tax.service.gov.uk/assets/hmrc-frontend/1.23.0/hmrc-frontend-ie8-1.23.0.min.css">
 }
 
 @scriptElement = {
     @scriptElem
     <script src="@controllers.routes.Assets.at("javascripts/ga-events.js")" type="text/javascript"></script>
+    <script src="@controllers.routes.Assets.at("javascripts/govuk-frontend-3.10.1.min.js")" type="text/javascript"></script>
             <script src="@controllers.routes.Assets.at("javascripts/session-timeout.js")" type="text/javascript"></script>
             <script src="@controllers.routes.Assets.at("javascripts/asa-fe.js")" type="text/javascript"></script>
+    <script type="text/javascript" src="https://www.tax.service.gov.uk/assets/hmrc-frontend/1.23.0/hmrc-frontend-1.23.0.min.js"></script>
 }
 
 @head = {

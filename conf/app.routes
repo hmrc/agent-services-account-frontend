@@ -2,6 +2,9 @@
 
 GET        /assets/*file                   controllers.Assets.at(path="/public", file)
 
+
+GET         /test                   @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController.test()
+
 GET        /                               @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController.root()
 GET        /home                           @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController.showAgentServicesAccount()
 GET        /home/survey                    @uk.gov.hmrc.agentservicesaccount.controllers.SignOutController.showSurvey()

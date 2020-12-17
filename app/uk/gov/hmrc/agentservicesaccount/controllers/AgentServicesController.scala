@@ -35,7 +35,8 @@ class AgentServicesController @Inject()(
   val withMaybePasscode: PasscodeVerification,
   asaView: agent_services_account,
   suspensionWarningView: suspension_warning,
-  manageAccountView: manage_account)(
+  manageAccountView: manage_account,
+  testView: test)(
   implicit val appConfig: AppConfig,
   val cc: MessagesControllerComponents,
   configuration: Configuration,
@@ -47,6 +48,10 @@ class AgentServicesController @Inject()(
 
   val customDimension = appConfig.customDimension
   val agentSuspensionEnabled = appConfig.agentSuspensionEnabled
+
+  def test: Action[AnyContent] = Action.async { implicit request =>
+    Future successful Ok(testView("ARN123456",true, customDimension, true, false))
+  }
 
   val root: Action[AnyContent] = Action.async { implicit request =>
     withAuthorisedAsAgent { _ =>

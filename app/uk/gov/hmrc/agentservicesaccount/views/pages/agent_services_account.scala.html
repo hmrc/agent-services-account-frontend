@@ -44,7 +44,31 @@
 
 
 @mainTemplate(title = Messages("agent.services.account.heading"), mainClass = Some("govuk-main-wrapper"), isAdmin = isAdmin, analyticsAdditionalJs = Some(analyticsAdditionalJs)) {
-<div class="padding-top-40 padding-bottom-40 account-services-home">
+
+    <section class="app-c-banner" style="margin: 0px 0 50px">
+        <h1 class="govuk-heading-xl welcome-heading" style="color:white">@Messages("agent.services.account.welcome")</h1>
+        <p></p><div class="govuk-hint" style="color:white">@Messages("agent.accountNumber", arn)</div><p></p>
+
+    </section>
+
+    <h2 class="govuk-heading-m">@Messages("agent.services.account.section4.h2")</h2>
+
+    <p>@Messages("agent-services.account.client-authorisations.p")</p>
+
+    <ul class="list list-bullet">
+        <li class="govuk-!-margin-bottom-1"><a href="@appConfig.agentInvitationsFrontendUrl">@Messages("agent.services.account.section4.col1.link")</a></li>
+        <li class="govuk-!-margin-bottom-1"><a href="@appConfig.agentInvitationsTrackUrl">@Messages("agent.services.account.section4.col2.link1")</a></li>
+        <li class="govuk-!-margin-bottom-1"><a href="@appConfig.agentMappingUrl">@Messages("agent.services.account.section4.col2.link2")</a></li>
+        <li class="govuk-!-margin-bottom-1"><a href="@appConfig.agentInvitationsCancelAuthUrl">@Messages("agent.services.account.section4.col2.link3")</a></li>
+    </ul>
+
+    <hr class="hr-thick">
+
+    <h2 class="govuk-heading-m">@Messages("agent-services-account.tax-services")</h2>
+
+
+
+    <div class="padding-top-40 padding-bottom-40 account-services-home">
     <h1 class="govuk-heading-xl welcome-heading">@Messages("app.name")
         <span class="govuk-hint">@Messages("agent.accountNumber", arn)</span>
     </h1>
