@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -89,14 +89,22 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
   val agentSuspensionEnabled = getBoolean("features.enable-agent-suspension")
   val welshToggleEnabled = getBoolean("features.enable-welsh-toggle")
 
-  val timeoutSeconds = getInt("timeoutDialog.timeout-seconds")
-  val timeoutCountdownSeconds = getInt("timeoutDialog.timeout-countdown-seconds")
+  val timeoutDialogTimeout = getInt("timeoutDialog.timeout")
+  val timeoutDialogCountdown = getInt("timeoutDialog.countdown")
 
   val passcodeAuthRegime = getString("passcodeAuthentication.regime")
   val passcodeAuthEnabled = getBoolean("passcodeAuthentication.enabled")
 
   val runMode = config.getOptional[String]("run.mode")
   val isDevEnv = if (env.mode.equals(Mode.Test)) false else runMode.forall(Mode.Dev.toString.equals)
+
+  val betaFeedbackUrl = getString("betaFeedbackUrl")
+
+  val googleAnalyticsHost = getString("google-analytics.host")
+  val googleAnalyticsToken = getString("google-analytics.token")
+
+  val hmrcOnlineGuidanceLink = getString("hmrcOnlineGuidanceLink")
+  val hmrcOnlineSignInLink = getString("hmrcOnlineSignInLink")
 
   def signOutUrlWithSurvey(surveyKey: String): String = s"$companyAuthFrontendExternalUrl$signOutPath?continue=${urlEncode(signOutContinueUrl + surveyKey)}"
 

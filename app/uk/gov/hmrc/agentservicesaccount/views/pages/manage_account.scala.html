@@ -1,5 +1,5 @@
 @*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,33 +14,30 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import play.api.Configuration
-@import uk.gov.hmrc.agentservicesaccount.views.html.main_template
+@import uk.gov.hmrc.agentservicesaccount.views.html.main
+@import uk.gov.hmrc.agentservicesaccount.views.html.components.secondary_nav
 
-@this(mainTemplate: main_template)
+@this(mainTemplate: main, secondaryNav: secondary_nav)
 
-@()(implicit messages: Messages, request: Request[_], appConfig: AppConfig, configuration: Configuration)
+@()(implicit messages: Messages, request: Request[_], appConfig: AppConfig)
+
+@mainTemplate(pageTitle = Some(Messages("manage.account.heading")), beforeContentBlock = Some(secondaryNav(isAdmin = true)), analyticsAdditionalJs = None) {
 
 
-@mainTemplate(title = Messages("manage.account.heading"), mainClass = Some("govuk-main-wrapper"), analyticsAdditionalJs = None, isAdmin = true) {
-
- <div class="padding-top-40 padding-bottom-40 account-services-home">
-  <div class="grid-row">
-   <div class="column-two-thirds">
     <h1 class="govuk-heading-xl">@Messages("manage.account.heading")</h1>
-    <p>@Messages("manage.account.p")</p>
-    <ul>
-     <li class="govuk-!-margin-bottom-2">
-      <a href="@appConfig.addUserUrl">@Messages("manage.account.add-user")</a>
+
+    <p class="govuk-body">@Messages("manage.account.p")</p>
+
+ <ul class="govuk-body">
+     <li>
+       <a href="@appConfig.addUserUrl">@Messages("manage.account.add-user")</a>
      </li>
      <li>
-      <a href="@appConfig.manageUsersUrl" target="_blank">@Messages("manage.account.manage-user-access")</a>
+       <a href="@appConfig.manageUsersUrl" target="_blank">@Messages("manage.account.manage-user-access")</a>
      </li>
-    </ul>
-   </div>
-  </div>
- </div>
+ </ul>
+
 
 }

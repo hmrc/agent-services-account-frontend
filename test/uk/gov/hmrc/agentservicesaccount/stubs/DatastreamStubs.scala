@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.agentservicesaccount.models
+package uk.gov.hmrc.agentservicesaccount.stubs
 
-case class Model(parameter: String)
+trait DatastreamStubs {
+
+
+
+}

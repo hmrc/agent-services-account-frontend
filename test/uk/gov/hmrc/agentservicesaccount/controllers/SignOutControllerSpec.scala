@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,6 +60,15 @@ class SignOutControllerSpec extends BaseISpec {
 
       status(request) shouldBe 303
       redirectLocation(request) shouldBe Some(appConfig.continueFromGGSignIn)
+    }
+
+    "remove session and redirect to HMRC Online sign-in page" in {
+      val onlineSignInUrl = "https://www.access.service.gov.uk/login/signin/creds"
+
+      val response = controller.onlineSignIn(FakeRequest("GET","/"))
+
+      status(response) shouldBe 303
+      redirectLocation(response) shouldBe Some(onlineSignInUrl)
     }
   }
 

@@ -13,4 +13,4 @@ addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.6.1")
 
 addSbtPlugin("org.wartremover" % "sbt-wartremover" % "2.4.10")
 
-addSbtPlugin("org.irundaia.sbt" % "sbt-sassify" % "1.4.12")
+addSbtPlugin("org.irundaia.sbt" % "sbt-sassify" % "1.4.11")

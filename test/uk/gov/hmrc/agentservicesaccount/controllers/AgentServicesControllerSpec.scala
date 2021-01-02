@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.agentservicesaccount.auth.PasscodeVerification
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.models.SuspensionDetails
+import uk.gov.hmrc.agentservicesaccount.models.{SuspensionDetails, SuspensionDetailsNotFound}
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentClientAuthorisationStubs._
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import uk.gov.hmrc.auth.core.{Enrolment, EnrolmentIdentifier}
@@ -86,6 +86,21 @@ class AgentServicesControllerSpec extends BaseISpec {
       status(response) shouldBe SEE_OTHER
       redirectLocation(response) shouldBe Some(routes.AgentServicesController.showSuspendedWarning().url)
     }
+
+    "throw an exception when suspension is enabled and suspension status returns NOT_FOUND for user" in {
+      val controllerWithSuspensionEnabled =
+        appBuilder(Map("features.enable-agent-suspension" -> true))
+          .build()
+          .injector.instanceOf[AgentServicesController]
+
+      givenAuthorisedAsAgentWith(arn)
+      givenAgentRecordNotFound
+
+
+      intercept[SuspensionDetailsNotFound]{
+        await(controllerWithSuspensionEnabled.root()(FakeRequest("GET", "/")))
+      }
+    }
   }
 
   "home" should {
@@ -110,10 +125,6 @@ class AgentServicesControllerSpec extends BaseISpec {
       content should include(htmlEscapedMessage("agent.services.account.section1.col2.h3"))
       content should include(messagesApi("agent.services.account.section1.col2.p"))
       content should include(htmlEscapedMessage("agent.services.account.section1.col2.link"))
-      content should include(htmlEscapedMessage("agent.services.account.paye-section.h2"))
-      content should include(htmlEscapedMessage("agent.services.account.paye-section.col1.p"))
-      content should include(htmlEscapedMessage("agent.services.account.paye-section.col1.link"))
-      content should include(appConfig.taxHistoryFrontendUrl)
       content should include(messagesApi("agent.services.account.section3.col1.h2"))
       content should include(messagesApi("agent.services.account.section3.col1.h3"))
       content should include(messagesApi("agent.services.account.section3.col1.text1"))
@@ -124,10 +135,8 @@ class AgentServicesControllerSpec extends BaseISpec {
       content should include(messagesApi("agent.services.account.section3.col2.link1", messagesApi("agent.services.account.section3.col2.link1.href")))
       content should include(messagesApi("agent.services.account.section4.h2"))
       content should include(messagesApi("agent.services.account.section4.col1.h3"))
-      content should include(messagesApi("agent.services.account.section4.col1.p"))
       content should include(messagesApi("agent.services.account.section4.col1.link"))
       content should include(appConfig.agentInvitationsFrontendUrl)
-      content should include(messagesApi("agent.services.account.section4.col2.h3"))
       content should include(messagesApi("agent.services.account.section4.col2.link1"))
       content should include(messagesApi("agent.services.account.section4.col2.link2"))
       content should include(htmlEscapedMessage("agent.services.account.section4.col2.link3"))
@@ -142,6 +151,17 @@ class AgentServicesControllerSpec extends BaseISpec {
       content should include(messagesApi("agent.services.account.trusts-section.col2.p"))
       content should include(messagesApi("agent.services.account.trusts-section.col2.register-trust-link.text"))
       content should include(messagesApi("agent.services.account.trusts-section.col2.register-estate-link.text"))
+      content should include(messagesApi("agent.services.account.welcome"))
+      content should include(messagesApi("agent.services.account.client-authorisations.p"))
+      content should include(messagesApi("agent.services.account.tax-services"))
+      content should include(messagesApi("asa.other.heading"))
+      content should include(messagesApi("asa.other.p1"))
+      content should include(messagesApi("asa.other.gg-sign-in.text", routes.SignOutController.onlineSignIn().url))
+      content should include(messagesApi("asa.other.p2"))
+      content should include(messagesApi("asa.other.li-sa"))
+      content should include(messagesApi("asa.other.li-ct"))
+      content should include(messagesApi("asa.other.li-paye"))
+      content should include(messagesApi("asa.other.guidance.text", appConfig.hmrcOnlineGuidanceLink))
     }
 
     "return Status: OK and body containing correct content when suspension details are in the session and agent is suspended for VATC" in {

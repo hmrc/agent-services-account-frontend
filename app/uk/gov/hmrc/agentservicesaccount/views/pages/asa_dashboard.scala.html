@@ -1,5 +1,5 @@
 @*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,11 +18,30 @@
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.controllers.routes
 @import play.api.Configuration
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcReportTechnicalIssueHelper
+@import uk.gov.hmrc.agentservicesaccount.views.html.components.secondary_nav
 
-@this(mainTemplate: main)
-@(arn: String, isWhitelisted: Boolean, customDimension: String, isAdmin: Boolean = false, isSuspendedForVat: Boolean)(implicit request: Request[_], messages: Messages, appConfig: AppConfig, configuration: Configuration)
+@this(mainTemplate: main, hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper, secondaryNav: secondary_nav)
 
-@mainTemplate(pageTitle = Some("My page title"), isAdmin = true){
+@(arn: String, isWhitelisted: Boolean, customDimension: String, isAdmin: Boolean = false, isSuspendedForVat: Boolean)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+
+@analyticsAdditionalJs = {
+    ga('send', 'event', {
+    'eventCategory': '@Messages("agent.services.account.additional.links.agent-afi.ga.link-view")',
+    'eventAction': '@Messages("agent.services.account.additional.links.agent-afi.ga.manage-clients")',
+    'eventLabel': '@Messages("agent.services.account.additional.links.agent-afi.ga.request-auth")'
+    });
+
+    ga('send', 'event', {
+    'eventCategory': '@Messages("agent.services.account.additional.links.agent-afi.ga.link-view")',
+    'eventAction': '@Messages("agent.services.account.additional.links.agent-afi.ga.services-you-need")',
+    'eventLabel': '@Messages("agent.services.account.additional.links.agent-afi.ga.view-income-record")'
+    });
+
+    ga('send', 'pageview', { '@customDimension': '@if(isWhitelisted) {Whitelisted} else {Non-Whitelisted}'});
+}
+
+@mainTemplate(pageTitle = Some(Messages("agent.services.account.heading")), beforeContentBlock = Some(secondaryNav(isAdmin)), analyticsAdditionalJs = Some(analyticsAdditionalJs)){
 
     <section class="app-c-banner" style="margin: 0px 0 50px">
         <h1 class="govuk-heading-xl welcome-heading" style="color:white">@Messages("agent.services.account.welcome")</h1>
@@ -31,7 +50,7 @@
 
     <h2 class="govuk-heading-m">@Messages("agent.services.account.section4.h2")</h2>
 
-    <p class="govuk-body">@Messages("agent-services.account.client-authorisations.p")</p>
+    <p class="govuk-body">@Messages("agent.services.account.client-authorisations.p")</p>
 
     <ul class="list list-bullet govuk-body govuk-!-margin-bottom-6">
         <li class="govuk-!-margin-bottom-1"><a href="@appConfig.agentInvitationsFrontendUrl">@Messages("agent.services.account.section4.col1.link")</a></li>
@@ -42,7 +61,7 @@
 
     <hr class="hr-thick govuk-!-margin-bottom-6">
 
-    <h2 class="govuk-heading-m">@Messages("agent-services-account.tax-services")</h2>
+    <h2 class="govuk-heading-m">@Messages("agent.services.account.tax-services")</h2>
 
     <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default">
         <div class="govuk-accordion__section govuk-body">
@@ -119,15 +138,18 @@
             </div>
             <div id="accordion-default-content-4" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-4">
                 <p class='govuk-body'>@Messages("asa.other.p1")</p>
-                <p>@Html(Messages("asa.other.gg-sign-in.text", routes.SignOutController.signedOut()))</p>
+                <p>@Html(Messages("asa.other.gg-sign-in.text", routes.SignOutController.onlineSignIn()))</p>
                 <p class="govuk-body">@Messages("asa.other.p2")</p>
                 <ul class="govuk-body">
                     <li>@Messages("asa.other.li-sa")</li>
                     <li>@Messages("asa.other.li-ct")</li>
                     <li>@Messages("asa.other.li-paye")</li>
                 </ul>
-                <p>@Html(Messages("asa.other.guidance.text","https://www.google.com"))</p>
+                <p>@Html(Messages("asa.other.guidance.text", appConfig.hmrcOnlineGuidanceLink))</p>
             </div>
         </div>
     </div>
+
+    @hmrcReportTechnicalIssueHelper()
+
 }

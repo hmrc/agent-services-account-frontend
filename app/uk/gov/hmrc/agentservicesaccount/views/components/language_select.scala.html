@@ -1,0 +1,64 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+@this()
+
+
+@()(implicit messages: Messages, request: Request[_], appConfig: AppConfig)
+
+@if(messages.lang.code == "en") {
+    <nav class="hmrc-language-select" aria-label="Language switcher">
+        <ul class="govuk-list hmrc-language-select__items">
+            <li class="govuk-header__navigation-item">
+                <a aria-current="page" lang="en" hreflang="en" href>English</a>
+            </li>
+            <li class="govuk-header__navigation-item">
+                <a href="@appConfig.routeToSwitchLanguage("cymraeg")"
+                hreflang="cy"
+                lang="cy"
+                rel="alternate"
+                class="govuk-header__link"
+                data-journey-click="link - click:lang-select:Cymraeg">
+                    <span class="govuk-visually-hidden">Newid yr iaith ir Gymraeg</span>
+                    <span aria-hidden="true">Cymraeg</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+}
+
+@if(messages.lang.code == "cy") {
+    <nav class="hmrc-language-select" aria-label="Switcher iaith">
+        <ul class="govuk-list hmrc-language-select__items">
+            <li class="govuk-header__navigation-item">
+                <a href="@appConfig.routeToSwitchLanguage("english")"
+                hreflang="en"
+                lang="en"
+                rel="alternate"
+                class="govuk-header__link"
+                data-journey-click="link - click:lang-select:English">
+                    <span class="govuk-visually-hidden">Change the language to English</span>
+                    <span aria-hidden="true">English</span>
+                </a>
+            </li>
+            <li class="govuk-header__navigation-item">
+                <a aria-current="page" lang="cy" hreflang="cy" href>Cymraeg</a>
+            </li>
+        </ul>
+    </nav>
+}
+

@@ -1,11 +1,26 @@
 app.name=Cyfrif gwasanaethau asiant
+service.name=Agent services account
 servicename.titleSuffix=–  Cyfrif gwasanaethau asiant – GOV.UK
 agent.services.account.heading=Croeso i’ch cyfrif gwasanaethau asiant
 existing.client.relationships.link=Mynediad at berthnasoedd presennol â chleientiaid
 
 serviceinfo.home=Hafan y cyfrif
 serviceinfo.manage=Rheoli’r cyfrif
+serviceinfo.aria.account-menu=Account menu
 serviceinfo.signout=Allgofnodi
+
+agent.services.account.welcome=Welcome to your agent services account
+agent-services.account.client-authorisations.p=You must ask your client to authorise you through your agent services account before you can access any services. Copy across an old authorisation or create a new one.
+agent-services-account.tax-services=Tax services
+
+asa.other.heading=Other tax services
+asa.other.p1=To manage other tax services, you will need to sign in to HMRC online.
+asa.other.gg-sign-in.text=<a href={0}>Sign in using the Government Gateway user ID you use to access these services.</a>
+asa.other.p2=Once you have signed in, you will be able to manage other taxes, for example:
+asa.other.li-sa=Self Assessment
+asa.other.li-ct=Corporation tax
+asa.other.li-paye=PAYE for employers
+asa.other.guidance.text=<a href={0}>If you are still not sure which account is for you, read the guidance.</a>
 
 agent.services.account.inset=Ni allwch fwrw golwg dros eich rhestrau o gleientiaid drwy’ch cyfrif gwasanaethau asiant. Gallwch ddefnyddio’ch cyfrif i fwrw golwg dros fanylion TAW  cleient unigol a’u rheoli.
 agent.services.account.section1.h2=Troi Treth yn Ddigidol ar gyfer TAW
@@ -46,10 +61,8 @@ agent.services.account.section3.col1.text2=Yna mae’n rhaid iddo:
 
 agent.services.account.section4.h2=Awdurdodiadau cleientiaid
 agent.services.account.section4.col1.h3=Gofyn i gleient eich awdurdodi
-agent.services.account.section4.col1.p=Dim ond os nad ydych wedi copïo awdurdodiad presennol gan y cleient ar draws y mae angen i chi wneud hyn.
 agent.services.account.section4.col1.link=Gofyn i gleient eich awdurdodi
 
-agent.services.account.section4.col2.h3=Rheoli awdurdodiadau
 agent.services.account.section4.col2.link1=Olrhain eich ceisiadau awdurdodi diweddar
 agent.services.account.section4.col2.link2=Copïo rhagor o awdurdodiadau cleientiaid TAW a Hunanasesiad ar draws
 agent.services.account.section4.col2.link3=Canslo awdurdodiad cleient

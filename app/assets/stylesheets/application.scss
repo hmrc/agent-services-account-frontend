@@ -1,3 +1,8 @@
+$govuk-assets-path: "/agent-services-account/assets/lib/govuk-frontend/govuk/assets/";
+$hmrc-assets-path: "/agent-services-account/assets/lib/hmrc-frontend/hmrc/";
+
+@import "lib/govuk-frontend/govuk/all";
+@import "lib/hmrc-frontend/hmrc/all";
 
 @import 'modules/_banner';
 
@@ -95,7 +100,6 @@ hr.hr-thick {
   transition: all .3s ease-in-out;
 }
 
-
-
-
-
+.govuk-phase-banner {
+  border-bottom: none;
+}

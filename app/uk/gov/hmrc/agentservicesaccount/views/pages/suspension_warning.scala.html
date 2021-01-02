@@ -1,5 +1,5 @@
 @*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,34 +17,35 @@
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import play.api.Configuration
 @import uk.gov.hmrc.agentservicesaccount.controllers.routes
-@import uk.gov.hmrc.agentservicesaccount.views.html.main_template
+@import uk.gov.hmrc.agentservicesaccount.views.html.main
+@import uk.gov.hmrc.agentservicesaccount.views.html.components.secondary_nav
 
-@this(mainTemplate: main_template)
+@this(mainTemplate: main, secondaryNav: secondary_nav)
 
-@(isAdmin: Boolean)(implicit messages: Messages, request: Request[_], appConfig: AppConfig, configuration: Configuration)
+@(isAdmin: Boolean)(implicit messages: Messages, request: Request[_], appConfig: AppConfig)
 
 @suspendedServices = @{request.session.get("suspendedServices").getOrElse("").split(',').toSet}
 
-@mainTemplate(title = Messages("suspension-warning.header"), mainClass = Some("govuk-main-wrapper two-thirds"), analyticsAdditionalJs = None, isAdmin = isAdmin, hasCustomContent = false) {
+@mainTemplate(pageTitle = Some(Messages("suspension-warning.header")), beforeContentBlock = Some(secondaryNav(isAdmin))) {
 
-    <h1 class="heading-xlarge">@Messages("suspension-warning.header")</h1>
-    <p>@Messages("suspension-warning.p1")</p>
+    <h1 class="govuk-heading-xl">@Messages("suspension-warning.header")</h1>
+    <p class="govuk-body">@Messages("suspension-warning.p1")</p>
 
     @if(suspendedServices.size == 1) {
-        <p>
+        <p class="govuk-body">
             @Messages("suspension-warning.p2.single", Messages(s"suspension-warning.single.${suspendedServices.head}"))
         </p>
 
     } else {
-        <p>@Messages("suspension-warning.p2.multi")</p>
-        <ul class="list list-bullet">
+        <p class="govuk-body">@Messages("suspension-warning.p2.multi")</p>
+        <ul class="list list-bullet govuk-body">
             @for(suspendedService <- suspendedServices) {
                 <li>@Messages(s"suspension-warning.multi.${suspendedService}")</li>
             }
         </ul>
     }
-    <p>@Messages("suspension-warning.p3")</p>
-    <p>@Messages("suspension-warning.p4")</p>
+    <p class="govuk-body">@Messages("suspension-warning.p3")</p>
+    <p class="govuk-body">@Messages("suspension-warning.p4")</p>
 
-    <a href="@routes.AgentServicesController.showAgentServicesAccount" class="button">@Messages("suspension-warning.button")</a>
+    <a href="@routes.AgentServicesController.showAgentServicesAccount" class="button govuk-body">@Messages("suspension-warning.button")</a>
 }
