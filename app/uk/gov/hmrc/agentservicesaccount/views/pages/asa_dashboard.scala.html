@@ -1,0 +1,155 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import uk.gov.hmrc.agentservicesaccount.views.html.main
+@import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+@import uk.gov.hmrc.agentservicesaccount.controllers.routes
+@import play.api.Configuration
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcReportTechnicalIssueHelper
+@import uk.gov.hmrc.agentservicesaccount.views.html.components.secondary_nav
+
+@this(mainTemplate: main, hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper, secondaryNav: secondary_nav)
+
+@(arn: String, isWhitelisted: Boolean, customDimension: String, isAdmin: Boolean = false, isSuspendedForVat: Boolean)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+
+@analyticsAdditionalJs = {
+    ga('send', 'event', {
+    'eventCategory': '@Messages("agent.services.account.additional.links.agent-afi.ga.link-view")',
+    'eventAction': '@Messages("agent.services.account.additional.links.agent-afi.ga.manage-clients")',
+    'eventLabel': '@Messages("agent.services.account.additional.links.agent-afi.ga.request-auth")'
+    });
+
+    ga('send', 'event', {
+    'eventCategory': '@Messages("agent.services.account.additional.links.agent-afi.ga.link-view")',
+    'eventAction': '@Messages("agent.services.account.additional.links.agent-afi.ga.services-you-need")',
+    'eventLabel': '@Messages("agent.services.account.additional.links.agent-afi.ga.view-income-record")'
+    });
+
+    ga('send', 'pageview', { '@customDimension': '@if(isWhitelisted) {Whitelisted} else {Non-Whitelisted}'});
+}
+
+@mainTemplate(pageTitle = Some(Messages("agent.services.account.heading")), beforeContentBlock = Some(secondaryNav(isAdmin)), analyticsAdditionalJs = Some(analyticsAdditionalJs)){
+
+    <section class="app-c-banner" style="margin: 0px 0 50px">
+        <h1 class="govuk-heading-xl welcome-heading" style="color:white">@Messages("agent.services.account.welcome")</h1>
+        <div class="govuk-hint" style="color:white">@Messages("agent.accountNumber", arn)</div><p></p>
+    </section>
+
+    <h2 class="govuk-heading-m">@Messages("agent.services.account.section4.h2")</h2>
+
+    <p class="govuk-body">@Messages("agent.services.account.client-authorisations.p")</p>
+
+    <ul class="list list-bullet govuk-body govuk-!-margin-bottom-6">
+        <li class="govuk-!-margin-bottom-1"><a href="@appConfig.agentInvitationsFrontendUrl">@Messages("agent.services.account.section4.col1.link")</a></li>
+        <li class="govuk-!-margin-bottom-1"><a href="@appConfig.agentInvitationsTrackUrl">@Messages("agent.services.account.section4.col2.link1")</a></li>
+        <li class="govuk-!-margin-bottom-1"><a href="@appConfig.agentMappingUrl">@Messages("agent.services.account.section4.col2.link2")</a></li>
+        <li class="govuk-!-margin-bottom-1"><a href="@appConfig.agentInvitationsCancelAuthUrl">@Messages("agent.services.account.section4.col2.link3")</a></li>
+    </ul>
+
+    <hr class="hr-thick govuk-!-margin-bottom-6">
+
+    <h2 class="govuk-heading-m">@Messages("agent.services.account.tax-services")</h2>
+
+    <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default">
+        <div class="govuk-accordion__section govuk-body">
+            <div class="govuk-accordion__section-header">
+                <h2 class="govuk-accordion__section-heading">
+                    <span class="govuk-accordion__section-button" id="accordion-default-heading-1">
+                        @Messages("agent.services.account.section1.h2")
+                    </span>
+                </h2>
+            </div>
+            <div id="accordion-default-content-1" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-1">
+                @if(isSuspendedForVat){
+                    <h3 class="govuk-heading-s" style="margin: 0px 0 10px">@Messages("agent.services.account.section1.suspended.h3")</h3>
+                    <p>@Messages("agent.services.account.section1.suspended.p1")</p>
+                    <p>@Messages("agent.services.account.section1.suspended.p2")</p>
+                } else {
+                    <h3 class="govuk-heading-s" style="margin: 0px 0 10px">@Messages("agent.services.account.section1.col1.h3")</h3>
+                    <p>@Messages("agent.services.account.section1.col1.p")</p>
+                    <p><a href="https://www.gov.uk/guidance/sign-up-for-making-tax-digital-for-vat" target="_blank">@Messages("agent.services.account.section1.col1.link")</a></p>
+
+                    <h3 class="govuk-heading-s" style="margin: 40px 0 10px">@Messages("agent.services.account.section1.col2.h3")</h3>
+                    <p>@Messages("agent.services.account.section1.col2.p")</p>
+                    <p><a href="@appConfig.vatUrl" target="_blank">@Messages("agent.services.account.section1.col2.link")</a></p>
+                }
+            </div>
+        </div>
+        <div class="govuk-accordion__section govuk-body">
+            <div class="govuk-accordion__section-header">
+                <h2 class="govuk-accordion__section-heading">
+                    <span class="govuk-accordion__section-button" id="accordion-default-heading-2">
+                    @Messages("agent.services.account.trusts-section.h2")
+                    </span>
+                </h2>
+            </div>
+            <div id="accordion-default-content-2" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-2">
+                <h3 class="govuk-heading-s" style="margin: 0px 0 10px">@Messages("agent.services.account.trusts-section.col1.h3")</h3>
+                <p><a target="_blank" href="https://www.gov.uk/guidance/register-your-clients-trust">@Messages("agent.services.account.trusts-section.col1.register-trust-link.text")</a></p>
+                <p><a target="_blank" href="https://www.gov.uk/guidance/register-your-clients-estate">@Messages("agent.services.account.trusts-section.col1.register-estate-link.text")</a></p>
+                <h3 class="govuk-heading-s" style="margin: 40px 0 10px">@Messages("agent.services.account.trusts-section.col2.h3")</h3>
+                <p>@Messages("agent.services.account.trusts-section.col2.p")</p>
+                <p><a href="https://www.gov.uk/guidance/manage-your-trusts-registration-service">@Messages("agent.services.account.trusts-section.col2.register-trust-link.text")</a></p>
+                <p><a href="https://tax.service.gov.uk/register-an-estate">@Messages("agent.services.account.trusts-section.col2.register-estate-link.text")</a></p>
+            </div>
+        </div>
+        <div class="govuk-accordion__section govuk-body">
+            <div class="govuk-accordion__section-header">
+                <h2 class="govuk-accordion__section-heading">
+                    <span class="govuk-accordion__section-button" id="accordion-default-heading-3">
+                        @Messages("agent.services.account.section3.col1.h2")
+                    </span>
+                </h2>
+            </div>
+            <div id="accordion-default-content-3" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-3">
+                <h3 class="govuk-heading-s" style="margin: 0px 0 10px">@Messages("agent.services.account.section3.col1.h3")</h3>
+                <p>
+                    @Messages("agent.services.account.section3.col1.text1")
+                    @Html(Messages("agent.services.account.section3.col1.link1", Messages("agent.services.account.section3.col1.link1.href"))).
+                </p>
+                <p>
+                    @Messages("agent.services.account.section3.col1.text2")
+                    @Html(Messages("agent.services.account.section3.col1.link2", Messages("agent.services.account.section3.col1.link2.href"))).
+                </p>
+                <h3 class="govuk-heading-s" style="margin: 40px 0 10px">@Messages("agent.services.account.section3.col2.h3")</h3>
+                <p>@Html(Messages("agent.services.account.section3.col2.link1", Messages("agent.services.account.section3.col2.link1.href")))</p>
+            </div>
+        </div>
+        <div class="govuk-accordion__section govuk-body">
+            <div class="govuk-accordion__section-header">
+                <h2 class="govuk-accordion__section-heading">
+                    <span class="govuk-accordion__section-button" id="accordion-default-heading-4">
+                        @Messages("asa.other.heading")
+                    </span>
+                </h2>
+            </div>
+            <div id="accordion-default-content-4" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-4">
+                <p class='govuk-body'>@Messages("asa.other.p1")</p>
+                <p>@Html(Messages("asa.other.gg-sign-in.text", routes.SignOutController.onlineSignIn()))</p>
+                <p class="govuk-body">@Messages("asa.other.p2")</p>
+                <ul class="govuk-body">
+                    <li>@Messages("asa.other.li-sa")</li>
+                    <li>@Messages("asa.other.li-ct")</li>
+                    <li>@Messages("asa.other.li-paye")</li>
+                </ul>
+                <p>@Html(Messages("asa.other.guidance.text", appConfig.hmrcOnlineGuidanceLink))</p>
+            </div>
+        </div>
+    </div>
+
+    @hmrcReportTechnicalIssueHelper()
+
+}

@@ -1,5 +1,5 @@
 @*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +14,17 @@
  * limitations under the License.
  *@
 
-@import play.api.Configuration
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+@import uk.gov.hmrc.agentservicesaccount.views.html.main
 
-@this(govUkWrapper: govuk_wrapper)
+@this(mainTemplate: main)
 
-@(pageTitle: String, heading: String, message: String)(implicit request: Request[_], messages: Messages, configuration: Configuration, appConfig: AppConfig)
+@(pageTitle: String, heading: String, message: String)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@contentHeader = {
-  <h1>@heading</h1>
+@mainTemplate(pageTitle = Some(pageTitle)) {
+
+ <h1 class="govuk-heading-xl">@heading</h1>
+
+ <p class="govuk-body">@message</p>
+
 }
-
-@mainContent = {
-  <p>@message</p>
-}
-
-@govUkWrapper(title = pageTitle, contentHeader = Some(contentHeader), mainContent = mainContent)

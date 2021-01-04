@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ package uk.gov.hmrc.agentservicesaccount.controllers
 import javax.inject._
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import play.api.{Configuration, Logging}
+import play.api.Logging
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.auth.{AuthActions, PasscodeVerification}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
@@ -33,12 +33,11 @@ class AgentServicesController @Inject()(
   authActions: AuthActions,
   agentClientAuthorisationConnector: AgentClientAuthorisationConnector,
   val withMaybePasscode: PasscodeVerification,
-  asaView: agent_services_account,
   suspensionWarningView: suspension_warning,
-  manageAccountView: manage_account)(
+  manageAccountView: manage_account,
+  asaDashboard: asa_dashboard)(
   implicit val appConfig: AppConfig,
   val cc: MessagesControllerComponents,
-  configuration: Configuration,
   ec: ExecutionContext,
   messagesApi: MessagesApi)
     extends AgentServicesBaseController with Logging {
@@ -71,7 +70,7 @@ class AgentServicesController @Inject()(
           request.session.get("isSuspendedForVat") match {
             case Some(isSuspendedForVat) =>
               Future successful Ok(
-                asaView(
+                asaDashboard(
                   formatArn(agentInfo.arn),
                   isWhitelisted,
                   customDimension,
@@ -81,7 +80,7 @@ class AgentServicesController @Inject()(
             case None =>
               agentClientAuthorisationConnector.getSuspensionDetails().map { suspensionDetails =>
                 Ok(
-                  asaView(
+                  asaDashboard(
                     formatArn(agentInfo.arn),
                     isWhitelisted,
                     customDimension,
@@ -91,7 +90,7 @@ class AgentServicesController @Inject()(
           }
         } else
           Future successful Ok(
-            asaView(
+            asaDashboard(
               formatArn(agentInfo.arn),
               isWhitelisted,
               customDimension,

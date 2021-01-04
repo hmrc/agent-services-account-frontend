@@ -1,5 +1,5 @@
 @*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,42 +14,68 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import play.api.Configuration
-@import uk.gov.hmrc.agentservicesaccount.views.html.main_template
-@import uk.gov.hmrc.play.views.html.helpers.{errorSummary, form, input_radio_group}
+@import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.controllers.routes
-@import uk.gov.hmrc.agentservicesaccount.forms.SignOutForm
+@import uk.gov.hmrc.agentservicesaccount.views.html.main
+@import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
+@import uk.gov.hmrc.govukfrontend.views.html.components.{ErrorSummary, GovukButton, GovukRadios, Radios}
+@import uk.gov.hmrc.govukfrontend.views.html.helpers.formWithCSRF
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.button.Button
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.fieldset.{Fieldset, Legend}
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.hint.Hint
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 
-@this(mainTemplate: main_template,
-      uiErrorSummary: uk.gov.hmrc.play.views.html.helpers.ErrorSummary,
-      uiFormHelper: uk.gov.hmrc.play.views.html.helpers.FormWithCSRF,
-      uiInputRadioGroup: uk.gov.hmrc.play.views.html.helpers.InputRadioGroup
+@this(mainTemplate: main,
+        uiFormHelper: formWithCSRF,
+        govukRadios: GovukRadios,
+        govukButton: GovukButton
 )
 
-@(surveyForm: Form[String])(implicit messages: Messages, request: Request[_], appConfig: AppConfig, configuration: Configuration)
+@(surveyForm: Form[String])(implicit messages: Messages, request: Request[_], appConfig: AppConfig)
 
-@mainTemplate(Messages("survey.title"), hasCustomContent = false) {
+@mainTemplate(pageTitle = Some(Messages("survey.title")), hasTimeout = false) {
 
- @if(surveyForm.hasErrors) {
-  @uiErrorSummary(Messages("survey.error.summary"), surveyForm, Seq.empty, Some("survey"))
- }
 
  @uiFormHelper(
-  action = routes.SignOutController.submitSurvey(),
-  'class -> "form js-form") {
+  action = routes.SignOutController.submitSurvey()) {
 
-  @uiInputRadioGroup(
-   surveyForm("surveyKey"),
-   SignOutForm.surveyKeys,
-   '_legend -> Html(s"""<h1 class="heading-xlarge margin-bottom-20">${Messages("survey.title")}</h1>
-                        <h2 class="heading-medium">${Messages("survey.h2")}</h2>
-                        <p class="govuk-hint">${Messages("survey.hint")}</p>"""),
-   '_groupDivClass -> "form-group soft--ends margin-bottom-10",
-   '_fieldsetAttributes -> Html("""id='surveyKey'""")
-  )
+  @if(surveyForm.errors.nonEmpty){
+   @ErrorSummary(errorList = surveyForm.errors.asTextErrorLinks, title = Text(messages("survey.error.summary")))
+  }
 
-  <button class="button form-field--submit margin-top-20" type="submit" id="continue">@Messages("survey.button")</button>
+  @govukRadios(Radios(
+   name = "surveyKey",
+   fieldset = Some(Fieldset(
+    legend = Some(Legend(
+     content = Text(messages("survey.title")),
+     isPageHeading = true,
+     classes = "govuk-fieldset__legend--xl"
+    ))
+   )),
+   hint = Some(Hint(content = HtmlContent(
+    s"""<h2 class="govuk-heading-m">${Messages("survey.h2")}</h2>
+       |<p class="govuk-hint">${Messages("survey.hint")}</p>""".stripMargin))),
+   errorMessage = surveyForm.errors.asTextErrorMessageForField(fieldKey = "surveyKey"),
+   items = Seq(
+    RadioItem(
+    id = Some("agent-sub"),
+    content = Text(Messages("survey.form.label.agentsub")),
+    value= Some("AGENTSUB"),
+    checked = surveyForm("surveyKey").value.contains("AGENTSUB")),
+    RadioItem(
+     id = Some("agent-home"),
+     content = Text(Messages("survey.form.label.agenthome")),
+     value = Some("AGENTHOME"),
+     checked = surveyForm("surveyKey").value.contains("AGENTHOME")),
+    RadioItem(
+     id = Some("invit-agent"),
+     content = Text(Messages("survey.form.label.invitagent")),
+     value = Some("INVITAGENT"),
+     checked = surveyForm("surveyKey").value.contains("INVITAGENT")
+    ))))
+
+  @govukButton(Button(content = Text(Messages("survey.button"))))
  }
-
 }

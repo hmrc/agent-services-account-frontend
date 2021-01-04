@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 package uk.gov.hmrc.agentservicesaccount.controllers
 
 import javax.inject.Inject
-import play.api.Configuration
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -31,7 +30,6 @@ import scala.concurrent.Future
 
 class SignOutController @Inject()(
   implicit val appConfig: AppConfig,
-  configuration: Configuration,
   override val messagesApi: MessagesApi,
   cc: MessagesControllerComponents,
   surveyView: survey,
@@ -65,6 +63,10 @@ class SignOutController @Inject()(
 
   def signedOut = Action.async {
     Future successful Redirect(appConfig.continueFromGGSignIn).withNewSession
+  }
+
+  def onlineSignIn: Action[AnyContent] = Action.async {
+    Future successful Redirect(appConfig.hmrcOnlineSignInLink).withNewSession
   }
 
   def timedOut = Action.async { implicit request =>

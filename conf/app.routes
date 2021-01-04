@@ -1,5 +1,10 @@
 # microservice specific routes
 
+
+
+->         /govuk-frontend                     govuk.Routes
+->         /hmrc-frontend                      hmrcfrontend.Routes
+
 GET        /assets/*file                   controllers.Assets.at(path="/public", file)
 
 GET        /                               @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController.root()
@@ -8,10 +13,10 @@ GET        /home/survey                    @uk.gov.hmrc.agentservicesaccount.con
 POST       /home/survey                    @uk.gov.hmrc.agentservicesaccount.controllers.SignOutController.submitSurvey()
 GET        /access-removed                 @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController.showSuspendedWarning()
 GET        /sign-out                       @uk.gov.hmrc.agentservicesaccount.controllers.SignOutController.signOut()
+GET         /online/sign-in                 @uk.gov.hmrc.agentservicesaccount.controllers.SignOutController.onlineSignIn()
 
 GET        /signed-out                     @uk.gov.hmrc.agentservicesaccount.controllers.SignOutController.signedOut()
 GET        /timed-out                      @uk.gov.hmrc.agentservicesaccount.controllers.SignOutController.timedOut()
 GET        /keep-alive                     @uk.gov.hmrc.agentservicesaccount.controllers.SignOutController.keepAlive
 GET        /manage-account                 @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController.manageAccount
-GET        /accessibility-statement        @uk.gov.hmrc.agentservicesaccount.controllers.AccessibilityStatementController.showAccessibilityStatement
 GET        /language/:lang                 @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesLanguageController.switchToLanguage(lang: String)

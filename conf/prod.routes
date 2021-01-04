@@ -4,4 +4,6 @@
 ->         /                            health.Routes
 ->         /template                    template.Routes
 
+GET        /assets/*file                   controllers.Assets.at(path="/public", file)
+
 GET        /admin/metrics               @com.kenshoo.play.metrics.MetricsController.metrics

@@ -1,11 +1,26 @@
 app.name=Agent services account
+service.name=Agent services account
 servicename.titleSuffix=- Agent services account - GOV.UK
 agent.services.account.heading=Welcome to your agent services account
 existing.client.relationships.link=Access existing client relationships
 
 serviceinfo.home=Account home
+serviceinfo.aria.account-menu=Account menu
 serviceinfo.manage=Manage account
 serviceinfo.signout=Sign out
+
+agent.services.account.welcome=Welcome to your agent services account
+agent.services.account.client-authorisations.p=You must ask your client to authorise you through your agent services account before you can access any services. Copy across an old authorisation or create a new one.
+agent.services.account.tax-services=Tax services
+
+asa.other.heading=Other tax services
+asa.other.p1=To manage other tax services, you will need to sign in to HMRC online.
+asa.other.gg-sign-in.text=<a href={0}>Sign in using the Government Gateway user ID you use to access these services.</a>
+asa.other.p2=Once you have signed in, you will be able to manage other taxes, for example:
+asa.other.li-sa=Self Assessment
+asa.other.li-ct=Corporation tax
+asa.other.li-paye=PAYE for employers
+asa.other.guidance.text=<a href={0}>If you are still not sure which account is for you, read the guidance.</a>
 
 agent.services.account.inset=You cannot view your client lists in your agent services account. You can use your account to view and manage an individual client's VAT details.
 agent.services.account.section1.h2=Making Tax Digital for VAT
@@ -46,13 +61,11 @@ agent.services.account.section3.col1.text2=They must then
 
 agent.services.account.section4.h2=Client authorisations
 agent.services.account.section4.col1.h3=Ask a client to authorise you
-agent.services.account.section4.col1.p=You only need to do this if you have not copied across an existing authorisation from the client.
 agent.services.account.section4.col1.link=Ask a client to authorise you
 
-agent.services.account.section4.col2.h3=Manage authorisations
 agent.services.account.section4.col2.link1=Track your recent authorisation requests
 agent.services.account.section4.col2.link2=Copy across more VAT and Self Assessment client authorisations
-agent.services.account.section4.col2.link3=Cancel a client''s authorisation
+agent.services.account.section4.col2.link3=Cancel a client’s authorisation
 
 manage.account.heading=Manage account
 manage.account.p=You can allow other users in your organisation to access this agent services account, and manage their access.
