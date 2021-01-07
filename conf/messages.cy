@@ -1,26 +1,26 @@
 app.name=Cyfrif gwasanaethau asiant
-service.name=Agent services account
+service.name=Cyfrif gwasanaethau asiant
 servicename.titleSuffix=–  Cyfrif gwasanaethau asiant – GOV.UK
 agent.services.account.heading=Croeso i’ch cyfrif gwasanaethau asiant
 existing.client.relationships.link=Mynediad at berthnasoedd presennol â chleientiaid
 
 serviceinfo.home=Hafan y cyfrif
 serviceinfo.manage=Rheoli’r cyfrif
-serviceinfo.aria.account-menu=Account menu
+serviceinfo.aria.account-menu=Dewislen y cyfrif
 serviceinfo.signout=Allgofnodi
 
-agent.services.account.welcome=Welcome to your agent services account
-agent-services.account.client-authorisations.p=You must ask your client to authorise you through your agent services account before you can access any services. Copy across an old authorisation or create a new one.
-agent-services-account.tax-services=Tax services
+agent.services.account.welcome=Croeso i’ch cyfrif gwasanaethau asiant
+agent.services.account.client-authorisations.p=Mae’n rhaid i chi ofyn i’ch cleient eich awdurdodi drwy eich cyfrif gwasanaethau asiant cyn y gallwch gael mynediad at unrhyw wasanaethau. Dylech gopïo hen awdurdodiad drosodd neu greu un newydd.
+agent.services.account.tax-services=Gwasanaethau treth
 
-asa.other.heading=Other tax services
-asa.other.p1=To manage other tax services, you will need to sign in to HMRC online.
-asa.other.gg-sign-in.text=<a href={0}>Sign in using the Government Gateway user ID you use to access these services.</a>
-asa.other.p2=Once you have signed in, you will be able to manage other taxes, for example:
-asa.other.li-sa=Self Assessment
-asa.other.li-ct=Corporation tax
-asa.other.li-paye=PAYE for employers
-asa.other.guidance.text=<a href={0}>If you are still not sure which account is for you, read the guidance.</a>
+asa.other.heading=Gwasanaethau treth eraill
+asa.other.p1=I reoli gwasanaethau treth eraill, bydd angen i chi fewngofnodi i CThEM ar-lein.
+asa.other.gg-sign-in.text=<a href={0}>Mewngofnodwch gan ddefnyddio’r Dynodydd Defnyddiwr (ID) rydych yn ei ddefnyddio i gael mynediad at y gwasanaethau hyn.</a>
+asa.other.p2=Unwaith y byddwch wedi mewngofnodi, byddwch yn gallu rheoli trethi eraill, er enghraifft:
+asa.other.li-sa=Hunanasesiad
+asa.other.li-ct=Treth Gorfforaeth
+asa.other.li-paye=TWE i gyflogwyr
+asa.other.guidance.text=<a href={0}>Os nad ydych yn siŵr o hyd pa gyfrif sydd i chi, darllenwch yr arweiniad.</a>
 
 agent.services.account.inset=Ni allwch fwrw golwg dros eich rhestrau o gleientiaid drwy’ch cyfrif gwasanaethau asiant. Gallwch ddefnyddio’ch cyfrif i fwrw golwg dros fanylion TAW  cleient unigol a’u rheoli.
 agent.services.account.section1.h2=Troi Treth yn Ddigidol ar gyfer TAW
