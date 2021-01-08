@@ -15,12 +15,12 @@ agent.services.account.tax-services=Gwasanaethau treth
 
 asa.other.heading=Gwasanaethau treth eraill
 asa.other.p1=I reoli gwasanaethau treth eraill, bydd angen i chi fewngofnodi i CThEM ar-lein.
-asa.other.gg-sign-in.text=<a href={0}>Mewngofnodwch gan ddefnyddio’r Dynodydd Defnyddiwr (ID) rydych yn ei ddefnyddio i gael mynediad at y gwasanaethau hyn.</a>
+asa.other.gg-sign-in.text=<a class="govuk-link" href={0}>Mewngofnodwch gan ddefnyddio’r Dynodydd Defnyddiwr (ID) rydych yn ei ddefnyddio i gael mynediad at y gwasanaethau hyn.</a>
 asa.other.p2=Unwaith y byddwch wedi mewngofnodi, byddwch yn gallu rheoli trethi eraill, er enghraifft:
 asa.other.li-sa=Hunanasesiad
 asa.other.li-ct=Treth Gorfforaeth
 asa.other.li-paye=TWE i gyflogwyr
-asa.other.guidance.text=<a href={0}>Os nad ydych yn siŵr o hyd pa gyfrif sydd i chi, darllenwch yr arweiniad.</a>
+asa.other.guidance.text=<a class="govuk-link" href={0}>Os nad ydych yn siŵr o hyd pa gyfrif sydd i chi, darllenwch yr arweiniad.</a>
 
 agent.services.account.inset=Ni allwch fwrw golwg dros eich rhestrau o gleientiaid drwy’ch cyfrif gwasanaethau asiant. Gallwch ddefnyddio’ch cyfrif i fwrw golwg dros fanylion TAW  cleient unigol a’u rheoli.
 agent.services.account.section1.h2=Troi Treth yn Ddigidol ar gyfer TAW
@@ -48,12 +48,12 @@ agent.services.account.paye-section.col1.p=Cael mynediad at gofnod incwm TWE cle
 agent.services.account.paye-section.col1.link=Bwrw golwg dros gofnod incwm TWE cleient
 
 agent.services.account.section3.col1.h2=Treth Enillion Cyfalaf ar eiddo yn y DU
-agent.services.account.section3.col1.link1=<a href="{0}" target="_blank">sefydlu cyfrif Treth Enillion Cyfalaf ar eiddo yn y DU (yn agor tab newydd)</a>
+agent.services.account.section3.col1.link1=<a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">sefydlu cyfrif Treth Enillion Cyfalaf ar eiddo yn y DU (yn agor tab newydd)</a>
 agent.services.account.section3.col1.link1.href=https://www.gov.uk/guidance/managing-your-clients-capital-gains-tax-on-uk-property-account#before-you-start
-agent.services.account.section3.col1.link2=<a href="{0}" target="_blank">eich awdurdodi i weithredu ar ei ran (yn agor tab newydd)</a>
+agent.services.account.section3.col1.link2=<a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">eich awdurdodi i weithredu ar ei ran (yn agor tab newydd)</a>
 agent.services.account.section3.col1.link2.href=https://www.gov.uk/guidance/managing-your-clients-capital-gains-tax-on-uk-property-account#get-authorisation
 agent.services.account.section3.col2.h3=Rheoli Treth Enillion Cyfalaf cleient ar eiddo yn y DU
-agent.services.account.section3.col2.link1=<a href="{0}">Rhoi gwybod am Dreth Enillion Cyfalaf eich cleient ar eiddo yn y DU a bwrw golwg dros daliadau a chosbau</a>
+agent.services.account.section3.col2.link1=<a class="govuk-link" href="{0}">Rhoi gwybod am Dreth Enillion Cyfalaf eich cleient ar eiddo yn y DU a bwrw golwg dros daliadau a chosbau</a>
 agent.services.account.section3.col2.link1.href=https://www.tax.service.gov.uk/capital-gains-tax-uk-property/start
 agent.services.account.section3.col1.h3=Cyn i chi ddechrau
 agent.services.account.section3.col1.text1=Yn gyntaf mae’n rhaid i’ch cleient:

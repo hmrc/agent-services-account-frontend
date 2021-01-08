@@ -15,12 +15,12 @@ agent.services.account.tax-services=Tax services
 
 asa.other.heading=Other tax services
 asa.other.p1=To manage other tax services, you will need to sign in to HMRC online.
-asa.other.gg-sign-in.text=<a href={0}>Sign in using the Government Gateway user ID you use to access these services.</a>
+asa.other.gg-sign-in.text=<a class="govuk-link" href={0}>Sign in using the Government Gateway user ID you use to access these services.</a>
 asa.other.p2=Once you have signed in, you will be able to manage other taxes, for example:
 asa.other.li-sa=Self Assessment
 asa.other.li-ct=Corporation tax
 asa.other.li-paye=PAYE for employers
-asa.other.guidance.text=<a href={0}>If you are still not sure which account is for you, read the guidance.</a>
+asa.other.guidance.text=<a class="govuk-link" href={0}>If you are still not sure which account is for you, read the guidance.</a>
 
 agent.services.account.inset=You cannot view your client lists in your agent services account. You can use your account to view and manage an individual client's VAT details.
 agent.services.account.section1.h2=Making Tax Digital for VAT
@@ -29,7 +29,7 @@ agent.services.account.section1.col1.p=You copied across existing client authori
 agent.services.account.section1.col1.link=Sign clients up for Making Tax Digital for VAT (opens in a new tab)
 agent.services.account.section1.col2.h3=Manage your client’s VAT details
 agent.services.account.section1.col2.p=Use this service to update your client’s VAT registration status, business name (if they are a limited company), principal place of business and VAT stagger.
-agent.services.account.section1.col2.link=Manage your client''s VAT details (opens in a new tab)
+agent.services.account.section1.col2.link=Manage your client’s VAT details (opens in a new tab)
 agent.services.account.section1.suspended.h3=We have temporarily limited your use of this service
 agent.services.account.section1.suspended.p1=We did this because we have suspended your agent code. We sent you a letter to confirm this.
 agent.services.account.section1.suspended.p2=This means you will not be able to use this service.
@@ -48,12 +48,12 @@ agent.services.account.paye-section.col1.p=Access a client’s PAYE income recor
 agent.services.account.paye-section.col1.link=View a client’s PAYE income record
 
 agent.services.account.section3.col1.h2=Capital Gains Tax on UK property
-agent.services.account.section3.col1.link1=<a href="{0}" target="_blank">set up a Capital Gains Tax on UK property account (opens in a new tab)</a>
+agent.services.account.section3.col1.link1=<a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">set up a Capital Gains Tax on UK property account (opens in a new tab)</a>
 agent.services.account.section3.col1.link1.href=https://www.gov.uk/guidance/managing-your-clients-capital-gains-tax-on-uk-property-account#before-you-start
-agent.services.account.section3.col1.link2=<a href="{0}" target="_blank">authorise you to act on their behalf (opens in a new tab)</a>
+agent.services.account.section3.col1.link2=<a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">authorise you to act on their behalf (opens in a new tab)</a>
 agent.services.account.section3.col1.link2.href=https://www.gov.uk/guidance/managing-your-clients-capital-gains-tax-on-uk-property-account#get-authorisation
 agent.services.account.section3.col2.h3=Manage a client’s Capital Gains Tax on UK property
-agent.services.account.section3.col2.link1=<a href="{0}">Report your client's Capital Gains Tax on UK property and view payments and penalties</a>
+agent.services.account.section3.col2.link1=<a class="govuk-link" href="{0}" rel="noreferrer noopener">Report your client's Capital Gains Tax on UK property and view payments and penalties</a>
 agent.services.account.section3.col2.link1.href=https://www.tax.service.gov.uk/capital-gains-tax-uk-property/start
 agent.services.account.section3.col1.h3=Before you start
 agent.services.account.section3.col1.text1=Your client must first
