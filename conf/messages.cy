@@ -44,8 +44,8 @@ agent.services.account.trusts-section.col2.register-trust-link.text=Cofrestru ne
 agent.services.account.trusts-section.col2.register-estate-link.text=Cofrestru neu gynnal ystâd eich cleient
 
 agent.services.account.paye-section.h2=Bwrw golwg dros gofnod incwm TWE cleient
-agent.services.account.paye-section.col1.p=Cael mynediad at gofnod incwm TWE cleient i’ch helpu i lenwi ei Ffurflen Dreth Hunanasesiad.
-agent.services.account.paye-section.col1.link=Bwrw golwg dros gofnod incwm TWE cleient
+agent.services.account.paye-section.text=Cael mynediad at gofnod incwm TWE cleient i’ch helpu i lenwi ei Ffurflen Dreth Hunanasesiad.
+agent.services.account.paye-section.link=Bwrw golwg dros gofnod incwm TWE cleient
 
 agent.services.account.section3.col1.h2=Treth Enillion Cyfalaf ar eiddo yn y DU
 agent.services.account.section3.col1.link1=<a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">sefydlu cyfrif Treth Enillion Cyfalaf ar eiddo yn y DU (yn agor tab newydd)</a>
