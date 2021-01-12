@@ -44,8 +44,8 @@ agent.services.account.trusts-section.col2.register-trust-link.text=Register or 
 agent.services.account.trusts-section.col2.register-estate-link.text=Register or maintain a client’s estate
 
 agent.services.account.paye-section.h2=View a client’s PAYE income record
-agent.services.account.paye-section.col1.p=Access a client’s PAYE income record to help you complete their Self Assessment tax return.
-agent.services.account.paye-section.col1.link=View a client’s PAYE income record
+agent.services.account.paye-section.text=Access a client’s PAYE income record to help you complete their Self Assessment tax return.
+agent.services.account.paye-section.link=View a client’s PAYE income record
 
 agent.services.account.section3.col1.h2=Capital Gains Tax on UK property
 agent.services.account.section3.col1.link1=<a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">set up a Capital Gains Tax on UK property account (opens in a new tab)</a>
