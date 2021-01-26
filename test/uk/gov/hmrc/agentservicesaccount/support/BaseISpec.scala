@@ -23,7 +23,7 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import uk.gov.hmrc.agentservicesaccount.stubs.AuthStubs
 import uk.gov.hmrc.play.test.UnitSpec
 
-class BaseISpec
+abstract class BaseISpec
     extends UnitSpec with Matchers with OptionValues with GuiceOneAppPerSuite with BeforeAndAfterEach
     with WireMockSupport with AkkaMaterializerSpec with AuthStubs with MetricsTestSupport {
 
@@ -33,9 +33,10 @@ class BaseISpec
     additionalConfiguration: Map[String, Any] = Map.empty[String, Any]): GuiceApplicationBuilder =
     new GuiceApplicationBuilder()
       .configure(
-        "microservice.services.auth.port"                       -> wireMockPort,
+        "microservice.services.auth.port"                 -> wireMockPort,
         "microservice.services.agent-client-authorisation.port" -> wireMockPort,
         "microservice.services.sso.port"                        -> wireMockPort,
+        "microservice.services.agent-fi-relationship.port"      -> wireMockPort,
         "auditing.enabled"                                      -> false
       )
       .configure(additionalConfiguration)

@@ -44,6 +44,8 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
 
   val acaBaseUrl = baseUrl("agent-client-authorisation")
 
+  val afiBaseUrl = baseUrl("agent-fi-relationship")
+
   val customDimension = getString("customDimension")
 
   val asaFrontendExternalUrl = getConfString("agent-services-account-frontend.external-url")
@@ -88,6 +90,7 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
 
   val agentSuspensionEnabled = getBoolean("features.enable-agent-suspension")
   val welshToggleEnabled = getBoolean("features.enable-welsh-toggle")
+  val irvAllowlistEnabled = getBoolean("features.enable-irv-allowlist")
 
   val timeoutDialogTimeout = getInt("timeoutDialog.timeout")
   val timeoutDialogCountdown = getInt("timeoutDialog.countdown")
