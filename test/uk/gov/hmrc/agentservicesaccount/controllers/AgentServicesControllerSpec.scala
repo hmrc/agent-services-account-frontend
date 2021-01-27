@@ -17,19 +17,16 @@
 package uk.gov.hmrc.agentservicesaccount.controllers
 
 import play.api.i18n.{Lang, Messages, MessagesApi}
-import play.api.mvc._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.agentservicesaccount.auth.PasscodeVerification
+import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models.{SuspensionDetails, SuspensionDetailsNotFound}
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentClientAuthorisationStubs._
+import uk.gov.hmrc.agentservicesaccount.stubs.AgentFiRelationshipStubs.{givenArnIsAllowlistedForIrv, givenArnIsNotAllowlistedForIrv}
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import uk.gov.hmrc.auth.core.{Enrolment, EnrolmentIdentifier}
-import uk.gov.hmrc.http.HeaderCarrier
-
-import scala.concurrent.{ExecutionContext, Future}
 
 class AgentServicesControllerSpec extends BaseISpec {
 
@@ -44,10 +41,6 @@ class AgentServicesControllerSpec extends BaseISpec {
   private implicit val messages: Messages = messagesApi.preferred(Seq.empty[Lang])
 
   protected def htmlEscapedMessage(key: String): String = HtmlFormat.escape(Messages(key)).toString
-
-  object NoPasscodeVerification extends PasscodeVerification {
-    override def apply[A](body: Boolean => Future[Result])(implicit request: Request[A], headerCarrier: HeaderCarrier, ec: ExecutionContext) = body(true)
-  }
 
   "root" should {
     "redirect to agent services account when suspension is disabled" in {
@@ -217,6 +210,32 @@ class AgentServicesControllerSpec extends BaseISpec {
       contentAsString(response) should {
         not include "<a href=\"/\" class=\"btn button\" id=\"continue\">"
       }
+    }
+
+    "include the Income Record Viewer section when the IRV allowlist is enabled and the ARN is allowed" in {
+      givenArnIsAllowlistedForIrv(Arn(arn))
+      givenAuthorisedAsAgentWith(arn)
+
+      val controller = appBuilder(Map("features.enable-irv-allowlist" -> true)).build().injector.instanceOf[AgentServicesController]
+
+      val result = controller.showAgentServicesAccount(FakeRequest())
+      status(result) shouldBe OK
+
+      val content = contentAsString(result)
+      content should include (messagesApi("agent.services.account.paye-section.h2"))
+    }
+
+    "not include the Income Record Viewer section when the IRV allowlist is enabled and the ARN is not allowed" in {
+      givenArnIsNotAllowlistedForIrv(Arn(arn))
+      givenAuthorisedAsAgentWith(arn)
+
+      val controller = appBuilder(Map("features.enable-irv-allowlist" -> true)).build().injector.instanceOf[AgentServicesController]
+
+      val result = controller.showAgentServicesAccount(FakeRequest())
+      status(result) shouldBe OK
+
+      val content = contentAsString(result)
+      content should not include messagesApi("agent.services.account.paye-section.h2")
     }
   }
 

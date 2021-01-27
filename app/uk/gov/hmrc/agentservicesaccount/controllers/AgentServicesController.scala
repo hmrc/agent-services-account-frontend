@@ -18,12 +18,12 @@ package uk.gov.hmrc.agentservicesaccount.controllers
 
 import javax.inject._
 import play.api.i18n.MessagesApi
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request, Result}
 import play.api.Logging
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.auth.{AuthActions, PasscodeVerification}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
+import uk.gov.hmrc.agentservicesaccount.connectors.{AfiRelationshipConnector, AgentClientAuthorisationConnector}
 import uk.gov.hmrc.agentservicesaccount.views.html.pages._
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -33,6 +33,7 @@ class AgentServicesController @Inject()(
   authActions: AuthActions,
   agentClientAuthorisationConnector: AgentClientAuthorisationConnector,
   val withMaybePasscode: PasscodeVerification,
+  afiRelationshipConnector: AfiRelationshipConnector,
   suspensionWarningView: suspension_warning,
   manageAccountView: manage_account,
   asaDashboard: asa_dashboard)(
@@ -40,7 +41,7 @@ class AgentServicesController @Inject()(
   val cc: MessagesControllerComponents,
   ec: ExecutionContext,
   messagesApi: MessagesApi)
-    extends AgentServicesBaseController with Logging {
+  extends AgentServicesBaseController with Logging {
 
   import authActions._
 
@@ -63,8 +64,8 @@ class AgentServicesController @Inject()(
   }
 
   val showAgentServicesAccount: Action[AnyContent] = Action.async { implicit request =>
-    withMaybePasscode { isWhitelisted =>
-      withAuthorisedAsAgent { agentInfo =>
+    withAuthorisedAsAgent { agentInfo =>
+      withIrvAllowed(agentInfo.arn) { isvAllowed =>
         logger.info(s"isAdmin: ${agentInfo.isAdmin}")
         if (agentSuspensionEnabled) {
           request.session.get("isSuspendedForVat") match {
@@ -72,7 +73,7 @@ class AgentServicesController @Inject()(
               Future successful Ok(
                 asaDashboard(
                   formatArn(agentInfo.arn),
-                  isWhitelisted,
+                  isvAllowed,
                   customDimension,
                   agentInfo.isAdmin,
                   isSuspendedForVat.toBoolean))
@@ -82,7 +83,7 @@ class AgentServicesController @Inject()(
                 Ok(
                   asaDashboard(
                     formatArn(agentInfo.arn),
-                    isWhitelisted,
+                    isvAllowed,
                     customDimension,
                     agentInfo.isAdmin,
                     suspensionDetails.suspendedRegimes.contains("VATC")))
@@ -92,7 +93,7 @@ class AgentServicesController @Inject()(
           Future successful Ok(
             asaDashboard(
               formatArn(agentInfo.arn),
-              isWhitelisted,
+              isvAllowed,
               customDimension,
               agentInfo.isAdmin,
               isSuspendedForVat = false))
@@ -107,14 +108,22 @@ class AgentServicesController @Inject()(
   }
 
   val manageAccount: Action[AnyContent] = Action.async { implicit request =>
-    withMaybePasscode { _ =>
-      withAuthorisedAsAgent { agentInfo =>
+    withAuthorisedAsAgent { agentInfo =>
+      withIrvAllowed(agentInfo.arn) { _ =>
         if (agentInfo.isAdmin) {
           Future.successful(Ok(manageAccountView()))
         } else {
           Future.successful(Forbidden)
         }
       }
+    }
+  }
+
+  private def withIrvAllowed(arn: Arn)(f: Boolean => Future[Result])(implicit request: Request[_]): Future[Result] = {
+    if (appConfig.irvAllowlistEnabled) {
+      afiRelationshipConnector.checkIrvAllowed(arn).flatMap(f)
+    } else {
+      withMaybePasscode(f)
     }
   }
 
