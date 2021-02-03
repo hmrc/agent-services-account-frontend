@@ -44,6 +44,34 @@ $(function() {
         });
     });
 
+    //accordion sections (open/close)
+	$(':button.govuk-accordion__section-button').each(function(){
+		$(this).click(function(e){
+			var pageTitle = $('title').text();
+			var category = ($(this).attr('aria-expanded') === 'false') ? "accordion - expand" : "accordion - hide";
+			var label = $(this).text().trim();
+			ga('send', 'event', {
+				'eventCategory' : category,
+				'eventAction' : pageTitle,
+				'eventLabel' : label
+			});
+		});
+	});
+
+	//accordion open/close all
+	$(':button.govuk-accordion__open-all').each(function(){
+		$(this).click(function(e){
+			var pageTitle = $('title').text();
+			var category = ($(this).attr('aria-expanded') === 'true') ? "accordion - expand" : "accordion - hide";
+			var label = $(this).text().trim();
+			ga('send', 'event', {
+				'eventCategory': category,
+				'eventAction': pageTitle,
+				'eventLabel': label
+			});
+		});
+	});
+
     // details summary
     $('details summary:not('+exclude+')').each(function(){
         $(this).click(function(e){
