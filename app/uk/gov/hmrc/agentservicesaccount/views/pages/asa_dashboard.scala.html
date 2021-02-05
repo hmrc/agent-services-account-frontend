@@ -25,23 +25,7 @@
 
 @(arn: String, isWhitelisted: Boolean, customDimension: String, isAdmin: Boolean = false, isSuspendedForVat: Boolean)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@analyticsAdditionalJs = {
-    ga('send', 'event', {
-    'eventCategory': '@Messages("agent.services.account.additional.links.agent-afi.ga.link-view")',
-    'eventAction': '@Messages("agent.services.account.additional.links.agent-afi.ga.manage-clients")',
-    'eventLabel': '@Messages("agent.services.account.additional.links.agent-afi.ga.request-auth")'
-    });
-
-    ga('send', 'event', {
-    'eventCategory': '@Messages("agent.services.account.additional.links.agent-afi.ga.link-view")',
-    'eventAction': '@Messages("agent.services.account.additional.links.agent-afi.ga.services-you-need")',
-    'eventLabel': '@Messages("agent.services.account.additional.links.agent-afi.ga.view-income-record")'
-    });
-
-    ga('send', 'pageview', { '@customDimension': '@if(isWhitelisted) {Whitelisted} else {Non-Whitelisted}'});
-}
-
-@mainTemplate(pageTitle = Some(Messages("agent.services.account.heading")), beforeContentBlock = Some(secondaryNav(isAdmin)), analyticsAdditionalJs = Some(analyticsAdditionalJs)){
+@mainTemplate(pageTitle = Some(Messages("agent.services.account.heading")), beforeContentBlock = Some(secondaryNav(isAdmin))){
 
     <section class="app-c-banner" style="margin: 0px 0 50px">
         <h1 class="govuk-heading-xl welcome-heading" style="color:white">@Messages("agent.services.account.welcome")</h1>
