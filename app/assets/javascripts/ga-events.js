@@ -44,12 +44,19 @@ $(function() {
         });
     });
 
+
     //accordion sections (open/close)
 	$(':button.govuk-accordion__section-button').each(function(){
 		$(this).click(function(e){
 			var pageTitle = $('title').text();
 			var category = ($(this).attr('aria-expanded') === 'false') ? "accordion - expand" : "accordion - hide";
 			var label = $(this).text().trim();
+			dataLayer.push(
+				{
+					'agents_event_category': category,
+					'agents_event_action': pageTitle,
+					'agents_event_label': label
+				});
 			ga('send', 'event', {
 				'eventCategory' : category,
 				'eventAction' : pageTitle,
@@ -64,10 +71,16 @@ $(function() {
 			var pageTitle = $('title').text();
 			var category = ($(this).attr('aria-expanded') === 'true') ? "accordion - expand" : "accordion - hide";
 			var label = $(this).text().trim();
+			dataLayer.push(
+				{
+					'agents_event_category': category,
+					'agents_event_action': pageTitle,
+					'agents_event_label': label
+				});
 			ga('send', 'event', {
-				'eventCategory': category,
-				'eventAction': pageTitle,
-				'eventLabel': label
+				'eventCategory' : category,
+				'eventAction' : pageTitle,
+				'eventLabel' : label
 			});
 		});
 	});
