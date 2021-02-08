@@ -65,7 +65,7 @@ class AgentServicesController @Inject()(
 
   val showAgentServicesAccount: Action[AnyContent] = Action.async { implicit request =>
     withAuthorisedAsAgent { agentInfo =>
-      withIrvAllowed(agentInfo.arn) { isvAllowed =>
+      withIrvAllowed(agentInfo.arn) { irvAllowed =>
         logger.info(s"isAdmin: ${agentInfo.isAdmin}")
         if (agentSuspensionEnabled) {
           request.session.get("isSuspendedForVat") match {
@@ -73,7 +73,7 @@ class AgentServicesController @Inject()(
               Future successful Ok(
                 asaDashboard(
                   formatArn(agentInfo.arn),
-                  isvAllowed,
+                  irvAllowed,
                   customDimension,
                   agentInfo.isAdmin,
                   isSuspendedForVat.toBoolean))
@@ -83,7 +83,7 @@ class AgentServicesController @Inject()(
                 Ok(
                   asaDashboard(
                     formatArn(agentInfo.arn),
-                    isvAllowed,
+                    irvAllowed,
                     customDimension,
                     agentInfo.isAdmin,
                     suspensionDetails.suspendedRegimes.contains("VATC")))
@@ -93,7 +93,7 @@ class AgentServicesController @Inject()(
           Future successful Ok(
             asaDashboard(
               formatArn(agentInfo.arn),
-              isvAllowed,
+              irvAllowed,
               customDimension,
               agentInfo.isAdmin,
               isSuspendedForVat = false))
