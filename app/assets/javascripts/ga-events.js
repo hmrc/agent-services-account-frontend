@@ -53,6 +53,7 @@ $(function() {
 			var label = $(this).text().trim();
 			dataLayer.push(
 				{
+					'event': 'custom_agents_request',
 					'agents_event_category': category,
 					'agents_event_action': pageTitle,
 					'agents_event_label': label
