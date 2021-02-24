@@ -63,15 +63,13 @@ lazy val wartRemoverSettings = {
 }
 
 lazy val compileDeps = Seq(
-  ws,
-  "uk.gov.hmrc" %% "bootstrap-frontend-play-27" % "3.2.0",
-  "uk.gov.hmrc" %% "govuk-template" % "5.60.0-play-27",
-  "uk.gov.hmrc" %% "auth-client" % "3.2.0-play-27",
-  "uk.gov.hmrc" %% "play-partials" % "7.1.0-play-27",
-  "uk.gov.hmrc" %% "agent-kenshoo-monitoring" % "4.4.0",
-  "uk.gov.hmrc" %% "agent-mtd-identifiers" % "0.19.0-play-27",
-  "uk.gov.hmrc" %% "play-language" % "4.5.0-play-27",
-  "uk.gov.hmrc" %% "play-frontend-hmrc" % "0.33.0-play-27"
+  "uk.gov.hmrc" %% "bootstrap-frontend-play-27" % "3.4.0",
+  "uk.gov.hmrc" %% "govuk-template"             % "5.61.0-play-27",
+  "uk.gov.hmrc" %% "play-partials"              % "7.1.0-play-27",
+  "uk.gov.hmrc" %% "agent-kenshoo-monitoring"   % "4.4.0",
+  "uk.gov.hmrc" %% "agent-mtd-identifiers"      % "0.22.0-play-27",
+  "uk.gov.hmrc" %% "play-language"              % "4.10.0-play-27",
+  "uk.gov.hmrc" %% "play-frontend-hmrc"         % "0.45.0-play-27"
 )
 
 def testDeps(scope: String) = Seq(
@@ -87,12 +85,11 @@ lazy val root = (project in file("."))
   .settings(
     name := "agent-services-account-frontend",
     organization := "uk.gov.hmrc",
-    scalaVersion := "2.12.10",
+    scalaVersion := "2.12.12",
     scalacOptions ++= Seq(
       "-Xfatal-warnings",
       "-Xlint:-missing-interpolator,_",
       "-Yno-adapted-args",
-      "-Ywarn-value-discard",
       "-Ywarn-dead-code",
       "-deprecation",
       "-feature",
@@ -108,8 +105,8 @@ lazy val root = (project in file("."))
     ),
     libraryDependencies ++= compileDeps ++ testDeps("test") ++ testDeps("it"),
     libraryDependencies ++= Seq(
-      compilerPlugin("com.github.ghik" % "silencer-plugin" % "1.4.4" cross CrossVersion.full),
-      "com.github.ghik" % "silencer-lib" % "1.4.4" % Provided cross CrossVersion.full
+      compilerPlugin("com.github.ghik" % "silencer-plugin" % "1.7.0" cross CrossVersion.full),
+      "com.github.ghik" % "silencer-lib" % "1.7.0" % Provided cross CrossVersion.full
     ),
     publishingSettings,
     scoverageSettings,
@@ -124,4 +121,4 @@ lazy val root = (project in file("."))
     parallelExecution in IntegrationTest := false
   )
   .settings(wartRemoverSettings: _*)
-  .enablePlugins(PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin, SbtArtifactory)
+  .enablePlugins(PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin)

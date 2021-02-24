@@ -198,7 +198,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       val response = controller.root()(FakeRequest("GET", "/").withSession(("otacTokenParam", "BAR1 23/")))
 
       status(response) shouldBe 303
-      redirectLocation(response) shouldBe Some("/gg/sign-in?continue=%2F%3Fp%3DBAR1%2B23%252F&origin=agent-services-account-frontend")
+      redirectLocation(response) shouldBe Some("/bas-gateway/sign-in?continue_url=%2F%3Fp%3DBAR1%2B23%252F&origin=agent-services-account-frontend")
     }
 
     "do not fail without continue url parameter" in {

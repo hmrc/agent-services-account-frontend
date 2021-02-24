@@ -17,10 +17,11 @@
 package uk.gov.hmrc.agentservicesaccount
 
 import javax.inject.{Inject, Singleton}
+import play.api.Logger.logger
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.mvc.Results._
 import play.api.mvc.{Request, RequestHeader, Result}
-import play.api.{Configuration, Environment, Logging}
+import play.api.{Configuration, Environment}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.views.html.error_template
 import uk.gov.hmrc.auth.core.{InsufficientEnrolments, NoActiveSession}
@@ -38,17 +39,19 @@ class ErrorHandler @Inject() (
                                val messagesApi: MessagesApi,
   errorTemplateView: error_template,
                                val auditConnector: AuditConnector)(implicit val config: Configuration, ec: ExecutionContext, appConfig: AppConfig)
-  extends FrontendErrorHandler with AuthRedirects with ErrorAuditing with Logging{
+  extends FrontendErrorHandler with AuthRedirects with ErrorAuditing {
 
   override def appName: String = appConfig.appName
 
   override def onClientError(request: RequestHeader, statusCode: Int, message: String): Future[Result] = {
     auditClientError(request, statusCode, message)
+    logger.error(s"onClientError $message")
     super.onClientError(request,statusCode,message)
   }
 
   override def resolveError(request: RequestHeader, exception: Throwable) = {
     auditServerError(request,exception)
+    logger.error(s"resolveError $exception")
     exception match {
       case _: NoActiveSession => toGGLogin(if (appConfig.isDevEnv) s"http://${request.host}${request.uri}" else s"${request.uri}")
       case _: InsufficientEnrolments => Forbidden
@@ -57,6 +60,7 @@ class ErrorHandler @Inject() (
   }
 
   override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit request: Request[_]) = {
+    logger.error(s"standardErrorTemplate $message")
     errorTemplateView(
       Messages(pageTitle),
       Messages(heading),
