@@ -103,9 +103,6 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
 
   val betaFeedbackUrl = getString("betaFeedbackUrl")
 
-  val googleAnalyticsHost = getString("google-analytics.host")
-  val googleAnalyticsToken = getString("google-analytics.token")
-
   val hmrcOnlineGuidanceLink = getString("hmrcOnlineGuidanceLink")
   val hmrcOnlineSignInLink = getString("hmrcOnlineSignInLink")
 

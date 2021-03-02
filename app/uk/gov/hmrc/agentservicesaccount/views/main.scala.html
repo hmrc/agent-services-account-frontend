@@ -24,7 +24,6 @@
 @this(
         govukLayout: GovukLayout,
         head: head,
-        analytics: analytics,
         header: header,
         hmrcStandardFooter: HmrcStandardFooter
 )
@@ -40,10 +39,6 @@
     <script src="@controllers.routes.Assets.at("javascripts/ga-events.js")" type="text/javascript"></script>
     <script src='@controllers.routes.Assets.at("lib/govuk-frontend/govuk/all.js")'></script>
     <script src='@controllers.routes.Assets.at("lib/hmrc-frontend/hmrc/all.js")'></script>
-    @analytics(
-        analyticsToken = appConfig.googleAnalyticsToken,
-        analyticsHost = appConfig.googleAnalyticsHost,
-        analyticsAdditionalJs = analyticsAdditionalJs)
     <script>
             window.GOVUKFrontend.initAll();
             window.HMRCFrontend.initAll();
