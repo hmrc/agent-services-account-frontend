@@ -55,6 +55,12 @@ class SignOutControllerSpec extends BaseISpec {
       redirectLocation(result).get shouldBe appConfig.signOutUrlWithSurvey("AGENTSUB")
     }
 
+    "return bad request if missing survey body" in {
+      val result = controller.submitSurvey(FakeRequest("POST", "/"))
+
+      status(result) shouldBe 400
+    }
+
     "/signed-out redirect to GG sign in with continue url back to /agent-services-account" in {
       val request = controller.signedOut(FakeRequest("GET","/")).withSession("otacTokenParam" -> "token")
 
@@ -69,6 +75,19 @@ class SignOutControllerSpec extends BaseISpec {
 
       status(response) shouldBe 303
       redirectLocation(response) shouldBe Some(onlineSignInUrl)
+    }
+
+    "timedOut should return forbidden with new session" in {
+      val request = controller.timedOut(FakeRequest("GET", "/"))
+
+      status(request) shouldBe 403
+    }
+
+    "keepAlive should return OK" in {
+      val response = controller.keepAlive(FakeRequest("GET", "/"))
+
+      status(response) shouldBe 200
+      await(bodyOf(response)).contains("OK") shouldBe true
     }
   }
 
