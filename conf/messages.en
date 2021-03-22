@@ -11,7 +11,7 @@ serviceinfo.signout=Sign out
 
 agent.services.account.welcome=Welcome to your agent services account
 agent.services.account.client-authorisations.p=You must ask your client to authorise you through your agent services account before you can access any services. Copy across an old authorisation or create a new one.
-agent.services.account.tax-services=Tax services
+agent.services.account.tax-services=Tax services you can manage in this account
 
 asa.other.heading=Other tax services
 asa.other.p1=To manage other tax services, you will need to sign in to HMRC online.
@@ -22,11 +22,13 @@ asa.other.li-ct=Corporation tax
 asa.other.li-paye=PAYE for employers
 asa.other.guidance.text=<a class="govuk-link" href={0}>If you are still not sure which account is for you, read the guidance.</a>
 
+agent.services.account.section2.h2=Making Tax Digital for Income Tax
+
 agent.services.account.inset=You cannot view your client lists in your agent services account. You can use your account to view and manage an individual client's VAT details.
 agent.services.account.section1.h2=Making Tax Digital for VAT
-agent.services.account.section1.col1.h3=Sign clients up for Making Tax Digital for VAT
-agent.services.account.section1.col1.p=You copied across existing client authorisations to your agent services account. This means you can now sign these clients up to Making Tax Digital.
-agent.services.account.section1.col1.link=Sign clients up for Making Tax Digital for VAT (opens in a new tab)
+agent.services.account.section1.col1.h3=Before you start
+agent.services.account.section1.col1.p=You must first get an authorisation from your client. You can do this by<a class="govuk-link" href="https://www.tax.service.gov.uk/agent-services-account/agent-mapping/start"> copying across your authorisations</a> or <a class="govuk-link" href="https://www.tax.service.gov.uk/agent-services-account/invitations/agents/client-type">requesting an authorisation.</a>
+agent.services.account.section1.col1.link=If you copy your client across, you will need to<a class="govuk-link" href="https://www.gov.uk/guidance/sign-up-for-making-tax-digital-for-vat" target="_blank" rel="noreferrer noopener"> sign them up to Making Tax Digital for VAT (opens in a new tab).</a>
 agent.services.account.section1.col2.h3=Manage your client’s VAT details
 agent.services.account.section1.col2.p=Use this service to update your client’s VAT registration status, business name (if they are a limited company), principal place of business and VAT stagger.
 agent.services.account.section1.col2.link=Manage your client’s VAT details (opens in a new tab)
@@ -63,7 +65,7 @@ agent.services.account.section4.h2=Client authorisations
 agent.services.account.section4.col1.h3=Ask a client to authorise you
 agent.services.account.section4.col1.link=Ask a client to authorise you
 
-agent.services.account.section4.col2.link1=Track your recent authorisation requests
+agent.services.account.section4.col2.link1=Track your authorisation requests from the last 30 days
 agent.services.account.section4.col2.link2=Copy across more VAT and Self Assessment client authorisations
 agent.services.account.section4.col2.link3=Cancel a client’s authorisation
 
