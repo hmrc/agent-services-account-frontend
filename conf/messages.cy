@@ -11,7 +11,7 @@ serviceinfo.signout=Allgofnodi
 
 agent.services.account.welcome=Croeso i’ch cyfrif gwasanaethau asiant
 agent.services.account.client-authorisations.p=Mae’n rhaid i chi ofyn i’ch cleient eich awdurdodi drwy eich cyfrif gwasanaethau asiant cyn y gallwch gael mynediad at unrhyw wasanaethau. Dylech gopïo hen awdurdodiad drosodd neu greu un newydd.
-agent.services.account.tax-services=Gwasanaethau treth
+agent.services.account.tax-services=Tax services you can manage in this account
 
 asa.other.heading=Gwasanaethau treth eraill
 asa.other.p1=I reoli gwasanaethau treth eraill, bydd angen i chi fewngofnodi i CThEM ar-lein.
@@ -24,9 +24,9 @@ asa.other.guidance.text=<a class="govuk-link" href={0}>Os nad ydych yn siŵr o h
 
 agent.services.account.inset=Ni allwch fwrw golwg dros eich rhestrau o gleientiaid drwy’ch cyfrif gwasanaethau asiant. Gallwch ddefnyddio’ch cyfrif i fwrw golwg dros fanylion TAW  cleient unigol a’u rheoli.
 agent.services.account.section1.h2=Troi Treth yn Ddigidol ar gyfer TAW
-agent.services.account.section1.col1.h3=Cofrestru cleientiaid ar gyfer y cynllun Troi Treth yn Ddigidol ar gyfer TAW
-agent.services.account.section1.col1.p=Rydych wedi copïo awdurdodiadau cleientiaid presennol ar draws i’ch cyfrif gwasanaethau asiant. Mae hyn yn golygu y gallwch nawr gofrestru’r cleientiaid hyn ar gyfer Troi Treth yn Ddigidol.
-agent.services.account.section1.col1.link=Cofrestru cleientiaid ar gyfer Troi Treth yn Ddigidol ar gyfer TAW (yn agor tab newydd)
+agent.services.account.section1.col1.h3=Before you start
+agent.services.account.section1.col1.p=You must first get an authorisation from your client. You can do this by<a class="govuk-link" href="https://www.tax.service.gov.uk/agent-mapping/start"> copying across your authorisations</a> or <a class="govuk-link" href="https://www.tax.service.gov.uk/invitations/agents/client-type">requesting an authorisation.</a>
+agent.services.account.section1.col1.link=If you copy your client across, you will need to<a class="govuk-link" href="https://www.gov.uk/guidance/sign-up-for-making-tax-digital-for-vat" target="_blank" rel="noreferrer noopener"> sign them up to Making Tax Digital for VAT (opens in a new tab).</a>
 agent.services.account.section1.col2.h3=Rheoli manylion TAW eich cleient
 agent.services.account.section1.col2.p=Defnyddiwch y gwasanaeth hwn i ddiweddaru statws cofrestru TAW, enw busnes (os yw’n gwmni cyfyngedig), prif leoliad busnes a chyfnodau TAW eich cleient.
 agent.services.account.section1.col2.link=Rheoli manylion TAW eich cleient (yn agor tab newydd)
@@ -35,13 +35,11 @@ agent.services.account.section1.suspended.p1=Gwnaethom hyn oherwydd ein bod wedi
 agent.services.account.section1.suspended.p2=Mae hyn yn golygu na fyddwch yn gallu defnyddio’r gwasanaeth hwn.
 
 agent.services.account.trusts-section.h2=Ymddiriedolaethau ac ystadau
-agent.services.account.trusts-section.col1.h3=Dod o hyd i arweiniad ar sut i gofrestru ymddiriedolaeth neu ystâd
-agent.services.account.trusts-section.col1.register-trust-link.text=Sut i gofrestru ymddiriedolaeth eich cleient (yn agor tab newydd)
-agent.services.account.trusts-section.col1.register-estate-link.text=Sut i gofrestru ystâd eich cleient (yn agor tab newydd)
-agent.services.account.trusts-section.col2.h3=Cofrestru neu gynnal ymddiriedolaeth neu ystâd eich cleient
-agent.services.account.trusts-section.col2.p=Defnyddiwch y gwasanaethau canlynol ar gyfer ymddiriedolaethau ac ystadau.
-agent.services.account.trusts-section.col2.register-trust-link.text=Cofrestru neu gynnal ymddiriedolaeth eich cleient
-agent.services.account.trusts-section.col2.register-estate-link.text=Cofrestru neu gynnal ystâd eich cleient
+agent.services.account.trusts-section.col1.h3=Before you start
+agent.services.account.trusts-section.col1.register-trust.p=Before you<a class="govuk-link" href="https://www.tax.service.gov.uk/invitations/agents/client-type"> ask your client to authorise you</a>, you or your client must have<a class="govuk-link" href="https://www.gov.uk/guidance/register-your-clients-trust"> registered the trust (opens in a new tab)</a> or<a class="govuk-link" href="https://www.gov.uk/guidance/register-your-clients-estate"> estate (opens in a new tab).</a>
+agent.services.account.trusts-section.col1.register-estate.p=Your client will need to<a class="govuk-link" href="https://www.gov.uk/guidance/manage-your-trusts-registration-service#how-to-use-the-online-service"> claim the trust</a> or estate.
+agent.services.account.trusts-section.col2.h3=Manage your client's trust
+agent.services.account.trusts-section.col2.register-trust-link.text=Use this service to update the details of your client’s trust or declare no changes on the trust register.
 
 agent.services.account.paye-section.h2=Bwrw golwg dros gofnod incwm TWE cleient
 agent.services.account.paye-section.text=Cael mynediad at gofnod incwm TWE cleient i’ch helpu i lenwi ei Ffurflen Dreth Hunanasesiad.
@@ -63,7 +61,7 @@ agent.services.account.section4.h2=Awdurdodiadau cleientiaid
 agent.services.account.section4.col1.h3=Gofyn i gleient eich awdurdodi
 agent.services.account.section4.col1.link=Gofyn i gleient eich awdurdodi
 
-agent.services.account.section4.col2.link1=Olrhain eich ceisiadau awdurdodi diweddar
+agent.services.account.section4.col2.link1=Track your authorisation requests from the last 30 days
 agent.services.account.section4.col2.link2=Copïo rhagor o awdurdodiadau cleientiaid TAW a Hunanasesiad ar draws
 agent.services.account.section4.col2.link3=Canslo awdurdodiad cleient
 

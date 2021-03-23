@@ -63,8 +63,8 @@
                     <p>@Messages("agent.services.account.section1.suspended.p2")</p>
                 } else {
                     <h3 class="govuk-heading-s" style="margin: 0px 0 10px">@Messages("agent.services.account.section1.col1.h3")</h3>
-                    <p>@Messages("agent.services.account.section1.col1.p")</p>
-                    <p><a class="govuk-link" href="https://www.gov.uk/guidance/sign-up-for-making-tax-digital-for-vat" target="_blank" rel="noreferrer noopener">@Messages("agent.services.account.section1.col1.link")</a></p>
+                <p>@Html(Messages("agent.services.account.section1.col1.p"))</p>
+                    <p>@Html(Messages("agent.services.account.section1.col1.link"))<a class="govuk-link" href="https://www.gov.uk/guidance/sign-up-for-making-tax-digital-for-vat" target="_blank" rel="noreferrer noopener"></a></p>
 
                     <h3 class="govuk-heading-s" style="margin: 40px 0 10px">@Messages("agent.services.account.section1.col2.h3")</h3>
                     <p>@Messages("agent.services.account.section1.col2.p")</p>
@@ -97,12 +97,10 @@
             </div>
             <div id="accordion-default-content-3" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-3">
                 <h3 class="govuk-heading-s" style="margin: 0px 0 10px">@Messages("agent.services.account.trusts-section.col1.h3")</h3>
-                <p><a class="govuk-link" target="_blank" rel="noreferrer noopener" href="https://www.gov.uk/guidance/register-your-clients-trust">@Messages("agent.services.account.trusts-section.col1.register-trust-link.text")</a></p>
-                <p><a class="govuk-link" target="_blank" rel="noreferrer noopener" href="https://www.gov.uk/guidance/register-your-clients-estate">@Messages("agent.services.account.trusts-section.col1.register-estate-link.text")</a></p>
+                <p>@Html(Messages("agent.services.account.trusts-section.col1.register-trust.p"))</p>
+                <p>@Html(Messages("agent.services.account.trusts-section.col1.register-estate.p"))</a></p>
                 <h3 class="govuk-heading-s" style="margin: 40px 0 10px">@Messages("agent.services.account.trusts-section.col2.h3")</h3>
-                <p>@Messages("agent.services.account.trusts-section.col2.p")</p>
                 <p><a class="govuk-link" href="https://www.gov.uk/guidance/manage-your-trusts-registration-service">@Messages("agent.services.account.trusts-section.col2.register-trust-link.text")</a></p>
-                <p><a class="govuk-link" href="https://tax.service.gov.uk/register-an-estate">@Messages("agent.services.account.trusts-section.col2.register-estate-link.text")</a></p>
             </div>
         </div>
         <div class="govuk-accordion__section govuk-body">
