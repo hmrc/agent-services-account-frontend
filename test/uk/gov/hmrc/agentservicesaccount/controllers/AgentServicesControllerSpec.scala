@@ -116,7 +116,6 @@ class AgentServicesControllerSpec extends BaseISpec {
       content should include(messagesApi("agent.services.account.section1.col1.p"))
       content should include("https://www.gov.uk/guidance/sign-up-for-making-tax-digital-for-vat")
       content should include(htmlEscapedMessage("agent.services.account.section1.col2.h3"))
-      content should include(messagesApi("agent.services.account.section1.col2.p"))
       content should include(htmlEscapedMessage("agent.services.account.section1.col2.link"))
       content should include(messagesApi("agent.services.account.section3.col1.h2"))
       content should include(messagesApi("agent.services.account.section3.col1.h3"))

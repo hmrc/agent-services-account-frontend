@@ -28,8 +28,7 @@ agent.services.account.section1.col1.h3=Before you start
 agent.services.account.section1.col1.p=You must first get an authorisation from your client. You can do this by<a class="govuk-link" href="https://www.tax.service.gov.uk/agent-mapping/start"> copying across your authorisations</a> or <a class="govuk-link" href="https://www.tax.service.gov.uk/invitations/agents/client-type">requesting an authorisation.</a>
 agent.services.account.section1.col1.link=If you copy your client across, you will need to<a class="govuk-link" href="https://www.gov.uk/guidance/sign-up-for-making-tax-digital-for-vat" target="_blank" rel="noreferrer noopener"> sign them up to Making Tax Digital for VAT (opens in a new tab).</a>
 agent.services.account.section1.col2.h3=Rheoli manylion TAW eich cleient
-agent.services.account.section1.col2.p=Defnyddiwch y gwasanaeth hwn i ddiweddaru statws cofrestru TAW, enw busnes (os yw’n gwmni cyfyngedig), prif leoliad busnes a chyfnodau TAW eich cleient.
-agent.services.account.section1.col2.link=Rheoli manylion TAW eich cleient (yn agor tab newydd)
+agent.services.account.section1.col2.link=Use this service for clients who have signed up for or opted out of Making Tax Digital (opens in a new tab).
 agent.services.account.section1.suspended.h3=Rydym wedi cyfyngu ar eich defnydd o’r gwasanaeth hwn dros dro
 agent.services.account.section1.suspended.p1=Gwnaethom hyn oherwydd ein bod wedi gohirio eich cod asiant. Rydym wedi anfon llythyr atoch yn cadarnhau hyn.
 agent.services.account.section1.suspended.p2=Mae hyn yn golygu na fyddwch yn gallu defnyddio’r gwasanaeth hwn.
