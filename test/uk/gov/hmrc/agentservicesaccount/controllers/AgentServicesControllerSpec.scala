@@ -113,7 +113,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       content should include(messagesApi("agent.accountNumber","TARN 000 0001"))
       content should include(messagesApi("agent.services.account.section1.h2"))
       content should include(messagesApi("agent.services.account.section1.col1.h3"))
-      content should include(messagesApi("agent.services.account.section1.col1.link"))
+      content should include(messagesApi("agent.services.account.section1.col1.p"))
       content should include("https://www.gov.uk/guidance/sign-up-for-making-tax-digital-for-vat")
       content should include(htmlEscapedMessage("agent.services.account.section1.col2.h3"))
       content should include(messagesApi("agent.services.account.section1.col2.p"))
@@ -138,12 +138,10 @@ class AgentServicesControllerSpec extends BaseISpec {
       content should include(appConfig.agentInvitationsCancelAuthUrl)
       content should include(messagesApi("agent.services.account.trusts-section.h2"))
       content should include(messagesApi("agent.services.account.trusts-section.col1.h3"))
-      content should include(messagesApi("agent.services.account.trusts-section.col1.register-trust-link.text"))
-      content should include(messagesApi("agent.services.account.trusts-section.col1.register-estate-link.text"))
+      content should include(messagesApi("agent.services.account.trusts-section.col1.register-trust.p"))
+      content should include(messagesApi("agent.services.account.trusts-section.col1.register-estate.p"))
       content should include(messagesApi("agent.services.account.trusts-section.col2.h3"))
-      content should include(messagesApi("agent.services.account.trusts-section.col2.p"))
       content should include(messagesApi("agent.services.account.trusts-section.col2.register-trust-link.text"))
-      content should include(messagesApi("agent.services.account.trusts-section.col2.register-estate-link.text"))
       content should include(messagesApi("agent.services.account.welcome"))
       content should include(messagesApi("agent.services.account.client-authorisations.p"))
       content should include(messagesApi("agent.services.account.tax-services"))
@@ -175,8 +173,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       content should include(messagesApi("agent.services.account.section1.suspended.p1"))
       content should include(messagesApi("agent.services.account.section1.suspended.p2"))
 
-      content should not include(messagesApi("agent.services.account.section1.col1.h3"))
-      content should not include(messagesApi("agent.services.account.section1.col1.link"))
+      content should not include(messagesApi("agent.services.account.section1.col1.p"))
       content should not include("https://www.gov.uk/guidance/sign-up-for-making-tax-digital-for-vat")
     }
 
