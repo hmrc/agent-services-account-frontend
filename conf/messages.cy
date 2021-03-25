@@ -33,6 +33,14 @@ agent.services.account.section1.suspended.h3=Rydym wedi cyfyngu ar eich defnydd 
 agent.services.account.section1.suspended.p1=Gwnaethom hyn oherwydd ein bod wedi gohirio eich cod asiant. Rydym wedi anfon llythyr atoch yn cadarnhau hyn.
 agent.services.account.section1.suspended.p2=Mae hyn yn golygu na fyddwch yn gallu defnyddio’r gwasanaeth hwn.
 
+agent.services.account.sectionITSA.h2=Making Tax Digital for Income Tax
+agent.services.account.sectionITSA.col1.h3=Before you start
+agent.services.account.sectionITSA.col1.p=You must first get an authorisation from your client. You can do this by<a class="govuk-link" href="https://www.tax.service.gov.uk/agent-mapping/start"> copying across your authorisations</a> or <a class="govuk-link" href="https://www.tax.service.gov.uk/invitations/agents/client-type">requesting an authorisation.</a>
+agent.services.account.sectionITSA.col1.link=If you copy your client across, you will need to<a class="govuk-link" href="https://www.gov.uk/guidance/sign-up-your-client-for-making-tax-digital-for-income-tax" target="_blank" rel="noreferrer noopener"> sign them up to Making Tax Digital for VAT (opens in a new tab).</a>
+agent.services.account.sectionITSA.col2.h3=Manage your client’s Income Tax details
+agent.services.account.sectionITSA.col2.link1.text=View your client’s Income Tax.
+agent.services.account.sectionITSA.col2.link2.text=Help clients check whether they are eligible(opens in a new tab).
+
 agent.services.account.trusts-section.h2=Ymddiriedolaethau ac ystadau
 agent.services.account.trusts-section.col1.h3=Before you start
 agent.services.account.trusts-section.col1.register-trust.p=Before you<a class="govuk-link" href="https://www.tax.service.gov.uk/invitations/agents/client-type"> ask your client to authorise you</a>, you or your client must have<a class="govuk-link" href="https://www.gov.uk/guidance/register-your-clients-trust"> registered the trust (opens in a new tab)</a> or<a class="govuk-link" href="https://www.gov.uk/guidance/register-your-clients-estate"> estate (opens in a new tab).</a>
