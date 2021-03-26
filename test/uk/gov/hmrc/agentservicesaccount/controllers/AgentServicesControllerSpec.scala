@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.agentservicesaccount.controllers
 
+
 import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -33,7 +34,7 @@ class AgentServicesControllerSpec extends BaseISpec {
   implicit val lang = Lang("en")
   implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   val controller = app.injector.instanceOf[AgentServicesController]
-  val appConfig = app.injector.instanceOf[AppConfig]
+  implicit val appConfig = app.injector.instanceOf[AppConfig]
 
   val arn = "TARN0000001"
   val agentEnrolment = Enrolment("HMRC-AS-AGENT", Seq(EnrolmentIdentifier("AgentReferenceNumber", arn)), state = "Activated", delegatedAuthRule = None)
@@ -111,16 +112,15 @@ class AgentServicesControllerSpec extends BaseISpec {
       content should include(messagesApi("agent.services.account.heading"))
       content should include(messagesApi("app.name"))
       content should include(messagesApi("agent.accountNumber","TARN 000 0001"))
-//      *****19TH APRIL RELEASE *******
-//      content should include(messagesApi("agent.services.account.sectionITSA.h2"))
-//      content should include(messagesApi("agent.services.account.sectionITSA.col1.h3"))
-//      content should include(htmlEscapedMessage("agent.services.account.sectionITSA.col1.p"))
-//      content should include(htmlEscapedMessage("agent.services.account.sectionITSA.col1.link"))
-//      content should include(messagesApi("agent.services.account.sectionITSA.col2.h3"))
-//      content should include("https://www.tax.service.gov.uk/report-quarterly/income-and-expenses/view/agents")
-//      content should include("https://www.gov.uk/guidance/follow-the-rules-for-making-tax-digital-for-income-tax#who-can-follow-the-rules")
-//      content should include(messagesApi("agent.services.account.sectionITSA.col2.link1.text"))
-//      content should include(messagesApi("agent.services.account.sectionITSA.col2.link2.text"))
+      content should include(messagesApi("agent.services.account.sectionITSA.h2"))
+      content should include(messagesApi("agent.services.account.sectionITSA.col1.h3"))
+      content should include(messagesApi("agent.services.account.sectionITSA.col1.p"))
+      content should include(messagesApi("agent.services.account.sectionITSA.col1.link"))
+      content should include(messagesApi("agent.services.account.sectionITSA.col2.h3"))
+      content should include("https://www.tax.service.gov.uk/report-quarterly/income-and-expenses/view/agents")
+      content should include("https://www.gov.uk/guidance/follow-the-rules-for-making-tax-digital-for-income-tax#who-can-follow-the-rules")
+      content should include(messagesApi("agent.services.account.sectionITSA.col2.link1.text"))
+      content should include(messagesApi("agent.services.account.sectionITSA.col2.link2.text"))
       content should include(messagesApi("agent.services.account.section1.h2"))
       content should include(messagesApi("agent.services.account.section1.col1.h3"))
       content should include(messagesApi("agent.services.account.section1.col1.p"))
@@ -182,7 +182,6 @@ class AgentServicesControllerSpec extends BaseISpec {
       content should include(messagesApi("agent.services.account.section1.suspended.p1"))
       content should include(messagesApi("agent.services.account.section1.suspended.p2"))
 
-      content should not include(messagesApi("agent.services.account.section1.col1.p"))
       content should not include("https://www.gov.uk/guidance/sign-up-for-making-tax-digital-for-vat")
     }
 
