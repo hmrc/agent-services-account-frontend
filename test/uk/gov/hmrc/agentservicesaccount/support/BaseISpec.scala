@@ -37,10 +37,10 @@ abstract class BaseISpec
         "microservice.services.agent-client-authorisation.port" -> wireMockPort,
         "microservice.services.sso.port"                        -> wireMockPort,
         "microservice.services.agent-fi-relationship.port"      -> wireMockPort,
-        "auditing.enabled"                                      -> false
+        "auditing.enabled"                                      -> false,
+        "features.enable-ITSA-Accordion"                        -> true
       )
       .configure(additionalConfiguration)
-
   override def beforeEach() {
     super.beforeEach()
     givenCleanMetricRegistry()
