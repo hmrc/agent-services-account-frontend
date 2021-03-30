@@ -11,7 +11,7 @@ serviceinfo.signout=Allgofnodi
 
 agent.services.account.welcome=Croeso i’ch cyfrif gwasanaethau asiant
 agent.services.account.client-authorisations.p=Mae’n rhaid i chi ofyn i’ch cleient eich awdurdodi drwy eich cyfrif gwasanaethau asiant cyn y gallwch gael mynediad at unrhyw wasanaethau. Dylech gopïo hen awdurdodiad drosodd neu greu un newydd.
-agent.services.account.tax-services=Tax services you can manage in this account
+agent.services.account.tax-services=Gwasanaethau treth y gallwch eu rheoli yn y cyfrif hwn
 
 asa.other.heading=Gwasanaethau treth eraill
 asa.other.p1=I reoli gwasanaethau treth eraill, bydd angen i chi fewngofnodi i CThEM ar-lein.
@@ -24,18 +24,18 @@ asa.other.guidance.text=<a class="govuk-link" href={0}>Os nad ydych yn siŵr o h
 
 agent.services.account.inset=Ni allwch fwrw golwg dros eich rhestrau o gleientiaid drwy’ch cyfrif gwasanaethau asiant. Gallwch ddefnyddio’ch cyfrif i fwrw golwg dros fanylion TAW  cleient unigol a’u rheoli.
 agent.services.account.section1.h2=Troi Treth yn Ddigidol ar gyfer TAW
-agent.services.account.section1.col1.h3=Before you start
-agent.services.account.section1.col1.p=You must first get an authorisation from your client. You can do this by<a class="govuk-link" href="https://www.tax.service.gov.uk/agent-mapping/start"> copying across your authorisations</a> or <a class="govuk-link" href="https://www.tax.service.gov.uk/invitations/agents/client-type">requesting an authorisation.</a>
-agent.services.account.section1.col1.link=If you copy your client across, you will need to<a class="govuk-link" href="https://www.gov.uk/guidance/sign-up-for-making-tax-digital-for-vat" target="_blank" rel="noreferrer noopener"> sign them up to Making Tax Digital for VAT (opens in a new tab).</a>
+agent.services.account.section1.col1.h3=Cyn i chi ddechrau
+agent.services.account.section1.col1.p=Yn gyntaf mae’n rhaid i chi gael awdurdodiad gan eich cleient. Gallwch wneud hyn drwy<a class="govuk-link" href="{0}"> gopïo’ch awdurdodiadau drosodd</a> neu <a class="govuk-link" href="{1}">wneud cais am awdurdodiad.</a>
+agent.services.account.section1.col1.link=Os ydych yn copïo manylion eich cleient drosodd, bydd angen i chi<a class="govuk-link" href="https://www.gov.uk/guidance/sign-up-for-making-tax-digital-for-vat.cy" target="_blank" rel="noreferrer noopener"> ei gofrestru ar gyfer y gwasanaeth Troi Treth yn Ddigidol ar gyfer TAW (yn agor tab newydd).</a>
 agent.services.account.section1.col2.h3=Rheoli manylion TAW eich cleient
-agent.services.account.section1.col2.link=Use this service for clients who have signed up for or opted out of Making Tax Digital (opens in a new tab).
+agent.services.account.section1.col2.link=Defnyddiwch y gwasanaeth hwn ar gyfer cleientiaid sydd wedi cofrestru ar gyfer Troi Treth yn Ddigidol neu sydd wedi optio allan o’r cynllun (yn agor tab newydd).
 agent.services.account.section1.suspended.h3=Rydym wedi cyfyngu ar eich defnydd o’r gwasanaeth hwn dros dro
 agent.services.account.section1.suspended.p1=Gwnaethom hyn oherwydd ein bod wedi gohirio eich cod asiant. Rydym wedi anfon llythyr atoch yn cadarnhau hyn.
 agent.services.account.section1.suspended.p2=Mae hyn yn golygu na fyddwch yn gallu defnyddio’r gwasanaeth hwn.
 
 agent.services.account.sectionITSA.h2=Making Tax Digital for Income Tax
-agent.services.account.sectionITSA.col1.h3=Before you start
-agent.services.account.sectionITSA.col1.p=You must first get an authorisation from your client. You can do this by<a class="govuk-link" href="https://www.tax.service.gov.uk/agent-mapping/start"> copying across your authorisations</a> or <a class="govuk-link" href="https://www.tax.service.gov.uk/invitations/agents/client-type">requesting an authorisation.</a>
+agent.services.account.sectionITSA.col1.h3=Cyn i chi ddechrau
+agent.services.account.sectionITSA.col1.p=You must first get an authorisation from your client. You can do this by<a class="govuk-link" href="{0}"> copying across your authorisations</a> or <a class="govuk-link" href="{1}">requesting an authorisation.</a>
 agent.services.account.sectionITSA.col1.link=If you copy your client across, you will need to<a class="govuk-link" href="https://www.gov.uk/guidance/sign-up-your-client-for-making-tax-digital-for-income-tax" target="_blank" rel="noreferrer noopener"> sign them up to Making Tax Digital for VAT (opens in a new tab).</a>
 agent.services.account.sectionITSA.col2.h3=Manage your client’s Income Tax details
 agent.services.account.sectionITSA.col2.link1.text=View your client’s Income Tax.
@@ -43,7 +43,7 @@ agent.services.account.sectionITSA.col2.link2.text=Help clients check whether th
 
 agent.services.account.trusts-section.h2=Ymddiriedolaethau ac ystadau
 agent.services.account.trusts-section.col1.h3=Before you start
-agent.services.account.trusts-section.col1.register-trust.p=Before you<a class="govuk-link" href="https://www.tax.service.gov.uk/invitations/agents/client-type"> ask your client to authorise you</a>, you or your client must have<a class="govuk-link" href="https://www.gov.uk/guidance/register-your-clients-trust"> registered the trust (opens in a new tab)</a> or<a class="govuk-link" href="https://www.gov.uk/guidance/register-your-clients-estate"> estate (opens in a new tab).</a>
+agent.services.account.trusts-section.col1.register-trust.p=Before you<a class="govuk-link" href="{0}"> ask your client to authorise you</a>, you or your client must have<a class="govuk-link" href="https://www.gov.uk/guidance/register-your-clients-trust"> registered the trust (opens in a new tab)</a> or<a class="govuk-link" href="https://www.gov.uk/guidance/register-your-clients-estate"> estate (opens in a new tab).</a>
 agent.services.account.trusts-section.col1.register-estate.p=Your client will need to<a class="govuk-link" href="https://www.gov.uk/guidance/manage-your-trusts-registration-service#how-to-use-the-online-service"> claim the trust</a> or estate.
 agent.services.account.trusts-section.col2.h3=Manage your client's trust
 agent.services.account.trusts-section.col2.register-trust-link.text=Use this service to update the details of your client’s trust or declare no changes on the trust register.

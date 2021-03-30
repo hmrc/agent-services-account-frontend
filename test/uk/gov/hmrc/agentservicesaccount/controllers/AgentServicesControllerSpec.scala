@@ -139,6 +139,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       content should include(messagesApi("agent.services.account.section4.col1.h3"))
       content should include(messagesApi("agent.services.account.section4.col1.link"))
       content should include(appConfig.agentInvitationsFrontendUrl)
+      content should include(appConfig.agentInvitationsFrontendClientTypeUrl)
       content should include(messagesApi("agent.services.account.section4.col2.link1"))
       content should include(messagesApi("agent.services.account.section4.col2.link2"))
       content should include(htmlEscapedMessage("agent.services.account.section4.col2.link3"))
