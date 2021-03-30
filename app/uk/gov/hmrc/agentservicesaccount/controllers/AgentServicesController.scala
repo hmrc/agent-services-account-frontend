@@ -36,7 +36,8 @@ class AgentServicesController @Inject()(
   afiRelationshipConnector: AfiRelationshipConnector,
   suspensionWarningView: suspension_warning,
   manageAccountView: manage_account,
-  asaDashboard: asa_dashboard)(
+  asaDashboard: asa_dashboard,
+  helpView: help)(
   implicit val appConfig: AppConfig,
   val cc: MessagesControllerComponents,
   ec: ExecutionContext,
@@ -116,6 +117,12 @@ class AgentServicesController @Inject()(
           Future.successful(Forbidden)
         }
       }
+    }
+  }
+
+  val showHelp: Action[AnyContent] = Action.async { implicit request =>
+    withAuthorisedAsAgent { agentInfo =>
+      Future successful Ok(helpView(agentInfo.isAdmin))
     }
   }
 

@@ -191,6 +191,29 @@ signed-out.header=Rydych wedi cael eich allgofnodi
 signed-out.p1=Nid ydych wedi gwneud dim byd ers {0}, felly rydym wedi’ch allgofnodi er mwyn cadw’ch cyfrif yn ddiogel.
 signed-out.p2=<a href="{0}">Mewngofnodwch eto</a> i ddefnyddio’r gwasanaeth hwn.
 
+help.title=Help and guidance
+help.heading=Help and guidance
+help.p1=Find out how to use your agent services account and how clients can authorise you to manage their taxes.
+help.authorised.h2=Getting authorised
+help.authorised.link=Authorising an agent
+help.mtd.h2=Making Tax Digital for VAT
+help.mtd.link1=Making Tax Digital for VAT as an agent: step by step
+help.mtd.link2=How to keep digital records and file returns for Making Tax Digital for VAT
+help.mtd.link3=How to sign clients up for MTD VAT
+help.mtd.link4=Help and support for Making Tax Digital (videos and webinars)
+help.mtd.link5=How to amend your clients' details if they have already signed up
+help.trusts.h2=Trusts and estates
+help.trusts.link1=How to register your client's estate
+help.trusts.link2=How to register your client’s trust
+help.cgt.h2=Capital Gains Tax on UK property
+help.cgt.link=How to ask for authorisation, manage your client's account and send returns as an agent
+help.cannot.h2=Tax services you cannot manage in this account
+help.cannot.link1=Self Assessment
+help.cannot.link2=VAT (not including Making Tax Digital for VAT)
+help.cannot.link3=Corporation Tax
+help.cannot.link4=Authorising an agent for other tax services
+help.cannot.link5=PAYE for Agents
+help.cannot.link6=How to change or cancel authorisations as an agent
 
 # Accessibility link
 footer.links.accessibility.text=Hygyrchedd

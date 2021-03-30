@@ -1,0 +1,143 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+@import play.api.Configuration
+@import uk.gov.hmrc.agentservicesaccount.controllers.routes
+@import uk.gov.hmrc.agentservicesaccount.views.html.main
+@import uk.gov.hmrc.agentservicesaccount.views.html.components.secondary_nav
+
+@this(mainTemplate: main, secondaryNav: secondary_nav)
+
+@(isAdmin: Boolean)(implicit messages: Messages, request: Request[_], appConfig: AppConfig)
+
+@mainTemplate(pageTitle = Some(Messages("help.title")), beforeContentBlock = Some(secondaryNav(isAdmin))) {
+
+<h1 class="govuk-heading-xl">@Messages("help.heading")</h1>
+<p>@Messages("help.p1")</p>
+<div class="govuk-grid-row govuk-!-margin-left-0 govuk-!-margin-right-0 govuk-!-margin-bottom-4">
+
+    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+    <br>
+    <h2 class="govuk-heading-m">@Messages("help.authorised.h2")</h2>
+    <div class="govuk-grid-column-one-third govuk-!-padding-left-0 govuk-!-padding-bottom-1">
+        <ul class="govuk-list">
+            <li class="govuk-!-margin-bottom-4"><a class="govuk-link govuk-link--no-visited-state" target="_blank" href="https://www.gov.uk/guidance/authorise-an-agent-to-deal-with-certain-tax-services-for-you">@Messages("help.authorised.link")</a></li>
+        </ul>
+    </div>
+
+    <div class="govuk-grid-column-one-third govuk-!-padding-bottom-1">
+        <ul class="govuk-list">
+        </ul>
+    </div>
+
+</div>
+
+<div class="govuk-grid-row govuk-!-margin-left-0 govuk-!-margin-right-0 govuk-!-margin-bottom-4">
+
+    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+    <br>
+    <h2 class="govuk-heading-m">@Messages("help.mtd.h2")</h2>
+    <div class="govuk-grid-column-one-third govuk-!-padding-left-0 govuk-!-padding-bottom-1">
+        <ul class="govuk-list">
+            <li class="govuk-!-margin-bottom-4"><a class="https://www.gov.uk/guidance/making-tax-digital-for-vat-as-an-agent-step-by-step" target="_blank" href="">@Messages("help.mtd.link1")</a></li>
+            <li class="govuk-!-margin-bottom-4"><a class="https://www.gov.uk/government/publications/vat-notice-70022-making-tax-digital-for-vat/vat-notice-70022-making-tax-digital-for-vat" target="_blank" href="">@Messages("help.mtd.link2")</a></li>
+        </ul>
+    </div>
+    <div class="govuk-grid-column-one-third govuk-!-padding-bottom-1">
+        <ul class="govuk-list">
+            <li class="govuk-!-margin-bottom-4"><a class="https://www.gov.uk/guidance/sign-up-your-client-for-making-tax-digital-for-vat" target="_blank" href="">@Messages("help.mtd.link3")</a></li>
+            <li class="govuk-!-margin-bottom-4"><a class="https://www.gov.uk/guidance/help-and-support-for-making-tax-digital#creating-an-agent-services-account" target="_blank" href="">@Messages("help.mtd.link4")</a></li>
+        </ul>
+    </div>
+    <div class="govuk-grid-column-one-third govuk-!-padding-bottom-1">
+        <ul class="govuk-list">
+            <li class="govuk-!-margin-bottom-4"><a class="https://www.gov.uk/guidance/update-your-clients-business-details-if-theyre-part-of-the-making-tax-digital-for-vat-pilot" target="_blank" href="">@Messages("help.mtd.link5")</a></li>
+        </ul>
+    </div>
+
+</div>
+<div class="govuk-grid-row govuk-!-margin-left-0 govuk-!-margin-right-0 govuk-!-margin-bottom-4">
+
+    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+    <br>
+    <h2 class="govuk-heading-m">@Messages("help.trusts.h2")</h2>
+    <div class="govuk-grid-column-one-third govuk-!-padding-left-0 govuk-!-padding-bottom-1">
+        <ul class="govuk-list">
+            <li class="govuk-!-margin-bottom-4"><a class="https://www.gov.uk/guidance/register-your-clients-estate" target="_blank" href="">@Messages("help.trusts.link1")</a></li>
+        </ul>
+    </div>
+    <div class="govuk-grid-column-one-third govuk-!-padding-bottom-1">
+        <ul class="govuk-list">
+            <li class="govuk-!-margin-bottom-4"><a class="https://www.gov.uk/guidance/register-your-clients-trust" target="_blank" href="">@Messages("help.trusts.link2")</a></li>
+        </ul>
+    </div>
+    <div class="govuk-grid-column-one-third govuk-!-padding-bottom-1">
+        <ul class="govuk-list">
+        </ul>
+    </div>
+
+</div>
+<div class="govuk-grid-row govuk-!-margin-left-0 govuk-!-margin-right-0 govuk-!-margin-bottom-4">
+
+    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+    <br>
+    <h2 class="govuk-heading-m">@Messages("help.cgt.h2")</h2>
+    <div class="govuk-grid-column-one-third govuk-!-padding-left-0 govuk-!-padding-bottom-1">
+        <ul class="govuk-list">
+            <li class="govuk-!-margin-bottom-4"><a class="https://www.gov.uk/guidance/managing-your-clients-capital-gains-tax-on-uk-property-account" target="_blank" href="">@Messages("help.cgt.link")</a></li>
+        </ul>
+    </div>
+    <div class="govuk-grid-column-one-third govuk-!-padding-bottom-1">
+        <ul class="govuk-list">
+        </ul>
+    </div>
+    <div class="govuk-grid-column-one-third govuk-!-padding-bottom-1">
+        <ul class="govuk-list">
+        </ul>
+    </div>
+
+</div>
+
+<div class="govuk-grid-row govuk-!-margin-left-0 govuk-!-margin-right-0 govuk-!-margin-bottom-4">
+
+    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+    <br>
+    <h2 class="govuk-heading-m">@Messages("help.cannot.h2")</h2>
+    <div class="govuk-grid-column-one-third govuk-!-padding-left-0 govuk-!-padding-bottom-1">
+        <ul class="govuk-list">
+            <li class="govuk-!-margin-bottom-4"><a class="https://www.gov.uk/guidance/self-assessment-for-agents-online-service" target="_blank" href="">@Messages("help.cannot.link1")</a></li>
+            <li class="govuk-!-margin-bottom-4"><a class="https://www.gov.uk/guidance/vat-online-services-for-agents" target="_blank" href="">@Messages("help.cannot.link2")</a></li>
+        </ul>
+    </div>
+    <div class="govuk-grid-column-one-third govuk-!-padding-bottom-1">
+        <ul class="govuk-list">
+            <li class="govuk-!-margin-bottom-4"><a class="https://www.gov.uk/guidance/corporation-tax-for-agents-online-service" target="_blank" href="">@Messages("help.cannot.link3")</a></li>
+            <li class="govuk-!-margin-bottom-4"><a class="https://www.gov.uk/guidance/client-authorisation-an-overview" target="_blank" href="">@Messages("help.cannot.link4")</a></li>
+        </ul>
+    </div>
+    <div class="govuk-grid-column-one-third govuk-!-padding-bottom-1">
+        <ul class="govuk-list">
+            <li class="govuk-!-margin-bottom-4"><a class="https://www.gov.uk/guidance/payecis-for-agents-online-service" target="_blank" href="">@Messages("help.cannot.link5")</a></li>
+            <li class="govuk-!-margin-bottom-4"><a class="https://www.gov.uk/guidance/client-authorisation-an-overview#how-to-change-or-cancel-authorisations-as-an-agent" target="_blank" href="">@Messages("help.cannot.link6")</a></li>
+        </ul>
+    </div>
+
+</div>
+<hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+
+
+}
