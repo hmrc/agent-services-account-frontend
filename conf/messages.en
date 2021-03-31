@@ -25,7 +25,7 @@ asa.other.guidance.text=<a class="govuk-link" href={0}>If you are still not sure
 agent.services.account.inset=You cannot view your client lists in your agent services account. You can use your account to view and manage an individual client's VAT details.
 agent.services.account.section1.h2=Making Tax Digital for VAT
 agent.services.account.section1.col1.h3=Before you start
-agent.services.account.section1.col1.p=You must first get an authorisation from your client. You can do this by<a class="govuk-link" href="https://www.tax.service.gov.uk/agent-mapping/start"> copying across your authorisations</a> or <a class="govuk-link" href="https://www.tax.service.gov.uk/invitations/agents/client-type">requesting an authorisation.</a>
+agent.services.account.section1.col1.p=You must first get an authorisation from your client. You can do this by<a class="govuk-link" href="{0}"> copying across your authorisations</a> or <a class="govuk-link" href="{1}">requesting an authorisation.</a>
 agent.services.account.section1.col1.link=If you copy your client across, you will need to<a class="govuk-link" href="https://www.gov.uk/guidance/sign-up-for-making-tax-digital-for-vat" target="_blank" rel="noreferrer noopener"> sign them up to Making Tax Digital for VAT (opens in a new tab).</a>
 agent.services.account.section1.col2.h3=Manage your client’s VAT details
 agent.services.account.section1.col2.link=Use this service for clients who have signed up for or opted out of Making Tax Digital (opens in a new tab).
@@ -35,15 +35,15 @@ agent.services.account.section1.suspended.p2=This means you will not be able to 
 
 agent.services.account.sectionITSA.h2=Making Tax Digital for Income Tax
 agent.services.account.sectionITSA.col1.h3=Before you start
-agent.services.account.sectionITSA.col1.p=You must first get an authorisation from your client. You can do this by<a class="govuk-link" href="https://www.tax.service.gov.uk/agent-mapping/start"> copying across your authorisations</a> or <a class="govuk-link" href="https://www.tax.service.gov.uk/invitations/agents/client-type">requesting an authorisation.</a>
-agent.services.account.sectionITSA.col1.link=If you copy your client across, you will need to<a class="govuk-link" href="https://www.gov.uk/guidance/sign-up-your-client-for-making-tax-digital-for-income-tax" target="_blank" rel="noreferrer noopener"> sign them up to Making Tax Digital for VAT (opens in a new tab).</a>
+agent.services.account.sectionITSA.col1.p=You must first get an authorisation from your client. You can do this by<a class="govuk-link" href="{0}"> copying across your authorisations</a> or <a class="govuk-link" href="{1}">requesting an authorisation.</a>
+agent.services.account.sectionITSA.col1.link=If you copy your client across, you will need to<a class="govuk-link" href="https://www.gov.uk/guidance/sign-up-your-client-for-making-tax-digital-for-income-tax" target="_blank" rel="noreferrer noopener"> sign them up to Making Tax Digital for Income Tax (opens in a new tab).</a>
 agent.services.account.sectionITSA.col2.h3=Manage your client’s Income Tax details
 agent.services.account.sectionITSA.col2.link1.text=View your client’s Income Tax.
 agent.services.account.sectionITSA.col2.link2.text=Help clients check whether they are eligible(opens in a new tab).
 
 agent.services.account.trusts-section.h2=Trusts and estates
 agent.services.account.trusts-section.col1.h3=Before you start
-agent.services.account.trusts-section.col1.register-trust.p=Before you<a class="govuk-link" href="https://www.tax.service.gov.uk/invitations/agents/client-type"> ask your client to authorise you</a>, you or your client must have<a class="govuk-link" href="https://www.gov.uk/guidance/register-your-clients-trust"> registered the trust (opens in a new tab)</a> or<a class="govuk-link" href="https://www.gov.uk/guidance/register-your-clients-estate"> estate (opens in a new tab).</a>
+agent.services.account.trusts-section.col1.register-trust.p=Before you<a class="govuk-link" href="{0}"> ask your client to authorise you</a>, you or your client must have<a class="govuk-link" href="https://www.gov.uk/guidance/register-your-clients-trust"> registered the trust (opens in a new tab)</a> or<a class="govuk-link" href="https://www.gov.uk/guidance/register-your-clients-estate"> estate (opens in a new tab).</a>
 agent.services.account.trusts-section.col1.register-estate.p=Your client will need to<a class="govuk-link" href="https://www.gov.uk/guidance/manage-your-trusts-registration-service#how-to-use-the-online-service"> claim the trust</a> or estate.
 agent.services.account.trusts-section.col2.h3=Manage your client's trust
 agent.services.account.trusts-section.col2.register-trust-link.text=Use this service to update the details of your client’s trust or declare no changes on the trust register.

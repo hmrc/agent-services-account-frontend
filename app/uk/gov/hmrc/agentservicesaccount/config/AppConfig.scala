@@ -70,6 +70,8 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
 
   val agentInvitationsFrontendUrl: String = s"$agentInvitationsFrontendExternalUrl/invitations/agents"
 
+  val agentInvitationsFrontendClientTypeUrl: String = s"$agentInvitationsFrontendExternalUrl/invitations/agents/client-type"
+
   val agentInvitationsTrackUrl: String = s"$agentInvitationsFrontendExternalUrl/invitations/track"
 
   val agentInvitationsCancelAuthUrl: String = s"$agentInvitationsFrontendExternalUrl/invitations/agents/cancel-authorisation/client-type"
