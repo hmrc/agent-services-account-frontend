@@ -281,4 +281,39 @@ class AgentServicesControllerSpec extends BaseISpec {
 
     }
   }
+
+  "help" should {
+
+    "return Status: OK and body containing correct content" in {
+      givenAuthorisedAsAgentWith(arn)
+      val response = controller.showHelp().apply(FakeRequest("GET", "/help"))
+
+      status(response) shouldBe OK
+      contentType(response).get shouldBe HTML
+      val content = contentAsString(response)
+      content should include(messagesApi("help.title"))
+      content should include(messagesApi("help.heading"))
+      content should include(messagesApi("help.p1"))
+      content should include(messagesApi("help.authorised.h2"))
+      content should include(messagesApi("help.authorised.link"))
+      content should include(messagesApi("help.mtd.h2"))
+      content should include(messagesApi("help.mtd.link1"))
+      content should include(messagesApi("help.mtd.link2"))
+      content should include(messagesApi("help.mtd.link3"))
+      content should include(messagesApi("help.mtd.link4"))
+      content should include(messagesApi("help.mtd.link5"))
+      content should include(messagesApi("help.trusts.h2"))
+      content should include(messagesApi("help.trusts.link1"))
+      content should include(messagesApi("help.trusts.link2"))
+      content should include(messagesApi("help.cgt.h2"))
+      content should include(messagesApi("help.cgt.link"))
+      content should include(messagesApi("help.cannot.h2"))
+      content should include(messagesApi("help.cannot.link1"))
+      content should include(messagesApi("help.cannot.link2"))
+      content should include(messagesApi("help.cannot.link3"))
+      content should include(messagesApi("help.cannot.link4"))
+      content should include(messagesApi("help.cannot.link5"))
+      content should include(messagesApi("help.cannot.link6"))
+    }
+  }
 }
