@@ -7,6 +7,7 @@ existing.client.relationships.link=Mynediad at berthnasoedd presennol â chleien
 serviceinfo.home=Hafan y cyfrif
 serviceinfo.manage=Rheoli’r cyfrif
 serviceinfo.aria.account-menu=Dewislen y cyfrif
+serviceinfo.help=Help and Guidance
 serviceinfo.signout=Allgofnodi
 
 agent.services.account.welcome=Croeso i’ch cyfrif gwasanaethau asiant
