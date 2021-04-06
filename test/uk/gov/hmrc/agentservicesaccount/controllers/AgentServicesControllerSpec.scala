@@ -117,7 +117,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       content should include(messagesApi("agent.services.account.sectionITSA.col1.p", appConfig.agentMappingUrl, appConfig.agentInvitationsFrontendClientTypeUrl))
       content should include(messagesApi("agent.services.account.sectionITSA.col1.link"))
       content should include(messagesApi("agent.services.account.sectionITSA.col2.h3"))
-      content should include("https://www.tax.service.gov.uk/report-quarterly/income-and-expenses/view/agents")
+      content should include(appConfig.incomeTaxSubscriptionAgentFrontendUrl)
       content should include("https://www.gov.uk/guidance/follow-the-rules-for-making-tax-digital-for-income-tax#who-can-follow-the-rules")
       content should include(messagesApi("agent.services.account.sectionITSA.col2.link1.text"))
       content should include(messagesApi("agent.services.account.sectionITSA.col2.link2.text"))

@@ -42,6 +42,8 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
 
   val ssoBaseUrl = baseUrl("sso")
 
+//  val saBaseUrl = baseUrl("sa")
+
   val acaBaseUrl = baseUrl("agent-client-authorisation")
 
   val afiBaseUrl = baseUrl("agent-fi-relationship")
@@ -71,6 +73,10 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
   val agentInvitationsFrontendUrl: String = s"$agentInvitationsFrontendExternalUrl/invitations/agents"
 
   val agentInvitationsFrontendClientTypeUrl: String = s"$agentInvitationsFrontendExternalUrl/invitations/agents/client-type"
+
+  val incomeTaxSubscriptionAgentFrontendExternalUrl = getConfString("income-tax-subscription-frontend.external-url")
+
+  val incomeTaxSubscriptionAgentFrontendUrl: String = s"$incomeTaxSubscriptionAgentFrontendExternalUrl/report-quarterly/income-and-expenses/view/agents"
 
   val agentInvitationsTrackUrl: String = s"$agentInvitationsFrontendExternalUrl/invitations/track"
 
