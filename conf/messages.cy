@@ -44,10 +44,10 @@ agent.services.account.sectionITSA.col2.link2.text=Helpu cleientiaid i wirio a y
 
 agent.services.account.trusts-section.h2=Ymddiriedolaethau ac ystadau
 agent.services.account.trusts-section.col1.h3=Cyn i chi ddechrau
-agent.services.account.trusts-section.col1.register-trust.p=Before you<a class="govuk-link" href="{0}"> ask your client to authorise you</a>, you or your client must have<a class="govuk-link" href="https://www.gov.uk/guidance/register-your-clients-trust"> registered the trust (opens in a new tab)</a> or<a class="govuk-link" href="https://www.gov.uk/guidance/register-your-clients-estate"> estate (opens in a new tab).</a>
-agent.services.account.trusts-section.col1.register-estate.p=Your client will need to<a class="govuk-link" href="https://www.gov.uk/guidance/manage-your-trusts-registration-service#how-to-use-the-online-service"> claim the trust</a> or estate.
-agent.services.account.trusts-section.col2.h3=Manage your client's trust
-agent.services.account.trusts-section.col2.register-trust-link.text=Use this service to update the details of your client’s trust or declare no changes on the trust register.
+agent.services.account.trusts-section.col1.register-trust.p=Cyn i chi<a class="govuk-link" href="{0}"> ofyn i’ch cleient eich awdurdodi, rhaid eich bod chi neu’ch cleient wedi<a class="govuk-link" href="https://www.gov.uk/guidance/register-your-clients-trust.cy"> cofrestru’r ymddiriedolaeth (yn agor tab newydd)</a> neu’r<a class="govuk-link" href="https://www.gov.uk/guidance/register-your-clients-estate"> ystâd (yn agor tab newydd).</a>
+agent.services.account.trusts-section.col1.register-estate.p=Bydd angen i’ch cleient<a class="govuk-link" href="https://www.gov.uk/guidance/manage-your-trusts-registration-service#how-to-use-the-online-service"> hawlio’r ymddiriedolaeth</a> neu’r ystâd.
+agent.services.account.trusts-section.col2.h3=Rheoli ymddiriedolaeth eich cleient
+agent.services.account.trusts-section.col2.register-trust-link.text=Defnyddiwch y gwasanaeth hwn i ddiweddaru manylion ymddiriedolaeth neu ystâd eich cleient neu i ddatgan dim newidiadau ar y gofrestr ymddiriedolaethau.
 
 agent.services.account.paye-section.h2=Bwrw golwg dros gofnod incwm TWE cleient
 agent.services.account.paye-section.text=Cael mynediad at gofnod incwm TWE cleient i’ch helpu i lenwi ei Ffurflen Dreth Hunanasesiad.
@@ -69,7 +69,7 @@ agent.services.account.section4.h2=Awdurdodiadau cleientiaid
 agent.services.account.section4.col1.h3=Gofyn i gleient eich awdurdodi
 agent.services.account.section4.col1.link=Gofyn i gleient eich awdurdodi
 
-agent.services.account.section4.col2.link1=Track your authorisation requests from the last 30 days
+agent.services.account.section4.col2.link1=Ewch ati i ddilyn hynt eich ceisiadau am awdurdodiad o’r 30 diwrnod diwethaf
 agent.services.account.section4.col2.link2=Copïo rhagor o awdurdodiadau cleientiaid TAW a Hunanasesiad ar draws
 agent.services.account.section4.col2.link3=Canslo awdurdodiad cleient
 
