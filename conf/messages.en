@@ -44,7 +44,7 @@ agent.services.account.sectionITSA.col2.link2.text=Help clients check whether th
 
 agent.services.account.trusts-section.h2=Trusts and estates
 agent.services.account.trusts-section.col1.h3=Before you start
-agent.services.account.trusts-section.col1.register-trust.p=Before you<a class="govuk-link" href="{0}"> ask your client to authorise you</a>, you or your client must have<a class="govuk-link" href="https://www.gov.uk/guidance/register-your-clients-trust"> registered the trust (opens in a new tab)</a> or<a class="govuk-link" href="https://www.gov.uk/guidance/register-your-clients-estate"> estate (opens in a new tab).</a>
+agent.services.account.trusts-section.col1.register-trust.p=Before you<a class="govuk-link" href="{0}"> ask your client to authorise you</a>, you or your client must have<a class="govuk-link" href="https://www.gov.uk/guidance/register-your-clients-trust" target="_blank" rel="noreferrer noopener"> registered the trust (opens in a new tab)</a> or<a class="govuk-link" href="https://www.gov.uk/guidance/register-your-clients-estate" target="_blank" rel="noreferrer noopener"> estate (opens in a new tab).</a>
 agent.services.account.trusts-section.col1.register-estate.p=Your client will need to<a class="govuk-link" href="https://www.gov.uk/guidance/manage-your-trusts-registration-service#how-to-use-the-online-service"> claim the trust</a> or estate.
 agent.services.account.trusts-section.col2.h3=Manage your client's trust
 agent.services.account.trusts-section.col2.register-trust-link.text=Use this service to update the details of your client’s trust or declare no changes on the trust register.
