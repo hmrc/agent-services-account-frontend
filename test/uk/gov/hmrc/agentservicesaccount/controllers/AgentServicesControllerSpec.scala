@@ -163,6 +163,17 @@ class AgentServicesControllerSpec extends BaseISpec {
       content should include(messagesApi("asa.other.li-ct"))
       content should include(messagesApi("asa.other.li-paye"))
       content should include(messagesApi("asa.other.guidance.text", appConfig.hmrcOnlineGuidanceLink))
+      content should include(messagesApi("serviceinfo.help"))
+    }
+
+    "not show Help and Guidance link when toggled off" in {
+      val controllerWithHelpToggledOff =
+        appBuilder(Map("features.enable-help-and-guidance" -> false)).build().injector.instanceOf[AgentServicesController]
+      givenAuthorisedAsAgentWith(arn)
+      givenSuspensionStatus(SuspensionDetails(suspensionStatus = false, None))
+
+      val response = controllerWithHelpToggledOff.showAgentServicesAccount()(FakeRequest("GET", "/home"))
+      contentAsString(response) should not include messagesApi("serviceinfo.help")
     }
 
     "return Status: OK and body containing correct content when suspension details are in the session and agent is suspended for VATC" in {
