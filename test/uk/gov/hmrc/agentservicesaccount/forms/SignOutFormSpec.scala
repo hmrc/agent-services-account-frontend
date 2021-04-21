@@ -24,13 +24,13 @@ class SignOutFormSpec extends UnitSpec {
   "SignOutForm" should {
     "return no error message for valid selection" in {
       val data = Json.obj("surveyKey" -> "AGENTSUB")
-      val form = SignOutForm.form.bind(data)
+      val form = SignOutForm.form.bind(data, 1024)
       form.hasErrors shouldBe false
     }
 
     "return an error message if empty selection" in {
       val data = Json.obj("surveyKey" -> "")
-      val form = SignOutForm.form.bind(data)
+      val form = SignOutForm.form.bind(data, 1024)
       form.hasErrors shouldBe true
       form.errors.length shouldBe 1
     }
