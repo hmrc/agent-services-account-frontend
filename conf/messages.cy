@@ -198,14 +198,14 @@ help.p1=Rhagor o wybodaeth am sut i ddefnyddio’ch cyfrif gwasanaethau asiant a
 help.authorised.h2=Cael awdurdodiad
 help.authorised.link=Awdurdodi asiant
 help.mtd.h2=Troi Treth yn Ddigidol ar gyfer TAW
-help.mtd.link1=Troi Treth yn Ddigidol ar gyfer TAW fel asiant: cam wrth gam
+help.mtd.link1=<a class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noopener" href="https://www.gov.uk/guidance/making-tax-digital-for-vat-as-an-agent-step-by-step.cy">Troi Treth yn Ddigidol ar gyfer TAW fel asiant: cam wrth gam</a>
 help.mtd.link2=Sut i gadw cofnodion digidol a chyflwyno Ffurflenni TAW ar gyfer Troi Treth yn Ddigidol ar gyfer TAW
-help.mtd.link3=Sut i gofrestru cleientiaid ar gyfer Troi Treth yn Ddigidol ar gyfer TAW
+help.mtd.link3=<a class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noopener" href="https://www.gov.uk/guidance/sign-up-your-client-for-making-tax-digital-for-vat.cy">Sut i gofrestru cleientiaid ar gyfer Troi Treth yn Ddigidol ar gyfer TAW</a>
 help.mtd.link4=Help a chymorth ar gyfer Troi Treth yn Ddigidol (fideos a gweminarau)
-help.mtd.link5=Sut i ddiwygio manylion eich cleientiaid os ydynt eisoes wedi’u cofrestru
+help.mtd.link5=<a class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noopener" href="https://www.gov.uk/guidance/update-your-clients-business-details-if-theyre-part-of-the-making-tax-digital-for-vat-pilot.cy">Sut i ddiwygio manylion eich cleientiaid os ydynt eisoes wedi’u cofrestru</a>
 help.trusts.h2=Ymddiriedolaethau ac ystadau
 help.trusts.link1=Sut i gofrestru ystâd eich cleient
-help.trusts.link2=Sut i gofrestru ymddiriedolaeth eich cleient
+help.trusts.link2=<a class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noopener" href="https://www.gov.uk/guidance/register-your-clients-trust.cy">Sut i gofrestru ymddiriedolaeth eich cleient</a>
 help.cgt.h2=Treth Enillion Cyfalaf ar eiddo yn y DU
 help.cgt.link=Sut i ofyn am awdurdodiad, rheoli cyfrif eich cleient ac anfon Ffurflenni Treth fel asiant
 help.cannot.h2=Gwasanaethau treth na allwch eu rheoli yn y cyfrif hwn
