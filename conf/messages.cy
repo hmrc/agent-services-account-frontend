@@ -4,8 +4,6 @@ servicename.titleSuffix=–  Cyfrif gwasanaethau asiant – GOV.UK
 agent.services.account.heading=Croeso i’ch cyfrif gwasanaethau asiant
 existing.client.relationships.link=Mynediad at berthnasoedd presennol â chleientiaid
 
-link.suffix=.cy
-
 serviceinfo.home=Hafan y cyfrif
 serviceinfo.manage=Rheoli’r cyfrif
 serviceinfo.aria.account-menu=Dewislen y cyfrif
