@@ -4,6 +4,8 @@ servicename.titleSuffix=- Agent services account - GOV.UK
 agent.services.account.heading=Welcome to your agent services account
 existing.client.relationships.link=Access existing client relationships
 
+link.suffix=
+
 serviceinfo.home=Account home
 serviceinfo.aria.account-menu=Account menu
 serviceinfo.manage=Manage account
@@ -198,14 +200,14 @@ help.p1=Find out how to use your agent services account and how clients can auth
 help.authorised.h2=Getting authorised
 help.authorised.link=Authorising an agent
 help.mtd.h2=Making Tax Digital for VAT
-help.mtd.link1=Making Tax Digital for VAT as an agent: step by step
+help.mtd.link1=<a class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noopener" href="https://www.gov.uk/guidance/making-tax-digital-for-vat-as-an-agent-step-by-step">Making Tax Digital for VAT as an agent: step by step</a>
 help.mtd.link2=How to keep digital records and file returns for Making Tax Digital for VAT
-help.mtd.link3=How to sign clients up for MTD VAT
+help.mtd.link3=<a class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noopener" href="https://www.gov.uk/guidance/sign-up-your-client-for-making-tax-digital-for-vat">How to sign clients up for MTD VAT</a>
 help.mtd.link4=Help and support for Making Tax Digital (videos and webinars)
-help.mtd.link5=How to amend your client’s details if they have already signed up
+help.mtd.link5=<a class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noopener" href="https://www.gov.uk/guidance/update-your-clients-business-details-if-theyre-part-of-the-making-tax-digital-for-vat-pilot">How to amend your client’s details if they have already signed up</a>
 help.trusts.h2=Trusts and estates
 help.trusts.link1=How to register your client’s estate
-help.trusts.link2=How to register your client’s trust
+help.trusts.link2=<a class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noopener" href="https://www.gov.uk/guidance/register-your-clients-trust">How to register your client’s trust</a>
 help.cgt.h2=Capital Gains Tax on UK property
 help.cgt.link=How to ask for authorisation, manage your client’s account and send returns as an agent
 help.cannot.h2=Tax services you cannot manage in this account
