@@ -20,7 +20,8 @@ import com.github.tomakehurst.wiremock.client.WireMock._
 
 trait AuthStubs {
 
-  def givenAuthorisedAsAgentWith(arn: String) = {
+  def givenAuthorisedAsAgentWith(arn: String, isAdmin: Boolean = true) = {
+    val credRole = if(isAdmin) "Admin" else "Assistant"
     stubFor(post(urlEqualTo("/auth/authorise"))
       .willReturn(
         aResponse()
@@ -28,7 +29,7 @@ trait AuthStubs {
           s"""{
             |  "internalId": "some-id",
             |  "affinityGroup": "Agent",
-            |  "credentialRole": "Admin",
+            |  "credentialRole": "$credRole",
             |  "allEnrolments": [{
             |    "key": "HMRC-AS-AGENT",
             |    "identifiers": [{ "key": "AgentReferenceNumber", "value": "$arn" }]

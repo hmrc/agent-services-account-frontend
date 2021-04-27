@@ -340,6 +340,13 @@ class AgentServicesControllerSpec extends BaseISpec {
       content should include(messagesApi("account-details.summary-list.address"))
       content should include(messagesApi("account-details.summary-list.none"))
     }
+
+    "return Forbidden if the agent is not Admin" in {
+      givenAuthorisedAsAgentWith(arn, false)
+
+      val response = controller.accountDetails().apply(FakeRequest("GET", "/account-details"))
+      status(response) shouldBe 403
+    }
   }
 
   "help" should {
