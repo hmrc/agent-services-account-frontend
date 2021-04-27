@@ -24,7 +24,7 @@ import play.api.http.Status._
 import play.api.libs.json.Json
 import uk.gov.hmrc.agent.kenshoo.monitoring.HttpAPIMonitor
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.models.{SuspensionDetails, SuspensionDetailsNotFound}
+import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, SuspensionDetails, SuspensionDetailsNotFound}
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
 
@@ -44,6 +44,17 @@ class AgentClientAuthorisationConnector @Inject()(http: HttpClient)(implicit val
             case OK => Json.parse(response.body).as[SuspensionDetails]
             case NO_CONTENT => SuspensionDetails(suspensionStatus = false, None)
             case NOT_FOUND => throw SuspensionDetailsNotFound("No record found for this agent")
+          })
+    }
+
+  def getAgencyDetails()(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[AgencyDetails]] =
+    monitor("ConsumerAPI-Get-AgencyDetails-GET") {
+      http
+        .GET[HttpResponse](s"${appConfig.acaBaseUrl}/agent-client-authorisation/agent/agency-details")
+        .map(response =>
+          response.status match {
+            case OK => Json.parse(response.body).asOpt[AgencyDetails]
+            case NO_CONTENT => None
           })
     }
 }

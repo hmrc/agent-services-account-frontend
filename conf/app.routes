@@ -20,4 +20,5 @@ GET        /signed-out                     @uk.gov.hmrc.agentservicesaccount.con
 GET        /timed-out                      @uk.gov.hmrc.agentservicesaccount.controllers.SignOutController.timedOut()
 GET        /keep-alive                     @uk.gov.hmrc.agentservicesaccount.controllers.SignOutController.keepAlive
 GET        /manage-account                 @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController.manageAccount
+GET         /account-details                @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController.accountDetails
 GET        /language/:lang                 @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesLanguageController.switchToLanguage(lang: String)

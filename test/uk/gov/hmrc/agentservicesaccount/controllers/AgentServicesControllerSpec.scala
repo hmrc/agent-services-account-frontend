@@ -23,7 +23,7 @@ import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.models.{SuspensionDetails, SuspensionDetailsNotFound}
+import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress, SuspensionDetails, SuspensionDetailsNotFound}
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentClientAuthorisationStubs._
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentFiRelationshipStubs.{givenArnIsAllowlistedForIrv, givenArnIsNotAllowlistedForIrv}
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
@@ -289,7 +289,56 @@ class AgentServicesControllerSpec extends BaseISpec {
       content should include(messagesApi("manage.account.p"))
       content should include(messagesApi("manage.account.add-user"))
       content should include(messagesApi("manage.account.manage-user-access"))
+      content should include(messagesApi("manage.account.account-details"))
 
+    }
+  }
+
+  "account-details" should {
+
+    "return Status: OK and body containing correct content" in {
+      givenAuthorisedAsAgentWith(arn)
+      givenAgentDetailsFound(
+        AgencyDetails(
+          Some("My Agency"),
+          Some("abc@abc.com"),
+            Some(BusinessAddress("25 Any Street", Some("Any Town"), None, None, Some("TF3 4TR"), "GB"))))
+
+      val response = controller.accountDetails().apply(FakeRequest("GET", "/account-details"))
+
+      status(response) shouldBe OK
+      contentType(response).get shouldBe HTML
+      val content = contentAsString(response)
+      content should include(messagesApi("account-details.title"))
+      content should include(messagesApi("account-details.inset"))
+      content should include(messagesApi("account-details.summary-list.header"))
+      content should include(messagesApi("account-details.summary-list.email"))
+      content should include(messagesApi("account-details.summary-list.name"))
+      content should include(messagesApi("account-details.summary-list.address"))
+      content should include("My Agency")
+      content should include("abc@abc.com")
+      content should include("25 Any Street")
+      content should include("Any Town")
+      content should include("TF3 4TR")
+      content should include("GB")
+    }
+
+    "return Status: OK and body containing None in place of missing agency details" in {
+      givenAuthorisedAsAgentWith(arn)
+      givenAgentDetailsNoContent()
+
+      val response = controller.accountDetails().apply(FakeRequest("GET", "/account-details"))
+
+      status(response) shouldBe OK
+      contentType(response).get shouldBe HTML
+      val content = contentAsString(response)
+      content should include(messagesApi("account-details.title"))
+      content should include(messagesApi("account-details.inset"))
+      content should include(messagesApi("account-details.summary-list.header"))
+      content should include(messagesApi("account-details.summary-list.email"))
+      content should include(messagesApi("account-details.summary-list.name"))
+      content should include(messagesApi("account-details.summary-list.address"))
+      content should include(messagesApi("account-details.summary-list.none"))
     }
   }
 
