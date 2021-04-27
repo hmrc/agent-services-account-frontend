@@ -77,6 +77,7 @@ manage.account.heading=Rheoli’r cyfrif
 manage.account.p=Gallwch ganiatáu i ddefnyddwyr eraill yn eich sefydliad gael mynediad at y cyfrif gwasanaethau asiant hwn, a rheoli eu mynediad.
 manage.account.add-user=Ychwanegu defnyddiwr newydd
 manage.account.manage-user-access=Rheoli mynediad defnyddwyr at eich cyfrif gwasanaethau asiant (yn agor tab newydd).
+manage.account.account-details=View the contact details we have for your business
 
 agent.services.account.h2.your-clients=Eich cleientiaid
 agent.services.account.h3.agent-services=Gwasanaethau asiant
@@ -226,3 +227,12 @@ label.beta.newservice=Mae hwn yn wasanaeth newydd
 label.beta.improve=yn ein helpu i’w wella.
 label.beta.feedback=adborth
 label.beta.yours=– bydd eich
+
+# Account Details
+account-details.title=Account details
+account-details.inset=You cannot change these details in your agent services account or over the phone yet.
+account-details.summary-list.header=Agent services account details
+account-details.summary-list.email=Email address
+account-details.summary-list.name=Name
+account-details.summary-list.address=Address
+account-details.summary-list.none=None
