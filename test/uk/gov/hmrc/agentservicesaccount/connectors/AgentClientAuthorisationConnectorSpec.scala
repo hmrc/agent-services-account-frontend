@@ -17,7 +17,7 @@
 package uk.gov.hmrc.agentservicesaccount.connectors
 
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
-import uk.gov.hmrc.agentservicesaccount.models.{SuspensionDetails, SuspensionDetailsNotFound}
+import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress, SuspensionDetails, SuspensionDetailsNotFound}
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentClientAuthorisationStubs._
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import uk.gov.hmrc.http.HeaderCarrier
@@ -49,6 +49,31 @@ class AgentClientAuthorisationConnectorSpec extends BaseISpec {
       intercept[SuspensionDetailsNotFound] {
         await(connector.getSuspensionDetails())
       }.getMessage shouldBe "No record found for this agent"
+    }
+  }
+
+  "getAgencyDetails" should {
+    "return agency details for a given agent" in {
+
+      val agentDetails = AgencyDetails(
+        Some("My Agency"),
+        Some("abc@abc.com"),
+        Some(BusinessAddress(
+          "25 Any Street",
+          Some("Central Grange"),
+          Some("Telford"),
+          None,
+          Some("TF4 3TR"),
+          "GB"
+        )))
+      givenAgentDetailsFound(agentDetails)
+
+      await(connector.getAgencyDetails()) shouldBe Some(agentDetails)
+    }
+
+    "return None when response is 204" in {
+      givenAgentDetailsNoContent()
+      await(connector.getAgencyDetails()) shouldBe None
     }
   }
 

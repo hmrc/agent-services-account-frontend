@@ -15,9 +15,9 @@
  *@
 
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-@import play.api.Configuration
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 @import uk.gov.hmrc.agentservicesaccount.views.html.components.secondary_nav
+@import uk.gov.hmrc.agentservicesaccount.controllers.routes
 
 @this(mainTemplate: main, secondaryNav: secondary_nav)
 
@@ -36,6 +36,9 @@
      </li>
      <li>
        <a href="@appConfig.manageUsersUrl" target="_blank">@Messages("manage.account.manage-user-access")</a>
+     </li>
+     <li>
+         <a href="@routes.AgentServicesController.accountDetails()">@Messages("manage.account.account-details")</a>
      </li>
  </ul>
 

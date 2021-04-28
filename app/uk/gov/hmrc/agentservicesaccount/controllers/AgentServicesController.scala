@@ -37,6 +37,7 @@ class AgentServicesController @Inject()(
   suspensionWarningView: suspension_warning,
   manageAccountView: manage_account,
   asaDashboard: asa_dashboard,
+  accountDetailsView: account_details,
   helpView: help)(
   implicit val appConfig: AppConfig,
   val cc: MessagesControllerComponents,
@@ -110,13 +111,20 @@ class AgentServicesController @Inject()(
 
   val manageAccount: Action[AnyContent] = Action.async { implicit request =>
     withAuthorisedAsAgent { agentInfo =>
-      withIrvAllowed(agentInfo.arn) { _ =>
         if (agentInfo.isAdmin) {
           Future.successful(Ok(manageAccountView()))
         } else {
           Future.successful(Forbidden)
         }
+    }
+  }
+
+  val accountDetails: Action[AnyContent] = Action.async { implicit request =>
+    withAuthorisedAsAgent { agentInfo =>
+      if(agentInfo.isAdmin) {
+        agentClientAuthorisationConnector.getAgencyDetails().map(agencyDetails => Ok(accountDetailsView(agencyDetails)))
       }
+      else Future successful(Forbidden)
     }
   }
 
