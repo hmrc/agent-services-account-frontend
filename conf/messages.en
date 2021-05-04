@@ -15,13 +15,7 @@ agent.services.account.client-authorisations.p=You must ask your client to autho
 agent.services.account.tax-services=Tax services you can manage in this account
 
 asa.other.heading=Other tax services
-asa.other.p1=To manage other tax services, you will need to sign in to HMRC online.
-asa.other.gg-sign-in.text=<a class="govuk-link" href={0}>Sign in using the Government Gateway user ID you use to access these services.</a>
-asa.other.p2=Once you have signed in, you will be able to manage other taxes, for example:
-asa.other.li-sa=Self Assessment
-asa.other.li-ct=Corporation tax
-asa.other.li-paye=PAYE for employers
-asa.other.guidance.text=<a class="govuk-link" href={0}>If you are still not sure which account is for you, read the guidance.</a>
+asa.other.p1=For any tax services not listed here, sign out of this account and <a class="govuk-link" href="https://www.gov.uk/government/collections/hmrc-online-services-for-agents#hmrc-online-services-for-agents-account" target="_blank" rel="noreferrer noopener"> log in to your HMRC online services for agents account (opens in new tab). </a>
 
 agent.services.account.inset=You cannot view your client lists in your agent services account. You can use your account to view and manage an individual client's VAT details.
 agent.services.account.section1.h2=Making Tax Digital for VAT

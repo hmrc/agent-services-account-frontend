@@ -15,13 +15,8 @@ agent.services.account.client-authorisations.p=Mae’n rhaid i chi ofyn i’ch c
 agent.services.account.tax-services=Gwasanaethau treth y gallwch eu rheoli yn y cyfrif hwn
 
 asa.other.heading=Gwasanaethau treth eraill
-asa.other.p1=I reoli gwasanaethau treth eraill, bydd angen i chi fewngofnodi i CThEM ar-lein.
-asa.other.gg-sign-in.text=<a class="govuk-link" href={0}>Mewngofnodwch gan ddefnyddio’r Dynodydd Defnyddiwr (ID) rydych yn ei ddefnyddio i gael mynediad at y gwasanaethau hyn.</a>
-asa.other.p2=Unwaith y byddwch wedi mewngofnodi, byddwch yn gallu rheoli trethi eraill, er enghraifft:
-asa.other.li-sa=Hunanasesiad
-asa.other.li-ct=Treth Gorfforaeth
-asa.other.li-paye=TWE i gyflogwyr
-asa.other.guidance.text=<a class="govuk-link" href={0}>Os nad ydych yn siŵr o hyd pa gyfrif sydd i chi, darllenwch yr arweiniad.</a>
+asa.other.p1=For any tax services not listed here, sign out of this account and <a class="govuk-link" href="https://www.gov.uk/government/collections/hmrc-online-services-for-agents#hmrc-online-services-for-agents-account" target="_blank" rel="noreferrer noopener"> log in to your HMRC online services for agents account (opens in new tab). </a>
+
 
 agent.services.account.inset=Ni allwch fwrw golwg dros eich rhestrau o gleientiaid drwy’ch cyfrif gwasanaethau asiant. Gallwch ddefnyddio’ch cyfrif i fwrw golwg dros fanylion TAW  cleient unigol a’u rheoli.
 agent.services.account.section1.h2=Troi Treth yn Ddigidol ar gyfer TAW

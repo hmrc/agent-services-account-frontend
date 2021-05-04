@@ -157,12 +157,6 @@ class AgentServicesControllerSpec extends BaseISpec {
       content should include(messagesApi("agent.services.account.tax-services"))
       content should include(messagesApi("asa.other.heading"))
       content should include(messagesApi("asa.other.p1"))
-      content should include(messagesApi("asa.other.gg-sign-in.text", routes.SignOutController.onlineSignIn().url))
-      content should include(messagesApi("asa.other.p2"))
-      content should include(messagesApi("asa.other.li-sa"))
-      content should include(messagesApi("asa.other.li-ct"))
-      content should include(messagesApi("asa.other.li-paye"))
-      content should include(messagesApi("asa.other.guidance.text", appConfig.hmrcOnlineGuidanceLink))
       content should include(messagesApi("serviceinfo.help"))
     }
 
