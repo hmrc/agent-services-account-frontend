@@ -68,6 +68,9 @@ agent.services.account.section4.col2.link1=Ewch ati i ddilyn hynt eich ceisiadau
 agent.services.account.section4.col2.link2=Copïo rhagor o awdurdodiadau cleientiaid TAW a Hunanasesiad ar draws
 agent.services.account.section4.col2.link3=Canslo awdurdodiad cleient
 
+agent.services.account.help.h2=Help ac arweiniad
+agent.services.account.help.link=Rhagor o wybodaeth am sut i ddefnyddio’ch cyfrif gwasanaethau asiant a sut y gall cleientiaid eich awdurdodi i reoli eu trethi.
+
 manage.account.heading=Rheoli’r cyfrif
 manage.account.p=Gallwch ganiatáu i ddefnyddwyr eraill yn eich sefydliad gael mynediad at y cyfrif gwasanaethau asiant hwn, a rheoli eu mynediad.
 manage.account.add-user=Ychwanegu defnyddiwr newydd

@@ -68,6 +68,9 @@ agent.services.account.section4.col2.link1=Track your authorisation requests fro
 agent.services.account.section4.col2.link2=Copy across more VAT and Self Assessment client authorisations
 agent.services.account.section4.col2.link3=Cancel a client’s authorisation
 
+agent.services.account.help.h2=Help and guidance
+agent.services.account.help.link=Find out how to use your agent services account and how clients can authorise you to manage their taxes.
+
 manage.account.heading=Manage account
 manage.account.p=You can allow other users in your organisation to access this agent services account, and manage their access.
 manage.account.add-user=Add a new user
