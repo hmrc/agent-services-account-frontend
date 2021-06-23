@@ -137,7 +137,7 @@ class AgentServicesController @Inject()(
     if (appConfig.irvAllowlistEnabled) {
       afiRelationshipConnector.checkIrvAllowed(arn).flatMap(f)
     } else {
-      withMaybePasscode(f)
+      f(true)
     }
   }
 
