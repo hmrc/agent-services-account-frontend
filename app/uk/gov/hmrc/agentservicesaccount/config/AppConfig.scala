@@ -103,9 +103,6 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
   val timeoutDialogTimeout = getInt("timeoutDialog.timeout")
   val timeoutDialogCountdown = getInt("timeoutDialog.countdown")
 
-  val passcodeAuthRegime = getString("passcodeAuthentication.regime")
-  val passcodeAuthEnabled = getBoolean("passcodeAuthentication.enabled")
-
   val runMode = config.getOptional[String]("run.mode")
   val isDevEnv = if (env.mode.equals(Mode.Test)) false else runMode.forall(Mode.Dev.toString.equals)
 

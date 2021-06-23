@@ -34,7 +34,7 @@ class SignOutControllerSpec extends BaseISpec {
     "remove session and redirect to /home/survey" in {
       val signOutUrl = "/agent-services-account/home/survey"
 
-      val response = controller.signOut(FakeRequest("GET","/")).withSession("otacTokenParam" -> "token")
+      val response = controller.signOut(FakeRequest("GET","/"))
 
       status(response) shouldBe 303
       redirectLocation(response) shouldBe Some(signOutUrl)
@@ -62,7 +62,7 @@ class SignOutControllerSpec extends BaseISpec {
     }
 
     "/signed-out redirect to GG sign in with continue url back to /agent-services-account" in {
-      val request = controller.signedOut(FakeRequest("GET","/")).withSession("otacTokenParam" -> "token")
+      val request = controller.signedOut(FakeRequest("GET","/"))
 
       status(request) shouldBe 303
       redirectLocation(request) shouldBe Some(appConfig.continueFromGGSignIn)

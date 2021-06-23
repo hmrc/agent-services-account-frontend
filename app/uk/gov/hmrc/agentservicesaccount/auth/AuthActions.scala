@@ -63,16 +63,9 @@ class AuthActions @Inject()(appConfig: AppConfig,
       }.recover(handleFailure)
 
   def handleFailure(implicit request: Request[_]): PartialFunction[Throwable, Result] = {
-    case _: NoActiveSession ⇒ {
-      import CallOps._
+    case _: NoActiveSession ⇒
       val url: String = if (appConfig.isDevEnv) s"http://${request.host}${request.uri}" else s"${request.uri}"
-      val requestWithMaybeOtac = request.session.get("otacTokenParam") match {
-        case Some(p) =>
-          addParamsToUrl(url, "p" -> Some(p))
-        case None => url
-      }
-      toGGLogin(requestWithMaybeOtac)
-    }
+      toGGLogin(url)
 
     case _: UnsupportedAuthProvider ⇒
       logger.warn(s"user logged in with unsupported auth provider")

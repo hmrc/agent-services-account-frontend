@@ -21,7 +21,7 @@ import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request, Result}
 import play.api.Logging
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
-import uk.gov.hmrc.agentservicesaccount.auth.{AuthActions, PasscodeVerification}
+import uk.gov.hmrc.agentservicesaccount.auth.AuthActions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AfiRelationshipConnector, AgentClientAuthorisationConnector}
 import uk.gov.hmrc.agentservicesaccount.views.html.pages._
@@ -32,7 +32,6 @@ import scala.concurrent.{ExecutionContext, Future}
 class AgentServicesController @Inject()(
   authActions: AuthActions,
   agentClientAuthorisationConnector: AgentClientAuthorisationConnector,
-  val withMaybePasscode: PasscodeVerification,
   afiRelationshipConnector: AfiRelationshipConnector,
   suspensionWarningView: suspension_warning,
   manageAccountView: manage_account,
@@ -138,7 +137,7 @@ class AgentServicesController @Inject()(
     if (appConfig.irvAllowlistEnabled) {
       afiRelationshipConnector.checkIrvAllowed(arn).flatMap(f)
     } else {
-      withMaybePasscode(f)
+      f(true)
     }
   }
 

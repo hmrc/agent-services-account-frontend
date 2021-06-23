@@ -204,14 +204,6 @@ class AgentServicesControllerSpec extends BaseISpec {
       content should include(messagesApi("app.name"))
     }
 
-    "return the redirect returned by authActions when authActions denies access" in {
-      GivenIsNotLoggedIn()
-      val response = controller.root()(FakeRequest("GET", "/").withSession(("otacTokenParam", "BAR1 23/")))
-
-      status(response) shouldBe 303
-      redirectLocation(response) shouldBe Some("/bas-gateway/sign-in?continue_url=%2F%3Fp%3DBAR1%2B23%252F&origin=agent-services-account-frontend")
-    }
-
     "do not fail without continue url parameter" in {
       givenAuthorisedAsAgentWith(arn)
       givenSuspensionStatus(SuspensionDetails(suspensionStatus = false, None))
