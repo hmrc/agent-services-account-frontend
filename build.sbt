@@ -63,12 +63,12 @@ lazy val wartRemoverSettings = {
 }
 
 lazy val compileDeps = Seq(
-  "uk.gov.hmrc" %% "bootstrap-frontend-play-27" % "3.4.0",
+  "uk.gov.hmrc" %% "bootstrap-frontend-play-27" % "5.6.0",
   "uk.gov.hmrc" %% "govuk-template"             % "5.61.0-play-27",
   "uk.gov.hmrc" %% "play-partials"              % "7.1.0-play-27",
   "uk.gov.hmrc" %% "play-ui"                    % "8.21.0-play-27", //needed for Optimizely
-  "uk.gov.hmrc" %% "agent-kenshoo-monitoring"   % "4.4.0",
-  "uk.gov.hmrc" %% "agent-mtd-identifiers"      % "0.23.0-play-27",
+  "uk.gov.hmrc" %% "agent-kenshoo-monitoring"   % "4.6.0-play-27",
+  "uk.gov.hmrc" %% "agent-mtd-identifiers"      % "0.25.0-play-27",
   "uk.gov.hmrc" %% "play-language"              % "4.12.0-play-27",
   "uk.gov.hmrc" %% "play-frontend-hmrc"         % "0.45.0-play-27"
 )
@@ -101,7 +101,8 @@ lazy val root = (project in file("."))
     resolvers := Seq(
       Resolver.typesafeRepo("releases"),
     ),
-    resolvers += "HMRC-open-artefacts-maven" at "https://open.artefacts.tax.service.gov.uk/maven2" ,
+    resolvers += "HMRC-open-artefacts-maven" at "https://open.artefacts.tax.service.gov.uk/maven2",
+    resolvers += "HMRC-local-artefacts-maven" at "https://artefacts.tax.service.gov.uk/artifactory/hmrc-releases-local",
     resolvers += Resolver.url("HMRC-open-artefacts-ivy", url("https://open.artefacts.tax.service.gov.uk/ivy2"))(Resolver.ivyStylePatterns),
 libraryDependencies ++= compileDeps ++ testDeps("test") ++ testDeps("it"),
     libraryDependencies ++= Seq(

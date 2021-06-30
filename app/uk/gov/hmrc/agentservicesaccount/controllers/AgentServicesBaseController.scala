@@ -20,7 +20,7 @@ import javax.inject.{Inject, Singleton}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{MessagesControllerComponents, RequestHeader}
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.HeaderCarrierConverter
+import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 @Singleton
@@ -30,5 +30,5 @@ class AgentServicesBaseController @Inject()(
     extends FrontendController(cc) with I18nSupport {
 
   override implicit def hc(implicit rh: RequestHeader): HeaderCarrier =
-    HeaderCarrierConverter.fromHeadersAndSessionAndRequest(rh.headers, Some(rh.session), Some(rh))
+    HeaderCarrierConverter.fromRequestAndSession(rh, rh.session)
 }
