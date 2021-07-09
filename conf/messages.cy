@@ -15,7 +15,7 @@ agent.services.account.client-authorisations.p=Mae’n rhaid i chi ofyn i’ch c
 agent.services.account.tax-services=Gwasanaethau treth y gallwch eu rheoli yn y cyfrif hwn
 
 asa.other.heading=Gwasanaethau treth eraill
-asa.other.p1=Y cyfrif gwasanaethau asiant yw cartref gwasanaethau treth CThEM a lansiwyd o 2019 ymlaen. Ar gyfer unrhyw wasanaethau treth sydd heb eu rhestru yma, allgofnodwch o’r cyfrif hwn a <a class="govuk-link" href="https://www.gov.uk/government/collections/hmrc-online-services-for-agents#hmrc-online-services-for-agents-account" target="_blank" rel="noreferrer noopener">mewngofnodwch i’ch cyfrif gwasanaethau ar-lein CThEM ar gyfer asiantau (yn agor tab newydd).</a>
+asa.other.p1=Y cyfrif gwasanaethau asiant yw cartref gwasanaethau treth CThEM a lansiwyd o 2019 ymlaen.<br/>Ar gyfer unrhyw wasanaethau treth sydd heb eu rhestru yma, allgofnodwch o’r cyfrif hwn a <a class="govuk-link" href="https://www.gov.uk/government/collections/hmrc-online-services-for-agents#hmrc-online-services-for-agents-account" target="_blank" rel="noreferrer noopener">mewngofnodwch i’ch cyfrif gwasanaethau ar-lein CThEM ar gyfer asiantau (yn agor tab newydd).</a>
 asa.other.warning=Rhybudd
 
 agent.services.account.inset=Ni allwch fwrw golwg dros eich rhestrau o gleientiaid drwy’ch cyfrif gwasanaethau asiant. Gallwch ddefnyddio’ch cyfrif i fwrw golwg dros fanylion TAW  cleient unigol a’u rheoli.

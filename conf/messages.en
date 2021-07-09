@@ -15,7 +15,7 @@ agent.services.account.client-authorisations.p=You must ask your client to autho
 agent.services.account.tax-services=Tax services you can manage in this account
 
 asa.other.heading=Other tax services
-asa.other.p1=The agent services account is the home for HMRC tax services launched from 2019. For any tax services not listed here, sign out of this account and <a class="govuk-link" href="https://www.gov.uk/government/collections/hmrc-online-services-for-agents#hmrc-online-services-for-agents-account" target="_blank" rel="noreferrer noopener"> log in to your HMRC online services for agents account (opens in new tab).</a>
+asa.other.p1=The agent services account is the home for HMRC tax services launched from 2019.<br/>For any tax services not listed here, sign out of this account and <a class="govuk-link" href="https://www.gov.uk/government/collections/hmrc-online-services-for-agents#hmrc-online-services-for-agents-account" target="_blank" rel="noreferrer noopener"> log in to your HMRC online services for agents account (opens in new tab).</a>
 asa.other.warning=Warning
 
 agent.services.account.inset=You cannot view your client lists in your agent services account. You can use your account to view and manage an individual client's VAT details.
