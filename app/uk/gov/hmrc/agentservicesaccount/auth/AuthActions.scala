@@ -16,6 +16,8 @@
 
 package uk.gov.hmrc.agentservicesaccount.auth
 
+import controllers.Assets.Redirect
+
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.Results._
 import play.api.mvc._
@@ -27,7 +29,6 @@ import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals.{allEnrolments, credentialRole}
 import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.bootstrap.config.AuthRedirects
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -45,7 +46,7 @@ case class AgentRequest[A](arn: Arn, request: Request[A]) extends WrappedRequest
 class AuthActions @Inject()(appConfig: AppConfig,
                             override val authConnector: AuthConnector,
                             val env: Environment,
-                            val config: Configuration) extends AuthorisedFunctions with AuthRedirects {
+                            val config: Configuration) extends AuthorisedFunctions {
 
   val logger = Logger(AuthActions.getClass)
 
@@ -64,8 +65,7 @@ class AuthActions @Inject()(appConfig: AppConfig,
 
   def handleFailure(implicit request: Request[_]): PartialFunction[Throwable, Result] = {
     case _: NoActiveSession ⇒
-      val url: String = if (appConfig.isDevEnv) s"http://${request.host}${request.uri}" else s"${request.uri}"
-      toGGLogin(url)
+      Redirect(s"$signInUrl?continue_url=$continueUrl${request.uri}&origin=$appName")
 
     case _: UnsupportedAuthProvider ⇒
       logger.warn(s"user logged in with unsupported auth provider")
@@ -84,6 +84,12 @@ class AuthActions @Inject()(appConfig: AppConfig,
       Arn(enrolId.value)
     }
   }
+
+  private def getString(key: String): String = config.underlying.getString(key)
+
+  private val signInUrl = getString("bas-gateway.url")
+  private val continueUrl = getString("login.continue")
+  private val appName = getString("appName")
 }
 
 object AuthActions {
