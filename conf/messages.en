@@ -228,7 +228,7 @@ label.beta.yours=– your
 
 # Account Details
 account-details.title=Account details
-account-details.inset=You cannot change these details in your agent services account or over the phone yet.
+account-details.inset=To change these details you will need to write to us. <a href={0} target="_blank" rel="noreferrer noopener">Find out more by reading the guidance (opens in new tab)</a>. You can only change your details if you are a director, company secretary, sole trader, proprietor or partner.
 account-details.summary-list.header=Agent services account details
 account-details.summary-list.email=Email address
 account-details.summary-list.name=Name

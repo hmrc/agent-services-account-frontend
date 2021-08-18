@@ -296,7 +296,6 @@ class AgentServicesControllerSpec extends BaseISpec {
       contentType(response).get shouldBe HTML
       val content = contentAsString(response)
       content should include(messagesApi("account-details.title"))
-      content should include(messagesApi("account-details.inset"))
       content should include(messagesApi("account-details.summary-list.header"))
       content should include(messagesApi("account-details.summary-list.email"))
       content should include(messagesApi("account-details.summary-list.name"))
@@ -307,6 +306,8 @@ class AgentServicesControllerSpec extends BaseISpec {
       content should include("Any Town")
       content should include("TF3 4TR")
       content should include("GB")
+      content should include(" To change these details you will need to write to us. <a href=https://www.gov.uk/guidance/change-or-remove-your-authorisations-as-a-tax-agent#changes-you-can-make-in-writing target=\"_blank\" rel=\"noreferrer noopener\">Find out more by reading the guidance (opens in new tab)</a>. You can only change your details if you are a director, company secretary, sole trader, proprietor or partner.")
+
     }
 
     "return Status: OK and body containing None in place of missing agency details" in {
@@ -319,13 +320,14 @@ class AgentServicesControllerSpec extends BaseISpec {
       contentType(response).get shouldBe HTML
       val content = contentAsString(response)
       content should include(messagesApi("account-details.title"))
-      content should include(messagesApi("account-details.inset"))
       content should include(messagesApi("account-details.summary-list.header"))
       content should include(messagesApi("account-details.summary-list.email"))
       content should include(messagesApi("account-details.summary-list.name"))
       content should include(messagesApi("account-details.summary-list.address"))
       content should include(messagesApi("account-details.summary-list.none"))
-    }
+      content should include(" To change these details you will need to write to us. <a href=https://www.gov.uk/guidance/change-or-remove-your-authorisations-as-a-tax-agent#changes-you-can-make-in-writing target=\"_blank\" rel=\"noreferrer noopener\">Find out more by reading the guidance (opens in new tab)</a>. You can only change your details if you are a director, company secretary, sole trader, proprietor or partner.")
+
+      }
 
     "return Forbidden if the agent is not Admin" in {
       givenAuthorisedAsAgentWith(arn, false)
