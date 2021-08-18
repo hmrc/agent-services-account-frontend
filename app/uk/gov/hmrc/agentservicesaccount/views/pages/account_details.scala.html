@@ -46,7 +46,7 @@
 
     @govukInsetText(
         InsetText(
-            content = Text(Messages("account-details.inset"))
+            content = HtmlContent(Messages("account-details.inset", appConfig.govUkGuidanceChangeDetails))
         ))
 
 

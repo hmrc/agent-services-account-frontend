@@ -120,4 +120,5 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
 
   def routeToSwitchLanguage: String => Call = (lang: String) => routes.AgentServicesLanguageController.switchToLanguage(lang)
 
+  val govUkGuidanceChangeDetails = getString("govUkGuidanceChangeDetails")
 }
