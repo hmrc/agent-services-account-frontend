@@ -228,7 +228,7 @@ label.beta.yours=– bydd eich
 
 # Account Details
 account-details.title=Manylion y cyfrif
-account-details.inset=Ni allwch newid y manylion hyn yn eich cyfrif gwasanaethau asiant na thros y ffôn eto.
+account-details.inset=Bydd angen i chi ysgrifennu atom er mwyn newid y manylion hyn. <a href={0} target="_blank" rel="noreferrer noopener">Dysgwch ragor drwy ddarllen yr arweiniad (yn agor tab newydd)</a>. Gallwch ond newid eich manylion os ydych yn gyfarwyddwr, ysgrifennydd cwmni, unig fasnachwr, perchennog neu’n bartner.
 account-details.summary-list.header=Manylion y cyfrif gwasanaethau asiant
 account-details.summary-list.email=Cyfeiriad e-bost
 account-details.summary-list.name=Enw
