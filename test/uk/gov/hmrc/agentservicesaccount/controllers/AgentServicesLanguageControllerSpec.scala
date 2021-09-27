@@ -19,7 +19,8 @@ package uk.gov.hmrc.agentservicesaccount.controllers
 import play.api.http.Status
 import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
-import play.api.test.Helpers.cookies
+import play.api.test.Helpers._
+import play.api.test.Helpers
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 
@@ -39,14 +40,14 @@ class AgentServicesLanguageControllerSpec extends BaseISpec {
 
     "providing the parameter 'english'" should {
 
-      val result = await(controller.switchToLanguage("english")(request))
+      val result = controller.switchToLanguage("english")(request)
 
       "return a Redirect status (303)" in {
         status(result) shouldBe Status.SEE_OTHER
       }
 
       "use the English language" in {
-        cookies(result)(timeout).get("PLAY_LANG").get.value shouldBe "en"
+        Helpers.cookies(result)(timeout).get("PLAY_LANG").get.value shouldBe "en"
       }
     }
   }

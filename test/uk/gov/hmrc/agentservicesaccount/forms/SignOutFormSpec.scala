@@ -17,7 +17,7 @@
 package uk.gov.hmrc.agentservicesaccount.forms
 
 import play.api.libs.json.Json
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.agentservicesaccount.support.UnitSpec
 
 class SignOutFormSpec extends UnitSpec {
 

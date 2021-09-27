@@ -16,12 +16,12 @@
 
 package uk.gov.hmrc.agentservicesaccount.support
 
-import org.scalatest.{BeforeAndAfterEach, Matchers, OptionValues}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.{BeforeAndAfterEach, OptionValues}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import uk.gov.hmrc.agentservicesaccount.stubs.AuthStubs
-import uk.gov.hmrc.play.test.UnitSpec
 
 abstract class BaseISpec
     extends UnitSpec with Matchers with OptionValues with GuiceOneAppPerSuite with BeforeAndAfterEach

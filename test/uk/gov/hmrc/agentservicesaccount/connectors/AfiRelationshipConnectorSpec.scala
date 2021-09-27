@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.agentservicesaccount.connectors
 
+import play.api.test.Helpers._
 import play.api.test.Injecting
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentFiRelationshipStubs.{givenArnIsAllowlistedForIrv, givenArnIsNotAllowlistedForIrv}

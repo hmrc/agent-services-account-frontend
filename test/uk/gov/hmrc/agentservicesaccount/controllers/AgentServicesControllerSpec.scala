@@ -20,6 +20,7 @@ package uk.gov.hmrc.agentservicesaccount.controllers
 import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import play.api.test.Helpers
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
@@ -49,7 +50,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       val response = controller.root()(FakeRequest("GET", "/"))
 
       status(response) shouldBe SEE_OTHER
-      redirectLocation(response) shouldBe Some(routes.AgentServicesController.showAgentServicesAccount().url)
+      Helpers.redirectLocation(response) shouldBe Some(routes.AgentServicesController.showAgentServicesAccount().url)
     }
 
     "redirect to agent service account when suspension is enabled but user is not suspended" in {
@@ -63,7 +64,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       val response = controllerWithSuspensionEnabled.root()(FakeRequest("GET", "/"))
 
       status(response) shouldBe SEE_OTHER
-      redirectLocation(response) shouldBe Some(routes.AgentServicesController.showAgentServicesAccount().url)
+      Helpers.redirectLocation(response) shouldBe Some(routes.AgentServicesController.showAgentServicesAccount().url)
     }
 
     "redirect to suspended warning when suspension is enabled and user is suspended" in {
@@ -78,7 +79,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       val response = controllerWithSuspensionEnabled.root()(FakeRequest("GET", "/"))
 
       status(response) shouldBe SEE_OTHER
-      redirectLocation(response) shouldBe Some(routes.AgentServicesController.showSuspendedWarning().url)
+      Helpers.redirectLocation(response) shouldBe Some(routes.AgentServicesController.showSuspendedWarning().url)
     }
 
     "throw an exception when suspension is enabled and suspension status returns NOT_FOUND for user" in {
@@ -105,8 +106,8 @@ class AgentServicesControllerSpec extends BaseISpec {
       val response = controller.showAgentServicesAccount()(FakeRequest("GET", "/home"))
 
       status(response) shouldBe OK
-      contentType(response).get shouldBe HTML
-      val content = contentAsString(response)
+      Helpers.contentType(response).get shouldBe HTML
+      val content = Helpers.contentAsString(response)
 
       content should include(messagesApi("agent.services.account.heading", "servicename.titleSuffix"))
       content should include(messagesApi("agent.services.account.heading"))
@@ -167,7 +168,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       givenSuspensionStatus(SuspensionDetails(suspensionStatus = false, None))
 
       val response = controllerWithHelpToggledOff.showAgentServicesAccount()(FakeRequest("GET", "/home"))
-      contentAsString(response) should not include messagesApi("serviceinfo.help")
+      Helpers.contentAsString(response) should not include messagesApi("serviceinfo.help")
     }
 
     "return Status: OK and body containing correct content when suspension details are in the session and agent is suspended for VATC" in {
@@ -180,8 +181,8 @@ class AgentServicesControllerSpec extends BaseISpec {
       val response = controllerWithSuspensionEnabled.showAgentServicesAccount()(FakeRequest("GET", "/home"))
 
       status(response) shouldBe OK
-      contentType(response).get shouldBe HTML
-      val content = contentAsString(response)
+      Helpers.contentType(response).get shouldBe HTML
+      val content = Helpers.contentAsString(response)
 
       content should include(messagesApi("agent.services.account.section1.h2"))
       content should include(messagesApi("agent.services.account.section1.suspended.h3"))
@@ -196,8 +197,8 @@ class AgentServicesControllerSpec extends BaseISpec {
       val response = controller.showAgentServicesAccount()(FakeRequest("GET", "/home"))
 
       status(response) shouldBe OK
-      contentType(response).get shouldBe HTML
-      val content = contentAsString(response)
+      Helpers.contentType(response).get shouldBe HTML
+      val content = Helpers.contentAsString(response)
 
       content should include(messagesApi("agent.services.account.heading", "servicename.titleSuffix"))
       content should include(messagesApi("agent.services.account.heading"))
@@ -210,7 +211,7 @@ class AgentServicesControllerSpec extends BaseISpec {
 
       val response = controller.showAgentServicesAccount().apply(FakeRequest("GET", "/home"))
       status(response) shouldBe OK
-      contentAsString(response) should {
+      Helpers.contentAsString(response) should {
         not include "<a href=\"/\" class=\"btn button\" id=\"continue\">"
       }
     }
@@ -224,7 +225,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       val result = controller.showAgentServicesAccount(FakeRequest())
       status(result) shouldBe OK
 
-      val content = contentAsString(result)
+      val content = Helpers.contentAsString(result)
       content should include (messagesApi("agent.services.account.paye-section.h2"))
     }
 
@@ -237,7 +238,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       val result = controller.showAgentServicesAccount(FakeRequest())
       status(result) shouldBe OK
 
-      val content = contentAsString(result)
+      val content = Helpers.contentAsString(result)
       content should not include messagesApi("agent.services.account.paye-section.h2")
     }
   }
@@ -248,8 +249,8 @@ class AgentServicesControllerSpec extends BaseISpec {
       val response = controller.showSuspendedWarning()(FakeRequest("GET", "/home").withSession("suspendedServices" -> "HMRC-MTD-IT,HMRC-MTD-VAT"))
 
       status(response) shouldBe OK
-      contentType(response).get shouldBe HTML
-      val content = contentAsString(response)
+      Helpers.contentType(response).get shouldBe HTML
+      val content = Helpers.contentAsString(response)
 
       content should include(messagesApi("suspension-warning.header"))
       content should include(messagesApi("suspension-warning.p1"))
@@ -269,8 +270,8 @@ class AgentServicesControllerSpec extends BaseISpec {
       val response = controller.manageAccount().apply(FakeRequest("GET", "/manage-account"))
 
       status(response) shouldBe OK
-      contentType(response).get shouldBe HTML
-      val content = contentAsString(response)
+      Helpers.contentType(response).get shouldBe HTML
+      val content = Helpers.contentAsString(response)
       content should include(messagesApi("manage.account.heading"))
       content should include(messagesApi("manage.account.p"))
       content should include(messagesApi("manage.account.add-user"))
@@ -292,9 +293,9 @@ class AgentServicesControllerSpec extends BaseISpec {
 
       val response = controller.accountDetails().apply(FakeRequest("GET", "/account-details"))
 
-      status(response) shouldBe OK
-      contentType(response).get shouldBe HTML
-      val content = contentAsString(response)
+      Helpers.status(response) shouldBe OK
+      Helpers.contentType(response).get shouldBe HTML
+      val content = Helpers.contentAsString(response)
       content should include(messagesApi("account-details.title"))
       content should include(messagesApi("account-details.summary-list.header"))
       content should include(messagesApi("account-details.summary-list.email"))
@@ -317,8 +318,8 @@ class AgentServicesControllerSpec extends BaseISpec {
       val response = controller.accountDetails().apply(FakeRequest("GET", "/account-details"))
 
       status(response) shouldBe OK
-      contentType(response).get shouldBe HTML
-      val content = contentAsString(response)
+      Helpers.contentType(response).get shouldBe HTML
+      val content = Helpers.contentAsString(response)
       content should include(messagesApi("account-details.title"))
       content should include(messagesApi("account-details.summary-list.header"))
       content should include(messagesApi("account-details.summary-list.email"))
@@ -344,8 +345,8 @@ class AgentServicesControllerSpec extends BaseISpec {
       val response = controller.showHelp().apply(FakeRequest("GET", "/help"))
 
       status(response) shouldBe OK
-      contentType(response).get shouldBe HTML
-      val content = contentAsString(response)
+      Helpers.contentType(response).get shouldBe HTML
+      val content = Helpers.contentAsString(response)
       content should include(messagesApi("help.title"))
       content should include(messagesApi("help.heading"))
       content should include(messagesApi("help.p1"))

@@ -63,23 +63,20 @@ lazy val wartRemoverSettings = {
 }
 
 lazy val compileDeps = Seq(
-  "uk.gov.hmrc" %% "bootstrap-frontend-play-27" % "5.6.0",
-  "uk.gov.hmrc" %% "govuk-template"             % "5.61.0-play-27",
-  "uk.gov.hmrc" %% "play-partials"              % "7.1.0-play-27",
-  "uk.gov.hmrc" %% "play-ui"                    % "8.21.0-play-27", //needed for Optimizely
-  "uk.gov.hmrc" %% "agent-kenshoo-monitoring"   % "4.6.0-play-27",
+  "uk.gov.hmrc" %% "bootstrap-frontend-play-28" % "5.9.0",
+  "uk.gov.hmrc" %% "govuk-template"             % "5.70.0-play-28",
+  "uk.gov.hmrc" %% "play-partials"              % "8.2.0-play-28",
+  "uk.gov.hmrc" %% "agent-kenshoo-monitoring"   % "4.8.0-play-28",
   "uk.gov.hmrc" %% "agent-mtd-identifiers"      % "0.25.0-play-27",
-  "uk.gov.hmrc" %% "play-language"              % "4.12.0-play-27",
-  "uk.gov.hmrc" %% "play-frontend-hmrc"         % "0.45.0-play-27"
+  "uk.gov.hmrc" %% "play-frontend-hmrc"         % "1.9.0-play-28"
 )
 
 def testDeps(scope: String) = Seq(
-  "uk.gov.hmrc" %% "hmrctest" % "3.10.0-play-26" % scope,
-  "org.scalatest" %% "scalatest" % "3.0.8" % scope,
-  "org.mockito" % "mockito-core" % "3.2.0" % scope,
-  "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.3" % scope,
-  "com.github.tomakehurst" % "wiremock-jre8" % "2.27.1" % scope,
-  "org.jsoup" % "jsoup" % "1.12.1" % scope
+  "org.scalatestplus.play" %% "scalatestplus-play" % "5.1.0" % "test",
+  "org.scalatestplus" %% "mockito-3-12" % "3.2.10.0" % "test",
+  "com.github.tomakehurst" % "wiremock-jre8" % "2.26.1" % scope,
+  "org.jsoup" % "jsoup" % "1.12.1" % scope,
+  "com.vladsch.flexmark" % "flexmark-all" % "0.35.10" % scope
 )
 
 lazy val root = (project in file("."))
