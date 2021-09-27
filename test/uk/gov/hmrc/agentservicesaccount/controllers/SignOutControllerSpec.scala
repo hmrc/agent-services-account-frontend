@@ -20,6 +20,7 @@ import play.api.i18n.MessagesApi
 import play.api.mvc.RequestHeader
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import play.api.test.Helpers
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 
@@ -37,7 +38,7 @@ class SignOutControllerSpec extends BaseISpec {
       val response = controller.signOut(FakeRequest("GET","/"))
 
       status(response) shouldBe 303
-      redirectLocation(response) shouldBe Some(signOutUrl)
+      redirectLocation(await(response)) shouldBe Some(signOutUrl)
     }
 
     "show the sign out form" in {
@@ -45,14 +46,14 @@ class SignOutControllerSpec extends BaseISpec {
       val result = controller.showSurvey(FakeRequest("GET", "/"))
 
       status(result) shouldBe 200
-      await(bodyOf(result)).contains("Feedback") shouldBe true
+      Helpers.contentAsString(result).contains("Feedback") shouldBe true
     }
 
     "redirect to survey" in {
       val result = controller.submitSurvey(FakeRequest("POST", "/").withFormUrlEncodedBody("surveyKey" -> "AGENTSUB"))
 
       status(result) shouldBe 303
-      redirectLocation(result).get shouldBe appConfig.signOutUrlWithSurvey("AGENTSUB")
+      Helpers.redirectLocation(result).get shouldBe appConfig.signOutUrlWithSurvey("AGENTSUB")
     }
 
     "return bad request if missing survey body" in {
@@ -65,7 +66,7 @@ class SignOutControllerSpec extends BaseISpec {
       val request = controller.signedOut(FakeRequest("GET","/"))
 
       status(request) shouldBe 303
-      redirectLocation(request) shouldBe Some(appConfig.continueFromGGSignIn)
+      Helpers.redirectLocation(request) shouldBe Some(appConfig.continueFromGGSignIn)
     }
 
     "remove session and redirect to HMRC Online sign-in page" in {
@@ -74,7 +75,7 @@ class SignOutControllerSpec extends BaseISpec {
       val response = controller.onlineSignIn(FakeRequest("GET","/"))
 
       status(response) shouldBe 303
-      redirectLocation(response) shouldBe Some(onlineSignInUrl)
+      Helpers.redirectLocation(response) shouldBe Some(onlineSignInUrl)
     }
 
     "timedOut should return forbidden with new session" in {
@@ -87,7 +88,7 @@ class SignOutControllerSpec extends BaseISpec {
       val response = controller.keepAlive(FakeRequest("GET", "/"))
 
       status(response) shouldBe 200
-      await(bodyOf(response)).contains("OK") shouldBe true
+      Helpers.contentAsString(response).contains("OK") shouldBe true
     }
   }
 

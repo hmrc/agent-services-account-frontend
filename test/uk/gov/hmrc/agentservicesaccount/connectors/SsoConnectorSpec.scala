@@ -20,6 +20,8 @@ import uk.gov.hmrc.agentservicesaccount.stubs.SsoStubs
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import uk.gov.hmrc.http.HeaderCarrier
 
+import play.api.test.Helpers._
+
 class SsoConnectorSpec extends BaseISpec {
 
   import scala.concurrent.ExecutionContext.Implicits.global

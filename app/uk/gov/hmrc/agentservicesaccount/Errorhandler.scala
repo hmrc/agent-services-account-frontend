@@ -17,11 +17,10 @@
 package uk.gov.hmrc.agentservicesaccount
 
 import javax.inject.{Inject, Singleton}
-import play.api.Logger.logger
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.mvc.Results._
 import play.api.mvc.{Request, RequestHeader, Result}
-import play.api.{Configuration, Environment}
+import play.api.{Configuration, Environment, Logger, Logging}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.views.html.error_template
 import uk.gov.hmrc.auth.core.{InsufficientEnrolments, NoActiveSession}
@@ -39,9 +38,11 @@ class ErrorHandler @Inject() (
                                val messagesApi: MessagesApi,
   errorTemplateView: error_template,
                                val auditConnector: AuditConnector)(implicit val config: Configuration, ec: ExecutionContext, appConfig: AppConfig)
-  extends FrontendErrorHandler with AuthRedirects with ErrorAuditing {
+  extends FrontendErrorHandler with AuthRedirects with ErrorAuditing with Logging {
 
   override def appName: String = appConfig.appName
+
+  def theLogger: Logger = logger // exposing the logger for testing
 
   override def onClientError(request: RequestHeader, statusCode: Int, message: String): Future[Result] = {
     auditClientError(request, statusCode, message)

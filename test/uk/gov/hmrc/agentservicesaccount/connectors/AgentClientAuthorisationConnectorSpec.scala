@@ -22,6 +22,8 @@ import uk.gov.hmrc.agentservicesaccount.stubs.AgentClientAuthorisationStubs._
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import uk.gov.hmrc.http.HeaderCarrier
 
+import play.api.test.Helpers._
+
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class AgentClientAuthorisationConnectorSpec extends BaseISpec {

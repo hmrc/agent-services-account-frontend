@@ -16,12 +16,10 @@
 
 package uk.gov.hmrc.agentservicesaccount.auth
 
-import controllers.Assets.Redirect
-
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.Results._
 import play.api.mvc._
-import play.api.{Configuration, Environment, Logger}
+import play.api.{Configuration, Environment, Logging}
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
@@ -46,9 +44,7 @@ case class AgentRequest[A](arn: Arn, request: Request[A]) extends WrappedRequest
 class AuthActions @Inject()(appConfig: AppConfig,
                             override val authConnector: AuthConnector,
                             val env: Environment,
-                            val config: Configuration) extends AuthorisedFunctions {
-
-  val logger = Logger(AuthActions.getClass)
+                            val config: Configuration) extends AuthorisedFunctions with Logging {
 
   def withAuthorisedAsAgent(body: AgentInfo => Future[Result])(implicit ec: ExecutionContext, hc: HeaderCarrier, request: Request[AnyContent]): Future[Result] =
     authorised(AuthProviders(GovernmentGateway) and AffinityGroup.Agent)
