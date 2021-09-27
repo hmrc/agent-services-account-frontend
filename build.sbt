@@ -66,10 +66,8 @@ lazy val compileDeps = Seq(
   "uk.gov.hmrc" %% "bootstrap-frontend-play-28" % "5.9.0",
   "uk.gov.hmrc" %% "govuk-template"             % "5.70.0-play-28",
   "uk.gov.hmrc" %% "play-partials"              % "8.2.0-play-28",
-  "uk.gov.hmrc" %% "play-ui"                    % "9.7.0-play-28", //needed for Optimizely
   "uk.gov.hmrc" %% "agent-kenshoo-monitoring"   % "4.8.0-play-28",
   "uk.gov.hmrc" %% "agent-mtd-identifiers"      % "0.25.0-play-27",
-  "uk.gov.hmrc" %% "play-language"              % "5.1.0-play-28",
   "uk.gov.hmrc" %% "play-frontend-hmrc"         % "1.9.0-play-28"
 )
 
