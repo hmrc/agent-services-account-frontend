@@ -15,34 +15,34 @@ agent.services.account.client-authorisations.p=Mae’n rhaid i chi ofyn i’ch c
 agent.services.account.tax-services=Gwasanaethau treth y gallwch eu rheoli yn y cyfrif hwn
 
 asa.other.heading=Gwasanaethau treth eraill
-asa.other.p1=Y cyfrif gwasanaethau asiant yw cartref gwasanaethau treth CThEM a lansiwyd o 2019 ymlaen.<br/>Ar gyfer unrhyw wasanaethau treth sydd heb eu rhestru yma, allgofnodwch o’r cyfrif hwn a <a class="govuk-link" href="https://www.gov.uk/government/collections/hmrc-online-services-for-agents#hmrc-online-services-for-agents-account" target="_blank" rel="noreferrer noopener">mewngofnodwch i’ch cyfrif gwasanaethau ar-lein CThEM ar gyfer asiantau (yn agor tab newydd).</a>
+asa.other.p1=Y cyfrif gwasanaethau asiant yw cartref gwasanaethau treth CThEM a lansiwyd o 2019 ymlaen.<br/>Ar gyfer unrhyw wasanaethau treth sydd heb eu rhestru yma, allgofnodwch o’r cyfrif hwn a <a class="govuk-link" href="https://www.gov.uk/government/collections/hmrc-online-services-for-agents#hmrc-online-services-for-agents-account" target="_blank" rel="noreferrer noopener">mewngofnodwch i’ch cyfrif gwasanaethau ar-lein CThEM ar gyfer asiantau (yn agor tab newydd)</a>.
 asa.other.warning=Rhybudd
 
 agent.services.account.inset=Ni allwch fwrw golwg dros eich rhestrau o gleientiaid drwy’ch cyfrif gwasanaethau asiant. Gallwch ddefnyddio’ch cyfrif i fwrw golwg dros fanylion TAW  cleient unigol a’u rheoli.
-agent.services.account.section1.h2=Troi Treth yn Ddigidol ar gyfer TAW
+agent.services.account.section1.h2=TAW
 agent.services.account.section1.col1.h3=Cyn i chi ddechrau
-agent.services.account.section1.col1.p=Yn gyntaf mae’n rhaid i chi gael awdurdodiad gan eich cleient. Gallwch wneud hyn drwy<a class="govuk-link" href="{0}"> gopïo’ch awdurdodiadau drosodd</a> neu <a class="govuk-link" href="{1}">wneud cais am awdurdodiad.</a>
-agent.services.account.section1.col1.link=Os ydych yn copïo manylion eich cleient drosodd, bydd angen i chi<a class="govuk-link" href="https://www.gov.uk/guidance/sign-up-for-making-tax-digital-for-vat.cy" target="_blank" rel="noreferrer noopener"> ei gofrestru ar gyfer y gwasanaeth Troi Treth yn Ddigidol ar gyfer TAW (yn agor tab newydd).</a>
+agent.services.account.section1.col1.p=Yn gyntaf mae’n rhaid i chi gael awdurdodiad gan eich cleient. Gallwch wneud hyn drwy<a class="govuk-link" href="{0}"> gopïo’ch awdurdodiadau drosodd</a> neu <a class="govuk-link" href="{1}">wneud cais am awdurdodiad</a>.
+agent.services.account.section1.col1.link=Os ydych yn copïo manylion eich cleient drosodd, bydd angen i chi<a class="govuk-link" href="https://www.gov.uk/guidance/sign-up-for-making-tax-digital-for-vat.cy" target="_blank" rel="noreferrer noopener"> ei gofrestru ar gyfer y gwasanaeth Troi Treth yn Ddigidol ar gyfer TAW (yn agor tab newydd)</a>.
 agent.services.account.section1.col2.h3=Rheoli manylion TAW eich cleient
-agent.services.account.section1.col2.link=Defnyddiwch y gwasanaeth hwn ar gyfer cleientiaid sydd wedi cofrestru ar gyfer Troi Treth yn Ddigidol neu sydd wedi optio allan o’r cynllun (yn agor tab newydd).
+agent.services.account.section1.col2.link=Defnyddiwch y gwasanaeth hwn ar gyfer cleientiaid sydd wedi cofrestru ar gyfer Troi Treth yn Ddigidol neu sydd wedi optio allan o’r cynllun (yn agor tab newydd)
 agent.services.account.section1.suspended.h3=Rydym wedi cyfyngu ar eich defnydd o’r gwasanaeth hwn dros dro
 agent.services.account.section1.suspended.p1=Gwnaethom hyn oherwydd ein bod wedi gohirio eich cod asiant. Rydym wedi anfon llythyr atoch yn cadarnhau hyn.
 agent.services.account.section1.suspended.p2=Mae hyn yn golygu na fyddwch yn gallu defnyddio’r gwasanaeth hwn.
 
 agent.services.account.sectionITSA.h2=Troi Treth yn Ddigidol ar gyfer Treth Incwm
 agent.services.account.sectionITSA.col1.h3=Cyn i chi ddechrau
-agent.services.account.sectionITSA.col1.p=Yn gyntaf mae’n rhaid i chi gael awdurdodiad gan eich cleient. Gallwch wneud hyn drwy<a class="govuk-link" href="{0}"> gopïo’ch awdurdodiadau drosodd</a> neu <a class="govuk-link" href="{1}">wneud cais am awdurdodiad.</a>
-agent.services.account.sectionITSA.col1.link=Os ydych yn copïo manylion eich cleient drosodd, bydd angen i chi<a class="govuk-link" href="https://www.gov.uk/guidance/sign-up-your-client-for-making-tax-digital-for-income-tax.cy" target="_blank" rel="noreferrer noopener"> ei gofrestru ar gyfer y cynllun Troi Treth yn Ddigidol ar gyfer Treth Incwm (yn agor tab newydd).</a>
+agent.services.account.sectionITSA.col1.p=Yn gyntaf mae’n rhaid i chi gael awdurdodiad gan eich cleient. Gallwch wneud hyn drwy<a class="govuk-link" href="{0}"> gopïo’ch awdurdodiadau drosodd</a> neu <a class="govuk-link" href="{1}">wneud cais am awdurdodiad</a>.
+agent.services.account.sectionITSA.col1.link=Os ydych yn copïo manylion eich cleient drosodd, bydd angen i chi<a class="govuk-link" href="https://www.gov.uk/guidance/sign-up-your-client-for-making-tax-digital-for-income-tax.cy" target="_blank" rel="noreferrer noopener"> ei gofrestru ar gyfer y cynllun Troi Treth yn Ddigidol ar gyfer Treth Incwm (yn agor tab newydd)</a>
 agent.services.account.sectionITSA.col2.h3=Rheoli manylion Treth Incwm eich cleient
-agent.services.account.sectionITSA.col2.link1.text=Bwrw golwg dros fanylion Treth Incwm eich cleient.
-agent.services.account.sectionITSA.col2.link2.text=Helpu cleientiaid i wirio a ydynt yn gymwys (yn agor tab newydd).
+agent.services.account.sectionITSA.col2.link1.text=Bwrw golwg dros fanylion Treth Incwm eich cleient
+agent.services.account.sectionITSA.col2.link2.text=Helpu cleientiaid i wirio a ydynt yn gymwys (yn agor tab newydd)
 
 agent.services.account.trusts-section.h2=Ymddiriedolaethau ac ystadau
 agent.services.account.trusts-section.col1.h3=Cyn i chi ddechrau
-agent.services.account.trusts-section.col1.register-trust.p=Cyn i chi<a class="govuk-link" href="{0}"> ofyn i’ch cleient eich awdurdodi, rhaid eich bod chi neu’ch cleient wedi<a class="govuk-link" href="https://www.gov.uk/guidance/register-your-clients-trust.cy" target="_blank" rel="noreferrer noopener"> cofrestru’r ymddiriedolaeth (yn agor tab newydd)</a> neu’r<a class="govuk-link" href="https://www.gov.uk/guidance/register-your-clients-estate" target="_blank" rel="noreferrer noopener"> ystâd (yn agor tab newydd).</a>
+agent.services.account.trusts-section.col1.register-trust.p=Cyn i chi<a class="govuk-link" href="{0}"> ofyn i’ch cleient eich awdurdodi, rhaid eich bod chi neu’ch cleient wedi<a class="govuk-link" href="https://www.gov.uk/guidance/register-your-clients-trust.cy" target="_blank" rel="noreferrer noopener"> cofrestru’r ymddiriedolaeth (yn agor tab newydd)</a> neu’r<a class="govuk-link" href="https://www.gov.uk/guidance/register-your-clients-estate" target="_blank" rel="noreferrer noopener"> ystâd (yn agor tab newydd)</a>.
 agent.services.account.trusts-section.col1.register-estate.p=Bydd angen i’ch cleient<a class="govuk-link" href="https://www.gov.uk/guidance/manage-your-trusts-registration-service#how-to-use-the-online-service"> hawlio’r ymddiriedolaeth</a> neu’r ystâd.
 agent.services.account.trusts-section.col2.h3=Rheoli ymddiriedolaeth eich cleient
-agent.services.account.trusts-section.col2.register-trust-link.text=Defnyddiwch y gwasanaeth hwn i ddiweddaru manylion ymddiriedolaeth neu ystâd eich cleient neu i ddatgan dim newidiadau ar y gofrestr ymddiriedolaethau.
+agent.services.account.trusts-section.col2.register-trust-link.text=Defnyddiwch y gwasanaeth hwn i ddiweddaru manylion ymddiriedolaeth neu ystâd eich cleient neu i ddatgan dim newidiadau ar y gofrestr ymddiriedolaethau
 
 agent.services.account.paye-section.h2=Bwrw golwg dros gofnod incwm TWE cleient
 agent.services.account.paye-section.text=Cael mynediad at gofnod incwm TWE cleient i’ch helpu i lenwi ei Ffurflen Dreth Hunanasesiad.
@@ -69,12 +69,12 @@ agent.services.account.section4.col2.link2=Copïo rhagor o awdurdodiadau cleient
 agent.services.account.section4.col2.link3=Canslo awdurdodiad cleient
 
 agent.services.account.help.h2=Help ac arweiniad
-agent.services.account.help.link=Rhagor o wybodaeth am sut i ddefnyddio’ch cyfrif gwasanaethau asiant a sut y gall cleientiaid eich awdurdodi i reoli eu trethi.
+agent.services.account.help.link=Rhagor o wybodaeth am sut i ddefnyddio’ch cyfrif gwasanaethau asiant a sut y gall cleientiaid eich awdurdodi i reoli eu trethi
 
 manage.account.heading=Rheoli’r cyfrif
 manage.account.p=Gallwch ganiatáu i ddefnyddwyr eraill yn eich sefydliad gael mynediad at y cyfrif gwasanaethau asiant hwn, a rheoli eu mynediad.
 manage.account.add-user=Ychwanegu defnyddiwr newydd
-manage.account.manage-user-access=Rheoli mynediad defnyddwyr at eich cyfrif gwasanaethau asiant (yn agor tab newydd).
+manage.account.manage-user-access=Rheoli mynediad defnyddwyr at eich cyfrif gwasanaethau asiant (yn agor tab newydd)
 manage.account.account-details=Bwrw golwg dros y manylion cyswllt sydd gennym ar gyfer eich busnes
 
 agent.services.account.h2.your-clients=Eich cleientiaid
@@ -108,14 +108,14 @@ suspension-warning.header=Rydym wedi cyfyngu ar eich defnydd o’r gwasanaeth hw
 suspension-warning.p1=Gwnaethom hyn oherwydd ein bod wedi gohirio eich cod asiant. Rydym wedi anfon llythyr atoch yn cadarnhau hyn.
 suspension-warning.p2.single=Mae hyn yn golygu na fyddwch yn gallu defnyddio’r gwasanaeth hwn i ofyn am awdurdodiad er mwyn {0}.
 suspension-warning.p2.multi=Mae hyn yn golygu na fyddwch yn gallu defnyddio’r gwasanaeth hwn i ofyn i gleientiaid am awdurdodiad i wneud y canlynol:
-suspension-warning.single.ITSA=anfon diweddariadau Treth Incwm cleient drwy feddalwedd
-suspension-warning.multi.ITSA=anfon eu diweddariadau Treth Incwm drwy feddalwedd
+suspension-warning.single.ITSA=anfon diweddariadau Troi Treth yn Ddigidol ar gyfer Treth Incwm cleient drwy feddalwedd
+suspension-warning.multi.ITSA=anfon eu diweddariadau Troi Treth yn Ddigidol ar gyfer Treth Incwm drwy feddalwedd
 suspension-warning.single.VATC=cyflwyno Ffurflenni TAW cleient drwy feddalwedd
 suspension-warning.multi.VATC=cyflwyno eu Ffurflenni TAW drwy feddalwedd
 suspension-warning.single.TRS=cynnal ymddiriedolaeth neu ystâd
 suspension-warning.multi.TRS=cynnal ymddiriedolaeth neu ystâd
-suspension-warning.single.CGT=rheoli Treth Enillion Cyfalaf cleient ar warediadau eiddo yn y DU
-suspension-warning.multi.CGT=rheoli eu Treth Enillion Cyfalaf ar warediadau eiddo yn y DU
+suspension-warning.single.CGT=rheoli cyfrif Treth Enillion Cyfalaf ar eiddo yn y DU ar gyfer cleient
+suspension-warning.multi.CGT=rheoli ei gyfrif Treth Enillion Cyfalaf ar eiddo yn y DU
 suspension-warning.p3=Gallwch barhau i gael mynediad at unrhyw wasanaeth arall sydd ar gael i chi.
 suspension-warning.p4=Os na chawsoch ein llythyr, neu os ydych yn meddwl ein bod wedi gwneud camgymeriad, defnyddiwch y cysylltiad “cael help gyda’r dudalen hon”.
 suspension-warning.button=Yn eich blaen
@@ -196,7 +196,7 @@ help.heading=Help ac arweiniad
 help.p1=Rhagor o wybodaeth am sut i ddefnyddio’ch cyfrif gwasanaethau asiant a sut y gall cleientiaid eich awdurdodi i reoli eu trethi.
 help.authorised.h2=Cael awdurdodiad
 help.authorised.link=Awdurdodi asiant
-help.mtd.h2=Troi Treth yn Ddigidol ar gyfer TAW
+help.mtd.h2=TAW
 help.mtd.link1=<a class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noopener" href="https://www.gov.uk/guidance/making-tax-digital-for-vat-as-an-agent-step-by-step.cy">Troi Treth yn Ddigidol ar gyfer TAW fel asiant: cam wrth gam</a>
 help.mtd.link2=Sut i gadw cofnodion digidol a chyflwyno Ffurflenni TAW ar gyfer Troi Treth yn Ddigidol ar gyfer TAW
 help.mtd.link3=<a class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noopener" href="https://www.gov.uk/guidance/sign-up-your-client-for-making-tax-digital-for-vat.cy">Sut i gofrestru cleientiaid ar gyfer Troi Treth yn Ddigidol ar gyfer TAW</a>
