@@ -23,6 +23,7 @@ agent.services.account.section1.h2=TAW
 agent.services.account.section1.col1.h3=Cyn i chi ddechrau
 agent.services.account.section1.col1.p=Yn gyntaf mae’n rhaid i chi gael awdurdodiad gan eich cleient. Gallwch wneud hyn drwy<a class="govuk-link" href="{0}"> gopïo’ch awdurdodiadau drosodd</a> neu <a class="govuk-link" href="{1}">wneud cais am awdurdodiad</a>.
 agent.services.account.section1.col1.link=Os ydych yn copïo manylion eich cleient drosodd, bydd angen i chi<a class="govuk-link" href="https://www.gov.uk/guidance/sign-up-for-making-tax-digital-for-vat.cy" target="_blank" rel="noreferrer noopener"> ei gofrestru ar gyfer y gwasanaeth Troi Treth yn Ddigidol ar gyfer TAW (yn agor tab newydd)</a>.
+agent.services.account.section1.col1.p2=Not all of your clients may have signed up to Making Tax Digital for VAT. If your client is not signed up, you can still manage and view their VAT details using this account.
 agent.services.account.section1.col2.h3=Rheoli manylion TAW eich cleient
 agent.services.account.section1.col2.link=Defnyddiwch y gwasanaeth hwn ar gyfer cleientiaid sydd wedi cofrestru ar gyfer Troi Treth yn Ddigidol neu sydd wedi optio allan o’r cynllun (yn agor tab newydd)
 agent.services.account.section1.suspended.h3=Rydym wedi cyfyngu ar eich defnydd o’r gwasanaeth hwn dros dro

@@ -22,9 +22,10 @@ agent.services.account.inset=You cannot view your client lists in your agent ser
 agent.services.account.section1.h2=VAT
 agent.services.account.section1.col1.h3=Before you start
 agent.services.account.section1.col1.p=You must first get an authorisation from your client. You can do this by<a class="govuk-link" href="{0}"> copying across your authorisations</a> or <a class="govuk-link" href="{1}">requesting an authorisation</a>.
-agent.services.account.section1.col1.link=If you copy your client across, you will need to<a class="govuk-link" href="https://www.gov.uk/guidance/sign-up-for-making-tax-digital-for-vat" target="_blank" rel="noreferrer noopener"> sign them up to Making Tax Digital for VAT (opens in a new tab)</a>.
-agent.services.account.section1.col2.h3=Manage your client’s VAT details
-agent.services.account.section1.col2.link=Use this service for clients who have signed up for or opted out of Making Tax Digital (opens in a new tab)
+agent.services.account.section1.col1.link=If you copy your client across, you may need to<a class="govuk-link" href="https://www.gov.uk/guidance/sign-up-for-making-tax-digital-for-vat" target="_blank" rel="noreferrer noopener"> sign them up to Making Tax Digital for VAT (opens in a new tab)</a>.
+agent.services.account.section1.col1.p2=Not all of your clients may have signed up to Making Tax Digital for VAT. If your client is not signed up, you can still manage and view their VAT details using this account.
+agent.services.account.section1.col2.h3=Manage your client’s VAT
+agent.services.account.section1.col2.link=Manage and view your clients’ VAT details whether they have signed up to Making Tax Digital for VAT or not (opens in a new tab)
 agent.services.account.section1.suspended.h3=We have temporarily limited your use of this service
 agent.services.account.section1.suspended.p1=We did this because we have suspended your agent code. We sent you a letter to confirm this.
 agent.services.account.section1.suspended.p2=This means you will not be able to use this service.
