@@ -22,10 +22,10 @@ agent.services.account.inset=Ni allwch fwrw golwg dros eich rhestrau o gleientia
 agent.services.account.section1.h2=TAW
 agent.services.account.section1.col1.h3=Cyn i chi ddechrau
 agent.services.account.section1.col1.p=Yn gyntaf mae’n rhaid i chi gael awdurdodiad gan eich cleient. Gallwch wneud hyn drwy<a class="govuk-link" href="{0}"> gopïo’ch awdurdodiadau drosodd</a> neu <a class="govuk-link" href="{1}">wneud cais am awdurdodiad</a>.
-agent.services.account.section1.col1.link=Os ydych yn copïo manylion eich cleient drosodd, bydd angen i chi<a class="govuk-link" href="https://www.gov.uk/guidance/sign-up-for-making-tax-digital-for-vat.cy" target="_blank" rel="noreferrer noopener"> ei gofrestru ar gyfer y gwasanaeth Troi Treth yn Ddigidol ar gyfer TAW (yn agor tab newydd)</a>.
-agent.services.account.section1.col1.p2=Not all of your clients may have signed up to Making Tax Digital for VAT. If your client is not signed up, you can still manage and view their VAT details using this account.
+agent.services.account.section1.col1.link=Os ydych yn copïo manylion eich cleient drosodd, mae’n bosibl y bydd angen i chi<a class="govuk-link" href="https://www.gov.uk/guidance/sign-up-for-making-tax-digital-for-vat.cy" target="_blank" rel="noreferrer noopener"> ei gofrestru ar gyfer y cynllun Troi Treth yn Ddigidol ar gyfer TAW (yn agor tab newydd)</a>.
+agent.services.account.section1.col1.p2=Efallai nad yw bob un o’ch cleientiaid wedi cofrestru ar gyfer y cynllun Troi Treth yn Ddigidol ar gyfer TAW. Os nad yw’ch cleient wedi cofrestru, gallwch dal i reoli a bwrw golwg dros ei fanylion TAW drwy ddefnyddio’r cyfrif hwn.
 agent.services.account.section1.col2.h3=Rheoli manylion TAW eich cleient
-agent.services.account.section1.col2.link=Defnyddiwch y gwasanaeth hwn ar gyfer cleientiaid sydd wedi cofrestru ar gyfer Troi Treth yn Ddigidol neu sydd wedi optio allan o’r cynllun (yn agor tab newydd)
+agent.services.account.section1.col2.link=Rheoli a bwrw golwg dros fanylion TAW eich cleientiaid, p’un a ydynt wedi cofrestru ar gyfer y cynllun Troi Treth yn Ddigidol ar gyfer TAW neu beidio (yn agor tab newydd)
 agent.services.account.section1.suspended.h3=Rydym wedi cyfyngu ar eich defnydd o’r gwasanaeth hwn dros dro
 agent.services.account.section1.suspended.p1=Gwnaethom hyn oherwydd ein bod wedi gohirio eich cod asiant. Rydym wedi anfon llythyr atoch yn cadarnhau hyn.
 agent.services.account.section1.suspended.p2=Mae hyn yn golygu na fyddwch yn gallu defnyddio’r gwasanaeth hwn.
@@ -199,7 +199,7 @@ help.authorised.h2=Cael awdurdodiad
 help.authorised.link=Awdurdodi asiant
 help.mtd.h2=TAW
 help.mtd.link1=<a class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noopener" href="https://www.gov.uk/guidance/making-tax-digital-for-vat-as-an-agent-step-by-step.cy">Troi Treth yn Ddigidol ar gyfer TAW fel asiant: cam wrth gam</a>
-help.mtd.link2=Sut i gadw cofnodion digidol a chyflwyno Ffurflenni TAW ar gyfer Troi Treth yn Ddigidol ar gyfer TAW
+help.mtd.link2=Cadw cofnodion TAW, gan gynnwys y cynllun Troi Treth yn Ddigidol ar gyfer TAW
 help.mtd.link3=<a class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noopener" href="https://www.gov.uk/guidance/sign-up-your-client-for-making-tax-digital-for-vat.cy">Sut i gofrestru cleientiaid ar gyfer Troi Treth yn Ddigidol ar gyfer TAW</a>
 help.mtd.link4=Help a chymorth ar gyfer Troi Treth yn Ddigidol (fideos a gweminarau)
 help.mtd.link5=<a class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noopener" href="https://www.gov.uk/guidance/update-your-clients-business-details-if-theyre-part-of-the-making-tax-digital-for-vat-pilot.cy">Sut i ddiwygio manylion eich cleientiaid os ydynt eisoes wedi’u cofrestru</a>
