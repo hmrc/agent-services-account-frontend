@@ -126,53 +126,6 @@ global.error.500.title=Mae’n ddrwg gennym, rydym yn profi anawsterau technegol
 global.error.500.heading=Mae’n ddrwg gennym, rydym yn profi anawsterau technegol
 global.error.500.message=Rhowch gynnig arall arni mewn ychydig o funudau.
 
-
-accessibility.statement.title=Datganiad hygyrchedd ar gyfer cyfrif gwasanaethau asiant
-accessibility.statement.h1=Datganiad hygyrchedd ar gyfer cyfrif gwasanaethau asiant
-accessibility.statement.intro.p1=Mae’r datganiad hygyrchedd hwn yn esbonio pa mor hygyrch yw’r gwasanaeth hwn, beth i’w wneud os ydych yn cael anhawster wrth ei ddefnyddio, a sut i roi gwybod am broblemau hygyrchedd gyda’r gwasanaeth.
-accessibility.statement.intro.p2=Mae’r gwasanaeth hwn yn rhan o wefan ehangach GOV.UK. Mae <a href="https://www.gov.uk/help/accessibility">datganiad hygyrchedd</a> ar wahân ar gyfer prif wefan GOV.UK.
-accessibility.statement.intro.p3=Mae’r dudalen hon yn cynnwys gwybodaeth am y gwasanaeth cyfrif gwasanaethau asiant yn unig, sydd ar gael yn <a href="https://www.tax.service.gov.uk/agent-subscription/task-list">www.tax.service.gov.uk/agent-subscription/task-list</a>.
-
-accessibility.statement.using.heading=Defnyddio’r gwasanaeth hwn
-accessibility.statement.using.p1=Mae’r gwasanaeth hwn yn eich galluogi i reoli’ch cyfrif gwasanaethau asiant CThEM ar gyfer eich cwmni asiant treth.
-accessibility.statement.using.p2=Mae’r gwasanaeth hwn yn cael ei redeg gan Gyllid a Thollau EM (CThEM). Rydym am i gymaint o bobl â phosibl allu defnyddio’r gwasanaeth hwn. Mae hyn yn golygu y dylech allu gwneud y canlynol:
-accessibility.statement.using.l1=newid lliwiau, lefelau cyferbyniad a ffontiau
-accessibility.statement.using.l2=chwyddo’r sgrin hyd at 300% heb i’r testun ddisgyn oddi ar y sgrin
-accessibility.statement.using.l3=mynd o ddechrau’r gwasanaeth i’r diwedd gan ddefnyddio bysellfwrdd yn unig
-accessibility.statement.using.l4=mynd o ddechrau’r gwasanaeth i’r diwedd gan ddefnyddio meddalwedd adnabod lleferydd
-accessibility.statement.using.l5=gwrando ar y gwasanaeth gan ddefnyddio darllenydd sgrin (gan gynnwys y fersiynau diweddaraf o JAWS, NVDA a VoiceOver)
-accessibility.statement.using.p3=Rydym hefyd wedi sicrhau bod y testun a ddefnyddir yn y gwasanaeth mor syml â phosibl i’w ddeall.
-accessibility.statement.using.p4=Mae gan <a class="govuk-link" href="https://mcmw.abilitynet.org.uk/">AbilityNet</a> gyngor ar wneud eich dyfais yn haws i’w defnyddio os oes gennych anabledd.
-
-accessibility.statement.accessible.heading=Pa mor hygyrch yw’r gwasanaeth hwn
-accessibility.statement.accessible.p1=Mae’r gwasanaeth hwn yn cydymffurfio’n rhannol â <a class="govuk-link" href="https://www.w3.org/TR/WCAG21/">safon AA Canllawiau Hygyrchedd Cynnwys y We, fersiwn 2.1</a>.
-
-accessibility.statement.whattodo.heading=Beth i’w wneud os ydych yn cael anhawster wrth ddefnyddio’r gwasanaeth hwn
-accessibility.statement.whattodo.p1=Os ydych yn cael anhawster wrth ddefnyddio’r gwasanaeth hwn, defnyddiwch y cysylltiad ‘Help gyda’r dudalen hon’ ar y dudalen yn y gwasanaeth ar-lein.
-
-accessibility.statement.reporting.heading=Rhoi gwybod am broblemau hygyrchedd gyda’r gwasanaeth hwn
-accessibility.statement.reporting.p1=Rydym bob amser yn ceisio gwella hygyrchedd y gwasanaeth hwn. Os byddwch yn dod o hyd i unrhyw broblemau nad ydynt wedi’u rhestru ar y dudalen hon, neu os ydych o’r farn nad ydym yn bodloni gofynion hygyrchedd, rhowch wybod am y <a href="{0}" target="_blank">broblem hygyrchedd (yn agor tab newydd)</a>.
-
-accessibility.statement.enforcement.heading=Beth i’w wneud os nad ydych yn hapus â sut rydym yn ateb eich cwyn
-accessibility.statement.enforcement.p1=Mae’r Comisiwn Cydraddoldeb a Hawliau Dynol (EHRC) yn gyfrifol am orfodi Rheoliadau Hygyrchedd Cyrff Sector Cyhoeddus (Gwefannau a Chymwysiadau Symudol) (Rhif 2) 2018 (y ‘rheoliadau hygyrchedd’). Os nad ydych yn hapus â sut rydym yn ateb eich cwyn,  <a href="https://www.equalityadvisoryservice.com/">cysylltwch â’r Gwasanaeth Cynghori a Chymorth Cydraddoldeb</a> (EASS), neu’r <a href="https://www.equalityni.org/Home">Equality Commission for Northern Ireland</a> (ECNI) os ydych yn byw yng Ngogledd Iwerddon.
-
-accessibility.statement.contacting.heading=Cysylltu â ni dros y ffôn neu gael ymweliad personol gennym
-accessibility.statement.contacting.p1=Rydym yn cynnig gwasanaeth text relay os ydych yn fyddar, â nam ar eich clyw neu os oes gennych nam ar eich lleferydd.
-accessibility.statement.contacting.p2=Gallwn ddarparu dehonglydd Iaith Arwyddion Prydain (BSL), neu gallwch drefnu ymweliad gan ymgynghorydd CThEM i’ch helpu i gwblhau’r gwasanaeth.
-accessibility.statement.contacting.p3=Gwybodaeth am sut i <a href="https://www.gov.uk/dealing-hmrc-additional-needs">gysylltu â ni</a>.
-
-accessibility.statement.technical.heading=Gwybodaeth dechnegol am hygyrchedd y gwasanaeth hwn
-accessibility.statement.technical.p1=Mae CThEM wedi ymrwymo i wneud y gwasanaeth hwn yn hygyrch, yn unol â Rheoliadau Hygyrchedd Cyrff Sector Cyhoeddus (Gwefannau a Chymwysiadau Symudol) (Rhif 2) 2018.
-accessibility.statement.technical.p2=Mae’r gwasanaeth hwn yn cydymffurfio’n rhannol â <a href="https://www.w3.org/TR/WCAG21/">safon AA Canllawiau Hygyrchedd Cynnwys y We, fersiwn 2.1</a>.
-
-accessibility.statement.technical.p3=Rydym wedi cynnal adolygiad arbenigol mewnol o’r gwasanaeth ac wedi trwsio pob mater hysbys o ran hygyrchedd.
-accessibility.statement.technical.p4=Byddwn yn trefnu archwiliad allanol ffurfiol o’r gwasanaeth cyfan cyn gynted â phosibl, fel rhan o’n cynllun ar gyfer sicrhau bod y gwasanaeth yn cydymffurfio’n llawn.
-
-accessibility.statement.howtested.heading=Sut gwnaethom brofi’r gwasanaeth hwn
-accessibility.statement.howtested.p1="Cafodd y gwasanaeth ei brofi ddiwethaf ar 22 Awst 2019 a gwiriwyd ei fod yn cydymffurfio â safon AA Canllawiau Hygyrchedd Cynnwys y We, fersiwn 2.1."
-accessibility.statement.howtested.p2="Profwyd y gwasanaeth llawn gan CThEM, ac roedd y gwaith o brofi’r gwasanaeth yn cynnwys defnyddwyr anabl."
-accessibility.statement.howtested.p3=Paratowyd y dudalen hon ar 23 Medi 2019. Cafodd ei diweddaru ddiwethaf ar 23 Medi 2019.
-
 #session time out
 timeout-dialog.p1=Am resymau diogelwch, cewch eich allgofnodi o’ch cyfrif gwasanaethau asiant ymhen
 
@@ -190,7 +143,7 @@ survey.empty=Dewiswch opsiwn
 #signed-out
 signed-out.header=Rydych wedi cael eich allgofnodi
 signed-out.p1=Nid ydych wedi gwneud dim byd ers {0}, felly rydym wedi’ch allgofnodi er mwyn cadw’ch cyfrif yn ddiogel.
-signed-out.p2=<a href="{0}">Mewngofnodwch eto</a> i ddefnyddio’r gwasanaeth hwn.
+signed-out.p2=<a class="govuk-link" href="{0}">Mewngofnodwch eto</a> i ddefnyddio’r gwasanaeth hwn.
 
 help.title=Help ac arweiniad
 help.heading=Help ac arweiniad
@@ -229,7 +182,7 @@ label.beta.yours=– bydd eich
 
 # Account Details
 account-details.title=Manylion y cyfrif
-account-details.inset=Bydd angen i chi ysgrifennu atom er mwyn newid y manylion hyn. <a href={0} target="_blank" rel="noreferrer noopener">Dysgwch ragor drwy ddarllen yr arweiniad (yn agor tab newydd)</a>. Gallwch ond newid eich manylion os ydych yn gyfarwyddwr, ysgrifennydd cwmni, unig fasnachwr, perchennog neu’n bartner.
+account-details.inset=Bydd angen i chi ysgrifennu atom er mwyn newid y manylion hyn. <a class="govuk-link" href={0} target="_blank" rel="noreferrer noopener">Dysgwch ragor drwy ddarllen yr arweiniad (yn agor tab newydd)</a>. Gallwch ond newid eich manylion os ydych yn gyfarwyddwr, ysgrifennydd cwmni, unig fasnachwr, perchennog neu’n bartner.
 account-details.summary-list.header=Manylion y cyfrif gwasanaethau asiant
 account-details.summary-list.email=Cyfeiriad e-bost
 account-details.summary-list.name=Enw
