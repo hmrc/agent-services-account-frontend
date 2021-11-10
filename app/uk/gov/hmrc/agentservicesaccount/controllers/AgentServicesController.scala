@@ -25,6 +25,7 @@ import uk.gov.hmrc.agentservicesaccount.auth.AuthActions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AfiRelationshipConnector, AgentClientAuthorisationConnector}
 import uk.gov.hmrc.agentservicesaccount.views.html.pages._
+import uk.gov.hmrc.agentservicesaccount.auth.CallOps._
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -77,7 +78,7 @@ class AgentServicesController @Inject()(
                   irvAllowed,
                   customDimension,
                   agentInfo.isAdmin,
-                  isSuspendedForVat.toBoolean))
+                  isSuspendedForVat.toBoolean)).addingToSession(toReturnFromMapping)
 
             case None =>
               agentClientAuthorisationConnector.getSuspensionDetails().map { suspensionDetails =>
@@ -87,7 +88,7 @@ class AgentServicesController @Inject()(
                     irvAllowed,
                     customDimension,
                     agentInfo.isAdmin,
-                    suspensionDetails.suspendedRegimes.contains("VATC")))
+                    suspensionDetails.suspendedRegimes.contains("VATC"))).addingToSession(toReturnFromMapping)
               }
           }
         } else
@@ -97,9 +98,14 @@ class AgentServicesController @Inject()(
               irvAllowed,
               customDimension,
               agentInfo.isAdmin,
-              isSuspendedForVat = false))
+              isSuspendedForVat = false)).addingToSession(toReturnFromMapping)
       }
     }
+  }
+
+  private def toReturnFromMapping()(implicit request: Request[AnyContent]) = {
+    val sessionKeyUsedInMappingService = "OriginForMapping"
+    sessionKeyUsedInMappingService -> localFriendlyUrl(env)(request.path,request.host)
   }
 
   val showSuspendedWarning: Action[AnyContent] = Action.async { implicit request =>
