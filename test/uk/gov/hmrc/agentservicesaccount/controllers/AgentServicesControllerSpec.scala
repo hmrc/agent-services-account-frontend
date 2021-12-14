@@ -18,6 +18,7 @@ package uk.gov.hmrc.agentservicesaccount.controllers
 
 
 import play.api.i18n.{Lang, Messages, MessagesApi}
+import play.api.mvc.Session
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.api.test.Helpers
@@ -80,6 +81,38 @@ class AgentServicesControllerSpec extends BaseISpec {
 
       status(response) shouldBe SEE_OTHER
       Helpers.redirectLocation(response) shouldBe Some(routes.AgentServicesController.showSuspendedWarning().url)
+    }
+
+    "redirect to suspended warning when suspension is enabled and user is suspended for AGSV" in {
+      val controllerWithSuspensionEnabled =
+        appBuilder(Map("features.enable-agent-suspension" -> true))
+          .build()
+          .injector.instanceOf[AgentServicesController]
+
+      givenAuthorisedAsAgentWith(arn)
+      givenSuspensionStatus(SuspensionDetails(suspensionStatus = true, Some(Set("AGSV"))))
+
+      val response = controllerWithSuspensionEnabled.root()(FakeRequest("GET", "/"))
+
+      status(response) shouldBe SEE_OTHER
+      Helpers.redirectLocation(response) shouldBe Some(routes.AgentServicesController.showSuspendedWarning().url)
+      Helpers.session(response) shouldBe Session(Map("suspendedServices" -> "ITSA,VATC,TRS,CGT", "isSuspendedForVat" -> "true"))
+    }
+
+    "redirect to suspended warning when suspension is enabled and user is suspended for ALL" in {
+      val controllerWithSuspensionEnabled =
+        appBuilder(Map("features.enable-agent-suspension" -> true))
+          .build()
+          .injector.instanceOf[AgentServicesController]
+
+      givenAuthorisedAsAgentWith(arn)
+      givenSuspensionStatus(SuspensionDetails(suspensionStatus = true, Some(Set("ALL"))))
+
+      val response = controllerWithSuspensionEnabled.root()(FakeRequest("GET", "/"))
+
+      status(response) shouldBe SEE_OTHER
+      Helpers.redirectLocation(response) shouldBe Some(routes.AgentServicesController.showSuspendedWarning().url)
+      Helpers.session(response) shouldBe Session(Map("suspendedServices" -> "ITSA,VATC,TRS,CGT", "isSuspendedForVat" -> "true"))
     }
 
     "throw an exception when suspension is enabled and suspension status returns NOT_FOUND for user" in {
