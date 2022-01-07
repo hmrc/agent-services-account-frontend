@@ -56,6 +56,20 @@ class SignOutControllerSpec extends BaseISpec {
       Helpers.redirectLocation(result).get shouldBe appConfig.signOutUrlWithSurvey("AGENTSUB")
     }
 
+    "redirect to service select survey if choosing 'accessing a service'" in {
+      val result = controller.submitSurvey(FakeRequest("POST", "/").withFormUrlEncodedBody("surveyKey" -> "ACCESSINGSERVICE"))
+
+      status(result) shouldBe 303
+      Helpers.redirectLocation(result).get shouldBe routes.SignOutController.showWhichService().url
+    }
+
+    "from 'which service' page, redirect to survey" in {
+      val result = controller.submitWhichService(FakeRequest("POST", "/").withFormUrlEncodedBody("service" -> "VAT"))
+
+      status(result) shouldBe 303
+      Helpers.redirectLocation(result).get shouldBe appConfig.signOutUrlWithSurvey("VATCA")
+    }
+
     "return bad request if missing survey body" in {
       val result = controller.submitSurvey(FakeRequest("POST", "/"))
 

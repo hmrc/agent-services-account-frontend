@@ -21,22 +21,22 @@ import play.api.data._
 import play.api.data.format.Formats._
 import play.api.i18n.Messages
 
-object SignOutForm {
+object FeedbackWhichServiceForm {
 
   val upperCaseText: Mapping[String] = of[String].transform(_.trim.toUpperCase, identity)
 
-  val supportedSurveyKeys = Set("AGENTSUB", "AGENTHOME", "INVITAGENT", "ACCESSINGSERVICE")
+  val supportedSurveyKeys = Set("VAT", "IT", "TRUST", "IR", "CGT", "OTHER")
 
   val form: Form[String] = Form(
     single(
-      "surveyKey" -> optional(upperCaseText)
+      "service" -> optional(upperCaseText)
           .verifying("survey.empty", sk => supportedSurveyKeys.contains(sk.getOrElse("")))
           .transform(_.getOrElse(""), (Some(_)): String => Option[String])
     )
   )
 
   def surveyKeys(implicit messages: Messages) = supportedSurveyKeys.map(key =>
-    key -> Messages(s"survey.form.label.${key.toLowerCase}")
+    key -> Messages(s"survey.form.service.${key.toLowerCase}")
   ).toSeq
 
 }
