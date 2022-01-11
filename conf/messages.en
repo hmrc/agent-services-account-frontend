@@ -139,6 +139,15 @@ survey.error.summary=There is a problem
 survey.form.label.agentsub=Creating an agent services account
 survey.form.label.agenthome=Accessing my agent services account
 survey.form.label.invitagent=Asking a client for authorisation
+survey.form.label.accessingService=Accessing a specific tax service on behalf of my client
+survey.whichService.title=Which tax service do you want to give us feedback about?
+survey.whichService.hint=To direct your feedback to the right team, we need to ask you some questions about the service you used.
+survey.whichService.label.vat=VAT
+survey.whichService.label.it=Making Tax Digital for Income Tax
+survey.whichService.label.trust=Manage a trust or estate
+survey.whichService.label.ir=View income record
+survey.whichService.label.cgt=Capital Gains Tax on a UK property
+survey.whichService.label.other=Any other tax service
 survey.button=Continue
 survey.empty=Please select an option
 

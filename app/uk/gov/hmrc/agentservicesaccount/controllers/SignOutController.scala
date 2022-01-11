@@ -21,8 +21,9 @@ import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.forms.SignOutForm
+import uk.gov.hmrc.agentservicesaccount.forms.{FeedbackWhichServiceForm, SignOutForm}
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.survey
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.survey_which_service
 import uk.gov.hmrc.agentservicesaccount.views.html.signed_out
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
@@ -33,6 +34,7 @@ class SignOutController @Inject()(
   override val messagesApi: MessagesApi,
   cc: MessagesControllerComponents,
   surveyView: survey,
+  whichServiceView: survey_which_service,
   signedOutView: signed_out)
     extends FrontendController(cc) with I18nSupport {
 
@@ -46,7 +48,11 @@ class SignOutController @Inject()(
     }
 
     val successFunction = { key: String =>
-      Future successful Redirect(appConfig.signOutUrlWithSurvey(key))
+      key match {
+        case "ACCESSINGSERVICE" if appConfig.feedbackSurveyServiceSelect => Future successful Redirect(routes.SignOutController.showWhichService())
+        case k => Future successful Redirect(appConfig.signOutUrlWithSurvey(key))
+
+      }
     }
 
     SignOutForm.form
@@ -56,6 +62,44 @@ class SignOutController @Inject()(
         successFunction
       )
   }
+
+  def showWhichService: Action[AnyContent] = Action.async { implicit request =>
+    if (appConfig.feedbackSurveyServiceSelect)
+      Future successful Ok(whichServiceView(FeedbackWhichServiceForm.form))
+    else Future.failed(new UnsupportedOperationException("Display of this page is disabled by configuration."))
+  }
+
+  def submitWhichService: Action[AnyContent] = Action.async { implicit request =>
+    val errorFunction = { formWithErrors: Form[String] =>
+      Future successful BadRequest(whichServiceView(formWithErrors))
+    }
+
+    // APB-5437
+    val feedbackKeyMapping = Map(
+      "VAT" -> "VATCA",
+      "IT" -> "ITVC",
+      "TRUST" -> "trusts",
+      "IR" -> "AGENTINDIV",
+      "CGT" -> "AGENTHOME",
+      "OTHER" -> "AGENTHOME"
+    )
+
+    val successFunction = { key: String =>
+      Future successful Redirect(appConfig.signOutUrlWithSurvey(feedbackKeyMapping.apply(key)))
+    }
+
+    if (appConfig.feedbackSurveyServiceSelect) {
+      FeedbackWhichServiceForm.form
+        .bindFromRequest()
+        .fold(
+          errorFunction,
+          successFunction
+        )
+    } else {
+      Future.failed(new UnsupportedOperationException("Display of this page is disabled by configuration."))
+    }
+  }
+
 
   def signOut: Action[AnyContent] = Action.async {
     Future successful Redirect(routes.SignOutController.showSurvey()).withNewSession

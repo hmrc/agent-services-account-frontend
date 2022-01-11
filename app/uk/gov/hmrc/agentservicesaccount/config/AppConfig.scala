@@ -111,6 +111,8 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
   val hmrcOnlineGuidanceLink = getString("hmrcOnlineGuidanceLink")
   val hmrcOnlineSignInLink = getString("hmrcOnlineSignInLink")
 
+  val feedbackSurveyServiceSelect = getBoolean("features.enable-feedback-survey-service-select")
+
   def signOutUrlWithSurvey(surveyKey: String): String = s"$companyAuthFrontendExternalUrl$signOutPath?continue=${urlEncode(signOutContinueUrl + surveyKey)}"
 
   def languageMap: Map[String, Lang] = Map(
