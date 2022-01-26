@@ -139,6 +139,15 @@ survey.error.summary=Mae problem wedi codi
 survey.form.label.agentsub=Creu cyfrif gwasanaethau asiant
 survey.form.label.agenthome=Mynediad i fy nghyfrif gwasanaethau asiant
 survey.form.label.invitagent=Gofyn i gleient am awdurdodiad
+survey.form.label.accessingService=Cael mynediad at wasanaeth treth penodol ar ran fy nghleient
+survey.whichService.title=Pa wasanaeth treth rydych am roi adborth i ni amdano?
+survey.whichService.hint=I gyfeirio’ch adborth at y tîm cywir, mae angen i ni ofyn rhai cwestiynau i chi am y gwasanaeth a ddefnyddiwyd gennych.
+survey.whichService.label.vat=TAW
+survey.whichService.label.it=Troi Treth yn Ddigidol ar gyfer Treth Incwm
+survey.whichService.label.trust=Rheoli ymddiriedolaeth neu ystâd
+survey.whichService.label.ir=Bwrw golwg dros y cofnod incwm
+survey.whichService.label.cgt=Treth Enillion Cyfalaf ar eiddo yn y DU
+survey.whichService.label.other=Unrhyw wasanaeth treth arall
 survey.button=Yn eich blaen
 survey.empty=Dewiswch opsiwn
 
