@@ -32,9 +32,9 @@
         hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper)
 
 
-@(agencyDetails: Option[AgencyDetails])(implicit messages: Messages, request: Request[_], appConfig: AppConfig)
+@(agencyDetails: Option[AgencyDetails])(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
 
-@mainTemplate(pageTitle = Some(Messages("account-details.title")), beforeContentBlock = Some(secondaryNav(isAdmin = true)), analyticsAdditionalJs = None) {
+@mainTemplate(pageTitle = Some(msgs("account-details.title")), beforeContentBlock = Some(secondaryNav(isAdmin = true)), analyticsAdditionalJs = None) {
 
 
     @govukBackLink(BackLink(
@@ -42,40 +42,40 @@
         content = Text("Back")
     ))
 
-    <h1 class="govuk-heading-xl">@Messages("account-details.title")</h1>
+    <h1 class="govuk-heading-xl">@msgs("account-details.title")</h1>
 
     @govukInsetText(
         InsetText(
-            content = HtmlContent(Messages("account-details.inset", appConfig.govUkGuidanceChangeDetails))
+            content = HtmlContent(msgs("account-details.inset", appConfig.govUkGuidanceChangeDetails))
         ))
 
 
 
 
-    <h2 class="govuk-heading-m">@Messages("account-details.summary-list.header")</h2>
+    <h2 class="govuk-heading-m">@msgs("account-details.summary-list.header")</h2>
 @govukSummaryList(SummaryList(
     rows = Seq(
         SummaryListRow(
         key = Key(
-            content = Text(Messages("account-details.summary-list.email"))
+            content = Text(msgs("account-details.summary-list.email"))
         ),
         value = Value(
-            content = Text(agencyDetails.flatMap(_.agencyEmail).getOrElse(Messages("account-details.summary-list.none")))
+            content = Text(agencyDetails.flatMap(_.agencyEmail).getOrElse(msgs("account-details.summary-list.none")))
         ),
         actions = None
     ),
         SummaryListRow(
             key = Key(
-                content = Text(Messages("account-details.summary-list.name"))
+                content = Text(msgs("account-details.summary-list.name"))
             ),
             value = Value(
-                content = Text(agencyDetails.flatMap(_.agencyName).getOrElse(Messages("account-details.summary-list.none")))
+                content = Text(agencyDetails.flatMap(_.agencyName).getOrElse(msgs("account-details.summary-list.none")))
             ),
             actions = None
         ),
                 SummaryListRow(
                     key = Key(
-                        content = Text(Messages("account-details.summary-list.address"))
+                        content = Text(msgs("account-details.summary-list.address"))
                     ),
                     value = Value(
                         content = HtmlContent(s"""${agencyDetails.flatMap(_.agencyAddress).map(

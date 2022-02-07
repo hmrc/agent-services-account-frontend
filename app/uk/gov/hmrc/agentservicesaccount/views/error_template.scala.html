@@ -19,7 +19,7 @@
 
 @this(mainTemplate: main)
 
-@(pageTitle: String, heading: String, message: String)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(pageTitle: String, heading: String, message: String)(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
 
 @mainTemplate(pageTitle = Some(pageTitle)) {
 

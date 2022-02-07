@@ -35,46 +35,46 @@
         govukButton: GovukButton
 )
 
-@(surveyForm: Form[String])(implicit messages: Messages, request: Request[_], appConfig: AppConfig)
+@(surveyForm: Form[String])(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
 
-@mainTemplate(pageTitle = Some(Messages("survey.title")), hasTimeout = false) {
+@mainTemplate(pageTitle = Some(msgs("survey.title")), hasTimeout = false) {
 
 
  @uiFormHelper(
   action = routes.SignOutController.submitSurvey()) {
 
   @if(surveyForm.errors.nonEmpty){
-   @govukErrorSummary(ErrorSummary(errorList = surveyForm.errors.asTextErrorLinks, title = Text(messages("survey.error.summary"))))
+   @govukErrorSummary(ErrorSummary(errorList = surveyForm.errors.asTextErrorLinks, title = Text(msgs("survey.error.summary"))))
   }
 
   @govukRadios(Radios(
    fieldset = Some(Fieldset(
     legend = Some(Legend(
-     content = Text(messages("survey.title")),
+     content = Text(msgs("survey.title")),
      isPageHeading = true,
      classes = "govuk-fieldset__legend--xl"
     ))
    )),
    hint = Some(Hint(content = HtmlContent(
-    s"""<h2 class="govuk-heading-m">${Messages("survey.h2")}</h2>
-       |<p class="govuk-hint">${Messages("survey.hint")}</p>""".stripMargin))),
+    s"""<h2 class="govuk-heading-m">${msgs("survey.h2")}</h2>
+       |<p class="govuk-hint">${msgs("survey.hint")}</p>""".stripMargin))),
    items = Seq(
     RadioItem(
-    content = Text(Messages("survey.form.label.agentsub")),
+    content = Text(msgs("survey.form.label.agentsub")),
     value = Some("AGENTSUB")),
     RadioItem(
-     content = Text(Messages("survey.form.label.agenthome")),
+     content = Text(msgs("survey.form.label.agenthome")),
      value = Some("AGENTHOME")),
     RadioItem(
-     content = Text(Messages("survey.form.label.invitagent")),
+     content = Text(msgs("survey.form.label.invitagent")),
      value = Some("INVITAGENT")),
    ) ++ (if (appConfig.feedbackSurveyServiceSelect) Seq(
     RadioItem(
-     content = Text(Messages("survey.form.label.accessingService")),
+     content = Text(msgs("survey.form.label.accessingService")),
      value = Some("ACCESSINGSERVICE")),
    ) else Seq.empty)
   ).withFormField(surveyForm("surveyKey")))
 
-  @govukButton(Button(content = Text(Messages("survey.button"))))
+  @govukButton(Button(content = Text(msgs("survey.button"))))
  }
 }

@@ -21,24 +21,24 @@
 
 @this(mainTemplate: main, secondaryNav: secondary_nav)
 
-@()(implicit messages: Messages, request: Request[_], appConfig: AppConfig)
+@()(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
 
-@mainTemplate(pageTitle = Some(Messages("manage.account.heading")), beforeContentBlock = Some(secondaryNav(isAdmin = true)), analyticsAdditionalJs = None) {
+@mainTemplate(pageTitle = Some(msgs("manage.account.heading")), beforeContentBlock = Some(secondaryNav(isAdmin = true)), analyticsAdditionalJs = None) {
 
 
-    <h1 class="govuk-heading-xl">@Messages("manage.account.heading")</h1>
+    <h1 class="govuk-heading-xl">@msgs("manage.account.heading")</h1>
 
-    <p class="govuk-body">@Messages("manage.account.p")</p>
+    <p class="govuk-body">@msgs("manage.account.p")</p>
 
  <ul class="govuk-body">
      <li>
-       <a class="govuk-link" href="@appConfig.addUserUrl">@Messages("manage.account.add-user")</a>
+       <a class="govuk-link" href="@appConfig.addUserUrl">@msgs("manage.account.add-user")</a>
      </li>
      <li>
-       <a class="govuk-link" href="@appConfig.manageUsersUrl" target="_blank" rel="noopener noreferrer">@Messages("manage.account.manage-user-access")</a>
+       <a class="govuk-link" href="@appConfig.manageUsersUrl" target="_blank" rel="noopener noreferrer">@msgs("manage.account.manage-user-access")</a>
      </li>
      <li>
-         <a class="govuk-link" href="@routes.AgentServicesController.accountDetails()">@Messages("manage.account.account-details")</a>
+         <a class="govuk-link" href="@routes.AgentServicesController.accountDetails()">@msgs("manage.account.account-details")</a>
      </li>
  </ul>
 

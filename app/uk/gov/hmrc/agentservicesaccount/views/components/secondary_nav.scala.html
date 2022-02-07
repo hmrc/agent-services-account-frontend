@@ -25,31 +25,31 @@
 @this(phaseBanner: GovukPhaseBanner)
 
 
-@(isAdmin: Boolean)(implicit messages: Messages, appConfig: AppConfig)
+@(isAdmin: Boolean)(implicit msgs: Messages, appConfig: AppConfig)
 
 @phaseBannerContent = {
-@Messages("label.beta.newservice")
-@Messages("label.beta.yours")
-    <a class="govuk-link" href='@appConfig.betaFeedbackUrl'>@Messages("label.beta.feedback")</a> @Messages("label.beta.improve")
+@msgs("label.beta.newservice")
+@msgs("label.beta.yours")
+    <a class="govuk-link" href='@appConfig.betaFeedbackUrl'>@msgs("label.beta.feedback")</a> @msgs("label.beta.improve")
 }
 
 <nav id="secondary-nav" class="hmrc-account-menu" aria-label="Account">
     <a href="@routes.AgentServicesController.root().url" class="hmrc-account-menu__link hmrc-account-menu__link--home">
-        <span class="hmrc-account-icon hmrc-account-icon--home">@Messages("serviceinfo.home")</span>
+        <span class="hmrc-account-icon hmrc-account-icon--home">@msgs("serviceinfo.home")</span>
     </a>
         <a href="#" class="hmrc-account-menu__link hmrc-account-menu__link--menu js-hidden js-visible" tabindex="-1" aria-hidden="true" aria-expanded="false">
-        @Messages("serviceinfo.aria.account-menu")</a>
+        @msgs("serviceinfo.aria.account-menu")</a>
     <ul class="hmrc-account-menu__main">
         @if(isAdmin) {
-            <li><a href="@routes.AgentServicesController.manageAccount().url" class="hmrc-account-menu__link">@Messages("serviceinfo.manage")</a></li>
+            <li><a href="@routes.AgentServicesController.manageAccount().url" class="hmrc-account-menu__link">@msgs("serviceinfo.manage")</a></li>
         }
         @if(appConfig.HelpAndGuidanceEnabled) {
         <li>
-            <a href="@routes.AgentServicesController.showHelp().url" class="hmrc-account-menu__link">@Messages("serviceinfo.help")</a>
+            <a href="@routes.AgentServicesController.showHelp().url" class="hmrc-account-menu__link">@msgs("serviceinfo.help")</a>
         </li>
         }
         <li>
-            <a href="@routes.SignOutController.signOut().url" class="hmrc-account-menu__link">@Messages("serviceinfo.signout")</a>
+            <a href="@routes.SignOutController.signOut().url" class="hmrc-account-menu__link">@msgs("serviceinfo.signout")</a>
         </li>
     </ul>
 </nav>

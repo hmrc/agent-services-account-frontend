@@ -22,30 +22,30 @@
 
 @this(mainTemplate: main, secondaryNav: secondary_nav)
 
-@(isAdmin: Boolean)(implicit messages: Messages, request: Request[_], appConfig: AppConfig)
+@(isAdmin: Boolean)(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
 
 @suspendedServices = @{request.session.get("suspendedServices").getOrElse("").split(',').toSet}
 
-@mainTemplate(pageTitle = Some(Messages("suspension-warning.header")), beforeContentBlock = Some(secondaryNav(isAdmin))) {
+@mainTemplate(pageTitle = Some(msgs("suspension-warning.header")), beforeContentBlock = Some(secondaryNav(isAdmin))) {
 
-    <h1 class="govuk-heading-xl">@Messages("suspension-warning.header")</h1>
-    <p class="govuk-body">@Messages("suspension-warning.p1")</p>
+    <h1 class="govuk-heading-xl">@msgs("suspension-warning.header")</h1>
+    <p class="govuk-body">@msgs("suspension-warning.p1")</p>
 
     @if(suspendedServices.size == 1) {
         <p class="govuk-body">
-            @Messages("suspension-warning.p2.single", Messages(s"suspension-warning.single.${suspendedServices.head}"))
+            @msgs("suspension-warning.p2.single", msgs(s"suspension-warning.single.${suspendedServices.head}"))
         </p>
 
     } else {
-        <p class="govuk-body">@Messages("suspension-warning.p2.multi")</p>
+        <p class="govuk-body">@msgs("suspension-warning.p2.multi")</p>
         <ul class="list list-bullet govuk-body">
             @for(suspendedService <- suspendedServices) {
-                <li>@Messages(s"suspension-warning.multi.${suspendedService}")</li>
+                <li>@msgs(s"suspension-warning.multi.${suspendedService}")</li>
             }
         </ul>
     }
-    <p class="govuk-body">@Messages("suspension-warning.p3")</p>
-    <p class="govuk-body">@Messages("suspension-warning.p4")</p>
+    <p class="govuk-body">@msgs("suspension-warning.p3")</p>
+    <p class="govuk-body">@msgs("suspension-warning.p4")</p>
 
-    <a href="@routes.AgentServicesController.showAgentServicesAccount" class="button govuk-body">@Messages("suspension-warning.button")</a>
+    <a href="@routes.AgentServicesController.showAgentServicesAccount" class="button govuk-body">@msgs("suspension-warning.button")</a>
 }
