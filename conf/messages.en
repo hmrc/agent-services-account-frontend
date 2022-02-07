@@ -63,6 +63,17 @@ agent.services.account.section3.col1.h3=Before you start
 agent.services.account.section3.col1.text1=Your client must first
 agent.services.account.section3.col1.text2=They must then
 
+agent.services.account.ppt.col1.h2=Plastic Packaging Tax
+agent.services.account.ppt.col1.link1=<a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">register for Plastic Packaging Tax (opens in a new tab)</a>
+agent.services.account.ppt.col1.link1.href=https://www.gov.uk/guidance/register-for-plastic-packaging-tax
+agent.services.account.ppt.col1.link2=<a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">authorise you to act on their behalf</a>
+agent.services.account.ppt.col2.h3=Manage your client’s Plastic Packaging Tax
+agent.services.account.ppt.col2.link1=<a class="govuk-link" href="{0}" rel="noreferrer noopener">Report your client’s Plastic Packaging Tax and view payments, returns and penalties</a>
+agent.services.account.ppt.col2.link1.href=https://www.tax.service.gov.uk/plastic-packaging-tax/account
+agent.services.account.ppt.col1.h3=Before you start
+agent.services.account.ppt.col1.text1=Your client must first
+agent.services.account.ppt.col1.text2=They must then
+
 agent.services.account.section4.h2=Client authorisations
 agent.services.account.section4.col1.h3=Ask a client to authorise you
 agent.services.account.section4.col1.link=Ask a client to authorise you
@@ -172,6 +183,11 @@ help.trusts.link1=How to register your client’s estate
 help.trusts.link2=<a class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noopener" href="https://www.gov.uk/guidance/register-your-clients-trust">How to register your client’s trust</a>
 help.cgt.h2=Capital Gains Tax on UK property
 help.cgt.link=How to ask for authorisation, manage your client’s account and send returns as an agent
+help.ppt.h2=Plastic Packaging Tax
+help.ppt.link1=Check if your client needs to register for Plastic Packaging Tax
+help.ppt.link1.href=https://www.gov.uk/guidance/check-if-you-need-to-register-for-plastic-packaging-tax
+help.ppt.link2=Register for the next live webinar
+help.ppt.link2.href=https://www.gov.uk/guidance/help-and-support-for-agents#plastic-packaging-tax
 help.cannot.h2=Tax services you cannot manage in this account
 help.cannot.link1=Self Assessment
 help.cannot.link2=VAT (not including Making Tax Digital for VAT)

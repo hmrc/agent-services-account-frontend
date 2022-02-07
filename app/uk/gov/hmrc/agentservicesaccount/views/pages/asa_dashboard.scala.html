@@ -145,6 +145,28 @@
         <div class="govuk-accordion__section govuk-body">
             <div class="govuk-accordion__section-header">
                 <h2 class="govuk-accordion__section-heading">
+                    <span class="govuk-accordion__section-button" id="accordion-default-heading-4">
+                    @Messages("agent.services.account.ppt.col1.h2")
+                    </span>
+                </h2>
+            </div>
+            <div id="accordion-default-content-4" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-4">
+                <h3 class="govuk-heading-s" style="margin: 0px 0 10px">@Messages("agent.services.account.ppt.col1.h3")</h3>
+                <p>
+                    @Messages("agent.services.account.ppt.col1.text1")
+                    @Html(Messages("agent.services.account.ppt.col1.link1", Messages("agent.services.account.ppt.col1.link1.href"))).
+                </p>
+                <p>
+                    @Messages("agent.services.account.ppt.col1.text2")
+                    @Html(Messages("agent.services.account.ppt.col1.link2", appConfig.agentInvitationsFrontendUrl)).
+                </p>
+                <h3 class="govuk-heading-s" style="margin: 40px 0 10px">@Messages("agent.services.account.ppt.col2.h3")</h3>
+                <p>@Html(Messages("agent.services.account.ppt.col2.link1", Messages("agent.services.account.ppt.col2.link1.href")))</p>
+            </div>
+        </div>
+        <div class="govuk-accordion__section govuk-body">
+            <div class="govuk-accordion__section-header">
+                <h2 class="govuk-accordion__section-heading">
                     <span class="govuk-accordion__section-button" id="accordion-default-heading-5">
                         @Messages("asa.other.heading")
                     </span>

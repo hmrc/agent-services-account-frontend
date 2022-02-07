@@ -63,6 +63,17 @@ agent.services.account.section3.col1.h3=Cyn i chi ddechrau
 agent.services.account.section3.col1.text1=Yn gyntaf mae’n rhaid i’ch cleient:
 agent.services.account.section3.col1.text2=Yna mae’n rhaid iddo:
 
+agent.services.account.ppt.col1.h2=Treth Deunydd Pacio Plastig
+agent.services.account.ppt.col1.link1=<a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">gofrestru ar gyfer y Dreth Deunydd Pacio Plastig gyntaf (yn agor tab newydd)</a>
+agent.services.account.ppt.col1.link1.href=https://www.gov.uk/guidance/register-for-plastic-packaging-tax
+agent.services.account.ppt.col1.link2=<a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">eich awdurdodi i weithredu ar ei ran</a>
+agent.services.account.ppt.col2.h3=Rheoli Treth Deunydd Pacio Plastig eich cleient
+agent.services.account.ppt.col2.link1=<a class="govuk-link" href="{0}" rel="noreferrer noopener">Rhoi gwybod am Dreth Deunydd Pacio Plastig eich cleient a bwrw golwg dros daliadau, ffurflenni a chosbau.</a>
+agent.services.account.ppt.col2.link1.href=https://www.tax.service.gov.uk/plastic-packaging-tax/account
+agent.services.account.ppt.col1.h3=Cyn i chi ddechrau
+agent.services.account.ppt.col1.text1=Mae’n rhaid i’ch cleient
+agent.services.account.ppt.col1.text2=Yna mae’n rhaid iddo:
+
 agent.services.account.section4.h2=Awdurdodiadau cleientiaid
 agent.services.account.section4.col1.h3=Gofyn i gleient eich awdurdodi
 agent.services.account.section4.col1.link=Gofyn i gleient eich awdurdodi
@@ -172,6 +183,11 @@ help.trusts.link1=Sut i gofrestru ystâd eich cleient
 help.trusts.link2=<a class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noopener" href="https://www.gov.uk/guidance/register-your-clients-trust.cy">Sut i gofrestru ymddiriedolaeth eich cleient</a>
 help.cgt.h2=Treth Enillion Cyfalaf ar eiddo yn y DU
 help.cgt.link=Sut i ofyn am awdurdodiad, rheoli cyfrif eich cleient ac anfon Ffurflenni Treth fel asiant
+help.ppt.h2=Treth Deunydd Pacio Plastig
+help.ppt.link1=Gwirio a oes angen i’ch cleient gofrestru ar gyfer y Dreth Deunydd Pacio Plastig
+help.ppt.link1.href=https://www.gov.uk/guidance/check-if-you-need-to-register-for-plastic-packaging-tax
+help.ppt.link2=Cofrestru ar gyfer y weminar fyw nesaf
+help.ppt.link2.href=https://www.gov.uk/guidance/help-and-support-for-agents#plastic-packaging-tax
 help.cannot.h2=Gwasanaethau treth na allwch eu rheoli yn y cyfrif hwn
 help.cannot.link1=Hunanasesiad
 help.cannot.link2=TAW (ac eithrio Troi Treth yn Ddigidol ar gyfer TAW)
