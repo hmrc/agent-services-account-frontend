@@ -19,7 +19,7 @@
 
 @this(languageSelect: language_select)
 
-@()(implicit appConfig: AppConfig, messages: Messages, request: Request[_])
+@()(implicit appConfig: AppConfig, msgs: Messages, request: Request[_])
 
 <header role="banner">
     <div class="govuk-header hmrc-header  hmrc-header--with-additional-navigation" data-module="header">
@@ -39,7 +39,7 @@
             </div>
             <div class="govuk-header__content">
                 <span class="govuk-header__link--service-name">
-                    @Messages("app.name")
+                    @msgs("app.name")
                 </span>
                 @languageSelect()
             </div>

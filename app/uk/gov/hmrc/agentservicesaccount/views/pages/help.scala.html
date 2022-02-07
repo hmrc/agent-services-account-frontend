@@ -22,20 +22,20 @@
 
 @this(mainTemplate: main, secondaryNav: secondary_nav)
 
-@(isAdmin: Boolean)(implicit messages: Messages, request: Request[_], appConfig: AppConfig)
+@(isAdmin: Boolean)(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
 
-@mainTemplate(pageTitle = Some(Messages("help.title")), beforeContentBlock = Some(secondaryNav(isAdmin))) {
+@mainTemplate(pageTitle = Some(msgs("help.title")), beforeContentBlock = Some(secondaryNav(isAdmin))) {
 
-<h1 class="govuk-heading-l">@Messages("help.heading")</h1>
-<p class="govuk-body-m">@Messages("help.p1")</p>
+<h1 class="govuk-heading-l">@msgs("help.heading")</h1>
+<p class="govuk-body-m">@msgs("help.p1")</p>
 <div class="govuk-grid-row govuk-!-margin-left-0 govuk-!-margin-right-0 govuk-!-margin-bottom-4">
 
     <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
     <br>
-    <h2 class="govuk-heading-m">@Messages("help.authorised.h2")</h2>
+    <h2 class="govuk-heading-m">@msgs("help.authorised.h2")</h2>
     <div class="govuk-grid-column-one-third govuk-!-padding-left-0 govuk-!-padding-bottom-1">
         <ul class="govuk-list">
-            <li class="govuk-!-margin-bottom-4"><a class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noopener" href="https://www.gov.uk/guidance/authorise-an-agent-to-deal-with-certain-tax-services-for-you">@Messages("help.authorised.link")</a></li>
+            <li class="govuk-!-margin-bottom-4"><a class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noopener" href="https://www.gov.uk/guidance/authorise-an-agent-to-deal-with-certain-tax-services-for-you">@msgs("help.authorised.link")</a></li>
         </ul>
     </div>
 
@@ -45,22 +45,22 @@
 
     <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
     <br>
-    <h2 class="govuk-heading-m">@Messages("help.mtd.h2")</h2>
+    <h2 class="govuk-heading-m">@msgs("help.mtd.h2")</h2>
     <div class="govuk-grid-column-one-third govuk-!-padding-left-0 govuk-!-padding-bottom-1">
         <ul class="govuk-list">
-            <li class="govuk-!-margin-bottom-4">@Html(Messages("help.mtd.link1"))</li>
-            <li class="govuk-!-margin-bottom-4"><a class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noopener" href="https://www.gov.uk/government/publications/vat-notice-70022-making-tax-digital-for-vat/vat-notice-70022-making-tax-digital-for-vat">@Messages("help.mtd.link2")</a></li>
+            <li class="govuk-!-margin-bottom-4">@Html(msgs("help.mtd.link1"))</li>
+            <li class="govuk-!-margin-bottom-4"><a class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noopener" href="https://www.gov.uk/government/publications/vat-notice-70022-making-tax-digital-for-vat/vat-notice-70022-making-tax-digital-for-vat">@msgs("help.mtd.link2")</a></li>
         </ul>
     </div>
     <div class="govuk-grid-column-one-third govuk-!-padding-bottom-1">
         <ul class="govuk-list">
-            <li class="govuk-!-margin-bottom-4">@Html(Messages("help.mtd.link3"))</li>
-            <li class="govuk-!-margin-bottom-4"><a class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noopener" href="https://www.gov.uk/guidance/help-and-support-for-making-tax-digital#creating-an-agent-services-account">@Messages("help.mtd.link4")</a></li>
+            <li class="govuk-!-margin-bottom-4">@Html(msgs("help.mtd.link3"))</li>
+            <li class="govuk-!-margin-bottom-4"><a class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noopener" href="https://www.gov.uk/guidance/help-and-support-for-making-tax-digital#creating-an-agent-services-account">@msgs("help.mtd.link4")</a></li>
         </ul>
     </div>
     <div class="govuk-grid-column-one-third govuk-!-padding-bottom-1">
         <ul class="govuk-list">
-            <li class="govuk-!-margin-bottom-4">@Html(Messages("help.mtd.link5"))</li>
+            <li class="govuk-!-margin-bottom-4">@Html(msgs("help.mtd.link5"))</li>
         </ul>
     </div>
 
@@ -69,15 +69,15 @@
 
     <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
     <br>
-    <h2 class="govuk-heading-m">@Messages("help.trusts.h2")</h2>
+    <h2 class="govuk-heading-m">@msgs("help.trusts.h2")</h2>
     <div class="govuk-grid-column-one-third govuk-!-padding-left-0 govuk-!-padding-bottom-1">
         <ul class="govuk-list">
-            <li class="govuk-!-margin-bottom-4"><a class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noopener" href="https://www.gov.uk/guidance/register-your-clients-estate">@Messages("help.trusts.link1")</a></li>
+            <li class="govuk-!-margin-bottom-4"><a class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noopener" href="https://www.gov.uk/guidance/register-your-clients-estate">@msgs("help.trusts.link1")</a></li>
         </ul>
     </div>
     <div class="govuk-grid-column-one-third govuk-!-padding-bottom-1">
         <ul class="govuk-list">
-            <li class="govuk-!-margin-bottom-4">@Html(Messages("help.trusts.link2"))</li>
+            <li class="govuk-!-margin-bottom-4">@Html(msgs("help.trusts.link2"))</li>
         </ul>
     </div>
 
@@ -86,25 +86,25 @@
 
     <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
     <br>
-    <h2 class="govuk-heading-m">@Messages("help.cgt.h2")</h2>
+    <h2 class="govuk-heading-m">@msgs("help.cgt.h2")</h2>
     <div class="govuk-grid-column-one-third govuk-!-padding-left-0 govuk-!-padding-bottom-1">
         <ul class="govuk-list">
-            <li class="govuk-!-margin-bottom-4"><a class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noopener" href="https://www.gov.uk/guidance/managing-your-clients-capital-gains-tax-on-uk-property-account">@Messages("help.cgt.link")</a></li>
+            <li class="govuk-!-margin-bottom-4"><a class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noopener" href="https://www.gov.uk/guidance/managing-your-clients-capital-gains-tax-on-uk-property-account">@msgs("help.cgt.link")</a></li>
         </ul>
     </div>
 </div>
 <div class="govuk-grid-row govuk-!-margin-left-0 govuk-!-margin-right-0 govuk-!-margin-bottom-4">
     <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
     <br>
-    <h2 class="govuk-heading-m">@Messages("help.ppt.h2")</h2>
+    <h2 class="govuk-heading-m">@msgs("help.ppt.h2")</h2>
     <div class="govuk-grid-column-one-third govuk-!-padding-left-0 govuk-!-padding-bottom-1">
         <ul class="govuk-list">
-            <li class="govuk-!-margin-bottom-4"><a class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noopener" href="@Messages("help.ppt.link1.href")">@Messages("help.ppt.link1")</a></li>
+            <li class="govuk-!-margin-bottom-4"><a class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noopener" href="@msgs("help.ppt.link1.href")">@msgs("help.ppt.link1")</a></li>
         </ul>
     </div>
     <div class="govuk-grid-column-one-third govuk-!-padding-bottom-1">
         <ul class="govuk-list">
-            <li class="govuk-!-margin-bottom-4"><a class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noopener" href="@Messages("help.ppt.link2.href")">@Html(Messages("help.ppt.link2"))</a></li>
+            <li class="govuk-!-margin-bottom-4"><a class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noopener" href="@msgs("help.ppt.link2.href")">@Html(msgs("help.ppt.link2"))</a></li>
         </ul>
     </div>
 </div>
@@ -112,23 +112,23 @@
 
     <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
     <br>
-    <h2 class="govuk-heading-m">@Messages("help.cannot.h2")</h2>
+    <h2 class="govuk-heading-m">@msgs("help.cannot.h2")</h2>
     <div class="govuk-grid-column-one-third govuk-!-padding-left-0 govuk-!-padding-bottom-1">
         <ul class="govuk-list">
-            <li class="govuk-!-margin-bottom-4"><a class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noopener" href="https://www.gov.uk/guidance/self-assessment-for-agents-online-service">@Messages("help.cannot.link1")</a></li>
-            <li class="govuk-!-margin-bottom-4"><a class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noopener" href="https://www.gov.uk/guidance/vat-online-services-for-agents">@Messages("help.cannot.link2")</a></li>
+            <li class="govuk-!-margin-bottom-4"><a class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noopener" href="https://www.gov.uk/guidance/self-assessment-for-agents-online-service">@msgs("help.cannot.link1")</a></li>
+            <li class="govuk-!-margin-bottom-4"><a class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noopener" href="https://www.gov.uk/guidance/vat-online-services-for-agents">@msgs("help.cannot.link2")</a></li>
         </ul>
     </div>
     <div class="govuk-grid-column-one-third govuk-!-padding-bottom-1">
         <ul class="govuk-list">
-            <li class="govuk-!-margin-bottom-4"><a class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noopener" href="https://www.gov.uk/guidance/corporation-tax-for-agents-online-service">@Messages("help.cannot.link3")</a></li>
-            <li class="govuk-!-margin-bottom-4"><a class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noopener" href="https://www.gov.uk/guidance/client-authorisation-an-overview">@Messages("help.cannot.link4")</a></li>
+            <li class="govuk-!-margin-bottom-4"><a class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noopener" href="https://www.gov.uk/guidance/corporation-tax-for-agents-online-service">@msgs("help.cannot.link3")</a></li>
+            <li class="govuk-!-margin-bottom-4"><a class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noopener" href="https://www.gov.uk/guidance/client-authorisation-an-overview">@msgs("help.cannot.link4")</a></li>
         </ul>
     </div>
     <div class="govuk-grid-column-one-third govuk-!-padding-bottom-1">
         <ul class="govuk-list">
-            <li class="govuk-!-margin-bottom-4"><a class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noopener" href="https://www.gov.uk/guidance/payecis-for-agents-online-service">@Messages("help.cannot.link5")</a></li>
-            <li class="govuk-!-margin-bottom-4"><a class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noopener" href="https://www.gov.uk/guidance/client-authorisation-an-overview#how-to-change-or-cancel-authorisations-as-an-agent">@Messages("help.cannot.link6")</a></li>
+            <li class="govuk-!-margin-bottom-4"><a class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noopener" href="https://www.gov.uk/guidance/payecis-for-agents-online-service">@msgs("help.cannot.link5")</a></li>
+            <li class="govuk-!-margin-bottom-4"><a class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noopener" href="https://www.gov.uk/guidance/client-authorisation-an-overview#how-to-change-or-cancel-authorisations-as-an-agent">@msgs("help.cannot.link6")</a></li>
         </ul>
     </div>
 

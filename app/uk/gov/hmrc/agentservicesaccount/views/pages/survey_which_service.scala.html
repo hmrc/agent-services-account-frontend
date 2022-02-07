@@ -35,49 +35,49 @@
         govukButton: GovukButton
 )
 
-@(surveyForm: Form[String])(implicit messages: Messages, request: Request[_], appConfig: AppConfig)
+@(surveyForm: Form[String])(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
 
-@mainTemplate(pageTitle = Some(Messages("survey.title")), hasTimeout = false) {
+@mainTemplate(pageTitle = Some(msgs("survey.title")), hasTimeout = false) {
 
 
  @uiFormHelper(
   action = routes.SignOutController.submitWhichService()) {
 
   @if(surveyForm.errors.nonEmpty){
-   @govukErrorSummary(ErrorSummary(errorList = surveyForm.errors.asTextErrorLinks, title = Text(messages("survey.error.summary"))))
+   @govukErrorSummary(ErrorSummary(errorList = surveyForm.errors.asTextErrorLinks, title = Text(msgs("survey.error.summary"))))
   }
 
   @govukRadios(Radios(
    fieldset = Some(Fieldset(
     legend = Some(Legend(
-     content = Text(messages("survey.whichService.title")),
+     content = Text(msgs("survey.whichService.title")),
      isPageHeading = true,
      classes = "govuk-fieldset__legend--xl"
     ))
    )),
-   hint = Some(Hint(content = Text(Messages("survey.whichService.hint")))),
+   hint = Some(Hint(content = Text(msgs("survey.whichService.hint")))),
    errorMessage = surveyForm.errors.asTextErrorMessageForField(fieldKey = "surveyKey"),
    items = Seq(
     RadioItem(
-      content = Text(Messages("survey.whichService.label.vat")),
+      content = Text(msgs("survey.whichService.label.vat")),
       value= Some("VAT")),
     RadioItem(
-     content = Text(Messages("survey.whichService.label.it")),
+     content = Text(msgs("survey.whichService.label.it")),
      value = Some("IT")),
     RadioItem(
-     content = Text(Messages("survey.whichService.label.trust")),
+     content = Text(msgs("survey.whichService.label.trust")),
      value = Some("TRUST")),
     RadioItem(
-     content = Text(Messages("survey.whichService.label.ir")),
+     content = Text(msgs("survey.whichService.label.ir")),
      value = Some("IR")),
     RadioItem(
-     content = Text(Messages("survey.whichService.label.cgt")),
+     content = Text(msgs("survey.whichService.label.cgt")),
      value = Some("CGT")),
     RadioItem(
-     content = Text(Messages("survey.whichService.label.other")),
+     content = Text(msgs("survey.whichService.label.other")),
      value = Some("OTHER")),
    )).withFormField(surveyForm("service")))
 
-  @govukButton(Button(content = Text(Messages("survey.button"))))
+  @govukButton(Button(content = Text(msgs("survey.button"))))
  }
 }

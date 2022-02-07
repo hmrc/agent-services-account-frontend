@@ -20,17 +20,17 @@
 
 @this(mainTemplate: main)
 
-@(redirectUrl: String)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(redirectUrl: String)(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
 
 @timeString=@{
     val timeout = appConfig.timeoutDialogTimeout
     if(timeout < 60) s"$timeout seconds" else s"${timeout/60} minutes"
 }
 
-@mainTemplate(pageTitle = Some(Messages("signed-out.header")), hasTimeout = false) {
+@mainTemplate(pageTitle = Some(msgs("signed-out.header")), hasTimeout = false) {
 
-    <h1 class="govuk-heading-xl">@Messages("signed-out.header")</h1>
-    <p class="govuk-body">@Messages("signed-out.p1", timeString)</p>
+    <h1 class="govuk-heading-xl">@msgs("signed-out.header")</h1>
+    <p class="govuk-body">@msgs("signed-out.p1", timeString)</p>
 
-    <p class="govuk-body">@Html(Messages("signed-out.p2", s"${redirectUrl}"))</p>
+    <p class="govuk-body">@Html(msgs("signed-out.p2", s"${redirectUrl}"))</p>
 }
