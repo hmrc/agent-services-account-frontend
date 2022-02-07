@@ -44,8 +44,6 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
 
   val acaBaseUrl = baseUrl("agent-client-authorisation")
 
-  val afiBaseUrl = baseUrl("agent-fi-relationship")
-
   val customDimension = getString("customDimension")
 
   val asaFrontendExternalUrl = getConfString("agent-services-account-frontend.external-url")

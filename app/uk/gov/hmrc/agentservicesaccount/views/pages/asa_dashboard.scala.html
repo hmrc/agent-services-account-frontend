@@ -23,7 +23,7 @@
 
 @this(mainTemplate: main, hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper, secondaryNav: secondary_nav)
 
-@(arn: String, isWhitelisted: Boolean, customDimension: String, isAdmin: Boolean = false, isSuspendedForVat: Boolean)(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
+@(arn: String, customDimension: String, isAdmin: Boolean = false, isSuspendedForVat: Boolean)(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
 @mainTemplate(pageTitle = Some(msgs("agent.services.account.heading")), beforeContentBlock = Some(secondaryNav(isAdmin))){
 
     <section class="app-c-banner" style="margin: 0px 0 50px">
@@ -89,7 +89,6 @@
                 }
             </div>
         </div>
-        @if(isWhitelisted) {
             <div class="govuk-accordion__section govuk-body">
                 <div class="govuk-accordion__section-header">
                     <h2 class="govuk-accordion__section-heading">
@@ -103,7 +102,6 @@
                     <p><a class="govuk-link" href="@appConfig.taxHistoryFrontendUrl">@msgs("agent.services.account.paye-section.link")</a></p>
                 </div>
             </div>
-        }
         <div class="govuk-accordion__section govuk-body">
             <div class="govuk-accordion__section-header">
                 <h2 class="govuk-accordion__section-heading">
