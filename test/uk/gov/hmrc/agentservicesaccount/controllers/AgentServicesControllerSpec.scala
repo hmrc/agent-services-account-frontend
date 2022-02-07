@@ -19,15 +19,12 @@ package uk.gov.hmrc.agentservicesaccount.controllers
 
 import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.mvc.Session
-import play.api.test.FakeRequest
+import play.api.test.{FakeRequest, Helpers}
 import play.api.test.Helpers._
-import play.api.test.Helpers
 import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress, SuspensionDetails, SuspensionDetailsNotFound}
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentClientAuthorisationStubs._
-import uk.gov.hmrc.agentservicesaccount.stubs.AgentFiRelationshipStubs.{givenArnIsAllowlistedForIrv, givenArnIsNotAllowlistedForIrv}
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import uk.gov.hmrc.auth.core.{Enrolment, EnrolmentIdentifier}
 
@@ -249,8 +246,8 @@ class AgentServicesControllerSpec extends BaseISpec {
       }
     }
 
-    "include the Income Record Viewer section when the IRV allowlist is enabled and the ARN is allowed" in {
-      givenArnIsAllowlistedForIrv(Arn(arn))
+    "include the Income Record Viewer section " in {
+
       givenAuthorisedAsAgentWith(arn)
 
       val controller = appBuilder(Map("features.enable-irv-allowlist" -> true)).build().injector.instanceOf[AgentServicesController]
@@ -262,18 +259,6 @@ class AgentServicesControllerSpec extends BaseISpec {
       content should include (messagesApi("agent.services.account.paye-section.h2"))
     }
 
-    "not include the Income Record Viewer section when the IRV allowlist is enabled and the ARN is not allowed" in {
-      givenArnIsNotAllowlistedForIrv(Arn(arn))
-      givenAuthorisedAsAgentWith(arn)
-
-      val controller = appBuilder(Map("features.enable-irv-allowlist" -> true)).build().injector.instanceOf[AgentServicesController]
-
-      val result = controller.showAgentServicesAccount(FakeRequest())
-      status(result) shouldBe OK
-
-      val content = Helpers.contentAsString(result)
-      content should not include messagesApi("agent.services.account.paye-section.h2")
-    }
   }
 
   "showSuspensionWarning" should {
