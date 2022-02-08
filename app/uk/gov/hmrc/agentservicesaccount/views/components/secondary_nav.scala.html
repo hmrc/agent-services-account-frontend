@@ -14,24 +14,12 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.agentservicesaccount.controllers.routes
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-@import uk.gov.hmrc.govukfrontend.views.html.components.GovukPhaseBanner
-@import uk.gov.hmrc.govukfrontend.views.html.components.PhaseBanner
-@import uk.gov.hmrc.govukfrontend.views.viewmodels.tag.Tag
-@import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
-@import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
+@import uk.gov.hmrc.agentservicesaccount.controllers.routes
 
-@this(phaseBanner: GovukPhaseBanner)
-
+@this()
 
 @(isAdmin: Boolean)(implicit msgs: Messages, appConfig: AppConfig)
-
-@phaseBannerContent = {
-@msgs("label.beta.newservice")
-@msgs("label.beta.yours")
-    <a class="govuk-link" href='@appConfig.betaFeedbackUrl'>@msgs("label.beta.feedback")</a> @msgs("label.beta.improve")
-}
 
 <nav id="secondary-nav" class="hmrc-account-menu" aria-label="Account">
     <a href="@routes.AgentServicesController.root().url" class="hmrc-account-menu__link hmrc-account-menu__link--home">
@@ -53,6 +41,5 @@
         </li>
     </ul>
 </nav>
-@phaseBanner(PhaseBanner(tag = Some(Tag(Text("Beta"))), content = HtmlContent(phaseBannerContent)))
 
 

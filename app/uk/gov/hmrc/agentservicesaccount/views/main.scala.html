@@ -17,11 +17,13 @@
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.views.html.components.head
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.{HmrcLayout, HmrcStandardFooter}
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcLanguageSelectHelper
 
 @this(
     hmrcLayout: HmrcLayout,
     head: head,
-    hmrcStandardFooter: HmrcStandardFooter
+    hmrcStandardFooter: HmrcStandardFooter,
+    hmrcLanguageSelectHelper: HmrcLanguageSelectHelper
 )
 
 @(
@@ -36,10 +38,14 @@
     <script src="@controllers.routes.Assets.at("javascripts/ga-events.js")" />
 }
 
+@beforeContent={
+    @beforeContentBlock.getOrElse("")
+    @hmrcLanguageSelectHelper()
+}
+
 @hmrcLayout(
     pageTitle = pageTitle,
-    isWelshTranslationAvailable = true,
     additionalHeadBlock = Some(head(hasTimeout)),
-    beforeContentBlock = beforeContentBlock,
+    beforeContentBlock = Some(beforeContent),
     additionalScriptsBlock = Some(scripts),
 )(contentBlock)
