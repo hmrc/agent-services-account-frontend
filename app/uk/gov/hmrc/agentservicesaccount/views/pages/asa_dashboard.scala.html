@@ -14,178 +14,249 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.agentservicesaccount.views.html.main
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-@import uk.gov.hmrc.agentservicesaccount.controllers.routes
-@import play.api.Configuration
+@import uk.gov.hmrc.agentservicesaccount.views.html.components._
+@import uk.gov.hmrc.agentservicesaccount.views.html.main
+@import uk.gov.hmrc.govukfrontend.views.Aliases.Text
+@import uk.gov.hmrc.govukfrontend.views.html.components.{GovukAccordion, GovukPanel}
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.accordion.{Accordion, Section}
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.panel.Panel
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcReportTechnicalIssueHelper
-@import uk.gov.hmrc.agentservicesaccount.views.html.components.secondary_nav
+@import uk.gov.hmrc.govukfrontend.views.html.components.GovukWarningText
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.warningtext.WarningText
 
-@this(mainTemplate: main, hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper, secondaryNav: secondary_nav)
 
-@(arn: String, customDimension: String, isAdmin: Boolean = false, isSuspendedForVat: Boolean)(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
-@mainTemplate(pageTitle = Some(msgs("agent.services.account.heading")), beforeContentBlock = Some(secondaryNav(isAdmin))){
+@import scala.collection.mutable.ListBuffer
 
-    <section class="app-c-banner" style="margin: 0px 0 50px">
-        <h1 class="govuk-heading-xl welcome-heading" style="color:white">@msgs("agent.services.account.welcome")</h1>
-        <div class="govuk-hint" style="color:white">@msgs("agent.accountNumber", arn)</div><p></p>
-    </section>
+@this(
+    mainTemplate: main,
+    p: p,
+    h2: h2,
+    h3: h3,
+    ul: ul,
+    a: a,
+    span: span,
+    govukWarningText: GovukWarningText,
+    govukPanel: GovukPanel,
+    govukAccordion: GovukAccordion,
+    hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper,
+    secondaryNav: secondary_nav
+)
+@(
+    arn: String,
+    customDimension: String,
+    isAdmin: Boolean = false,
+    isSuspendedForVat: Boolean
+)(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
 
-    <h2 class="govuk-heading-m">@msgs("agent.services.account.section4.h2")</h2>
+@itsaAccordionItem = {
+    @h3("agent.services.account.sectionITSA.col1.h3")
+    @p(html = Some(Html(msgs("agent.services.account.sectionITSA.col1.p",
+        appConfig.agentMappingUrl,
+        appConfig.agentInvitationsFrontendClientTypeUrl))))
+    @p(html = Some(Html(msgs("agent.services.account.sectionITSA.col1.link"))))
+    @h3("agent.services.account.sectionITSA.col2.h3")
 
-    <p class="govuk-body">@msgs("agent.services.account.client-authorisations.p")</p>
+    @p(html = Some(Html(
+            a(href = appConfig.incomeTaxSubscriptionAgentFrontendUrl, key = "agent.services.account.sectionITSA.col2.link1.text") + "")
+        )
+    )
+    @p(html = Some(Html(
+        a(href = "https://www.gov.uk/guidance/follow-the-rules-for-making-tax-digital-for-income-tax#who-can-follow-the-rules",
+            key = "agent.services.account.sectionITSA.col2.link2.text",
+            target= Some("_blank"),
+            rel = Some("noreferrer noopener")
+        ) + "")
+        )
+    )
+}
 
-    <ul class="list list-bullet govuk-body govuk-!-margin-bottom-6">
-        <li class="govuk-!-margin-bottom-1"><a class="govuk-link" href="@appConfig.agentInvitationsFrontendUrl">@msgs("agent.services.account.section4.col1.link")</a></li>
-        <li class="govuk-!-margin-bottom-1"><a class="govuk-link" href="@appConfig.agentInvitationsTrackUrl">@msgs("agent.services.account.section4.col2.link1")</a></li>
-        <li class="govuk-!-margin-bottom-1"><a class="govuk-link" href="@appConfig.agentMappingUrl">@msgs("agent.services.account.section4.col2.link2")</a></li>
-        <li class="govuk-!-margin-bottom-1"><a class="govuk-link" href="@appConfig.agentInvitationsCancelAuthUrl">@msgs("agent.services.account.section4.col2.link3")</a></li>
-    </ul>
+@mtdForVatAccordionItem = {
+    @if(isSuspendedForVat) {
+        @h3("agent.services.account.section1.suspended.h3")
+        @p("agent.services.account.section1.suspended.p1")
+        @p("agent.services.account.section1.suspended.p2")
+    } else {
+        @h3("agent.services.account.section1.col1.h3")
+        @p(
+            html = Some(Html(
+                msgs("agent.services.account.section1.col1.p",
+                    appConfig.agentMappingUrl,
+                    appConfig.agentInvitationsFrontendClientTypeUrl)))
+        )
+        @p(html=Some(Html(msgs("agent.services.account.section1.col1.link"))))
+
+        @h3("agent.services.account.section1.col2.h3")
+        @p(html = Some(Html(
+            a(href = appConfig.vatUrl,
+                key = "agent.services.account.section1.col2.link",
+                target= Some("_blank"),
+                rel = Some("noreferrer noopener")
+            ) + "")
+        )
+        )
+
+    }
+}
+
+@payeIncomeRecordAccordionItem = {
+    @p("agent.services.account.paye-section.text")
+    @p(html = Some(Html(a(href = appConfig.taxHistoryFrontendUrl, key = "agent.services.account.paye-section.link") + "")))
+}
+
+@trustsAccordionItem = {
+    @h3("agent.services.account.trusts-section.col1.h3")
+    @p(msgs("agent.services.account.trusts-section.col1.register-trust.p", appConfig.agentInvitationsFrontendClientTypeUrl))
+    @p("agent.services.account.trusts-section.col1.register-estate.p")
+    @h3("agent.services.account.trusts-section.col2.h3")
+    @p(html=Some(Html(a(href = "https://www.gov.uk/guidance/manage-your-trusts-registration-service",
+            key = "agent.services.account.trusts-section.col2.register-trust-link.text") +  ".")))
+}
+
+@capitalGainsAccordionItem = {
+
+    @h3("agent.services.account.section3.col1.h3")
+    @p(html = Some(Html(
+        span("agent.services.account.section3.col1.text1") + "" +
+        span(msgs("agent.services.account.section3.col1.link1",
+            msgs("agent.services.account.section3.col1.link1.href"))))
+    ))
+
+    @p(html = Some(
+        Html(
+            span("agent.services.account.section3.col1.text2") + " " +
+                    span(key=msgs("agent.services.account.section3.col1.link2",
+                        msgs("agent.services.account.section3.col1.link2.href"))))
+    ))
+    @h3("agent.services.account.section3.col2.h3")
+    @p(key = msgs("agent.services.account.section3.col2.link1",
+        msgs("agent.services.account.section3.col2.link1.href")))
+}
+
+@platicPackaginItem = {
+
+    @h3("agent.services.account.ppt.col1.h3")
+    @p(html = Some(
+        Html(
+            span("agent.services.account.ppt.col1.text1") + "" +
+                    span(msgs("agent.services.account.ppt.col1.link1",
+                msgs("agent.services.account.ppt.col1.link1.href")))
+        )
+    ))
+
+    @p(html = Some(
+        Html(
+            span("agent.services.account.ppt.col1.text2") + " " +
+                    span(key = msgs("agent.services.account.ppt.col1.link2", appConfig.agentInvitationsFrontendUrl)))
+    ))
+
+    @h3("agent.services.account.ppt.col2.h3")
+    @p(msgs("agent.services.account.ppt.col2.link1", msgs("agent.services.account.ppt.col2.link1.href")))
+
+
+}
+@otherTaxesItem = {
+    @govukWarningText(
+        WarningText(
+            content = HtmlContent(
+                span("asa.other.p1")
+            )
+        )
+    )
+}
+
+@accordionItems = @{
+    val items = ListBuffer[Section]()
+    if(appConfig.ITSAAccordionEnabled) {
+        items.append(
+            Section(
+                headingContent = Text(msgs("agent.services.account.sectionITSA.h2")),
+                content = HtmlContent(itsaAccordionItem)
+            )
+        )
+    }
+    items.append(
+        Section(
+            headingContent = Text(msgs("agent.services.account.section1.h2")),
+            content = HtmlContent(mtdForVatAccordionItem)
+        )
+    )
+    items.append(
+        Section(
+            headingContent = Text(msgs("agent.services.account.paye-section.h2")),
+            content = HtmlContent(payeIncomeRecordAccordionItem)
+        )
+    )
+    items.append(
+        Section(
+            headingContent = Text(msgs("agent.services.account.trusts-section.h2")),
+            content = HtmlContent(trustsAccordionItem)
+        )
+    )
+    items.append(
+        Section(
+            headingContent = Text(msgs("agent.services.account.section3.col1.h2")),
+            content = HtmlContent(capitalGainsAccordionItem)
+        )
+    )
+    items.append(
+        Section(
+            headingContent = Text(msgs("agent.services.account.ppt.col1.h2")),
+            content = HtmlContent(platicPackaginItem)
+        )
+    )
+    items.append(
+        Section(
+            headingContent = Text(msgs("asa.other.heading")),
+            content = HtmlContent(otherTaxesItem)
+        )
+    )
+    items
+}
+
+@mainTemplate(pageTitle = Some(msgs("agent.services.account.heading")), beforeContentBlock = Some(secondaryNav(isAdmin))) {
+
+    @govukPanel(
+        Panel(
+            title = Text(msgs("agent.services.account.welcome")),
+            content = HtmlContent(msgs("agent.accountNumber", arn)),
+            classes = "blue-panel"
+        )
+    )
+
+    @h2("agent.services.account.section4.h2")
+
+    @p("agent.services.account.client-authorisations.p")
+
+    @ul(items = Seq[Html](
+        a(href = appConfig.agentInvitationsFrontendUrl, key="agent.services.account.section4.col1.link"),
+        a(href = appConfig.agentInvitationsTrackUrl, key="agent.services.account.section4.col2.link1"),
+        a(href = appConfig.agentMappingUrl, key="agent.services.account.section4.col2.link2"),
+        a(href = appConfig.agentInvitationsCancelAuthUrl, key="agent.services.account.section4.col2.link3"),
+    ))
 
     <hr class="govuk-section-break hr-thick govuk-!-margin-bottom-6">
 
-    <h2 class="govuk-heading-m">@msgs("agent.services.account.tax-services")</h2>
+    @h2("agent.services.account.tax-services")
 
-    <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default">
-        @if(appConfig.ITSAAccordionEnabled) {
-        <div class="govuk-accordion__section govuk-body">
-            <div class="govuk-accordion__section-header">
-                <h2 class="govuk-accordion__section-heading">
-                    <span class="govuk-accordion__section-button" id="accordion-default-heading-6">
-                    @msgs("agent.services.account.sectionITSA.h2")
-                    </span>
-                </h2>
-            </div>
-            <div id="accordion-default-content-6" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-6">
-                <h3 class="govuk-heading-s" style="margin: 0px 0 10px">@msgs("agent.services.account.sectionITSA.col1.h3")</h3>
-                <p>@Html(msgs("agent.services.account.sectionITSA.col1.p",appConfig.agentMappingUrl, appConfig.agentInvitationsFrontendClientTypeUrl))</p>
-                <p>@Html(msgs("agent.services.account.sectionITSA.col1.link")).</p>
-                <h3 class="govuk-heading-s" style="margin: 40px 0 10px">@msgs("agent.services.account.sectionITSA.col2.h3")</h3>
-                <p><a class="govuk-link" href="@appConfig.incomeTaxSubscriptionAgentFrontendUrl">@msgs("agent.services.account.sectionITSA.col2.link1.text")</a>.</p>
-                <p><a class="govuk-link" href="https://www.gov.uk/guidance/follow-the-rules-for-making-tax-digital-for-income-tax#who-can-follow-the-rules" target="_blank" rel="noreferrer noopener">@msgs("agent.services.account.sectionITSA.col2.link2.text")</a>.</p>
-            </div>
-        </div>
-        }
-        <div class="govuk-accordion__section govuk-body">
-            <div class="govuk-accordion__section-header">
-                <h2 class="govuk-accordion__section-heading">
-                    <span class="govuk-accordion__section-button" id="accordion-default-heading-1">
-                        @msgs("agent.services.account.section1.h2")
-                    </span>
-                </h2>
-            </div>
-            <div id="accordion-default-content-1" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-1">
-                @if(isSuspendedForVat){
-                    <h3 class="govuk-heading-s" style="margin: 0px 0 10px">@msgs("agent.services.account.section1.suspended.h3")</h3>
-                    <p>@msgs("agent.services.account.section1.suspended.p1")</p>
-                    <p>@msgs("agent.services.account.section1.suspended.p2")</p>
-                } else {
-                    <h3 class="govuk-heading-s" style="margin: 0px 0 10px">@msgs("agent.services.account.section1.col1.h3")</h3>
-                <p>@Html(msgs("agent.services.account.section1.col1.p",appConfig.agentMappingUrl, appConfig.agentInvitationsFrontendClientTypeUrl))</p>
-                    <p>@Html(msgs("agent.services.account.section1.col1.link"))</p>
+    @govukAccordion(
+        Accordion(
+            id = "accordion-default",
+            items = accordionItems
+        )
+    )
 
-                    <h3 class="govuk-heading-s" style="margin: 40px 0 10px">@msgs("agent.services.account.section1.col2.h3")</h3>
-                    <p><a class="govuk-link" href="@appConfig.vatUrl" target="_blank" rel="noreferrer noopener">@msgs("agent.services.account.section1.col2.link")</a>.</p>
-                }
-            </div>
-        </div>
-            <div class="govuk-accordion__section govuk-body">
-                <div class="govuk-accordion__section-header">
-                    <h2 class="govuk-accordion__section-heading">
-                        <span class="govuk-accordion__section-button" id="accordion-default-heading-2">
-                        @msgs("agent.services.account.paye-section.h2")
-                        </span>
-                    </h2>
-                </div>
-                <div id="accordion-default-content-2" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-2">
-                    <p style="margin: 0px 0 10px">@msgs("agent.services.account.paye-section.text")</p>
-                    <p><a class="govuk-link" href="@appConfig.taxHistoryFrontendUrl">@msgs("agent.services.account.paye-section.link")</a></p>
-                </div>
-            </div>
-        <div class="govuk-accordion__section govuk-body">
-            <div class="govuk-accordion__section-header">
-                <h2 class="govuk-accordion__section-heading">
-                    <span class="govuk-accordion__section-button" id="accordion-default-heading-3">
-                    @msgs("agent.services.account.trusts-section.h2")
-                    </span>
-                </h2>
-            </div>
-            <div id="accordion-default-content-3" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-3">
-                <h3 class="govuk-heading-s" style="margin: 0px 0 10px">@msgs("agent.services.account.trusts-section.col1.h3")</h3>
-                <p>@Html(msgs("agent.services.account.trusts-section.col1.register-trust.p",appConfig.agentInvitationsFrontendClientTypeUrl))</p>
-                <p>@Html(msgs("agent.services.account.trusts-section.col1.register-estate.p"))</p>
-                <h3 class="govuk-heading-s" style="margin: 40px 0 10px">@msgs("agent.services.account.trusts-section.col2.h3")</h3>
-                <p><a class="govuk-link" href="https://www.gov.uk/guidance/manage-your-trusts-registration-service">@msgs("agent.services.account.trusts-section.col2.register-trust-link.text")</a>.</p>
-            </div>
-        </div>
-        <div class="govuk-accordion__section govuk-body">
-            <div class="govuk-accordion__section-header">
-                <h2 class="govuk-accordion__section-heading">
-                    <span class="govuk-accordion__section-button" id="accordion-default-heading-4">
-                        @msgs("agent.services.account.section3.col1.h2")
-                    </span>
-                </h2>
-            </div>
-            <div id="accordion-default-content-4" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-4">
-                <h3 class="govuk-heading-s" style="margin: 0px 0 10px">@msgs("agent.services.account.section3.col1.h3")</h3>
-                <p>
-                    @msgs("agent.services.account.section3.col1.text1")
-                    @Html(msgs("agent.services.account.section3.col1.link1", msgs("agent.services.account.section3.col1.link1.href"))).
-                </p>
-                <p>
-                    @msgs("agent.services.account.section3.col1.text2")
-                    @Html(msgs("agent.services.account.section3.col1.link2", msgs("agent.services.account.section3.col1.link2.href"))).
-                </p>
-                <h3 class="govuk-heading-s" style="margin: 40px 0 10px">@msgs("agent.services.account.section3.col2.h3")</h3>
-                <p>@Html(msgs("agent.services.account.section3.col2.link1", msgs("agent.services.account.section3.col2.link1.href")))</p>
-            </div>
-        </div>
-        <div class="govuk-accordion__section govuk-body">
-            <div class="govuk-accordion__section-header">
-                <h2 class="govuk-accordion__section-heading">
-                    <span class="govuk-accordion__section-button" id="accordion-default-heading-4">
-                    @msgs("agent.services.account.ppt.col1.h2")
-                    </span>
-                </h2>
-            </div>
-            <div id="accordion-default-content-4" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-4">
-                <h3 class="govuk-heading-s" style="margin: 0px 0 10px">@msgs("agent.services.account.ppt.col1.h3")</h3>
-                <p>
-                    @msgs("agent.services.account.ppt.col1.text1")
-                    @Html(msgs("agent.services.account.ppt.col1.link1", msgs("agent.services.account.ppt.col1.link1.href"))).
-                </p>
-                <p>
-                    @msgs("agent.services.account.ppt.col1.text2")
-                    @Html(msgs("agent.services.account.ppt.col1.link2", appConfig.agentInvitationsFrontendUrl)).
-                </p>
-                <h3 class="govuk-heading-s" style="margin: 40px 0 10px">@msgs("agent.services.account.ppt.col2.h3")</h3>
-                <p>@Html(msgs("agent.services.account.ppt.col2.link1", msgs("agent.services.account.ppt.col2.link1.href")))</p>
-            </div>
-        </div>
-        <div class="govuk-accordion__section govuk-body">
-            <div class="govuk-accordion__section-header">
-                <h2 class="govuk-accordion__section-heading">
-                    <span class="govuk-accordion__section-button" id="accordion-default-heading-5">
-                        @msgs("asa.other.heading")
-                    </span>
-                </h2>
-            </div>
-            <div id="accordion-default-content-5" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-5">
-                <div class="govuk-warning-text">
-                    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-                    <strong class="govuk-warning-text__text">
-                    <span class="govuk-warning-text__assistive">@msgs("asa.other.warning")</span>
-                        @Html(msgs("asa.other.p1"))
-                    </strong>
-                </div>
-            </div>
-        </div>
-        <div>
-            <hr class="govuk-section-break hr-thick govuk-!-margin-bottom-6">
-            <h2 class="govuk-heading-m" style="margin: 0px 0 5px">@msgs("agent.services.account.help.h2")</h2>
-            <p class="govuk-body govuk-!-width-two-thirds"><a class="govuk-link" href="/agent-services-account/help-and-guidance">@msgs("agent.services.account.help.link")</a>.</p>
-        </div>
-    </div>
+    <hr class="govuk-section-break hr-thick govuk-!-margin-bottom-6">
+
+    @h2("agent.services.account.help.h2")
+    @p(html = Some(Html(
+        a(href = "/agent-services-account/help-and-guidance",
+            key = "agent.services.account.help.link",
+        ) + "")
+    )
+    )
+
     @hmrcReportTechnicalIssueHelper()
 
 }

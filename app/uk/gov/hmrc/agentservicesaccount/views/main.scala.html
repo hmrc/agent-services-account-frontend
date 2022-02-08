@@ -14,41 +14,32 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.govukfrontend.views.html.components.GovukLayout
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-@import uk.gov.hmrc.agentservicesaccount.controllers.routes
-@import uk.gov.hmrc.agentservicesaccount.views.html.components.{header, head}
-@import uk.gov.hmrc.hmrcfrontend.views.html.components._
-@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcStandardFooter
+@import uk.gov.hmrc.agentservicesaccount.views.html.components.head
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.{HmrcLayout, HmrcStandardFooter}
 
 @this(
-        govukLayout: GovukLayout,
-        head: head,
-        header: header,
-        hmrcStandardFooter: HmrcStandardFooter
+    hmrcLayout: HmrcLayout,
+    head: head,
+    hmrcStandardFooter: HmrcStandardFooter
 )
 
-@(pageTitle: Option[String] = None,
-        beforeContentBlock: Option[Html] = None,
-        analyticsAdditionalJs: Option[Html] = None,
-        hasTimeout: Boolean = true,
+@(
+    pageTitle: Option[String] = None,
+    beforeContentBlock: Option[Html] = None,
+    analyticsAdditionalJs: Option[Html] = None,
+    hasTimeout: Boolean = true,
 )(contentBlock: Html)(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
 
 @scripts = {
-    <script src="@controllers.routes.Assets.at("javascripts/jquery.js")" type="text/javascript"></script>
-    <script src="@controllers.routes.Assets.at("javascripts/ga-events.js")" type="text/javascript"></script>
-    <script src='@controllers.routes.Assets.at("lib/govuk-frontend/govuk/all.js")'></script>
-    <script src='@controllers.routes.Assets.at("lib/hmrc-frontend/hmrc/all.js")'></script>
-    <script>
-            window.GOVUKFrontend.initAll();
-            window.HMRCFrontend.initAll();
-    </script>
+    <script src="@controllers.routes.Assets.at("javascripts/jquery.js")" />
+    <script src="@controllers.routes.Assets.at("javascripts/ga-events.js")" />
 }
 
-@govukLayout(
+@hmrcLayout(
     pageTitle = pageTitle,
-    headerBlock = Some(header()),
-    headBlock = Some(head(hasTimeout)),
+    isWelshTranslationAvailable = true,
+    additionalHeadBlock = Some(head(hasTimeout)),
     beforeContentBlock = beforeContentBlock,
-    footerBlock = Some(hmrcStandardFooter()),
-    bodyEndBlock = Some(scripts))(contentBlock)
+    additionalScriptsBlock = Some(scripts),
+)(contentBlock)
