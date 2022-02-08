@@ -93,7 +93,6 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
   val vatUrl = s"$vatExternalUrl$vatStartPath"
 
   val agentSuspensionEnabled = getBoolean("features.enable-agent-suspension")
-  val welshToggleEnabled = true
   val irvAllowlistEnabled = getBoolean("features.enable-irv-allowlist")
   val ITSAAccordionEnabled = getBoolean("features.enable-ITSA-Accordion")
   val HelpAndGuidanceEnabled = getBoolean("features.enable-help-and-guidance")
