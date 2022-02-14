@@ -78,7 +78,7 @@ agent.services.account.section4.h2=Client authorisations
 agent.services.account.section4.col1.h3=Ask a client to authorise you
 agent.services.account.section4.col1.link=Ask a client to authorise you
 
-agent.services.account.section4.col2.link1=Track your authorisation requests from the last 30 days
+agent.services.account.section4.col2.link1=Manage your authorisation requests from the last 30 days
 agent.services.account.section4.col2.link2=Copy across more VAT and Self Assessment client authorisations
 agent.services.account.section4.col2.link3=Cancel a client’s authorisation
 
@@ -102,7 +102,7 @@ agent.services.account.h3.manage=Manage your account
 agent.services.account.p.manage=Allow other users in your organisation to access this agent services account, or restrict their access.
 
 agent.invitations.links.start=<a href="{0}" id="{1}" >Ask a client to authorise you</a>
-agent.invitations.links.track=<a href="{0}" id="{1}" >Track your recent authorisation requests</a>
+agent.invitations.links.track=<a href="{0}" id="{1}" >Manage your recent authorisation requests</a>
 agent.services.account.additional.links.mapping.body2=<a href="{0}" id="{1}" >Copy across your existing Self Assessment and VAT clients to this account</a>
 agent.invitations.links.cancel-auth=<a href="{0}" id="{1}" >Cancel a client''s authorisation</a>
 agent.accountNumber=Account number: {0}

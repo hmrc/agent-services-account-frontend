@@ -78,7 +78,7 @@ agent.services.account.section4.h2=Awdurdodiadau cleientiaid
 agent.services.account.section4.col1.h3=Gofyn i gleient eich awdurdodi
 agent.services.account.section4.col1.link=Gofyn i gleient eich awdurdodi
 
-agent.services.account.section4.col2.link1=Ewch ati i ddilyn hynt eich ceisiadau am awdurdodiad o’r 30 diwrnod diwethaf
+agent.services.account.section4.col2.link1=Rheoli’ch ceisiadau am awdurdodiad o’r 30 diwrnod diwethaf
 agent.services.account.section4.col2.link2=Copïo rhagor o awdurdodiadau cleientiaid TAW a Hunanasesiad ar draws
 agent.services.account.section4.col2.link3=Canslo awdurdodiad cleient
 
@@ -102,7 +102,7 @@ agent.services.account.h3.manage=Rheoli eich cyfrif
 agent.services.account.p.manage=Caniatáu i ddefnyddwyr eraill yn eich sefydliad gael mynediad at y cyfrif gwasanaethau asiant hwn, neu gyfyngu ar eu mynediad.
 
 agent.invitations.links.start=<a href="{0}" id="{1}" >Gofyn i gleient eich awdurdodi</a>
-agent.invitations.links.track=<a href="{0}" id="{1}" >Olrhain eich ceisiadau awdurdodi diweddar</a>
+agent.invitations.links.track=<a href="{0}" id="{1}" >Rheoli’ch ceisiadau diweddar am awdurdodiad</a>
 agent.services.account.additional.links.mapping.body2=<a href="{0}" id="{1}">Copïo eich cleientiaid Hunanasesiad a TAW ar draws i’r cyfrif hwn</a>
 agent.invitations.links.cancel-auth=<a href="{0}" id="{1}" >Canslo awdurdodiad cleient</a>
 agent.accountNumber=Rhif y cyfrif: {0}
