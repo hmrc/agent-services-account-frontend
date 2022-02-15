@@ -9,7 +9,7 @@ lazy val scoverageSettings = {
     ScoverageKeys.coverageMinimum := 80.00,
     ScoverageKeys.coverageFailOnMinimum := true,
     ScoverageKeys.coverageHighlighting := true,
-    parallelExecution in Test := false
+    Test / parallelExecution := false
   )
 }
 
@@ -22,7 +22,7 @@ lazy val wartRemoverSettings = {
       Wart.IsInstanceOf
       //Wart.Any
     )
-    wartremoverWarnings in (Compile, compile) ++= warningWarts
+    Compile / compile / wartremoverWarnings ++= warningWarts
   }
 
   val wartRemoverError = {
@@ -47,15 +47,15 @@ lazy val wartRemoverSettings = {
       Wart.Var,
       Wart.While)
 
-    wartremoverErrors in (Compile, compile) ++= errorWarts
+    Compile / compile / wartremoverErrors ++= errorWarts
   }
 
   Seq(
     wartRemoverError,
     wartRemoverWarning,
-    wartremoverErrors in (Test, compile) --= Seq(Wart.Any, Wart.Equals, Wart.Null, Wart.NonUnitStatements, Wart.PublicInference),
+    Test / compile / wartremoverErrors --= Seq(Wart.Any, Wart.Equals, Wart.Null, Wart.NonUnitStatements, Wart.PublicInference),
     wartremoverExcluded ++=
-      routes.in(Compile).value ++
+      (Compile / routes).value ++
         (baseDirectory.value / "it").get ++
         (baseDirectory.value / "test").get ++
         Seq(sourceManaged.value / "main" / "sbt-buildinfo" / "BuildInfo.scala")
@@ -67,11 +67,11 @@ TwirlKeys.templateImports ++= Seq(
 )
 
 lazy val compileDeps = Seq(
-  "uk.gov.hmrc" %% "bootstrap-frontend-play-28" % "5.16.0",
+  "uk.gov.hmrc" %% "bootstrap-frontend-play-28" % "5.20.0",
   "uk.gov.hmrc" %% "play-partials"              % "8.2.0-play-28",
   "uk.gov.hmrc" %% "agent-kenshoo-monitoring"   % "4.8.0-play-28",
-  "uk.gov.hmrc" %% "agent-mtd-identifiers"      % "0.25.0-play-27",
-  "uk.gov.hmrc" %% "play-frontend-hmrc"         % "3.2.0-play-28"
+  "uk.gov.hmrc" %% "agent-mtd-identifiers"      % "0.31.0-play-28",
+  "uk.gov.hmrc" %% "play-frontend-hmrc"         % "3.4.0-play-28"
 )
 
 def testDeps(scope: String) = Seq(
@@ -111,15 +111,15 @@ libraryDependencies ++= compileDeps ++ testDeps("test") ++ testDeps("it"),
     ),
     publishingSettings,
     scoverageSettings,
-    unmanagedResourceDirectories in Compile += baseDirectory.value / "resources"
+    Compile / unmanagedResourceDirectories += baseDirectory.value / "resources"
   )
   .configs(IntegrationTest)
   .settings(
     majorVersion := 0,
-    Keys.fork in IntegrationTest := false,
+    IntegrationTest / Keys.fork := false,
     Defaults.itSettings,
-    unmanagedSourceDirectories in IntegrationTest += baseDirectory(_ / "it").value,
-    parallelExecution in IntegrationTest := false
+    IntegrationTest / unmanagedSourceDirectories += baseDirectory(_ / "it").value,
+    IntegrationTest / parallelExecution := false
   )
   .settings(wartRemoverSettings: _*)
   .enablePlugins(PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin)

@@ -17,12 +17,12 @@
 package uk.gov.hmrc.agentservicesaccount.connectors
 
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
-import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress, SuspensionDetails, SuspensionDetailsNotFound}
+import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress}
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentClientAuthorisationStubs._
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import uk.gov.hmrc.http.HeaderCarrier
-
 import play.api.test.Helpers._
+import uk.gov.hmrc.agentclientauthorisation.model.{SuspensionDetails, SuspensionDetailsNotFound}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
