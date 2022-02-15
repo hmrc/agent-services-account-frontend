@@ -34,8 +34,8 @@
 )(contentBlock: Html)(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
 
 @scripts = {
-    <script src="@controllers.routes.Assets.at("javascripts/jquery.js")" />
-    <script src="@controllers.routes.Assets.at("javascripts/ga-events.js")" />
+    <script src="@controllers.routes.Assets.at("javascripts/jquery.js")"></script>
+    <script src="@controllers.routes.Assets.at("javascripts/ga-events.js")"></script>
 }
 
 @beforeContent={
