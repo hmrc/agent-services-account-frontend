@@ -22,8 +22,9 @@ import play.api.mvc.Session
 import play.api.test.{FakeRequest, Helpers}
 import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
+import uk.gov.hmrc.agentclientauthorisation.model.{SuspensionDetails, SuspensionDetailsNotFound}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress, SuspensionDetails, SuspensionDetailsNotFound}
+import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress}
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentClientAuthorisationStubs._
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import uk.gov.hmrc.auth.core.{Enrolment, EnrolmentIdentifier}
@@ -93,7 +94,7 @@ class AgentServicesControllerSpec extends BaseISpec {
 
       status(response) shouldBe SEE_OTHER
       Helpers.redirectLocation(response) shouldBe Some(routes.AgentServicesController.showSuspendedWarning().url)
-      Helpers.session(response) shouldBe Session(Map("suspendedServices" -> "ITSA,VATC,TRS,CGT", "isSuspendedForVat" -> "true"))
+      Helpers.session(response) shouldBe Session(Map("suspendedServices" -> "CGT,ITSA,PPT,TRS,VATC", "isSuspendedForVat" -> "true"))
     }
 
     "redirect to suspended warning when suspension is enabled and user is suspended for ALL" in {
@@ -109,7 +110,7 @@ class AgentServicesControllerSpec extends BaseISpec {
 
       status(response) shouldBe SEE_OTHER
       Helpers.redirectLocation(response) shouldBe Some(routes.AgentServicesController.showSuspendedWarning().url)
-      Helpers.session(response) shouldBe Session(Map("suspendedServices" -> "ITSA,VATC,TRS,CGT", "isSuspendedForVat" -> "true"))
+      Helpers.session(response) shouldBe Session(Map("suspendedServices" -> "CGT,ITSA,PPT,TRS,VATC", "isSuspendedForVat" -> "true"))
     }
 
     "throw an exception when suspension is enabled and suspension status returns NOT_FOUND for user" in {
