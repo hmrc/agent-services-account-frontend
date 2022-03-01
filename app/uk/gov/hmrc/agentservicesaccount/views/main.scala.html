@@ -18,6 +18,7 @@
 @import uk.gov.hmrc.agentservicesaccount.views.html.components.head
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.{HmrcLayout, HmrcStandardFooter}
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcLanguageSelectHelper
+@import views.html.helper.CSPNonce
 
 @this(
     hmrcLayout: HmrcLayout,
@@ -34,8 +35,8 @@
 )(contentBlock: Html)(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
 
 @scripts = {
-    <script src="@controllers.routes.Assets.at("javascripts/jquery.js")"></script>
-    <script src="@controllers.routes.Assets.at("javascripts/ga-events.js")"></script>
+    <script src="@controllers.routes.Assets.at("javascripts/jquery.js")" @{CSPNonce.attr}></script>
+    <script src="@controllers.routes.Assets.at("javascripts/ga-events.js")" @{CSPNonce.attr}></script>
 }
 
 @beforeContent={
@@ -48,4 +49,5 @@
     additionalHeadBlock = Some(head(hasTimeout)),
     beforeContentBlock = Some(beforeContent),
     additionalScriptsBlock = Some(scripts),
+    nonce = CSPNonce.get
 )(contentBlock)

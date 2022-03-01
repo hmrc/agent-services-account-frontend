@@ -22,7 +22,7 @@
 
 @(hasTimeout: Boolean)(implicit appConfig: AppConfig, msgs: Messages)
 
-<link rel="stylesheet" type="text/css" href="@controllers.routes.Assets.at("stylesheets/application.css")" media="screen">
+<link rel="stylesheet" href="@controllers.routes.Assets.at("stylesheets/application.css")" media="screen">
 
 @if(hasTimeout) {
     @hmrcTimeoutDialog(
