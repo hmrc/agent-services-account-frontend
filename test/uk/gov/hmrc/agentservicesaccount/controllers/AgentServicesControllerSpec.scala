@@ -45,96 +45,80 @@ class AgentServicesControllerSpec extends BaseISpec {
 
   "root" should {
     "redirect to agent services account when suspension is disabled" in {
+      val controllerWithSuspensionDisabled =
+        appBuilder(Map("features.enable-agent-suspension" -> false))
+          .build()
+          .injector.instanceOf[AgentServicesController]
       givenAuthorisedAsAgentWith(arn)
-      val response = controller.root()(FakeRequest("GET", "/"))
+      val response = controllerWithSuspensionDisabled.root()(FakeRequest("GET", "/"))
 
       status(response) shouldBe SEE_OTHER
       Helpers.redirectLocation(response) shouldBe Some(routes.AgentServicesController.showAgentServicesAccount().url)
     }
 
     "redirect to agent service account when suspension is enabled but user is not suspended" in {
-      val controllerWithSuspensionEnabled =
-        appBuilder(Map("features.enable-agent-suspension" -> true))
-          .build()
-          .injector.instanceOf[AgentServicesController]
       givenAuthorisedAsAgentWith(arn)
       givenSuspensionStatus(SuspensionDetails(suspensionStatus = false, None))
 
-      val response = controllerWithSuspensionEnabled.root()(FakeRequest("GET", "/"))
+      val response = controller.root()(FakeRequest("GET", "/"))
 
       status(response) shouldBe SEE_OTHER
       Helpers.redirectLocation(response) shouldBe Some(routes.AgentServicesController.showAgentServicesAccount().url)
     }
 
     "redirect to suspended warning when suspension is enabled and user is suspended" in {
-     val controllerWithSuspensionEnabled =
-       appBuilder(Map("features.enable-agent-suspension" -> true))
-         .build()
-         .injector.instanceOf[AgentServicesController]
-
       givenAuthorisedAsAgentWith(arn)
       givenSuspensionStatus(SuspensionDetails(suspensionStatus = true, Some(Set("ITSA"))))
 
-      val response = controllerWithSuspensionEnabled.root()(FakeRequest("GET", "/"))
+      val response = controller.root()(FakeRequest("GET", "/"))
 
       status(response) shouldBe SEE_OTHER
       Helpers.redirectLocation(response) shouldBe Some(routes.AgentServicesController.showSuspendedWarning().url)
     }
 
     "redirect to suspended warning when suspension is enabled and user is suspended for AGSV" in {
-      val controllerWithSuspensionEnabled =
-        appBuilder(Map("features.enable-agent-suspension" -> true))
-          .build()
-          .injector.instanceOf[AgentServicesController]
-
       givenAuthorisedAsAgentWith(arn)
       givenSuspensionStatus(SuspensionDetails(suspensionStatus = true, Some(Set("AGSV"))))
 
-      val response = controllerWithSuspensionEnabled.root()(FakeRequest("GET", "/"))
+      val response = controller.root()(FakeRequest("GET", "/"))
 
       status(response) shouldBe SEE_OTHER
       Helpers.redirectLocation(response) shouldBe Some(routes.AgentServicesController.showSuspendedWarning().url)
-      Helpers.session(response) shouldBe Session(Map("suspendedServices" -> "CGT,ITSA,PPT,TRS,VATC", "isSuspendedForVat" -> "true"))
+      Helpers.session(response) shouldBe Session(Map("suspendedServices" -> "CGT,ITSA,PIR,PPT,TRS,VATC", "isSuspendedForVat" -> "true"))
     }
 
     "redirect to suspended warning when suspension is enabled and user is suspended for ALL" in {
-      val controllerWithSuspensionEnabled =
-        appBuilder(Map("features.enable-agent-suspension" -> true))
-          .build()
-          .injector.instanceOf[AgentServicesController]
-
       givenAuthorisedAsAgentWith(arn)
       givenSuspensionStatus(SuspensionDetails(suspensionStatus = true, Some(Set("ALL"))))
 
-      val response = controllerWithSuspensionEnabled.root()(FakeRequest("GET", "/"))
+      val response = controller.root()(FakeRequest("GET", "/"))
 
       status(response) shouldBe SEE_OTHER
       Helpers.redirectLocation(response) shouldBe Some(routes.AgentServicesController.showSuspendedWarning().url)
-      Helpers.session(response) shouldBe Session(Map("suspendedServices" -> "CGT,ITSA,PPT,TRS,VATC", "isSuspendedForVat" -> "true"))
+      Helpers.session(response) shouldBe Session(Map("suspendedServices" -> "CGT,ITSA,PIR,PPT,TRS,VATC", "isSuspendedForVat" -> "true"))
     }
 
     "throw an exception when suspension is enabled and suspension status returns NOT_FOUND for user" in {
-      val controllerWithSuspensionEnabled =
-        appBuilder(Map("features.enable-agent-suspension" -> true))
-          .build()
-          .injector.instanceOf[AgentServicesController]
-
       givenAuthorisedAsAgentWith(arn)
       givenAgentRecordNotFound
 
 
       intercept[SuspensionDetailsNotFound]{
-        await(controllerWithSuspensionEnabled.root()(FakeRequest("GET", "/")))
+        await(controller.root()(FakeRequest("GET", "/")))
       }
     }
   }
 
   "home" should {
     "return Status: OK and body containing correct content" in {
+      val controllerWithSuspensionDisabled =
+        appBuilder(Map("features.enable-agent-suspension" -> false))
+          .build()
+          .injector.instanceOf[AgentServicesController]
       givenAuthorisedAsAgentWith(arn)
       givenSuspensionStatus(SuspensionDetails(suspensionStatus = false, None))
 
-      val response = controller.showAgentServicesAccount()(FakeRequest("GET", "/home"))
+      val response = controllerWithSuspensionDisabled.showAgentServicesAccount()(FakeRequest("GET", "/home"))
 
       status(response) shouldBe OK
       Helpers.contentType(response).get shouldBe HTML
@@ -203,13 +187,9 @@ class AgentServicesControllerSpec extends BaseISpec {
     }
 
     "return Status: OK and body containing correct content when suspension details are in the session and agent is suspended for VATC" in {
-      val controllerWithSuspensionEnabled =
-        appBuilder(Map("features.enable-agent-suspension" -> true))
-          .build()
-          .injector.instanceOf[AgentServicesController]
       givenSuspensionStatus(SuspensionDetails(suspensionStatus = true, Some(Set("VATC"))))
       givenAuthorisedAsAgentWith(arn)
-      val response = controllerWithSuspensionEnabled.showAgentServicesAccount()(FakeRequest("GET", "/home"))
+      val response = controller.showAgentServicesAccount()(FakeRequest("GET", "/home"))
 
       status(response) shouldBe OK
       Helpers.contentType(response).get shouldBe HTML
@@ -224,8 +204,12 @@ class AgentServicesControllerSpec extends BaseISpec {
     }
 
     "return Status: OK and body containing correct content when agent suspension is not enabled" in {
+      val controllerWithSuspensionDisabled =
+        appBuilder(Map("features.enable-agent-suspension" -> false))
+          .build()
+          .injector.instanceOf[AgentServicesController]
       givenAuthorisedAsAgentWith(arn)
-      val response = controller.showAgentServicesAccount()(FakeRequest("GET", "/home"))
+      val response = controllerWithSuspensionDisabled.showAgentServicesAccount()(FakeRequest("GET", "/home"))
 
       status(response) shouldBe OK
       Helpers.contentType(response).get shouldBe HTML
@@ -248,10 +232,11 @@ class AgentServicesControllerSpec extends BaseISpec {
     }
 
     "include the Income Record Viewer section " in {
-
+      val controller =
+        appBuilder(Map("features.enable-agent-suspension" -> false, "features.enable-irv-allowlist" -> true))
+          .build()
+          .injector.instanceOf[AgentServicesController]
       givenAuthorisedAsAgentWith(arn)
-
-      val controller = appBuilder(Map("features.enable-irv-allowlist" -> true)).build().injector.instanceOf[AgentServicesController]
 
       val result = controller.showAgentServicesAccount(FakeRequest())
       status(result) shouldBe OK
