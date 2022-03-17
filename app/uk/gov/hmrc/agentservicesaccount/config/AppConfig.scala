@@ -110,6 +110,8 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
 
   val feedbackSurveyServiceSelect = getBoolean("features.enable-feedback-survey-service-select")
 
+  val enablePpt = getBoolean("features.enable-ppt")
+
   def signOutUrlWithSurvey(surveyKey: String): String = s"$companyAuthFrontendExternalUrl$signOutPath?continue=${urlEncode(signOutContinueUrl + surveyKey)}"
 
   def languageMap: Map[String, Lang] = Map(
