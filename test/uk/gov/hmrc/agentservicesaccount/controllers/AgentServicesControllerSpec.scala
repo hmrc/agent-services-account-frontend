@@ -22,10 +22,11 @@ import play.api.mvc.Session
 import play.api.test.{FakeRequest, Helpers}
 import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.agentmtdidentifiers.model.{SuspensionDetails, SuspensionDetailsNotFound}
+import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, SuspensionDetails, SuspensionDetailsNotFound}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress}
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentClientAuthorisationStubs._
+import uk.gov.hmrc.agentservicesaccount.stubs.AgentFiRelationshipStubs.{givenArnIsAllowlistedForIrv, givenArnIsNotAllowlistedForIrv}
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import uk.gov.hmrc.auth.core.{Enrolment, EnrolmentIdentifier}
 
@@ -45,6 +46,7 @@ class AgentServicesControllerSpec extends BaseISpec {
 
   "root" should {
     "redirect to agent services account when suspension is disabled" in {
+      givenArnIsAllowlistedForIrv(Arn(arn))
       val controllerWithSuspensionDisabled =
         appBuilder(Map("features.enable-agent-suspension" -> false))
           .build()
@@ -57,6 +59,7 @@ class AgentServicesControllerSpec extends BaseISpec {
     }
 
     "redirect to agent service account when suspension is enabled but user is not suspended" in {
+      givenArnIsAllowlistedForIrv(Arn(arn))
       givenAuthorisedAsAgentWith(arn)
       givenSuspensionStatus(SuspensionDetails(suspensionStatus = false, None))
 
@@ -67,6 +70,7 @@ class AgentServicesControllerSpec extends BaseISpec {
     }
 
     "redirect to suspended warning when suspension is enabled and user is suspended" in {
+      givenArnIsAllowlistedForIrv(Arn(arn))
       givenAuthorisedAsAgentWith(arn)
       givenSuspensionStatus(SuspensionDetails(suspensionStatus = true, Some(Set("ITSA"))))
 
@@ -77,6 +81,7 @@ class AgentServicesControllerSpec extends BaseISpec {
     }
 
     "redirect to suspended warning when suspension is enabled and user is suspended for AGSV" in {
+      givenArnIsAllowlistedForIrv(Arn(arn))
       givenAuthorisedAsAgentWith(arn)
       givenSuspensionStatus(SuspensionDetails(suspensionStatus = true, Some(Set("AGSV"))))
 
@@ -88,6 +93,7 @@ class AgentServicesControllerSpec extends BaseISpec {
     }
 
     "redirect to suspended warning when suspension is enabled and user is suspended for ALL" in {
+      givenArnIsAllowlistedForIrv(Arn(arn))
       givenAuthorisedAsAgentWith(arn)
       givenSuspensionStatus(SuspensionDetails(suspensionStatus = true, Some(Set("ALL"))))
 
@@ -99,6 +105,7 @@ class AgentServicesControllerSpec extends BaseISpec {
     }
 
     "throw an exception when suspension is enabled and suspension status returns NOT_FOUND for user" in {
+      givenArnIsAllowlistedForIrv(Arn(arn))
       givenAuthorisedAsAgentWith(arn)
       givenAgentRecordNotFound
 
@@ -111,6 +118,7 @@ class AgentServicesControllerSpec extends BaseISpec {
 
   "home" should {
     "return Status: OK and body containing correct content" in {
+      givenArnIsAllowlistedForIrv(Arn(arn))
       val controllerWithSuspensionDisabled =
         appBuilder(Map("features.enable-agent-suspension" -> false))
           .build()
@@ -177,6 +185,7 @@ class AgentServicesControllerSpec extends BaseISpec {
     }
 
     "not show Help and Guidance link when toggled off" in {
+      givenArnIsAllowlistedForIrv(Arn(arn))
       val controllerWithHelpToggledOff =
         appBuilder(Map("features.enable-help-and-guidance" -> false)).build().injector.instanceOf[AgentServicesController]
       givenAuthorisedAsAgentWith(arn)
@@ -187,6 +196,7 @@ class AgentServicesControllerSpec extends BaseISpec {
     }
 
     "return Status: OK and body containing correct content when suspension details are in the session and agent is suspended for VATC" in {
+      givenArnIsAllowlistedForIrv(Arn(arn))
       givenSuspensionStatus(SuspensionDetails(suspensionStatus = true, Some(Set("VATC"))))
       givenAuthorisedAsAgentWith(arn)
       val response = controller.showAgentServicesAccount()(FakeRequest("GET", "/home"))
@@ -204,6 +214,7 @@ class AgentServicesControllerSpec extends BaseISpec {
     }
 
     "return Status: OK and body containing correct content when agent suspension is not enabled" in {
+      givenArnIsAllowlistedForIrv(Arn(arn))
       val controllerWithSuspensionDisabled =
         appBuilder(Map("features.enable-agent-suspension" -> false))
           .build()
@@ -221,6 +232,7 @@ class AgentServicesControllerSpec extends BaseISpec {
     }
 
     "do not fail without continue url parameter" in {
+      givenArnIsAllowlistedForIrv(Arn(arn))
       givenAuthorisedAsAgentWith(arn)
       givenSuspensionStatus(SuspensionDetails(suspensionStatus = false, None))
 
@@ -231,7 +243,8 @@ class AgentServicesControllerSpec extends BaseISpec {
       }
     }
 
-    "include the Income Record Viewer section " in {
+    "include the Income Record Viewer section when the IRV allowlist is enabled and the ARN is allowed " in {
+      givenArnIsAllowlistedForIrv(Arn(arn))
       val controller =
         appBuilder(Map("features.enable-agent-suspension" -> false, "features.enable-irv-allowlist" -> true))
           .build()
@@ -245,10 +258,25 @@ class AgentServicesControllerSpec extends BaseISpec {
       content should include (messagesApi("agent.services.account.paye-section.h2"))
     }
 
+    "not include the Income Record Viewer section when the IRV allowlist is enabled and the ARN is not allowed" in {
+      givenArnIsNotAllowlistedForIrv(Arn(arn))
+      givenSuspensionStatus(SuspensionDetails(suspensionStatus = false, None))
+      givenAuthorisedAsAgentWith(arn)
+
+      val controller = appBuilder().build().injector.instanceOf[AgentServicesController]
+
+      val result = controller.showAgentServicesAccount(FakeRequest())
+      status(result) shouldBe OK
+
+      val content = Helpers.contentAsString(result)
+      content should not include messagesApi("agent.services.account.paye-section.h2")
+    }
+
   }
 
   "showSuspensionWarning" should {
     "return Ok and show the suspension warning page" in {
+      givenArnIsAllowlistedForIrv(Arn(arn))
       givenAuthorisedAsAgentWith(arn)
       val response = controller.showSuspendedWarning()(FakeRequest("GET", "/home").withSession("suspendedServices" -> "HMRC-MTD-IT,HMRC-MTD-VAT"))
 
@@ -270,6 +298,7 @@ class AgentServicesControllerSpec extends BaseISpec {
   "manage-account" should {
 
     "return Status: OK and body containing correct content" in {
+      givenArnIsAllowlistedForIrv(Arn(arn))
       givenAuthorisedAsAgentWith(arn)
       val response = controller.manageAccount().apply(FakeRequest("GET", "/manage-account"))
 
@@ -288,6 +317,7 @@ class AgentServicesControllerSpec extends BaseISpec {
   "account-details" should {
 
     "return Status: OK and body containing correct content" in {
+      givenArnIsAllowlistedForIrv(Arn(arn))
       givenAuthorisedAsAgentWith(arn)
       givenAgentDetailsFound(
         AgencyDetails(
@@ -316,6 +346,7 @@ class AgentServicesControllerSpec extends BaseISpec {
     }
 
     "return Status: OK and body containing None in place of missing agency details" in {
+      givenArnIsAllowlistedForIrv(Arn(arn))
       givenAuthorisedAsAgentWith(arn)
       givenAgentDetailsNoContent()
 

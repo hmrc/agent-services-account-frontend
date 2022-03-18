@@ -93,7 +93,6 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
   val vatUrl = s"$vatExternalUrl$vatStartPath"
 
   val agentSuspensionEnabled = getBoolean("features.enable-agent-suspension")
-  val irvAllowlistEnabled = getBoolean("features.enable-irv-allowlist")
   val ITSAAccordionEnabled = getBoolean("features.enable-ITSA-Accordion")
   val HelpAndGuidanceEnabled = getBoolean("features.enable-help-and-guidance")
 
@@ -120,4 +119,6 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
   def routeToSwitchLanguage: String => Call = (lang: String) => routes.AgentServicesLanguageController.switchToLanguage(lang)
 
   val govUkGuidanceChangeDetails = getString("govUkGuidanceChangeDetails")
+
+  val afiBaseUrl = baseUrl("agent-fi-relationship")
 }
