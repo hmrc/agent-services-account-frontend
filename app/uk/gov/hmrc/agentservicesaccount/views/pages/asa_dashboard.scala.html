@@ -200,12 +200,14 @@
             content = HtmlContent(capitalGainsAccordionItem)
         )
     )
-    items.append(
-        Section(
-            headingContent = Text(msgs("agent.services.account.ppt.col1.h2")),
-            content = HtmlContent(plasticPackagingItem)
+    if (appConfig.enablePpt) {
+        items.append(
+            Section(
+                headingContent = Text(msgs("agent.services.account.ppt.col1.h2")),
+                content = HtmlContent(plasticPackagingItem)
+            )
         )
-    )
+    }
     items.append(
         Section(
             headingContent = Text(msgs("asa.other.heading")),
