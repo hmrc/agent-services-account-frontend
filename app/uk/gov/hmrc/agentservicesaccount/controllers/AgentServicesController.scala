@@ -18,12 +18,12 @@ package uk.gov.hmrc.agentservicesaccount.controllers
 
 import play.api.Logging
 import play.api.i18n.MessagesApi
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request, Result}
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.auth.AuthActions
 import uk.gov.hmrc.agentservicesaccount.auth.CallOps._
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
+import uk.gov.hmrc.agentservicesaccount.connectors.{AfiRelationshipConnector, AgentClientAuthorisationConnector}
 import uk.gov.hmrc.agentservicesaccount.views.html.pages._
 
 import javax.inject._
@@ -33,6 +33,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class AgentServicesController @Inject()(
   authActions: AuthActions,
   agentClientAuthorisationConnector: AgentClientAuthorisationConnector,
+  afiRelationshipConnector: AfiRelationshipConnector,
   suspensionWarningView: suspension_warning,
   manageAccountView: manage_account,
   asaDashboard: asa_dashboard,
@@ -66,6 +67,7 @@ class AgentServicesController @Inject()(
 
   val showAgentServicesAccount: Action[AnyContent] = Action.async { implicit request =>
     withAuthorisedAsAgent { agentInfo =>
+      withIrvAllowed(agentInfo.arn) { irvAllowed =>
         logger.info(s"isAdmin: ${agentInfo.isAdmin}")
         if (agentSuspensionEnabled) {
           request.session.get("isSuspendedForVat") match {
@@ -73,6 +75,7 @@ class AgentServicesController @Inject()(
               Future successful Ok(
                 asaDashboard(
                   formatArn(agentInfo.arn),
+                  irvAllowed,
                   customDimension,
                   agentInfo.isAdmin,
                   isSuspendedForVat.toBoolean)).addingToSession(toReturnFromMapping)
@@ -82,6 +85,7 @@ class AgentServicesController @Inject()(
                 Ok(
                   asaDashboard(
                     formatArn(agentInfo.arn),
+                    irvAllowed,
                     customDimension,
                     agentInfo.isAdmin,
                     suspensionDetails.suspendedRegimes.contains("VATC"))).addingToSession(toReturnFromMapping)
@@ -91,9 +95,11 @@ class AgentServicesController @Inject()(
           Future successful Ok(
             asaDashboard(
               formatArn(agentInfo.arn),
+              irvAllowed,
               customDimension,
               agentInfo.isAdmin,
               isSuspendedForVat = false)).addingToSession(toReturnFromMapping)
+      }
 
     }
   }
@@ -137,6 +143,10 @@ class AgentServicesController @Inject()(
   private def formatArn(arn: Arn): String = {
     val arnStr = arn.value
     s"${arnStr.take(4)} ${arnStr.slice(4, 7)} ${arnStr.drop(7)}"
+  }
+
+  private def withIrvAllowed(arn: Arn)(f: Boolean => Future[Result])(implicit request: Request[_]): Future[Result] = {
+      afiRelationshipConnector.checkIrvAllowed(arn).flatMap(f)
   }
 
 }

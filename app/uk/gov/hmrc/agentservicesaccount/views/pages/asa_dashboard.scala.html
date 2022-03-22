@@ -45,6 +45,7 @@
 )
 @(
     arn: String,
+        isIrvAllowed: Boolean,
     customDimension: String,
     isAdmin: Boolean = false,
     isSuspendedForVat: Boolean
@@ -182,12 +183,14 @@
             content = HtmlContent(mtdForVatAccordionItem)
         )
     )
-    items.append(
-        Section(
-            headingContent = Text(msgs("agent.services.account.paye-section.h2")),
-            content = HtmlContent(payeIncomeRecordAccordionItem)
+    if(isIrvAllowed) {
+        items.append(
+            Section(
+                headingContent = Text(msgs("agent.services.account.paye-section.h2")),
+                content = HtmlContent(payeIncomeRecordAccordionItem)
+            )
         )
-    )
+    }
     items.append(
         Section(
             headingContent = Text(msgs("agent.services.account.trusts-section.h2")),
