@@ -32,13 +32,13 @@ class SsoConnectorSpec extends BaseISpec {
 
   "SsoConnector" should {
     "return 204" in {
-      SsoStubs.givenDomainIsWhitelisted("foo.com")
+      SsoStubs.givenDomainIsAllowlisted("foo.com")
       val result = await(connector.validateExternalDomain("foo.com"))
       result shouldBe true
     }
 
     "return 400" in {
-      SsoStubs.givenDomainIsNotWhitelisted("Imnotvalid.com")
+      SsoStubs.givenDomainIsNotAllowlisted("Imnotvalid.com")
       val result = await(connector.validateExternalDomain("Imnotvalid.com"))
       result shouldBe false
     }
