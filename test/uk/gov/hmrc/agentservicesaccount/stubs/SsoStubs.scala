@@ -21,14 +21,14 @@ import com.github.tomakehurst.wiremock.http.Fault
 
 object SsoStubs {
 
-  def givenDomainIsWhitelisted(domain: String) = {
+  def givenDomainIsAllowlisted(domain: String) = {
     stubFor(get(urlEqualTo(s"/sso/validate/domain/$domain"))
       .willReturn(
         aResponse()
           .withStatus(204)))
   }
 
-  def givenDomainIsNotWhitelisted(domain: String) = {
+  def givenDomainIsNotAllowlisted(domain: String) = {
     stubFor(get(urlEqualTo(s"/sso/validate/domain/$domain"))
       .willReturn(
         aResponse()
