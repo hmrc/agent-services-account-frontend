@@ -47,9 +47,9 @@ agent.services.account.trusts-section.col1.register-estate.p=Your client will ne
 agent.services.account.trusts-section.col2.h3=Manage your client's trust
 agent.services.account.trusts-section.col2.register-trust-link.text=Use this service to update the details of your client’s trust or declare no changes on the trust register
 
-agent.services.account.paye-section.h2=View a client’s PAYE income record
-agent.services.account.paye-section.text=Access a client’s PAYE income record to help you complete their Self Assessment tax return.
-agent.services.account.paye-section.link=View a client’s PAYE income record
+agent.services.account.paye-section.h2=View a client’s Income record
+agent.services.account.paye-section.text=Access a client’s Income record to help you complete their Self Assessment tax return.
+agent.services.account.paye-section.link=View a client’s Income record
 
 agent.services.account.section3.col1.h2=Capital Gains Tax on UK property
 agent.services.account.section3.col1.link1=<a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">set up a Capital Gains Tax on UK property account (opens in a new tab)</a>
@@ -109,7 +109,7 @@ agent.accountNumber=Account number: {0}
 
 agent.manageYourUsers.links.start=<a href="{0}" target="_blank" rel="noopener noreferrer" id="{1}">Manage user access to your agent services account<span class="visuallyhidden"> (Opens in a new tab)</span></a>
 agent.addNewUser.links.start=<a href="{0}" rel="noopener noreferrer" id="{1}">Add a new user</a>
-agent.services.account.additional.links.agent-afi.body2=<a href="{0}" id="{1}">View a client''s PAYE income record</a>
+agent.services.account.additional.links.agent-afi.body2=<a href="{0}" id="{1}">View a client''s Income record</a>
 common.sign-out=Sign out
 agent.services.account.additional.links.agent-afi.ga.link-view=link - view
 agent.services.account.additional.links.agent-afi.ga.manage-clients=Manage your clients
@@ -132,8 +132,8 @@ suspension-warning.single.CGT=manage a client''s Capital Gains Tax on UK propert
 suspension-warning.multi.CGT=manage their Capital Gains Tax on UK property account
 suspension-warning.single.PPT=manage their Plastic Packaging Tax
 suspension-warning.multi.PPT=manage their Plastic Packaging Tax
-suspension-warning.single.PIR=view their PAYE income record
-suspension-warning.multi.PIR=view their PAYE income record
+suspension-warning.single.PIR=view their Income record
+suspension-warning.multi.PIR=view their Income record
 suspension-warning.p3=You can still access any other service available to you.
 suspension-warning.p4=If you did not receive our letter, or think we have made a mistake, use the ''get help with this page'' link.
 suspension-warning.button=Continue

@@ -47,9 +47,9 @@ agent.services.account.trusts-section.col1.register-estate.p=Bydd angen i’ch c
 agent.services.account.trusts-section.col2.h3=Rheoli ymddiriedolaeth eich cleient
 agent.services.account.trusts-section.col2.register-trust-link.text=Defnyddiwch y gwasanaeth hwn i ddiweddaru manylion ymddiriedolaeth neu ystâd eich cleient neu i ddatgan dim newidiadau ar y gofrestr ymddiriedolaethau
 
-agent.services.account.paye-section.h2=Bwrw golwg dros gofnod incwm TWE cleient
-agent.services.account.paye-section.text=Cael mynediad at gofnod incwm TWE cleient i’ch helpu i lenwi ei Ffurflen Dreth Hunanasesiad.
-agent.services.account.paye-section.link=Bwrw golwg dros gofnod incwm TWE cleient
+agent.services.account.paye-section.h2=Bwrw golwg dros gofnod incwm cleient
+agent.services.account.paye-section.text=Cael mynediad at gofnod incwm cleient i’ch helpu i lenwi ei Ffurflen Dreth Hunanasesiad.
+agent.services.account.paye-section.link=Bwrw golwg dros gofnod incwm cleient
 
 agent.services.account.section3.col1.h2=Treth Enillion Cyfalaf ar eiddo yn y DU
 agent.services.account.section3.col1.link1=<a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">sefydlu cyfrif Treth Enillion Cyfalaf ar eiddo yn y DU (yn agor tab newydd)</a>
@@ -109,7 +109,7 @@ agent.accountNumber=Rhif y cyfrif: {0}
 
 agent.manageYourUsers.links.start=<a href="{0}" target="_blank" rel="noopener noreferrer" id="{1}">Rheoli mynediad defnyddwyr at eich cyfrif gwasanaethau asiant<span class="visuallyhidden"> (yn agor tab newydd)</span></a>
 agent.addNewUser.links.start=<a href="{0}" rel="noopener noreferrer" id="{1}">Ychwanegu defnyddiwr newydd</a>
-agent.services.account.additional.links.agent-afi.body2=<a href="{0}" id="{1}">Bwrw golwg dros gofnod incwm TWE cleient</a>
+agent.services.account.additional.links.agent-afi.body2=<a href="{0}" id="{1}">Bwrw golwg dros gofnod incwm cleient</a>
 common.sign-out=Allgofnodi
 agent.services.account.additional.links.agent-afi.ga.link-view=cysylltiad – bwrw golwg
 agent.services.account.additional.links.agent-afi.ga.manage-clients=Rheoli eich cleientiaid
@@ -132,8 +132,8 @@ suspension-warning.single.CGT=rheoli cyfrif Treth Enillion Cyfalaf ar eiddo yn y
 suspension-warning.multi.CGT=rheoli ei gyfrif Treth Enillion Cyfalaf ar eiddo yn y DU
 suspension-warning.single.PPT=rheoli ei Dreth Deunydd Pacio Plastig
 suspension-warning.multi.PPT=rheoli ei Dreth Deunydd Pacio Plastig
-suspension-warning.single.PIR=bwrw golwg dros ei gofnod incwm TWE
-suspension-warning.multi.PIR=bwrw golwg dros ei gofnod incwm TWE
+suspension-warning.single.PIR=bwrw golwg dros ei gofnod incwm
+suspension-warning.multi.PIR=bwrw golwg dros ei gofnod incwm
 suspension-warning.p3=Gallwch barhau i gael mynediad at unrhyw wasanaeth arall sydd ar gael i chi.
 suspension-warning.p4=Os na chawsoch ein llythyr, neu os ydych yn meddwl ein bod wedi gwneud camgymeriad, defnyddiwch y cysylltiad “cael help gyda’r dudalen hon”.
 suspension-warning.button=Yn eich blaen
