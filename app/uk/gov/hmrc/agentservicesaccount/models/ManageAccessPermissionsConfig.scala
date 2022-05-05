@@ -17,6 +17,7 @@
 package uk.gov.hmrc.agentservicesaccount.models
 
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+import uk.gov.hmrc.agentmtdidentifiers.model.{OptedInNotReady, OptedInReady, OptedInSingleUser, OptedOutEligible, OptedOutSingleUser, OptedOutWrongClientCount, OptinStatus}
 
 case class ManageAccessPermissionsConfig(status: String, statusClass: String, insetText: Option[String], accessGroups: List[Link], settings: List[Link])
 

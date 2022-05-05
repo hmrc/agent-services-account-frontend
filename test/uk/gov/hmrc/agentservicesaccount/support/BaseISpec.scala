@@ -37,6 +37,7 @@ abstract class BaseISpec
         "microservice.services.agent-client-authorisation.port" -> wireMockPort,
         "microservice.services.sso.port"                        -> wireMockPort,
         "microservice.services.agent-fi-relationship.port"      -> wireMockPort,
+        "microservice.services.agent-permissions.port"          -> wireMockPort,
         "auditing.enabled"                                      -> false,
         "features.enable-ITSA-Accordion"                        -> true,
         "features.enable-help-and-guidance"                     -> true

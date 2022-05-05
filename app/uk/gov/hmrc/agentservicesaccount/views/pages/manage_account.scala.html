@@ -36,21 +36,21 @@
 
     <h1 class="govuk-heading-xl">@msgs("manage.account.heading")</h1>
 
-    @if(appConfig.granPermsEnabled){
+    @if(appConfig.granPermsEnabled && manageAccessPermissionsConfig.isDefined){
 
         @manageAccessPermissionsConfig.map { config =>
 
         <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
 
-        @h2(Messages("manage.account.manage-access-permissions.heading"))
+        @h2(key = Messages("manage.account.manage-access-permissions.heading"), id = Some("manage-access-permissions-heading"))
 
-        <h3 class="govuk-heading-s" id="status-key">"@{Messages("manage.account.manage-access-permissions.status")}"
-        <strong class="@config.statusClass" id="status-value">@config.status</strong>
+        <h3 class="govuk-heading-s" id="status-key">@{Messages("manage.account.manage-access-permissions.status")}
+        <strong class="@config.statusClass" id="status-value">@{Messages(config.status)}</strong>
         </h3>
 
-        @config.insetText.map{txt => @p(key = txt)}
+        @config.insetText.map{txt => <p class="govuk-body" id ="inset-text">@Messages(txt, appConfig.granPermsMaxClientCount)</p> }
 
-        @if(config.accessGroups.nonEmpty){ @h3(Messages("manage.account.manage-access-permissions.access-groups.heading"))
+        @if(config.accessGroups.nonEmpty){ @h3(key = Messages("manage.account.manage-access-permissions.access-groups.heading"), id = Some("access-groups-heading"))
 
             @ul(items = config.accessGroups.map{ link =>
                 a(key = Messages(link.msgKey), href = link.href)

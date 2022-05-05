@@ -18,8 +18,7 @@ package uk.gov.hmrc.agentservicesaccount.stubs
 
 
 import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, get, stubFor, urlEqualTo}
-import uk.gov.hmrc.agentmtdidentifiers.model.Arn
-import uk.gov.hmrc.agentservicesaccount.models.OptinStatus
+import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, OptinStatus}
 
 object AgentPermissionsStubs {
 
@@ -28,10 +27,7 @@ object AgentPermissionsStubs {
       get(urlEqualTo(s"/agent-permissions/arn/${arn.value}/optin-status"))
         .willReturn(aResponse()
           .withStatus(200)
-          .withBody(
-            s"""{
-               |"value": "$optinStatus"
-               |}""".stripMargin)))
+          .withBody(s""" "${optinStatus.value}" """)))
 
   def givenOptinStatusFailedForArn(arn: Arn) =
     stubFor(
