@@ -18,7 +18,7 @@
 
 @(key: String, classes: Option[String] = None, id: Option[String] = None)(implicit msgs: Messages)
 
-@cls = @{"govuk-heading-xl ".concat(classes.getOrElse(""))}
+@cls = @{"govuk-heading-l ".concat(classes.getOrElse(""))}
 
 <h1 class="@cls">@Html(msgs(key))</h1>
 
