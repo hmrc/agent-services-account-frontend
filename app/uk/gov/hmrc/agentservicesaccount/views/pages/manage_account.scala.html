@@ -18,29 +18,91 @@
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 @import uk.gov.hmrc.agentservicesaccount.views.html.components.secondary_nav
 @import uk.gov.hmrc.agentservicesaccount.controllers.routes
+@import uk.gov.hmrc.agentservicesaccount.models.ManageAccessPermissionsConfig
 
-@this(mainTemplate: main, secondaryNav: secondary_nav)
+@this(mainTemplate: main,
+        secondaryNav: secondary_nav,
+        h2: h2,
+        h3: h3,
+        p:p,
+        a:a,
+        ul: ul)
 
-@()(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
+
+@(manageAccessPermissionsConfig: Option[ManageAccessPermissionsConfig])(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
 
 @mainTemplate(pageTitle = Some(msgs("manage.account.heading")), beforeContentBlock = Some(secondaryNav(isAdmin = true)), analyticsAdditionalJs = None) {
 
 
     <h1 class="govuk-heading-xl">@msgs("manage.account.heading")</h1>
 
-    <p class="govuk-body">@msgs("manage.account.p")</p>
+    @if(appConfig.granPermsEnabled){
 
- <ul class="govuk-body">
-     <li>
-       <a class="govuk-link" href="@appConfig.addUserUrl">@msgs("manage.account.add-user")</a>
-     </li>
-     <li>
-       <a class="govuk-link" href="@appConfig.manageUsersUrl" target="_blank" rel="noopener noreferrer">@msgs("manage.account.manage-user-access")</a>
-     </li>
-     <li>
-         <a class="govuk-link" href="@routes.AgentServicesController.accountDetails()">@msgs("manage.account.account-details")</a>
-     </li>
- </ul>
+        @manageAccessPermissionsConfig.map { config =>
+
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+
+        @h2(Messages("manage.account.manage-access-permissions.heading"))
+
+        <h3 class="govuk-heading-s" id="status-key">"@{Messages("manage.account.manage-access-permissions.status")}"
+        <strong class="@config.statusClass" id="status-value">@config.status</strong>
+        </h3>
+
+        @config.insetText.map{txt => @p(key = txt)}
+
+        @if(config.accessGroups.nonEmpty){ @h3(Messages("manage.account.manage-access-permissions.access-groups.heading"))
+
+            @ul(items = config.accessGroups.map{ link =>
+                a(key = Messages(link.msgKey), href = link.href)
+            })
+
+        }
+
+        @if(config.settings.nonEmpty){ @h3(Messages("manage.account.manage-access-permissions.settings.heading"))
+
+            @ul(items = config.settings.map{ link =>
+                a(key = Messages(link.msgKey), href = link.href)
+            })
+        }
+
+            <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+
+            @h2(Messages("manage.account.make-changes-to-your-account.heading"))
+
+            @ul(items = Seq(
+                a(key = Messages("manage.account.make-changes-to-your-account.add-remove"),
+                    href = appConfig.addUserUrl),
+                a(key = Messages("manage.account.make-changes-to-your-account.client-list"),
+                    href = appConfig.manageUsersUrl,
+                    target= Some("_blank"),
+                    rel = Some("noreferrer noopener"))))
+
+            <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+
+          @h2(Messages("manage.account.contact-details.heading"))
+
+          @p(html = Some(Html(
+              a(href = routes.AgentServicesController.accountDetails().url,
+                  key = Messages("manage.account.contact-details.view")
+              ) + "")))
+
+        }
+
+    } else {
+        <p class="govuk-body">@msgs("manage.account.p")</p>
 
 
+        <ul class="govuk-body">
+            <li>
+                <a class="govuk-link" href="@appConfig.addUserUrl">@msgs("manage.account.add-user")</a>
+            </li>
+            <li>
+                <a class="govuk-link" href="@appConfig.manageUsersUrl" target="_blank" rel="noopener noreferrer">@msgs("manage.account.manage-user-access")</a>
+            </li>
+            <li>
+                <a class="govuk-link" href="@routes.AgentServicesController.accountDetails()">@msgs("manage.account.account-details")</a>
+            </li>
+        </ul>
+
+    }
 }

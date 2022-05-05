@@ -23,7 +23,8 @@ import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.auth.AuthActions
 import uk.gov.hmrc.agentservicesaccount.auth.CallOps._
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.connectors.{AfiRelationshipConnector, AgentClientAuthorisationConnector}
+import uk.gov.hmrc.agentservicesaccount.connectors.{AfiRelationshipConnector, AgentClientAuthorisationConnector, AgentPermissionsConnector}
+import uk.gov.hmrc.agentservicesaccount.models.ManageAccessPermissionsConfig
 import uk.gov.hmrc.agentservicesaccount.views.html.pages._
 
 import javax.inject._
@@ -34,6 +35,7 @@ class AgentServicesController @Inject()(
   authActions: AuthActions,
   agentClientAuthorisationConnector: AgentClientAuthorisationConnector,
   afiRelationshipConnector: AfiRelationshipConnector,
+  agentPermissionsConnector: AgentPermissionsConnector,
   suspensionWarningView: suspension_warning,
   manageAccountView: manage_account,
   asaDashboard: asa_dashboard,
@@ -118,7 +120,10 @@ class AgentServicesController @Inject()(
   val manageAccount: Action[AnyContent] = Action.async { implicit request =>
     withAuthorisedAsAgent { agentInfo =>
         if (agentInfo.isAdmin) {
-          Future.successful(Ok(manageAccountView()))
+          if (appConfig.granPermsEnabled) {
+            agentPermissionsConnector.getOptinStatus(agentInfo.arn).map(status => Ok(manageAccountView(ManageAccessPermissionsConfig(status))))
+          } else
+          Future.successful(Ok(manageAccountView(None)))
         } else {
           Future.successful(Forbidden)
         }

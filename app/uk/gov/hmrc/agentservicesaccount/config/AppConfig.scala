@@ -25,7 +25,7 @@ import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import views.html.helper.urlEncode
 
 @Singleton
-class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig, env:Environment) extends Logging{
+class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig, env:Environment) extends Logging {
 
   val appName = "agent-services-account-frontend"
 
@@ -33,7 +33,9 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
     servicesConfig.getConfString(key, throw new RuntimeException(s"config $key not found"))
 
   private def getString(key: String) = servicesConfig.getString(key)
+
   private def getBoolean(key: String) = servicesConfig.getBoolean(key)
+
   private def getInt(key: String) = servicesConfig.getInt(key)
 
   private def baseUrl(key: String) = servicesConfig.baseUrl(key)
@@ -82,14 +84,14 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
 
   val taxHistoryFrontendUrl: String = s"$taxHistoryFrontendExternalUrl/tax-history/select-client"
 
-  val userManagementExternalUrl =  getString("user-management.external-url")
-  val manageUsersStartPath =  getString("user-management.manage-users")
-  val addUserStartPath =  getString("user-management.add-user")
+  val userManagementExternalUrl = getString("user-management.external-url")
+  val manageUsersStartPath = getString("user-management.manage-users")
+  val addUserStartPath = getString("user-management.add-user")
   lazy val manageUsersUrl: String = s"$userManagementExternalUrl$manageUsersStartPath"
   lazy val addUserUrl: String = s"$userManagementExternalUrl$addUserStartPath"
 
-  val vatExternalUrl  = getConfString("vat-agent-client-lookup-frontend.external-url")
-  val vatStartPath  = getConfString("vat-agent-client-lookup-frontend.start.path")
+  val vatExternalUrl = getConfString("vat-agent-client-lookup-frontend.external-url")
+  val vatStartPath = getConfString("vat-agent-client-lookup-frontend.start.path")
   val vatUrl = s"$vatExternalUrl$vatStartPath"
 
   val agentSuspensionEnabled = getBoolean("features.enable-agent-suspension")
@@ -123,4 +125,17 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
   val govUkGuidanceChangeDetails = getString("govUkGuidanceChangeDetails")
 
   val afiBaseUrl = baseUrl("agent-fi-relationship")
+
+  //Gran Perms
+  val agentPermissionsBaseUrl = baseUrl("agent-permissions")
+  val agentUserClientDetailsBaseUrl = baseUrl("agent-user-client-details")
+  val agentPermissionsFrontendExternalUrl = getConfString("agent-permissions-frontend.external-url")
+  val agentPermissionsFrontendOptInPath = getConfString("agent-permissions-frontend.optin-start-path")
+  val agentPermissionsFrontendOptOutPath = getConfString("agent-permissions-frontend.optout-start-path")
+  val agentPermissionsFrontendManageAccessGroupsPath = getConfString("agent-permissions-frontend.manage-access-groups-path")
+  val granPermsEnabled = getBoolean("features.enable-gran-perms")
+
+  val agentPermissionsOptInUrl = s"$agentPermissionsFrontendExternalUrl$agentPermissionsFrontendOptInPath"
+  val agentPermissionsOptOutUrl = s"$agentPermissionsFrontendExternalUrl$agentPermissionsFrontendOptOutPath"
+  val agentPermissionsManageAccessGroupsUrl = s"$agentPermissionsFrontendExternalUrl$agentPermissionsFrontendManageAccessGroupsPath"
 }

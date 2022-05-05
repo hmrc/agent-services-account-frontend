@@ -19,8 +19,8 @@ package uk.gov.hmrc.agentservicesaccount.controllers
 
 import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.mvc.Session
-import play.api.test.{FakeRequest, Helpers}
 import play.api.test.Helpers._
+import play.api.test.{FakeRequest, Helpers}
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, SuspensionDetails, SuspensionDetailsNotFound}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
@@ -295,12 +295,17 @@ class AgentServicesControllerSpec extends BaseISpec {
     }
   }
 
-  "manage-account" should {
+  "manage-account with gran_perms disbaled" should {
+
+    val controllerWithGranPermsDisabled =
+      appBuilder(Map("features.enable-gran-perms" -> false))
+        .build()
+        .injector.instanceOf[AgentServicesController]
 
     "return Status: OK and body containing correct content" in {
       givenArnIsAllowlistedForIrv(Arn(arn))
       givenAuthorisedAsAgentWith(arn)
-      val response = controller.manageAccount().apply(FakeRequest("GET", "/manage-account"))
+      val response = controllerWithGranPermsDisabled.manageAccount().apply(FakeRequest("GET", "/manage-account"))
 
       status(response) shouldBe OK
       Helpers.contentType(response).get shouldBe HTML
@@ -310,7 +315,6 @@ class AgentServicesControllerSpec extends BaseISpec {
       content should include(messagesApi("manage.account.add-user"))
       content should include(messagesApi("manage.account.manage-user-access"))
       content should include(messagesApi("manage.account.account-details"))
-
     }
   }
 
