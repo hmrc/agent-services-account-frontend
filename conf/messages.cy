@@ -85,7 +85,35 @@ agent.services.account.section4.col2.link3=Canslo awdurdodiad cleient
 agent.services.account.help.h2=Help ac arweiniad
 agent.services.account.help.link=Rhagor o wybodaeth am sut i ddefnyddio’ch cyfrif gwasanaethau asiant a sut y gall cleientiaid eich awdurdodi i reoli eu trethi
 
+#Manage Account (gran_perms_enabled)
 manage.account.heading=Rheoli’r cyfrif
+manage.account.manage-access-permissions.heading=Manage access permissions
+manage.account.manage-access-permissions.status=Status
+manage.account.manage-access-permissions.status-opted-in=OPTED-IN
+manage.account.manage-access-permissions.status-opted-out=OPTED-OUT
+
+manage.account.manage-access-permissions.inset-text.Opted-In_NOT_READY=You have added new clients but need to wait until your client names are ready to use with access groups. You will receive a confirmation email after which you can start using access groups.
+manage.account.manage-access-permissions.inset-text.Opted-In_READY=You are opted in and can now start creating access groups.
+manage.account.manage-access-permissions.inset-text.Opted-Out_WRONG_CLIENT_COUNT=To use access groups you need to have more than one client and fewer than {0} clients in your agent services account.
+manage.account.manage-access-permissions.inset-text.Opted-Out_SINGLE_USER=To use access groups you need to add more team members to your agent services account.
+manage.account.manage-access-permissions.inset-text.Opted-In_SINGLE_USER=To use access groups you need to add more team members to your agent services account.
+
+manage.account.manage-access-permissions.access-groups.heading=Access groups
+manage.account.manage-access-permissions.access-groups.create-new=Create new access group
+manage.account.manage-access-permissions.access-groups.manage=Manage access groups
+manage.account.manage-access-permissions.access-groups.optin=Opt in to use access groups
+
+manage.account.manage-access-permissions.settings.heading=Settings
+manage.account.manage-access-permissions.settings.optout=Opt out of using access groups
+
+manage.account.make-changes-to-your-account.heading=Make changes to your account
+manage.account.make-changes-to-your-account.add-remove=Add or remove a team member
+manage.account.make-changes-to-your-account.client-list=Manage who can view your client list (opens in a new tab)
+
+manage.account.contact-details.heading=Contact details
+manage.account.contact-details.view=View the contact details we have for your business
+
+#Manage account (gran_perms_disabled)
 manage.account.p=Gallwch ganiatáu i ddefnyddwyr eraill yn eich sefydliad gael mynediad at y cyfrif gwasanaethau asiant hwn, a rheoli eu mynediad.
 manage.account.add-user=Ychwanegu defnyddiwr newydd
 manage.account.manage-user-access=Rheoli mynediad defnyddwyr at eich cyfrif gwasanaethau asiant (yn agor tab newydd)

@@ -17,18 +17,21 @@
 package uk.gov.hmrc.agentservicesaccount.controllers
 
 
+import org.jsoup.Jsoup
 import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.mvc.Session
-import play.api.test.{FakeRequest, Helpers}
 import play.api.test.Helpers._
+import play.api.test.{FakeRequest, Helpers}
 import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, SuspensionDetails, SuspensionDetailsNotFound}
+import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, OptedInNotReady, OptedInReady, OptedInSingleUser, OptedOutEligible, OptedOutSingleUser, OptedOutWrongClientCount, SuspensionDetails, SuspensionDetailsNotFound}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress}
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentClientAuthorisationStubs._
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentFiRelationshipStubs.{givenArnIsAllowlistedForIrv, givenArnIsNotAllowlistedForIrv}
-import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
+import uk.gov.hmrc.agentservicesaccount.support.{BaseISpec, Css}
 import uk.gov.hmrc.auth.core.{Enrolment, EnrolmentIdentifier}
+import uk.gov.hmrc.agentservicesaccount.stubs.AgentPermissionsStubs._
+
 
 class AgentServicesControllerSpec extends BaseISpec {
 
@@ -297,9 +300,32 @@ class AgentServicesControllerSpec extends BaseISpec {
 
   "manage-account" should {
 
-    "return Status: OK and body containing correct content" in {
+    "return Status: OK and body containing correct content when gran perms FF disabled" in {
+
+          val controllerWithGranPermsDisabled =
+            appBuilder(Map("features.enable-gran-perms" -> false))
+              .build()
+              .injector.instanceOf[AgentServicesController]
+
       givenArnIsAllowlistedForIrv(Arn(arn))
       givenAuthorisedAsAgentWith(arn)
+      val response = controllerWithGranPermsDisabled.manageAccount().apply(FakeRequest("GET", "/manage-account"))
+
+      status(response) shouldBe OK
+      Helpers.contentType(response).get shouldBe HTML
+      val content = Helpers.contentAsString(response)
+      content should include(messagesApi("manage.account.heading"))
+      content should include(messagesApi("manage.account.p"))
+      content should include(messagesApi("manage.account.add-user"))
+      content should include(messagesApi("manage.account.manage-user-access"))
+      content should include(messagesApi("manage.account.account-details"))
+    }
+
+    "return Status: OK and body containing existing manage account content when gran perms FF is on but there was an error getting optin-status" in {
+
+      givenArnIsAllowlistedForIrv(Arn(arn))
+      givenAuthorisedAsAgentWith(arn)
+      givenOptinStatusFailedForArn(Arn(arn))
       val response = controller.manageAccount().apply(FakeRequest("GET", "/manage-account"))
 
       status(response) shouldBe OK
@@ -310,6 +336,204 @@ class AgentServicesControllerSpec extends BaseISpec {
       content should include(messagesApi("manage.account.add-user"))
       content should include(messagesApi("manage.account.manage-user-access"))
       content should include(messagesApi("manage.account.account-details"))
+    }
+
+    "return status: OK and body containing content for status Opted-In_READY" in {
+
+      givenArnIsAllowlistedForIrv(Arn(arn))
+      givenAuthorisedAsAgentWith(arn)
+      givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInReady)
+      val response = await(controller.manageAccount()(FakeRequest("GET", "/manage-account")))
+
+      status(response) shouldBe 200
+
+      val html = Jsoup.parse(contentAsString(response))
+      val h1 = html.select(Css.H1)
+      val h2 = html.select(Css.H2)
+      val h3 = html.select(Css.H3)
+      val paragraphs = html.select(Css.paragraphs)
+      val li = html.select(Css.LI)
+
+      h1.get(0).text shouldBe "Manage account"
+      h2.get(0).text shouldBe "Manage access permissions"
+      h3.get(0).text shouldBe "Status OPTED-IN"
+      paragraphs.get(0).text shouldBe "You are opted in and can now start creating access groups."
+      h3.get(1).text shouldBe "Access groups"
+      li.get(0).child(0).text shouldBe "Create new access group"
+      li.get(0).child(0).attr("href") shouldBe "http://localhost:9452/agent-permissions/opt-in"
+      li.get(1).child(0).text shouldBe "Manage access groups"
+      li.get(1).child(0).attr("href") shouldBe "http://localhost:9452/agent-permissions/manage-access-groups/start"
+      h3.get(2).text shouldBe "Settings"
+      li.get(2).child(0).text shouldBe "Opt out of using access groups"
+      li.get(2).child(0).attr("href") shouldBe "http://localhost:9452/agent-permissions/opt-out"
+      h2.get(1).text shouldBe "Make changes to your account"
+      li.get(3).child(0).text shouldBe "Add or remove a team member"
+      li.get(3).child(0).attr("href") shouldBe "http://localhost:hmmm/user-profile-redirect-frontend/group-profile-management"
+      li.get(4).child(0).text shouldBe "Manage who can view your client list (opens in a new tab)"
+      li.get(4).child(0).attr("href") shouldBe "http://localhost:hmmm/tax-and-scheme-management/users?origin=Agent"
+      h2.get(2).text shouldBe "Contact details"
+      paragraphs.get(1).child(0).text shouldBe "View the contact details we have for your business"
+      paragraphs.get(1).child(0).attr("href") shouldBe "/agent-services-account/account-details"
+
+    }
+
+    "return status: OK and body containing content for status Opted-In_NOT_READY" in {
+
+      givenArnIsAllowlistedForIrv(Arn(arn))
+      givenAuthorisedAsAgentWith(arn)
+      givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInNotReady)
+      val response = await(controller.manageAccount()(FakeRequest("GET", "/manage-account")))
+
+      status(response) shouldBe 200
+
+      val html = Jsoup.parse(contentAsString(response))
+      val h1 = html.select(Css.H1)
+      val h2 = html.select(Css.H2)
+      val h3 = html.select(Css.H3)
+      val paragraphs = html.select(Css.paragraphs)
+      val li = html.select(Css.LI)
+
+      h1.get(0).text shouldBe "Manage account"
+      h2.get(0).text shouldBe "Manage access permissions"
+      h3.get(0).text shouldBe "Status OPTED-IN"
+      paragraphs.get(0).text shouldBe "You have added new clients but need to wait until your client names are ready to use with access groups. You will receive a confirmation email after which you can start using access groups."
+      h3.get(1).text shouldBe "Settings"
+      li.get(0).child(0).text shouldBe "Opt out of using access groups"
+      li.get(0).child(0).attr("href") shouldBe "http://localhost:9452/agent-permissions/opt-out"
+      h2.get(1).text shouldBe "Make changes to your account"
+      li.get(1).child(0).text shouldBe "Add or remove a team member"
+      li.get(1).child(0).attr("href") shouldBe "http://localhost:hmmm/user-profile-redirect-frontend/group-profile-management"
+      li.get(2).child(0).text shouldBe "Manage who can view your client list (opens in a new tab)"
+      li.get(2).child(0).attr("href") shouldBe "http://localhost:hmmm/tax-and-scheme-management/users?origin=Agent"
+      h2.get(2).text shouldBe "Contact details"
+      paragraphs.get(1).child(0).text shouldBe "View the contact details we have for your business"
+      paragraphs.get(1).child(0).attr("href") shouldBe "/agent-services-account/account-details"
+
+    }
+
+    "return status: OK and body containing content for status Opted-In_SINGLE_USER" in {
+
+      givenArnIsAllowlistedForIrv(Arn(arn))
+      givenAuthorisedAsAgentWith(arn)
+      givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInSingleUser)
+      val response = await(controller.manageAccount()(FakeRequest("GET", "/manage-account")))
+
+      status(response) shouldBe 200
+
+      val html = Jsoup.parse(contentAsString(response))
+      val h1 = html.select(Css.H1)
+      val h2 = html.select(Css.H2)
+      val h3 = html.select(Css.H3)
+      val paragraphs = html.select(Css.paragraphs)
+      val li = html.select(Css.LI)
+
+      h1.get(0).text shouldBe "Manage account"
+      h2.get(0).text shouldBe "Manage access permissions"
+      h3.get(0).text shouldBe "Status OPTED-IN"
+      paragraphs.get(0).text shouldBe "To use access groups you need to add more team members to your agent services account."
+      h2.get(1).text shouldBe "Make changes to your account"
+      li.get(0).child(0).text shouldBe "Add or remove a team member"
+      li.get(0).child(0).attr("href") shouldBe "http://localhost:hmmm/user-profile-redirect-frontend/group-profile-management"
+      li.get(1).child(0).text shouldBe "Manage who can view your client list (opens in a new tab)"
+      li.get(1).child(0).attr("href") shouldBe "http://localhost:hmmm/tax-and-scheme-management/users?origin=Agent"
+      h2.get(2).text shouldBe "Contact details"
+      paragraphs.get(1).child(0).text shouldBe "View the contact details we have for your business"
+      paragraphs.get(1).child(0).attr("href") shouldBe "/agent-services-account/account-details"
+
+    }
+
+    "return status: OK and body containing content for status Opted-Out_WRONG_CLIENT_COUNT" in {
+
+      givenArnIsAllowlistedForIrv(Arn(arn))
+      givenAuthorisedAsAgentWith(arn)
+      givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedOutWrongClientCount)
+      val response = await(controller.manageAccount()(FakeRequest("GET", "/manage-account")))
+
+      status(response) shouldBe 200
+
+      val html = Jsoup.parse(contentAsString(response))
+      val h1 = html.select(Css.H1)
+      val h2 = html.select(Css.H2)
+      val h3 = html.select(Css.H3)
+      val paragraphs = html.select(Css.paragraphs)
+      val li = html.select(Css.LI)
+
+      h1.get(0).text shouldBe "Manage account"
+      h2.get(0).text shouldBe "Manage access permissions"
+      h3.get(0).text shouldBe "Status OPTED-OUT"
+      paragraphs.get(0).text shouldBe "To use access groups you need to have more than one client and fewer than 50 clients in your agent services account."
+      h2.get(1).text shouldBe "Make changes to your account"
+      li.get(0).child(0).text shouldBe "Add or remove a team member"
+      li.get(0).child(0).attr("href") shouldBe "http://localhost:hmmm/user-profile-redirect-frontend/group-profile-management"
+      li.get(1).child(0).text shouldBe "Manage who can view your client list (opens in a new tab)"
+      li.get(1).child(0).attr("href") shouldBe "http://localhost:hmmm/tax-and-scheme-management/users?origin=Agent"
+      h2.get(2).text shouldBe "Contact details"
+      paragraphs.get(1).child(0).text shouldBe "View the contact details we have for your business"
+      paragraphs.get(1).child(0).attr("href") shouldBe "/agent-services-account/account-details"
+
+    }
+
+    "return status: OK and body containing content for status Opted-Out_SINGLE_USER" in {
+
+      givenArnIsAllowlistedForIrv(Arn(arn))
+      givenAuthorisedAsAgentWith(arn)
+      givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedOutSingleUser)
+      val response = await(controller.manageAccount()(FakeRequest("GET", "/manage-account")))
+
+      status(response) shouldBe 200
+
+      val html = Jsoup.parse(contentAsString(response))
+      val h1 = html.select(Css.H1)
+      val h2 = html.select(Css.H2)
+      val h3 = html.select(Css.H3)
+      val paragraphs = html.select(Css.paragraphs)
+      val li = html.select(Css.LI)
+
+      h1.get(0).text shouldBe "Manage account"
+      h2.get(0).text shouldBe "Manage access permissions"
+      h3.get(0).text shouldBe "Status OPTED-OUT"
+      paragraphs.get(0).text shouldBe "To use access groups you need to add more team members to your agent services account."
+      h2.get(1).text shouldBe "Make changes to your account"
+      li.get(0).child(0).text shouldBe "Add or remove a team member"
+      li.get(0).child(0).attr("href") shouldBe "http://localhost:hmmm/user-profile-redirect-frontend/group-profile-management"
+      li.get(1).child(0).text shouldBe "Manage who can view your client list (opens in a new tab)"
+      li.get(1).child(0).attr("href") shouldBe "http://localhost:hmmm/tax-and-scheme-management/users?origin=Agent"
+      h2.get(2).text shouldBe "Contact details"
+      paragraphs.get(1).child(0).text shouldBe "View the contact details we have for your business"
+      paragraphs.get(1).child(0).attr("href") shouldBe "/agent-services-account/account-details"
+
+    }
+
+    "return status: OK and body containing content for status Opted-Out_ELIGIBLE" in {
+
+      givenArnIsAllowlistedForIrv(Arn(arn))
+      givenAuthorisedAsAgentWith(arn)
+      givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedOutEligible)
+      val response = await(controller.manageAccount()(FakeRequest("GET", "/manage-account")))
+
+      status(response) shouldBe 200
+
+      val html = Jsoup.parse(contentAsString(response))
+      val h1 = html.select(Css.H1)
+      val h2 = html.select(Css.H2)
+      val h3 = html.select(Css.H3)
+      val paragraphs = html.select(Css.paragraphs)
+      val li = html.select(Css.LI)
+
+      h1.get(0).text shouldBe "Manage account"
+      h2.get(0).text shouldBe "Manage access permissions"
+      h3.get(0).text shouldBe "Status OPTED-OUT"
+      h3.get(1).text shouldBe "Access groups"
+      li.get(0).child(0).text shouldBe "Opt in to use access groups"
+      li.get(0).child(0).attr("href") shouldBe "http://localhost:9452/agent-permissions/opt-in"
+      h2.get(1).text shouldBe "Make changes to your account"
+      li.get(1).child(0).text shouldBe "Add or remove a team member"
+      li.get(1).child(0).attr("href") shouldBe "http://localhost:hmmm/user-profile-redirect-frontend/group-profile-management"
+      li.get(2).child(0).text shouldBe "Manage who can view your client list (opens in a new tab)"
+      li.get(2).child(0).attr("href") shouldBe "http://localhost:hmmm/tax-and-scheme-management/users?origin=Agent"
+      h2.get(2).text shouldBe "Contact details"
+      paragraphs.get(0).child(0).text shouldBe "View the contact details we have for your business"
+      paragraphs.get(0).child(0).attr("href") shouldBe "/agent-services-account/account-details"
 
     }
   }
