@@ -31,6 +31,7 @@ import uk.gov.hmrc.agentservicesaccount.stubs.AgentFiRelationshipStubs.{givenArn
 import uk.gov.hmrc.agentservicesaccount.support.{BaseISpec, Css}
 import uk.gov.hmrc.auth.core.{Enrolment, EnrolmentIdentifier}
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentPermissionsStubs._
+import uk.gov.hmrc.http.SessionKeys
 
 
 class AgentServicesControllerSpec extends BaseISpec {
@@ -47,6 +48,8 @@ class AgentServicesControllerSpec extends BaseISpec {
 
   protected def htmlEscapedMessage(key: String): String = HtmlFormat.escape(Messages(key)).toString
 
+  private def fakeRequest(method: String = "GET", uri: String = "/") = FakeRequest(method, uri).withSession(SessionKeys.authToken -> "Bearer XYZ")
+
   "root" should {
     "redirect to agent services account when suspension is disabled" in {
       givenArnIsAllowlistedForIrv(Arn(arn))
@@ -55,7 +58,7 @@ class AgentServicesControllerSpec extends BaseISpec {
           .build()
           .injector.instanceOf[AgentServicesController]
       givenAuthorisedAsAgentWith(arn)
-      val response = controllerWithSuspensionDisabled.root()(FakeRequest("GET", "/"))
+      val response = controllerWithSuspensionDisabled.root()(fakeRequest("GET", "/"))
 
       status(response) shouldBe SEE_OTHER
       Helpers.redirectLocation(response) shouldBe Some(routes.AgentServicesController.showAgentServicesAccount().url)
@@ -66,7 +69,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       givenAuthorisedAsAgentWith(arn)
       givenSuspensionStatus(SuspensionDetails(suspensionStatus = false, None))
 
-      val response = controller.root()(FakeRequest("GET", "/"))
+      val response = controller.root()(fakeRequest("GET", "/"))
 
       status(response) shouldBe SEE_OTHER
       Helpers.redirectLocation(response) shouldBe Some(routes.AgentServicesController.showAgentServicesAccount().url)
@@ -77,7 +80,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       givenAuthorisedAsAgentWith(arn)
       givenSuspensionStatus(SuspensionDetails(suspensionStatus = true, Some(Set("ITSA"))))
 
-      val response = controller.root()(FakeRequest("GET", "/"))
+      val response = controller.root()(fakeRequest("GET", "/"))
 
       status(response) shouldBe SEE_OTHER
       Helpers.redirectLocation(response) shouldBe Some(routes.AgentServicesController.showSuspendedWarning().url)
@@ -88,11 +91,11 @@ class AgentServicesControllerSpec extends BaseISpec {
       givenAuthorisedAsAgentWith(arn)
       givenSuspensionStatus(SuspensionDetails(suspensionStatus = true, Some(Set("AGSV"))))
 
-      val response = controller.root()(FakeRequest("GET", "/"))
+      val response = controller.root()(fakeRequest("GET", "/"))
 
       status(response) shouldBe SEE_OTHER
       Helpers.redirectLocation(response) shouldBe Some(routes.AgentServicesController.showSuspendedWarning().url)
-      Helpers.session(response) shouldBe Session(Map("suspendedServices" -> "CGT,ITSA,PIR,PPT,TRS,VATC", "isSuspendedForVat" -> "true"))
+      Helpers.session(response) shouldBe Session(Map("authToken" -> "Bearer XYZ", "suspendedServices" -> "CGT,ITSA,PIR,PPT,TRS,VATC", "isSuspendedForVat" -> "true"))
     }
 
     "redirect to suspended warning when suspension is enabled and user is suspended for ALL" in {
@@ -100,11 +103,11 @@ class AgentServicesControllerSpec extends BaseISpec {
       givenAuthorisedAsAgentWith(arn)
       givenSuspensionStatus(SuspensionDetails(suspensionStatus = true, Some(Set("ALL"))))
 
-      val response = controller.root()(FakeRequest("GET", "/"))
+      val response = controller.root()(fakeRequest("GET", "/"))
 
       status(response) shouldBe SEE_OTHER
       Helpers.redirectLocation(response) shouldBe Some(routes.AgentServicesController.showSuspendedWarning().url)
-      Helpers.session(response) shouldBe Session(Map("suspendedServices" -> "CGT,ITSA,PIR,PPT,TRS,VATC", "isSuspendedForVat" -> "true"))
+      Helpers.session(response) shouldBe Session(Map("authToken" -> "Bearer XYZ", "suspendedServices" -> "CGT,ITSA,PIR,PPT,TRS,VATC", "isSuspendedForVat" -> "true"))
     }
 
     "throw an exception when suspension is enabled and suspension status returns NOT_FOUND for user" in {
@@ -114,7 +117,7 @@ class AgentServicesControllerSpec extends BaseISpec {
 
 
       intercept[SuspensionDetailsNotFound]{
-        await(controller.root()(FakeRequest("GET", "/")))
+        await(controller.root()(fakeRequest("GET", "/")))
       }
     }
   }
@@ -129,7 +132,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       givenAuthorisedAsAgentWith(arn)
       givenSuspensionStatus(SuspensionDetails(suspensionStatus = false, None))
 
-      val response = controllerWithSuspensionDisabled.showAgentServicesAccount()(FakeRequest("GET", "/home"))
+      val response = controllerWithSuspensionDisabled.showAgentServicesAccount()(fakeRequest("GET", "/home"))
 
       status(response) shouldBe OK
       Helpers.contentType(response).get shouldBe HTML
@@ -194,7 +197,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       givenAuthorisedAsAgentWith(arn)
       givenSuspensionStatus(SuspensionDetails(suspensionStatus = false, None))
 
-      val response = controllerWithHelpToggledOff.showAgentServicesAccount()(FakeRequest("GET", "/home"))
+      val response = controllerWithHelpToggledOff.showAgentServicesAccount()(fakeRequest("GET", "/home"))
       Helpers.contentAsString(response) should not include messagesApi("serviceinfo.help")
     }
 
@@ -202,7 +205,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       givenArnIsAllowlistedForIrv(Arn(arn))
       givenSuspensionStatus(SuspensionDetails(suspensionStatus = true, Some(Set("VATC"))))
       givenAuthorisedAsAgentWith(arn)
-      val response = controller.showAgentServicesAccount()(FakeRequest("GET", "/home"))
+      val response = controller.showAgentServicesAccount()(fakeRequest("GET", "/home"))
 
       status(response) shouldBe OK
       Helpers.contentType(response).get shouldBe HTML
@@ -223,7 +226,7 @@ class AgentServicesControllerSpec extends BaseISpec {
           .build()
           .injector.instanceOf[AgentServicesController]
       givenAuthorisedAsAgentWith(arn)
-      val response = controllerWithSuspensionDisabled.showAgentServicesAccount()(FakeRequest("GET", "/home"))
+      val response = controllerWithSuspensionDisabled.showAgentServicesAccount()(fakeRequest("GET", "/home"))
 
       status(response) shouldBe OK
       Helpers.contentType(response).get shouldBe HTML
@@ -239,7 +242,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       givenAuthorisedAsAgentWith(arn)
       givenSuspensionStatus(SuspensionDetails(suspensionStatus = false, None))
 
-      val response = controller.showAgentServicesAccount().apply(FakeRequest("GET", "/home"))
+      val response = controller.showAgentServicesAccount().apply(fakeRequest("GET", "/home"))
       status(response) shouldBe OK
       Helpers.contentAsString(response) should {
         not include "<a href=\"/\" class=\"btn button\" id=\"continue\">"
@@ -254,7 +257,7 @@ class AgentServicesControllerSpec extends BaseISpec {
           .injector.instanceOf[AgentServicesController]
       givenAuthorisedAsAgentWith(arn)
 
-      val result = controller.showAgentServicesAccount(FakeRequest())
+      val result = controller.showAgentServicesAccount(fakeRequest())
       status(result) shouldBe OK
 
       val content = Helpers.contentAsString(result)
@@ -268,7 +271,7 @@ class AgentServicesControllerSpec extends BaseISpec {
 
       val controller = appBuilder().build().injector.instanceOf[AgentServicesController]
 
-      val result = controller.showAgentServicesAccount(FakeRequest())
+      val result = controller.showAgentServicesAccount(fakeRequest())
       status(result) shouldBe OK
 
       val content = Helpers.contentAsString(result)
@@ -281,7 +284,7 @@ class AgentServicesControllerSpec extends BaseISpec {
     "return Ok and show the suspension warning page" in {
       givenArnIsAllowlistedForIrv(Arn(arn))
       givenAuthorisedAsAgentWith(arn)
-      val response = controller.showSuspendedWarning()(FakeRequest("GET", "/home").withSession("suspendedServices" -> "HMRC-MTD-IT,HMRC-MTD-VAT"))
+      val response = controller.showSuspendedWarning()(fakeRequest("GET", "/home").withSession("suspendedServices" -> "HMRC-MTD-IT,HMRC-MTD-VAT"))
 
       status(response) shouldBe OK
       Helpers.contentType(response).get shouldBe HTML
@@ -309,7 +312,7 @@ class AgentServicesControllerSpec extends BaseISpec {
 
       givenArnIsAllowlistedForIrv(Arn(arn))
       givenAuthorisedAsAgentWith(arn)
-      val response = controllerWithGranPermsDisabled.manageAccount().apply(FakeRequest("GET", "/manage-account"))
+      val response = controllerWithGranPermsDisabled.manageAccount().apply(fakeRequest("GET", "/manage-account"))
 
       status(response) shouldBe OK
       Helpers.contentType(response).get shouldBe HTML
@@ -326,7 +329,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       givenArnIsAllowlistedForIrv(Arn(arn))
       givenAuthorisedAsAgentWith(arn)
       givenOptinStatusFailedForArn(Arn(arn))
-      val response = controller.manageAccount().apply(FakeRequest("GET", "/manage-account"))
+      val response = controller.manageAccount().apply(fakeRequest("GET", "/manage-account"))
 
       status(response) shouldBe OK
       Helpers.contentType(response).get shouldBe HTML
@@ -343,7 +346,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       givenArnIsAllowlistedForIrv(Arn(arn))
       givenAuthorisedAsAgentWith(arn)
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInReady)
-      val response = await(controller.manageAccount()(FakeRequest("GET", "/manage-account")))
+      val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
 
@@ -382,7 +385,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       givenArnIsAllowlistedForIrv(Arn(arn))
       givenAuthorisedAsAgentWith(arn)
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInNotReady)
-      val response = await(controller.manageAccount()(FakeRequest("GET", "/manage-account")))
+      val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
 
@@ -416,7 +419,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       givenArnIsAllowlistedForIrv(Arn(arn))
       givenAuthorisedAsAgentWith(arn)
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInSingleUser)
-      val response = await(controller.manageAccount()(FakeRequest("GET", "/manage-account")))
+      val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
 
@@ -447,7 +450,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       givenArnIsAllowlistedForIrv(Arn(arn))
       givenAuthorisedAsAgentWith(arn)
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedOutWrongClientCount)
-      val response = await(controller.manageAccount()(FakeRequest("GET", "/manage-account")))
+      val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
 
@@ -478,7 +481,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       givenArnIsAllowlistedForIrv(Arn(arn))
       givenAuthorisedAsAgentWith(arn)
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedOutSingleUser)
-      val response = await(controller.manageAccount()(FakeRequest("GET", "/manage-account")))
+      val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
 
@@ -509,7 +512,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       givenArnIsAllowlistedForIrv(Arn(arn))
       givenAuthorisedAsAgentWith(arn)
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedOutEligible)
-      val response = await(controller.manageAccount()(FakeRequest("GET", "/manage-account")))
+      val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
 
@@ -549,7 +552,7 @@ class AgentServicesControllerSpec extends BaseISpec {
           Some("abc@abc.com"),
             Some(BusinessAddress("25 Any Street", Some("Any Town"), None, None, Some("TF3 4TR"), "GB"))))
 
-      val response = controller.accountDetails().apply(FakeRequest("GET", "/account-details"))
+      val response = controller.accountDetails().apply(fakeRequest("GET", "/account-details"))
 
       Helpers.status(response) shouldBe OK
       Helpers.contentType(response).get shouldBe HTML
@@ -574,7 +577,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       givenAuthorisedAsAgentWith(arn)
       givenAgentDetailsNoContent()
 
-      val response = controller.accountDetails().apply(FakeRequest("GET", "/account-details"))
+      val response = controller.accountDetails().apply(fakeRequest("GET", "/account-details"))
 
       status(response) shouldBe OK
       Helpers.contentType(response).get shouldBe HTML
@@ -592,7 +595,7 @@ class AgentServicesControllerSpec extends BaseISpec {
     "return Forbidden if the agent is not Admin" in {
       givenAuthorisedAsAgentWith(arn, isAdmin = false)
 
-      val response = controller.accountDetails().apply(FakeRequest("GET", "/account-details"))
+      val response = controller.accountDetails().apply(fakeRequest("GET", "/account-details"))
       status(response) shouldBe 403
     }
   }
@@ -601,7 +604,7 @@ class AgentServicesControllerSpec extends BaseISpec {
 
     "return Status: OK and body containing correct content" in {
       givenAuthorisedAsAgentWith(arn)
-      val response = controller.showHelp().apply(FakeRequest("GET", "/help"))
+      val response = controller.showHelp().apply(fakeRequest("GET", "/help"))
 
       status(response) shouldBe OK
       Helpers.contentType(response).get shouldBe HTML

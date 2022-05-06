@@ -29,15 +29,15 @@
         @msgs("serviceinfo.aria.account-menu")</a>
     <ul class="hmrc-account-menu__main">
         @if(isAdmin) {
-            <li><a href="@routes.AgentServicesController.manageAccount().url" class="hmrc-account-menu__link">@msgs("serviceinfo.manage")</a></li>
+            <li><a href="@routes.AgentServicesController.manageAccount.url" class="hmrc-account-menu__link">@msgs("serviceinfo.manage")</a></li>
         }
         @if(appConfig.HelpAndGuidanceEnabled) {
         <li>
-            <a href="@routes.AgentServicesController.showHelp().url" class="hmrc-account-menu__link">@msgs("serviceinfo.help")</a>
+            <a href="@routes.AgentServicesController.showHelp.url" class="hmrc-account-menu__link">@msgs("serviceinfo.help")</a>
         </li>
         }
         <li>
-            <a href="@routes.SignOutController.signOut().url" class="hmrc-account-menu__link">@msgs("serviceinfo.signout")</a>
+            <a href="@routes.SignOutController.signOut.url" class="hmrc-account-menu__link">@msgs("serviceinfo.signout")</a>
         </li>
     </ul>
 </nav>
