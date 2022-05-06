@@ -82,7 +82,7 @@
           @h2(Messages("manage.account.contact-details.heading"))
 
           @p(html = Some(
-              a(href = routes.AgentServicesController.accountDetails().url,
+              a(href = routes.AgentServicesController.accountDetails.url,
                   key = Messages("manage.account.contact-details.view")
               )))
 
@@ -100,7 +100,7 @@
                 <a class="govuk-link" href="@appConfig.manageUsersUrl" target="_blank" rel="noopener noreferrer">@msgs("manage.account.manage-user-access")</a>
             </li>
             <li>
-                <a class="govuk-link" href="@routes.AgentServicesController.accountDetails()">@msgs("manage.account.account-details")</a>
+                <a class="govuk-link" href="@routes.AgentServicesController.accountDetails">@msgs("manage.account.account-details")</a>
             </li>
         </ul>
 
