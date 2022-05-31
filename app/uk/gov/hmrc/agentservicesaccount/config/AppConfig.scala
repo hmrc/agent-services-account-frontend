@@ -133,10 +133,12 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
   val agentPermissionsFrontendOptInPath = getConfString("agent-permissions-frontend.optin-start-path")
   val agentPermissionsFrontendOptOutPath = getConfString("agent-permissions-frontend.optout-start-path")
   val agentPermissionsFrontendManageAccessGroupsPath = getConfString("agent-permissions-frontend.manage-access-groups-path")
+  val agentPermissionsFrontendGroupsCreatePath = getConfString("agent-permissions-frontend.create-access-group-path")
   val granPermsEnabled = getBoolean("features.enable-gran-perms")
   val granPermsMaxClientCount = getInt("gran-perms-max-client-count")
 
   val agentPermissionsOptInUrl = s"$agentPermissionsFrontendExternalUrl$agentPermissionsFrontendOptInPath"
   val agentPermissionsOptOutUrl = s"$agentPermissionsFrontendExternalUrl$agentPermissionsFrontendOptOutPath"
+  val agentPermissionsCreateAccessGroupUrl = s"$agentPermissionsFrontendExternalUrl$agentPermissionsFrontendGroupsCreatePath"
   val agentPermissionsManageAccessGroupsUrl = s"$agentPermissionsFrontendExternalUrl$agentPermissionsFrontendManageAccessGroupsPath"
 }

@@ -363,7 +363,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       paragraphs.get(0).text shouldBe "You are opted in and can now start creating access groups."
       h3.get(1).text shouldBe "Access groups"
       li.get(0).child(0).text shouldBe "Create new access group"
-      li.get(0).child(0).attr("href") shouldBe "http://localhost:9452/agent-permissions/opt-in/start"
+      li.get(0).child(0).attr("href") shouldBe "http://localhost:9452/agent-permissions/group/create-access-group"
       li.get(1).child(0).text shouldBe "Manage access groups"
       li.get(1).child(0).attr("href") shouldBe "http://localhost:9452/agent-permissions/manage-access-groups/start"
       h3.get(2).text shouldBe "Settings"
