@@ -34,7 +34,7 @@ object ManageAccessPermissionsConfig {
         accessGroups =
           List(
             Link(msgKey = "manage.account.manage-access-permissions.access-groups.create-new",
-              href = appConfig.agentPermissionsOptInUrl),
+              href = appConfig.agentPermissionsCreateAccessGroupUrl),
             Link(msgKey = "manage.account.manage-access-permissions.access-groups.manage",
               href = appConfig.agentPermissionsManageAccessGroupsUrl)),
         settings =
