@@ -19,8 +19,10 @@
 @import uk.gov.hmrc.agentservicesaccount.controllers.routes
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 @import uk.gov.hmrc.agentservicesaccount.views.html.components.secondary_nav
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcReportTechnicalIssueHelper
 
-@this(mainTemplate: main, secondaryNav: secondary_nav)
+@this(mainTemplate: main, secondaryNav: secondary_nav,hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper)
+
 
 @(isAdmin: Boolean)(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
 
@@ -47,5 +49,11 @@
     <p class="govuk-body">@msgs("suspension-warning.p3")</p>
     <p class="govuk-body">@msgs("suspension-warning.p4")</p>
 
-    <a href="@routes.AgentServicesController.showAgentServicesAccount" class="button govuk-body">@msgs("suspension-warning.button")</a>
+    <p>
+    <a href="@routes.AgentServicesController.showAgentServicesAccount" class="govuk-button">@msgs("suspension-warning.button")</a>
+    </p>
+
+    @hmrcReportTechnicalIssueHelper()
+
+
 }
