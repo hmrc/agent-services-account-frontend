@@ -34,4 +34,5 @@ object Css {
   val SUBMIT_BUTTON = "main form button"
   val currentLanguage = "ul.hmrc-language-select__list li.hmrc-language-select__list-item span[aria-current=true]";
   val alternateLanguage = ".hmrc-language-select__list .hmrc-language-select__list-item a.govuk-link";
+  val getHelpWithThisPageLink = "main a.govuk-link.hmrc-report-technical-issue"
 }
