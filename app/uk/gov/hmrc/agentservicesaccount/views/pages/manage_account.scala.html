@@ -99,12 +99,6 @@
         @p("manage.account.p")
         @ul_html(items =
             Seq(
-                Html(msgs("already-copied.link1")),
-                Html(msgs("already-copied.link2"))
-            )
-        )
-        @ul_html(items =
-            Seq(
                 Html(a("manage.account.add-user", href = appConfig.addUserUrl).toString),
                 Html(
                     a("manage.account.manage-user-access",
