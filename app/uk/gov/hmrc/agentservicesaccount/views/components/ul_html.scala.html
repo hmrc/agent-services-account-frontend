@@ -16,10 +16,10 @@
 
 @this()
 
-@(items: Seq[Html], classes: Option[String] = Some("govuk-list--bullet"))(implicit msgs: Messages)
+@(items: Seq[Html], classes: Option[String] = None)(implicit msgs: Messages)
 
 <ul class="govuk-list @classes.getOrElse("")">
- @for(li <- items) {
- <li class="govuk-list--item">@li</li>
-}
+    @for(html <- items) {
+        <li class="govuk-list--item">@html</li>
+    }
 </ul>
