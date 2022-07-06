@@ -23,6 +23,7 @@ import play.api.http.Status.OK
 import uk.gov.hmrc.agent.kenshoo.monitoring.HttpAPIMonitor
 import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, OptinStatus}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+import uk.gov.hmrc.agentservicesaccount.models.AccessGroupSummaries
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
 import uk.gov.hmrc.http.HttpReads.Implicits.readRaw
 
@@ -49,5 +50,15 @@ class AgentPermissionsConnector @Inject()(http: HttpClient)(implicit val metrics
     }
   }
 
-
+  def getGroupsSummaries(arn: Arn)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[AccessGroupSummaries]] = {
+    val url = s"$baseUrl/agent-permissions/arn/${arn.value}/groups"
+    monitor("ConsumedAPI-GetGroupsSummaries-GET"){
+      http.GET[HttpResponse](url).map{ response =>
+        response.status match {
+          case OK => response.json.asOpt[AccessGroupSummaries]
+          case e => logger.warn(s"GetGroupsSummaries returned status $e ${response.body}"); None
+        }
+      }
+    }
+  }
 }

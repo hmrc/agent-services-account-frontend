@@ -25,7 +25,7 @@ import play.api.test.{FakeRequest, Helpers}
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, OptedInNotReady, OptedInReady, OptedInSingleUser, OptedOutEligible, OptedOutSingleUser, OptedOutWrongClientCount, SuspensionDetails, SuspensionDetailsNotFound}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress}
+import uk.gov.hmrc.agentservicesaccount.models.{AccessGroupSummaries, AccessGroupSummary, AgencyDetails, BusinessAddress}
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentClientAuthorisationStubs._
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentFiRelationshipStubs.{givenArnIsAllowlistedForIrv, givenArnIsNotAllowlistedForIrv}
 import uk.gov.hmrc.agentservicesaccount.support.{BaseISpec, Css}
@@ -344,11 +344,12 @@ class AgentServicesControllerSpec extends BaseISpec {
       content should include(messagesApi("manage.account.account-details"))
     }
 
-    "return status: OK and body containing content for status Opted-In_READY" in {
+    "return status: OK and body containing content for status Opted-In_READY (no access groups created yet)" in {
 
       givenArnIsAllowlistedForIrv(Arn(arn))
       givenAuthorisedAsAgentWith(arn)
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInReady)
+      givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq.empty)) // no access groups yet
       val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
@@ -365,7 +366,9 @@ class AgentServicesControllerSpec extends BaseISpec {
       h3.get(0).text shouldBe "Status OPTED-IN"
       paragraphs.get(0).text shouldBe "You are opted in and can now start creating access groups."
       h3.get(1).text shouldBe "Access groups"
+      paragraphs.get(1).text shouldBe "Access groups allow you to control which team members can view and manage each client’s tax affairs."
       li.get(0).child(0).text shouldBe "Create new access group"
+      li.get(0).child(0).hasClass("govuk-button") shouldBe true
       li.get(0).child(0).attr("href") shouldBe "http://localhost:9452/agent-permissions/group/create-access-group"
       li.get(1).child(0).text shouldBe "Manage access groups"
       li.get(1).child(0).attr("href") shouldBe "http://localhost:9452/agent-permissions/manage-access-groups"
@@ -378,10 +381,30 @@ class AgentServicesControllerSpec extends BaseISpec {
       li.get(4).child(0).text shouldBe "Manage who can view your client list (opens in a new tab)"
       li.get(4).child(0).attr("href") shouldBe "http://localhost:hmmm/tax-and-scheme-management/users?origin=Agent"
       h2.get(2).text shouldBe "Contact details"
-      paragraphs.get(1).child(0).text shouldBe "View the contact details we have for your business"
-      paragraphs.get(1).child(0).attr("href") shouldBe "/agent-services-account/account-details"
+      paragraphs.get(2).child(0).text shouldBe "View the contact details we have for your business"
+      paragraphs.get(2).child(0).attr("href") shouldBe "/agent-services-account/account-details"
 
     }
+
+    "return status: OK and body containing content for status Opted-In_READY (access groups already created)" in {
+
+      givenArnIsAllowlistedForIrv(Arn(arn))
+      givenAuthorisedAsAgentWith(arn)
+      givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInReady)
+      givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq(AccessGroupSummary("myAccessGroupId")))) // there is already an access group
+      val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
+
+      status(response) shouldBe 200
+
+      val html = Jsoup.parse(contentAsString(response))
+      val paragraphs = html.select(Css.paragraphs)
+      val li = html.select(Css.LI)
+
+      paragraphs.get(1).text should not be "Access groups allow you to control which team members can view and manage each client’s tax affairs."
+      li.get(0).child(0).text shouldBe "Create new access group"
+      li.get(0).child(0).hasClass("govuk-button") shouldBe false
+    }
+
 
     "return status: OK and body containing content for status Opted-In_NOT_READY" in {
 

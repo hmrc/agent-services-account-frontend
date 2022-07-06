@@ -99,6 +99,7 @@ manage.account.manage-access-permissions.inset-text.Opted-Out_SINGLE_USER=To use
 manage.account.manage-access-permissions.inset-text.Opted-In_SINGLE_USER=To use access groups you need to add more team members to your agent services account.
 
 manage.account.manage-access-permissions.access-groups.heading=Access groups
+manage.account.manage-access-permissions.access-groups.hint=Access groups allow you to control which team members can view and manage each client’s tax affairs.
 manage.account.manage-access-permissions.access-groups.create-new=Create new access group
 manage.account.manage-access-permissions.access-groups.manage=Manage access groups
 manage.account.manage-access-permissions.access-groups.optin=Opt in to use access groups

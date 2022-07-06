@@ -19,76 +19,82 @@ package uk.gov.hmrc.agentservicesaccount.models
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentmtdidentifiers.model.{OptedInNotReady, OptedInReady, OptedInSingleUser, OptedOutEligible, OptedOutSingleUser, OptedOutWrongClientCount, OptinStatus}
 
-case class ManageAccessPermissionsConfig(status: String, statusClass: String, insetText: Option[String], accessGroups: List[Link], settings: List[Link])
+case class ManageAccessPermissionsConfig(status: String, statusClass: String, insetText: Option[String], explainAccessGroups: Boolean, accessGroups: List[Link], settings: List[Link])
 
-case class Link(msgKey: String, href: String)
+case class Link(msgKey: String, href: String, renderAsButton: Boolean = false)
 
 object ManageAccessPermissionsConfig {
 
-  def apply(optinStatus: Option[OptinStatus])(implicit appConfig: AppConfig): Option[ManageAccessPermissionsConfig] ={
-    optinStatus.map {
-      case OptedInReady => ManageAccessPermissionsConfig(
-        status = "manage.account.manage-access-permissions.status-opted-in",
-        statusClass = "govuk-tag",
-        insetText = Some("manage.account.manage-access-permissions.inset-text.Opted-In_READY"),
-        accessGroups =
-          List(
-            Link(msgKey = "manage.account.manage-access-permissions.access-groups.create-new",
-              href = appConfig.agentPermissionsCreateAccessGroupUrl),
-            Link(msgKey = "manage.account.manage-access-permissions.access-groups.manage",
-              href = appConfig.agentPermissionsManageAccessGroupsUrl)),
-        settings =
-          List(
-            Link(msgKey = "manage.account.manage-access-permissions.settings.optout",
-              href = appConfig.agentPermissionsOptOutUrl)))
-
-      case OptedInNotReady => ManageAccessPermissionsConfig(
-        status = "manage.account.manage-access-permissions.status-opted-in",
-        statusClass = "govuk-tag",
-        insetText = Some("manage.account.manage-access-permissions.inset-text.Opted-In_NOT_READY"),
-        accessGroups = List.empty,
-        settings =
-          List(
-            Link(msgKey = "manage.account.manage-access-permissions.settings.optout",
-              href = appConfig.agentPermissionsOptOutUrl)
-          )
-      )
-
-      case OptedInSingleUser => ManageAccessPermissionsConfig(
-        status = "manage.account.manage-access-permissions.status-opted-in",
-        statusClass = "govuk-tag",
-        insetText = Some("manage.account.manage-access-permissions.inset-text.Opted-In_SINGLE_USER"),
-        accessGroups = List.empty,
-        settings = List.empty
-      )
-
-      case OptedOutEligible => ManageAccessPermissionsConfig(
-        status = "manage.account.manage-access-permissions.status-opted-out",
-        statusClass = "govuk-tag govuk-tag--grey",
-        insetText = None,
-        accessGroups =
-          List(
-            Link(msgKey = "manage.account.manage-access-permissions.access-groups.optin",
-              href = appConfig.agentPermissionsOptInUrl)
+  def apply(optinStatus: OptinStatus, hasAnyGroups: Boolean)(implicit appConfig: AppConfig): ManageAccessPermissionsConfig = optinStatus match {
+    case OptedInReady => ManageAccessPermissionsConfig(
+      status = "manage.account.manage-access-permissions.status-opted-in",
+      statusClass = "govuk-tag",
+      insetText = Some("manage.account.manage-access-permissions.inset-text.Opted-In_READY"),
+      explainAccessGroups = !hasAnyGroups,
+      accessGroups =
+        List(
+          Link(msgKey = "manage.account.manage-access-permissions.access-groups.create-new",
+            href = appConfig.agentPermissionsCreateAccessGroupUrl,
+            renderAsButton = !hasAnyGroups
           ),
-        settings = List.empty
-      )
+          Link(msgKey = "manage.account.manage-access-permissions.access-groups.manage",
+            href = appConfig.agentPermissionsManageAccessGroupsUrl)),
+      settings =
+        List(
+          Link(msgKey = "manage.account.manage-access-permissions.settings.optout",
+            href = appConfig.agentPermissionsOptOutUrl)))
 
-      case OptedOutWrongClientCount => ManageAccessPermissionsConfig(
-        status = "manage.account.manage-access-permissions.status-opted-out",
-        statusClass = "govuk-tag govuk-tag--grey",
-        insetText = Some("manage.account.manage-access-permissions.inset-text.Opted-Out_WRONG_CLIENT_COUNT"),
-        accessGroups = List.empty,
-        settings = List.empty
-      )
+    case OptedInNotReady => ManageAccessPermissionsConfig(
+      status = "manage.account.manage-access-permissions.status-opted-in",
+      statusClass = "govuk-tag",
+      insetText = Some("manage.account.manage-access-permissions.inset-text.Opted-In_NOT_READY"),
+      explainAccessGroups = false,
+      accessGroups = List.empty,
+      settings =
+        List(
+          Link(msgKey = "manage.account.manage-access-permissions.settings.optout",
+            href = appConfig.agentPermissionsOptOutUrl)
+        )
+    )
 
-      case OptedOutSingleUser => ManageAccessPermissionsConfig(
-        status = "manage.account.manage-access-permissions.status-opted-out",
-        statusClass = "govuk-tag govuk-tag--grey",
-        insetText = Some("manage.account.manage-access-permissions.inset-text.Opted-Out_SINGLE_USER"),
-        accessGroups = List.empty,
-        settings = List.empty
-      )
-    }
+    case OptedInSingleUser => ManageAccessPermissionsConfig(
+      status = "manage.account.manage-access-permissions.status-opted-in",
+      statusClass = "govuk-tag",
+      insetText = Some("manage.account.manage-access-permissions.inset-text.Opted-In_SINGLE_USER"),
+      explainAccessGroups = false,
+      accessGroups = List.empty,
+      settings = List.empty
+    )
+
+    case OptedOutEligible => ManageAccessPermissionsConfig(
+      status = "manage.account.manage-access-permissions.status-opted-out",
+      statusClass = "govuk-tag govuk-tag--grey",
+      insetText = None,
+      explainAccessGroups = false,
+      accessGroups =
+        List(
+          Link(msgKey = "manage.account.manage-access-permissions.access-groups.optin",
+            href = appConfig.agentPermissionsOptInUrl)
+        ),
+      settings = List.empty
+    )
+
+    case OptedOutWrongClientCount => ManageAccessPermissionsConfig(
+      status = "manage.account.manage-access-permissions.status-opted-out",
+      statusClass = "govuk-tag govuk-tag--grey",
+      insetText = Some("manage.account.manage-access-permissions.inset-text.Opted-Out_WRONG_CLIENT_COUNT"),
+      explainAccessGroups = false,
+      accessGroups = List.empty,
+      settings = List.empty
+    )
+
+    case OptedOutSingleUser => ManageAccessPermissionsConfig(
+      status = "manage.account.manage-access-permissions.status-opted-out",
+      statusClass = "govuk-tag govuk-tag--grey",
+      insetText = Some("manage.account.manage-access-permissions.inset-text.Opted-Out_SINGLE_USER"),
+      explainAccessGroups = false,
+      accessGroups = List.empty,
+      settings = List.empty
+    )
   }
 }

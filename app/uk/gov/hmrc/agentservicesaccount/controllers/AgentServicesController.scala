@@ -121,7 +121,13 @@ class AgentServicesController @Inject()(
     withAuthorisedAsAgent { agentInfo =>
         if (agentInfo.isAdmin) {
           if (appConfig.granPermsEnabled) {
-            agentPermissionsConnector.getOptinStatus(agentInfo.arn).map(status => Ok(manageAccountView(ManageAccessPermissionsConfig(status))))
+            for {
+              status <- agentPermissionsConnector.getOptinStatus(agentInfo.arn)
+              mGroups <- agentPermissionsConnector.getGroupsSummaries(agentInfo.arn)
+              hasAnyGroups = mGroups.exists(_.groups.nonEmpty)
+            } yield {
+              Ok(manageAccountView(status.map(ManageAccessPermissionsConfig(_, hasAnyGroups))))
+            }
           } else
           Future.successful(Ok(manageAccountView(None)))
         } else {

@@ -18,7 +18,9 @@ package uk.gov.hmrc.agentservicesaccount.stubs
 
 
 import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, get, stubFor, urlEqualTo}
+import play.api.libs.json.Json
 import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, OptinStatus}
+import uk.gov.hmrc.agentservicesaccount.models.AccessGroupSummaries
 
 object AgentPermissionsStubs {
 
@@ -35,4 +37,12 @@ object AgentPermissionsStubs {
         .willReturn(aResponse()
         .withStatus(500))
     )
+
+  def givenAccessGroupsForArn(arn: Arn, accessGroupSummaries: AccessGroupSummaries) =
+    stubFor(
+      get(urlEqualTo(s"/agent-permissions/arn/${arn.value}/groups"))
+        .willReturn(aResponse()
+          .withStatus(200)
+          .withBody(Json.toJson(accessGroupSummaries).toString)))
+
 }
