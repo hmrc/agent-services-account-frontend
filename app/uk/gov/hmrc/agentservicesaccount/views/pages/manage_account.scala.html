@@ -40,6 +40,10 @@
 
             @h2(key = Messages("manage.account.manage-access-permissions.heading"), id = Some("manage-access-permissions-heading"))
 
+            @if(config.explainAccessGroups) {
+                <p class="govuk-body" id ="inset-text">@Messages("manage.account.manage-access-permissions.access-groups.hint")</p>
+            }
+
             <h3 class="govuk-heading-s" id="status-key">@{
                 Messages("manage.account.manage-access-permissions.status")
             }
@@ -48,15 +52,9 @@
             }</strong>
             </h3>
 
-            @config.insetText.map { txt => <p class="govuk-body" id ="inset-text">@Messages(txt, appConfig.granPermsMaxClientCount)</p> }
+            @config.insetText.map { txt => <p class="govuk-inset-text" id ="inset-text">@Messages(txt, appConfig.granPermsMaxClientCount)</p> }
 
             @if(config.accessGroups.nonEmpty) {
-                @h3(key = Messages("manage.account.manage-access-permissions.access-groups.heading"), id = Some("access-groups-heading"))
-
-                @if(config.explainAccessGroups) {
-                    <p class="govuk-body" id ="inset-text">@Messages("manage.account.manage-access-permissions.access-groups.hint")</p>
-                }
-
                 @ul(items = config.accessGroups.map { link =>
                     val classes = if (link.renderAsButton) Some("govuk-button") else None
                     a(key = Messages(link.msgKey), href = link.href, classes = classes)
@@ -66,8 +64,6 @@
             }
 
             @if(config.settings.nonEmpty) {
-                @h3(Messages("manage.account.manage-access-permissions.settings.heading"))
-
                 @ul(items = config.settings.map { link =>
                     a(key = Messages(link.msgKey), href = link.href)
                 },
@@ -76,13 +72,31 @@
 
             <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
 
-            @h2(Messages("manage.account.make-changes-to-your-account.heading"))
+            @if(config.showClientSettings) {
+                @h2(Messages("manage.account.clients.heading"))
+
+                <p class="govuk-body">@Messages("manage.account.clients.hint")</p>
+
+                @ul(items = Seq(
+                    a(key = Messages("manage.account.clients.manage"),
+                        href = s"${appConfig.agentPermissionsManageAccessGroupsUrl}"),
+                    a(key = Messages("manage.account.clients.unassigned"),
+                        href = s"${appConfig.agentPermissionsManageAccessGroupsUrl}#clients-panel")),
+                    classes = None
+                )
+
+                <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+            }
+
+            @h2(Messages("manage.account.team-members.heading"))
+
+            <p class="govuk-body">@Messages("manage.account.team-members.hint")</p>
 
             @ul(items = Seq(
-                a(key = Messages("manage.account.make-changes-to-your-account.add-remove"),
-                    href = appConfig.addUserUrl),
-                a(key = Messages("manage.account.make-changes-to-your-account.client-list"),
-                    href = appConfig.manageUsersUrl,
+                a(key = Messages("manage.account.team-members.manage"),
+                    href = appConfig.manageUsersUrl),
+                a(key = Messages("manage.account.team-members.add-remove"),
+                    href = appConfig.addUserUrl,
                     target = Some("_blank"),
                     rel = Some("noreferrer noopener"))),
                 classes = None
