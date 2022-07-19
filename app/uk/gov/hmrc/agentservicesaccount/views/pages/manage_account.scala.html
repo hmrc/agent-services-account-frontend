@@ -42,6 +42,10 @@
                 id = Some("manage-access-permissions-heading")
             )
 
+            @if(config.explainAccessGroups) {
+                <p class="govuk-body" id ="inset-text">@Messages("manage.account.manage-access-permissions.access-groups.hint")</p>
+            }
+
             <h3 class="govuk-heading-s" id="status-key">@{
                 msgs("manage.account.manage-access-permissions.status")
             }
@@ -50,15 +54,9 @@
             }</strong>
             </h3>
 
-            @config.insetText.map { txt => <p class="govuk-body" id ="inset-text">@msgs(txt, appConfig.granPermsMaxClientCount)</p> }
+            @config.insetText.map { txt => <p class="govuk-inset-text" id ="inset-text">@Messages(txt, appConfig.granPermsMaxClientCount)</p> }
 
             @if(config.accessGroups.nonEmpty) {
-                @h3(key = "manage.account.manage-access-permissions.access-groups.heading", id = Some("access-groups-heading"))
-
-                @if(config.explainAccessGroups) {
-                    <p class="govuk-body" id ="inset-text">@msgs("manage.account.manage-access-permissions.access-groups.hint")</p>
-                }
-
                 @ul(items = config.accessGroups.map { link =>
                     val classes = if (link.renderAsButton) Some("govuk-button") else None
                     a(key = link.msgKey, href = link.href, classes = classes)
@@ -69,8 +67,8 @@
             <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
 
             @if(config.clients.nonEmpty){
-                @h2("manage.account.manage-access-permissions.clients.heading")
-                @p(key = "manage.account.manage-access-permissions.clients.p")
+                @h2("manage.account.clients.heading")
+                @p(key = "manage.account.clients.p")
 
                 @ul(items = config.clients.map{ link =>
                 a(key = link.msgKey, href = link.href)
@@ -80,13 +78,13 @@
             }
         }
 
-        @h2("manage.account.manage-access-permissions.team-members.heading")
-        @p(key = "manage.account.manage-access-permissions.team-members.p")
+        @h2("manage.account.team-members.heading")
+        @p(key = "manage.account.team-members.p")
 
         @ul(items = Seq(
-            a(key = "manage.account.manage-access-permissions.team-members.manage-link",
+            a(key = "manage.account.team-members.manage-link",
                 href = "#"),
-            a(key = "manage.account.manage-access-permissions.team-members.external-manage-link",
+            a(key = "manage.account.team-members.external-manage-link",
                 href = appConfig.addUserUrl,
                 target = Some("_blank"),
                 rel = Some("noreferrer noopener"))),
