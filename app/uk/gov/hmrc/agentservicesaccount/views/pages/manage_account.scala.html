@@ -42,9 +42,7 @@
                 id = Some("manage-access-permissions-heading")
             )
 
-            @if(config.explainAccessGroups) {
-                <p class="govuk-body" id ="inset-text">@Messages("manage.account.manage-access-permissions.access-groups.hint")</p>
-            }
+            <p class="govuk-body" id ="inset-text">@msgs("manage.account.manage-access-permissions.access-groups.hint")</p>
 
             <h3 class="govuk-heading-s" id="status-key">@{
                 msgs("manage.account.manage-access-permissions.status")
@@ -54,7 +52,7 @@
             }</strong>
             </h3>
 
-            @config.insetText.map { txt => <p class="govuk-inset-text" id ="inset-text">@Messages(txt, appConfig.granPermsMaxClientCount)</p> }
+            @config.insetText.map { txt => <p class="govuk-inset-text" id ="inset-text">@msgs(txt, appConfig.granPermsMaxClientCount)</p> }
 
             @if(config.accessGroups.nonEmpty) {
                 @ul(items = config.accessGroups.map { link =>

@@ -22,7 +22,6 @@ import uk.gov.hmrc.agentmtdidentifiers.model.{OptedInNotReady, OptedInReady, Opt
 case class ManageAccessPermissionsConfig(status: String,
                                          statusClass: String,
                                          insetText: Option[String],
-                                         explainAccessGroups: Boolean,
                                          accessGroups: List[Link],
                                          clients: List[Link])
 
@@ -35,7 +34,6 @@ object ManageAccessPermissionsConfig {
       status = "manage.account.manage-access-permissions.status-opted-in",
       statusClass = "govuk-body govuk-!-margin-left-2",
       insetText = None,
-      explainAccessGroups = true,
       accessGroups =
         List(
           Link(msgKey = "manage.account.manage-access-permissions.access-groups.create-new",
@@ -58,7 +56,6 @@ object ManageAccessPermissionsConfig {
       status = "manage.account.manage-access-permissions.status-opted-in",
       statusClass = "govuk-body govuk-!-margin-left-2",
       insetText = Some("manage.account.manage-access-permissions.inset-text.Opted-In_NOT_READY"),
-      explainAccessGroups = true,
       accessGroups = List(
         Link(msgKey = "manage.account.manage-access-permissions.settings.optout",
           href = appConfig.agentPermissionsOptOutUrl)
@@ -70,7 +67,6 @@ object ManageAccessPermissionsConfig {
       status = "manage.account.manage-access-permissions.status-opted-in",
       statusClass = "govuk-body govuk-!-margin-left-2",
       insetText = Some("manage.account.manage-access-permissions.inset-text.Opted-In_SINGLE_USER"),
-      explainAccessGroups = true,
       accessGroups = List.empty,
       clients = List.empty
     )
@@ -79,7 +75,6 @@ object ManageAccessPermissionsConfig {
       status = "manage.account.manage-access-permissions.status-opted-out",
       statusClass = "govuk-body govuk-!-margin-left-2",
       insetText = None,
-      explainAccessGroups = true,
       accessGroups =
         List(
           Link(msgKey = "manage.account.manage-access-permissions.access-groups.optin",
@@ -92,7 +87,6 @@ object ManageAccessPermissionsConfig {
       status = "manage.account.manage-access-permissions.status-opted-out",
       statusClass = "govuk-body govuk-!-margin-left-2",
       insetText = Some("manage.account.manage-access-permissions.inset-text.Opted-Out_WRONG_CLIENT_COUNT"),
-      explainAccessGroups = true,
       accessGroups = List.empty,
       clients = List.empty
     )
@@ -101,7 +95,6 @@ object ManageAccessPermissionsConfig {
       status = "manage.account.manage-access-permissions.status-opted-out",
       statusClass = "govuk-body govuk-!-margin-left-2",
       insetText = Some("manage.account.manage-access-permissions.inset-text.Opted-Out_SINGLE_USER"),
-      explainAccessGroups = true,
       accessGroups = List.empty,
       clients = List.empty
     )
