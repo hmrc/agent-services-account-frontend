@@ -36,52 +36,54 @@
 
         @manageAccessPermissionsConfig.map { config =>
 
-            <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
 
-            @h2(key = Messages("manage.account.manage-access-permissions.heading"), id = Some("manage-access-permissions-heading"))
+        @h2(key = "manage.account.manage-access-permissions.heading",
+            id = Some("manage-access-permissions-heading")
+        )
 
             <h3 class="govuk-heading-s" id="status-key">@{
-                Messages("manage.account.manage-access-permissions.status")
+                msgs("manage.account.manage-access-permissions.status")
             }
             <strong class="@config.statusClass" id="status-value">@{
-                Messages(config.status)
+                msgs(config.status)
             }</strong>
             </h3>
 
-            @config.insetText.map { txt => <p class="govuk-body" id ="inset-text">@Messages(txt, appConfig.granPermsMaxClientCount)</p> }
+            @config.insetText.map { txt => <p class="govuk-body" id ="inset-text">@msgs(txt, appConfig.granPermsMaxClientCount)</p> }
 
             @if(config.accessGroups.nonEmpty) {
-                @h3(key = Messages("manage.account.manage-access-permissions.access-groups.heading"), id = Some("access-groups-heading"))
+                @h3(key = "manage.account.manage-access-permissions.access-groups.heading", id = Some("access-groups-heading"))
 
                 @if(config.explainAccessGroups) {
-                    <p class="govuk-body" id ="inset-text">@Messages("manage.account.manage-access-permissions.access-groups.hint")</p>
+                    <p class="govuk-body" id ="inset-text">@msgs("manage.account.manage-access-permissions.access-groups.hint")</p>
                 }
 
                 @ul(items = config.accessGroups.map { link =>
                     val classes = if (link.renderAsButton) Some("govuk-button") else None
-                    a(key = Messages(link.msgKey), href = link.href, classes = classes)
+                    a(key = link.msgKey, href = link.href, classes = classes)
                 },
                     classes = None)
 
-            }
+        }
 
             @if(config.settings.nonEmpty) {
-                @h3(Messages("manage.account.manage-access-permissions.settings.heading"))
+                @h3("manage.account.manage-access-permissions.settings.heading")
 
                 @ul(items = config.settings.map { link =>
-                    a(key = Messages(link.msgKey), href = link.href)
+                    a(key = link.msgKey, href = link.href)
                 },
                     classes = None)
             }
 
             <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
 
-            @h2(Messages("manage.account.make-changes-to-your-account.heading"))
+            @h2("manage.account.make-changes-to-your-account.heading")
 
             @ul(items = Seq(
-                a(key = Messages("manage.account.make-changes-to-your-account.add-remove"),
+                a(key = "manage.account.make-changes-to-your-account.add-remove",
                     href = appConfig.addUserUrl),
-                a(key = Messages("manage.account.make-changes-to-your-account.client-list"),
+                a(key = "manage.account.make-changes-to-your-account.client-list",
                     href = appConfig.manageUsersUrl,
                     target = Some("_blank"),
                     rel = Some("noreferrer noopener"))),
@@ -90,11 +92,11 @@
 
             <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
 
-            @h2(Messages("manage.account.contact-details.heading"))
+            @h2("manage.account.contact-details.heading")
 
             @p(html = Some(
-                a(href = routes.AgentServicesController.accountDetails.url,
-                    key = Messages("manage.account.contact-details.view")
+              a(href = routes.AgentServicesController.accountDetails.url,
+                  key = "manage.account.contact-details.view"
                 )))
 
         }
