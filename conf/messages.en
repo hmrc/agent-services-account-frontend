@@ -104,12 +104,17 @@ manage.account.manage-access-permissions.access-groups.create-new=Create new acc
 manage.account.manage-access-permissions.access-groups.manage=Manage access groups
 manage.account.manage-access-permissions.access-groups.optin=Opt in to use access groups
 
-manage.account.manage-access-permissions.settings.heading=Settings
 manage.account.manage-access-permissions.settings.optout=Opt out of using access groups
 
-manage.account.make-changes-to-your-account.heading=Make changes to your account
-manage.account.make-changes-to-your-account.add-remove=Add or remove a team member
-manage.account.make-changes-to-your-account.client-list=Manage who can view your client list (opens in a new tab)
+manage.account.manage-access-permissions.clients.heading=Clients
+manage.account.manage-access-permissions.clients.p=View client details, update client reference and see what groups a client is in.
+manage.account.manage-access-permissions.clients.manage-link=Manage clients
+manage.account.manage-access-permissions.clients.unassigned-link=Unassigned clients
+
+manage.account.manage-access-permissions.team-members.heading=Team members
+manage.account.manage-access-permissions.team-members.p=View team member details and see what groups a team member is in.
+manage.account.manage-access-permissions.team-members.manage-link=Manage team members
+manage.account.manage-access-permissions.team-members.external-manage-link=Add or remove team members (opens in new tab)
 
 manage.account.contact-details.heading=Contact details
 manage.account.contact-details.view=View the contact details we have for your business

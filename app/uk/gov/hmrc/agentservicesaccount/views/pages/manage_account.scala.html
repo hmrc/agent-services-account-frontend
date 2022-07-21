@@ -36,11 +36,11 @@
 
         @manageAccessPermissionsConfig.map { config =>
 
-        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+            <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
 
-        @h2(key = "manage.account.manage-access-permissions.heading",
-            id = Some("manage-access-permissions-heading")
-        )
+            @h2(key = "manage.account.manage-access-permissions.heading",
+                id = Some("manage-access-permissions-heading")
+            )
 
             <h3 class="govuk-heading-s" id="status-key">@{
                 msgs("manage.account.manage-access-permissions.status")
@@ -64,42 +64,43 @@
                     a(key = link.msgKey, href = link.href, classes = classes)
                 },
                     classes = None)
-
-        }
-
-            @if(config.settings.nonEmpty) {
-                @h3("manage.account.manage-access-permissions.settings.heading")
-
-                @ul(items = config.settings.map { link =>
-                    a(key = link.msgKey, href = link.href)
-                },
-                    classes = None)
             }
 
             <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
 
-            @h2("manage.account.make-changes-to-your-account.heading")
+            @if(config.clients.nonEmpty){
+                @h2("manage.account.manage-access-permissions.clients.heading")
+                @p(key = "manage.account.manage-access-permissions.clients.p")
 
-            @ul(items = Seq(
-                a(key = "manage.account.make-changes-to-your-account.add-remove",
-                    href = appConfig.addUserUrl),
-                a(key = "manage.account.make-changes-to-your-account.client-list",
-                    href = appConfig.manageUsersUrl,
-                    target = Some("_blank"),
-                    rel = Some("noreferrer noopener"))),
-                classes = None
-            )
+                @ul(items = config.clients.map{ link =>
+                a(key = link.msgKey, href = link.href)
+                }, classes = None)
 
-            <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-
-            @h2("manage.account.contact-details.heading")
-
-            @p(html = Some(
-              a(href = routes.AgentServicesController.accountDetails.url,
-                  key = "manage.account.contact-details.view"
-                )))
-
+                <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+            }
         }
+
+        @h2("manage.account.manage-access-permissions.team-members.heading")
+        @p(key = "manage.account.manage-access-permissions.team-members.p")
+
+        @ul(items = Seq(
+            a(key = "manage.account.manage-access-permissions.team-members.manage-link",
+                href = "#"),
+            a(key = "manage.account.manage-access-permissions.team-members.external-manage-link",
+                href = appConfig.addUserUrl,
+                target = Some("_blank"),
+                rel = Some("noreferrer noopener"))),
+            classes = None
+        )
+
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+
+        @h2("manage.account.contact-details.heading")
+
+        @p(html = Some(
+          a(href = routes.AgentServicesController.accountDetails.url,
+              key = "manage.account.contact-details.view"
+            )))
 
     } else {
         @p("manage.account.p")

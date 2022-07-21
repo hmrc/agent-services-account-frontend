@@ -19,7 +19,12 @@ package uk.gov.hmrc.agentservicesaccount.models
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentmtdidentifiers.model.{OptedInNotReady, OptedInReady, OptedInSingleUser, OptedOutEligible, OptedOutSingleUser, OptedOutWrongClientCount, OptinStatus}
 
-case class ManageAccessPermissionsConfig(status: String, statusClass: String, insetText: Option[String], explainAccessGroups: Boolean, accessGroups: List[Link], settings: List[Link])
+case class ManageAccessPermissionsConfig(status: String,
+                                         statusClass: String,
+                                         insetText: Option[String],
+                                         explainAccessGroups: Boolean,
+                                         accessGroups: List[Link],
+                                         clients: List[Link])
 
 case class Link(msgKey: String, href: String, renderAsButton: Boolean = false)
 
@@ -38,23 +43,27 @@ object ManageAccessPermissionsConfig {
             renderAsButton = !hasAnyGroups
           ),
           Link(msgKey = "manage.account.manage-access-permissions.access-groups.manage",
-            href = appConfig.agentPermissionsManageAccessGroupsUrl)),
-      settings =
-        List(
+            href = appConfig.agentPermissionsManageAccessGroupsUrl),
           Link(msgKey = "manage.account.manage-access-permissions.settings.optout",
-            href = appConfig.agentPermissionsOptOutUrl)))
+            href = appConfig.agentPermissionsOptOutUrl)),
+      clients = List(
+          Link(msgKey = "manage.account.manage-access-permissions.clients.manage-link",
+            href = appConfig.agentPermissionsManageClientUrl),
+          Link(msgKey = "manage.account.manage-access-permissions.clients.unassigned-link",
+            href = "#")
+        )
+      )
 
     case OptedInNotReady => ManageAccessPermissionsConfig(
       status = "manage.account.manage-access-permissions.status-opted-in",
       statusClass = "govuk-tag",
       insetText = Some("manage.account.manage-access-permissions.inset-text.Opted-In_NOT_READY"),
       explainAccessGroups = false,
-      accessGroups = List.empty,
-      settings =
-        List(
-          Link(msgKey = "manage.account.manage-access-permissions.settings.optout",
-            href = appConfig.agentPermissionsOptOutUrl)
-        )
+      accessGroups = List(
+        Link(msgKey = "manage.account.manage-access-permissions.settings.optout",
+          href = appConfig.agentPermissionsOptOutUrl)
+      ),
+      clients = List.empty
     )
 
     case OptedInSingleUser => ManageAccessPermissionsConfig(
@@ -63,7 +72,7 @@ object ManageAccessPermissionsConfig {
       insetText = Some("manage.account.manage-access-permissions.inset-text.Opted-In_SINGLE_USER"),
       explainAccessGroups = false,
       accessGroups = List.empty,
-      settings = List.empty
+      clients = List.empty
     )
 
     case OptedOutEligible => ManageAccessPermissionsConfig(
@@ -76,7 +85,7 @@ object ManageAccessPermissionsConfig {
           Link(msgKey = "manage.account.manage-access-permissions.access-groups.optin",
             href = appConfig.agentPermissionsOptInUrl)
         ),
-      settings = List.empty
+      clients = List.empty
     )
 
     case OptedOutWrongClientCount => ManageAccessPermissionsConfig(
@@ -85,7 +94,7 @@ object ManageAccessPermissionsConfig {
       insetText = Some("manage.account.manage-access-permissions.inset-text.Opted-Out_WRONG_CLIENT_COUNT"),
       explainAccessGroups = false,
       accessGroups = List.empty,
-      settings = List.empty
+      clients = List.empty
     )
 
     case OptedOutSingleUser => ManageAccessPermissionsConfig(
@@ -94,7 +103,7 @@ object ManageAccessPermissionsConfig {
       insetText = Some("manage.account.manage-access-permissions.inset-text.Opted-Out_SINGLE_USER"),
       explainAccessGroups = false,
       accessGroups = List.empty,
-      settings = List.empty
+      clients = List.empty
     )
   }
 }

@@ -127,18 +127,21 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
   val afiBaseUrl = baseUrl("agent-fi-relationship")
 
   //Gran Perms
-  val agentPermissionsBaseUrl = baseUrl("agent-permissions")
-  val agentUserClientDetailsBaseUrl = baseUrl("agent-user-client-details")
-  val agentPermissionsFrontendExternalUrl = getConfString("agent-permissions-frontend.external-url")
-  val agentPermissionsFrontendOptInPath = getConfString("agent-permissions-frontend.optin-start-path")
-  val agentPermissionsFrontendOptOutPath = getConfString("agent-permissions-frontend.optout-start-path")
-  val agentPermissionsFrontendManageAccessGroupsPath = getConfString("agent-permissions-frontend.manage-access-groups-path")
-  val agentPermissionsFrontendGroupsCreatePath = getConfString("agent-permissions-frontend.create-access-group-path")
-  val granPermsEnabled = getBoolean("features.enable-gran-perms")
-  val granPermsMaxClientCount = getInt("gran-perms-max-client-count")
+  val agentPermissionsBaseUrl: String = baseUrl("agent-permissions")
+  val agentUserClientDetailsBaseUrl: String = baseUrl("agent-user-client-details")
+  val agentPermissionsFrontendExternalUrl: String = getConfString("agent-permissions-frontend.external-url")
+  val agentPermissionsFrontendOptInPath: String = getConfString("agent-permissions-frontend.optin-start-path")
+  val agentPermissionsFrontendOptOutPath: String = getConfString("agent-permissions-frontend.optout-start-path")
+  val agentPermissionsFrontendManageAccessGroupsPath: String = getConfString("agent-permissions-frontend.manage-access-groups-path")
+  val agentPermissionsFrontendManageClientsPath: String = getConfString("agent-permissions-frontend.manage-clients-path")
+  val agentPermissionsFrontendGroupsCreatePath: String = getConfString("agent-permissions-frontend.create-access-group-path")
+  val granPermsEnabled: Boolean = getBoolean("features.enable-gran-perms")
+  val granPermsMaxClientCount: Int = getInt("gran-perms-max-client-count")
 
   val agentPermissionsOptInUrl = s"$agentPermissionsFrontendExternalUrl$agentPermissionsFrontendOptInPath"
   val agentPermissionsOptOutUrl = s"$agentPermissionsFrontendExternalUrl$agentPermissionsFrontendOptOutPath"
   val agentPermissionsCreateAccessGroupUrl = s"$agentPermissionsFrontendExternalUrl$agentPermissionsFrontendGroupsCreatePath"
   val agentPermissionsManageAccessGroupsUrl = s"$agentPermissionsFrontendExternalUrl$agentPermissionsFrontendManageAccessGroupsPath"
+  val agentPermissionsManageClientUrl = s"$agentPermissionsFrontendExternalUrl$agentPermissionsFrontendManageClientsPath"
+
 }
