@@ -331,7 +331,9 @@ class AgentServicesControllerSpec extends BaseISpec {
 
       givenArnIsAllowlistedForIrv(Arn(arn))
       givenAuthorisedAsAgentWith(arn)
+      givenSyncEacdFailure(Arn(arn))
       givenOptinStatusFailedForArn(Arn(arn))
+      givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq.empty))
       val response = controller.manageAccount().apply(fakeRequest("GET", "/manage-account"))
 
       status(response) shouldBe OK
@@ -348,6 +350,7 @@ class AgentServicesControllerSpec extends BaseISpec {
 
       givenArnIsAllowlistedForIrv(Arn(arn))
       givenAuthorisedAsAgentWith(arn)
+      givenSyncEacdSuccess(Arn(arn))
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInReady)
       givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq.empty)) // no access groups yet
       val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
@@ -390,6 +393,7 @@ class AgentServicesControllerSpec extends BaseISpec {
 
       givenArnIsAllowlistedForIrv(Arn(arn))
       givenAuthorisedAsAgentWith(arn)
+      givenSyncEacdSuccess(Arn(arn))
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInReady)
       givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq(AccessGroupSummary("myAccessGroupId")))) // there is already an access group
       val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
@@ -433,7 +437,9 @@ class AgentServicesControllerSpec extends BaseISpec {
 
       givenArnIsAllowlistedForIrv(Arn(arn))
       givenAuthorisedAsAgentWith(arn)
+      givenSyncEacdSuccess(Arn(arn))
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInNotReady)
+      givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq.empty))
       val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
@@ -468,7 +474,9 @@ class AgentServicesControllerSpec extends BaseISpec {
 
       givenArnIsAllowlistedForIrv(Arn(arn))
       givenAuthorisedAsAgentWith(arn)
+      givenSyncEacdSuccess(Arn(arn))
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInSingleUser)
+      givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq.empty))
       val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
@@ -501,7 +509,9 @@ class AgentServicesControllerSpec extends BaseISpec {
 
       givenArnIsAllowlistedForIrv(Arn(arn))
       givenAuthorisedAsAgentWith(arn)
+      givenSyncEacdSuccess(Arn(arn))
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedOutWrongClientCount)
+      givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq.empty))
       val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
@@ -534,7 +544,9 @@ class AgentServicesControllerSpec extends BaseISpec {
 
       givenArnIsAllowlistedForIrv(Arn(arn))
       givenAuthorisedAsAgentWith(arn)
+      givenSyncEacdSuccess(Arn(arn))
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedOutSingleUser)
+      givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq.empty))
       val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
@@ -567,7 +579,9 @@ class AgentServicesControllerSpec extends BaseISpec {
 
       givenArnIsAllowlistedForIrv(Arn(arn))
       givenAuthorisedAsAgentWith(arn)
+      givenSyncEacdSuccess(Arn(arn))
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedOutEligible)
+      givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq.empty))
       val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200

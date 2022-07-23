@@ -20,6 +20,7 @@ import com.codahale.metrics.MetricRegistry
 import com.kenshoo.play.metrics.Metrics
 import play.api.Logging
 import play.api.http.Status.OK
+import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.agent.kenshoo.monitoring.HttpAPIMonitor
 import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, OptinStatus}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
@@ -29,6 +30,7 @@ import uk.gov.hmrc.http.HttpReads.Implicits.readRaw
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.{Failure, Success}
 
 
 @Singleton
@@ -60,5 +62,28 @@ class AgentPermissionsConnector @Inject()(http: HttpClient)(implicit val metrics
         }
       }
     }
+  }
+
+  def syncEacd(arn: Arn)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Unit] = {
+    val url = s"$baseUrl/agent-permissions/arn/${arn.value}/sync"
+
+    http.PATCH[SyncEacd, HttpResponse](url, SyncEacd("sync")).map{ response =>
+      response.status match {
+        case OK =>
+          logger.debug(s"EACD sync called for $arn")
+        case other =>
+          logger.warn(s"syncEacd returned status $other ${response.body}");
+      }
+    } transformWith {
+      case Success(_) =>
+        Future.successful(logger.debug("EACD sync called successfully"))
+      case Failure(ex) =>
+        Future.successful(logger.error(s"EACD sync call failed: ${ex.getMessage}"))
+    }
+  }
+
+  case class SyncEacd(msg: String)
+  object SyncEacd {
+    implicit val format: OFormat[SyncEacd] = Json.format[SyncEacd]
   }
 }

@@ -67,11 +67,11 @@ TwirlKeys.templateImports ++= Seq(
 )
 
 lazy val compileDeps = Seq(
-  "uk.gov.hmrc" %% "bootstrap-frontend-play-28" % "5.24.0",
+  "uk.gov.hmrc" %% "bootstrap-frontend-play-28" % "6.3.0",
   "uk.gov.hmrc" %% "play-partials"              % "8.3.0-play-28",
   "uk.gov.hmrc" %% "agent-kenshoo-monitoring"   % "4.8.0-play-28",
-  "uk.gov.hmrc" %% "agent-mtd-identifiers"      % "0.36.0-play-28",
-  "uk.gov.hmrc" %% "play-frontend-hmrc"         % "3.15.0-play-28"
+  "uk.gov.hmrc" %% "agent-mtd-identifiers"      % "0.45.0-play-28",
+  "uk.gov.hmrc" %% "play-frontend-hmrc"         % "3.22.0-play-28"
 )
 
 def testDeps(scope: String) = Seq(
@@ -104,6 +104,7 @@ lazy val root = (project in file("."))
     ),
     resolvers += "HMRC-open-artefacts-maven" at "https://open.artefacts.tax.service.gov.uk/maven2",
     resolvers += "HMRC-local-artefacts-maven" at "https://artefacts.tax.service.gov.uk/artifactory/hmrc-releases-local",
+    resolvers += "hmrc-releases" at "https://artefacts.tax.service.gov.uk/artifactory/hmrc-releases/",
     resolvers += Resolver.url("HMRC-open-artefacts-ivy", url("https://open.artefacts.tax.service.gov.uk/ivy2"))(Resolver.ivyStylePatterns),
 libraryDependencies ++= compileDeps ++ testDeps("test") ++ testDeps("it"),
     libraryDependencies ++= Seq(
