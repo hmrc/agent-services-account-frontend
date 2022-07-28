@@ -67,7 +67,7 @@ TwirlKeys.templateImports ++= Seq(
 )
 
 lazy val compileDeps = Seq(
-  "uk.gov.hmrc" %% "bootstrap-frontend-play-28" % "6.3.0",
+  "uk.gov.hmrc" %% "bootstrap-frontend-play-28" % "6.4.0",
   "uk.gov.hmrc" %% "play-partials"              % "8.3.0-play-28",
   "uk.gov.hmrc" %% "agent-kenshoo-monitoring"   % "4.8.0-play-28",
   "uk.gov.hmrc" %% "agent-mtd-identifiers"      % "0.45.0-play-28",
@@ -125,3 +125,4 @@ libraryDependencies ++= compileDeps ++ testDeps("test") ++ testDeps("it"),
   )
   .settings(wartRemoverSettings: _*)
   .enablePlugins(PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin)
+  .disablePlugins(JUnitXmlReportPlugin) //Required to prevent https://github.com/scalatest/scalatest/issues/1427
