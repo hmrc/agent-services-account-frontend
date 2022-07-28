@@ -17,12 +17,24 @@
 package uk.gov.hmrc.agentservicesaccount.stubs
 
 
-import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, get, stubFor, urlEqualTo}
+import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, get, patch, serverError, stubFor, urlEqualTo}
+import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.libs.json.Json
 import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, OptinStatus}
 import uk.gov.hmrc.agentservicesaccount.models.AccessGroupSummaries
 
 object AgentPermissionsStubs {
+
+  def givenSyncEacdSuccess(arn: Arn): StubMapping =
+    stubFor(
+      patch(urlEqualTo(s"/agent-permissions/arn/${arn.value}/sync"))
+        .willReturn(aResponse()
+          .withStatus(200)))
+
+  def givenSyncEacdFailure(arn: Arn): StubMapping =
+    stubFor(
+      patch(urlEqualTo(s"/agent-permissions/arn/${arn.value}/sync"))
+        .willReturn(serverError()))
 
   def givenOptinStatusSuccessReturnsForArn( arn: Arn, optinStatus: OptinStatus) =
     stubFor(

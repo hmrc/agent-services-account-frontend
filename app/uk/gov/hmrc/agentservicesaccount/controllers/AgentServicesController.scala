@@ -122,6 +122,7 @@ class AgentServicesController @Inject()(
         if (agentInfo.isAdmin) {
           if (appConfig.granPermsEnabled) {
             for {
+              _ <- agentPermissionsConnector.syncEacd(agentInfo.arn)
               status <- agentPermissionsConnector.getOptinStatus(agentInfo.arn)
               mGroups <- agentPermissionsConnector.getGroupsSummaries(agentInfo.arn)
               hasAnyGroups = mGroups.exists(_.groups.nonEmpty)
