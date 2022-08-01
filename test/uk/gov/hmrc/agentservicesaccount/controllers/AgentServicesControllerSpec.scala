@@ -690,7 +690,6 @@ class AgentServicesControllerSpec extends BaseISpec {
       content should include(messagesApi("help.mtd.link2"))
       content should include(messagesApi("help.mtd.link3"))
       content should include(messagesApi("help.mtd.link4"))
-      content should include(messagesApi("help.mtd.link5"))
       content should include(messagesApi("help.trusts.h2"))
       content should include(messagesApi("help.trusts.link1"))
       content should include(messagesApi("help.trusts.link2"))
