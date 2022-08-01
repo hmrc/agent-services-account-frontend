@@ -361,13 +361,13 @@ class AgentServicesControllerSpec extends BaseISpec {
       val h1 = html.select(Css.H1)
       val h2 = html.select(Css.H2)
       val h3 = html.select(Css.H3)
-      val paragraphs = html.select(Css.paragraphs)
       val li = html.select(Css.LI)
 
       h1.get(0).text shouldBe "Manage account"
       h2.get(0).text shouldBe "Manage access groups"
       h3.get(0).text shouldBe "Status Turned on"
-      paragraphs.get(0).text shouldBe "Access groups allow you to control which team members can view and manage each client’s tax affairs."
+      html.select(Css.insetText).get(0).text
+        .shouldBe("Access groups allow you to control which team members can view and manage each client’s tax affairs.")
       li.get(0).child(0).text shouldBe "Create new access group"
       li.get(0).child(0).hasClass("govuk-button") shouldBe true
       li.get(0).child(0).attr("href") shouldBe "http://localhost:9452/agent-permissions/group/create-access-group"
@@ -384,8 +384,9 @@ class AgentServicesControllerSpec extends BaseISpec {
       li.get(6).child(0).text shouldBe "Add or remove team members (opens in a new tab)"
       li.get(6).child(0).attr("href") shouldBe "http://localhost:hmmm/user-profile-redirect-frontend/group-profile-management"
       h2.get(3).text shouldBe "Contact details"
-      paragraphs.get(3).child(0).text shouldBe "View the contact details we have for your business"
-      paragraphs.get(3).child(0).attr("href") shouldBe "/agent-services-account/account-details"
+      val paragraphs = html.select(Css.paragraphs)
+      paragraphs.get(2).child(0).text shouldBe "View the contact details we have for your business"
+      paragraphs.get(2).child(0).attr("href") shouldBe "/agent-services-account/account-details"
 
     }
 
@@ -401,7 +402,6 @@ class AgentServicesControllerSpec extends BaseISpec {
       status(response) shouldBe 200
 
       val html = Jsoup.parse(contentAsString(response))
-      val paragraphs = html.select(Css.paragraphs)
       val li = html.select(Css.LI)
       val h1 = html.select(Css.H1)
       val h2 = html.select(Css.H2)
@@ -410,13 +410,15 @@ class AgentServicesControllerSpec extends BaseISpec {
       h1.get(0).text shouldBe "Manage account"
       h2.get(0).text shouldBe "Manage access groups"
       h3.get(0).text shouldBe "Status Turned on"
+      html.select(Css.insetText).get(0).text
+        .shouldBe("Access groups allow you to control which team members can view and manage each client’s tax affairs.")
 
-      paragraphs.get(0).text shouldBe("Access groups allow you to control which team members can view and manage each client’s tax affairs.")
       li.get(0).child(0).text shouldBe "Create new access group"
       li.get(0).child(0).hasClass("govuk-button") shouldBe false
 
       h2.get(1).text shouldBe "Clients"
-      paragraphs.get(1).text shouldBe "View client details, update client reference and see what groups a client is in."
+      val paragraphs = html.select(Css.paragraphs)
+      paragraphs.get(0).text shouldBe "View client details, update client reference and see what groups a client is in."
       li.get(3).child(0).text shouldBe "Manage clients"
       li.get(3).child(0).attr("href") shouldBe "http://localhost:9452/agent-permissions/manage-clients"
       li.get(4).child(0).text shouldBe "Unassigned clients"
@@ -424,7 +426,7 @@ class AgentServicesControllerSpec extends BaseISpec {
 
       // TODO - should move these into method checks eg. pageWithTeamMembersSectionContent(html)
       h2.get(2).text shouldBe "Team members"
-      paragraphs.get(2).text shouldBe "View team member details and see what groups a team member is in."
+      paragraphs.get(1).text shouldBe "View team member details and see what groups a team member is in."
       li.get(5).child(0).text shouldBe "Manage team members"
       li.get(5).child(0).attr("href") shouldBe "#"
       li.get(6).child(0).text shouldBe "Add or remove team members (opens in a new tab)"
@@ -448,25 +450,27 @@ class AgentServicesControllerSpec extends BaseISpec {
       val h1 = html.select(Css.H1)
       val h2 = html.select(Css.H2)
       val h3 = html.select(Css.H3)
-      val paragraphs = html.select(Css.paragraphs)
       val li = html.select(Css.LI)
 
       h1.get(0).text shouldBe "Manage account"
       h2.get(0).text shouldBe "Manage access groups"
       h3.get(0).text shouldBe "Status Turned on"
-      paragraphs.get(0).text shouldBe "Access groups allow you to control which team members can view and manage each client’s tax affairs."
-      paragraphs.get(1).text shouldBe "You have added new clients but need to wait until your client details are ready to use with access groups. You will receive a confirmation email after which you can start using access groups."
+      html.select(Css.insetText).get(0).text
+        .shouldBe("Access groups allow you to control which team members can view and manage each client’s tax affairs.")
+      html.select(Css.insetText).get(1).text
+        .shouldBe("You have added new clients but need to wait until your client details are ready to use with access groups. You will receive a confirmation email after which you can start using access groups.")
       li.get(0).child(0).text shouldBe "Turn off access groups"
       li.get(0).child(0).attr("href") shouldBe "http://localhost:9452/agent-permissions/opt-out/start"
       h2.get(1).text shouldBe "Team members"
-      paragraphs.get(2).text shouldBe "View team member details and see what groups a team member is in."
+      val paragraphs = html.select(Css.paragraphs)
+      paragraphs.get(0).text shouldBe "View team member details and see what groups a team member is in."
       li.get(1).child(0).text shouldBe "Manage team members"
       li.get(1).child(0).attr("href") shouldBe "#"
       li.get(2).child(0).text shouldBe "Add or remove team members (opens in a new tab)"
       li.get(2).child(0).attr("href") shouldBe "http://localhost:hmmm/user-profile-redirect-frontend/group-profile-management"
       h2.get(2).text shouldBe "Contact details"
-      paragraphs.get(3).child(0).text shouldBe "View the contact details we have for your business"
-      paragraphs.get(3).child(0).attr("href") shouldBe "/agent-services-account/account-details"
+      paragraphs.get(1).child(0).text shouldBe "View the contact details we have for your business"
+      paragraphs.get(1).child(0).attr("href") shouldBe "/agent-services-account/account-details"
 
     }
 
@@ -491,17 +495,19 @@ class AgentServicesControllerSpec extends BaseISpec {
       h1.get(0).text shouldBe "Manage account"
       h2.get(0).text shouldBe "Manage access groups"
       h3.get(0).text shouldBe "Status Turned on"
-      paragraphs.get(0).text shouldBe "Access groups allow you to control which team members can view and manage each client’s tax affairs."
-      paragraphs.get(1).text shouldBe "To use access groups you need to add more team members to your agent services account under ‘Manage team members’ below."
+      html.select(Css.insetText).get(0).text
+        .shouldBe("Access groups allow you to control which team members can view and manage each client’s tax affairs.")
+      html.select(Css.insetText).get(1).text
+        .shouldBe("To use access groups you need to add more team members to your agent services account under ‘Manage team members’ below.")
       h2.get(1).text shouldBe "Team members"
-      paragraphs.get(2).text shouldBe "View team member details and see what groups a team member is in."
+      paragraphs.get(0).text shouldBe "View team member details and see what groups a team member is in."
       li.get(0).child(0).text shouldBe "Manage team members"
       li.get(0).child(0).attr("href") shouldBe "#"
       li.get(1).child(0).text shouldBe "Add or remove team members (opens in a new tab)"
       li.get(1).child(0).attr("href") shouldBe "http://localhost:hmmm/user-profile-redirect-frontend/group-profile-management"
       h2.get(2).text shouldBe "Contact details"
-      paragraphs.get(3).child(0).text shouldBe "View the contact details we have for your business"
-      paragraphs.get(3).child(0).attr("href") shouldBe "/agent-services-account/account-details"
+      paragraphs.get(1).child(0).text shouldBe "View the contact details we have for your business"
+      paragraphs.get(1).child(0).attr("href") shouldBe "/agent-services-account/account-details"
 
     }
 
@@ -520,23 +526,26 @@ class AgentServicesControllerSpec extends BaseISpec {
       val h1 = html.select(Css.H1)
       val h2 = html.select(Css.H2)
       val h3 = html.select(Css.H3)
-      val paragraphs = html.select(Css.paragraphs)
       val li = html.select(Css.LI)
 
       h1.get(0).text shouldBe "Manage account"
       h2.get(0).text shouldBe "Manage access groups"
-      paragraphs.get(0).text shouldBe "Access groups allow you to control which team members can view and manage each client’s tax affairs."
+      html.select(Css.insetText).get(0).text
+        .shouldBe("Access groups allow you to control which team members can view and manage each client’s tax affairs.")
+      html.select(Css.insetText).get(1).text
+        .shouldBe("To use access groups you need to have more than 1 client in your agent services account.")
+
       h3.get(0).text shouldBe "Status Turned off"
-      paragraphs.get(1).text shouldBe "To use access groups you need to have more than 1 client in your agent services account."
       h2.get(1).text shouldBe "Team members"
-      paragraphs.get(2).text shouldBe "View team member details and see what groups a team member is in."
+      val paragraphs = html.select(Css.paragraphs)
+      paragraphs.get(0).text shouldBe "View team member details and see what groups a team member is in."
       li.get(0).child(0).text shouldBe "Manage team members"
       li.get(0).child(0).attr("href") shouldBe "#"
       li.get(1).child(0).text shouldBe "Add or remove team members (opens in a new tab)"
       li.get(1).child(0).attr("href") shouldBe "http://localhost:hmmm/user-profile-redirect-frontend/group-profile-management"
       h2.get(2).text shouldBe "Contact details"
-      paragraphs.get(3).child(0).text shouldBe "View the contact details we have for your business"
-      paragraphs.get(3).child(0).attr("href") shouldBe "/agent-services-account/account-details"
+      paragraphs.get(1).child(0).text shouldBe "View the contact details we have for your business"
+      paragraphs.get(1).child(0).attr("href") shouldBe "/agent-services-account/account-details"
 
     }
 
@@ -555,23 +564,26 @@ class AgentServicesControllerSpec extends BaseISpec {
       val h1 = html.select(Css.H1)
       val h2 = html.select(Css.H2)
       val h3 = html.select(Css.H3)
-      val paragraphs = html.select(Css.paragraphs)
       val li = html.select(Css.LI)
 
       h1.get(0).text shouldBe "Manage account"
       h2.get(0).text shouldBe "Manage access groups"
       h3.get(0).text shouldBe "Status Turned off"
-      paragraphs.get(0).text shouldBe "Access groups allow you to control which team members can view and manage each client’s tax affairs."
-      paragraphs.get(1).text shouldBe "To use access groups you need to add more team members to your agent services account under ‘Manage team members’ below."
+      html.select(Css.insetText).get(0).text
+        .shouldBe("Access groups allow you to control which team members can view and manage each client’s tax affairs.")
+      html.select(Css.insetText).get(1).text
+        .shouldBe("To use access groups you need to add more team members to your agent services account under ‘Manage team members’ below.")
+
       h2.get(1).text shouldBe "Team members"
-      paragraphs.get(2).text shouldBe "View team member details and see what groups a team member is in."
+      val paragraphs = html.select(Css.paragraphs)
+      paragraphs.get(0).text shouldBe "View team member details and see what groups a team member is in."
       li.get(0).child(0).text shouldBe "Manage team members"
       li.get(0).child(0).attr("href") shouldBe "#"
       li.get(1).child(0).text shouldBe "Add or remove team members (opens in a new tab)"
       li.get(1).child(0).attr("href") shouldBe "http://localhost:hmmm/user-profile-redirect-frontend/group-profile-management"
       h2.get(2).text shouldBe "Contact details"
-      paragraphs.get(3).child(0).text shouldBe "View the contact details we have for your business"
-      paragraphs.get(3).child(0).attr("href") shouldBe "/agent-services-account/account-details"
+      paragraphs.get(1).child(0).text shouldBe "View the contact details we have for your business"
+      paragraphs.get(1).child(0).attr("href") shouldBe "/agent-services-account/account-details"
 
     }
 
@@ -590,24 +602,26 @@ class AgentServicesControllerSpec extends BaseISpec {
       val h1 = html.select(Css.H1)
       val h2 = html.select(Css.H2)
       val h3 = html.select(Css.H3)
-      val paragraphs = html.select(Css.paragraphs)
       val li = html.select(Css.LI)
 
       h1.get(0).text shouldBe "Manage account"
       h2.get(0).text shouldBe "Manage access groups"
-      paragraphs.get(0).text shouldBe "Access groups allow you to control which team members can view and manage each client’s tax affairs."
+      html.select(Css.insetText).get(0).text
+        .shouldBe("Access groups allow you to control which team members can view and manage each client’s tax affairs.")
+
       h3.get(0).text shouldBe "Status Turned off"
       li.get(0).child(0).text shouldBe "Turn on access groups"
       li.get(0).child(0).attr("href") shouldBe "http://localhost:9452/agent-permissions/opt-in/start"
       h2.get(1).text shouldBe "Team members"
-      paragraphs.get(1).text shouldBe "View team member details and see what groups a team member is in."
+      val paragraphs = html.select(Css.paragraphs)
+      paragraphs.get(0).text shouldBe "View team member details and see what groups a team member is in."
       li.get(1).child(0).text shouldBe "Manage team members"
       li.get(1).child(0).attr("href") shouldBe "#"
       li.get(2).child(0).text shouldBe "Add or remove team members (opens in a new tab)"
       li.get(2).child(0).attr("href") shouldBe "http://localhost:hmmm/user-profile-redirect-frontend/group-profile-management"
       h2.get(2).text shouldBe "Contact details"
-      paragraphs.get(2).child(0).text shouldBe "View the contact details we have for your business"
-      paragraphs.get(2).child(0).attr("href") shouldBe "/agent-services-account/account-details"
+      paragraphs.get(1).child(0).text shouldBe "View the contact details we have for your business"
+      paragraphs.get(1).child(0).attr("href") shouldBe "/agent-services-account/account-details"
 
     }
   }
