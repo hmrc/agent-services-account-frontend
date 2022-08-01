@@ -19,7 +19,7 @@ asa.other.p1=Y cyfrif gwasanaethau asiant yw cartref gwasanaethau treth CThEM a 
 asa.other.warning=Rhybudd
 
 agent.services.account.inset=Ni allwch fwrw golwg dros eich rhestrau o gleientiaid drwy’ch cyfrif gwasanaethau asiant. Gallwch ddefnyddio’ch cyfrif i fwrw golwg dros fanylion TAW  cleient unigol a’u rheoli.
-agent.services.account.section1.h2=Troi Treth yn Ddigidol ar gyfer TAW
+agent.services.account.section1.h2=TAW
 agent.services.account.section1.col1.h3=Cyn i chi ddechrau
 agent.services.account.section1.col1.p=Yn gyntaf mae’n rhaid i chi gael awdurdodiad gan eich cleient. Gallwch wneud hyn drwy<a class="govuk-link" href="{0}"> gopïo’ch awdurdodiadau drosodd</a> neu <a class="govuk-link" href="{1}">wneud cais am awdurdodiad</a>.
 agent.services.account.section1.col1.link=Os ydych yn copïo manylion eich cleient drosodd, bydd angen i chi<a class="govuk-link" href="https://www.gov.uk/guidance/sign-up-for-making-tax-digital-for-vat.cy" target="_blank" rel="noreferrer noopener"> ei gofrestru ar gyfer y gwasanaeth Troi Treth yn Ddigidol ar gyfer TAW (yn agor tab newydd)</a>.
@@ -208,7 +208,7 @@ help.heading=Help ac arweiniad
 help.p1=Rhagor o wybodaeth am sut i ddefnyddio’ch cyfrif gwasanaethau asiant a sut y gall cleientiaid eich awdurdodi i reoli eu trethi.
 help.authorised.h2=Cael awdurdodiad
 help.authorised.link=Awdurdodi asiant
-help.mtd.h2=Troi Treth yn Ddigidol ar gyfer TAW
+help.mtd.h2=TAW
 help.mtd.link1=<a class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noopener" href="https://www.gov.uk/guidance/making-tax-digital-for-vat-as-an-agent-step-by-step.cy">Troi Treth yn Ddigidol ar gyfer TAW fel asiant: cam wrth gam</a>
 help.mtd.link2=Sut i gadw cofnodion digidol a chyflwyno Ffurflenni TAW ar gyfer Troi Treth yn Ddigidol ar gyfer TAW
 help.mtd.link3=<a class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noopener" href="https://www.gov.uk/guidance/sign-up-your-client-for-making-tax-digital-for-vat.cy">Sut i gofrestru cleientiaid ar gyfer Troi Treth yn Ddigidol ar gyfer TAW</a>
