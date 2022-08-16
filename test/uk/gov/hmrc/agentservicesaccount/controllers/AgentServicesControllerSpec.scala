@@ -381,7 +381,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       li.get(4).child(0).text shouldBe "Unassigned clients"
       h2.get(2).text shouldBe "Team members"
       li.get(5).child(0).text shouldBe "Manage team members"
-      li.get(5).child(0).attr("href") shouldBe "#"
+      li.get(5).child(0).attr("href") shouldBe "http://localhost:9452/agent-permissions/manage-team-members"
       li.get(6).child(0).text shouldBe "Add or remove team members (opens in a new tab)"
       li.get(6).child(0).attr("href") shouldBe "http://localhost:1111/user-profile-redirect-frontend/group-profile-management"
       h2.get(3).text shouldBe "Contact details"
@@ -429,7 +429,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       h2.get(2).text shouldBe "Team members"
       paragraphs.get(2).text shouldBe "View team member details and see what groups a team member is in."
       li.get(5).child(0).text shouldBe "Manage team members"
-      li.get(5).child(0).attr("href") shouldBe "#"
+      li.get(5).child(0).attr("href") shouldBe "http://localhost:9452/agent-permissions/manage-team-members"
       li.get(6).child(0).text shouldBe "Add or remove team members (opens in a new tab)"
       li.get(6).child(0).attr("href") shouldBe "http://localhost:1111/user-profile-redirect-frontend/group-profile-management"
 
@@ -467,7 +467,7 @@ class AgentServicesControllerSpec extends BaseISpec {
 
       paragraphs.get(1).text shouldBe "View team member details and see what groups a team member is in."
       li.get(1).child(0).text shouldBe "Manage team members"
-      li.get(1).child(0).attr("href") shouldBe "#"
+      li.get(1).child(0).attr("href") shouldBe "http://localhost:9452/agent-permissions/manage-team-members"
       li.get(2).child(0).text shouldBe "Add or remove team members (opens in a new tab)"
       li.get(2).child(0).attr("href") shouldBe "http://localhost:1111/user-profile-redirect-frontend/group-profile-management"
       h2.get(2).text shouldBe "Contact details"
@@ -504,7 +504,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       h2.get(1).text shouldBe "Team members"
       paragraphs.get(1).text shouldBe "View team member details and see what groups a team member is in."
       li.get(0).child(0).text shouldBe "Manage team members"
-      li.get(0).child(0).attr("href") shouldBe "#"
+      li.get(0).child(0).attr("href") shouldBe "http://localhost:9452/agent-permissions/manage-team-members"
       li.get(1).child(0).text shouldBe "Add or remove team members (opens in a new tab)"
       li.get(1).child(0).attr("href") shouldBe "http://localhost:1111/user-profile-redirect-frontend/group-profile-management"
       h2.get(2).text shouldBe "Contact details"
@@ -539,16 +539,14 @@ class AgentServicesControllerSpec extends BaseISpec {
         .shouldBe("To use access groups you need to have more than 1 client in your agent services account.")
 
       h3.get(0).text shouldBe "Status Turned off"
-      h2.get(1).text shouldBe "Team members"
 
-      paragraphs.get(1).text shouldBe "View team member details and see what groups a team member is in."
-      li.get(0).child(0).text shouldBe "Manage team members"
-      li.get(0).child(0).attr("href") shouldBe "#"
-      li.get(1).child(0).text shouldBe "Add or remove team members (opens in a new tab)"
-      li.get(1).child(0).attr("href") shouldBe "http://localhost:1111/user-profile-redirect-frontend/group-profile-management"
+      h2.get(1).text shouldBe "Team members"
+      li.get(0).child(0).text shouldBe "Add or remove team members (opens in a new tab)"
+      li.get(0).child(0).attr("href") shouldBe "http://localhost:1111/user-profile-redirect-frontend/group-profile-management"
+
       h2.get(2).text shouldBe "Contact details"
-      paragraphs.get(2).child(0).text shouldBe "View the contact details we have for your business"
-      paragraphs.get(2).child(0).attr("href") shouldBe "/agent-services-account/account-details"
+      paragraphs.get(1).child(0).text shouldBe "View the contact details we have for your business"
+      paragraphs.get(1).child(0).attr("href") shouldBe "/agent-services-account/account-details"
 
     }
 
@@ -579,15 +577,12 @@ class AgentServicesControllerSpec extends BaseISpec {
         .shouldBe("To use access groups you need to add more team members to your agent services account under ‘Manage team members’ below.")
 
       h2.get(1).text shouldBe "Team members"
+      li.get(0).child(0).text shouldBe "Add or remove team members (opens in a new tab)"
+      li.get(0).child(0).attr("href") shouldBe "http://localhost:1111/user-profile-redirect-frontend/group-profile-management"
 
-      paragraphs.get(1).text shouldBe "View team member details and see what groups a team member is in."
-      li.get(0).child(0).text shouldBe "Manage team members"
-      li.get(0).child(0).attr("href") shouldBe "#"
-      li.get(1).child(0).text shouldBe "Add or remove team members (opens in a new tab)"
-      li.get(1).child(0).attr("href") shouldBe "http://localhost:1111/user-profile-redirect-frontend/group-profile-management"
       h2.get(2).text shouldBe "Contact details"
-      paragraphs.get(2).child(0).text shouldBe "View the contact details we have for your business"
-      paragraphs.get(2).child(0).attr("href") shouldBe "/agent-services-account/account-details"
+      paragraphs.get(1).child(0).text shouldBe "View the contact details we have for your business"
+      paragraphs.get(1).child(0).attr("href") shouldBe "/agent-services-account/account-details"
 
     }
 
@@ -619,14 +614,12 @@ class AgentServicesControllerSpec extends BaseISpec {
       li.get(0).child(0).attr("href") shouldBe "http://localhost:9452/agent-permissions/opt-in/start"
       h2.get(1).text shouldBe "Team members"
 
-      paragraphs.get(1).text shouldBe "View team member details and see what groups a team member is in."
-      li.get(1).child(0).text shouldBe "Manage team members"
-      li.get(1).child(0).attr("href") shouldBe "#"
-      li.get(2).child(0).text shouldBe "Add or remove team members (opens in a new tab)"
-      li.get(2).child(0).attr("href") shouldBe "http://localhost:1111/user-profile-redirect-frontend/group-profile-management"
+      li.get(1).child(0).text shouldBe "Add or remove team members (opens in a new tab)"
+      li.get(1).child(0).attr("href") shouldBe "http://localhost:1111/user-profile-redirect-frontend/group-profile-management"
+
       h2.get(2).text shouldBe "Contact details"
-      paragraphs.get(2).child(0).text shouldBe "View the contact details we have for your business"
-      paragraphs.get(2).child(0).attr("href") shouldBe "/agent-services-account/account-details"
+      paragraphs.get(1).child(0).text shouldBe "View the contact details we have for your business"
+      paragraphs.get(1).child(0).attr("href") shouldBe "/agent-services-account/account-details"
 
     }
   }

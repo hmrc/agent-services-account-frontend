@@ -73,20 +73,32 @@
 
                 <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
             }
+
+            @h2("manage.account.team-members.heading")
+            @if(config.teamMembers){
+                @p(key = "manage.account.team-members.p")
+
+                @ul(items = Seq(
+                    a(key = "manage.account.team-members.manage-link",
+                    href = appConfig.agentPermissionsManageTeamMembersUrl),
+                    a(key = "manage.account.team-members.external-manage-link",
+                    href = appConfig.addUserUrl,
+                    target = Some("_blank"),
+                    rel = Some("noreferrer noopener"))),
+                    classes = None
+                )
+            } else {
+
+                @ul(items = Seq(
+                    a(key = "manage.account.team-members.external-manage-link",
+                    href = appConfig.addUserUrl,
+                    target = Some("_blank"),
+                    rel = Some("noreferrer noopener"))),
+                    classes = None
+                )
+            }
         }
 
-        @h2("manage.account.team-members.heading")
-        @p(key = "manage.account.team-members.p")
-
-        @ul(items = Seq(
-            a(key = "manage.account.team-members.manage-link",
-                href = "#"),
-            a(key = "manage.account.team-members.external-manage-link",
-                href = appConfig.addUserUrl,
-                target = Some("_blank"),
-                rel = Some("noreferrer noopener"))),
-            classes = None
-        )
 
         <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
 

@@ -23,7 +23,8 @@ case class ManageAccessPermissionsConfig(status: String,
                                          statusClass: String,
                                          insetText: Option[String],
                                          accessGroups: List[Link],
-                                         clients: List[Link])
+                                         clients: List[Link],
+                                         teamMembers: Boolean)
 
 case class Link(msgKey: String, href: String, renderAsButton: Boolean = false)
 
@@ -49,7 +50,8 @@ object ManageAccessPermissionsConfig {
             href = appConfig.agentPermissionsManageClientUrl),
           Link(msgKey = "manage.account.clients.unassigned-link",
             href = "#")
-        )
+        ),
+      teamMembers = true
       )
 
     case OptedInNotReady => ManageAccessPermissionsConfig(
@@ -60,7 +62,8 @@ object ManageAccessPermissionsConfig {
         Link(msgKey = "manage.account.manage-access-permissions.settings.optout",
           href = appConfig.agentPermissionsOptOutUrl)
       ),
-      clients = List.empty
+      clients = List.empty,
+      teamMembers = true
     )
 
     case OptedInSingleUser => ManageAccessPermissionsConfig(
@@ -68,7 +71,8 @@ object ManageAccessPermissionsConfig {
       statusClass = "govuk-body govuk-!-margin-left-2",
       insetText = Some("manage.account.manage-access-permissions.inset-text.Opted-In_SINGLE_USER"),
       accessGroups = List.empty,
-      clients = List.empty
+      clients = List.empty,
+      teamMembers = true
     )
 
     case OptedOutEligible => ManageAccessPermissionsConfig(
@@ -80,7 +84,8 @@ object ManageAccessPermissionsConfig {
           Link(msgKey = "manage.account.manage-access-permissions.access-groups.optin",
             href = appConfig.agentPermissionsOptInUrl, renderAsButton = true)
         ),
-      clients = List.empty
+      clients = List.empty,
+      teamMembers = false
     )
 
     case OptedOutWrongClientCount => ManageAccessPermissionsConfig(
@@ -88,7 +93,8 @@ object ManageAccessPermissionsConfig {
       statusClass = "govuk-body govuk-!-margin-left-2",
       insetText = Some("manage.account.manage-access-permissions.inset-text.Opted-Out_WRONG_CLIENT_COUNT"),
       accessGroups = List.empty,
-      clients = List.empty
+      clients = List.empty,
+      teamMembers = false
     )
 
     case OptedOutSingleUser => ManageAccessPermissionsConfig(
@@ -96,7 +102,8 @@ object ManageAccessPermissionsConfig {
       statusClass = "govuk-body govuk-!-margin-left-2",
       insetText = Some("manage.account.manage-access-permissions.inset-text.Opted-Out_SINGLE_USER"),
       accessGroups = List.empty,
-      clients = List.empty
+      clients = List.empty,
+      teamMembers = false
     )
   }
 }
