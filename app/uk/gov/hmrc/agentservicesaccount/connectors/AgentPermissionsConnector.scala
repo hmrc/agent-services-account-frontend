@@ -30,7 +30,7 @@ import uk.gov.hmrc.http.HttpReads.Implicits.readRaw
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.{Failure, Success}
+import scala.util.{Failure, Success, Try}
 
 
 @Singleton
@@ -53,9 +53,28 @@ class AgentPermissionsConnector @Inject()(http: HttpClient)(implicit val metrics
   }
 
   def getGroupsSummaries(arn: Arn)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[AccessGroupSummaries]] = {
+
+    def buildHeaders: Seq[(String, String)] = {
+      hc.otherHeaders.toMap.get("Cookie").map(_.split(";")).map { cookieParts =>
+        cookieParts.foldLeft(Seq.empty[(String, String)]) { (acc, cookiePart) =>
+          if (cookiePart.trim.startsWith("PLAY_LANG")) {
+            Try {
+              val pairKeyValue = cookiePart.split("=")
+              pairKeyValue(0).trim -> pairKeyValue(1).trim
+            } match {
+              case Success(pair) => acc :+ pair
+              case Failure(ex) =>
+                logger.error(s"Unable to obtain lang header: ${ex.getMessage} from $cookiePart")
+                acc
+            }
+          } else acc
+        }
+      }.toSeq.flatten
+    }
+
     val url = s"$baseUrl/agent-permissions/arn/${arn.value}/groups"
     monitor("ConsumedAPI-GetGroupsSummaries-GET"){
-      http.GET[HttpResponse](url).map{ response =>
+      http.GET[HttpResponse](url, headers = buildHeaders).map{ response =>
         response.status match {
           case OK => response.json.asOpt[AccessGroupSummaries]
           case e => logger.warn(s"GetGroupsSummaries returned status $e ${response.body}"); None
