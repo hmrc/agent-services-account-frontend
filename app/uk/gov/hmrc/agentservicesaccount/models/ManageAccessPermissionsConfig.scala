@@ -49,7 +49,7 @@ object ManageAccessPermissionsConfig {
           Link(msgKey = "manage.account.clients.manage-link",
             href = appConfig.agentPermissionsManageClientUrl),
           Link(msgKey = "manage.account.clients.unassigned-link",
-            href = "#")
+            href = appConfig.agentPermissionsUnassignedClientsUrl)
         ),
       teamMembers = true
       )

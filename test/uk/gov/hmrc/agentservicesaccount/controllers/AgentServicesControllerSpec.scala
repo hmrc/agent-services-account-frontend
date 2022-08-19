@@ -423,7 +423,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       li.get(3).child(0).text shouldBe "Manage clients"
       li.get(3).child(0).attr("href") shouldBe "http://localhost:9452/agent-permissions/manage-clients"
       li.get(4).child(0).text shouldBe "Unassigned clients"
-      li.get(4).child(0).attr("href") shouldBe "#"
+      li.get(4).child(0).attr("href") shouldBe "http://localhost:9452/agent-permissions/manage-access-groups#unassigned-clients"
 
       // TODO - should move these into method checks eg. pageWithTeamMembersSectionContent(html)
       h2.get(2).text shouldBe "Team members"
