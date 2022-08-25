@@ -36,6 +36,18 @@ object AgentPermissionsStubs {
       patch(urlEqualTo(s"/agent-permissions/arn/${arn.value}/sync"))
         .willReturn(serverError()))
 
+  def givenArnAllowedOk(): StubMapping =
+    stubFor(
+      get(urlEqualTo(s"/agent-permissions/arn-allowed"))
+        .willReturn(aResponse()
+          .withStatus(200)))
+
+  def givenArnAllowedNotOk(): StubMapping =
+    stubFor(
+      get(urlEqualTo(s"/agent-permissions/arn-allowed"))
+        .willReturn(aResponse()
+          .withStatus(403)))
+
   def givenOptinStatusSuccessReturnsForArn( arn: Arn, optinStatus: OptinStatus) =
     stubFor(
       get(urlEqualTo(s"/agent-permissions/arn/${arn.value}/optin-status"))

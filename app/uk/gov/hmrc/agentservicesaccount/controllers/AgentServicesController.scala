@@ -23,7 +23,7 @@ import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.auth.AuthActions
 import uk.gov.hmrc.agentservicesaccount.auth.CallOps._
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.connectors.{AfiRelationshipConnector, AgentClientAuthorisationConnector, AgentPermissionsConnector}
+import uk.gov.hmrc.agentservicesaccount.connectors.{AfiRelationshipConnector, AgentClientAuthorisationConnector, AgentPermissionsConnector, AgentPermissionsFrontendConnector}
 import uk.gov.hmrc.agentservicesaccount.models.ManageAccessPermissionsConfig
 import uk.gov.hmrc.agentservicesaccount.views.html.pages._
 
@@ -36,6 +36,7 @@ class AgentServicesController @Inject()(
   agentClientAuthorisationConnector: AgentClientAuthorisationConnector,
   afiRelationshipConnector: AfiRelationshipConnector,
   agentPermissionsConnector: AgentPermissionsConnector,
+  agentPermissionsFrontendConnector: AgentPermissionsFrontendConnector,
   suspensionWarningView: suspension_warning,
   manageAccountView: manage_account,
   asaDashboard: asa_dashboard,
@@ -121,16 +122,22 @@ class AgentServicesController @Inject()(
     withAuthorisedAsAgent { agentInfo =>
         if (agentInfo.isAdmin) {
           if (appConfig.granPermsEnabled) {
-            for {
-              _ <- agentPermissionsConnector.syncEacd(agentInfo.arn)
-              status <- agentPermissionsConnector.getOptinStatus(agentInfo.arn)
-              mGroups <- agentPermissionsConnector.getGroupsSummaries(agentInfo.arn)
-              hasAnyGroups = mGroups.exists(_.groups.nonEmpty)
-            } yield {
-              Ok(manageAccountView(status.map(ManageAccessPermissionsConfig(_, hasAnyGroups))))
+            agentPermissionsFrontendConnector.isArnAllowed flatMap {
+              case true =>
+                for {
+                  _ <- agentPermissionsConnector.syncEacd(agentInfo.arn)
+                  status <- agentPermissionsConnector.getOptinStatus(agentInfo.arn)
+                  mGroups <- agentPermissionsConnector.getGroupsSummaries(agentInfo.arn)
+                  hasAnyGroups = mGroups.exists(_.groups.nonEmpty)
+                } yield {
+                  Ok(manageAccountView(status.map(ManageAccessPermissionsConfig(_, hasAnyGroups))))
+                }
+              case false =>
+                Future successful Ok(manageAccountView(None))
             }
-          } else
-          Future.successful(Ok(manageAccountView(None)))
+          } else {
+            Future.successful(Ok(manageAccountView(None)))
+          }
         } else {
           Future.successful(Forbidden)
         }

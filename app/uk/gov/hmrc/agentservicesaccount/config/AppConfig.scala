@@ -136,6 +136,7 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
   val agentPermissionsFrontendManageClientsPath: String = getConfString("agent-permissions-frontend.manage-clients-path")
   val agentPermissionsFrontendManageTeamMembersPath: String = getConfString("agent-permissions-frontend.manage-team-members-path")
   val agentPermissionsFrontendGroupsCreatePath: String = getConfString("agent-permissions-frontend.create-access-group-path")
+  lazy val agentPermissionsFrontendArnAllowedPath: String = getConfString("agent-permissions-frontend.arn-allowed-path")
   val granPermsEnabled: Boolean = getBoolean("features.enable-gran-perms")
   val granPermsMaxClientCount: Int = getInt("gran-perms-max-client-count")
 
@@ -146,4 +147,5 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
   val agentPermissionsUnassignedClientsUrl = s"$agentPermissionsFrontendExternalUrl$agentPermissionsFrontendManageAccessGroupsPath#unassigned-clients"
   val agentPermissionsManageClientUrl = s"$agentPermissionsFrontendExternalUrl$agentPermissionsFrontendManageClientsPath"
   val agentPermissionsManageTeamMembersUrl = s"$agentPermissionsFrontendExternalUrl$agentPermissionsFrontendManageTeamMembersPath"
+  def agentPermissionsArnAllowedUrl = s"$agentPermissionsFrontendExternalUrl$agentPermissionsFrontendArnAllowedPath"
 }
