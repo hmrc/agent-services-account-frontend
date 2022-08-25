@@ -331,8 +331,29 @@ class AgentServicesControllerSpec extends BaseISpec {
 
       givenArnIsAllowlistedForIrv(Arn(arn))
       givenAuthorisedAsAgentWith(arn)
+      givenArnAllowedOk()
       givenSyncEacdFailure(Arn(arn))
       givenOptinStatusFailedForArn(Arn(arn))
+      givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq.empty))
+      val response = controller.manageAccount().apply(fakeRequest("GET", "/manage-account"))
+
+      status(response) shouldBe OK
+      Helpers.contentType(response).get shouldBe HTML
+      val content = Helpers.contentAsString(response)
+      content should include(messagesApi("manage.account.heading"))
+      content should include(messagesApi("manage.account.p"))
+      content should include(messagesApi("manage.account.add-user"))
+      content should include(messagesApi("manage.account.manage-user-access"))
+      content should include(messagesApi("manage.account.account-details"))
+    }
+
+    "return Status: OK and body containing existing manage account content when gran perms FF is on but ARN is not on allowed list" in {
+
+      givenArnIsAllowlistedForIrv(Arn(arn))
+      givenAuthorisedAsAgentWith(arn)
+      givenArnAllowedNotOk()
+      givenSyncEacdSuccess(Arn(arn))
+      givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInReady)
       givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq.empty))
       val response = controller.manageAccount().apply(fakeRequest("GET", "/manage-account"))
 
@@ -350,6 +371,7 @@ class AgentServicesControllerSpec extends BaseISpec {
 
       givenArnIsAllowlistedForIrv(Arn(arn))
       givenAuthorisedAsAgentWith(arn)
+      givenArnAllowedOk()
       givenSyncEacdSuccess(Arn(arn))
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInReady)
       givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq.empty)) // no access groups yet
@@ -371,17 +393,17 @@ class AgentServicesControllerSpec extends BaseISpec {
         .shouldBe("Access groups allow you to control which team members can view and manage each client’s tax affairs.")
       li.get(0).child(0).text shouldBe "Create new access group"
       li.get(0).child(0).hasClass("govuk-button") shouldBe true
-      li.get(0).child(0).attr("href") shouldBe "http://localhost:9452/agent-permissions/group/create-access-group"
+      li.get(0).child(0).attr("href") shouldBe s"http://localhost:$wireMockPort/agent-permissions/group/create-access-group"
       li.get(1).child(0).text shouldBe "Manage access groups"
-      li.get(1).child(0).attr("href") shouldBe "http://localhost:9452/agent-permissions/manage-access-groups"
+      li.get(1).child(0).attr("href") shouldBe s"http://localhost:$wireMockPort/agent-permissions/manage-access-groups"
       li.get(2).child(0).text shouldBe "Turn off access groups"
-      li.get(2).child(0).attr("href") shouldBe "http://localhost:9452/agent-permissions/opt-out/start"
+      li.get(2).child(0).attr("href") shouldBe s"http://localhost:$wireMockPort/agent-permissions/opt-out/start"
       h2.get(1).text shouldBe "Clients"
       li.get(3).child(0).text shouldBe "Manage clients"
       li.get(4).child(0).text shouldBe "Unassigned clients"
       h2.get(2).text shouldBe "Team members"
       li.get(5).child(0).text shouldBe "Manage team members"
-      li.get(5).child(0).attr("href") shouldBe "http://localhost:9452/agent-permissions/manage-team-members"
+      li.get(5).child(0).attr("href") shouldBe s"http://localhost:$wireMockPort/agent-permissions/manage-team-members"
       li.get(6).child(0).text shouldBe "Add or remove team members (opens in a new tab)"
       li.get(6).child(0).attr("href") shouldBe "http://localhost:1111/user-profile-redirect-frontend/group-profile-management"
       h2.get(3).text shouldBe "Contact details"
@@ -394,6 +416,7 @@ class AgentServicesControllerSpec extends BaseISpec {
 
       givenArnIsAllowlistedForIrv(Arn(arn))
       givenAuthorisedAsAgentWith(arn)
+      givenArnAllowedOk()
       givenSyncEacdSuccess(Arn(arn))
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInReady)
       givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq(AccessGroupSummary("myAccessGroupId")))) // there is already an access group
@@ -421,15 +444,15 @@ class AgentServicesControllerSpec extends BaseISpec {
 
       paragraphs.get(1).text shouldBe "View client details, update client reference and see what groups a client is in."
       li.get(3).child(0).text shouldBe "Manage clients"
-      li.get(3).child(0).attr("href") shouldBe "http://localhost:9452/agent-permissions/manage-clients"
+      li.get(3).child(0).attr("href") shouldBe s"http://localhost:$wireMockPort/agent-permissions/manage-clients"
       li.get(4).child(0).text shouldBe "Unassigned clients"
-      li.get(4).child(0).attr("href") shouldBe "http://localhost:9452/agent-permissions/manage-access-groups#unassigned-clients"
+      li.get(4).child(0).attr("href") shouldBe s"http://localhost:$wireMockPort/agent-permissions/manage-access-groups#unassigned-clients"
 
       // TODO - should move these into method checks eg. pageWithTeamMembersSectionContent(html)
       h2.get(2).text shouldBe "Team members"
       paragraphs.get(2).text shouldBe "View team member details and see what groups a team member is in."
       li.get(5).child(0).text shouldBe "Manage team members"
-      li.get(5).child(0).attr("href") shouldBe "http://localhost:9452/agent-permissions/manage-team-members"
+      li.get(5).child(0).attr("href") shouldBe s"http://localhost:$wireMockPort/agent-permissions/manage-team-members"
       li.get(6).child(0).text shouldBe "Add or remove team members (opens in a new tab)"
       li.get(6).child(0).attr("href") shouldBe "http://localhost:1111/user-profile-redirect-frontend/group-profile-management"
 
@@ -440,6 +463,7 @@ class AgentServicesControllerSpec extends BaseISpec {
 
       givenArnIsAllowlistedForIrv(Arn(arn))
       givenAuthorisedAsAgentWith(arn)
+      givenArnAllowedOk()
       givenSyncEacdSuccess(Arn(arn))
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInNotReady)
       givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq.empty))
@@ -462,12 +486,12 @@ class AgentServicesControllerSpec extends BaseISpec {
       html.select(Css.insetText).get(0).text
         .shouldBe("You have added new clients but need to wait until your client details are ready to use with access groups. You will receive a confirmation email after which you can start using access groups.")
       li.get(0).child(0).text shouldBe "Turn off access groups"
-      li.get(0).child(0).attr("href") shouldBe "http://localhost:9452/agent-permissions/opt-out/start"
+      li.get(0).child(0).attr("href") shouldBe s"http://localhost:$wireMockPort/agent-permissions/opt-out/start"
       h2.get(1).text shouldBe "Team members"
 
       paragraphs.get(1).text shouldBe "View team member details and see what groups a team member is in."
       li.get(1).child(0).text shouldBe "Manage team members"
-      li.get(1).child(0).attr("href") shouldBe "http://localhost:9452/agent-permissions/manage-team-members"
+      li.get(1).child(0).attr("href") shouldBe s"http://localhost:$wireMockPort/agent-permissions/manage-team-members"
       li.get(2).child(0).text shouldBe "Add or remove team members (opens in a new tab)"
       li.get(2).child(0).attr("href") shouldBe "http://localhost:1111/user-profile-redirect-frontend/group-profile-management"
       h2.get(2).text shouldBe "Contact details"
@@ -480,6 +504,7 @@ class AgentServicesControllerSpec extends BaseISpec {
 
       givenArnIsAllowlistedForIrv(Arn(arn))
       givenAuthorisedAsAgentWith(arn)
+      givenArnAllowedOk()
       givenSyncEacdSuccess(Arn(arn))
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInSingleUser)
       givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq.empty))
@@ -504,7 +529,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       h2.get(1).text shouldBe "Team members"
       paragraphs.get(1).text shouldBe "View team member details and see what groups a team member is in."
       li.get(0).child(0).text shouldBe "Manage team members"
-      li.get(0).child(0).attr("href") shouldBe "http://localhost:9452/agent-permissions/manage-team-members"
+      li.get(0).child(0).attr("href") shouldBe s"http://localhost:$wireMockPort/agent-permissions/manage-team-members"
       li.get(1).child(0).text shouldBe "Add or remove team members (opens in a new tab)"
       li.get(1).child(0).attr("href") shouldBe "http://localhost:1111/user-profile-redirect-frontend/group-profile-management"
       h2.get(2).text shouldBe "Contact details"
@@ -517,6 +542,7 @@ class AgentServicesControllerSpec extends BaseISpec {
 
       givenArnIsAllowlistedForIrv(Arn(arn))
       givenAuthorisedAsAgentWith(arn)
+      givenArnAllowedOk()
       givenSyncEacdSuccess(Arn(arn))
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedOutWrongClientCount)
       givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq.empty))
@@ -554,6 +580,7 @@ class AgentServicesControllerSpec extends BaseISpec {
 
       givenArnIsAllowlistedForIrv(Arn(arn))
       givenAuthorisedAsAgentWith(arn)
+      givenArnAllowedOk()
       givenSyncEacdSuccess(Arn(arn))
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedOutSingleUser)
       givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq.empty))
@@ -590,6 +617,7 @@ class AgentServicesControllerSpec extends BaseISpec {
 
       givenArnIsAllowlistedForIrv(Arn(arn))
       givenAuthorisedAsAgentWith(arn)
+      givenArnAllowedOk()
       givenSyncEacdSuccess(Arn(arn))
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedOutEligible)
       givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq.empty))
@@ -611,7 +639,7 @@ class AgentServicesControllerSpec extends BaseISpec {
 
       h3.get(0).text shouldBe "Status Turned off"
       li.get(0).child(0).text shouldBe "Turn on access groups"
-      li.get(0).child(0).attr("href") shouldBe "http://localhost:9452/agent-permissions/opt-in/start"
+      li.get(0).child(0).attr("href") shouldBe s"http://localhost:$wireMockPort/agent-permissions/opt-in/start"
       h2.get(1).text shouldBe "Team members"
 
       li.get(1).child(0).text shouldBe "Add or remove team members (opens in a new tab)"
