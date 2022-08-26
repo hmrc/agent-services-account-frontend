@@ -23,7 +23,7 @@ import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.auth.AuthActions
 import uk.gov.hmrc.agentservicesaccount.auth.CallOps._
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.connectors.{AfiRelationshipConnector, AgentClientAuthorisationConnector, AgentPermissionsConnector, AgentPermissionsFrontendConnector}
+import uk.gov.hmrc.agentservicesaccount.connectors.{AfiRelationshipConnector, AgentClientAuthorisationConnector, AgentPermissionsConnector}
 import uk.gov.hmrc.agentservicesaccount.models.ManageAccessPermissionsConfig
 import uk.gov.hmrc.agentservicesaccount.views.html.pages._
 
@@ -36,7 +36,6 @@ class AgentServicesController @Inject()(
   agentClientAuthorisationConnector: AgentClientAuthorisationConnector,
   afiRelationshipConnector: AfiRelationshipConnector,
   agentPermissionsConnector: AgentPermissionsConnector,
-  agentPermissionsFrontendConnector: AgentPermissionsFrontendConnector,
   suspensionWarningView: suspension_warning,
   manageAccountView: manage_account,
   asaDashboard: asa_dashboard,
@@ -122,7 +121,7 @@ class AgentServicesController @Inject()(
     withAuthorisedAsAgent { agentInfo =>
         if (agentInfo.isAdmin) {
           if (appConfig.granPermsEnabled) {
-            agentPermissionsFrontendConnector.isArnAllowed flatMap {
+            agentPermissionsConnector.isArnAllowed flatMap {
               case true =>
                 for {
                   _ <- agentPermissionsConnector.syncEacd(agentInfo.arn)
