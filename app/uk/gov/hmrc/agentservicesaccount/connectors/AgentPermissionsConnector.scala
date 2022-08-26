@@ -101,6 +101,21 @@ class AgentPermissionsConnector @Inject()(http: HttpClient)(implicit val metrics
     }
   }
 
+  def isArnAllowed(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Boolean] = {
+    val url = s"$baseUrl/agent-permissions/arn-allowed"
+
+    monitor("ConsumedAPI-GranPermsArnAllowed-GET") {
+      http.GET[HttpResponse](url).map { response =>
+        response.status match {
+          case OK => true
+          case other =>
+            logger.warn(s"ArnAllowed call returned status $other")
+            false
+        }
+      }
+    }
+  }
+
   case class SyncEacd(msg: String)
   object SyncEacd {
     implicit val format: OFormat[SyncEacd] = Json.format[SyncEacd]
