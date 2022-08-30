@@ -397,7 +397,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       li.get(1).child(0).text shouldBe "Manage access groups"
       li.get(1).child(0).attr("href") shouldBe s"http://localhost:$wireMockPort/agent-permissions/manage-access-groups"
       li.get(2).child(0).text shouldBe "Turn off access groups"
-      li.get(2).child(0).attr("href") shouldBe s"http://localhost:$wireMockPort/agent-permissions/opt-out/start"
+      li.get(2).child(0).attr("href") shouldBe s"http://localhost:$wireMockPort/agent-permissions/turn-off-guide"
       h2.get(1).text shouldBe "Clients"
       li.get(3).child(0).text shouldBe "Manage clients"
       li.get(4).child(0).text shouldBe "Unassigned clients"
@@ -486,7 +486,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       html.select(Css.insetText).get(0).text
         .shouldBe("You have added new clients but need to wait until your client details are ready to use with access groups. You will receive a confirmation email after which you can start using access groups.")
       li.get(0).child(0).text shouldBe "Turn off access groups"
-      li.get(0).child(0).attr("href") shouldBe s"http://localhost:$wireMockPort/agent-permissions/opt-out/start"
+      li.get(0).child(0).attr("href") shouldBe s"http://localhost:$wireMockPort/agent-permissions/turn-off-guide"
       h2.get(1).text shouldBe "Team members"
 
       paragraphs.get(1).text shouldBe "View team member details and see what groups a team member is in."
@@ -639,7 +639,7 @@ class AgentServicesControllerSpec extends BaseISpec {
 
       h3.get(0).text shouldBe "Status Turned off"
       li.get(0).child(0).text shouldBe "Turn on access groups"
-      li.get(0).child(0).attr("href") shouldBe s"http://localhost:$wireMockPort/agent-permissions/opt-in/start"
+      li.get(0).child(0).attr("href") shouldBe s"http://localhost:$wireMockPort/agent-permissions/turn-on-guide"
       h2.get(1).text shouldBe "Team members"
 
       li.get(1).child(0).text shouldBe "Add or remove team members (opens in a new tab)"
