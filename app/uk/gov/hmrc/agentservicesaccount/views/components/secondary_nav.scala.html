@@ -27,10 +27,11 @@
     </a>
         <a href="#" class="hmrc-account-menu__link hmrc-account-menu__link--menu js-hidden js-visible" tabindex="-1" aria-hidden="true" aria-expanded="false">
         @msgs("serviceinfo.aria.account-menu")</a>
+
+    @if(isAdmin) {
+    <a href="@routes.AgentServicesController.manageAccount.url" class="hmrc-account-menu__link">@msgs("serviceinfo.manage")</a>
+    }
     <ul class="hmrc-account-menu__main">
-        @if(isAdmin) {
-            <li><a href="@routes.AgentServicesController.manageAccount.url" class="hmrc-account-menu__link">@msgs("serviceinfo.manage")</a></li>
-        }
         @if(appConfig.HelpAndGuidanceEnabled) {
         <li>
             <a href="@routes.AgentServicesController.showHelp.url" class="hmrc-account-menu__link">@msgs("serviceinfo.help")</a>
