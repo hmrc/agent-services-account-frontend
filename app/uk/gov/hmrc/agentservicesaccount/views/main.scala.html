@@ -15,6 +15,7 @@
  *@
 
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+@import uk.gov.hmrc.agentservicesaccount.controllers.routes
 @import uk.gov.hmrc.agentservicesaccount.views.html.components.head
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.{HmrcLayout, HmrcStandardFooter}
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcLanguageSelectHelper
@@ -48,6 +49,7 @@
     pageTitle = pageTitle,
     additionalHeadBlock = Some(head(hasTimeout)),
     beforeContentBlock = Some(beforeContent),
+    serviceUrl = Some(routes.AgentServicesController.root().url),
     additionalScriptsBlock = Some(scripts),
     nonce = CSPNonce.get
 )(contentBlock)
