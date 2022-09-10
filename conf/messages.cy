@@ -27,7 +27,7 @@ agent.services.account.section1.col1.link=Os ydych yn copïo manylion eich cleie
 agent.services.account.section1.col1.p2=Efallai nad yw bob un o’ch cleientiaid wedi cofrestru ar gyfer y cynllun Troi Treth yn Ddigidol ar gyfer TAW. Os nad yw’ch cleient wedi cofrestru, gallwch dal i reoli a bwrw golwg dros ei fanylion TAW drwy ddefnyddio’r cyfrif hwn.
 # above not in use - for removal of MTD for VAT
 agent.services.account.section1.col2.h3=Rheoli manylion TAW eich cleient
-agent.services.account.section1.col2.link=Defnyddiwch y gwasanaeth hwn ar gyfer cleientiaid sydd wedi cofrestru ar gyfer Troi Treth yn Ddigidol neu sydd wedi optio allan o’r cynllun (yn agor tab newydd)
+agent.services.account.section1.col2.link=Rheoli, cyflwyno a bwrw golwg dros fanylion TAW eich cleient (yn agor mewn tab newydd)
 agent.services.account.section1.suspended.h3=Rydym wedi cyfyngu ar eich defnydd o’r gwasanaeth hwn dros dro
 agent.services.account.section1.suspended.p1=Gwnaethom hyn oherwydd ein bod wedi gohirio eich cod asiant. Rydym wedi anfon llythyr atoch yn cadarnhau hyn.
 agent.services.account.section1.suspended.p2=Mae hyn yn golygu na fyddwch yn gallu defnyddio’r gwasanaeth hwn.
