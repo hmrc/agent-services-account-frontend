@@ -27,7 +27,7 @@ agent.services.account.section1.col1.link=If you copy your client across, you wi
 agent.services.account.section1.col1.p2=Not all of your clients may have signed up to Making Tax Digital for VAT. If your client is not signed up, you can still manage and view their VAT details using this account.
 # above not in use - for removal of MTD for VAT
 agent.services.account.section1.col2.h3=Manage your client’s VAT
-agent.services.account.section1.col2.link=Use this service for clients who have signed up for or opted out of Making Tax Digital (opens in a new tab)
+agent.services.account.section1.col2.link=Manage, submit and view your client's VAT details (opens in a new tab)
 agent.services.account.section1.suspended.h3=We have temporarily limited your use of this service
 agent.services.account.section1.suspended.p1=We did this because we have suspended your agent code. We sent you a letter to confirm this.
 agent.services.account.section1.suspended.p2=This means you will not be able to use this service.
