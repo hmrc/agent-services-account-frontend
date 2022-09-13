@@ -37,4 +37,4 @@
         @if(rel.nonEmpty){rel="@rel"}
         @if(target.nonEmpty){target="@target"}
     }
-    @attrs.map(a => a._1 + "=" + a._2)>@Html(msgs(key))</a>
+    @attrs.map(a => a._1 + "=" + a._2 + " ")>@Html(msgs(key))</a>
