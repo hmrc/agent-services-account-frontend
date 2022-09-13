@@ -20,7 +20,7 @@ import play.api.Logging
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request, Result}
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
-import uk.gov.hmrc.agentservicesaccount.auth.AuthActions
+import uk.gov.hmrc.agentservicesaccount.auth.{AuthActions, FullAgentInfo}
 import uk.gov.hmrc.agentservicesaccount.auth.CallOps._
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AfiRelationshipConnector, AgentClientAuthorisationConnector, AgentPermissionsConnector}
@@ -32,26 +32,28 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class AgentServicesController @Inject()(
-  authActions: AuthActions,
-  agentClientAuthorisationConnector: AgentClientAuthorisationConnector,
-  afiRelationshipConnector: AfiRelationshipConnector,
-  agentPermissionsConnector: AgentPermissionsConnector,
-  suspensionWarningView: suspension_warning,
-  manageAccountView: manage_account,
-  asaDashboard: asa_dashboard,
-  accountDetailsView: account_details,
-  helpView: help)(
-  implicit val appConfig: AppConfig,
-  val cc: MessagesControllerComponents,
-  ec: ExecutionContext,
-  messagesApi: MessagesApi)
-  extends AgentServicesBaseController with Logging {
+     authActions: AuthActions,
+     agentClientAuthorisationConnector: AgentClientAuthorisationConnector,
+     afiRelationshipConnector: AfiRelationshipConnector,
+     agentPermissionsConnector: AgentPermissionsConnector,
+     suspensionWarningView: suspension_warning,
+     manage_account: manage_account,
+     your_account: your_account,
+     asaDashboard: asa_dashboard,
+     accountDetailsView: account_details,
+     helpView: help)(implicit val appConfig: AppConfig,
+                      val cc: MessagesControllerComponents,
+                      ec: ExecutionContext,
+                      messagesApi: MessagesApi)
+                      extends AgentServicesBaseController with Logging {
 
   import authActions._
 
   val customDimension = appConfig.customDimension
   val agentSuspensionEnabled = appConfig.agentSuspensionEnabled
-
+  implicit class ToFuture[T](t: T) {
+    def toFuture: Future[T] = Future successful t
+  }
   val root: Action[AnyContent] = Action.async { implicit request =>
     withAuthorisedAsAgent { _ =>
       if (agentSuspensionEnabled) {
@@ -129,17 +131,31 @@ class AgentServicesController @Inject()(
                   mGroups <- agentPermissionsConnector.getGroupsSummaries(agentInfo.arn)
                   hasAnyGroups = mGroups.exists(_.groups.nonEmpty)
                 } yield {
-                  Ok(manageAccountView(status.map(ManageAccessPermissionsConfig(_, hasAnyGroups))))
+                  Ok(manage_account(status.map(ManageAccessPermissionsConfig(_, hasAnyGroups))))
                 }
               case false =>
-                Future successful Ok(manageAccountView(None))
+                Future successful Ok(manage_account(None))
             }
           } else {
-            Future.successful(Ok(manageAccountView(None)))
+            Future.successful(Ok(manage_account(None)))
           }
         } else {
           Future.successful(Forbidden)
         }
+    }
+  }
+
+  val yourAccount: Action[AnyContent] = Action.async { implicit request =>
+    withFullUserDetails { (agentInfo: FullAgentInfo) =>
+      if (true) {
+        if (appConfig.granPermsEnabled) {
+          Ok(your_account(Some(agentInfo))).toFuture
+        } else {
+          Ok(your_account(None)).toFuture
+        }
+      } else {
+        Forbidden.toFuture
+      }
     }
   }
 

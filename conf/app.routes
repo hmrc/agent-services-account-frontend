@@ -4,20 +4,21 @@
 
 GET        /assets/*file                   controllers.Assets.at(path="/public", file)
 
-GET        /                               @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController.root()
-GET        /home                           @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController.showAgentServicesAccount()
-GET        /home/survey                    @uk.gov.hmrc.agentservicesaccount.controllers.SignOutController.showSurvey()
-POST       /home/survey                    @uk.gov.hmrc.agentservicesaccount.controllers.SignOutController.submitSurvey()
-GET        /home/survey-service            @uk.gov.hmrc.agentservicesaccount.controllers.SignOutController.showWhichService()
-POST       /home/survey-service            @uk.gov.hmrc.agentservicesaccount.controllers.SignOutController.submitWhichService()
-GET        /access-removed                 @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController.showSuspendedWarning()
-GET        /sign-out                       @uk.gov.hmrc.agentservicesaccount.controllers.SignOutController.signOut()
-GET        /online/sign-in                 @uk.gov.hmrc.agentservicesaccount.controllers.SignOutController.onlineSignIn()
-GET        /help-and-guidance              @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController.showHelp()
+GET        /                        @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController.root()
+GET        /home                    @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController.showAgentServicesAccount()
+GET        /home/survey             @uk.gov.hmrc.agentservicesaccount.controllers.SignOutController.showSurvey()
+POST       /home/survey             @uk.gov.hmrc.agentservicesaccount.controllers.SignOutController.submitSurvey()
+GET        /home/survey-service     @uk.gov.hmrc.agentservicesaccount.controllers.SignOutController.showWhichService()
+POST       /home/survey-service     @uk.gov.hmrc.agentservicesaccount.controllers.SignOutController.submitWhichService()
+GET        /access-removed          @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController.showSuspendedWarning()
+GET        /sign-out                @uk.gov.hmrc.agentservicesaccount.controllers.SignOutController.signOut()
+GET        /online/sign-in          @uk.gov.hmrc.agentservicesaccount.controllers.SignOutController.onlineSignIn()
+GET        /help-and-guidance       @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController.showHelp()
 
-GET        /signed-out                     @uk.gov.hmrc.agentservicesaccount.controllers.SignOutController.signedOut()
-GET        /timed-out                      @uk.gov.hmrc.agentservicesaccount.controllers.SignOutController.timedOut()
-GET        /keep-alive                     @uk.gov.hmrc.agentservicesaccount.controllers.SignOutController.keepAlive
-GET        /manage-account                 @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController.manageAccount
-GET        /account-details                @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController.accountDetails
-GET        /language/:lang                 @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesLanguageController.switchToLanguage(lang: String)
+GET        /signed-out              @uk.gov.hmrc.agentservicesaccount.controllers.SignOutController.signedOut()
+GET        /timed-out               @uk.gov.hmrc.agentservicesaccount.controllers.SignOutController.timedOut()
+GET        /keep-alive              @uk.gov.hmrc.agentservicesaccount.controllers.SignOutController.keepAlive
+GET        /manage-account          @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController.manageAccount
+GET        /your-account            @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController.yourAccount
+GET        /account-details         @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController.accountDetails
+GET        /language/:lang          @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesLanguageController.switchToLanguage(lang: String)

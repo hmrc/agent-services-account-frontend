@@ -1,0 +1,71 @@
+@*
+ * Copyright 2022 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+@import uk.gov.hmrc.agentservicesaccount.controllers.routes
+@import uk.gov.hmrc.agentservicesaccount.models.ManageAccessPermissionsConfig
+@import uk.gov.hmrc.agentservicesaccount.views.html.components.secondary_nav
+@import uk.gov.hmrc.agentservicesaccount.views.html.main
+@import uk.gov.hmrc.agentservicesaccount.auth.FullAgentInfo
+@import uk.gov.hmrc.auth.core.retrieve.Name
+
+@this(mainTemplate: main,
+        secondaryNav: secondary_nav,
+        h1: h1, h2: h2, h3: h3, p: p, a: a, span: span,
+        ul: ul, ul_html: ul_html, inset_text: inset_text)
+
+@(info: Option[FullAgentInfo] = None)(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
+
+@mainTemplate(
+    pageTitle = Some(msgs("your.account.h1")), analyticsAdditionalJs = None, fullWidth = true,
+    beforeContentBlock = Some(secondaryNav(isAdmin = true))) {
+
+    @if(info.isDefined){
+
+    <div class="govuk-grid-column-two-thirds">
+        @h1("your.account.h1")
+
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+
+        @h3("your.account.h3.name")
+        @p(info.get.name.map(n => n.name.get + " " + n.lastName.get).getOrElse("" ))
+        @h3("your.account.h3.role")
+        @p(info.get.credentialRole.map(_.toString).getOrElse(""))
+        @h3("your.account.h3.email")
+        @p(info.get.email.getOrElse(""))
+    </div>
+
+    <div class="govuk-grid-column-one-third">
+        @h2("your.account.your.groups.h2")
+        @p("your.account.your.groups.p")
+    </div>
+    }
+    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+
+    <div class="govuk-grid-column-full">
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+        @h2("your.account.your.admins.h2")
+        @a("your.account.your.admins.a", href = "")
+
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+
+        @h2("manage.account.contact-details.heading")
+        @p(html = Some(
+            a(href = routes.AgentServicesController.accountDetails.url,
+                key = "manage.account.contact-details.view"
+            )))
+    </div>
+}

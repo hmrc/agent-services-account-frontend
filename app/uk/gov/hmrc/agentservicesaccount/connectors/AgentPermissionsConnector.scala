@@ -117,6 +117,7 @@ class AgentPermissionsConnector @Inject()(http: HttpClient)(implicit val metrics
   }
 
   case class SyncEacd(msg: String)
+
   object SyncEacd {
     implicit val format: OFormat[SyncEacd] = Json.format[SyncEacd]
   }

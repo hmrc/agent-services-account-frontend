@@ -187,7 +187,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       content should include(messagesApi("agent.services.account.tax-services"))
       content should include(messagesApi("asa.other.heading"))
       content should include(messagesApi("asa.other.p1"))
-      content should include(messagesApi("serviceinfo.help"))
+      content should include(messagesApi("nav.help"))
     }
 
     "not show Help and Guidance link when toggled off" in {
@@ -198,7 +198,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       givenSuspensionStatus(SuspensionDetails(suspensionStatus = false, None))
 
       val response = controllerWithHelpToggledOff.showAgentServicesAccount()(fakeRequest("GET", "/home"))
-      Helpers.contentAsString(response) should not include messagesApi("serviceinfo.help")
+      Helpers.contentAsString(response) should not include messagesApi("nav.help")
     }
 
     "return Status: OK and body containing correct content when suspension details are in the session and agent is suspended for VATC" in {
@@ -320,7 +320,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       status(response) shouldBe OK
       Helpers.contentType(response).get shouldBe HTML
       val content = Helpers.contentAsString(response)
-      content should include(messagesApi("manage.account.heading"))
+      content should include(messagesApi("manage.account.h1"))
       content should include(messagesApi("manage.account.p"))
       content should include(messagesApi("manage.account.add-user"))
       content should include(messagesApi("manage.account.manage-user-access"))
@@ -340,7 +340,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       status(response) shouldBe OK
       Helpers.contentType(response).get shouldBe HTML
       val content = Helpers.contentAsString(response)
-      content should include(messagesApi("manage.account.heading"))
+      content should include(messagesApi("manage.account.h1"))
       content should include(messagesApi("manage.account.p"))
       content should include(messagesApi("manage.account.add-user"))
       content should include(messagesApi("manage.account.manage-user-access"))
@@ -360,7 +360,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       status(response) shouldBe OK
       Helpers.contentType(response).get shouldBe HTML
       val content = Helpers.contentAsString(response)
-      content should include(messagesApi("manage.account.heading"))
+      content should include(messagesApi("manage.account.h1"))
       content should include(messagesApi("manage.account.p"))
       content should include(messagesApi("manage.account.add-user"))
       content should include(messagesApi("manage.account.manage-user-access"))
