@@ -24,13 +24,13 @@ import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
 import uk.gov.hmrc.auth.core._
-import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals.{allEnrolments, credentialRole}
-import uk.gov.hmrc.auth.core.retrieve.~
+import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals.{allEnrolments, credentialRole, email, name}
+import uk.gov.hmrc.auth.core.retrieve.{Name, ~}
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
 
-case class AgentInfo(arn: Arn, credentialRole: Option[CredentialRole]) {
+case class AgentInfo(arn: Arn, credentialRole: Option[CredentialRole], name: Option[Name], email: Option[String]) {
   val isAdmin: Boolean = credentialRole match {
     case Some(Assistant) => false
     case Some(_) => true
@@ -48,11 +48,11 @@ class AuthActions @Inject()(appConfig: AppConfig,
 
   def withAuthorisedAsAgent(body: AgentInfo => Future[Result])(implicit ec: ExecutionContext, hc: HeaderCarrier, request: Request[AnyContent]): Future[Result] =
     authorised(AuthProviders(GovernmentGateway) and AffinityGroup.Agent)
-      .retrieve(allEnrolments and credentialRole) {
-        case enrols ~ credRole =>
+      .retrieve(allEnrolments and credentialRole and name and email) {
+        case enrols ~ credRole ~ name ~ email =>
           getArn(enrols) match {
             case Some(arn) =>
-              body(AgentInfo(arn, credRole))
+              body(AgentInfo(arn, credRole, name, email))
             case None =>
               logger.warn("No HMRC-AS-AGENT enrolment found -- redirecting to /agent-subscription/start.")
               Future successful Redirect(appConfig.agentSubscriptionFrontendUrl)
