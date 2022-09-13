@@ -21,7 +21,7 @@
 
 @(pageTitle: String, heading: String, message: String)(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
 
-@mainTemplate(pageTitle = Some(pageTitle)) {
+@mainTemplate(pageTitle = pageTitle) {
 
  <h1 class="govuk-heading-xl">@heading</h1>
 

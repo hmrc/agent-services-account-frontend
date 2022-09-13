@@ -306,6 +306,8 @@ class AgentServicesControllerSpec extends BaseISpec {
 
   "manage-account" should {
 
+    val manageAccountTitle = "Manage account - Agent services account - GOV.UK"
+
     "return Status: OK and body containing correct content when gran perms FF disabled" in {
 
           val controllerWithGranPermsDisabled =
@@ -386,6 +388,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       val li = html.select(Css.LI)
       val paragraphs = html.select(Css.paragraphs)
 
+      html.title() shouldBe manageAccountTitle
       h1.get(0).text shouldBe "Manage account"
       h2.get(0).text shouldBe "Manage access groups"
       h3.get(0).text shouldBe "Status Turned on"
@@ -431,6 +434,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       val h3 = html.select(Css.H3)
       val paragraphs = html.select(Css.paragraphs)
 
+      html.title() shouldBe manageAccountTitle
       h1.get(0).text shouldBe "Manage account"
       h2.get(0).text shouldBe "Manage access groups"
       h3.get(0).text shouldBe "Status Turned on"
@@ -478,6 +482,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       val li = html.select(Css.LI)
       val paragraphs = html.select(Css.paragraphs)
 
+      html.title() shouldBe manageAccountTitle
       h1.get(0).text shouldBe "Manage account"
       h2.get(0).text shouldBe "Manage access groups"
       h3.get(0).text shouldBe "Status Turned on"
@@ -519,6 +524,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       val paragraphs = html.select(Css.paragraphs)
       val li = html.select(Css.LI)
 
+      html.title() shouldBe manageAccountTitle
       h1.get(0).text shouldBe "Manage account"
       h2.get(0).text shouldBe "Manage access groups"
       h3.get(0).text shouldBe "Status Turned on"
@@ -557,6 +563,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       val li = html.select(Css.LI)
       val paragraphs = html.select(Css.paragraphs)
 
+      html.title() shouldBe manageAccountTitle
       h1.get(0).text shouldBe "Manage account"
       h2.get(0).text shouldBe "Manage access groups"
       paragraphs.get(0).text
@@ -595,6 +602,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       val li = html.select(Css.LI)
       val paragraphs = html.select(Css.paragraphs)
 
+      html.title() shouldBe manageAccountTitle
       h1.get(0).text shouldBe "Manage account"
       h2.get(0).text shouldBe "Manage access groups"
       h3.get(0).text shouldBe "Status Turned off"
@@ -632,6 +640,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       val li = html.select(Css.LI)
       val paragraphs = html.select(Css.paragraphs)
 
+      html.title() shouldBe manageAccountTitle
       h1.get(0).text shouldBe "Manage account"
       h2.get(0).text shouldBe "Manage access groups"
       paragraphs.get(0).text

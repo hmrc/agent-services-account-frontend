@@ -28,7 +28,7 @@
 
 @suspendedServices = @{request.session.get("suspendedServices").getOrElse("").split(',').toSet}
 
-@mainTemplate(pageTitle = Some(msgs("suspension-warning.header")), beforeContentBlock = Some(secondaryNav(isAdmin))) {
+@mainTemplate(pageTitle = msgs("suspension-warning.header"), beforeContentBlock = Some(secondaryNav(isAdmin))) {
 
     <h1 class="govuk-heading-xl">@msgs("suspension-warning.header")</h1>
     <p class="govuk-body">@msgs("suspension-warning.p1")</p>
