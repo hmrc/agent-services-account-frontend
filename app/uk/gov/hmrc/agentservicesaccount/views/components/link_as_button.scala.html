@@ -16,10 +16,16 @@
 
 @this()
 
-@(items: Seq[Html], classes: Option[String] = None, id : Option[String] = None)(implicit msgs: Messages)
+@(
+   href: String,
+   key: String = "common.continue",
+   id: String = "button-link",
+   classes: Option[String] = None
+)(implicit msgs: Messages)
 
-<ul class="govuk-list @classes.getOrElse("")" @id.map(i => { s"id =${i}"})>
-    @for(html <- items) {
-        <li class="govuk-list--item">@html</li>
-    }
-</ul>
+@cls = @{classes.getOrElse("").concat(" govuk-button")}
+
+<a id="@id"
+   href="@href"
+   class="@cls"
+   draggable="false" role="button">@msgs(key)</a>

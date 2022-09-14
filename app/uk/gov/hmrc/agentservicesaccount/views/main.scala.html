@@ -33,6 +33,7 @@
     beforeContentBlock: Option[Html] = None,
     analyticsAdditionalJs: Option[Html] = None,
     hasTimeout: Boolean = true,
+    fullWidth: Boolean = false
 )(contentBlock: Html)(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
 
 @scripts = {
@@ -45,11 +46,20 @@
     @hmrcLanguageSelectHelper()
 }
 
+@bespokeContentLayout = {
+    <div class="govuk-grid-row">
+        <div class="@if(fullWidth) {govuk-grid-column-full-width} else {govuk-grid-column-two-thirds}">
+            @contentBlock
+        </div>
+    </div>
+}
+
 @hmrcLayout(
     pageTitle = Some(msgs("generic.title", pageTitle, msgs("service.name"))),
     additionalHeadBlock = Some(head(hasTimeout)),
     beforeContentBlock = Some(beforeContent),
     serviceUrl = Some(routes.AgentServicesController.root().url),
     additionalScriptsBlock = Some(scripts),
-    nonce = CSPNonce.get
-)(contentBlock)
+    nonce = CSPNonce.get,
+    mainContentLayout = None,
+)(bespokeContentLayout)

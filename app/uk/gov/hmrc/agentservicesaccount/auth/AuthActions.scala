@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.agentservicesaccount.auth
 
-import javax.inject.{Inject, Singleton}
 import play.api.mvc.Results._
 import play.api.mvc._
 import play.api.{Configuration, Environment, Logging}
@@ -24,13 +23,18 @@ import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
 import uk.gov.hmrc.auth.core._
-import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals.{allEnrolments, credentialRole}
-import uk.gov.hmrc.auth.core.retrieve.~
+import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals._
+import uk.gov.hmrc.auth.core.retrieve.{Credentials, Name, ~}
 import uk.gov.hmrc.http.HeaderCarrier
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
-case class AgentInfo(arn: Arn, credentialRole: Option[CredentialRole]) {
+case class AgentInfo(arn: Arn,
+                     credentialRole: Option[CredentialRole],
+                     email: Option[String] = None,
+                     name: Option[Name]= None,
+                     credentials: Option[Credentials]= None)  {
   val isAdmin: Boolean = credentialRole match {
     case Some(Assistant) => false
     case Some(_) => true
@@ -58,6 +62,24 @@ class AuthActions @Inject()(appConfig: AppConfig,
               Future successful Redirect(appConfig.agentSubscriptionFrontendUrl)
           }
       }.recover(handleFailure)
+
+  def withFullUserDetails(body: AgentInfo => Future[Result])
+                         (implicit ec: ExecutionContext, hc: HeaderCarrier, request: Request[AnyContent])
+  : Future[Result] = {
+    val agentEnrolment = "HMRC-AS-AGENT"
+    authorised(AuthProviders(GovernmentGateway) and Enrolment(agentEnrolment))
+      .retrieve(allEnrolments and credentialRole and email and name and credentials) {
+        case enrols ~ credRole ~ email ~ name ~ credentials =>
+          getArn(enrols) match {
+            case Some(arn) =>
+              val full = AgentInfo(arn, credRole, email, name, credentials)
+              body(full)
+            case _ =>
+              logger.warn("No HMRC-AS-AGENT enrolment found -- redirecting to /agent-subscription/start.")
+              Future successful Redirect(appConfig.agentSubscriptionFrontendUrl)
+          }
+      }
+  }.recover(handleFailure)
 
   def handleFailure(implicit request: Request[_]): PartialFunction[Throwable, Result] = {
     case _: NoActiveSession ⇒

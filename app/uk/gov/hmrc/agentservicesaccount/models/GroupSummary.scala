@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,14 +12,18 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@this()
+package uk.gov.hmrc.agentservicesaccount.models
 
-@(items: Seq[Html], classes: Option[String] = None, id : Option[String] = None)(implicit msgs: Messages)
+import play.api.libs.json.{Json, OFormat}
 
-<ul class="govuk-list @classes.getOrElse("")" @id.map(i => { s"id =${i}"})>
-    @for(html <- items) {
-        <li class="govuk-list--item">@html</li>
-    }
-</ul>
+case class GroupSummary(groupId: String,
+                        groupName: String,
+                        clientCount: Int,
+                        teamMemberCount: Int)
+
+case object GroupSummary {
+  implicit val formatCreateAccessGroupRequest: OFormat[GroupSummary] =
+    Json.format[GroupSummary]
+}

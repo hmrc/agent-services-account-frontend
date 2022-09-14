@@ -5,11 +5,28 @@ servicename.titleSuffix=- Agent services account - GOV.UK
 agent.services.account.heading=Welcome to your agent services account
 existing.client.relationships.link=Access existing client relationships
 
-serviceinfo.home=Account home
-serviceinfo.aria.account-menu=Account menu
-serviceinfo.manage=Manage account
-serviceinfo.help=Help and Guidance
-serviceinfo.signout=Sign out
+nav.home=Account home
+nav.aria.account-menu=Account menu
+nav.manage.account=Manage account
+nav.your.account=Your account
+nav.help=Help and Guidance
+nav.signout=Sign out
+
+your.account.h1=Your account
+your.account.h3.name=Name
+your.account.h3.email=Email address
+your.account.h3.role=Role
+your.account.p.role=Standard - As a user with standard permissions you can view your assigned access groups and clients. Please contact your administrator for more information.
+
+your.account.your.groups.h2=Your access groups
+your.account.your.groups.p=You are not currently assigned to any groups
+
+your.account.your.admins.h2=Your company’s administrators
+your.account.your.admins.a=View administrators
+
+your.account.your.contact.details.h2=Contact details
+your.account.your.contact.details.a=View the contact details we have for your business
+
 
 agent.services.account.welcome=Welcome to your agent services account
 agent.services.account.client-authorisations.p=You must ask your client to authorise you through your agent services account before you can access any services. Copy across an old authorisation or create a new one.
@@ -87,7 +104,7 @@ agent.services.account.help.h2=Help and guidance
 agent.services.account.help.link=Find out how to use your agent services account and how clients can authorise you to manage their taxes
 
 #Manage Account (gran_perms_enabled)
-manage.account.heading=Manage account
+manage.account.h1=Manage account
 manage.account.manage-access-permissions.heading=Manage access groups
 manage.account.manage-access-permissions.status=Status
 manage.account.manage-access-permissions.status-opted-in=Turned on
