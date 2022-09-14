@@ -38,7 +38,6 @@ abstract class BaseISpec
         "microservice.services.sso.port"                        -> wireMockPort,
         "microservice.services.agent-fi-relationship.port"      -> wireMockPort,
         "microservice.services.agent-permissions.port"          -> wireMockPort,
-        "microservice.services.users-groups-search.port"        -> wireMockPort,
         "microservice.services.agent-permissions-frontend.external-url"  -> wireMockBaseUrlAsString,
         "auditing.enabled"                                      -> false,
         "features.enable-ITSA-Accordion"                        -> true,

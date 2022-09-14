@@ -126,8 +126,6 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
 
   val afiBaseUrl = baseUrl("agent-fi-relationship")
 
-  lazy val ugsBaseUrl = baseUrl("users-groups-search")
-
   //Gran Perms
   val agentPermissionsBaseUrl: String = baseUrl("agent-permissions")
   val agentUserClientDetailsBaseUrl: String = baseUrl("agent-user-client-details")
