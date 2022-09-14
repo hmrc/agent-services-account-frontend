@@ -30,25 +30,16 @@ import uk.gov.hmrc.http.HeaderCarrier
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
-case class AgentInfo(arn: Arn, credentialRole: Option[CredentialRole]) {
+case class AgentInfo(arn: Arn,
+                     credentialRole: Option[CredentialRole],
+                     email: Option[String] = None,
+                     name: Option[Name]= None,
+                     credentials: Option[Credentials]= None)  {
   val isAdmin: Boolean = credentialRole match {
     case Some(Assistant) => false
     case Some(_) => true
     case _ => false
   }
-}
-
-case class FullAgentInfo(arn: Arn,
-                         credentialRole: Option[CredentialRole],
-                         email: Option[String],
-                         name: Option[Name],
-                         creds: Option[Credentials]) {
-  val isAdmin: Boolean = credentialRole match {
-    case Some(Assistant) => false
-    case Some(_) => true
-    case _ => false
-  }
-
 }
 
 case class AgentRequest[A](arn: Arn, request: Request[A]) extends WrappedRequest[A](request)
@@ -72,7 +63,7 @@ class AuthActions @Inject()(appConfig: AppConfig,
           }
       }.recover(handleFailure)
 
-  def withFullUserDetails(body: FullAgentInfo => Future[Result])
+  def withFullUserDetails(body: AgentInfo => Future[Result])
                          (implicit ec: ExecutionContext, hc: HeaderCarrier, request: Request[AnyContent])
   : Future[Result] = {
     val agentEnrolment = "HMRC-AS-AGENT"
@@ -81,7 +72,8 @@ class AuthActions @Inject()(appConfig: AppConfig,
         case enrols ~ credRole ~ email ~ name ~ credentials =>
           getArn(enrols) match {
             case Some(arn) =>
-              body(FullAgentInfo(arn, credRole, email, name, credentials))
+              val full = AgentInfo(arn, credRole, email, name, credentials)
+              body(full)
             case _ =>
               logger.warn("No HMRC-AS-AGENT enrolment found -- redirecting to /agent-subscription/start.")
               Future successful Redirect(appConfig.agentSubscriptionFrontendUrl)

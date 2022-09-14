@@ -29,7 +29,7 @@
 )
 
 @(
-    pageTitle: Option[String] = None,
+    pageTitle: String,
     beforeContentBlock: Option[Html] = None,
     analyticsAdditionalJs: Option[Html] = None,
     hasTimeout: Boolean = true,
@@ -55,7 +55,7 @@
 }
 
 @hmrcLayout(
-    pageTitle = Some( pageTitle.get + msgs("servicename.titleSuffix")),
+    pageTitle = Some(msgs("generic.title", pageTitle, msgs("service.name"))),
     additionalHeadBlock = Some(head(hasTimeout)),
     beforeContentBlock = Some(beforeContent),
     serviceUrl = Some(routes.AgentServicesController.root().url),

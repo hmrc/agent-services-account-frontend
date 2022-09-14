@@ -1,5 +1,6 @@
 app.name=Agent services account
 service.name=Agent services account
+generic.title={0} - {1} - GOV.UK
 servicename.titleSuffix=- Agent services account - GOV.UK
 agent.services.account.heading=Welcome to your agent services account
 existing.client.relationships.link=Access existing client relationships
@@ -20,7 +21,7 @@ your.account.p.role=Standard - As a user with standard permissions you can view 
 your.account.your.groups.h2=Your access groups
 your.account.your.groups.p=You are not currently assigned to any groups
 
-your.account.your.admins.h2=Your company's administrators
+your.account.your.admins.h2=Your company’s administrators
 your.account.your.admins.a=View administrators
 
 your.account.your.contact.details.h2=Contact details

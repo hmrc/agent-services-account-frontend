@@ -39,6 +39,34 @@ trait AuthStubs {
         )))
   }
 
+  def givenFullAuthorisedAsAgentWith(arn: String, providerId: String, isAdmin: Boolean = false) = {
+    val credRole = if(isAdmin) "Admin" else "Assistant"
+    stubFor(post(urlEqualTo("/auth/authorise"))
+      .willReturn(
+        aResponse()
+          .withStatus(200).withBody(
+          s"""{
+             |  "internalId": "some-id",
+             |  "affinityGroup": "Agent",
+             |  "credentialRole": "$credRole",
+             |  "email": "bob@builder.com",
+             |  "optionalCredentials": {
+             |    "providerId": "$providerId",
+             |    "providerType": "whatever"
+             |  },
+             |  "optionalName": {
+             |    "name": "Bob",
+             |    "lastName": "The Builder"
+             |  },
+             |  "allEnrolments": [{
+             |    "key": "HMRC-AS-AGENT",
+             |    "identifiers": [{ "key": "AgentReferenceNumber", "value": "$arn" }]
+             |  }]
+             |
+             |}""".stripMargin
+        )))
+  }
+
   def GivenIsNotLoggedIn() = {
     stubFor(post(urlPathEqualTo(s"/auth/authorise"))
       .willReturn(aResponse()
