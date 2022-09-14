@@ -32,8 +32,7 @@
 @this(
     mainTemplate: main,
     p: p,
-    h2: h2,
-    h3: h3,
+    h2: h2, h3: h3, h4: h4,
     ul: ul,
     a: a,
     span: span,
@@ -52,12 +51,12 @@
 )(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
 
 @itsaAccordionItem = {
-    @h3("agent.services.account.sectionITSA.col1.h3")
+    @h4("agent.services.account.sectionITSA.col1.h3")
     @p(html = Some(Html(msgs("agent.services.account.sectionITSA.col1.p",
         appConfig.agentMappingUrl,
         appConfig.agentInvitationsFrontendClientTypeUrl))))
     @p(html = Some(Html(msgs("agent.services.account.sectionITSA.col1.link"))))
-    @h3("agent.services.account.sectionITSA.col2.h3")
+    @h4("agent.services.account.sectionITSA.col2.h3")
 
     @p(html = Some(Html(
             a(href = appConfig.incomeTaxSubscriptionAgentFrontendUrl, key = "agent.services.account.sectionITSA.col2.link1.text") + "")
@@ -75,11 +74,11 @@
 
 @mtdForVatAccordionItem = {
     @if(isSuspendedForVat) {
-        @h3("agent.services.account.section1.suspended.h3")
+        @h4("agent.services.account.section1.suspended.h3")
         @p("agent.services.account.section1.suspended.p1")
         @p("agent.services.account.section1.suspended.p2")
     } else {
-        @h3("agent.services.account.section1.col1.h3")
+        @h4("agent.services.account.section1.col1.h3")
         @p(
             html = Some(Html(
                 msgs("agent.services.account.section1.col1.p",
@@ -88,7 +87,7 @@
         )
         @p(html=Some(Html(msgs("agent.services.account.section1.col1.link"))))
 
-        @h3("agent.services.account.section1.col2.h3")
+        @h4("agent.services.account.section1.col2.h3")
         @p(html = Some(Html(
             a(href = appConfig.vatUrl,
                 key = "agent.services.account.section1.col2.link",
@@ -107,17 +106,17 @@
 }
 
 @trustsAccordionItem = {
-    @h3("agent.services.account.trusts-section.col1.h3")
+    @h4("agent.services.account.trusts-section.col1.h3")
     @p(msgs("agent.services.account.trusts-section.col1.register-trust.p", appConfig.agentInvitationsFrontendClientTypeUrl))
     @p("agent.services.account.trusts-section.col1.register-estate.p")
-    @h3("agent.services.account.trusts-section.col2.h3")
+    @h4("agent.services.account.trusts-section.col2.h3")
     @p(html=Some(Html(a(href = "https://www.gov.uk/guidance/manage-your-trusts-registration-service",
             key = "agent.services.account.trusts-section.col2.register-trust-link.text") +  ".")))
 }
 
 @capitalGainsAccordionItem = {
 
-    @h3("agent.services.account.section3.col1.h3")
+    @h4("agent.services.account.section3.col1.h3")
     @p(html = Some(Html(
         span("agent.services.account.section3.col1.text1") + "" +
         span(msgs("agent.services.account.section3.col1.link1",
@@ -130,14 +129,14 @@
                     span(key=msgs("agent.services.account.section3.col1.link2",
                         msgs("agent.services.account.section3.col1.link2.href"))))
     ))
-    @h3("agent.services.account.section3.col2.h3")
+    @h4("agent.services.account.section3.col2.h3")
     @p(key = msgs("agent.services.account.section3.col2.link1",
         msgs("agent.services.account.section3.col2.link1.href")))
 }
 
 @plasticPackagingItem = {
 
-    @h3("agent.services.account.ppt.col1.h3")
+    @h4("agent.services.account.ppt.col1.h3")
     @p(html = Some(
         Html(
             span("agent.services.account.ppt.col1.text1") + "" +
@@ -152,7 +151,7 @@
                     span(key = msgs("agent.services.account.ppt.col1.link2", appConfig.agentInvitationsFrontendUrl)))
     ))
 
-    @h3("agent.services.account.ppt.col2.h3")
+    @h4("agent.services.account.ppt.col2.h3")
     @p(msgs("agent.services.account.ppt.col2.link1", msgs("agent.services.account.ppt.col2.link1.href")))
 
 
@@ -248,6 +247,7 @@
     @govukAccordion(
         Accordion(
             id = "accordion-default",
+            headingLevel = 3,
             items = accordionItems
         )
     )
