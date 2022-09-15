@@ -31,11 +31,7 @@
 
 @this(
     mainTemplate: main,
-    p: p,
-    h2: h2, h3: h3, h4: h4,
-    ul: ul,
-    a: a,
-    span: span,
+    p: p, h2: h2, h3: h3, h4: h4, ul: ul, a: a, span: span,
     govukWarningText: GovukWarningText,
     govukPanel: GovukPanel,
     govukAccordion: GovukAccordion,
@@ -44,7 +40,7 @@
 )
 @(
     arn: String,
-        isIrvAllowed: Boolean,
+    isIrvAllowed: Boolean,
     customDimension: String,
     isAdmin: Boolean = false,
     isSuspendedForVat: Boolean
@@ -156,14 +152,9 @@
 
 
 }
+
 @otherTaxesItem = {
-    @govukWarningText(
-        WarningText(
-            content = HtmlContent(
-                span("asa.other.p1")
-            )
-        )
-    )
+    @govukWarningText(WarningText(content = HtmlContent(span("asa.other.p1"))))
 }
 
 @accordionItems = @{
