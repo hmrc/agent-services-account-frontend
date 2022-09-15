@@ -19,13 +19,13 @@ package uk.gov.hmrc.agentservicesaccount.connectors
 import com.codahale.metrics.MetricRegistry
 import com.kenshoo.play.metrics.Metrics
 import play.api.Logging
-import play.api.http.Status.OK
+import play.api.http.Status.{NOT_FOUND, OK}
 import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.agent.kenshoo.monitoring.HttpAPIMonitor
 import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, OptinStatus}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.models.AccessGroupSummaries
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
+import uk.gov.hmrc.agentservicesaccount.models.{AccessGroupSummaries, GroupSummary}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse, UpstreamErrorResponse}
 import uk.gov.hmrc.http.HttpReads.Implicits.readRaw
 
 import javax.inject.{Inject, Singleton}
@@ -83,6 +83,27 @@ class AgentPermissionsConnector @Inject()(http: HttpClient)(implicit val metrics
     }
   }
 
+  def getGroupsForTeamMember(arn: Arn, userId: String)(implicit hc: HeaderCarrier,
+                                                             ec: ExecutionContext): Future[Option[Seq[GroupSummary]]] = {
+    val url = s"$baseUrl/agent-permissions/arn/${arn.value}/team-member/$userId/groups"
+    monitor("ConsumedAPI-groupSummariesForTeamMember-GET") {
+      http.GET[HttpResponse](url).map { response: HttpResponse =>
+        val eventuallySummaries = response.status match {
+          case OK => response.json.asOpt[Seq[GroupSummary]]
+          case NOT_FOUND => None
+          case e =>
+            throw UpstreamErrorResponse(
+              s"error getting group summary for arn: $arn, teamMember: $userId from $url",
+              e)
+        }
+        val maybeGroups = eventuallySummaries.map { summaries =>
+          summaries
+        }
+        maybeGroups
+      }
+    }
+  }
+
   def syncEacd(arn: Arn)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Unit] = {
     val url = s"$baseUrl/agent-permissions/arn/${arn.value}/sync"
 
@@ -117,6 +138,7 @@ class AgentPermissionsConnector @Inject()(http: HttpClient)(implicit val metrics
   }
 
   case class SyncEacd(msg: String)
+
   object SyncEacd {
     implicit val format: OFormat[SyncEacd] = Json.format[SyncEacd]
   }

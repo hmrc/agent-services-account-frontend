@@ -1,0 +1,82 @@
+@*
+ * Copyright 2022 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import uk.gov.hmrc.agentservicesaccount.auth.AgentInfo
+@import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+@import uk.gov.hmrc.agentservicesaccount.controllers.routes
+@import uk.gov.hmrc.agentservicesaccount.models.GroupSummary
+@import uk.gov.hmrc.agentservicesaccount.views.html.components.secondary_nav
+@import uk.gov.hmrc.agentservicesaccount.views.html.main
+
+@this(
+    mainTemplate: main, secondary_nav: secondary_nav,
+    h1: h1, h2: h2, h3: h3, p: p, a: a, ul_html: ul_html, span: span,
+)
+
+@(
+    info: Option[AgentInfo] = None,
+    groups: Option[Seq[GroupSummary]] = None
+)(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
+
+@mainTemplate(  pageTitle = msgs("your.account.h1"), analyticsAdditionalJs = None, fullWidth = true,
+                beforeContentBlock = Some(secondary_nav(isAdmin = false))) {
+
+    @h1("your.account.h1")
+
+    @if(info.isDefined){
+        <div class="govuk-grid-column-two-thirds" id="user-details">
+            @h3("your.account.h3.name")
+            @p(info.get.name.map(n => n.name.get + " " + n.lastName.get).getOrElse("" ))
+            @h3("your.account.h3.email")
+            @p(info.get.email.getOrElse(""))
+            @h3("your.account.h3.role")
+            @p("your.account.p.role")
+        </div>
+
+        <div class="govuk-grid-column-one-third" id="user-groups">
+            @h2("your.account.your.groups.h2")
+            <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+            @if(groups.isEmpty || groups.get.isEmpty) {
+                @p("your.account.your.groups.p")
+            } else {
+                @ul_html(items = groups.get.map(grp =>
+                    Html(
+                        a(
+                            key = grp.groupName,
+                            href = s"${appConfig.agentPermissionsFrontendManageClientsPath}/${grp.groupId}").toString
+                    )
+                )
+                )
+            }
+        </div>
+    }
+
+    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+
+    <div class="govuk-grid-column-full" id="bottom-panel">
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+        @h2("your.account.your.admins.h2")
+        @a("your.account.your.admins.a", href = routes.AgentServicesController.administrators.url)
+
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+
+        @h2("manage.account.contact-details.heading")
+        @p(html = Some(
+            a(href = routes.AgentServicesController.accountDetails.url,
+                key = "manage.account.contact-details.view"
+            )))
+    </div>
+}

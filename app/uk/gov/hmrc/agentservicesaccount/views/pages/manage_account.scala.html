@@ -27,10 +27,10 @@
 
 @(manageAccessPermissionsConfig: Option[ManageAccessPermissionsConfig])(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
 
-@mainTemplate(pageTitle = Some(msgs("manage.account.heading")), beforeContentBlock = Some(secondaryNav(isAdmin = true)), analyticsAdditionalJs = None) {
+@mainTemplate(pageTitle = msgs("manage.account.h1"), beforeContentBlock = Some(secondaryNav(isAdmin = true)), analyticsAdditionalJs = None) {
 
 
-    @h1("manage.account.heading")
+    @h1("manage.account.h1")
 
     @if(appConfig.granPermsEnabled && manageAccessPermissionsConfig.isDefined) {
 
@@ -56,7 +56,8 @@
             @if(config.accessGroups.nonEmpty) {
                 @ul(items = config.accessGroups.map { link =>
                     val classes = if (link.renderAsButton) Some("govuk-button") else None
-                    a(key = link.msgKey, href = link.href, classes = classes)
+                    val attributes : Map[String,String] = if (link.renderAsButton) Map("draggable" -> "false", "role" ->"button", "data-module" -> "govuk-button") else Map.empty
+                    a(key = link.msgKey, href = link.href, classes = classes, attrs = attributes)
                 },
                     classes = None)
             }

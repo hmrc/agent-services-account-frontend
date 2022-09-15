@@ -1,14 +1,15 @@
 app.name=Cyfrif gwasanaethau asiant
 service.name=Cyfrif gwasanaethau asiant
-servicename.titleSuffix=–  Cyfrif gwasanaethau asiant – GOV.UK
+generic.title={0} - {1} - GOV.UK
+servicename.titleSuffix=– Cyfrif gwasanaethau asiant – GOV.UK
 agent.services.account.heading=Croeso i’ch cyfrif gwasanaethau asiant
 existing.client.relationships.link=Mynediad at berthnasoedd presennol â chleientiaid
 
-serviceinfo.home=Hafan y cyfrif
-serviceinfo.manage=Rheoli’r cyfrif
-serviceinfo.aria.account-menu=Dewislen y cyfrif
-serviceinfo.help=Help ac arweiniad
-serviceinfo.signout=Allgofnodi
+nav.home=Hafan y cyfrif
+nav.manage=Rheoli’r cyfrif
+nav.aria.account-menu=Dewislen y cyfrif
+nav.help=Help ac arweiniad
+nav.signout=Allgofnodi
 
 agent.services.account.welcome=Croeso i’ch cyfrif gwasanaethau asiant
 agent.services.account.client-authorisations.p=Mae’n rhaid i chi ofyn i’ch cleient eich awdurdodi drwy eich cyfrif gwasanaethau asiant cyn y gallwch gael mynediad at unrhyw wasanaethau. Dylech gopïo hen awdurdodiad drosodd neu greu un newydd.
@@ -86,7 +87,7 @@ agent.services.account.help.h2=Help ac arweiniad
 agent.services.account.help.link=Rhagor o wybodaeth am sut i ddefnyddio’ch cyfrif gwasanaethau asiant a sut y gall cleientiaid eich awdurdodi i reoli eu trethi
 
 #Manage Account (gran_perms_enabled)
-manage.account.heading=Rheoli’r cyfrif
+manage.account.h1=Rheoli’r cyfrif
 manage.account.manage-access-permissions.heading=Manage access groups
 manage.account.manage-access-permissions.status=Status
 manage.account.manage-access-permissions.status-opted-in=Turned on

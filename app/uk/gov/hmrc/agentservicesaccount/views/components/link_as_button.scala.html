@@ -14,17 +14,18 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-@import uk.gov.hmrc.agentservicesaccount.views.html.main
+@this()
 
-@this(mainTemplate: main)
+@(
+   href: String,
+   key: String = "common.continue",
+   id: String = "button-link",
+   classes: Option[String] = None
+)(implicit msgs: Messages)
 
-@(pageTitle: String, heading: String, message: String)(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
+@cls = @{classes.getOrElse("").concat(" govuk-button")}
 
-@mainTemplate(pageTitle = pageTitle) {
-
- <h1 class="govuk-heading-xl">@heading</h1>
-
- <p class="govuk-body">@message</p>
-
-}
+<a id="@id"
+   href="@href"
+   class="@cls"
+   draggable="false" role="button">@msgs(key)</a>

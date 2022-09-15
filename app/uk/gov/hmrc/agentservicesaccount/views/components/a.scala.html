@@ -17,14 +17,14 @@
 @this()
 
 @(
-        key: String,
-        href: String,
-        classes: Option[String] = None,
-        id: Option[String] = None,
-        attrs: Map[String, String] = Map.empty,
-        openInNewWindow: Boolean = false,
-        rel: Option[String] = None,
-        target: Option[String] = None,
+    key: String,
+    href: String,
+    classes: Option[String] = None,
+    id: Option[String] = None,
+    attrs: Map[String, String] = Map.empty,
+    openInNewWindow: Boolean = false,
+    rel: Option[String] = None,
+    target: Option[String] = None,
 )(implicit msgs: Messages)
 
 @cls = @{classes.getOrElse("").concat(" govuk-link govuk-body")}
@@ -37,4 +37,4 @@
         @if(rel.nonEmpty){rel="@rel"}
         @if(target.nonEmpty){target="@target"}
     }
-    @attrs.map(a => a._1 + "=" + a._2)>@Html(msgs(key))</a>
+    @attrs.map(a => a._1 + "=" + a._2 + " ")>@Html(msgs(key))</a>

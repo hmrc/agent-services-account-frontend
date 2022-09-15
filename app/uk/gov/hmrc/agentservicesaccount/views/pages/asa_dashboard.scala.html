@@ -219,7 +219,7 @@
     items
 }
 
-@mainTemplate(pageTitle = Some(msgs("agent.services.account.heading")), beforeContentBlock = Some(secondaryNav(isAdmin))) {
+@mainTemplate(pageTitle = msgs("agent.services.account.heading"), beforeContentBlock = Some(secondaryNav(isAdmin))) {
 
     @govukPanel(
         Panel(

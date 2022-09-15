@@ -18,5 +18,5 @@
 
 @(key: String, classes: Option[String] = None, id: Option[String] = None)(implicit msgs: Messages)
 
-<span @classes.map(cls => s"class=${cls}")
+<span class ="@classes.getOrElse("")")
       @id.map(i => s"id=${i}")>@Html(msgs(key))</span>

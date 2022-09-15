@@ -16,9 +16,9 @@
 
 @this()
 
-@(items: Seq[Html], classes: Option[String] = None)(implicit msgs: Messages)
+@(items: Seq[Html], classes: Option[String] = None, id : Option[String] = None)(implicit msgs: Messages)
 
-<ul class="govuk-list @classes.getOrElse("")">
+<ul class="govuk-list @classes.getOrElse("")" @id.map(i => { s"id =${i}"})>
     @for(html <- items) {
         <li class="govuk-list--item">@html</li>
     }
