@@ -88,7 +88,7 @@ agent.services.account.help.link=Rhagor o wybodaeth am sut i ddefnyddio’ch cyf
 
 #Manage Account (gran_perms_enabled)
 manage.account.h1=Rheoli’r cyfrif
-manage.account.manage-access-permissions.heading=Manage access groups
+manage.account.manage-access-permissions.heading=Rheoli grwpiau mynediad
 manage.account.manage-access-permissions.status=Status
 manage.account.manage-access-permissions.status-opted-in=Turned on
 manage.account.manage-access-permissions.status-opted-out=Turned off
@@ -99,24 +99,24 @@ manage.account.manage-access-permissions.inset-text.Opted-Out_SINGLE_USER=To use
 manage.account.manage-access-permissions.inset-text.Opted-In_SINGLE_USER=To use access groups you need to add more team members to your agent services account under ‘Manage team members’ below.
 
 manage.account.manage-access-permissions.access-groups.hint=Access groups allow you to control which team members can view and manage each client’s tax affairs.
-manage.account.manage-access-permissions.access-groups.create-new=Create new access group
-manage.account.manage-access-permissions.access-groups.manage=Manage access groups
-manage.account.manage-access-permissions.access-groups.optin=Turn on access groups
+manage.account.manage-access-permissions.access-groups.create-new=Creu grŵp mynediad newydd
+manage.account.manage-access-permissions.access-groups.manage=Rheoli grwpiau mynediad
+manage.account.manage-access-permissions.access-groups.optin=Galluogi grwpiau mynediad
 
-manage.account.manage-access-permissions.settings.optout=Turn off access groups
+manage.account.manage-access-permissions.settings.optout=Analluogi grwpiau mynediad
 
-manage.account.clients.heading=Clients
+manage.account.clients.heading=Cleientiaid
 manage.account.clients.p=View client details, update client reference and see what groups a client is in.
-manage.account.clients.manage-link=Manage clients
-manage.account.clients.unassigned-link=Unassigned clients
+manage.account.clients.manage-link=Rheoli cleientiaid
+manage.account.clients.unassigned-link=Cleientiaid sydd heb eu neilltuo
 
-manage.account.team-members.heading=Team members
+manage.account.team-members.heading=Aelodau tîm
 manage.account.team-members.p=View team member details and see what groups a team member is in.
-manage.account.team-members.manage-link=Manage team members
+manage.account.team-members.manage-link=Rheoli aelodau o’r tîm
 manage.account.team-members.external-manage-link=Add or remove team members (opens in a new tab)
 
 manage.account.contact-details.heading=Contact details
-manage.account.contact-details.view=View the contact details we have for your business
+manage.account.contact-details.view=Bwrw golwg dros y manylion cyswllt sydd gennym ar gyfer eich busnes
 
 #Manage account (gran_perms_disabled)
 manage.account.p=Gallwch ganiatáu i ddefnyddwyr eraill yn eich sefydliad gael mynediad at y cyfrif gwasanaethau asiant hwn, a rheoli eu mynediad.
