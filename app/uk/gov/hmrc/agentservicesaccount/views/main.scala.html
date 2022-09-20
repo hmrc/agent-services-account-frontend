@@ -62,4 +62,5 @@
     additionalScriptsBlock = Some(scripts),
     nonce = CSPNonce.get,
     mainContentLayout = None,
+    signOutUrl = Some(routes.SignOutController.signOut.url)
 )(bespokeContentLayout)

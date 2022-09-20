@@ -27,34 +27,27 @@
         class="hmrc-account-menu__link hmrc-account-menu__link--home">
         @span("nav.home", classes = Some("hmrc-account-icon hmrc-account-icon--home"))
     </a>
-    <a href="#" tabindex="-1" aria-hidden="true" aria-expanded="false"
-        class="hmrc-account-menu__link hmrc-account-menu__link--menu js-hidden js-visible">
-        @msgs("serviceinfo.aria.account-menu")
-    </a>
-
     @if(isAdmin) {
         @a(
             key = "nav.manage.account",
             href = controller.manageAccount.url,
-            classes = Some("hmrc-account-menu__link")
+            classes = Some("hmrc-account-menu__link"),
+            addStandardClasses = false
         )
     } else{
         @a(
             key = "nav.your.account",
             href = controller.yourAccount.url,
-            classes = Some("hmrc-account-menu__link")
+            classes = Some("hmrc-account-menu__link"),
+            addStandardClasses = false
         )
     }
-    <ul class="hmrc-account-menu__main">
-        @if(appConfig.HelpAndGuidanceEnabled) {
-        <li>
-            <a href="@controller.showHelp.url" class="hmrc-account-menu__link">@msgs("nav.help")</a>
-        </li>
-        }
-        <li>
-            <a href="@routes.SignOutController.signOut.url" class="hmrc-account-menu__link">@msgs("nav.signout")</a>
-        </li>
-    </ul>
+    @a(
+        key = "nav.help",
+        href = controller.showHelp.url,
+        classes = Some("hmrc-account-menu__link"),
+        addStandardClasses = false
+    )
 </nav>
 
 

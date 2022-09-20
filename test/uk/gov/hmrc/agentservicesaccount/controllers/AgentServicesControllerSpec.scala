@@ -192,17 +192,6 @@ class AgentServicesControllerSpec extends BaseISpec {
       content should include(messagesApi("nav.help"))
     }
 
-    "not show Help and Guidance link when toggled off" in {
-      givenArnIsAllowlistedForIrv(Arn(arn))
-      val controllerWithHelpToggledOff =
-        appBuilder(Map("features.enable-help-and-guidance" -> false)).build().injector.instanceOf[AgentServicesController]
-      givenAuthorisedAsAgentWith(arn)
-      givenSuspensionStatus(SuspensionDetails(suspensionStatus = false, None))
-
-      val response = controllerWithHelpToggledOff.showAgentServicesAccount()(fakeRequest("GET", "/home"))
-      Helpers.contentAsString(response) should not include messagesApi("nav.help")
-    }
-
     "return Status: OK and body containing correct content when suspension details are in the session and agent is suspended for VATC" in {
       givenArnIsAllowlistedForIrv(Arn(arn))
       givenSuspensionStatus(SuspensionDetails(suspensionStatus = true, Some(Set("VATC"))))
