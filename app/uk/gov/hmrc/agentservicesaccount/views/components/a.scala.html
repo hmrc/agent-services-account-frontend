@@ -25,9 +25,10 @@
     openInNewWindow: Boolean = false,
     rel: Option[String] = None,
     target: Option[String] = None,
+    addStandardClasses: Boolean = true,
 )(implicit msgs: Messages)
 
-@cls = @{classes.getOrElse("").concat(" govuk-link govuk-body")}
+@cls = @{classes.getOrElse("").concat(if(addStandardClasses)" govuk-link govuk-body" else "")}
 
 <a href="@href" class="@cls"
     @if(id.nonEmpty){id="@id"}
