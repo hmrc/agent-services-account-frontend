@@ -61,7 +61,8 @@
                         } else {
                             a(key = link.msgKey, href = link.href)
                         }
-                    })
+                    },
+                    classes = None)
                 } else {
                     @defining(config.accessGroups(0)){ link =>
                         @if(link.renderAsButton){
