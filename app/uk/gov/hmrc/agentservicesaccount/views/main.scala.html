@@ -20,11 +20,13 @@
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.{HmrcLayout, HmrcStandardFooter}
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcLanguageSelectHelper
 @import views.html.helper.CSPNonce
+@import uk.gov.hmrc.hmrcfrontend.views.config.StandardBetaBanner
 
 @this(
     hmrcLayout: HmrcLayout,
     head: head,
     hmrcStandardFooter: HmrcStandardFooter,
+    standardBetaBanner: StandardBetaBanner,
     hmrcLanguageSelectHelper: HmrcLanguageSelectHelper
 )
 
@@ -58,6 +60,7 @@
     pageTitle = Some(msgs("generic.title", pageTitle, msgs("service.name"))),
     additionalHeadBlock = Some(head(hasTimeout)),
     beforeContentBlock = Some(beforeContent),
+    phaseBanner = Some(standardBetaBanner(appConfig.betaFeedbackUrl)),
     serviceUrl = Some(routes.AgentServicesController.root().url),
     additionalScriptsBlock = Some(scripts),
     nonce = CSPNonce.get,

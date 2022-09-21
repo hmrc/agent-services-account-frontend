@@ -140,6 +140,11 @@ class AgentServicesControllerSpec extends BaseISpec {
       Helpers.contentType(response).get shouldBe HTML
       val content = Helpers.contentAsString(response)
 
+      val html = Jsoup.parse(content)
+      html.select("div.govuk-phase-banner").isEmpty() shouldBe false
+      html.select("div.govuk-phase-banner a").text shouldBe "feedback"
+      html.select("div.govuk-phase-banner a").attr("href") shouldBe "http://localhost:9250/contact/beta-feedback?service=AOSS"
+
       content should include(messagesApi("agent.services.account.heading", "servicename.titleSuffix"))
       content should include(messagesApi("agent.services.account.heading"))
       content should include(messagesApi("app.name"))
