@@ -1,0 +1,53 @@
+@*
+ * Copyright 2022 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import uk.gov.hmrc.govukfrontend.views.html.components.GovukSummaryList
+@import uk.gov.hmrc.agentservicesaccount.views.components.models.SummaryListData
+@import uk.gov.hmrc.govukfrontend.views.Aliases.SummaryList
+@import uk.gov.hmrc.govukfrontend.views.Aliases.SummaryListRow
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.Key
+@import uk.gov.hmrc.govukfrontend.views.Aliases.Text
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.Actions
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.ActionItem
+@import uk.gov.hmrc.govukfrontend.views.Aliases.Value
+
+@this(govukSummaryList: GovukSummaryList)
+
+@(rows: Seq[SummaryListData])(implicit msgs: Messages)
+
+    @govukSummaryList(
+        SummaryList(
+            rows = rows.map(summaryListRow =>
+                SummaryListRow(
+                    Key(Text(msgs(summaryListRow.key))),
+                    Value(Text(summaryListRow.value)),
+                    actions = Some(
+                        Actions(
+                            classes = summaryListRow.linkClasses.getOrElse(""),
+                            items = if(summaryListRow.link.isDefined) Seq(
+                                ActionItem(
+                                    href = summaryListRow.link.get.url,
+                                    content = Text(msgs(summaryListRow.linkMsgKey)),
+                                    visuallyHiddenText = summaryListRow.hiddenText
+                                )
+                            ) else Seq.empty
+                        )
+                    )
+                )
+            )
+        )
+    )
+

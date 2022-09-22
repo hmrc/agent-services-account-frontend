@@ -270,3 +270,15 @@ account-details.summary-list.email=Email address
 account-details.summary-list.name=Name
 account-details.summary-list.address=Address
 account-details.summary-list.none=None
+
+#administrators
+administrators.h1=Administrators
+administrators.ul.p=Administrators can:
+administrators.ul.li.1=turn access groups on or off
+administrators.ul.li.2=view information about all clients and access groups
+administrators.ul.li.3=create, rename and delete access groups 
+administrators.ul.li.4=assign clients and team members to access groups
+
+
+
+

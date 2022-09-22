@@ -16,7 +16,6 @@
 
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
-@import uk.gov.hmrc.agentservicesaccount.views.html.components.secondary_nav
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
@@ -24,8 +23,7 @@
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcReportTechnicalIssueHelper
 
 @this(
-        mainTemplate: main,
-        secondaryNav: secondary_nav,
+        main: main,
         govukSummaryList: GovukSummaryList,
         govukInsetText : GovukInsetText,
         govukBackLink : GovukBackLink,
@@ -34,7 +32,7 @@
 
 @(agencyDetails: Option[AgencyDetails])(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
 
-@mainTemplate(pageTitle = msgs("account-details.title"), beforeContentBlock = Some(secondaryNav(isAdmin = true)), analyticsAdditionalJs = None) {
+@main(pageTitle = msgs("account-details.title"), isAdmin = true, analyticsAdditionalJs = None) {
 
 
     @govukBackLink(BackLink(

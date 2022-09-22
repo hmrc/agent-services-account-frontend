@@ -17,11 +17,11 @@
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 
-@this(mainTemplate: main)
+@this(main: main)
 
 @(pageTitle: String, heading: String, message: String)(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
 
-@mainTemplate(pageTitle = pageTitle) {
+@main(pageTitle = pageTitle, showSecondaryNav = false) {
 
  <h1 class="govuk-heading-xl">@heading</h1>
 
