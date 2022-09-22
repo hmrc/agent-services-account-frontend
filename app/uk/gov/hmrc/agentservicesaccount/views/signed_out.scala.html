@@ -27,7 +27,7 @@
     if(timeout < 60) s"$timeout seconds" else s"${timeout/60} minutes"
 }
 
-@main(pageTitle = msgs("signed-out.header"), hasTimeout = false) {
+@main(pageTitle = msgs("signed-out.header"), hasTimeout = false, showSecondaryNav = false) {
 
     <h1 class="govuk-heading-xl">@msgs("signed-out.header")</h1>
     <p class="govuk-body">@msgs("signed-out.p1", timeString)</p>

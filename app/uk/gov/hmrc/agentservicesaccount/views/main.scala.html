@@ -36,7 +36,8 @@
     isAdmin: Boolean = false,
     analyticsAdditionalJs: Option[Html] = None,
     hasTimeout: Boolean = true,
-    fullWidth: Boolean = false
+    fullWidth: Boolean = false,
+    showSecondaryNav: Boolean = true
 )(contentBlock: Html)(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
 
 @scripts = {
@@ -44,9 +45,10 @@
     <script src="@controllers.routes.Assets.at("javascripts/ga-events.js")" @{CSPNonce.attr}></script>
 }
 
-
 @beforeContent = {
-    @secondary_nav(isAdmin = isAdmin)
+    @if(showSecondaryNav){
+        @secondary_nav(isAdmin = isAdmin)
+    }
     @hmrcLanguageSelectHelper()
 }
 
