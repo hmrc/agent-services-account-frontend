@@ -23,7 +23,7 @@ import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.auth.CallOps._
 import uk.gov.hmrc.agentservicesaccount.auth.{AgentInfo, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.connectors.{AfiRelationshipConnector, AgentClientAuthorisationConnector, AgentPermissionsConnector}
+import uk.gov.hmrc.agentservicesaccount.connectors.{AfiRelationshipConnector, AgentClientAuthorisationConnector, AgentPermissionsConnector, AgentUserClientDetailsConnector}
 import uk.gov.hmrc.agentservicesaccount.models.ManageAccessPermissionsConfig
 import uk.gov.hmrc.agentservicesaccount.views.html.pages._
 
@@ -37,6 +37,7 @@ class AgentServicesController @Inject()
   agentClientAuthorisationConnector: AgentClientAuthorisationConnector,
   afiRelationshipConnector: AfiRelationshipConnector,
   agentPermissionsConnector: AgentPermissionsConnector,
+  agentUserClientDetailsConnector: AgentUserClientDetailsConnector,
   suspensionWarningView: suspension_warning,
   manage_account: manage_account,
   administrators_html: administrators,
@@ -167,7 +168,15 @@ class AgentServicesController @Inject()
   }
 
   val administrators: Action[AnyContent] = Action.async { implicit request =>
-    Ok(administrators_html()).toFuture
+    withAuthorisedAsAgent { agentInfo =>
+      agentUserClientDetailsConnector.getTeamMembers(agentInfo.arn).map{ maybeMembers =>
+        Ok(
+          administrators_html(
+            maybeMembers.getOrElse(Seq.empty)
+              .filter(_.credentialRole.getOrElse("").equals("User")))
+        )
+      }
+    }
   }
 
   val accountDetails: Action[AnyContent] = Action.async { implicit request =>

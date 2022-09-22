@@ -30,14 +30,12 @@
 @import scala.collection.mutable.ListBuffer
 
 @this(
-    mainTemplate: main,
+    main: main,
     p: p, h2: h2, h3: h3, h4: h4, ul_html: ul_html, a: a, span: span,
     govukWarningText: GovukWarningText,
     govukPanel: GovukPanel,
     govukAccordion: GovukAccordion,
-    hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper,
-    secondaryNav: secondary_nav
-)
+    hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper)
 @(
     arn: String,
     isIrvAllowed: Boolean,
@@ -210,7 +208,7 @@
     items
 }
 
-@mainTemplate(pageTitle = msgs("agent.services.account.heading"), beforeContentBlock = Some(secondaryNav(isAdmin))) {
+@main(pageTitle = msgs("agent.services.account.heading"), isAdmin = isAdmin) {
 
     @govukPanel(
         Panel(

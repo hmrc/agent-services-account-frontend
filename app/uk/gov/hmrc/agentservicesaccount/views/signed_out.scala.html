@@ -18,7 +18,7 @@
 @import play.api.Configuration
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 
-@this(mainTemplate: main)
+@this(main: main)
 
 @(redirectUrl: String)(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
 
@@ -27,7 +27,7 @@
     if(timeout < 60) s"$timeout seconds" else s"${timeout/60} minutes"
 }
 
-@mainTemplate(pageTitle = msgs("signed-out.header"), hasTimeout = false) {
+@main(pageTitle = msgs("signed-out.header"), hasTimeout = false) {
 
     <h1 class="govuk-heading-xl">@msgs("signed-out.header")</h1>
     <p class="govuk-body">@msgs("signed-out.p1", timeString)</p>

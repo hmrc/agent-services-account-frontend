@@ -25,6 +25,7 @@
 @this(
     hmrcLayout: HmrcLayout,
     head: head,
+    secondary_nav: secondary_nav,
     hmrcStandardFooter: HmrcStandardFooter,
     standardBetaBanner: StandardBetaBanner,
     hmrcLanguageSelectHelper: HmrcLanguageSelectHelper
@@ -32,7 +33,7 @@
 
 @(
     pageTitle: String,
-    beforeContentBlock: Option[Html] = None,
+    isAdmin: Boolean = false,
     analyticsAdditionalJs: Option[Html] = None,
     hasTimeout: Boolean = true,
     fullWidth: Boolean = false
@@ -43,8 +44,9 @@
     <script src="@controllers.routes.Assets.at("javascripts/ga-events.js")" @{CSPNonce.attr}></script>
 }
 
-@beforeContent={
-    @beforeContentBlock.getOrElse("")
+
+@beforeContent = {
+    @secondary_nav(isAdmin = isAdmin)
     @hmrcLanguageSelectHelper()
 }
 

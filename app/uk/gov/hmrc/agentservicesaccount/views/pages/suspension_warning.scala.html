@@ -15,20 +15,18 @@
  *@
 
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-@import play.api.Configuration
 @import uk.gov.hmrc.agentservicesaccount.controllers.routes
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
-@import uk.gov.hmrc.agentservicesaccount.views.html.components.secondary_nav
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcReportTechnicalIssueHelper
 
-@this(mainTemplate: main, secondaryNav: secondary_nav,hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper)
+@this(main: main, hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper)
 
 
 @(isAdmin: Boolean)(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
 
 @suspendedServices = @{request.session.get("suspendedServices").getOrElse("").split(',').toSet}
 
-@mainTemplate(pageTitle = msgs("suspension-warning.header"), beforeContentBlock = Some(secondaryNav(isAdmin))) {
+@main(pageTitle = msgs("suspension-warning.header"), isAdmin = isAdmin) {
 
     <h1 class="govuk-heading-xl">@msgs("suspension-warning.header")</h1>
     <p class="govuk-body">@msgs("suspension-warning.p1")</p>

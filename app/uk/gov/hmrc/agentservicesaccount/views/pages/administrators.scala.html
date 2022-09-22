@@ -14,31 +14,26 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.agentservicesaccount.auth.AgentInfo
+@import uk.gov.hmrc.agentmtdidentifiers.model.UserDetails
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-@import uk.gov.hmrc.agentservicesaccount.controllers.routes
-@import uk.gov.hmrc.agentservicesaccount.models.GroupSummary
-@import uk.gov.hmrc.agentservicesaccount.views.html.components.secondary_nav
+@import uk.gov.hmrc.agentservicesaccount.views.components.models.SummaryListData
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 
-@this(
-    mainTemplate: main, secondary_nav: secondary_nav,
-    h1: h1, p: p, a: a, ul: ul, span: span,
-)
+@this(main: main, h1: h1, p: p, ul: ul, summary_list: summary_list)
 
-@(
-    info: Option[AgentInfo] = None,
-    groups: Option[Seq[GroupSummary]] = None
-)(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
+@(admins: Seq[UserDetails] = Seq.empty)(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
 
-@mainTemplate(  pageTitle = msgs("administrators.h1"), analyticsAdditionalJs = None, fullWidth = true,
-                beforeContentBlock = Some(secondary_nav(isAdmin = false))) {
+@main(pageTitle = msgs("administrators.h1"), isAdmin = false,
+    analyticsAdditionalJs = None, fullWidth = true) {
 
     @h1("administrators.h1")
-
     @p("administrators.ul.p")
     @ul(items = (1 to 4).map(i => s"administrators.ul.li.$i"))
-    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
 
+    @summary_list(
+        admins.map(a =>
+            SummaryListData(key = a.name.getOrElse(""), value = a.email.getOrElse(""))
+        )
+    )
 
 }
