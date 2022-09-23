@@ -24,7 +24,7 @@ import play.api.mvc.Session
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
 import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, OptedInNotReady, OptedInReady, OptedInSingleUser, OptedOutEligible, OptedOutSingleUser, OptedOutWrongClientCount, SuspensionDetails, SuspensionDetailsNotFound}
+import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, OptedInNotReady, OptedInReady, OptedInSingleUser, OptedOutEligible, OptedOutSingleUser, OptedOutWrongClientCount, SuspensionDetails, SuspensionDetailsNotFound, UserDetails}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models.{AccessGroupSummaries, AccessGroupSummary, AgencyDetails, BusinessAddress, GroupSummary}
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentClientAuthorisationStubs._
@@ -32,6 +32,7 @@ import uk.gov.hmrc.agentservicesaccount.stubs.AgentFiRelationshipStubs.{givenArn
 import uk.gov.hmrc.agentservicesaccount.support.{BaseISpec, Css}
 import uk.gov.hmrc.auth.core.{Enrolment, EnrolmentIdentifier}
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentPermissionsStubs._
+import uk.gov.hmrc.agentservicesaccount.stubs.AgentUserClientDetailsStubs._
 import uk.gov.hmrc.agentservicesaccount.support.Css._
 import uk.gov.hmrc.http.SessionKeys
 
@@ -378,14 +379,14 @@ class AgentServicesControllerSpec extends BaseISpec {
       status(response) shouldBe 200
 
       val html = Jsoup.parse(contentAsString(response))
-      val h1 = html.select(Css.H1)
+      
       val h2 = html.select(H2)
       val h3 = html.select(Css.H3)
       val li = html.select(Css.LI)
       val paragraphs = html.select(Css.paragraphs)
 
       html.title() shouldBe manageAccountTitle
-      h1.get(0).text shouldBe "Manage account"
+      html.select(H1).get(0).text shouldBe "Manage account"
       h2.get(0).text shouldBe "Manage access groups"
       h3.get(0).text shouldBe "Status Turned on"
       paragraphs.get(0).text
@@ -425,13 +426,13 @@ class AgentServicesControllerSpec extends BaseISpec {
 
       val html = Jsoup.parse(contentAsString(response))
       val li = html.select(Css.LI)
-      val h1 = html.select(Css.H1)
+      
       val h2 = html.select(H2)
       val h3 = html.select(Css.H3)
       val paragraphs = html.select(Css.paragraphs)
 
       html.title() shouldBe manageAccountTitle
-      h1.get(0).text shouldBe "Manage account"
+      html.select(H1).get(0).text shouldBe "Manage account"
       h2.get(0).text shouldBe "Manage access groups"
       h3.get(0).text shouldBe "Status Turned on"
       paragraphs.get(0).text
@@ -471,14 +472,14 @@ class AgentServicesControllerSpec extends BaseISpec {
       status(response) shouldBe 200
 
       val html = Jsoup.parse(contentAsString(response))
-      val h1 = html.select(Css.H1)
+      
       val h2 = html.select(H2)
       val h3 = html.select(Css.H3)
       val li = html.select(Css.LI)
       val paragraphs = html.select(Css.paragraphs)
 
       html.title() shouldBe manageAccountTitle
-      h1.get(0).text shouldBe "Manage account"
+      html.select(H1).get(0).text shouldBe "Manage account"
       h2.get(0).text shouldBe "Manage access groups"
       paragraphs.get(0).text
         .shouldBe("Access groups allow you to control which team members can view and manage each client’s tax affairs.")
@@ -515,14 +516,14 @@ class AgentServicesControllerSpec extends BaseISpec {
       status(response) shouldBe 200
 
       val html = Jsoup.parse(contentAsString(response))
-      val h1 = html.select(Css.H1)
+      
       val h2 = html.select(H2)
       val h3 = html.select(Css.H3)
       val paragraphs = html.select(Css.paragraphs)
       val li = html.select(Css.LI)
 
       html.title() shouldBe manageAccountTitle
-      h1.get(0).text shouldBe "Manage account"
+      html.select(H1).get(0).text shouldBe "Manage account"
       h2.get(0).text shouldBe "Manage access groups"
       h3.get(0).text shouldBe "Status Turned on"
       paragraphs.get(0).text
@@ -554,13 +555,13 @@ class AgentServicesControllerSpec extends BaseISpec {
       status(response) shouldBe 200
 
       val html = Jsoup.parse(contentAsString(response))
-      val h1 = html.select(Css.H1)
+      
       val h2 = html.select(H2)
       val h3 = html.select(Css.H3)
       val paragraphs = html.select(Css.paragraphs)
 
       html.title() shouldBe manageAccountTitle
-      h1.get(0).text shouldBe "Manage account"
+      html.select(H1).get(0).text shouldBe "Manage account"
       h2.get(0).text shouldBe "Manage access groups"
       paragraphs.get(0).text
         .shouldBe("Access groups allow you to control which team members can view and manage each client’s tax affairs.")
@@ -592,13 +593,13 @@ class AgentServicesControllerSpec extends BaseISpec {
       status(response) shouldBe 200
 
       val html = Jsoup.parse(contentAsString(response))
-      val h1 = html.select(Css.H1)
+      
       val h2 = html.select(H2)
       val h3 = html.select(Css.H3)
       val paragraphs = html.select(Css.paragraphs)
 
       html.title() shouldBe manageAccountTitle
-      h1.get(0).text shouldBe "Manage account"
+      html.select(H1).get(0).text shouldBe "Manage account"
       h2.get(0).text shouldBe "Manage access groups"
       h3.get(0).text shouldBe "Status Turned off"
       paragraphs.get(0).text
@@ -629,13 +630,13 @@ class AgentServicesControllerSpec extends BaseISpec {
       status(response) shouldBe 200
 
       val html = Jsoup.parse(contentAsString(response))
-      val h1 = html.select(Css.H1)
+      
       val h2 = html.select(H2)
       val h3 = html.select(Css.H3)
       val paragraphs = html.select(Css.paragraphs)
 
       html.title() shouldBe manageAccountTitle
-      h1.get(0).text shouldBe "Manage account"
+      html.select(H1).get(0).text shouldBe "Manage account"
       h2.get(0).text shouldBe "Manage access groups"
       paragraphs.get(0).text
         .shouldBe("Access groups allow you to control which team members can view and manage each client’s tax affairs.")
@@ -716,10 +717,9 @@ class AgentServicesControllerSpec extends BaseISpec {
     }
   }
 
-
   val yourAccountUrl: String = routes.AgentServicesController.yourAccount.url
 
-  s"$yourAccountUrl" should {
+  s"GET on Your Account at url: $yourAccountUrl" should {
 
     "render correctly for Standard User who's Opted-In_READY without Access Groups" in {
       val providerId = RandomUtils.nextLong().toString
@@ -735,9 +735,9 @@ class AgentServicesControllerSpec extends BaseISpec {
       status(response) shouldBe 200
 
       val html = Jsoup.parse(contentAsString(response))
-      val h1 = html.select(Css.H1)
+      
       html.title() shouldBe "Your account - Agent services account - GOV.UK"
-      h1.get(0).text shouldBe "Your account"
+      html.select(H1).get(0).text shouldBe "Your account"
 
       //LEFT PANEL
       val userDetailsPanel = html.select("div#user-details")
@@ -784,9 +784,8 @@ class AgentServicesControllerSpec extends BaseISpec {
       status(response) shouldBe 200
 
       val html = Jsoup.parse(contentAsString(response))
-      val h1 = html.select(H1)
       html.title() shouldBe "Your account - Agent services account - GOV.UK"
-      h1.get(0).text shouldBe "Your account"
+      html.select(H1).get(0).text shouldBe "Your account"
       //LEFT PANEL
       val userDetailsPanel = html.select("div#user-details")
       userDetailsPanel.select("h3").get(0).text() shouldBe "Name"
@@ -818,7 +817,48 @@ class AgentServicesControllerSpec extends BaseISpec {
     }
   }
 
-    "help" should {
+  val adminUrl: String = routes.AgentServicesController.administrators.url
+
+  s"GET on Administrators of your account at url: $adminUrl" should {
+
+    "render static data and list of Admin Users for ARN" in {
+      givenArnIsAllowlistedForIrv(Arn(arn))
+      givenAuthorisedAsAgentWith(arn)
+      givenArnAllowedOk()
+      givenSyncEacdSuccess(Arn(arn))
+      givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInReady)
+      val teamMembers = Seq(
+        UserDetails(credentialRole = Some("User"), name = Some("Robert Builder"), email = Some("bob@builder.com")),
+        UserDetails(credentialRole = Some("User"), name = Some("Steve Smith"), email = Some("steve@builder.com")),
+        //Assistant will be filtered out from the results we get back
+        UserDetails(credentialRole = Some("Assistant"), name = Some("irrelevant")),
+      )
+      stubGetTeamMembersForArn(Arn(arn), teamMembers)
+      val response = await(controller.administrators()(fakeRequest("GET", adminUrl)))
+
+      status(response) shouldBe 200
+
+      val html = Jsoup.parse(contentAsString(response))
+      html.title() shouldBe "Administrators - Agent services account - GOV.UK"
+      html.select(Css.H1).get(0).text shouldBe "Administrators"
+
+      html.select(paragraphs).get(0).text shouldBe "Administrators can:"
+      html.select(LI).get(0).text shouldBe "turn access groups on or off"
+      html.select(LI).get(1).text shouldBe "view information about all clients and access groups"
+      html.select(LI).get(2).text shouldBe "create, rename and delete access groups"
+      html.select(LI).get(3).text shouldBe "assign clients and team members to access groups"
+      val adminNames = html.select(summaryListKeys)
+      val adminEmails = html.select(summaryListValues)
+      adminNames.size() shouldBe 2
+      adminNames.get(0).text shouldBe "Robert Builder"
+      adminEmails.get(0).text shouldBe "bob@builder.com"
+      adminNames.get(1).text shouldBe "Steve Smith"
+      adminEmails.get(1).text shouldBe "steve@builder.com"
+    }
+
+  }
+
+  "help" should {
 
     "return Status: OK and body containing correct content" in {
       givenAuthorisedAsAgentWith(arn)
