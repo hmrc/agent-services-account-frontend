@@ -54,8 +54,7 @@ class AgentUserClientDetailsConnectorImpl @Inject()(val http: HttpClient)(
   override def getTeamMembers(arn: Arn)(
       implicit hc: HeaderCarrier,
       ec: ExecutionContext): Future[Option[Seq[UserDetails]]] = {
-    val url =
-      s"$baseUrl/agent-user-client-details/arn/${arn.value}/team-members"
+    val url = s"$baseUrl/agent-user-client-details/arn/${arn.value}/team-members"
     monitor("ConsumedAPI-team-members-GET") {
       http.GET[HttpResponse](url).map { response =>
         response.status match {

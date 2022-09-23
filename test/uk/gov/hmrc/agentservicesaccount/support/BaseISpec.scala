@@ -33,15 +33,16 @@ abstract class BaseISpec
     additionalConfiguration: Map[String, Any] = Map.empty[String, Any]): GuiceApplicationBuilder =
     new GuiceApplicationBuilder()
       .configure(
-        "microservice.services.auth.port"                 -> wireMockPort,
-        "microservice.services.agent-client-authorisation.port" -> wireMockPort,
-        "microservice.services.sso.port"                        -> wireMockPort,
-        "microservice.services.agent-fi-relationship.port"      -> wireMockPort,
-        "microservice.services.agent-permissions.port"          -> wireMockPort,
-        "microservice.services.agent-permissions-frontend.external-url"  -> wireMockBaseUrlAsString,
-        "auditing.enabled"                                      -> false,
-        "features.enable-ITSA-Accordion"                        -> true,
-        "features.enable-help-and-guidance"                     -> true
+        "microservice.services.auth.port"                                 -> wireMockPort,
+        "microservice.services.agent-client-authorisation.port"           -> wireMockPort,
+        "microservice.services.sso.port"                                  -> wireMockPort,
+        "microservice.services.agent-fi-relationship.port"                -> wireMockPort,
+        "microservice.services.agent-permissions.port"                    -> wireMockPort,
+        "microservice.services.agent-user-client-details.port"            -> wireMockPort,
+        "microservice.services.agent-permissions-frontend.external-url"   -> wireMockBaseUrlAsString,
+        "auditing.enabled"                   -> false,
+        "features.enable-ITSA-Accordion"     -> true,
+        "features.enable-help-and-guidance"  -> true
       )
       .configure(additionalConfiguration)
 
