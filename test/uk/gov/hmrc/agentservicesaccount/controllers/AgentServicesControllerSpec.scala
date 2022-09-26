@@ -992,7 +992,6 @@ class AgentServicesControllerSpec extends BaseISpec {
       h3.get(7).text shouldBe "Manage clients"
       p.get(24).text shouldBe "You can manage the client’s reference within access groups. This will not affect their details in other Government Gateway services."
 
-
     }
 
   }

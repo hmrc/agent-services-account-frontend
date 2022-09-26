@@ -6,8 +6,9 @@ agent.services.account.heading=Croeso i’ch cyfrif gwasanaethau asiant
 existing.client.relationships.link=Mynediad at berthnasoedd presennol â chleientiaid
 
 nav.home=Hafan y cyfrif
-nav.manage=Rheoli’r cyfrif
 nav.aria.account-menu=Dewislen y cyfrif
+nav.manage.account=Rheoli’r cyfrif
+nav.your.account=Your account
 nav.help=Help ac arweiniad
 nav.signout=Allgofnodi
 
@@ -85,6 +86,22 @@ agent.services.account.section4.col2.link3=Canslo awdurdodiad cleient
 
 agent.services.account.help.h2=Help ac arweiniad
 agent.services.account.help.link=Rhagor o wybodaeth am sut i ddefnyddio’ch cyfrif gwasanaethau asiant a sut y gall cleientiaid eich awdurdodi i reoli eu trethi
+
+#Your Account (Assistant/standard user only - not behind feature flag)
+your.account.h1=Your account
+your.account.h3.name=Enw
+your.account.h3.email=E-bost
+your.account.h3.role=Swydd
+your.account.p.role=Standard - As a user with standard permissions you can view your assigned access groups and clients. Please contact your administrator for more information.
+
+your.account.your.groups.h2=Your access groups
+your.account.your.groups.p=You are not currently assigned to any groups
+
+your.account.your.admins.h2=Your company’s administrators
+your.account.your.admins.a=View administrators
+
+your.account.your.contact.details.h2=Manylion cyswllt
+your.account.your.contact.details.a=Bwrw golwg dros y manylion cyswllt sydd gennym ar gyfer eich busnes
 
 #Manage Account (gran_perms_enabled)
 manage.account.h1=Rheoli’r cyfrif
@@ -315,3 +332,11 @@ account-details.summary-list.email=Cyfeiriad e-bost
 account-details.summary-list.name=Enw
 account-details.summary-list.address=Cyfeiriad
 account-details.summary-list.none=Dim
+
+#administrators (Assistant/standard user only - not behind feature flag)
+administrators.h1=Administrators
+administrators.ul.p=Administrators can:
+administrators.ul.li.1=turn access groups on or off
+administrators.ul.li.2=view information about all clients and access groups
+administrators.ul.li.3=create, rename and delete access groups
+administrators.ul.li.4=assign clients and team members to access groups
