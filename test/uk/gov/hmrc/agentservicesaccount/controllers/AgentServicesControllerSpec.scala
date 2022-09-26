@@ -862,33 +862,37 @@ class AgentServicesControllerSpec extends BaseISpec {
 
     "return Status: OK and body containing correct content" in {
       givenAuthorisedAsAgentWith(arn)
-      val response = controller.showHelp().apply(fakeRequest("GET", "/help"))
+      val response = await(controller.showHelp().apply(fakeRequest("GET", "/help")))
 
       status(response) shouldBe OK
-      Helpers.contentType(response).get shouldBe HTML
-      val content = Helpers.contentAsString(response)
-      content should include(messagesApi("help.title"))
-      content should include(messagesApi("help.heading"))
-      content should include(messagesApi("help.p1"))
-      content should include(messagesApi("help.authorised.h2"))
-      content should include(messagesApi("help.authorised.link"))
-      content should include(messagesApi("help.mtd.h2"))
-      content should include(messagesApi("help.mtd.link1"))
-      content should include(messagesApi("help.mtd.link2"))
-      content should include(messagesApi("help.mtd.link3"))
-      content should include(messagesApi("help.mtd.link4"))
-      content should include(messagesApi("help.trusts.h2"))
-      content should include(messagesApi("help.trusts.link1"))
-      content should include(messagesApi("help.trusts.link2"))
-      content should include(messagesApi("help.cgt.h2"))
-      content should include(messagesApi("help.cgt.link"))
-      content should include(messagesApi("help.cannot.h2"))
-      content should include(messagesApi("help.cannot.link1"))
-      content should include(messagesApi("help.cannot.link2"))
-      content should include(messagesApi("help.cannot.link3"))
-      content should include(messagesApi("help.cannot.link4"))
-      content should include(messagesApi("help.cannot.link5"))
-      content should include(messagesApi("help.cannot.link6"))
+
+      val html = Jsoup.parse(contentAsString(response))
+      html.title() shouldBe "Help and guidance - Agent services account - GOV.UK"
+      html.select(Css.H1).get(0).text shouldBe "Help and guidance"
+
+      val h2 = html.select(H2)
+      val h3 = html.select(Css.H3)
+      val p = html.select(Css.paragraphs)
+
+      p.get(0).text shouldBe "This guidance is for tax agents and advisors. It describes how to use your agent services account."
+
+      // Accordion content - TODO fill out
+      h2.get(0).text shouldBe "About this guidance"
+
+      h2.get(1).text shouldBe "About your agent services account"
+
+      h2.get(2).text shouldBe "Account home: client authorisations"
+
+      h2.get(3).text shouldBe "Account home: tax services"
+      h3.get(0).text shouldBe "VAT"
+      h3.get(1).text shouldBe "Trusts and estates"
+
+      h2.get(4).text shouldBe "Manage account: standard users"
+
+      h2.get(5).text shouldBe "Manage account: administrators"
+
+
     }
+
   }
 }

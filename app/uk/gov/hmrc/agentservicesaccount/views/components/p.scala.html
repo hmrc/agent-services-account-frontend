@@ -23,6 +23,6 @@
    id: Option[String] = None
 )(implicit msgs: Messages)
 
-@cls = @{if(classes.isDefined) classes.get.concat(" govuk-body") else "govuk-body"}
+@cls = @{if(classes.isDefined) classes.get else "govuk-body"}
 
 <p class ="@cls" @id.map(i => { s"id =${i}"})>@html.getOrElse(Html(msgs(key)))</p>
