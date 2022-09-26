@@ -263,7 +263,7 @@ help.cannot.link5=TWE ar gyfer Asiantau
 help.cannot.link6=Sut i newid neu ganslo awdurdodiadau fel asiant
 
 help.subheading5=Manage account: standard users
-help.manage.standard.p1=Standard users cannot make any changes to access groups. If access groups are turned off, they can manage the tax of all their organisation's clients. When access groups are turned on, they can only:
+help.manage.standard.p1=Standard users cannot make any changes to access groups. If access groups are turned off, they can manage the tax of all their organisation''s clients. When access groups are turned on, they can only:
 help.manage.standard.list1.1=view the access groups they are assigned to
 help.manage.standard.list1.2=view and manage clients they are assigned to through these access groups
 help.manage.standard.p2=Whether access groups are on or off, they can also:
@@ -292,7 +292,7 @@ help.manage.admin.p8=When you turn access groups on, it may take some time for o
 help.manage.admin.p9=If you turn access groups off then all your team members will be able to manage all your clients’ tax again. The service will remember your groups, so you can restore them by turning access groups on again.
 help.manage.admin.p10=Access groups do not work with Income Record Viewer at present. HMRC is looking into this.
 help.manage.admin.h3.team-members=Rheoli aelodau o’r tîm
-help.manage.admin.p11=You cannot add team members to your account within this service. If you select 'Add or remove team members' then the required service will open in a new tab.
+help.manage.admin.p11=You cannot add team members to your account within this service. If you select '''Add or remove team members'' then the required service will open in a new tab.
 help.manage.admin.h3.clients=Rheoli cleientiaid
 help.manage.admin.p12=You can manage the client’s reference within access groups. This will not affect their details in other Government Gateway services.
 
