@@ -29,6 +29,8 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
 
   val appName = "agent-services-account-frontend"
 
+  def isTest: Boolean = env.mode == Mode.Test
+
   private def getConfString(key: String) =
     servicesConfig.getConfString(key, throw new RuntimeException(s"config $key not found"))
 
