@@ -16,120 +16,180 @@
 
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
+@import uk.gov.hmrc.agentservicesaccount.views.html.components._
+@import uk.gov.hmrc.govukfrontend.views.html.components.GovukAccordion
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.accordion.{Accordion, Section}
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
 
-@this(main: main)
+@this(
+    main: main,
+    h1: h1, h2: h2, h3: h3, p: p, ul: ul, a:a, ul_html: ul_html,
+    govukAccordion: GovukAccordion)
 
 @(isAdmin: Boolean)(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
 
-@main(pageTitle = msgs("help.title"), isAdmin = isAdmin) {
 
-<h1 class="govuk-heading-l">@msgs("help.heading")</h1>
-<p class="govuk-body-m">@msgs("help.p1")</p>
-<div class="govuk-grid-row govuk-!-margin-left-0 govuk-!-margin-right-0 govuk-!-margin-bottom-4">
-
-    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-    <br>
-    <h2 class="govuk-heading-m">@msgs("help.authorised.h2")</h2>
-    <div class="govuk-grid-column-one-third govuk-!-padding-left-0 govuk-!-padding-bottom-1">
-        <ul class="govuk-list">
-            <li class="govuk-!-margin-bottom-4"><a class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noopener" href="https://www.gov.uk/guidance/authorise-an-agent-to-deal-with-certain-tax-services-for-you">@msgs("help.authorised.link")</a></li>
-        </ul>
-    </div>
-
-</div>
-
-<div class="govuk-grid-row govuk-!-margin-left-0 govuk-!-margin-right-0 govuk-!-margin-bottom-4">
-
-    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-    <br>
-    <h2 class="govuk-heading-m">@msgs("help.mtd.h2")</h2>
-    <div class="govuk-grid-column-one-third govuk-!-padding-left-0 govuk-!-padding-bottom-1">
-        <ul class="govuk-list">
-            <li class="govuk-!-margin-bottom-4">@Html(msgs("help.mtd.link1"))</li>
-            <li class="govuk-!-margin-bottom-4"><a class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noopener" href="https://www.gov.uk/government/publications/vat-notice-70022-making-tax-digital-for-vat/vat-notice-70022-making-tax-digital-for-vat">@msgs("help.mtd.link2")</a></li>
-        </ul>
-    </div>
-    <div class="govuk-grid-column-one-third govuk-!-padding-bottom-1">
-        <ul class="govuk-list">
-            <li class="govuk-!-margin-bottom-4">@Html(msgs("help.mtd.link3"))</li>
-            <li class="govuk-!-margin-bottom-4"><a class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noopener" href="https://www.gov.uk/guidance/help-and-support-for-making-tax-digital#creating-an-agent-services-account">@msgs("help.mtd.link4")</a></li>
-        </ul>
-    </div>
-    <div class="govuk-grid-column-one-third govuk-!-padding-bottom-1">
-    </div>
-
-</div>
-<div class="govuk-grid-row govuk-!-margin-left-0 govuk-!-margin-right-0 govuk-!-margin-bottom-4">
-
-    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-    <br>
-    <h2 class="govuk-heading-m">@msgs("help.trusts.h2")</h2>
-    <div class="govuk-grid-column-one-third govuk-!-padding-left-0 govuk-!-padding-bottom-1">
-        <ul class="govuk-list">
-            <li class="govuk-!-margin-bottom-4"><a class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noopener" href="https://www.gov.uk/guidance/register-your-clients-estate">@msgs("help.trusts.link1")</a></li>
-        </ul>
-    </div>
-    <div class="govuk-grid-column-one-third govuk-!-padding-bottom-1">
-        <ul class="govuk-list">
-            <li class="govuk-!-margin-bottom-4">@Html(msgs("help.trusts.link2"))</li>
-        </ul>
-    </div>
-
-</div>
-<div class="govuk-grid-row govuk-!-margin-left-0 govuk-!-margin-right-0 govuk-!-margin-bottom-4">
-
-    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-    <br>
-    <h2 class="govuk-heading-m">@msgs("help.cgt.h2")</h2>
-    <div class="govuk-grid-column-one-third govuk-!-padding-left-0 govuk-!-padding-bottom-1">
-        <ul class="govuk-list">
-            <li class="govuk-!-margin-bottom-4"><a class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noopener" href="https://www.gov.uk/guidance/managing-your-clients-capital-gains-tax-on-uk-property-account">@msgs("help.cgt.link")</a></li>
-        </ul>
-    </div>
-</div>
-@if(appConfig.enablePpt) {
-    <div class="govuk-grid-row govuk-!-margin-left-0 govuk-!-margin-right-0 govuk-!-margin-bottom-4">
-        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-        <br>
-        <h2 class="govuk-heading-m">@msgs("help.ppt.h2")</h2>
-        <div class="govuk-grid-column-one-third govuk-!-padding-left-0 govuk-!-padding-bottom-1">
-            <ul class="govuk-list">
-                <li class="govuk-!-margin-bottom-4"><a class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noopener" href="@msgs("help.ppt.link1.href")">@msgs("help.ppt.link1")</a></li>
-            </ul>
-        </div>
-        <div class="govuk-grid-column-one-third govuk-!-padding-bottom-1">
-            <ul class="govuk-list">
-                <li class="govuk-!-margin-bottom-4"><a class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noopener" href="@msgs("help.ppt.link2.href")">@Html(msgs("help.ppt.link2"))</a></li>
-            </ul>
-        </div>
-    </div>
+@aboutThisGuidanceItem = {
+    @p(key= "help.about-guidance.p1")
+    @ul(items = (1 to 5).map(i => s"help.about-guidance.list1.$i"))
+    @p(key = "help.about-guidance.p2")
+    @ul(items = (1 to 2).map(i => s"help.about-guidance.list2.$i"))
 }
-<div class="govuk-grid-row govuk-!-margin-left-0 govuk-!-margin-right-0 govuk-!-margin-bottom-4">
 
-    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-    <br>
-    <h2 class="govuk-heading-m">@msgs("help.cannot.h2")</h2>
-    <div class="govuk-grid-column-one-third govuk-!-padding-left-0 govuk-!-padding-bottom-1">
-        <ul class="govuk-list">
-            <li class="govuk-!-margin-bottom-4"><a class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noopener" href="https://www.gov.uk/guidance/self-assessment-for-agents-online-service">@msgs("help.cannot.link1")</a></li>
-            <li class="govuk-!-margin-bottom-4"><a class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noopener" href="https://www.gov.uk/guidance/vat-online-services-for-agents">@msgs("help.cannot.link2")</a></li>
-        </ul>
-    </div>
-    <div class="govuk-grid-column-one-third govuk-!-padding-bottom-1">
-        <ul class="govuk-list">
-            <li class="govuk-!-margin-bottom-4"><a class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noopener" href="https://www.gov.uk/guidance/corporation-tax-for-agents-online-service">@msgs("help.cannot.link3")</a></li>
-            <li class="govuk-!-margin-bottom-4"><a class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noopener" href="https://www.gov.uk/guidance/client-authorisation-an-overview">@msgs("help.cannot.link4")</a></li>
-        </ul>
-    </div>
-    <div class="govuk-grid-column-one-third govuk-!-padding-bottom-1">
-        <ul class="govuk-list">
-            <li class="govuk-!-margin-bottom-4"><a class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noopener" href="https://www.gov.uk/guidance/payecis-for-agents-online-service">@msgs("help.cannot.link5")</a></li>
-            <li class="govuk-!-margin-bottom-4"><a class="govuk-link govuk-link--no-visited-state" target="_blank" rel="noopener" href="https://www.gov.uk/guidance/client-authorisation-an-overview#how-to-change-or-cancel-authorisations-as-an-agent">@msgs("help.cannot.link6")</a></li>
-        </ul>
-    </div>
+@aboutAsaItem = {
+    @p(key = "help.about-asa.p1")
+    @p(key = "help.about-asa.p2")
+    @p(key = "help.about-asa.p3")
+}
 
-</div>
-<hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+@clientAuthItem = {
+    @p(key = "help.client-auth.p1")
+    @p(key = "help.client-auth.p2")
+    @p(key = "help.client-auth.p3")
+    @p(key = "help.client-auth.p4")
+    @a(
+    key = "help.client-auth.a",
+    href ="https://www.gov.uk/guidance/authorise-an-agent-to-deal-with-certain-tax-services-for-you",
+    openInNewWindow=true, classes = Some("govuk-link--no-visited-state")
+    )
+}
 
+@taxServicesItem = {
+    @h3("help.mtd.h2")
+    @ul_html(
+        classes = Some("govuk-list--spaced"),
+        items = Seq[Html](
+            a(href = msgs("help.mtd.link1.href"),
+                key="help.mtd.link1", openInNewWindow=true, classes = Some("govuk-link--no-visited-state")),
+            a(href = "https://www.gov.uk/government/publications/vat-notice-70022-making-tax-digital-for-vat/vat-notice-70022-making-tax-digital-for-vat",
+                key="help.mtd.link2", openInNewWindow=true, classes = Some("govuk-link--no-visited-state")),
+            a(href = msgs("help.mtd.link3.href"),
+                key="help.mtd.link3", openInNewWindow=true, classes = Some("govuk-link--no-visited-state")),
+            a(href = "https://www.gov.uk/guidance/help-and-support-for-making-tax-digital#creating-an-agent-services-account",
+                key="help.mtd.link4", openInNewWindow=true, classes = Some("govuk-link--no-visited-state"))
+        )
+    )
+
+    @h3("help.trusts.h2")
+    @ul_html(
+        classes = Some("govuk-list--spaced"),
+        items = Seq[Html](
+            a(href = "https://www.gov.uk/guidance/register-your-clients-estate",
+                key="help.trusts.link1", openInNewWindow=true, classes = Some("govuk-link--no-visited-state")),
+            a(href = msgs("help.trusts.link2.href"),
+                key="help.trusts.link2", openInNewWindow=true, classes = Some("govuk-link--no-visited-state"))
+        )
+    )
+
+    @h3("help.cgt.h2")
+    @a(
+        href="https://www.gov.uk/guidance/managing-your-clients-capital-gains-tax-on-uk-property-account",
+        key = "help.cgt.link", openInNewWindow=true, classes = Some("govuk-link--no-visited-state")
+    )
+
+    @if(appConfig.enablePpt) {
+        @h3("help.ppt.h2")
+        @ul_html(
+            classes = Some("govuk-list--spaced"),
+            items = Seq[Html](
+                a(href = msgs("help.ppt.link1.href"),
+                    key="help.ppt.link1", openInNewWindow=true, classes = Some("govuk-link--no-visited-state")),
+                a(href = msgs("help.ppt.link2.href"),
+                    key="help.ppt.link2", openInNewWindow=true, classes = Some("govuk-link--no-visited-state"))
+            )
+        )
+    }
+
+    @h3("help.cannot.h2")
+    @ul_html(
+        classes = Some("govuk-list--spaced"),
+        items = Seq[Html](
+            a(href = "https://www.gov.uk/guidance/self-assessment-for-agents-online-service",
+                key="help.cannot.link1", openInNewWindow=true, classes = Some("govuk-link--no-visited-state")),
+            a(href = "https://www.gov.uk/guidance/vat-online-services-for-agents",
+                key="help.cannot.link2", openInNewWindow=true, classes = Some("govuk-link--no-visited-state")),
+            a(href = "https://www.gov.uk/guidance/corporation-tax-for-agents-online-service",
+                key="help.cannot.link3", openInNewWindow=true, classes = Some("govuk-link--no-visited-state")),
+            a(href = "https://www.gov.uk/guidance/client-authorisation-an-overview",
+                key="help.cannot.link4", openInNewWindow=true, classes = Some("govuk-link--no-visited-state")),
+            a(href = "https://www.gov.uk/guidance/payecis-for-agents-online-service",
+                key="help.cannot.link5", openInNewWindow=true, classes = Some("govuk-link--no-visited-state")),
+            a(href = "https://www.gov.uk/guidance/client-authorisation-an-overview#how-to-change-or-cancel-authorisations-as-an-agent",
+                key="help.cannot.link6", openInNewWindow=true, classes = Some("govuk-link--no-visited-state"))
+        )
+    )
+
+}
+
+@standardUserItem = {
+    @p(key = "help.manage.standard.p1")
+    @ul(items = (1 to 2).map(i => s"help.manage.standard.list1.$i"))
+    @p(key = "help.manage.standard.p2")
+    @ul(items = (1 to 2).map(i => s"help.manage.standard.list2.$i"))
+    @p(key = "help.manage.standard.p3")
+}
+
+@adminUserItem = {
+    @p(key = "help.manage.admin.p1")
+    @ul(items = (1 to 6).map(i => s"help.manage.admin.list1.$i"))
+    @h3("help.manage.admin.h3")
+    @p(key = "help.manage.admin.p2")
+    @p(key = "help.manage.admin.p3")
+    @p(key = "help.manage.admin.p4")
+    @p(key = "help.manage.admin.p5")
+    @p(key = "help.manage.admin.p6")
+
+    @ul(items = (1 to 2).map(i => s"help.manage.admin.list2.$i"))
+    @p(key = "help.manage.admin.p7")
+    @p(key = "help.manage.admin.p8")
+    @p(key = "help.manage.admin.p9")
+    @p(key = "help.manage.admin.p10")
+    @h3("help.manage.admin.h3.team-members")
+    @p(key = "help.manage.admin.p11")
+    @h3("help.manage.admin.h3.clients")
+    @p(key = "help.manage.admin.p12")
+}
+
+@accordionItems = @{
+    Seq(
+        Section(
+            headingContent = Text(msgs("help.subheading1")),
+            content = HtmlContent(aboutThisGuidanceItem)
+        ),
+        Section(
+            headingContent = Text(msgs("help.subheading2")),
+            content = HtmlContent(aboutAsaItem)
+        ),
+        Section(
+            headingContent = Text(msgs("help.subheading3")),
+            content = HtmlContent(clientAuthItem)
+        ),
+        Section(
+            headingContent = Text(msgs("help.subheading4")),
+            content = HtmlContent(taxServicesItem)
+        ),
+        Section(
+            headingContent = Text(msgs("help.subheading5")),
+            content = HtmlContent(standardUserItem)
+        ),
+        Section(
+            headingContent = Text(msgs("help.subheading6")),
+            content = HtmlContent(adminUserItem)
+        )
+    )
+}
+
+@main(pageTitle = msgs("help.heading"), isAdmin = isAdmin) {
+
+@h1("help.heading")
+@p("help.p1", classes=Some("govuk-body-l"), addStandardClasses=false)
+
+@govukAccordion(
+    Accordion(
+        id = "accordion-help",
+        headingLevel = 2,
+        items = accordionItems
+    )
+)
 
 }

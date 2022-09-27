@@ -18,6 +18,6 @@
 
 @(key: String, classes: Option[String] = None, id: Option[String] = None)(implicit msgs: Messages)
 
-@cls = @{"govuk-heading-m".concat(classes.getOrElse(""))}
+@cls = @{"govuk-heading-m ".concat(classes.getOrElse(""))}
 
-<h2 class ="@cls" @id.map(i => { s"id =${i}"})>@msgs(key)</h2>
+<h2 class ="@cls" @id.map(i => { s"id =${i}"})>@Html(msgs(key))</h2>
