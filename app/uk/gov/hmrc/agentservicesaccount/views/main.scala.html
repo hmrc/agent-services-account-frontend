@@ -46,6 +46,12 @@
 }
 
 @beforeContent = {
+    @defining("https://www.googletagmanager.com/ns.html?id=GTM-P39VTVL"){ gtmUrl =>
+        @if(!appConfig.isTest){
+            <noscript><iframe src="@gtmUrl" height="0" width="0"
+                style="display:none;visibility:hidden"></iframe></noscript>
+        }
+    }
     @if(showSecondaryNav){
         @secondary_nav(isAdmin = isAdmin)
     }
@@ -69,5 +75,5 @@
     additionalScriptsBlock = Some(scripts),
     nonce = CSPNonce.get,
     mainContentLayout = None,
-    signOutUrl = Some(routes.SignOutController.signOut.url)
+    signOutUrl = Some(routes.SignOutController.signOut.url),
 )(bespokeContentLayout)
