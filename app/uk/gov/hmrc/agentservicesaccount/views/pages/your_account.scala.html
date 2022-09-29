@@ -31,7 +31,11 @@
 
 @main(pageTitle = msgs("your.account.h1"), analyticsAdditionalJs = None, fullWidth = true, isAdmin = false) {
 
-    @h1("your.account.h1")
+    <div class="govuk-grid-column-full">
+@* the govuk-grid-column-full class has a padding left that
+    aligns this h1 with rest of page*@
+        @h1("your.account.h1")
+    </div>
 
     @if(info.isDefined){
         <div class="govuk-grid-column-two-thirds" id="user-details">
