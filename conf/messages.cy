@@ -88,18 +88,18 @@ agent.services.account.help.h2=Help ac arweiniad
 agent.services.account.help.link=Rhagor o wybodaeth am sut i ddefnyddio’ch cyfrif gwasanaethau asiant a sut y gall cleientiaid eich awdurdodi i reoli eu trethi
 
 #Your Account (Assistant/standard user only - not behind feature flag)
-your.account.h1=Your account
+your.account.h1=Eich cyfrif
 your.account.h3.name=Enw
 your.account.h3.email=E-bost
 your.account.h3.role=Swydd
-your.account.p.role=Standard - As a user with standard permissions you can view your assigned access groups and clients. Please contact your administrator for more information.
+your.account.p.role=Safonol - Fel defnyddiwr gyda chaniatâd safonol, gallwch fwrw golwg dros y grwpiau mynediad a’r cleientiaid sydd wedi’u neilltuo i chi. Cysylltwch â’ch gweinyddwr am ragor o wybodaeth.
 
-your.account.your.groups.h2=Your access groups
-your.account.your.groups.p=You are not currently assigned to any groups
+your.account.your.groups.h2=Eich grwpiau mynediad
+your.account.your.groups.p=Nid ydych wedi’ch neilltuo i unrhyw grŵp mynediad ar hyn o bryd
 your.account.unassigned-clients=Y cleientiaid eraill
 
-your.account.your.admins.h2=Your company’s administrators
-your.account.your.admins.a=View administrators
+your.account.your.admins.h2=Gweinyddwyr eich sefydliad
+your.account.your.admins.a=Bwrw golwg dros y gweinyddwyr
 
 your.account.your.contact.details.h2=Manylion cyswllt
 your.account.your.contact.details.a=Bwrw golwg dros y manylion cyswllt sydd gennym ar gyfer eich busnes
@@ -335,9 +335,10 @@ account-details.summary-list.address=Cyfeiriad
 account-details.summary-list.none=Dim
 
 #administrators (Assistant/standard user only - not behind feature flag)
-administrators.h1=Administrators
-administrators.ul.p=Administrators can:
-administrators.ul.li.1=turn access groups on or off
-administrators.ul.li.2=view information about all clients and access groups
-administrators.ul.li.3=create, rename and delete access groups
-administrators.ul.li.4=assign clients and team members to access groups
+administrators.h1=Gweinyddwyr
+administrators.ul.p=Gall gweinyddwyr:
+administrators.ul.li.1=galluogi ac analluogi grwpiau mynediad
+administrators.ul.li.2=bwrw golwg dros wybodaeth am bob client a grŵp mynediad
+administrators.ul.li.3=creu, ailenwi a dileu grwpiau mynediad
+administrators.ul.li.4=neilltuo cleientiaid ac aelodau’r tîm i grwpiau mynediad
+
