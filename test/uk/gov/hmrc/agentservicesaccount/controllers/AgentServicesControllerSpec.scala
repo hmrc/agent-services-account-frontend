@@ -755,6 +755,9 @@ class AgentServicesControllerSpec extends BaseISpec {
       grps.isEmpty shouldBe true
       userGroupsPanel.select("p").get(0).text shouldBe "You are not currently assigned to any groups"
 
+      userGroupsPanel.select("a").get(0).text shouldBe "Other clients"
+      userGroupsPanel.select("a").get(0).attr("href") shouldBe s"$wireMockBaseUrlAsString/agent-permissions/your-account/other-clients"
+
       //BOTTOM PANEL
       val bottomPanel = html.select("div#bottom-panel")
       bottomPanel.select("h2").get(0).text shouldBe "Your company’s administrators"
@@ -800,9 +803,11 @@ class AgentServicesControllerSpec extends BaseISpec {
       val userGroupsPanel = html.select("div#user-groups")
       val grps = userGroupsPanel.select("ul li a")
       grps.get(0).text() shouldBe "Potatoes"
-      grps.get(0).attr("href") shouldBe "/agent-permissions/manage-clients/grpId1"
+      grps.get(0).attr("href") shouldBe s"$wireMockBaseUrlAsString/agent-permissions/your-account/group-clients/grpId1"
       grps.get(1).text() shouldBe "Carrots"
-      grps.get(1).attr("href") shouldBe "/agent-permissions/manage-clients/grpId2"
+      grps.get(1).attr("href") shouldBe s"$wireMockBaseUrlAsString/agent-permissions/your-account/group-clients/grpId2"
+      userGroupsPanel.select("a").get(2).text shouldBe "Other clients"
+      userGroupsPanel.select("a").get(2).attr("href") shouldBe s"$wireMockBaseUrlAsString/agent-permissions/your-account/other-clients"
 
       //BOTTOM PANEL
       val bottomPanel = html.select("div#bottom-panel")

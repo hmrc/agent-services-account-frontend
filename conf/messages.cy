@@ -96,6 +96,7 @@ your.account.p.role=Standard - As a user with standard permissions you can view 
 
 your.account.your.groups.h2=Your access groups
 your.account.your.groups.p=You are not currently assigned to any groups
+your.account.unassigned-clients=Y cleientiaid eraill
 
 your.account.your.admins.h2=Your company’s administrators
 your.account.your.admins.a=View administrators
