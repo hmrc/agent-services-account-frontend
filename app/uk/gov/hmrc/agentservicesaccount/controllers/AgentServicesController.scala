@@ -124,6 +124,7 @@ class AgentServicesController @Inject()
     }
   }
 
+  // TODO add redirect to your account if standard user
   val manageAccount: Action[AnyContent] = Action.async { implicit request =>
     withAuthorisedAsAgent { agentInfo =>
       if (agentInfo.isAdmin) {
@@ -179,6 +180,7 @@ class AgentServicesController @Inject()
     }
   }
 
+  // TODO check req to make accessible to Assistant users?
   val accountDetails: Action[AnyContent] = Action.async { implicit request =>
     withAuthorisedAsAgent { agentInfo =>
       if (agentInfo.isAdmin) {

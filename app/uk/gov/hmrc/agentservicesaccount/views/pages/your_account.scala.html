@@ -53,11 +53,14 @@
                     Html(
                         a(
                             key = grp.groupName,
-                            href = s"${appConfig.agentPermissionsFrontendManageClientsPath}/${grp.groupId}").toString
+                            href = s"${appConfig.agentPermissionsFrontendAssistantViewGroupClientsUrl}/${grp.groupId}").toString
                     )
                 )
                 )
             }
+
+            @a(key= "your.account.unassigned-clients",
+            href= s"${appConfig.agentPermissionsFrontendAssistantViewUnassignedClientsUrl}")
         </div>
     }
 
