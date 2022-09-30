@@ -29,6 +29,8 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
 
   val appName = "agent-services-account-frontend"
 
+  def isTest: Boolean = env.mode == Mode.Test
+
   private def getConfString(key: String) =
     servicesConfig.getConfString(key, throw new RuntimeException(s"config $key not found"))
 
@@ -147,4 +149,8 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
   val agentPermissionsUnassignedClientsUrl = s"$agentPermissionsFrontendExternalUrl$agentPermissionsFrontendUnassignedClientsPath"
   val agentPermissionsManageClientUrl = s"$agentPermissionsFrontendExternalUrl$agentPermissionsFrontendManageClientsPath"
   val agentPermissionsManageTeamMembersUrl = s"$agentPermissionsFrontendExternalUrl$agentPermissionsFrontendManageTeamMembersPath"
+
+  // Assistant users are read only
+  val agentPermissionsFrontendAssistantViewGroupClientsUrl = s"$agentPermissionsFrontendExternalUrl/agent-permissions/your-account/group-clients"
+  val agentPermissionsFrontendAssistantViewUnassignedClientsUrl = s"$agentPermissionsFrontendExternalUrl/agent-permissions/your-account/other-clients"
 }

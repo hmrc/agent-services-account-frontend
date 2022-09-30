@@ -21,9 +21,9 @@ import play.api.i18n.MessagesApi
 import play.api.mvc._
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.auth.CallOps._
-import uk.gov.hmrc.agentservicesaccount.auth.{AuthActions, AgentInfo}
+import uk.gov.hmrc.agentservicesaccount.auth.{AgentInfo, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.connectors.{AfiRelationshipConnector, AgentClientAuthorisationConnector, AgentPermissionsConnector}
+import uk.gov.hmrc.agentservicesaccount.connectors.{AfiRelationshipConnector, AgentClientAuthorisationConnector, AgentPermissionsConnector, AgentUserClientDetailsConnector}
 import uk.gov.hmrc.agentservicesaccount.models.ManageAccessPermissionsConfig
 import uk.gov.hmrc.agentservicesaccount.views.html.pages._
 
@@ -31,20 +31,23 @@ import javax.inject._
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AgentServicesController @Inject()(
-                                         authActions: AuthActions,
-                                         agentClientAuthorisationConnector: AgentClientAuthorisationConnector,
-                                         afiRelationshipConnector: AfiRelationshipConnector,
-                                         agentPermissionsConnector: AgentPermissionsConnector,
-                                         suspensionWarningView: suspension_warning,
-                                         manage_account: manage_account,
-                                         your_account: your_account,
-                                         asaDashboard: asa_dashboard,
-                                         accountDetailsView: account_details,
-                                         helpView: help)(implicit val appConfig: AppConfig,
-                                                         val cc: MessagesControllerComponents,
-                                                         ec: ExecutionContext,
-                                                         messagesApi: MessagesApi)
+class AgentServicesController @Inject()
+(
+  authActions: AuthActions,
+  agentClientAuthorisationConnector: AgentClientAuthorisationConnector,
+  afiRelationshipConnector: AfiRelationshipConnector,
+  agentPermissionsConnector: AgentPermissionsConnector,
+  agentUserClientDetailsConnector: AgentUserClientDetailsConnector,
+  suspensionWarningView: suspension_warning,
+  manage_account: manage_account,
+  administrators_html: administrators,
+  your_account: your_account,
+  asaDashboard: asa_dashboard,
+  accountDetailsView: account_details,
+  helpView: help)(implicit val appConfig: AppConfig,
+                  val cc: MessagesControllerComponents,
+                  ec: ExecutionContext,
+                  messagesApi: MessagesApi)
   extends AgentServicesBaseController with Logging {
 
   import authActions._
@@ -121,6 +124,7 @@ class AgentServicesController @Inject()(
     }
   }
 
+  // TODO add redirect to your account if standard user
   val manageAccount: Action[AnyContent] = Action.async { implicit request =>
     withAuthorisedAsAgent { agentInfo =>
       if (agentInfo.isAdmin) {
@@ -153,7 +157,7 @@ class AgentServicesController @Inject()(
         if (appConfig.granPermsEnabled) {
           agentInfo.credentials.fold(Ok(your_account(None)).toFuture) { credentials =>
             agentPermissionsConnector.getGroupsForTeamMember(agentInfo.arn, credentials.providerId)
-              .map ( maybeSummaries => Ok(your_account(Some(agentInfo), maybeSummaries)))
+              .map(maybeSummaries => Ok(your_account(Some(agentInfo), maybeSummaries)))
           }
         } else {
           Ok(your_account(None)).toFuture
@@ -164,10 +168,19 @@ class AgentServicesController @Inject()(
     }
   }
 
-  val administrators: Action[AnyContent] = Action.async {
-    Ok("administrators").toFuture
+  val administrators: Action[AnyContent] = Action.async { implicit request =>
+    withAuthorisedAsAgent { agentInfo =>
+      agentUserClientDetailsConnector.getTeamMembers(agentInfo.arn).map{ maybeMembers =>
+        Ok(
+          administrators_html(
+            maybeMembers.getOrElse(Seq.empty)
+              .filter(_.credentialRole.getOrElse("").equals("User")))
+        )
+      }
+    }
   }
 
+  // TODO check req to make accessible to Assistant users?
   val accountDetails: Action[AnyContent] = Action.async { implicit request =>
     withAuthorisedAsAgent { agentInfo =>
       if (agentInfo.isAdmin) {

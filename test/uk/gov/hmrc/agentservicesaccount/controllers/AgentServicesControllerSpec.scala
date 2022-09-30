@@ -24,7 +24,7 @@ import play.api.mvc.Session
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
 import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, OptedInNotReady, OptedInReady, OptedInSingleUser, OptedOutEligible, OptedOutSingleUser, OptedOutWrongClientCount, SuspensionDetails, SuspensionDetailsNotFound}
+import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, OptedInNotReady, OptedInReady, OptedInSingleUser, OptedOutEligible, OptedOutSingleUser, OptedOutWrongClientCount, SuspensionDetails, SuspensionDetailsNotFound, UserDetails}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models.{AccessGroupSummaries, AccessGroupSummary, AgencyDetails, BusinessAddress, GroupSummary}
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentClientAuthorisationStubs._
@@ -32,6 +32,7 @@ import uk.gov.hmrc.agentservicesaccount.stubs.AgentFiRelationshipStubs.{givenArn
 import uk.gov.hmrc.agentservicesaccount.support.{BaseISpec, Css}
 import uk.gov.hmrc.auth.core.{Enrolment, EnrolmentIdentifier}
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentPermissionsStubs._
+import uk.gov.hmrc.agentservicesaccount.stubs.AgentUserClientDetailsStubs._
 import uk.gov.hmrc.agentservicesaccount.support.Css._
 import uk.gov.hmrc.http.SessionKeys
 
@@ -378,14 +379,14 @@ class AgentServicesControllerSpec extends BaseISpec {
       status(response) shouldBe 200
 
       val html = Jsoup.parse(contentAsString(response))
-      val h1 = html.select(Css.H1)
+      
       val h2 = html.select(H2)
       val h3 = html.select(Css.H3)
       val li = html.select(Css.LI)
       val paragraphs = html.select(Css.paragraphs)
 
       html.title() shouldBe manageAccountTitle
-      h1.get(0).text shouldBe "Manage account"
+      html.select(H1).get(0).text shouldBe "Manage account"
       h2.get(0).text shouldBe "Manage access groups"
       h3.get(0).text shouldBe "Status Turned on"
       paragraphs.get(0).text
@@ -425,13 +426,13 @@ class AgentServicesControllerSpec extends BaseISpec {
 
       val html = Jsoup.parse(contentAsString(response))
       val li = html.select(Css.LI)
-      val h1 = html.select(Css.H1)
+      
       val h2 = html.select(H2)
       val h3 = html.select(Css.H3)
       val paragraphs = html.select(Css.paragraphs)
 
       html.title() shouldBe manageAccountTitle
-      h1.get(0).text shouldBe "Manage account"
+      html.select(H1).get(0).text shouldBe "Manage account"
       h2.get(0).text shouldBe "Manage access groups"
       h3.get(0).text shouldBe "Status Turned on"
       paragraphs.get(0).text
@@ -471,14 +472,14 @@ class AgentServicesControllerSpec extends BaseISpec {
       status(response) shouldBe 200
 
       val html = Jsoup.parse(contentAsString(response))
-      val h1 = html.select(Css.H1)
+      
       val h2 = html.select(H2)
       val h3 = html.select(Css.H3)
       val li = html.select(Css.LI)
       val paragraphs = html.select(Css.paragraphs)
 
       html.title() shouldBe manageAccountTitle
-      h1.get(0).text shouldBe "Manage account"
+      html.select(H1).get(0).text shouldBe "Manage account"
       h2.get(0).text shouldBe "Manage access groups"
       paragraphs.get(0).text
         .shouldBe("Access groups allow you to control which team members can view and manage each client’s tax affairs.")
@@ -515,14 +516,14 @@ class AgentServicesControllerSpec extends BaseISpec {
       status(response) shouldBe 200
 
       val html = Jsoup.parse(contentAsString(response))
-      val h1 = html.select(Css.H1)
+      
       val h2 = html.select(H2)
       val h3 = html.select(Css.H3)
       val paragraphs = html.select(Css.paragraphs)
       val li = html.select(Css.LI)
 
       html.title() shouldBe manageAccountTitle
-      h1.get(0).text shouldBe "Manage account"
+      html.select(H1).get(0).text shouldBe "Manage account"
       h2.get(0).text shouldBe "Manage access groups"
       h3.get(0).text shouldBe "Status Turned on"
       paragraphs.get(0).text
@@ -554,13 +555,13 @@ class AgentServicesControllerSpec extends BaseISpec {
       status(response) shouldBe 200
 
       val html = Jsoup.parse(contentAsString(response))
-      val h1 = html.select(Css.H1)
+      
       val h2 = html.select(H2)
       val h3 = html.select(Css.H3)
       val paragraphs = html.select(Css.paragraphs)
 
       html.title() shouldBe manageAccountTitle
-      h1.get(0).text shouldBe "Manage account"
+      html.select(H1).get(0).text shouldBe "Manage account"
       h2.get(0).text shouldBe "Manage access groups"
       paragraphs.get(0).text
         .shouldBe("Access groups allow you to control which team members can view and manage each client’s tax affairs.")
@@ -592,13 +593,13 @@ class AgentServicesControllerSpec extends BaseISpec {
       status(response) shouldBe 200
 
       val html = Jsoup.parse(contentAsString(response))
-      val h1 = html.select(Css.H1)
+      
       val h2 = html.select(H2)
       val h3 = html.select(Css.H3)
       val paragraphs = html.select(Css.paragraphs)
 
       html.title() shouldBe manageAccountTitle
-      h1.get(0).text shouldBe "Manage account"
+      html.select(H1).get(0).text shouldBe "Manage account"
       h2.get(0).text shouldBe "Manage access groups"
       h3.get(0).text shouldBe "Status Turned off"
       paragraphs.get(0).text
@@ -629,13 +630,13 @@ class AgentServicesControllerSpec extends BaseISpec {
       status(response) shouldBe 200
 
       val html = Jsoup.parse(contentAsString(response))
-      val h1 = html.select(Css.H1)
+      
       val h2 = html.select(H2)
       val h3 = html.select(Css.H3)
       val paragraphs = html.select(Css.paragraphs)
 
       html.title() shouldBe manageAccountTitle
-      h1.get(0).text shouldBe "Manage account"
+      html.select(H1).get(0).text shouldBe "Manage account"
       h2.get(0).text shouldBe "Manage access groups"
       paragraphs.get(0).text
         .shouldBe("Access groups allow you to control which team members can view and manage each client’s tax affairs.")
@@ -716,10 +717,9 @@ class AgentServicesControllerSpec extends BaseISpec {
     }
   }
 
-
   val yourAccountUrl: String = routes.AgentServicesController.yourAccount.url
 
-  s"$yourAccountUrl" should {
+  s"GET on Your Account at url: $yourAccountUrl" should {
 
     "render correctly for Standard User who's Opted-In_READY without Access Groups" in {
       val providerId = RandomUtils.nextLong().toString
@@ -735,9 +735,9 @@ class AgentServicesControllerSpec extends BaseISpec {
       status(response) shouldBe 200
 
       val html = Jsoup.parse(contentAsString(response))
-      val h1 = html.select(Css.H1)
+      
       html.title() shouldBe "Your account - Agent services account - GOV.UK"
-      h1.get(0).text shouldBe "Your account"
+      html.select(H1).get(0).text shouldBe "Your account"
 
       //LEFT PANEL
       val userDetailsPanel = html.select("div#user-details")
@@ -754,6 +754,9 @@ class AgentServicesControllerSpec extends BaseISpec {
       val grps = userGroupsPanel.select("ul li a")
       grps.isEmpty shouldBe true
       userGroupsPanel.select("p").get(0).text shouldBe "You are not currently assigned to any groups"
+
+      userGroupsPanel.select("a").get(0).text shouldBe "Other clients"
+      userGroupsPanel.select("a").get(0).attr("href") shouldBe s"$wireMockBaseUrlAsString/agent-permissions/your-account/other-clients"
 
       //BOTTOM PANEL
       val bottomPanel = html.select("div#bottom-panel")
@@ -784,9 +787,8 @@ class AgentServicesControllerSpec extends BaseISpec {
       status(response) shouldBe 200
 
       val html = Jsoup.parse(contentAsString(response))
-      val h1 = html.select(H1)
       html.title() shouldBe "Your account - Agent services account - GOV.UK"
-      h1.get(0).text shouldBe "Your account"
+      html.select(H1).get(0).text shouldBe "Your account"
       //LEFT PANEL
       val userDetailsPanel = html.select("div#user-details")
       userDetailsPanel.select("h3").get(0).text() shouldBe "Name"
@@ -801,9 +803,11 @@ class AgentServicesControllerSpec extends BaseISpec {
       val userGroupsPanel = html.select("div#user-groups")
       val grps = userGroupsPanel.select("ul li a")
       grps.get(0).text() shouldBe "Potatoes"
-      grps.get(0).attr("href") shouldBe "/agent-permissions/manage-clients/grpId1"
+      grps.get(0).attr("href") shouldBe s"$wireMockBaseUrlAsString/agent-permissions/your-account/group-clients/grpId1"
       grps.get(1).text() shouldBe "Carrots"
-      grps.get(1).attr("href") shouldBe "/agent-permissions/manage-clients/grpId2"
+      grps.get(1).attr("href") shouldBe s"$wireMockBaseUrlAsString/agent-permissions/your-account/group-clients/grpId2"
+      userGroupsPanel.select("a").get(2).text shouldBe "Other clients"
+      userGroupsPanel.select("a").get(2).attr("href") shouldBe s"$wireMockBaseUrlAsString/agent-permissions/your-account/other-clients"
 
       //BOTTOM PANEL
       val bottomPanel = html.select("div#bottom-panel")
@@ -818,37 +822,182 @@ class AgentServicesControllerSpec extends BaseISpec {
     }
   }
 
-    "help" should {
+  val adminUrl: String = routes.AgentServicesController.administrators.url
 
-    "return Status: OK and body containing correct content" in {
+  s"GET on Administrators of your account at url: $adminUrl" should {
+
+    "render static data and list of Admin Users for ARN" in {
+      givenArnIsAllowlistedForIrv(Arn(arn))
       givenAuthorisedAsAgentWith(arn)
-      val response = controller.showHelp().apply(fakeRequest("GET", "/help"))
+      givenArnAllowedOk()
+      givenSyncEacdSuccess(Arn(arn))
+      givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInReady)
+      val teamMembers = Seq(
+        UserDetails(credentialRole = Some("User"), name = Some("Robert Builder"), email = Some("bob@builder.com")),
+        UserDetails(credentialRole = Some("User"), name = Some("Steve Smith"), email = Some("steve@builder.com")),
+        //Assistant will be filtered out from the results we get back
+        UserDetails(credentialRole = Some("Assistant"), name = Some("irrelevant")),
+      )
+      stubGetTeamMembersForArn(Arn(arn), teamMembers)
+      val response = await(controller.administrators()(fakeRequest("GET", adminUrl)))
 
-      status(response) shouldBe OK
-      Helpers.contentType(response).get shouldBe HTML
-      val content = Helpers.contentAsString(response)
-      content should include(messagesApi("help.title"))
-      content should include(messagesApi("help.heading"))
-      content should include(messagesApi("help.p1"))
-      content should include(messagesApi("help.authorised.h2"))
-      content should include(messagesApi("help.authorised.link"))
-      content should include(messagesApi("help.mtd.h2"))
-      content should include(messagesApi("help.mtd.link1"))
-      content should include(messagesApi("help.mtd.link2"))
-      content should include(messagesApi("help.mtd.link3"))
-      content should include(messagesApi("help.mtd.link4"))
-      content should include(messagesApi("help.trusts.h2"))
-      content should include(messagesApi("help.trusts.link1"))
-      content should include(messagesApi("help.trusts.link2"))
-      content should include(messagesApi("help.cgt.h2"))
-      content should include(messagesApi("help.cgt.link"))
-      content should include(messagesApi("help.cannot.h2"))
-      content should include(messagesApi("help.cannot.link1"))
-      content should include(messagesApi("help.cannot.link2"))
-      content should include(messagesApi("help.cannot.link3"))
-      content should include(messagesApi("help.cannot.link4"))
-      content should include(messagesApi("help.cannot.link5"))
-      content should include(messagesApi("help.cannot.link6"))
+      status(response) shouldBe 200
+
+      val html = Jsoup.parse(contentAsString(response))
+      html.title() shouldBe "Administrators - Agent services account - GOV.UK"
+      html.select(Css.H1).get(0).text shouldBe "Administrators"
+
+      html.select(paragraphs).get(0).text shouldBe "Administrators can:"
+      html.select(LI).get(0).text shouldBe "turn access groups on or off"
+      html.select(LI).get(1).text shouldBe "view information about all clients and access groups"
+      html.select(LI).get(2).text shouldBe "create, rename and delete access groups"
+      html.select(LI).get(3).text shouldBe "assign clients and team members to access groups"
+      val adminNames = html.select(summaryListKeys)
+      val adminEmails = html.select(summaryListValues)
+      adminNames.size() shouldBe 2
+      adminNames.get(0).text shouldBe "Robert Builder"
+      adminEmails.get(0).text shouldBe "bob@builder.com"
+      adminNames.get(1).text shouldBe "Steve Smith"
+      adminEmails.get(1).text shouldBe "steve@builder.com"
     }
+
+  }
+
+  "GET help" should {
+
+    "return Status: OK" in {
+      givenAuthorisedAsAgentWith(arn)
+      val response = await(controller.showHelp().apply(fakeRequest("GET", "/help")))
+      status(response) shouldBe OK
+    }
+
+    "contain matching heading in page title" in {
+      givenAuthorisedAsAgentWith(arn)
+      val response = await(controller.showHelp().apply(fakeRequest("GET", "/help")))
+      val html = Jsoup.parse(contentAsString(response))
+      html.title() shouldBe "Help and guidance - Agent services account - GOV.UK"
+      html.select(H1).get(0).text shouldBe "Help and guidance"
+    }
+
+    "contain body with correct content" in {
+      givenAuthorisedAsAgentWith(arn)
+      val response = await(controller.showHelp().apply(fakeRequest("GET", "/help")))
+      val html = Jsoup.parse(contentAsString(response))
+      val h2 = html.select(H2)
+      val h3 = html.select(H3)
+      val p = html.select(paragraphs)
+      val li = html.select(LI)
+      val a = html.select(link)
+
+      p.get(0).text shouldBe "This guidance is for tax agents and advisors. It describes how to use your agent services account."
+
+      // Accordion tab1
+      h2.get(0).text shouldBe "About this guidance"
+      p.get(1).text shouldBe "This help and guidance is for tax agents and advisors. It covers how to use your agent services account to:"
+      li.get(0).text shouldBe "copy VAT and Income Tax for Self Assessment authorisations from other agent accounts"
+      li.get(1).text shouldBe "request and manage authorisations from clients"
+      li.get(2).text shouldBe "manage tax services launched since 2019"
+      li.get(3).text shouldBe "manage the tax affairs of your assigned clients"
+      li.get(4).text shouldBe "view the details we hold about your organisation"
+      p.get(2).text shouldBe "If you have administrator access, you can also:"
+      li.get(5).text shouldBe "control which staff members can view and manage a client’s tax"
+      li.get(6).text shouldBe "manage client references"
+
+      // Accordion tab2
+      h2.get(1).text shouldBe "About your agent services account"
+      p.get(3).text shouldBe "You can only have one agent services account, but you can add several team members to this account. They will need to Government Gateway user IDs for you to add them."
+      p.get(4).text shouldBe "The ‘Account home’ screen includes links for managing client authorisations and certain tax services. For other tax services, you will need to log into your online services for agents account."
+      p.get(5).text shouldBe "The ‘Manage account’ screen will vary, depending on whether you have administrator or standard user access. Administrators can choose to manage access permissions using the new feature ‘access groups’. When access groups are turned on, standard users can only manage the clients they have been assigned to."
+
+      // Accordion tab3
+      h2.get(2).text shouldBe "Account home: client authorisations"
+      p.get(6).text shouldBe "This section allows you to create, view and manage authorisation requests"
+      p.get(7).text shouldBe "You can copy across authorisations for VAT and Income Tax for Self Assessment from your online services for agents accounts."
+      p.get(8).text shouldBe "You can also create an authorisation request for a client, and view or manage your recent authorisation requests."
+      p.get(9).text shouldBe "When asking a client for authorisation, you can send them the link to this guidance:"
+      a.get(0).text shouldBe "https://www.gov.uk/guidance/authorise-an-agent-to-deal-with-certain-tax-services-for-you"
+      a.get(0).attr("href") shouldBe "https://www.gov.uk/guidance/authorise-an-agent-to-deal-with-certain-tax-services-for-you"
+
+      // Accordion tab4 - these links are in list items 7-20
+      h2.get(3).text shouldBe "Account home: tax services"
+
+      h3.get(0).text shouldBe "VAT"
+      a.get(1).text shouldBe "Making Tax Digital for VAT as an agent: step by step"
+      a.get(1).attr("href") shouldBe "https://www.gov.uk/guidance/making-tax-digital-for-vat-as-an-agent-step-by-step"
+      a.get(2).text shouldBe "How to keep digital records and file returns for Making Tax Digital for VAT"
+      a.get(2).attr("href") shouldBe "https://www.gov.uk/government/publications/vat-notice-70022-making-tax-digital-for-vat/vat-notice-70022-making-tax-digital-for-vat"
+      a.get(3).text shouldBe "How to sign clients up for Making Tax Digital for VAT"
+      a.get(3).attr("href") shouldBe "https://www.gov.uk/guidance/sign-up-your-client-for-making-tax-digital-for-vat"
+      a.get(4).text shouldBe "Help and support for Making Tax Digital (videos and webinars)"
+      a.get(4).attr("href") shouldBe "https://www.gov.uk/guidance/help-and-support-for-making-tax-digital#creating-an-agent-services-account"
+
+      h3.get(1).text shouldBe "Trusts and estates"
+      a.get(5).text shouldBe "How to register your client’s estate"
+      a.get(5).attr("href") shouldBe "https://www.gov.uk/guidance/register-your-clients-estate"
+      a.get(6).text shouldBe "How to register your client’s trust"
+      a.get(6).attr("href") shouldBe "https://www.gov.uk/guidance/register-your-clients-trust"
+
+      h3.get(2).text shouldBe "Capital Gains Tax on UK property"
+      a.get(7).text shouldBe "How to ask for authorisation, manage your client’s account and send returns as an agent"
+      a.get(7).attr("href") shouldBe "https://www.gov.uk/guidance/managing-your-clients-capital-gains-tax-on-uk-property-account"
+
+      h3.get(3).text shouldBe "Plastic Packaging Tax"
+      a.get(8).text shouldBe "Check if your client needs to register for Plastic Packaging Tax"
+      a.get(8).attr("href") shouldBe "https://www.gov.uk/guidance/check-if-you-need-to-register-for-plastic-packaging-tax"
+      a.get(9).text shouldBe "Register for the next live webinar"
+      a.get(9).attr("href") shouldBe "https://www.gov.uk/guidance/help-and-support-for-agents#plastic-packaging-tax"
+
+      h3.get(4).text shouldBe "Tax services you cannot manage in this account"
+      a.get(10).text shouldBe "Self Assessment"
+      a.get(10).attr("href") shouldBe "https://www.gov.uk/guidance/self-assessment-for-agents-online-service"
+      a.get(11).text shouldBe "VAT (not including Making Tax Digital for VAT)"
+      a.get(11).attr("href") shouldBe "https://www.gov.uk/guidance/vat-online-services-for-agents"
+      a.get(12).text shouldBe "Corporation Tax"
+      a.get(12).attr("href") shouldBe "https://www.gov.uk/guidance/corporation-tax-for-agents-online-service"
+      a.get(13).text shouldBe "Authorising an agent for other tax services"
+      a.get(13).attr("href") shouldBe "https://www.gov.uk/guidance/client-authorisation-an-overview"
+      a.get(14).text shouldBe "PAYE for Agents"
+      a.get(14).attr("href") shouldBe "https://www.gov.uk/guidance/payecis-for-agents-online-service"
+      a.get(15).text shouldBe "How to change or cancel authorisations as an agent"
+      a.get(15).attr("href") shouldBe "https://www.gov.uk/guidance/client-authorisation-an-overview#how-to-change-or-cancel-authorisations-as-an-agent"
+
+      // Accordion tab5
+      h2.get(4).text shouldBe "Manage account: standard users"
+      p.get(10).text shouldBe "Standard users cannot make any changes to access groups. If access groups are turned off, they can manage the tax of all their organisation's clients. When access groups are turned on, they can only:"
+      li.get(21).text shouldBe "view the access groups they are assigned to"
+      li.get(22).text shouldBe "view and manage clients they are assigned to through these access groups"
+      p.get(11).text shouldBe "Whether access groups are on or off, they can also:"
+      li.get(23).text shouldBe "view details of the people in the company with administrator access"
+      li.get(24).text shouldBe "view the details we hold about their company"
+      p.get(12).text shouldBe "If you are a standard user and you need to access more information, contact someone in your company with administrator access."
+
+      // Accordion tab6
+      h2.get(5).text shouldBe "Manage account: administrators"
+      p.get(13).text shouldBe "Team members with administrator access can:"
+      li.get(25).text shouldBe "see all client, team member and access group details"
+      li.get(26).text shouldBe "turn access groups on and off"
+      li.get(27).text shouldBe "create, edit and delete access groups"
+      li.get(28).text shouldBe "assign clients and team members to access groups"
+      li.get(29).text shouldBe "create or change client references within this service"
+      li.get(30).text shouldBe "view the details we hold about their organisation"
+      h3.get(5).text shouldBe "Manage access permissions with access groups new"
+      p.get(14).text shouldBe "Access groups allow you to manage access permissions for your team members within your agent services account."
+      p.get(15).text shouldBe "By default, all your team members can manage all your clients’ tax affairs. You may want to limit who can manage a specific client’s tax. If so, turn on access groups."
+      p.get(16).text shouldBe "Access groups include team members and clients. If a client in access groups, only the team members in those groups manage their tax. You can change the clients and team members in a group at any time"
+      p.get(17).text shouldBe "You do not need to assign all your clients to groups. If you do not add a client to any access groups, any staff member can manage their tax."
+      p.get(18).text shouldBe "To use access groups your agent services account needs to include:"
+      li.get(31).text shouldBe "more than one team member"
+      li.get(32).text shouldBe "between 2 and 1,000 clients (inclusive)"
+      p.get(19).text shouldBe "HMRC are looking into making access groups available to larger agent firms."
+      p.get(20).text shouldBe "When you turn access groups on, it may take some time for our service to gather all your client details. If this happens then you will receive an email when the processing is done."
+      p.get(21).text shouldBe "If you turn access groups off then all your team members will be able to manage all your clients’ tax again. The service will remember your groups, so you can restore them by turning access groups on again."
+      p.get(22).text shouldBe "Access groups do not work with Income Record Viewer at present. HMRC is looking into this."
+      h3.get(6).text shouldBe "Manage team members"
+      p.get(23).text shouldBe "You cannot add team members to your account within this service. If you select 'Add or remove team members' then the required service will open in a new tab."
+      h3.get(7).text shouldBe "Manage clients"
+      p.get(24).text shouldBe "You can manage the client’s reference within access groups. This will not affect their details in other Government Gateway services."
+
+    }
+
   }
 }

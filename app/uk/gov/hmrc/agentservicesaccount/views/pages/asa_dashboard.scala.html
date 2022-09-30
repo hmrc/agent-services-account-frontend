@@ -30,14 +30,12 @@
 @import scala.collection.mutable.ListBuffer
 
 @this(
-    mainTemplate: main,
-    p: p, h2: h2, h3: h3, h4: h4, ul: ul, a: a, span: span,
+    main: main,
+    p: p, h2: h2, h3: h3, h4: h4, ul_html: ul_html, a: a, span: span,
     govukWarningText: GovukWarningText,
     govukPanel: GovukPanel,
     govukAccordion: GovukAccordion,
-    hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper,
-    secondaryNav: secondary_nav
-)
+    hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper)
 @(
     arn: String,
     isIrvAllowed: Boolean,
@@ -210,7 +208,7 @@
     items
 }
 
-@mainTemplate(pageTitle = msgs("agent.services.account.heading"), beforeContentBlock = Some(secondaryNav(isAdmin))) {
+@main(pageTitle = msgs("agent.services.account.heading"), isAdmin = isAdmin) {
 
     @govukPanel(
         Panel(
@@ -224,7 +222,7 @@
 
     @p("agent.services.account.client-authorisations.p")
 
-    @ul(items = Seq[Html](
+    @ul_html(items = Seq[Html](
         a(href = appConfig.agentInvitationsFrontendUrl, key="agent.services.account.section4.col1.link"),
         a(href = appConfig.agentInvitationsTrackUrl, key="agent.services.account.section4.col2.link1"),
         a(href = appConfig.agentMappingUrl, key="agent.services.account.section4.col2.link2"),

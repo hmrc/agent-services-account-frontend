@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,10 +12,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@this()
+package uk.gov.hmrc.agentservicesaccount.views.components.models
 
-@(key: String, classes: Option[String] = None, id: Option[String] = None)(implicit msgs: Messages)
-
-<span class="@classes.getOrElse("")" @id.map(i => s"id=${i}")>@Html(msgs(key))</span>
+case class SummaryRowData(key: String, value: String)

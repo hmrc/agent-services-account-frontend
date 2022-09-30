@@ -14,23 +14,26 @@
  * limitations under the License.
  *@
 
+@import uk.gov.hmrc.agentmtdidentifiers.model.UserDetails
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-@import play.api.Configuration
+@import uk.gov.hmrc.agentservicesaccount.views.components.models.SummaryListData
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 
-@this(main: main)
+@this(main: main, h1: h1, p: p, ul: ul, summary_list: summary_list)
 
-@(redirectUrl: String)(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
+@(admins: Seq[UserDetails] = Seq.empty)(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
 
-@timeString=@{
-    val timeout = appConfig.timeoutDialogTimeout
-    if(timeout < 60) s"$timeout seconds" else s"${timeout/60} minutes"
-}
+@main(pageTitle = msgs("administrators.h1"), isAdmin = false,
+    analyticsAdditionalJs = None, fullWidth = true) {
 
-@main(pageTitle = msgs("signed-out.header"), hasTimeout = false, showSecondaryNav = false) {
+    @h1("administrators.h1")
+    @p("administrators.ul.p")
+    @ul(items = (1 to 4).map(i => s"administrators.ul.li.$i"))
 
-    <h1 class="govuk-heading-xl">@msgs("signed-out.header")</h1>
-    <p class="govuk-body">@msgs("signed-out.p1", timeString)</p>
+    @summary_list(
+        admins.map(a =>
+            SummaryListData(key = a.name.getOrElse(""), value = a.email.getOrElse(""))
+        )
+    )
 
-    <p class="govuk-body">@Html(msgs("signed-out.p2", s"${redirectUrl}"))</p>
 }

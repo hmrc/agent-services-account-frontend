@@ -25,6 +25,7 @@
 @this(
     hmrcLayout: HmrcLayout,
     head: head,
+    secondary_nav: secondary_nav,
     hmrcStandardFooter: HmrcStandardFooter,
     standardBetaBanner: StandardBetaBanner,
     hmrcLanguageSelectHelper: HmrcLanguageSelectHelper
@@ -32,10 +33,11 @@
 
 @(
     pageTitle: String,
-    beforeContentBlock: Option[Html] = None,
+    isAdmin: Boolean = false,
     analyticsAdditionalJs: Option[Html] = None,
     hasTimeout: Boolean = true,
-    fullWidth: Boolean = false
+    fullWidth: Boolean = false,
+    showSecondaryNav: Boolean = true
 )(contentBlock: Html)(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
 
 @scripts = {
@@ -43,8 +45,16 @@
     <script src="@controllers.routes.Assets.at("javascripts/ga-events.js")" @{CSPNonce.attr}></script>
 }
 
-@beforeContent={
-    @beforeContentBlock.getOrElse("")
+@beforeContent = {
+    @defining("https://www.googletagmanager.com/ns.html?id=GTM-P39VTVL"){ gtmUrl =>
+        @if(!appConfig.isTest){
+            <noscript><iframe src="@gtmUrl" height="0" width="0"
+                style="display:none;visibility:hidden"></iframe></noscript>
+        }
+    }
+    @if(showSecondaryNav){
+        @secondary_nav(isAdmin = isAdmin)
+    }
     @hmrcLanguageSelectHelper()
 }
 
@@ -65,5 +75,5 @@
     additionalScriptsBlock = Some(scripts),
     nonce = CSPNonce.get,
     mainContentLayout = None,
-    signOutUrl = Some(routes.SignOutController.signOut.url)
+    signOutUrl = Some(routes.SignOutController.signOut.url),
 )(bespokeContentLayout)

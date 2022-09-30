@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,10 +12,22 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@this()
+package uk.gov.hmrc.agentservicesaccount.stubs
 
-@(key: String, classes: Option[String] = None, id: Option[String] = None)(implicit msgs: Messages)
+import com.github.tomakehurst.wiremock.client.WireMock._
+import play.api.libs.json.Json
+import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, UserDetails}
 
-<span class="@classes.getOrElse("")" @id.map(i => s"id=${i}")>@Html(msgs(key))</span>
+object AgentUserClientDetailsStubs {
+
+  def stubGetTeamMembersForArn(arn: Arn, teamMembers: Seq[UserDetails]) =
+    stubFor(
+      get(urlEqualTo(s"/agent-user-client-details/arn/${arn.value}/team-members"))
+        .willReturn(aResponse()
+        .withStatus(200)
+        .withBody(Json.toJson(teamMembers).toString))
+  )
+
+}
