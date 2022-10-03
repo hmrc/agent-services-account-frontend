@@ -96,6 +96,8 @@ your.account.p.role=Standard - As a user with standard permissions you can view 
 
 your.account.your.groups.h2=Your access groups
 your.account.your.groups.p=You are not currently assigned to any groups
+your.account.your.groups.off.p=Access groups are turned off. Only administrators can turn access groups on or off.
+your.account.unassigned-clients.h2=Other clients you can access
 your.account.unassigned-clients=Other clients
 
 your.account.your.admins.h2=Your company’s administrators

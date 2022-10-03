@@ -8,7 +8,7 @@ existing.client.relationships.link=Mynediad at berthnasoedd presennol â chleien
 nav.home=Hafan y cyfrif
 nav.aria.account-menu=Dewislen y cyfrif
 nav.manage.account=Rheoli’r cyfrif
-nav.your.account=Your account
+nav.your.account=Eich cyfrif
 nav.help=Help ac arweiniad
 nav.signout=Allgofnodi
 
@@ -96,6 +96,8 @@ your.account.p.role=Safonol - Fel defnyddiwr gyda chaniatâd safonol, gallwch fw
 
 your.account.your.groups.h2=Eich grwpiau mynediad
 your.account.your.groups.p=Nid ydych wedi’ch neilltuo i unrhyw grŵp mynediad ar hyn o bryd
+your.account.your.groups.off.p=Mae’r grwpiau mynediad wedi’u hanalluogi. Dim ond gweinyddwyr sy’n gallu galluogi neu analluogi grwpiau mynediad.
+your.account.unassigned-clients.h2=Gallwch gael mynediad at y cleientiaid eraill hyn
 your.account.unassigned-clients=Y cleientiaid eraill
 
 your.account.your.admins.h2=Gweinyddwyr eich sefydliad

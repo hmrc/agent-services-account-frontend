@@ -48,6 +48,7 @@
         </div>
 
         <div class="govuk-grid-column-one-third" id="user-groups">
+            @* Missing content if not opted in your.account.your.groups.off.p *@
             @h2("your.account.your.groups.h2")
             <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
             @if(groups.isEmpty || groups.get.isEmpty) {
@@ -63,6 +64,8 @@
                 )
             }
 
+            @h2("your.account.unassigned-clients.h2")
+            <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
             @a(key= "your.account.unassigned-clients",
             href= s"${appConfig.agentPermissionsFrontendAssistantViewUnassignedClientsUrl}")
         </div>
