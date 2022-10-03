@@ -19,12 +19,20 @@
 @import uk.gov.hmrc.agentservicesaccount.views.components.models.SummaryListData
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 
-@this(main: main, h1: h1, p: p, ul: ul, summary_list: summary_list)
+@this(main: main,
+h1: h1, p: p, ul: ul,
+summary_list: summary_list,
+govukBackLink : GovukBackLink)
 
 @(admins: Seq[UserDetails] = Seq.empty)(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
 
 @main(pageTitle = msgs("administrators.h1"), isAdmin = false,
     analyticsAdditionalJs = None, fullWidth = true) {
+
+    @govukBackLink(BackLink(
+        href = s"${routes.AgentServicesController.yourAccount}",
+        content = Text("Back")
+    ))
 
     @h1("administrators.h1")
     @p("administrators.ul.p")
