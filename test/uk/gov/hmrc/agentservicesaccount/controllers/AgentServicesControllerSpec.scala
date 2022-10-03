@@ -709,6 +709,8 @@ class AgentServicesControllerSpec extends BaseISpec {
         html.select(H1).get(0).text shouldBe "Account details"
         html.select(secondaryNavLinks).get(1).text shouldBe "Manage account"
 
+        html.select(backLink).get(0).attr("href") shouldBe "/agent-services-account/manage-account"
+
         html.select(H2).get(0).text shouldBe "Agent services account details"
 
         html.select(insetText).text() shouldBe "To change these details you will need to write to us. Find out more by reading the guidance (opens in new tab). You can only change your details if you are a director, company secretary, sole trader, proprietor or partner."
@@ -733,6 +735,8 @@ class AgentServicesControllerSpec extends BaseISpec {
         html.title() shouldBe "Account details - Agent services account - GOV.UK"
         html.select(H1).get(0).text shouldBe "Account details"
         html.select(secondaryNavLinks).get(1).text shouldBe "Manage account"
+
+        html.select(backLink).get(0).attr("href") shouldBe "/agent-services-account/manage-account"
 
         html.select(H2).get(0).text shouldBe "Agent services account details"
 
@@ -763,6 +767,9 @@ class AgentServicesControllerSpec extends BaseISpec {
         html.select(H1).get(0).text shouldBe "Account details"
         // checks isAdmin passed correctly
         html.select(secondaryNavLinks).get(1).text shouldBe "Your account"
+
+        // this is fine because manage-account redirects to /your-account if isAdmin is false
+        html.select(backLink).get(0).attr("href") shouldBe "/agent-services-account/manage-account"
 
         html.select(H2).get(0).text shouldBe "Agent services account details"
         html.select(insetText).text() shouldBe "To change these details you will need to write to us. Find out more by reading the guidance (opens in new tab). You can only change your details if you are a director, company secretary, sole trader, proprietor or partner."
@@ -898,6 +905,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       val teamMembers = Seq(
         UserDetails(credentialRole = Some("User"), name = Some("Robert Builder"), email = Some("bob@builder.com")),
         UserDetails(credentialRole = Some("User"), name = Some("Steve Smith"), email = Some("steve@builder.com")),
+        UserDetails(credentialRole = Some("Admin"), name = Some("Albert Forger"), email = Some("a.forger@builder.com")),
         //Assistant will be filtered out from the results we get back
         UserDetails(credentialRole = Some("Assistant"), name = Some("irrelevant")),
       )
@@ -909,6 +917,8 @@ class AgentServicesControllerSpec extends BaseISpec {
       val html = Jsoup.parse(contentAsString(response))
       html.title() shouldBe "Administrators - Agent services account - GOV.UK"
       html.select(Css.H1).get(0).text shouldBe "Administrators"
+
+      html.select(backLink).get(0).attr("href") shouldBe "/agent-services-account/your-account"
 
       html.select(paragraphs).get(0).text shouldBe "Administrators can:"
       html.select(LI).get(0).text shouldBe "turn access groups on or off"
@@ -922,6 +932,8 @@ class AgentServicesControllerSpec extends BaseISpec {
       adminEmails.get(0).text shouldBe "bob@builder.com"
       adminNames.get(1).text shouldBe "Steve Smith"
       adminEmails.get(1).text shouldBe "steve@builder.com"
+      adminNames.get(2).text shouldBe "Albert Forger"
+      adminEmails.get(2).text shouldBe "a.forger@builder.com"
     }
 
   }

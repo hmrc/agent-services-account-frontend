@@ -11,6 +11,7 @@ nav.manage.account=Rheoli’r cyfrif
 nav.your.account=Eich cyfrif
 nav.help=Help ac arweiniad
 nav.signout=Allgofnodi
+common.back=Yn ôl
 
 agent.services.account.welcome=Croeso i’ch cyfrif gwasanaethau asiant
 agent.services.account.client-authorisations.p=Mae’n rhaid i chi ofyn i’ch cleient eich awdurdodi drwy eich cyfrif gwasanaethau asiant cyn y gallwch gael mynediad at unrhyw wasanaethau. Dylech gopïo hen awdurdodiad drosodd neu greu un newydd.
