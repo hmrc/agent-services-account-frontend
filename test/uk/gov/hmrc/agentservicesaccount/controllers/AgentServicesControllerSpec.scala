@@ -709,9 +709,12 @@ class AgentServicesControllerSpec extends BaseISpec {
         html.select(H1).get(0).text shouldBe "Account details"
         html.select(secondaryNavLinks).get(1).text shouldBe "Manage account"
 
+        html.select(backLink).get(0).attr("href") shouldBe "/agent-services-account/manage-account"
+
         html.select(H2).get(0).text shouldBe "Agent services account details"
 
         html.select(insetText).text() shouldBe "To change these details you will need to write to us. Find out more by reading the guidance (opens in new tab). You can only change your details if you are a director, company secretary, sole trader, proprietor or partner."
+        html.select(link).get(0).attr("href").shouldBe("https://www.gov.uk/guidance/change-or-remove-your-authorisations-as-a-tax-agent#changes-you-can-make-in-writing")
 
         html.select(summaryListKeys).get(0).text shouldBe "Email address"
         html.select(summaryListValues).get(0).text shouldBe "abc@abc.com"
@@ -734,10 +737,11 @@ class AgentServicesControllerSpec extends BaseISpec {
         html.select(H1).get(0).text shouldBe "Account details"
         html.select(secondaryNavLinks).get(1).text shouldBe "Manage account"
 
+        html.select(backLink).get(0).attr("href") shouldBe "/agent-services-account/manage-account"
+
         html.select(H2).get(0).text shouldBe "Agent services account details"
 
         html.select(insetText).text() shouldBe "To change these details you will need to write to us. Find out more by reading the guidance (opens in new tab). You can only change your details if you are a director, company secretary, sole trader, proprietor or partner."
-        html.select(link).get(1).attr("href").shouldBe("https://www.gov.uk/guidance/change-or-remove-your-authorisations-as-a-tax-agent#changes-you-can-make-in-writing")
 
         html.select(summaryListKeys).get(0).text shouldBe "Email address"
         html.select(summaryListValues).get(0).text shouldBe "None"
@@ -763,6 +767,9 @@ class AgentServicesControllerSpec extends BaseISpec {
         html.select(H1).get(0).text shouldBe "Account details"
         // checks isAdmin passed correctly
         html.select(secondaryNavLinks).get(1).text shouldBe "Your account"
+
+        // this is fine because manage-account redirects to /your-account if isAdmin is false
+        html.select(backLink).get(0).attr("href") shouldBe "/agent-services-account/manage-account"
 
         html.select(H2).get(0).text shouldBe "Agent services account details"
         html.select(insetText).text() shouldBe "To change these details you will need to write to us. Find out more by reading the guidance (opens in new tab). You can only change your details if you are a director, company secretary, sole trader, proprietor or partner."
@@ -898,6 +905,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       val teamMembers = Seq(
         UserDetails(credentialRole = Some("User"), name = Some("Robert Builder"), email = Some("bob@builder.com")),
         UserDetails(credentialRole = Some("User"), name = Some("Steve Smith"), email = Some("steve@builder.com")),
+        UserDetails(credentialRole = Some("Admin"), name = Some("Albert Forger"), email = Some("a.forger@builder.com")),
         //Assistant will be filtered out from the results we get back
         UserDetails(credentialRole = Some("Assistant"), name = Some("irrelevant")),
       )
@@ -910,6 +918,8 @@ class AgentServicesControllerSpec extends BaseISpec {
       html.title() shouldBe "Administrators - Agent services account - GOV.UK"
       html.select(Css.H1).get(0).text shouldBe "Administrators"
 
+      html.select(backLink).get(0).attr("href") shouldBe "/agent-services-account/your-account"
+
       html.select(paragraphs).get(0).text shouldBe "Administrators can:"
       html.select(LI).get(0).text shouldBe "turn access groups on or off"
       html.select(LI).get(1).text shouldBe "view information about all clients and access groups"
@@ -917,11 +927,13 @@ class AgentServicesControllerSpec extends BaseISpec {
       html.select(LI).get(3).text shouldBe "assign clients and team members to access groups"
       val adminNames = html.select(summaryListKeys)
       val adminEmails = html.select(summaryListValues)
-      adminNames.size() shouldBe 2
+      adminNames.size() shouldBe 3
       adminNames.get(0).text shouldBe "Robert Builder"
       adminEmails.get(0).text shouldBe "bob@builder.com"
       adminNames.get(1).text shouldBe "Steve Smith"
       adminEmails.get(1).text shouldBe "steve@builder.com"
+      adminNames.get(2).text shouldBe "Albert Forger"
+      adminEmails.get(2).text shouldBe "a.forger@builder.com"
     }
 
   }

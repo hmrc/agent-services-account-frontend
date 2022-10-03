@@ -21,6 +21,7 @@
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcLanguageSelectHelper
 @import views.html.helper.CSPNonce
 @import uk.gov.hmrc.hmrcfrontend.views.config.StandardBetaBanner
+@import uk.gov.hmrc.govukfrontend.views.html.components._
 
 @this(
     hmrcLayout: HmrcLayout,
@@ -28,6 +29,7 @@
     secondary_nav: secondary_nav,
     hmrcStandardFooter: HmrcStandardFooter,
     standardBetaBanner: StandardBetaBanner,
+    govukBackLink : GovukBackLink,
     hmrcLanguageSelectHelper: HmrcLanguageSelectHelper
 )
 
@@ -37,6 +39,7 @@
     analyticsAdditionalJs: Option[Html] = None,
     hasTimeout: Boolean = true,
     fullWidth: Boolean = false,
+    backLinkHref: Option[String] = None,
     showSecondaryNav: Boolean = true
 )(contentBlock: Html)(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
 
@@ -56,6 +59,14 @@
         @secondary_nav(isAdmin = isAdmin)
     }
     @hmrcLanguageSelectHelper()
+
+    @if(backLinkHref.isDefined) {
+        @govukBackLink(BackLink(
+            href = backLinkHref.get,
+            content = Text(msgs("common.back"))
+        ))
+    }
+
 }
 
 @bespokeContentLayout = {
