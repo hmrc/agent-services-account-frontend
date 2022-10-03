@@ -177,7 +177,7 @@ class AgentServicesController @Inject()
         Ok(
           administrators_html(
             maybeMembers.getOrElse(Seq.empty)
-              .filter(_.credentialRole.getOrElse("").equals("User")))
+              .filterNot(_.credentialRole.getOrElse("").equals("Assistant")))
         )
       }
     }
