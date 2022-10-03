@@ -804,11 +804,11 @@ class AgentServicesControllerSpec extends BaseISpec {
 
       //LEFT PANEL
       val userDetailsPanel = html.select("div#user-details")
-      userDetailsPanel.select("h3").get(0).text() shouldBe "Name"
+      userDetailsPanel.select("h2").get(0).text() shouldBe "Name"
       userDetailsPanel.select("p").get(0).text() shouldBe "Bob The Builder"
-      userDetailsPanel.select("h3").get(1).text() shouldBe "Email address"
+      userDetailsPanel.select("h2").get(1).text() shouldBe "Email address"
       userDetailsPanel.select("p").get(1).text() shouldBe "bob@builder.com"
-      userDetailsPanel.select("h3").get(2).text() shouldBe "Role"
+      userDetailsPanel.select("h2").get(2).text() shouldBe "Role"
       userDetailsPanel.select("p").get(2)
         .text() shouldBe "Standard - As a user with standard permissions you can view your assigned access groups and clients. Please contact your administrator for more information."
 
@@ -854,11 +854,11 @@ class AgentServicesControllerSpec extends BaseISpec {
       html.select(H1).get(0).text shouldBe "Your account"
       //LEFT PANEL
       val userDetailsPanel = html.select("div#user-details")
-      userDetailsPanel.select("h3").get(0).text() shouldBe "Name"
+      userDetailsPanel.select("h2").get(0).text() shouldBe "Name"
       userDetailsPanel.select("p").get(0).text() shouldBe "Bob The Builder"
-      userDetailsPanel.select("h3").get(1).text() shouldBe "Email address"
+      userDetailsPanel.select("h2").get(1).text() shouldBe "Email address"
       userDetailsPanel.select("p").get(1).text() shouldBe "bob@builder.com"
-      userDetailsPanel.select("h3").get(2).text() shouldBe "Role"
+      userDetailsPanel.select("h2").get(2).text() shouldBe "Role"
       userDetailsPanel.select("p").get(2)
         .text() shouldBe "Standard - As a user with standard permissions you can view your assigned access groups and clients. Please contact your administrator for more information."
 

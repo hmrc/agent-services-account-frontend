@@ -39,11 +39,11 @@
 
     @if(info.isDefined){
         <div class="govuk-grid-column-two-thirds" id="user-details">
-            @h3("your.account.h3.name")
+            @h2("your.account.h3.name", size = "s")
             @p(info.get.name.map(n => n.name.get + " " + n.lastName.get).getOrElse("" ))
-            @h3("your.account.h3.email")
+            @h2("your.account.h3.email", size = "s")
             @p(info.get.email.getOrElse(""))
-            @h3("your.account.h3.role")
+            @h2("your.account.h3.role", size = "s")
             @p("your.account.p.role")
         </div>
 
