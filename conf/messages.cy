@@ -223,37 +223,37 @@ signed-out.p1=Nid ydych wedi gwneud dim byd ers {0}, felly rydym wedi’ch allgo
 signed-out.p2=<a class="govuk-link" href="{0}">Mewngofnodwch eto</a> i ddefnyddio’r gwasanaeth hwn.
 
 help.heading=Help ac arweiniad
-help.p1=This guidance is for tax agents and advisors. It describes how to use your agent services account.
+help.p1=Mae’r arweiniad hwn ar gyfer asiantau ac ymgynghorwyr treth. Mae’n disgrifio sut i ddefnyddio’ch cyfrif gwasanaethau asiant.
 # unused below? to be removed once confirmed
 help.p1-unused=Rhagor o wybodaeth am sut i ddefnyddio’ch cyfrif gwasanaethau asiant a sut y gall cleientiaid eich awdurdodi i reoli eu trethi.
 help.authorised.h2=Cael awdurdodiad
 help.authorised.link=Awdurdodi asiant
 # unused above? to be removed once confirmed
 
-help.subheading1=About this guidance
-help.about-guidance.p1=This help and guidance is for tax agents and advisors. It covers how to use your agent services account to:
-help.about-guidance.list1.1=copy VAT and Income Tax for Self Assessment authorisations from other agent accounts
-help.about-guidance.list1.2=request and manage authorisations from clients
-help.about-guidance.list1.3=manage tax services launched since 2019
-help.about-guidance.list1.4=manage the tax affairs of your assigned clients
-help.about-guidance.list1.5=view the details we hold about your organisation
-help.about-guidance.p2=If you have administrator access, you can also:
-help.about-guidance.list2.1=control which staff members can view and manage a client’s tax
-help.about-guidance.list2.2=manage client references
+help.subheading1=Ynglŷn â’r arweiniad hwn
+help.about-guidance.p1=Mae’r help a’r arweiniad hwn ar gyfer asiantau ac ymgynghorwyr treth. Mae’n cwmpasu sut i ddefnyddio’ch cyfrif gwasanaethau asiant i wneud y canlynol:
+help.about-guidance.list1.1=copïo awdurdodiadau TAW a Threth Incwm ar gyfer Hunanasesiad o gyfrifon eraill i asiantau
+help.about-guidance.list1.2=gwneud cais am awdurdodiadau gan gleientiaid a’u rheoli
+help.about-guidance.list1.3=rheoli’r gwasanaethau treth a lansiwyd ers 2019
+help.about-guidance.list1.4=rheoli materion treth y cleientiaid sydd wedi’u neilltuo i chi
+help.about-guidance.list1.5=bwrw golwg dros y manylion sydd gennym am eich sefydliad
+help.about-guidance.p2=Os oes gennych fynediad fel gweinyddwr, gallwch hefyd:
+help.about-guidance.list2.1=rheoli pa aelodau’r staff sy’n gallu bwrw golwg treth eich cleient a’i rheoli
+help.about-guidance.list2.2=rheoli cyfeirnodau cleientiaid
 
-help.subheading2=About your agent services account
-help.about-asa.p1=You can only have one agent services account, but you can add several team members to this account. They will need to Government Gateway user IDs for you to add them.
-help.about-asa.p2=The ‘Account home’ screen includes links for managing client authorisations and certain tax services. For other tax services, you will need to log into your online services for agents account.
-help.about-asa.p3=The ‘Manage account’ screen will vary, depending on whether you have administrator or standard user access. Administrators can choose to manage access permissions using the new feature ‘access groups’. When access groups are turned on, standard users can only manage the clients they have been assigned to.
+help.subheading2=Gair ynghylch eich cyfrif gwasanaethau asiant
+help.about-asa.p1=Dim ond un cyfrif gwasanaethau asiant y mae’n bosib i chi ei gael, ond gallwch ychwanegu sawl aelod o’r tîm at y cyfrif hwn. Bydd angen i bob un ohonynt gael Dynodydd Defnyddiwr (ID) ar gyfer Porth y Llywodraeth er mwyn i chi eu hychwanegu.
+help.about-asa.p2=Mae’r sgrin ‘Hafan ar gyfer y cyfrif’ yn cynnwys cysylltiadau er mwyn rheoli awdurdodiadau cleientiaid a gwasanaethau treth penodol. Ar gyfer gwasanaethau treth eraill, bydd angen i chi fewngofnodi i’ch cyfrif gwasanaethau ar-lein ar gyfer asiantau.
+help.about-asa.p3=Bydd y sgrin ‘Rheoli’r cyfrif’ yn amrywio, yn dibynnu a oes gennych fynediad fel gweinyddwr neu fynediad fel defnyddiwr safonol. Gall y gweinyddwyr ddewis rheoli caniatâd o ran mynediad drwy ddefnyddio’r nodwedd newydd ar gyfer ‘grwpiau mynediad’. Pan fydd y grwpiau mynediad wedi eu galluogi, bydd y defnyddwyr sydd â mynediad safonol yn gallu rheoli’r cleientiaid a neilltuwyd iddynt yn unig.
 
-help.subheading3=Account home: client authorisations
-help.client-auth.p1=This section allows you to create, view and manage authorisation requests
-help.client-auth.p2=You can copy across authorisations for VAT and Income Tax for Self Assessment from your online services for agents accounts.
-help.client-auth.p3=You can also create an authorisation request for a client, and view or manage your recent authorisation requests.
-help.client-auth.p4=When asking a client for authorisation, you can send them the link to this guidance:
+help.subheading3=Hafan y cyfrif: awdurdodiadau cleientiaid
+help.client-auth.p1=Gallwch greu, rheoli a bwrw golwg dros geisiadau am awdurdodiadau yn yr adran hon
+help.client-auth.p2=Gallwch gopïo awdurdodiadau ar gyfer TAW a Threth Incwm ar gyfer Hunanasesiad o’ch cyfrifon gwasanaethau ar-lein ar gyfer asiantau.
+help.client-auth.p3=Gallwch hefyd greu cais am awdurdodiad ar gyfer cleient, yn ogystal â rheoli neu fwrw golwg dros eich ceisiadau diweddar am awdurdodiadau.
+help.client-auth.p4=Pan fyddwch yn gofyn i gleient am awdurdodiad, gallwch anfon y cysylltiad i’r arweiniad hwn ato:
 help.client-auth.a=https://www.gov.uk/guidance/authorise-an-agent-to-deal-with-certain-tax-services-for-you
 
-help.subheading4=Account home: tax services
+help.subheading4=Hafan y cyfrif: gwasanaethau treth
 help.mtd.h2=TAW
 help.mtd.link1=Troi Treth yn Ddigidol ar gyfer TAW fel asiant: cam wrth gam
 help.mtd.link1.href=https://www.gov.uk/guidance/making-tax-digital-for-vat-as-an-agent-step-by-step.cy
@@ -280,39 +280,39 @@ help.cannot.link4=Awdurdodi asiant ar gyfer gwasanaethau treth eraill
 help.cannot.link5=TWE ar gyfer Asiantau
 help.cannot.link6=Sut i newid neu ganslo awdurdodiadau fel asiant
 
-help.subheading5=Manage account: standard users
-help.manage.standard.p1=Standard users cannot make any changes to access groups. If access groups are turned off, they can manage the tax of all their organisation''s clients. When access groups are turned on, they can only:
-help.manage.standard.list1.1=view the access groups they are assigned to
-help.manage.standard.list1.2=view and manage clients they are assigned to through these access groups
-help.manage.standard.p2=Whether access groups are on or off, they can also:
-help.manage.standard.list2.1=view details of the people in the company with administrator access
-help.manage.standard.list2.2=view the details we hold about their company
-help.manage.standard.p3=If you are a standard user and you need to access more information, contact someone in your company with administrator access.
+help.subheading5=Rheoli’r cyfrif: defnyddwyr sydd â mynediad safonol
+help.manage.standard.p1=Ni all y defnyddwyr sydd â mynediad safonol wneud unrhyw newidiadau i’r grwpiau mynediad. Os bydd y grwpiau mynediad wedi’u diffodd, gallant reoli treth pob cleient eu sefydliad. Pan fydd y grwpiau mynediad wedi’u galluogi, gallant wneud y canlynol yn unig:
+help.manage.standard.list1.1=bwrw golwg dros y grwpiau mynediad a neilltuwyd iddynt
+help.manage.standard.list1.2=bwrw golwg dros y cleientiaid a neilltuwyd iddynt, a’u rheoli drwy’r grwpiau mynediad hyn
+help.manage.standard.p2=P’un a yw’r grwpiau mynediad wedi’u galluogi, neu wedi’u diffodd, gallant hefyd wneud y canlynol:
+help.manage.standard.list2.1=bwrw golwg dros fanylion y rheiny yn y cwmni sydd â mynediad fel gweinyddwr
+help.manage.standard.list2.2=bwrw golwg dros y manylion sydd gennym am eu cwmni
+help.manage.standard.p3=Os ydych yn ddefnyddiwr sydd â mynediad safonol, a bod angen i chi gael mynediad at ragor o wybodaeth, cysylltwch â rhywun yn eich sefydliad sydd â mynediad fel gweinyddwr.
 
-help.subheading6=Manage account: administrators
-help.manage.admin.p1=Team members with administrator access can:
-help.manage.admin.list1.1=see all client, team member and access group details
-help.manage.admin.list1.2=turn access groups on and off
-help.manage.admin.list1.3=create, edit and delete access groups
-help.manage.admin.list1.4=assign clients and team members to access groups
-help.manage.admin.list1.5=create or change client references within this service
-help.manage.admin.list1.6=view the details we hold about their organisation
-help.manage.admin.h3=Manage access permissions with access groups <strong class="govuk-tag">new</strong>
-help.manage.admin.p2=Access groups allow you to manage access permissions for your team members within your agent services account.
-help.manage.admin.p3=By default, all your team members can manage all your clients’ tax affairs. You may want to limit who can manage a specific client’s tax. If so, turn on access groups.
-help.manage.admin.p4=Access groups include team members and clients. If a client in access groups, only the team members in those groups manage their tax. You can change the clients and team members in a group at any time
-help.manage.admin.p5=You do not need to assign all your clients to groups. If you do not add a client to any access groups, any staff member can manage their tax.
-help.manage.admin.p6=To use access groups your agent services account needs to include:
-help.manage.admin.list2.1=more than one team member
-help.manage.admin.list2.2=between 2 and 1,000 clients (inclusive)
-help.manage.admin.p7=HMRC are looking into making access groups available to larger agent firms.
-help.manage.admin.p8=When you turn access groups on, it may take some time for our service to gather all your client details. If this happens then you will receive an email when the processing is done.
-help.manage.admin.p9=If you turn access groups off then all your team members will be able to manage all your clients’ tax again. The service will remember your groups, so you can restore them by turning access groups on again.
-help.manage.admin.p10=Access groups do not work with Income Record Viewer at present. HMRC is looking into this.
+help.subheading6=Rheoli’r cyfrif: gweinyddwyr
+help.manage.admin.p1=Gall aelodau’r tîm sydd â mynediad fel gweinyddwr wneud y canlynol:
+help.manage.admin.list1.1=bwrw golwg dros yr holl fanylion o ran cleientiaid, aelodau’r tîm a grwpiau mynediad
+help.manage.admin.list1.2=galluogi a diffodd grwpiau mynediad
+help.manage.admin.list1.3=creu, golygu a dileu grwpiau mynediad
+help.manage.admin.list1.4=neilltuo cleientiaid ac aelodau’r tîm i grwpiau mynediad
+help.manage.admin.list1.5=creu neu newid cyfeirnodau cleientiaid drwy ddefnyddio’r gwasanaeth hwn
+help.manage.admin.list1.6=bwrw golwg dros y manylion sydd gennym am eu sefydliad
+help.manage.admin.h3=Rheoli caniatâd o ran mynediad ar gyfer y grwpiau mynediad <strong class="govuk-tag">NEWYDD</strong>
+help.manage.admin.p2=Mae grwpiau mynediad yn eich galluogi i reoli pa aelodau’ch tîm sydd â chaniatâd o ran mynediad drwy ddefnyddio’ch cyfrif gwasanaethau asiant.
+help.manage.admin.p3=Yn ddiofyn, gall pob aelod o’ch tîm reoli materion treth eich cleientiaid i gyd. Mae’n bosib y byddwch am gyfyngu pwy all reoli treth cleient penodol. Os felly, dylech alluogi grwpiau mynediad.
+help.manage.admin.p4=Gall y grwpiau mynediad gynnwys aelodau’r tîm a chleientiaid. Os bydd cleient yn rhan o’r grwpiau mynediad, dim ond aelodau’r tîm sy’n rhan o’r grwpiau hynny sy’n gallu rheoli treth y cleient hwnnw. Gallwch newid y cleientiaid ac aelodau’r tîm sy’n rhan o’r grŵp ar unrhyw adeg.
+help.manage.admin.p5=Does dim rhaid i chi neilltuo pob un o’ch cleientiaid i grŵp. Os na fyddwch yn ychwanegu cleient at unrhyw un o’r grwpiau mynediad, gall unrhyw aelod o’r staff reoli ei dreth.
+help.manage.admin.p6=Er mwyn defnyddio grwpiau mynediad, mae angen i’ch cyfrif gwasanaethau asiant gynnwys:
+help.manage.admin.list2.1=mwy nag un aelod o’r tîm
+help.manage.admin.list2.2=rhwng 2 a 1,000 o gleientiaid
+help.manage.admin.p7=Mae CThEF yn ystyried rhoi’r gallu i gwmnïau asiant mwy o faint ddefnyddio grwpiau mynediad.
+help.manage.admin.p8=Pan fyddwch yn galluogi grwpiau mynediad, efallai y bydd yn cymryd amser i’n gwasanaeth gasglu manylion eich holl gleientiaid. Os bydd hyn yn digwydd, byddwch yn cael e-bost pan fydd y weithred o brosesu ar ben.
+help.manage.admin.p9=Os byddwch yn diffodd y grwpiau mynediad, bydd pob aelod o’ch tîm yn gallu rheoli treth pob un o’ch cleientiaid unwaith eto. Bydd y gwasanaeth yn cofio eich grwpiau, felly byddwch yn gallu eu hadfer drwy alluogi’r grwpiau mynediad unwaith eto.
+help.manage.admin.p10=Ar hyn o bryd, nid yw’r grwpiau mynediad yn gweithio gyda’r Darllenydd Cofnodion Incwm. Mae CThEF yn ymchwilio i hyn.
 help.manage.admin.h3.team-members=Rheoli aelodau o’r tîm
-help.manage.admin.p11=You cannot add team members to your account within this service. If you select '''Add or remove team members'' then the required service will open in a new tab.
+help.manage.admin.p11=Ni allwch ychwanegu aelodau’r tîm at eich cyfrif drwy ddefnyddio’r gwasanaeth hwn. Os ydych yn dewis ‘Ychwanegu neu ddileu aelod o’r tîm’, bydd y gwasanaeth sydd ei angen arnoch er mwyn gwneud hyn yn agor mewn tab newydd.
 help.manage.admin.h3.clients=Rheoli cleientiaid
-help.manage.admin.p12=You can manage the client’s reference within access groups. This will not affect their details in other Government Gateway services.
+help.manage.admin.p12=Gallwch reoli cyfeirnod y cleient o fewn y grwpiau mynediad. Ni fydd hyn yn effeithio ar ei fanylion o fewn gwasanaethau eraill Porth y Llywodraeth.
 
 # Accessibility link
 footer.links.accessibility.text=Hygyrchedd
