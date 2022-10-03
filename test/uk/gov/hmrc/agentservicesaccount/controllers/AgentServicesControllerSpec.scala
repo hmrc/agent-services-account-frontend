@@ -406,6 +406,9 @@ class AgentServicesControllerSpec extends BaseISpec {
       li.get(5).child(0).attr("href") shouldBe s"http://localhost:$wireMockPort/agent-permissions/manage-team-members"
       li.get(6).child(0).text shouldBe "Add or remove team members (opens in a new tab)"
       li.get(6).child(0).attr("href") shouldBe "http://localhost:1111/user-profile-redirect-frontend/group-profile-management"
+      li.get(7).child(0).text shouldBe "Manage user access to your agent services account (opens in a new tab)"
+      li.get(7).child(0).attr("href") shouldBe s"http://localhost:1111/tax-and-scheme-management/users?origin=Agent"
+
       h2.get(3).text shouldBe "Contact details"
       paragraphs.get(3).child(0).text shouldBe "View the contact details we have for your business"
       paragraphs.get(3).child(0).attr("href") shouldBe "/agent-services-account/account-details"
@@ -457,6 +460,9 @@ class AgentServicesControllerSpec extends BaseISpec {
       li.get(6).child(0).text shouldBe "Add or remove team members (opens in a new tab)"
       li.get(6).child(0).attr("href") shouldBe "http://localhost:1111/user-profile-redirect-frontend/group-profile-management"
 
+      li.get(7).child(0).text shouldBe "Manage user access to your agent services account (opens in a new tab)"
+      li.get(7).child(0).attr("href") shouldBe s"http://localhost:1111/tax-and-scheme-management/users?origin=Agent"
+
     }
 
     "return status: OK and body containing content for status Opted-In_NOT_READY" in {
@@ -496,6 +502,8 @@ class AgentServicesControllerSpec extends BaseISpec {
       li.get(0).child(0).attr("href") shouldBe s"http://localhost:$wireMockPort/agent-permissions/manage-team-members"
       li.get(1).child(0).text shouldBe "Add or remove team members (opens in a new tab)"
       li.get(1).child(0).attr("href") shouldBe "http://localhost:1111/user-profile-redirect-frontend/group-profile-management"
+      li.get(2).child(0).text shouldBe "Manage user access to your agent services account (opens in a new tab)"
+      li.get(2).child(0).attr("href") shouldBe s"http://localhost:1111/tax-and-scheme-management/users?origin=Agent"
 
       h2.get(2).text shouldBe "Contact details"
       paragraphs.get(3).child(0).text shouldBe "View the contact details we have for your business"
@@ -536,6 +544,9 @@ class AgentServicesControllerSpec extends BaseISpec {
       li.get(0).child(0).attr("href") shouldBe s"http://localhost:$wireMockPort/agent-permissions/manage-team-members"
       li.get(1).child(0).text shouldBe "Add or remove team members (opens in a new tab)"
       li.get(1).child(0).attr("href") shouldBe "http://localhost:1111/user-profile-redirect-frontend/group-profile-management"
+      li.get(2).child(0).text shouldBe "Manage user access to your agent services account (opens in a new tab)"
+      li.get(2).child(0).attr("href") shouldBe s"http://localhost:1111/tax-and-scheme-management/users?origin=Agent"
+
       h2.get(2).text shouldBe "Contact details"
       paragraphs.get(2).child(0).text shouldBe "View the contact details we have for your business"
       paragraphs.get(2).child(0).attr("href") shouldBe "/agent-services-account/account-details"
@@ -559,6 +570,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       val h2 = html.select(H2)
       val h3 = html.select(Css.H3)
       val paragraphs = html.select(Css.paragraphs)
+      val li = html.select(Css.LI)
 
       html.title() shouldBe manageAccountTitle
       html.select(H1).get(0).text shouldBe "Manage account"
@@ -571,12 +583,14 @@ class AgentServicesControllerSpec extends BaseISpec {
       h3.get(0).text shouldBe "Status Turned off"
 
       h2.get(1).text shouldBe "Team members"
-      html.select("p#manage-team-members a").text() shouldBe "Add or remove team members (opens in a new tab)"
-      html.select("p#manage-team-members a").attr("href") shouldBe "http://localhost:1111/user-profile-redirect-frontend/group-profile-management"
+      li.get(0).child(0).text shouldBe "Add or remove team members (opens in a new tab)"
+      li.get(0).child(0).attr("href") shouldBe "http://localhost:1111/user-profile-redirect-frontend/group-profile-management"
+      li.get(1).child(0).text shouldBe "Manage user access to your agent services account (opens in a new tab)"
+      li.get(1).child(0).attr("href") shouldBe s"http://localhost:1111/tax-and-scheme-management/users?origin=Agent"
 
       h2.get(2).text shouldBe "Contact details"
-      paragraphs.get(2).child(0).text shouldBe "View the contact details we have for your business"
-      paragraphs.get(2).child(0).attr("href") shouldBe "/agent-services-account/account-details"
+      paragraphs.get(1).child(0).text shouldBe "View the contact details we have for your business"
+      paragraphs.get(1).child(0).attr("href") shouldBe "/agent-services-account/account-details"
 
     }
 
@@ -597,6 +611,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       val h2 = html.select(H2)
       val h3 = html.select(Css.H3)
       val paragraphs = html.select(Css.paragraphs)
+      val li = html.select(Css.LI)
 
       html.title() shouldBe manageAccountTitle
       html.select(H1).get(0).text shouldBe "Manage account"
@@ -608,12 +623,14 @@ class AgentServicesControllerSpec extends BaseISpec {
         .shouldBe("To use access groups you need to add more team members to your agent services account under ‘Manage team members’ below.")
 
       h2.get(1).text shouldBe "Team members"
-      html.select("p#manage-team-members a").text() shouldBe "Add or remove team members (opens in a new tab)"
-      html.select("p#manage-team-members a").attr("href") shouldBe "http://localhost:1111/user-profile-redirect-frontend/group-profile-management"
+      li.get(0).child(0).text shouldBe "Add or remove team members (opens in a new tab)"
+      li.get(0).child(0).attr("href") shouldBe "http://localhost:1111/user-profile-redirect-frontend/group-profile-management"
+      li.get(1).child(0).text shouldBe "Manage user access to your agent services account (opens in a new tab)"
+      li.get(1).child(0).attr("href") shouldBe s"http://localhost:1111/tax-and-scheme-management/users?origin=Agent"
 
       h2.get(2).text shouldBe "Contact details"
-      paragraphs.get(2).child(0).text shouldBe "View the contact details we have for your business"
-      paragraphs.get(2).child(0).attr("href") shouldBe "/agent-services-account/account-details"
+      paragraphs.get(1).child(0).text shouldBe "View the contact details we have for your business"
+      paragraphs.get(1).child(0).attr("href") shouldBe "/agent-services-account/account-details"
 
     }
 
@@ -634,6 +651,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       val h2 = html.select(H2)
       val h3 = html.select(Css.H3)
       val paragraphs = html.select(Css.paragraphs)
+      val li = html.select(Css.LI)
 
       html.title() shouldBe manageAccountTitle
       html.select(H1).get(0).text shouldBe "Manage account"
@@ -646,9 +664,10 @@ class AgentServicesControllerSpec extends BaseISpec {
       html.select("p#config-link a").attr("href") shouldBe s"http://localhost:$wireMockPort/agent-permissions/turn-on-guide"
 
       h2.get(1).text shouldBe "Team members"
-      html.select("p#manage-team-members a").text shouldBe "Add or remove team members (opens in a new tab)"
-      html.select("p#manage-team-members a").attr("href") shouldBe
-        "http://localhost:1111/user-profile-redirect-frontend/group-profile-management"
+      li.get(0).child(0).text shouldBe "Add or remove team members (opens in a new tab)"
+      li.get(0).child(0).attr("href") shouldBe "http://localhost:1111/user-profile-redirect-frontend/group-profile-management"
+      li.get(1).child(0).text shouldBe "Manage user access to your agent services account (opens in a new tab)"
+      li.get(1).child(0).attr("href") shouldBe s"http://localhost:1111/tax-and-scheme-management/users?origin=Agent"
 
       val contactDetails = html.select("div#contact-details")
       contactDetails.select("h2").text shouldBe "Contact details"
