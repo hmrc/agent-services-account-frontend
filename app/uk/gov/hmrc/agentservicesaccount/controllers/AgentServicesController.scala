@@ -52,8 +52,8 @@ class AgentServicesController @Inject()
 
   import authActions._
 
-  val customDimension = appConfig.customDimension
-  val agentSuspensionEnabled = appConfig.agentSuspensionEnabled
+  val customDimension: String = appConfig.customDimension
+  val agentSuspensionEnabled: Boolean = appConfig.agentSuspensionEnabled
 
   implicit class ToFuture[T](t: T) {
     def toFuture: Future[T] = Future successful t
@@ -124,7 +124,6 @@ class AgentServicesController @Inject()
     }
   }
 
-  // TODO add redirect to your account if standard user
   val manageAccount: Action[AnyContent] = Action.async { implicit request =>
     withAuthorisedAsAgent { agentInfo =>
       if (agentInfo.isAdmin) {
@@ -146,7 +145,11 @@ class AgentServicesController @Inject()
           Future.successful(Ok(manage_account(None)))
         }
       } else {
-        Future.successful(Forbidden)
+        if (appConfig.granPermsEnabled) {
+          Future.successful(Redirect(routes.AgentServicesController.yourAccount))
+        } else {
+          Future.successful(Forbidden)
+        }
       }
     }
   }
@@ -180,13 +183,9 @@ class AgentServicesController @Inject()
     }
   }
 
-  // TODO check req to make accessible to Assistant users?
   val accountDetails: Action[AnyContent] = Action.async { implicit request =>
     withAuthorisedAsAgent { agentInfo =>
-      if (agentInfo.isAdmin) {
-        agentClientAuthorisationConnector.getAgencyDetails().map(agencyDetails => Ok(accountDetailsView(agencyDetails)))
-      }
-      else Future successful (Forbidden)
+        agentClientAuthorisationConnector.getAgencyDetails().map(agencyDetails => Ok(accountDetailsView(agencyDetails, agentInfo.isAdmin)))
     }
   }
 

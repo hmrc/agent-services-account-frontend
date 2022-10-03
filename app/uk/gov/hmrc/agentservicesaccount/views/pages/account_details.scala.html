@@ -30,9 +30,10 @@
         hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper)
 
 
-@(agencyDetails: Option[AgencyDetails])(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
+@(agencyDetails: Option[AgencyDetails],
+isAdmin: Boolean)(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
 
-@main(pageTitle = msgs("account-details.title"), isAdmin = true, analyticsAdditionalJs = None) {
+@main(pageTitle = msgs("account-details.title"), isAdmin = isAdmin, analyticsAdditionalJs = None) {
 
 
     @govukBackLink(BackLink(
