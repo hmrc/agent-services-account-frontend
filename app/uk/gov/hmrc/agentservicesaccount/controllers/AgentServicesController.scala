@@ -123,7 +123,7 @@ class AgentServicesController @Inject()
       Future successful Ok(suspensionWarningView(agentInfo.isAdmin))
     }
   }
-  
+
   val manageAccount: Action[AnyContent] = Action.async { implicit request =>
     withAuthorisedAsAgent { agentInfo =>
       if (agentInfo.isAdmin) {
@@ -184,8 +184,8 @@ class AgentServicesController @Inject()
   }
 
   val accountDetails: Action[AnyContent] = Action.async { implicit request =>
-    withAuthorisedAsAgent { _ =>
-        agentClientAuthorisationConnector.getAgencyDetails().map(agencyDetails => Ok(accountDetailsView(agencyDetails)))
+    withAuthorisedAsAgent { agentInfo =>
+        agentClientAuthorisationConnector.getAgencyDetails().map(agencyDetails => Ok(accountDetailsView(agencyDetails, agentInfo.isAdmin)))
     }
   }
 
