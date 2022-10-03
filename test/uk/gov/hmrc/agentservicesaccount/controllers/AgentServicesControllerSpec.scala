@@ -660,61 +660,123 @@ class AgentServicesControllerSpec extends BaseISpec {
 
   "account-details" should {
 
-    "return Status: OK and body containing correct content" in {
-      givenArnIsAllowlistedForIrv(Arn(arn))
-      givenAuthorisedAsAgentWith(arn)
-      givenAgentDetailsFound(
-        AgencyDetails(
-          Some("My Agency"),
-          Some("abc@abc.com"),
+    "return status OK" when {
+      "agent is admin and details found" in {
+        givenArnIsAllowlistedForIrv(Arn(arn))
+        givenAuthorisedAsAgentWith(arn)
+        givenAgentDetailsFound(
+          AgencyDetails(
+            Some("My Agency"),
+            Some("abc@abc.com"),
             Some(BusinessAddress("25 Any Street", Some("Any Town"), None, None, Some("TF3 4TR"), "GB"))))
 
-      val response = controller.accountDetails().apply(fakeRequest("GET", "/account-details"))
+        val response = await(controller.accountDetails().apply(fakeRequest("GET", "/account-details")))
+        status(response) shouldBe OK
+      }
 
-      Helpers.status(response) shouldBe OK
-      Helpers.contentType(response).get shouldBe HTML
-      val content = Helpers.contentAsString(response)
-      content should include(messagesApi("account-details.title"))
-      content should include(messagesApi("account-details.summary-list.header"))
-      content should include(messagesApi("account-details.summary-list.email"))
-      content should include(messagesApi("account-details.summary-list.name"))
-      content should include(messagesApi("account-details.summary-list.address"))
-      content should include("My Agency")
-      content should include("abc@abc.com")
-      content should include("25 Any Street")
-      content should include("Any Town")
-      content should include("TF3 4TR")
-      content should include("GB")
-      content should include(" To change these details you will need to write to us. <a class=\"govuk-link\" href=https://www.gov.uk/guidance/change-or-remove-your-authorisations-as-a-tax-agent#changes-you-can-make-in-writing target=\"_blank\" rel=\"noreferrer noopener\">Find out more by reading the guidance (opens in new tab)</a>. You can only change your details if you are a director, company secretary, sole trader, proprietor or partner.")
+      "agent is admin and details not found" in {
+        givenArnIsAllowlistedForIrv(Arn(arn))
+        givenAuthorisedAsAgentWith(arn)
+        givenAgentDetailsNoContent()
 
+        val response = await(controller.accountDetails().apply(fakeRequest("GET", "/account-details")))
+        status(response) shouldBe OK
+      }
+
+      "agent is assistant" in {
+        givenAuthorisedAsAgentWith(arn, isAdmin = false)
+        givenAgentDetailsNoContent()
+
+        val response = await(controller.accountDetails().apply(fakeRequest("GET", "/account-details")))
+        status(response) shouldBe OK
+      }
     }
 
-    "return Status: OK and body containing None in place of missing agency details" in {
-      givenArnIsAllowlistedForIrv(Arn(arn))
-      givenAuthorisedAsAgentWith(arn)
-      givenAgentDetailsNoContent()
+    "display correct content" when {
+      "agent is admin and details found" in {
+        givenArnIsAllowlistedForIrv(Arn(arn))
+        givenAuthorisedAsAgentWith(arn)
+        givenAgentDetailsFound(
+          AgencyDetails(
+            Some("My Agency"),
+            Some("abc@abc.com"),
+            Some(BusinessAddress("25 Any Street", Some("Any Town"), None, None, Some("TF3 4TR"), "GB"))))
 
-      val response = controller.accountDetails().apply(fakeRequest("GET", "/account-details"))
+        val response = await(controller.accountDetails().apply(fakeRequest("GET", "/account-details")))
+        val html = Jsoup.parse(contentAsString(response))
 
-      status(response) shouldBe OK
-      Helpers.contentType(response).get shouldBe HTML
-      val content = Helpers.contentAsString(response)
-      content should include(messagesApi("account-details.title"))
-      content should include(messagesApi("account-details.summary-list.header"))
-      content should include(messagesApi("account-details.summary-list.email"))
-      content should include(messagesApi("account-details.summary-list.name"))
-      content should include(messagesApi("account-details.summary-list.address"))
-      content should include(messagesApi("account-details.summary-list.none"))
-      content should include(" To change these details you will need to write to us. <a class=\"govuk-link\" href=https://www.gov.uk/guidance/change-or-remove-your-authorisations-as-a-tax-agent#changes-you-can-make-in-writing target=\"_blank\" rel=\"noreferrer noopener\">Find out more by reading the guidance (opens in new tab)</a>. You can only change your details if you are a director, company secretary, sole trader, proprietor or partner.")
+        html.title() shouldBe "Account details - Agent services account - GOV.UK"
+        html.select(H1).get(0).text shouldBe "Account details"
+        html.select(secondaryNavLinks).get(1).text shouldBe "Manage account"
+
+        html.select(H2).get(0).text shouldBe "Agent services account details"
+
+        html.select(insetText).text() shouldBe "To change these details you will need to write to us. Find out more by reading the guidance (opens in new tab). You can only change your details if you are a director, company secretary, sole trader, proprietor or partner."
+
+        html.select(summaryListKeys).get(0).text shouldBe "Email address"
+        html.select(summaryListValues).get(0).text shouldBe "abc@abc.com"
+        html.select(summaryListKeys).get(1).text shouldBe "Name"
+        html.select(summaryListValues).get(1).text shouldBe "My Agency"
+        html.select(summaryListKeys).get(2).text shouldBe "Address"
+        html.select(summaryListValues).get(2).text shouldBe "25 Any Street Any Town TF3 4TR GB"
 
       }
 
-    "return Forbidden if the agent is not Admin" in {
-      givenAuthorisedAsAgentWith(arn, isAdmin = false)
+      "agent is admin and details not found" in {
+        givenArnIsAllowlistedForIrv(Arn(arn))
+        givenAuthorisedAsAgentWith(arn)
+        givenAgentDetailsNoContent()
 
-      val response = controller.accountDetails().apply(fakeRequest("GET", "/account-details"))
-      status(response) shouldBe 403
+        val response = await(controller.accountDetails().apply(fakeRequest("GET", "/account-details")))
+        val html = Jsoup.parse(contentAsString(response))
+
+        html.title() shouldBe "Account details - Agent services account - GOV.UK"
+        html.select(H1).get(0).text shouldBe "Account details"
+        html.select(secondaryNavLinks).get(1).text shouldBe "Manage account"
+
+        html.select(H2).get(0).text shouldBe "Agent services account details"
+
+        html.select(insetText).text() shouldBe "To change these details you will need to write to us. Find out more by reading the guidance (opens in new tab). You can only change your details if you are a director, company secretary, sole trader, proprietor or partner."
+        html.select(link).get(1).attr("href").shouldBe("https://www.gov.uk/guidance/change-or-remove-your-authorisations-as-a-tax-agent#changes-you-can-make-in-writing")
+
+        html.select(summaryListKeys).get(0).text shouldBe "Email address"
+        html.select(summaryListValues).get(0).text shouldBe "None"
+        html.select(summaryListKeys).get(1).text shouldBe "Name"
+        html.select(summaryListValues).get(1).text shouldBe "None"
+        html.select(summaryListKeys).get(2).text shouldBe "Address"
+        html.select(summaryListValues).get(2).text shouldBe ""
+
+      }
+
+      "the agent is not Admin" in {
+        givenAuthorisedAsAgentWith(arn, isAdmin = false)
+        givenAgentDetailsFound(
+          AgencyDetails(
+            Some("My Agency"),
+            Some("abc@abc.com"),
+            Some(BusinessAddress("25 Any Street", Some("Any Town"), None, None, Some("TF3 4TR"), "GB"))))
+
+        val response = await(controller.accountDetails().apply(fakeRequest("GET", "/account-details")))
+        val html = Jsoup.parse(contentAsString(response))
+
+        html.title() shouldBe "Account details - Agent services account - GOV.UK"
+        html.select(H1).get(0).text shouldBe "Account details"
+        // checks isAdmin passed correctly
+        html.select(secondaryNavLinks).get(1).text shouldBe "Your account"
+
+        html.select(H2).get(0).text shouldBe "Agent services account details"
+        html.select(insetText).text() shouldBe "To change these details you will need to write to us. Find out more by reading the guidance (opens in new tab). You can only change your details if you are a director, company secretary, sole trader, proprietor or partner."
+
+        html.select(summaryListKeys).get(0).text shouldBe "Email address"
+        html.select(summaryListValues).get(0).text shouldBe "abc@abc.com"
+        html.select(summaryListKeys).get(1).text shouldBe "Name"
+        html.select(summaryListValues).get(1).text shouldBe "My Agency"
+        html.select(summaryListKeys).get(2).text shouldBe "Address"
+        html.select(summaryListValues).get(2).text shouldBe "25 Any Street Any Town TF3 4TR GB"
+
+      }
     }
+
   }
 
   val yourAccountUrl: String = routes.AgentServicesController.yourAccount.url
@@ -738,6 +800,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       
       html.title() shouldBe "Your account - Agent services account - GOV.UK"
       html.select(H1).get(0).text shouldBe "Your account"
+      html.select(secondaryNavLinks).get(1).text shouldBe "Your account"
 
       //LEFT PANEL
       val userDetailsPanel = html.select("div#user-details")
