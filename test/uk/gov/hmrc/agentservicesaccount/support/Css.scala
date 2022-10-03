@@ -30,14 +30,15 @@ object Css {
   val summaryListKeys = "dl.govuk-summary-list .govuk-summary-list__key"
   val summaryListValues = "dl.govuk-summary-list .govuk-summary-list__value"
   def errorSummaryForField(id: String): String = {
-    s".govuk-error-summary__body li a[href=#${id}]"
+    s".govuk-error-summary__body li a[href=#$id]"
   }
-  def errorForField(id: String): String = s"span#${id}-error"
-  def labelFor(id: String): String = s"label[for=${id}]"
+  def errorForField(id: String): String = s"span#$id-error"
+  def labelFor(id: String): String = s"label[for=$id]"
   val SUBMIT_BUTTON = "main form button"
   val linkStyledAsButton = "a.govuk-button"
   val link = "main a"
-  val currentLanguage = "ul.hmrc-language-select__list li.hmrc-language-select__list-item span[aria-current=true]";
-  val alternateLanguage = ".hmrc-language-select__list .hmrc-language-select__list-item a.govuk-link";
+  val currentLanguage = "ul.hmrc-language-select__list li.hmrc-language-select__list-item span[aria-current=true]"
+  val alternateLanguage = ".hmrc-language-select__list .hmrc-language-select__list-item a.govuk-link"
   val getHelpWithThisPageLink = "main a.govuk-link.hmrc-report-technical-issue"
+  val secondaryNavLinks = "#secondary-nav a"
 }
