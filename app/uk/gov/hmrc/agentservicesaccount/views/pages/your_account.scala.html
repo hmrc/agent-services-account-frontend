@@ -40,7 +40,7 @@
     @if(info.isDefined){
         <div class="govuk-grid-column-two-thirds" id="user-details">
             @h2("your.account.h3.name", size = "s")
-            @p(info.get.name.map(n => n.name.get + " " + n.lastName.get).getOrElse("" ))
+            @p(info.get.name.map(n => n.name.getOrElse("") + " " + n.lastName.getOrElse("")).getOrElse("" ))
             @h2("your.account.h3.email", size = "s")
             @p(info.get.email.getOrElse(""))
             @h2("your.account.h3.role", size = "s")
