@@ -70,6 +70,21 @@
         )
     )
 
+    @h3("help.itsa.h2")
+    @ul_html(
+        classes = Some("govuk-list--spaced"),
+        items = Seq[Html](
+            a(href = "https://www.gov.uk/government/collections/making-tax-digital-for-income-tax-as-an-agent-step-by-step",
+                key="help.itsa.link1", openInNewWindow=true, classes = Some("govuk-link--no-visited-state")),
+            a(href = "https://www.gov.uk/guidance/using-making-tax-digital-for-income-tax",
+                key="help.itsa.link2", openInNewWindow=true, classes = Some("govuk-link--no-visited-state")),
+            a(href = "https://www.gov.uk/guidance/sign-up-your-client-for-making-tax-digital-for-income-tax",
+                key="help.itsa.link3", openInNewWindow=true, classes = Some("govuk-link--no-visited-state")),
+            a(href = "https://www.gov.uk/guidance/help-and-support-for-making-tax-digital#creating-an-agent-services-account",
+                key="help.mtd.link4", openInNewWindow=true, classes = Some("govuk-link--no-visited-state"))
+        )
+    )
+
     @h3("help.trusts.h2")
     @ul_html(
         classes = Some("govuk-list--spaced"),
