@@ -24,8 +24,9 @@ import play.api.http.Status.{ACCEPTED, OK}
 import uk.gov.hmrc.agent.kenshoo.monitoring.HttpAPIMonitor
 import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, UserDetails}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse, UpstreamErrorResponse}
 import uk.gov.hmrc.http.HttpReads.Implicits._
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
+
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -60,9 +61,10 @@ class AgentUserClientDetailsConnectorImpl @Inject()(val http: HttpClient)(
         response.status match {
           case ACCEPTED => None
           case OK       => response.json.asOpt[Seq[UserDetails]]
-          case e =>
-            throw UpstreamErrorResponse(s"error getTeamMemberList for ${arn.value}",
-                                        e)
+          case other =>
+            logger.warn(
+              s"error getting TeamMemberList for ${arn.value}. Backend response status: $other")
+            None
         }
       }
     }
