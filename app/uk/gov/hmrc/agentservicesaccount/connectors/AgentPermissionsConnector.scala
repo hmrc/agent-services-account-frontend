@@ -25,8 +25,8 @@ import uk.gov.hmrc.agent.kenshoo.monitoring.HttpAPIMonitor
 import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, OptinStatus}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models.{AccessGroupSummaries, GroupSummary}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse, UpstreamErrorResponse}
 import uk.gov.hmrc.http.HttpReads.Implicits.readRaw
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -88,18 +88,14 @@ class AgentPermissionsConnector @Inject()(http: HttpClient)(implicit val metrics
     val url = s"$baseUrl/agent-permissions/arn/${arn.value}/team-member/$userId/groups"
     monitor("ConsumedAPI-groupSummariesForTeamMember-GET") {
       http.GET[HttpResponse](url).map { response: HttpResponse =>
-        val eventuallySummaries = response.status match {
+        response.status match {
           case OK => response.json.asOpt[Seq[GroupSummary]]
           case NOT_FOUND => None
-          case e =>
-            throw UpstreamErrorResponse(
-              s"error getting group summary for arn: $arn, teamMember: $userId from $url",
-              e)
+          case other =>
+            logger.warn(
+              s"error getting groups for '$userId'. Backend response status: $other")
+            None
         }
-        val maybeGroups = eventuallySummaries.map { summaries =>
-          summaries
-        }
-        maybeGroups
       }
     }
   }
