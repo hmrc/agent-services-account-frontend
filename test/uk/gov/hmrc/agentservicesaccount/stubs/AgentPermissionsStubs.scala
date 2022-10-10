@@ -19,6 +19,7 @@ package uk.gov.hmrc.agentservicesaccount.stubs
 
 import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, get, patch, serverError, stubFor, urlEqualTo}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
+import play.api.http.Status.{NOT_FOUND, NO_CONTENT}
 import play.api.libs.json.Json
 import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, OptinStatus}
 import uk.gov.hmrc.agentservicesaccount.models.{AccessGroupSummaries, GroupSummary}
@@ -54,6 +55,14 @@ object AgentPermissionsStubs {
         .willReturn(aResponse()
           .withStatus(200)
           .withBody(s""" "${optinStatus.value}" """)))
+
+  def givenOptinRecordExistsForArn(arn: Arn, exists: Boolean) =
+    stubFor(
+      get(urlEqualTo(s"/agent-permissions/arn/${arn.value}/optin-record-exists"))
+        .willReturn(
+          aResponse()
+            .withStatus(if(exists) NO_CONTENT else NOT_FOUND))
+    )
 
   def givenOptinStatusFailedForArn(arn: Arn) =
     stubFor(

@@ -19,7 +19,7 @@ package uk.gov.hmrc.agentservicesaccount.connectors
 import com.codahale.metrics.MetricRegistry
 import com.kenshoo.play.metrics.Metrics
 import play.api.Logging
-import play.api.http.Status.{NOT_FOUND, OK}
+import play.api.http.Status.{NOT_FOUND, NO_CONTENT, OK}
 import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.agent.kenshoo.monitoring.HttpAPIMonitor
 import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, OptinStatus}
@@ -95,6 +95,21 @@ class AgentPermissionsConnector @Inject()(http: HttpClient)(implicit val metrics
             logger.warn(
               s"error getting groups for '$userId'. Backend response status: $other")
             None
+        }
+      }
+    }
+  }
+
+  def isOptedIn(arn: Arn)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Boolean] = {
+    val url = s"$baseUrl/agent-permissions/arn/${arn.value}/optin-record-exists"
+    monitor("ConsumedAPI-optInRecordExists-GET") {
+      http.GET[HttpResponse](url).map { response: HttpResponse =>
+        response.status match {
+          case NO_CONTENT => true
+          case NOT_FOUND => false
+          case other =>
+            logger.warn(s"error getting opt in record for '$arn'. Backend response status: $other")
+            false
         }
       }
     }
