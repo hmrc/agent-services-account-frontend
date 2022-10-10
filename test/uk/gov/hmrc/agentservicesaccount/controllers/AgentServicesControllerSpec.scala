@@ -811,12 +811,8 @@ class AgentServicesControllerSpec extends BaseISpec {
 
     "render correctly for Standard User who's Opted-In_READY without Access Groups" in {
       val providerId = RandomUtils.nextLong().toString
-      givenArnIsAllowlistedForIrv(Arn(arn))
       givenFullAuthorisedAsAgentWith(arn, providerId)
-      givenArnAllowedOk()
-      givenSyncEacdSuccess(Arn(arn))
-      givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInReady)
-      givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq.empty)) // no access groups yet
+      givenOptinRecordExistsForArn(Arn(arn), true)
       givenAccessGroupsForTeamMember(Arn(arn), providerId, Seq.empty)
       val response = await(controller.yourAccount()(fakeRequest("GET", yourAccountUrl)))
 
@@ -858,17 +854,54 @@ class AgentServicesControllerSpec extends BaseISpec {
 
     }
 
+    "render correctly for Standard User who's NOT Opted-In_READY without Access Groups" in {
+      val providerId = RandomUtils.nextLong().toString
+      givenFullAuthorisedAsAgentWith(arn, providerId)
+      givenOptinRecordExistsForArn(Arn(arn), false)
+      givenAccessGroupsForTeamMember(Arn(arn), providerId, Seq.empty)
+      val response = await(controller.yourAccount()(fakeRequest("GET", yourAccountUrl)))
+
+      status(response) shouldBe 200
+
+      val html = Jsoup.parse(contentAsString(response))
+
+      html.title() shouldBe "Your account - Agent services account - GOV.UK"
+      html.select(H1).get(0).text shouldBe "Your account"
+      html.select(secondaryNavLinks).get(1).text shouldBe "Your account"
+
+      //LEFT PANEL
+      val userDetailsPanel = html.select("div#user-details")
+      userDetailsPanel.select("h2").get(0).text() shouldBe "Name"
+      userDetailsPanel.select("p").get(0).text() shouldBe "Bob The Builder"
+      userDetailsPanel.select("h2").get(1).text() shouldBe "Email address"
+      userDetailsPanel.select("p").get(1).text() shouldBe "bob@builder.com"
+      userDetailsPanel.select("h2").get(2).text() shouldBe "Role"
+      userDetailsPanel.select("p").get(2)
+        .text() shouldBe "Standard - As a user with standard permissions you can view your assigned access groups and clients. Please contact your administrator for more information."
+
+      //RIGHT PANEL
+      val userGroupsPanel = html.select("div#user-groups")
+      userGroupsPanel.isEmpty shouldBe true
+
+      //BOTTOM PANEL
+      val bottomPanel = html.select("div#bottom-panel")
+      bottomPanel.select("h2").get(0).text shouldBe "Your company’s administrators"
+      bottomPanel.select("a").get(0).text shouldBe "View administrators"
+      bottomPanel.select("a").get(0).attr("href") shouldBe routes.AgentServicesController.administrators.url
+      bottomPanel.select("h2").get(1).text shouldBe "Contact details"
+      bottomPanel.select("a").get(1).text shouldBe "View the contact details we have for your business"
+      bottomPanel.select("a").get(1).attr("href") shouldBe routes.AgentServicesController.accountDetails.url
+
+    }
+
     "return status: OK and body containing content for status Opted-In_READY (access groups already created)" in {
       val providerId = RandomUtils.nextLong().toString
       val groupSummaries: Seq[GroupSummary] = Seq(
         GroupSummary("grpId1", "Potatoes", 1, 1),
         GroupSummary("grpId2", "Carrots", 1, 1),
       )
-      givenArnIsAllowlistedForIrv(Arn(arn))
       givenFullAuthorisedAsAgentWith(arn, providerId)
-      givenArnAllowedOk()
-      givenSyncEacdSuccess(Arn(arn))
-      givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInReady)
+      givenOptinRecordExistsForArn(Arn(arn), true)
       givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq(AccessGroupSummary("myAccessGroupId")))) // there is already an access group
       givenAccessGroupsForTeamMember(Arn(arn), providerId, groupSummaries)
       val response = await(controller.yourAccount()(fakeRequest("GET", yourAccountUrl)))

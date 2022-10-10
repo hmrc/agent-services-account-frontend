@@ -159,8 +159,13 @@ class AgentServicesController @Inject()
       if (!agentInfo.isAdmin) {
         if (appConfig.granPermsEnabled) {
           agentInfo.credentials.fold(Ok(your_account(None)).toFuture) { credentials =>
-            agentPermissionsConnector.getGroupsForTeamMember(agentInfo.arn, credentials.providerId)
-              .map(maybeSummaries => Ok(your_account(Some(agentInfo), maybeSummaries)))
+            agentPermissionsConnector.isOptedIn(agentInfo.arn).flatMap(isOptedIn =>
+              if (isOptedIn)
+                agentPermissionsConnector.getGroupsForTeamMember(agentInfo.arn, credentials.providerId)
+                  .map(maybeSummaries => Ok(your_account(Some(agentInfo), maybeSummaries)))
+              else
+                Ok(your_account(Some(agentInfo), None, false)).toFuture
+            )
           }
         } else {
           Ok(your_account(None)).toFuture
