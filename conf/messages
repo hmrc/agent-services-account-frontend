@@ -42,7 +42,7 @@ agent.services.account.sectionITSA.col1.p=You must first get an authorisation fr
 agent.services.account.sectionITSA.col1.link=If you copy your client across, you will need to<a class="govuk-link" href="https://www.gov.uk/guidance/sign-up-your-client-for-making-tax-digital-for-income-tax" target="_blank" rel="noreferrer noopener"> sign them up to Making Tax Digital for Income Tax (opens in a new tab)</a>
 agent.services.account.sectionITSA.col2.h3=Manage your client’s Income Tax details
 agent.services.account.sectionITSA.col2.link1.text=View your client’s Income Tax
-agent.services.account.sectionITSA.col2.link2.text=Help clients check whether they are eligible(opens in a new tab)
+agent.services.account.sectionITSA.col2.link2.text=Help clients check whether they are eligible (opens in a new tab)
 
 agent.services.account.trusts-section.h2=Trusts and estates
 agent.services.account.trusts-section.col1.h3=Before you start

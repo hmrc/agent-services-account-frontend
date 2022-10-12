@@ -33,7 +33,7 @@ trait UnitSpec extends AnyWordSpecLike with Matchers with OptionValues with Scal
   def status(result: Result): Int = result.header.status
   def status(result: Future[Result]): Int = Helpers.status(result)
   def bodyOf(result: Result): String = Helpers.contentAsString(Future.successful(result))
-  def redirectLocation(result: Result) = Helpers.redirectLocation(Future.successful(result))
+  def redirectLocation(result: Result): Option[String] = Helpers.redirectLocation(Future.successful(result))
   def contentAsString(result: Result): String = Helpers.contentAsString(Future.successful(result))
   def contentAsJson(result: Result): JsValue = Helpers.contentAsJson(Future.successful(result))
   def contentType(result: Result): Option[String] =

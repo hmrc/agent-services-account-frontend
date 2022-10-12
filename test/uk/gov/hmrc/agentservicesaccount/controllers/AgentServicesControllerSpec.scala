@@ -19,6 +19,8 @@ package uk.gov.hmrc.agentservicesaccount.controllers
 
 import org.apache.commons.lang3.RandomUtils
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
+import org.scalatest.Assertion
 import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.mvc.Session
 import play.api.test.Helpers._
@@ -126,153 +128,180 @@ class AgentServicesControllerSpec extends BaseISpec {
   }
 
   "home" should {
-    "return Status: OK and body containing correct content" in {
-      givenArnIsAllowlistedForIrv(Arn(arn))
-      val controllerWithSuspensionDisabled =
-        appBuilder(Map("features.enable-agent-suspension" -> false))
-          .build()
-          .injector.instanceOf[AgentServicesController]
-      givenAuthorisedAsAgentWith(arn)
-      givenSuspensionStatus(SuspensionDetails(suspensionStatus = false, None))
 
-      val response = controllerWithSuspensionDisabled.showAgentServicesAccount()(fakeRequest("GET", "/home"))
+    "return status: OK" when {
+      "IRV allowlist is enabled and the ARN is allowed (suspension disabled)" in {
+        givenArnIsAllowlistedForIrv(Arn(arn))
+        val controller =
+          appBuilder(Map("features.enable-agent-suspension" -> false, "features.enable-irv-allowlist" -> true))
+            .build()
+            .injector.instanceOf[AgentServicesController]
+        givenAuthorisedAsAgentWith(arn)
 
-      status(response) shouldBe OK
-      Helpers.contentType(response).get shouldBe HTML
-      val content = Helpers.contentAsString(response)
-
-      val html = Jsoup.parse(content)
-      html.select("div.govuk-phase-banner").isEmpty() shouldBe false
-      html.select("div.govuk-phase-banner a").text shouldBe "feedback"
-      html.select("div.govuk-phase-banner a").attr("href") shouldBe "http://localhost:9250/contact/beta-feedback?service=AOSS"
-
-      content should include(messagesApi("agent.services.account.heading", "servicename.titleSuffix"))
-      content should include(messagesApi("agent.services.account.heading"))
-      content should include(messagesApi("app.name"))
-      content should include(messagesApi("agent.accountNumber","TARN 000 0001"))
-      content should include(messagesApi("agent.services.account.sectionITSA.h2"))
-      content should include(messagesApi("agent.services.account.sectionITSA.col1.h3"))
-      content should include(messagesApi("agent.services.account.sectionITSA.col1.p", appConfig.agentMappingUrl, appConfig.agentInvitationsFrontendClientTypeUrl))
-      content should include(messagesApi("agent.services.account.sectionITSA.col1.link"))
-      content should include(messagesApi("agent.services.account.sectionITSA.col2.h3"))
-      content should include(appConfig.incomeTaxSubscriptionAgentFrontendUrl)
-      content should include("https://www.gov.uk/guidance/follow-the-rules-for-making-tax-digital-for-income-tax#who-can-follow-the-rules")
-      content should include(messagesApi("agent.services.account.sectionITSA.col2.link1.text"))
-      content should include(messagesApi("agent.services.account.sectionITSA.col2.link2.text"))
-      content should include(messagesApi("agent.services.account.section1.h2"))
-      content should include(messagesApi("agent.services.account.section1.col1.h3"))
-      content should include(messagesApi("agent.services.account.section1.col1.p", appConfig.agentMappingUrl, appConfig.agentInvitationsFrontendClientTypeUrl))
-      content should include("https://www.gov.uk/guidance/sign-up-for-making-tax-digital-for-vat")
-      content should include(htmlEscapedMessage("agent.services.account.section1.col2.h3"))
-      content should include(htmlEscapedMessage("agent.services.account.section1.col2.link"))
-      content should include(messagesApi("agent.services.account.section3.col1.h2"))
-      content should include(messagesApi("agent.services.account.section3.col1.h3"))
-      content should include(messagesApi("agent.services.account.section3.col1.text1"))
-      content should include(messagesApi("agent.services.account.section3.col1.link1", messagesApi("agent.services.account.section3.col1.link1.href")))
-      content should include(messagesApi("agent.services.account.section3.col1.text2"))
-      content should include(messagesApi("agent.services.account.section3.col1.link2", messagesApi("agent.services.account.section3.col1.link2.href")))
-      content should include(messagesApi("agent.services.account.section3.col2.h3"))
-      content should include(messagesApi("agent.services.account.section3.col2.link1", messagesApi("agent.services.account.section3.col2.link1.href")))
-      content should include(messagesApi("agent.services.account.section4.h2"))
-      content should include(messagesApi("agent.services.account.section4.col1.h3"))
-      content should include(messagesApi("agent.services.account.section4.col1.link"))
-      content should include(appConfig.agentInvitationsFrontendUrl)
-      content should include(appConfig.agentInvitationsFrontendClientTypeUrl)
-      content should include(messagesApi("agent.services.account.section4.col2.link1"))
-      content should include(messagesApi("agent.services.account.section4.col2.link2"))
-      content should include(htmlEscapedMessage("agent.services.account.section4.col2.link3"))
-      content should include(appConfig.agentInvitationsTrackUrl)
-      content should include(appConfig.agentMappingUrl)
-      content should include(appConfig.agentInvitationsCancelAuthUrl)
-      content should include(messagesApi("agent.services.account.trusts-section.h2"))
-      content should include(messagesApi("agent.services.account.trusts-section.col1.h3"))
-      content should include(messagesApi("agent.services.account.trusts-section.col1.register-trust.p", appConfig.agentInvitationsFrontendClientTypeUrl))
-      content should include(messagesApi("agent.services.account.trusts-section.col1.register-estate.p"))
-      content should include(messagesApi("agent.services.account.trusts-section.col2.h3"))
-      content should include(messagesApi("agent.services.account.trusts-section.col2.register-trust-link.text"))
-      content should include(messagesApi("agent.services.account.welcome"))
-      content should include(messagesApi("agent.services.account.client-authorisations.p"))
-      content should include(messagesApi("agent.services.account.tax-services"))
-      content should include(messagesApi("asa.other.heading"))
-      content should include(messagesApi("asa.other.p1"))
-      content should include(messagesApi("nav.help"))
-    }
-
-    "return Status: OK and body containing correct content when suspension details are in the session and agent is suspended for VATC" in {
-      givenArnIsAllowlistedForIrv(Arn(arn))
-      givenSuspensionStatus(SuspensionDetails(suspensionStatus = true, Some(Set("VATC"))))
-      givenAuthorisedAsAgentWith(arn)
-      val response = controller.showAgentServicesAccount()(fakeRequest("GET", "/home"))
-
-      status(response) shouldBe OK
-      Helpers.contentType(response).get shouldBe HTML
-      val content = Helpers.contentAsString(response)
-
-      content should include(messagesApi("agent.services.account.section1.h2"))
-      content should include(messagesApi("agent.services.account.section1.suspended.h3"))
-      content should include(messagesApi("agent.services.account.section1.suspended.p1"))
-      content should include(messagesApi("agent.services.account.section1.suspended.p2"))
-
-      content should not include("https://www.gov.uk/guidance/sign-up-for-making-tax-digital-for-vat")
-    }
-
-    "return Status: OK and body containing correct content when agent suspension is not enabled" in {
-      givenArnIsAllowlistedForIrv(Arn(arn))
-      val controllerWithSuspensionDisabled =
-        appBuilder(Map("features.enable-agent-suspension" -> false))
-          .build()
-          .injector.instanceOf[AgentServicesController]
-      givenAuthorisedAsAgentWith(arn)
-      val response = controllerWithSuspensionDisabled.showAgentServicesAccount()(fakeRequest("GET", "/home"))
-
-      status(response) shouldBe OK
-      Helpers.contentType(response).get shouldBe HTML
-      val content = Helpers.contentAsString(response)
-
-      content should include(messagesApi("agent.services.account.heading", "servicename.titleSuffix"))
-      content should include(messagesApi("agent.services.account.heading"))
-      content should include(messagesApi("app.name"))
-    }
-
-    "do not fail without continue url parameter" in {
-      givenArnIsAllowlistedForIrv(Arn(arn))
-      givenAuthorisedAsAgentWith(arn)
-      givenSuspensionStatus(SuspensionDetails(suspensionStatus = false, None))
-
-      val response = controller.showAgentServicesAccount().apply(fakeRequest("GET", "/home"))
-      status(response) shouldBe OK
-      Helpers.contentAsString(response) should {
-        not include "<a href=\"/\" class=\"btn button\" id=\"continue\">"
+        val result = controller.showAgentServicesAccount(fakeRequest())
+        status(result) shouldBe OK
       }
+
+      "IRV allowlist is disabled and no suspension status" in {
+        val controller =
+          appBuilder(Map("features.enable-irv-allowlist" -> false, "features.enable-agent-suspension" -> true))
+            .build()
+            .injector.instanceOf[AgentServicesController]
+        givenSuspensionStatusNotFound
+        givenAuthorisedAsAgentWith(arn)
+
+        val result = controller.showAgentServicesAccount(fakeRequest())
+        status(result) shouldBe OK
+      }
+
+      "suspension details are in the session and agent is suspended for VATC (with IRV enabled)" in {
+        givenArnIsAllowlistedForIrv(Arn(arn))
+        givenSuspensionStatus(SuspensionDetails(suspensionStatus = true, Some(Set("VATC"))))
+        givenAuthorisedAsAgentWith(arn)
+        val response = controller.showAgentServicesAccount()(fakeRequest("GET", "/home"))
+
+        status(response) shouldBe OK
+      }
+
     }
 
-    "include the Income Record Viewer section when the IRV allowlist is enabled and the ARN is allowed " in {
-      givenArnIsAllowlistedForIrv(Arn(arn))
-      val controller =
-        appBuilder(Map("features.enable-agent-suspension" -> false, "features.enable-irv-allowlist" -> true))
-          .build()
-          .injector.instanceOf[AgentServicesController]
-      givenAuthorisedAsAgentWith(arn)
+    "return body containing the correct content" when {
 
-      val result = controller.showAgentServicesAccount(fakeRequest())
-      status(result) shouldBe OK
+      def expectedBlueBannerContent(html: Document): Assertion = {
+        expectedH1(html, "Welcome to your agent services account")
+        assertPageContainsText(html, "Account number: TARN 000 0001")
+      }
 
-      val content = Helpers.contentAsString(result)
-      content should include (messagesApi("agent.services.account.paye-section.h2"))
-    }
+      def expectedClientAuthContent(html: Document): Assertion = {
+        expectedH2(html, "Client authorisations")
+        assertElementInPositionContainsText(html, paragraphs, expectedText = "You must ask your client to authorise you through your agent services account before you can access any services. Copy across an old authorisation or create a new one.")
+        assertContainsTextForElement(html.select(LI).get(0), "Ask a client to authorise you")
+        assertAttributeValueForElement(html.select(link).get(0), attributeValue = "http://localhost:9448/invitations/agents")
+        assertContainsTextForElement(html.select(LI).get(1), "Manage your authorisation requests from the last 30 days")
+        assertAttributeValueForElement(html.select(link).get(1), attributeValue = "http://localhost:9448/invitations/track")
+        assertContainsTextForElement(html.select(LI).get(2), "Copy across more VAT and Self Assessment client authorisations")
+        assertAttributeValueForElement(html.select(link).get(2), attributeValue = "http://localhost:9438/agent-mapping/start")
+        assertContainsTextForElement(html.select(LI).get(3), "Cancel a client’s authorisation")
+        assertAttributeValueForElement(html.select(link).get(3), attributeValue = "http://localhost:9448/invitations/agents/cancel-authorisation/client-type")
+      }
 
-    "not include the Income Record Viewer section when the IRV allowlist is enabled and the ARN is not allowed" in {
-      givenArnIsNotAllowlistedForIrv(Arn(arn))
-      givenSuspensionStatus(SuspensionDetails(suspensionStatus = false, None))
-      givenAuthorisedAsAgentWith(arn)
+      "an authorised agent with suspension disabled and IRV enabled and allowed" in {
+        givenArnIsAllowlistedForIrv(Arn(arn))
+        val controllerWithSuspensionDisabled =
+          appBuilder(Map("features.enable-agent-suspension" -> false))
+            .build()
+            .injector.instanceOf[AgentServicesController]
+        givenAuthorisedAsAgentWith(arn)
+        givenSuspensionStatus(SuspensionDetails(suspensionStatus = false, None))
 
-      val controller = appBuilder().build().injector.instanceOf[AgentServicesController]
+        val response = await(controllerWithSuspensionDisabled.showAgentServicesAccount()(fakeRequest("GET", "/home")))
+        val html = Jsoup.parse(contentAsString(response))
 
-      val result = controller.showAgentServicesAccount(fakeRequest())
-      status(result) shouldBe OK
+        expectedTitle(html, "Welcome to your agent services account - Agent services account - GOV.UK")
 
-      val content = Helpers.contentAsString(result)
-      content should not include messagesApi("agent.services.account.paye-section.h2")
+        // beta banner present - only when gran perms enabled?
+        assertElementContainsText(html, cssSelector = "div.govuk-phase-banner a", expectedText = "feedback")
+        assertAttributeValueForElement(
+          element = html.select("div.govuk-phase-banner a").get(0),
+          attributeValue = "http://localhost:9250/contact/beta-feedback?service=AOSS"
+        )
+
+        expectedBlueBannerContent(html)
+        expectedClientAuthContent(html)
+
+        // accordion includes Income Record Viewer section
+        expectedH2(html, "Tax services you can manage in this account", 1)
+
+        expectedH3(html, "Making Tax Digital for Income Tax")
+        expectedH4(html, "Before you start")
+        assertElementInPositionContainsText(html, paragraphs, 1,
+          "You must first get an authorisation from your client. You can do this by copying across your authorisations or requesting an authorisation.")
+        assertAttributeValueForElement(html.select(link).get(4), attributeValue = "http://localhost:9438/agent-mapping/start")
+        assertAttributeValueForElement(html.select(link).get(5), attributeValue = "http://localhost:9448/invitations/agents/client-type")
+        assertElementInPositionContainsText(html, paragraphs, 2,
+          "If you copy your client across, you will need to sign them up to Making Tax Digital for Income Tax (opens in a new tab)")
+        assertAttributeValueForElement(html.select(link).get(6), attributeValue = "https://www.gov.uk/guidance/sign-up-your-client-for-making-tax-digital-for-income-tax")
+        expectedH4(html, "Manage your client’s Income Tax details", 1)
+        assertElementInPositionContainsText(html, paragraphs, 3,
+          "View your client’s Income Tax")
+        assertAttributeValueForElement(html.select(link).get(7), attributeValue = "http://localhost:9081/report-quarterly/income-and-expenses/view/agents")
+        assertElementInPositionContainsText(html, paragraphs, 4,
+          "Help clients check whether they are eligible (opens in a new tab)")
+        assertAttributeValueForElement(html.select(link).get(8), attributeValue = "https://www.gov.uk/guidance/follow-the-rules-for-making-tax-digital-for-income-tax#who-can-follow-the-rules")
+
+        expectedH3(html, "VAT", 1)
+        expectedH4(html, "Before you start", 2)
+        assertElementInPositionContainsText(html, paragraphs, 5,
+          "You must first get an authorisation from your client. You can do this by copying across your authorisations or requesting an authorisation.")
+        assertAttributeValueForElement(html.select(link).get(9), attributeValue = "http://localhost:9438/agent-mapping/start")
+        assertAttributeValueForElement(html.select(link).get(10), attributeValue = "http://localhost:9448/invitations/agents/client-type")
+
+        assertAttributeValueForElement(html.select(link).get(11), attributeValue = "https://www.gov.uk/guidance/sign-up-for-making-tax-digital-for-vat")
+        expectedH4(html, "Manage your client’s VAT", 3)
+        assertAttributeValueForElement(html.select(link).get(12), attributeValue = "https://www.tax.service.gov.uk/register-for-vat")
+        assertAttributeValueForElement(html.select(link).get(13), attributeValue = "http://localhost:9149/vat-through-software/representative/client-vat-number")
+
+        expectedH3(html, "View a client’s Income record", 2)
+
+        expectedH3(html, "Trusts and estates", 3)
+        expectedH4(html, "Before you start", 4)
+        expectedH4(html, "Manage your clients trust", 5)
+
+        expectedH3(html, "Capital Gains Tax on UK property", 4)
+        expectedH4(html, "Before you start", 6)
+        expectedH4(html, "Manage a client’s Capital Gains Tax on UK property", 7)
+
+        expectedH3(html, "Plastic Packaging Tax", 5)
+        expectedH4(html, "Before you start", 8)
+        expectedH4(html, "Manage your client’s Plastic Packaging Tax", 9)
+
+        expectedH3(html, "Other tax services", 6)
+
+        expectedH2(html, "Help and guidance", 2)
+
+      }
+
+      "agent is suspended for VATC and suspension details are in the session (IRV enabled & allowed)" in {
+        givenArnIsAllowlistedForIrv(Arn(arn))
+        givenSuspensionStatus(SuspensionDetails(suspensionStatus = true, Some(Set("VATC"))))
+        givenAuthorisedAsAgentWith(arn)
+        val response = controller.showAgentServicesAccount()(fakeRequest("GET", "/home"))
+
+        status(response) shouldBe OK
+        Helpers.contentType(response).get shouldBe HTML
+        val content = Helpers.contentAsString(response)
+
+        // accordion with suspension content
+        content should include(messagesApi("agent.services.account.section1.h2"))
+        content should include(messagesApi("agent.services.account.section1.suspended.h3"))
+        content should include(messagesApi("agent.services.account.section1.suspended.p1"))
+        content should include(messagesApi("agent.services.account.section1.suspended.p2"))
+
+        content should not include("https://www.gov.uk/guidance/sign-up-for-making-tax-digital-for-vat")
+      }
+
+      "IRV allowlist is enabled and the ARN is not allowed (suspension FF enabled)" in {
+        givenArnIsNotAllowlistedForIrv(Arn(arn))
+        givenSuspensionStatus(SuspensionDetails(suspensionStatus = false, None))
+        givenAuthorisedAsAgentWith(arn)
+
+        val controller = appBuilder().build().injector.instanceOf[AgentServicesController]
+
+        val result = controller.showAgentServicesAccount(fakeRequest())
+        status(result) shouldBe OK
+
+        val content = Helpers.contentAsString(result)
+        content should not include messagesApi("agent.services.account.paye-section.h2")
+
+        // accordion does NOT include Income Record Viewer section
+        //      expectedH2(html, "Tax services you can manage in this account", 1)
+        //      expectedH3(html, "Making Tax Digital for Income Tax")
+        //      expectedH3(html, "VAT", 1)
+        //      expectedH3(html, "Trusts and estates", 2)
+        //      expectedH3(html, "Capital Gains Tax on UK property", 3)
+        //      expectedH3(html, "Plastic Packaging Tax", 4)
+        //      expectedH3(html, "Other tax services", 5)
+      }
     }
 
   }
@@ -812,7 +841,7 @@ class AgentServicesControllerSpec extends BaseISpec {
     "render correctly for Standard User who's Opted-In_READY without Access Groups" in {
       val providerId = RandomUtils.nextLong().toString
       givenFullAuthorisedAsAgentWith(arn, providerId)
-      givenOptinRecordExistsForArn(Arn(arn), true)
+      givenOptinRecordExistsForArn(Arn(arn), exists = true)
       givenAccessGroupsForTeamMember(Arn(arn), providerId, Seq.empty)
       val response = await(controller.yourAccount()(fakeRequest("GET", yourAccountUrl)))
 
@@ -857,7 +886,7 @@ class AgentServicesControllerSpec extends BaseISpec {
     "render correctly for Standard User who's NOT Opted-In_READY without Access Groups" in {
       val providerId = RandomUtils.nextLong().toString
       givenFullAuthorisedAsAgentWith(arn, providerId)
-      givenOptinRecordExistsForArn(Arn(arn), false)
+      givenOptinRecordExistsForArn(Arn(arn), exists = false)
       givenAccessGroupsForTeamMember(Arn(arn), providerId, Seq.empty)
       val response = await(controller.yourAccount()(fakeRequest("GET", yourAccountUrl)))
 
@@ -901,7 +930,7 @@ class AgentServicesControllerSpec extends BaseISpec {
         GroupSummary("grpId2", "Carrots", 1, 1),
       )
       givenFullAuthorisedAsAgentWith(arn, providerId)
-      givenOptinRecordExistsForArn(Arn(arn), true)
+      givenOptinRecordExistsForArn(Arn(arn), exists = true)
       givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq(AccessGroupSummary("myAccessGroupId")))) // there is already an access group
       givenAccessGroupsForTeamMember(Arn(arn), providerId, groupSummaries)
       val response = await(controller.yourAccount()(fakeRequest("GET", yourAccountUrl)))

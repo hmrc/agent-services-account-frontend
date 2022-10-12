@@ -23,6 +23,7 @@ object Css {
   val H1 = "main h1"
   val H2 = "main h2"
   val H3 = "main h3"
+  val H4 = "main h4"
   val LI = "main ul li"
   val PRE_H1 = "main .govuk-caption-l"
   val paragraphs = "main p"
