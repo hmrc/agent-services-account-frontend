@@ -60,21 +60,21 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
 
   lazy val continueFromGGSignIn = s"$companyAuthFrontendExternalUrl$signInPath?continue=${urlEncode(s"$asaFrontendExternalUrl/agent-services-account")}"
 
-  val agentMappingFrontendExternalUrl = getConfString("agent-mapping-frontend.external-url")
+  val agentMappingFrontendExternalUrl: String = getConfString("agent-mapping-frontend.external-url")
 
   val agentMappingUrl: String = s"$agentMappingFrontendExternalUrl/agent-mapping/start"
 
-  val agentSubscriptionFrontendExternalUrl = getConfString("agent-subscription-frontend.external-url")
+  val agentSubscriptionFrontendExternalUrl: String = getConfString("agent-subscription-frontend.external-url")
 
   val agentSubscriptionFrontendUrl: String = s"$agentSubscriptionFrontendExternalUrl/agent-subscription/start"
 
-  val agentInvitationsFrontendExternalUrl = getConfString("agent-invitations-frontend.external-url")
+  val agentInvitationsFrontendExternalUrl: String = getConfString("agent-invitations-frontend.external-url")
 
   val agentInvitationsFrontendUrl: String = s"$agentInvitationsFrontendExternalUrl/invitations/agents"
 
   val agentInvitationsFrontendClientTypeUrl: String = s"$agentInvitationsFrontendExternalUrl/invitations/agents/client-type"
 
-  val incomeTaxSubscriptionAgentFrontendExternalUrl = getConfString("income-tax-subscription-frontend.external-url")
+  val incomeTaxSubscriptionAgentFrontendExternalUrl: String = getConfString("income-tax-subscription-frontend.external-url")
 
   val incomeTaxSubscriptionAgentFrontendUrl: String = s"$incomeTaxSubscriptionAgentFrontendExternalUrl/report-quarterly/income-and-expenses/view/agents"
 
@@ -82,19 +82,23 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
 
   val agentInvitationsCancelAuthUrl: String = s"$agentInvitationsFrontendExternalUrl/invitations/agents/cancel-authorisation/client-type"
 
-  val taxHistoryFrontendExternalUrl = getConfString("tax-history-frontend.external-url")
+  val taxHistoryFrontendExternalUrl: String = getConfString("tax-history-frontend.external-url")
 
   val taxHistoryFrontendUrl: String = s"$taxHistoryFrontendExternalUrl/tax-history/select-client"
 
-  val userManagementExternalUrl = getString("user-management.external-url")
-  val manageUsersStartPath = getString("user-management.manage-users")
-  val addUserStartPath = getString("user-management.add-user")
+  val userManagementExternalUrl: String = getString("user-management.external-url")
+  val manageUsersStartPath: String = getString("user-management.manage-users")
+  val addUserStartPath: String = getString("user-management.add-user")
   lazy val manageUsersUrl: String = s"$userManagementExternalUrl$manageUsersStartPath"
   lazy val addUserUrl: String = s"$userManagementExternalUrl$addUserStartPath"
 
-  val vatExternalUrl = getConfString("vat-agent-client-lookup-frontend.external-url")
-  val vatStartPath = getConfString("vat-agent-client-lookup-frontend.start.path")
+  val vatExternalUrl: String = getConfString("vat-agent-client-lookup-frontend.external-url")
+  val vatStartPath: String = getConfString("vat-agent-client-lookup-frontend.start.path")
   val vatUrl = s"$vatExternalUrl$vatStartPath"
+
+  val vrsExternalUrl: String = getString("vat-registration-service.external-url")
+  val vrsPath: String = getString("vat-registration-service.path")
+  val vrsUrl = s"$vrsExternalUrl$vrsPath"
 
   val agentSuspensionEnabled = getBoolean("features.enable-agent-suspension")
   val ITSAAccordionEnabled = getBoolean("features.enable-ITSA-Accordion")
