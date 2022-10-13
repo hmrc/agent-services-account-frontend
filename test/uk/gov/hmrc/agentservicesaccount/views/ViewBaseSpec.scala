@@ -61,7 +61,7 @@ trait ViewBaseSpec extends AnyWordSpecLike with Matchers with OptionValues with 
     elements.get(index).text shouldBe expectedText
   }
 
-  def assertContainsTextForElement(element: Element, expectedText: String): Assertion = {
+  def expectTextForElement(element: Element, expectedText: String): Assertion = {
     element.text shouldBe expectedText
   }
 
