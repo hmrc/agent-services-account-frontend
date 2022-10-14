@@ -82,15 +82,19 @@
         @p(html=Some(Html(msgs("agent.services.account.section1.col1.link"))))
 
         @h4("agent.services.account.section1.col2.h3")
-        @p(html = Some(Html(
-            a(href = appConfig.vatUrl,
-                key = "agent.services.account.section1.col2.link",
-                target= Some("_blank"),
-                rel = Some("noreferrer noopener")
-            ) + "")
+        @ul_html(
+            items = Seq[Html](
+                a(href = appConfig.vrsUrl,
+                    key = "agent.services.account.section1.col2.link1",
+                    openInNewWindow = true
+                ),
+                a(href = appConfig.vatUrl,
+                    key = "agent.services.account.section1.col2.link2",
+                    openInNewWindow = true
+                )
+            ),
+            classes = Some("govuk-list--bullet")
         )
-        )
-
     }
 }
 

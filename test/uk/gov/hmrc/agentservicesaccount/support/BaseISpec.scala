@@ -22,10 +22,11 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import uk.gov.hmrc.agentservicesaccount.stubs.AuthStubs
+import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 
 abstract class BaseISpec
     extends UnitSpec with Matchers with OptionValues with GuiceOneAppPerSuite with BeforeAndAfterEach
-    with WireMockSupport with AkkaMaterializerSpec with AuthStubs with MetricsTestSupport {
+    with WireMockSupport with AkkaMaterializerSpec with AuthStubs with MetricsTestSupport with ViewBaseSpec {
 
   override implicit lazy val app: Application = appBuilder().build()
 
@@ -46,7 +47,7 @@ abstract class BaseISpec
       )
       .configure(additionalConfiguration)
 
-  override def beforeEach() {
+  override def beforeEach(): Unit = {
     super.beforeEach()
     givenCleanMetricRegistry()
     ()
