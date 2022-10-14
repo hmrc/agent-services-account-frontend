@@ -52,18 +52,16 @@
     @p(html = Some(Html(msgs("agent.services.account.sectionITSA.col1.link"))))
     @h4("agent.services.account.sectionITSA.col2.h3")
 
-    @p(html = Some(Html(
-            a(href = appConfig.incomeTaxSubscriptionAgentFrontendUrl, key = "agent.services.account.sectionITSA.col2.link1.text") + "")
-        )
-    )
-    @p(html = Some(Html(
+    @p(html = Some(
+            a(href = appConfig.incomeTaxSubscriptionAgentFrontendUrl, key = "agent.services.account.sectionITSA.col2.link1.text")
+    ))
+    @p(html = Some(
         a(href = "https://www.gov.uk/guidance/follow-the-rules-for-making-tax-digital-for-income-tax#who-can-follow-the-rules",
             key = "agent.services.account.sectionITSA.col2.link2.text",
             target= Some("_blank"),
             rel = Some("noreferrer noopener")
-        ) + "")
         )
-    )
+    ))
 }
 
 @mtdForVatAccordionItem = {
@@ -100,7 +98,7 @@
 
 @payeIncomeRecordAccordionItem = {
     @p("agent.services.account.paye-section.text")
-    @p(html = Some(Html(a(href = appConfig.taxHistoryFrontendUrl, key = "agent.services.account.paye-section.link") + "")))
+    @p(html = Some(a(href = appConfig.taxHistoryFrontendUrl, key = "agent.services.account.paye-section.link")))
 }
 
 @trustsAccordionItem = {
@@ -248,12 +246,11 @@
     <hr class="govuk-section-break hr-thick govuk-!-margin-bottom-6">
 
     @h2("agent.services.account.help.h2")
-    @p(html = Some(Html(
+    @p(html = Some(
         a(href = "/agent-services-account/help-and-guidance",
             key = "agent.services.account.help.link",
-        ) + "")
-    )
-    )
+        )
+    ))
 
     @hmrcReportTechnicalIssueHelper()
 
