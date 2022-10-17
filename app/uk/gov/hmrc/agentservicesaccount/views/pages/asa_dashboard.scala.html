@@ -15,10 +15,11 @@
  *@
 
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+@import uk.gov.hmrc.agentservicesaccount.controllers.routes
 @import uk.gov.hmrc.agentservicesaccount.views.html.components._
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 @import uk.gov.hmrc.govukfrontend.views.Aliases.Text
-@import uk.gov.hmrc.govukfrontend.views.html.components.{GovukAccordion, GovukPanel}
+@import uk.gov.hmrc.govukfrontend.views.html.components.{GovukNotificationBanner, GovukAccordion, GovukPanel, NotificationBanner}
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.accordion.{Accordion, Section}
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.panel.Panel
@@ -35,10 +36,12 @@
     govukWarningText: GovukWarningText,
     govukPanel: GovukPanel,
     govukAccordion: GovukAccordion,
+    govukNotificationBanner: GovukNotificationBanner,
     hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper)
 @(
     arn: String,
     isIrvAllowed: Boolean,
+    isShownRecruitmentBanner: Boolean = true,
     customDimension: String,
     isAdmin: Boolean = false,
     isSuspendedForVat: Boolean
@@ -210,6 +213,24 @@
     items
 }
 
+@notificationContent = {
+    @p("beta.invite.banner.heading", classes = Some("govuk-notification-banner__heading"))
+
+    @p("beta.invite.banner.p")
+
+    <div class="govuk-button-group">
+        @a(href = routes.BetaInviteController.showInvite.url,
+        key="beta.invite.banner.link1",
+        classes = Some("govuk-notification-banner__link")
+        )
+
+        @a(href = routes.AgentServicesController.showAgentServicesAccount.url,
+        key="beta.invite.banner.link2",
+        classes = Some("govuk-notification-banner__link")
+        )
+    </div>
+}
+
 @main(pageTitle = msgs("agent.services.account.heading"), isAdmin = isAdmin) {
 
     @govukPanel(
@@ -219,6 +240,12 @@
             classes = "blue-panel"
         )
     )
+
+    @if(isShownRecruitmentBanner) {
+        @govukNotificationBanner(NotificationBanner(
+            content = HtmlContent(notificationContent)
+        ))
+    }
 
     @h2("agent.services.account.section4.h2")
 

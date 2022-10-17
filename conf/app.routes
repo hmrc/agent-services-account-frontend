@@ -26,3 +26,9 @@ GET        /account-details                         @uk.gov.hmrc.agentservicesac
 # Assitant or 'Standard' user only
 GET        /your-account                            @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController.yourAccount
 GET        /your-account/administrators             @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController.administrators
+
+# Private beta feature testing
+GET        /private-beta-invite                     @uk.gov.hmrc.agentservicesaccount.controllers.BetaInviteController.showInvite
+GET        /private-beta-invite/details             @uk.gov.hmrc.agentservicesaccount.controllers.BetaInviteController.showInviteDetails
+GET        /private-beta-invite/check-answers       @uk.gov.hmrc.agentservicesaccount.controllers.BetaInviteController.showInviteCheckYourAnswers
+

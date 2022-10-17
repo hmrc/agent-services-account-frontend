@@ -351,3 +351,8 @@ administrators.ul.li.2=view information about all clients and access groups
 administrators.ul.li.3=create, rename and delete access groups
 administrators.ul.li.4=assign clients and team members to access groups
 
+# private beta form
+beta.invite.banner.heading=Help improve our new feature
+beta.invite.banner.p=Try out access groups and tell us what you think.
+beta.invite.banner.link1=Tell me more
+beta.invite.banner.link2=No thanks

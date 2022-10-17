@@ -148,6 +148,20 @@ class AgentPermissionsConnector @Inject()(http: HttpClient)(implicit val metrics
     }
   }
 
+  def isShownPrivateBetaInvite(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Boolean] = {
+    val url = s"$baseUrl/agent-permissions/private-beta-recruitment"
+
+    monitor("ConsumedAPI-GranPermsPrivateBeta-GET") {
+      http.GET[HttpResponse](url).map { response =>
+        response.status match {
+          case OK => logger.info(s"in private beta or has dismissed private beta invite")
+            false
+          case _ => true
+        }
+      }
+    }
+  }
+
   case class SyncEacd(msg: String)
 
   object SyncEacd {
