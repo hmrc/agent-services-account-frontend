@@ -78,7 +78,6 @@ class AgentServicesController @Inject()
     withAuthorisedAsAgent { agentInfo =>
       withIrvAllowed(agentInfo.arn) { irvAllowed =>
         withShowFeatureInvite(agentInfo.arn) { showFeatureInvite : Boolean =>
-          logger.info(s"isAdmin: ${agentInfo.isAdmin}")
           if (agentSuspensionEnabled) {
             request.session.get("isSuspendedForVat") match {
               case Some(isSuspendedForVat) =>

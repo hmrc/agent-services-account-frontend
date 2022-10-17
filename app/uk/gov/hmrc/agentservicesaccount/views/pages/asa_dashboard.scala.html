@@ -214,21 +214,26 @@
 }
 
 @notificationContent = {
-    @p("beta.invite.banner.heading", classes = Some("govuk-notification-banner__heading"))
+<div class="govuk-notification-banner" role="region" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
+    <div class="govuk-notification-banner__content">
+        @p("beta.invite.banner.heading", classes = Some("govuk-notification-banner__heading"))
 
-    @p("beta.invite.banner.p")
+        @p("beta.invite.banner.p")
 
-    <div class="govuk-button-group">
-        @a(href = routes.BetaInviteController.showInvite.url,
-        key="beta.invite.banner.link1",
-        classes = Some("govuk-notification-banner__link")
-        )
+        <div class="govuk-button-group">
+            @a(href = routes.BetaInviteController.showInvite.url,
+            key="beta.invite.banner.link1",
+            classes = Some("govuk-notification-banner__link")
+            )
 
-        @a(href = routes.AgentServicesController.showAgentServicesAccount.url,
-        key="beta.invite.banner.link2",
-        classes = Some("govuk-notification-banner__link")
-        )
+            @a(href = routes.AgentServicesController.showAgentServicesAccount.url,
+            key="beta.invite.banner.link2",
+            classes = Some("govuk-notification-banner__link")
+            )
+        </div>
     </div>
+</div>
+
 }
 
 @main(pageTitle = msgs("agent.services.account.heading"), isAdmin = isAdmin) {
@@ -242,9 +247,7 @@
     )
 
     @if(isShownRecruitmentBanner) {
-        @govukNotificationBanner(NotificationBanner(
-            content = HtmlContent(notificationContent)
-        ))
+        @notificationContent
     }
 
     @h2("agent.services.account.section4.h2")

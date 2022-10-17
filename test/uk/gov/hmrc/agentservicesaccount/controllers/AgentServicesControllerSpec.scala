@@ -172,17 +172,26 @@ class AgentServicesControllerSpec extends BaseISpec {
         assertPageContainsText(html, "Account number: TARN 000 0001")
       }
 
-      def expectedClientAuthContent(html: Document): Assertion = {
+      def expectedBetaInviteContent(html: Document): Assertion = {
+        html.select(paragraphs).get(0).text shouldBe "Help improve our new feature"
+        html.select(paragraphs).get(1).text shouldBe "Try out access groups and tell us what you think."
+        html.select(link).get(0).text shouldBe "Tell me more"
+        html.select(link).get(0).attr("href") shouldBe "/agent-services-account/private-beta-invite"
+        html.select(link).get(1).text shouldBe "No thanks"
+        html.select(link).get(1).attr("href") shouldBe "/agent-services-account/home"
+      }
+
+      def expectedClientAuthContent(html: Document, betaInviteContent: Boolean = true): Assertion = {
         expectedH2(html, "Client authorisations")
-        assertElementInPositionContainsText(html, paragraphs, expectedText = "You must ask your client to authorise you through your agent services account before you can access any services. Copy across an old authorisation or create a new one.")
+        html.select(paragraphs).get(if(betaInviteContent) 2 else 0).text shouldBe "You must ask your client to authorise you through your agent services account before you can access any services. Copy across an old authorisation or create a new one."
         expectTextForElement(html.select(LI).get(0), "Ask a client to authorise you")
-        assertAttributeValueForElement(html.select(link).get(0), attributeValue = "http://localhost:9448/invitations/agents")
+        assertAttributeValueForElement(html.select(link).get(if(betaInviteContent) 2 else 0), attributeValue = "http://localhost:9448/invitations/agents")
         expectTextForElement(html.select(LI).get(1), "Manage your authorisation requests from the last 30 days")
-        assertAttributeValueForElement(html.select(link).get(1), attributeValue = "http://localhost:9448/invitations/track")
+        assertAttributeValueForElement(html.select(link).get(if(betaInviteContent) 3 else 1), attributeValue = "http://localhost:9448/invitations/track")
         expectTextForElement(html.select(LI).get(2), "Copy across more VAT and Self Assessment client authorisations")
-        assertAttributeValueForElement(html.select(link).get(2), attributeValue = "http://localhost:9438/agent-mapping/start")
+        assertAttributeValueForElement(html.select(link).get(if(betaInviteContent) 4 else 2), attributeValue = "http://localhost:9438/agent-mapping/start")
         expectTextForElement(html.select(LI).get(3), "Cancel a client’s authorisation")
-        assertAttributeValueForElement(html.select(link).get(3), attributeValue = "http://localhost:9448/invitations/agents/cancel-authorisation/client-type")
+        assertAttributeValueForElement(html.select(link).get(if(betaInviteContent) 5 else 3), attributeValue = "http://localhost:9448/invitations/agents/cancel-authorisation/client-type")
       }
 
       "an authorised agent with suspension disabled and IRV enabled and allowed" in {
@@ -210,6 +219,7 @@ class AgentServicesControllerSpec extends BaseISpec {
         )
 
         expectedHomeBannerContent(html)
+        expectedBetaInviteContent(html)
         expectedClientAuthContent(html)
 
         // accordion includes Income Record Viewer section
@@ -217,79 +227,77 @@ class AgentServicesControllerSpec extends BaseISpec {
 
         expectedH3(html, "Making Tax Digital for Income Tax")
         expectedH4(html, "Before you start")
-        expectTextForElement(p.get(1),
-          "You must first get an authorisation from your client. You can do this by copying across your authorisations or requesting an authorisation.")
-        assertAttributeValueForElement(a.get(4), attributeValue = "http://localhost:9438/agent-mapping/start")
-        assertAttributeValueForElement(a.get(5), attributeValue = "http://localhost:9448/invitations/agents/client-type")
-        expectTextForElement(p.get(2),
-          "If you copy your client across, you will need to sign them up to Making Tax Digital for Income Tax (opens in a new tab)")
-        assertAttributeValueForElement(a.get(6), attributeValue = "https://www.gov.uk/guidance/sign-up-your-client-for-making-tax-digital-for-income-tax")
+        p.get(3).text shouldBe "You must first get an authorisation from your client. You can do this by copying across your authorisations or requesting an authorisation."
+        a.get(6).attr("href") shouldBe "http://localhost:9438/agent-mapping/start"
+        a.get(7).attr("href") shouldBe "http://localhost:9448/invitations/agents/client-type"
+        p.get(4).text shouldBe "If you copy your client across, you will need to sign them up to Making Tax Digital for Income Tax (opens in a new tab)"
+        a.get(8).attr("href") shouldBe "https://www.gov.uk/guidance/sign-up-your-client-for-making-tax-digital-for-income-tax"
         expectedH4(html, "Manage your client’s Income Tax details", 1)
-        expectTextForElement(p.get(3), "View your client’s Income Tax")
-        assertAttributeValueForElement(a.get(7), attributeValue = "http://localhost:9081/report-quarterly/income-and-expenses/view/agents")
-        expectTextForElement(p.get(4), "Help clients check whether they are eligible (opens in a new tab)")
-        assertAttributeValueForElement(a.get(8), attributeValue = "https://www.gov.uk/guidance/follow-the-rules-for-making-tax-digital-for-income-tax#who-can-follow-the-rules")
+        p.get(5).text shouldBe "View your client’s Income Tax"
+        a.get(9).attr("href") shouldBe "http://localhost:9081/report-quarterly/income-and-expenses/view/agents"
+        p.get(6).text shouldBe "Help clients check whether they are eligible (opens in a new tab)"
+        a.get(10).attr("href") shouldBe "https://www.gov.uk/guidance/follow-the-rules-for-making-tax-digital-for-income-tax#who-can-follow-the-rules"
 
         expectedH3(html, "VAT", 1)
         expectedH4(html, "Before you start", 2)
-        p.get(5).text shouldBe "You must first get an authorisation from your client. You can do this by copying across your authorisations or requesting an authorisation."
-        assertAttributeValueForElement(a.get(9), attributeValue = "http://localhost:9438/agent-mapping/start")
-        assertAttributeValueForElement(a.get(10), attributeValue = "http://localhost:9448/invitations/agents/client-type")
+        p.get(7).text shouldBe "You must first get an authorisation from your client. You can do this by copying across your authorisations or requesting an authorisation."
+        a.get(11).attr("href") shouldBe "http://localhost:9438/agent-mapping/start"
+        a.get(12).attr("href") shouldBe "http://localhost:9448/invitations/agents/client-type"
 
-        p.get(6).text shouldBe "If you copy your client across, you will need to sign them up to Making Tax Digital for VAT (opens in a new tab)."
-        assertAttributeValueForElement(a.get(11), attributeValue = "https://www.gov.uk/guidance/sign-up-for-making-tax-digital-for-vat")
+        p.get(8).text shouldBe "If you copy your client across, you will need to sign them up to Making Tax Digital for VAT (opens in a new tab)."
+        a.get(13).attr("href") shouldBe "https://www.gov.uk/guidance/sign-up-for-making-tax-digital-for-vat"
         expectedH4(html, "Manage your client’s VAT", 3)
-        a.get(12).text shouldBe "Register your client for VAT (opens in a new tab)"
-        a.get(12).attr("href") shouldBe "https://www.tax.service.gov.uk/register-for-vat"
-        a.get(13).text shouldBe "Manage, submit and view your client’s VAT details (opens in a new tab)"
-        a.get(13).attr("href") shouldBe "http://localhost:9149/vat-through-software/representative/client-vat-number"
+        a.get(14).text shouldBe "Register your client for VAT (opens in a new tab)"
+        a.get(14).attr("href") shouldBe "https://www.tax.service.gov.uk/register-for-vat"
+        a.get(15).text shouldBe "Manage, submit and view your client’s VAT details (opens in a new tab)"
+        a.get(15).attr("href") shouldBe "http://localhost:9149/vat-through-software/representative/client-vat-number"
 
         expectedH3(html, "View a client’s Income record", 2)
-        p.get(7).text shouldBe "Access a client’s Income record to help you complete their Self Assessment tax return."
-        p.get(8).text shouldBe "View a client’s Income record"
-        a.get(14).attr("href") shouldBe "http://localhost:9996/tax-history/select-client"
+        p.get(9).text shouldBe "Access a client’s Income record to help you complete their Self Assessment tax return."
+        p.get(10).text shouldBe "View a client’s Income record"
+        a.get(16).attr("href") shouldBe "http://localhost:9996/tax-history/select-client"
 
         expectedH3(html, "Trusts and estates", 3)
         expectedH4(html, "Before you start", 4)
-        p.get(9).text shouldBe "Before you ask your client to authorise you, you or your client must have registered the trust (opens in a new tab) or estate (opens in a new tab)."
-        a.get(15).attr("href") shouldBe "http://localhost:9448/invitations/agents/client-type"
-        a.get(16).attr("href") shouldBe "https://www.gov.uk/guidance/register-your-clients-trust"
-        a.get(17).attr("href") shouldBe "https://www.gov.uk/guidance/register-your-clients-estate"
-        p.get(10).text shouldBe "Your client will need to claim the trust or estate."
-        a.get(18).attr("href") shouldBe "https://www.gov.uk/guidance/manage-your-trusts-registration-service#how-to-use-the-online-service"
+        p.get(11).text shouldBe "Before you ask your client to authorise you, you or your client must have registered the trust (opens in a new tab) or estate (opens in a new tab)."
+        a.get(17).attr("href") shouldBe "http://localhost:9448/invitations/agents/client-type"
+        a.get(18).attr("href") shouldBe "https://www.gov.uk/guidance/register-your-clients-trust"
+        a.get(19).attr("href") shouldBe "https://www.gov.uk/guidance/register-your-clients-estate"
+        p.get(12).text shouldBe "Your client will need to claim the trust or estate."
+        a.get(20).attr("href") shouldBe "https://www.gov.uk/guidance/manage-your-trusts-registration-service#how-to-use-the-online-service"
         expectedH4(html, "Manage your client’s trust", 5)
-        p.get(11).text shouldBe "Use this service to update the details of your client’s trust or declare no changes on the trust register ."
-        a.get(19).text shouldBe "Use this service to update the details of your client’s trust or declare no changes on the trust register"
-        a.get(19).attr("href") shouldBe "https://www.gov.uk/guidance/manage-your-trusts-registration-service"
+        p.get(13).text shouldBe "Use this service to update the details of your client’s trust or declare no changes on the trust register ."
+        a.get(21).text shouldBe "Use this service to update the details of your client’s trust or declare no changes on the trust register"
+        a.get(21).attr("href") shouldBe "https://www.gov.uk/guidance/manage-your-trusts-registration-service"
 
         expectedH3(html, "Capital Gains Tax on UK property", 4)
         expectedH4(html, "Before you start", 6)
-        p.get(12).text shouldBe "Your client must first set up a Capital Gains Tax on UK property account (opens in a new tab)"
-        a.get(20).attr("href") shouldBe "https://www.gov.uk/guidance/managing-your-clients-capital-gains-tax-on-uk-property-account#before-you-start"
-        p.get(13).text shouldBe "They must then authorise you to act on their behalf (opens in a new tab)"
-        a.get(21).attr("href") shouldBe "https://www.gov.uk/guidance/managing-your-clients-capital-gains-tax-on-uk-property-account#get-authorisation"
+        p.get(14).text shouldBe "Your client must first set up a Capital Gains Tax on UK property account (opens in a new tab)"
+        a.get(22).attr("href") shouldBe "https://www.gov.uk/guidance/managing-your-clients-capital-gains-tax-on-uk-property-account#before-you-start"
+        p.get(15).text shouldBe "They must then authorise you to act on their behalf (opens in a new tab)"
+        a.get(23).attr("href") shouldBe "https://www.gov.uk/guidance/managing-your-clients-capital-gains-tax-on-uk-property-account#get-authorisation"
         expectedH4(html, "Manage a client’s Capital Gains Tax on UK property", 7)
-        a.get(22).text shouldBe "Report your client’s Capital Gains Tax on UK property and view payments and penalties"
-        a.get(22).attr("href") shouldBe "https://www.tax.service.gov.uk/capital-gains-tax-uk-property/start"
+        a.get(24).text shouldBe "Report your client’s Capital Gains Tax on UK property and view payments and penalties"
+        a.get(24).attr("href") shouldBe "https://www.tax.service.gov.uk/capital-gains-tax-uk-property/start"
 
         expectedH3(html, "Plastic Packaging Tax", 5)
         expectedH4(html, "Before you start", 8)
-        p.get(15).text shouldBe "Your client must first register for Plastic Packaging Tax (opens in a new tab)"
-        a.get(23).attr("href") shouldBe "https://www.gov.uk/guidance/register-for-plastic-packaging-tax"
-        p.get(16).text shouldBe "They must then authorise you to act on their behalf"
-        a.get(24).attr("href") shouldBe "http://localhost:9448/invitations/agents"
+        p.get(17).text shouldBe "Your client must first register for Plastic Packaging Tax (opens in a new tab)"
+        a.get(25).attr("href") shouldBe "https://www.gov.uk/guidance/register-for-plastic-packaging-tax"
+        p.get(18).text shouldBe "They must then authorise you to act on their behalf"
+        a.get(26).attr("href") shouldBe "http://localhost:9448/invitations/agents"
         expectedH4(html, "Manage your client’s Plastic Packaging Tax", 9)
-        p.get(17).text shouldBe "Report your client’s Plastic Packaging Tax and view payments, returns and penalties"
-        a.get(25).attr("href") shouldBe "https://www.tax.service.gov.uk/plastic-packaging-tax/account"
+        p.get(19).text shouldBe "Report your client’s Plastic Packaging Tax and view payments, returns and penalties"
+        a.get(27).attr("href") shouldBe "https://www.tax.service.gov.uk/plastic-packaging-tax/account"
 
         expectedH3(html, "Other tax services", 6)
         html.select(".govuk-warning-text").text shouldBe "! The agent services account is the home for HMRC tax services launched from 2019. For any tax services not listed here, sign out of this account and log in to your HMRC online services for agents account (opens in new tab)."
-        a.get(26).attr("href") shouldBe "https://www.gov.uk/government/collections/hmrc-online-services-for-agents#hmrc-online-services-for-agents-account"
+        a.get(28).attr("href") shouldBe "https://www.gov.uk/government/collections/hmrc-online-services-for-agents#hmrc-online-services-for-agents-account"
         // end of accordion
 
         expectedH2(html, "Help and guidance", 2)
-        p.get(18).text shouldBe "Find out how to use your agent services account and how clients can authorise you to manage their taxes"
-        a.get(27).attr("href") shouldBe "/agent-services-account/help-and-guidance"
+        p.get(20).text shouldBe "Find out how to use your agent services account and how clients can authorise you to manage their taxes"
+        a.get(29).attr("href") shouldBe "/agent-services-account/help-and-guidance"
       }
 
       "agent is suspended for VATC and suspension details are in the session (IRV enabled & allowed)" in {
@@ -297,13 +305,15 @@ class AgentServicesControllerSpec extends BaseISpec {
         givenSuspensionStatus(SuspensionDetails(suspensionStatus = true, Some(Set("VATC"))))
         givenAuthorisedAsAgentWith(arn)
 
+        givenHidePrivateBetaInvite()
+
         val response = await(controller.showAgentServicesAccount()(fakeRequest("GET", "/home")))
         val html = Jsoup.parse(contentAsString(response))
         val p = html.select(paragraphs)
         val a = html.select(link)
 
         expectedHomeBannerContent(html)
-        expectedClientAuthContent(html)
+        expectedClientAuthContent(html, betaInviteContent = false)
 
         // accordion with suspension content includes Income Record Viewer section
         expectedH2(html, "Tax services you can manage in this account", 1)
@@ -381,6 +391,8 @@ class AgentServicesControllerSpec extends BaseISpec {
         givenSuspensionStatus(SuspensionDetails(suspensionStatus = false, None))
         givenAuthorisedAsAgentWith(arn)
 
+        givenHidePrivateBetaInvite()
+
         val controller = appBuilder().build().injector.instanceOf[AgentServicesController]
 
         val response = await(controller.showAgentServicesAccount()(fakeRequest("GET", "/home")))
@@ -389,7 +401,7 @@ class AgentServicesControllerSpec extends BaseISpec {
         val a = html.select(link)
 
         expectedHomeBannerContent(html)
-        expectedClientAuthContent(html)
+        expectedClientAuthContent(html, betaInviteContent = false)
 
         // accordion does NOT include Income Record Viewer section
         expectedH2(html, "Tax services you can manage in this account", 1)
@@ -464,6 +476,27 @@ class AgentServicesControllerSpec extends BaseISpec {
         // View a client’s Income record nowhere on page
         html.text().contains("Income record") shouldBe false
         html.text().contains("http://localhost:9996/tax-history/select-client") shouldBe false
+
+      }
+
+      "agent with showFeatureInvite being false" in {
+        givenArnIsNotAllowlistedForIrv(Arn(arn))
+        givenSuspensionStatus(SuspensionDetails(suspensionStatus = false, None))
+        givenAuthorisedAsAgentWith(arn)
+        givenHidePrivateBetaInvite()
+
+        val controller = appBuilder().build().injector.instanceOf[AgentServicesController]
+
+        val response = await(controller.showAgentServicesAccount()(fakeRequest("GET", "/home")))
+        val html = Jsoup.parse(contentAsString(response))
+
+        expectedHomeBannerContent(html)
+        expectedClientAuthContent(html, betaInviteContent = false)
+
+        // no beta invite
+        html.text().contains("Help improve our new feature") shouldBe false
+        html.text().contains("Try out access groups and tell us what you think.") shouldBe false
+        html.text().contains("/agent-services-account/private-beta-invite") shouldBe false
 
       }
     }

@@ -49,14 +49,21 @@ object AgentPermissionsStubs {
         .willReturn(aResponse()
           .withStatus(403)))
 
-  def givenOptinStatusSuccessReturnsForArn( arn: Arn, optinStatus: OptinStatus) =
+  def givenHidePrivateBetaInvite(): StubMapping =
+    stubFor(
+      get(urlEqualTo(s"/agent-permissions/private-beta-invite"))
+        .willReturn(aResponse()
+          .withStatus(200)))
+
+
+  def givenOptinStatusSuccessReturnsForArn( arn: Arn, optinStatus: OptinStatus): StubMapping =
     stubFor(
       get(urlEqualTo(s"/agent-permissions/arn/${arn.value}/optin-status"))
         .willReturn(aResponse()
           .withStatus(200)
           .withBody(s""" "${optinStatus.value}" """)))
 
-  def givenOptinRecordExistsForArn(arn: Arn, exists: Boolean) =
+  def givenOptinRecordExistsForArn(arn: Arn, exists: Boolean): StubMapping =
     stubFor(
       get(urlEqualTo(s"/agent-permissions/arn/${arn.value}/optin-record-exists"))
         .willReturn(
@@ -64,21 +71,21 @@ object AgentPermissionsStubs {
             .withStatus(if(exists) NO_CONTENT else NOT_FOUND))
     )
 
-  def givenOptinStatusFailedForArn(arn: Arn) =
+  def givenOptinStatusFailedForArn(arn: Arn): StubMapping =
     stubFor(
       get(urlEqualTo(s"/agent-permissions/arn/${arn.value}/optin-status"))
         .willReturn(aResponse()
         .withStatus(500))
     )
 
-  def givenAccessGroupsForArn(arn: Arn, accessGroupSummaries: AccessGroupSummaries) =
+  def givenAccessGroupsForArn(arn: Arn, accessGroupSummaries: AccessGroupSummaries): StubMapping =
     stubFor(
       get(urlEqualTo(s"/agent-permissions/arn/${arn.value}/groups"))
         .willReturn(aResponse()
           .withStatus(200)
           .withBody(Json.toJson(accessGroupSummaries).toString)))
 
-  def givenAccessGroupsForTeamMember(arn: Arn, credentialsProviderId: String, groupSummaries: Seq[GroupSummary]) =
+  def givenAccessGroupsForTeamMember(arn: Arn, credentialsProviderId: String, groupSummaries: Seq[GroupSummary]): StubMapping =
     stubFor(
       get(urlEqualTo(s"/agent-permissions/arn/${arn.value}/team-member/$credentialsProviderId/groups"))
         .willReturn(aResponse()

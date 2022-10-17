@@ -149,7 +149,7 @@ class AgentPermissionsConnector @Inject()(http: HttpClient)(implicit val metrics
   }
 
   def isShownPrivateBetaInvite(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Boolean] = {
-    val url = s"$baseUrl/agent-permissions/private-beta-recruitment"
+    val url = s"$baseUrl/agent-permissions/private-beta-invite"
 
     monitor("ConsumedAPI-GranPermsPrivateBeta-GET") {
       http.GET[HttpResponse](url).map { response =>
