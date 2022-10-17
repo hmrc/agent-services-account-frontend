@@ -350,7 +350,7 @@ administrators.ul.li.2=bwrw golwg dros wybodaeth am bob client a grŵp mynediad
 administrators.ul.li.3=creu, ailenwi a dileu grwpiau mynediad
 administrators.ul.li.4=neilltuo cleientiaid ac aelodau’r tîm i grwpiau mynediad
 
-# private beta form
+# private beta feature testing
 beta.invite.banner.heading=Help improve our new feature
 beta.invite.banner.p=Try out access groups and tell us what you think.
 beta.invite.banner.link1=Tell me more

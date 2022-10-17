@@ -47,6 +47,13 @@ class BetaInviteController @Inject()
     def toFuture: Future[T] = Future successful t
   }
 
+  val hideInvite: Action[AnyContent] = Action.async { implicit request =>
+    withAuthorisedAsAgent { _ =>
+      // TODO post to hide invite once BE exists
+      Future successful Redirect(routes.AgentServicesController.showAgentServicesAccount())
+    }
+  }
+
   val showInvite: Action[AnyContent] = Action.async { implicit request =>
     withAuthorisedAsAgent { _ =>
       Ok(s"not implemented APB-6581").toFuture
