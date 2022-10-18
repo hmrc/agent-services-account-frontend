@@ -102,7 +102,6 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
 
   val agentSuspensionEnabled = getBoolean("features.enable-agent-suspension")
   val ITSAAccordionEnabled = getBoolean("features.enable-ITSA-Accordion")
-  val HelpAndGuidanceEnabled = getBoolean("features.enable-help-and-guidance")
 
   val timeoutDialogTimeout = getInt("timeoutDialog.timeout")
   val timeoutDialogCountdown = getInt("timeoutDialog.countdown")
