@@ -162,14 +162,12 @@
 
 @accordionItems = @{
     val items = ListBuffer[Section]()
-    if(appConfig.ITSAAccordionEnabled) {
-        items.append(
-            Section(
-                headingContent = Text(msgs("agent.services.account.sectionITSA.h2")),
-                content = HtmlContent(itsaAccordionItem)
-            )
+    items.append(
+        Section(
+            headingContent = Text(msgs("agent.services.account.sectionITSA.h2")),
+            content = HtmlContent(itsaAccordionItem)
         )
-    }
+    )
     items.append(
         Section(
             headingContent = Text(msgs("agent.services.account.section1.h2")),

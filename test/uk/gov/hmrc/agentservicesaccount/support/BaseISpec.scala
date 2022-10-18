@@ -41,9 +41,7 @@ abstract class BaseISpec
         "microservice.services.agent-permissions.port"                    -> wireMockPort,
         "microservice.services.agent-user-client-details.port"            -> wireMockPort,
         "microservice.services.agent-permissions-frontend.external-url"   -> wireMockBaseUrlAsString,
-        "auditing.enabled"                   -> false,
-        "features.enable-ITSA-Accordion"     -> true,
-        "features.enable-help-and-guidance"  -> true
+        "auditing.enabled"                   -> false
       )
       .configure(additionalConfiguration)
 
