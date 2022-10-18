@@ -15,10 +15,11 @@
  *@
 
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+@import uk.gov.hmrc.agentservicesaccount.controllers.routes
 @import uk.gov.hmrc.agentservicesaccount.views.html.components._
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 @import uk.gov.hmrc.govukfrontend.views.Aliases.Text
-@import uk.gov.hmrc.govukfrontend.views.html.components.{GovukAccordion, GovukPanel}
+@import uk.gov.hmrc.govukfrontend.views.html.components.{GovukNotificationBanner, GovukAccordion, GovukPanel, NotificationBanner}
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.accordion.{Accordion, Section}
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.panel.Panel
@@ -35,10 +36,12 @@
     govukWarningText: GovukWarningText,
     govukPanel: GovukPanel,
     govukAccordion: GovukAccordion,
+    govukNotificationBanner: GovukNotificationBanner,
     hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper)
 @(
     arn: String,
     isIrvAllowed: Boolean,
+    isShownRecruitmentBanner: Boolean = true,
     customDimension: String,
     isAdmin: Boolean = false,
     isSuspendedForVat: Boolean
@@ -52,18 +55,16 @@
     @p(html = Some(Html(msgs("agent.services.account.sectionITSA.col1.link"))))
     @h4("agent.services.account.sectionITSA.col2.h3")
 
-    @p(html = Some(Html(
-            a(href = appConfig.incomeTaxSubscriptionAgentFrontendUrl, key = "agent.services.account.sectionITSA.col2.link1.text") + "")
-        )
-    )
-    @p(html = Some(Html(
+    @p(html = Some(
+            a(href = appConfig.incomeTaxSubscriptionAgentFrontendUrl, key = "agent.services.account.sectionITSA.col2.link1.text")
+    ))
+    @p(html = Some(
         a(href = "https://www.gov.uk/guidance/follow-the-rules-for-making-tax-digital-for-income-tax#who-can-follow-the-rules",
             key = "agent.services.account.sectionITSA.col2.link2.text",
             target= Some("_blank"),
             rel = Some("noreferrer noopener")
-        ) + "")
         )
-    )
+    ))
 }
 
 @mtdForVatAccordionItem = {
@@ -100,7 +101,7 @@
 
 @payeIncomeRecordAccordionItem = {
     @p("agent.services.account.paye-section.text")
-    @p(html = Some(Html(a(href = appConfig.taxHistoryFrontendUrl, key = "agent.services.account.paye-section.link") + "")))
+    @p(html = Some(a(href = appConfig.taxHistoryFrontendUrl, key = "agent.services.account.paye-section.link")))
 }
 
 @trustsAccordionItem = {
@@ -212,6 +213,29 @@
     items
 }
 
+@notificationContent = {
+<div class="govuk-notification-banner" role="region" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
+    <div class="govuk-notification-banner__content">
+        @p("beta.invite.banner.heading", classes = Some("govuk-notification-banner__heading"))
+
+        @p("beta.invite.banner.p")
+
+        <div class="govuk-button-group">
+            @a(href = routes.BetaInviteController.showInvite.url,
+            key="beta.invite.banner.link1",
+            classes = Some("govuk-notification-banner__link")
+            )
+
+            @a(href = routes.BetaInviteController.hideInvite.url,
+            key="beta.invite.banner.link2",
+            classes = Some("govuk-notification-banner__link")
+            )
+        </div>
+    </div>
+</div>
+
+}
+
 @main(pageTitle = msgs("agent.services.account.heading"), isAdmin = isAdmin) {
 
     @govukPanel(
@@ -221,6 +245,10 @@
             classes = "blue-panel"
         )
     )
+
+    @if(isShownRecruitmentBanner) {
+        @notificationContent
+    }
 
     @h2("agent.services.account.section4.h2")
 
@@ -248,12 +276,11 @@
     <hr class="govuk-section-break hr-thick govuk-!-margin-bottom-6">
 
     @h2("agent.services.account.help.h2")
-    @p(html = Some(Html(
+    @p(html = Some(
         a(href = "/agent-services-account/help-and-guidance",
             key = "agent.services.account.help.link",
-        ) + "")
-    )
-    )
+        )
+    ))
 
     @hmrcReportTechnicalIssueHelper()
 

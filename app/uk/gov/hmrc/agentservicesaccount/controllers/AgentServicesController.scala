@@ -77,39 +77,42 @@ class AgentServicesController @Inject()
   val showAgentServicesAccount: Action[AnyContent] = Action.async { implicit request =>
     withAuthorisedAsAgent { agentInfo =>
       withIrvAllowed(agentInfo.arn) { irvAllowed =>
-        logger.info(s"isAdmin: ${agentInfo.isAdmin}")
-        if (agentSuspensionEnabled) {
-          request.session.get("isSuspendedForVat") match {
-            case Some(isSuspendedForVat) =>
-              Future successful Ok(
-                asaDashboard(
-                  formatArn(agentInfo.arn),
-                  irvAllowed,
-                  customDimension,
-                  agentInfo.isAdmin,
-                  isSuspendedForVat.toBoolean)).addingToSession(toReturnFromMapping)
-
-            case None =>
-              agentClientAuthorisationConnector.getSuspensionDetails().map { suspensionDetails =>
-                Ok(
+        withShowFeatureInvite(agentInfo.arn) { showFeatureInvite : Boolean =>
+          if (agentSuspensionEnabled) {
+            request.session.get("isSuspendedForVat") match {
+              case Some(isSuspendedForVat) =>
+                Future successful Ok(
                   asaDashboard(
                     formatArn(agentInfo.arn),
                     irvAllowed,
+                    showFeatureInvite,
                     customDimension,
                     agentInfo.isAdmin,
-                    suspensionDetails.suspendedRegimes.contains("VATC"))).addingToSession(toReturnFromMapping)
-              }
-          }
-        } else
-          Future successful Ok(
-            asaDashboard(
-              formatArn(agentInfo.arn),
-              irvAllowed,
-              customDimension,
-              agentInfo.isAdmin,
-              isSuspendedForVat = false)).addingToSession(toReturnFromMapping)
-      }
+                    isSuspendedForVat.toBoolean)).addingToSession(toReturnFromMapping)
 
+              case None =>
+                agentClientAuthorisationConnector.getSuspensionDetails().map { suspensionDetails =>
+                  Ok(
+                    asaDashboard(
+                      formatArn(agentInfo.arn),
+                      irvAllowed,
+                      showFeatureInvite,
+                      customDimension,
+                      agentInfo.isAdmin,
+                      suspensionDetails.suspendedRegimes.contains("VATC"))).addingToSession(toReturnFromMapping)
+                }
+            }
+          } else
+            Future successful Ok(
+              asaDashboard(
+                formatArn(agentInfo.arn),
+                irvAllowed,
+                showFeatureInvite,
+                customDimension,
+                agentInfo.isAdmin,
+                isSuspendedForVat = false)).addingToSession(toReturnFromMapping)
+        }
+      }
     }
   }
 
@@ -164,7 +167,7 @@ class AgentServicesController @Inject()
                 agentPermissionsConnector.getGroupsForTeamMember(agentInfo.arn, credentials.providerId)
                   .map(maybeSummaries => Ok(your_account(Some(agentInfo), maybeSummaries)))
               else
-                Ok(your_account(Some(agentInfo), None, false)).toFuture
+                Ok(your_account(Some(agentInfo), None, optedIn = false)).toFuture
             )
           }
         } else {
@@ -207,6 +210,10 @@ class AgentServicesController @Inject()
 
   private def withIrvAllowed(arn: Arn)(f: Boolean => Future[Result])(implicit request: Request[_]): Future[Result] = {
     afiRelationshipConnector.checkIrvAllowed(arn).flatMap(f)
+  }
+
+  private def withShowFeatureInvite(arn: Arn)(f: Boolean => Future[Result])(implicit request: Request[_]): Future[Result] = {
+    agentPermissionsConnector.isShownPrivateBetaInvite.flatMap(f)
   }
 
 }
