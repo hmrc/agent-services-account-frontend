@@ -101,7 +101,6 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
   val vrsUrl = s"$vrsExternalUrl$vrsPath"
 
   val agentSuspensionEnabled = getBoolean("features.enable-agent-suspension")
-  val ITSAAccordionEnabled = getBoolean("features.enable-ITSA-Accordion")
 
   val timeoutDialogTimeout = getInt("timeoutDialog.timeout")
   val timeoutDialogCountdown = getInt("timeoutDialog.countdown")
