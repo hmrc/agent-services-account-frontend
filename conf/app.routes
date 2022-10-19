@@ -7,7 +7,6 @@ GET        /language/:lang                          @uk.gov.hmrc.agentservicesac
 
 GET        /                                        @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController.root()
 GET        /home                                    @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController.showAgentServicesAccount()
-POST       /home                                    @uk.gov.hmrc.agentservicesaccount.controllers.BetaInviteController.hideInvite
 
 GET        /home/survey                             @uk.gov.hmrc.agentservicesaccount.controllers.SignOutController.showSurvey()
 POST       /home/survey                             @uk.gov.hmrc.agentservicesaccount.controllers.SignOutController.submitSurvey()
@@ -32,6 +31,7 @@ GET        /your-account/administrators             @uk.gov.hmrc.agentservicesac
 
 # Private beta feature testing
 GET        /private-beta-invite                     @uk.gov.hmrc.agentservicesaccount.controllers.BetaInviteController.showInvite
+POST       /private-beta-invite/decline             @uk.gov.hmrc.agentservicesaccount.controllers.BetaInviteController.hideInvite
 GET        /private-beta-invite/details             @uk.gov.hmrc.agentservicesaccount.controllers.BetaInviteController.showInviteDetails
 GET        /private-beta-invite/check-answers       @uk.gov.hmrc.agentservicesaccount.controllers.BetaInviteController.showInviteCheckYourAnswers
 

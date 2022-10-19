@@ -16,17 +16,18 @@
 
 package uk.gov.hmrc.agentservicesaccount.connectors
 
+import akka.Done
 import com.codahale.metrics.MetricRegistry
 import com.kenshoo.play.metrics.Metrics
 import play.api.Logging
-import play.api.http.Status.{NOT_FOUND, NO_CONTENT, OK}
+import play.api.http.Status.{CONFLICT, CREATED, NOT_FOUND, NO_CONTENT, OK}
 import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.agent.kenshoo.monitoring.HttpAPIMonitor
 import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, OptinStatus}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models.{AccessGroupSummaries, GroupSummary}
 import uk.gov.hmrc.http.HttpReads.Implicits.readRaw
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse, UpstreamErrorResponse}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -157,6 +158,25 @@ class AgentPermissionsConnector @Inject()(http: HttpClient)(implicit val metrics
           case OK => logger.info(s"in private beta or has dismissed private beta invite")
             false
           case _ => true
+        }
+      }
+    }
+  }
+
+  def declinePrivateBetaInvite()(implicit hc: HeaderCarrier,
+                                            ec: ExecutionContext): Future[Done] = {
+    val url = s"$baseUrl/agent-permissions/private-beta-invite/decline"
+    monitor("ConsumedAPI-declinePrivateBetaInvite-POST") {
+      http.POSTEmpty[HttpResponse](url).map { response =>
+        response.status match {
+          case CREATED => Done
+          case CONFLICT =>
+            logger.warn(s"Tried to decline when already dismissed")
+            Done
+          case e =>
+            throw UpstreamErrorResponse(
+              s"error sending dismiss request for private beta invite",
+              e)
         }
       }
     }

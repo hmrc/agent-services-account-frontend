@@ -32,9 +32,7 @@ class BetaInviteController @Inject()
 (
   authActions: AuthActions,
   agentClientAuthorisationConnector: AgentClientAuthorisationConnector,
-  agentPermissionsConnector: AgentPermissionsConnector,
-  agentUserClientDetailsConnector: AgentUserClientDetailsConnector,
-  suspensionWarningView: suspension_warning
+  agentPermissionsConnector: AgentPermissionsConnector
 )(implicit val appConfig: AppConfig,
                   val cc: MessagesControllerComponents,
                   ec: ExecutionContext,
@@ -49,8 +47,9 @@ class BetaInviteController @Inject()
 
   val hideInvite: Action[AnyContent] = Action.async { implicit request =>
     withAuthorisedAsAgent { _ =>
-      // TODO post to hide invite once BE exists
-      Future successful Redirect(routes.AgentServicesController.showAgentServicesAccount())
+      agentPermissionsConnector.declinePrivateBetaInvite().map(_ =>
+        Redirect(routes.AgentServicesController.showAgentServicesAccount())
+      )
     }
   }
 
