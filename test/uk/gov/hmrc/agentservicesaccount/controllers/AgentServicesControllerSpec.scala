@@ -952,7 +952,9 @@ class AgentServicesControllerSpec extends BaseISpec {
 
         html.title() shouldBe "Account details - Agent services account - GOV.UK"
         html.select(H1).get(0).text shouldBe "Account details"
-        html.select(secondaryNavLinks).get(1).text shouldBe "Manage account"
+        html.select(secondaryNavLinks).get(1).text shouldBe "Manage account New"
+        html.select(secondaryNavLinks).get(1).select("span").text shouldBe "Manage account"
+        html.select(secondaryNavLinks).get(1).select("strong").text shouldBe "New"
 
         html.select(backLink).get(0).attr("href") shouldBe "/agent-services-account/manage-account"
 
@@ -980,7 +982,10 @@ class AgentServicesControllerSpec extends BaseISpec {
 
         html.title() shouldBe "Account details - Agent services account - GOV.UK"
         html.select(H1).get(0).text shouldBe "Account details"
-        html.select(secondaryNavLinks).get(1).text shouldBe "Manage account"
+        
+        html.select(secondaryNavLinks).get(1).text shouldBe "Manage account New"
+        html.select(secondaryNavLinks).get(1).select("span").text shouldBe "Manage account"
+        html.select(secondaryNavLinks).get(1).select("strong").text shouldBe "New"
 
         html.select(backLink).get(0).attr("href") shouldBe "/agent-services-account/manage-account"
 

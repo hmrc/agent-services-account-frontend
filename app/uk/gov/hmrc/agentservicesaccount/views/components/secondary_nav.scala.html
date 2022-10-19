@@ -28,12 +28,10 @@
         @span("nav.home", classes = Some("hmrc-account-icon hmrc-account-icon--home"))
     </a>
     @if(isAdmin) {
-        @a(
-            key = "nav.manage.account",
-            href = controller.manageAccount.url,
-            classes = Some("hmrc-account-menu__link"),
-            addStandardClasses = false
-        )
+        <a href="@controller.manageAccount.url" class="hmrc-account-menu__link">
+            <span>@msgs("nav.manage.account")</span>
+            <strong class="govuk-tag" style="margin-left: 10px; font-size: 12px; padding: 3px 5px ;">New</strong>
+        </a>
     } else{
         @a(
             key = "nav.your.account",
