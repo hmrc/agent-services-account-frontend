@@ -26,6 +26,7 @@
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcReportTechnicalIssueHelper
 @import uk.gov.hmrc.govukfrontend.views.html.components.GovukWarningText
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.warningtext.WarningText
+@import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 
 
 @import scala.collection.mutable.ListBuffer
@@ -37,7 +38,8 @@
     govukPanel: GovukPanel,
     govukAccordion: GovukAccordion,
     govukNotificationBanner: GovukNotificationBanner,
-    hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper)
+    hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper,
+    formWithCSRF: FormWithCSRF)
 @(
     arn: String,
     isIrvAllowed: Boolean,
@@ -218,17 +220,21 @@
 
         @p("beta.invite.banner.p")
 
+        @formWithCSRF(
+        action = Call("POST", routes.BetaInviteController.hideInvite.url),
+        ) {
         <div class="govuk-button-group">
             @a(href = routes.BetaInviteController.showInvite.url,
             key="beta.invite.banner.link1",
             classes = Some("govuk-notification-banner__link")
             )
 
-            @a(href = routes.BetaInviteController.hideInvite.url,
-            key="beta.invite.banner.link2",
-            classes = Some("govuk-notification-banner__link")
-            )
+            <button class="govuk-button govuk-button--secondary" data-module="govuk-button" type="submit">
+                @msgs("beta.invite.banner.link2")
+            </button>
+
         </div>
+        }
     </div>
 </div>
 

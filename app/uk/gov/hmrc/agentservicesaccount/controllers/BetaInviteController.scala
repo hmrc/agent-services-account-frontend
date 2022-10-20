@@ -21,8 +21,7 @@ import play.api.i18n.MessagesApi
 import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.auth.AuthActions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.connectors.{AgentClientAuthorisationConnector, AgentPermissionsConnector, AgentUserClientDetailsConnector}
-import uk.gov.hmrc.agentservicesaccount.views.html.pages._
+import uk.gov.hmrc.agentservicesaccount.connectors.AgentPermissionsConnector
 
 import javax.inject._
 import scala.concurrent.{ExecutionContext, Future}
@@ -31,10 +30,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class BetaInviteController @Inject()
 (
   authActions: AuthActions,
-  agentClientAuthorisationConnector: AgentClientAuthorisationConnector,
-  agentPermissionsConnector: AgentPermissionsConnector,
-  agentUserClientDetailsConnector: AgentUserClientDetailsConnector,
-  suspensionWarningView: suspension_warning
+  agentPermissionsConnector: AgentPermissionsConnector
 )(implicit val appConfig: AppConfig,
                   val cc: MessagesControllerComponents,
                   ec: ExecutionContext,
@@ -49,8 +45,9 @@ class BetaInviteController @Inject()
 
   val hideInvite: Action[AnyContent] = Action.async { implicit request =>
     withAuthorisedAsAgent { _ =>
-      // TODO post to hide invite once BE exists
-      Future successful Redirect(routes.AgentServicesController.showAgentServicesAccount())
+      agentPermissionsConnector.declinePrivateBetaInvite().map(_ =>
+        Redirect(routes.AgentServicesController.showAgentServicesAccount())
+      )
     }
   }
 
