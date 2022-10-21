@@ -22,6 +22,8 @@ import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.auth.AuthActions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentPermissionsConnector
+import uk.gov.hmrc.agentservicesaccount.forms.BetaInviteForm
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.beta_invite._
 
 import javax.inject._
 import scala.concurrent.{ExecutionContext, Future}
@@ -30,7 +32,9 @@ import scala.concurrent.{ExecutionContext, Future}
 class BetaInviteController @Inject()
 (
   authActions: AuthActions,
-  agentPermissionsConnector: AgentPermissionsConnector
+  agentPermissionsConnector: AgentPermissionsConnector,
+  participate: participate,
+  your_details: your_details
 )(implicit val appConfig: AppConfig,
                   val cc: MessagesControllerComponents,
                   ec: ExecutionContext,
@@ -43,6 +47,8 @@ class BetaInviteController @Inject()
     def toFuture: Future[T] = Future successful t
   }
 
+  private val controller: ReverseBetaInviteController = routes.BetaInviteController
+
   val hideInvite: Action[AnyContent] = Action.async { implicit request =>
     withAuthorisedAsAgent { _ =>
       agentPermissionsConnector.declinePrivateBetaInvite().map(_ =>
@@ -53,11 +59,31 @@ class BetaInviteController @Inject()
 
   val showInvite: Action[AnyContent] = Action.async { implicit request =>
     withAuthorisedAsAgent { _ =>
-      Ok(s"not implemented APB-6581").toFuture
+      Ok(participate(
+        BetaInviteForm.form("")
+      )).toFuture
+    }
+  }
+
+  def submitInvite(): Action[AnyContent] = Action.async { implicit request =>
+    withAuthorisedAsAgent { _ =>
+      BetaInviteForm
+        .form("")
+        .bindFromRequest()
+        .fold(
+          formWithErrors => { Ok(s"$formWithErrors not implemented APB-6581").toFuture},
+          formData => { Ok(s"$formData not implemented APB-6581").toFuture}
+        )
     }
   }
 
   val showInviteDetails: Action[AnyContent] = Action.async { implicit request =>
+    withAuthorisedAsAgent { _ =>
+      Ok(s"not implemented ${controller.showInviteDetails.url} APB-6581").toFuture
+    }
+  }
+
+  def submitInviteDetails(): Action[AnyContent] = Action.async { implicit request =>
     withAuthorisedAsAgent { _ =>
       Ok(s"not implemented APB-6581").toFuture
     }
@@ -65,7 +91,13 @@ class BetaInviteController @Inject()
 
   val showInviteCheckYourAnswers: Action[AnyContent] = Action.async { implicit request =>
     withAuthorisedAsAgent { _ =>
-      Ok(s"not implemented APB-6589").toFuture
+      Ok(s"not implemented ${controller.showInviteCheckYourAnswers.url} APB-6589").toFuture
+    }
+  }
+
+  val showInviteConfirmation: Action[AnyContent] = Action.async { implicit request =>
+    withAuthorisedAsAgent { _ =>
+      Ok(s"not implemented ${controller.showInviteConfirmation.url} APB-6589").toFuture
     }
   }
 
