@@ -17,21 +17,65 @@
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
+@import uk.gov.hmrc.govukfrontend.views.html.components.{GovukButton, GovukInput, GovukFieldset}
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
 @import uk.gov.hmrc.agentservicesaccount.controllers.routes
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcReportTechnicalIssueHelper
+@import uk.gov.hmrc.agentservicesaccount.models.BetaInviteContactDetails
+@import uk.gov.hmrc.govukfrontend.views.html.components.{Input, Text, Label, Hint, PrefixOrSuffix}
+@import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
 
 @this(
-        main: main,
-        govukSummaryList: GovukSummaryList,
-        govukInsetText : GovukInsetText,
-        hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper)
+    main: main,
+    h1: h1, p: p,
+    formWithCSRF: FormWithCSRF,
+    govukInput: GovukInput,
+    govukFieldset: GovukFieldset,
+    govukSummaryList: GovukSummaryList,
+    govukInsetText : GovukInsetText,
+    govukButton: GovukButton,
+    hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper
+)
 
-@(
-    agencyDetails: Option[AgencyDetails],
-    isAdmin: Boolean
-)(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
+@(form: Form[BetaInviteContactDetails])(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
+
+@fieldsetHtml = {
+
+@p("beta.invite.details.p")
+
+    @govukInput(Input(
+    label = Label(
+        classes = "govuk-heading-s",
+        content = HtmlContent(msgs("beta.invite.details.label1")),
+        isPageHeading = false
+    ),
+    classes = "",
+    spellcheck = Some(false),
+    autocomplete = Some("name")
+    ).withFormField(form("name")))
+
+    @govukInput(Input(
+        label = Label(
+            classes = "govuk-heading-s",
+            content = HtmlContent(msgs("beta.invite.details.label2")),
+            isPageHeading = false
+        ),
+        classes = "",
+        spellcheck = Some(false),
+        autocomplete = Some("email")
+    ).withFormField(form("email")))
+
+    @govukInput(Input(
+        label = Label(
+            classes = "govuk-heading-s",
+            content = HtmlContent(msgs("beta.invite.details.label3")),
+            isPageHeading = false
+        ),
+        classes = "govuk-input--width-20",
+        autocomplete = Some("tel")
+    ).withFormField(form("phone")))
+}
 
 @main(
     pageTitle = msgs("account-details.title"),
@@ -39,48 +83,20 @@
     showSecondaryNav = false
 ) {
 
-    <h1 class="govuk-heading-xl">@msgs("account-details.title")</h1>
-
-    @govukInsetText(
-        InsetText(
-            content = HtmlContent(msgs("account-details.inset", appConfig.govUkGuidanceChangeDetails))
+    @formWithCSRF(action = routes.BetaInviteController.submitInviteContactDetails()) {
+        @govukFieldset(Fieldset(
+        legend = Some(Legend(
+            content = Text(msgs("beta.invite.details.heading")),
+            classes = "govuk-fieldset__legend--l",
+            isPageHeading = true
+        )),
+            describedBy = Some("identify-client-hint"),
+            html = fieldsetHtml
         ))
 
-    <h2 class="govuk-heading-m">@msgs("account-details.summary-list.header")</h2>
-@govukSummaryList(SummaryList(
-    rows = Seq(
-        SummaryListRow(
-        key = Key(
-            content = Text(msgs("account-details.summary-list.email"))
-        ),
-        value = Value(
-            content = Text(agencyDetails.flatMap(_.agencyEmail).getOrElse(msgs("account-details.summary-list.none")))
-        ),
-        actions = None
-    ),
-        SummaryListRow(
-            key = Key(
-                content = Text(msgs("account-details.summary-list.name"))
-            ),
-            value = Value(
-                content = Text(agencyDetails.flatMap(_.agencyName).getOrElse(msgs("account-details.summary-list.none")))
-            ),
-            actions = None
-        ),
-                SummaryListRow(
-                    key = Key(
-                        content = Text(msgs("account-details.summary-list.address"))
-                    ),
-                    value = Value(
-                        content = HtmlContent(s"""${agencyDetails.flatMap(_.agencyAddress).map(
-                            ba => List(Some(ba.addressLine1), ba.addressLine2, ba.addressLine3, ba.addressLine4, ba.postalCode, Some(ba.countryCode)).flatten
-                        ).map(_.mkString("<br>")).getOrElse("")}""")
-                    ),
-                    actions = None
-                )
-    )
-))
-
+        @govukButton(Button(content = Text(msgs("common.continue"))))
+    }
     @hmrcReportTechnicalIssueHelper()
+
 
 }

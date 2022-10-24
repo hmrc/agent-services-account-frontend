@@ -14,19 +14,12 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.agentservicesaccount.forms
+package uk.gov.hmrc.agentservicesaccount.views.components.models
 
-import play.api.data.Forms._
-import play.api.data._
-import uk.gov.hmrc.agentservicesaccount.models.BetaInviteDetails
-
-object BetaInviteDetailsForm {
-
-  def form: Form[BetaInviteDetails] = Form(
-    mapping(
-      "name" -> nonEmptyText,
-      "email" -> nonEmptyText,
-      "phone" -> optional(text)
-    )(BetaInviteDetails.apply)(BetaInviteDetails.unapply)
-  )
-}
+case class RadioData(
+    name: String,
+    label: String,
+    hint: Option[String] = None,
+    isChecked: Option[Boolean] = None,
+    id: Option[String] = None
+)

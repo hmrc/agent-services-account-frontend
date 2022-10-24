@@ -14,14 +14,21 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.agentservicesaccount.models
+package uk.gov.hmrc.agentservicesaccount.forms
 
-case class BetaInviteContactDetails(name: String,
-                                    email: String,
-                                    phone: Option[String])
+import play.api.data.Form
+import play.api.data.Forms._
 
-case class BetaInviteDetailsForEmail(numberOfClients: String,
-                                     name: String,
-                                     email: String,
-                                     phone: Option[String])
+object YesNoForm {
 
+  def form(errorMessageKey: String = "state.required"): Form[Boolean] = {
+    Form(
+      single(
+        "accept" -> optional(boolean)
+          .verifying(errorMessageKey, _.isDefined)
+          .transform(_.get, (b: Boolean) => Option(b))
+      )
+    )
+
+  }
+}

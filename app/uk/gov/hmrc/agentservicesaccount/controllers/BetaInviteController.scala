@@ -22,7 +22,7 @@ import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.auth.AuthActions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentPermissionsConnector
-import uk.gov.hmrc.agentservicesaccount.forms.BetaInviteForm
+import uk.gov.hmrc.agentservicesaccount.forms.{BetaInviteContactDetailsForm, BetaInviteForm, YesNoForm}
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.beta_invite._
 
 import javax.inject._
@@ -34,7 +34,8 @@ class BetaInviteController @Inject()
   authActions: AuthActions,
   agentPermissionsConnector: AgentPermissionsConnector,
   participate: participate,
-  your_details: your_details
+  your_details: your_details,
+  number_of_clients: number_of_clients
 )(implicit val appConfig: AppConfig,
                   val cc: MessagesControllerComponents,
                   ec: ExecutionContext,
@@ -60,32 +61,70 @@ class BetaInviteController @Inject()
   val showInvite: Action[AnyContent] = Action.async { implicit request =>
     withAuthorisedAsAgent { _ =>
       Ok(participate(
-        BetaInviteForm.form("")
+        YesNoForm.form("beta.invite.yes-no.required.error")
       )).toFuture
     }
   }
 
   def submitInvite(): Action[AnyContent] = Action.async { implicit request =>
     withAuthorisedAsAgent { _ =>
-      BetaInviteForm
-        .form("")
+      YesNoForm
+        .form("beta.invite.yes-no.required.error")
         .bindFromRequest()
         .fold(
-          formWithErrors => { Ok(s"$formWithErrors not implemented APB-6581").toFuture},
-          formData => { Ok(s"$formData not implemented APB-6581").toFuture}
+          formWithErrors => { Ok(participate(formWithErrors)).toFuture},
+          (acceptInvite: Boolean) => {
+            if (acceptInvite) {
+              Redirect(controller.showInviteDetails).toFuture
+            } else {
+              // TODO dismiss banner
+              Redirect(routes.AgentServicesController.showAgentServicesAccount()).toFuture
+            }
+          }
         )
     }
   }
 
   val showInviteDetails: Action[AnyContent] = Action.async { implicit request =>
     withAuthorisedAsAgent { _ =>
-      Ok(s"not implemented ${controller.showInviteDetails.url} APB-6581").toFuture
+      Ok(number_of_clients(BetaInviteForm.form())).toFuture
     }
   }
 
   def submitInviteDetails(): Action[AnyContent] = Action.async { implicit request =>
     withAuthorisedAsAgent { _ =>
-      Ok(s"not implemented APB-6581").toFuture
+      BetaInviteForm
+        .form()
+        .bindFromRequest()
+        .fold(
+          formWithErrors => { Ok(number_of_clients(formWithErrors)).toFuture},
+          formData => {
+            // TODO save to session
+            logger.info(s"data to be saved: $formData")
+            Redirect(controller.showInviteContactDetails).toFuture}
+        )
+    }
+  }
+
+
+  val showInviteContactDetails: Action[AnyContent] = Action.async { implicit request =>
+    withAuthorisedAsAgent { _ =>
+      Ok(your_details(BetaInviteContactDetailsForm.form)).toFuture
+    }
+  }
+
+  def submitInviteContactDetails(): Action[AnyContent] = Action.async { implicit request =>
+    withAuthorisedAsAgent { _ =>
+      BetaInviteContactDetailsForm
+        .form
+        .bindFromRequest()
+        .fold(
+          formWithErrors => { Ok(your_details(formWithErrors)).toFuture},
+          formData => {
+            // TODO save to session
+            logger.info(s"data to be saved: $formData")
+            Redirect(controller.showInviteCheckYourAnswers).toFuture}
+        )
     }
   }
 

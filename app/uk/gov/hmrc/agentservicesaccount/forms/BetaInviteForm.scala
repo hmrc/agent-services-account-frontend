@@ -18,16 +18,14 @@ package uk.gov.hmrc.agentservicesaccount.forms
 
 import play.api.data.Form
 import play.api.data.Forms._
-import uk.gov.hmrc.agentservicesaccount.models.BetaInvite
 
 object BetaInviteForm {
 
-
-  def form(errorMessageKey: String = ""): Form[BetaInvite] = Form(
-    mapping(
-      "accept" -> boolean,
-      "numberOfClients" -> optional(number) // need to add verification
-    )(BetaInvite.apply)(BetaInvite.unapply)
-  )
+  def form(): Form[String] =
+    Form[String](
+      single(
+        "size" -> text.verifying("beta.invite.size.required.error", _.nonEmpty)
+      )
+    )
 
 }

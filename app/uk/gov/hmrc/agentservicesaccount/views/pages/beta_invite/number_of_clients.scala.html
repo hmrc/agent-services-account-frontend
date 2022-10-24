@@ -31,7 +31,7 @@
 
 @this(
     main: main,
-    h1: h1, p: p,
+    h1: h1, p: p, inset_text: inset_text,
     formWithCSRF: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
@@ -39,7 +39,8 @@
     hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper
 )
 
-@(form: Form[Boolean])(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
+@(form: Form[String])(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
+
 
 @main(
     pageTitle = msgs("survey.title"),
@@ -48,35 +49,38 @@
 ) {
 
 
-    @formWithCSRF(action = routes.BetaInviteController.submitInvite()) {
+    @formWithCSRF(action = routes.BetaInviteController.submitInviteDetails()) {
 
     @if(form.errors.nonEmpty){
         @govukErrorSummary(ErrorSummary(errorList = form.errors.asTextErrorLinks, title = Text(msgs("survey.error.summary"))))
     }
 
-    @h1("beta.invite.yes-no.heading")
+    @h1("beta.invite.size.legend")
 
-    @p("beta.invite.yes-no.p")
+    @inset_text("beta.invite.details.p")
 
     @govukRadios(Radios(
         fieldset = Some(Fieldset(
-            legend = Some(Legend(
-                content = Text(msgs("beta.invite.yes-no.legend")),
-                classes = "govuk-fieldset__legend--s",
+                legend = Some(Legend(
+                content = Text(msgs("beta.invite.size.legend")),
+                classes = "govuk-visually-hidden",
                 isPageHeading = false
             ))
         )),
-        classes = "govuk-radios--inline",
-        idPrefix = Some("accept"),
-        name = "accept",
+        idPrefix = Some("size"),
+        name = "size",
         items = Seq(
             RadioItem(
-                content = Text(msgs("common.yes")),
-                value = Some("true")
+                content = Text(msgs("beta.invite.size.label.s")),
+                value = Some("small")
             ),
             RadioItem(
-                content = Text(msgs("common.no")),
-                value = Some("false")
+                content = Text(msgs("beta.invite.size.label.m")),
+                value = Some("medium")
+            ),
+            RadioItem(
+                content = Text(msgs("beta.invite.size.label.l")),
+                value = Some("large")
             )
         )
     ))
