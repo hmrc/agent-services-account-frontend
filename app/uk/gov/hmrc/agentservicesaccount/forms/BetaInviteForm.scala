@@ -21,10 +21,12 @@ import play.api.data.Forms._
 
 object BetaInviteForm {
 
-  def form(): Form[String] =
-    Form[String](
+  val form: Form[String] =
+    Form(
       single(
-        "size" -> text.verifying("beta.invite.size.required.error", _.nonEmpty)
+        "size" -> optional(text)
+          .verifying("beta.invite.size.required.error", _.nonEmpty)
+          .transform(_.getOrElse(""), (Some(_)): String => Option[String])
       )
     )
 

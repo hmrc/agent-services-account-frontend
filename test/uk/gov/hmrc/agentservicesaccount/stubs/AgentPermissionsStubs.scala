@@ -19,7 +19,7 @@ package uk.gov.hmrc.agentservicesaccount.stubs
 
 import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, get, patch, serverError, stubFor, urlEqualTo}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
-import play.api.http.Status.{NOT_FOUND, NO_CONTENT}
+import play.api.http.Status.{CONFLICT, CREATED, NOT_FOUND, NO_CONTENT}
 import play.api.libs.json.Json
 import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, OptinStatus}
 import uk.gov.hmrc.agentservicesaccount.models.{AccessGroupSummaries, GroupSummary}
@@ -92,4 +92,11 @@ object AgentPermissionsStubs {
           .withStatus(200)
           .withBody(Json.toJson(groupSummaries).toString)))
 
+  def givenHideBetaInviteResponse(conflict: Boolean = false): StubMapping =
+    stubFor(
+      get(urlEqualTo(s"/agent-permissions/private-beta-invite/decline"))
+        .willReturn(
+          aResponse()
+            .withStatus(if(conflict) CONFLICT else CREATED))
+    )
 }

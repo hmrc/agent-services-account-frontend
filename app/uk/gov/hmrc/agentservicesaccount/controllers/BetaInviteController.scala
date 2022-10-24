@@ -77,8 +77,9 @@ class BetaInviteController @Inject()
             if (acceptInvite) {
               Redirect(controller.showInviteDetails).toFuture
             } else {
-              // TODO dismiss banner
-              Redirect(routes.AgentServicesController.showAgentServicesAccount()).toFuture
+              agentPermissionsConnector.declinePrivateBetaInvite().map(_ =>
+                Redirect(routes.AgentServicesController.showAgentServicesAccount())
+              )
             }
           }
         )
@@ -87,14 +88,14 @@ class BetaInviteController @Inject()
 
   val showInviteDetails: Action[AnyContent] = Action.async { implicit request =>
     withAuthorisedAsAgent { _ =>
-      Ok(number_of_clients(BetaInviteForm.form())).toFuture
+      Ok(number_of_clients(BetaInviteForm.form)).toFuture
     }
   }
 
   def submitInviteDetails(): Action[AnyContent] = Action.async { implicit request =>
     withAuthorisedAsAgent { _ =>
       BetaInviteForm
-        .form()
+        .form
         .bindFromRequest()
         .fold(
           formWithErrors => { Ok(number_of_clients(formWithErrors)).toFuture},
