@@ -30,8 +30,15 @@ GET        /your-account                            @uk.gov.hmrc.agentservicesac
 GET        /your-account/administrators             @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController.administrators
 
 # Private beta feature testing
-GET        /private-beta-invite                     @uk.gov.hmrc.agentservicesaccount.controllers.BetaInviteController.showInvite
 POST       /private-beta-invite/decline             @uk.gov.hmrc.agentservicesaccount.controllers.BetaInviteController.hideInvite
-GET        /private-beta-invite/details             @uk.gov.hmrc.agentservicesaccount.controllers.BetaInviteController.showInviteDetails
-GET        /private-beta-invite/check-answers       @uk.gov.hmrc.agentservicesaccount.controllers.BetaInviteController.showInviteCheckYourAnswers
+
+GET        /private-beta-testing                    @uk.gov.hmrc.agentservicesaccount.controllers.BetaInviteController.showInvite
+POST       /private-beta-testing                    @uk.gov.hmrc.agentservicesaccount.controllers.BetaInviteController.submitInvite()
+
+GET        /private-beta-testing-details            @uk.gov.hmrc.agentservicesaccount.controllers.BetaInviteController.showInviteDetails
+POST       /private-beta-testing-details            @uk.gov.hmrc.agentservicesaccount.controllers.BetaInviteController.submitInviteDetails()
+GET        /private-beta-testing-contact-details    @uk.gov.hmrc.agentservicesaccount.controllers.BetaInviteController.showInviteContactDetails
+POST       /private-beta-testing-contact-details    @uk.gov.hmrc.agentservicesaccount.controllers.BetaInviteController.submitInviteContactDetails()
+GET        /private-beta-check-your-answers         @uk.gov.hmrc.agentservicesaccount.controllers.BetaInviteController.showInviteCheckYourAnswers
+GET        /private-beta-confirmation               @uk.gov.hmrc.agentservicesaccount.controllers.BetaInviteController.showInviteConfirmation
 

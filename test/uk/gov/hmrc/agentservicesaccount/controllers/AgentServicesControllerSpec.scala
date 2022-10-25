@@ -176,7 +176,7 @@ class AgentServicesControllerSpec extends BaseISpec {
         html.select(paragraphs).get(0).text shouldBe "Help improve our new feature"
         html.select(paragraphs).get(1).text shouldBe "Try out access groups and tell us what you think."
         html.select(link).get(0).text shouldBe "Tell me more"
-        html.select(link).get(0).attr("href") shouldBe "/agent-services-account/private-beta-invite"
+        html.select(link).get(0).attr("href") shouldBe "/agent-services-account/private-beta-testing"
         html.select(SUBMIT_BUTTON).get(0).text shouldBe "No thanks"
       }
 
@@ -495,7 +495,8 @@ class AgentServicesControllerSpec extends BaseISpec {
         // no beta invite
         html.text().contains("Help improve our new feature") shouldBe false
         html.text().contains("Try out access groups and tell us what you think.") shouldBe false
-        html.text().contains("/agent-services-account/private-beta-invite") shouldBe false
+        html.text().contains("/agent-services-account/private-beta-testing") shouldBe false
+        html.text().contains("/private-beta") shouldBe false
 
       }
     }
@@ -519,7 +520,6 @@ class AgentServicesControllerSpec extends BaseISpec {
       content should include(messagesApi("suspension-warning.multi.HMRC-MTD-VAT"))
       content should include(messagesApi("suspension-warning.p3"))
       content should include(htmlEscapedMessage("suspension-warning.p4"))
-      content should include(messagesApi("suspension-warning.button"))
       val getHelpLink = Jsoup.parse(content).select(Css.getHelpWithThisPageLink)
       getHelpLink.attr("href") shouldBe "http://localhost:9250/contact/report-technical-problem?newTab=true&service=AOSS&referrerUrl=%2Fhome"
       getHelpLink.text shouldBe "Is this page not working properly? (opens in new tab)"

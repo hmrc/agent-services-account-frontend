@@ -12,6 +12,12 @@ nav.your.account=Eich cyfrif
 nav.help=Help ac arweiniad
 nav.signout=Allgofnodi
 common.back=Yn ôl
+common.continue=Yn eich blaen
+common.yes=Iawn
+common.no=Na
+common.change=Newid
+common.what.happens.next=Yr hyn sy’n digwydd nesaf
+details.link-hidden= ar gyfer {0}
 
 agent.services.account.welcome=Croeso i’ch cyfrif gwasanaethau asiant
 agent.services.account.client-authorisations.p=Mae’n rhaid i chi ofyn i’ch cleient eich awdurdodi drwy eich cyfrif gwasanaethau asiant cyn y gallwch gael mynediad at unrhyw wasanaethau. Dylech gopïo hen awdurdodiad drosodd neu greu un newydd.
@@ -191,7 +197,6 @@ suspension-warning.single.PIR=bwrw golwg dros ei gofnod incwm
 suspension-warning.multi.PIR=bwrw golwg dros ei gofnod incwm
 suspension-warning.p3=Gallwch barhau i gael mynediad at unrhyw wasanaeth arall sydd ar gael i chi.
 suspension-warning.p4=Os na chawsoch ein llythyr, neu os ydych yn meddwl ein bod wedi gwneud camgymeriad, defnyddiwch y cysylltiad “cael help gyda’r dudalen hon”.
-suspension-warning.button=Yn eich blaen
 
 # Error messages for digital services
 global.error.500.title=Mae’n ddrwg gennym, rydym yn profi anawsterau technegol – 500
@@ -218,7 +223,6 @@ survey.whichService.label.trust=Rheoli ymddiriedolaeth neu ystâd
 survey.whichService.label.ir=Bwrw golwg dros y cofnod incwm
 survey.whichService.label.cgt=Treth Enillion Cyfalaf ar eiddo yn y DU
 survey.whichService.label.other=Unrhyw wasanaeth treth arall
-survey.button=Yn eich blaen
 survey.empty=Dewiswch opsiwn
 
 #signed-out
@@ -351,7 +355,31 @@ administrators.ul.li.3=creu, ailenwi a dileu grwpiau mynediad
 administrators.ul.li.4=neilltuo cleientiaid ac aelodau’r tîm i grwpiau mynediad
 
 # private beta feature testing
-beta.invite.banner.heading=Help improve our new feature
-beta.invite.banner.p=Try out access groups and tell us what you think.
-beta.invite.banner.link1=Tell me more
-beta.invite.banner.link2=No thanks
+beta.invite.banner.heading=Helpwch i wella ein nodwedd newydd
+beta.invite.banner.p=Rhowch gynnig ar y nodwedd grwpiau mynediad a rhoi’ch barn.
+beta.invite.banner.link1=Hoffwn wybod rhagor
+beta.invite.banner.link2=Dim diolch
+
+beta.invite.yes-no.heading=Profi’r nodwedd grwpiau mynediad
+beta.invite.yes-no.p=Rydym yn profi nodwedd newydd. Mae’n gadael i asiantau reoli pa aelodau o staff sy’n gallu rheoli trethi cleient. Bydd eich adborth yn ein helpu ni i wella ein gwasanaeth cyn i ni ei gyflwyno i bawb.
+beta.invite.yes-no.legend=A fyddech yn hoffi helpu i brofi’r grwpiau mynediad?
+beta.invite.yes-no.required.error=Select yes to help test access groups
+
+beta.invite.size.label=Sawl cleient sydd gennych?
+beta.invite.size.label.small=1,000 neu lai
+beta.invite.size.label.small=Rhwng 1,001 a 5,000
+beta.invite.size.label.small=Mwy na 10,000
+beta.invite.size.required.error=Select the number of clients you have
+
+beta.invite.details.heading=Manylion cyswllt
+beta.invite.details.p=Ar hyn o bryd, rydym yn profi’r nodwedd gydag asiantau sydd â 1,000 o gleientiaid neu lai. Os oes gennych fwy na 1,000 o gleientiaid byddwn yn cysylltu â chi yn nes ymlaen.
+beta.invite.details.label1=Enw
+beta.invite.details.label2=E-bost
+beta.invite.details.label3=Rhif ffôn (dewisol)
+
+beta.invite.cya.heading=Gwiriwch eich atebion
+
+beta.invite.confirmation.heading=Gwiriwch eich atebion
+beta.invite.confirmation.p=Byddwn yn cysylltu â chi gan ddefnyddio’r manylion cyswllt rydych wedi’u rhoi.
+beta.invite.confirmation.link=Dychwelyd i hafan y cyfrif gwasanaethau asiant
+
