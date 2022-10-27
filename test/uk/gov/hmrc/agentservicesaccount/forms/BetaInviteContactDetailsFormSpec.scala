@@ -52,8 +52,12 @@ class BetaInviteContactDetailsFormSpec extends AnyWordSpec with Matchers with Gu
           Some(BetaInviteContactDetails("Blah alkfh","asdlkj@eqkf.do",Some("32456 789896")))
     }
 
-    s"error when $nameField and $emailField not present in params" in {
-      val params: Map[String, String] = Map.empty
+    s"error when $nameField and $emailField are empty" in {
+      val params = Map(
+        nameField -> "",
+        emailField -> "",
+        phoneField -> ""
+      )
       val validatedForm = BetaInviteContactDetailsForm.form.bind(params)
       validatedForm.hasErrors shouldBe true
       validatedForm.error(nameField).get.message shouldBe "error.required.name"
@@ -63,20 +67,20 @@ class BetaInviteContactDetailsFormSpec extends AnyWordSpec with Matchers with Gu
 
     s"error when $nameField is too long" in {
       val params = Map(
-        nameField -> RandomStringUtils.randomAlphanumeric(81),
-        emailField -> "an@email",
+        nameField -> RandomStringUtils.randomAlphanumeric(80),
+        emailField -> "an@email.com",
         phoneField -> ""
       )
       val validatedForm = BetaInviteContactDetailsForm.form.bind(params)
       validatedForm.hasErrors shouldBe true
-      validatedForm.error(emailField).get.message shouldBe "error.max-length.name"
+      validatedForm.error(nameField).get.message shouldBe "error.max-length.name"
       validatedForm.errors.length shouldBe 1
     }
 
     s"error when $emailField is too long" in {
       val params = Map(
         nameField -> RandomStringUtils.randomAlphanumeric(79),
-        emailField -> "a@".concat(RandomStringUtils.randomAlphanumeric(63)),
+        emailField -> RandomStringUtils.randomAlphanumeric(61).concat("@a.a"),
         phoneField -> ""
       )
       val validatedForm = BetaInviteContactDetailsForm.form.bind(params)

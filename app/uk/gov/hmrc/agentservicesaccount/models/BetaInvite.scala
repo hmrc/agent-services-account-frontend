@@ -28,6 +28,7 @@ case class BetaInviteDetailsForEmail(numberOfClients: AgentSize,
 
 sealed trait AgentSize {
 
+  // for email
   def toDescription: String =
     this match {
       case Small => "Less than 1000"

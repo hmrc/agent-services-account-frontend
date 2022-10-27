@@ -22,6 +22,7 @@ import uk.gov.hmrc.agentservicesaccount.models.BetaInviteContactDetails
 
 object BetaInviteContactDetailsForm {
 
+  // matches [anything]@[anything].[anything]
   private val emailRegex = """^.{0,62}@.{1,65}\..{1,65}$"""
 
   def form: Form[BetaInviteContactDetails] = Form(
@@ -32,7 +33,7 @@ object BetaInviteContactDetailsForm {
       "email" -> text
         .verifying("error.required.email", _.trim.nonEmpty)
         .verifying("error.max-length.email", _.trim.length < 64)
-        .verifying("error.invalid.email", _.matches(emailRegex)),
+        .verifying("error.invalid.email", x => x.trim.matches(emailRegex) || x.isEmpty),
       "phone" -> optional(text)
     )(BetaInviteContactDetails.apply)(BetaInviteContactDetails.unapply)
   )

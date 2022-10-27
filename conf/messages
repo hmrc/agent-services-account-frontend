@@ -3,6 +3,8 @@ service.name=Agent services account
 generic.title={0} - {1} - GOV.UK
 servicename.titleSuffix=- Agent services account - GOV.UK
 agent.services.account.heading=Welcome to your agent services account
+error-prefix=Error:
+
 existing.client.relationships.link=Access existing client relationships
 
 nav.home=Account home

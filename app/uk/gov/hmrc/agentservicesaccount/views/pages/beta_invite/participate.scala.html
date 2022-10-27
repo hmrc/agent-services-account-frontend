@@ -42,7 +42,7 @@
 @(form: Form[Boolean])(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
 
 @main(
-    pageTitle = msgs("beta.invite.yes-no.heading"),
+    pageTitle = withErrorPrefix(form.hasErrors, msgs("beta.invite.yes-no.heading")),
     backLinkHref = Some(routes.AgentServicesController.showAgentServicesAccount.url),
     showSecondaryNav = false
 ) {

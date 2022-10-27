@@ -43,7 +43,7 @@
 
 
 @main(
-    pageTitle = msgs("beta.invite.size.legend"),
+    pageTitle = withErrorPrefix(form.hasErrors, msgs("beta.invite.size.legend")),
     backLinkHref = Some(routes.BetaInviteController.showInvite.url),
     showSecondaryNav = false
 ) {

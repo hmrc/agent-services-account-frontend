@@ -3,6 +3,8 @@ service.name=Cyfrif gwasanaethau asiant
 generic.title={0} - {1} - GOV.UK
 servicename.titleSuffix=– Cyfrif gwasanaethau asiant – GOV.UK
 agent.services.account.heading=Croeso i’ch cyfrif gwasanaethau asiant
+error-prefix=Gwall:
+
 existing.client.relationships.link=Mynediad at berthnasoedd presennol â chleientiaid
 
 nav.home=Hafan y cyfrif
