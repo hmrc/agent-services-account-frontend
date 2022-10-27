@@ -378,6 +378,7 @@ beta.invite.details.label2=E-bost
 beta.invite.details.label3=Rhif ffôn (dewisol)
 
 beta.invite.cya.heading=Gwiriwch eich atebion
+beta.invite.cya.not-provided=Not provided
 
 beta.invite.confirmation.heading=Gwiriwch eich atebion
 beta.invite.confirmation.p=Byddwn yn cysylltu â chi gan ddefnyddio’r manylion cyswllt rydych wedi’u rhoi.

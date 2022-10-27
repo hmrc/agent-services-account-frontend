@@ -36,11 +36,8 @@ class BetaInviteContactDetailsFormSpec extends AnyWordSpec with Matchers with Gu
         phoneField -> ""
       )
 
-      BetaInviteContactDetailsForm.form.bind(params).value shouldBe Map(
-        nameField -> "Blah alkfh",
-        emailField -> "asdlkj@eqkf.do",
-        phoneField -> ""
-      )
+      BetaInviteContactDetailsForm.form.bind(params).value shouldBe
+        Some(BetaInviteContactDetails("Blah alkfh","asdlkj@eqkf.do",None))
 
     }
 
@@ -51,11 +48,8 @@ class BetaInviteContactDetailsFormSpec extends AnyWordSpec with Matchers with Gu
           phoneField -> "32456 789896"
         )
 
-        BetaInviteContactDetailsForm.form.bind(params).value shouldBe Map(
-          nameField -> "Blah alkfh",
-          emailField -> "asdlkj@eqkf.do",
-          phoneField -> "32456 789896"
-        )
+        BetaInviteContactDetailsForm.form.bind(params).value shouldBe
+          Some(BetaInviteContactDetails("Blah alkfh","asdlkj@eqkf.do",Some("32456 789896")))
     }
 
     s"error when $nameField and $emailField not present in params" in {
@@ -81,7 +75,7 @@ class BetaInviteContactDetailsFormSpec extends AnyWordSpec with Matchers with Gu
 
     s"error when $emailField is too long" in {
       val params = Map(
-        nameField -> RandomStringUtils.randomAlphanumeric(80),
+        nameField -> RandomStringUtils.randomAlphanumeric(79),
         emailField -> "a@".concat(RandomStringUtils.randomAlphanumeric(63)),
         phoneField -> ""
       )

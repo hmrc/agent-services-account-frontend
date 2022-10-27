@@ -23,19 +23,24 @@ import uk.gov.hmrc.agentservicesaccount.auth.AuthActions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentPermissionsConnector
 import uk.gov.hmrc.agentservicesaccount.forms.{BetaInviteContactDetailsForm, BetaInviteForm, YesNoForm}
+import uk.gov.hmrc.agentservicesaccount.models.{AgentSize, BetaInviteDetailsForEmail}
+import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.beta_invite._
 
 import javax.inject._
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class BetaInviteController @Inject()
 (
   authActions: AuthActions,
   agentPermissionsConnector: AgentPermissionsConnector,
+  cacheService: SessionCacheService,
   participate: participate,
+  number_of_clients: number_of_clients,
   your_details: your_details,
-  number_of_clients: number_of_clients
+  check_answers: check_answers,
+  confirmation: confirmation
 )(implicit val appConfig: AppConfig,
                   val cc: MessagesControllerComponents,
                   ec: ExecutionContext,
@@ -43,10 +48,6 @@ class BetaInviteController @Inject()
   extends AgentServicesBaseController with Logging {
 
   import authActions._
-
-  implicit class ToFuture[T](t: T) {
-    def toFuture: Future[T] = Future successful t
-  }
 
   private val controller: ReverseBetaInviteController = routes.BetaInviteController
 
@@ -100,8 +101,7 @@ class BetaInviteController @Inject()
         .fold(
           formWithErrors => { Ok(number_of_clients(formWithErrors)).toFuture},
           formData => {
-            // TODO save to session
-            logger.info(s"data to be saved: $formData")
+            cacheService.put(AGENT_SIZE, formData)
             Redirect(controller.showInviteContactDetails).toFuture}
         )
     }
@@ -122,7 +122,9 @@ class BetaInviteController @Inject()
         .fold(
           formWithErrors => { Ok(your_details(formWithErrors)).toFuture},
           formData => {
-            // TODO save to session
+            cacheService.put(NAME, formData.name)
+            cacheService.put(EMAIL, formData.email)
+            cacheService.put(PHONE, formData.phone.getOrElse(""))
             logger.info(s"data to be saved: $formData")
             Redirect(controller.showInviteCheckYourAnswers).toFuture}
         )
@@ -131,13 +133,28 @@ class BetaInviteController @Inject()
 
   val showInviteCheckYourAnswers: Action[AnyContent] = Action.async { implicit request =>
     withAuthorisedAsAgent { _ =>
-      Ok(s"not implemented ${controller.showInviteCheckYourAnswers.url} APB-6589").toFuture
+      cacheService.getBetaInviteSessionItems().flatMap(answers => {
+        val detailsForEmail: BetaInviteDetailsForEmail = BetaInviteDetailsForEmail(
+          AgentSize(answers.head.getOrElse("")),
+          answers(1).getOrElse(""),
+          answers(2).getOrElse(""),
+          answers(3),
+        )
+        Ok(check_answers(detailsForEmail))
+      }.toFuture)
+    }
+  }
+
+  def submitDetailsToEmail(): Action[AnyContent] = Action.async { implicit request =>
+    withAuthorisedAsAgent { _ =>
+      logger.info("not implemented sending email til APB-6583")
+      Redirect(controller.showInviteConfirmation).toFuture
     }
   }
 
   val showInviteConfirmation: Action[AnyContent] = Action.async { implicit request =>
     withAuthorisedAsAgent { _ =>
-      Ok(s"not implemented ${controller.showInviteConfirmation.url} APB-6589").toFuture
+      Ok(confirmation()).toFuture
     }
   }
 

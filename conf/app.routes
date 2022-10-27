@@ -40,5 +40,6 @@ POST       /private-beta-testing-details            @uk.gov.hmrc.agentservicesac
 GET        /private-beta-testing-contact-details    @uk.gov.hmrc.agentservicesaccount.controllers.BetaInviteController.showInviteContactDetails
 POST       /private-beta-testing-contact-details    @uk.gov.hmrc.agentservicesaccount.controllers.BetaInviteController.submitInviteContactDetails()
 GET        /private-beta-check-your-answers         @uk.gov.hmrc.agentservicesaccount.controllers.BetaInviteController.showInviteCheckYourAnswers
+POST       /private-beta-check-your-answers         @uk.gov.hmrc.agentservicesaccount.controllers.BetaInviteController.submitDetailsToEmail()
 GET        /private-beta-confirmation               @uk.gov.hmrc.agentservicesaccount.controllers.BetaInviteController.showInviteConfirmation
 

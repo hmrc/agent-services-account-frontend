@@ -15,13 +15,64 @@
  */
 
 package uk.gov.hmrc.agentservicesaccount.models
+import play.api.libs.json.{Format, JsError, JsResult, JsString, JsSuccess, JsValue}
 
 case class BetaInviteContactDetails(name: String,
                                     email: String,
                                     phone: Option[String])
 
-case class BetaInviteDetailsForEmail(numberOfClients: String,
+case class BetaInviteDetailsForEmail(numberOfClients: AgentSize,
                                      name: String,
                                      email: String,
                                      phone: Option[String])
 
+sealed trait AgentSize {
+
+  def toDescription: String =
+    this match {
+      case Small => "Less than 1000"
+      case Medium => "Between 1,001 and 5,000"
+      case Large => "Over 10,000"
+      case _ => "Unknown"
+    }
+
+  override def toString: String =
+    this match {
+      case Small => "s"
+      case Medium => "m"
+      case Large => "l"
+      case _ => "Unknown"
+    }
+}
+
+case object Small extends AgentSize
+case object Medium extends AgentSize
+case object Large extends AgentSize
+case class Unknown(attempted: String) extends AgentSize
+
+
+object AgentSize {
+  def unapply(status: AgentSize): Option[String] = status match {
+    case Small      => Some("small")
+    case Medium     => Some("medium")
+    case Large      => Some("large")
+    case _            => None
+  }
+
+  def apply(status: String): AgentSize = status.toLowerCase match {
+    case "small"      => Small
+    case "medium"     => Medium
+    case "large"      => Large
+    case _            => Unknown(status)
+  }
+
+  implicit val agentSizeFormat: Format[AgentSize] = new Format[AgentSize] {
+    override def reads(json: JsValue): JsResult[AgentSize] = apply(json.as[String]) match {
+      case Unknown(value) => JsError(s"Status of [$value] is not a valid AgentSize")
+      case value          => JsSuccess(value)
+    }
+
+    override def writes(o: AgentSize): JsValue =
+      unapply(o).map(JsString).getOrElse(throw new IllegalArgumentException)
+  }
+}

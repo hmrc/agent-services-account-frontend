@@ -379,6 +379,7 @@ beta.invite.details.label2=Email
 beta.invite.details.label3=Telephone number (optional)
 
 beta.invite.cya.heading=Check your answers
+beta.invite.cya.not-provided=Not provided
 
 beta.invite.confirmation.heading=We have received your response
 beta.invite.confirmation.p=We will get in touch with you using the contact details you provided.
