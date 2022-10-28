@@ -171,7 +171,7 @@ class AgentPermissionsConnector @Inject()(http: HttpClient)(implicit val metrics
         response.status match {
           case CREATED => Done
           case CONFLICT =>
-            logger.warn(s"Tried to decline when already dismissed")
+            logger.info(s"Tried to decline when already dismissed")
             Done
           case e =>
             throw UpstreamErrorResponse(

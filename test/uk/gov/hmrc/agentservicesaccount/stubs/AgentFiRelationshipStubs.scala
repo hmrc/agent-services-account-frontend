@@ -17,12 +17,13 @@
 package uk.gov.hmrc.agentservicesaccount.stubs
 
 import com.github.tomakehurst.wiremock.client.WireMock.{get, noContent, notFound, stubFor}
+import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 
 object AgentFiRelationshipStubs {
-  def givenArnIsAllowlistedForIrv(arn: Arn) =
+  def givenArnIsAllowlistedForIrv(arn: Arn): StubMapping =
     stubFor(get(s"/agent-fi-relationship/${arn.value}/irv-allowed").willReturn(noContent()))
 
-  def givenArnIsNotAllowlistedForIrv(arn: Arn) =
+  def givenArnIsNotAllowlistedForIrv(arn: Arn): StubMapping =
     stubFor(get(s"/agent-fi-relationship/${arn.value}/irv-allowed").willReturn(notFound()))
 }

@@ -26,6 +26,7 @@ import play.api.test.FakeRequest
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
+import uk.gov.hmrc.agentservicesaccount.stubs.AgentPermissionsStubs.givenHideBetaInviteResponse
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import uk.gov.hmrc.auth.core.{Enrolment, EnrolmentIdentifier}
 import uk.gov.hmrc.http.SessionKeys
@@ -36,7 +37,7 @@ class BetaInviteControllerSpec extends BaseISpec {
   val controller: BetaInviteController = app.injector.instanceOf[BetaInviteController]
   implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
-  implicit lazy val mockSessionCacheService: SessionCacheService = app.injector.instanceOf[SessionCacheService]
+  implicit val mockSessionCacheService: SessionCacheService = app.injector.instanceOf[SessionCacheService]
   implicit lazy val mockSessionCacheRepo: SessionCacheRepository = app.injector.instanceOf[SessionCacheRepository]
 
   override implicit lazy val app: Application =
@@ -57,22 +58,22 @@ class BetaInviteControllerSpec extends BaseISpec {
   val agentEnrolment: Enrolment = Enrolment("HMRC-AS-AGENT", Seq(EnrolmentIdentifier("AgentReferenceNumber", arn)), state = "Activated", delegatedAuthRule = None)
 
   "POST hide invite" should {
-//    "redirect to home and decline beta invite" in {
-//      givenAuthorisedAsAgentWith(arn)
-//      givenHideBetaInviteResponse(CREATED)
-//
-//      implicit val request: FakeRequest[AnyContentAsEmpty.type] =
-//        postRequestNoBody("/private-beta-invite/decline")
-//
-//      val result = await(controller.hideInvite.apply(request))
-//      //then
-//      status(result) shouldBe SEE_OTHER
-//      redirectLocation(result) shouldBe
-//        Some("/agent-services-account/home")
-//    }
+    "redirect to home and decline beta invite" in {
+      givenAuthorisedAsAgentWith(arn)
+      givenHideBetaInviteResponse()
+
+      implicit val request: FakeRequest[AnyContentAsEmpty.type] =
+        postRequestNoBody("/private-beta-invite/decline")
+
+      val result = await(controller.hideInvite(request))
+      //then
+      status(result) shouldBe SEE_OTHER
+      redirectLocation(result) shouldBe
+        Some("/agent-services-account/home")
+    }
   }
 
-  "GET show invite" should {
+  s"GET ${routes.BetaInviteController.showInvite.url}" should {
     "render yes no radio" in {
       givenAuthorisedAsAgentWith(arn)
 
@@ -82,24 +83,25 @@ class BetaInviteControllerSpec extends BaseISpec {
 
       val html = Jsoup.parse(contentAsString(result))
       html.title() shouldBe "Access groups feature testing - Agent services account - GOV.UK"
+      // TODO add checks on view
     }
   }
 
-  "POST submit invite" should {
-//    "redirect to home if no" in {
-//      givenAuthorisedAsAgentWith(arn)
-//      givenHideBetaInviteResponse(CREATED)
-//
-//      implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] =
-//        postRequestNoBody("/private-beta-testing")
-//          .withFormUrlEncodedBody("accept" -> "false")
-//
-//      val result = await(controller.submitInvite()(request))
-//      //then
-//      status(result) shouldBe SEE_OTHER
-//      redirectLocation(result) shouldBe
-//        Some("/agent-services-account/home")
-//    }
+  s"POST ${routes.BetaInviteController.submitInvite().url}" should {
+    "redirect to ASA home if no" in {
+      givenAuthorisedAsAgentWith(arn)
+      givenHideBetaInviteResponse()
+
+      implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] =
+        postRequestNoBody("/private-beta-testing")
+          .withFormUrlEncodedBody("accept" -> "false")
+
+      val result = await(controller.submitInvite()(request))
+      //then
+      status(result) shouldBe SEE_OTHER
+      redirectLocation(result) shouldBe
+        Some("/agent-services-account/home")
+    }
 
     s"redirect to ${routes.BetaInviteController.showInviteDetails.url} if yes" in {
       givenAuthorisedAsAgentWith(arn)
