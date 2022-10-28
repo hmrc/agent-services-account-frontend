@@ -23,6 +23,7 @@ import play.api.test.Helpers.{await, defaultAwaitTimeout}
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import uk.gov.hmrc.auth.core.{Enrolment, EnrolmentIdentifier}
 import uk.gov.hmrc.http.SessionKeys
@@ -33,6 +34,7 @@ class BetaInviteControllerSpec extends BaseISpec {
   val controller: BetaInviteController = app.injector.instanceOf[BetaInviteController]
   implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
+  implicit lazy val mockSessionCacheService: SessionCacheService = app.injector.instanceOf[SessionCacheService]
 
   def getRequest(path: String): FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", path)
     .withHeaders("Authorization" -> "Bearer XYZ")
