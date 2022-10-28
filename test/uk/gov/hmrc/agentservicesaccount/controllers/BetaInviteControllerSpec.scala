@@ -38,7 +38,7 @@ class BetaInviteControllerSpec extends BaseISpec {
   implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
   implicit val mockSessionCacheService: SessionCacheService = app.injector.instanceOf[SessionCacheService]
-  implicit lazy val mockSessionCacheRepo: SessionCacheRepository = app.injector.instanceOf[SessionCacheRepository]
+  implicit val mockSessionCacheRepo: SessionCacheRepository = app.injector.instanceOf[SessionCacheRepository]
 
   override implicit lazy val app: Application =
     appBuilder(Map("mongodb.uri" -> s"mongodb://localhost:27017/test-BetaInviteControllerSpec"))
