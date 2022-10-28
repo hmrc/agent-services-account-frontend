@@ -17,12 +17,14 @@
 package uk.gov.hmrc.agentservicesaccount.controllers
 
 import org.jsoup.Jsoup
+import play.api.Application
 import play.api.http.Status.{OK, SEE_OTHER}
 import play.api.i18n.MessagesApi
 import play.api.test.Helpers.{await, defaultAwaitTimeout}
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import uk.gov.hmrc.auth.core.{Enrolment, EnrolmentIdentifier}
@@ -35,6 +37,11 @@ class BetaInviteControllerSpec extends BaseISpec {
   implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
   implicit lazy val mockSessionCacheService: SessionCacheService = app.injector.instanceOf[SessionCacheService]
+  implicit lazy val mockSessionCacheRepo: SessionCacheRepository = app.injector.instanceOf[SessionCacheRepository]
+
+  override implicit lazy val app: Application =
+    appBuilder(Map("mongodb.uri" -> s"mongodb://localhost:27017/test-BetaInviteControllerSpec"))
+      .build()
 
   def getRequest(path: String): FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", path)
     .withHeaders("Authorization" -> "Bearer XYZ")

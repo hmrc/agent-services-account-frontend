@@ -55,6 +55,11 @@ object AgentPermissionsStubs {
         .willReturn(aResponse()
           .withStatus(200)))
 
+  def givenHidePrivateBetaInviteNotFound(): StubMapping =
+    stubFor(
+      get(urlEqualTo(s"/agent-permissions/private-beta-invite"))
+        .willReturn(aResponse()
+          .withStatus(404)))
 
   def givenOptinStatusSuccessReturnsForArn( arn: Arn, optinStatus: OptinStatus): StubMapping =
     stubFor(
