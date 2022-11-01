@@ -33,7 +33,8 @@ sealed trait AgentSize {
     this match {
       case Small => "Less than 1000"
       case Medium => "Between 1,001 and 5,000"
-      case Large => "Over 10,000"
+      case Large => "Between 5,001 and 9,999"
+      case XLarge => "Over 10,000"
       case _ => "Unknown"
     }
 
@@ -42,6 +43,7 @@ sealed trait AgentSize {
       case Small => "s"
       case Medium => "m"
       case Large => "l"
+      case XLarge => "x"
       case _ => "Unknown"
     }
 }
@@ -49,6 +51,7 @@ sealed trait AgentSize {
 case object Small extends AgentSize
 case object Medium extends AgentSize
 case object Large extends AgentSize
+case object XLarge extends AgentSize
 case class Unknown(attempted: String) extends AgentSize
 
 
@@ -57,6 +60,7 @@ object AgentSize {
     case Small      => Some("small")
     case Medium     => Some("medium")
     case Large      => Some("large")
+    case XLarge     => Some("xlarge")
     case _            => None
   }
 
@@ -64,6 +68,7 @@ object AgentSize {
     case "small"      => Small
     case "medium"     => Medium
     case "large"      => Large
+    case "xlarge"     => XLarge
     case _            => Unknown(status)
   }
 
