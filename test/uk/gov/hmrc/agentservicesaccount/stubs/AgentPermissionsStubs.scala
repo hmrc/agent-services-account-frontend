@@ -17,7 +17,7 @@
 package uk.gov.hmrc.agentservicesaccount.stubs
 
 
-import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, get, patch, serverError, stubFor, urlEqualTo}
+import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, get, patch, post, serverError, stubFor, urlEqualTo}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.Status.{CONFLICT, CREATED, NOT_FOUND, NO_CONTENT}
 import play.api.libs.json.Json
@@ -55,6 +55,11 @@ object AgentPermissionsStubs {
         .willReturn(aResponse()
           .withStatus(200)))
 
+  def givenHidePrivateBetaInviteNotFound(): StubMapping =
+    stubFor(
+      get(urlEqualTo(s"/agent-permissions/private-beta-invite"))
+        .willReturn(aResponse()
+          .withStatus(404)))
 
   def givenOptinStatusSuccessReturnsForArn( arn: Arn, optinStatus: OptinStatus): StubMapping =
     stubFor(
@@ -94,9 +99,10 @@ object AgentPermissionsStubs {
 
   def givenHideBetaInviteResponse(conflict: Boolean = false): StubMapping =
     stubFor(
-      get(urlEqualTo(s"/agent-permissions/private-beta-invite/decline"))
+      post(urlEqualTo(s"/agent-permissions/private-beta-invite/decline"))
         .willReturn(
           aResponse()
             .withStatus(if(conflict) CONFLICT else CREATED))
     )
+
 }

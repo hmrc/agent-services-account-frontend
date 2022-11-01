@@ -3,6 +3,8 @@ service.name=Agent services account
 generic.title={0} - {1} - GOV.UK
 servicename.titleSuffix=- Agent services account - GOV.UK
 agent.services.account.heading=Welcome to your agent services account
+error-prefix=Error:
+
 existing.client.relationships.link=Access existing client relationships
 
 nav.home=Account home
@@ -369,7 +371,8 @@ beta.invite.yes-no.required.error=Select yes to help test access groups
 beta.invite.size.legend=How many clients do you have?
 beta.invite.size.label.s=1,000 or fewer
 beta.invite.size.label.m=Between 1,001 and 5,000
-beta.invite.size.label.l=More than 10,000
+beta.invite.size.label.l=Between 5,001 and 9,999
+beta.invite.size.label.x=More than 10,000
 beta.invite.size.required.error=Select the number of clients you have
 
 beta.invite.details.heading=Contact details
@@ -378,7 +381,14 @@ beta.invite.details.label1=Name
 beta.invite.details.label2=Email
 beta.invite.details.label3=Telephone number (optional)
 
+error.required.name=Enter a name
+error.max-length.name=Your name must be 80 characters or fewer
+error.required.email=Enter an email
+error.max-length.email=Your email must be 254 characters or fewer
+error.invalid.email=Enter an email address in the correct format, like name@example.com
+
 beta.invite.cya.heading=Check your answers
+beta.invite.cya.not-provided=Not provided
 
 beta.invite.confirmation.heading=We have received your response
 beta.invite.confirmation.p=We will get in touch with you using the contact details you provided.

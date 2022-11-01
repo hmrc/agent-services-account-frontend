@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.agentservicesaccount.stubs
+package uk.gov.hmrc.agentservicesaccount.utils
 
-import com.github.tomakehurst.wiremock.client.WireMock.{get, noContent, notFound, stubFor}
-import com.github.tomakehurst.wiremock.stubbing.StubMapping
-import uk.gov.hmrc.agentmtdidentifiers.model.Arn
+import play.api.i18n.Messages
 
-object AgentFiRelationshipStubs {
-  def givenArnIsAllowlistedForIrv(arn: Arn): StubMapping =
-    stubFor(get(s"/agent-fi-relationship/${arn.value}/irv-allowed").willReturn(noContent()))
+object ViewUtils {
 
-  def givenArnIsNotAllowlistedForIrv(arn: Arn): StubMapping =
-    stubFor(get(s"/agent-fi-relationship/${arn.value}/irv-allowed").willReturn(notFound()))
+  def withErrorPrefix(hasFormErrors: Boolean, str: String)(implicit mgs: Messages): String = {
+    val errorPrefix = if(hasFormErrors) { mgs("error-prefix") + " "} else {""}
+    errorPrefix.concat(mgs(str))
+  }
+
 }

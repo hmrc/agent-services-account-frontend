@@ -78,8 +78,8 @@
 }
 
 @main(
-    pageTitle = msgs("beta.invite.details.heading"),
-    backLinkHref = Some(s"${routes.AgentServicesController.manageAccount}"),
+    pageTitle = withErrorPrefix(form.hasErrors, msgs("beta.invite.details.heading")),
+    backLinkHref = Some(routes.BetaInviteController.showInviteDetails.url),
     showSecondaryNav = false
 ) {
 

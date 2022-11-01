@@ -55,10 +55,6 @@ class AgentServicesController @Inject()
   val customDimension: String = appConfig.customDimension
   val agentSuspensionEnabled: Boolean = appConfig.agentSuspensionEnabled
 
-  implicit class ToFuture[T](t: T) {
-    def toFuture: Future[T] = Future successful t
-  }
-
   val root: Action[AnyContent] = Action.async { implicit request =>
     withAuthorisedAsAgent { _ =>
       if (agentSuspensionEnabled) {

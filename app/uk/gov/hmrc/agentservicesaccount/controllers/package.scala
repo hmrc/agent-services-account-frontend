@@ -14,16 +14,26 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.agentservicesaccount.stubs
+package uk.gov.hmrc.agentservicesaccount
+import uk.gov.hmrc.mongo.cache.DataKey
+import scala.concurrent.Future
 
-import com.github.tomakehurst.wiremock.client.WireMock.{get, noContent, notFound, stubFor}
-import com.github.tomakehurst.wiremock.stubbing.StubMapping
-import uk.gov.hmrc.agentmtdidentifiers.model.Arn
+package object controllers {
+  implicit class ToFuture[T](t: T) {
+    def toFuture: Future[T] = Future successful t
+  }
 
-object AgentFiRelationshipStubs {
-  def givenArnIsAllowlistedForIrv(arn: Arn): StubMapping =
-    stubFor(get(s"/agent-fi-relationship/${arn.value}/irv-allowed").willReturn(noContent()))
+  val AGENT_SIZE: DataKey[String] = DataKey("numberOfClients")
+  val NAME: DataKey[String] = DataKey("name")
+  val EMAIL: DataKey[String] = DataKey("email")
+  val PHONE: DataKey[String] = DataKey("phone")
 
-  def givenArnIsNotAllowlistedForIrv(arn: Arn): StubMapping =
-    stubFor(get(s"/agent-fi-relationship/${arn.value}/irv-allowed").willReturn(notFound()))
+  val sessionKeys =
+    List(
+      AGENT_SIZE,
+      NAME,
+      EMAIL,
+      PHONE
+    )
+
 }

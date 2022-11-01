@@ -23,6 +23,7 @@ import play.api.{Configuration, Environment, Logging, Mode}
 import uk.gov.hmrc.agentservicesaccount.controllers.routes
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import views.html.helper.urlEncode
+import scala.concurrent.duration.Duration
 
 @Singleton
 class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig, env:Environment) extends Logging {
@@ -42,20 +43,20 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
 
   private def baseUrl(key: String) = servicesConfig.baseUrl(key)
 
-  val authBaseUrl = baseUrl("auth")
+  val authBaseUrl: String = baseUrl("auth")
 
-  val ssoBaseUrl = baseUrl("sso")
+  val ssoBaseUrl: String = baseUrl("sso")
 
-  val acaBaseUrl = baseUrl("agent-client-authorisation")
+  val acaBaseUrl: String = baseUrl("agent-client-authorisation")
 
-  val customDimension = getString("customDimension")
+  val customDimension: String = getString("customDimension")
 
-  val asaFrontendExternalUrl = getConfString("agent-services-account-frontend.external-url")
+  val asaFrontendExternalUrl: String = getConfString("agent-services-account-frontend.external-url")
 
-  val companyAuthFrontendExternalUrl = getConfString("company-auth-frontend.external-url")
-  val signOutPath = getConfString("company-auth-frontend.sign-out.path")
-  val signInPath = getConfString("company-auth-frontend.sign-in.path")
-  val signOutContinueUrl = getConfString("company-auth-frontend.sign-out.continue-url")
+  val companyAuthFrontendExternalUrl: String = getConfString("company-auth-frontend.external-url")
+  val signOutPath: String = getConfString("company-auth-frontend.sign-out.path")
+  val signInPath: String = getConfString("company-auth-frontend.sign-in.path")
+  val signOutContinueUrl: String = getConfString("company-auth-frontend.sign-out.continue-url")
   lazy val signOut: String = s"$companyAuthFrontendExternalUrl$signOutPath"
 
   lazy val continueFromGGSignIn = s"$companyAuthFrontendExternalUrl$signInPath?continue=${urlEncode(s"$asaFrontendExternalUrl/agent-services-account")}"
@@ -100,22 +101,16 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
   val vrsPath: String = getString("vat-registration-service.path")
   val vrsUrl = s"$vrsExternalUrl$vrsPath"
 
-  val agentSuspensionEnabled = getBoolean("features.enable-agent-suspension")
+  val timeoutDialogTimeout: Int = getInt("timeoutDialog.timeout")
+  val timeoutDialogCountdown: Int = getInt("timeoutDialog.countdown")
 
-  val timeoutDialogTimeout = getInt("timeoutDialog.timeout")
-  val timeoutDialogCountdown = getInt("timeoutDialog.countdown")
+  val runMode: Option[String] = config.getOptional[String]("run.mode")
+  val isDevEnv: Boolean = if (env.mode.equals(Mode.Test)) false else runMode.forall(Mode.Dev.toString.equals)
 
-  val runMode = config.getOptional[String]("run.mode")
-  val isDevEnv = if (env.mode.equals(Mode.Test)) false else runMode.forall(Mode.Dev.toString.equals)
+  val betaFeedbackUrl: String = getString("betaFeedbackUrl")
 
-  val betaFeedbackUrl = getString("betaFeedbackUrl")
-
-  val hmrcOnlineGuidanceLink = getString("hmrcOnlineGuidanceLink")
-  val hmrcOnlineSignInLink = getString("hmrcOnlineSignInLink")
-
-  val feedbackSurveyServiceSelect = getBoolean("features.enable-feedback-survey-service-select")
-
-  val enablePpt = getBoolean("features.enable-ppt")
+  val hmrcOnlineGuidanceLink: String = getString("hmrcOnlineGuidanceLink")
+  val hmrcOnlineSignInLink: String = getString("hmrcOnlineSignInLink")
 
   def signOutUrlWithSurvey(surveyKey: String): String = s"$companyAuthFrontendExternalUrl$signOutPath?continue=${urlEncode(signOutContinueUrl + surveyKey)}"
 
@@ -126,9 +121,17 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
 
   def routeToSwitchLanguage: String => Call = (lang: String) => routes.AgentServicesLanguageController.switchToLanguage(lang)
 
-  val govUkGuidanceChangeDetails = getString("govUkGuidanceChangeDetails")
+  val govUkGuidanceChangeDetails: String = getString("govUkGuidanceChangeDetails")
 
-  val afiBaseUrl = baseUrl("agent-fi-relationship")
+  val afiBaseUrl: String = baseUrl("agent-fi-relationship")
+
+  lazy val sessionCacheExpiryDuration: Duration = servicesConfig.getDuration("mongodb.cache.expiry")
+
+  // feature flags
+  val feedbackSurveyServiceSelect: Boolean = getBoolean("features.enable-feedback-survey-service-select")
+  val agentSuspensionEnabled: Boolean = getBoolean("features.enable-agent-suspension")
+  val enablePpt: Boolean = getBoolean("features.enable-ppt")
+  val granPermsEnabled: Boolean = getBoolean("features.enable-gran-perms")
 
   //Gran Perms
   val agentPermissionsBaseUrl: String = baseUrl("agent-permissions")
@@ -141,7 +144,6 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
   val agentPermissionsFrontendManageTeamMembersPath: String = getConfString("agent-permissions-frontend.manage-team-members-path")
   val agentPermissionsFrontendGroupsCreatePath: String = getConfString("agent-permissions-frontend.create-access-group-path")
   val agentPermissionsFrontendUnassignedClientsPath: String = getConfString("agent-permissions-frontend.unassigned-clients-path")
-  val granPermsEnabled: Boolean = getBoolean("features.enable-gran-perms")
   val granPermsMaxClientCount: Int = getInt("gran-perms-max-client-count")
 
   val agentPermissionsOptInUrl = s"$agentPermissionsFrontendExternalUrl$agentPermissionsFrontendOptInPath"

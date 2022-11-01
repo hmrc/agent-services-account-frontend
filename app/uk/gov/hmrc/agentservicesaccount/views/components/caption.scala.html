@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,18 +12,12 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package uk.gov.hmrc.agentservicesaccount.stubs
+@this()
 
-import com.github.tomakehurst.wiremock.client.WireMock.{get, noContent, notFound, stubFor}
-import com.github.tomakehurst.wiremock.stubbing.StubMapping
-import uk.gov.hmrc.agentmtdidentifiers.model.Arn
+@(key: String = "", id: Option[String] = None, classes: Option[String] = None)(implicit msgs: Messages)
 
-object AgentFiRelationshipStubs {
-  def givenArnIsAllowlistedForIrv(arn: Arn): StubMapping =
-    stubFor(get(s"/agent-fi-relationship/${arn.value}/irv-allowed").willReturn(noContent()))
+@cls = @{if(classes.isDefined) classes.get.concat(" govuk-caption-l") else "govuk-caption-l"}
 
-  def givenArnIsNotAllowlistedForIrv(arn: Arn): StubMapping =
-    stubFor(get(s"/agent-fi-relationship/${arn.value}/irv-allowed").willReturn(notFound()))
-}
+<span class="@cls" @id.map(i=> { s"id =${i}"})>@msgs(key)</span>

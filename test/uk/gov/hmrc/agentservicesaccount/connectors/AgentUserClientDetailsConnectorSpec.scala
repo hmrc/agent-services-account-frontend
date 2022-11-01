@@ -30,7 +30,7 @@ class AgentUserClientDetailsConnectorSpec extends BaseISpec {
   implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
   private implicit val hc: HeaderCarrier = HeaderCarrier()
 
-  val arn = Arn("TARN0000001")
+  val arn: Arn = Arn("TARN0000001")
 
   "getTeamMembers" should {
     "return the team members" in {

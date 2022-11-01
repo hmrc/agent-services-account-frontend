@@ -137,6 +137,7 @@ class AgentServicesControllerSpec extends BaseISpec {
             .build()
             .injector.instanceOf[AgentServicesController]
         givenAuthorisedAsAgentWith(arn)
+        givenHidePrivateBetaInviteNotFound()
 
         val result = controller.showAgentServicesAccount(fakeRequest())
         status(result) shouldBe OK
@@ -149,6 +150,7 @@ class AgentServicesControllerSpec extends BaseISpec {
             .injector.instanceOf[AgentServicesController]
         givenSuspensionStatusNotFound
         givenAuthorisedAsAgentWith(arn)
+        givenHidePrivateBetaInviteNotFound()
 
         val result = controller.showAgentServicesAccount(fakeRequest())
         status(result) shouldBe OK
@@ -158,8 +160,9 @@ class AgentServicesControllerSpec extends BaseISpec {
         givenArnIsAllowlistedForIrv(Arn(arn))
         givenSuspensionStatus(SuspensionDetails(suspensionStatus = true, Some(Set("VATC"))))
         givenAuthorisedAsAgentWith(arn)
-        val response = controller.showAgentServicesAccount()(fakeRequest("GET", "/home"))
+        givenHidePrivateBetaInviteNotFound()
 
+        val response = controller.showAgentServicesAccount()(fakeRequest("GET", "/home"))
         status(response) shouldBe OK
       }
 
@@ -201,6 +204,7 @@ class AgentServicesControllerSpec extends BaseISpec {
             .injector.instanceOf[AgentServicesController]
         givenAuthorisedAsAgentWith(arn)
         givenSuspensionStatus(SuspensionDetails(suspensionStatus = false, None))
+        givenHidePrivateBetaInviteNotFound()
 
         val response = await(controllerWithSuspensionDisabled.showAgentServicesAccount()(fakeRequest("GET", "/home")))
         val html = Jsoup.parse(contentAsString(response))

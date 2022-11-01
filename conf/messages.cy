@@ -3,6 +3,8 @@ service.name=Cyfrif gwasanaethau asiant
 generic.title={0} - {1} - GOV.UK
 servicename.titleSuffix=– Cyfrif gwasanaethau asiant – GOV.UK
 agent.services.account.heading=Croeso i’ch cyfrif gwasanaethau asiant
+error-prefix=Gwall:
+
 existing.client.relationships.link=Mynediad at berthnasoedd presennol â chleientiaid
 
 nav.home=Hafan y cyfrif
@@ -366,9 +368,10 @@ beta.invite.yes-no.legend=A fyddech yn hoffi helpu i brofi’r grwpiau mynediad?
 beta.invite.yes-no.required.error=Select yes to help test access groups
 
 beta.invite.size.label=Sawl cleient sydd gennych?
-beta.invite.size.label.small=1,000 neu lai
-beta.invite.size.label.small=Rhwng 1,001 a 5,000
-beta.invite.size.label.small=Mwy na 10,000
+beta.invite.size.label.s=1,000 neu lai
+beta.invite.size.label.m=Rhwng 1,001 a 5,000
+beta.invite.size.label.l=Rhwng 5,001 a 9,999
+beta.invite.size.label.x=Mwy na 10,000
 beta.invite.size.required.error=Select the number of clients you have
 
 beta.invite.details.heading=Manylion cyswllt
@@ -377,7 +380,14 @@ beta.invite.details.label1=Enw
 beta.invite.details.label2=E-bost
 beta.invite.details.label3=Rhif ffôn (dewisol)
 
+error.required.name=Enter a name
+error.max-length.name=Your name must be 80 characters or fewer
+error.required.email=Enter an email
+error.max-length.email=Your email must be 254 characters or fewer
+error.invalid.email=Enter an email address in the correct format, like name@example.com
+
 beta.invite.cya.heading=Gwiriwch eich atebion
+beta.invite.cya.not-provided=Not provided
 
 beta.invite.confirmation.heading=Gwiriwch eich atebion
 beta.invite.confirmation.p=Byddwn yn cysylltu â chi gan ddefnyddio’r manylion cyswllt rydych wedi’u rhoi.

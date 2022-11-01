@@ -16,9 +16,11 @@
 
 package uk.gov.hmrc.agentservicesaccount.forms
 
+import org.apache.commons.lang3.RandomStringUtils
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import uk.gov.hmrc.agentservicesaccount.models.BetaInviteContactDetails
 
 class BetaInviteContactDetailsFormSpec extends AnyWordSpec with Matchers with GuiceOneAppPerSuite {
 
@@ -31,36 +33,86 @@ class BetaInviteContactDetailsFormSpec extends AnyWordSpec with Matchers with Gu
       val params = Map(
         nameField -> "Blah alkfh",
         emailField -> "asdlkj@eqkf.do",
-        phoneField -> None
+        phoneField -> ""
       )
 
-      // TODO fix this trash
-      params shouldBe params
-     // BetaInviteContactDetailsForm.form.bind(params).value
+      BetaInviteContactDetailsForm.form.bind(params).value shouldBe
+        Some(BetaInviteContactDetails("Blah alkfh","asdlkj@eqkf.do",None))
 
     }
 
     "be successful when not empty (with phone)" in {
-      true shouldBe true
+        val params = Map(
+          nameField -> "Blah alkfh",
+          emailField -> "asdlkj@eqkf.do",
+          phoneField -> "32456 789896"
+        )
+
+        BetaInviteContactDetailsForm.form.bind(params).value shouldBe
+          Some(BetaInviteContactDetails("Blah alkfh","asdlkj@eqkf.do",Some("32456 789896")))
     }
 
-    s"error when $nameField not present in params" in {
-      val params: Map[String, String] = Map.empty
+    s"error when $nameField and $emailField are empty" in {
+      val params = Map(
+        nameField -> "",
+        emailField -> "",
+        phoneField -> ""
+      )
       val validatedForm = BetaInviteContactDetailsForm.form.bind(params)
       validatedForm.hasErrors shouldBe true
-      //validatedForm.error(fieldName).get.message shouldBe "beta.invite.size.required.error"
+      validatedForm.error(nameField).get.message shouldBe "error.required.name"
+      validatedForm.error(emailField).get.message shouldBe "error.required.email"
+      validatedForm.errors.length shouldBe 2
     }
 
-    s"error when $emailField not present in params" in {
-      val params: Map[String, String] = Map.empty
+    s"error when $nameField is too long" in {
+      val params = Map(
+        nameField -> RandomStringUtils.randomAlphanumeric(81),
+        emailField -> RandomStringUtils.randomAlphanumeric(250).concat("@a.a"),
+        phoneField -> ""
+      )
       val validatedForm = BetaInviteContactDetailsForm.form.bind(params)
       validatedForm.hasErrors shouldBe true
-      //validatedForm.error(fieldName).get.message shouldBe "beta.invite.size.required.error"
+      validatedForm.error(nameField).get.message shouldBe "error.max-length.name"
+      validatedForm.errors.length shouldBe 1
+    }
+
+    s"error when $emailField is too long" in {
+      val params = Map(
+        nameField -> RandomStringUtils.randomAlphanumeric(80),
+        // total 255 characters
+        emailField -> RandomStringUtils.randomAlphanumeric(251).concat("@a.a"),
+        phoneField -> ""
+      )
+      val validatedForm = BetaInviteContactDetailsForm.form.bind(params)
+      validatedForm.hasErrors shouldBe true
+      validatedForm.error(emailField).get.message shouldBe "error.max-length.email"
+      validatedForm.errors.length shouldBe 1
+    }
+
+    s"error when $emailField does not have @ symbol" in {
+      val params = Map(
+        nameField -> "Blah alkfh",
+        emailField -> "not an email",
+        phoneField -> "32456 789896"
+      )
+      val validatedForm = BetaInviteContactDetailsForm.form.bind(params)
+      validatedForm.hasErrors shouldBe true
+      validatedForm.error(emailField).get.message shouldBe "error.invalid.email"
+      validatedForm.errors.length shouldBe 1
     }
 
     "unbind" in {
-      BetaInviteForm.form.mapping.unbind("small") shouldBe Map(
-        "size" -> "small")
+      val unboundForm = BetaInviteContactDetailsForm.form.mapping.unbind(BetaInviteContactDetails(
+        "Blah alkfh",
+        "asdlkj@eqkf.do",
+        None
+      ))
+
+      unboundForm shouldBe Map(
+        nameField -> "Blah alkfh",
+        emailField -> "asdlkj@eqkf.do"
+      )
     }
   }
 

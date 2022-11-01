@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.agentservicesaccount.support
 
+import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.{BeforeAndAfterEach, OptionValues}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
@@ -25,8 +26,17 @@ import uk.gov.hmrc.agentservicesaccount.stubs.AuthStubs
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 
 abstract class BaseISpec
-    extends UnitSpec with Matchers with OptionValues with GuiceOneAppPerSuite with BeforeAndAfterEach
-    with WireMockSupport with AkkaMaterializerSpec with AuthStubs with MetricsTestSupport with ViewBaseSpec {
+    extends UnitSpec
+      with Matchers
+      with OptionValues
+      with GuiceOneAppPerSuite
+      with BeforeAndAfterEach
+      with WireMockSupport
+      with AkkaMaterializerSpec
+      with AuthStubs
+      with MetricsTestSupport
+      with ScalaFutures
+      with ViewBaseSpec {
 
   override implicit lazy val app: Application = appBuilder().build()
 
@@ -41,7 +51,8 @@ abstract class BaseISpec
         "microservice.services.agent-permissions.port"                    -> wireMockPort,
         "microservice.services.agent-user-client-details.port"            -> wireMockPort,
         "microservice.services.agent-permissions-frontend.external-url"   -> wireMockBaseUrlAsString,
-        "auditing.enabled"                   -> false
+        "auditing.enabled"                   -> false,
+        "metrics.enabled" -> false
       )
       .configure(additionalConfiguration)
 

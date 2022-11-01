@@ -43,8 +43,8 @@
 
 
 @main(
-    pageTitle = msgs("beta.invite.size.legend"),
-    backLinkHref = None,
+    pageTitle = withErrorPrefix(form.hasErrors, msgs("beta.invite.size.legend")),
+    backLinkHref = Some(routes.BetaInviteController.showInvite.url),
     showSecondaryNav = false
 ) {
 
@@ -81,6 +81,10 @@
             RadioItem(
                 content = Text(msgs("beta.invite.size.label.l")),
                 value = Some("large")
+            ),
+            RadioItem(
+                content = Text(msgs("beta.invite.size.label.x")),
+                value = Some("xlarge")
             )
         )
     ))
