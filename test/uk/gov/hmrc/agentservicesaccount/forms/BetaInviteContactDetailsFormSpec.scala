@@ -67,8 +67,8 @@ class BetaInviteContactDetailsFormSpec extends AnyWordSpec with Matchers with Gu
 
     s"error when $nameField is too long" in {
       val params = Map(
-        nameField -> RandomStringUtils.randomAlphanumeric(80),
-        emailField -> "an@email.com",
+        nameField -> RandomStringUtils.randomAlphanumeric(81),
+        emailField -> RandomStringUtils.randomAlphanumeric(250).concat("@a.a"),
         phoneField -> ""
       )
       val validatedForm = BetaInviteContactDetailsForm.form.bind(params)
@@ -79,8 +79,9 @@ class BetaInviteContactDetailsFormSpec extends AnyWordSpec with Matchers with Gu
 
     s"error when $emailField is too long" in {
       val params = Map(
-        nameField -> RandomStringUtils.randomAlphanumeric(79),
-        emailField -> RandomStringUtils.randomAlphanumeric(61).concat("@a.a"),
+        nameField -> RandomStringUtils.randomAlphanumeric(80),
+        // total 255 characters
+        emailField -> RandomStringUtils.randomAlphanumeric(251).concat("@a.a"),
         phoneField -> ""
       )
       val validatedForm = BetaInviteContactDetailsForm.form.bind(params)
