@@ -76,13 +76,9 @@
         @p("agent.services.account.section1.suspended.p2")
     } else {
         @h4("agent.services.account.section1.col1.h3")
-        @p(
-            html = Some(Html(
-                msgs("agent.services.account.section1.col1.p",
-                    appConfig.agentMappingUrl,
-                    appConfig.agentInvitationsFrontendClientTypeUrl)))
-        )
-        @p(html=Some(Html(msgs("agent.services.account.section1.col1.link"))))
+        <p>
+            @a("agent.services.account.section1.col1.p", href = appConfig.agentInvitationsFrontendClientTypeUrl)
+        </p>
 
         @h4("agent.services.account.section1.col2.h3")
         @ul_html(
