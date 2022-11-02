@@ -32,8 +32,7 @@ asa.other.warning=Warning
 agent.services.account.inset=You cannot view your client lists in your agent services account. You can use your account to view and manage an individual client’s VAT details.
 agent.services.account.section1.h2=VAT
 agent.services.account.section1.col1.h3=Before you start
-agent.services.account.section1.col1.p=You must first get an authorisation from your client. You can do this by<a class="govuk-link" href="{0}"> copying across your authorisations</a> or <a class="govuk-link" href="{1}">requesting an authorisation</a>.
-agent.services.account.section1.col1.link=If you copy your client across, you will need to<a class="govuk-link" href="https://www.gov.uk/guidance/sign-up-for-making-tax-digital-for-vat" target="_blank" rel="noreferrer noopener"> sign them up to Making Tax Digital for VAT (opens in a new tab)</a>.
+agent.services.account.section1.col1.p=You must first get an authorisation from your client.
 # below not in use - for removal of MTD for VAT
 agent.services.account.section1.col1.p2=Not all of your clients may have signed up to Making Tax Digital for VAT. If your client is not signed up, you can still manage and view their VAT details using this account.
 # above not in use - for removal of MTD for VAT
