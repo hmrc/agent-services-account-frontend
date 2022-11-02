@@ -380,14 +380,16 @@ beta.invite.details.label1=Enw
 beta.invite.details.label2=E-bost
 beta.invite.details.label3=Rhif ffôn (dewisol)
 
-error.required.name=Enter a name
-error.max-length.name=Your name must be 80 characters or fewer
-error.required.email=Enter an email
-error.max-length.email=Your email must be 254 characters or fewer
-error.invalid.email=Enter an email address in the correct format, like name@example.com
+error.required.name=Nodwch enw
+error.max-length.name=Rhaid i’ch enw fod yn 80 o gymeriadau neu lai
+error.required.email=Nodwch gyfeiriad e-bost
+error.max-length.email=Mae’n rhaid i’r cyfeiriad e-bost fod yn 254 o gymeriadau neu lai
+error.invalid.email=Nodwch y cyfeiriad e-bost yn y fformat cywir, fel enw@enghraifft.com
+error.max-length.phone=Rhaid i’ch rhif ffôn fod yn 20 o gymeriadau neu lai
+error.invalid.phone=Nodwch rif ffôn yn y fformat cywir, fel 01632 960 001 neu +44 808 157 0192
 
 beta.invite.cya.heading=Gwiriwch eich atebion
-beta.invite.cya.not-provided=Not provided
+beta.invite.cya.not-provided=Heb ei ddarparu
 
 beta.invite.confirmation.heading=Gwiriwch eich atebion
 beta.invite.confirmation.p=Byddwn yn cysylltu â chi gan ddefnyddio’r manylion cyswllt rydych wedi’u rhoi.

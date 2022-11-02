@@ -94,11 +94,35 @@ class BetaInviteContactDetailsFormSpec extends AnyWordSpec with Matchers with Gu
       val params = Map(
         nameField -> "Blah alkfh",
         emailField -> "not an email",
-        phoneField -> "32456 789896"
+        phoneField -> "1 2 3 4 5 6 7 8 9 0 "
       )
       val validatedForm = BetaInviteContactDetailsForm.form.bind(params)
       validatedForm.hasErrors shouldBe true
       validatedForm.error(emailField).get.message shouldBe "error.invalid.email"
+      validatedForm.errors.length shouldBe 1
+    }
+
+    s"error when $phoneField is too long" in {
+      val params = Map(
+        nameField -> RandomStringUtils.randomAlphanumeric(79),
+        emailField -> RandomStringUtils.randomAlphanumeric(250).concat("@a.a"),
+        phoneField -> "+44 32456 78989 6345678"
+      )
+      val validatedForm = BetaInviteContactDetailsForm.form.bind(params)
+      validatedForm.hasErrors shouldBe true
+      validatedForm.error(phoneField).get.message shouldBe "error.max-length.phone"
+      validatedForm.errors.length shouldBe 1
+    }
+
+    s"error when $phoneField has non numeric characters" in {
+      val params = Map(
+        nameField -> RandomStringUtils.randomAlphanumeric(79),
+        emailField -> RandomStringUtils.randomAlphanumeric(250).concat("@a.a"),
+        phoneField -> RandomStringUtils.randomAlphanumeric(11)
+      )
+      val validatedForm = BetaInviteContactDetailsForm.form.bind(params)
+      validatedForm.hasErrors shouldBe true
+      validatedForm.error(phoneField).get.message shouldBe "error.invalid.phone"
       validatedForm.errors.length shouldBe 1
     }
 

@@ -364,7 +364,7 @@ beta.invite.banner.link1=Tell me more
 beta.invite.banner.link2=No thanks
 
 beta.invite.yes-no.heading=Access groups feature testing
-beta.invite.yes-no.p=We’re testing a new feature. It lets agents control which staff members can manage a client's taxes. Your feedback will help us improve our service before we roll it out to everyone.
+beta.invite.yes-no.p=We’re testing a new feature. It lets agents control which staff members can manage a client''s taxes. Your feedback will help us improve our service before we roll it out to everyone.
 beta.invite.yes-no.legend=Would you like to help test access groups?
 beta.invite.yes-no.required.error=Select yes to help test access groups
 
@@ -386,6 +386,8 @@ error.max-length.name=Your name must be 80 characters or fewer
 error.required.email=Enter an email
 error.max-length.email=Your email must be 254 characters or fewer
 error.invalid.email=Enter an email address in the correct format, like name@example.com
+error.max-length.phone=Your phone number must be 20 characters or fewer
+error.invalid.phone=Enter a phone number in the correct format, like 01632 960 001 or +44 808 157 0192
 
 beta.invite.cya.heading=Check your answers
 beta.invite.cya.not-provided=Not provided

@@ -23,7 +23,7 @@ import uk.gov.hmrc.agentservicesaccount.auth.AuthActions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentPermissionsConnector
 import uk.gov.hmrc.agentservicesaccount.forms.{BetaInviteContactDetailsForm, BetaInviteForm, YesNoForm}
-import uk.gov.hmrc.agentservicesaccount.models.{AgentSize, BetaInviteDetailsForEmail}
+import uk.gov.hmrc.agentservicesaccount.models.{AgentSize, BetaInviteContactDetails, BetaInviteDetailsForEmail}
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.beta_invite._
 
@@ -89,7 +89,10 @@ class BetaInviteController @Inject()
 
   val showInviteDetails: Action[AnyContent] = Action.async { implicit request =>
     withAuthorisedAsAgent { _ =>
-      Ok(number_of_clients(BetaInviteForm.form)).toFuture
+      cacheService.get(AGENT_SIZE).flatMap(maybeAnswer => {
+        val sizeForm = BetaInviteForm.form.fill(maybeAnswer.getOrElse(""))
+        Ok(number_of_clients(sizeForm)).toFuture
+      })
     }
   }
 
@@ -110,7 +113,16 @@ class BetaInviteController @Inject()
 
   val showInviteContactDetails: Action[AnyContent] = Action.async { implicit request =>
     withAuthorisedAsAgent { _ =>
-      Ok(your_details(BetaInviteContactDetailsForm.form)).toFuture
+      cacheService.getBetaInviteSessionItems().flatMap(answers => {
+        val contactForm = BetaInviteContactDetailsForm.form.fill(
+          BetaInviteContactDetails(
+            answers(1).getOrElse(""),
+            answers(2).getOrElse(""),
+            answers(3)
+          )
+        )
+        Ok(your_details(contactForm)).toFuture
+      })
     }
   }
 
