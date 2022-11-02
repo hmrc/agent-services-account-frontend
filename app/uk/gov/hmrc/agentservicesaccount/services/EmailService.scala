@@ -35,25 +35,20 @@ class EmailService @Inject()(emailConnector: EmailConnector)(implicit langs: Lan
   protected def getLogger: LoggerLike = logger
 
   def sendInviteAcceptedEmail(arn: Arn, details: BetaInviteDetailsForEmail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Unit] =
-    sendEmail("mtdgpvolunteers@hmrc.gov.uk", arn, details, "agent_interested_in_private_beta")
+    sendEmail(Seq("mtdgpvolunteers@hmrc.gov.uk", "team-agents@digital.hmrc.gov.uk", "naga.vemuri1@digital.hmrc.gov.uk"), arn, details, "agent_interested_in_private_beta")
 
-  def sendEmail(sendTo: String,
+  def sendEmail(sendTo: Seq[String],
                 arn: Arn,
                 details: BetaInviteDetailsForEmail,
                 templateId: String
-               )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Unit] =
-    arn match {
-      case arn =>
-        val emailInfo: SendEmailData = emailInformation(templateId, sendTo, arn.value, details)
-        emailConnector.sendEmail(emailInfo)
-      case _ =>
-        logger.warn(s"email not sent as there were no details for email found in invitation")
-        Future.successful((): Unit)
-    }
+               )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Unit] = {
+    val emailInfo: SendEmailData = emailInformation(templateId, sendTo, arn.value, details)
+    emailConnector.sendEmail(emailInfo)
+  }
 
-  private def emailInformation(templateId: String, email: String, arn: String, details: BetaInviteDetailsForEmail) =
+  private def emailInformation(templateId: String, sendTo: Seq[String], arn: String, details: BetaInviteDetailsForEmail) =
     SendEmailData(
-      Seq(email),
+      sendTo,
       templateId,
       Map(
         "arn" -> arn,
