@@ -52,7 +52,7 @@
     @p("beta.invite.confirmation.p")
 
     @formWithCSRF(action = Call("POST", routes.BetaInviteController.hideInvite.url)) {
-        @govukButton(Button(content = Text(msgs("beta.invite.confirmation.link")), classes = "govuk-button--secondary"))
+        @govukButton(Button(content = Text(msgs("beta.invite.confirmation.link")), classes = "govuk-button--secondary button-styled-as-link"))
     }
 
 @*

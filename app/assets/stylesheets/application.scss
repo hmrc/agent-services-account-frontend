@@ -1,3 +1,6 @@
+@import "lib/govuk-frontend/govuk/all";
+@import "lib/hmrc-frontend/hmrc/all";
+
 @import 'modules/_banner';
 
 hr.hr-thick {
@@ -26,4 +29,35 @@ hr.hr-thick {
 
 .hmrc-account-menu__link.selected {
   border-bottom: 4px solid #003078;
+}
+
+// private beta banner recruitment, can't be a real link because it's a POST req
+.button-styled-as-link {
+@extend .govuk-link;
+  background: none;
+  box-shadow: none;
+  color: govuk-colour("blue");
+  border-width: 0;
+  padding-left:0;
+  padding-right:0;
+
+  &:hover {
+  @extend .govuk-link;
+    color: govuk-colour("dark-blue");
+    background: none;
+    box-shadow: none;
+    text-decoration: underline;
+  }
+
+  &:focus {
+    outline: 3px solid transparent;
+    color: govuk-colour("black");
+    background-color: govuk-colour("yellow");
+    box-shadow: 0 -2px govuk-colour("yellow"), 0 4px govuk-colour("black");
+    text-decoration: none;
+  }
+
+  &:active {
+    background: none;
+  }
 }
