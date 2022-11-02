@@ -24,7 +24,7 @@ import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentPermissionsConnector
 import uk.gov.hmrc.agentservicesaccount.forms.{BetaInviteContactDetailsForm, BetaInviteForm, YesNoForm}
 import uk.gov.hmrc.agentservicesaccount.models.{AgentSize, BetaInviteContactDetails, BetaInviteDetailsForEmail}
-import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
+import uk.gov.hmrc.agentservicesaccount.services.{EmailService, SessionCacheService}
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.beta_invite._
 
 import javax.inject._
@@ -35,6 +35,7 @@ class BetaInviteController @Inject()
 (
   authActions: AuthActions,
   agentPermissionsConnector: AgentPermissionsConnector,
+  emailService: EmailService,
   cacheService: SessionCacheService,
   participate: participate,
   number_of_clients: number_of_clients,
@@ -158,9 +159,18 @@ class BetaInviteController @Inject()
   }
 
   def submitDetailsToEmail(): Action[AnyContent] = Action.async { implicit request =>
-    withAuthorisedAsAgent { _ =>
-      logger.info("not implemented sending email til APB-6583")
-      Redirect(controller.showInviteConfirmation).toFuture
+    withAuthorisedAsAgent { agentInfo =>
+      cacheService.getBetaInviteSessionItems().flatMap(answers => {
+        val detailsForEmail: BetaInviteDetailsForEmail = BetaInviteDetailsForEmail(
+          AgentSize(answers.head.getOrElse("")),
+          answers(1).getOrElse(""),
+          answers(2).getOrElse(""),
+          answers(3),
+        )
+        emailService.sendInviteAcceptedEmail(agentInfo.arn, detailsForEmail).map(_ =>
+          Redirect(controller.showInviteConfirmation)
+        )
+      })
     }
   }
 
