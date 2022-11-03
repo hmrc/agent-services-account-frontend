@@ -35,7 +35,7 @@ class EmailService @Inject()(emailConnector: EmailConnector)(implicit langs: Lan
   protected def getLogger: LoggerLike = logger
 
   def sendInviteAcceptedEmail(arn: Arn, details: BetaInviteDetailsForEmail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Unit] =
-    sendEmail(Seq("mtdgpvolunteers@hmrc.gov.uk", "team-agents@digital.hmrc.gov.uk", "naga.vemuri1@digital.hmrc.gov.uk"), arn, details, "agent_interested_in_private_beta")
+    sendEmail(Seq("mtdgpvolunteers@hmrc.gov.uk", "team-agents@digital.hmrc.gov.uk", "naga.vemuri1@digital.hmrc.gov.uk"), arn, details, "agent_permissions_beta_participant_details")
 
   def sendEmail(sendTo: Seq[String],
                 arn: Arn,
@@ -52,10 +52,10 @@ class EmailService @Inject()(emailConnector: EmailConnector)(implicit langs: Lan
       templateId,
       Map(
         "arn" -> arn,
-        "numberOfClients" -> details.numberOfClients.toDescription,
-        "name" -> details.name,
-        "email" -> details.email,
-        "phone" -> details.phone.getOrElse("Not provided")
+        "numClients" -> details.numberOfClients.toDescription,
+        "contactName" -> details.name,
+        "emailAddress" -> details.email,
+        "telephoneNumber" -> details.phone.getOrElse("Not provided")
       )
     )
 
