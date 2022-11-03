@@ -142,7 +142,7 @@ class BetaInviteControllerSpec extends BaseISpec {
       status(result) shouldBe OK
 
       val html = Jsoup.parse(contentAsString(result))
-      html.title() shouldBe "How many clients do you have? - Agent services account - GOV.UK"
+      html.title() shouldBe "How many clients do you manage using your agent services account? - Agent services account - GOV.UK"
     }
   }
 
@@ -171,7 +171,7 @@ class BetaInviteControllerSpec extends BaseISpec {
       //then
       status(result) shouldBe OK
       val html = Jsoup.parse(contentAsString(result))
-      html.title() shouldBe "Error: How many clients do you have? - Agent services account - GOV.UK"
+      html.title() shouldBe "Error: How many clients do you manage using your agent services account? - Agent services account - GOV.UK"
     }
   }
 
