@@ -21,7 +21,6 @@
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
 @import uk.gov.hmrc.agentservicesaccount.controllers.routes
-@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcReportTechnicalIssueHelper
 @import uk.gov.hmrc.agentservicesaccount.models.BetaInviteContactDetails
 @import uk.gov.hmrc.govukfrontend.views.html.components.{Input, Text, Label, Hint, PrefixOrSuffix}
 @import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
@@ -34,8 +33,7 @@
     govukFieldset: GovukFieldset,
     govukSummaryList: GovukSummaryList,
     govukInsetText : GovukInsetText,
-    govukButton: GovukButton,
-    hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper
+    govukButton: GovukButton
 )
 
 @(form: Form[BetaInviteContactDetails])(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
@@ -96,7 +94,5 @@
 
         @govukButton(Button(content = Text(msgs("common.continue"))))
     }
-    @hmrcReportTechnicalIssueHelper()
-
 
 }

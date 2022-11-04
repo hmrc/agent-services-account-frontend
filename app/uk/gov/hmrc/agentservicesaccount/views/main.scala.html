@@ -22,6 +22,7 @@
 @import views.html.helper.CSPNonce
 @import uk.gov.hmrc.hmrcfrontend.views.config.StandardBetaBanner
 @import uk.gov.hmrc.govukfrontend.views.html.components._
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcReportTechnicalIssueHelper
 
 @this(
     hmrcLayout: HmrcLayout,
@@ -30,7 +31,8 @@
     hmrcStandardFooter: HmrcStandardFooter,
     standardBetaBanner: StandardBetaBanner,
     govukBackLink : GovukBackLink,
-    hmrcLanguageSelectHelper: HmrcLanguageSelectHelper
+    hmrcLanguageSelectHelper: HmrcLanguageSelectHelper,
+    hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper
 )
 
 @(
@@ -74,6 +76,10 @@
         <div class="@if(fullWidth) {govuk-grid-column-full} else {govuk-grid-column-two-thirds}">
             @contentBlock
         </div>
+    </div>
+
+    <div class="govuk-!-margin-bottom-9 govuk-!-margin-top-9">
+        @hmrcReportTechnicalIssueHelper()
     </div>
 }
 

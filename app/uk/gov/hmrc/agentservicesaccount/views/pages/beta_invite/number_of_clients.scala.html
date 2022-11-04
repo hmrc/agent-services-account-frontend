@@ -27,7 +27,6 @@
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 @import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 @import uk.gov.hmrc.govukfrontend.views.html.components.GovukErrorSummary
-@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcReportTechnicalIssueHelper
 
 @this(
     main: main,
@@ -35,8 +34,7 @@
     formWithCSRF: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
-    govukButton: GovukButton,
-    hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper
+    govukButton: GovukButton
 )
 
 @(form: Form[String])(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
@@ -93,5 +91,4 @@
 
     }
 
-    @hmrcReportTechnicalIssueHelper()
 }
