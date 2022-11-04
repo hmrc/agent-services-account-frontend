@@ -20,13 +20,8 @@
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
 @import uk.gov.hmrc.agentservicesaccount.controllers.routes
-@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcReportTechnicalIssueHelper
 
-@this(
-        main: main,
-        govukSummaryList: GovukSummaryList,
-        govukInsetText : GovukInsetText,
-        hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper)
+@this(main: main, govukSummaryList: GovukSummaryList, govukInsetText : GovukInsetText)
 
 @(
     agencyDetails: Option[AgencyDetails],
@@ -82,6 +77,5 @@
     )
 ))
 
-    @hmrcReportTechnicalIssueHelper()
 
 }

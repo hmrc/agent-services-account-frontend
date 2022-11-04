@@ -23,7 +23,6 @@
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.accordion.{Accordion, Section}
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.panel.Panel
-@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcReportTechnicalIssueHelper
 @import uk.gov.hmrc.govukfrontend.views.html.components.GovukWarningText
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.warningtext.WarningText
 @import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
@@ -38,7 +37,6 @@
     govukPanel: GovukPanel,
     govukAccordion: GovukAccordion,
     govukNotificationBanner: GovukNotificationBanner,
-    hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper,
     formWithCSRF: FormWithCSRF)
 @(
     arn: String,
@@ -281,7 +279,5 @@
             key = "agent.services.account.help.link",
         )
     ))
-
-    @hmrcReportTechnicalIssueHelper()
 
 }
