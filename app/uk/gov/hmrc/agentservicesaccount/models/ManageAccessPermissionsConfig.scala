@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.agentservicesaccount.models
 
+import play.api.i18n.Messages
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentmtdidentifiers.model.{OptedInNotReady, OptedInReady, OptedInSingleUser, OptedOutEligible, OptedOutSingleUser, OptedOutWrongClientCount, OptinStatus}
 
@@ -30,7 +31,7 @@ case class Link(msgKey: String, href: String, renderAsButton: Boolean = false)
 
 object ManageAccessPermissionsConfig {
 
-  def apply(optinStatus: OptinStatus, hasAnyGroups: Boolean)(implicit appConfig: AppConfig): ManageAccessPermissionsConfig = optinStatus match {
+  def apply(optinStatus: OptinStatus, hasAnyGroups: Boolean)(implicit appConfig: AppConfig, messages: Messages): ManageAccessPermissionsConfig = optinStatus match {
     case OptedInReady => ManageAccessPermissionsConfig(
       status = "manage.account.manage-access-permissions.status-opted-in",
       statusClass = "govuk-body govuk-!-margin-left-2",
@@ -91,7 +92,7 @@ object ManageAccessPermissionsConfig {
     case OptedOutWrongClientCount => ManageAccessPermissionsConfig(
       status = "manage.account.manage-access-permissions.status-opted-out",
       statusClass = "govuk-body govuk-!-margin-left-2",
-      insetText = Some("manage.account.manage-access-permissions.inset-text.Opted-Out_WRONG_CLIENT_COUNT"),
+      insetText = Some(Messages("manage.account.manage-access-permissions.inset-text.Opted-Out_WRONG_CLIENT_COUNT", appConfig.granPermsMaxClientCount)),
       accessGroups = List.empty,
       clients = List.empty,
       teamMembers = false

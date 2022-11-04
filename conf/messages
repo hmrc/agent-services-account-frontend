@@ -124,7 +124,7 @@ manage.account.manage-access-permissions.status-opted-in=Turned on
 manage.account.manage-access-permissions.status-opted-out=Turned off
 
 manage.account.manage-access-permissions.inset-text.Opted-In_NOT_READY=You have added new clients but need to wait until your client details are ready to use with access groups. You will receive a confirmation email after which you can start using access groups.
-manage.account.manage-access-permissions.inset-text.Opted-Out_WRONG_CLIENT_COUNT=To use access groups you need to have more than 1 client in your agent services account.
+manage.account.manage-access-permissions.inset-text.Opted-Out_WRONG_CLIENT_COUNT=To use access groups you need to have more than one client and fewer than {0} clients in your agent services account.
 manage.account.manage-access-permissions.inset-text.Opted-Out_SINGLE_USER=To use access groups you need to add more team members to your agent services account under ‘Manage team members’ below.
 manage.account.manage-access-permissions.inset-text.Opted-In_SINGLE_USER=To use access groups you need to add more team members to your agent services account under ‘Manage team members’ below.
 
