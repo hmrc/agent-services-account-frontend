@@ -367,7 +367,7 @@ beta.invite.yes-no.p=Rydym yn profi nodwedd newydd. Mae’n gadael i asiantau re
 beta.invite.yes-no.legend=A fyddech yn hoffi helpu i brofi’r grwpiau mynediad?
 beta.invite.yes-no.required.error=Dewiswch ‘Iawn’ i helpu i brofi grwpiau mynediad
 
-beta.invite.size.label=Sawl cleient sydd gennych?
+beta.invite.size.legend=Faint o gleientiaid ydych chi’n eu rheoli gan ddefnyddio’ch cyfrif gwasanaethau asiant?
 beta.invite.size.label.s=1,000 neu lai
 beta.invite.size.label.m=Rhwng 1,001 a 5,000
 beta.invite.size.label.l=Rhwng 5,001 a 9,999

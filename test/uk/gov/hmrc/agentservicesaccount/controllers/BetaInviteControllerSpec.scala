@@ -219,4 +219,18 @@ class BetaInviteControllerSpec extends BaseISpec {
     }
   }
 
+
+  "GET showInviteCheckYourAnswers" should {
+    "render check your answers page" in {
+      givenAuthorisedAsAgentWith(arn)
+
+      val result = await(controller.showInviteCheckYourAnswers.apply(getRequest("/private-beta-check-your-answers")))
+      //then
+      status(result) shouldBe OK
+
+      val html = Jsoup.parse(contentAsString(result))
+      html.title() shouldBe "Check your answers - Agent services account - GOV.UK"
+    }
+  }
+
 }
