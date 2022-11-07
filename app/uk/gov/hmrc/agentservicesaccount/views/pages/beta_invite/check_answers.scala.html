@@ -48,6 +48,11 @@
 
     @summary_list(rows=
         Seq[SummaryListData](
+            SummaryListData(key = msgs("beta.invite.yes-no.legend"),
+                            value = msgs("common.yes"),
+                            link = Some(routes.BetaInviteController.showInvite),
+                            hiddenText = Some(msgs("beta.invite.yes-no.legend"))
+            ),
             SummaryListData(key = msgs("beta.invite.size.legend"),
                             value = msgs(s"beta.invite.size.label.${answers.numberOfClients.toString}"),
                             link = Some(routes.BetaInviteController.showInviteDetails),

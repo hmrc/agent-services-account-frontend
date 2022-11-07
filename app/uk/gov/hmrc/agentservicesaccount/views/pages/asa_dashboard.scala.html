@@ -210,7 +210,7 @@
 @notificationContent = {
 <div class="govuk-notification-banner" role="region" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
     <div class="govuk-notification-banner__content">
-        @p("beta.invite.banner.heading", classes = Some("govuk-notification-banner__heading"))
+        @p("beta.invite.banner.heading", classes = Some("govuk-notification-banner__heading"), id = Some("govuk-notification-banner-title"))
 
         @p("beta.invite.banner.p")
 
@@ -223,7 +223,7 @@
             classes = Some("govuk-notification-banner__link")
             )
 
-            <button class="govuk-button govuk-button--secondary" data-module="govuk-button" type="submit">
+            <button class="govuk-button govuk-button--secondary button-styled-as-link" data-module="govuk-button" type="submit">
                 @msgs("beta.invite.banner.link2")
             </button>
 

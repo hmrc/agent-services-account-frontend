@@ -142,7 +142,7 @@ class BetaInviteControllerSpec extends BaseISpec {
       status(result) shouldBe OK
 
       val html = Jsoup.parse(contentAsString(result))
-      html.title() shouldBe "How many clients do you have? - Agent services account - GOV.UK"
+      html.title() shouldBe "How many clients do you manage using your agent services account? - Agent services account - GOV.UK"
     }
   }
 
@@ -171,7 +171,7 @@ class BetaInviteControllerSpec extends BaseISpec {
       //then
       status(result) shouldBe OK
       val html = Jsoup.parse(contentAsString(result))
-      html.title() shouldBe "Error: How many clients do you have? - Agent services account - GOV.UK"
+      html.title() shouldBe "Error: How many clients do you manage using your agent services account? - Agent services account - GOV.UK"
     }
   }
 
@@ -216,6 +216,20 @@ class BetaInviteControllerSpec extends BaseISpec {
 
       val html = Jsoup.parse(contentAsString(result))
       html.title() shouldBe "Error: Contact details - Agent services account - GOV.UK"
+    }
+  }
+
+
+  "GET showInviteCheckYourAnswers" should {
+    "render check your answers page" in {
+      givenAuthorisedAsAgentWith(arn)
+
+      val result = await(controller.showInviteCheckYourAnswers.apply(getRequest("/private-beta-check-your-answers")))
+      //then
+      status(result) shouldBe OK
+
+      val html = Jsoup.parse(contentAsString(result))
+      html.title() shouldBe "Check your answers - Agent services account - GOV.UK"
     }
   }
 
