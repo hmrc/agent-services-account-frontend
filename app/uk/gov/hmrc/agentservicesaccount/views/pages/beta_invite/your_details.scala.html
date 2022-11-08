@@ -83,12 +83,11 @@
 
     @formWithCSRF(action = routes.BetaInviteController.submitInviteContactDetails()) {
         @govukFieldset(Fieldset(
-        legend = Some(Legend(
-            content = Text(msgs("beta.invite.details.heading")),
-            classes = "govuk-fieldset__legend--l",
-            isPageHeading = true
-        )),
-            describedBy = Some("identify-client-hint"),
+            legend = Some(Legend(
+                content = Text(msgs("beta.invite.details.heading")),
+                classes = "govuk-fieldset__legend--l",
+                isPageHeading = true
+            )),
             html = fieldsetHtml
         ))
 
