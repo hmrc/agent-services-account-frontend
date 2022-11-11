@@ -367,7 +367,7 @@ beta.invite.yes-no.p=We’re testing a new feature. It lets agents control which
 beta.invite.yes-no.legend=Would you like to help test access groups?
 beta.invite.yes-no.required.error=Select yes to help test access groups
 
-beta.invite.size.legend=How many clients do you have?
+beta.invite.size.legend=How many clients do you manage using your agent services account?
 beta.invite.size.label.s=1,000 or fewer
 beta.invite.size.label.m=Between 1,001 and 5,000
 beta.invite.size.label.l=Between 5,001 and 9,999

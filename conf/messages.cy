@@ -364,14 +364,14 @@ beta.invite.banner.link2=Dim diolch
 beta.invite.yes-no.heading=Profi’r nodwedd grwpiau mynediad
 beta.invite.yes-no.p=Rydym yn profi nodwedd newydd. Mae’n gadael i asiantau reoli pa aelodau o staff sy’n gallu rheoli trethi cleient. Bydd eich adborth yn ein helpu ni i wella ein gwasanaeth cyn i ni ei gyflwyno i bawb.
 beta.invite.yes-no.legend=A fyddech yn hoffi helpu i brofi’r grwpiau mynediad?
-beta.invite.yes-no.required.error=Select yes to help test access groups
+beta.invite.yes-no.required.error=Dewiswch ‘Iawn’ i helpu i brofi grwpiau mynediad
 
-beta.invite.size.label=Sawl cleient sydd gennych?
+beta.invite.size.legend=Faint o gleientiaid ydych chi’n eu rheoli gan ddefnyddio’ch cyfrif gwasanaethau asiant?
 beta.invite.size.label.s=1,000 neu lai
 beta.invite.size.label.m=Rhwng 1,001 a 5,000
 beta.invite.size.label.l=Rhwng 5,001 a 9,999
 beta.invite.size.label.x=Mwy na 10,000
-beta.invite.size.required.error=Select the number of clients you have
+beta.invite.size.required.error=Dewiswch nifer y cleientiaid sydd gennych
 
 beta.invite.details.heading=Manylion cyswllt
 beta.invite.details.p=Ar hyn o bryd, rydym yn profi’r nodwedd gydag asiantau sydd â 1,000 o gleientiaid neu lai. Os oes gennych fwy na 1,000 o gleientiaid byddwn yn cysylltu â chi yn nes ymlaen.
@@ -379,7 +379,7 @@ beta.invite.details.label1=Enw
 beta.invite.details.label2=E-bost
 beta.invite.details.label3=Rhif ffôn (dewisol)
 
-error.required.name=Nodwch enw
+error.required.name=Nodwch eich enw
 error.max-length.name=Rhaid i’ch enw fod yn 80 o gymeriadau neu lai
 error.required.email=Nodwch gyfeiriad e-bost
 error.max-length.email=Mae’n rhaid i’r cyfeiriad e-bost fod yn 254 o gymeriadau neu lai

@@ -25,15 +25,13 @@
 @import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 @import uk.gov.hmrc.govukfrontend.views.html.components.GovukButton
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.button.Button
-@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcReportTechnicalIssueHelper
 
 @this(
     main: main,
     h1: h1, h2:h2, p: p, a: a,
     govukPanel: GovukPanel,
     formWithCSRF: FormWithCSRF,
-    govukButton: GovukButton,
-    hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper
+    govukButton: GovukButton
 )
 
 @()(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
@@ -52,14 +50,8 @@
     @p("beta.invite.confirmation.p")
 
     @formWithCSRF(action = Call("POST", routes.BetaInviteController.hideInvite.url)) {
-        @govukButton(Button(content = Text(msgs("beta.invite.confirmation.link")), classes = "govuk-button--secondary"))
+        @govukButton(Button(content = Text(msgs("beta.invite.confirmation.link")), classes = "govuk-button--secondary button-styled-as-link"))
     }
 
-@*
-    @a(href = routes.AgentServicesController.hideInvite.url, key="beta.invite.confirmation.link")
-*@
 
-    <div class="govuk-!-margin-bottom-9 govuk-!-margin-top-9">
-        @hmrcReportTechnicalIssueHelper()
-    </div>
 }

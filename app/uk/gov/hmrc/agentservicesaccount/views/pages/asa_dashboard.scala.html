@@ -23,7 +23,6 @@
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.accordion.{Accordion, Section}
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.panel.Panel
-@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcReportTechnicalIssueHelper
 @import uk.gov.hmrc.govukfrontend.views.html.components.GovukWarningText
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.warningtext.WarningText
 @import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
@@ -38,7 +37,6 @@
     govukPanel: GovukPanel,
     govukAccordion: GovukAccordion,
     govukNotificationBanner: GovukNotificationBanner,
-    hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper,
     formWithCSRF: FormWithCSRF)
 @(
     arn: String,
@@ -212,7 +210,7 @@
 @notificationContent = {
 <div class="govuk-notification-banner" role="region" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
     <div class="govuk-notification-banner__content">
-        @p("beta.invite.banner.heading", classes = Some("govuk-notification-banner__heading"))
+        @p("beta.invite.banner.heading", classes = Some("govuk-notification-banner__heading"), id = Some("govuk-notification-banner-title"))
 
         @p("beta.invite.banner.p")
 
@@ -225,7 +223,7 @@
             classes = Some("govuk-notification-banner__link")
             )
 
-            <button class="govuk-button govuk-button--secondary" data-module="govuk-button" type="submit">
+            <button class="govuk-button govuk-button--secondary button-styled-as-link" data-module="govuk-button" type="submit">
                 @msgs("beta.invite.banner.link2")
             </button>
 
@@ -281,7 +279,5 @@
             key = "agent.services.account.help.link",
         )
     ))
-
-    @hmrcReportTechnicalIssueHelper()
 
 }
