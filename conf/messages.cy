@@ -123,7 +123,7 @@ manage.account.manage-access-permissions.status-opted-in=Wedi’i droi ymlaen
 manage.account.manage-access-permissions.status-opted-out=Wedi’i droi i ffwrdd
 
 manage.account.manage-access-permissions.inset-text.Opted-In_NOT_READY=Rydych wedi ychwanegu cleientiaid newydd, ond mae angen i chi aros nes bod manylion eich cleientiaid yn barod i’w defnyddio gyda’r grwpiau mynediad. Byddwch yn cael e-bost cadarnhau, ac ar ôl hynny gallwch ddechrau defnyddio’r grwpiau mynediad.
-manage.account.manage-access-permissions.inset-text.Opted-Out_WRONG_CLIENT_COUNT=I ddefnyddio’r grwpiau mynediad, mae angen i chi gael mwy nag 1 cleient yn eich cyfrif gwasanaethau asiant.
+manage.account.manage-access-permissions.inset-text.Opted-Out_WRONG_CLIENT_COUNT=I ddefnyddio’r grwpiau mynediad, mae angen i chi fod â mwy nag un cleient a llai na {0} o gleientiaid yn eich cyfrif gwasanaethau asiant.
 manage.account.manage-access-permissions.inset-text.Opted-Out_SINGLE_USER=I ddefnyddio’r grwpiau mynediad, mae angen i chi ychwanegu rhagor o aelodau’r tîm at eich cyfrif gwasanaethau asiant o dan ‘Rheoli aelodau’r tîm’ isod.
 manage.account.manage-access-permissions.inset-text.Opted-In_SINGLE_USER=I ddefnyddio’r grwpiau mynediad, mae angen i chi ychwanegu rhagor o aelodau’r tîm at eich cyfrif gwasanaethau asiant o dan ‘Rheoli aelodau’r tîm’ isod.
 
