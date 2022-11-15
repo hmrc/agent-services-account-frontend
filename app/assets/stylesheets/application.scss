@@ -1,6 +1,3 @@
-@import "lib/govuk-frontend/govuk/all";
-@import "lib/hmrc-frontend/hmrc/all";
-
 @import 'modules/_banner';
 
 hr.hr-thick {
@@ -33,16 +30,16 @@ hr.hr-thick {
 
 // private beta banner recruitment, can't be a real link because it's a POST req
 .button-styled-as-link {
-@extend .govuk-link;
   background: none;
   box-shadow: none;
-  color: govuk-colour("blue");
+  // not sure why it doesn't like govuk-colour("blue"); here
+  color: #1d70b8;
   border-width: 0;
   padding-left:0;
   padding-right:0;
+  text-decoration: underline;
 
   &:hover {
-  @extend .govuk-link;
     color: govuk-colour("dark-blue");
     background: none;
     box-shadow: none;
