@@ -16,6 +16,15 @@ allowing them to access to a range of HMRC digital services.
 
 ### Running the app locally
 
+
+#### BE services needed to view ASA dashboard
+
+| **Microservice** | **Purpose**  | 
+|------------------|--------------|
+| agent-fi-relationship   | IRV allowlist check   | 
+| agent-client-authorisation  | suspension check        | 
+| agent-permissions  | private beta invite check, also granular permissions in manage account         | 
+
     sm --start AGENT_ONBOARDING -r
     sm --stop AGENT_SERVICES_ACCOUNT_FRONTEND
     sbt run
