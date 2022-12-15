@@ -808,7 +808,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       paragraphs.get(0).text
         .shouldBe("Access groups allow you to control which team members can view and manage each client’s tax affairs.")
       html.select(Css.insetText).get(0).text
-        .shouldBe("To use access groups you need to have more than one client and fewer than 10,000 clients in your agent services account.")
+        .shouldBe("To use access groups you need to have more than one client and fewer than 100,000 clients in your agent services account.")
 
       h3.get(0).text shouldBe "Status Turned off"
 
