@@ -19,13 +19,14 @@ package uk.gov.hmrc.agentservicesaccount.controllers
 import play.api.Logging
 import play.api.i18n.MessagesApi
 import play.api.mvc._
-import uk.gov.hmrc.agentmtdidentifiers.model.Arn
+import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, OptedInNotReady, OptedInReady, OptedInSingleUser, OptinStatus}
 import uk.gov.hmrc.agentservicesaccount.auth.CallOps._
 import uk.gov.hmrc.agentservicesaccount.auth.{AgentInfo, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AfiRelationshipConnector, AgentClientAuthorisationConnector, AgentPermissionsConnector, AgentUserClientDetailsConnector}
 import uk.gov.hmrc.agentservicesaccount.models.ManageAccessPermissionsConfig
 import uk.gov.hmrc.agentservicesaccount.views.html.pages._
+import uk.gov.hmrc.http.HeaderCarrier
 
 import javax.inject._
 import scala.concurrent.{ExecutionContext, Future}
@@ -54,6 +55,8 @@ class AgentServicesController @Inject()
 
   val customDimension: String = appConfig.customDimension
   val agentSuspensionEnabled: Boolean = appConfig.agentSuspensionEnabled
+
+  private val optedInStatuses = List(OptedInReady, OptedInNotReady, OptedInSingleUser)
 
   val root: Action[AnyContent] = Action.async { implicit request =>
     withAuthorisedAsAgent { _ =>
@@ -130,12 +133,12 @@ class AgentServicesController @Inject()
           agentPermissionsConnector.isArnAllowed flatMap {
             case true =>
               for {
-                _ <- agentPermissionsConnector.syncEacd(agentInfo.arn)
-                status <- agentPermissionsConnector.getOptinStatus(agentInfo.arn)
+                maybeOptinStatus <- agentPermissionsConnector.getOptinStatus(agentInfo.arn)
                 mGroups <- agentPermissionsConnector.getGroupsSummaries(agentInfo.arn)
                 hasAnyGroups = mGroups.exists(_.groups.nonEmpty)
               } yield {
-                Ok(manage_account(status.map(ManageAccessPermissionsConfig(_, hasAnyGroups))))
+                maybeOptinStatus.foreach(syncEacdIfOptedIn(agentInfo.arn, _))
+                Ok(manage_account(maybeOptinStatus.map(ManageAccessPermissionsConfig(_, hasAnyGroups))))
               }
             case false =>
               Future successful Ok(manage_account(None))
@@ -151,6 +154,11 @@ class AgentServicesController @Inject()
         }
       }
     }
+  }
+
+  private def syncEacdIfOptedIn(arn: Arn, optinStatus: OptinStatus)(implicit hc: HeaderCarrier) = {
+    if (optedInStatuses.contains(optinStatus)) agentPermissionsConnector.syncEacd(arn)
+    else Future.successful(())
   }
 
   val yourAccount: Action[AnyContent] = Action.async { implicit request =>
