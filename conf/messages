@@ -375,7 +375,6 @@ beta.invite.size.label.x=More than 10,000
 beta.invite.size.required.error=Select the number of clients you have
 
 beta.invite.details.heading=Contact details
-beta.invite.details.p=At the moment we’re testing with agents who have 1,000 clients or fewer. If you have more than 1,000 clients we will get in touch at a later date.
 beta.invite.details.label1=Name
 beta.invite.details.label2=Email
 beta.invite.details.label3=Telephone number (optional)
