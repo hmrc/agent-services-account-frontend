@@ -374,7 +374,6 @@ beta.invite.size.label.x=Mwy na 10,000
 beta.invite.size.required.error=Dewiswch nifer y cleientiaid sydd gennych
 
 beta.invite.details.heading=Manylion cyswllt
-beta.invite.details.p=Ar hyn o bryd, rydym yn profi’r nodwedd gydag asiantau sydd â 1,000 o gleientiaid neu lai. Os oes gennych fwy na 1,000 o gleientiaid byddwn yn cysylltu â chi yn nes ymlaen.
 beta.invite.details.label1=Enw
 beta.invite.details.label2=E-bost
 beta.invite.details.label3=Rhif ffôn (dewisol)
