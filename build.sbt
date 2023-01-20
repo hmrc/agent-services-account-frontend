@@ -67,25 +67,6 @@ TwirlKeys.templateImports ++= Seq(
   "uk.gov.hmrc.agentservicesaccount.utils.ViewUtils._",
 )
 
-lazy val compileDeps = Seq(
-  "uk.gov.hmrc"       %% "bootstrap-frontend-play-28" % "7.12.0",
-  "uk.gov.hmrc"       %% "play-partials"              % "8.3.0-play-28",
-  "uk.gov.hmrc"       %% "agent-kenshoo-monitoring"   % "4.8.0-play-28",
-  "uk.gov.hmrc"       %% "agent-mtd-identifiers"      % "0.52.0-play-28",
-  "uk.gov.hmrc.mongo" %% "hmrc-mongo-play-28"         % "0.74.0",
-  "uk.gov.hmrc"       %% "play-frontend-hmrc"         % "5.5.0-play-28"
-)
-
-def testDeps(scope: String) = Seq(
-  "org.scalatestplus.play" %% "scalatestplus-play" % "5.1.0" % "test",
-  "org.scalatestplus" %% "mockito-3-12" % "3.2.10.0" % "test",
-  "uk.gov.hmrc.mongo"       %% "hmrc-mongo-test-play-28"    % "0.74.0"            % "test, it",
-  "com.github.tomakehurst" % "wiremock-jre8" % "2.26.1" % scope,
-  "org.jsoup" %  "jsoup" % "1.15.3" % Test,
-  "org.jsoup" % "jsoup" % "1.15.3" % scope,
-  "com.vladsch.flexmark" % "flexmark-all" % "0.35.10" % scope
-)
-
 lazy val root = (project in file("."))
   .settings(
     name := "agent-services-account-frontend",
@@ -105,7 +86,7 @@ lazy val root = (project in file("."))
     resolvers += Resolver.typesafeRepo("releases"),
     resolvers += "HMRC-open-artefacts-maven" at "https://open.artefacts.tax.service.gov.uk/maven2",
     resolvers += Resolver.url("HMRC-open-artefacts-ivy", url("https://open.artefacts.tax.service.gov.uk/ivy2"))(Resolver.ivyStylePatterns),
-libraryDependencies ++= compileDeps ++ testDeps("test") ++ testDeps("it"),
+    libraryDependencies ++= AppDependencies.compile ++ AppDependencies.test,
     libraryDependencies ++= Seq(
       compilerPlugin("com.github.ghik" % "silencer-plugin" % "1.7.8" cross CrossVersion.full),
       "com.github.ghik" % "silencer-lib" % "1.7.8" % Provided cross CrossVersion.full
