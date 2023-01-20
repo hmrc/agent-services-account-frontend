@@ -54,13 +54,11 @@ class AgentServicesController @Inject()
   import authActions._
 
   val customDimension: String = appConfig.customDimension
-  val agentSuspensionEnabled: Boolean = appConfig.agentSuspensionEnabled
 
   private val optedInStatuses = List(OptedInReady, OptedInNotReady, OptedInSingleUser)
 
   val root: Action[AnyContent] = Action.async { implicit request =>
     withAuthorisedAsAgent { _ =>
-      if (agentSuspensionEnabled) {
         agentClientAuthorisationConnector.getSuspensionDetails().map { suspensionDetails =>
           if (!suspensionDetails.suspensionStatus) Redirect(routes.AgentServicesController.showAgentServicesAccount())
           else
@@ -69,7 +67,6 @@ class AgentServicesController @Inject()
                 "suspendedServices" -> suspensionDetails.toString,
                 "isSuspendedForVat" -> suspensionDetails.suspendedRegimes.contains("VATC").toString)
         }
-      } else Future successful Redirect(routes.AgentServicesController.showAgentServicesAccount())
     }
   }
 
@@ -77,7 +74,6 @@ class AgentServicesController @Inject()
     withAuthorisedAsAgent { agentInfo =>
       withIrvAllowed(agentInfo.arn) { irvAllowed =>
         withShowFeatureInvite(agentInfo.arn) { showFeatureInvite : Boolean =>
-          if (agentSuspensionEnabled) {
             request.session.get("isSuspendedForVat") match {
               case Some(isSuspendedForVat) =>
                 Future successful Ok(
@@ -101,15 +97,6 @@ class AgentServicesController @Inject()
                       suspensionDetails.suspendedRegimes.contains("VATC"))).addingToSession(toReturnFromMapping)
                 }
             }
-          } else
-            Future successful Ok(
-              asaDashboard(
-                formatArn(agentInfo.arn),
-                irvAllowed,
-                showFeatureInvite,
-                customDimension,
-                agentInfo.isAdmin,
-                isSuspendedForVat = false)).addingToSession(toReturnFromMapping)
         }
       }
     }

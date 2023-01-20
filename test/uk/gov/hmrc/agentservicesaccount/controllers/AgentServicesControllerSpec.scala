@@ -56,20 +56,8 @@ class AgentServicesControllerSpec extends BaseISpec {
   private def fakeRequest(method: String = "GET", uri: String = "/") = FakeRequest(method, uri).withSession(SessionKeys.authToken -> "Bearer XYZ")
 
   "root" should {
-    "redirect to agent services account when suspension is disabled" in {
-      givenArnIsAllowlistedForIrv(Arn(arn))
-      val controllerWithSuspensionDisabled =
-        appBuilder(Map("features.enable-agent-suspension" -> false))
-          .build()
-          .injector.instanceOf[AgentServicesController]
-      givenAuthorisedAsAgentWith(arn)
-      val response = controllerWithSuspensionDisabled.root()(fakeRequest("GET", "/"))
 
-      status(response) shouldBe SEE_OTHER
-      Helpers.redirectLocation(response) shouldBe Some(routes.AgentServicesController.showAgentServicesAccount().url)
-    }
-
-    "redirect to agent service account when suspension is enabled but user is not suspended" in {
+    "redirect to agent service account when the user is not suspended" in {
       givenArnIsAllowlistedForIrv(Arn(arn))
       givenAuthorisedAsAgentWith(arn)
       givenSuspensionStatus(SuspensionDetails(suspensionStatus = false, None))
@@ -80,7 +68,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       Helpers.redirectLocation(response) shouldBe Some(routes.AgentServicesController.showAgentServicesAccount().url)
     }
 
-    "redirect to suspended warning when suspension is enabled and user is suspended" in {
+    "redirect to suspended warning when user is suspended" in {
       givenArnIsAllowlistedForIrv(Arn(arn))
       givenAuthorisedAsAgentWith(arn)
       givenSuspensionStatus(SuspensionDetails(suspensionStatus = true, Some(Set("ITSA"))))
@@ -91,7 +79,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       Helpers.redirectLocation(response) shouldBe Some(routes.AgentServicesController.showSuspendedWarning().url)
     }
 
-    "redirect to suspended warning when suspension is enabled and user is suspended for AGSV" in {
+    "redirect to suspended warning when user is suspended for AGSV" in {
       givenArnIsAllowlistedForIrv(Arn(arn))
       givenAuthorisedAsAgentWith(arn)
       givenSuspensionStatus(SuspensionDetails(suspensionStatus = true, Some(Set("AGSV"))))
@@ -103,7 +91,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       Helpers.session(response) shouldBe Session(Map("authToken" -> "Bearer XYZ", "suspendedServices" -> "CGT,ITSA,PIR,PPT,TRS,VATC", "isSuspendedForVat" -> "true"))
     }
 
-    "redirect to suspended warning when suspension is enabled and user is suspended for ALL" in {
+    "redirect to suspended warning when user is suspended for ALL" in {
       givenArnIsAllowlistedForIrv(Arn(arn))
       givenAuthorisedAsAgentWith(arn)
       givenSuspensionStatus(SuspensionDetails(suspensionStatus = true, Some(Set("ALL"))))
@@ -115,7 +103,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       Helpers.session(response) shouldBe Session(Map("authToken" -> "Bearer XYZ", "suspendedServices" -> "CGT,ITSA,PIR,PPT,TRS,VATC", "isSuspendedForVat" -> "true"))
     }
 
-    "throw an exception when suspension is enabled and suspension status returns NOT_FOUND for user" in {
+    "throw an exception when suspension status returns NOT_FOUND for user" in {
       givenArnIsAllowlistedForIrv(Arn(arn))
       givenAuthorisedAsAgentWith(arn)
       givenAgentRecordNotFound
@@ -130,22 +118,10 @@ class AgentServicesControllerSpec extends BaseISpec {
   "home" should {
 
     "return status: OK" when {
-      "IRV allowlist is enabled and the ARN is allowed (suspension disabled)" in {
+      "IRV allowlist is enabled and the ARN is allowed" in {
         givenArnIsAllowlistedForIrv(Arn(arn))
         val controller =
-          appBuilder(Map("features.enable-agent-suspension" -> false, "features.enable-irv-allowlist" -> true))
-            .build()
-            .injector.instanceOf[AgentServicesController]
-        givenAuthorisedAsAgentWith(arn)
-        givenHidePrivateBetaInviteNotFound()
-
-        val result = controller.showAgentServicesAccount(fakeRequest())
-        status(result) shouldBe OK
-      }
-
-      "IRV allowlist is disabled and no suspension status" in {
-        val controller =
-          appBuilder(Map("features.enable-irv-allowlist" -> false, "features.enable-agent-suspension" -> true))
+          appBuilder(Map("features.enable-irv-allowlist" -> true))
             .build()
             .injector.instanceOf[AgentServicesController]
         givenSuspensionStatusNotFound
@@ -156,7 +132,20 @@ class AgentServicesControllerSpec extends BaseISpec {
         status(result) shouldBe OK
       }
 
-      "suspension details are in the session and agent is suspended for VATC (with IRV enabled)" in {
+      "IRV allowlist is disabled and no suspension status" in {
+        val controller =
+          appBuilder(Map("features.enable-irv-allowlist" -> false))
+            .build()
+            .injector.instanceOf[AgentServicesController]
+        givenSuspensionStatusNotFound
+        givenAuthorisedAsAgentWith(arn)
+        givenHidePrivateBetaInviteNotFound()
+
+        val result = controller.showAgentServicesAccount(fakeRequest())
+        status(result) shouldBe OK
+      }
+
+      "IRV allowlist is enabled but agent is suspended for VATC (suspension details are in the session)" in {
         givenArnIsAllowlistedForIrv(Arn(arn))
         givenSuspensionStatus(SuspensionDetails(suspensionStatus = true, Some(Set("VATC"))))
         givenAuthorisedAsAgentWith(arn)
