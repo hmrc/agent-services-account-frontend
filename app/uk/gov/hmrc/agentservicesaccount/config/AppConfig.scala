@@ -131,7 +131,6 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
 
   // feature flags
   val feedbackSurveyServiceSelect: Boolean = getBoolean("features.enable-feedback-survey-service-select")
-  val agentSuspensionEnabled: Boolean = getBoolean("features.enable-agent-suspension")
   val enablePpt: Boolean = getBoolean("features.enable-ppt")
   val granPermsEnabled: Boolean = getBoolean("features.enable-gran-perms")
 
