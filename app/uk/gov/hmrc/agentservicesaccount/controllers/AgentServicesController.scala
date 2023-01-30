@@ -19,7 +19,7 @@ package uk.gov.hmrc.agentservicesaccount.controllers
 import play.api.Logging
 import play.api.i18n.MessagesApi
 import play.api.mvc._
-import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, OptedInNotReady, OptedInReady, OptedInSingleUser, OptinStatus}
+import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, OptedInReady, OptinStatus}
 import uk.gov.hmrc.agentservicesaccount.auth.CallOps._
 import uk.gov.hmrc.agentservicesaccount.auth.{AgentInfo, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
@@ -54,8 +54,6 @@ class AgentServicesController @Inject()
   import authActions._
 
   val customDimension: String = appConfig.customDimension
-
-  private val optedInStatuses = List(OptedInReady, OptedInNotReady, OptedInSingleUser)
 
   val root: Action[AnyContent] = Action.async { implicit request =>
     withAuthorisedAsAgent { _ =>
@@ -144,7 +142,7 @@ class AgentServicesController @Inject()
   }
 
   private def syncEacdIfOptedIn(arn: Arn, optinStatus: OptinStatus)(implicit hc: HeaderCarrier) = {
-    if (optedInStatuses.contains(optinStatus)) agentPermissionsConnector.syncEacd(arn)
+    if (optinStatus == OptedInReady) agentPermissionsConnector.syncEacd(arn)
     else Future.successful(())
   }
 
