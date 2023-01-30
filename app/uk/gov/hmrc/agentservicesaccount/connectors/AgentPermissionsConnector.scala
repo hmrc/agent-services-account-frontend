@@ -20,36 +20,42 @@ import akka.Done
 import com.codahale.metrics.MetricRegistry
 import com.kenshoo.play.metrics.Metrics
 import play.api.Logging
-import play.api.http.Status.{CONFLICT, CREATED, NOT_FOUND, NO_CONTENT, OK}
+import play.api.http.Status._
 import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.agent.kenshoo.monitoring.HttpAPIMonitor
 import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, OptinStatus}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models.{AccessGroupSummaries, GroupSummary}
-import uk.gov.hmrc.http.HttpReads.Implicits.readRaw
+import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse, UpstreamErrorResponse}
 
+import java.net.URL
 import javax.inject.{Inject, Singleton}
+import scala.concurrent.duration.DurationInt
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success, Try}
 
 
 @Singleton
-class AgentPermissionsConnector @Inject()(http: HttpClient)(implicit val metrics: Metrics, appConfig: AppConfig) extends HttpAPIMonitor with Logging {
+class AgentPermissionsConnector @Inject()(http: HttpClient, httpV2: HttpClientV2)(implicit val metrics: Metrics, appConfig: AppConfig) extends HttpAPIMonitor with Logging {
 
   override val kenshooRegistry: MetricRegistry = metrics.defaultRegistry
 
   private val baseUrl = appConfig.agentPermissionsBaseUrl
 
+  import uk.gov.hmrc.http.HttpReads.Implicits._
+
   def getOptinStatus(arn: Arn)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[OptinStatus]] = {
-    val url = s"$baseUrl/agent-permissions/arn/${arn.value}/optin-status"
-    monitor("ConsumedAPI-GetOptinStatus-GET"){
-      http.GET[HttpResponse](url).map{ response =>
-          response.status match {
-            case OK => response.json.asOpt[OptinStatus]
-            case e => logger.warn(s"getOptinStatus returned status $e ${response.body}"); None
-          }
-      }
+    monitor("ConsumedAPI-GetOptinStatus-GET") {
+      httpV2
+        .get(new URL(s"$baseUrl/agent-permissions/arn/${arn.value}/optin-status"))
+        .transform(ws => ws.withRequestTimeout(2.minutes))
+        .execute[Option[OptinStatus]]
+        .recover { case e =>
+          logger.warn(s"getOptinStatus error: ${e.getMessage}")
+          Option.empty[OptinStatus]
+        }
+
     }
   }
 
