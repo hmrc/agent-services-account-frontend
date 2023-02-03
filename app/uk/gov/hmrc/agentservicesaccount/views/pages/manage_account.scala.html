@@ -54,7 +54,7 @@
                 @if(config.accessGroups.size > 1) {
                     @ul_html(items = config.accessGroups.map { link =>
                         if (link.renderAsButton) {
-                            link_as_button(key = link.msgKey, href = "http://localhost:9452/agent-permissions/create-group/select-group-type")
+                            link_as_button(key = link.msgKey, href = link.href)
                         } else {
                             a(key = link.msgKey, href = link.href)
                         }
