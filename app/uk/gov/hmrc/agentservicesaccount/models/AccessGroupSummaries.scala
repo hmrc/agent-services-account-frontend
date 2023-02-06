@@ -17,19 +17,14 @@
 package uk.gov.hmrc.agentservicesaccount.models
 
 import play.api.libs.json._
+import uk.gov.hmrc.agentmtdidentifiers.model.GroupSummary
 
 /*
   Stripped-down representation of AccessGroupSummary/AccessGroupSummaries for the sole purpose of determining
   if the client has any access groups at all.
  */
 
-case class AccessGroupSummary(groupId: String)
-
-object AccessGroupSummary {
-  implicit val formatAccessGroupSummary: OFormat[AccessGroupSummary] = Json.format[AccessGroupSummary]
-}
-
-case class AccessGroupSummaries(groups: Seq[AccessGroupSummary])
+case class AccessGroupSummaries(groups: Seq[GroupSummary])
 
 object AccessGroupSummaries {
   implicit val format: OFormat[AccessGroupSummaries] = Json.format[AccessGroupSummaries]

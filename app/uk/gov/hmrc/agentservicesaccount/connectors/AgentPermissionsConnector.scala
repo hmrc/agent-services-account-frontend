@@ -23,9 +23,9 @@ import play.api.Logging
 import play.api.http.Status._
 import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.agent.kenshoo.monitoring.HttpAPIMonitor
-import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, OptinStatus}
+import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, GroupSummary, OptinStatus}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.models.{AccessGroupSummaries, GroupSummary}
+import uk.gov.hmrc.agentservicesaccount.models.AccessGroupSummaries
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse, UpstreamErrorResponse}
 

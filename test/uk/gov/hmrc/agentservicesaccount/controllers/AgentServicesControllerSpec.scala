@@ -26,9 +26,9 @@ import play.api.mvc.Session
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
 import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, OptedInNotReady, OptedInReady, OptedInSingleUser, OptedOutEligible, OptedOutSingleUser, OptedOutWrongClientCount, SuspensionDetails, SuspensionDetailsNotFound, UserDetails}
+import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, GroupSummary, OptedInNotReady, OptedInReady, OptedInSingleUser, OptedOutEligible, OptedOutSingleUser, OptedOutWrongClientCount, SuspensionDetails, SuspensionDetailsNotFound, UserDetails}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.models.{AccessGroupSummaries, AccessGroupSummary, AgencyDetails, BusinessAddress, GroupSummary}
+import uk.gov.hmrc.agentservicesaccount.models.{AccessGroupSummaries, AgencyDetails, BusinessAddress}
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentClientAuthorisationStubs._
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentFiRelationshipStubs.{givenArnIsAllowlistedForIrv, givenArnIsNotAllowlistedForIrv}
 import uk.gov.hmrc.agentservicesaccount.support.{BaseISpec, Css}
@@ -49,6 +49,8 @@ class AgentServicesControllerSpec extends BaseISpec {
   val arn = "TARN0000001"
   val agentEnrolment: Enrolment = Enrolment("HMRC-AS-AGENT", Seq(EnrolmentIdentifier("AgentReferenceNumber", arn)), state = "Activated", delegatedAuthRule = None)
 
+  val customSummary: GroupSummary = GroupSummary("grpId1", "Potatoes", Some(1), 1)
+
   private implicit val messages: Messages = messagesApi.preferred(Seq.empty[Lang])
 
   protected def htmlEscapedMessage(key: String): String = HtmlFormat.escape(Messages(key)).toString
@@ -62,7 +64,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       givenAuthorisedAsAgentWith(arn)
       givenSuspensionStatus(SuspensionDetails(suspensionStatus = false, None))
 
-      val response = controller.root()(fakeRequest("GET", "/"))
+      val response = controller.root()(fakeRequest())
 
       status(response) shouldBe SEE_OTHER
       Helpers.redirectLocation(response) shouldBe Some(routes.AgentServicesController.showAgentServicesAccount().url)
@@ -73,7 +75,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       givenAuthorisedAsAgentWith(arn)
       givenSuspensionStatus(SuspensionDetails(suspensionStatus = true, Some(Set("ITSA"))))
 
-      val response = controller.root()(fakeRequest("GET", "/"))
+      val response = controller.root()(fakeRequest())
 
       status(response) shouldBe SEE_OTHER
       Helpers.redirectLocation(response) shouldBe Some(routes.AgentServicesController.showSuspendedWarning().url)
@@ -84,7 +86,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       givenAuthorisedAsAgentWith(arn)
       givenSuspensionStatus(SuspensionDetails(suspensionStatus = true, Some(Set("AGSV"))))
 
-      val response = controller.root()(fakeRequest("GET", "/"))
+      val response = controller.root()(fakeRequest())
 
       status(response) shouldBe SEE_OTHER
       Helpers.redirectLocation(response) shouldBe Some(routes.AgentServicesController.showSuspendedWarning().url)
@@ -96,7 +98,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       givenAuthorisedAsAgentWith(arn)
       givenSuspensionStatus(SuspensionDetails(suspensionStatus = true, Some(Set("ALL"))))
 
-      val response = controller.root()(fakeRequest("GET", "/"))
+      val response = controller.root()(fakeRequest())
 
       status(response) shouldBe SEE_OTHER
       Helpers.redirectLocation(response) shouldBe Some(routes.AgentServicesController.showSuspendedWarning().url)
@@ -110,7 +112,7 @@ class AgentServicesControllerSpec extends BaseISpec {
 
 
       intercept[SuspensionDetailsNotFound]{
-        await(controller.root()(fakeRequest("GET", "/")))
+        await(controller.root()(fakeRequest()))
       }
     }
   }
@@ -641,7 +643,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       givenArnAllowedOk()
       givenSyncEacdSuccess(Arn(arn))
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInReady)
-      givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq(AccessGroupSummary("myAccessGroupId")))) // there is already an access group
+      givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq(customSummary))) // there is already an access group
       val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
@@ -1121,12 +1123,12 @@ class AgentServicesControllerSpec extends BaseISpec {
     "return status: OK and body containing content for status Opted-In_READY (access groups already created)" in {
       val providerId = RandomUtils.nextLong().toString
       val groupSummaries: Seq[GroupSummary] = Seq(
-        GroupSummary("grpId1", "Potatoes", 1, 1),
-        GroupSummary("grpId2", "Carrots", 1, 1),
+        customSummary,
+        customSummary.copy("grpId2", "Carrots"),
       )
       givenFullAuthorisedAsAgentWith(arn, providerId)
       givenOptinRecordExistsForArn(Arn(arn), exists = true)
-      givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq(AccessGroupSummary("myAccessGroupId")))) // there is already an access group
+      givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq(customSummary))) // there is already an access group
       givenAccessGroupsForTeamMember(Arn(arn), providerId, groupSummaries)
       val response = await(controller.yourAccount()(fakeRequest("GET", yourAccountUrl)))
 
