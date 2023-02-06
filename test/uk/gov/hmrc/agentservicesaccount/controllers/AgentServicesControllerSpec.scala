@@ -612,7 +612,7 @@ class AgentServicesControllerSpec extends BaseISpec {
         .shouldBe("Access groups allow you to control which team members can view and manage each client’s tax affairs.")
       li.get(0).child(0).text shouldBe "Create new access group"
       li.get(0).child(0).hasClass("govuk-button") shouldBe true
-      li.get(0).child(0).attr("href") shouldBe s"http://localhost:$wireMockPort/agent-permissions/group/create-access-group"
+      li.get(0).child(0).attr("href") shouldBe s"http://localhost:$wireMockPort/agent-permissions/create-group/select-group-type"
       li.get(1).child(0).text shouldBe "Manage access groups"
       li.get(1).child(0).attr("href") shouldBe s"http://localhost:$wireMockPort/agent-permissions/manage-access-groups"
       li.get(2).child(0).text shouldBe "Turn off access groups"
