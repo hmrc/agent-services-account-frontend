@@ -19,11 +19,6 @@ package uk.gov.hmrc.agentservicesaccount.models
 import play.api.libs.json._
 import uk.gov.hmrc.agentmtdidentifiers.model.GroupSummary
 
-/*
-  Stripped-down representation of AccessGroupSummary/AccessGroupSummaries for the sole purpose of determining
-  if the client has any access groups at all.
- */
-
 case class AccessGroupSummaries(groups: Seq[GroupSummary])
 
 object AccessGroupSummaries {
