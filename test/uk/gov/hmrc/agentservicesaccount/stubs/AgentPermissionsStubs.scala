@@ -21,8 +21,8 @@ import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, get, patch, p
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.Status.{CONFLICT, CREATED, NOT_FOUND, NO_CONTENT}
 import play.api.libs.json.Json
-import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, OptinStatus}
-import uk.gov.hmrc.agentservicesaccount.models.{AccessGroupSummaries, GroupSummary}
+import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, GroupSummary, OptinStatus}
+import uk.gov.hmrc.agentservicesaccount.models.AccessGroupSummaries
 
 object AgentPermissionsStubs {
 
