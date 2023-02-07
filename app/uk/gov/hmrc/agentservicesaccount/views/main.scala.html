@@ -46,8 +46,8 @@
 )(contentBlock: Html)(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
 
 @scripts = {
-    <script src="@controllers.routes.Assets.at("javascripts/jquery.js")" @{CSPNonce.attr}></script>
-    <script src="@controllers.routes.Assets.at("javascripts/ga-events.js")" @{CSPNonce.attr}></script>
+    <script @{CSPNonce.attr} src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script @{CSPNonce.attr} src="@controllers.routes.Assets.at("javascripts/ga-events.js")"></script>
 }
 
 @beforeContent = {
