@@ -50,6 +50,7 @@ class AgentServicesControllerSpec extends BaseISpec {
   val agentEnrolment: Enrolment = Enrolment("HMRC-AS-AGENT", Seq(EnrolmentIdentifier("AgentReferenceNumber", arn)), state = "Activated", delegatedAuthRule = None)
 
   val customSummary: GroupSummary = GroupSummary("grpId1", "Potatoes", Some(1), 1)
+  val taxSummary: GroupSummary = GroupSummary("grpIda", "TRust me", None, 1, Some("HMRC-TERS"))
 
   private implicit val messages: Messages = messagesApi.preferred(Seq.empty[Lang])
 
@@ -1125,10 +1126,11 @@ class AgentServicesControllerSpec extends BaseISpec {
       val groupSummaries: Seq[GroupSummary] = Seq(
         customSummary,
         customSummary.copy("grpId2", "Carrots"),
+        taxSummary
       )
       givenFullAuthorisedAsAgentWith(arn, providerId)
       givenOptinRecordExistsForArn(Arn(arn), exists = true)
-      givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq(customSummary))) // there is already an access group
+      givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(groupSummaries)) // there is already an access group
       givenAccessGroupsForTeamMember(Arn(arn), providerId, groupSummaries)
       val response = await(controller.yourAccount()(fakeRequest("GET", yourAccountUrl)))
 
@@ -1151,9 +1153,11 @@ class AgentServicesControllerSpec extends BaseISpec {
       val userGroupsPanel = html.select("div#user-groups")
       val grps = userGroupsPanel.select("ul li a")
       grps.get(0).text() shouldBe "Potatoes"
-      grps.get(0).attr("href") shouldBe s"$wireMockBaseUrlAsString/agent-permissions/your-account/group-clients/grpId1"
+      grps.get(0).attr("href") shouldBe s"$wireMockBaseUrlAsString/agent-permissions/your-account/group-clients/custom/grpId1"
       grps.get(1).text() shouldBe "Carrots"
-      grps.get(1).attr("href") shouldBe s"$wireMockBaseUrlAsString/agent-permissions/your-account/group-clients/grpId2"
+      grps.get(1).attr("href") shouldBe s"$wireMockBaseUrlAsString/agent-permissions/your-account/group-clients/custom/grpId2"
+      grps.get(2).text() shouldBe "TRust me"
+      grps.get(2).attr("href") shouldBe s"$wireMockBaseUrlAsString/agent-permissions/your-account/group-clients/tax/grpIda"
       userGroupsPanel.select("a").get(2).text shouldBe "Other clients"
       userGroupsPanel.select("a").get(2).attr("href") shouldBe s"$wireMockBaseUrlAsString/agent-permissions/your-account/other-clients"
 
