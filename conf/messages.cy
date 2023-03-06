@@ -21,6 +21,11 @@ common.change=Newid
 common.what.happens.next=Yr hyn sy’n digwydd nesaf
 details.link-hidden= ar gyfer {0}
 
+accordion.showSection = Dangos
+accordion.hideSection = Cuddio
+accordion.showAllSections = Dangos pob adran
+accordion.hideAllSections = Cuddio pob adran
+
 agent.services.account.welcome=Croeso i’ch cyfrif gwasanaethau asiant
 agent.services.account.client-authorisations.p=Mae’n rhaid i chi ofyn i’ch cleient eich awdurdodi drwy eich cyfrif gwasanaethau asiant cyn y gallwch gael mynediad at unrhyw wasanaethau. Dylech gopïo hen awdurdodiad drosodd neu greu un newydd.
 agent.services.account.tax-services=Gwasanaethau treth y gallwch eu rheoli yn y cyfrif hwn
