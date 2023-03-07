@@ -32,13 +32,17 @@
 
 @main(pageTitle = msgs("your.account.h1"), analyticsAdditionalJs = None, fullWidth = true, isAdmin = false) {
 
-    <div class="govuk-grid-column-full">
-@* the govuk-grid-column-full class has a padding left that
-    aligns this h1 with rest of page*@
-        @h1("your.account.h1")
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+    @* the govuk-grid-column-full class has a padding left that
+        aligns this h1 with rest of page*@
+            @h1("your.account.h1")
+        </div>
     </div>
 
     @if(info.isDefined){
+    <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds" id="user-details">
             @h2("your.account.h3.name", size = "s")
             @p(info.get.name.map(n => n.name.getOrElse("") + " " + n.lastName.getOrElse("")).getOrElse("" ))
@@ -73,21 +77,22 @@
             href= s"${appConfig.agentPermissionsFrontendAssistantViewUnassignedClientsUrl}")
         </div>
         }
+    </div>
     }
 
-    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full" id="bottom-panel">
+            <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+            @h2("your.account.your.admins.h2")
+            @a("your.account.your.admins.a", href = routes.AgentServicesController.administrators.url)
 
-    <div class="govuk-grid-column-full" id="bottom-panel">
-        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-        @h2("your.account.your.admins.h2")
-        @a("your.account.your.admins.a", href = routes.AgentServicesController.administrators.url)
+            <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
 
-        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-
-        @h2("manage.account.contact-details.heading")
-        @p(html = Some(
-            a(href = routes.AgentServicesController.accountDetails.url,
-                key = "manage.account.contact-details.view"
-            )))
+            @h2("manage.account.contact-details.heading")
+            @p(html = Some(
+                a(href = routes.AgentServicesController.accountDetails.url,
+                    key = "manage.account.contact-details.view"
+                )))
+        </div>
     </div>
 }

@@ -17,7 +17,8 @@
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.controllers.routes
 @import uk.gov.hmrc.agentservicesaccount.views.html.components.head
-@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.{HmrcLayout, HmrcStandardFooter}
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.{HmrcStandardPage, HmrcStandardFooter}
+@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.hmrcstandardpage._
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcLanguageSelectHelper
 @import views.html.helper.CSPNonce
 @import uk.gov.hmrc.hmrcfrontend.views.config.StandardBetaBanner
@@ -25,7 +26,8 @@
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcReportTechnicalIssueHelper
 
 @this(
-    hmrcLayout: HmrcLayout,
+    hmrcStandardPage: HmrcStandardPage,
+    fullWidthMainContent: fullWidthMainContentLayout,
     head: head,
     secondary_nav: secondary_nav,
     hmrcStandardFooter: HmrcStandardFooter,
@@ -71,26 +73,30 @@
 
 }
 
-@bespokeContentLayout = {
-    <div class="govuk-grid-row">
-        <div class="@if(fullWidth) {govuk-grid-column-full} else {govuk-grid-column-two-thirds}">
-            @contentBlock
-        </div>
-    </div>
+@bespokeContentBlock = {
+     @contentBlock
 
     <div class="govuk-!-margin-bottom-9 govuk-!-margin-top-9">
         @hmrcReportTechnicalIssueHelper()
     </div>
 }
 
-@hmrcLayout(
+
+@hmrcStandardPage(HmrcStandardPageParams(
+    serviceURLs = ServiceURLs(
+        serviceUrl = Some(routes.AgentServicesController.root().url),
+        signOutUrl = Some(routes.SignOutController.signOut.url)
+    ),
+    banners = Banners(
+        phaseBanner = Some(standardBetaBanner(appConfig.betaFeedbackUrl)),
+    ),
+    templateOverrides = TemplateOverrides(
+        additionalHeadBlock = Some(head(hasTimeout)),
+        additionalScriptsBlock = Some(scripts),
+        beforeContentBlock = Some(beforeContent),
+        mainContentLayout = if(fullWidth) Some(fullWidthMainContent(_)) else None
+    ),
+    serviceName = Some(msgs("service.name")),
     pageTitle = Some(msgs("generic.title", pageTitle, msgs("service.name"))),
-    additionalHeadBlock = Some(head(hasTimeout)),
-    beforeContentBlock = Some(beforeContent),
-    phaseBanner = Some(standardBetaBanner(appConfig.betaFeedbackUrl)),
-    serviceUrl = Some(routes.AgentServicesController.root().url),
-    additionalScriptsBlock = Some(scripts),
-    nonce = CSPNonce.get,
-    mainContentLayout = None,
-    signOutUrl = Some(routes.SignOutController.signOut.url),
-)(bespokeContentLayout)
+    cspNonce = CSPNonce.get
+))(bespokeContentBlock)

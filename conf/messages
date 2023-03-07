@@ -21,6 +21,12 @@ common.change=Change
 common.what.happens.next=What happens next
 details.link-hidden= for {0}
 
+accordion.showSection = Show
+accordion.hideSection = Hide
+accordion.showAllSections = Show all sections
+accordion.hideAllSections = Hide all sections
+
+
 agent.services.account.welcome=Welcome to your agent services account
 agent.services.account.client-authorisations.p=You must ask your client to authorise you through your agent services account before you can access any services. Copy across an old authorisation or create a new one.
 agent.services.account.tax-services=Tax services you can manage in this account
