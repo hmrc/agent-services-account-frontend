@@ -203,7 +203,13 @@
     Accordion(
         id = "accordion-help",
         headingLevel = 2,
-        items = accordionItems
+        items = accordionItems,
+        attributes = Map(
+            "data-i18n.show-section" -> msgs("accordion.showSection"),
+            "data-i18n.hide-section" -> msgs("accordion.hideSection"),
+            "data-i18n.show-all-sections" -> msgs("accordion.showAllSections"),
+            "data-i18n.hide-all-sections" -> msgs("accordion.hideAllSections")
+        )
     )
 )
 
