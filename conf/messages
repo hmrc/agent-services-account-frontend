@@ -258,12 +258,12 @@ help.about-guidance.list2.1=control which staff members can view and manage a cl
 help.about-guidance.list2.2=manage client references
 
 help.subheading2=About your agent services account
-help.about-asa.p1=You can only have one agent services account, but you can add several team members to this account. They will need to Government Gateway user IDs for you to add them.
+help.about-asa.p1=You can only have one agent services account, but you can add several team members to this account. They will need to have Government Gateway user IDs for you to add them.
 help.about-asa.p2=The ‘Account home’ screen includes links for managing client authorisations and certain tax services. For other tax services, you will need to log into your online services for agents account.
 help.about-asa.p3=The ‘Manage account’ screen will vary, depending on whether you have administrator or standard user access. Administrators can choose to manage access permissions using the new feature ‘access groups’. When access groups are turned on, standard users can only manage the clients they have been assigned to.
 
 help.subheading3=Account home: client authorisations
-help.client-auth.p1=This section allows you to create, view and manage authorisation requests
+help.client-auth.p1=This section allows you to create, view and manage authorisation requests.
 help.client-auth.p2=You can copy across authorisations for VAT and Income Tax for Self Assessment from your online services for agents accounts.
 help.client-auth.p3=You can also create an authorisation request for a client, and view or manage your recent authorisation requests.
 help.client-auth.p4=When asking a client for authorisation, you can send them the link to this guidance:
@@ -320,7 +320,7 @@ help.manage.admin.list1.6=view the details we hold about their organisation
 help.manage.admin.h3=Manage access permissions with access groups <strong class="govuk-tag">new</strong>
 help.manage.admin.p2=Access groups allow you to manage access permissions for your team members within your agent services account.
 help.manage.admin.p3=By default, all your team members can manage all your clients’ tax affairs. You may want to limit who can manage a specific client’s tax. If so, turn on access groups.
-help.manage.admin.p4=Access groups include team members and clients. If a client in access groups, only the team members in those groups manage their tax. You can change the clients and team members in a group at any time
+help.manage.admin.p4=Access groups include team members and clients. If a client is in access groups, only the team members in those groups can manage their tax. You can change the clients and team members in a group at any time
 help.manage.admin.p5=You do not need to assign all your clients to groups. If you do not add a client to any access groups, any staff member can manage their tax.
 help.manage.admin.p6=To use access groups your agent services account needs to include:
 help.manage.admin.list2.1=more than one team member

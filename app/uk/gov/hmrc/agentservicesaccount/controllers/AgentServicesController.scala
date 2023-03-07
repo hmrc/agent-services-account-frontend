@@ -26,6 +26,7 @@ import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AfiRelationshipConnector, AgentClientAuthorisationConnector, AgentPermissionsConnector, AgentUserClientDetailsConnector}
 import uk.gov.hmrc.agentservicesaccount.models.ManageAccessPermissionsConfig
 import uk.gov.hmrc.agentservicesaccount.views.html.pages._
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.assistant._
 import uk.gov.hmrc.http.HeaderCarrier
 
 import javax.inject._

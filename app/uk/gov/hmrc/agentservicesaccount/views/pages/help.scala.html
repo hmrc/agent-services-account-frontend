@@ -97,10 +97,12 @@
     )
 
     @h3("help.cgt.h2")
-    @a(
+    <div class="govuk-list govuk-list--spaced"> @* adds matching spacing without having a list 1 link long *@
+        @a(
         href="https://www.gov.uk/guidance/managing-your-clients-capital-gains-tax-on-uk-property-account",
         key = "help.cgt.link", openInNewWindow=true, classes = Some("govuk-link--no-visited-state")
-    )
+        )
+    </div>
 
     @if(appConfig.enablePpt) {
         @h3("help.ppt.h2")
