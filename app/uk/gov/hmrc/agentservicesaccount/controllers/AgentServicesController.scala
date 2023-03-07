@@ -23,7 +23,7 @@ import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, OptedInReady, OptinStatus}
 import uk.gov.hmrc.agentservicesaccount.auth.CallOps._
 import uk.gov.hmrc.agentservicesaccount.auth.{AgentInfo, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.connectors.{AfiRelationshipConnector, AgentClientAuthorisationConnector, AgentPermissionsConnector, AgentUserClientDetailsConnector}
+import uk.gov.hmrc.agentservicesaccount.connectors.{AgentClientAuthorisationConnector, AgentPermissionsConnector, AgentUserClientDetailsConnector}
 import uk.gov.hmrc.agentservicesaccount.models.ManageAccessPermissionsConfig
 import uk.gov.hmrc.agentservicesaccount.views.html.pages._
 import uk.gov.hmrc.http.HeaderCarrier
@@ -36,7 +36,6 @@ class AgentServicesController @Inject()
 (
   authActions: AuthActions,
   agentClientAuthorisationConnector: AgentClientAuthorisationConnector,
-  afiRelationshipConnector: AfiRelationshipConnector,
   agentPermissionsConnector: AgentPermissionsConnector,
   agentUserClientDetailsConnector: AgentUserClientDetailsConnector,
   suspensionWarningView: suspension_warning,
@@ -70,33 +69,30 @@ class AgentServicesController @Inject()
 
   val showAgentServicesAccount: Action[AnyContent] = Action.async { implicit request =>
     withAuthorisedAsAgent { agentInfo =>
-      withIrvAllowed(agentInfo.arn) { irvAllowed =>
-        withShowFeatureInvite(agentInfo.arn) { showFeatureInvite : Boolean =>
-            request.session.get("isSuspendedForVat") match {
-              case Some(isSuspendedForVat) =>
-                Future successful Ok(
+      withShowFeatureInvite(agentInfo.arn) { showFeatureInvite : Boolean =>
+          request.session.get("isSuspendedForVat") match {
+            case Some(isSuspendedForVat) =>
+              Future successful Ok(
+                asaDashboard(
+                  formatArn(agentInfo.arn),
+                  showFeatureInvite,
+                  customDimension,
+                  agentInfo.isAdmin,
+                  isSuspendedForVat.toBoolean)).addingToSession(toReturnFromMapping)
+
+            case None =>
+              agentClientAuthorisationConnector.getSuspensionDetails().map { suspensionDetails =>
+                Ok(
                   asaDashboard(
                     formatArn(agentInfo.arn),
-                    irvAllowed,
                     showFeatureInvite,
                     customDimension,
                     agentInfo.isAdmin,
-                    isSuspendedForVat.toBoolean)).addingToSession(toReturnFromMapping)
-
-              case None =>
-                agentClientAuthorisationConnector.getSuspensionDetails().map { suspensionDetails =>
-                  Ok(
-                    asaDashboard(
-                      formatArn(agentInfo.arn),
-                      irvAllowed,
-                      showFeatureInvite,
-                      customDimension,
-                      agentInfo.isAdmin,
-                      suspensionDetails.suspendedRegimes.contains("VATC"))).addingToSession(toReturnFromMapping)
-                }
-            }
-        }
+                    suspensionDetails.suspendedRegimes.contains("VATC"))).addingToSession(toReturnFromMapping)
+              }
+          }
       }
+
     }
   }
 
@@ -195,10 +191,6 @@ class AgentServicesController @Inject()
   private def formatArn(arn: Arn): String = {
     val arnStr = arn.value
     s"${arnStr.take(4)} ${arnStr.slice(4, 7)} ${arnStr.drop(7)}"
-  }
-
-  private def withIrvAllowed(arn: Arn)(f: Boolean => Future[Result])(implicit request: Request[_]): Future[Result] = {
-    afiRelationshipConnector.checkIrvAllowed(arn).flatMap(f)
   }
 
   private def withShowFeatureInvite(arn: Arn)(f: Boolean => Future[Result])(implicit request: Request[_]): Future[Result] = {

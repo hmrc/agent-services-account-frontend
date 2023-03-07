@@ -125,8 +125,6 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
 
   val govUkGuidanceChangeDetails: String = getString("govUkGuidanceChangeDetails")
 
-  val afiBaseUrl: String = baseUrl("agent-fi-relationship")
-
   lazy val sessionCacheExpiryDuration: Duration = servicesConfig.getDuration("mongodb.cache.expiry")
 
   // feature flags
