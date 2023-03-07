@@ -21,7 +21,6 @@ allowing them to access to a range of HMRC digital services.
 
 | **Microservice** | **Purpose**  | 
 |------------------|--------------|
-| agent-fi-relationship   | IRV allowlist check   | 
 | agent-client-authorisation  | suspension check        | 
 | agent-permissions  | private beta invite check, also granular permissions in manage account         | 
 
