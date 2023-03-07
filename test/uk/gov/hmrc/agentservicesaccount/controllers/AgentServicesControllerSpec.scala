@@ -1262,13 +1262,13 @@ class AgentServicesControllerSpec extends BaseISpec {
 
       // Accordion tab2
       h2.get(1).text shouldBe "About your agent services account"
-      p.get(3).text shouldBe "You can only have one agent services account, but you can add several team members to this account. They will need to Government Gateway user IDs for you to add them."
+      p.get(3).text shouldBe "You can only have one agent services account, but you can add several team members to this account. They will need to have Government Gateway user IDs for you to add them."
       p.get(4).text shouldBe "The ‘Account home’ screen includes links for managing client authorisations and certain tax services. For other tax services, you will need to log into your online services for agents account."
       p.get(5).text shouldBe "The ‘Manage account’ screen will vary, depending on whether you have administrator or standard user access. Administrators can choose to manage access permissions using the new feature ‘access groups’. When access groups are turned on, standard users can only manage the clients they have been assigned to."
 
       // Accordion tab3
       h2.get(2).text shouldBe "Account home: client authorisations"
-      p.get(6).text shouldBe "This section allows you to create, view and manage authorisation requests"
+      p.get(6).text shouldBe "This section allows you to create, view and manage authorisation requests."
       p.get(7).text shouldBe "You can copy across authorisations for VAT and Income Tax for Self Assessment from your online services for agents accounts."
       p.get(8).text shouldBe "You can also create an authorisation request for a client, and view or manage your recent authorisation requests."
       p.get(9).text shouldBe "When asking a client for authorisation, you can send them the link to this guidance:"
@@ -1350,7 +1350,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       h3.get(6).text shouldBe "Manage access permissions with access groups new"
       p.get(14).text shouldBe "Access groups allow you to manage access permissions for your team members within your agent services account."
       p.get(15).text shouldBe "By default, all your team members can manage all your clients’ tax affairs. You may want to limit who can manage a specific client’s tax. If so, turn on access groups."
-      p.get(16).text shouldBe "Access groups include team members and clients. If a client in access groups, only the team members in those groups manage their tax. You can change the clients and team members in a group at any time"
+      p.get(16).text shouldBe "Access groups include team members and clients. If a client is in access groups, only the team members in those groups can manage their tax. You can change the clients and team members in a group at any time"
       p.get(17).text shouldBe "You do not need to assign all your clients to groups. If you do not add a client to any access groups, any staff member can manage their tax."
       p.get(18).text shouldBe "To use access groups your agent services account needs to include:"
       li.get(35).text shouldBe "more than one team member"
