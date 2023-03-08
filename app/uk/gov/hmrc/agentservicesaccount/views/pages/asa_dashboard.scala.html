@@ -40,7 +40,6 @@
     formWithCSRF: FormWithCSRF)
 @(
     arn: String,
-    isIrvAllowed: Boolean,
     isShownRecruitmentBanner: Boolean = true,
     customDimension: String,
     isAdmin: Boolean = false,
@@ -170,14 +169,12 @@
             content = HtmlContent(mtdForVatAccordionItem)
         )
     )
-    if(isIrvAllowed) {
-        items.append(
-            Section(
-                headingContent = Text(msgs("agent.services.account.paye-section.h2")),
-                content = HtmlContent(payeIncomeRecordAccordionItem)
-            )
+    items.append(
+        Section(
+            headingContent = Text(msgs("agent.services.account.paye-section.h2")),
+            content = HtmlContent(payeIncomeRecordAccordionItem)
         )
-    }
+    )
     items.append(
         Section(
             headingContent = Text(msgs("agent.services.account.trusts-section.h2")),
