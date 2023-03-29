@@ -41,4 +41,16 @@ $(function() {
 				});
 		});
 	});
+
+	$('[name="landing"]').each(function(){
+		$(this).click(function(e){
+				window.close()
+
+		});
+	});
+
+
+
 });
+
+

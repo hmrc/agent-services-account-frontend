@@ -15,9 +15,11 @@ nav.help=Help and Guidance
 nav.signout=Sign out
 common.back=Back
 common.continue=Continue
+common.continue.manage.account=Continue to manage account
 common.yes=Yes
 common.no=No
 common.change=Change
+common.cancel=Cancel 
 common.what.happens.next=What happens next
 details.link-hidden= for {0}
 
@@ -399,3 +401,12 @@ beta.invite.cya.not-provided=Not provided
 beta.invite.confirmation.heading=We have received your response
 beta.invite.confirmation.p=We will get in touch with you using the contact details you provided.
 beta.invite.confirmation.link=Return to agent services account home
+
+
+agent-service-bridging.title= Manage access in the agent services account
+agent-service-bridging.p1= For this tax service, use access groups to control which team members can manage this client. This is done in your agent services account.
+agent-service-bridging.p2= This tax service is managed through your agent services account. Access permissions for the agent services account work differently from other HMRC online services.
+agent-service-bridging.p3= Your organisation can restrict access to a client's taxes using access groups. If a client is not in any access groups, any team member can manage their tax. If a client is in access groups, only team members in the same groups can manage their tax.
+agent-service-bridging.p4= Your organisation has turned access groups on. You can create new access groups or view existing groups from the 'Manage account' screen.
+agent-service-bridging.p5= By default, all your team members have access to all your clients. You can restrict access to a client's taxes using access groups.
+agent-service-bridging.p6= To find out more, select 'Turn on access groups' on the 'Manage account' page. You'll be shown more information. You can then choose to turn access groups on or leave them off.
