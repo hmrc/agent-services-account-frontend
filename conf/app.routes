@@ -27,7 +27,7 @@ GET        /account-details                         @uk.gov.hmrc.agentservicesac
 
 #Route for Optin or OptOut status
 
-GET        /agent-services-access                   @uk.gov.hmrc.agentservicesaccount.controllers.ManageAgentServicesAccountLanding.showAccessGroupSummaryForASA
+GET        /agent-services-access                   @uk.gov.hmrc.agentservicesaccount.controllers.ManageLandingController.showAccessGroupSummaryForASA
 
 # Assitant or 'Standard' user only
 GET        /your-account                            @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController.yourAccount

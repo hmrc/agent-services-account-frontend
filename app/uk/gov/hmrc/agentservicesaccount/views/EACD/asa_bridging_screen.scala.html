@@ -74,9 +74,8 @@
     key = "common.continue.manage.account",
     classes = Some("govuk-button")
    )
-  </div>
+   @govukButton(Button(name = Some("landing"), classes = "govuk-button--secondary" , content = Text(msgs("common.cancel"))))
 
-  @govukButton(Button(name = Some("landing"), classes = "govuk-button--secondary" , content = Text(msgs("common.cancel"))))
   </div>
 
 

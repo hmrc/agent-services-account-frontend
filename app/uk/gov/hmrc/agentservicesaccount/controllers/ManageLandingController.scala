@@ -29,7 +29,7 @@ import uk.gov.hmrc.agentservicesaccount.views.html.pages._
 import javax.inject._
 import scala.concurrent.{ExecutionContext, Future}
 
-class ManageAgentServicesAccountLanding @Inject()(
+class ManageLandingController @Inject()(
 
                                                    authActions: AuthActions,
 
