@@ -15,6 +15,7 @@ nav.help=Help ac arweiniad
 nav.signout=Allgofnodi
 common.back=Yn ôl
 common.continue=Yn eich blaen
+common.continue.manage.account=Yn eich blaen i reoli'r cyfrif
 common.yes=Iawn
 common.no=Na
 common.change=Newid
@@ -397,4 +398,12 @@ beta.invite.cya.not-provided=Heb ei ddarparu
 beta.invite.confirmation.heading=Gwiriwch eich atebion
 beta.invite.confirmation.p=Byddwn yn cysylltu â chi gan ddefnyddio’r manylion cyswllt rydych wedi’u rhoi.
 beta.invite.confirmation.link=Dychwelyd i hafan y cyfrif gwasanaethau asiant
+
+agent-service-bridging.title= MRheoli mynediad drwy'r cyfrif gwasanaethau asiant
+agent-service-bridging.p1= Ar gyfer y gwasanaeth treth hwn, defnyddiwch grwpiau mynediad i reoli pa aelodau o'r tîm sy'n gallu rheoli'r cleient hwn. Defnyddir eich cyfrif gwasanaethau asiant i wneud hyn.
+agent-service-bridging.p2= Rheolir y gwasanaeth treth hwn drwy'ch cyfrif gwasanaethau asiant. Mae caniatâd o ran mynediad ar gyfer y cyfrif gwasanaethau asiant yn gweithio mewn ffordd wahanol i wasanaethau ar-lein eraill CThEF.
+agent-service-bridging.p3= Gall eich sefydliad gyfyngu ar fynediad at drethi cleient drwy ddefnyddio grwpiau mynediad. Os nad yw cleient yn rhan o unrhyw grwpiau mynediad, gall unrhyw aelod o'r tîm reoli treth y cleient hwnnw. Os bydd cleient yn rhan o unrhyw grwpiau mynediad, dim ond aelodau tîm sy'n rhan o'r un grwpiau sy'n gallu rheoli treth y cleient hwnnw.
+agent-service-bridging.p4= Mae'ch sefydliad wedi galluogi grwpiau mynediad. Gallwch greu grwpiau mynediad newydd, neu fwrw golwg dros grwpiau presennol, drwy'r sgrin 'Rheoli cyfrif'.
+agent-service-bridging.p5= Fel gosodiad diofyn, mae gan holl aelodau'ch tîm fynediad at eich holl gleientiaid. Gallwch gyfyngu ar fynediad at drethi cleient drwy ddefnyddio grwpiau mynediad.
+agent-service-bridging.p6= I ddysgu rhagor, dewiswch 'Galluogi grwpiau mynediad' ar y dudalen 'Rheoli cyfrif'. Bydd rhagor o wybodaeth i'w gweld. Yna, gallwch ddewis galluogi grwpiau mynediad neu eu gadael nhw heb eu galluogi.
 
