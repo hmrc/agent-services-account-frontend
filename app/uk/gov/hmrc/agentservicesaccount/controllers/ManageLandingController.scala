@@ -23,54 +23,39 @@ import uk.gov.hmrc.agentmtdidentifiers.model.OptedInReady
 import uk.gov.hmrc.agentservicesaccount.auth.AuthActions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentPermissionsConnector
-import uk.gov.hmrc.agentservicesaccount.views.html.EACD._
-import uk.gov.hmrc.agentservicesaccount.views.html.pages._
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.EACD._
 
 import javax.inject._
 import scala.concurrent.{ExecutionContext, Future}
 
 class ManageLandingController @Inject()(
-
-                                                   authActions: AuthActions,
-
-                                                   agentPermissionsConnector: AgentPermissionsConnector,
-
-                                                   suspensionWarningView: suspension_warning,
-
-                                                   asa_bridging_screen: asa_bridging_screen,
-
-                                                   helpView: help)(implicit val appConfig: AppConfig,
-                                                                   val cc: MessagesControllerComponents,
-                                                                   ec: ExecutionContext,
-                                                                   messagesApi: MessagesApi)
+                                         authActions: AuthActions,
+                                         agentPermissionsConnector: AgentPermissionsConnector,
+                                         asa_bridging_screen: asa_bridging_screen)(implicit val appConfig: AppConfig,
+                                                                                   val cc: MessagesControllerComponents,
+                                                                                   ec: ExecutionContext,
+                                                                                   messagesApi: MessagesApi)
   extends AgentServicesBaseController with Logging {
 
 
   val showAccessGroupSummaryForASA: Action[AnyContent] = Action.async { implicit request =>
-
-    authActions.withAuthorisedAsAgent { agentInfo => // agentInfo is a val for withAuthorisedAsAgent
-      if (agentInfo.isAdmin) { // <- whats happening here
-
-        if (appConfig.granPermsEnabled) { // checks GranPremsEnable
+    // auth step will confirm user is authorised, with correct GG affinity type and HMRC-AS-AGENT enrolment
+    authActions.withAuthorisedAsAgent { agentInfo => // agentInfo is data about the logged in Agent, used in check below
+      if (agentInfo.isAdmin) { // only credentialRole = Admin or User can see this page
+        if (appConfig.granPermsEnabled) { // checks GranPremsEnable feature flag
           for {
-            maybeOptinStatus <- agentPermissionsConnector.getOptinStatus(agentInfo.arn) //maybeOptinStatus is a instance of getOptinStatus from agentPermissionConnector
+            //maybeOptinStatus is the response from agentPermissions's getOptinStatus endpoint
+            maybeOptinStatus <- agentPermissionsConnector.getOptinStatus(agentInfo.arn)
           } yield {
-            maybeOptinStatus match { // pattern match on mayOptinStatus
-              case Some(OptedInReady) => (Ok(asa_bridging_screen(true)))
-
-              case _ => (Ok(asa_bridging_screen(false)))
+            maybeOptinStatus match { // pattern match on mayOptinStatus :Option[OptinStatus]
+              case Some(OptedInReady) => Ok(asa_bridging_screen(isAccessGroupEnabled = true))
+              case _ => Ok(asa_bridging_screen(isAccessGroupEnabled = false))
             }
-
           }
-
         } else {
-          Future.successful(Ok(asa_bridging_screen(false)))
-
-
+          Future.successful(Ok(asa_bridging_screen(isAccessGroupEnabled = false)))
         }
-
       } else {
-
         Future.successful(Unauthorized)
       }
     }
