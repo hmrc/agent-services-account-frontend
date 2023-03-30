@@ -21,10 +21,11 @@ import org.jsoup.Jsoup
 import play.api.i18n.{Lang, MessagesApi}
 import play.api.test.Helpers._
 import play.api.test.FakeRequest
-import uk.gov.hmrc.agentservicesaccount.support.Css.paragraphs
-
-import uk.gov.hmrc.agentservicesaccount.support.{BaseISpec}
-
+import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, OptedInReady}
+import uk.gov.hmrc.agentservicesaccount.models.AccessGroupSummaries
+import uk.gov.hmrc.agentservicesaccount.stubs.AgentPermissionsStubs.{givenAccessGroupsForArn, givenArnAllowedOk, givenOptinStatusSuccessReturnsForArn, givenSyncEacdSuccess}
+import uk.gov.hmrc.agentservicesaccount.support.Css.{H1, paragraphs}
+import uk.gov.hmrc.agentservicesaccount.support.{BaseISpec, Css}
 import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.auth.core.{Enrolment, EnrolmentIdentifier}
 
@@ -83,7 +84,7 @@ class ManageAgentServicesAccountLandingSpec extends BaseISpec {
 
     }
 
-    "return page correct content" in {
+    "return page correct content when OptOut" in {
 
      // This page is showing me when access groups are turned off
 
@@ -98,6 +99,37 @@ class ManageAgentServicesAccountLandingSpec extends BaseISpec {
       p.get(2).text shouldBe "By default, all your team members have access to all your clients. You can restrict access to a clients taxes using access groups."
       p.get(3).text shouldBe "To find out more, select Turn on access groups on the Manage account page. Youll be shown more information. You can then choose to turn access groups on or leave them off."
 
+    }
+
+    "return page with correct content whilst Optin" in {
+
+      // This page is showing me when access groups are turned on
+
+      givenAuthorisedAsAgentWith(arn)
+
+      givenArnAllowedOk()
+      givenSyncEacdSuccess(Arn(arn))
+      givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInReady)
+      givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq.empty)) // no access groups yet
+
+      val response = await(controller.showAccessGroupSummaryForASA()(FakeRequest("GET", "/agent-services-access").withSession(SessionKeys.authToken -> "Bearer XYZ")))
+
+      status(response) shouldBe 200
+
+      val html = Jsoup.parse(contentAsString(response))
+
+      val p = html.select(Css.paragraphs)
+
+      html.title() shouldBe ASAAccountTitle
+      html.select(H1).get(0).text shouldBe "Manage access in the agent services account"
+      p.get(0).text
+        .shouldBe("For this tax service, use access groups to control which team members can manage this client. This is done in your agent services account.")
+      p.get(1).text
+        .shouldBe("This tax service is managed through your agent services account. Access permissions for the agent services account work differently from other HMRC online services.")
+      p.get(2).text
+        .shouldBe("Your organisation can restrict access to a clients taxes using access groups. If a client is not in any access groups, any team member can manage their tax. If a client is in access groups, only team members in the same groups can manage their tax.")
+      p.get(3).text
+        .shouldBe("Your organisation has turned access groups on. You can create new access groups or view existing groups from the Manage account screen.")
     }
 
   }
