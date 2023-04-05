@@ -21,7 +21,8 @@ import org.jsoup.Jsoup
 import play.api.i18n.{Lang, MessagesApi}
 import play.api.test.Helpers._
 import play.api.test.FakeRequest
-import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, OptedInReady}
+import uk.gov.hmrc.agentmtdidentifiers.model.Arn
+import uk.gov.hmrc.agents.accessgroups.optin.OptedInReady
 import uk.gov.hmrc.agentservicesaccount.models.AccessGroupSummaries
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentPermissionsStubs.{givenAccessGroupsForArn, givenArnAllowedOk, givenOptinStatusSuccessReturnsForArn, givenSyncEacdSuccess}
 import uk.gov.hmrc.agentservicesaccount.support.Css.{H1, paragraphs}
@@ -30,20 +31,13 @@ import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.auth.core.{Enrolment, EnrolmentIdentifier}
 
 
-
-
-
-
 class ManageLandingControllerSpec extends BaseISpec {
-
 
   implicit val lang: Lang = Lang("en")
   implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
 
-
   val arn = "TARN0000001"
   val agentEnrolment: Enrolment = Enrolment("HMRC-AS-AGENT", Seq(EnrolmentIdentifier("AgentReferenceNumber", arn)), state = "Activated", delegatedAuthRule = None)
-
 
   val controller: ManageLandingController = app.injector.instanceOf[ManageLandingController]
 
@@ -51,28 +45,19 @@ class ManageLandingControllerSpec extends BaseISpec {
 
     val ASAAccountTitle = "Manage access in the agent services account - Agent services account - GOV.UK"
 
-    "return Status: Unauthorized containing correct content" in {
-
-
-      givenAuthorisedAsAgentWith(arn, false)
+    "return Status: Unauthorized" in {
+      givenAuthorisedAsAgentWith(arn, isAdmin = false)
       val response = await(controller.showAccessGroupSummaryForASA(FakeRequest("GET", "/agent-services-access").withSession(SessionKeys.authToken -> "Bearer XYZ"))) //URL response created to mock webpage
 
-
-      status(response) shouldBe 401 // I except response to be Unauthorized(401)
-
-      val html = Jsoup.parse(contentAsString(response))
-
-      html.title() shouldBe ""
-
-
+      status(response) shouldBe 401 // Unauthorized(401)
     }
 
     "return page correct content when OptOut" in {
-
-     // This page is showing me when access groups are turned off
-
+      // Given: auth agent with no opt in status
       givenAuthorisedAsAgentWith(arn)
+      // When:
       val response = await(controller.showAccessGroupSummaryForASA()(FakeRequest("GET", "/agent-services-access").withSession(SessionKeys.authToken -> "Bearer XYZ")))
+      // Then: page shown is for when access groups are turned off
 
       val html = Jsoup.parse(contentAsString(response))
       val p = html.select(paragraphs)

@@ -17,12 +17,14 @@
 package uk.gov.hmrc.agentservicesaccount.stubs
 
 import com.github.tomakehurst.wiremock.client.WireMock._
+import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.libs.json.Json
-import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, UserDetails}
+import uk.gov.hmrc.agentmtdidentifiers.model.Arn
+import uk.gov.hmrc.agents.accessgroups.UserDetails
 
 object AgentUserClientDetailsStubs {
 
-  def stubGetTeamMembersForArn(arn: Arn, teamMembers: Seq[UserDetails]) =
+  def stubGetTeamMembersForArn(arn: Arn, teamMembers: Seq[UserDetails]): StubMapping =
     stubFor(
       get(urlEqualTo(s"/agent-user-client-details/arn/${arn.value}/team-members"))
         .willReturn(aResponse()

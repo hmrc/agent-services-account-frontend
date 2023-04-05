@@ -17,7 +17,7 @@
 package uk.gov.hmrc.agentservicesaccount.models
 
 import play.api.libs.json._
-import uk.gov.hmrc.agentmtdidentifiers.model.GroupSummary
+import uk.gov.hmrc.agents.accessgroups.GroupSummary
 
 case class AccessGroupSummaries(groups: Seq[GroupSummary])
 
