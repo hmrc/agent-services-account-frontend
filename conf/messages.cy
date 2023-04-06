@@ -114,7 +114,7 @@ your.account.your.groups.h2=Eich grwpiau mynediad
 your.account.your.groups.p=Nid ydych wedi’ch neilltuo i unrhyw grŵp mynediad ar hyn o bryd
 your.account.your.groups.off.p=Mae’r grwpiau mynediad wedi’u hanalluogi. Dim ond gweinyddwyr sy’n gallu galluogi neu analluogi grwpiau mynediad.
 your.account.unassigned-clients.h2=Gallwch gael mynediad at y cleientiaid eraill hyn
-your.account.unassigned-clients=Y cleientiaid eraill
+your.account.unassigned-clients.a=Gweld cleientiaid eraill
 
 your.account.your.admins.h2=Gweinyddwyr eich sefydliad
 your.account.your.admins.a=Bwrw golwg dros y gweinyddwyr

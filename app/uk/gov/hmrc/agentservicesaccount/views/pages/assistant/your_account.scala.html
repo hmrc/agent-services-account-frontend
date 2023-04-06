@@ -20,9 +20,7 @@
 @import uk.gov.hmrc.agentmtdidentifiers.model.GroupSummary
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 
-@this(
-    main: main, h1: h1, h2: h2, h3: h3, p: p, a: a, ul_html: ul_html, span: span,
-)
+@this(main: main, h1: h1, h2: h2, h3: h3, p: p, a: a, ul_html: ul_html, span: span)
 
 @(
     info: Option[AgentInfo] = None,
@@ -73,7 +71,7 @@
 
             @h2("your.account.unassigned-clients.h2")
             <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-            @a(key= "your.account.unassigned-clients",
+            @a(key= "your.account.unassigned-clients.a",
             href= s"${appConfig.agentPermissionsFrontendAssistantViewUnassignedClientsUrl}")
         </div>
         }
