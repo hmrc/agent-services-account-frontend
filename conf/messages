@@ -104,20 +104,20 @@ agent.services.account.section4.col2.link3=Cancel a client’s authorisation
 agent.services.account.help.h2=Help and guidance
 agent.services.account.help.link=Find out how to use your agent services account and how clients can authorise you to manage their taxes
 
-#Your Account (Assistant/standard user only - not behind feature flag)
+#Your Account (Assistant/standard user only)
 your.account.h1=Your account
-your.account.h3.name=Name
-your.account.h3.email=Email address
-your.account.h3.role=Role
-your.account.p.role=Standard - As a user with standard permissions you can view your assigned access groups and clients. Please contact your administrator for more information.
+your.account.name=Name
+your.account.email=Email address
+your.account.role=Role
+your.account.p.role=Standard user <br/> You can view your assigned access groups and clients. You can also view clients who are not in any access groups.
 
 your.account.your.groups.h2=Your access groups
-your.account.your.groups.p=You are not currently assigned to any groups
+your.account.your.groups.p=You are not currently assigned to any access groups.
 your.account.your.groups.off.p=Access groups are turned off. Only administrators can turn access groups on or off.
 your.account.unassigned-clients.h2=Other clients you can access
 your.account.unassigned-clients.a=View other clients
 
-your.account.your.admins.h2=Your company’s administrators
+your.account.your.admins.h2=Your organisation’s administrators
 your.account.your.admins.a=View administrators
 
 your.account.your.contact.details.h2=Contact details

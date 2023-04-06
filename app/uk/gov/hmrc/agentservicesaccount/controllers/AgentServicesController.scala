@@ -19,7 +19,8 @@ package uk.gov.hmrc.agentservicesaccount.controllers
 import play.api.Logging
 import play.api.i18n.MessagesApi
 import play.api.mvc._
-import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, OptedInReady, OptinStatus}
+import uk.gov.hmrc.agentmtdidentifiers.model.Arn
+import uk.gov.hmrc.agents.accessgroups.optin.{OptedInReady, OptinStatus}
 import uk.gov.hmrc.agentservicesaccount.auth.CallOps._
 import uk.gov.hmrc.agentservicesaccount.auth.{AgentInfo, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig

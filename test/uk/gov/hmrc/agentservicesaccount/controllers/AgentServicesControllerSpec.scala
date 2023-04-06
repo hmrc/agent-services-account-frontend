@@ -26,7 +26,9 @@ import play.api.mvc.Session
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
 import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, GroupSummary, OptedInNotReady, OptedInReady, OptedInSingleUser, OptedOutEligible, OptedOutSingleUser, OptedOutWrongClientCount, SuspensionDetails, SuspensionDetailsNotFound, UserDetails}
+import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, SuspensionDetails, SuspensionDetailsNotFound}
+import uk.gov.hmrc.agents.accessgroups.{GroupSummary, UserDetails}
+import uk.gov.hmrc.agents.accessgroups.optin._
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models.{AccessGroupSummaries, AgencyDetails, BusinessAddress}
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentClientAuthorisationStubs._
@@ -36,6 +38,8 @@ import uk.gov.hmrc.agentservicesaccount.stubs.AgentPermissionsStubs._
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentUserClientDetailsStubs._
 import uk.gov.hmrc.agentservicesaccount.support.Css._
 import uk.gov.hmrc.http.SessionKeys
+
+import java.util.UUID
 
 
 class AgentServicesControllerSpec extends BaseISpec {
@@ -48,8 +52,10 @@ class AgentServicesControllerSpec extends BaseISpec {
   val arn = "TARN0000001"
   val agentEnrolment: Enrolment = Enrolment("HMRC-AS-AGENT", Seq(EnrolmentIdentifier("AgentReferenceNumber", arn)), state = "Activated", delegatedAuthRule = None)
 
-  val customSummary: GroupSummary = GroupSummary("grpId1", "Potatoes", Some(1), 1)
-  val taxSummary: GroupSummary = GroupSummary("grpIda", "TRust me", None, 1, Some("HMRC-TERS"))
+  val groupId1: UUID = UUID.randomUUID()
+
+  val customSummary: GroupSummary = GroupSummary(groupId1, "Potatoes", Some(1), 1)
+  val taxSummary: GroupSummary = GroupSummary(UUID.randomUUID(), "TRust me", None, 1, Some("HMRC-TERS"))
 
   private implicit val messages: Messages = messagesApi.preferred(Seq.empty[Lang])
 
@@ -912,28 +918,26 @@ class AgentServicesControllerSpec extends BaseISpec {
       html.select(H1).get(0).text shouldBe "Your account"
       html.select(secondaryNavLinks).get(1).text shouldBe "Your account"
 
-      //LEFT PANEL
       val userDetailsPanel = html.select("div#user-details")
-      userDetailsPanel.select("h2").get(0).text() shouldBe "Name"
-      userDetailsPanel.select("p").get(0).text() shouldBe "Bob The Builder"
-      userDetailsPanel.select("h2").get(1).text() shouldBe "Email address"
-      userDetailsPanel.select("p").get(1).text() shouldBe "bob@builder.com"
-      userDetailsPanel.select("h2").get(2).text() shouldBe "Role"
-      userDetailsPanel.select("p").get(2)
-        .text() shouldBe "Standard - As a user with standard permissions you can view your assigned access groups and clients. Please contact your administrator for more information."
+      userDetailsPanel.select(summaryListKeys).get(0).text() shouldBe "Name"
+      userDetailsPanel.select(summaryListValues).get(0).text() shouldBe "Bob The Builder"
+      userDetailsPanel.select(summaryListKeys).get(1).text() shouldBe "Email address"
+      userDetailsPanel.select(summaryListValues).get(1).text() shouldBe "bob@builder.com"
+      userDetailsPanel.select(summaryListKeys).get(2).text() shouldBe "Role"
+      userDetailsPanel.select(summaryListValues).get(2)
+        .text() shouldBe "Standard user You can view your assigned access groups and clients. You can also view clients who are not in any access groups."
 
-      //RIGHT PANEL
       val userGroupsPanel = html.select("div#user-groups")
       val grps = userGroupsPanel.select("ul li a")
       grps.isEmpty shouldBe true
-      userGroupsPanel.select("p").get(0).text shouldBe "You are not currently assigned to any groups"
+      userGroupsPanel.select("p").get(0).text shouldBe "You are not currently assigned to any access groups."
 
       userGroupsPanel.select("a").get(0).text shouldBe "View other clients"
       userGroupsPanel.select("a").get(0).attr("href") shouldBe s"$wireMockBaseUrlAsString/agent-permissions/your-account/other-clients"
 
       //BOTTOM PANEL
       val bottomPanel = html.select("div#bottom-panel")
-      bottomPanel.select("h2").get(0).text shouldBe "Your company’s administrators"
+      bottomPanel.select("h2").get(0).text shouldBe "Your organisation’s administrators"
       bottomPanel.select("a").get(0).text shouldBe "View administrators"
       bottomPanel.select("a").get(0).attr("href") shouldBe routes.AgentServicesController.administrators.url
       bottomPanel.select("h2").get(1).text shouldBe "Contact details"
@@ -957,23 +961,20 @@ class AgentServicesControllerSpec extends BaseISpec {
       html.select(H1).get(0).text shouldBe "Your account"
       html.select(secondaryNavLinks).get(1).text shouldBe "Your account"
 
-      //LEFT PANEL
       val userDetailsPanel = html.select("div#user-details")
-      userDetailsPanel.select("h2").get(0).text() shouldBe "Name"
-      userDetailsPanel.select("p").get(0).text() shouldBe "Bob The Builder"
-      userDetailsPanel.select("h2").get(1).text() shouldBe "Email address"
-      userDetailsPanel.select("p").get(1).text() shouldBe "bob@builder.com"
-      userDetailsPanel.select("h2").get(2).text() shouldBe "Role"
-      userDetailsPanel.select("p").get(2)
-        .text() shouldBe "Standard - As a user with standard permissions you can view your assigned access groups and clients. Please contact your administrator for more information."
+      userDetailsPanel.select(summaryListKeys).get(0).text() shouldBe "Name"
+      userDetailsPanel.select(summaryListValues).get(0).text() shouldBe "Bob The Builder"
+      userDetailsPanel.select(summaryListKeys).get(1).text() shouldBe "Email address"
+      userDetailsPanel.select(summaryListValues).get(1).text() shouldBe "bob@builder.com"
+      userDetailsPanel.select(summaryListKeys).get(2).text() shouldBe "Role"
+      userDetailsPanel.select(summaryListValues).get(2)
+        .text() shouldBe "Standard user You can view your assigned access groups and clients. You can also view clients who are not in any access groups."
 
-      //RIGHT PANEL
       val userGroupsPanel = html.select("div#user-groups")
       userGroupsPanel.isEmpty shouldBe true
 
-      //BOTTOM PANEL
       val bottomPanel = html.select("div#bottom-panel")
-      bottomPanel.select("h2").get(0).text shouldBe "Your company’s administrators"
+      bottomPanel.select("h2").get(0).text shouldBe "Your organisation’s administrators"
       bottomPanel.select("a").get(0).text shouldBe "View administrators"
       bottomPanel.select("a").get(0).attr("href") shouldBe routes.AgentServicesController.administrators.url
       bottomPanel.select("h2").get(1).text shouldBe "Contact details"
@@ -983,10 +984,12 @@ class AgentServicesControllerSpec extends BaseISpec {
     }
 
     "return status: OK and body containing content for status Opted-In_READY (access groups already created)" in {
+      val groupId2 = UUID.randomUUID()
+
       val providerId = RandomUtils.nextLong().toString
       val groupSummaries: Seq[GroupSummary] = Seq(
         customSummary,
-        customSummary.copy("grpId2", "Carrots"),
+        customSummary.copy(groupId2, "Carrots"),
         taxSummary
       )
       givenFullAuthorisedAsAgentWith(arn, providerId)
@@ -1000,31 +1003,30 @@ class AgentServicesControllerSpec extends BaseISpec {
       val html = Jsoup.parse(contentAsString(response))
       html.title() shouldBe "Your account - Agent services account - GOV.UK"
       html.select(H1).get(0).text shouldBe "Your account"
-      //LEFT PANEL
-      val userDetailsPanel = html.select("div#user-details")
-      userDetailsPanel.select("h2").get(0).text() shouldBe "Name"
-      userDetailsPanel.select("p").get(0).text() shouldBe "Bob The Builder"
-      userDetailsPanel.select("h2").get(1).text() shouldBe "Email address"
-      userDetailsPanel.select("p").get(1).text() shouldBe "bob@builder.com"
-      userDetailsPanel.select("h2").get(2).text() shouldBe "Role"
-      userDetailsPanel.select("p").get(2)
-        .text() shouldBe "Standard - As a user with standard permissions you can view your assigned access groups and clients. Please contact your administrator for more information."
 
-      //RIGHT PANEL
+      val userDetailsPanel = html.select("div#user-details")
+      userDetailsPanel.select(summaryListKeys).get(0).text() shouldBe "Name"
+      userDetailsPanel.select(summaryListValues).get(0).text() shouldBe "Bob The Builder"
+      userDetailsPanel.select(summaryListKeys).get(1).text() shouldBe "Email address"
+      userDetailsPanel.select(summaryListValues).get(1).text() shouldBe "bob@builder.com"
+      userDetailsPanel.select(summaryListKeys).get(2).text() shouldBe "Role"
+      userDetailsPanel.select(summaryListValues).get(2)
+        .text() shouldBe "Standard user You can view your assigned access groups and clients. You can also view clients who are not in any access groups."
+
       val userGroupsPanel = html.select("div#user-groups")
       val grps = userGroupsPanel.select("ul li a")
       grps.get(0).text() shouldBe "Potatoes"
-      grps.get(0).attr("href") shouldBe s"$wireMockBaseUrlAsString/agent-permissions/your-account/group-clients/custom/grpId1"
+      grps.get(0).attr("href") shouldBe s"$wireMockBaseUrlAsString/agent-permissions/your-account/group-clients/custom/${groupId1.toString}"
       grps.get(1).text() shouldBe "Carrots"
-      grps.get(1).attr("href") shouldBe s"$wireMockBaseUrlAsString/agent-permissions/your-account/group-clients/custom/grpId2"
+      grps.get(1).attr("href") shouldBe s"$wireMockBaseUrlAsString/agent-permissions/your-account/group-clients/custom/${groupId2.toString}"
       grps.get(2).text() shouldBe "TRust me"
-      grps.get(2).attr("href") shouldBe s"$wireMockBaseUrlAsString/agent-permissions/your-account/group-clients/tax/grpIda"
+      grps.get(2).attr("href") shouldBe s"$wireMockBaseUrlAsString/agent-permissions/your-account/group-clients/tax/${taxSummary.groupId.toString}"
       userGroupsPanel.select("a").get(3).text shouldBe "View other clients"
       userGroupsPanel.select("a").get(3).attr("href") shouldBe s"$wireMockBaseUrlAsString/agent-permissions/your-account/other-clients"
 
       //BOTTOM PANEL
       val bottomPanel = html.select("div#bottom-panel")
-      bottomPanel.select("h2").get(0).text shouldBe "Your company’s administrators"
+      bottomPanel.select("h2").get(0).text shouldBe "Your organisation’s administrators"
       bottomPanel.select("a").get(0).text shouldBe "View administrators"
       bottomPanel.select("a").get(0).attr("href") shouldBe routes.AgentServicesController.administrators.url
       bottomPanel.select("h2").get(1).text shouldBe "Contact details"

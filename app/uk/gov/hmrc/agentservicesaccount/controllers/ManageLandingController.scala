@@ -19,7 +19,7 @@ package uk.gov.hmrc.agentservicesaccount.controllers
 import play.api.Logging
 import play.api.i18n.MessagesApi
 import play.api.mvc._
-import uk.gov.hmrc.agentmtdidentifiers.model.OptedInReady
+import uk.gov.hmrc.agents.accessgroups.optin.OptedInReady
 import uk.gov.hmrc.agentservicesaccount.auth.AuthActions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentPermissionsConnector
@@ -36,7 +36,6 @@ class ManageLandingController @Inject()(
                                                                                    ec: ExecutionContext,
                                                                                    messagesApi: MessagesApi)
   extends AgentServicesBaseController with Logging {
-
 
   val showAccessGroupSummaryForASA: Action[AnyContent] = Action.async { implicit request =>
     // auth step will confirm user is authorised, with correct GG affinity type and HMRC-AS-AGENT enrolment
@@ -60,6 +59,5 @@ class ManageLandingController @Inject()(
       }
     }
   }
-
 
 }

@@ -17,7 +17,8 @@
 package uk.gov.hmrc.agentservicesaccount.connectors
 
 import play.api.test.Helpers.{await, defaultAwaitTimeout}
-import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, UserDetails}
+import uk.gov.hmrc.agentmtdidentifiers.model.Arn
+import uk.gov.hmrc.agents.accessgroups.UserDetails
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentUserClientDetailsStubs.stubGetTeamMembersForArn
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import uk.gov.hmrc.http.HeaderCarrier
