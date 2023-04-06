@@ -109,7 +109,7 @@ your.account.h1=Your account
 your.account.name=Name
 your.account.email=Email address
 your.account.role=Role
-your.account.p.role=Standard user - You can view your assigned access groups and clients. You can also view clients who are not in any access groups.
+your.account.p.role=Standard user <br/> You can view your assigned access groups and clients. You can also view clients who are not in any access groups.
 
 your.account.your.groups.h2=Your access groups
 your.account.your.groups.p=You are not currently assigned to any access groups.

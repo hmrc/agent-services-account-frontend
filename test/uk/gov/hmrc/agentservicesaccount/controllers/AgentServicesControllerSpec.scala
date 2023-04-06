@@ -925,7 +925,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       userDetailsPanel.select(summaryListValues).get(1).text() shouldBe "bob@builder.com"
       userDetailsPanel.select(summaryListKeys).get(2).text() shouldBe "Role"
       userDetailsPanel.select(summaryListValues).get(2)
-        .text() shouldBe "Standard user - You can view your assigned access groups and clients. You can also view clients who are not in any access groups."
+        .text() shouldBe "Standard user You can view your assigned access groups and clients. You can also view clients who are not in any access groups."
 
       val userGroupsPanel = html.select("div#user-groups")
       val grps = userGroupsPanel.select("ul li a")
@@ -968,7 +968,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       userDetailsPanel.select(summaryListValues).get(1).text() shouldBe "bob@builder.com"
       userDetailsPanel.select(summaryListKeys).get(2).text() shouldBe "Role"
       userDetailsPanel.select(summaryListValues).get(2)
-        .text() shouldBe "Standard user - You can view your assigned access groups and clients. You can also view clients who are not in any access groups."
+        .text() shouldBe "Standard user You can view your assigned access groups and clients. You can also view clients who are not in any access groups."
 
       val userGroupsPanel = html.select("div#user-groups")
       userGroupsPanel.isEmpty shouldBe true
@@ -1011,7 +1011,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       userDetailsPanel.select(summaryListValues).get(1).text() shouldBe "bob@builder.com"
       userDetailsPanel.select(summaryListKeys).get(2).text() shouldBe "Role"
       userDetailsPanel.select(summaryListValues).get(2)
-        .text() shouldBe "Standard user - You can view your assigned access groups and clients. You can also view clients who are not in any access groups."
+        .text() shouldBe "Standard user You can view your assigned access groups and clients. You can also view clients who are not in any access groups."
 
       val userGroupsPanel = html.select("div#user-groups")
       val grps = userGroupsPanel.select("ul li a")

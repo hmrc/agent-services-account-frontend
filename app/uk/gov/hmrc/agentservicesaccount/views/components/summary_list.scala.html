@@ -20,6 +20,7 @@
 @import uk.gov.hmrc.govukfrontend.views.Aliases.SummaryListRow
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.Key
 @import uk.gov.hmrc.govukfrontend.views.Aliases.Text
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.Actions
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.ActionItem
 @import uk.gov.hmrc.govukfrontend.views.Aliases.Value
@@ -33,7 +34,7 @@
             rows = rows.map(summaryListRow =>
                 SummaryListRow(
                     Key(Text(msgs(summaryListRow.key))),
-                    Value(Text(summaryListRow.value)),
+                    Value(HtmlContent(summaryListRow.value)),
                     actions = Some(
                         Actions(
                             classes = summaryListRow.linkClasses.getOrElse(""),

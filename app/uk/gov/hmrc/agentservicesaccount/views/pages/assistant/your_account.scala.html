@@ -46,7 +46,6 @@
     @if(optedIn){
         <div id="user-groups">
         @h2("your.account.your.groups.h2")
-        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
         @if(groups.isEmpty || groups.get.isEmpty) {
             @p("your.account.your.groups.p")
         } else {
@@ -59,9 +58,8 @@
             )
             )
         }
-
-            @h2("your.account.unassigned-clients.h2")
             <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+            @h2("your.account.unassigned-clients.h2")
             @a(key= "your.account.unassigned-clients.a",
             href= s"${appConfig.agentPermissionsFrontendAssistantViewUnassignedClientsUrl}")
         </div>
