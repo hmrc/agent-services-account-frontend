@@ -21,9 +21,7 @@
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 @import uk.gov.hmrc.agentservicesaccount.views.components.models.SummaryListData
 
-@this(
-    main: main, h1: h1, h2: h2, h3: h3, p: p, a: a, ul_html: ul_html, span: span, summary_list: summary_list
-)
+@this(main: main, h1: h1, h2: h2, h3: h3, p: p, a: a, ul_html: ul_html, span: span, summary_list: summary_list)
 
 @(
     info: Option[AgentInfo] = None,
@@ -62,10 +60,10 @@
             )
         }
 
-        @h2("your.account.unassigned-clients.h2")
-        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-        @a(key= "your.account.unassigned-clients",
-        href= s"${appConfig.agentPermissionsFrontendAssistantViewUnassignedClientsUrl}")
+            @h2("your.account.unassigned-clients.h2")
+            <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+            @a(key= "your.account.unassigned-clients.a",
+            href= s"${appConfig.agentPermissionsFrontendAssistantViewUnassignedClientsUrl}")
         </div>
     } else {
         @h2("your.account.your.groups.h2")

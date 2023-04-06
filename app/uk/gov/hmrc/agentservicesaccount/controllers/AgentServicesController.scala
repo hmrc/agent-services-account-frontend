@@ -26,8 +26,8 @@ import uk.gov.hmrc.agentservicesaccount.auth.{AgentInfo, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AgentClientAuthorisationConnector, AgentPermissionsConnector, AgentUserClientDetailsConnector}
 import uk.gov.hmrc.agentservicesaccount.models.ManageAccessPermissionsConfig
-import uk.gov.hmrc.agentservicesaccount.views.html.pages._
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.assistant._
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.{suspension_warning, manage_account, asa_dashboard, account_details, help}
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.assistant.{your_account, administrators}
 import uk.gov.hmrc.http.HeaderCarrier
 
 import javax.inject._
@@ -58,41 +58,41 @@ class AgentServicesController @Inject()
 
   val root: Action[AnyContent] = Action.async { implicit request =>
     withAuthorisedAsAgent { _ =>
-        agentClientAuthorisationConnector.getSuspensionDetails().map { suspensionDetails =>
-          if (!suspensionDetails.suspensionStatus) Redirect(routes.AgentServicesController.showAgentServicesAccount())
-          else
-            Redirect(routes.AgentServicesController.showSuspendedWarning())
-              .addingToSession(
-                "suspendedServices" -> suspensionDetails.toString,
-                "isSuspendedForVat" -> suspensionDetails.suspendedRegimes.contains("VATC").toString)
-        }
+      agentClientAuthorisationConnector.getSuspensionDetails().map { suspensionDetails =>
+        if (!suspensionDetails.suspensionStatus) Redirect(routes.AgentServicesController.showAgentServicesAccount())
+        else
+          Redirect(routes.AgentServicesController.showSuspendedWarning())
+            .addingToSession(
+              "suspendedServices" -> suspensionDetails.toString,
+              "isSuspendedForVat" -> suspensionDetails.suspendedRegimes.contains("VATC").toString)
+      }
     }
   }
 
   val showAgentServicesAccount: Action[AnyContent] = Action.async { implicit request =>
     withAuthorisedAsAgent { agentInfo =>
-      withShowFeatureInvite(agentInfo.arn) { showFeatureInvite : Boolean =>
-          request.session.get("isSuspendedForVat") match {
-            case Some(isSuspendedForVat) =>
-              Future successful Ok(
+      withShowFeatureInvite(agentInfo.arn) { showFeatureInvite: Boolean =>
+        request.session.get("isSuspendedForVat") match {
+          case Some(isSuspendedForVat) =>
+            Future successful Ok(
+              asaDashboard(
+                formatArn(agentInfo.arn),
+                showFeatureInvite,
+                customDimension,
+                agentInfo.isAdmin,
+                isSuspendedForVat.toBoolean)).addingToSession(toReturnFromMapping)
+
+          case None =>
+            agentClientAuthorisationConnector.getSuspensionDetails().map { suspensionDetails =>
+              Ok(
                 asaDashboard(
                   formatArn(agentInfo.arn),
                   showFeatureInvite,
                   customDimension,
                   agentInfo.isAdmin,
-                  isSuspendedForVat.toBoolean)).addingToSession(toReturnFromMapping)
-
-            case None =>
-              agentClientAuthorisationConnector.getSuspensionDetails().map { suspensionDetails =>
-                Ok(
-                  asaDashboard(
-                    formatArn(agentInfo.arn),
-                    showFeatureInvite,
-                    customDimension,
-                    agentInfo.isAdmin,
-                    suspensionDetails.suspendedRegimes.contains("VATC"))).addingToSession(toReturnFromMapping)
-              }
-          }
+                  suspensionDetails.suspendedRegimes.contains("VATC"))).addingToSession(toReturnFromMapping)
+            }
+        }
       }
 
     }
@@ -149,13 +149,15 @@ class AgentServicesController @Inject()
       if (!agentInfo.isAdmin) {
         if (appConfig.granPermsEnabled) {
           agentInfo.credentials.fold(Ok(your_account(None)).toFuture) { credentials =>
-            agentPermissionsConnector.isOptedIn(agentInfo.arn).flatMap(isOptedIn =>
-              if (isOptedIn)
-                agentPermissionsConnector.getGroupsForTeamMember(agentInfo.arn, credentials.providerId)
-                  .map(maybeSummaries => Ok(your_account(Some(agentInfo), maybeSummaries)))
-              else
-                Ok(your_account(Some(agentInfo), None, optedIn = false)).toFuture
-            )
+            agentPermissionsConnector
+              .isOptedIn(agentInfo.arn)
+              .flatMap(isOptedIn =>
+                if (isOptedIn)
+                  agentPermissionsConnector.getGroupsForTeamMember(agentInfo.arn, credentials.providerId)
+                    .map(maybeSummaries => Ok(your_account(Some(agentInfo), maybeSummaries)))
+                else
+                  Ok(your_account(Some(agentInfo), None, optedIn = false)).toFuture
+              )
           }
         } else {
           Ok(your_account(None)).toFuture
@@ -168,7 +170,7 @@ class AgentServicesController @Inject()
 
   val administrators: Action[AnyContent] = Action.async { implicit request =>
     withAuthorisedAsAgent { agentInfo =>
-      agentUserClientDetailsConnector.getTeamMembers(agentInfo.arn).map{ maybeMembers =>
+      agentUserClientDetailsConnector.getTeamMembers(agentInfo.arn).map { maybeMembers =>
         Ok(
           administrators_html(
             maybeMembers.getOrElse(Seq.empty)
@@ -180,7 +182,7 @@ class AgentServicesController @Inject()
 
   val accountDetails: Action[AnyContent] = Action.async { implicit request =>
     withAuthorisedAsAgent { agentInfo =>
-        agentClientAuthorisationConnector.getAgencyDetails().map(agencyDetails => Ok(accountDetailsView(agencyDetails, agentInfo.isAdmin)))
+      agentClientAuthorisationConnector.getAgencyDetails().map(agencyDetails => Ok(accountDetailsView(agencyDetails, agentInfo.isAdmin)))
     }
   }
 
