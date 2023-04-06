@@ -928,7 +928,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       grps.isEmpty shouldBe true
       userGroupsPanel.select("p").get(0).text shouldBe "You are not currently assigned to any groups"
 
-      userGroupsPanel.select("a").get(0).text shouldBe "Other clients"
+      userGroupsPanel.select("a").get(0).text shouldBe "View other clients"
       userGroupsPanel.select("a").get(0).attr("href") shouldBe s"$wireMockBaseUrlAsString/agent-permissions/your-account/other-clients"
 
       //BOTTOM PANEL
@@ -1019,7 +1019,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       grps.get(1).attr("href") shouldBe s"$wireMockBaseUrlAsString/agent-permissions/your-account/group-clients/custom/grpId2"
       grps.get(2).text() shouldBe "TRust me"
       grps.get(2).attr("href") shouldBe s"$wireMockBaseUrlAsString/agent-permissions/your-account/group-clients/tax/grpIda"
-      userGroupsPanel.select("a").get(3).text shouldBe "Other clients"
+      userGroupsPanel.select("a").get(3).text shouldBe "View other clients"
       userGroupsPanel.select("a").get(3).attr("href") shouldBe s"$wireMockBaseUrlAsString/agent-permissions/your-account/other-clients"
 
       //BOTTOM PANEL
