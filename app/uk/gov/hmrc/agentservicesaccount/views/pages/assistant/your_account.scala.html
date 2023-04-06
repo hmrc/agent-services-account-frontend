@@ -19,9 +19,10 @@
 @import uk.gov.hmrc.agentservicesaccount.controllers.routes
 @import uk.gov.hmrc.agents.accessgroups.GroupSummary
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
+@import uk.gov.hmrc.agentservicesaccount.views.components.models.SummaryListData
 
 @this(
-    main: main, h1: h1, h2: h2, h3: h3, p: p, a: a, ul_html: ul_html, span: span,
+    main: main, h1: h1, h2: h2, h3: h3, p: p, a: a, ul_html: ul_html, span: span, summary_list: summary_list
 )
 
 @(
@@ -30,69 +31,60 @@
     optedIn: Boolean = true
 )(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
 
-@main(pageTitle = msgs("your.account.h1"), analyticsAdditionalJs = None, fullWidth = true, isAdmin = false) {
+@main(pageTitle = msgs("your.account.h1"), analyticsAdditionalJs = None, isAdmin = false) {
 
-
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-full">
-    @* the govuk-grid-column-full class has a padding left that
-        aligns this h1 with rest of page*@
-            @h1("your.account.h1")
-        </div>
-    </div>
+    @h1("your.account.h1")
 
     @if(info.isDefined){
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds" id="user-details">
-            @h2("your.account.h3.name", size = "s")
-            @p(info.get.name.map(n => n.name.getOrElse("") + " " + n.lastName.getOrElse("")).getOrElse("" ))
-            @h2("your.account.h3.email", size = "s")
-            @p(info.get.email.getOrElse(""))
-            @h2("your.account.h3.role", size = "s")
-            @p("your.account.p.role")
+        <div id="user-details">
+            @summary_list(rows= Seq[SummaryListData](
+            SummaryListData(key = "your.account.name", value = info.get.name.map(n => n.name.getOrElse("") + " " + n.lastName.getOrElse("")).getOrElse("" )),
+            SummaryListData(key = "your.account.email", value = info.get.email.getOrElse("")),
+            SummaryListData(key = "your.account.role", value = msgs("your.account.p.role"))
+            ))
         </div>
-
-        @if(optedIn){
-
-            <div class="govuk-grid-column-one-third" id="user-groups">
-            @* Missing content if not opted in your.account.your.groups.off.p *@
-            @h2("your.account.your.groups.h2")
-            <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-            @if(groups.isEmpty || groups.get.isEmpty) {
-                @p("your.account.your.groups.p")
-            } else {
-                @ul_html(items = groups.get.map(grp =>
-                    Html(
-                        a(
-                            key = grp.groupName,
-                            href = s"${appConfig.agentPermissionsFrontendAssistantViewGroupClientsUrl}/${grp.groupType}/${grp.groupId}").toString
-                    )
-                )
-                )
-            }
-
-            @h2("your.account.unassigned-clients.h2")
-            <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-            @a(key= "your.account.unassigned-clients",
-            href= s"${appConfig.agentPermissionsFrontendAssistantViewUnassignedClientsUrl}")
-        </div>
-        }
-    </div>
     }
 
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-full" id="bottom-panel">
-            <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-            @h2("your.account.your.admins.h2")
-            @a("your.account.your.admins.a", href = routes.AgentServicesController.administrators.url)
+    @if(optedIn){
+        <div id="user-groups">
+        @h2("your.account.your.groups.h2")
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+        @if(groups.isEmpty || groups.get.isEmpty) {
+            @p("your.account.your.groups.p")
+        } else {
+            @ul_html(items = groups.get.map(grp =>
+                Html(
+                    a(
+                        key = grp.groupName,
+                        href = s"${appConfig.agentPermissionsFrontendAssistantViewGroupClientsUrl}/${grp.groupType}/${grp.groupId}").toString
+                )
+            )
+            )
+        }
 
-            <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-
-            @h2("manage.account.contact-details.heading")
-            @p(html = Some(
-                a(href = routes.AgentServicesController.accountDetails.url,
-                    key = "manage.account.contact-details.view"
-                )))
+        @h2("your.account.unassigned-clients.h2")
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+        @a(key= "your.account.unassigned-clients",
+        href= s"${appConfig.agentPermissionsFrontendAssistantViewUnassignedClientsUrl}")
         </div>
+    } else {
+        @h2("your.account.your.groups.h2")
+        @p("your.account.your.groups.off.p")
+    }
+
+
+    <div id="bottom-panel">
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+        @h2("your.account.your.admins.h2")
+        @a("your.account.your.admins.a", href = routes.AgentServicesController.administrators.url)
+
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+
+        @h2("manage.account.contact-details.heading")
+        @p(html = Some(
+            a(href = routes.AgentServicesController.accountDetails.url,
+                key = "manage.account.contact-details.view"
+            )))
     </div>
+
 }
