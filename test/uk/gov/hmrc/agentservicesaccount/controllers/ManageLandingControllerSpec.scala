@@ -45,11 +45,11 @@ class ManageLandingControllerSpec extends BaseISpec {
 
     val ASAAccountTitle = "Manage access in the agent services account - Agent services account - GOV.UK"
 
-    "return Status: Unauthorized" in {
+    "return Status: Forbidden" in {
       givenAuthorisedAsAgentWith(arn, isAdmin = false)
       val response = await(controller.showAccessGroupSummaryForASA(FakeRequest("GET", "/agent-services-access").withSession(SessionKeys.authToken -> "Bearer XYZ"))) //URL response created to mock webpage
 
-      status(response) shouldBe 401 // Unauthorized(401)
+      status(response) shouldBe 403
     }
 
     "return page correct content when OptOut" in {
@@ -57,8 +57,8 @@ class ManageLandingControllerSpec extends BaseISpec {
       givenAuthorisedAsAgentWith(arn)
       // When:
       val response = await(controller.showAccessGroupSummaryForASA()(FakeRequest("GET", "/agent-services-access").withSession(SessionKeys.authToken -> "Bearer XYZ")))
+      status(response) shouldBe 200
       // Then: page shown is for when access groups are turned off
-
       val html = Jsoup.parse(contentAsString(response))
       val p = html.select(paragraphs)
 
@@ -70,20 +70,16 @@ class ManageLandingControllerSpec extends BaseISpec {
     }
 
     "return Status: OK & page with correct content whilst Optin" in {
-
-      // This page is showing me when access groups are turned on
-
       givenAuthorisedAsAgentWith(arn)
-
       givenArnAllowedOk()
       givenSyncEacdSuccess(Arn(arn))
-      givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInReady)
+      givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInReady) // access groups turned on
       givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq.empty)) // no access groups yet
 
       val response = await(controller.showAccessGroupSummaryForASA()(FakeRequest("GET", "/agent-services-access").withSession(SessionKeys.authToken -> "Bearer XYZ")))
 
-      status(response) shouldBe 200 // I except response to be OK(200)
-
+      status(response) shouldBe 200
+      // Then: page shown is for when access groups are turned on
       val html = Jsoup.parse(contentAsString(response))
 
       val p = html.select(Css.paragraphs)

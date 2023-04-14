@@ -6,7 +6,22 @@
 This is the frontend for the Agent Services account page. It is available to agents who have the HMRC-AS-AGENT enrolment, 
 allowing them to access to a range of HMRC digital services.
 
-### Running the tests
+### Manage account vs Your account
+ASA accounts typically hold `credentialRole: "User"`. An agency has at least one admin - historically this login has been shared in smaller agencies.
+
+If they create additional users (creating fresh Government Gateway credentials) through the external service they will be assigned to the same group (same ARN). The additional users can be:
+- "Admin" - credentialRole is User or Admin, Admin is deprecated
+- "Standard" - credentialRole is Assistant
+
+Administrators have access to most ASA functionality, such as sending authorisation requests and managing access groups. They see "Manage account" in the secondary nav bar.
+
+Standard users have limited functionality. They can view the clients lists they are assigned to, and a list of administrators for their agency. They can manage the taxes of clients they have access to. They see "Your account" in the secondary nav bar.
+
+#### Creating additional users (team members)
+
+The link to add users to the agency is in `application.conf` under `user-management.add-user`. It is a redirect through Secure Credentials Platform (SCP). 
+
+## Running the tests
 
     sbt test
 

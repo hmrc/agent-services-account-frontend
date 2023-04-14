@@ -1041,8 +1041,8 @@ class AgentServicesControllerSpec extends BaseISpec {
 
   s"GET on Administrators of your account at url: $adminUrl" should {
 
-    "render static data and list of Admin Users for ARN" in {
-      givenAuthorisedAsAgentWith(arn)
+    "render static data and list of Admin Users for ARN if standard user" in {
+      givenAuthorisedAsAgentWith(arn, isAdmin = false)
       givenArnAllowedOk()
       givenSyncEacdSuccess(Arn(arn))
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInReady)
@@ -1078,6 +1078,14 @@ class AgentServicesControllerSpec extends BaseISpec {
       adminEmails.get(1).text shouldBe "steve@builder.com"
       adminNames.get(2).text shouldBe "Albert Forger"
       adminEmails.get(2).text shouldBe "a.forger@builder.com"
+    }
+
+    "return forbidden for admin users" in {
+      givenAuthorisedAsAgentWith(arn) // isAdmin = true
+
+      val response = await(controller.administrators()(fakeRequest("GET", adminUrl)))
+
+      status(response) shouldBe 403
     }
 
   }

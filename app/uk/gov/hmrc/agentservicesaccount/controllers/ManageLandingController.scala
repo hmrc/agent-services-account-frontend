@@ -55,7 +55,7 @@ class ManageLandingController @Inject()(
           Future.successful(Ok(asa_bridging_screen(isAccessGroupEnabled = false)))
         }
       } else {
-        Future.successful(Unauthorized)
+        Future.successful(Forbidden)
       }
     }
   }

@@ -77,7 +77,7 @@ class AgentServicesController @Inject()
             Future successful Ok(
               asaDashboard(
                 formatArn(agentInfo.arn),
-                showFeatureInvite,
+                showFeatureInvite && agentInfo.isAdmin,
                 customDimension,
                 agentInfo.isAdmin,
                 isSuspendedForVat.toBoolean)).addingToSession(toReturnFromMapping)
@@ -87,7 +87,7 @@ class AgentServicesController @Inject()
               Ok(
                 asaDashboard(
                   formatArn(agentInfo.arn),
-                  showFeatureInvite,
+                  showFeatureInvite && agentInfo.isAdmin,
                   customDimension,
                   agentInfo.isAdmin,
                   suspensionDetails.suspendedRegimes.contains("VATC"))).addingToSession(toReturnFromMapping)
@@ -170,13 +170,15 @@ class AgentServicesController @Inject()
 
   val administrators: Action[AnyContent] = Action.async { implicit request =>
     withAuthorisedAsAgent { agentInfo =>
-      agentUserClientDetailsConnector.getTeamMembers(agentInfo.arn).map { maybeMembers =>
-        Ok(
-          administrators_html(
-            maybeMembers.getOrElse(Seq.empty)
-              .filterNot(_.credentialRole.getOrElse("").equals("Assistant")))
-        )
-      }
+      if (!agentInfo.isAdmin) {
+        agentUserClientDetailsConnector.getTeamMembers(agentInfo.arn).map { maybeMembers =>
+          Ok(
+            administrators_html(
+              maybeMembers.getOrElse(Seq.empty)
+                .filterNot(_.credentialRole.getOrElse("").equals("Assistant")))
+          )
+        }
+      } else Forbidden.toFuture
     }
   }
 
@@ -188,7 +190,7 @@ class AgentServicesController @Inject()
 
   val showHelp: Action[AnyContent] = Action.async { implicit request =>
     withAuthorisedAsAgent { agentInfo =>
-      Future successful Ok(helpView(agentInfo.isAdmin))
+        Future successful Ok(helpView(agentInfo.isAdmin))
     }
   }
 
