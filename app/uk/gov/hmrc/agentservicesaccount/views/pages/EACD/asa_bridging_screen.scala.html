@@ -24,62 +24,33 @@
 
 @import uk.gov.hmrc.agentservicesaccount.controllers.routes
 
-
 @this(main: main, govukButton: GovukButton,link_as_button: link_as_button)
 
+@(isAccessGroupEnabled: Boolean)(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
 
-@(
-    isAccessGroupEnabled: Boolean // parameters for controller
-)(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
+@main(pageTitle = msgs("agent-service-bridging.title"), isAdmin = true) {
 
-@main( // laods main page header and footer
-    pageTitle = msgs("agent-service-bridging.title"),
+ <h1 class="govuk-heading-xl">@msgs("agent-service-bridging.title")</h1>
 
-) {
-
+ <p class="govuk-inset-text"> @msgs("agent-service-bridging.p1") </p>
+ <p class="govuk-body"> @msgs("agent-service-bridging.p2") </p>
  @if(isAccessGroupEnabled) {
-  <h1 class="govuk-heading-xl">@msgs("agent-service-bridging.title")</h1>
-
-  <p class="govuk-inset-text"> @msgs("agent-service-bridging.p1") </p>
-  <p class="govuk-body"> @msgs("agent-service-bridging.p2") </p>
   <p class="govuk-body"> @msgs("agent-service-bridging.p3") </p>
   <p class="govuk-body"> @msgs("agent-service-bridging.p4") </p>
-
-
-  <div class="govuk-button-group">
-   @link_as_button(
-    href= routes.AgentServicesController.manageAccount.url,
-    key = "common.continue.manage.account",
-    classes = Some("govuk-button"),
-   )
-
-   @govukButton(Button(name = Some("landing"), classes = "govuk-button--secondary" , content = Text(msgs("common.cancel"))))
-
-  </div>
-
-
-
- }else {
-
-  <h1 class="govuk-heading-xl">@msgs("agent-service-bridging.title")</h1>
-
-  <p class="govuk-inset-text"> @msgs("agent-service-bridging.p1") </p>
-  <p class="govuk-body"> @msgs("agent-service-bridging.p2") </p>
+ } else {
   <p class="govuk-body"> @msgs("agent-service-bridging.p5") </p>
   <p class="govuk-body"> @msgs("agent-service-bridging.p6") </p>
-
-  <div class="govuk-button-group">
-   @link_as_button(
-    href= routes.AgentServicesController.manageAccount.url,
-    key = "common.continue.manage.account",
-    classes = Some("govuk-button")
-   )
-   @govukButton(Button(name = Some("landing"), classes = "govuk-button--secondary" , content = Text(msgs("common.cancel"))))
-
-  </div>
-
-
  }
+
+ <div class="govuk-button-group">
+  @link_as_button(
+  href= routes.AgentServicesController.manageAccount.url,
+  key = "common.continue.manage.account",
+  classes = Some("govuk-button")
+  )
+  @govukButton(Button(name = Some("landing"), classes = "govuk-button--secondary" , content = Text(msgs("common.cancel"))))
+
+ </div>
 
 }
 
