@@ -124,10 +124,10 @@ class AgentPermissionsConnector @Inject()(http: HttpClient, httpV2: HttpClientV2
     }
   }
 
-  def syncEacd(arn: Arn)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Unit] = {
-    val url = s"$baseUrl/agent-permissions/arn/${arn.value}/sync"
+  def syncEacd(arn: Arn, fullSync: Boolean)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Unit] = {
+    val url = s"$baseUrl/agent-permissions/arn/${arn.value}/sync?fullSync=" + fullSync
 
-    http.PATCH[SyncEacd, HttpResponse](url, SyncEacd("sync")).map{ response =>
+    http.POST[SyncEacd, HttpResponse](url, SyncEacd("sync")).map{ response =>
       response.status match {
         case OK =>
           logger.debug(s"EACD sync called for $arn")
