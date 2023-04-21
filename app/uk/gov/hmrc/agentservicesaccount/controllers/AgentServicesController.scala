@@ -140,7 +140,7 @@ class AgentServicesController @Inject()
   }
 
   private def syncEacdIfOptedIn(arn: Arn, optinStatus: OptinStatus)(implicit hc: HeaderCarrier) = {
-    if (optinStatus == OptedInReady) agentPermissionsConnector.syncEacd(arn)
+    if (optinStatus == OptedInReady) agentPermissionsConnector.syncEacd(arn, fullSync = true)
     else Future.successful(())
   }
 
