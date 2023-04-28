@@ -16,15 +16,14 @@
 
 package uk.gov.hmrc.agentservicesaccount.services
 
-import play.api.{LoggerLike, Logging}
 import play.api.i18n.{Lang, Langs}
+import play.api.{LoggerLike, Logging}
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.connectors.EmailConnector
 import uk.gov.hmrc.agentservicesaccount.models.{BetaInviteDetailsForEmail, SendEmailData}
 import uk.gov.hmrc.http.HeaderCarrier
 
 import javax.inject.Inject
-import scala.collection.Seq
 import scala.concurrent.{ExecutionContext, Future}
 
 class EmailService @Inject()(emailConnector: EmailConnector)(implicit langs: Langs)

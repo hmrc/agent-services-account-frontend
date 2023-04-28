@@ -1,5 +1,4 @@
 import uk.gov.hmrc.SbtAutoBuildPlugin
-import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin._
 
 lazy val scoverageSettings = {
   import scoverage.ScoverageKeys
@@ -36,13 +35,9 @@ lazy val wartRemoverSettings = {
       Wart.FinalVal,
       Wart.JavaConversions,
       Wart.JavaSerializable,
-      //Wart.LeakingSealed,
-//      Wart.MutableDataStructures,
       Wart.Null,
-      //Wart.OptionPartial,
       Wart.Recursion,
       Wart.Return,
-      //Wart.TraversableOps,
       Wart.TryPartial,
       Wart.Var,
       Wart.While)
@@ -71,26 +66,21 @@ lazy val root = (project in file("."))
   .settings(
     name := "agent-services-account-frontend",
     organization := "uk.gov.hmrc",
-    scalaVersion := "2.12.15",
+    scalaVersion := "2.13.10",
     scalacOptions ++= Seq(
-      "-Xfatal-warnings",
-      "-Xlint:-missing-interpolator,_",
-      "-Yno-adapted-args",
-      "-Ywarn-dead-code",
-      "-deprecation",
-      "-feature",
-      "-unchecked",
-      "-language:implicitConversions",
-      "-P:silencer:pathFilters=views;routes;uk/gov/hmrc/agentservicesaccount/FrontendModule"),
-    PlayKeys.playDefaultPort := 9401,
-    resolvers += Resolver.typesafeRepo("releases"),
-    resolvers += "HMRC-open-artefacts-maven" at "https://open.artefacts.tax.service.gov.uk/maven2",
-    resolvers += Resolver.url("HMRC-open-artefacts-ivy", url("https://open.artefacts.tax.service.gov.uk/ivy2"))(Resolver.ivyStylePatterns),
-    libraryDependencies ++= AppDependencies.compile ++ AppDependencies.test,
-    libraryDependencies ++= Seq(
-      compilerPlugin("com.github.ghik" % "silencer-plugin" % "1.7.8" cross CrossVersion.full),
-      "com.github.ghik" % "silencer-lib" % "1.7.8" % Provided cross CrossVersion.full
+      "-Werror",
+      "-Wdead-code",
+      "-Xlint",
+      "-Wconf:src=target/.*:s", // silence warnings from compiled files
+      "-Wconf:src=*html:w", // silence html warnings as they are wrong
+      "-Wconf:cat=deprecation:s",
+      "-Wconf:cat=unused-privates:s",
+      "-Wconf:msg=match may not be exhaustive:is", // summarize warnings about non-exhaustive pattern matching
     ),
+    PlayKeys.playDefaultPort := 9401,
+    libraryDependencies ++= AppDependencies.compile ++ AppDependencies.test,
+    //fix for scoverage compile errors for scala 2.13.10
+    libraryDependencySchemes ++= Seq("org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always),
     scoverageSettings,
     Compile / unmanagedResourceDirectories += baseDirectory.value / "resources"
   )

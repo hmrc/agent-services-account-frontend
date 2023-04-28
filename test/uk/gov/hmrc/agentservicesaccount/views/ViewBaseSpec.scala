@@ -24,7 +24,7 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpecLike
 import org.scalatest.{Assertion, OptionValues}
 import play.twirl.api.Html
-import uk.gov.hmrc.agentservicesaccount.support.Css.{H1, H2, H3, H4, paragraphs}
+import uk.gov.hmrc.agentservicesaccount.support.Css.{H1, H2, H3, H4}
 
 trait ViewBaseSpec extends AnyWordSpecLike with Matchers with OptionValues with ScalaFutures {
 
