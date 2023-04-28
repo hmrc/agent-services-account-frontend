@@ -68,7 +68,7 @@ lazy val root = (project in file("."))
     organization := "uk.gov.hmrc",
     scalaVersion := "2.13.10",
     scalacOptions ++= Seq(
-//      "-Werror",
+      "-Werror",
       "-Wdead-code",
       "-Xlint",
       "-Wconf:src=target/.*:s", // silence warnings from compiled files
