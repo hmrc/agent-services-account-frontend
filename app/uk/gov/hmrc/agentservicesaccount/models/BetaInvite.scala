@@ -15,7 +15,7 @@
  */
 
 package uk.gov.hmrc.agentservicesaccount.models
-import play.api.libs.json.{Format, JsError, JsResult, JsString, JsSuccess, JsValue}
+import play.api.libs.json._
 
 case class BetaInviteContactDetails(name: String,
                                     email: String,

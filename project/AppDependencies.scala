@@ -1,7 +1,7 @@
 import sbt._
 
 object AppDependencies {
-  private val mongoVer: String = "0.74.0"
+  private val mongoVer: String = "1.1.0"
   private val bootstrapVer: String = "7.15.0"
 
   val compile = Seq(
