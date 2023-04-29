@@ -49,6 +49,5 @@ lazy val root = (project in file("."))
     IntegrationTest / unmanagedSourceDirectories += baseDirectory(_ / "it").value,
     IntegrationTest / parallelExecution := false
   )
-  .settings(wartRemoverSettings: _*)
   .enablePlugins(PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin)
   .disablePlugins(JUnitXmlReportPlugin) //Required to prevent https://github.com/scalatest/scalatest/issues/1427
