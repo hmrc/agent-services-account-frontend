@@ -9,7 +9,6 @@ addSbtPlugin("com.typesafe.play"    % "sbt-plugin"            % "2.8.19")
 addSbtPlugin("com.typesafe.sbt"     % "sbt-twirl" 		         % "1.5.1")
 addSbtPlugin("com.timushev.sbt"     % "sbt-updates"           % "0.3.4")  // provides sbt command "dependencyUpdates"
 addSbtPlugin("io.github.irundaia"   % "sbt-sassify"           % "1.5.2")
-addSbtPlugin("org.wartremover"      % "sbt-wartremover"       % "2.4.21")
 addSbtPlugin("org.scoverage"        % "sbt-scoverage"         % "2.0.7")
 
 //fix for scoverage compile errors for scala 2.13.10
