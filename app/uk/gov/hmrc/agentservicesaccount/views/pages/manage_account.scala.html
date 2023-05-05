@@ -27,7 +27,9 @@
     maybe_inset_text: maybe_inset_text,
     access_groups_section: access_groups_section,
     clients: clients,
+    contact_details: contact_details,
     team_members: team_members,
+    info: info,
 )
 @(
     maybeOptinStatus: Option[OptinStatus] = None,
@@ -43,53 +45,17 @@
     })
 }
 
-@isOptedIn(status: OptinStatus) = @{
-    status match {
-        case OptedInReady | OptedInNotReady | OptedInSingleUser => "in"
-        case _ => "out"
-    }
-}
-
 @main(pageTitle = msgs("manage.account.h1"), isAdmin = true, analyticsAdditionalJs = None) {
 
     @h1("manage.account.h1")
-
     <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
     @if(appConfig.granPermsEnabled && maybeOptinStatus.isDefined) {
-        @h2(key = "manage.account.manage-access-permissions.heading",
-            id = Some("manage-access-permissions-heading"))
-        @p("manage.account.manage-access-permissions.access-groups.hint")
-
-        @p(
-            id = Some("opt-in-status"),
-            html =
-                Some(
-                    Html(
-                        span("manage.account.manage-access-permissions.status",
-                            classes = Some("govuk-!-font-weight-bold govuk-!-margin-right-2 ")).toString() +
-                        span(msgs("manage.account.manage-access-permissions.status.opted." + isOptedIn(maybeOptinStatus.get)),
-                            id = Some("status-value")).toString()
-                    )
-                )
-        )
+        @info(maybeOptinStatus)
         @maybe_inset_text(maybeOptinStatus)
         @access_groups_section(maybeOptinStatus,hasAnyGroups)
         @clients(maybeOptinStatus)
         @team_members(maybeOptinStatus)
-
-        <div id="contact-details">
-            @h2("manage.account.contact-details.heading")
-            @p(
-                html = Some(
-                    a(href = routes.AgentServicesController.accountDetails.url, key = "manage.account.contact-details.view")
-                )
-            )
-            <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-
-        </div>
-
-
-
+        @contact_details()
     } else {
         @p("manage.account.p")
         @ul_html(

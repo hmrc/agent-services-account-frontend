@@ -1,0 +1,51 @@
+@*
+ * Copyright 2023 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+@import uk.gov.hmrc.agentservicesaccount.controllers.routes
+@import uk.gov.hmrc.agents.accessgroups.optin._
+
+@this(p: p, h2: h2, a: a, span: span)
+
+@(
+    maybeOptinStatus: Option[OptinStatus] = None
+)(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
+
+@isOptedIn(status: OptinStatus) = @{
+    status match {
+        case OptedInReady | OptedInNotReady | OptedInSingleUser => "in"
+        case _ => "out"
+    }
+}
+
+@h2(
+    key = "manage.account.manage-access-permissions.heading",
+    id = Some("manage-access-permissions-heading")
+)
+@p("manage.account.manage-access-permissions.access-groups.hint")
+
+@p(
+    id = Some("opt-in-status"),
+    html =
+        Some(
+            Html(
+                span("manage.account.manage-access-permissions.status",
+                    classes = Some("govuk-!-font-weight-bold govuk-!-margin-right-2 ")).toString() +
+                        span(msgs("manage.account.manage-access-permissions.status.opted." + isOptedIn(maybeOptinStatus.get)),
+                            id = Some("status-value")).toString()
+            )
+        )
+)
