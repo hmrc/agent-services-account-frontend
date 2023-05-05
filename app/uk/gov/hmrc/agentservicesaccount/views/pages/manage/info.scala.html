@@ -20,9 +20,7 @@
 
 @this(p: p, h2: h2, a: a, span: span)
 
-@(
-    maybeOptinStatus: Option[OptinStatus] = None
-)(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
+@(optinStatus: OptinStatus)(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
 
 @isOptedIn(status: OptinStatus) = @{
     status match {
@@ -44,7 +42,7 @@
             Html(
                 span("manage.account.manage-access-permissions.status",
                     classes = Some("govuk-!-font-weight-bold govuk-!-margin-right-2 ")).toString() +
-                        span(msgs("manage.account.manage-access-permissions.status.opted." + isOptedIn(maybeOptinStatus.get)),
+                        span(msgs("manage.account.manage-access-permissions.status.opted." + isOptedIn(optinStatus)),
                             id = Some("status-value")).toString()
             )
         )

@@ -19,11 +19,9 @@
 
 @this(p: p, h2: h2, a: a, ul_html: ul_html)
 
-@(
-    maybeOptinStatus: Option[OptinStatus] = None
-)(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
+@(optinStatus: OptinStatus)(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
 
-@if(maybeOptinStatus.getOrElse("").equals(OptedInReady)) {
+@if(OptedInReady.equals(optinStatus)) {
 
     @h2("manage.account.clients.heading")
     @p(key = "manage.account.clients.p")

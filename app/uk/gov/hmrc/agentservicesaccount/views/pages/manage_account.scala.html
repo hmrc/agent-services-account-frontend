@@ -41,11 +41,11 @@
     @h1("manage.account.h1")
     <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
     @if(appConfig.granPermsEnabled && maybeOptinStatus.isDefined) {
-        @info(maybeOptinStatus)
-        @maybe_inset_text(maybeOptinStatus)
-        @access_groups_section(maybeOptinStatus,hasAnyGroups)
-        @clients(maybeOptinStatus)
-        @team_members(maybeOptinStatus)
+        @info(maybeOptinStatus.get)
+        @maybe_inset_text(maybeOptinStatus.get)
+        @access_groups_section(maybeOptinStatus.get, hasAnyGroups)
+        @clients(maybeOptinStatus.get)
+        @team_members(maybeOptinStatus.get)
         @contact_details()
     } else {
         @p("manage.account.p")

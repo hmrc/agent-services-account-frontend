@@ -19,46 +19,35 @@
 
 @this(inset_text: inset_text, a: a, ul_html: ul_html, link_as_button: link_as_button)
 
-@(
-        maybeOptinStatus: Option[OptinStatus] = None,
-        hasAnyGroups: Boolean = false
-)(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
+@(optinStatus: OptinStatus, hasAnyGroups: Boolean = false)(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
 
-@renderForThisOptInStatus = @{
-    maybeOptinStatus.isDefined &&
-            Seq(OptedInReady, OptedInNotReady, OptedOutEligible).contains(maybeOptinStatus.get)
-}
-
-@if(renderForThisOptInStatus) {
-    @defining(maybeOptinStatus.get) { optinStatus =>
-        @if(OptedInReady.equals(optinStatus)) {
-            @ul_html(
-                items =
-                    Seq(
-                        a(key = msgs("manage.account.manage-access-permissions.access-groups.create-new"),
-                            href = appConfig.agentPermissionsCreateAccessGroupUrl,
-                            classes = Some(if(!hasAnyGroups) "govuk-button" else "")
-                        ),
-                        a(key = msgs("manage.account.manage-access-permissions.access-groups.manage"),
-                            href = appConfig.agentPermissionsManageAccessGroupsUrl
-                        ),
-                        a(key = msgs("manage.account.manage-access-permissions.access-groups." + optinStatus),
-                            href = appConfig.agentPermissionsOptOutUrl,
-                            id = Some("config-link")
-                        )
+@if(Seq(OptedInReady, OptedInNotReady, OptedOutEligible).contains(optinStatus)) {
+    @if(OptedInReady.equals(optinStatus)) {
+        @ul_html(
+            items =
+                Seq(
+                    a(key = msgs("manage.account.manage-access-permissions.access-groups.create-new"),
+                        href = appConfig.agentPermissionsCreateAccessGroupUrl,
+                        classes = Some(if(!hasAnyGroups) "govuk-button" else "")
+                    ),
+                    a(key = msgs("manage.account.manage-access-permissions.access-groups.manage"),
+                        href = appConfig.agentPermissionsManageAccessGroupsUrl
+                    ),
+                    a(key = msgs("manage.account.manage-access-permissions.access-groups." + optinStatus),
+                        href = appConfig.agentPermissionsOptOutUrl,
+                        id = Some("config-link")
                     )
-            )
-        } else {
-            <p class="govuk-body" id="config-link">
-                @a(
-                    key = msgs("manage.account.manage-access-permissions.access-groups." + optinStatus),
-                    href = appConfig.getOptinInOrOutUrl(optinStatus)
                 )
-            </p>
+        )
+    } else {
+        <p class="govuk-body" id="config-link">
+        @a(
+            key = msgs("manage.account.manage-access-permissions.access-groups." + optinStatus),
+            href = appConfig.getOptinInOrOutUrl(optinStatus)
+        )
+        </p>
 
-        }
     }
-
 }
 
 <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">

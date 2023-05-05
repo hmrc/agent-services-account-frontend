@@ -19,16 +19,11 @@
 
 @this(p: p, h2: h2, a: a, ul_html: ul_html)
 
-@(maybeOptinStatus: Option[OptinStatus] = None)(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
-
-@renderForThisOptInStatus = @{
-    maybeOptinStatus.isDefined &&
-            Seq(OptedInReady, OptedInNotReady, OptedInSingleUser).contains(maybeOptinStatus.get)
-}
+@(optinStatus: OptinStatus)(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
 
 @h2("manage.account.team-members.heading")
 
-@if(renderForThisOptInStatus) {
+@if(Seq(OptedInReady, OptedInNotReady, OptedInSingleUser).contains(optinStatus)) {
     @p(key = "manage.account.team-members.p")
 
     @ul_html(
