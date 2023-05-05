@@ -36,15 +36,6 @@
     hasAnyGroups: Boolean = false
 )(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
 
-
-@maybeInsetMessage = @{
-    maybeOptinStatus.map(status => {
-        val messageKey = "manage.account.manage-access-permissions.inset-text." + status
-        val messageValue = msgs("manage.account.manage-access-permissions.inset-text." + status, appConfig.granPermsMaxClientCount)
-        if(messageKey.equals(messageValue)) null else messageValue
-    })
-}
-
 @main(pageTitle = msgs("manage.account.h1"), isAdmin = true, analyticsAdditionalJs = None) {
 
     @h1("manage.account.h1")
