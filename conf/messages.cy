@@ -126,20 +126,22 @@ your.account.your.contact.details.a=Bwrw golwg dros y manylion cyswllt sydd genn
 manage.account.h1=Rheoli’r cyfrif
 manage.account.manage-access-permissions.heading=Rheoli grwpiau mynediad
 manage.account.manage-access-permissions.status=Statws
-manage.account.manage-access-permissions.status-opted-in=Wedi’i droi ymlaen
-manage.account.manage-access-permissions.status-opted-out=Wedi’i droi i ffwrdd
+
+manage.account.manage-access-permissions.status.opted.in=Wedi’i droi ymlaen
+manage.account.manage-access-permissions.status.opted.out=Wedi’i droi i ffwrdd
 
 manage.account.manage-access-permissions.inset-text.Opted-In_NOT_READY=Rydych wedi ychwanegu cleientiaid newydd, ond mae angen i chi aros nes bod manylion eich cleientiaid yn barod i’w defnyddio gyda’r grwpiau mynediad. Byddwch yn cael e-bost cadarnhau, ac ar ôl hynny gallwch ddechrau defnyddio’r grwpiau mynediad.
-manage.account.manage-access-permissions.inset-text.Opted-Out_WRONG_CLIENT_COUNT=I ddefnyddio’r grwpiau mynediad, mae angen i chi fod â mwy nag un cleient a llai na {0} o gleientiaid yn eich cyfrif gwasanaethau asiant.
-manage.account.manage-access-permissions.inset-text.Opted-Out_SINGLE_USER=I ddefnyddio’r grwpiau mynediad, mae angen i chi ychwanegu rhagor o aelodau’r tîm at eich cyfrif gwasanaethau asiant o dan ‘Rheoli aelodau’r tîm’ isod.
+manage.account.manage-access-permissions.inset-text.OptedOutWrongClientCount=I ddefnyddio’r grwpiau mynediad, mae angen i chi fod â mwy nag un cleient a llai na {0} o gleientiaid yn eich cyfrif gwasanaethau asiant.
+manage.account.manage-access-permissions.inset-text.OptedOutSingleUser=I ddefnyddio’r grwpiau mynediad, mae angen i chi ychwanegu rhagor o aelodau’r tîm at eich cyfrif gwasanaethau asiant o dan ‘Rheoli aelodau’r tîm’ isod.
 manage.account.manage-access-permissions.inset-text.Opted-In_SINGLE_USER=I ddefnyddio’r grwpiau mynediad, mae angen i chi ychwanegu rhagor o aelodau’r tîm at eich cyfrif gwasanaethau asiant o dan ‘Rheoli aelodau’r tîm’ isod.
 
 manage.account.manage-access-permissions.access-groups.hint=Mae grwpiau mynediad yn caniatáu i chi reoli pa aelodau’r tîm all fwrw golwg dros faterion treth pob cleient, a’u rheoli.
 manage.account.manage-access-permissions.access-groups.create-new=Creu grŵp mynediad newydd
 manage.account.manage-access-permissions.access-groups.manage=Rheoli grwpiau mynediad
-manage.account.manage-access-permissions.access-groups.optin=Galluogi grwpiau mynediad
 
-manage.account.manage-access-permissions.settings.optout=Analluogi grwpiau mynediad
+manage.account.manage-access-permissions.access-groups.OptedOutEligible=Galluogi grwpiau mynediad
+manage.account.manage-access-permissions.access-groups.OptedInReady=Analluogi grwpiau mynediad
+manage.account.manage-access-permissions.access-groups.OptedInNotReady=Analluogi grwpiau mynediad
 
 manage.account.clients.heading=Cleientiaid
 manage.account.clients.p=Bwrw golwg dros fanylion y cleient, diweddaru cyfeirnod y cleient a gweld pa grwpiau y mae’r cleient yn rhan ohonynt.

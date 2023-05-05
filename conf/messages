@@ -128,20 +128,22 @@ your.account.your.contact.details.a=View the contact details we have for your bu
 manage.account.h1=Manage account
 manage.account.manage-access-permissions.heading=Manage access groups
 manage.account.manage-access-permissions.status=Status
-manage.account.manage-access-permissions.status-opted-in=Turned on
-manage.account.manage-access-permissions.status-opted-out=Turned off
 
-manage.account.manage-access-permissions.inset-text.Opted-In_NOT_READY=You have added new clients but need to wait until your client details are ready to use with access groups. You will receive a confirmation email after which you can start using access groups.
-manage.account.manage-access-permissions.inset-text.Opted-Out_WRONG_CLIENT_COUNT=To use access groups you need to have more than one client and fewer than {0} clients in your agent services account.
-manage.account.manage-access-permissions.inset-text.Opted-Out_SINGLE_USER=To use access groups you need to add more team members to your agent services account under ‘Manage team members’ below.
-manage.account.manage-access-permissions.inset-text.Opted-In_SINGLE_USER=To use access groups you need to add more team members to your agent services account under ‘Manage team members’ below.
+manage.account.manage-access-permissions.status.opted.in=Turned on
+manage.account.manage-access-permissions.status.opted.out=Turned off
+
+manage.account.manage-access-permissions.inset-text.OptedInNotReady=You have added new clients but need to wait until your client details are ready to use with access groups. You will receive a confirmation email after which you can start using access groups.
+manage.account.manage-access-permissions.inset-text.OptedOutWrongClientCount=To use access groups you need to have more than one client and fewer than {0} clients in your agent services account.
+manage.account.manage-access-permissions.inset-text.OptedOutSingleUser=To use access groups you need to add more team members to your agent services account under ‘Manage team members’ below.
+manage.account.manage-access-permissions.inset-text.OptedInSingleUser=To use access groups you need to add more team members to your agent services account under ‘Manage team members’ below.
 
 manage.account.manage-access-permissions.access-groups.hint=Access groups allow you to control which team members can view and manage each client’s tax affairs.
 manage.account.manage-access-permissions.access-groups.create-new=Create new access group
 manage.account.manage-access-permissions.access-groups.manage=Manage access groups
-manage.account.manage-access-permissions.access-groups.optin=Turn on access groups
 
-manage.account.manage-access-permissions.settings.optout=Turn off access groups
+manage.account.manage-access-permissions.access-groups.OptedOutEligible=Turn on access groups
+manage.account.manage-access-permissions.access-groups.OptedInReady=Turn off access groups
+manage.account.manage-access-permissions.access-groups.OptedInNotReady=Turn off access groups
 
 manage.account.clients.heading=Clients
 manage.account.clients.p=View client details, update client reference and see what groups a client is in.

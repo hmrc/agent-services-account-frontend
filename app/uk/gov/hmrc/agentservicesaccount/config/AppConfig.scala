@@ -20,9 +20,11 @@ import com.google.inject.{Inject, Singleton}
 import play.api.i18n.Lang
 import play.api.mvc.Call
 import play.api.{Configuration, Environment, Logging, Mode}
+import uk.gov.hmrc.agents.accessgroups.optin.{OptedInNotReady, OptedOutEligible, OptinStatus}
 import uk.gov.hmrc.agentservicesaccount.controllers.routes
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import views.html.helper.urlEncode
+
 import scala.concurrent.duration.Duration
 
 @Singleton
@@ -147,6 +149,13 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
 
   val agentPermissionsOptInUrl = s"$agentPermissionsFrontendExternalUrl$agentPermissionsFrontendOptInPath"
   val agentPermissionsOptOutUrl = s"$agentPermissionsFrontendExternalUrl$agentPermissionsFrontendOptOutPath"
+  def getOptinInOrOutUrl(status: OptinStatus) = {
+    status match {
+      case OptedOutEligible => agentPermissionsOptInUrl
+      case OptedInNotReady => agentPermissionsOptOutUrl
+      case _ => throw new IllegalArgumentException("Invalid OptinStatus")
+    }
+  }
   val agentPermissionsCreateAccessGroupUrl = s"$agentPermissionsFrontendExternalUrl$agentPermissionsFrontendGroupsCreatePath"
   val agentPermissionsManageAccessGroupsUrl = s"$agentPermissionsFrontendExternalUrl$agentPermissionsFrontendManageAccessGroupsPath"
   val agentPermissionsUnassignedClientsUrl = s"$agentPermissionsFrontendExternalUrl$agentPermissionsFrontendUnassignedClientsPath"

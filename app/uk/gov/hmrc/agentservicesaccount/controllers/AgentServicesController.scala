@@ -25,9 +25,8 @@ import uk.gov.hmrc.agentservicesaccount.auth.CallOps._
 import uk.gov.hmrc.agentservicesaccount.auth.{AgentInfo, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AgentClientAuthorisationConnector, AgentPermissionsConnector, AgentUserClientDetailsConnector}
-import uk.gov.hmrc.agentservicesaccount.models.ManageAccessPermissionsConfig
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.{suspension_warning, manage_account, asa_dashboard, account_details, help}
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.assistant.{your_account, administrators}
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.assistant.{administrators, your_account}
+import uk.gov.hmrc.agentservicesaccount.views.html.pages._
 import uk.gov.hmrc.http.HeaderCarrier
 
 import javax.inject._
@@ -121,13 +120,13 @@ class AgentServicesController @Inject()
                 hasAnyGroups = mGroups.exists(_.groups.nonEmpty)
               } yield {
                 maybeOptinStatus.foreach(syncEacdIfOptedIn(agentInfo.arn, _))
-                Ok(manage_account(maybeOptinStatus.map(ManageAccessPermissionsConfig(_, hasAnyGroups))))
+                Ok(manage_account(maybeOptinStatus, hasAnyGroups))
               }
             case false =>
-              Future successful Ok(manage_account(None))
+              Future successful Ok(manage_account())
           }
         } else {
-          Future.successful(Ok(manage_account(None)))
+          Future.successful(Ok(manage_account()))
         }
       } else {
         if (appConfig.granPermsEnabled) {
