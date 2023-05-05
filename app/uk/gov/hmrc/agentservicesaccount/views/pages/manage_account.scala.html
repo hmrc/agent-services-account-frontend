@@ -16,133 +16,87 @@
 
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.controllers.routes
-@import uk.gov.hmrc.agentservicesaccount.models.ManageAccessPermissionsConfig
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
+@import uk.gov.hmrc.agentservicesaccount.views.html.pages.manage._
+@import uk.gov.hmrc.agents.accessgroups.optin._
 
-@this(main: main, h1: h1, h2: h2, h3: h3, p: p, a: a,
-    span: span, link_as_button: link_as_button,
-    ul_html: ul_html, inset_text: inset_text)
+@this(
+    main: main, h1: h1, h2: h2, h3: h3, p: p, a: a, span: span,
+    link_as_button: link_as_button,
+    ul_html: ul_html, inset_text: inset_text,
+    maybe_inset_text: maybe_inset_text,
+    access_groups_section: access_groups_section,
+    clients: clients,
+    team_members: team_members,
+)
+@(
+    maybeOptinStatus: Option[OptinStatus] = None,
+    hasAnyGroups: Boolean = false
+)(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
 
-@(manageAccessPermissionsConfig: Option[ManageAccessPermissionsConfig])(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
+
+@maybeInsetMessage = @{
+    maybeOptinStatus.map(status => {
+        val messageKey = "manage.account.manage-access-permissions.inset-text." + status
+        val messageValue = msgs("manage.account.manage-access-permissions.inset-text." + status, appConfig.granPermsMaxClientCount)
+        if(messageKey.equals(messageValue)) null else messageValue
+    })
+}
+
+@isOptedIn(status: OptinStatus) = @{
+    status match {
+        case OptedInReady | OptedInNotReady | OptedInSingleUser => "in"
+        case _ => "out"
+    }
+}
 
 @main(pageTitle = msgs("manage.account.h1"), isAdmin = true, analyticsAdditionalJs = None) {
 
     @h1("manage.account.h1")
 
-    @if(appConfig.granPermsEnabled && manageAccessPermissionsConfig.isDefined) {
+    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+    @if(appConfig.granPermsEnabled && maybeOptinStatus.isDefined) {
+        @h2(key = "manage.account.manage-access-permissions.heading",
+            id = Some("manage-access-permissions-heading"))
+        @p("manage.account.manage-access-permissions.access-groups.hint")
 
-        @manageAccessPermissionsConfig.map { config =>
-
-            <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-
-            @h2(key = "manage.account.manage-access-permissions.heading",
-                id = Some("manage-access-permissions-heading")
-            )
-
-            @p("manage.account.manage-access-permissions.access-groups.hint")
-
-            <h3 class="govuk-heading-s" id="status-key">
-                @span("manage.account.manage-access-permissions.status")
-                <strong class="@config.statusClass" id="status-value">@msgs(config.status)</strong>
-            </h3>
-
-            @config.insetText.map { txt =>
-                @inset_text(msgs(txt, appConfig.granPermsMaxClientCount))
-            }
-
-            @if(config.accessGroups.nonEmpty) {
-                @if(config.accessGroups.size > 1) {
-                    @ul_html(items = config.accessGroups.map { link =>
-                        if (link.renderAsButton) {
-                            link_as_button(key = link.msgKey, href = link.href)
-                        } else {
-                            a(key = link.msgKey, href = link.href)
-                        }
-                    },
-                    classes = None)
-                } else {
-                    @defining(config.accessGroups(0)){ link =>
-                        @if(link.renderAsButton){
-                            @p(html = Some(Html(link_as_button(key = link.msgKey, href = link.href).toString)),
-                                id = Some("config-link")
-                            )
-                        }else{
-                            @p(html = Some(Html(a(key = link.msgKey, href = link.href).toString)),
-                                id = Some("config-link"))
-                        }
-                    }
-                }
-            }
-
-            <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-
-            @if(config.clients.nonEmpty){
-                @h2("manage.account.clients.heading")
-                @p(key = "manage.account.clients.p")
-
-                @ul_html(items = config.clients.map{ link =>
-                a(key = link.msgKey, href = link.href)
-                }, classes = None)
-
-                <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-            }
-
-            @h2("manage.account.team-members.heading")
-            @if(config.teamMembers){
-                @p(key = "manage.account.team-members.p")
-
-                @ul_html(
-                    items = Seq(
-                        a(key = "manage.account.team-members.manage-link",
-                            href = appConfig.agentPermissionsManageTeamMembersUrl),
-                        a(key = "manage.account.team-members.external-manage-link",
-                            href = appConfig.addUserUrl,
-                            openInNewWindow = true),
-                        a(key = "manage.account.manage-user-access",
-                            href = appConfig.manageUsersUrl,
-                            openInNewWindow = true)
-                        ),
-                    classes = None
+        @p(
+            id = Some("opt-in-status"),
+            html =
+                Some(
+                    Html(
+                        span("manage.account.manage-access-permissions.status",
+                            classes = Some("govuk-!-font-weight-bold govuk-!-margin-right-2 ")).toString() +
+                        span(msgs("manage.account.manage-access-permissions.status.opted." + isOptedIn(maybeOptinStatus.get)),
+                            id = Some("status-value")).toString()
+                    )
                 )
-            } else {
-                @ul_html(
-                    id= Some("manage-team-members"),
-                    items = Seq(
-                        a(key = "manage.account.team-members.external-manage-link",
-                            href = appConfig.addUserUrl,
-                            openInNewWindow = true),
-                        a("manage.account.manage-user-access",
-                            href = appConfig.manageUsersUrl,
-                            openInNewWindow = true),
-                    ),
-                    classes = None
-                )
-            }
-        }
-
-
-        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+        )
+        @maybe_inset_text(maybeOptinStatus)
+        @access_groups_section(maybeOptinStatus,hasAnyGroups)
+        @clients(maybeOptinStatus)
+        @team_members(maybeOptinStatus)
 
         <div id="contact-details">
             @h2("manage.account.contact-details.heading")
-
-            @p(html = Some(
-              a(href = routes.AgentServicesController.accountDetails.url,
-                  key = "manage.account.contact-details.view"
-                ))
+            @p(
+                html = Some(
+                    a(href = routes.AgentServicesController.accountDetails.url, key = "manage.account.contact-details.view")
+                )
             )
+            <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+
         </div>
+
+
 
     } else {
         @p("manage.account.p")
-        @ul_html(items =
-            Seq(
+        @ul_html(
+            items = Seq(
                 a("manage.account.add-user", href = appConfig.addUserUrl),
-                a("manage.account.manage-user-access",
-                    href = appConfig.manageUsersUrl,
-                    openInNewWindow = true),
-                a("manage.account.account-details",
-                    href = routes.AgentServicesController.accountDetails.url)
+                a("manage.account.manage-user-access", href = appConfig.manageUsersUrl, openInNewWindow = true),
+                a("manage.account.account-details", href = routes.AgentServicesController.accountDetails.url)
             )
         )
 
