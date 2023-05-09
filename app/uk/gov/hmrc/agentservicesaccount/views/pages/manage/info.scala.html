@@ -29,21 +29,24 @@
     }
 }
 
-@h2(
-    key = "manage.account.manage-access-permissions.heading",
-    id = Some("manage-access-permissions-heading")
-)
-@p("manage.account.manage-access-permissions.access-groups.hint")
+<section id="info-section">
+    @h2(
+        key = "manage.account.manage-access-permissions.heading",
+        id = Some("manage-access-permissions-heading")
+    )
 
-@p(
-    id = Some("opt-in-status"),
-    html =
-        Some(
-            Html(
-                span("manage.account.manage-access-permissions.status",
-                    classes = Some("govuk-!-font-weight-bold govuk-!-margin-right-2 ")).toString() +
-                        span(msgs("manage.account.manage-access-permissions.status.opted." + isOptedIn(optinStatus)),
-                            id = Some("status-value")).toString()
+    @p("manage.account.manage-access-permissions.access-groups.hint")
+
+    @p(
+        id = Some("opt-in-status"),
+        html =
+            Some(
+                Html(
+                    span("manage.account.manage-access-permissions.status",
+                        classes = Some("govuk-!-font-weight-bold govuk-!-margin-right-2 ")).toString() +
+                            span(msgs("manage.account.manage-access-permissions.status.opted." + isOptedIn(optinStatus)),
+                                id = Some("status-value")).toString()
+                )
             )
-        )
-)
+    )
+</section>

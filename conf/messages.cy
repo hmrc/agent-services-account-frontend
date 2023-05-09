@@ -124,7 +124,6 @@ your.account.your.contact.details.a=Bwrw golwg dros y manylion cyswllt sydd genn
 
 #Manage Account (gran_perms_enabled)
 manage.account.h1=Rheoli’r cyfrif
-manage.account.manage-access-permissions.heading=Rheoli grwpiau mynediad
 manage.account.manage-access-permissions.status=Statws
 
 manage.account.manage-access-permissions.status.opted.in=Wedi’i droi ymlaen
@@ -137,7 +136,7 @@ manage.account.manage-access-permissions.inset-text.Opted-In_SINGLE_USER=I ddefn
 
 manage.account.manage-access-permissions.access-groups.hint=Mae grwpiau mynediad yn caniatáu i chi reoli pa aelodau’r tîm all fwrw golwg dros faterion treth pob cleient, a’u rheoli.
 manage.account.manage-access-permissions.access-groups.create-new=Creu grŵp mynediad newydd
-manage.account.manage-access-permissions.access-groups.manage=Rheoli grwpiau mynediad
+manage.account.manage-access-permissions.heading=Grwpiau mynediad
 
 manage.account.manage-access-permissions.access-groups.OptedOutEligible=Galluogi grwpiau mynediad
 manage.account.manage-access-permissions.access-groups.OptedInReady=Analluogi grwpiau mynediad
@@ -146,11 +145,10 @@ manage.account.manage-access-permissions.access-groups.OptedInNotReady=Analluogi
 manage.account.clients.heading=Cleientiaid
 manage.account.clients.p=Bwrw golwg dros fanylion y cleient, diweddaru cyfeirnod y cleient a gweld pa grwpiau y mae’r cleient yn rhan ohonynt.
 manage.account.clients.manage-link=Rheoli cleientiaid
-manage.account.clients.unassigned-link=Cleientiaid sydd heb eu neilltuo
+manage.account.clients.unassigned-link=Cleientiaid nad ydynt mewn unrhyw grwpiau
 
-manage.account.team-members.heading=Aelodau tîm
 manage.account.team-members.p=Bwrw golwg dros fanylion aelod y tîm a gweld pa grwpiau y mae aelod y tîm yn rhan ohonynt.
-manage.account.team-members.manage-link=Rheoli aelodau o’r tîm
+manage.account.manage-team-members.heading=Rheoli aelodau’r tîm ar eich cyfrif gwasanaethau asiant
 manage.account.team-members.external-manage-link=Ychwanegu neu ddileu aelodau’r tîm (yn agor tab newydd)
 
 manage.account.contact-details.heading=Manylion cyswllt

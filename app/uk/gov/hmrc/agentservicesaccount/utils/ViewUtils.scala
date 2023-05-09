@@ -17,12 +17,20 @@
 package uk.gov.hmrc.agentservicesaccount.utils
 
 import play.api.i18n.Messages
+import uk.gov.hmrc.agents.accessgroups.optin.{OptedInNotReady, OptedInReady, OptedInSingleUser, OptinStatus}
 
 object ViewUtils {
 
   def withErrorPrefix(hasFormErrors: Boolean, str: String)(implicit mgs: Messages): String = {
     val errorPrefix = if(hasFormErrors) { mgs("error-prefix") + " "} else {""}
     errorPrefix.concat(mgs(str))
+  }
+
+  def isOptedIn(optinStatus: OptinStatus): Boolean = {
+    optinStatus match {
+      case OptedInReady | OptedInNotReady | OptedInSingleUser => true
+      case _ => false
+    }
   }
 
 }

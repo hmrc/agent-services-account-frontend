@@ -23,16 +23,19 @@
 
 @if(OptedInReady.equals(optinStatus)) {
 
-    @h2("manage.account.clients.heading")
-    @p(key = "manage.account.clients.p")
+    <section id="manage-clients-section">
+        @h2("manage.account.clients.heading")
+        @p(key = "manage.account.clients.p")
 
-    @ul_html(
-        items = List(
-            a(key = "manage.account.clients.manage-link", href = appConfig.agentPermissionsManageClientUrl),
-            a(key = "manage.account.clients.unassigned-link", href = appConfig.agentPermissionsUnassignedClientsUrl)
+        @ul_html(
+            items = List(
+                a(key = "manage.account.clients.manage-link", href = appConfig.agentPermissionsManageClientUrl),
+                a(key = "manage.account.clients.unassigned-link", href = appConfig.agentPermissionsUnassignedClientsUrl)
+            ),
+            liClasses = Some("govuk-!-margin-bottom-4")
         )
-    )
 
-    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+    </section>
 }
 
