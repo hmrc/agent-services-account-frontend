@@ -112,7 +112,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       givenAgentRecordNotFound
 
 
-      intercept[SuspensionDetailsNotFound]{
+      intercept[SuspensionDetailsNotFound] {
         await(controller.root()(fakeRequest()))
       }
     }
@@ -159,15 +159,15 @@ class AgentServicesControllerSpec extends BaseISpec {
 
       def expectedClientAuthContent(html: Document, betaInviteContent: Boolean = true): Assertion = {
         expectedH2(html, "Client authorisations")
-        html.select(paragraphs).get(if(betaInviteContent) 2 else 0).text shouldBe "You must ask your client to authorise you through your agent services account before you can access any services. Copy across an old authorisation or create a new one."
+        html.select(paragraphs).get(if (betaInviteContent) 2 else 0).text shouldBe "You must ask your client to authorise you through your agent services account before you can access any services. Copy across an old authorisation or create a new one."
         expectTextForElement(html.select(LI).get(0), "Ask a client to authorise you")
-        assertAttributeValueForElement(html.select(link).get(if(betaInviteContent) 1 else 0), attributeValue = "http://localhost:9448/invitations/agents")
+        assertAttributeValueForElement(html.select(link).get(if (betaInviteContent) 1 else 0), attributeValue = "http://localhost:9448/invitations/agents")
         expectTextForElement(html.select(LI).get(1), "Manage your authorisation requests from the last 30 days")
-        assertAttributeValueForElement(html.select(link).get(if(betaInviteContent) 2 else 1), attributeValue = "http://localhost:9448/invitations/track")
+        assertAttributeValueForElement(html.select(link).get(if (betaInviteContent) 2 else 1), attributeValue = "http://localhost:9448/invitations/track")
         expectTextForElement(html.select(LI).get(2), "Copy across more VAT and Self Assessment client authorisations")
-        assertAttributeValueForElement(html.select(link).get(if(betaInviteContent) 3 else 2), attributeValue = "http://localhost:9438/agent-mapping/start")
+        assertAttributeValueForElement(html.select(link).get(if (betaInviteContent) 3 else 2), attributeValue = "http://localhost:9438/agent-mapping/start")
         expectTextForElement(html.select(LI).get(3), "Cancel a client’s authorisation")
-        assertAttributeValueForElement(html.select(link).get(if(betaInviteContent) 4 else 3), attributeValue = "http://localhost:9448/invitations/agents/cancel-authorisation/client-type")
+        assertAttributeValueForElement(html.select(link).get(if (betaInviteContent) 4 else 3), attributeValue = "http://localhost:9448/invitations/agents/cancel-authorisation/client-type")
       }
 
       "an authorised agent with no suspension" in {
@@ -216,7 +216,7 @@ class AgentServicesControllerSpec extends BaseISpec {
         p.get(7).select("a").text shouldBe "You must first get an authorisation from your client."
         p.get(7).select("a").attr("href") shouldBe "http://localhost:9448/invitations/agents/client-type"
 
-//        a.get(10).attr("href") shouldBe "https://www.gov.uk/guidance/sign-up-for-making-tax-digital-for-vat"
+        //        a.get(10).attr("href") shouldBe "https://www.gov.uk/guidance/sign-up-for-making-tax-digital-for-vat"
         expectedH4(html, "Manage your client’s VAT", 3)
         a.get(11).text shouldBe "Register your client for VAT (opens in a new tab)"
         a.get(11).attr("href") shouldBe "https://www.tax.service.gov.uk/register-for-vat"
@@ -404,16 +404,66 @@ class AgentServicesControllerSpec extends BaseISpec {
     }
   }
 
+  def verifyContactSection(html: Document) = {
+    val contactDetailsSection = html.select("#contact-details")
+    contactDetailsSection.select("h2").text shouldBe "Contact details"
+    contactDetailsSection.select("p a").text shouldBe "View the contact details we have for your business"
+    contactDetailsSection.select("p a").attr("href") shouldBe "/agent-services-account/account-details"
+  }
+
+  def verifyClientsSectionNotPresent(html: Document) = {
+    html.select("section#manage-clients-section").isEmpty shouldBe true
+  }
+  def verifyClientsSection(html: Document) = {
+    val manageClientsSection = html.select("section#manage-clients-section")
+    manageClientsSection.select("h2").text shouldBe "Clients"
+    manageClientsSection.select("p").text shouldBe "View client details, update client reference and see what groups a client is in."
+    val clientLinksList = manageClientsSection.select("ul li")
+    clientLinksList.get(0).select("a").text shouldBe "Manage clients"
+    clientLinksList.get(0).select("a").attr("href") shouldBe s"http://localhost:$wireMockPort/agent-permissions/manage-clients"
+    clientLinksList.get(1).select("a").text shouldBe "Clients who are not in any groups"
+    clientLinksList.get(1).select("a").attr("href") shouldBe s"http://localhost:$wireMockPort/agent-permissions/unassigned-clients"
+
+  }
+
+  def verifyManageTeamMembersSection(html: Document) = {
+    val manageTeamSection = html.select("#manage-team-members-section")
+    manageTeamSection.select("h2").text shouldBe "Manage team members’ access groups"
+    manageTeamSection.select("a").text shouldBe "Manage team members’ access groups"
+  }
+
+  def verifyHowToManageSection(html: Document) = {
+    val howToManageSection = html.select("#how-to-manage-team-members-section")
+    howToManageSection.select("h2").text shouldBe "Manage team members on your agent services account"
+    howToManageSection.select(Css.detailsSummary).text() shouldBe "How to add or remove team members"
+    howToManageSection.select(Css.detailsText).text() shouldBe "Use the link in this section to create a new Government Gateway user ID for your team members. These IDs will be linked to the agent services account. Once your team members have verified their new IDs, you can give them access to the account. You can also remove a team member’s access using the same link."
+
+    val howToManageList = howToManageSection.select("ul li")
+    howToManageList.get(0).select("a").text shouldBe "Create Government Gateway user IDs for team members (opens in new tab)"
+    howToManageList.get(0).select("a").attr("href") shouldBe s"http://localhost:1111/user-profile-redirect-frontend/group-profile-management"
+    howToManageList.get(1).select("a").text shouldBe "Manage team member access to your agent services account (opens in new tab)"
+    howToManageList.get(1).select("a").attr("href") shouldBe s"http://localhost:1111/tax-and-scheme-management/users?origin=Agent"
+  }
+
+  def verifyInfoSection(html: Document, status: String = "on") = {
+    val infoSection = html.select("#info-section")
+    infoSection.select("h2").text shouldBe "Access groups"
+    infoSection.select("p").get(0).text.shouldBe("Access groups allow you to restrict which team members can manage a client’s tax.")
+    infoSection.select("p").get(1).text.shouldBe(s"Status Turned $status")
+    html.select("#opt-in-status").text shouldBe s"Status Turned $status"
+    html.select("#opt-in-status").select("#status-value").text shouldBe s"Turned $status"
+  }
+
   "manage-account" should {
 
     val manageAccountTitle = "Manage account - Agent services account - GOV.UK"
 
     "return Status: OK and body containing correct content when gran perms FF disabled" in {
 
-          val controllerWithGranPermsDisabled =
-            appBuilder(Map("features.enable-gran-perms" -> false))
-              .build()
-              .injector.instanceOf[AgentServicesController]
+      val controllerWithGranPermsDisabled =
+        appBuilder(Map("features.enable-gran-perms" -> false))
+          .build()
+          .injector.instanceOf[AgentServicesController]
 
       givenAuthorisedAsAgentWith(arn)
       val response = controllerWithGranPermsDisabled.manageAccount().apply(fakeRequest("GET", "/manage-account"))
@@ -478,7 +528,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       status(response) shouldBe 200
 
       val html = Jsoup.parse(contentAsString(response))
-      
+
       val h2 = html.select(H2)
 
       val li = html.select(Css.LI)
@@ -486,34 +536,23 @@ class AgentServicesControllerSpec extends BaseISpec {
 
       html.title() shouldBe manageAccountTitle
       html.select(H1).get(0).text shouldBe "Manage account"
-      h2.get(0).text shouldBe "Manage access groups"
+      h2.get(0).text shouldBe "Access groups"
       html.select("#opt-in-status").text shouldBe "Status Turned on"
       html.select("#opt-in-status").select("#status-value").text shouldBe "Turned on"
 
       paragraphs.get(0).text
-        .shouldBe("Access groups allow you to control which team members can view and manage each client’s tax affairs.")
+        .shouldBe("Access groups allow you to restrict which team members can manage a client’s tax.")
       li.get(0).child(0).text shouldBe "Create new access group"
-      li.get(0).child(0).hasClass("govuk-button") shouldBe true
+      li.get(0).child(0).hasClass("govuk-button") shouldBe false
       li.get(0).child(0).attr("href") shouldBe s"http://localhost:$wireMockPort/agent-permissions/create-group/select-group-type"
       li.get(1).child(0).text shouldBe "Manage access groups"
       li.get(1).child(0).attr("href") shouldBe s"http://localhost:$wireMockPort/agent-permissions/manage-access-groups"
       li.get(2).child(0).text shouldBe "Turn off access groups"
       li.get(2).child(0).attr("href") shouldBe s"http://localhost:$wireMockPort/agent-permissions/turn-off-guide"
-      h2.get(1).text shouldBe "Clients"
-      li.get(3).child(0).text shouldBe "Manage clients"
-      li.get(4).child(0).text shouldBe "Unassigned clients"
-      h2.get(2).text shouldBe "Team members"
-      li.get(5).child(0).text shouldBe "Manage team members"
-      li.get(5).child(0).attr("href") shouldBe s"http://localhost:$wireMockPort/agent-permissions/manage-team-members"
-      li.get(6).child(0).text shouldBe "Add or remove team members (opens in a new tab)"
-      li.get(6).child(0).attr("href") shouldBe "http://localhost:1111/user-profile-redirect-frontend/group-profile-management"
-      li.get(7).child(0).text shouldBe "Manage user access to your agent services account (opens in a new tab)"
-      li.get(7).child(0).attr("href") shouldBe s"http://localhost:1111/tax-and-scheme-management/users?origin=Agent"
 
-      h2.get(3).text shouldBe "Contact details"
-      paragraphs.get(4).child(0).text shouldBe "View the contact details we have for your business"
-      paragraphs.get(4).child(0).attr("href") shouldBe "/agent-services-account/account-details"
-
+      verifyClientsSection(html)
+      verifyHowToManageSection(html)
+      verifyContactSection(html)
     }
 
     "return status: OK and body containing content for status Opted-In_READY (access groups already created)" in {
@@ -529,40 +568,25 @@ class AgentServicesControllerSpec extends BaseISpec {
 
       val html = Jsoup.parse(contentAsString(response))
       val li = html.select(Css.LI)
-      
+
       val h2 = html.select(H2)
       val paragraphs = html.select(Css.paragraphs)
 
       html.title() shouldBe manageAccountTitle
       html.select(H1).get(0).text shouldBe "Manage account"
-      h2.get(0).text shouldBe "Manage access groups"
+      h2.get(0).text shouldBe "Access groups"
       html.select("#opt-in-status").text shouldBe "Status Turned on"
       html.select("#opt-in-status").select("#status-value").text shouldBe "Turned on"
 
       paragraphs.get(0).text
-        .shouldBe("Access groups allow you to control which team members can view and manage each client’s tax affairs.")
+        .shouldBe("Access groups allow you to restrict which team members can manage a client’s tax.")
 
       li.get(0).child(0).text shouldBe "Create new access group"
       li.get(0).child(0).hasClass("govuk-button") shouldBe false
 
-      h2.get(1).text shouldBe "Clients"
-
-      paragraphs.get(2).text shouldBe "View client details, update client reference and see what groups a client is in."
-      li.get(3).child(0).text shouldBe "Manage clients"
-      li.get(3).child(0).attr("href") shouldBe s"http://localhost:$wireMockPort/agent-permissions/manage-clients"
-      li.get(4).child(0).text shouldBe "Unassigned clients"
-      li.get(4).child(0).attr("href") shouldBe s"http://localhost:$wireMockPort/agent-permissions/unassigned-clients"
-
-      // TODO - should move these into method checks eg. pageWithTeamMembersSectionContent(html)
-      h2.get(2).text shouldBe "Team members"
-      paragraphs.get(3).text shouldBe "View team member details and see what groups a team member is in."
-      li.get(5).child(0).text shouldBe "Manage team members"
-      li.get(5).child(0).attr("href") shouldBe s"http://localhost:$wireMockPort/agent-permissions/manage-team-members"
-      li.get(6).child(0).text shouldBe "Add or remove team members (opens in a new tab)"
-      li.get(6).child(0).attr("href") shouldBe "http://localhost:1111/user-profile-redirect-frontend/group-profile-management"
-
-      li.get(7).child(0).text shouldBe "Manage user access to your agent services account (opens in a new tab)"
-      li.get(7).child(0).attr("href") shouldBe s"http://localhost:1111/tax-and-scheme-management/users?origin=Agent"
+      verifyClientsSection(html)
+      verifyManageTeamMembersSection(html)
+      verifyHowToManageSection(html)
 
     }
 
@@ -578,38 +602,16 @@ class AgentServicesControllerSpec extends BaseISpec {
       status(response) shouldBe 200
 
       val html = Jsoup.parse(contentAsString(response))
-      
-      val h2 = html.select(H2)
-
-      val li = html.select(Css.LI)
-      val paragraphs = html.select(Css.paragraphs)
-
       html.title() shouldBe manageAccountTitle
       html.select(H1).get(0).text shouldBe "Manage account"
-      h2.get(0).text shouldBe "Manage access groups"
-      paragraphs.get(0).text
-        .shouldBe("Access groups allow you to control which team members can view and manage each client’s tax affairs.")
       html.select(Css.insetText).get(0).text
         .shouldBe("You have added new clients but need to wait until your client details are ready to use with access groups. You will receive a confirmation email after which you can start using access groups.")
 
-      html.select("#opt-in-status").text shouldBe "Status Turned on"
-      html.select("#opt-in-status").select("#status-value").text shouldBe "Turned on"
-
-      html.select("p#config-link a").text shouldBe "Turn off access groups"
-      html.select("p#config-link a").attr("href") shouldBe s"http://localhost:$wireMockPort/agent-permissions/turn-off-guide"
-
-      h2.get(1).text shouldBe "Team members"
-      paragraphs.get(3).text shouldBe "View team member details and see what groups a team member is in."
-      li.get(0).child(0).text shouldBe "Manage team members"
-      li.get(0).child(0).attr("href") shouldBe s"http://localhost:$wireMockPort/agent-permissions/manage-team-members"
-      li.get(1).child(0).text shouldBe "Add or remove team members (opens in a new tab)"
-      li.get(1).child(0).attr("href") shouldBe "http://localhost:1111/user-profile-redirect-frontend/group-profile-management"
-      li.get(2).child(0).text shouldBe "Manage user access to your agent services account (opens in a new tab)"
-      li.get(2).child(0).attr("href") shouldBe s"http://localhost:1111/tax-and-scheme-management/users?origin=Agent"
-
-      h2.get(2).text shouldBe "Contact details"
-      paragraphs.get(4).child(0).text shouldBe "View the contact details we have for your business"
-      paragraphs.get(4).child(0).attr("href") shouldBe "/agent-services-account/account-details"
+      verifyInfoSection(html, "on")
+      verifyManageTeamMembersSection(html)
+      verifyHowToManageSection(html)
+      verifyContactSection(html)
+      verifyClientsSectionNotPresent(html)
 
     }
 
@@ -625,35 +627,18 @@ class AgentServicesControllerSpec extends BaseISpec {
       status(response) shouldBe 200
 
       val html = Jsoup.parse(contentAsString(response))
-      
-      val h2 = html.select(H2)
-      val paragraphs = html.select(Css.paragraphs)
-      val li = html.select(Css.LI)
 
       html.title() shouldBe manageAccountTitle
       html.select(H1).get(0).text shouldBe "Manage account"
-      h2.get(0).text shouldBe "Manage access groups"
 
-      html.select("#opt-in-status").text shouldBe "Status Turned on"
-      html.select("#opt-in-status").select("#status-value").text shouldBe "Turned on"
-
-      paragraphs.get(0).text
-        .shouldBe("Access groups allow you to control which team members can view and manage each client’s tax affairs.")
       html.select(Css.insetText).get(0).text
         .shouldBe("To use access groups you need to add more team members to your agent services account under ‘Manage team members’ below.")
-      h2.get(1).text shouldBe "Team members"
-      paragraphs.get(2).text shouldBe "View team member details and see what groups a team member is in."
-      li.get(0).child(0).text shouldBe "Manage team members"
-      li.get(0).child(0).attr("href") shouldBe s"http://localhost:$wireMockPort/agent-permissions/manage-team-members"
-      li.get(1).child(0).text shouldBe "Add or remove team members (opens in a new tab)"
-      li.get(1).child(0).attr("href") shouldBe "http://localhost:1111/user-profile-redirect-frontend/group-profile-management"
-      li.get(2).child(0).text shouldBe "Manage user access to your agent services account (opens in a new tab)"
-      li.get(2).child(0).attr("href") shouldBe s"http://localhost:1111/tax-and-scheme-management/users?origin=Agent"
 
-      h2.get(2).text shouldBe "Contact details"
-      paragraphs.get(3).child(0).text shouldBe "View the contact details we have for your business"
-      paragraphs.get(3).child(0).attr("href") shouldBe "/agent-services-account/account-details"
-
+      verifyInfoSection(html, "on")
+      verifyManageTeamMembersSection(html)
+      verifyClientsSectionNotPresent(html)
+      verifyHowToManageSection(html)
+      verifyContactSection(html)
     }
 
     "return status: OK and body containing content for status Opted-Out_WRONG_CLIENT_COUNT" in {
@@ -668,31 +653,17 @@ class AgentServicesControllerSpec extends BaseISpec {
       status(response) shouldBe 200
 
       val html = Jsoup.parse(contentAsString(response))
-      
-      val h2 = html.select(H2)
-      val paragraphs = html.select(Css.paragraphs)
-      val li = html.select(Css.LI)
 
       html.title() shouldBe manageAccountTitle
       html.select(H1).get(0).text shouldBe "Manage account"
-      h2.get(0).text shouldBe "Manage access groups"
-      paragraphs.get(0).text
-        .shouldBe("Access groups allow you to control which team members can view and manage each client’s tax affairs.")
+
       html.select(Css.insetText).get(0).text
         .shouldBe("To use access groups you need to have more than one client and fewer than 100,000 clients in your agent services account.")
-      
-      html.select("#opt-in-status").text shouldBe "Status Turned off"
-      html.select("#opt-in-status").select("#status-value").text shouldBe "Turned off"
 
-      h2.get(1).text shouldBe "Team members"
-      li.get(0).child(0).text shouldBe "Add or remove team members (opens in a new tab)"
-      li.get(0).child(0).attr("href") shouldBe "http://localhost:1111/user-profile-redirect-frontend/group-profile-management"
-      li.get(1).child(0).text shouldBe "Manage user access to your agent services account (opens in a new tab)"
-      li.get(1).child(0).attr("href") shouldBe s"http://localhost:1111/tax-and-scheme-management/users?origin=Agent"
-
-      h2.get(2).text shouldBe "Contact details"
-      paragraphs.get(2).child(0).text shouldBe "View the contact details we have for your business"
-      paragraphs.get(2).child(0).attr("href") shouldBe "/agent-services-account/account-details"
+      verifyInfoSection(html, "off")
+      verifyHowToManageSection(html)
+      verifyClientsSectionNotPresent(html)
+      verifyContactSection(html)
 
     }
 
@@ -708,33 +679,16 @@ class AgentServicesControllerSpec extends BaseISpec {
       status(response) shouldBe 200
 
       val html = Jsoup.parse(contentAsString(response))
-      
-      val h2 = html.select(H2)
-
-      val paragraphs = html.select(Css.paragraphs)
-      val li = html.select(Css.LI)
-
       html.title() shouldBe manageAccountTitle
       html.select(H1).get(0).text shouldBe "Manage account"
-      h2.get(0).text shouldBe "Manage access groups"
 
-      html.select("#opt-in-status").text shouldBe "Status Turned off"
-      html.select("#opt-in-status").select("#status-value").text shouldBe "Turned off"
-
-      paragraphs.get(0).text
-        .shouldBe("Access groups allow you to control which team members can view and manage each client’s tax affairs.")
       html.select(Css.insetText).get(0).text
         .shouldBe("To use access groups you need to add more team members to your agent services account under ‘Manage team members’ below.")
 
-      h2.get(1).text shouldBe "Team members"
-      li.get(0).child(0).text shouldBe "Add or remove team members (opens in a new tab)"
-      li.get(0).child(0).attr("href") shouldBe "http://localhost:1111/user-profile-redirect-frontend/group-profile-management"
-      li.get(1).child(0).text shouldBe "Manage user access to your agent services account (opens in a new tab)"
-      li.get(1).child(0).attr("href") shouldBe s"http://localhost:1111/tax-and-scheme-management/users?origin=Agent"
-
-      h2.get(2).text shouldBe "Contact details"
-      paragraphs.get(2).child(0).text shouldBe "View the contact details we have for your business"
-      paragraphs.get(2).child(0).attr("href") shouldBe "/agent-services-account/account-details"
+      verifyInfoSection(html, "off")
+      verifyHowToManageSection(html)
+      verifyContactSection(html)
+      verifyClientsSectionNotPresent(html)
 
     }
 
@@ -750,34 +704,10 @@ class AgentServicesControllerSpec extends BaseISpec {
       status(response) shouldBe 200
 
       val html = Jsoup.parse(contentAsString(response))
-      
-      val h2 = html.select(H2)
 
-      val paragraphs = html.select(Css.paragraphs)
-      val li = html.select(Css.LI)
-
-      html.title() shouldBe manageAccountTitle
-      html.select(H1).get(0).text shouldBe "Manage account"
-      h2.get(0).text shouldBe "Manage access groups"
-      paragraphs.get(0).text
-        .shouldBe("Access groups allow you to control which team members can view and manage each client’s tax affairs.")
-
-      html.select("#opt-in-status").text shouldBe "Status Turned off"
-      html.select("#opt-in-status").select("#status-value").text shouldBe "Turned off"
-      html.select("p#config-link a").text shouldBe "Turn on access groups"
-      html.select("p#config-link a").attr("href") shouldBe s"http://localhost:$wireMockPort/agent-permissions/turn-on-guide"
-
-      h2.get(1).text shouldBe "Team members"
-      li.get(0).child(0).text shouldBe "Add or remove team members (opens in a new tab)"
-      li.get(0).child(0).attr("href") shouldBe "http://localhost:1111/user-profile-redirect-frontend/group-profile-management"
-      li.get(1).child(0).text shouldBe "Manage user access to your agent services account (opens in a new tab)"
-      li.get(1).child(0).attr("href") shouldBe s"http://localhost:1111/tax-and-scheme-management/users?origin=Agent"
-
-      val contactDetails = html.select("div#contact-details")
-      contactDetails.select("h2").text shouldBe "Contact details"
-      contactDetails.select("p a").text shouldBe "View the contact details we have for your business"
-      contactDetails.select("p a").attr("href") shouldBe "/agent-services-account/account-details"
-
+      verifyInfoSection(html, "off")
+      verifyHowToManageSection(html)
+      verifyClientsSectionNotPresent(html)
     }
   }
 
@@ -924,7 +854,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       status(response) shouldBe 200
 
       val html = Jsoup.parse(contentAsString(response))
-      
+
       html.title() shouldBe "Your account - Agent services account - GOV.UK"
       html.select(H1).get(0).text shouldBe "Your account"
       html.select(secondaryNavLinks).get(1).text shouldBe "Your account"

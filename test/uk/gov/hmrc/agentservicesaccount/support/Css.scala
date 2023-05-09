@@ -28,6 +28,8 @@ object Css {
   val PRE_H1 = "main .govuk-caption-l"
   val paragraphs = "main p"
   val insetText = "div.govuk-inset-text"
+  val detailsSummary = "details.govuk-details .govuk-details__summary-text"
+  val detailsText = "details.govuk-details .govuk-details__text"
   val summaryListKeys = "dl.govuk-summary-list .govuk-summary-list__key"
   val summaryListValues = "dl.govuk-summary-list .govuk-summary-list__value"
   def errorSummaryForField(id: String): String = {

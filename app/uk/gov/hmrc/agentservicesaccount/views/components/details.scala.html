@@ -14,18 +14,18 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-@import uk.gov.hmrc.agentservicesaccount.controllers.routes
+@import uk.gov.hmrc.govukfrontend.views.Aliases.Details
+@import uk.gov.hmrc.govukfrontend.views.html.components.GovukDetails
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 
-@this(p: p, h2: h2, a: a)
+@this(govukDetails: GovukDetails)
 
-@()(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
-<section id="contact-details">
-    @h2("manage.account.contact-details.heading")
-    @p(
-        html = Some(
-            a(href = routes.AgentServicesController.accountDetails.url,
-                key = "manage.account.contact-details.view")
-        )
+@(summary: String, content: Html, classes: String = "")(implicit request: Request[_], messages: Messages)
+
+@govukDetails(
+    Details(
+        summary = HtmlContent(messages(summary)),
+        content = HtmlContent(content),
+        classes = classes,
     )
-</section>
+)

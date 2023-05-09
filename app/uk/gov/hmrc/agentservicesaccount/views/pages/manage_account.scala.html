@@ -28,6 +28,7 @@
     access_groups_section: access_groups_section,
     clients: clients,
     contact_details: contact_details,
+    manage_team_members_groups: manage_team_members_groups,
     team_members: team_members,
     info: info,
 )
@@ -36,7 +37,7 @@
     hasAnyGroups: Boolean = false
 )(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
 
-@main(pageTitle = msgs("manage.account.h1"), isAdmin = true, analyticsAdditionalJs = None) {
+@main(pageTitle = msgs("manage.account.h1"), isAdmin = true, analyticsAdditionalJs = None, fullWidth = true) {
 
     @h1("manage.account.h1")
     <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
@@ -45,6 +46,7 @@
         @maybe_inset_text(maybeOptinStatus.get)
         @access_groups_section(maybeOptinStatus.get, hasAnyGroups)
         @clients(maybeOptinStatus.get)
+        @manage_team_members_groups(maybeOptinStatus.get)
         @team_members(maybeOptinStatus.get)
         @contact_details()
     } else {

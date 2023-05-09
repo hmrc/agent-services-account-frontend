@@ -17,30 +17,18 @@
 @import uk.gov.hmrc.agents.accessgroups.optin._
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 
-@this(p: p, h2: h2, a: a, ul_html: ul_html, details: details)
+@this(p: p, h2: h2, a: a, ul_html: ul_html)
 
 @(optinStatus: OptinStatus)(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
 
-<section id="how-to-manage-team-members-section">
-    @h2("manage.account.manage-team-members.heading")
-
-    @details(
-        "manage.account.team-members.details.title",
-        p("manage.account.team-members.details.p")
-    )
-
-    @p(key = "manage.account.team-members.p")
-
-    @ul_html(
-        id = Some("manage-team-members"),
-        items = Seq(
-            a(key = "manage.account.team-members.external-manage-link", href = appConfig.addUserUrl, openInNewWindow = true),
-            a(key = "manage.account.manage-user-access", href = appConfig.manageUsersUrl, openInNewWindow = true)
-        ),
-        liClasses = Some("govuk-!-margin-bottom-4")
-    )
-
+@if(isOptedIn(optinStatus)) {
+<section id="manage-team-members-section">
+ @h2("manage.team-members.groups.heading")
+    @a(key = "manage.team-members.groups.a",
+     href = appConfig.agentPermissionsManageTeamMembersUrl, openInNewWindow = true)
 
     <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-
 </section>
+}
+
+

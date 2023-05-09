@@ -26,25 +26,25 @@
         @ul_html(
             items =
                 Seq(
-                    a(key = msgs("manage.account.manage-access-permissions.access-groups.create-new"),
-                        href = appConfig.agentPermissionsCreateAccessGroupUrl,
-                        classes = Some(if(!hasAnyGroups) "govuk-button" else "")
+                    a(key = msgs("manage.account.manage-access-permissions.access-groups.create-new.a"),
+                        href = appConfig.agentPermissionsCreateAccessGroupUrl
                     ),
-                    a(key = msgs("manage.account.manage-access-permissions.access-groups.manage"),
+                    a(key = msgs("manage.account.manage-access-permissions.access-groups.manage.a"),
                         href = appConfig.agentPermissionsManageAccessGroupsUrl
                     ),
                     a(key = msgs("manage.account.manage-access-permissions.access-groups." + optinStatus),
                         href = appConfig.agentPermissionsOptOutUrl,
                         id = Some("config-link")
                     )
-                )
+                ),
+            liClasses = Some("govuk-!-margin-bottom-4")
         )
     } else {
         <p class="govuk-body" id="config-link">
-        @a(
-            key = msgs("manage.account.manage-access-permissions.access-groups." + optinStatus),
-            href = appConfig.getOptinInOrOutUrl(optinStatus)
-        )
+            @a(
+                key = msgs("manage.account.manage-access-permissions.access-groups." + optinStatus),
+                href = appConfig.getOptinInOrOutUrl(optinStatus)
+            )
         </p>
 
     }

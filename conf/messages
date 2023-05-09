@@ -126,7 +126,6 @@ your.account.your.contact.details.a=View the contact details we have for your bu
 
 #Manage Account (gran_perms_enabled)
 manage.account.h1=Manage account
-manage.account.manage-access-permissions.heading=Manage access groups
 manage.account.manage-access-permissions.status=Status
 
 manage.account.manage-access-permissions.status.opted.in=Turned on
@@ -137,10 +136,11 @@ manage.account.manage-access-permissions.inset-text.OptedOutWrongClientCount=To 
 manage.account.manage-access-permissions.inset-text.OptedOutSingleUser=To use access groups you need to add more team members to your agent services account under ‘Manage team members’ below.
 manage.account.manage-access-permissions.inset-text.OptedInSingleUser=To use access groups you need to add more team members to your agent services account under ‘Manage team members’ below.
 
-manage.account.manage-access-permissions.access-groups.hint=Access groups allow you to control which team members can view and manage each client’s tax affairs.
-manage.account.manage-access-permissions.access-groups.create-new=Create new access group
-manage.account.manage-access-permissions.access-groups.manage=Manage access groups
+manage.account.manage-access-permissions.access-groups.hint=Access groups allow you to restrict which team members can manage a client’s tax. 
+manage.account.manage-access-permissions.heading=Access groups
 
+manage.account.manage-access-permissions.access-groups.create-new.a=Create new access group
+manage.account.manage-access-permissions.access-groups.manage.a=Manage access groups
 manage.account.manage-access-permissions.access-groups.OptedOutEligible=Turn on access groups
 manage.account.manage-access-permissions.access-groups.OptedInReady=Turn off access groups
 manage.account.manage-access-permissions.access-groups.OptedInNotReady=Turn off access groups
@@ -148,12 +148,17 @@ manage.account.manage-access-permissions.access-groups.OptedInNotReady=Turn off 
 manage.account.clients.heading=Clients
 manage.account.clients.p=View client details, update client reference and see what groups a client is in.
 manage.account.clients.manage-link=Manage clients
-manage.account.clients.unassigned-link=Unassigned clients
+manage.account.clients.unassigned-link=Clients who are not in any groups
 
-manage.account.team-members.heading=Team members
 manage.account.team-members.p=View team member details and see what groups a team member is in.
-manage.account.team-members.manage-link=Manage team members
-manage.account.team-members.external-manage-link=Add or remove team members (opens in a new tab)
+manage.account.manage-team-members.heading=Manage team members on your agent services account
+manage.account.team-members.external-manage-link=Create Government Gateway user IDs for team members (opens in new tab)
+manage.account.manage-user-access=Manage team member access to your agent services account (opens in new tab)
+manage.account.team-members.details.title=How to add or remove team members
+manage.account.team-members.details.p=Use the link in this section to create a new Government Gateway user ID for your team members. These IDs will be linked to the agent services account. <br>Once your team members have verified their new IDs, you can give them access to the account. You can also remove a team member’s access using the same link.
+
+manage.team-members.groups.heading=Manage team members’ access groups
+manage.team-members.groups.a=Manage team members’ access groups
 
 manage.account.contact-details.heading=Contact details
 manage.account.contact-details.view=View the contact details we have for your business
@@ -161,7 +166,6 @@ manage.account.contact-details.view=View the contact details we have for your bu
 #Manage account (gran_perms_disabled)
 manage.account.p=You can allow other users in your organisation to access this agent services account, and manage their access.
 manage.account.add-user=Add a new user
-manage.account.manage-user-access=Manage user access to your agent services account (opens in a new tab)
 manage.account.account-details=View the contact details we have for your business
 
 agent.services.account.h2.your-clients=Your clients
