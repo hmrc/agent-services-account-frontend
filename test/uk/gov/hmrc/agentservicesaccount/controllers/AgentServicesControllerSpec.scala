@@ -415,41 +415,45 @@ class AgentServicesControllerSpec extends BaseISpec {
     html.select("section#manage-clients-section").isEmpty shouldBe true
   }
   def verifyClientsSection(html: Document) = {
-    val manageClientsSection = html.select("section#manage-clients-section")
-    manageClientsSection.select("h2").text shouldBe "Clients"
-    manageClientsSection.select("p").text shouldBe "View client details, update client reference and see what groups a client is in."
-    val clientLinksList = manageClientsSection.select("ul li")
-    clientLinksList.get(0).select("a").text shouldBe "Manage clients"
-    clientLinksList.get(0).select("a").attr("href") shouldBe s"http://localhost:$wireMockPort/agent-permissions/manage-clients"
-    clientLinksList.get(1).select("a").text shouldBe "Clients who are not in any groups"
-    clientLinksList.get(1).select("a").attr("href") shouldBe s"http://localhost:$wireMockPort/agent-permissions/unassigned-clients"
-
+    val section = html.select("section#manage-clients-section")
+    section.select("h2").text shouldBe "Clients"
+    section.select("p").text shouldBe "View client details, update client reference and see what groups a client is in."
+    val list = section.select("ul li")
+    list.get(0).select("a").text shouldBe "Manage clients"
+    list.get(0).select("a").attr("href") shouldBe s"http://localhost:$wireMockPort/agent-permissions/manage-clients"
+    list.get(1).select("a").text shouldBe "Clients who are not in any groups"
+    list.get(1).select("a").attr("href") shouldBe s"http://localhost:$wireMockPort/agent-permissions/unassigned-clients"
+    section.select("hr").isEmpty() shouldBe false
   }
 
   def verifyManageTeamMembersSection(html: Document) = {
-    val manageTeamSection = html.select("#manage-team-members-section")
-    manageTeamSection.select("h2").text shouldBe "Manage team members’ access groups"
-    manageTeamSection.select("a").text shouldBe "Manage team members’ access groups"
+    val section = html.select("#manage-team-members-section")
+    section.select("h2").text shouldBe "Manage team members’ access groups"
+    section.select("a").text shouldBe "Manage team members’ access groups"
+    section.select("hr").isEmpty() shouldBe false
+
   }
 
   def verifyHowToManageSection(html: Document) = {
-    val howToManageSection = html.select("#how-to-manage-team-members-section")
-    howToManageSection.select("h2").text shouldBe "Manage team members on your agent services account"
-    howToManageSection.select(Css.detailsSummary).text() shouldBe "How to add or remove team members"
-    howToManageSection.select(Css.detailsText).text() shouldBe "Use the link in this section to create a new Government Gateway user ID for your team members. These IDs will be linked to the agent services account. Once your team members have verified their new IDs, you can give them access to the account. You can also remove a team member’s access using the same link."
+    val section = html.select("#how-to-manage-team-members-section")
+    section.select("h2").text shouldBe "Manage team members on your agent services account"
+    section.select(Css.detailsSummary).text() shouldBe "How to add or remove team members"
+    section.select(Css.detailsText).text() shouldBe "Use the link in this section to create a new Government Gateway user ID for your team members. These IDs will be linked to the agent services account. Once your team members have verified their new IDs, you can give them access to the account. You can also remove a team member’s access using the same link."
 
-    val howToManageList = howToManageSection.select("ul li")
-    howToManageList.get(0).select("a").text shouldBe "Create Government Gateway user IDs for team members (opens in new tab)"
-    howToManageList.get(0).select("a").attr("href") shouldBe s"http://localhost:1111/user-profile-redirect-frontend/group-profile-management"
-    howToManageList.get(1).select("a").text shouldBe "Manage team member access to your agent services account (opens in new tab)"
-    howToManageList.get(1).select("a").attr("href") shouldBe s"http://localhost:1111/tax-and-scheme-management/users?origin=Agent"
+    val list = section.select("ul li")
+    list.get(0).select("a").text shouldBe "Create Government Gateway user IDs for team members (opens in new tab)"
+    list.get(0).select("a").attr("href") shouldBe s"http://localhost:1111/user-profile-redirect-frontend/group-profile-management"
+    list.get(1).select("a").text shouldBe "Manage team member access to your agent services account (opens in new tab)"
+    list.get(1).select("a").attr("href") shouldBe s"http://localhost:1111/tax-and-scheme-management/users?origin=Agent"
+    section.select("hr").isEmpty() shouldBe false
+
   }
 
   def verifyInfoSection(html: Document, status: String = "on") = {
-    val infoSection = html.select("#info-section")
-    infoSection.select("h2").text shouldBe "Access groups"
-    infoSection.select("p").get(0).text.shouldBe("Access groups allow you to restrict which team members can manage a client’s tax.")
-    infoSection.select("p").get(1).text.shouldBe(s"Status Turned $status")
+    val section = html.select("#info-section")
+    section.select("h2").text shouldBe "Access groups"
+    section.select("p").get(0).text.shouldBe("Access groups allow you to restrict which team members can manage a client’s tax.")
+    section.select("p").get(1).text.shouldBe(s"Status Turned $status")
     html.select("#opt-in-status").text shouldBe s"Status Turned $status"
     html.select("#opt-in-status").select("#status-value").text shouldBe s"Turned $status"
   }
