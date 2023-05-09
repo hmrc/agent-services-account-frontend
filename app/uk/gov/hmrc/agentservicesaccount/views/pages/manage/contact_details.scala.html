@@ -21,11 +21,15 @@
 
 @()(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
 <section id="contact-details">
+
     @h2("manage.account.contact-details.heading")
+
     @p(
         html = Some(
-            a(href = routes.AgentServicesController.accountDetails.url,
-                key = "manage.account.contact-details.view")
+            a(
+                href = routes.AgentServicesController.accountDetails.url,
+                key = "manage.account.contact-details.view"
+            )
         )
     )
 </section>
