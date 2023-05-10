@@ -134,6 +134,7 @@ manage.account.manage-access-permissions.inset-text.OptedOutWrongClientCount=I d
 manage.account.manage-access-permissions.inset-text.OptedOutSingleUser=I ddefnyddio’r grwpiau mynediad, mae angen i chi ychwanegu rhagor o aelodau’r tîm at eich cyfrif gwasanaethau asiant o dan ‘Rheoli aelodau’r tîm’ isod.
 manage.account.manage-access-permissions.inset-text.Opted-In_SINGLE_USER=I ddefnyddio’r grwpiau mynediad, mae angen i chi ychwanegu rhagor o aelodau’r tîm at eich cyfrif gwasanaethau asiant o dan ‘Rheoli aelodau’r tîm’ isod.
 
+
 manage.account.manage-access-permissions.access-groups.hint=Mae grwpiau mynediad yn caniatáu i chi reoli pa aelodau’r tîm all fwrw golwg dros faterion treth pob cleient, a’u rheoli.
 manage.account.manage-access-permissions.access-groups.create-new=Creu grŵp mynediad newydd
 manage.account.manage-access-permissions.heading=Grwpiau mynediad
