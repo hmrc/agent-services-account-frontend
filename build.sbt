@@ -19,7 +19,6 @@ lazy val root = (project in file("."))
       "-Xlint",
       "-Wconf:src=target/.*:s", // silence warnings from compiled files
       "-Wconf:src=*html:w", // silence html warnings as they are wrong
-      //"-Wconf:cat=deprecation:s",
       "-Wconf:cat=unused-privates:s",
       "-Wconf:msg=match may not be exhaustive:is", // summarize warnings about non-exhaustive pattern matching
     ),
