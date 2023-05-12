@@ -79,7 +79,7 @@ class AgentServicesController @Inject()
                 showFeatureInvite && agentInfo.isAdmin,
                 customDimension,
                 agentInfo.isAdmin,
-                isSuspendedForVat.toBoolean)).addingToSession(toReturnFromMapping)
+                isSuspendedForVat.toBoolean)).addingToSession(toReturnFromMapping())
 
           case None =>
             agentClientAuthorisationConnector.getSuspensionDetails().map { suspensionDetails =>
@@ -89,7 +89,7 @@ class AgentServicesController @Inject()
                   showFeatureInvite && agentInfo.isAdmin,
                   customDimension,
                   agentInfo.isAdmin,
-                  suspensionDetails.suspendedRegimes.contains("VATC"))).addingToSession(toReturnFromMapping)
+                  suspensionDetails.suspendedRegimes.contains("VATC"))).addingToSession(toReturnFromMapping())
             }
         }
       }

@@ -17,7 +17,7 @@
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.controllers.routes
 @import uk.gov.hmrc.agentservicesaccount.views.html.components.head
-@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.{HmrcStandardPage, HmrcStandardFooter}
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcStandardPage
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.hmrcstandardpage._
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcLanguageSelectHelper
 @import views.html.helper.CSPNonce
@@ -30,7 +30,6 @@
     fullWidthMainContent: fullWidthMainContentLayout,
     head: head,
     secondary_nav: secondary_nav,
-    hmrcStandardFooter: HmrcStandardFooter,
     standardBetaBanner: StandardBetaBanner,
     govukBackLink : GovukBackLink,
     hmrcLanguageSelectHelper: HmrcLanguageSelectHelper,
@@ -97,6 +96,5 @@
         mainContentLayout = if(fullWidth) Some(fullWidthMainContent(_)) else None
     ),
     serviceName = Some(msgs("service.name")),
-    pageTitle = Some(msgs("generic.title", pageTitle, msgs("service.name"))),
-    cspNonce = CSPNonce.get
+    pageTitle = Some(msgs("generic.title", pageTitle, msgs("service.name")))
 ))(bespokeContentBlock)
