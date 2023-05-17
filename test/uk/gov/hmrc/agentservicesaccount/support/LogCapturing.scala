@@ -22,12 +22,12 @@ import ch.qos.logback.core.read.ListAppender
 import play.Logger.ALogger
 import play.api.LoggerLike
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 // This trait is a copy and paste from the hmrctest library, which is now deprecated.
 trait LogCapturing {
 
-  def withCaptureOfLoggingFrom(logger: LogbackLogger)(body: (=> List[ILoggingEvent]) => Unit) {
+  def withCaptureOfLoggingFrom(logger: LogbackLogger)(body: (=> List[ILoggingEvent]) => Unit): Unit = {
     val appender = new ListAppender[ILoggingEvent]()
     appender.setContext(logger.getLoggerContext)
     appender.start()
@@ -37,11 +37,11 @@ trait LogCapturing {
     body(appender.list.asScala.toList)
   }
 
-  def withCaptureOfLoggingFrom(logger: LoggerLike)(body: (=> List[ILoggingEvent]) => Unit) {
+  def withCaptureOfLoggingFrom(logger: LoggerLike)(body: (=> List[ILoggingEvent]) => Unit): Unit = {
     withCaptureOfLoggingFrom(logger.logger.asInstanceOf[LogbackLogger])(body)
   }
 
-  def withCaptureOfLoggingFrom(logger: ALogger)(body: (=> List[ILoggingEvent]) => Unit) {
+  def withCaptureOfLoggingFrom(logger: ALogger)(body: (=> List[ILoggingEvent]) => Unit): Unit = {
     withCaptureOfLoggingFrom(logger.underlying.asInstanceOf[LogbackLogger])(body)
   }
 

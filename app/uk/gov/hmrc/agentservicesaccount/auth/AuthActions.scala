@@ -82,14 +82,14 @@ class AuthActions @Inject()(appConfig: AppConfig,
   }.recover(handleFailure)
 
   def handleFailure(implicit request: Request[_]): PartialFunction[Throwable, Result] = {
-    case _: NoActiveSession ⇒
+    case _: NoActiveSession =>
       Redirect(s"$signInUrl?continue_url=$continueUrl${request.uri}&origin=$appName")
 
-    case _: UnsupportedAuthProvider ⇒
+    case _: UnsupportedAuthProvider =>
       logger.warn(s"user logged in with unsupported auth provider")
       Forbidden
 
-    case _: UnsupportedAffinityGroup ⇒
+    case _: UnsupportedAffinityGroup =>
       logger.warn(s"user logged in with unsupported affinity group")
       Forbidden
   }

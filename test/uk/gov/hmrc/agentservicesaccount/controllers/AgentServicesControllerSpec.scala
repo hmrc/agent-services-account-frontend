@@ -264,7 +264,7 @@ class AgentServicesControllerSpec extends BaseISpec {
         a.get(24).attr("href") shouldBe "https://www.tax.service.gov.uk/plastic-packaging-tax/account"
 
         expectedH3(html, "Other tax services", 6)
-        html.select(".govuk-warning-text").text shouldBe "! The agent services account is the home for HMRC tax services launched from 2019. For any tax services not listed here, sign out of this account and log in to your HMRC online services for agents account (opens in new tab)."
+        html.select(".govuk-warning-text").text shouldBe "! Warning The agent services account is the home for HMRC tax services launched from 2019. For any tax services not listed here, sign out of this account and log in to your HMRC online services for agents account (opens in new tab)."
         a.get(25).attr("href") shouldBe "https://www.gov.uk/government/collections/hmrc-online-services-for-agents#hmrc-online-services-for-agents-account"
         // end of accordion
 
@@ -350,7 +350,7 @@ class AgentServicesControllerSpec extends BaseISpec {
         a.get(20).attr("href") shouldBe "https://www.tax.service.gov.uk/plastic-packaging-tax/account"
 
         expectedH3(html, "Other tax services", 6)
-        html.select(".govuk-warning-text").text shouldBe "! The agent services account is the home for HMRC tax services launched from 2019. For any tax services not listed here, sign out of this account and log in to your HMRC online services for agents account (opens in new tab)."
+        html.select(".govuk-warning-text").text shouldBe "! Warning The agent services account is the home for HMRC tax services launched from 2019. For any tax services not listed here, sign out of this account and log in to your HMRC online services for agents account (opens in new tab)."
         a.get(21).attr("href") shouldBe "https://www.gov.uk/government/collections/hmrc-online-services-for-agents#hmrc-online-services-for-agents-account"
         // end of accordion
 

@@ -22,7 +22,7 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatest.{Assertion, Suite}
 import play.api.Application
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 trait MetricsTestSupport {
   self: Suite with Matchers =>
