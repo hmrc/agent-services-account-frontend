@@ -609,7 +609,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       html.title() shouldBe manageAccountTitle
       html.select(H1).get(0).text shouldBe "Manage account"
       html.select(Css.insetText).get(0).text
-        .shouldBe("You have added new clients but need to wait until your client details are ready to use with access groups. You will receive a confirmation email after which you can start using access groups.")
+        .shouldBe("You have turned on access groups but need to wait until your client details are ready to use with access groups. You will receive a confirmation email after which you can start using access groups.")
 
       verifyInfoSection(html, "on")
       verifyManageTeamMembersSection(html)
@@ -636,7 +636,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       html.select(H1).get(0).text shouldBe "Manage account"
 
       html.select(Css.insetText).get(0).text
-        .shouldBe("To use access groups you need to add more team members to your agent services account under ‘Manage team members’ below.")
+        .shouldBe("To use access groups you need to add more team members to your agent services account under ‘Manage team members on your agent services account’.")
 
       verifyInfoSection(html, "on")
       verifyManageTeamMembersSection(html)
@@ -662,7 +662,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       html.select(H1).get(0).text shouldBe "Manage account"
 
       html.select(Css.insetText).get(0).text
-        .shouldBe("To use access groups you need to have more than one client and fewer than 100,000 clients in your agent services account.")
+        .shouldBe("To use access groups you need more than 1 client in your agent services account.")
 
       verifyInfoSection(html, "off")
       verifyHowToManageSection(html)
@@ -687,7 +687,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       html.select(H1).get(0).text shouldBe "Manage account"
 
       html.select(Css.insetText).get(0).text
-        .shouldBe("To use access groups you need to add more team members to your agent services account under ‘Manage team members’ below.")
+        .shouldBe("To use access groups you need to add more team members to your agent services account under ‘Manage team members on your agent services account’.")
 
       verifyInfoSection(html, "off")
       verifyHowToManageSection(html)
