@@ -129,14 +129,14 @@ manage.account.manage-access-permissions.status=Statws
 manage.account.manage-access-permissions.status.opted.in=Wedi’i droi ymlaen
 manage.account.manage-access-permissions.status.opted.out=Wedi’i droi i ffwrdd
 
-manage.account.manage-access-permissions.inset-text.Opted-In_NOT_READY=Rydych wedi ychwanegu cleientiaid newydd, ond mae angen i chi aros nes bod manylion eich cleientiaid yn barod i’w defnyddio gyda’r grwpiau mynediad. Byddwch yn cael e-bost cadarnhau, ac ar ôl hynny gallwch ddechrau defnyddio’r grwpiau mynediad.
-manage.account.manage-access-permissions.inset-text.OptedOutWrongClientCount=I ddefnyddio’r grwpiau mynediad, mae angen i chi fod â mwy nag un cleient a llai na {0} o gleientiaid yn eich cyfrif gwasanaethau asiant.
-manage.account.manage-access-permissions.inset-text.OptedOutSingleUser=I ddefnyddio’r grwpiau mynediad, mae angen i chi ychwanegu rhagor o aelodau’r tîm at eich cyfrif gwasanaethau asiant o dan ‘Rheoli aelodau’r tîm’ isod.
-manage.account.manage-access-permissions.inset-text.Opted-In_SINGLE_USER=I ddefnyddio’r grwpiau mynediad, mae angen i chi ychwanegu rhagor o aelodau’r tîm at eich cyfrif gwasanaethau asiant o dan ‘Rheoli aelodau’r tîm’ isod.
-
 manage.account.manage-access-permissions.access-groups.hint=Mae grwpiau mynediad yn caniatáu i chi reoli pa aelodau’r tîm all fwrw golwg dros faterion treth pob cleient, a’u rheoli.
 manage.account.manage-access-permissions.access-groups.create-new=Creu grŵp mynediad newydd
 manage.account.manage-access-permissions.heading=Grwpiau mynediad
+
+manage.account.manage-access-permissions.inset-text.OptedInNotReady=You have turned on access groups but need to wait until your client details are ready to use with access groups. You will receive a confirmation email  after which you can start using access groups.
+manage.account.manage-access-permissions.inset-text.OptedOutWrongClientCount=To use access groups you need more than 1 client in your agent services account.
+manage.account.manage-access-permissions.inset-text.OptedOutSingleUser=To use access groups you need to add more team members to your agent services account under ‘Manage team members on your agent services account’.
+manage.account.manage-access-permissions.inset-text.OptedInSingleUser=To use access groups you need to add more team members to your agent services account under ‘Manage team members on your agent services account’.
 
 manage.account.manage-access-permissions.access-groups.OptedOutEligible=Galluogi grwpiau mynediad
 manage.account.manage-access-permissions.access-groups.OptedInReady=Analluogi grwpiau mynediad

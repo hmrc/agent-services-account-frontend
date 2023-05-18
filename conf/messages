@@ -131,10 +131,10 @@ manage.account.manage-access-permissions.status=Status
 manage.account.manage-access-permissions.status.opted.in=Turned on
 manage.account.manage-access-permissions.status.opted.out=Turned off
 
-manage.account.manage-access-permissions.inset-text.OptedInNotReady=You have added new clients but need to wait until your client details are ready to use with access groups. You will receive a confirmation email after which you can start using access groups.
-manage.account.manage-access-permissions.inset-text.OptedOutWrongClientCount=To use access groups you need to have more than one client and fewer than {0} clients in your agent services account.
-manage.account.manage-access-permissions.inset-text.OptedOutSingleUser=To use access groups you need to add more team members to your agent services account under ‘Manage team members’ below.
-manage.account.manage-access-permissions.inset-text.OptedInSingleUser=To use access groups you need to add more team members to your agent services account under ‘Manage team members’ below.
+manage.account.manage-access-permissions.inset-text.OptedInNotReady=You have turned on access groups but need to wait until your client details are ready to use with access groups. You will receive a confirmation email  after which you can start using access groups.
+manage.account.manage-access-permissions.inset-text.OptedOutWrongClientCount=To use access groups you need more than 1 client in your agent services account.
+manage.account.manage-access-permissions.inset-text.OptedOutSingleUser=To use access groups you need to add more team members to your agent services account under ‘Manage team members on your agent services account’.
+manage.account.manage-access-permissions.inset-text.OptedInSingleUser=To use access groups you need to add more team members to your agent services account under ‘Manage team members on your agent services account’.
 
 manage.account.manage-access-permissions.access-groups.hint=Access groups allow you to restrict which team members can manage a client’s tax. 
 manage.account.manage-access-permissions.heading=Access groups

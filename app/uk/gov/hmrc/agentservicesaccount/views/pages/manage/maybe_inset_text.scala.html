@@ -24,10 +24,8 @@
 @{
     //show inset text if it is required
     optinStatus match {
-        case OptedInSingleUser | OptedOutSingleUser  | OptedInNotReady =>
+        case OptedInSingleUser | OptedOutSingleUser  | OptedInNotReady | OptedOutWrongClientCount =>
             inset_text(msgs("manage.account.manage-access-permissions.inset-text." + optinStatus))
-        case OptedOutWrongClientCount =>
-            inset_text(msgs("manage.account.manage-access-permissions.inset-text." + optinStatus, appConfig.granPermsMaxClientCount ))
         case _ => Html(None)
     }
 }
