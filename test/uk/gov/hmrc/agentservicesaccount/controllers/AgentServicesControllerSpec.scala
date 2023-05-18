@@ -440,7 +440,7 @@ class AgentServicesControllerSpec extends BaseISpec {
     section.select(Css.detailsSummary).text() shouldBe "How to add or remove team members"
     section.select(Css.detailsText).text() shouldBe "Use the link in this section to create a new Government Gateway user ID for your team members. These IDs will be linked to the agent services account. Once your team members have verified their new IDs, you can give them access to the account. You can also remove a team member’s access using the same link."
 
-    val list = section.select("ul li")
+    val list = section.select("ol.govuk-list--number li")
     list.get(0).select("a").text shouldBe "Create Government Gateway user IDs for team members (opens in new tab)"
     list.get(0).select("a").attr("href") shouldBe s"http://localhost:1111/user-profile-redirect-frontend/group-profile-management"
     list.get(1).select("a").text shouldBe "Manage team member access to your agent services account (opens in new tab)"

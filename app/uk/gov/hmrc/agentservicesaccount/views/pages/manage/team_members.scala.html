@@ -17,7 +17,7 @@
 @import uk.gov.hmrc.agents.accessgroups.optin._
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 
-@this(p: p, h2: h2, a: a, ul_html: ul_html, details: details)
+@this(p: p, h2: h2, a: a, ol_html: ol_html, details: details)
 
 @(optinStatus: OptinStatus)(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
 
@@ -31,16 +31,16 @@
 
     @p(key = "manage.account.team-members.p")
 
-    @ul_html(
+    @ol_html(
         id = Some("manage-team-members"),
         items = Seq(
             a(key = "manage.account.team-members.external-manage-link", href = appConfig.addUserUrl, openInNewWindow = true),
             a(key = "manage.account.manage-user-access", href = appConfig.manageUsersUrl, openInNewWindow = true)
         ),
-        liClasses = Some("govuk-!-margin-bottom-4")
+        liClasses = Some("govuk-!-margin-bottom-2")
     )
 
 
-    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+    <hr class="govuk-!-margin-top-7 govuk-section-break govuk-section-break--m govuk-section-break--visible">
 
 </section>
