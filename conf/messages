@@ -1,305 +1,175 @@
-app.name=Agent services account
-service.name=Agent services account
-generic.title={0} - {1} - GOV.UK
-servicename.titleSuffix=- Agent services account - GOV.UK
-agent.services.account.heading=Welcome to your agent services account
-error-prefix=Error:
-
-existing.client.relationships.link=Access existing client relationships
-
-nav.home=Account home
-nav.aria.account-menu=Account menu
-nav.manage.account=Manage account
-nav.your.account=Your account
-nav.help=Help and Guidance
-nav.signout=Sign out
-common.back=Back
-common.continue=Continue
-common.continue.manage.account=Continue to manage account
-common.yes=Yes
-common.no=No
-common.change=Change
-common.cancel=Cancel 
-common.what.happens.next=What happens next
-details.link-hidden= for {0}
-
-accordion.showSection = Show
+accordion.hideAllSections = Hide all sections
 accordion.hideSection = Hide
 accordion.showAllSections = Show all sections
-accordion.hideAllSections = Hide all sections
-
-
-agent.services.account.welcome=Welcome to your agent services account
-agent.services.account.client-authorisations.p=You must ask your client to authorise you through your agent services account before you can access any services. Copy across an old authorisation or create a new one.
-agent.services.account.tax-services=Tax services you can manage in this account
-
+accordion.showSection = Show
+account-details.inset=To change these details you will need to write to us. <a class="govuk-link" href={0} target="_blank" rel="noreferrer noopener">Find out more by reading the guidance (opens in new tab)</a>. You can only change your details if you are a director, company secretary, sole trader, proprietor or partner.
+account-details.summary-list.address=Address
+account-details.summary-list.email=Email address
+account-details.summary-list.header=Agent services account details
+account-details.summary-list.name=Name
+account-details.summary-list.none=None
+account-details.title=Account details
+administrators.h1=Administrators
+administrators.ul.li.1=turn access groups on or off
+administrators.ul.li.2=view information about all clients and access groups
+administrators.ul.li.3=create, rename and delete access groups
+administrators.ul.li.4=assign clients and team members to access groups
+administrators.ul.p=Administrators can:
+agent-service-bridging.p1= For this tax service, use access groups to control which team members can manage this client. This is done in your agent services account.
+agent-service-bridging.p2= This tax service is managed through your agent services account. Access permissions for the agent services account work differently from other HMRC online services.
+agent-service-bridging.p3= Your organisation can restrict access to a client''s taxes using access groups. If a client is not in any access groups, any team member can manage their tax. If a client is in access groups, only team members in the same groups can manage their tax.
+agent-service-bridging.p4= Your organisation has turned access groups on. You can create new access groups or view existing groups from the ''Manage account'' screen.
+agent-service-bridging.p5= By default, all your team members have access to all your clients. You can restrict access to a client''s taxes using access groups.
+agent-service-bridging.p6= To find out more, select ''Turn on access groups'' on the ''Manage account'' page. You''ll be shown more information. You can then choose to turn access groups on or leave them off.
+agent-service-bridging.title= Manage access in the agent services account
+agent.accountNumber=Agent Reference Number: {0}
+agent.addNewUser.links.start=<a href="{0}" rel="noopener noreferrer" id="{1}">Add a new user</a>
+agent.invitations.links.cancel-auth=<a href="{0}" id="{1}" >Cancel a client''s authorisation</a>
+agent.invitations.links.start=<a href="{0}" id="{1}" >Ask a client to authorise you</a>
+agent.invitations.links.track=<a href="{0}" id="{1}" >Manage your recent authorisation requests</a>
+agent.manageYourUsers.links.start=<a href="{0}" target="_blank" rel="noopener noreferrer" id="{1}">Manage user access to your agent services account<span class="visuallyhidden"> (Opens in a new tab)</span></a>
+app.name=Agent services account
+asa.account.home.manage.section.a=Manage your account
+asa.account.home.manage.section.h2=Manage account
+asa.account.home.manage.section.p=View your client list and update client references. Manage your team members’ access to this account and specific clients
+asa.additional.links.agent-afi.body2=<a href="{0}" id="{1}">View a client''s Income record</a>
+asa.additional.links.agent-afi.ga.link-view=link - view
+asa.additional.links.agent-afi.ga.manage-clients=Manage your clients
+asa.additional.links.agent-afi.ga.request-auth=Ask a client to authorise you
+asa.additional.links.agent-afi.ga.services-you-need=Services you might need
+asa.additional.links.agent-afi.ga.view-income-record=View a clients income record
+asa.additional.links.mapping.body2=<a href="{0}" id="{1}" >Copy across your existing Self Assessment and VAT clients to this account</a>
+asa.client-authorisations.p=You must ask your client to authorise you through your agent services account before you can access any services. Copy across an old authorisation or create a new one.
+asa.h2.your-clients=Your clients
+asa.h3.agent-services=Agent services
+asa.h3.client-authorisations=Client authorisations
+asa.h3.manage=Manage your account
+asa.heading=Welcome to your agent services account
+asa.help.h2=Help and guidance
+asa.help.link=Find out how to use your agent services account and how clients can authorise you to manage their taxes
+asa.inset=You cannot view your client lists in your agent services account. You can use your account to view and manage an individual client’s VAT details.
 asa.other.heading=Other tax services
 asa.other.p1=The agent services account is the home for HMRC tax services launched from 2019.<br/>For any tax services not listed here, sign out of this account and <a class="govuk-link" href="https://www.gov.uk/government/collections/hmrc-online-services-for-agents#hmrc-online-services-for-agents-account" target="_blank" rel="noreferrer noopener"> log in to your HMRC online services for agents account (opens in new tab)</a>.
 asa.other.warning=Warning
-
-agent.services.account.inset=You cannot view your client lists in your agent services account. You can use your account to view and manage an individual client’s VAT details.
-agent.services.account.section1.h2=VAT
-agent.services.account.section1.col1.h3=Before you start
-agent.services.account.section1.col1.p=You must first get an authorisation from your client.
-# below not in use - for removal of MTD for VAT
-agent.services.account.section1.col1.p2=Not all of your clients may have signed up to Making Tax Digital for VAT. If your client is not signed up, you can still manage and view their VAT details using this account.
-# above not in use - for removal of MTD for VAT
-agent.services.account.section1.col2.h3=Manage your client’s VAT
-agent.services.account.section1.col2.link1=Register your client for VAT (opens in a new tab)
-agent.services.account.section1.col2.link2=Manage, submit and view your client’s VAT details (opens in a new tab)
-agent.services.account.section1.suspended.h3=We have temporarily limited your use of this service
-agent.services.account.section1.suspended.p1=We did this because we have suspended your agent code. We sent you a letter to confirm this.
-agent.services.account.section1.suspended.p2=This means you will not be able to use this service.
-
-agent.services.account.sectionITSA.h2=Making Tax Digital for Income Tax
-agent.services.account.sectionITSA.col1.h3=Before you start
-agent.services.account.sectionITSA.col1.p=You must first get an authorisation from your client. You can do this by<a class="govuk-link" href="{0}"> copying across your authorisations</a> or <a class="govuk-link" href="{1}">requesting an authorisation</a>.
-agent.services.account.sectionITSA.col1.link=If you copy your client across, you will need to<a class="govuk-link" href="https://www.gov.uk/guidance/sign-up-your-client-for-making-tax-digital-for-income-tax" target="_blank" rel="noreferrer noopener"> sign them up to Making Tax Digital for Income Tax (opens in a new tab)</a>
-agent.services.account.sectionITSA.col2.h3=Manage your client’s Income Tax details
-agent.services.account.sectionITSA.col2.link1.text=View your client’s Income Tax
-agent.services.account.sectionITSA.col2.link2.text=Help clients check whether they are eligible (opens in a new tab)
-
-agent.services.account.trusts-section.h2=Trusts and estates
-agent.services.account.trusts-section.col1.h3=Before you start
-agent.services.account.trusts-section.col1.register-trust.p=Before you<a class="govuk-link" href="{0}"> ask your client to authorise you</a>, you or your client must have<a class="govuk-link" href="https://www.gov.uk/guidance/register-your-clients-trust" target="_blank" rel="noreferrer noopener"> registered the trust (opens in a new tab)</a> or<a class="govuk-link" href="https://www.gov.uk/guidance/register-your-clients-estate" target="_blank" rel="noreferrer noopener"> estate (opens in a new tab)</a>.
-agent.services.account.trusts-section.col1.register-estate.p=Your client will need to<a class="govuk-link" href="https://www.gov.uk/guidance/manage-your-trusts-registration-service#how-to-use-the-online-service"> claim the trust</a> or estate.
-agent.services.account.trusts-section.col2.h3=Manage your client’s trust
-agent.services.account.trusts-section.col2.register-trust-link.text=Use this service to update the details of your client’s trust or declare no changes on the trust register
-
-agent.services.account.paye-section.h2=View a client’s Income record
-agent.services.account.paye-section.text=Access a client’s Income record to help you complete their Self Assessment tax return.
-agent.services.account.paye-section.link=View a client’s Income record
-
-agent.services.account.section3.col1.h2=Capital Gains Tax on UK property
-agent.services.account.section3.col1.link1=<a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">set up a Capital Gains Tax on UK property account (opens in a new tab)</a>
-agent.services.account.section3.col1.link1.href=https://www.gov.uk/guidance/managing-your-clients-capital-gains-tax-on-uk-property-account#before-you-start
-agent.services.account.section3.col1.link2=<a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">authorise you to act on their behalf (opens in a new tab)</a>
-agent.services.account.section3.col1.link2.href=https://www.gov.uk/guidance/managing-your-clients-capital-gains-tax-on-uk-property-account#get-authorisation
-agent.services.account.section3.col2.h3=Manage a client’s Capital Gains Tax on UK property
-agent.services.account.section3.col2.link1=<a class="govuk-link" href="{0}" rel="noreferrer noopener">Report your client’s Capital Gains Tax on UK property and view payments and penalties</a>
-agent.services.account.section3.col2.link1.href=https://www.tax.service.gov.uk/capital-gains-tax-uk-property/start
-agent.services.account.section3.col1.h3=Before you start
-agent.services.account.section3.col1.text1=Your client must first
-agent.services.account.section3.col1.text2=They must then
-
-agent.services.account.ppt.col1.h2=Plastic Packaging Tax
-agent.services.account.ppt.col1.link1=<a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">register for Plastic Packaging Tax (opens in a new tab)</a>
-agent.services.account.ppt.col1.link1.href=https://www.gov.uk/guidance/register-for-plastic-packaging-tax
-agent.services.account.ppt.col1.link2=<a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">authorise you to act on their behalf</a>
-agent.services.account.ppt.col2.h3=Manage your client’s Plastic Packaging Tax
-agent.services.account.ppt.col2.link1=<a class="govuk-link" href="{0}" rel="noreferrer noopener">Report your client’s Plastic Packaging Tax and view payments, returns and penalties</a>
-agent.services.account.ppt.col2.link1.href=https://www.tax.service.gov.uk/plastic-packaging-tax/account
-agent.services.account.ppt.col1.h3=Before you start
-agent.services.account.ppt.col1.text1=Your client must first
-agent.services.account.ppt.col1.text2=They must then
-
-agent.services.account.section4.h2=Client authorisations
-agent.services.account.section4.col1.h3=Ask a client to authorise you
-agent.services.account.section4.col1.link=Ask a client to authorise you
-
-agent.services.account.section4.col2.link1=Manage your authorisation requests from the last 30 days
-agent.services.account.section4.col2.link2=Copy across more VAT and Self Assessment client authorisations
-agent.services.account.section4.col2.link3=Cancel a client’s authorisation
-
-agent.services.account.help.h2=Help and guidance
-agent.services.account.help.link=Find out how to use your agent services account and how clients can authorise you to manage their taxes
-
-#Your Account (Assistant/standard user only)
-your.account.h1=Your account
-your.account.name=Name
-your.account.email=Email address
-your.account.role=Role
-your.account.p.role=Standard user <br/> You can view your assigned access groups and clients. You can also view clients who are not in any access groups.
-
-your.account.your.groups.h2=Your access groups
-your.account.your.groups.p=You are not currently assigned to any access groups.
-your.account.your.groups.off.p=Access groups are turned off. Only administrators can turn access groups on or off.
-your.account.unassigned-clients.h2=Other clients you can access
-your.account.unassigned-clients.a=View other clients
-
-your.account.your.admins.h2=Your organisation’s administrators
-your.account.your.admins.a=View administrators
-
-your.account.your.contact.details.h2=Contact details
-your.account.your.contact.details.a=View the contact details we have for your business
-
-
-#Manage Account (gran_perms_enabled)
-manage.account.h1=Manage account
-manage.account.manage-access-permissions.status=Status
-
-manage.account.manage-access-permissions.status.opted.in=Turned on
-manage.account.manage-access-permissions.status.opted.out=Turned off
-
-manage.account.manage-access-permissions.inset-text.OptedInNotReady=You have turned on access groups but need to wait until your client details are ready to use with access groups. You will receive a confirmation email  after which you can start using access groups.
-manage.account.manage-access-permissions.inset-text.OptedOutWrongClientCount=To use access groups you need more than 1 client in your agent services account.
-manage.account.manage-access-permissions.inset-text.OptedOutSingleUser=To use access groups you need to add more team members to your agent services account under ‘Manage team members on your agent services account’.
-manage.account.manage-access-permissions.inset-text.OptedInSingleUser=To use access groups you need to add more team members to your agent services account under ‘Manage team members on your agent services account’.
-
-manage.account.manage-access-permissions.access-groups.hint=Access groups allow you to restrict which team members can manage a client’s tax. 
-manage.account.manage-access-permissions.heading=Access groups
-
-manage.account.manage-access-permissions.access-groups.create-new.a=Create new access group
-manage.account.manage-access-permissions.access-groups.manage.a=Manage access groups
-manage.account.manage-access-permissions.access-groups.OptedOutEligible=Turn on access groups
-manage.account.manage-access-permissions.access-groups.OptedInReady=Turn off access groups
-manage.account.manage-access-permissions.access-groups.OptedInNotReady=Turn off access groups
-
-manage.account.clients.heading=Clients
-manage.account.clients.p=View client details, update client reference and see what groups a client is in.
-manage.account.clients.manage-link=Manage clients
-manage.account.clients.unassigned-link=Clients who are not in any groups
-
-manage.account.team-members.p=View team member details and see what groups a team member is in.
-manage.account.manage-team-members.heading=Manage team members on your agent services account
-manage.account.team-members.external-manage-link=Create Government Gateway user IDs for team members (opens in new tab)
-manage.account.manage-user-access=Manage team member access to your agent services account (opens in new tab)
-manage.account.team-members.details.title=How to add or remove team members
-manage.account.team-members.details.p=Use the link in this section to create a new Government Gateway user ID for your team members. These IDs will be linked to the agent services account. <br>Once your team members have verified their new IDs, you can give them access to the account. You can also remove a team member’s access using the same link.
-
-manage.team-members.groups.heading=Manage team members’ access groups
-manage.team-members.groups.a=Manage team members’ access groups
-
-manage.account.contact-details.heading=Contact details
-manage.account.contact-details.view=View the contact details we have for your business
-
-#Manage account (gran_perms_disabled)
-manage.account.p=You can allow other users in your organisation to access this agent services account, and manage their access.
-manage.account.add-user=Add a new user
-manage.account.account-details=View the contact details we have for your business
-
-agent.services.account.h2.your-clients=Your clients
-agent.services.account.h3.agent-services=Agent services
-agent.services.account.p.agent-services=Access services for clients that have already authorised you to act on their behalf.
-
-agent.services.account.h3.client-authorisations=Client authorisations
-agent.services.account.p.client-authorisations=Start a new authorisation request or link your current clients to your account.
-
-agent.services.account.h3.manage=Manage your account
-agent.services.account.p.manage=Allow other users in your organisation to access this agent services account, or restrict their access.
-
-agent.invitations.links.start=<a href="{0}" id="{1}" >Ask a client to authorise you</a>
-agent.invitations.links.track=<a href="{0}" id="{1}" >Manage your recent authorisation requests</a>
-agent.services.account.additional.links.mapping.body2=<a href="{0}" id="{1}" >Copy across your existing Self Assessment and VAT clients to this account</a>
-agent.invitations.links.cancel-auth=<a href="{0}" id="{1}" >Cancel a client''s authorisation</a>
-agent.accountNumber=Account number: {0}
-
-agent.manageYourUsers.links.start=<a href="{0}" target="_blank" rel="noopener noreferrer" id="{1}">Manage user access to your agent services account<span class="visuallyhidden"> (Opens in a new tab)</span></a>
-agent.addNewUser.links.start=<a href="{0}" rel="noopener noreferrer" id="{1}">Add a new user</a>
-agent.services.account.additional.links.agent-afi.body2=<a href="{0}" id="{1}">View a client''s Income record</a>
+asa.p.agent-services=Access services for clients that have already authorised you to act on their behalf.
+asa.p.client-authorisations=Start a new authorisation request or link your current clients to your account.
+asa.p.manage=Allow other users in your organisation to access this agent services account, or restrict their access.
+asa.paye-section.h2=View a client’s Income record
+asa.paye-section.link=View a client’s Income record
+asa.paye-section.text=Access a client’s Income record to help you complete their Self Assessment tax return.
+asa.ppt.col1.h2=Plastic Packaging Tax
+asa.ppt.col1.h3=Before you start
+asa.ppt.col1.link1.href=https://www.gov.uk/guidance/register-for-plastic-packaging-tax
+asa.ppt.col1.link1=<a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">register for Plastic Packaging Tax (opens in a new tab)</a>
+asa.ppt.col1.link2=<a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">authorise you to act on their behalf</a>
+asa.ppt.col1.text1=Your client must first
+asa.ppt.col1.text2=They must then
+asa.ppt.col2.h3=Manage your client’s Plastic Packaging Tax
+asa.ppt.col2.link1.href=https://www.tax.service.gov.uk/plastic-packaging-tax/account
+asa.ppt.col2.link1=<a class="govuk-link" href="{0}" rel="noreferrer noopener">Report your client’s Plastic Packaging Tax and view payments, returns and penalties</a>
+asa.section1.col1.h3=Before you start
+asa.section1.col1.p2=Not all of your clients may have signed up to Making Tax Digital for VAT. If your client is not signed up, you can still manage and view their VAT details using this account.
+asa.section1.col1.p=You must first get an authorisation from your client.
+asa.section1.col2.h3=Manage your client’s VAT
+asa.section1.col2.link1=Register your client for VAT (opens in a new tab)
+asa.section1.col2.link2=Manage, submit and view your client’s VAT details (opens in a new tab)
+asa.section1.h2=VAT
+asa.section1.suspended.h3=We have temporarily limited your use of this service
+asa.section1.suspended.p1=We did this because we have suspended your agent code. We sent you a letter to confirm this.
+asa.section1.suspended.p2=This means you will not be able to use this service.
+asa.section3.col1.h2=Capital Gains Tax on UK property
+asa.section3.col1.h3=Before you start
+asa.section3.col1.link1.href=https://www.gov.uk/guidance/managing-your-clients-capital-gains-tax-on-uk-property-account#before-you-start
+asa.section3.col1.link1=<a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">set up a Capital Gains Tax on UK property account (opens in a new tab)</a>
+asa.section3.col1.link2.href=https://www.gov.uk/guidance/managing-your-clients-capital-gains-tax-on-uk-property-account#get-authorisation
+asa.section3.col1.link2=<a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">authorise you to act on their behalf (opens in a new tab)</a>
+asa.section3.col1.text1=Your client must first
+asa.section3.col1.text2=They must then
+asa.section3.col2.h3=Manage a client’s Capital Gains Tax on UK property
+asa.section3.col2.link1.href=https://www.tax.service.gov.uk/capital-gains-tax-uk-property/start
+asa.section3.col2.link1=<a class="govuk-link" href="{0}" rel="noreferrer noopener">Report your client’s Capital Gains Tax on UK property and view payments and penalties</a>
+asa.section4.col1.h3=Ask a client to authorise you
+asa.section4.col1.link=Ask a client to authorise you
+asa.section4.col2.link1=Manage your authorisation requests from the last 30 days
+asa.section4.col2.link2=Copy across more VAT and Self Assessment client authorisations
+asa.section4.col2.link3=Cancel a client’s authorisation
+asa.section4.h2=Client authorisations
+asa.sectionITSA.col1.h3=Before you start
+asa.sectionITSA.col1.link=If you copy your client across, you will need to<a class="govuk-link" href="https://www.gov.uk/guidance/sign-up-your-client-for-making-tax-digital-for-income-tax" target="_blank" rel="noreferrer noopener"> sign them up to Making Tax Digital for Income Tax (opens in a new tab)</a>
+asa.sectionITSA.col1.p=You must first get an authorisation from your client. You can do this by<a class="govuk-link" href="{0}"> copying across your authorisations</a> or <a class="govuk-link" href="{1}">requesting an authorisation</a>.
+asa.sectionITSA.col2.h3=Manage your client’s Income Tax details
+asa.sectionITSA.col2.link1.text=View your client’s Income Tax
+asa.sectionITSA.col2.link2.text=Help clients check whether they are eligible (opens in a new tab)
+asa.sectionITSA.h2=Making Tax Digital for Income Tax
+asa.tax-services=Tax services you can manage in this account
+asa.trusts-section.col1.h3=Before you start
+asa.trusts-section.col1.register-estate.p=Your client will need to<a class="govuk-link" href="https://www.gov.uk/guidance/manage-your-trusts-registration-service#how-to-use-the-online-service"> claim the trust</a> or estate.
+asa.trusts-section.col1.register-trust.p=Before you<a class="govuk-link" href="{0}"> ask your client to authorise you</a>, you or your client must have<a class="govuk-link" href="https://www.gov.uk/guidance/register-your-clients-trust" target="_blank" rel="noreferrer noopener"> registered the trust (opens in a new tab)</a> or<a class="govuk-link" href="https://www.gov.uk/guidance/register-your-clients-estate" target="_blank" rel="noreferrer noopener"> estate (opens in a new tab)</a>.
+asa.trusts-section.col2.h3=Manage your client’s trust
+asa.trusts-section.col2.register-trust-link.text=Use this service to update the details of your client’s trust or declare no changes on the trust register
+asa.trusts-section.h2=Trusts and estates
+beta.invite.banner.heading=Help improve our new feature
+beta.invite.banner.link1=Tell me more
+beta.invite.banner.link2=No thanks
+beta.invite.banner.p=Try out access groups and tell us what you think.
+beta.invite.confirmation.heading=We have received your response
+beta.invite.confirmation.link=Return to agent services account home
+beta.invite.confirmation.p=We will get in touch with you using the contact details you provided.
+beta.invite.cya.heading=Check your answers
+beta.invite.cya.not-provided=Not provided
+beta.invite.details.heading=Contact details
+beta.invite.details.label1=Name
+beta.invite.details.label2=Email
+beta.invite.details.label3=Telephone number (optional)
+beta.invite.size.label.l=Between 5,001 and 9,999
+beta.invite.size.label.m=Between 1,001 and 5,000
+beta.invite.size.label.s=1,000 or fewer
+beta.invite.size.label.x=More than 10,000
+beta.invite.size.legend=How many clients do you manage using your agent services account?
+beta.invite.size.required.error=Select the number of clients you have
+beta.invite.yes-no.heading=Access groups feature testing
+beta.invite.yes-no.legend=Would you like to help test access groups?
+beta.invite.yes-no.p=We’re testing a new feature. It lets agents control which staff members can manage a client''s taxes. Your feedback will help us improve our service before we roll it out to everyone.
+beta.invite.yes-no.required.error=Select yes to help test access groups
+common.back=Back
+common.cancel=Cancel 
+common.change=Change
+common.continue.manage.account=Continue to manage account
+common.continue=Continue
+common.no=No
 common.sign-out=Sign out
-agent.services.account.additional.links.agent-afi.ga.link-view=link - view
-agent.services.account.additional.links.agent-afi.ga.manage-clients=Manage your clients
-agent.services.account.additional.links.agent-afi.ga.services-you-need=Services you might need
-agent.services.account.additional.links.agent-afi.ga.request-auth=Ask a client to authorise you
-agent.services.account.additional.links.agent-afi.ga.view-income-record=View a clients income record
-
-#suspension warning
-suspension-warning.header=We have temporarily limited your use of this service
-suspension-warning.p1=We did this because we have suspended your agent code. We sent you a letter to confirm this.
-suspension-warning.p2.single=This means you will not be able to use this service to ask for authorisation to {0}.
-suspension-warning.p2.multi=This means you will not be able to use this service to ask clients for authorisation to:
-suspension-warning.single.ITSA=manage a client’s Making Tax Digital for Income Tax
-suspension-warning.multi.ITSA=manage their Making Tax Digital for Income Tax
-suspension-warning.single.VATC=manage a client’s VAT
-suspension-warning.multi.VATC=manage their VAT
-suspension-warning.single.TRS=maintain a trust or an estate
-suspension-warning.multi.TRS=maintain a trust or an estate
-suspension-warning.single.CGT=manage a client''s Capital Gains Tax on UK property account
-suspension-warning.multi.CGT=manage their Capital Gains Tax on UK property account
-suspension-warning.single.PPT=manage their Plastic Packaging Tax
-suspension-warning.multi.PPT=manage their Plastic Packaging Tax
-suspension-warning.single.PIR=view their Income record
-suspension-warning.multi.PIR=view their Income record
-suspension-warning.p3=You can still access any other service available to you.
-suspension-warning.p4=If you did not receive our letter, or think we have made a mistake, use the ’Is this page not working properly?’ link.
-
-# Error messages.en for digital services
-global.error.500.title=Sorry, we are experiencing technical difficulties - 500
+common.what.happens.next=What happens next
+common.yes=Yes
+details.link-hidden= for {0}
+error-prefix=Error:
+error.invalid.email=Enter an email address in the correct format, like name@example.com
+error.invalid.phone=Enter a phone number in the correct format, like 01632 960 001 or +44 808 157 0192
+error.max-length.email=Your email must be 254 characters or fewer
+error.max-length.name=Your name must be 80 characters or fewer
+error.max-length.phone=Your phone number must be 20 characters or fewer
+error.required.email=Enter an email
+error.required.name=Enter a name
+existing.client.relationships.link=Access existing client relationships
+footer.links.accessibility.text=Accessibility
+footer.links.accessibility.url=/agent-services-account/accessibility-statement
+generic.title={0} - {1} - GOV.UK
 global.error.500.heading=Sorry, we’re experiencing technical difficulties
 global.error.500.message=Please try again in a few minutes.
-
-#session time out
-timeout-dialog.p1=For security reasons, you will be signed out of your Agent services account in
-
-#survey
-survey.title=Feedback
-survey.h2=What were you doing today?
-survey.hint=We will ask you some questions about the service you used.
-survey.error.summary=There is a problem
-survey.form.label.agentsub=Creating an agent services account
-survey.form.label.agenthome=Accessing my agent services account
-survey.form.label.invitagent=Asking a client for authorisation
-survey.form.label.accessingService=Accessing a specific tax service on behalf of my client
-survey.whichService.title=Which tax service do you want to give us feedback about?
-survey.whichService.hint=To direct your feedback to the right team, we need to ask you some questions about the service you used.
-survey.whichService.label.vat=VAT
-survey.whichService.label.it=Making Tax Digital for Income Tax
-survey.whichService.label.trust=Manage a trust or estate
-survey.whichService.label.ir=View income record
-survey.whichService.label.cgt=Capital Gains Tax on a UK property
-survey.whichService.label.other=Any other tax service
-survey.empty=Please select an option
-
-#signed-out
-signed-out.header=You have been signed out
-signed-out.p1=You have not done anything for {0}, so we have signed you out to keep your account secure.
-signed-out.p2=<a class="govuk-link" href="{0}">Sign in again</a> to use this service.
-
-help.heading=Help and guidance
-help.p1=This guidance is for tax agents and advisors. It describes how to use your agent services account.
-# unused? to be removed once confirmed
-help.p1-unused=Find out how to use your agent services account and how clients can authorise you to manage their taxes.
-help.authorised.h2=Getting authorised
-help.authorised.link=Authorising an agent
-# unused above? to be removed once confirmed
-
-help.subheading1=About this guidance
-help.about-guidance.p1=This help and guidance is for tax agents and advisors. It covers how to use your agent services account to:
+global.error.500.title=Sorry, we are experiencing technical difficulties - 500
+help.about-asa.p1=You can only have one agent services account, but you can add several team members to this account. They will need to have Government Gateway user IDs for you to add them.
+help.about-asa.p2=The ‘Account home’ screen includes links for managing client authorisations and certain tax services. For other tax services, you will need to log into your online services for agents account.
+help.about-asa.p3=The ‘Manage account’ screen will vary, depending on whether you have administrator or standard user access. Administrators can choose to manage access permissions using the new feature ‘access groups’. When access groups are turned on, standard users can only manage the clients they have been assigned to.
 help.about-guidance.list1.1=copy VAT and Income Tax for Self Assessment authorisations from other agent accounts
 help.about-guidance.list1.2=request and manage authorisations from clients
 help.about-guidance.list1.3=manage tax services launched since 2019
 help.about-guidance.list1.4=manage the tax affairs of your assigned clients
 help.about-guidance.list1.5=view the details we hold about your organisation
-help.about-guidance.p2=If you have administrator access, you can also:
 help.about-guidance.list2.1=control which staff members can view and manage a client’s tax
 help.about-guidance.list2.2=manage client references
-
-help.subheading2=About your agent services account
-help.about-asa.p1=You can only have one agent services account, but you can add several team members to this account. They will need to have Government Gateway user IDs for you to add them.
-help.about-asa.p2=The ‘Account home’ screen includes links for managing client authorisations and certain tax services. For other tax services, you will need to log into your online services for agents account.
-help.about-asa.p3=The ‘Manage account’ screen will vary, depending on whether you have administrator or standard user access. Administrators can choose to manage access permissions using the new feature ‘access groups’. When access groups are turned on, standard users can only manage the clients they have been assigned to.
-
-help.subheading3=Account home: client authorisations
-help.client-auth.p1=This section allows you to create, view and manage authorisation requests.
-help.client-auth.p2=You can copy across authorisations for VAT and Income Tax for Self Assessment from your online services for agents accounts.
-help.client-auth.p3=You can also create an authorisation request for a client, and view or manage your recent authorisation requests.
-help.client-auth.p4=When asking a client for authorisation, you can send them the link to this guidance:
-help.client-auth.a=https://www.gov.uk/guidance/authorise-an-agent-to-deal-with-certain-tax-services-for-you
-
-help.subheading4=Account home: tax services
-help.mtd.h2=VAT
-help.mtd.link1=Making Tax Digital for VAT as an agent: step by step
-help.mtd.link1.href=https://www.gov.uk/guidance/making-tax-digital-for-vat-as-an-agent-step-by-step
-help.mtd.link2=How to keep digital records and file returns for Making Tax Digital for VAT
-help.mtd.link3=How to sign clients up for Making Tax Digital for VAT
-help.mtd.link3.href=https://www.gov.uk/guidance/sign-up-your-client-for-making-tax-digital-for-vat
-help.mtd.link4=Help and support for Making Tax Digital (videos and webinars)
-help.itsa.h2=Making Tax Digital for Income Tax for Self Assessment (ITSA)
-help.itsa.link1=Making Tax Digital for Income Tax as an agent: step by step
-help.itsa.link2=Using Making Tax Digital for Income Tax
-help.itsa.link3=How to sign clients up for Making Tax Digital for Income Tax
-help.trusts.h2=Trusts and estates
-help.trusts.link1=How to register your client’s estate
-help.trusts.link2=How to register your client’s trust
-help.trusts.link2.href=https://www.gov.uk/guidance/register-your-clients-trust
-help.cgt.h2=Capital Gains Tax on UK property
-help.cgt.link=How to ask for authorisation, manage your client’s account and send returns as an agent
-help.ppt.h2=Plastic Packaging Tax
-help.ppt.link1=Check if your client needs to register for Plastic Packaging Tax
-help.ppt.link1.href=https://www.gov.uk/guidance/check-if-you-need-to-register-for-plastic-packaging-tax
-help.ppt.link2=Register for the next live webinar
-help.ppt.link2.href=https://www.gov.uk/guidance/help-and-support-for-agents#plastic-packaging-tax
+help.about-guidance.p1=This help and guidance is for tax agents and advisors. It covers how to use your agent services account to:
+help.about-guidance.p2=If you have administrator access, you can also:
+help.authorised.h2=Getting authorised
+help.authorised.link=Authorising an agent
 help.cannot.h2=Tax services you cannot manage in this account
 help.cannot.link1=Self Assessment
 help.cannot.link2=VAT (not including Making Tax Digital for VAT)
@@ -307,112 +177,167 @@ help.cannot.link3=Corporation Tax
 help.cannot.link4=Authorising an agent for other tax services
 help.cannot.link5=PAYE for Agents
 help.cannot.link6=How to change or cancel authorisations as an agent
-
-help.subheading5=Manage account: standard users
-help.manage.standard.p1=Standard users cannot make any changes to access groups. If access groups are turned off, they can manage the tax of all their organisation''s clients. When access groups are turned on, they can only:
-help.manage.standard.list1.1=view the access groups they are assigned to
-help.manage.standard.list1.2=view and manage clients they are assigned to through these access groups
-help.manage.standard.p2=Whether access groups are on or off, they can also:
-help.manage.standard.list2.1=view details of the people in the company with administrator access
-help.manage.standard.list2.2=view the details we hold about their company
-help.manage.standard.p3=If you are a standard user and you need to access more information, contact someone in your company with administrator access.
-
-help.subheading6=Manage account: administrators
-help.manage.admin.p1=Team members with administrator access can:
+help.cgt.h2=Capital Gains Tax on UK property
+help.cgt.link=How to ask for authorisation, manage your client’s account and send returns as an agent
+help.client-auth.a=https://www.gov.uk/guidance/authorise-an-agent-to-deal-with-certain-tax-services-for-you
+help.client-auth.p1=This section allows you to create, view and manage authorisation requests.
+help.client-auth.p2=You can copy across authorisations for VAT and Income Tax for Self Assessment from your online services for agents accounts.
+help.client-auth.p3=You can also create an authorisation request for a client, and view or manage your recent authorisation requests.
+help.client-auth.p4=When asking a client for authorisation, you can send them the link to this guidance:
+help.heading=Help and guidance
+help.itsa.h2=Making Tax Digital for Income Tax for Self Assessment (ITSA)
+help.itsa.link1=Making Tax Digital for Income Tax as an agent: step by step
+help.itsa.link2=Using Making Tax Digital for Income Tax
+help.itsa.link3=How to sign clients up for Making Tax Digital for Income Tax
+help.manage.admin.h3.clients=Manage clients
+help.manage.admin.h3.team-members=Manage team members
+help.manage.admin.h3=Manage access permissions with access groups <strong class="govuk-tag">new</strong>
 help.manage.admin.list1.1=see all client, team member and access group details
 help.manage.admin.list1.2=turn access groups on and off
 help.manage.admin.list1.3=create, edit and delete access groups
 help.manage.admin.list1.4=assign clients and team members to access groups
 help.manage.admin.list1.5=create or change client references within this service
 help.manage.admin.list1.6=view the details we hold about their organisation
-help.manage.admin.h3=Manage access permissions with access groups <strong class="govuk-tag">new</strong>
+help.manage.admin.list2.1=more than one team member
+help.manage.admin.list2.2=between 2 and 1,000 clients (inclusive)
+help.manage.admin.p10=Access groups do not work with Income Record Viewer at present. HMRC is looking into this.
+help.manage.admin.p11=You cannot add team members to your account within this service. If you select ''Add or remove team members'' then the required service will open in a new tab.
+help.manage.admin.p12=You can manage the client’s reference within access groups. This will not affect their details in other Government Gateway services.
+help.manage.admin.p1=Team members with administrator access can:
 help.manage.admin.p2=Access groups allow you to manage access permissions for your team members within your agent services account.
 help.manage.admin.p3=By default, all your team members can manage all your clients’ tax affairs. You may want to limit who can manage a specific client’s tax. If so, turn on access groups.
 help.manage.admin.p4=Access groups include team members and clients. If a client is in access groups, only the team members in those groups can manage their tax. You can change the clients and team members in a group at any time
 help.manage.admin.p5=You do not need to assign all your clients to groups. If you do not add a client to any access groups, any staff member can manage their tax.
 help.manage.admin.p6=To use access groups your agent services account needs to include:
-help.manage.admin.list2.1=more than one team member
-help.manage.admin.list2.2=between 2 and 1,000 clients (inclusive)
 help.manage.admin.p7=HMRC are looking into making access groups available to larger agent firms.
 help.manage.admin.p8=When you turn access groups on, it may take some time for our service to gather all your client details. If this happens then you will receive an email when the processing is done.
 help.manage.admin.p9=If you turn access groups off then all your team members will be able to manage all your clients’ tax again. The service will remember your groups, so you can restore them by turning access groups on again.
-help.manage.admin.p10=Access groups do not work with Income Record Viewer at present. HMRC is looking into this.
-help.manage.admin.h3.team-members=Manage team members
-help.manage.admin.p11=You cannot add team members to your account within this service. If you select ''Add or remove team members'' then the required service will open in a new tab.
-help.manage.admin.h3.clients=Manage clients
-help.manage.admin.p12=You can manage the client’s reference within access groups. This will not affect their details in other Government Gateway services.
-
-# Accessibility link
-footer.links.accessibility.text=Accessibility
-footer.links.accessibility.url=/agent-services-account/accessibility-statement
-
-# BETA header
-label.beta=BETA
-label.beta.newservice= This is a new service
-label.beta.improve=will help us to improve it.
+help.manage.standard.list1.1=view the access groups they are assigned to
+help.manage.standard.list1.2=view and manage clients they are assigned to through these access groups
+help.manage.standard.list2.1=view details of the people in the company with administrator access
+help.manage.standard.list2.2=view the details we hold about their company
+help.manage.standard.p1=Standard users cannot make any changes to access groups. If access groups are turned off, they can manage the tax of all their organisation''s clients. When access groups are turned on, they can only:
+help.manage.standard.p2=Whether access groups are on or off, they can also:
+help.manage.standard.p3=If you are a standard user and you need to access more information, contact someone in your company with administrator access.
+help.mtd.h2=VAT
+help.mtd.link1.href=https://www.gov.uk/guidance/making-tax-digital-for-vat-as-an-agent-step-by-step
+help.mtd.link1=Making Tax Digital for VAT as an agent: step by step
+help.mtd.link2=How to keep digital records and file returns for Making Tax Digital for VAT
+help.mtd.link3.href=https://www.gov.uk/guidance/sign-up-your-client-for-making-tax-digital-for-vat
+help.mtd.link3=How to sign clients up for Making Tax Digital for VAT
+help.mtd.link4=Help and support for Making Tax Digital (videos and webinars)
+help.p1-unused=Find out how to use your agent services account and how clients can authorise you to manage their taxes.
+help.p1=This guidance is for tax agents and advisors. It describes how to use your agent services account.
+help.ppt.h2=Plastic Packaging Tax
+help.ppt.link1.href=https://www.gov.uk/guidance/check-if-you-need-to-register-for-plastic-packaging-tax
+help.ppt.link1=Check if your client needs to register for Plastic Packaging Tax
+help.ppt.link2.href=https://www.gov.uk/guidance/help-and-support-for-agents#plastic-packaging-tax
+help.ppt.link2=Register for the next live webinar
+help.subheading1=About this guidance
+help.subheading2=About your agent services account
+help.subheading3=Account home: client authorisations
+help.subheading4=Account home: tax services
+help.subheading5=Manage account: standard users
+help.subheading6=Manage account: administrators
+help.trusts.h2=Trusts and estates
+help.trusts.link1=How to register your client’s estate
+help.trusts.link2.href=https://www.gov.uk/guidance/register-your-clients-trust
+help.trusts.link2=How to register your client’s trust
 label.beta.feedback=feedback
+label.beta.improve=will help us to improve it.
+label.beta.newservice= This is a new service
 label.beta.yours=– your
-
-# Account Details
-account-details.title=Account details
-account-details.inset=To change these details you will need to write to us. <a class="govuk-link" href={0} target="_blank" rel="noreferrer noopener">Find out more by reading the guidance (opens in new tab)</a>. You can only change your details if you are a director, company secretary, sole trader, proprietor or partner.
-account-details.summary-list.header=Agent services account details
-account-details.summary-list.email=Email address
-account-details.summary-list.name=Name
-account-details.summary-list.address=Address
-account-details.summary-list.none=None
-
-#administrators (Assistant/standard user only - not behind feature flag)
-administrators.h1=Administrators
-administrators.ul.p=Administrators can:
-administrators.ul.li.1=turn access groups on or off
-administrators.ul.li.2=view information about all clients and access groups
-administrators.ul.li.3=create, rename and delete access groups
-administrators.ul.li.4=assign clients and team members to access groups
-
-# private beta feature testing
-beta.invite.banner.heading=Help improve our new feature
-beta.invite.banner.p=Try out access groups and tell us what you think.
-beta.invite.banner.link1=Tell me more
-beta.invite.banner.link2=No thanks
-
-beta.invite.yes-no.heading=Access groups feature testing
-beta.invite.yes-no.p=We’re testing a new feature. It lets agents control which staff members can manage a client''s taxes. Your feedback will help us improve our service before we roll it out to everyone.
-beta.invite.yes-no.legend=Would you like to help test access groups?
-beta.invite.yes-no.required.error=Select yes to help test access groups
-
-beta.invite.size.legend=How many clients do you manage using your agent services account?
-beta.invite.size.label.s=1,000 or fewer
-beta.invite.size.label.m=Between 1,001 and 5,000
-beta.invite.size.label.l=Between 5,001 and 9,999
-beta.invite.size.label.x=More than 10,000
-beta.invite.size.required.error=Select the number of clients you have
-
-beta.invite.details.heading=Contact details
-beta.invite.details.label1=Name
-beta.invite.details.label2=Email
-beta.invite.details.label3=Telephone number (optional)
-
-error.required.name=Enter a name
-error.max-length.name=Your name must be 80 characters or fewer
-error.required.email=Enter an email
-error.max-length.email=Your email must be 254 characters or fewer
-error.invalid.email=Enter an email address in the correct format, like name@example.com
-error.max-length.phone=Your phone number must be 20 characters or fewer
-error.invalid.phone=Enter a phone number in the correct format, like 01632 960 001 or +44 808 157 0192
-
-beta.invite.cya.heading=Check your answers
-beta.invite.cya.not-provided=Not provided
-
-beta.invite.confirmation.heading=We have received your response
-beta.invite.confirmation.p=We will get in touch with you using the contact details you provided.
-beta.invite.confirmation.link=Return to agent services account home
-
-
-agent-service-bridging.title= Manage access in the agent services account
-agent-service-bridging.p1= For this tax service, use access groups to control which team members can manage this client. This is done in your agent services account.
-agent-service-bridging.p2= This tax service is managed through your agent services account. Access permissions for the agent services account work differently from other HMRC online services.
-agent-service-bridging.p3= Your organisation can restrict access to a client''s taxes using access groups. If a client is not in any access groups, any team member can manage their tax. If a client is in access groups, only team members in the same groups can manage their tax.
-agent-service-bridging.p4= Your organisation has turned access groups on. You can create new access groups or view existing groups from the ''Manage account'' screen.
-agent-service-bridging.p5= By default, all your team members have access to all your clients. You can restrict access to a client''s taxes using access groups.
-agent-service-bridging.p6= To find out more, select ''Turn on access groups'' on the ''Manage account'' page. You''ll be shown more information. You can then choose to turn access groups on or leave them off.
+label.beta=BETA
+manage.account.account-details=View the contact details we have for your business
+manage.account.add-user=Add a new user
+manage.account.clients.heading=Clients
+manage.account.clients.manage-link=Manage clients
+manage.account.clients.p=View client details, update client reference and see what groups a client is in.
+manage.account.clients.unassigned-link=Clients who are not in any groups
+manage.account.contact-details.heading=Contact details
+manage.account.contact-details.view=View the contact details we have for your business
+manage.account.h1=Manage account
+manage.account.manage-access-permissions.access-groups.OptedInNotReady=Turn off access groups
+manage.account.manage-access-permissions.access-groups.OptedInReady=Turn off access groups
+manage.account.manage-access-permissions.access-groups.OptedOutEligible=Turn on access groups
+manage.account.manage-access-permissions.access-groups.create-new.a=Create new access group
+manage.account.manage-access-permissions.access-groups.hint=Access groups allow you to restrict which team members can manage a client’s tax. 
+manage.account.manage-access-permissions.access-groups.manage.a=Manage access groups
+manage.account.manage-access-permissions.heading=Access groups
+manage.account.manage-access-permissions.inset-text.OptedInNotReady=You have turned on access groups but need to wait until your client details are ready to use with access groups. You will receive a confirmation email  after which you can start using access groups.
+manage.account.manage-access-permissions.inset-text.OptedInSingleUser=To use access groups you need to add more team members to your agent services account under ‘Manage team members on your agent services account’.
+manage.account.manage-access-permissions.inset-text.OptedOutSingleUser=To use access groups you need to add more team members to your agent services account under ‘Manage team members on your agent services account’.
+manage.account.manage-access-permissions.inset-text.OptedOutWrongClientCount=To use access groups you need more than 1 client in your agent services account.
+manage.account.manage-access-permissions.status.opted.in=Turned on
+manage.account.manage-access-permissions.status.opted.out=Turned off
+manage.account.manage-access-permissions.status=Status
+manage.account.manage-team-members.heading=Manage team members on your agent services account
+manage.account.manage-user-access=Manage team member access to your agent services account (opens in new tab)
+manage.account.p=You can allow other users in your organisation to access this agent services account, and manage their access.
+manage.account.team-members.details.p=Use the link in this section to create a new Government Gateway user ID for your team members. These IDs will be linked to the agent services account. <br>Once your team members have verified their new IDs, you can give them access to the account. You can also remove a team member’s access using the same link.
+manage.account.team-members.details.title=How to add or remove team members
+manage.account.team-members.external-manage-link=Create Government Gateway user IDs for team members (opens in new tab)
+manage.account.team-members.p=View team member details and see what groups a team member is in.
+manage.team-members.groups.a=Manage team members’ access groups
+manage.team-members.groups.heading=Manage team members’ access groups
+nav.aria.account-menu=Account menu
+nav.help=Help and Guidance
+nav.home=Account home
+nav.manage.account=Manage account
+nav.signout=Sign out
+nav.your.account=Your account
+service.name=Agent services account
+servicename.titleSuffix=- Agent services account - GOV.UK
+signed-out.header=You have been signed out
+signed-out.p1=You have not done anything for {0}, so we have signed you out to keep your account secure.
+signed-out.p2=<a class="govuk-link" href="{0}">Sign in again</a> to use this service.
+survey.empty=Please select an option
+survey.error.summary=There is a problem
+survey.form.label.accessingService=Accessing a specific tax service on behalf of my client
+survey.form.label.agenthome=Accessing my agent services account
+survey.form.label.agentsub=Creating an agent services account
+survey.form.label.invitagent=Asking a client for authorisation
+survey.h2=What were you doing today?
+survey.hint=We will ask you some questions about the service you used.
+survey.title=Feedback
+survey.whichService.hint=To direct your feedback to the right team, we need to ask you some questions about the service you used.
+survey.whichService.label.cgt=Capital Gains Tax on a UK property
+survey.whichService.label.ir=View income record
+survey.whichService.label.it=Making Tax Digital for Income Tax
+survey.whichService.label.other=Any other tax service
+survey.whichService.label.trust=Manage a trust or estate
+survey.whichService.label.vat=VAT
+survey.whichService.title=Which tax service do you want to give us feedback about?
+suspension-warning.header=We have temporarily limited your use of this service
+suspension-warning.multi.CGT=manage their Capital Gains Tax on UK property account
+suspension-warning.multi.ITSA=manage their Making Tax Digital for Income Tax
+suspension-warning.multi.PIR=view their Income record
+suspension-warning.multi.PPT=manage their Plastic Packaging Tax
+suspension-warning.multi.TRS=maintain a trust or an estate
+suspension-warning.multi.VATC=manage their VAT
+suspension-warning.p1=We did this because we have suspended your agent code. We sent you a letter to confirm this.
+suspension-warning.p2.multi=This means you will not be able to use this service to ask clients for authorisation to:
+suspension-warning.p2.single=This means you will not be able to use this service to ask for authorisation to {0}.
+suspension-warning.p3=You can still access any other service available to you.
+suspension-warning.p4=If you did not receive our letter, or think we have made a mistake, use the ’Is this page not working properly?’ link.
+suspension-warning.single.CGT=manage a client''s Capital Gains Tax on UK property account
+suspension-warning.single.ITSA=manage a client’s Making Tax Digital for Income Tax
+suspension-warning.single.PIR=view their Income record
+suspension-warning.single.PPT=manage their Plastic Packaging Tax
+suspension-warning.single.TRS=maintain a trust or an estate
+suspension-warning.single.VATC=manage a client’s VAT
+timeout-dialog.p1=For security reasons, you will be signed out of your Agent services account in
+your.account.email=Email address
+your.account.h1=Your account
+your.account.name=Name
+your.account.p.role=Standard user <br/> You can view your assigned access groups and clients. You can also view clients who are not in any access groups.
+your.account.role=Role
+your.account.unassigned-clients.a=View other clients
+your.account.unassigned-clients.h2=Other clients you can access
+your.account.your.admins.a=View administrators
+your.account.your.admins.h2=Your organisation’s administrators
+your.account.your.contact.details.a=View the contact details we have for your business
+your.account.your.contact.details.h2=Contact details
+your.account.your.groups.h2=Your access groups
+your.account.your.groups.off.p=Access groups are turned off. Only administrators can turn access groups on or off.
+your.account.your.groups.p=You are not currently assigned to any access groups.

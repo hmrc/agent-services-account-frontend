@@ -1,0 +1,204 @@
+@*
+ * Copyright 2023 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+@import uk.gov.hmrc.govukfrontend.views.Aliases.{HtmlContent, Text, WarningText}
+@import uk.gov.hmrc.govukfrontend.views.html.components.GovukWarningText
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.accordion.Section
+@import uk.gov.hmrc.govukfrontend.views.Aliases.Accordion
+@import uk.gov.hmrc.govukfrontend.views.html.components.GovukAccordion
+
+@import scala.collection.mutable.ListBuffer
+
+@this(
+        p: p, h2: h2, h4: h4, a: a, span: span, ul_html: ul_html,
+        govukWarningText: GovukWarningText,
+        govukAccordion: GovukAccordion,
+)
+
+@(isSuspendedForVat: Boolean)(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
+
+@itsaAccordionItem = {
+@h4("asa.sectionITSA.col1.h3")
+@p(html = Some(Html(msgs("asa.sectionITSA.col1.p",
+    appConfig.agentMappingUrl,
+    appConfig.agentInvitationsFrontendClientTypeUrl))))
+@p(html = Some(Html(msgs("asa.sectionITSA.col1.link"))))
+@h4("asa.sectionITSA.col2.h3")
+
+@p(html = Some(
+    a(href = appConfig.incomeTaxSubscriptionAgentFrontendUrl, key = "asa.sectionITSA.col2.link1.text")
+))
+@p(html = Some(
+    a(href = "https://www.gov.uk/guidance/follow-the-rules-for-making-tax-digital-for-income-tax#who-can-follow-the-rules",
+        key = "asa.sectionITSA.col2.link2.text",
+        target = Some("_blank"),
+        rel = Some("noreferrer noopener")
+    )
+))
+}
+
+@mtdForVatAccordionItem = {
+@if(isSuspendedForVat) {
+    @h4("asa.section1.suspended.h3")
+    @p("asa.section1.suspended.p1")
+    @p("asa.section1.suspended.p2")
+} else {
+    @h4("asa.section1.col1.h3")
+    <p>
+    @a("asa.section1.col1.p", href = appConfig.agentInvitationsFrontendClientTypeUrl)
+    </p>
+
+    @h4("asa.section1.col2.h3")
+    @ul_html(
+        items = Seq[Html](
+            a(href = appConfig.vrsUrl,
+                key = "asa.section1.col2.link1",
+                openInNewWindow = true
+            ),
+            a(href = appConfig.vatUrl,
+                key = "asa.section1.col2.link2",
+                openInNewWindow = true
+            )
+        ),
+        classes = Some("govuk-list--bullet")
+    )
+}
+}
+
+@payeIncomeRecordAccordionItem = {
+@p("asa.paye-section.text")
+@p(html = Some(a(href = appConfig.taxHistoryFrontendUrl, key = "asa.paye-section.link")))
+}
+
+@trustsAccordionItem = {
+@h4("asa.trusts-section.col1.h3")
+@p(msgs("asa.trusts-section.col1.register-trust.p", appConfig.agentInvitationsFrontendClientTypeUrl))
+@p("asa.trusts-section.col1.register-estate.p")
+@h4("asa.trusts-section.col2.h3")
+@p(html = Some(Html(a(href = "https://www.gov.uk/guidance/manage-your-trusts-registration-service",
+    key = "asa.trusts-section.col2.register-trust-link.text") + ".")))
+}
+
+@capitalGainsAccordionItem = {
+
+@h4("asa.section3.col1.h3")
+@p(html = Some(Html(
+    span("asa.section3.col1.text1") + "" +
+            span(msgs("asa.section3.col1.link1",
+                msgs("asa.section3.col1.link1.href"))))
+))
+
+@p(html = Some(
+    Html(
+        span("asa.section3.col1.text2") + " " +
+                span(key = msgs("asa.section3.col1.link2",
+                    msgs("asa.section3.col1.link2.href"))))
+))
+@h4("asa.section3.col2.h3")
+@p(key = msgs("asa.section3.col2.link1",
+    msgs("asa.section3.col2.link1.href")))
+}
+
+@plasticPackagingItem = {
+
+@h4("asa.ppt.col1.h3")
+@p(html = Some(
+    Html(
+        span("asa.ppt.col1.text1") + "" +
+                span(msgs("asa.ppt.col1.link1",
+                    msgs("asa.ppt.col1.link1.href")))
+    )
+))
+
+@p(html = Some(
+    Html(
+        span("asa.ppt.col1.text2") + " " +
+                span(key = msgs("asa.ppt.col1.link2", appConfig.agentInvitationsFrontendUrl)))
+))
+
+@h4("asa.ppt.col2.h3")
+@p(msgs("asa.ppt.col2.link1", msgs("asa.ppt.col2.link1.href")))
+
+
+}
+
+@otherTaxesItem = {
+@govukWarningText(WarningText(content = HtmlContent(span("asa.other.p1"))))
+}
+
+@accordionItems = @{
+    val items = ListBuffer[Section]()
+    items.append(
+        Section(
+            headingContent = Text(msgs("asa.sectionITSA.h2")),
+            content = HtmlContent(itsaAccordionItem)
+        )
+    )
+    items.append(
+        Section(
+            headingContent = Text(msgs("asa.section1.h2")),
+            content = HtmlContent(mtdForVatAccordionItem)
+        )
+    )
+    items.append(
+        Section(
+            headingContent = Text(msgs("asa.paye-section.h2")),
+            content = HtmlContent(payeIncomeRecordAccordionItem)
+        )
+    )
+    items.append(
+        Section(
+            headingContent = Text(msgs("asa.trusts-section.h2")),
+            content = HtmlContent(trustsAccordionItem)
+        )
+    )
+    items.append(
+        Section(
+            headingContent = Text(msgs("asa.section3.col1.h2")),
+            content = HtmlContent(capitalGainsAccordionItem)
+        )
+    )
+    if(appConfig.enablePpt) {
+        items.append(
+            Section(
+                headingContent = Text(msgs("asa.ppt.col1.h2")),
+                content = HtmlContent(plasticPackagingItem)
+            )
+        )
+    }
+    items.append(
+        Section(
+            headingContent = Text(msgs("asa.other.heading")),
+            content = HtmlContent(otherTaxesItem)
+        )
+    )
+    items
+}
+
+@govukAccordion(
+    Accordion(
+        id = "tax-services-accordion",
+        headingLevel = 3,
+        items = accordionItems.toSeq,
+        attributes = Map(
+            "data-i18n.show-section" -> msgs("accordion.showSection"),
+            "data-i18n.hide-section" -> msgs("accordion.hideSection"),
+            "data-i18n.show-all-sections" -> msgs("accordion.showAllSections"),
+            "data-i18n.hide-all-sections" -> msgs("accordion.hideAllSections")
+        )
+    )
+)

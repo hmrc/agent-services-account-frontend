@@ -1,4 +1,13 @@
-@import 'modules/_banner';
+#main-content {
+  padding-top: 0;
+}
+
+ul#client-auth-links{
+  a{
+    display: inline-block;
+    margin-bottom: 4px;
+  }
+}
 
 hr.hr-thick {
   height: 5px;
@@ -15,8 +24,8 @@ hr.hr-thick {
   .govuk-list {
     a {
       &:focus {
-            color: govuk-colour("black") !important;
-            background-color: govuk-colour("yellow")
+        color: govuk-colour("black") !important;
+        background-color: govuk-colour("yellow")
       }
     }
   }
@@ -35,8 +44,8 @@ hr.hr-thick {
   // not sure why it doesn't like govuk-colour("blue"); here
   color: #1d70b8;
   border-width: 0;
-  padding-left:0;
-  padding-right:0;
+  padding-left: 0;
+  padding-right: 0;
   text-decoration: underline;
 
   &:hover {
