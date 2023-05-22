@@ -101,7 +101,7 @@ asa.sectionITSA.col2.h3=Manage your client’s Income Tax details
 asa.sectionITSA.col2.link1.text=View your client’s Income Tax
 asa.sectionITSA.col2.link2.text=Help clients check whether they are eligible (opens in a new tab)
 asa.sectionITSA.h2=Making Tax Digital for Income Tax
-asa.tax-services=Tax services you can manage in this account
+asa.tax-services=Tax services you can access through this account
 asa.trusts-section.col1.h3=Before you start
 asa.trusts-section.col1.register-estate.p=Your client will need to<a class="govuk-link" href="https://www.gov.uk/guidance/manage-your-trusts-registration-service#how-to-use-the-online-service"> claim the trust</a> or estate.
 asa.trusts-section.col1.register-trust.p=Before you<a class="govuk-link" href="{0}"> ask your client to authorise you</a>, you or your client must have<a class="govuk-link" href="https://www.gov.uk/guidance/register-your-clients-trust" target="_blank" rel="noreferrer noopener"> registered the trust (opens in a new tab)</a> or<a class="govuk-link" href="https://www.gov.uk/guidance/register-your-clients-estate" target="_blank" rel="noreferrer noopener"> estate (opens in a new tab)</a>.
