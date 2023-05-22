@@ -195,7 +195,7 @@ class AgentServicesControllerSpec extends BaseISpec {
         expectedClientAuthContent(html)
 
         // accordion includes Income Record Viewer section
-        html.select("#tax-services-h2").text() shouldBe "Tax services you can manage in this account"
+        html.select("#tax-services-h2").text() shouldBe "Tax services you can access through this account"
         val accordion = html.select("#tax-services-accordion")
         accordion.select("#tax-services-accordion-heading-1").text() shouldBe  "Making Tax Digital for Income Tax"
         accordion.select("#tax-services-accordion-heading-2").text() shouldBe  "VAT"

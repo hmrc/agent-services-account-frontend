@@ -101,7 +101,7 @@ asa.sectionITSA.col2.h3=Rheoli manylion Treth Incwm eich cleient
 asa.sectionITSA.col2.link1.text=Bwrw golwg dros fanylion Treth Incwm eich cleient
 asa.sectionITSA.col2.link2.text=Helpu cleientiaid i wirio a ydynt yn gymwys (yn agor tab newydd)
 asa.sectionITSA.h2=Troi Treth yn Ddigidol ar gyfer Treth Incwm
-asa.tax-services=Gwasanaethau treth y gallwch eu rheoli yn y cyfrif hwn
+asa.tax-services=Gwasanaethau treth y gallwch gael mynediad iddynt drwy'r cyfrif hwn
 asa.trusts-section.col1.h3=Cyn i chi ddechrau
 asa.trusts-section.col1.register-estate.p=Bydd angen i’ch cleient<a class="govuk-link" href="https://www.gov.uk/guidance/manage-your-trusts-registration-service#how-to-use-the-online-service"> hawlio’r ymddiriedolaeth</a> neu’r ystâd.
 asa.trusts-section.col1.register-trust.p=Cyn i chi<a class="govuk-link" href="{0}"> ofyn i’ch cleient eich awdurdodi, rhaid eich bod chi neu’ch cleient wedi<a class="govuk-link" href="https://www.gov.uk/guidance/register-your-clients-trust.cy" target="_blank" rel="noreferrer noopener"> cofrestru’r ymddiriedolaeth (yn agor tab newydd)</a> neu’r<a class="govuk-link" href="https://www.gov.uk/guidance/register-your-clients-estate" target="_blank" rel="noreferrer noopener"> ystâd (yn agor tab newydd)</a>.
