@@ -44,7 +44,7 @@ class AgentServicesController @Inject()
   administrators_html: administrators,
   your_account: your_account,
   asaDashboard: asa_dashboard,
-  accountDetailsView: account_details,
+  account_details: account_details,
   helpView: help)(implicit val appConfig: AppConfig,
                   val cc: MessagesControllerComponents,
                   ec: ExecutionContext,
@@ -183,7 +183,7 @@ class AgentServicesController @Inject()
 
   val accountDetails: Action[AnyContent] = Action.async { implicit request =>
     withAuthorisedAsAgent { agentInfo =>
-      agentClientAuthorisationConnector.getAgencyDetails().map(agencyDetails => Ok(accountDetailsView(agencyDetails, agentInfo.isAdmin)))
+      agentClientAuthorisationConnector.getAgencyDetails().map(agencyDetails => Ok(account_details(agencyDetails, agentInfo.isAdmin)))
     }
   }
 
