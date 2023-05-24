@@ -37,7 +37,7 @@
 
     } else {
         <p class="govuk-body">@msgs("suspension-warning.p2.multi")</p>
-        <ul class="list list-bullet govuk-body">
+        <ul class="govuk-list govuk-list--bullet govuk-body">
             @for(suspendedService <- suspendedServices) {
                 <li>@msgs(s"suspension-warning.multi.${suspendedService}")</li>
             }

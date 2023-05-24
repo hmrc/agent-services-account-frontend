@@ -21,11 +21,15 @@
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
 @import uk.gov.hmrc.agentservicesaccount.controllers.routes
 
-@this(main: main, govukSummaryList: GovukSummaryList, govukInsetText : GovukInsetText)
+@this(
+    main: main, h1: h1, h2: h2,
+    govukSummaryList: GovukSummaryList,
+    inset_text:inset_text
+)
 
 @(
-    agencyDetails: Option[AgencyDetails],
-    isAdmin: Boolean
+        agencyDetails: Option[AgencyDetails],
+        isAdmin: Boolean
 )(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
 
 @main(
@@ -35,47 +39,46 @@
     analyticsAdditionalJs = None
 ) {
 
-    <h1 class="govuk-heading-xl">@msgs("account-details.title")</h1>
+    @h1("account-details.title")
+    @inset_text(msgs("account-details.inset", appConfig.govUkGuidanceChangeDetails))
+    @h2("account-details.summary-list.header")
 
-    @govukInsetText(
-        InsetText(
-            content = HtmlContent(msgs("account-details.inset", appConfig.govUkGuidanceChangeDetails))
-        ))
-
-    <h2 class="govuk-heading-m">@msgs("account-details.summary-list.header")</h2>
-@govukSummaryList(SummaryList(
-    rows = Seq(
-        SummaryListRow(
-        key = Key(
-            content = Text(msgs("account-details.summary-list.email"))
-        ),
-        value = Value(
-            content = Text(agencyDetails.flatMap(_.agencyEmail).getOrElse(msgs("account-details.summary-list.none")))
-        ),
-        actions = None
-    ),
-        SummaryListRow(
-            key = Key(
-                content = Text(msgs("account-details.summary-list.name"))
+    @govukSummaryList(SummaryList(
+        rows = Seq(
+            SummaryListRow(
+                key = Key(
+                    content = Text(msgs("account-details.summary-list.email"))
+                ),
+                value = Value(
+                    content = Text(agencyDetails.flatMap(_.agencyEmail).getOrElse(msgs("account-details.summary-list.none")))
+                ),
+                actions = None
             ),
-            value = Value(
-                content = Text(agencyDetails.flatMap(_.agencyName).getOrElse(msgs("account-details.summary-list.none")))
+            SummaryListRow(
+                key = Key(
+                    content = Text(msgs("account-details.summary-list.name"))
+                ),
+                value = Value(
+                    content = Text(agencyDetails.flatMap(_.agencyName).getOrElse(msgs("account-details.summary-list.none")))
+                ),
+                actions = None
             ),
-            actions = None
-        ),
-                SummaryListRow(
-                    key = Key(
-                        content = Text(msgs("account-details.summary-list.address"))
-                    ),
-                    value = Value(
-                        content = HtmlContent(s"""${agencyDetails.flatMap(_.agencyAddress).map(
-                            ba => List(Some(ba.addressLine1), ba.addressLine2, ba.addressLine3, ba.addressLine4, ba.postalCode, Some(ba.countryCode)).flatten
-                        ).map(_.mkString("<br>")).getOrElse("")}""")
-                    ),
-                    actions = None
-                )
-    )
-))
+            SummaryListRow(
+                key = Key(
+                    content = Text(msgs("account-details.summary-list.address"))
+                ),
+                value = Value(
+                    content = HtmlContent(
+                        s"""${
+                            agencyDetails.flatMap(_.agencyAddress).map(
+                                ba => List(Some(ba.addressLine1), ba.addressLine2, ba.addressLine3, ba.addressLine4, ba.postalCode, Some(ba.countryCode)).flatten
+                            ).map(_.mkString("<br>")).getOrElse("")
+                        }""")
+                ),
+                actions = None
+            )
+        )
+    ))
 
 
 }

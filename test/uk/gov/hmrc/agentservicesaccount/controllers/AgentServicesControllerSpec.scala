@@ -836,7 +836,7 @@ class AgentServicesControllerSpec extends BaseISpec {
         html.select(insetText).text() shouldBe "To change these details you will need to write to us. Find out more by reading the guidance (opens in new tab). You can only change your details if you are a director, company secretary, sole trader, proprietor or partner."
         html.select(link).get(0).attr("href").shouldBe("https://www.gov.uk/guidance/change-or-remove-your-authorisations-as-a-tax-agent#changes-you-can-make-in-writing")
 
-        html.select(summaryListKeys).get(0).text shouldBe "Email address"
+        html.select(summaryListKeys).get(0).text shouldBe "Email"
         html.select(summaryListValues).get(0).text shouldBe "abc@abc.com"
         html.select(summaryListKeys).get(1).text shouldBe "Name"
         html.select(summaryListValues).get(1).text shouldBe "My Agency"
@@ -865,7 +865,7 @@ class AgentServicesControllerSpec extends BaseISpec {
 
         html.select(insetText).text() shouldBe "To change these details you will need to write to us. Find out more by reading the guidance (opens in new tab). You can only change your details if you are a director, company secretary, sole trader, proprietor or partner."
 
-        html.select(summaryListKeys).get(0).text shouldBe "Email address"
+        html.select(summaryListKeys).get(0).text shouldBe "Email"
         html.select(summaryListValues).get(0).text shouldBe "None"
         html.select(summaryListKeys).get(1).text shouldBe "Name"
         html.select(summaryListValues).get(1).text shouldBe "None"
@@ -896,7 +896,7 @@ class AgentServicesControllerSpec extends BaseISpec {
         html.select(H2).get(0).text shouldBe "Agent services account details"
         html.select(insetText).text() shouldBe "To change these details you will need to write to us. Find out more by reading the guidance (opens in new tab). You can only change your details if you are a director, company secretary, sole trader, proprietor or partner."
 
-        html.select(summaryListKeys).get(0).text shouldBe "Email address"
+        html.select(summaryListKeys).get(0).text shouldBe "Email"
         html.select(summaryListValues).get(0).text shouldBe "abc@abc.com"
         html.select(summaryListKeys).get(1).text shouldBe "Name"
         html.select(summaryListValues).get(1).text shouldBe "My Agency"
@@ -930,7 +930,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       val userDetailsPanel = html.select("div#user-details")
       userDetailsPanel.select(summaryListKeys).get(0).text() shouldBe "Name"
       userDetailsPanel.select(summaryListValues).get(0).text() shouldBe "Bob The Builder"
-      userDetailsPanel.select(summaryListKeys).get(1).text() shouldBe "Email address"
+      userDetailsPanel.select(summaryListKeys).get(1).text() shouldBe "Email"
       userDetailsPanel.select(summaryListValues).get(1).text() shouldBe "bob@builder.com"
       userDetailsPanel.select(summaryListKeys).get(2).text() shouldBe "Role"
       userDetailsPanel.select(summaryListValues).get(2)
@@ -973,7 +973,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       val userDetailsPanel = html.select("div#user-details")
       userDetailsPanel.select(summaryListKeys).get(0).text() shouldBe "Name"
       userDetailsPanel.select(summaryListValues).get(0).text() shouldBe "Bob The Builder"
-      userDetailsPanel.select(summaryListKeys).get(1).text() shouldBe "Email address"
+      userDetailsPanel.select(summaryListKeys).get(1).text() shouldBe "Email"
       userDetailsPanel.select(summaryListValues).get(1).text() shouldBe "bob@builder.com"
       userDetailsPanel.select(summaryListKeys).get(2).text() shouldBe "Role"
       userDetailsPanel.select(summaryListValues).get(2)
@@ -1016,7 +1016,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       val userDetailsPanel = html.select("div#user-details")
       userDetailsPanel.select(summaryListKeys).get(0).text() shouldBe "Name"
       userDetailsPanel.select(summaryListValues).get(0).text() shouldBe "Bob The Builder"
-      userDetailsPanel.select(summaryListKeys).get(1).text() shouldBe "Email address"
+      userDetailsPanel.select(summaryListKeys).get(1).text() shouldBe "Email"
       userDetailsPanel.select(summaryListValues).get(1).text() shouldBe "bob@builder.com"
       userDetailsPanel.select(summaryListKeys).get(2).text() shouldBe "Role"
       userDetailsPanel.select(summaryListValues).get(2)
