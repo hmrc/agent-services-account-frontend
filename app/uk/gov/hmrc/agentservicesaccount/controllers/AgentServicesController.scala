@@ -145,7 +145,7 @@ class AgentServicesController @Inject()
 
   val yourAccount: Action[AnyContent] = Action.async { implicit request =>
     withFullUserDetails { (agentInfo: AgentInfo) =>
-      if (true) {
+      if (!agentInfo.isAdmin) {
         if (appConfig.granPermsEnabled) {
           agentInfo.credentials.fold(Ok(your_account(None)).toFuture) { credentials =>
             agentPermissionsConnector
