@@ -64,8 +64,8 @@ class ManageLandingControllerSpec extends BaseISpec {
 
       p.get(0).text shouldBe "For this tax service, use access groups to control which team members can manage this client. This is done in your agent services account."
       p.get(1).text shouldBe "This tax service is managed through your agent services account. Access permissions for the agent services account work differently from other HMRC online services."
-      p.get(2).text shouldBe "By default, all your team members have access to all your clients. You can restrict access to a client's taxes using access groups."
-      p.get(3).text shouldBe "To find out more, select 'Turn on access groups' on the 'Manage account' page. You'll be shown more information. You can then choose to turn access groups on or leave them off."
+      p.get(2).text shouldBe "By default, all your team members have access to all your clients. You can restrict access to a client’s taxes using access groups."
+      p.get(3).text shouldBe "To find out more, select ‘Turn on access groups’ on the ‘Manage account’ page. You’ll be shown more information. You can then choose to turn access groups on or leave them off."
 
     }
 
@@ -91,9 +91,9 @@ class ManageLandingControllerSpec extends BaseISpec {
       p.get(1).text
         .shouldBe("This tax service is managed through your agent services account. Access permissions for the agent services account work differently from other HMRC online services.")
       p.get(2).text
-        .shouldBe("Your organisation can restrict access to a client's taxes using access groups. If a client is not in any access groups, any team member can manage their tax. If a client is in access groups, only team members in the same groups can manage their tax.")
+        .shouldBe("Your organisation can restrict access to a client’s taxes using access groups. If a client is not in any access groups, any team member can manage their tax. If a client is in access groups, only team members in the same groups can manage their tax.")
       p.get(3).text
-        .shouldBe("Your organisation has turned access groups on. You can create new access groups or view existing groups from the 'Manage account' screen.")
+        .shouldBe("Your organisation has turned access groups on. You can create new access groups or view existing groups from the ‘Manage account’ screen.")
     }
 
   }
