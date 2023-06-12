@@ -30,6 +30,7 @@ import uk.gov.hmrc.agentservicesaccount.stubs.AgentPermissionsStubs.givenHideBet
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import uk.gov.hmrc.auth.core.{Enrolment, EnrolmentIdentifier}
 import uk.gov.hmrc.http.SessionKeys
+import com.github.tomakehurst.wiremock.client.WireMock._
 
 
 class BetaInviteControllerSpec extends BaseISpec {
@@ -143,6 +144,26 @@ class BetaInviteControllerSpec extends BaseISpec {
 
       val html = Jsoup.parse(contentAsString(result))
       html.title() shouldBe "How many clients do you manage using your agent services account? - Agent services account - GOV.UK"
+    }
+  }
+
+  "GET withFullUserDetails" should {
+    "redirect to subscription journey when there's no HMRC-AS-AGENT enrolments" in {
+        stubFor(post(urlEqualTo("/auth/authorise")) // Created stub without any enrolments.
+          .willReturn(
+            aResponse()
+              .withStatus(200).withBody(
+              s"""{
+                 |  "internalId": "some-id",
+                 |  "affinityGroup": "Agent",
+                 |  "credentialRole": "Admin",
+                 |  "allEnrolments": []
+                 |}""".stripMargin
+            )))
+
+      val result = await(controller.showInviteDetails.apply(getRequest("/your-account"))) // withFullUserDetails is used by the /your-account route
+      status(result) shouldBe SEE_OTHER // 303
+      redirectLocation(result) shouldBe Some("http://localhost:9437/agent-subscription/start")
     }
   }
 

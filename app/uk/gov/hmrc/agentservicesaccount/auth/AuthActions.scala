@@ -66,8 +66,7 @@ class AuthActions @Inject()(appConfig: AppConfig,
   def withFullUserDetails(body: AgentInfo => Future[Result])
                          (implicit ec: ExecutionContext, hc: HeaderCarrier, request: Request[AnyContent])
   : Future[Result] = {
-    val agentEnrolment = "HMRC-AS-AGENT"
-    authorised(AuthProviders(GovernmentGateway) and Enrolment(agentEnrolment))
+    authorised(AuthProviders(GovernmentGateway))
       .retrieve(allEnrolments and credentialRole and email and name and credentials) {
         case enrols ~ credRole ~ email ~ name ~ credentials =>
           getArn(enrols) match {
