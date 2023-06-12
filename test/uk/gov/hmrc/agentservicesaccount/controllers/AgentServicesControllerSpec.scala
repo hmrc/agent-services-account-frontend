@@ -294,8 +294,8 @@ class AgentServicesControllerSpec extends BaseISpec {
 
         //Other tax services
         val seven = accordion.select("#tax-services-accordion-content-7")
-        seven.select(".govuk-warning-text").text shouldBe "! Warning The agent services account is the home for HMRC tax services launched from 2019. For any tax services not listed here, sign out of this account and log in to your HMRC online services for agents account (opens in new tab)."
-        seven.select(".govuk-warning-text").select("a").get(0).text shouldBe "log in to your HMRC online services for agents account (opens in new tab)"
+        seven.select(".govuk-warning-text").text shouldBe "! Warning The agent services account is the home for HMRC tax services launched from 2019. For any tax services not listed here, sign out of this account and log in to your HMRC online services for agents account (opens in a new tab)."
+        seven.select(".govuk-warning-text").select("a").get(0).text shouldBe "log in to your HMRC online services for agents account (opens in a new tab)"
         seven.select(".govuk-warning-text").select("a").get(0).attr("href") shouldBe "https://www.gov.uk/government/collections/hmrc-online-services-for-agents#hmrc-online-services-for-agents-account"
         // end of accordion
 
@@ -410,8 +410,8 @@ class AgentServicesControllerSpec extends BaseISpec {
 
         //Other tax services
         val seven = accordion.select("#tax-services-accordion-content-7")
-        seven.select(".govuk-warning-text").text shouldBe "! Warning The agent services account is the home for HMRC tax services launched from 2019. For any tax services not listed here, sign out of this account and log in to your HMRC online services for agents account (opens in new tab)."
-        seven.select(".govuk-warning-text").select("a").get(0).text shouldBe "log in to your HMRC online services for agents account (opens in new tab)"
+        seven.select(".govuk-warning-text").text shouldBe "! Warning The agent services account is the home for HMRC tax services launched from 2019. For any tax services not listed here, sign out of this account and log in to your HMRC online services for agents account (opens in a new tab)."
+        seven.select(".govuk-warning-text").select("a").get(0).text shouldBe "log in to your HMRC online services for agents account (opens in a new tab)"
         seven.select(".govuk-warning-text").select("a").get(0).attr("href") shouldBe "https://www.gov.uk/government/collections/hmrc-online-services-for-agents#hmrc-online-services-for-agents-account"
         // end of accordion
 
@@ -505,9 +505,9 @@ class AgentServicesControllerSpec extends BaseISpec {
     section.select(Css.detailsText).text() shouldBe "Use the link in this section to create a new Government Gateway user ID for your team members. These IDs will be linked to the agent services account. Once your team members have verified their new IDs, you can give them access to the account. You can also remove a team member’s access using the same link."
 
     val list = section.select("ol.govuk-list--number li")
-    list.get(0).select("a").text shouldBe "Create Government Gateway user IDs for team members (opens in new tab)"
+    list.get(0).select("a").text shouldBe "Create Government Gateway user IDs for team members (opens in a new tab)"
     list.get(0).select("a").attr("href") shouldBe s"http://localhost:1111/user-profile-redirect-frontend/group-profile-management"
-    list.get(1).select("a").text shouldBe "Manage team member access to your agent services account (opens in new tab)"
+    list.get(1).select("a").text shouldBe "Manage team member access to your agent services account (opens in a new tab)"
     list.get(1).select("a").attr("href") shouldBe s"http://localhost:1111/tax-and-scheme-management/users?origin=Agent"
     section.select("hr").isEmpty() shouldBe false
 
@@ -833,7 +833,7 @@ class AgentServicesControllerSpec extends BaseISpec {
 
         html.select(H2).get(0).text shouldBe "Agent services account details"
 
-        html.select(insetText).text() shouldBe "To change these details you will need to write to us. Find out more by reading the guidance (opens in new tab). You can only change your details if you are a director, company secretary, sole trader, proprietor or partner."
+        html.select(insetText).text() shouldBe "To change these details you will need to write to us. Find out more by reading the guidance (opens in a new tab). You can only change your details if you are a director, company secretary, sole trader, proprietor or partner."
         html.select(link).get(0).attr("href").shouldBe("https://www.gov.uk/guidance/change-or-remove-your-authorisations-as-a-tax-agent#changes-you-can-make-in-writing")
 
         html.select(summaryListKeys).get(0).text shouldBe "Email"
@@ -863,7 +863,7 @@ class AgentServicesControllerSpec extends BaseISpec {
 
         html.select(H2).get(0).text shouldBe "Agent services account details"
 
-        html.select(insetText).text() shouldBe "To change these details you will need to write to us. Find out more by reading the guidance (opens in new tab). You can only change your details if you are a director, company secretary, sole trader, proprietor or partner."
+        html.select(insetText).text() shouldBe "To change these details you will need to write to us. Find out more by reading the guidance (opens in a new tab). You can only change your details if you are a director, company secretary, sole trader, proprietor or partner."
 
         html.select(summaryListKeys).get(0).text shouldBe "Email"
         html.select(summaryListValues).get(0).text shouldBe "None"
@@ -894,7 +894,7 @@ class AgentServicesControllerSpec extends BaseISpec {
         html.select(backLink).get(0).attr("href") shouldBe "/agent-services-account/manage-account"
 
         html.select(H2).get(0).text shouldBe "Agent services account details"
-        html.select(insetText).text() shouldBe "To change these details you will need to write to us. Find out more by reading the guidance (opens in new tab). You can only change your details if you are a director, company secretary, sole trader, proprietor or partner."
+        html.select(insetText).text() shouldBe "To change these details you will need to write to us. Find out more by reading the guidance (opens in a new tab). You can only change your details if you are a director, company secretary, sole trader, proprietor or partner."
 
         html.select(summaryListKeys).get(0).text shouldBe "Email"
         html.select(summaryListValues).get(0).text shouldBe "abc@abc.com"
@@ -912,7 +912,7 @@ class AgentServicesControllerSpec extends BaseISpec {
 
   s"GET on Your Account at url: $yourAccountUrl" should {
 
-    "render correctly for Standard User who's Opted-In_READY without Access Groups" in {
+    "render correctly for Standard User who’s Opted-In_READY without Access Groups" in {
       val providerId = RandomUtils.nextLong().toString
       givenFullAuthorisedAsAgentWith(arn, providerId)
       givenOptinRecordExistsForArn(Arn(arn), exists = true)
@@ -955,7 +955,7 @@ class AgentServicesControllerSpec extends BaseISpec {
 
     }
 
-    "render correctly for Standard User who's NOT Opted-In_READY without Access Groups" in {
+    "render correctly for Standard User who’s NOT Opted-In_READY without Access Groups" in {
       val providerId = RandomUtils.nextLong().toString
       givenFullAuthorisedAsAgentWith(arn, providerId)
       givenOptinRecordExistsForArn(Arn(arn), exists = false)
@@ -1209,7 +1209,7 @@ class AgentServicesControllerSpec extends BaseISpec {
 
       // Accordion tab5
       h2.get(4).text shouldBe "Manage account: standard users"
-      p.get(10).text shouldBe "Standard users cannot make any changes to access groups. If access groups are turned off, they can manage the tax of all their organisation's clients. When access groups are turned on, they can only:"
+      p.get(10).text shouldBe "Standard users cannot make any changes to access groups. If access groups are turned off, they can manage the tax of all their organisation’s clients. When access groups are turned on, they can only:"
       li.get(25).text shouldBe "view the access groups they are assigned to"
       li.get(26).text shouldBe "view and manage clients they are assigned to through these access groups"
       p.get(11).text shouldBe "Whether access groups are on or off, they can also:"
@@ -1239,7 +1239,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       p.get(21).text shouldBe "If you turn access groups off then all your team members will be able to manage all your clients’ tax again. The service will remember your groups, so you can restore them by turning access groups on again."
       p.get(22).text shouldBe "Access groups do not work with Income Record Viewer at present. HMRC is looking into this."
       h3.get(7).text shouldBe "Manage team members"
-      p.get(23).text shouldBe "You cannot add team members to your account within this service. If you select 'Add or remove team members' then the required service will open in a new tab."
+      p.get(23).text shouldBe "You cannot add team members to your account within this service. If you select ‘Add or remove team members’ then the required service will open in a new tab."
       h3.get(8).text shouldBe "Manage clients"
       p.get(24).text shouldBe "You can manage the client’s reference within access groups. This will not affect their details in other Government Gateway services."
 
