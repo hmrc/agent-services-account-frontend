@@ -67,6 +67,8 @@ asa.ppt.col1.text2=They must then
 asa.ppt.col2.h3=Manage your client’s Plastic Packaging Tax
 asa.ppt.col2.link1.href=https://www.tax.service.gov.uk/plastic-packaging-tax/account
 asa.ppt.col2.link1=<a class="govuk-link" href="{0}" rel="noreferrer noopener">Report your client’s Plastic Packaging Tax and view payments, returns and penalties</a>
+asa.cbc-section.col1.link1.p=You must first get an authorisation from your client. You can do this by <a class="govuk-link" href="{0}"> requesting an authorisation</a>
+asa.cbc-section.col1.link2.p=Manage your clients'' country-by-country reports and your country-by-country agent contact details
 asa.section1.col1.h3=Before you start
 asa.section1.col1.p2=Not all of your clients may have signed up to Making Tax Digital for VAT. If your client is not signed up, you can still manage and view their VAT details using this account.
 asa.section1.col1.p=You must first get an authorisation from your client.

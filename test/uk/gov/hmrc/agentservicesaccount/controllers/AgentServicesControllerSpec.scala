@@ -202,8 +202,9 @@ class AgentServicesControllerSpec extends BaseISpec {
         accordion.select("#tax-services-accordion-heading-3").text() shouldBe  "View a client’s Income record"
         accordion.select("#tax-services-accordion-heading-4").text() shouldBe  "Trusts and estates"
         accordion.select("#tax-services-accordion-heading-5").text() shouldBe  "Capital Gains Tax on UK property"
-        accordion.select("#tax-services-accordion-heading-6").text() shouldBe  "Plastic Packaging Tax"
-        accordion.select("#tax-services-accordion-heading-7").text() shouldBe  "Other tax services"
+        accordion.select("#tax-services-accordion-heading-6").text() shouldBe  "Country-by-country reports"
+        accordion.select("#tax-services-accordion-heading-7").text() shouldBe  "Plastic Packaging Tax"
+        accordion.select("#tax-services-accordion-heading-8").text() shouldBe  "Other tax services"
 //        tax-services-accordion-content-1
         val one = accordion.select("#tax-services-accordion-content-1")
         one.select("h4").get(0).text() shouldBe "Before you start"
@@ -275,28 +276,41 @@ class AgentServicesControllerSpec extends BaseISpec {
         fivePs.get(2).select("a").get(0).text shouldBe "Report your client’s Capital Gains Tax on UK property and view payments and penalties"
         fivePs.get(2).select("a").get(0).attr("href") shouldBe "https://www.tax.service.gov.uk/capital-gains-tax-uk-property/start"
 
-//      Plastic Packaging Tax
+        //Country by country
         val six = accordion.select("#tax-services-accordion-content-6")
         six.select("h4").get(0).text() shouldBe "Before you start"
-        six.select("h4").get(1).text() shouldBe "Manage your client’s Plastic Packaging Tax"
+        six.select("h4").get(1).text() shouldBe "Manage country-by-country reports"
 
         val sixPs = six.select("p")
-        sixPs.get(0).text shouldBe "Your client must first register for Plastic Packaging Tax (opens in a new tab)"
-        sixPs.get(0).select("a").get(0).text shouldBe "register for Plastic Packaging Tax (opens in a new tab)"
-        sixPs.get(0).select("a").get(0).attr("href") shouldBe "https://www.gov.uk/guidance/register-for-plastic-packaging-tax"
+        sixPs.get(0).text shouldBe "You must first get an authorisation from your client. You can do this by requesting an authorisation"
+        sixPs.get(0).select("a").get(0).text shouldBe "requesting an authorisation"
+        sixPs.get(0).select("a").get(0).attr("href") shouldBe "http://localhost:9448/invitations/agents/client-type"
 
-        sixPs.get(1).text shouldBe "They must then authorise you to act on their behalf"
-        sixPs.get(1).select("a").get(0).text shouldBe "authorise you to act on their behalf"
-        sixPs.get(1).select("a").get(0).attr("href") shouldBe "http://localhost:9448/invitations/agents"
-        sixPs.get(2).text shouldBe "Report your client’s Plastic Packaging Tax and view payments, returns and penalties"
-        sixPs.get(2).select("a").get(0).text shouldBe "Report your client’s Plastic Packaging Tax and view payments, returns and penalties"
-        sixPs.get(2).select("a").get(0).attr("href") shouldBe "https://www.tax.service.gov.uk/plastic-packaging-tax/account"
+        sixPs.get(1).text shouldBe "Manage your clients' country-by-country reports and your country-by-country agent contact details"
+        sixPs.get(1).select("a").get(0).attr("href") shouldBe "https://cbcr-prototype.herokuapp.com/v3/report/agent/what-do-you-want-to-do-next"
+
+//      Plastic Packaging Tax
+        val seven = accordion.select("#tax-services-accordion-content-7")
+        seven.select("h4").get(0).text() shouldBe "Before you start"
+        seven.select("h4").get(1).text() shouldBe "Manage your client’s Plastic Packaging Tax"
+
+        val sevenPs = seven.select("p")
+        sevenPs.get(0).text shouldBe "Your client must first register for Plastic Packaging Tax (opens in a new tab)"
+        sevenPs.get(0).select("a").get(0).text shouldBe "register for Plastic Packaging Tax (opens in a new tab)"
+        sevenPs.get(0).select("a").get(0).attr("href") shouldBe "https://www.gov.uk/guidance/register-for-plastic-packaging-tax"
+
+        sevenPs.get(1).text shouldBe "They must then authorise you to act on their behalf"
+        sevenPs.get(1).select("a").get(0).text shouldBe "authorise you to act on their behalf"
+        sevenPs.get(1).select("a").get(0).attr("href") shouldBe "http://localhost:9448/invitations/agents"
+        sevenPs.get(2).text shouldBe "Report your client’s Plastic Packaging Tax and view payments, returns and penalties"
+        sevenPs.get(2).select("a").get(0).text shouldBe "Report your client’s Plastic Packaging Tax and view payments, returns and penalties"
+        sevenPs.get(2).select("a").get(0).attr("href") shouldBe "https://www.tax.service.gov.uk/plastic-packaging-tax/account"
 
         //Other tax services
-        val seven = accordion.select("#tax-services-accordion-content-7")
-        seven.select(".govuk-warning-text").text shouldBe "! Warning The agent services account is the home for HMRC tax services launched from 2019. For any tax services not listed here, sign out of this account and log in to your HMRC online services for agents account (opens in a new tab)."
-        seven.select(".govuk-warning-text").select("a").get(0).text shouldBe "log in to your HMRC online services for agents account (opens in a new tab)"
-        seven.select(".govuk-warning-text").select("a").get(0).attr("href") shouldBe "https://www.gov.uk/government/collections/hmrc-online-services-for-agents#hmrc-online-services-for-agents-account"
+        val eight = accordion.select("#tax-services-accordion-content-8")
+        eight.select(".govuk-warning-text").text shouldBe "! Warning The agent services account is the home for HMRC tax services launched from 2019. For any tax services not listed here, sign out of this account and log in to your HMRC online services for agents account (opens in a new tab)."
+        eight.select(".govuk-warning-text").select("a").get(0).text shouldBe "log in to your HMRC online services for agents account (opens in a new tab)"
+        eight.select(".govuk-warning-text").select("a").get(0).attr("href") shouldBe "https://www.gov.uk/government/collections/hmrc-online-services-for-agents#hmrc-online-services-for-agents-account"
         // end of accordion
 
         val helpAndGuidance = html.select("#help-and-guidance-section")
@@ -325,8 +339,9 @@ class AgentServicesControllerSpec extends BaseISpec {
         accordion.select("#tax-services-accordion-heading-3").text() shouldBe "View a client’s Income record"
         accordion.select("#tax-services-accordion-heading-4").text() shouldBe "Trusts and estates"
         accordion.select("#tax-services-accordion-heading-5").text() shouldBe "Capital Gains Tax on UK property"
-        accordion.select("#tax-services-accordion-heading-6").text() shouldBe "Plastic Packaging Tax"
-        accordion.select("#tax-services-accordion-heading-7").text() shouldBe "Other tax services"
+        accordion.select("#tax-services-accordion-heading-6").text() shouldBe "Country-by-country reports"
+        accordion.select("#tax-services-accordion-heading-7").text() shouldBe "Plastic Packaging Tax"
+        accordion.select("#tax-services-accordion-heading-8").text() shouldBe "Other tax services"
         //        tax-services-accordion-content-1
         val one = accordion.select("#tax-services-accordion-content-1")
         one.select("h4").get(0).text() shouldBe "Before you start"
@@ -391,28 +406,41 @@ class AgentServicesControllerSpec extends BaseISpec {
         fivePs.get(2).select("a").get(0).text shouldBe "Report your client’s Capital Gains Tax on UK property and view payments and penalties"
         fivePs.get(2).select("a").get(0).attr("href") shouldBe "https://www.tax.service.gov.uk/capital-gains-tax-uk-property/start"
 
-        //      Plastic Packaging Tax
+        //Country by country
         val six = accordion.select("#tax-services-accordion-content-6")
         six.select("h4").get(0).text() shouldBe "Before you start"
-        six.select("h4").get(1).text() shouldBe "Manage your client’s Plastic Packaging Tax"
+        six.select("h4").get(1).text() shouldBe "Manage country-by-country reports"
 
         val sixPs = six.select("p")
-        sixPs.get(0).text shouldBe "Your client must first register for Plastic Packaging Tax (opens in a new tab)"
-        sixPs.get(0).select("a").get(0).text shouldBe "register for Plastic Packaging Tax (opens in a new tab)"
-        sixPs.get(0).select("a").get(0).attr("href") shouldBe "https://www.gov.uk/guidance/register-for-plastic-packaging-tax"
+        sixPs.get(0).text shouldBe "You must first get an authorisation from your client. You can do this by requesting an authorisation"
+        sixPs.get(0).select("a").get(0).text shouldBe "requesting an authorisation"
+        sixPs.get(0).select("a").get(0).attr("href") shouldBe "http://localhost:9448/invitations/agents/client-type"
 
-        sixPs.get(1).text shouldBe "They must then authorise you to act on their behalf"
-        sixPs.get(1).select("a").get(0).text shouldBe "authorise you to act on their behalf"
-        sixPs.get(1).select("a").get(0).attr("href") shouldBe "http://localhost:9448/invitations/agents"
-        sixPs.get(2).text shouldBe "Report your client’s Plastic Packaging Tax and view payments, returns and penalties"
-        sixPs.get(2).select("a").get(0).text shouldBe "Report your client’s Plastic Packaging Tax and view payments, returns and penalties"
-        sixPs.get(2).select("a").get(0).attr("href") shouldBe "https://www.tax.service.gov.uk/plastic-packaging-tax/account"
+        sixPs.get(1).text shouldBe "Manage your clients' country-by-country reports and your country-by-country agent contact details"
+        sixPs.get(1).select("a").get(0).attr("href") shouldBe "https://cbcr-prototype.herokuapp.com/v3/report/agent/what-do-you-want-to-do-next"
+
+        //      Plastic Packaging Tax
+        val seven = accordion.select("#tax-services-accordion-content-7")
+        seven.select("h4").get(0).text() shouldBe "Before you start"
+        seven.select("h4").get(1).text() shouldBe "Manage your client’s Plastic Packaging Tax"
+
+        val sevenPs = seven.select("p")
+        sevenPs.get(0).text shouldBe "Your client must first register for Plastic Packaging Tax (opens in a new tab)"
+        sevenPs.get(0).select("a").get(0).text shouldBe "register for Plastic Packaging Tax (opens in a new tab)"
+        sevenPs.get(0).select("a").get(0).attr("href") shouldBe "https://www.gov.uk/guidance/register-for-plastic-packaging-tax"
+
+        sevenPs.get(1).text shouldBe "They must then authorise you to act on their behalf"
+        sevenPs.get(1).select("a").get(0).text shouldBe "authorise you to act on their behalf"
+        sevenPs.get(1).select("a").get(0).attr("href") shouldBe "http://localhost:9448/invitations/agents"
+        sevenPs.get(2).text shouldBe "Report your client’s Plastic Packaging Tax and view payments, returns and penalties"
+        sevenPs.get(2).select("a").get(0).text shouldBe "Report your client’s Plastic Packaging Tax and view payments, returns and penalties"
+        sevenPs.get(2).select("a").get(0).attr("href") shouldBe "https://www.tax.service.gov.uk/plastic-packaging-tax/account"
 
         //Other tax services
-        val seven = accordion.select("#tax-services-accordion-content-7")
-        seven.select(".govuk-warning-text").text shouldBe "! Warning The agent services account is the home for HMRC tax services launched from 2019. For any tax services not listed here, sign out of this account and log in to your HMRC online services for agents account (opens in a new tab)."
-        seven.select(".govuk-warning-text").select("a").get(0).text shouldBe "log in to your HMRC online services for agents account (opens in a new tab)"
-        seven.select(".govuk-warning-text").select("a").get(0).attr("href") shouldBe "https://www.gov.uk/government/collections/hmrc-online-services-for-agents#hmrc-online-services-for-agents-account"
+        val eight = accordion.select("#tax-services-accordion-content-8")
+        eight.select(".govuk-warning-text").text shouldBe "! Warning The agent services account is the home for HMRC tax services launched from 2019. For any tax services not listed here, sign out of this account and log in to your HMRC online services for agents account (opens in a new tab)."
+        eight.select(".govuk-warning-text").select("a").get(0).text shouldBe "log in to your HMRC online services for agents account (opens in a new tab)"
+        eight.select(".govuk-warning-text").select("a").get(0).attr("href") shouldBe "https://www.gov.uk/government/collections/hmrc-online-services-for-agents#hmrc-online-services-for-agents-account"
         // end of accordion
 
         val helpAndGuidance = html.select("#help-and-guidance-section")

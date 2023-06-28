@@ -135,6 +135,15 @@
 
 
 }
+    @CounrtyByCountryAccordionItem = {
+
+            @h4("asa.section3.col1.h3")
+            @p(msgs("asa.cbc-section.col1.link1.p", appConfig.agentInvitationsFrontendClientTypeUrl))
+
+            @h4("Manage country-by-country reports")
+            @p(html = Some(a(href = "https://cbcr-prototype.herokuapp.com/v3/report/agent/what-do-you-want-to-do-next",
+                key = "asa.cbc-section.col1.link2.p")))
+        }
 
 @otherTaxesItem = {
 @govukWarningText(WarningText(content = HtmlContent(span("asa.other.p1"))))
@@ -172,6 +181,16 @@
             content = HtmlContent(capitalGainsAccordionItem)
         )
     )
+
+    if(appConfig.enableCbc) {
+        items.append(
+            Section(
+            headingContent = Text(msgs("Country-by-country reports")),
+            content = HtmlContent(CounrtyByCountryAccordionItem)
+            )
+        )
+    }
+
     if(appConfig.enablePpt) {
         items.append(
             Section(
