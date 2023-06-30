@@ -140,8 +140,8 @@
             @h4("asa.section3.col1.h3")
             @p(msgs("asa.cbc-section.col1.link1.p", appConfig.agentInvitationsFrontendClientTypeUrl))
 
-            @h4("Manage country-by-country reports")
-            @p(html = Some(a(href = "https://cbcr-prototype.herokuapp.com/v3/report/agent/what-do-you-want-to-do-next",
+            @h4("asa.cbc.col1.h2")
+            @p(html = Some(a(href = "https://www.tax.service.gov.uk/send-a-country-by-country-report",
                 key = "asa.cbc-section.col1.link2.p")))
         }
 
@@ -185,7 +185,7 @@
     if(appConfig.enableCbc) {
         items.append(
             Section(
-            headingContent = Text(msgs("Country-by-country reports")),
+            headingContent = Text(msgs("asa.cbc.col1.h3")),
             content = HtmlContent(CounrtyByCountryAccordionItem)
             )
         )

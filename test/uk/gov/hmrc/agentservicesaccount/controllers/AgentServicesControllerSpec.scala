@@ -287,7 +287,7 @@ class AgentServicesControllerSpec extends BaseISpec {
         sixPs.get(0).select("a").get(0).attr("href") shouldBe "http://localhost:9448/invitations/agents/client-type"
 
         sixPs.get(1).text shouldBe "Manage your clients' country-by-country reports and your country-by-country agent contact details"
-        sixPs.get(1).select("a").get(0).attr("href") shouldBe "https://cbcr-prototype.herokuapp.com/v3/report/agent/what-do-you-want-to-do-next"
+        sixPs.get(1).select("a").get(0).attr("href") shouldBe "https://www.tax.service.gov.uk/send-a-country-by-country-report"
 
 //      Plastic Packaging Tax
         val seven = accordion.select("#tax-services-accordion-content-7")
@@ -417,7 +417,7 @@ class AgentServicesControllerSpec extends BaseISpec {
         sixPs.get(0).select("a").get(0).attr("href") shouldBe "http://localhost:9448/invitations/agents/client-type"
 
         sixPs.get(1).text shouldBe "Manage your clients' country-by-country reports and your country-by-country agent contact details"
-        sixPs.get(1).select("a").get(0).attr("href") shouldBe "https://cbcr-prototype.herokuapp.com/v3/report/agent/what-do-you-want-to-do-next"
+        sixPs.get(1).select("a").get(0).attr("href") shouldBe "https://www.tax.service.gov.uk/send-a-country-by-country-report"
 
         //      Plastic Packaging Tax
         val seven = accordion.select("#tax-services-accordion-content-7")
