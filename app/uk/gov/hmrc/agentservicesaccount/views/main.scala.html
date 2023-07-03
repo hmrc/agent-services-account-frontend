@@ -24,18 +24,20 @@
 @import uk.gov.hmrc.hmrcfrontend.views.config.StandardBetaBanner
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcReportTechnicalIssueHelper
+@import uk.gov.hmrc.govukfrontend.views.html.components.TwoThirdsMainContent
+@import uk.gov.hmrc.agentservicesaccount.views.html.fullWidthMainContentLayout
 
 @this(
     hmrcStandardPage: HmrcStandardPage,
-    fullWidthMainContent: fullWidthMainContentLayout,
     head: head,
     secondary_nav: secondary_nav,
     standardBetaBanner: StandardBetaBanner,
     govukBackLink : GovukBackLink,
     hmrcLanguageSelectHelper: HmrcLanguageSelectHelper,
-    hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper
+    hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper,
+    twoThirdsLayout: TwoThirdsMainContent,
+    fullWidthMainContent: fullWidthMainContentLayout
 )
-
 @(
     pageTitle: String,
     isAdmin: Boolean = false,
@@ -43,7 +45,7 @@
     hasTimeout: Boolean = true,
     fullWidth: Boolean = false,
     backLinkHref: Option[String] = None,
-    showSecondaryNav: Boolean = true
+    showSecondaryNav: Boolean = true,
 )(contentBlock: Html)(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
 
 @scripts = {
@@ -93,7 +95,7 @@
         additionalHeadBlock = Some(head(hasTimeout)),
         additionalScriptsBlock = Some(scripts),
         beforeContentBlock = Some(beforeContent),
-        mainContentLayout = if(fullWidth) Some(fullWidthMainContent(_)) else None
+        mainContentLayout = if(fullWidth) Some(fullWidthMainContent(_)) else Some(twoThirdsLayout(_))
     ),
     serviceName = Some(msgs("service.name")),
     pageTitle = Some(msgs("generic.title", pageTitle, msgs("service.name")))
