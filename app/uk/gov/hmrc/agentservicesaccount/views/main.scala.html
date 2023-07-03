@@ -25,7 +25,7 @@
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcReportTechnicalIssueHelper
 @import uk.gov.hmrc.govukfrontend.views.html.components.TwoThirdsMainContent
-
+@import uk.gov.hmrc.agentservicesaccount.views.html.fullWidthMainContentLayout
 
 @this(
     hmrcStandardPage: HmrcStandardPage,
@@ -36,6 +36,7 @@
     hmrcLanguageSelectHelper: HmrcLanguageSelectHelper,
     hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper,
     twoThirdsLayout: TwoThirdsMainContent,
+    fullWidthMainContent: fullWidthMainContentLayout
 )
 @(
     pageTitle: String,
@@ -94,7 +95,7 @@
         additionalHeadBlock = Some(head(hasTimeout)),
         additionalScriptsBlock = Some(scripts),
         beforeContentBlock = Some(beforeContent),
-        mainContentLayout = if(fullWidth) Some(twoThirdsLayout(_)) else None
+        mainContentLayout = if(fullWidth) Some(fullWidthMainContent(_)) else Some(twoThirdsLayout(_))
     ),
     serviceName = Some(msgs("service.name")),
     pageTitle = Some(msgs("generic.title", pageTitle, msgs("service.name")))
