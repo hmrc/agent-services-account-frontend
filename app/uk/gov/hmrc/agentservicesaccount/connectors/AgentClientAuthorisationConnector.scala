@@ -22,6 +22,7 @@ import com.kenshoo.play.metrics.Metrics
 import javax.inject.Inject
 import play.api.http.Status._
 import play.api.libs.json.Json
+import play.api.i18n.Lang.logger
 import uk.gov.hmrc.agent.kenshoo.monitoring.HttpAPIMonitor
 import uk.gov.hmrc.agentmtdidentifiers.model.{SuspensionDetails, SuspensionDetailsNotFound}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
@@ -45,7 +46,7 @@ class AgentClientAuthorisationConnector @Inject()(http: HttpClient)(implicit val
             case OK => Json.parse(response.body).as[SuspensionDetails]
             case NO_CONTENT => SuspensionDetails(suspensionStatus = false, None)
             case NOT_FOUND => throw SuspensionDetailsNotFound("No record found for this agent")
-            case e =>  throw UpstreamErrorResponse(s"Error code $e thrown whilst handing details", e)
+            case e =>  throw UpstreamErrorResponse(s"Error $e unable to get suspension details", e)
           })
     }
 
@@ -57,6 +58,7 @@ class AgentClientAuthorisationConnector @Inject()(http: HttpClient)(implicit val
           response.status match {
             case OK => Json.parse(response.body).asOpt[AgencyDetails]
             case NO_CONTENT => None
+            case s => logger.error(s"unexpected response $s when getting agency details"); None
           })
     }
 }
