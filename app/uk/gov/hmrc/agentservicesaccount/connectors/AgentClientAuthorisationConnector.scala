@@ -22,12 +22,13 @@ import com.kenshoo.play.metrics.Metrics
 import javax.inject.Inject
 import play.api.http.Status._
 import play.api.libs.json.Json
+import play.api.i18n.Lang.logger
 import uk.gov.hmrc.agent.kenshoo.monitoring.HttpAPIMonitor
 import uk.gov.hmrc.agentmtdidentifiers.model.{SuspensionDetails, SuspensionDetailsNotFound}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
 import uk.gov.hmrc.http.HttpReads.Implicits._
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse, UpstreamErrorResponse}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -45,6 +46,7 @@ class AgentClientAuthorisationConnector @Inject()(http: HttpClient)(implicit val
             case OK => Json.parse(response.body).as[SuspensionDetails]
             case NO_CONTENT => SuspensionDetails(suspensionStatus = false, None)
             case NOT_FOUND => throw SuspensionDetailsNotFound("No record found for this agent")
+            case e =>  throw UpstreamErrorResponse(s"Error $e unable to get suspension details", e)
           })
     }
 
@@ -56,6 +58,7 @@ class AgentClientAuthorisationConnector @Inject()(http: HttpClient)(implicit val
           response.status match {
             case OK => Json.parse(response.body).asOpt[AgencyDetails]
             case NO_CONTENT => None
+            case s => logger.error(s"unexpected response $s when getting agency details"); None
           })
     }
 }
