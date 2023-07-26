@@ -483,12 +483,13 @@ class AgentServicesControllerSpec extends BaseISpec {
       Helpers.contentType(response).get shouldBe HTML
       val content = Helpers.contentAsString(response)
 
-      content should include(messagesApi("suspension-warning.header"))
+      content should include(messagesApi("suspension-warning.header1"))
       content should include(messagesApi("suspension-warning.p1"))
-      content should include(messagesApi("suspension-warning.p2.multi"))
-      content should include(messagesApi("suspension-warning.multi.HMRC-MTD-IT"))
-      content should include(messagesApi("suspension-warning.multi.HMRC-MTD-VAT"))
-      content should include(messagesApi("suspension-warning.p3"))
+      content should include(messagesApi("suspension-warning.p2"))
+      content should include(messagesApi("suspension-warning.p5"))
+      content should include(messagesApi("suspension-warning.list1"))
+      content should include(messagesApi("suspension-warning.list2"))
+      content should include(messagesApi("suspension-warning.list3"))
       content should include(htmlEscapedMessage("suspension-warning.p4"))
       val getHelpLink = Jsoup.parse(content).select(Css.getHelpWithThisPageLink)
       getHelpLink.attr("href") shouldBe "http://localhost:9250/contact/report-technical-problem?newTab=true&service=AOSS&referrerUrl=%2Fhome"

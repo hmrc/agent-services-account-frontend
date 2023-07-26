@@ -18,7 +18,7 @@
 @import uk.gov.hmrc.agentservicesaccount.controllers.routes
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 
-@this(main: main)
+@this(main: main, link_as_button: link_as_button)
 
 
 @(isAdmin: Boolean)(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
@@ -27,28 +27,25 @@
 
 @main(pageTitle = msgs("suspension-warning.header"), isAdmin = isAdmin) {
 
-    <h1 class="govuk-heading-xl">@msgs("suspension-warning.header")</h1>
+    <h1 class="govuk-heading-xl">@msgs("suspension-warning.header1")</h1>
     <p class="govuk-body">@msgs("suspension-warning.p1")</p>
 
-    @if(suspendedServices.size == 1) {
-        <p class="govuk-body">
-            @msgs("suspension-warning.p2.single", msgs(s"suspension-warning.single.${suspendedServices.head}"))
-        </p>
-
-    } else {
-        <p class="govuk-body">@msgs("suspension-warning.p2.multi")</p>
+        <p class="govuk-body">@msgs("suspension-warning.p2")</p>
+        <p class="govuk-body">@msgs("suspension-warning.p5")</p>
         <ul class="govuk-list govuk-list--bullet govuk-body">
-            @for(suspendedService <- suspendedServices) {
-                <li>@msgs(s"suspension-warning.multi.${suspendedService}")</li>
-            }
+
+            <li>@msgs("suspension-warning.list1")</li>
+            <li>@msgs("suspension-warning.list2")</li>
+            <li>@msgs("suspension-warning.list3")</li>
+
         </ul>
-    }
-    <p class="govuk-body">@msgs("suspension-warning.p3")</p>
+
     <p class="govuk-body">@msgs("suspension-warning.p4")</p>
 
-    <p>
+    <div class="govuk-button-group">
     <a href="@routes.AgentServicesController.showAgentServicesAccount" class="govuk-button">@msgs("common.continue")</a>
-    </p>
+    <a href="@routes.AgentServicesController.manageAccount.url" class="govuk-link">@msgs("common.continue.gov")</a>
+    </div>
 
 
 }
