@@ -50,6 +50,7 @@ class AuthActions @Inject()(appConfig: AppConfig,
                             val env: Environment,
                             val config: Configuration) extends AuthorisedFunctions with Logging {
 
+  // TODO we need to checks the agents data and see if they're suspended or not if they're redirect them to the suspended warning page
   def withAuthorisedAsAgent(body: AgentInfo => Future[Result])(implicit ec: ExecutionContext, hc: HeaderCarrier, request: Request[AnyContent]): Future[Result] =
     authorised(AuthProviders(GovernmentGateway) and AffinityGroup.Agent)
       .retrieve(allEnrolments and credentialRole) {
