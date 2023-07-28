@@ -44,15 +44,12 @@ class Actions @Inject()(  agentClientAuthorisationConnector: AgentClientAuthoris
       agentClientAuthorisationConnector.getSuspensionDetails().map { suspensionDetails =>
         if (!suspensionDetails.suspensionStatus) None
         else
-          //todo write tests and do for all taxes
-         Some( Redirect(routes.AgentServicesController.showSuspendedWarning())
-            .addingToSession(
-              "suspendedServices" -> suspensionDetails.toString,
-              "isSuspendedForVat" -> suspensionDetails.suspendedRegimes.contains("VATC").toString))
+         Some( Redirect(routes.AgentServicesController.showSuspendedWarning()))
       }
 
 
     }
+
 
 
   }

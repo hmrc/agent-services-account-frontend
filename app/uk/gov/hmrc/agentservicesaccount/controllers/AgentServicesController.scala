@@ -71,8 +71,7 @@ class AgentServicesController @Inject()
                 formatArn(agentInfo.arn),
                 showFeatureInvite && agentInfo.isAdmin,
                 customDimension,
-                agentInfo.isAdmin,
-                false)).addingToSession(toReturnFromMapping())
+                agentInfo.isAdmin)).addingToSession(toReturnFromMapping())
         }
       }
 
