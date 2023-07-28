@@ -20,7 +20,7 @@ import play.api.Logging
 import play.api.i18n.MessagesApi
 import play.api.mvc._
 import uk.gov.hmrc.agents.accessgroups.optin.OptedInReady
-import uk.gov.hmrc.agentservicesaccount.actions.AuthActions
+import uk.gov.hmrc.agentservicesaccount.actions.{Actions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentPermissionsConnector
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.EACD._
@@ -29,7 +29,7 @@ import javax.inject._
 import scala.concurrent.{ExecutionContext, Future}
 
 class ManageLandingController @Inject()(
-                                         authActions: AuthActions,
+                                         actions:Actions,
                                          agentPermissionsConnector: AgentPermissionsConnector,
                                          asa_bridging_screen: asa_bridging_screen)(implicit val appConfig: AppConfig,
                                                                                    val cc: MessagesControllerComponents,
@@ -37,9 +37,9 @@ class ManageLandingController @Inject()(
                                                                                    messagesApi: MessagesApi)
   extends AgentServicesBaseController with Logging {
 
-  val showAccessGroupSummaryForASA: Action[AnyContent] = Action.async { implicit request =>
+  val showAccessGroupSummaryForASA: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     // auth step will confirm user is authorised, with correct GG affinity type and HMRC-AS-AGENT enrolment
-    authActions.withAuthorisedAsAgent { agentInfo => // agentInfo is data about the logged in Agent, used in check below
+   val agentInfo = request.agentInfo
       if (agentInfo.isAdmin) { // only credentialRole = Admin or User can see this page
         if (appConfig.granPermsEnabled) { // checks GranPremsEnable feature flag
           for {
@@ -57,7 +57,6 @@ class ManageLandingController @Inject()(
       } else {
         Future.successful(Forbidden)
       }
-    }
   }
 
 }

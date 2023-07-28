@@ -63,48 +63,33 @@ class AgentServicesController @Inject()
 
       }
 
-  val showAgentServicesAccount: Action[AnyContent] = Action.async { implicit request =>
-    withAuthorisedAsAgent { agentInfo =>
+  val showAgentServicesAccount: Action[AnyContent] = actions.authActionCheckSuspend.async  { implicit request =>
+    val agentInfo = request.agentInfo
       withShowFeatureInvite(agentInfo.arn) { showFeatureInvite: Boolean =>
-        request.session.get("isSuspendedForVat") match {
-          case Some(isSuspendedForVat) =>
             Future successful Ok(
               asaDashboard(
                 formatArn(agentInfo.arn),
                 showFeatureInvite && agentInfo.isAdmin,
                 customDimension,
                 agentInfo.isAdmin,
-                isSuspendedForVat.toBoolean)).addingToSession(toReturnFromMapping())
-
-          case None =>
-            agentClientAuthorisationConnector.getSuspensionDetails().map { suspensionDetails =>
-              Ok(
-                asaDashboard(
-                  formatArn(agentInfo.arn),
-                  showFeatureInvite && agentInfo.isAdmin,
-                  customDimension,
-                  agentInfo.isAdmin,
-                  suspensionDetails.suspendedRegimes.contains("VATC"))).addingToSession(toReturnFromMapping())
-            }
+                false)).addingToSession(toReturnFromMapping())
         }
       }
 
-    }
-  }
+
+
 
   private def toReturnFromMapping()(implicit request: Request[AnyContent]) = {
     val sessionKeyUsedInMappingService = "OriginForMapping"
     sessionKeyUsedInMappingService -> localFriendlyUrl(env)(request.path, request.host)
   }
 
-  val showSuspendedWarning: Action[AnyContent] = Action.async { implicit request =>
-    withAuthorisedAsAgent { agentInfo =>
-      Future successful Ok(suspensionWarningView(agentInfo.isAdmin))
-    }
+  val showSuspendedWarning: Action[AnyContent] = actions.authActionCheckSuspend { implicit request =>
+   Ok(suspensionWarningView(request.agentInfo.isAdmin))
   }
 
-  val manageAccount: Action[AnyContent] = Action.async { implicit request =>
-    withAuthorisedAsAgent { agentInfo =>
+  val manageAccount: Action[AnyContent] = actions.authActionCheckSuspend.async{ implicit request =>
+      val agentInfo = request.agentInfo
       if (agentInfo.isAdmin) {
         if (appConfig.granPermsEnabled) {
           agentPermissionsConnector.isArnAllowed flatMap {
@@ -129,7 +114,7 @@ class AgentServicesController @Inject()
         } else {
           Future.successful(Forbidden)
         }
-      }
+
     }
   }
 
@@ -162,8 +147,8 @@ class AgentServicesController @Inject()
     }
   }
 
-  val administrators: Action[AnyContent] = Action.async { implicit request =>
-    withAuthorisedAsAgent { agentInfo =>
+  val administrators: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
+   val agentInfo= request.agentInfo
       if (!agentInfo.isAdmin) {
         agentUserClientDetailsConnector.getTeamMembers(agentInfo.arn).map { maybeMembers =>
           Ok(
@@ -174,18 +159,17 @@ class AgentServicesController @Inject()
         }
       } else Forbidden.toFuture
     }
+
+
+  val accountDetails: Action[AnyContent] =  actions.authActionCheckSuspend.async { implicit request =>
+
+      agentClientAuthorisationConnector.getAgencyDetails().map(agencyDetails => Ok(account_details(agencyDetails, request.agentInfo.isAdmin)))
   }
 
-  val accountDetails: Action[AnyContent] = Action.async { implicit request =>
-    withAuthorisedAsAgent { agentInfo =>
-      agentClientAuthorisationConnector.getAgencyDetails().map(agencyDetails => Ok(account_details(agencyDetails, agentInfo.isAdmin)))
-    }
-  }
+  val showHelp: Action[AnyContent] =  actions.authActionCheckSuspend { implicit request =>
 
-  val showHelp: Action[AnyContent] = Action.async { implicit request =>
-    withAuthorisedAsAgent { agentInfo =>
-        Future successful Ok(helpView(agentInfo.isAdmin))
-    }
+   Ok(helpView(request.agentInfo.isAdmin))
+
   }
 
   private def formatArn(arn: Arn): String = {

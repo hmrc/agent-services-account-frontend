@@ -90,20 +90,6 @@ class AuthActions @Inject()(appConfig: AppConfig,
       logger.warn(s"user logged in with unsupported affinity group")
       Left(Forbidden)
   }
-  //todo get rid of withAuthorisedAsAgent
-  // TODO we need to checks the agents data and see if they're suspended or not if they're redirect them to the suspended warning page
-  def withAuthorisedAsAgent(body: AgentInfo => Future[Result])(implicit ec: ExecutionContext, hc: HeaderCarrier, request: Request[AnyContent]): Future[Result] =
-    authorised(AuthProviders(GovernmentGateway) and AffinityGroup.Agent)
-      .retrieve(allEnrolments and credentialRole) {
-        case enrols ~ credRole =>
-          getArn(enrols) match {
-            case Some(arn) =>
-              body(AgentInfo(arn, credRole))
-            case None =>
-              logger.warn("No HMRC-AS-AGENT enrolment found -- redirecting to /agent-subscription/start.")
-              Future successful Redirect(appConfig.agentSubscriptionFrontendUrl)
-          }
-      }.recover(handleFailure)
 
   def withFullUserDetails(body: AgentInfo => Future[Result])
                          (implicit ec: ExecutionContext, hc: HeaderCarrier, request: Request[AnyContent])

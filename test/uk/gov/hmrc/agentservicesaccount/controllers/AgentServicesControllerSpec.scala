@@ -131,13 +131,13 @@ class AgentServicesControllerSpec extends BaseISpec {
         status(result) shouldBe OK
       }
 
-      "Agent is suspended for VATC (suspension details are in the session)" in {
-        givenSuspensionStatus(SuspensionDetails(suspensionStatus = true, Some(Set("VATC"))))
+      "Agent is suspended should be redirected" in {
+        givenSuspensionStatus(SuspensionDetails(suspensionStatus = true, None))
         givenAuthorisedAsAgentWith(arn)
         givenHidePrivateBetaInviteNotFound()
 
         val response = controller.showAgentServicesAccount()(fakeRequest("GET", "/home"))
-        status(response) shouldBe OK
+        status(response) shouldBe SEE_OTHER
       }
 
     }

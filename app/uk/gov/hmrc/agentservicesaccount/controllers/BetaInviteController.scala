@@ -19,7 +19,7 @@ package uk.gov.hmrc.agentservicesaccount.controllers
 import play.api.Logging
 import play.api.i18n.MessagesApi
 import play.api.mvc._
-import uk.gov.hmrc.agentservicesaccount.actions.AuthActions
+import uk.gov.hmrc.agentservicesaccount.actions.{Actions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentPermissionsConnector
 import uk.gov.hmrc.agentservicesaccount.forms.{BetaInviteContactDetailsForm, BetaInviteForm, YesNoForm}
@@ -33,7 +33,8 @@ import scala.concurrent.ExecutionContext
 @Singleton
 class BetaInviteController @Inject()
 (
-  authActions: AuthActions,
+  actions:Actions,
+
   agentPermissionsConnector: AgentPermissionsConnector,
   emailService: EmailService,
   cacheService: SessionCacheService,
@@ -48,28 +49,24 @@ class BetaInviteController @Inject()
                   messagesApi: MessagesApi)
   extends AgentServicesBaseController with Logging {
 
-  import authActions._
 
   private val controller: ReverseBetaInviteController = routes.BetaInviteController
 
-  val hideInvite: Action[AnyContent] = Action.async { implicit request =>
-    withAuthorisedAsAgent { _ =>
+  val hideInvite: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
       agentPermissionsConnector.declinePrivateBetaInvite().map(_ =>
         Redirect(routes.AgentServicesController.showAgentServicesAccount())
       )
-    }
   }
 
-  val showInvite: Action[AnyContent] = Action.async { implicit request =>
-    withAuthorisedAsAgent { _ =>
+  val showInvite: Action[AnyContent] = actions.authActionCheckSuspend { implicit request =>
+
       Ok(participate(
         YesNoForm.form("beta.invite.yes-no.required.error")
-      )).toFuture
-    }
+      ))
   }
 
-  def submitInvite(): Action[AnyContent] = Action.async { implicit request =>
-    withAuthorisedAsAgent { _ =>
+  def submitInvite(): Action[AnyContent] =  actions.authActionCheckSuspend.async { implicit request =>
+
       YesNoForm
         .form("beta.invite.yes-no.required.error")
         .bindFromRequest()
@@ -85,36 +82,36 @@ class BetaInviteController @Inject()
             }
           }
         )
-    }
+
   }
 
-  val showInviteDetails: Action[AnyContent] = Action.async { implicit request =>
-    withAuthorisedAsAgent { _ =>
-      cacheService.get(AGENT_SIZE).flatMap(maybeAnswer => {
+  val showInviteDetails: Action[AnyContent] =  actions.authActionCheckSuspend.async{ implicit request =>
+
+      cacheService.get(AGENT_SIZE).map(maybeAnswer => {
         val sizeForm = BetaInviteForm.form.fill(maybeAnswer.getOrElse(""))
-        Ok(number_of_clients(sizeForm)).toFuture
+        Ok(number_of_clients(sizeForm))
       })
-    }
+
   }
 
-  def submitInviteDetails(): Action[AnyContent] = Action.async { implicit request =>
-    withAuthorisedAsAgent { _ =>
+  def submitInviteDetails(): Action[AnyContent] = actions.authActionCheckSuspend{ implicit request =>
+
       BetaInviteForm
         .form
         .bindFromRequest()
         .fold(
-          formWithErrors => { Ok(number_of_clients(formWithErrors)).toFuture},
+          formWithErrors => { Ok(number_of_clients(formWithErrors))},
           formData => {
             cacheService.put(AGENT_SIZE, formData)
-            Redirect(controller.showInviteContactDetails).toFuture}
+            Redirect(controller.showInviteContactDetails)}
         )
-    }
+
   }
 
 
-  val showInviteContactDetails: Action[AnyContent] = Action.async { implicit request =>
-    withAuthorisedAsAgent { _ =>
-      cacheService.getBetaInviteSessionItems().flatMap(answers => {
+  val showInviteContactDetails: Action[AnyContent] = actions.authActionCheckSuspend .async { implicit request =>
+
+      cacheService.getBetaInviteSessionItems().map(answers => {
         val contactForm = BetaInviteContactDetailsForm.form.fill(
           BetaInviteContactDetails(
             answers(1).getOrElse(""),
@@ -122,30 +119,29 @@ class BetaInviteController @Inject()
             answers(3)
           )
         )
-        Ok(your_details(contactForm)).toFuture
+        Ok(your_details(contactForm))
       })
     }
-  }
 
-  def submitInviteContactDetails(): Action[AnyContent] = Action.async { implicit request =>
-    withAuthorisedAsAgent { _ =>
+
+  def submitInviteContactDetails(): Action[AnyContent] = actions.authActionCheckSuspend { implicit request =>
+
       BetaInviteContactDetailsForm
         .form
         .bindFromRequest()
         .fold(
-          formWithErrors => { Ok(your_details(formWithErrors)).toFuture},
+          formWithErrors => { Ok(your_details(formWithErrors))},
           formData => {
             cacheService.put(NAME, formData.name)
             cacheService.put(EMAIL, formData.email)
             cacheService.put(PHONE, formData.phone.getOrElse(""))
             logger.info(s"data to be saved: $formData")
-            Redirect(controller.showInviteCheckYourAnswers).toFuture}
+            Redirect(controller.showInviteCheckYourAnswers)}
         )
-    }
+
   }
 
-  val showInviteCheckYourAnswers: Action[AnyContent] = Action.async { implicit request =>
-    withAuthorisedAsAgent { _ =>
+  val showInviteCheckYourAnswers: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
       cacheService.getBetaInviteSessionItems().flatMap(answers => {
         val detailsForEmail: BetaInviteDetailsForEmail = BetaInviteDetailsForEmail(
           AgentSize(answers.head.getOrElse("")),
@@ -155,11 +151,10 @@ class BetaInviteController @Inject()
         )
         Ok(check_answers(detailsForEmail))
       }.toFuture)
-    }
   }
 
-  def submitDetailsToEmail(): Action[AnyContent] = Action.async { implicit request =>
-    withAuthorisedAsAgent { agentInfo =>
+  def submitDetailsToEmail(): Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
+
       cacheService.getBetaInviteSessionItems().flatMap(answers => {
         val detailsForEmail: BetaInviteDetailsForEmail = BetaInviteDetailsForEmail(
           AgentSize(answers.head.getOrElse("")),
@@ -167,17 +162,15 @@ class BetaInviteController @Inject()
           answers(2).getOrElse(""),
           answers(3),
         )
-        emailService.sendInviteAcceptedEmail(agentInfo.arn, detailsForEmail).map(_ =>
+        emailService.sendInviteAcceptedEmail(request.agentInfo.arn, detailsForEmail).map(_ =>
           Redirect(controller.showInviteConfirmation)
         )
       })
-    }
+
   }
 
-  val showInviteConfirmation: Action[AnyContent] = Action.async { implicit request =>
-    withAuthorisedAsAgent { _ =>
-      Ok(confirmation()).toFuture
-    }
+  val showInviteConfirmation: Action[AnyContent] = actions.authActionCheckSuspend { implicit request =>
+      Ok(confirmation())
   }
 
 
