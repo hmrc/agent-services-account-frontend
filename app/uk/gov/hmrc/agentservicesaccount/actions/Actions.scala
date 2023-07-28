@@ -56,5 +56,6 @@ class Actions @Inject()(  agentClientAuthorisationConnector: AgentClientAuthoris
   def authActionCheckSuspend: ActionBuilder[AuthRequestWithAgentInfo, AnyContent] =
     actionBuilder andThen authActions.authActionRefiner andThen filterSuspendedAgent
 
-
+  def authAction: ActionBuilder[AuthRequestWithAgentInfo, AnyContent] =
+    actionBuilder andThen authActions.authActionRefiner
 }

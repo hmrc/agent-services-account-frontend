@@ -57,10 +57,9 @@ class AgentServicesController @Inject()
   val customDimension: String = appConfig.customDimension
 
   val root: Action[AnyContent] = actions.authActionCheckSuspend { implicit request =>
-     println(request)
+    //todo remove println
+    println(request)
     Redirect(routes.AgentServicesController.showAgentServicesAccount())
-
-
       }
 
   val showAgentServicesAccount: Action[AnyContent] = actions.authActionCheckSuspend.async  { implicit request =>
@@ -83,7 +82,7 @@ class AgentServicesController @Inject()
     sessionKeyUsedInMappingService -> localFriendlyUrl(env)(request.path, request.host)
   }
 
-  val showSuspendedWarning: Action[AnyContent] = actions.authActionCheckSuspend { implicit request =>
+  val showSuspendedWarning: Action[AnyContent] = actions.authAction { implicit request =>
    Ok(suspensionWarningView(request.agentInfo.isAdmin))
   }
 
