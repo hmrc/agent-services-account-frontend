@@ -20,7 +20,7 @@ import play.api.Logging
 import play.api.i18n.MessagesApi
 import play.api.mvc._
 import uk.gov.hmrc.agents.accessgroups.optin.OptedInReady
-import uk.gov.hmrc.agentservicesaccount.auth.AuthActions
+import uk.gov.hmrc.agentservicesaccount.actions.AuthActions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentPermissionsConnector
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.EACD._

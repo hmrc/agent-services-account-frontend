@@ -21,8 +21,8 @@ import play.api.i18n.MessagesApi
 import play.api.mvc._
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agents.accessgroups.optin.{OptedInReady, OptinStatus}
-import uk.gov.hmrc.agentservicesaccount.auth.CallOps._
-import uk.gov.hmrc.agentservicesaccount.auth.{AgentInfo, AuthActions}
+import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AgentInfo, AuthActions}
+import uk.gov.hmrc.agentservicesaccount.actions.CallOps._
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AgentClientAuthorisationConnector, AgentPermissionsConnector, AgentUserClientDetailsConnector}
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.assistant.{administrators, your_account}
@@ -36,6 +36,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class AgentServicesController @Inject()
 (
   authActions: AuthActions,
+  actions:Actions,
   agentClientAuthorisationConnector: AgentClientAuthorisationConnector,
   agentPermissionsConnector: AgentPermissionsConnector,
   agentUserClientDetailsConnector: AgentUserClientDetailsConnector,
@@ -55,18 +56,12 @@ class AgentServicesController @Inject()
 
   val customDimension: String = appConfig.customDimension
 
-  val root: Action[AnyContent] = Action.async { implicit request =>
-    withAuthorisedAsAgent { _ =>
-      agentClientAuthorisationConnector.getSuspensionDetails().map { suspensionDetails =>
-        if (!suspensionDetails.suspensionStatus) Redirect(routes.AgentServicesController.showAgentServicesAccount())
-        else
-          Redirect(routes.AgentServicesController.showSuspendedWarning())
-            .addingToSession(
-              "suspendedServices" -> suspensionDetails.toString,
-              "isSuspendedForVat" -> suspensionDetails.suspendedRegimes.contains("VATC").toString)
+  val root: Action[AnyContent] = actions.authActionCheckSuspend { implicit request =>
+     println(request)
+    Redirect(routes.AgentServicesController.showAgentServicesAccount())
+
+
       }
-    }
-  }
 
   val showAgentServicesAccount: Action[AnyContent] = Action.async { implicit request =>
     withAuthorisedAsAgent { agentInfo =>

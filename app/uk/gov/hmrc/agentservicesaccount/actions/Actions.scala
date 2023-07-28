@@ -23,24 +23,28 @@ import uk.gov.hmrc.agentservicesaccount.controllers.routes
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
-class Actions (  agentClientAuthorisationConnector: AgentClientAuthorisationConnector,
+@Singleton
+class Actions @Inject()(  agentClientAuthorisationConnector: AgentClientAuthorisationConnector,
+                 authActions: AuthActions,
                  actionBuilder:DefaultActionBuilder
               ) (implicit ec: ExecutionContext ) {
 
-  def filterSuspendedAgent: ActionFilter[Request] = new ActionFilter[Request] {
+  def filterSuspendedAgent: ActionFilter[AuthRequestWithAgentInfo] = new ActionFilter[AuthRequestWithAgentInfo] {
     def executionContext: ExecutionContext = ec
-    def filter[A](request: Request[A]): Future[Option[Result]] = {
+    def filter[A](request: AuthRequestWithAgentInfo[A]): Future[Option[Result]] = {
 
 
-      implicit val req: Request[A] = request
+      implicit val req: Request[A] = request.request
 
-      implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
+      implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(req, req.session)
 
       agentClientAuthorisationConnector.getSuspensionDetails().map { suspensionDetails =>
         if (!suspensionDetails.suspensionStatus) None
         else
+          //todo write tests and do for all taxes
          Some( Redirect(routes.AgentServicesController.showSuspendedWarning())
             .addingToSession(
               "suspendedServices" -> suspensionDetails.toString,
@@ -51,11 +55,9 @@ class Actions (  agentClientAuthorisationConnector: AgentClientAuthorisationConn
     }
 
 
-    def requestAction: ActionBuilder[Request, AnyContent] =
-      actionBuilder andThen filterSuspendedAgent
-
   }
-
+  def authActionCheckSuspend: ActionBuilder[AuthRequestWithAgentInfo, AnyContent] =
+    actionBuilder andThen authActions.authActionRefiner andThen filterSuspendedAgent
 
 
 }

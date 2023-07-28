@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.agentservicesaccount.auth
+package uk.gov.hmrc.agentservicesaccount.actions
 
 import play.api.mvc.Results._
 import play.api.mvc._
@@ -26,9 +26,14 @@ import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals._
 import uk.gov.hmrc.auth.core.retrieve.{Credentials, Name, ~}
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
+class AuthRequestWithAgentInfo[A](
+                         val agentInfo: AgentInfo,
+                         val request: Request[A]
+                       ) extends WrappedRequest[A](request)
 
 case class AgentInfo(arn: Arn,
                      credentialRole: Option[CredentialRole],
@@ -48,8 +53,44 @@ case class AgentRequest[A](arn: Arn, request: Request[A]) extends WrappedRequest
 class AuthActions @Inject()(appConfig: AppConfig,
                             override val authConnector: AuthConnector,
                             val env: Environment,
-                            val config: Configuration) extends AuthorisedFunctions with Logging {
+                            val config: Configuration)(implicit ec:ExecutionContext) extends AuthorisedFunctions with Logging {
 
+  def authActionRefiner: ActionRefiner[Request, AuthRequestWithAgentInfo] =
+    new ActionRefiner[Request, AuthRequestWithAgentInfo] {
+
+      override protected def refine[A](request: Request[A]): Future[Either[Result, AuthRequestWithAgentInfo[A]]] = {
+        implicit val r: Request[A] = request
+        implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
+
+        authorised(AuthProviders(GovernmentGateway) and AffinityGroup.Agent)
+          .retrieve(allEnrolments and credentialRole) {
+            case enrols ~ credRole =>
+              getArn(enrols) match {
+                case Some(arn) =>
+                  Future.successful(Right(new  AuthRequestWithAgentInfo(AgentInfo(arn, credRole),r)))
+                case None =>
+                  logger.warn("No HMRC-AS-AGENT enrolment found -- redirecting to /agent-subscription/start.")
+                  Future successful Left(Redirect(appConfig.agentSubscriptionFrontendUrl))
+              }
+          }.recover(handleFailureRefiner)
+
+      }
+
+      override protected def executionContext: ExecutionContext = ec
+    }
+  def handleFailureRefiner[A](implicit request: Request[_]): PartialFunction[Throwable, Either[Result, AuthRequestWithAgentInfo[A]]] = {
+    case _: NoActiveSession =>
+      Left(Redirect(s"$signInUrl?continue_url=$continueUrl${request.uri}&origin=$appName"))
+
+    case _: UnsupportedAuthProvider =>
+      logger.warn(s"user logged in with unsupported auth provider")
+      Left(Forbidden)
+
+    case _: UnsupportedAffinityGroup =>
+      logger.warn(s"user logged in with unsupported affinity group")
+      Left(Forbidden)
+  }
+  //todo get rid of withAuthorisedAsAgent
   // TODO we need to checks the agents data and see if they're suspended or not if they're redirect them to the suspended warning page
   def withAuthorisedAsAgent(body: AgentInfo => Future[Result])(implicit ec: ExecutionContext, hc: HeaderCarrier, request: Request[AnyContent]): Future[Result] =
     authorised(AuthProviders(GovernmentGateway) and AffinityGroup.Agent)
