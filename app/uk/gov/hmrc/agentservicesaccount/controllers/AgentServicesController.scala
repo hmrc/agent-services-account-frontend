@@ -56,9 +56,9 @@ class AgentServicesController @Inject()
 
   val customDimension: String = appConfig.customDimension
 
-  val root: Action[AnyContent] = actions.authActionCheckSuspend { implicit request =>
+  val root: Action[AnyContent] = actions.authActionCheckSuspend {
     Redirect(routes.AgentServicesController.showAgentServicesAccount())
-      }
+  }
 
   val showAgentServicesAccount: Action[AnyContent] = actions.authActionCheckSuspend.async  { implicit request =>
     val agentInfo = request.agentInfo
