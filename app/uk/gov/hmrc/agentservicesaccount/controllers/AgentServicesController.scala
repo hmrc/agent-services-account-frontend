@@ -57,8 +57,6 @@ class AgentServicesController @Inject()
   val customDimension: String = appConfig.customDimension
 
   val root: Action[AnyContent] = actions.authActionCheckSuspend { implicit request =>
-    //todo remove println
-    println(request)
     Redirect(routes.AgentServicesController.showAgentServicesAccount())
       }
 
