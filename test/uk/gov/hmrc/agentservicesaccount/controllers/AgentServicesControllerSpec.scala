@@ -22,7 +22,6 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.scalatest.Assertion
 import play.api.i18n.{Lang, Messages, MessagesApi}
-import play.api.mvc.Session
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
 import play.twirl.api.HtmlFormat
@@ -93,7 +92,6 @@ class AgentServicesControllerSpec extends BaseISpec {
 
       status(response) shouldBe SEE_OTHER
       Helpers.redirectLocation(response) shouldBe Some(routes.AgentServicesController.showSuspendedWarning().url)
-      Helpers.session(response) shouldBe Session(Map("authToken" -> "Bearer XYZ", "suspendedServices" -> "CGT,ITSA,PIR,PPT,TRS,VATC", "isSuspendedForVat" -> "true"))
     }
 
     "redirect to suspended warning when user is suspended for ALL" in {
@@ -104,7 +102,6 @@ class AgentServicesControllerSpec extends BaseISpec {
 
       status(response) shouldBe SEE_OTHER
       Helpers.redirectLocation(response) shouldBe Some(routes.AgentServicesController.showSuspendedWarning().url)
-      Helpers.session(response) shouldBe Session(Map("authToken" -> "Bearer XYZ", "suspendedServices" -> "CGT,ITSA,PIR,PPT,TRS,VATC", "isSuspendedForVat" -> "true"))
     }
 
     "throw an exception when suspension status returns NOT_FOUND for user" in {
@@ -131,13 +128,13 @@ class AgentServicesControllerSpec extends BaseISpec {
         status(result) shouldBe OK
       }
 
-      "Agent is suspended for VATC (suspension details are in the session)" in {
-        givenSuspensionStatus(SuspensionDetails(suspensionStatus = true, Some(Set("VATC"))))
+      "Agent is suspended should be redirected" in {
+        givenSuspensionStatus(SuspensionDetails(suspensionStatus = true, None))
         givenAuthorisedAsAgentWith(arn)
         givenHidePrivateBetaInviteNotFound()
 
         val response = controller.showAgentServicesAccount()(fakeRequest("GET", "/home"))
-        status(response) shouldBe OK
+        status(response) shouldBe SEE_OTHER
       }
 
     }
@@ -320,136 +317,6 @@ class AgentServicesControllerSpec extends BaseISpec {
         helpAndGuidance.select("p").get(0).select("a").get(0).attr("href") shouldBe "/agent-services-account/help-and-guidance"
       }
 
-      "agent is suspended for VATC and suspension details are in the session" in {
-        givenSuspensionStatus(SuspensionDetails(suspensionStatus = true, Some(Set("VATC"))))
-        givenAuthorisedAsAgentWith(arn)
-
-        givenHidePrivateBetaInvite()
-
-        val response = await(controller.showAgentServicesAccount()(fakeRequest("GET", "/home")))
-        val html = Jsoup.parse(contentAsString(response))
-
-        expectedHomeBannerContent(html)
-        expectedClientAuthContent(html, betaInviteContent = false)
-
-        // accordion with suspension content includes Income Record Viewer section
-        val accordion = html.select("#tax-services-accordion")
-        accordion.select("#tax-services-accordion-heading-1").text() shouldBe "Making Tax Digital for Income Tax"
-        accordion.select("#tax-services-accordion-heading-2").text() shouldBe "VAT"
-        accordion.select("#tax-services-accordion-heading-3").text() shouldBe "View a client’s Income record"
-        accordion.select("#tax-services-accordion-heading-4").text() shouldBe "Trusts and estates"
-        accordion.select("#tax-services-accordion-heading-5").text() shouldBe "Capital Gains Tax on UK property"
-        accordion.select("#tax-services-accordion-heading-6").text() shouldBe "Country-by-country reports"
-        accordion.select("#tax-services-accordion-heading-7").text() shouldBe "Plastic Packaging Tax"
-        accordion.select("#tax-services-accordion-heading-8").text() shouldBe "Other tax services"
-        //        tax-services-accordion-content-1
-        val one = accordion.select("#tax-services-accordion-content-1")
-        one.select("h4").get(0).text() shouldBe "Before you start"
-        one.select("h4").get(1).text() shouldBe "Manage your client’s Income Tax details"
-
-        val p1 = one.select("p").get(0)
-        p1.text shouldBe "You must first get an authorisation from your client. You can do this by copying across your authorisations or requesting an authorisation."
-        p1.select("a").get(0).attr("href") shouldBe "http://localhost:9438/agent-mapping/start"
-        p1.select("a").get(1).attr("href") shouldBe "http://localhost:9448/invitations/agents/client-type"
-        one.select("p").get(1).text shouldBe "If you copy your client across, you will need to sign them up to Making Tax Digital for Income Tax (opens in a new tab)"
-        one.select("p").get(1).select("a").attr("href") shouldBe "https://www.gov.uk/guidance/sign-up-your-client-for-making-tax-digital-for-income-tax"
-        one.select("p").get(2).text shouldBe "View your client’s Income Tax"
-        one.select("p").get(2).select("a").attr("href") shouldBe "http://localhost:9081/report-quarterly/income-and-expenses/view/agents"
-        one.select("p").get(3).text shouldBe "Help clients check whether they are eligible (opens in a new tab)"
-        one.select("p").get(3).select("a").attr("href") shouldBe "https://www.gov.uk/guidance/follow-the-rules-for-making-tax-digital-for-income-tax#who-can-follow-the-rules"
-
-        val two = accordion.select("#tax-services-accordion-content-2")
-        two.select("h4").get(0).text() shouldBe "We have temporarily limited your use of this service"
-        two.select("p").get(0).text shouldBe "We did this because we have suspended your agent code. We sent you a letter to confirm this."
-        two.select("p").get(1).text shouldBe "This means you will not be able to use this service."
-
-        val three = accordion.select("#tax-services-accordion-content-3")
-        three.select("p").get(0).text shouldBe "Access a client’s Income record to help you complete their Self Assessment tax return."
-        three.select("p").get(1).text shouldBe "View a client’s Income record"
-        three.select("p").get(1).select("a").text() shouldBe "View a client’s Income record"
-        three.select("p").get(1).select("a").attr("href") shouldBe "http://localhost:9996/tax-history/select-client"
-
-        val four = accordion.select("#tax-services-accordion-content-4")
-        four.select("h4").get(0).text() shouldBe "Before you start"
-        four.select("h4").get(1).text() shouldBe "Manage your client’s trust"
-
-        val fourPs = four.select("p")
-        fourPs.get(0).text shouldBe "Before you ask your client to authorise you, you or your client must have registered the trust (opens in a new tab) or estate (opens in a new tab)."
-        fourPs.get(0).select("a").get(0).attr("href") shouldBe "http://localhost:9448/invitations/agents/client-type"
-        fourPs.get(0).select("a").get(0).text shouldBe "ask your client to authorise you"
-        fourPs.get(0).select("a").get(1).attr("href") shouldBe "https://www.gov.uk/guidance/register-your-clients-trust"
-        fourPs.get(0).select("a").get(1).text shouldBe "registered the trust (opens in a new tab)"
-        fourPs.get(0).select("a").get(2).attr("href") shouldBe "https://www.gov.uk/guidance/register-your-clients-estate"
-        fourPs.get(0).select("a").get(2).text shouldBe "estate (opens in a new tab)"
-        fourPs.get(1).text shouldBe "Your client will need to claim the trust or estate."
-        fourPs.get(1).select("a").text shouldBe "claim the trust"
-        fourPs.get(1).select("a").attr("href") shouldBe "https://www.gov.uk/guidance/manage-your-trusts-registration-service#how-to-use-the-online-service"
-
-        fourPs.get(2).text shouldBe "Use this service to update the details of your client’s trust or declare no changes on the trust register ."
-        fourPs.get(2).select("a").get(0).text shouldBe "Use this service to update the details of your client’s trust or declare no changes on the trust register"
-        fourPs.get(2).select("a").get(0).attr("href") shouldBe "https://www.gov.uk/guidance/manage-your-trusts-registration-service"
-
-        //      Capital Gains Tax on UK property
-        val five = accordion.select("#tax-services-accordion-content-5")
-        five.select("h4").get(0).text() shouldBe "Before you start"
-        five.select("h4").get(1).text() shouldBe "Manage a client’s Capital Gains Tax on UK property"
-        val fivePs = five.select("p")
-        fivePs.get(0).text shouldBe "Your client must first set up a Capital Gains Tax on UK property account (opens in a new tab)"
-        fivePs.get(0).select("a").get(0).text shouldBe "set up a Capital Gains Tax on UK property account (opens in a new tab)"
-        fivePs.get(0).select("a").get(0).attr("href")
-          .shouldBe("https://www.gov.uk/guidance/managing-your-clients-capital-gains-tax-on-uk-property-account#before-you-start")
-        fivePs.get(1).text shouldBe "They must then authorise you to act on their behalf (opens in a new tab)"
-        fivePs.get(1).select("a").get(0).text shouldBe "authorise you to act on their behalf (opens in a new tab)"
-        fivePs.get(1).select("a").get(0).attr("href") shouldBe "https://www.gov.uk/guidance/managing-your-clients-capital-gains-tax-on-uk-property-account#get-authorisation"
-
-        fivePs.get(2).text shouldBe "Report your client’s Capital Gains Tax on UK property and view payments and penalties"
-        fivePs.get(2).select("a").get(0).text shouldBe "Report your client’s Capital Gains Tax on UK property and view payments and penalties"
-        fivePs.get(2).select("a").get(0).attr("href") shouldBe "https://www.tax.service.gov.uk/capital-gains-tax-uk-property/start"
-
-        //Country by country
-        val six = accordion.select("#tax-services-accordion-content-6")
-        six.select("h4").get(0).text() shouldBe "Before you start"
-        six.select("h4").get(1).text() shouldBe "Manage country-by-country reports"
-
-        val sixPs = six.select("p")
-        sixPs.get(0).text shouldBe "You must first get an authorisation from your client. You can do this by requesting an authorisation"
-        sixPs.get(0).select("a").get(0).text shouldBe "requesting an authorisation"
-        sixPs.get(0).select("a").get(0).attr("href") shouldBe "http://localhost:9448/invitations/agents/client-type"
-
-        sixPs.get(1).text shouldBe "Manage your clients' country-by-country reports and your country-by-country agent contact details"
-        sixPs.get(1).select("a").get(0).attr("href") shouldBe "https://www.tax.service.gov.uk/send-a-country-by-country-report"
-
-        //      Plastic Packaging Tax
-        val seven = accordion.select("#tax-services-accordion-content-7")
-        seven.select("h4").get(0).text() shouldBe "Before you start"
-        seven.select("h4").get(1).text() shouldBe "Manage your client’s Plastic Packaging Tax"
-
-        val sevenPs = seven.select("p")
-        sevenPs.get(0).text shouldBe "Your client must first register for Plastic Packaging Tax (opens in a new tab)"
-        sevenPs.get(0).select("a").get(0).text shouldBe "register for Plastic Packaging Tax (opens in a new tab)"
-        sevenPs.get(0).select("a").get(0).attr("href") shouldBe "https://www.gov.uk/guidance/register-for-plastic-packaging-tax"
-
-        sevenPs.get(1).text shouldBe "They must then authorise you to act on their behalf"
-        sevenPs.get(1).select("a").get(0).text shouldBe "authorise you to act on their behalf"
-        sevenPs.get(1).select("a").get(0).attr("href") shouldBe "http://localhost:9448/invitations/agents"
-        sevenPs.get(2).text shouldBe "Report your client’s Plastic Packaging Tax and view payments, returns and penalties"
-        sevenPs.get(2).select("a").get(0).text shouldBe "Report your client’s Plastic Packaging Tax and view payments, returns and penalties"
-        sevenPs.get(2).select("a").get(0).attr("href") shouldBe "https://www.tax.service.gov.uk/plastic-packaging-tax/account"
-
-        //Other tax services
-        val eight = accordion.select("#tax-services-accordion-content-8")
-        eight.select(".govuk-warning-text").text shouldBe "! Warning The agent services account is the home for HMRC tax services launched from 2019. For any tax services not listed here, sign out of this account and log in to your HMRC online services for agents account (opens in a new tab)."
-        eight.select(".govuk-warning-text").select("a").get(0).text shouldBe "log in to your HMRC online services for agents account (opens in a new tab)"
-        eight.select(".govuk-warning-text").select("a").get(0).attr("href") shouldBe "https://www.gov.uk/government/collections/hmrc-online-services-for-agents#hmrc-online-services-for-agents-account"
-        // end of accordion
-
-        val helpAndGuidance = html.select("#help-and-guidance-section")
-        helpAndGuidance.select("h2").text shouldBe "Help and guidance"
-        helpAndGuidance.select("p").get(0).text shouldBe "Find out how to use your agent services account and how clients can authorise you to manage their taxes"
-        helpAndGuidance.select("p").get(0).select("a").get(0).text shouldBe "Find out how to use your agent services account and how clients can authorise you to manage their taxes"
-        helpAndGuidance.select("p").get(0).select("a").get(0).attr("href") shouldBe "/agent-services-account/help-and-guidance"
-      }
-
       "agent with showFeatureInvite being false" in {
         givenSuspensionStatus(SuspensionDetails(suspensionStatus = false, None))
         givenAuthorisedAsAgentWith(arn)
@@ -483,12 +350,13 @@ class AgentServicesControllerSpec extends BaseISpec {
       Helpers.contentType(response).get shouldBe HTML
       val content = Helpers.contentAsString(response)
 
-      content should include(messagesApi("suspension-warning.header"))
+      content should include(messagesApi("suspension-warning.header1"))
       content should include(messagesApi("suspension-warning.p1"))
-      content should include(messagesApi("suspension-warning.p2.multi"))
-      content should include(messagesApi("suspension-warning.multi.HMRC-MTD-IT"))
-      content should include(messagesApi("suspension-warning.multi.HMRC-MTD-VAT"))
-      content should include(messagesApi("suspension-warning.p3"))
+      content should include(messagesApi("suspension-warning.p2"))
+      content should include(messagesApi("suspension-warning.p5"))
+      content should include(messagesApi("suspension-warning.list1"))
+      content should include(messagesApi("suspension-warning.list2"))
+      content should include(messagesApi("suspension-warning.list3"))
       content should include(htmlEscapedMessage("suspension-warning.p4"))
       val getHelpLink = Jsoup.parse(content).select(Css.getHelpWithThisPageLink)
       getHelpLink.attr("href") shouldBe "http://localhost:9250/contact/report-technical-problem?newTab=true&service=AOSS&referrerUrl=%2Fhome"

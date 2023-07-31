@@ -22,6 +22,8 @@ import org.scalatest.{BeforeAndAfterEach, OptionValues}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
+import uk.gov.hmrc.agentmtdidentifiers.model.SuspensionDetails
+import uk.gov.hmrc.agentservicesaccount.stubs.AgentClientAuthorisationStubs.givenSuspensionStatus
 import uk.gov.hmrc.agentservicesaccount.stubs.AuthStubs
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 
@@ -58,6 +60,7 @@ abstract class BaseISpec
   override def beforeEach(): Unit = {
     super.beforeEach()
     givenCleanMetricRegistry()
+    givenSuspensionStatus(SuspensionDetails(suspensionStatus = false, None))
     ()
   }
 }
