@@ -338,7 +338,12 @@ suspension-warning.list1=director
 suspension-warning.list2=partner
 suspension-warning.list3=sole trader
 
-suspend.contact-details.invite.details.label1=
+suspend.contact-details.invite.details.label1=Contact name
+suspend.contact-details.invite.details.label2=Contact email address
+suspend.contact-details.invite.details.label3=Telephone number
+suspend.contact-details.invite.details.label3.hint=Telephone number
+suspend.contact-details.invite.details.label4=Unique Taxpayer Reference(optional)
+suspend.contact-details.invite.details.heading=Contact Details
 
 common.continue.gov=Return to Government Gateway sign in
 timeout-dialog.p1=For security reasons, you will be signed out of your Agent services account in

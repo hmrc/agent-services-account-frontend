@@ -48,6 +48,7 @@ class SuspendedJourneyController @Inject()
 
   val showContactDetails: Action[AnyContent] = actions.authAction { implicit request =>
     //todo change
+    //ask about validation write tests for it etc..
     val contactForm = BetaInviteContactDetailsForm.form.fill(
       BetaInviteContactDetails(
         (""),
