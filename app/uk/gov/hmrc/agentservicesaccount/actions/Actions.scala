@@ -44,7 +44,7 @@ class Actions @Inject()(  agentClientAuthorisationConnector: AgentClientAuthoris
       agentClientAuthorisationConnector.getSuspensionDetails().map { suspensionDetails =>
         if (!suspensionDetails.suspensionStatus) None
         else
-         Some( Redirect(routes.AgentServicesController.showSuspendedWarning()))
+         Some( Redirect(routes.SuspendedJourneyController.showSuspendedWarning()))
       }
 
 

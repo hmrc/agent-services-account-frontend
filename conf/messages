@@ -337,6 +337,9 @@ suspension-warning.single.VATC=manage a client’s VAT
 suspension-warning.list1=director
 suspension-warning.list2=partner
 suspension-warning.list3=sole trader
+
+suspend.contact-details.invite.details.label1=
+
 common.continue.gov=Return to Government Gateway sign in
 timeout-dialog.p1=For security reasons, you will be signed out of your Agent services account in
 your.account.email=Email
