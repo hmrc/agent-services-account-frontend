@@ -18,8 +18,9 @@ package uk.gov.hmrc.agentservicesaccount.forms
 
 import play.api.data.Forms._
 import play.api.data._
-import uk.gov.hmrc.agentservicesaccount.models.BetaInviteContactDetails
+import uk.gov.hmrc.agentservicesaccount.models.{BetaInviteContactDetails, SuspendContentDetails}
 
+//todo refactor together
 object BetaInviteContactDetailsForm {
 
   // matches [anything]@[anything].[anything]
@@ -40,5 +41,30 @@ object BetaInviteContactDetailsForm {
         .verifying("error.invalid.phone", x => x.trim.matches(phoneRegex) || x.trim.isEmpty)
       )
     )(BetaInviteContactDetails.apply)(BetaInviteContactDetails.unapply)
+  )
+}
+
+object ContactDetailsSuspendForm {
+
+  // matches [anything]@[anything].[anything]
+  private val emailRegex = """^.{1,252}@.{1,256}\..{1,256}$"""
+  private val phoneRegex = """^[0-9 +()]{0,25}$"""
+
+  def form: Form[SuspendContentDetails] = Form(
+    mapping(
+      "name" -> text
+        .verifying("error.required.name", _.trim.nonEmpty)
+        .verifying("error.max-length.name", _.trim.length < 81),
+      "email" -> text
+        .verifying("error.required.email", _.trim.nonEmpty)
+        .verifying("error.max-length.email", _.trim.length < 255)
+        .verifying("error.invalid.email", x => x.trim.matches(emailRegex) || x.trim.isEmpty),
+      "phone" -> optional(text
+        .verifying("error.max-length.phone", x => x.trim.length < 21 || x.trim.isEmpty)
+        .verifying("error.invalid.phone", x => x.trim.matches(phoneRegex) || x.trim.isEmpty)),
+      //todo get validation messages for utr  and validation rules
+        "utr" -> optional(text)
+
+    )(SuspendContentDetails.apply)(SuspendContentDetails.unapply)
   )
 }

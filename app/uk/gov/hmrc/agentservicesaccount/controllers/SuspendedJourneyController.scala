@@ -17,46 +17,79 @@
 package uk.gov.hmrc.agentservicesaccount.controllers
 
 import play.api.Logging
+import play.api.data.Form
 import play.api.i18n.MessagesApi
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.agentservicesaccount.actions.Actions
+import play.api.mvc._
+import uk.gov.hmrc.agentmtdidentifiers.model.Utr
+import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthRequestWithAgentInfo}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.forms.BetaInviteContactDetailsForm
-import uk.gov.hmrc.agentservicesaccount.models.BetaInviteContactDetails
+import uk.gov.hmrc.agentservicesaccount.connectors.AgentSubscriptionConnector
+import uk.gov.hmrc.agentservicesaccount.forms.ContactDetailsSuspendForm
+import uk.gov.hmrc.agentservicesaccount.models.{AuthProviderId, SuspendContentDetails}
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.suspend.{contact_details, suspension_warning}
+import uk.gov.hmrc.http.HeaderCarrier
 
 import javax.inject.Inject
-//import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
-class SuspendedJourneyController @Inject()
-(
-  actions:Actions,
-  suspensionWarningView: suspension_warning,
-  contactDetails:contact_details,
-  cacheService: SessionCacheService,
+class SuspendedJourneyController @Inject() (
+                                             actions: Actions,
+                                             suspensionWarningView: suspension_warning,
+                                             contactDetailsView: contact_details,
+                                             asc: AgentSubscriptionConnector,
+                                             cacheService: SessionCacheService
+                                           )(
+                                             implicit val appConfig: AppConfig,
+                                             val cc: MessagesControllerComponents,
+                                             ec: ExecutionContext,
+                                             messagesApi: MessagesApi
+                                           ) extends AgentServicesBaseController with Logging {
 
-)(implicit val appConfig: AppConfig,
-  val cc: MessagesControllerComponents,
-//  ec: ExecutionContext,
-  messagesApi: MessagesApi)
-  extends AgentServicesBaseController with Logging {
-
-  val showSuspendedWarning: Action[AnyContent] = actions.authAction { implicit request =>
+  def showSuspendedWarning: Action[AnyContent] = actions.authAction { implicit request =>
     Ok(suspensionWarningView(request.agentInfo.isAdmin))
   }
 
-  val showContactDetails: Action[AnyContent] = actions.authAction { implicit request =>
-    //todo change
-    //ask about validation write tests for it etc..
-    val contactForm = BetaInviteContactDetailsForm.form.fill(
-      BetaInviteContactDetails(
-        (""),
-        (""),
-        None
-      )
-    )
-    Ok(contactDetails(contactForm))
+  def showContactDetails: Action[AnyContent] = actions.authAction.async { implicit request =>
+
+    contactForm(ContactDetailsSuspendForm.form)
   }
 
+  def submitContactDetails: Action[AnyContent] = actions.authAction.async { implicit request =>
+    ContactDetailsSuspendForm.form.bindFromRequest().fold(
+      formWithErrors => {
+        contactForm(formWithErrors)
+      },
+      formData => {
+        cacheService.put(NAME, formData.name)
+        cacheService.put(EMAIL, formData.email)
+        cacheService.put(PHONE, formData.phone.getOrElse(""))
+        maybeGetUtr().flatMap {
+          case Some(utr) =>     cacheService.put(UTR, utr.value)
+          case None =>
+            cacheService.put(UTR, formData.utr.getOrElse(""))
+        }
+
+        Redirect("").toFuture
+      }
+    )
+  }
+
+  private def contactForm(form: Form[SuspendContentDetails])(implicit hc: HeaderCarrier, ec: ExecutionContext, rc: AuthRequestWithAgentInfo[AnyContent]): Future[Result] = {
+
+    val maybeUtr = maybeGetUtr()
+    maybeUtr.map {
+      case Some(_) => Ok(contactDetailsView(form, true))
+      case None => Ok(contactDetailsView(form))
+    }
+    Ok(contactDetailsView(form)).toFuture
+  }
+
+  def maybeGetUtr()(implicit hc: HeaderCarrier, ec: ExecutionContext, rc: AuthRequestWithAgentInfo[AnyContent]): Future[Option[Utr]] = {
+    val maybeProviderId: Option[String] = rc.agentInfo.credentials.map(_.providerId)
+    maybeProviderId match {
+      case Some(pId) => asc.getJourneyById(AuthProviderId(pId)).map(_.map(_.businessDetails.utr))
+      case None => Future.successful(None)
+    }
+  }
 }

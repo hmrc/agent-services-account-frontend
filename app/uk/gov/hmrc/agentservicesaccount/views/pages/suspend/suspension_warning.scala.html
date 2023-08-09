@@ -43,7 +43,7 @@
     <p class="govuk-body">@msgs("suspension-warning.p4")</p>
 
     <div class="govuk-button-group">
-    <a href="#" class="govuk-button">@msgs("common.continue")</a>
+    <a href="@routes.SuspendedJourneyController.showContactDetails()" class="govuk-button">@msgs("common.continue")</a>
     <a href="@routes.SignOutController.signOut()" class="govuk-link">@msgs("common.continue.gov")</a>
     </div>
 

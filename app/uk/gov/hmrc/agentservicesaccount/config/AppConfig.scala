@@ -53,6 +53,8 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
 
   val acaBaseUrl: String = baseUrl("agent-client-authorisation")
 
+  val agentSubscriptionBaseUrl: String = baseUrl("agent-subscription")
+
   val emailBaseUrl: String = baseUrl("email")
 
   val asaFrontendExternalUrl: String = getConfString("agent-services-account-frontend.external-url")

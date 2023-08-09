@@ -42,7 +42,7 @@ class Actions @Inject()(  agentClientAuthorisationConnector: AgentClientAuthoris
       implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(req, req.session)
 
       agentClientAuthorisationConnector.getSuspensionDetails().map { suspensionDetails =>
-        if (!suspensionDetails.suspensionStatus) None
+        if (!suspensionDetails.suspensionStatus)      Some( Redirect(routes.SuspendedJourneyController.showSuspendedWarning()))
         else
          Some( Redirect(routes.SuspendedJourneyController.showSuspendedWarning()))
       }

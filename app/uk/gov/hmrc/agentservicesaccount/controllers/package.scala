@@ -27,13 +27,16 @@ package object controllers {
   val NAME: DataKey[String] = DataKey("name")
   val EMAIL: DataKey[String] = DataKey("email")
   val PHONE: DataKey[String] = DataKey("phone")
+  val UTR: DataKey[String] = DataKey("utr")
 
+  //todo put in my ones
   val sessionKeys =
     List(
       AGENT_SIZE,
       NAME,
       EMAIL,
-      PHONE
+      PHONE,
+      UTR
     )
 
 }

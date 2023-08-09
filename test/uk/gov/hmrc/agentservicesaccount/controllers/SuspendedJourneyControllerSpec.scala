@@ -69,7 +69,6 @@ class SuspendedJourneyControllerSpec extends BaseISpec {
       status(response) shouldBe OK
       Helpers.contentType(response).get shouldBe HTML
       val content = Helpers.contentAsString(response)
-  //todo contrent
       content should include(messagesApi("suspend.contact-details.invite.details.label1"))
       content should include(messagesApi("suspend.contact-details.invite.details.label2"))
       content should include(messagesApi("suspend.contact-details.invite.details.label3"))
