@@ -46,7 +46,7 @@ class AgentSubscriptionConnector @Inject()(
     monitor(s"ConsumedAPI-Agent-Subscription-getJourneyByPrimaryId-GET") {
       val url =
         new  URL(s"${appConfig.agentSubscriptionBaseUrl}/agent-subscription/subscription/journey/id/${encodePathSegment(internalId.id)}")
-      println("getJourneyById + " + url)
+
       httpV2.get(url)
         .execute[Option[SubscriptionJourneyRecord]]
     }
