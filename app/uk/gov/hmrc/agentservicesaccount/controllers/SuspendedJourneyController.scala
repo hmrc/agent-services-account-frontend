@@ -20,11 +20,12 @@ import play.api.Logging
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc._
+import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.agentmtdidentifiers.model.Utr
 import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthRequestWithAgentInfo}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentSubscriptionConnector
-import uk.gov.hmrc.agentservicesaccount.forms.{ContactDetailsSuspendForm}
+import uk.gov.hmrc.agentservicesaccount.forms.ContactDetailsSuspendForm
 import uk.gov.hmrc.agentservicesaccount.models.{AuthProviderId, SuspendContentDetails}
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.suspend.{contact_details, suspension_warning}
@@ -51,7 +52,7 @@ class SuspendedJourneyController @Inject() (
   }
 
   def showContactDetails: Action[AnyContent] = actions.authAction.async { implicit request =>
-//todo fill in with session data
+
     cacheService.getSessionItems().flatMap(answers => {
       val contactForm = ContactDetailsSuspendForm.form.fill(
         SuspendContentDetails(
@@ -61,14 +62,15 @@ class SuspendedJourneyController @Inject() (
           answers(4)
         )
       )
-      getContactFormResult(contactForm)
+
+      getContactForm(contactForm).map(Ok(_))
     })
   }
 
   def submitContactDetails: Action[AnyContent] = actions.authAction.async { implicit request =>
     ContactDetailsSuspendForm.form.bindFromRequest().fold(
       formWithErrors => {
-        getContactFormResult(formWithErrors)
+        getContactForm(formWithErrors).map(BadRequest(_))
       },
       formData => {
         cacheService.put(NAME, formData.name)
@@ -85,14 +87,14 @@ class SuspendedJourneyController @Inject() (
     )
   }
 
-  private def getContactFormResult(form: Form[SuspendContentDetails])(implicit hc: HeaderCarrier, ec: ExecutionContext, rc: AuthRequestWithAgentInfo[AnyContent]): Future[Result] = {
+   def getContactForm(form: Form[SuspendContentDetails])(implicit hc: HeaderCarrier, ec: ExecutionContext, rc: AuthRequestWithAgentInfo[AnyContent]): Future[HtmlFormat.Appendable] = {
 
     val maybeUtr = maybeGetUtr()
     maybeUtr.map {
-      case Some(_) => Ok(contactDetailsView(form, true))
-      case None => Ok(contactDetailsView(form))
+      case Some(_) => contactDetailsView(form, true)
+      case None => contactDetailsView(form)
     }
-    Ok(contactDetailsView(form)).toFuture
+  contactDetailsView(form).toFuture
   }
 
   def maybeGetUtr()(implicit hc: HeaderCarrier, ec: ExecutionContext, rc: AuthRequestWithAgentInfo[AnyContent]): Future[Option[Utr]] = {

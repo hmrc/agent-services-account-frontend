@@ -19,7 +19,7 @@ package uk.gov.hmrc.agentservicesaccount.controllers
 import org.jsoup.Jsoup
 import play.api.test.{FakeRequest, Helpers}
 import uk.gov.hmrc.agentservicesaccount.support.{BaseISpec, Css}
-import play.api.http.Status.OK
+import play.api.http.Status.{BAD_REQUEST, OK}
 import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.test.Helpers.defaultAwaitTimeout
 import play.twirl.api.HtmlFormat
@@ -75,6 +75,29 @@ class SuspendedJourneyControllerSpec extends BaseISpec {
       content should include(messagesApi("suspend.contact-details.invite.details.label3.hint"))
       content should include(messagesApi("suspend.contact-details.invite.details.label4"))
       content should include(messagesApi("suspend.contact-details.invite.details.heading"))
+
+
+      val getHelpLink = Jsoup.parse(content).select(Css.getHelpWithThisPageLink)
+      getHelpLink.attr("href") shouldBe "http://localhost:9250/contact/report-technical-problem?newTab=true&service=AOSS&referrerUrl=%2Fhome"
+      getHelpLink.text shouldBe "Is this page not working properly? (opens in new tab)"
+    }
+  }
+  "submitContactDetails" should {
+    "return Bad request and show error messages if the data is wrong" in {
+      givenAuthorisedAsAgentWith(arn)
+      val response = controller.submitContactDetails()(fakeRequest("POST", "/home"))
+
+      status(response) shouldBe BAD_REQUEST
+      Helpers.contentType(response).get shouldBe HTML
+      val content = Helpers.contentAsString(response)
+      content should include(messagesApi("suspend.contact-details.invite.details.label1"))
+      content should include(messagesApi("suspend.contact-details.invite.details.label2"))
+      content should include(messagesApi("suspend.contact-details.invite.details.label3"))
+      content should include(messagesApi("suspend.contact-details.invite.details.label3.hint"))
+      content should include(messagesApi("suspend.contact-details.invite.details.label4"))
+      content should include(messagesApi("suspend.contact-details.invite.details.label4"))
+//      content should include(messagesApi("error.required.name"))
+//      content should include(messagesApi("error.required.email"))
 
 
       val getHelpLink = Jsoup.parse(content).select(Css.getHelpWithThisPageLink)
