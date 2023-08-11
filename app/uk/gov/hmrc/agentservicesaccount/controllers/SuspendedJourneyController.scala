@@ -24,7 +24,7 @@ import uk.gov.hmrc.agentmtdidentifiers.model.Utr
 import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthRequestWithAgentInfo}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentSubscriptionConnector
-import uk.gov.hmrc.agentservicesaccount.forms.ContactDetailsSuspendForm
+import uk.gov.hmrc.agentservicesaccount.forms.{ContactDetailsSuspendForm}
 import uk.gov.hmrc.agentservicesaccount.models.{AuthProviderId, SuspendContentDetails}
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.suspend.{contact_details, suspension_warning}
@@ -51,14 +51,24 @@ class SuspendedJourneyController @Inject() (
   }
 
   def showContactDetails: Action[AnyContent] = actions.authAction.async { implicit request =>
-
-    contactForm(ContactDetailsSuspendForm.form)
+//todo fill in with session data
+    cacheService.getSessionItems().flatMap(answers => {
+      val contactForm = ContactDetailsSuspendForm.form.fill(
+        SuspendContentDetails(
+          answers(1).getOrElse(""),
+          answers(2).getOrElse(""),
+          answers(3),
+          answers(4)
+        )
+      )
+      getContactFormResult(contactForm)
+    })
   }
 
   def submitContactDetails: Action[AnyContent] = actions.authAction.async { implicit request =>
     ContactDetailsSuspendForm.form.bindFromRequest().fold(
       formWithErrors => {
-        contactForm(formWithErrors)
+        getContactFormResult(formWithErrors)
       },
       formData => {
         cacheService.put(NAME, formData.name)
@@ -75,7 +85,7 @@ class SuspendedJourneyController @Inject() (
     )
   }
 
-  private def contactForm(form: Form[SuspendContentDetails])(implicit hc: HeaderCarrier, ec: ExecutionContext, rc: AuthRequestWithAgentInfo[AnyContent]): Future[Result] = {
+  private def getContactFormResult(form: Form[SuspendContentDetails])(implicit hc: HeaderCarrier, ec: ExecutionContext, rc: AuthRequestWithAgentInfo[AnyContent]): Future[Result] = {
 
     val maybeUtr = maybeGetUtr()
     maybeUtr.map {

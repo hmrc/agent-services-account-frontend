@@ -29,7 +29,6 @@ package object controllers {
   val PHONE: DataKey[String] = DataKey("phone")
   val UTR: DataKey[String] = DataKey("utr")
 
-  //todo put in my ones
   val sessionKeys =
     List(
       AGENT_SIZE,

@@ -51,7 +51,7 @@ class SessionCacheService @Inject()(
     sessionCacheRepository.deleteFromSession(dataKey)
   }
 
-  def getBetaInviteSessionItems()(implicit request: Request[_], ec: ExecutionContext): Future[List[Option[String]]] = {
+  def getSessionItems()(implicit request: Request[_], ec: ExecutionContext): Future[List[Option[String]]] = {
     Future.sequence(sessionKeys.map(get(_)))
   }
 
