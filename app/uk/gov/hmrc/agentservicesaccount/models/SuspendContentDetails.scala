@@ -14,28 +14,16 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.agentservicesaccount
-import uk.gov.hmrc.mongo.cache.DataKey
-import scala.concurrent.Future
+package uk.gov.hmrc.agentservicesaccount.models
 
-package object controllers {
-  implicit class ToFuture[T](t: T) {
-    def toFuture: Future[T] = Future successful t
-  }
+import play.api.libs.json.{Json, OFormat}
 
-  val AGENT_SIZE: DataKey[String] = DataKey("numberOfClients")
-  val NAME: DataKey[String] = DataKey("name")
-  val EMAIL: DataKey[String] = DataKey("email")
-  val PHONE: DataKey[String] = DataKey("phone")
-  val UTR: DataKey[String] = DataKey("utr")
 
-  val sessionKeys =
-    List(
-      AGENT_SIZE,
-      NAME,
-      EMAIL,
-      PHONE,
-      UTR
-    )
+case class SuspendContentDetails(name: String,
+                                    email: String,
+                                    phone: Option[String],
+                                     utr: Option[String])
 
+object SuspendContentDetails{
+  implicit val formats: OFormat[SuspendContentDetails] = Json.format[SuspendContentDetails]
 }

@@ -140,6 +140,7 @@ common.cancel=Cancel
 common.change=Change
 common.continue.manage.account=Continue to manage account
 common.continue=Continue
+common.continue-save=Save and Continue
 common.no=No
 common.sign-out=Sign out
 common.what.happens.next=What happens next
@@ -337,6 +338,16 @@ suspension-warning.single.VATC=manage a client’s VAT
 suspension-warning.list1=director
 suspension-warning.list2=partner
 suspension-warning.list3=sole trader
+
+suspend.contact-details.invite.details.label1=Contact name
+suspend.contact-details.invite.details.label2=Contact email address
+suspend.contact-details.invite.details.label3=Telephone number
+suspend.contact-details.invite.details.label3.hint=We need this to call you about your account
+suspend.contact-details.invite.details.label4=Unique Taxpayer Reference(optional)
+suspend.contact-details.invite.details.hint=Account recovery
+suspend.contact-details.invite.details.heading=Contact Details
+suspend.contact-details.invite.details.inset=We can only talk to a director partner or sole trader.
+
 common.continue.gov=Return to Government Gateway sign in
 timeout-dialog.p1=For security reasons, you will be signed out of your Agent services account in
 your.account.email=Email

@@ -40,7 +40,6 @@ class AgentServicesController @Inject()
   agentClientAuthorisationConnector: AgentClientAuthorisationConnector,
   agentPermissionsConnector: AgentPermissionsConnector,
   agentUserClientDetailsConnector: AgentUserClientDetailsConnector,
-  suspensionWarningView: suspension_warning,
   manage_account: manage_account,
   administrators_html: administrators,
   your_account: your_account,
@@ -80,9 +79,6 @@ class AgentServicesController @Inject()
     sessionKeyUsedInMappingService -> localFriendlyUrl(env)(request.path, request.host)
   }
 
-  val showSuspendedWarning: Action[AnyContent] = actions.authAction { implicit request =>
-   Ok(suspensionWarningView(request.agentInfo.isAdmin))
-  }
 
   val manageAccount: Action[AnyContent] = actions.authActionCheckSuspend.async{ implicit request =>
       val agentInfo = request.agentInfo

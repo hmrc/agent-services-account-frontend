@@ -14,28 +14,19 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.agentservicesaccount
-import uk.gov.hmrc.mongo.cache.DataKey
-import scala.concurrent.Future
+package uk.gov.hmrc.agentservicesaccount.models
 
-package object controllers {
-  implicit class ToFuture[T](t: T) {
-    def toFuture: Future[T] = Future successful t
-  }
+import play.api.libs.json.Format
+import play.api.libs.functional.syntax._
 
-  val AGENT_SIZE: DataKey[String] = DataKey("numberOfClients")
-  val NAME: DataKey[String] = DataKey("name")
-  val EMAIL: DataKey[String] = DataKey("email")
-  val PHONE: DataKey[String] = DataKey("phone")
-  val UTR: DataKey[String] = DataKey("utr")
+/**
+ * An internal id associated with a Government Gateway account.
+ *
+ * @param id
+ */
+final case class AuthProviderId(id: String)
 
-  val sessionKeys =
-    List(
-      AGENT_SIZE,
-      NAME,
-      EMAIL,
-      PHONE,
-      UTR
-    )
-
+object AuthProviderId {
+  implicit val format: Format[AuthProviderId] = implicitly[Format[String]].inmap(AuthProviderId(_), _.id)
 }
+

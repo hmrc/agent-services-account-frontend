@@ -81,7 +81,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       val response = controller.root()(fakeRequest())
 
       status(response) shouldBe SEE_OTHER
-      Helpers.redirectLocation(response) shouldBe Some(routes.AgentServicesController.showSuspendedWarning().url)
+      Helpers.redirectLocation(response) shouldBe Some(routes.SuspendedJourneyController.showSuspendedWarning().url)
     }
 
     "redirect to suspended warning when user is suspended for AGSV" in {
@@ -91,7 +91,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       val response = controller.root()(fakeRequest())
 
       status(response) shouldBe SEE_OTHER
-      Helpers.redirectLocation(response) shouldBe Some(routes.AgentServicesController.showSuspendedWarning().url)
+      Helpers.redirectLocation(response) shouldBe Some(routes.SuspendedJourneyController.showSuspendedWarning().url)
     }
 
     "redirect to suspended warning when user is suspended for ALL" in {
@@ -101,7 +101,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       val response = controller.root()(fakeRequest())
 
       status(response) shouldBe SEE_OTHER
-      Helpers.redirectLocation(response) shouldBe Some(routes.AgentServicesController.showSuspendedWarning().url)
+      Helpers.redirectLocation(response) shouldBe Some(routes.SuspendedJourneyController.showSuspendedWarning().url)
     }
 
     "throw an exception when suspension status returns NOT_FOUND for user" in {
@@ -341,28 +341,6 @@ class AgentServicesControllerSpec extends BaseISpec {
 
   }
 
-  "showSuspensionWarning" should {
-    "return Ok and show the suspension warning page" in {
-      givenAuthorisedAsAgentWith(arn)
-      val response = controller.showSuspendedWarning()(fakeRequest("GET", "/home").withSession("suspendedServices" -> "HMRC-MTD-IT,HMRC-MTD-VAT"))
-
-      status(response) shouldBe OK
-      Helpers.contentType(response).get shouldBe HTML
-      val content = Helpers.contentAsString(response)
-
-      content should include(messagesApi("suspension-warning.header1"))
-      content should include(messagesApi("suspension-warning.p1"))
-      content should include(messagesApi("suspension-warning.p2"))
-      content should include(messagesApi("suspension-warning.p5"))
-      content should include(messagesApi("suspension-warning.list1"))
-      content should include(messagesApi("suspension-warning.list2"))
-      content should include(messagesApi("suspension-warning.list3"))
-      content should include(htmlEscapedMessage("suspension-warning.p4"))
-      val getHelpLink = Jsoup.parse(content).select(Css.getHelpWithThisPageLink)
-      getHelpLink.attr("href") shouldBe "http://localhost:9250/contact/report-technical-problem?newTab=true&service=AOSS&referrerUrl=%2Fhome"
-      getHelpLink.text shouldBe "Is this page not working properly? (opens in new tab)"
-    }
-  }
 
   def verifyContactSection(html: Document) = {
     val contactDetailsSection = html.select("#contact-details")

@@ -111,7 +111,7 @@ class BetaInviteController @Inject()
 
   val showInviteContactDetails: Action[AnyContent] = actions.authActionCheckSuspend .async { implicit request =>
 
-      cacheService.getBetaInviteSessionItems().map(answers => {
+      cacheService.getSessionItems().map(answers => {
         val contactForm = BetaInviteContactDetailsForm.form.fill(
           BetaInviteContactDetails(
             answers(1).getOrElse(""),
@@ -142,7 +142,7 @@ class BetaInviteController @Inject()
   }
 
   val showInviteCheckYourAnswers: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-      cacheService.getBetaInviteSessionItems().flatMap(answers => {
+      cacheService.getSessionItems().flatMap(answers => {
         val detailsForEmail: BetaInviteDetailsForEmail = BetaInviteDetailsForEmail(
           AgentSize(answers.head.getOrElse("")),
           answers(1).getOrElse(""),
@@ -155,7 +155,7 @@ class BetaInviteController @Inject()
 
   def submitDetailsToEmail(): Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
 
-      cacheService.getBetaInviteSessionItems().flatMap(answers => {
+      cacheService.getSessionItems().flatMap(answers => {
         val detailsForEmail: BetaInviteDetailsForEmail = BetaInviteDetailsForEmail(
           AgentSize(answers.head.getOrElse("")),
           answers(1).getOrElse(""),
