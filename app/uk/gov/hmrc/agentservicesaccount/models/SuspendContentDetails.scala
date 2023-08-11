@@ -16,8 +16,14 @@
 
 package uk.gov.hmrc.agentservicesaccount.models
 
+import play.api.libs.json.{Json, OFormat}
+
 
 case class SuspendContentDetails(name: String,
                                     email: String,
                                     phone: Option[String],
                                      utr: Option[String])
+
+object SuspendContentDetails{
+  implicit val formats: OFormat[SuspendContentDetails] = Json.format[SuspendContentDetails]
+}

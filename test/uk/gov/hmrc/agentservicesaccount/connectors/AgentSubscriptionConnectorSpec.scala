@@ -16,48 +16,42 @@
 
 package uk.gov.hmrc.agentservicesaccount.connectors
 
-
-import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, get, stubFor, urlEqualTo}
+import com.github.tomakehurst.wiremock.client.WireMock._
 import play.api.libs.json.Json
-import uk.gov.hmrc.agentservicesaccount.models.{AuthProviderId, BusinessDetails, SubscriptionJourneyRecord}
-
-import scala.concurrent.ExecutionContext
 import uk.gov.hmrc.agentmtdidentifiers.model.Utr
+import uk.gov.hmrc.agentservicesaccount.models.{AuthProviderId, BusinessDetails, SubscriptionJourneyRecord}
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import uk.gov.hmrc.http.HeaderCarrier
 
-class AgentSubscriptionConnectorSpec  extends BaseISpec {
+import scala.concurrent.Await
+import scala.concurrent.duration._
 
-  // Mocked dependencies
+class AgentSubscriptionConnectorSpec extends BaseISpec {
 
-  implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
   private lazy val connector = app.injector.instanceOf[AgentSubscriptionConnector]
-  // Test data
-  val authProviderId = AuthProviderId("someId")
-  val journeyRecord = SubscriptionJourneyRecord(authProviderId, BusinessDetails(Utr("1234567890")))
 
-  // Example HeaderCarrier
-  implicit val hc: HeaderCarrier = HeaderCarrier()
+  private implicit val hc: HeaderCarrier = HeaderCarrier()
+
 
   "AgentSubscriptionConnector" should {
-    "retrieve a journey record by ID" in {
-//      val encodedId: String = connector.encodePathSegment(authProviderId.id)
-      val url = "/agent-subscription/subscription/journey/id/someId"
-      val responseJson = Json.toJson(journeyRecord).toString()
-      println(s"Response JSON: $responseJson")
-      println("test + " + url)
-      stubFor(get(urlEqualTo("/agent-subscription/subscription/journey/id/someId"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withBody(responseJson)
-        ))
+    "return a SubscriptionJourneyRecord when response is OK" in {
+      val internalId = AuthProviderId("12345")
+      val responseBody = Json.toJson(SubscriptionJourneyRecord(internalId,BusinessDetails(Utr("1234567890")))).toString
+
+      stubFor(
+        get(urlEqualTo(s"/agent-subscription/subscription/journey/id/${internalId.id}"))
+          .willReturn(
+            aResponse()
+              .withStatus(200)
+              .withBody(responseBody)
+          )
+      )
 
 
-      val result = connector.getJourneyById(authProviderId)
+      val result = connector.getJourneyById(internalId)(HeaderCarrier())
 
-      println(journeyRecord)
-      result.futureValue shouldEqual Some(journeyRecord)
+      val subscriptionJourneyOpt = Await.result(result, 5.seconds)
+      subscriptionJourneyOpt shouldBe Some(SubscriptionJourneyRecord(internalId,BusinessDetails(Utr("1234567890"))))
     }
   }
 }

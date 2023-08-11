@@ -18,6 +18,7 @@ package uk.gov.hmrc.agentservicesaccount.model
 
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 import play.api.libs.json.Json
 import uk.gov.hmrc.agentmtdidentifiers.model.Utr
 import uk.gov.hmrc.agentservicesaccount.models._
@@ -48,3 +49,29 @@ class BusinessDetailsSpec extends AnyFlatSpec with Matchers {
     parsedDetails shouldEqual businessDetails
   }
 }
+import play.api.libs.json._
+
+class AgentSizeSpec extends AnyWordSpec with Matchers {
+
+  "AgentSize" should {
+    "serialize and deserialize correctly" in {
+      val smallJson = JsString("small")
+      val mediumJson = JsString("medium")
+      val largeJson = JsString("large")
+      val xlargeJson = JsString("xlarge")
+
+      AgentSize.agentSizeFormat.reads(smallJson) shouldBe JsSuccess(Small)
+      AgentSize.agentSizeFormat.reads(mediumJson) shouldBe JsSuccess(Medium)
+      AgentSize.agentSizeFormat.reads(largeJson) shouldBe JsSuccess(Large)
+      AgentSize.agentSizeFormat.reads(xlargeJson) shouldBe JsSuccess(XLarge)
+
+      AgentSize.agentSizeFormat.writes(Small) shouldBe smallJson
+      AgentSize.agentSizeFormat.writes(Medium) shouldBe mediumJson
+      AgentSize.agentSizeFormat.writes(Large) shouldBe largeJson
+      AgentSize.agentSizeFormat.writes(XLarge) shouldBe xlargeJson
+    }
+  }
+}
+
+
+
