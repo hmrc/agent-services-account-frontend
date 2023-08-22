@@ -69,7 +69,7 @@ class SuspendedJourneyControllerSpec extends BaseISpec {
       val continueLink = Jsoup.parse(content).select(Css.linkStyledAsButton)
       continueLink.attr("href") shouldBe "/agent-services-account/recovery-contact-details"
       continueLink.text shouldBe "Continue"
-      val signoutLink = Jsoup.parse(content).select(Css.signoutLink)
+      val signoutLink = Jsoup.parse(content).select(Css.signoutLink).get(1)
       signoutLink.attr("href") shouldBe "/agent-services-account/signed-out"
       signoutLink.text shouldBe "Return to Government Gateway sign in"
     }

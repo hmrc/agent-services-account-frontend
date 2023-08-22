@@ -18,7 +18,7 @@
 @import uk.gov.hmrc.agentservicesaccount.controllers.routes
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 
-@this(main: main, link_as_button: link_as_button)
+@this(main: main, p: p, h1: h1, h2: h2, h3: h3, h4: h4, ul: ul, a: a, link_as_button: link_as_button)
 
 
 @(isAdmin: Boolean)(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
@@ -27,24 +27,17 @@
 
 @main(pageTitle = msgs("suspension-warning.header"), isAdmin = isAdmin) {
 
-    <h1 class="govuk-heading-xl">@msgs("suspension-warning.header1")</h1>
-    <p class="govuk-body">@msgs("suspension-warning.p1")</p>
-
-        <p class="govuk-body">@msgs("suspension-warning.p2")</p>
-        <p class="govuk-body">@msgs("suspension-warning.p5")</p>
-        <ul class="govuk-list govuk-list--bullet govuk-body">
-
-            <li>@msgs("suspension-warning.list1")</li>
-            <li>@msgs("suspension-warning.list2")</li>
-            <li>@msgs("suspension-warning.list3")</li>
-
-        </ul>
-
+    @h1(key = "suspension-warning.header1", size = "xl")
+    @p("suspension-warning.p1")
+    @p("suspension-warning.p2")
+    @p("suspension-warning.p5")
+    @ul(items = List("suspension-warning.list1", "suspension-warning.list2", "suspension-warning.list3" ), classes = Some("govuk-list--bullet govuk-body"))
     <p class="govuk-body">@msgs("suspension-warning.p4")</p>
 
     <div class="govuk-button-group">
-    <a href="@routes.SuspendedJourneyController.showContactDetails()" class="govuk-button">@msgs("common.continue")</a>
-    <a href="@routes.SignOutController.signedOut()" class="govuk-link">@msgs("common.continue.gov")</a>
+        @a(key = "common.continue",
+            href = s"${routes.SuspendedJourneyController.showContactDetails().url}", classes = Some("govuk-button"))
+        @a(key = "common.continue.gov", href = s"${routes.SignOutController.signedOut().url}")
     </div>
 
 
