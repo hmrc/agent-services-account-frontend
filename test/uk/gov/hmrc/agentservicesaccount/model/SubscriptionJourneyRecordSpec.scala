@@ -16,40 +16,10 @@
 
 package uk.gov.hmrc.agentservicesaccount.model
 
-import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
-import play.api.libs.json.Json
-import uk.gov.hmrc.agentmtdidentifiers.model.Utr
-import uk.gov.hmrc.agentservicesaccount.models._
-
-class SubscriptionJourneyRecordSpec extends AnyFlatSpec with Matchers {
-
-  "SubscriptionJourneyRecord" should "be serializable to JSON and back" in {
-    val authProviderId = AuthProviderId("someId")
-    val businessDetails = BusinessDetails(Utr("1234567890"))
-    val subscriptionJourneyRecord = SubscriptionJourneyRecord(authProviderId, businessDetails)
-
-    val json = Json.toJson(subscriptionJourneyRecord)
-    val parsedRecord = json.as[SubscriptionJourneyRecord]
-
-    parsedRecord shouldEqual subscriptionJourneyRecord
-  }
-}
-
-class BusinessDetailsSpec extends AnyFlatSpec with Matchers {
-
-  "BusinessDetails" should "be serializable to JSON and back" in {
-    val utr = Utr("1234567890")
-    val businessDetails = BusinessDetails(utr)
-
-    val json = Json.toJson(businessDetails)
-    val parsedDetails = json.as[BusinessDetails]
-
-    parsedDetails shouldEqual businessDetails
-  }
-}
 import play.api.libs.json._
+import uk.gov.hmrc.agentservicesaccount.models._
 
 class AgentSizeSpec extends AnyWordSpec with Matchers {
 

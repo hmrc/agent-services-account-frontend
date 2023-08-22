@@ -15,15 +15,11 @@
  *@
 
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-@import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
-@import uk.gov.hmrc.agentservicesaccount.views.html.main
-@import uk.gov.hmrc.govukfrontend.views.html.components.{GovukButton, GovukInput, GovukFieldset}
-@import uk.gov.hmrc.govukfrontend.views.html.components._
-@import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
 @import uk.gov.hmrc.agentservicesaccount.controllers.routes
-@import uk.gov.hmrc.agentservicesaccount.models.SuspendContentDetails
-@import uk.gov.hmrc.govukfrontend.views.html.components.{Input, Text, Label, Hint, PrefixOrSuffix}
+@import uk.gov.hmrc.agentservicesaccount.models.SuspendContactDetails
+@import uk.gov.hmrc.agentservicesaccount.views.html.main
 @import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
+@import uk.gov.hmrc.govukfrontend.views.html.components.{GovukButton, GovukFieldset, GovukInput, Hint, Input, Label, Text, _}
 
 @this(
         main: main,
@@ -33,10 +29,11 @@
         govukFieldset: GovukFieldset,
         govukSummaryList: GovukSummaryList,
         govukInsetText : GovukInsetText,
-        govukButton: GovukButton
+        govukButton: GovukButton,
+        govukErrorSummary: GovukErrorSummary
 )
 
-@(form: Form[SuspendContentDetails],hasUtr:Boolean = false)(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
+@(form: Form[SuspendContactDetails])(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
 
 @fieldsetHtml = {
 
@@ -75,7 +72,6 @@
     autocomplete = Some("tel")
 ).withFormField(form("phone")))
 
-@if(!hasUtr){
     @govukInput(Input(
     label = Label(
         content = HtmlContent(msgs("suspend.contact-details.invite.details.label4")),
@@ -85,7 +81,7 @@
     classes = "",
     spellcheck = Some(false),
     autocomplete = Some("utr")
-).withFormField(form("utr")))}
+).withFormField(form("utr")))
 
 }
 
@@ -94,6 +90,10 @@
     backLinkHref = Some(routes.BetaInviteController.showInviteDetails.url),
     showSecondaryNav = false
 ) {
+
+    @if(form.hasErrors){
+        @govukErrorSummary(ErrorSummary(errorList = form.errors.asTextErrorLinks, title = Text(msgs("survey.error.summary"))))
+    }
     <p class="govuk-hint">@msgs("suspend.contact-details.invite.details.hint")</p>
     <h1 class="govuk-fieldset__legend--l">@msgs("suspend.contact-details.invite.details.heading")</h1>
     <p class="govuk-inset-text govuk-!-margin-bottom-6">@msgs("suspend.contact-details.invite.details.inset")</p>
