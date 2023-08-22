@@ -67,6 +67,16 @@ class SuspendedJourneyControllerSpec extends BaseISpec {
       getHelpLink.attr("href") shouldBe "http://localhost:9250/contact/report-technical-problem?newTab=true&service=AOSS&referrerUrl=%2Fhome"
       getHelpLink.text shouldBe "Is this page not working properly? (opens in new tab)"
     }
+
+    "redirect to home page when the agent is not suspended" in {
+      givenAuthorisedAsAgentWith(arn)
+      givenSuspensionStatus(SuspensionDetails(suspensionStatus = false, None))
+
+      val response = controller.showSuspendedWarning()(fakeRequest())
+
+      status(response) shouldBe SEE_OTHER
+      redirectLocation(response.futureValue) shouldBe Some(routes.AgentServicesController.showAgentServicesAccount().url)
+    }
   }
   "showContactDetails" should {
     "return Ok and show the suspension warning page" in {
