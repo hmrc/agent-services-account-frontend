@@ -45,4 +45,5 @@ object Css {
   val getHelpWithThisPageLink = "main a.govuk-link.hmrc-report-technical-issue"
   val backLink = "a.govuk-back-link"
   val secondaryNavLinks = "#secondary-nav a"
+  val signoutLink = "main div.govuk-button-group a.govuk-link"
 }

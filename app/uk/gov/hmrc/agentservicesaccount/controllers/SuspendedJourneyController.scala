@@ -22,7 +22,7 @@ import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.forms.ContactDetailsSuspendForm
-import uk.gov.hmrc.agentservicesaccount.models.SuspendContentDetails
+import uk.gov.hmrc.agentservicesaccount.models.SuspendContactDetails
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.suspend.{contact_details, suspension_warning}
 
@@ -49,7 +49,7 @@ class SuspendedJourneyController @Inject() (
 
     cacheService.getSessionItems().flatMap(answers => {
       val contactForm = ContactDetailsSuspendForm.form.fill(
-        SuspendContentDetails(
+        SuspendContactDetails(
           answers(1).getOrElse(""),
           answers(2).getOrElse(""),
           answers(3).getOrElse(""),

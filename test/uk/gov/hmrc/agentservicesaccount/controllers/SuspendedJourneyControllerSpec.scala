@@ -66,6 +66,12 @@ class SuspendedJourneyControllerSpec extends BaseISpec {
       val getHelpLink = Jsoup.parse(content).select(Css.getHelpWithThisPageLink)
       getHelpLink.attr("href") shouldBe "http://localhost:9250/contact/report-technical-problem?newTab=true&service=AOSS&referrerUrl=%2Fhome"
       getHelpLink.text shouldBe "Is this page not working properly? (opens in new tab)"
+      val continueLink = Jsoup.parse(content).select(Css.linkStyledAsButton)
+      continueLink.attr("href") shouldBe "/agent-services-account/recovery-contact-details"
+      continueLink.text shouldBe "Continue"
+      val signoutLink = Jsoup.parse(content).select(Css.signoutLink)
+      signoutLink.attr("href") shouldBe "/agent-services-account/signed-out"
+      signoutLink.text shouldBe "Return to Government Gateway sign in"
     }
 
     "redirect to home page when the agent is not suspended" in {
@@ -124,10 +130,12 @@ class SuspendedJourneyControllerSpec extends BaseISpec {
     }
     "return SEE_OTHER  if the data is correct" in {
       givenAuthorisedAsAgentWith(arn)
-      val request = fakeRequest("POST", "/home")
+      val request = fakeRequest("POST", "/")
 
-        .withFormUrlEncodedBody("name" -> "colm",
-        "email" -> "colm@colm.com")
+        .withFormUrlEncodedBody(
+          "name" -> "colm",
+        "email" -> "colm@colm.com",
+          "phone" -> "01234542")
       val response = controller.submitContactDetails()(request)
 
       status(response) shouldBe SEE_OTHER

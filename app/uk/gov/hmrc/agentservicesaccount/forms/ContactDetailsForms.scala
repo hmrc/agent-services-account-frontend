@@ -19,7 +19,7 @@ package uk.gov.hmrc.agentservicesaccount.forms
 import play.api.data.Forms._
 import play.api.data._
 import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
-import uk.gov.hmrc.agentservicesaccount.models.{BetaInviteContactDetails, SuspendContentDetails}
+import uk.gov.hmrc.agentservicesaccount.models.{BetaInviteContactDetails, SuspendContactDetails}
 
 //todo refactor together
 object BetaInviteContactDetailsForm {
@@ -62,15 +62,15 @@ object ContactDetailsSuspendForm {
 
   private def suspendedDetailsEmailConstraint: Constraint[String] = Constraint[String] { input: String =>
     if (input.trim.isEmpty) Invalid(ValidationError("error.suspended-details.required.email"))
-    else if(!input.trim.matches(emailRegex)) Invalid(ValidationError("error.suspended-details.required.email"))
     else if (input.trim.length > 254) Invalid(ValidationError("error.max-length.email"))
+    else if (!input.trim.matches(emailRegex)) Invalid(ValidationError("error.suspended-details.required.email"))
     else Valid
   }
 
   private def suspendedDetailsTelephoneConstraint: Constraint[String] = Constraint[String] { input: String =>
     if (input.trim.isEmpty) Invalid(ValidationError("error.suspended-details.required.telephone"))
-    else if (!input.trim.matches(phoneRegex)) Invalid(ValidationError("error.suspended-details.invalid.telephone"))
     else if (input.trim.length > 20) Invalid(ValidationError("error.max-length.telephone"))
+    else if (!input.trim.matches(phoneRegex)) Invalid(ValidationError("error.suspended-details.invalid.telephone"))
     else Valid
   }
 
@@ -86,12 +86,12 @@ object ContactDetailsSuspendForm {
   private val suspendedDetailsTelephoneMapping: Mapping[String] = text.verifying(suspendedDetailsTelephoneConstraint)
   private val suspendedDetailsUtrMapping: Mapping[Option[String]] = optional(text.verifying(suspendedDetailsUtrConstraint))
 
-  def form: Form[SuspendContentDetails] = Form(
+  def form: Form[SuspendContactDetails] = Form(
     mapping(
       "name"  -> suspendedDetailsNameMapping,
       "email" -> suspendedDetailsEmailMapping,
       "phone" -> suspendedDetailsTelephoneMapping,
       "utr"   -> suspendedDetailsUtrMapping
-    )(SuspendContentDetails.apply)(SuspendContentDetails.unapply)
+    )(SuspendContactDetails.apply)(SuspendContactDetails.unapply)
   )
 }

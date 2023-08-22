@@ -16,17 +16,14 @@
 
 package uk.gov.hmrc.agentservicesaccount.models
 
-import play.api.libs.json.Format
-import play.api.libs.functional.syntax._
+import play.api.libs.json.{Json, OFormat}
 
-/**
- * An internal id associated with a Government Gateway account.
- *
- * @param id
- */
-final case class AuthProviderId(id: String)
 
-object AuthProviderId {
-  implicit val format: Format[AuthProviderId] = implicitly[Format[String]].inmap(AuthProviderId(_), _.id)
+case class SuspendContactDetails(name: String,
+                                 email: String,
+                                 phone: String,
+                                 utr: Option[String])
+
+object SuspendContactDetails{
+  implicit val formats: OFormat[SuspendContactDetails] = Json.format[SuspendContactDetails]
 }
-
