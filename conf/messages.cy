@@ -54,9 +54,13 @@ asa.other.warning=Rhybudd
 asa.p.agent-services=Mynediad at wasanaethau ar gyfer cleientiaid sydd eisoes wedi eich awdurdodi i weithredu ar eu rhan.
 asa.p.client-authorisations=Dechrau cais am awdurdodiad newydd neu gysylltu’ch cleientiaid cyfredol â’ch cyfrif.
 asa.p.manage=Caniatáu i ddefnyddwyr eraill yn eich sefydliad gael mynediad at y cyfrif gwasanaethau asiant hwn, neu gyfyngu ar eu mynediad.
+
+# PAYE
 asa.paye-section.h2=Bwrw golwg dros gofnod incwm cleient
 asa.paye-section.link=Bwrw golwg dros gofnod incwm cleient
 asa.paye-section.text=Cael mynediad at gofnod incwm cleient i’ch helpu i lenwi ei Ffurflen Dreth Hunanasesiad.
+
+# PPT
 asa.ppt.col1.h2=Treth Deunydd Pacio Plastig
 asa.ppt.col1.h3=Cyn i chi ddechrau
 asa.ppt.col1.link1.href=https://www.gov.uk/guidance/register-for-plastic-packaging-tax
@@ -67,6 +71,14 @@ asa.ppt.col1.text2=Yna mae’n rhaid iddo:
 asa.ppt.col2.h3=Rheoli Treth Deunydd Pacio Plastig eich cleient
 asa.ppt.col2.link1.href=https://www.tax.service.gov.uk/plastic-packaging-tax/account
 asa.ppt.col2.link1=<a class="govuk-link" href="{0}" rel="noreferrer noopener">Rhoi gwybod am Dreth Deunydd Pacio Plastig eich cleient a bwrw golwg dros daliadau, ffurflenni a chosbau.</a>
+
+# CBC
+asa.cbc.col1.h2=Manage country-by-country reports
+asa.cbc.col1.h3=Country-by-country reports
+asa.cbc-section.col1.link1.p=You must first get an authorisation from your client. You can do this by <a class="govuk-link" href="{0}"> requesting an authorisation</a>
+asa.cbc-section.col1.link2.p=Manage your clients'' country-by-country reports and your country-by-country agent contact details
+
+# VAT
 asa.section1.col1.h3=Cyn i chi ddechrau
 asa.section1.col1.p2=Efallai nad yw bob un o’ch cleientiaid wedi cofrestru ar gyfer y cynllun Troi Treth yn Ddigidol ar gyfer TAW. Os nad yw’ch cleient wedi cofrestru, gallwch dal i reoli a bwrw golwg dros ei fanylion TAW drwy ddefnyddio’r cyfrif hwn.
 asa.section1.col1.p=Yn gyntaf mae’n rhaid i chi gael awdurdodiad gan eich cleient.
@@ -74,9 +86,13 @@ asa.section1.col2.h3=Rheoli manylion TAW eich cleient
 asa.section1.col2.link1=Cofrestru’ch cleient ar gyfer TAW (yn agor tab newydd)
 asa.section1.col2.link2=Rheoli, cyflwyno a bwrw golwg dros fanylion TAW eich cleient (yn agor mewn tab newydd)
 asa.section1.h2=TAW
+
+# Suspension
 asa.section1.suspended.h3=Rydym wedi cyfyngu ar eich defnydd o’r gwasanaeth hwn dros dro
 asa.section1.suspended.p1=Gwnaethom hyn oherwydd ein bod wedi gohirio eich cod asiant. Rydym wedi anfon llythyr atoch yn cadarnhau hyn.
 asa.section1.suspended.p2=Mae hyn yn golygu na fyddwch yn gallu defnyddio’r gwasanaeth hwn.
+
+# CGT
 asa.section3.col1.h2=Treth Enillion Cyfalaf ar eiddo yn y DU
 asa.section3.col1.h3=Cyn i chi ddechrau
 asa.section3.col1.link1.href=https://www.gov.uk/guidance/managing-your-clients-capital-gains-tax-on-uk-property-account#before-you-start
@@ -88,12 +104,16 @@ asa.section3.col1.text2=Yna mae’n rhaid iddo:
 asa.section3.col2.h3=Rheoli Treth Enillion Cyfalaf cleient ar eiddo yn y DU
 asa.section3.col2.link1.href=https://www.tax.service.gov.uk/capital-gains-tax-uk-property/start
 asa.section3.col2.link1=<a class="govuk-link" href="{0}">Rhoi gwybod am Dreth Enillion Cyfalaf eich cleient ar eiddo yn y DU a bwrw golwg dros daliadau a chosbau</a>
+
+# Main choices
 asa.section4.col1.h3=Gofyn i gleient eich awdurdodi
 asa.section4.col1.link=Gofyn i gleient eich awdurdodi
 asa.section4.col2.link1=Rheoli’ch ceisiadau am awdurdodiad o’r 30 diwrnod diwethaf
 asa.section4.col2.link2=Copïo rhagor o awdurdodiadau cleientiaid TAW a Hunanasesiad ar draws
 asa.section4.col2.link3=Canslo awdurdodiad cleient
 asa.section4.h2=Awdurdodiadau cleientiaid
+
+# ITSA
 asa.sectionITSA.col1.h3=Cyn i chi ddechrau
 asa.sectionITSA.col1.link=Os ydych yn copïo manylion eich cleient drosodd, bydd angen i chi<a class="govuk-link" href="https://www.gov.uk/guidance/sign-up-your-client-for-making-tax-digital-for-income-tax.cy" target="_blank" rel="noreferrer noopener"> ei gofrestru ar gyfer y cynllun Troi Treth yn Ddigidol ar gyfer Treth Incwm (yn agor tab newydd)</a>
 asa.sectionITSA.col1.p=Yn gyntaf mae’n rhaid i chi gael awdurdodiad gan eich cleient. Gallwch wneud hyn drwy<a class="govuk-link" href="{0}"> gopïo’ch awdurdodiadau drosodd</a> neu <a class="govuk-link" href="{1}">wneud cais am awdurdodiad</a>.
@@ -102,12 +122,16 @@ asa.sectionITSA.col2.link1.text=Bwrw golwg dros fanylion Treth Incwm eich cleien
 asa.sectionITSA.col2.link2.text=Helpu cleientiaid i wirio a ydynt yn gymwys (yn agor tab newydd)
 asa.sectionITSA.h2=Troi Treth yn Ddigidol ar gyfer Treth Incwm
 asa.tax-services=Gwasanaethau treth y gallwch gael mynediad iddynt drwy'r cyfrif hwn
+
+# Trusts
 asa.trusts-section.col1.h3=Cyn i chi ddechrau
 asa.trusts-section.col1.register-estate.p=Bydd angen i’ch cleient<a class="govuk-link" href="https://www.gov.uk/guidance/manage-your-trusts-registration-service#how-to-use-the-online-service"> hawlio’r ymddiriedolaeth</a> neu’r ystâd.
 asa.trusts-section.col1.register-trust.p=Cyn i chi<a class="govuk-link" href="{0}"> ofyn i’ch cleient eich awdurdodi, rhaid eich bod chi neu’ch cleient wedi<a class="govuk-link" href="https://www.gov.uk/guidance/register-your-clients-trust.cy" target="_blank" rel="noreferrer noopener"> cofrestru’r ymddiriedolaeth (yn agor tab newydd)</a> neu’r<a class="govuk-link" href="https://www.gov.uk/guidance/register-your-clients-estate" target="_blank" rel="noreferrer noopener"> ystâd (yn agor tab newydd)</a>.
 asa.trusts-section.col2.h3=Rheoli ymddiriedolaeth eich cleient
 asa.trusts-section.col2.register-trust-link.text=Defnyddiwch y gwasanaeth hwn i ddiweddaru manylion ymddiriedolaeth neu ystâd eich cleient neu i ddatgan dim newidiadau ar y gofrestr ymddiriedolaethau
 asa.trusts-section.h2=Ymddiriedolaethau ac ystadau
+
+# BETA invite
 beta.invite.banner.heading=Helpwch i wella ein nodwedd newydd
 beta.invite.banner.link1=Hoffwn wybod rhagor
 beta.invite.banner.link2=Dim diolch
@@ -131,16 +155,21 @@ beta.invite.yes-no.heading=Profi’r nodwedd grwpiau mynediad
 beta.invite.yes-no.legend=A fyddech yn hoffi helpu i brofi’r grwpiau mynediad?
 beta.invite.yes-no.p=Rydym yn profi nodwedd newydd. Mae’n gadael i asiantau reoli pa aelodau o staff sy’n gallu rheoli trethi cleient. Bydd eich adborth yn ein helpu ni i wella ein gwasanaeth cyn i ni ei gyflwyno i bawb.
 beta.invite.yes-no.required.error=Dewiswch ‘Iawn’ i helpu i brofi grwpiau mynediad
+
+# Common
 common.back=Yn ôl
 common.cancel=Canslo
 common.change=Newid
 common.continue.manage.account=Yn eich blaen i reoli’r cyfrif
 common.continue=Yn eich blaen
+common.continue-save=Save and Continue
 common.no=Na
 common.sign-out=Allgofnodi
 common.what.happens.next=Yr hyn sy’n digwydd nesaf
 common.yes=Iawn
 details.link-hidden= ar gyfer {0}
+
+# Errors
 error-prefix=Gwall:
 error.invalid.email=Nodwch y cyfeiriad e-bost yn y fformat cywir, fel enw@enghraifft.com
 error.invalid.phone=Nodwch rif ffôn yn y fformat cywir, fel 01632 960 001 neu +44 808 157 0192
@@ -149,6 +178,16 @@ error.max-length.name=Rhaid i’ch enw fod yn 80 o gymeriadau neu lai
 error.max-length.phone=Rhaid i’ch rhif ffôn fod yn 20 o gymeriadau neu lai
 error.required.email=Nodwch gyfeiriad e-bost
 error.required.name=Nodwch eich enw
+error.suspended-details.required.name=Enter the contact name
+error.suspended-details.max-length.name=Name must be between 0 and 80 characters
+error.suspended-details.invalid-chars.name=Name must not include the characters < and >
+error.suspended-details.required.email=Enter an email address with a name, @ symbol and a domain name, like name@example.com
+error.suspended-details.required.telephone=Enter your telephone number
+error.suspended-details.invalid.telephone=Enter a telephone number, like 01642 123 456, 07777 777 777 or +33 23 45 67 88
+error.suspended-details.max-length.telephone=Telephone number must be between 0 and 20 characters
+error.suspended-details.invalid.utr=Unique Taxpayer Reference must only include numbers and the letter 'k'
+error.suspended-details.max-length.utr=Unique Taxpayer Reference must be between 10 and 14 characters
+
 existing.client.relationships.link=Mynediad at berthnasoedd presennol â chleientiaid
 footer.links.accessibility.text=Hygyrchedd
 footer.links.accessibility.url=/agent-services-account/accessibility-statement
@@ -156,6 +195,8 @@ generic.title={0} - {1} - GOV.UK
 global.error.500.heading=Mae’n ddrwg gennym, rydym yn profi anawsterau technegol
 global.error.500.message=Rhowch gynnig arall arni mewn ychydig o funudau.
 global.error.500.title=Mae’n ddrwg gennym, rydym yn profi anawsterau technegol – 500
+
+# Help & Guidance
 help.about-asa.p1=Dim ond un cyfrif gwasanaethau asiant y mae’n bosib i chi ei gael, ond gallwch ychwanegu sawl aelod o’r tîm at y cyfrif hwn. Bydd angen i bob un ohonynt gael Dynodydd Defnyddiwr (ID) ar gyfer Porth y Llywodraeth er mwyn i chi eu hychwanegu.
 help.about-asa.p2=Mae’r sgrin ‘Hafan ar gyfer y cyfrif’ yn cynnwys cysylltiadau er mwyn rheoli awdurdodiadau cleientiaid a gwasanaethau treth penodol. Ar gyfer gwasanaethau treth eraill, bydd angen i chi fewngofnodi i’ch cyfrif gwasanaethau ar-lein ar gyfer asiantau.
 help.about-asa.p3=Bydd y sgrin ‘Rheoli’r cyfrif’ yn amrywio, yn dibynnu a oes gennych fynediad fel gweinyddwr neu fynediad fel defnyddiwr safonol. Gall y gweinyddwyr ddewis rheoli caniatâd o ran mynediad drwy ddefnyddio’r nodwedd newydd ar gyfer ‘grwpiau mynediad’. Pan fydd y grwpiau mynediad wedi eu galluogi, bydd y defnyddwyr sydd â mynediad safonol yn gallu rheoli’r cleientiaid a neilltuwyd iddynt yn unig.
@@ -248,6 +289,8 @@ label.beta.improve=yn ein helpu i’w wella.
 label.beta.newservice=Mae hwn yn wasanaeth newydd
 label.beta.yours=– bydd eich
 label.beta=BETA
+
+# Manage account
 manage.account.account-details=Bwrw golwg dros y manylion cyswllt sydd gennym ar gyfer eich busnes
 manage.account.add-user=Ychwanegu defnyddiwr newydd
 manage.account.clients.heading=Cleientiaid
@@ -292,6 +335,8 @@ servicename.titleSuffix=– Cyfrif gwasanaethau asiant – GOV.UK
 signed-out.header=Rydych wedi cael eich allgofnodi
 signed-out.p1=Nid ydych wedi gwneud dim byd ers {0}, felly rydym wedi’ch allgofnodi er mwyn cadw’ch cyfrif yn ddiogel.
 signed-out.p2=<a class="govuk-link" href="{0}">Mewngofnodwch eto</a> i ddefnyddio’r gwasanaeth hwn.
+
+# Survey
 survey.empty=Dewiswch opsiwn
 survey.error.summary=Mae problem wedi codi
 survey.form.label.accessingService=Cael mynediad at wasanaeth treth penodol ar ran fy nghleient
@@ -309,6 +354,8 @@ survey.whichService.label.other=Unrhyw wasanaeth treth arall
 survey.whichService.label.trust=Rheoli ymddiriedolaeth neu ystâd
 survey.whichService.label.vat=TAW
 survey.whichService.title=Pa wasanaeth treth rydych am roi adborth i ni amdano?
+
+# Suspension
 suspension-warning.header=Rydym wedi cyfyngu ar eich defnydd o’r gwasanaeth hwn dros dro
 suspension-warning.header1=
 suspension-warning.multi.CGT=rheoli ei gyfrif Treth Enillion Cyfalaf ar eiddo yn y DU
@@ -323,6 +370,7 @@ suspension-warning.p2.multi=Mae hyn yn golygu na fyddwch yn gallu defnyddio’r 
 suspension-warning.p2.single=Mae hyn yn golygu na fyddwch yn gallu defnyddio’r gwasanaeth hwn i ofyn am awdurdodiad er mwyn {0}.
 suspension-warning.p3=Gallwch barhau i gael mynediad at unrhyw wasanaeth arall sydd ar gael i chi.
 suspension-warning.p4=suspension-warning.p4=If you want us to get in touch, select ''Continue''. You can enter the relevant contact details. 
+suspension-warning.p5=We can only talk to people in the roles below:
 suspension-warning.single.CGT=rheoli cyfrif Treth Enillion Cyfalaf ar eiddo yn y DU ar gyfer cleient
 suspension-warning.single.ITSA=anfon diweddariadau Troi Treth yn Ddigidol ar gyfer Treth Incwm cleient drwy feddalwedd
 suspension-warning.single.PIR=bwrw golwg dros ei gofnod incwm
@@ -332,7 +380,20 @@ suspension-warning.single.VATC=cyflwyno Ffurflenni TAW cleient drwy feddalwedd
 suspension-warning.list1=director
 suspension-warning.list2=partner
 suspension-warning.list3=sole trader
+
+suspend.contact-details.invite.details.label1=Contact name
+suspend.contact-details.invite.details.label2=Contact email address
+suspend.contact-details.invite.details.label3=Telephone number
+suspend.contact-details.invite.details.label3.hint=We need this to call you about your account
+suspend.contact-details.invite.details.label4=Unique Taxpayer Reference(optional)
+suspend.contact-details.invite.details.hint=Account recovery
+suspend.contact-details.invite.details.heading=Contact Details
+suspend.contact-details.invite.details.inset=We can only talk to a director partner or sole trader.
+
+common.continue.gov=Return to Government Gateway sign in
 timeout-dialog.p1=Am resymau diogelwch, cewch eich allgofnodi o’ch cyfrif gwasanaethau asiant ymhen
+
+# Your account
 your.account.email=E-bost
 your.account.h1=Eich cyfrif
 your.account.name=Enw

@@ -51,7 +51,6 @@ abstract class BaseISpec
         "microservice.services.sso.port"                                  -> wireMockPort,
         "microservice.services.agent-permissions.port"                    -> wireMockPort,
         "microservice.services.agent-user-client-details.port"            -> wireMockPort,
-        "microservice.services.agent-subscription.port"            -> wireMockPort,
         "microservice.services.agent-permissions-frontend.external-url"   -> wireMockBaseUrlAsString,
         "auditing.enabled"                   -> false,
         "metrics.enabled" -> false

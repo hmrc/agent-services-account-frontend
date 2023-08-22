@@ -28,6 +28,7 @@ package object controllers {
   val EMAIL: DataKey[String] = DataKey("email")
   val PHONE: DataKey[String] = DataKey("phone")
   val UTR: DataKey[String] = DataKey("utr")
+  val ARN: DataKey[String] = DataKey("arn")
 
   val sessionKeys =
     List(
@@ -35,7 +36,8 @@ package object controllers {
       NAME,
       EMAIL,
       PHONE,
-      UTR
+      UTR,
+      ARN
     )
 
 }

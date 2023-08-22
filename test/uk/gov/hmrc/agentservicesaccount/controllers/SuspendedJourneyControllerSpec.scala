@@ -27,6 +27,8 @@ import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.http.SessionKeys
 import play.api.http.MimeTypes.HTML
 import play.api.mvc.Result
+import uk.gov.hmrc.agentmtdidentifiers.model.SuspensionDetails
+import uk.gov.hmrc.agentservicesaccount.stubs.AgentClientAuthorisationStubs.givenSuspensionStatus
 
 import scala.concurrent.Future
 
@@ -45,7 +47,9 @@ class SuspendedJourneyControllerSpec extends BaseISpec {
   "showSuspensionWarning" should {
     "return Ok and show the suspension warning page" in {
       givenAuthorisedAsAgentWith(arn)
-      val response = controller.showSuspendedWarning()(fakeRequest("GET", "/home").withSession("suspendedServices" -> "HMRC-MTD-IT,HMRC-MTD-VAT"))
+      givenSuspensionStatus(SuspensionDetails(suspensionStatus = true, Some(Set("AGSV"))))
+
+      val response = controller.showSuspendedWarning()(fakeRequest("GET", "/home"))
 
       status(response) shouldBe OK
       Helpers.contentType(response).get shouldBe HTML
@@ -67,8 +71,8 @@ class SuspendedJourneyControllerSpec extends BaseISpec {
   "showContactDetails" should {
     "return Ok and show the suspension warning page" in {
       givenAuthorisedAsAgentWith(arn)
-      val response = controller.showContactDetails()(fakeRequest("GET", "/home").withSession("suspendedServices" -> "HMRC-MTD-IT,HMRC-MTD-VAT"))
-
+      givenSuspensionStatus(SuspensionDetails(suspensionStatus = true, Some(Set("AGSV"))))
+      val response = controller.showContactDetails()(fakeRequest("GET", "/home"))
       status(response) shouldBe OK
       Helpers.contentType(response).get shouldBe HTML
       val content = Helpers.contentAsString(response)
@@ -88,6 +92,7 @@ class SuspendedJourneyControllerSpec extends BaseISpec {
   "submitContactDetails" should {
     "return Bad request and show error messages if the data is wrong" in {
       givenAuthorisedAsAgentWith(arn)
+      givenSuspensionStatus(SuspensionDetails(suspensionStatus = true, Some(Set("AGSV"))))
       val response: Future[Result] = controller.submitContactDetails()(fakeRequest("POST", "/home"))
 
       status(response) shouldBe BAD_REQUEST

@@ -32,30 +32,24 @@ class Actions @Inject()(  agentClientAuthorisationConnector: AgentClientAuthoris
                  actionBuilder:DefaultActionBuilder
               ) (implicit ec: ExecutionContext ) {
 
-  def filterSuspendedAgent: ActionFilter[AuthRequestWithAgentInfo] = new ActionFilter[AuthRequestWithAgentInfo] {
+  def filterSuspendedAgent(onlyForSuspended: Boolean): ActionFilter[AuthRequestWithAgentInfo] = new ActionFilter[AuthRequestWithAgentInfo] {
     def executionContext: ExecutionContext = ec
     def filter[A](request: AuthRequestWithAgentInfo[A]): Future[Option[Result]] = {
-
-
       implicit val req: Request[A] = request.request
-
       implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(req, req.session)
-
-      agentClientAuthorisationConnector.getSuspensionDetails().map { suspensionDetails =>
-        if (!suspensionDetails.suspensionStatus)           None
-        else
-         Some( Redirect(routes.SuspendedJourneyController.showSuspendedWarning()))
+      agentClientAuthorisationConnector.getSuspensionDetails().map { suspensionDetails => {
+        (onlyForSuspended, suspensionDetails.suspensionStatus) match {
+          case (true, true) | (false, false) => None
+          case (true, false) => Some(Redirect(routes.AgentServicesController.showAgentServicesAccount()))
+          case (false, true) => Some(Redirect(routes.SuspendedJourneyController.showSuspendedWarning()))
+        }
+        }
       }
-
-
     }
-
-
-
   }
   def authActionCheckSuspend: ActionBuilder[AuthRequestWithAgentInfo, AnyContent] =
-    actionBuilder andThen authActions.authActionRefiner andThen filterSuspendedAgent
+    actionBuilder andThen authActions.authActionRefiner andThen filterSuspendedAgent(false)
 
-  def authAction: ActionBuilder[AuthRequestWithAgentInfo, AnyContent] =
-    actionBuilder andThen authActions.authActionRefiner
+  def authActionOnlyForSuspended: ActionBuilder[AuthRequestWithAgentInfo, AnyContent] =
+    actionBuilder andThen authActions.authActionRefiner andThen filterSuspendedAgent(true)
 }

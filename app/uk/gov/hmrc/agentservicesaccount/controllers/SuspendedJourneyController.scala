@@ -17,28 +17,22 @@
 package uk.gov.hmrc.agentservicesaccount.controllers
 
 import play.api.Logging
-import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc._
-import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.agentmtdidentifiers.model.Utr
-import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthRequestWithAgentInfo}
+import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.connectors.AgentSubscriptionConnector
 import uk.gov.hmrc.agentservicesaccount.forms.ContactDetailsSuspendForm
-import uk.gov.hmrc.agentservicesaccount.models.{AuthProviderId, SuspendContentDetails}
+import uk.gov.hmrc.agentservicesaccount.models.SuspendContentDetails
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.suspend.{contact_details, suspension_warning}
-import uk.gov.hmrc.http.HeaderCarrier
 
 import javax.inject.Inject
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 class SuspendedJourneyController @Inject() (
                                              actions: Actions,
                                              suspensionWarningView: suspension_warning,
                                              contactDetailsView: contact_details,
-                                             asc: AgentSubscriptionConnector,
                                              cacheService: SessionCacheService
                                            )(
                                              implicit val appConfig: AppConfig,
@@ -47,61 +41,39 @@ class SuspendedJourneyController @Inject() (
                                              messagesApi: MessagesApi
                                            ) extends AgentServicesBaseController with Logging {
 
-  def showSuspendedWarning: Action[AnyContent] = actions.authAction { implicit request =>
+  def showSuspendedWarning: Action[AnyContent] = actions.authActionOnlyForSuspended { implicit request =>
     Ok(suspensionWarningView(request.agentInfo.isAdmin))
   }
 
-  def showContactDetails: Action[AnyContent] = actions.authAction.async { implicit request =>
+  def showContactDetails: Action[AnyContent] = actions.authActionOnlyForSuspended.async { implicit request =>
 
     cacheService.getSessionItems().flatMap(answers => {
       val contactForm = ContactDetailsSuspendForm.form.fill(
         SuspendContentDetails(
           answers(1).getOrElse(""),
           answers(2).getOrElse(""),
-          answers(3),
+          answers(3).getOrElse(""),
           answers(4)
         )
       )
-
-      getContactForm(contactForm).map(Ok(_))
+      contactDetailsView(contactForm).toFuture.map(Ok(_))
     })
   }
 
-  def submitContactDetails: Action[AnyContent] = actions.authAction.async { implicit request =>
+  def submitContactDetails: Action[AnyContent] = actions.authActionOnlyForSuspended.async { implicit request =>
     ContactDetailsSuspendForm.form.bindFromRequest().fold(
       formWithErrors => {
-        getContactForm(formWithErrors).map(BadRequest(_))
+        contactDetailsView(formWithErrors).toFuture.map(BadRequest(_))
       },
       formData => {
-        cacheService.put(NAME, formData.name)
-        cacheService.put(EMAIL, formData.email)
-        cacheService.put(PHONE, formData.phone.getOrElse(""))
-        maybeGetUtr().flatMap {
-          case Some(utr) =>     cacheService.put(UTR, utr.value)
-          case None =>
-            cacheService.put(UTR, formData.utr.getOrElse(""))
-        }
-
-        Redirect("").toFuture
+        for {
+          _ <- cacheService.put(NAME, formData.name)
+          _ <- cacheService.put(EMAIL, formData.email)
+          _ <- cacheService.put(PHONE, formData.phone)
+          _ <- cacheService.put(UTR, formData.utr.getOrElse(""))
+          _ <- cacheService.put(ARN, request.agentInfo.arn.value)
+        } yield Redirect("")
       }
     )
-  }
-
-   def getContactForm(form: Form[SuspendContentDetails])(implicit hc: HeaderCarrier, ec: ExecutionContext, rc: AuthRequestWithAgentInfo[AnyContent]): Future[HtmlFormat.Appendable] = {
-
-    val maybeUtr = maybeGetUtr()
-    maybeUtr.map {
-      case Some(_) => contactDetailsView(form, true)
-      case None => contactDetailsView(form)
-    }
-  contactDetailsView(form).toFuture
-  }
-
-  def maybeGetUtr()(implicit hc: HeaderCarrier, ec: ExecutionContext, rc: AuthRequestWithAgentInfo[AnyContent]): Future[Option[Utr]] = {
-    val maybeProviderId: Option[String] = rc.agentInfo.credentials.map(_.providerId)
-    maybeProviderId match {
-      case Some(pId) => asc.getJourneyById(AuthProviderId(pId)).map(_.map(_.businessDetails.utr))
-      case None => Future.successful(None)
-    }
   }
 }

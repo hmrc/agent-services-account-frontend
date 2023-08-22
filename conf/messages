@@ -54,9 +54,13 @@ asa.other.warning=Warning
 asa.p.agent-services=Access services for clients that have already authorised you to act on their behalf.
 asa.p.client-authorisations=Start a new authorisation request or link your current clients to your account.
 asa.p.manage=Allow other users in your organisation to access this agent services account, or restrict their access.
+
+# PAYE
 asa.paye-section.h2=View a client’s Income record
 asa.paye-section.link=View a client’s Income record
 asa.paye-section.text=Access a client’s Income record to help you complete their Self Assessment tax return.
+
+# PPT
 asa.ppt.col1.h2=Plastic Packaging Tax
 asa.ppt.col1.h3=Before you start
 asa.ppt.col1.link1.href=https://www.gov.uk/guidance/register-for-plastic-packaging-tax
@@ -67,10 +71,14 @@ asa.ppt.col1.text2=They must then
 asa.ppt.col2.h3=Manage your client’s Plastic Packaging Tax
 asa.ppt.col2.link1.href=https://www.tax.service.gov.uk/plastic-packaging-tax/account
 asa.ppt.col2.link1=<a class="govuk-link" href="{0}" rel="noreferrer noopener">Report your client’s Plastic Packaging Tax and view payments, returns and penalties</a>
+
+# CBC
 asa.cbc.col1.h2=Manage country-by-country reports
 asa.cbc.col1.h3=Country-by-country reports
 asa.cbc-section.col1.link1.p=You must first get an authorisation from your client. You can do this by <a class="govuk-link" href="{0}"> requesting an authorisation</a>
 asa.cbc-section.col1.link2.p=Manage your clients'' country-by-country reports and your country-by-country agent contact details
+
+# VAT
 asa.section1.col1.h3=Before you start
 asa.section1.col1.p2=Not all of your clients may have signed up to Making Tax Digital for VAT. If your client is not signed up, you can still manage and view their VAT details using this account.
 asa.section1.col1.p=You must first get an authorisation from your client.
@@ -78,9 +86,13 @@ asa.section1.col2.h3=Manage your client’s VAT
 asa.section1.col2.link1=Register your client for VAT (opens in a new tab)
 asa.section1.col2.link2=Manage, submit and view your client’s VAT details (opens in a new tab)
 asa.section1.h2=VAT
+
+# Suspension
 asa.section1.suspended.h3=We have temporarily limited your use of this service
 asa.section1.suspended.p1=We did this because we have suspended your agent code. We sent you a letter to confirm this.
 asa.section1.suspended.p2=This means you will not be able to use this service.
+
+# CGT
 asa.section3.col1.h2=Capital Gains Tax on UK property
 asa.section3.col1.h3=Before you start
 asa.section3.col1.link1.href=https://www.gov.uk/guidance/managing-your-clients-capital-gains-tax-on-uk-property-account#before-you-start
@@ -92,12 +104,16 @@ asa.section3.col1.text2=They must then
 asa.section3.col2.h3=Manage a client’s Capital Gains Tax on UK property
 asa.section3.col2.link1.href=https://www.tax.service.gov.uk/capital-gains-tax-uk-property/start
 asa.section3.col2.link1=<a class="govuk-link" href="{0}" rel="noreferrer noopener">Report your client’s Capital Gains Tax on UK property and view payments and penalties</a>
+
+# Main choices
 asa.section4.col1.h3=Ask a client to authorise you
 asa.section4.col1.link=Ask a client to authorise you
 asa.section4.col2.link1=Manage your authorisation requests from the last 30 days
 asa.section4.col2.link2=Copy across more VAT and Self Assessment client authorisations
 asa.section4.col2.link3=Cancel a client’s authorisation
 asa.section4.h2=Client authorisations
+
+# ITSA
 asa.sectionITSA.col1.h3=Before you start
 asa.sectionITSA.col1.link=If you copy your client across, you will need to<a class="govuk-link" href="https://www.gov.uk/guidance/sign-up-your-client-for-making-tax-digital-for-income-tax" target="_blank" rel="noreferrer noopener"> sign them up to Making Tax Digital for Income Tax (opens in a new tab)</a>
 asa.sectionITSA.col1.p=You must first get an authorisation from your client. You can do this by<a class="govuk-link" href="{0}"> copying across your authorisations</a> or <a class="govuk-link" href="{1}">requesting an authorisation</a>.
@@ -106,12 +122,16 @@ asa.sectionITSA.col2.link1.text=View your client’s Income Tax
 asa.sectionITSA.col2.link2.text=Help clients check whether they are eligible (opens in a new tab)
 asa.sectionITSA.h2=Making Tax Digital for Income Tax
 asa.tax-services=Tax services you can access through this account
+
+# Trusts
 asa.trusts-section.col1.h3=Before you start
 asa.trusts-section.col1.register-estate.p=Your client will need to<a class="govuk-link" href="https://www.gov.uk/guidance/manage-your-trusts-registration-service#how-to-use-the-online-service"> claim the trust</a> or estate.
 asa.trusts-section.col1.register-trust.p=Before you<a class="govuk-link" href="{0}"> ask your client to authorise you</a>, you or your client must have<a class="govuk-link" href="https://www.gov.uk/guidance/register-your-clients-trust" target="_blank" rel="noreferrer noopener"> registered the trust (opens in a new tab)</a> or<a class="govuk-link" href="https://www.gov.uk/guidance/register-your-clients-estate" target="_blank" rel="noreferrer noopener"> estate (opens in a new tab)</a>.
 asa.trusts-section.col2.h3=Manage your client’s trust
 asa.trusts-section.col2.register-trust-link.text=Use this service to update the details of your client’s trust or declare no changes on the trust register
 asa.trusts-section.h2=Trusts and estates
+
+#BETA invite
 beta.invite.banner.heading=Help improve our new feature
 beta.invite.banner.link1=Tell me more
 beta.invite.banner.link2=No thanks
@@ -135,6 +155,8 @@ beta.invite.yes-no.heading=Access groups feature testing
 beta.invite.yes-no.legend=Would you like to help test access groups?
 beta.invite.yes-no.p=We’re testing a new feature. It lets agents control which staff members can manage a client’s taxes. Your feedback will help us improve our service before we roll it out to everyone.
 beta.invite.yes-no.required.error=Select yes to help test access groups
+
+# Common
 common.back=Back
 common.cancel=Cancel
 common.change=Change
@@ -146,6 +168,8 @@ common.sign-out=Sign out
 common.what.happens.next=What happens next
 common.yes=Yes
 details.link-hidden= for {0}
+
+# Errors
 error-prefix=Error:
 error.invalid.email=Enter an email address in the correct format, like name@example.com
 error.invalid.phone=Enter a phone number in the correct format, like 01632 960 001 or +44 808 157 0192
@@ -154,6 +178,16 @@ error.max-length.name=Your name must be 80 characters or fewer
 error.max-length.phone=Your phone number must be 20 characters or fewer
 error.required.email=Enter an email
 error.required.name=Enter a name
+error.suspended-details.required.name=Enter the contact name
+error.suspended-details.max-length.name=Name must be between 0 and 80 characters
+error.suspended-details.invalid-chars.name=Name must not include the characters < and >
+error.suspended-details.required.email=Enter an email address with a name, @ symbol and a domain name, like name@example.com
+error.suspended-details.required.telephone=Enter your telephone number
+error.suspended-details.invalid.telephone=Enter a telephone number, like 01642 123 456, 07777 777 777 or +33 23 45 67 88
+error.suspended-details.max-length.telephone=Telephone number must be between 0 and 20 characters
+error.suspended-details.invalid.utr=Unique Taxpayer Reference must only include numbers and the letter 'k'
+error.suspended-details.max-length.utr=Unique Taxpayer Reference must be between 10 and 14 characters
+
 existing.client.relationships.link=Access existing client relationships
 footer.links.accessibility.text=Accessibility
 footer.links.accessibility.url=/agent-services-account/accessibility-statement
@@ -161,6 +195,8 @@ generic.title={0} - {1} - GOV.UK
 global.error.500.heading=Sorry, we’re experiencing technical difficulties
 global.error.500.message=Please try again in a few minutes.
 global.error.500.title=Sorry, we are experiencing technical difficulties - 500
+
+# Help & Guidance
 help.about-asa.p1=You can only have one agent services account, but you can add several team members to this account. They will need to have Government Gateway user IDs for you to add them.
 help.about-asa.p2=The ‘Account home’ screen includes links for managing client authorisations and certain tax services. For other tax services, you will need to log into your online services for agents account.
 help.about-asa.p3=The ‘Manage account’ screen will vary, depending on whether you have administrator or standard user access. Administrators can choose to manage access permissions using the new feature ‘access groups’. When access groups are turned on, standard users can only manage the clients they have been assigned to.
@@ -253,6 +289,8 @@ label.beta.improve=will help us to improve it.
 label.beta.newservice= This is a new service
 label.beta.yours=– your
 label.beta=BETA
+
+# Manage account
 manage.account.account-details=View the contact details we have for your business
 manage.account.add-user=Add a new user
 manage.account.clients.heading=Clients
@@ -297,6 +335,8 @@ servicename.titleSuffix=- Agent services account - GOV.UK
 signed-out.header=You have been signed out
 signed-out.p1=You have not done anything for {0}, so we have signed you out to keep your account secure.
 signed-out.p2=<a class="govuk-link" href="{0}">Sign in again</a> to use this service.
+
+# Survey
 survey.empty=Please select an option
 survey.error.summary=There is a problem
 survey.form.label.accessingService=Accessing a specific tax service on behalf of my client
@@ -314,6 +354,8 @@ survey.whichService.label.other=Any other tax service
 survey.whichService.label.trust=Manage a trust or estate
 survey.whichService.label.vat=VAT
 survey.whichService.title=Which tax service do you want to give us feedback about?
+
+# Suspension
 suspension-warning.header=We have temporarily limited your use of this service
 suspension-warning.header1=We have suspended your access to your agent services account
 suspension-warning.multi.CGT=manage their Capital Gains Tax on UK property account
@@ -350,6 +392,8 @@ suspend.contact-details.invite.details.inset=We can only talk to a director part
 
 common.continue.gov=Return to Government Gateway sign in
 timeout-dialog.p1=For security reasons, you will be signed out of your Agent services account in
+
+# Your account
 your.account.email=Email
 your.account.h1=Your account
 your.account.name=Name
