@@ -48,7 +48,6 @@ abstract class BaseISpec
       .configure(
         "microservice.services.auth.port"                                 -> wireMockPort,
         "microservice.services.agent-client-authorisation.port"           -> wireMockPort,
-        "microservice.services.sso.port"                                  -> wireMockPort,
         "microservice.services.agent-permissions.port"                    -> wireMockPort,
         "microservice.services.agent-user-client-details.port"            -> wireMockPort,
         "microservice.services.agent-permissions-frontend.external-url"   -> wireMockBaseUrlAsString,

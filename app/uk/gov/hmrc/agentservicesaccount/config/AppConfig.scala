@@ -49,8 +49,6 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
 
   val authBaseUrl: String = baseUrl("auth")
 
-  val ssoBaseUrl: String = baseUrl("sso")
-
   val acaBaseUrl: String = baseUrl("agent-client-authorisation")
 
   val emailBaseUrl: String = baseUrl("email")
