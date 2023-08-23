@@ -21,10 +21,10 @@ import play.api.i18n.MessagesApi
 import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.forms.ContactDetailsSuspendForm
+import uk.gov.hmrc.agentservicesaccount.forms.{ContactDetailsSuspendForm,SuspendDescriptionForm}
 import uk.gov.hmrc.agentservicesaccount.models.SuspendContactDetails
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.suspend.{contact_details, suspension_warning}
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.suspend.{contact_details, suspension_warning, recovery_description}
 
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
@@ -33,6 +33,7 @@ class SuspendedJourneyController @Inject() (
                                              actions: Actions,
                                              suspensionWarningView: suspension_warning,
                                              contactDetailsView: contact_details,
+                                             recoveryDescriptionView: recovery_description,
                                              cacheService: SessionCacheService
                                            )(
                                              implicit val appConfig: AppConfig,
@@ -72,8 +73,26 @@ class SuspendedJourneyController @Inject() (
           _ <- cacheService.put(PHONE, formData.phone)
           _ <- cacheService.put(UTR, formData.utr.getOrElse(""))
           _ <- cacheService.put(ARN, request.agentInfo.arn.value)
-        } yield Redirect("")
+        } yield Redirect(routes.SuspendedJourneyController.showSuspendedDescription())
       }
     )
+  }
+
+  def showSuspendedDescription: Action[AnyContent] = actions.authActionOnlyForSuspended.async { implicit request =>
+    Ok(recoveryDescriptionView(SuspendDescriptionForm.form)).toFuture
+  }
+
+  def submitSuspendedDescription:  Action[AnyContent] = actions.authActionOnlyForSuspended.async { implicit request =>
+    SuspendDescriptionForm.form
+      .bindFromRequest()
+      .fold(
+        formWithErrors => recoveryDescriptionView(formWithErrors).toFuture
+          .map(BadRequest(_)),
+        formData => {
+          for {
+         _ <- cacheService.put(DESCRIPTION, formData)
+          } yield Redirect("")
+        }
+      )
   }
 }

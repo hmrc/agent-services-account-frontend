@@ -390,6 +390,12 @@ suspend.contact-details.invite.details.hint=Account recovery
 suspend.contact-details.invite.details.heading=Contact Details
 suspend.contact-details.invite.details.inset=We can only talk to a director partner or sole trader.
 
+suspend.description.h1=Details of issue
+suspend.description.title=Recovery description | Agent services account
+suspend.description.hint1=Account recovery
+suspend.description.label=Tell us what happened
+suspend.description.hint=Do not include personal or financial information like your National Insurance number or credit card details.
+
 common.continue.gov=Return to Government Gateway sign in
 timeout-dialog.p1=Am resymau diogelwch, cewch eich allgofnodi o’ch cyfrif gwasanaethau asiant ymhen
 
