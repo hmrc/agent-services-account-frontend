@@ -20,13 +20,18 @@
 @import uk.gov.hmrc.govukfrontend.views.html.components.GovukTextarea
 @import uk.gov.hmrc.govukfrontend.views.html.components.GovukHint
 @import uk.gov.hmrc.govukfrontend.views.Aliases.Hint
+
 @import uk.gov.hmrc.govukfrontend.views.Aliases.{Textarea, Label, Text}
+
+@import uk.gov.hmrc.hmrcfrontend.views.html.components.HmrcCharacterCount
+@import uk.gov.hmrc.hmrcfrontend.views.Aliases.CharacterCount
 @import uk.gov.hmrc.agentservicesaccount.forms.SuspendDescriptionForm
 @import uk.gov.hmrc.govukfrontend.views.Implicits.RichTextarea
+
 @import views.html.helper.form
+@import uk.gov.hmrc.hmrcfrontend.views.Implicits.RichCharacterCount
 
-@this(main: main, a: a, p: p, h1: h1, link_as_button: link_as_button, govUkTextArea: GovukTextarea, govukHint: GovukHint)
-
+@this(main: main, a: a, p: p, h1: h1, link_as_button: link_as_button, govUkTextArea: GovukTextarea, govukHint: GovukHint, hmrcCharacterCount: HmrcCharacterCount)
 
 @(form: Form[String])(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
 
@@ -35,16 +40,11 @@
     @p(id = Some("recovery-hint"), classes= Some("govuk-hint"), key = "suspend.description.hint1")
     <h1 class="govuk-heading-xl">@msgs("suspend.description.h1")</h1>
 
-
-    @govUkTextArea(
-        Textarea(
-            label = Label(classes = "govuk-label govuk-label--s", content = Text(msgs("suspend.description.label"))),
-            id = "",
-            name ="",
-            rows = 0,
-            value = Some(""),
-            describedBy = Some(""),
-            hint = Option(Hint(Some(""), classes = "", attributes = Map.empty, content = Text(msgs("suspend.description.hint"))))
+    @hmrcCharacterCount(
+        CharacterCount(
+        label = Label(classes = "govuk-label govuk-label--s", content = Text(msgs("suspend.description.label"))),
+        hint = Option(Hint(Some(""), classes = "", attributes = Map.empty, content = Text(msgs("suspend.description.hint")))),
+        maxWords = Some(250)
         ).withFormField(form("description"))
     )
 
