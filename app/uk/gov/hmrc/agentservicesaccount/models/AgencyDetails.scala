@@ -18,7 +18,6 @@ package uk.gov.hmrc.agentservicesaccount.models
 
 import play.api.libs.json.{Json, OFormat}
 
-
 case class BusinessAddress(
                             addressLine1: String,
                             addressLine2: Option[String],
@@ -31,8 +30,14 @@ object BusinessAddress {
   implicit val format: OFormat[BusinessAddress] = Json.format
 }
 
-case class AgencyDetails(agencyName: Option[String], agencyEmail: Option[String], agencyAddress: Option[BusinessAddress])
+case class AgencyDetails(
+                          agencyName: Option[String],
+                          agencyEmail: Option[String],
+                          agencyTelephone: Option[String],
+                          agencyAddress: Option[BusinessAddress]
+                        )
 
-object AgencyDetails{
+object AgencyDetails {
   implicit val format: OFormat[AgencyDetails] = Json.format
 }
+

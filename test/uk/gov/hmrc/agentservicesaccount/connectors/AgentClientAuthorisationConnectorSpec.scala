@@ -32,7 +32,7 @@ class AgentClientAuthorisationConnectorSpec extends BaseISpec {
 
   private implicit val hc: HeaderCarrier = HeaderCarrier()
 
-  val arn = Arn("TARN0000001")
+  val arn: Arn = Arn("TARN0000001")
 
   "getSuspensionDetails" should {
     "return the suspension details for a given agent" in {
@@ -58,16 +58,18 @@ class AgentClientAuthorisationConnectorSpec extends BaseISpec {
     "return agency details for a given agent" in {
 
       val agentDetails = AgencyDetails(
-        Some("My Agency"),
-        Some("abc@abc.com"),
-        Some(BusinessAddress(
-          "25 Any Street",
-          Some("Central Grange"),
-          Some("Telford"),
-          None,
-          Some("TF4 3TR"),
-          "GB"
-        )))
+          Some("My Agency"),
+          Some("abc@abc.com"),
+          Some("07345678901"),
+          Some(BusinessAddress(
+            "25 Any Street",
+            Some("Central Grange"),
+            Some("Telford"),
+            None,
+            Some("TF4 3TR"),
+            "GB"))
+        )
+
       givenAgentDetailsFound(agentDetails)
 
       await(connector.getAgencyDetails()) shouldBe Some(agentDetails)

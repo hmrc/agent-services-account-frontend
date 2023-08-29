@@ -56,6 +56,15 @@
             ),
             SummaryListRow(
                 key = Key(
+                    content = Text(msgs("account-details.summary-list.phone"))
+                    ),
+                value = Value(
+                    content = Text(agencyDetails.flatMap(_.agencyTelephone).getOrElse(msgs("account-details.summary-list.none")))
+                    ),
+                actions = None
+            ),
+            SummaryListRow(
+                key = Key(
                     content = Text(msgs("account-details.summary-list.name"))
                 ),
                 value = Value(
