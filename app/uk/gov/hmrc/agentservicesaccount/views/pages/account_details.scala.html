@@ -15,7 +15,7 @@
  *@
 
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-@import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
+@import uk.gov.hmrc.agentservicesaccount.models.AccountDetails
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
@@ -28,7 +28,7 @@
 )
 
 @(
-        agencyDetails: Option[AgencyDetails],
+        agencyDetails: Option[AccountDetails],
         isAdmin: Boolean
 )(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
 
@@ -52,6 +52,15 @@
                 value = Value(
                     content = Text(agencyDetails.flatMap(_.agencyEmail).getOrElse(msgs("account-details.summary-list.none")))
                 ),
+                actions = None
+            ),
+            SummaryListRow(
+                key = Key(
+                    content = Text(msgs("account-details.summary-list.phone"))
+                    ),
+                value = Value(
+                    content = Text(agencyDetails.flatMap(_.phoneNumber).getOrElse(msgs("account-details.summary-list.none")))
+                    ),
                 actions = None
             ),
             SummaryListRow(

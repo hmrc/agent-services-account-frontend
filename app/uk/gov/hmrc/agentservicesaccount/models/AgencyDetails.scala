@@ -18,7 +18,6 @@ package uk.gov.hmrc.agentservicesaccount.models
 
 import play.api.libs.json.{Json, OFormat}
 
-
 case class BusinessAddress(
                             addressLine1: String,
                             addressLine2: Option[String],
@@ -31,8 +30,50 @@ object BusinessAddress {
   implicit val format: OFormat[BusinessAddress] = Json.format
 }
 
-case class AgencyDetails(agencyName: Option[String], agencyEmail: Option[String], agencyAddress: Option[BusinessAddress])
+case class AgencyDetails(
+                          agencyName: Option[String],
+                          agencyEmail: Option[String],
+                          agencyAddress: Option[BusinessAddress]
+                        )
 
-object AgencyDetails{
+object AgencyDetails {
   implicit val format: OFormat[AgencyDetails] = Json.format
+}
+
+case class ContactDetails(phoneNumber: Option[String])
+
+object ContactDetails {
+  implicit val detailsFormat: OFormat[ContactDetails] = Json.format[ContactDetails]
+}
+
+case class AgencyDetailsResponse(
+                                    agencyDetails: Option[AgencyDetails],
+                                    contactDetails: Option[ContactDetails]
+                                  )
+
+object AgencyDetailsResponse {
+  implicit val format: OFormat[AgencyDetailsResponse] = Json.format
+}
+
+//a bit easier to handle in the view
+case class AccountDetails(
+                           phoneNumber: Option[String],
+                           agencyName: Option[String],
+                           agencyEmail: Option[String],
+                           agencyAddress: Option[BusinessAddress]
+                        )
+
+object AccountDetails {
+  implicit val format: OFormat[AccountDetails] = Json.format
+
+  def maybeFromResponse(maybeResponse: Option[AgencyDetailsResponse]): Option[AccountDetails] = {
+    maybeResponse.fold(Option.empty[AccountDetails])(response =>
+    Option(AccountDetails(
+      response.contactDetails.flatMap(_.phoneNumber),
+      response.agencyDetails.flatMap(_.agencyName),
+      response.agencyDetails.flatMap(_.agencyEmail),
+      response.agencyDetails.flatMap(_.agencyAddress),
+    ))
+    )
+  }
 }

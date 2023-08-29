@@ -29,7 +29,7 @@ import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, SuspensionDetails, Suspension
 import uk.gov.hmrc.agents.accessgroups.optin._
 import uk.gov.hmrc.agents.accessgroups.{GroupSummary, UserDetails}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.models.{AccessGroupSummaries, AgencyDetails, BusinessAddress}
+import uk.gov.hmrc.agentservicesaccount.models.{AccessGroupSummaries, AgencyDetails, AgencyDetailsResponse, BusinessAddress, ContactDetails}
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentClientAuthorisationStubs._
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentPermissionsStubs._
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentUserClientDetailsStubs._
@@ -342,17 +342,17 @@ class AgentServicesControllerSpec extends BaseISpec {
   }
 
 
-  def verifyContactSection(html: Document) = {
+  def verifyContactSection(html: Document): Assertion = {
     val contactDetailsSection = html.select("#contact-details")
     contactDetailsSection.select("h2").text shouldBe "Contact details"
     contactDetailsSection.select("p a").text shouldBe "View the contact details we have for your business"
     contactDetailsSection.select("p a").attr("href") shouldBe "/agent-services-account/account-details"
   }
 
-  def verifyClientsSectionNotPresent(html: Document) = {
+  def verifyClientsSectionNotPresent(html: Document): Assertion = {
     html.select("section#manage-clients-section").isEmpty shouldBe true
   }
-  def verifyClientsSection(html: Document) = {
+  def verifyClientsSection(html: Document): Assertion = {
     val section = html.select("section#manage-clients-section")
     section.select("h2").text shouldBe "Clients"
     section.select("p").text shouldBe "View client details, update client reference and see what groups a client is in."
@@ -361,18 +361,18 @@ class AgentServicesControllerSpec extends BaseISpec {
     list.get(0).select("a").attr("href") shouldBe s"http://localhost:$wireMockPort/agent-permissions/manage-clients"
     list.get(1).select("a").text shouldBe "Clients who are not in any groups"
     list.get(1).select("a").attr("href") shouldBe s"http://localhost:$wireMockPort/agent-permissions/unassigned-clients"
-    section.select("hr").isEmpty() shouldBe false
+    section.select("hr").isEmpty shouldBe false
   }
 
-  def verifyManageTeamMembersSection(html: Document) = {
+  def verifyManageTeamMembersSection(html: Document): Assertion = {
     val section = html.select("#manage-team-members-section")
     section.select("h2").text shouldBe "Manage team members’ access groups"
     section.select("a").text shouldBe "Manage team members’ access groups"
-    section.select("hr").isEmpty() shouldBe false
+    section.select("hr").isEmpty shouldBe false
 
   }
 
-  def verifyHowToManageSection(html: Document) = {
+  def verifyHowToManageSection(html: Document): Assertion = {
     val section = html.select("#how-to-manage-team-members-section")
     section.select("h2").text shouldBe "Manage team members on your agent services account"
     section.select(Css.detailsSummary).text() shouldBe "How to add or remove team members"
@@ -383,11 +383,11 @@ class AgentServicesControllerSpec extends BaseISpec {
     list.get(0).select("a").attr("href") shouldBe s"http://localhost:1111/user-profile-redirect-frontend/group-profile-management"
     list.get(1).select("a").text shouldBe "Manage team member access to your agent services account (opens in a new tab)"
     list.get(1).select("a").attr("href") shouldBe s"http://localhost:1111/tax-and-scheme-management/users?origin=Agent"
-    section.select("hr").isEmpty() shouldBe false
+    section.select("hr").isEmpty shouldBe false
 
   }
 
-  def verifyInfoSection(html: Document, status: String = "on") = {
+  def verifyInfoSection(html: Document, status: String = "on"): Assertion = {
     val section = html.select("#info-section")
     section.select("h2").text shouldBe "Access groups"
     section.select("p").get(0).text.shouldBe("Access groups allow you to restrict which team members can manage a client’s tax.")
@@ -659,10 +659,14 @@ class AgentServicesControllerSpec extends BaseISpec {
       "agent is admin and details found" in {
         givenAuthorisedAsAgentWith(arn)
         givenAgentDetailsFound(
-          AgencyDetails(
-            Some("My Agency"),
-            Some("abc@abc.com"),
-            Some(BusinessAddress("25 Any Street", Some("Any Town"), None, None, Some("TF3 4TR"), "GB"))))
+          AgencyDetailsResponse(
+            Some(AgencyDetails(
+              Some("My Agency"),
+              Some("abc@abc.com"),
+              Some(BusinessAddress("25 Any Street", Some("Any Town"), None, None, Some("TF3 4TR"), "GB")))),
+            Some(ContactDetails(Some("07345678901")))
+          )
+        )
 
         val response = await(controller.accountDetails().apply(fakeRequest("GET", "/account-details")))
         status(response) shouldBe OK
@@ -689,10 +693,14 @@ class AgentServicesControllerSpec extends BaseISpec {
       "agent is admin and details found" in {
         givenAuthorisedAsAgentWith(arn)
         givenAgentDetailsFound(
-          AgencyDetails(
-            Some("My Agency"),
-            Some("abc@abc.com"),
-            Some(BusinessAddress("25 Any Street", Some("Any Town"), None, None, Some("TF3 4TR"), "GB"))))
+          AgencyDetailsResponse(
+            Some(AgencyDetails(
+              Some("My Agency"),
+              Some("abc@abc.com"),
+              Some(BusinessAddress("25 Any Street", Some("Any Town"), None, None, Some("TF3 4TR"), "GB")))),
+            Some(ContactDetails(Some("07345678901")))
+          )
+        )
 
         val response = await(controller.accountDetails().apply(fakeRequest("GET", "/account-details")))
         val html = Jsoup.parse(contentAsString(response))
@@ -712,10 +720,12 @@ class AgentServicesControllerSpec extends BaseISpec {
 
         html.select(summaryListKeys).get(0).text shouldBe "Email"
         html.select(summaryListValues).get(0).text shouldBe "abc@abc.com"
-        html.select(summaryListKeys).get(1).text shouldBe "Name"
-        html.select(summaryListValues).get(1).text shouldBe "My Agency"
-        html.select(summaryListKeys).get(2).text shouldBe "Address"
-        html.select(summaryListValues).get(2).text shouldBe "25 Any Street Any Town TF3 4TR GB"
+        html.select(summaryListKeys).get(1).text shouldBe "Contact telephone number"
+        html.select(summaryListValues).get(1).text shouldBe "07345678901"
+        html.select(summaryListKeys).get(2).text shouldBe "Name"
+        html.select(summaryListValues).get(2).text shouldBe "My Agency"
+        html.select(summaryListKeys).get(3).text shouldBe "Address"
+        html.select(summaryListValues).get(3).text shouldBe "25 Any Street Any Town TF3 4TR GB"
 
       }
 
@@ -741,20 +751,25 @@ class AgentServicesControllerSpec extends BaseISpec {
 
         html.select(summaryListKeys).get(0).text shouldBe "Email"
         html.select(summaryListValues).get(0).text shouldBe "None"
-        html.select(summaryListKeys).get(1).text shouldBe "Name"
+        html.select(summaryListKeys).get(1).text shouldBe "Contact telephone number"
         html.select(summaryListValues).get(1).text shouldBe "None"
-        html.select(summaryListKeys).get(2).text shouldBe "Address"
-        html.select(summaryListValues).get(2).text shouldBe ""
+        html.select(summaryListKeys).get(2).text shouldBe "Name"
+        html.select(summaryListValues).get(2).text shouldBe "None"
+        html.select(summaryListKeys).get(3).text shouldBe "Address"
+        html.select(summaryListValues).get(3).text shouldBe ""
 
       }
 
       "the agent is not Admin" in {
         givenAuthorisedAsAgentWith(arn, isAdmin = false)
         givenAgentDetailsFound(
-          AgencyDetails(
-            Some("My Agency"),
-            Some("abc@abc.com"),
-            Some(BusinessAddress("25 Any Street", Some("Any Town"), None, None, Some("TF3 4TR"), "GB"))))
+          AgencyDetailsResponse(
+            Some(AgencyDetails(
+              Some("My Agency"),
+              Some("abc@abc.com"),
+              Some(BusinessAddress("25 Any Street", Some("Any Town"), None, None, Some("TF3 4TR"), "GB")))),
+            Some(ContactDetails(Some("07345678901")))
+          ))
 
         val response = await(controller.accountDetails().apply(fakeRequest("GET", "/account-details")))
         val html = Jsoup.parse(contentAsString(response))
@@ -772,10 +787,12 @@ class AgentServicesControllerSpec extends BaseISpec {
 
         html.select(summaryListKeys).get(0).text shouldBe "Email"
         html.select(summaryListValues).get(0).text shouldBe "abc@abc.com"
-        html.select(summaryListKeys).get(1).text shouldBe "Name"
-        html.select(summaryListValues).get(1).text shouldBe "My Agency"
-        html.select(summaryListKeys).get(2).text shouldBe "Address"
-        html.select(summaryListValues).get(2).text shouldBe "25 Any Street Any Town TF3 4TR GB"
+        html.select(summaryListKeys).get(1).text shouldBe "Contact telephone number"
+        html.select(summaryListValues).get(1).text shouldBe "07345678901"
+        html.select(summaryListKeys).get(2).text shouldBe "Name"
+        html.select(summaryListValues).get(2).text shouldBe "My Agency"
+        html.select(summaryListKeys).get(3).text shouldBe "Address"
+        html.select(summaryListValues).get(3).text shouldBe "25 Any Street Any Town TF3 4TR GB"
 
       }
     }

@@ -4,6 +4,7 @@ accordion.showAllSections = Show all sections
 accordion.showSection = Show
 account-details.inset=To change these details you will need to write to us. <a class="govuk-link" href={0} target="_blank" rel="noreferrer noopener">Find out more by reading the guidance (opens in a new tab)</a>. You can only change your details if you are a director, company secretary, sole trader, proprietor or partner.
 account-details.summary-list.address=Address
+account-details.summary-list.phone=Contact telephone number
 account-details.summary-list.email=Email
 account-details.summary-list.header=Agent services account details
 account-details.summary-list.name=Name

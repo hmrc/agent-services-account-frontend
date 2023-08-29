@@ -17,7 +17,7 @@
 package uk.gov.hmrc.agentservicesaccount.connectors
 
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
-import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress}
+import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, AgencyDetailsResponse, BusinessAddress, ContactDetails}
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentClientAuthorisationStubs._
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import uk.gov.hmrc.http.HeaderCarrier
@@ -32,7 +32,7 @@ class AgentClientAuthorisationConnectorSpec extends BaseISpec {
 
   private implicit val hc: HeaderCarrier = HeaderCarrier()
 
-  val arn = Arn("TARN0000001")
+  val arn: Arn = Arn("TARN0000001")
 
   "getSuspensionDetails" should {
     "return the suspension details for a given agent" in {
@@ -57,17 +57,21 @@ class AgentClientAuthorisationConnectorSpec extends BaseISpec {
   "getAgencyDetails" should {
     "return agency details for a given agent" in {
 
-      val agentDetails = AgencyDetails(
-        Some("My Agency"),
-        Some("abc@abc.com"),
-        Some(BusinessAddress(
-          "25 Any Street",
-          Some("Central Grange"),
-          Some("Telford"),
-          None,
-          Some("TF4 3TR"),
-          "GB"
-        )))
+      val agentDetails = AgencyDetailsResponse(
+        Some(AgencyDetails(
+          Some("My Agency"),
+          Some("abc@abc.com"),
+          Some(BusinessAddress(
+            "25 Any Street",
+            Some("Central Grange"),
+            Some("Telford"),
+            None,
+            Some("TF4 3TR"),
+            "GB"))
+        )),
+        Some(ContactDetails(Some("07345678901")))
+      )
+
       givenAgentDetailsFound(agentDetails)
 
       await(connector.getAgencyDetails()) shouldBe Some(agentDetails)

@@ -20,7 +20,7 @@ import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.libs.json.Json
 import uk.gov.hmrc.agentmtdidentifiers.model.SuspensionDetails
-import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
+import uk.gov.hmrc.agentservicesaccount.models.AgencyDetailsResponse
 
 object AgentClientAuthorisationStubs {
 
@@ -46,12 +46,12 @@ object AgentClientAuthorisationStubs {
           .withStatus(404)
       ))
 
-  def givenAgentDetailsFound(agencyDetails: AgencyDetails): StubMapping =
+  def givenAgentDetailsFound(agencyDetailsResponse: AgencyDetailsResponse): StubMapping =
     stubFor(get(urlEqualTo("/agent-client-authorisation/agent/agency-details"))
     .willReturn(
       aResponse()
         .withStatus(200)
-        .withBody(Json.toJson(agencyDetails).toString)
+        .withBody(Json.toJson(agencyDetailsResponse).toString)
     ))
 
   def givenAgentDetailsNoContent(): StubMapping =
