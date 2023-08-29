@@ -25,7 +25,6 @@ import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AgentInfo, AuthActions
 import uk.gov.hmrc.agentservicesaccount.actions.CallOps._
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AgentClientAuthorisationConnector, AgentPermissionsConnector, AgentUserClientDetailsConnector}
-import uk.gov.hmrc.agentservicesaccount.models.AccountDetails
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.assistant.{administrators, your_account}
 import uk.gov.hmrc.agentservicesaccount.views.html.pages._
 import uk.gov.hmrc.http.HeaderCarrier
@@ -156,7 +155,7 @@ class AgentServicesController @Inject()
 
   val accountDetails: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
       agentClientAuthorisationConnector.getAgencyDetails().map(agencyDetails =>
-        Ok(account_details(AccountDetails.maybeFromResponse(agencyDetails), request.agentInfo.isAdmin))
+        Ok(account_details(agencyDetails, request.agentInfo.isAdmin))
       )
 
   }

@@ -26,7 +26,7 @@ import play.api.i18n.Lang.logger
 import uk.gov.hmrc.agent.kenshoo.monitoring.HttpAPIMonitor
 import uk.gov.hmrc.agentmtdidentifiers.model.{SuspensionDetails, SuspensionDetailsNotFound}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.models.AgencyDetailsResponse
+import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse, UpstreamErrorResponse}
 
@@ -50,13 +50,13 @@ class AgentClientAuthorisationConnector @Inject()(http: HttpClient)(implicit val
           })
     }
 
-  def getAgencyDetails()(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[AgencyDetailsResponse]] =
+  def getAgencyDetails()(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[AgencyDetails]] =
     monitor("ConsumerAPI-Get-AgencyDetails-GET") {
       http
         .GET[HttpResponse](s"${appConfig.acaBaseUrl}/agent-client-authorisation/agent/agency-details")
         .map(response =>
           response.status match {
-            case OK => Json.parse(response.body).asOpt[AgencyDetailsResponse]
+            case OK => Json.parse(response.body).asOpt[AgencyDetails]
             case NO_CONTENT => None
             case s => logger.error(s"unexpected response $s when getting agency details"); None
           })

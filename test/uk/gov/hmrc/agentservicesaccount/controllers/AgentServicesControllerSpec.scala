@@ -29,7 +29,7 @@ import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, SuspensionDetails, Suspension
 import uk.gov.hmrc.agents.accessgroups.optin._
 import uk.gov.hmrc.agents.accessgroups.{GroupSummary, UserDetails}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.models.{AccessGroupSummaries, AgencyDetails, AgencyDetailsResponse, BusinessAddress, ContactDetails}
+import uk.gov.hmrc.agentservicesaccount.models.{AccessGroupSummaries, AgencyDetails,  BusinessAddress}
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentClientAuthorisationStubs._
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentPermissionsStubs._
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentUserClientDetailsStubs._
@@ -659,12 +659,11 @@ class AgentServicesControllerSpec extends BaseISpec {
       "agent is admin and details found" in {
         givenAuthorisedAsAgentWith(arn)
         givenAgentDetailsFound(
-          AgencyDetailsResponse(
-            Some(AgencyDetails(
+          AgencyDetails(
               Some("My Agency"),
               Some("abc@abc.com"),
-              Some(BusinessAddress("25 Any Street", Some("Any Town"), None, None, Some("TF3 4TR"), "GB")))),
-            Some(ContactDetails(Some("07345678901")))
+              Some("07345678901"),
+              Some(BusinessAddress("25 Any Street", Some("Any Town"), None, None, Some("TF3 4TR"), "GB"))
           )
         )
 
@@ -693,12 +692,11 @@ class AgentServicesControllerSpec extends BaseISpec {
       "agent is admin and details found" in {
         givenAuthorisedAsAgentWith(arn)
         givenAgentDetailsFound(
-          AgencyDetailsResponse(
-            Some(AgencyDetails(
+          AgencyDetails(
               Some("My Agency"),
               Some("abc@abc.com"),
-              Some(BusinessAddress("25 Any Street", Some("Any Town"), None, None, Some("TF3 4TR"), "GB")))),
-            Some(ContactDetails(Some("07345678901")))
+              Some("07345678901"),
+              Some(BusinessAddress("25 Any Street", Some("Any Town"), None, None, Some("TF3 4TR"), "GB"))
           )
         )
 
@@ -763,13 +761,13 @@ class AgentServicesControllerSpec extends BaseISpec {
       "the agent is not Admin" in {
         givenAuthorisedAsAgentWith(arn, isAdmin = false)
         givenAgentDetailsFound(
-          AgencyDetailsResponse(
-            Some(AgencyDetails(
+          AgencyDetails(
               Some("My Agency"),
               Some("abc@abc.com"),
-              Some(BusinessAddress("25 Any Street", Some("Any Town"), None, None, Some("TF3 4TR"), "GB")))),
-            Some(ContactDetails(Some("07345678901")))
-          ))
+              Some("07345678901"),
+              Some(BusinessAddress("25 Any Street", Some("Any Town"), None, None, Some("TF3 4TR"), "GB"))
+          )
+        )
 
         val response = await(controller.accountDetails().apply(fakeRequest("GET", "/account-details")))
         val html = Jsoup.parse(contentAsString(response))

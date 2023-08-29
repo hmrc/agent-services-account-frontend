@@ -17,7 +17,7 @@
 package uk.gov.hmrc.agentservicesaccount.connectors
 
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
-import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, AgencyDetailsResponse, BusinessAddress, ContactDetails}
+import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress}
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentClientAuthorisationStubs._
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import uk.gov.hmrc.http.HeaderCarrier
@@ -57,10 +57,10 @@ class AgentClientAuthorisationConnectorSpec extends BaseISpec {
   "getAgencyDetails" should {
     "return agency details for a given agent" in {
 
-      val agentDetails = AgencyDetailsResponse(
-        Some(AgencyDetails(
+      val agentDetails = AgencyDetails(
           Some("My Agency"),
           Some("abc@abc.com"),
+          Some("07345678901"),
           Some(BusinessAddress(
             "25 Any Street",
             Some("Central Grange"),
@@ -68,9 +68,7 @@ class AgentClientAuthorisationConnectorSpec extends BaseISpec {
             None,
             Some("TF4 3TR"),
             "GB"))
-        )),
-        Some(ContactDetails(Some("07345678901")))
-      )
+        )
 
       givenAgentDetailsFound(agentDetails)
 
