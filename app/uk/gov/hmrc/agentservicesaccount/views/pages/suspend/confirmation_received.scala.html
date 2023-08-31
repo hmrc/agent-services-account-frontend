@@ -1,0 +1,46 @@
+@*
+ * Copyright 2023 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+@import uk.gov.hmrc.agentservicesaccount.views.html.main
+
+@import uk.gov.hmrc.govukfrontend.views.html.components.GovukPanel
+@import uk.gov.hmrc.govukfrontend.views.Aliases.Panel
+
+@import uk.gov.hmrc.govukfrontend.views.Aliases.Text
+
+@import uk.gov.hmrc.agentservicesaccount.controllers.routes
+
+@this(main: main, p: p, h1: h1, h2: h2, a: a, govukPanel: GovukPanel)
+
+
+@()(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
+
+
+
+@main(pageTitle = msgs("suspend.confirmation.title")) {
+
+    @govukPanel(
+        Panel(
+            title = Text(msgs("suspend.confirmation.h1"))
+        )
+    )
+
+    @h2("common.what.happens.next")
+    @p("suspend.confirmation.p1")
+    @a(key = "common.continue.gov", href = s"${routes.SignOutController.signedOut().url}")
+
+}

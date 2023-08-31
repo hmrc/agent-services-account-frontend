@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.agentservicesaccount.support
 
+import com.google.inject.AbstractModule
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.{BeforeAndAfterEach, OptionValues}
@@ -42,6 +43,7 @@ abstract class BaseISpec
 
   override implicit lazy val app: Application = appBuilder().build()
 
+  def moduleWithOverrides = new AbstractModule() {}
   protected def appBuilder(
     additionalConfiguration: Map[String, Any] = Map.empty[String, Any]): GuiceApplicationBuilder =
     new GuiceApplicationBuilder()
@@ -55,6 +57,7 @@ abstract class BaseISpec
         "metrics.enabled" -> false
       )
       .configure(additionalConfiguration)
+      .overrides(moduleWithOverrides)
 
   override def beforeEach(): Unit = {
     super.beforeEach()

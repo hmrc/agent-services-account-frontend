@@ -21,8 +21,7 @@ import play.api.libs.json.{Json, OFormat}
 
 case class SuspendContactDetails(name: String,
                                  email: String,
-                                 phone: String,
-                                 utr: Option[String])
+                                 phone: String)
 
 object SuspendContactDetails{
   implicit val formats: OFormat[SuspendContactDetails] = Json.format[SuspendContactDetails]

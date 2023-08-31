@@ -20,7 +20,7 @@ import play.api.i18n.{Lang, Langs}
 import play.api.{LoggerLike, Logging}
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.connectors.EmailConnector
-import uk.gov.hmrc.agentservicesaccount.models.{BetaInviteDetailsForEmail, SendEmailData}
+import uk.gov.hmrc.agentservicesaccount.models.{AccountRecoverySummary, BetaInviteDetailsForEmail, SendEmailData}
 import uk.gov.hmrc.http.HeaderCarrier
 
 import javax.inject.Inject
@@ -55,6 +55,30 @@ class EmailService @Inject()(emailConnector: EmailConnector)(implicit langs: Lan
         "contactName" -> details.name,
         "emailAddress" -> details.email,
         "telephoneNumber" -> details.phone.getOrElse("Not provided")
+      )
+    )
+
+  def sendSuspendedSummaryEmail(arn: Arn, details: AccountRecoverySummary)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Unit] =
+    sendSuspendedEmail(Seq("mtdgpvolunteers@hmrc.gov.uk"), arn, details, "agent_permissions_beta_participant_details")
+
+  def sendSuspendedEmail(sendTo: Seq[String],
+                         arn: Arn,
+                         details: AccountRecoverySummary,
+                         templateId: String
+                        )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Unit] = {
+    val emailInfo: SendEmailData = SuspendedEmailInformation(templateId, sendTo, arn.value, details)
+    emailConnector.sendEmail(emailInfo)
+  }
+
+  private def SuspendedEmailInformation(templateId: String, sendTo: Seq[String], arn: String, details: AccountRecoverySummary) =
+    SendEmailData(
+      sendTo,
+      templateId,
+      Map(
+        "arn" -> arn,
+        "contactName" -> details.name,
+        "emailAddress" -> details.email,
+        "telephoneNumber" -> details.phone
       )
     )
 

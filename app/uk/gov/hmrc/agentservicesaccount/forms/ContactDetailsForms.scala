@@ -50,8 +50,6 @@ object ContactDetailsSuspendForm {
   // matches [anything]@[anything].[anything]
   private val emailRegex = """^.{1,252}@.{1,256}\..{1,256}$"""
   private val phoneRegex = """^[0-9 +()]{0,25}$"""
-  private val utrPattern = """^[0-9]{10}$|^[k,K][0-9]{10}$|^[0-9]{10}[k,K]$|^[0-9]{13}$|^[k,K][0-9]{13}$|^[0-9]{13}[k,K]$""""
-
 
   private def suspendedDetailsNameConstraint: Constraint[String] = Constraint[String] { input: String =>
     if (input.trim.isEmpty) Invalid(ValidationError("error.suspended-details.required.name"))
@@ -74,24 +72,14 @@ object ContactDetailsSuspendForm {
     else Valid
   }
 
-  private def suspendedDetailsUtrConstraint: Constraint[String] = Constraint[String] { input: String =>
-    if (input.trim.length < 10 || input.trim.length > 14) Invalid(ValidationError("error.suspended-details.max-length.utr"))
-    else if (!input.trim.matches(utrPattern)) Invalid(ValidationError("error.suspended-details.invalid.utr"))
-    else Valid
-  }
-
-
   private val suspendedDetailsNameMapping: Mapping[String] = text.verifying(suspendedDetailsNameConstraint)
   private val suspendedDetailsEmailMapping: Mapping[String] = text.verifying(suspendedDetailsEmailConstraint)
   private val suspendedDetailsTelephoneMapping: Mapping[String] = text.verifying(suspendedDetailsTelephoneConstraint)
-  private val suspendedDetailsUtrMapping: Mapping[Option[String]] = optional(text.verifying(suspendedDetailsUtrConstraint))
-
   def form: Form[SuspendContactDetails] = Form(
     mapping(
       "name"  -> suspendedDetailsNameMapping,
       "email" -> suspendedDetailsEmailMapping,
       "phone" -> suspendedDetailsTelephoneMapping,
-      "utr"   -> suspendedDetailsUtrMapping
     )(SuspendContactDetails.apply)(SuspendContactDetails.unapply)
   )
 }

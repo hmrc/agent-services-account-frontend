@@ -27,7 +27,6 @@ package object controllers {
   val NAME: DataKey[String] = DataKey("name")
   val EMAIL: DataKey[String] = DataKey("email")
   val PHONE: DataKey[String] = DataKey("phone")
-  val UTR: DataKey[String] = DataKey("utr")
   val ARN: DataKey[String] = DataKey("arn")
   val DESCRIPTION: DataKey[String] = DataKey("description")
 
@@ -37,8 +36,8 @@ package object controllers {
       NAME,
       EMAIL,
       PHONE,
-      UTR,
-      ARN
+      ARN,
+      DESCRIPTION
     )
 
 }

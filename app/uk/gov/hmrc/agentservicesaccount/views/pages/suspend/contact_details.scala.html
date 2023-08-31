@@ -71,18 +71,6 @@
         msgs("suspend.contact-details.invite.details.label3.hint")))),
     autocomplete = Some("tel")
 ).withFormField(form("phone")))
-
-    @govukInput(Input(
-    label = Label(
-        content = HtmlContent(msgs("suspend.contact-details.invite.details.label4")),
-        classes = "govuk-body govuk-!-font-size-27 govuk-!-font-weight-bold",
-        isPageHeading = false
-    ),
-    classes = "",
-    spellcheck = Some(false),
-    autocomplete = Some("utr")
-).withFormField(form("utr")))
-
 }
 
 @main(

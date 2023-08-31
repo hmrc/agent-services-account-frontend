@@ -16,32 +16,50 @@
 
 package uk.gov.hmrc.agentservicesaccount.controllers
 
+import com.google.inject.AbstractModule
 import org.jsoup.Jsoup
 import play.api.test.{FakeRequest, Helpers}
 import uk.gov.hmrc.agentservicesaccount.support.{BaseISpec, Css}
 import play.api.http.Status.{BAD_REQUEST, OK, SEE_OTHER}
 import play.api.i18n.{Lang, Messages, MessagesApi}
-import play.api.test.Helpers.defaultAwaitTimeout
+import play.api.test.Helpers.{await, defaultAwaitTimeout}
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.http.SessionKeys
 import play.api.http.MimeTypes.HTML
 import play.api.mvc.Result
 import uk.gov.hmrc.agentmtdidentifiers.model.SuspensionDetails
+import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentClientAuthorisationStubs.givenSuspensionStatus
+import uk.gov.hmrc.agentservicesaccount.stubs.SessionServiceMocks
 
 import scala.concurrent.Future
 
-class SuspendedJourneyControllerSpec extends BaseISpec {
+class SuspendedJourneyControllerSpec extends BaseISpec with SessionServiceMocks{
+
+  trait Test{
+
+  }
 
   implicit val lang: Lang = Lang("en")
   implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   val controller: SuspendedJourneyController = app.injector.instanceOf[SuspendedJourneyController]
+  implicit lazy val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
   implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
   val arn = "TARN0000001"
 
   private implicit val messages: Messages = messagesApi.preferred(Seq.empty[Lang])
-  private def fakeRequest(method: String = "GET", uri: String = "/") = FakeRequest(method, uri).withSession(SessionKeys.authToken -> "Bearer XYZ")
+
+  override def moduleWithOverrides = new AbstractModule() {
+    override def configure(): Unit = {
+      bind(classOf[SessionCacheService]).toInstance(mockSessionCacheService)
+    }
+  }
+
+  private def fakeRequest(method: String = "GET", uri: String = "/") =
+    FakeRequest(method, uri)
+      .withSession(SessionKeys.authToken -> "Bearer XYZ")
+      .withSession(SessionKeys.sessionId -> "session-x")
   protected def htmlEscapedMessage(key: String): String = HtmlFormat.escape(Messages(key)).toString
 
   "showSuspensionWarning" should {
@@ -49,7 +67,7 @@ class SuspendedJourneyControllerSpec extends BaseISpec {
       givenAuthorisedAsAgentWith(arn)
       givenSuspensionStatus(SuspensionDetails(suspensionStatus = true, Some(Set("AGSV"))))
 
-      val response = controller.showSuspendedWarning()(fakeRequest("GET", "/home"))
+      val response = controller.showSuspendedWarning()(fakeRequest())
 
       status(response) shouldBe OK
       Helpers.contentType(response).get shouldBe HTML
@@ -64,7 +82,7 @@ class SuspendedJourneyControllerSpec extends BaseISpec {
       content should include(messagesApi("suspension-warning.list3"))
       content should include(htmlEscapedMessage("suspension-warning.p4"))
       val getHelpLink = Jsoup.parse(content).select(Css.getHelpWithThisPageLink)
-      getHelpLink.attr("href") shouldBe "http://localhost:9250/contact/report-technical-problem?newTab=true&service=AOSS&referrerUrl=%2Fhome"
+      getHelpLink.attr("href") shouldBe "http://localhost:9250/contact/report-technical-problem?newTab=true&service=AOSS&referrerUrl=%2F"
       getHelpLink.text shouldBe "Is this page not working properly? (opens in new tab)"
       val continueLink = Jsoup.parse(content).select(Css.linkStyledAsButton)
       continueLink.attr("href") shouldBe "/agent-services-account/recovery-contact-details"
@@ -85,10 +103,13 @@ class SuspendedJourneyControllerSpec extends BaseISpec {
     }
   }
   "showContactDetails" should {
-    "return Ok and show the suspension warning page" in {
+    "return Ok and show the contact details page" in {
       givenAuthorisedAsAgentWith(arn)
       givenSuspensionStatus(SuspensionDetails(suspensionStatus = true, Some(Set("AGSV"))))
-      val response = controller.showContactDetails()(fakeRequest("GET", "/home"))
+
+      getAllSessionItems(List(Some(""),Some(""),Some(""), Some("")))
+
+      val response = controller.showContactDetails()(fakeRequest())
       status(response) shouldBe OK
       Helpers.contentType(response).get shouldBe HTML
       val content = Helpers.contentAsString(response)
@@ -96,12 +117,11 @@ class SuspendedJourneyControllerSpec extends BaseISpec {
       content should include(messagesApi("suspend.contact-details.invite.details.label2"))
       content should include(messagesApi("suspend.contact-details.invite.details.label3"))
       content should include(messagesApi("suspend.contact-details.invite.details.label3.hint"))
-      content should include(messagesApi("suspend.contact-details.invite.details.label4"))
       content should include(messagesApi("suspend.contact-details.invite.details.heading"))
 
 
       val getHelpLink = Jsoup.parse(content).select(Css.getHelpWithThisPageLink)
-      getHelpLink.attr("href") shouldBe "http://localhost:9250/contact/report-technical-problem?newTab=true&service=AOSS&referrerUrl=%2Fhome"
+      getHelpLink.attr("href") shouldBe "http://localhost:9250/contact/report-technical-problem?newTab=true&service=AOSS&referrerUrl=%2F"
       getHelpLink.text shouldBe "Is this page not working properly? (opens in new tab)"
     }
   }
@@ -109,38 +129,115 @@ class SuspendedJourneyControllerSpec extends BaseISpec {
     "return Bad request and show error messages if the data is wrong" in {
       givenAuthorisedAsAgentWith(arn)
       givenSuspensionStatus(SuspensionDetails(suspensionStatus = true, Some(Set("AGSV"))))
-      val response: Future[Result] = controller.submitContactDetails()(fakeRequest("POST", "/home"))
+      val response: Future[Result] = controller.submitContactDetails()(fakeRequest("POST", "/recovery-contact-details")
+
+        .withFormUrlEncodedBody(
+          "name" -> "",
+          "email" -> " ",
+          "phone" -> " ")
+      )
 
       status(response) shouldBe BAD_REQUEST
       Helpers.contentType(response).get shouldBe HTML
       val content = Helpers.contentAsString(response)
-      content should include(messagesApi("suspend.contact-details.invite.details.label1"))
-      content should include(messagesApi("suspend.contact-details.invite.details.label2"))
-      content should include(messagesApi("suspend.contact-details.invite.details.label3"))
-      content should include(messagesApi("suspend.contact-details.invite.details.label3.hint"))
-      content should include(messagesApi("suspend.contact-details.invite.details.label4"))
-      content should include(messagesApi("suspend.contact-details.invite.details.label4"))
-//      content should include(messagesApi("error.required.name"))
-//      content should include(messagesApi("error.required.email"))
-
-
-      val getHelpLink = Jsoup.parse(content).select(Css.getHelpWithThisPageLink)
-      getHelpLink.attr("href") shouldBe "http://localhost:9250/contact/report-technical-problem?newTab=true&service=AOSS&referrerUrl=%2Fhome"
-      getHelpLink.text shouldBe "Is this page not working properly? (opens in new tab)"
+      content should include(messagesApi("error.suspended-details.required.name"))
+      content should include(messagesApi("error.suspended-details.required.email"))
+      content should include(messagesApi("error.suspended-details.required.telephone"))
     }
+
     "return SEE_OTHER  if the data is correct" in {
       givenAuthorisedAsAgentWith(arn)
-      val request = fakeRequest("POST", "/")
+      givenSuspensionStatus(SuspensionDetails(suspensionStatus = true, Some(Set("AGSV"))))
+
+      expectPutSessionItem[String](NAME, "Romel")
+      expectPutSessionItem[String](EMAIL, "romel@romel.com")
+      expectPutSessionItem[String](PHONE, "01711111111")
+      expectPutSessionItem[String](ARN, "TARN0000001")
+
+      val request = fakeRequest("POST", "/recovery-contact-details")
 
         .withFormUrlEncodedBody(
-          "name" -> "colm",
-        "email" -> "colm@colm.com",
-          "phone" -> "01234542")
+          "name" -> "Romel",
+        "email" -> "romel@romel.com",
+          "phone" -> "01711111111")
       val response = controller.submitContactDetails()(request)
 
       status(response) shouldBe SEE_OTHER
 
-
+      redirectLocation(await(response)) shouldBe Some(routes.SuspendedJourneyController.showSuspendedDescription().url)
     }
   }
+
+  "showSuspendedDescription" should {
+    "return Ok and show the description recovery page" in {
+      givenAuthorisedAsAgentWith(arn)
+      givenSuspensionStatus(SuspensionDetails(suspensionStatus = true, None))
+
+      expectGetSessionItemNone[String](DESCRIPTION)
+
+      val response: Future[Result] = controller.showSuspendedDescription()(fakeRequest())
+      status(response) shouldBe OK
+      Helpers.contentType(response).get shouldBe HTML
+
+      val content = Helpers.contentAsString(response)
+      content should include(messagesApi("suspend.description.title"))
+      content should include(messagesApi("suspend.description.hint1"))
+      content should include(messagesApi("suspend.description.h1"))
+      content should include(messagesApi("suspend.description.label"))
+      content should include(messagesApi("suspend.description.hint"))
+      content should include(messagesApi("common.continue-save"))
+    }
+  }
+
+
+  "showSuspendedSummary" should {
+    s"redirect to ${routes.SuspendedJourneyController.showContactDetails().url} when no details are present" in {
+      givenAuthorisedAsAgentWith(arn)
+      givenSuspensionStatus(SuspensionDetails(suspensionStatus = true, None))
+
+      expectGetSessionItemNone[String](NAME)
+      expectGetSessionItemNone[String](EMAIL)
+      expectGetSessionItemNone[String](PHONE)
+      expectGetSessionItemNone[String](DESCRIPTION)
+      expectGetSessionItemNone[String](ARN)
+
+      val response: Future[Result] = controller.showSuspendedSummary()(fakeRequest())
+      status(response) shouldBe 303
+      redirectLocation(await(response)) shouldBe Some(routes.SuspendedJourneyController.showContactDetails().url)
+    }
+    s"return Ok when session details are found" in {
+      givenAuthorisedAsAgentWith(arn)
+      givenSuspensionStatus(SuspensionDetails(suspensionStatus = true, None))
+
+      expectGetSessionItem[String](NAME, "Romel", 1)
+      expectGetSessionItem[String](EMAIL, "Romel@romel.com", 1)
+      expectGetSessionItem[String](PHONE, "017111111111", 1)
+      expectGetSessionItem[String](DESCRIPTION, "Some description", 1)
+      expectGetSessionItem[String](ARN, "XARN000001122", 1)
+
+
+      val response: Future[Result] = controller.showSuspendedSummary()(fakeRequest())
+      status(response) shouldBe OK
+    }
+
+  }
+
+
+  "submitSuspendedConfirmation" should {
+    "return Ok and show the confirmation page" in {
+      givenAuthorisedAsAgentWith(arn)
+      givenSuspensionStatus(SuspensionDetails(suspensionStatus = true, Some(Set("AGSV"))))
+
+      val response: Future[Result] = controller.showSuspendedConfirmation()(fakeRequest("POST", "/home"))
+      status(response) shouldBe OK
+      Helpers.contentType(response).get shouldBe HTML
+      val content = Helpers.contentAsString(response)
+      content should include(messagesApi("suspend.confirmation.title"))
+      content should include(messagesApi ("suspend.confirmation.h1"))
+      content should include(messagesApi  ("common.what.happens.next"))
+      content should include(messagesApi("suspend.confirmation.p1"))
+      content should include(messagesApi ( "common.continue.gov"))
+    }
+  }
+
 }

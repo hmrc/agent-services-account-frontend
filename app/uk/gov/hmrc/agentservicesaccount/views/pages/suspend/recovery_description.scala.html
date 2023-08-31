@@ -15,41 +15,60 @@
  *@
 
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+@import uk.gov.hmrc.agentservicesaccount.controllers.routes
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 
-@import uk.gov.hmrc.govukfrontend.views.html.components.GovukTextarea
-@import uk.gov.hmrc.govukfrontend.views.html.components.GovukHint
-@import uk.gov.hmrc.govukfrontend.views.Aliases.Hint
+@import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
+@import uk.gov.hmrc.govukfrontend.views.html.components.{Label, Text, _}
 
-@import uk.gov.hmrc.govukfrontend.views.Aliases.{Textarea, Label, Text}
+@import uk.gov.hmrc.agentservicesaccount.forms.SuspendDescriptionForm
 
 @import uk.gov.hmrc.hmrcfrontend.views.html.components.HmrcCharacterCount
 @import uk.gov.hmrc.hmrcfrontend.views.Aliases.CharacterCount
-@import uk.gov.hmrc.agentservicesaccount.forms.SuspendDescriptionForm
-@import uk.gov.hmrc.govukfrontend.views.Implicits.RichTextarea
-
-@import views.html.helper.form
 @import uk.gov.hmrc.hmrcfrontend.views.Implicits.RichCharacterCount
 
-@this(main: main, a: a, p: p, h1: h1, link_as_button: link_as_button, govUkTextArea: GovukTextarea, govukHint: GovukHint, hmrcCharacterCount: HmrcCharacterCount)
+
+
+@import views.html.helper.form
+
+
+
+
+@this(
+        main: main,
+        a: a,
+        p: p,
+        h1: h1,
+        link_as_button: link_as_button,
+        govUkTextArea: GovukTextarea,
+        formWithCSRF: FormWithCSRF,
+        govukButton: GovukButton,
+        govukHint: GovukHint,
+        hmrcCharacterCount: HmrcCharacterCount,
+        govukErrorSummary: GovukErrorSummary)
 
 @(form: Form[String])(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
 
-@main(pageTitle = msgs("suspend.description.title")) {
+@main(pageTitle = msgs("suspend.description.title"), backLinkHref = Some(s"${routes.SuspendedJourneyController.showContactDetails()}")) {
+
+    @if(form.hasErrors){
+        @govukErrorSummary(ErrorSummary(errorList = form.errors.asTextErrorLinks, title = Text(msgs("survey.error.summary"))))
+    }
 
     @p(id = Some("recovery-hint"), classes= Some("govuk-hint"), key = "suspend.description.hint1")
     <h1 class="govuk-heading-xl">@msgs("suspend.description.h1")</h1>
 
-    @hmrcCharacterCount(
-        CharacterCount(
-        label = Label(classes = "govuk-label govuk-label--s", content = Text(msgs("suspend.description.label"))),
-        hint = Option(Hint(Some(""), classes = "", attributes = Map.empty, content = Text(msgs("suspend.description.hint")))),
-        maxWords = Some(250)
-        ).withFormField(form("description"))
-    )
 
-    <div class="govuk-button-group">
-        @a(key = "common.continue-save", href ="", classes = Some("govuk-button"))
-    </div>
+    @formWithCSRF(action = routes.SuspendedJourneyController.submitSuspendedDescription()) {
+        @hmrcCharacterCount(
+            CharacterCount(
+                label = Label(classes = "govuk-label govuk-label--s", content = Text(msgs("suspend.description.label"))),
+                hint = Option(Hint(Some(""), classes = "", attributes = Map.empty, content = Text(msgs("suspend.description.hint")))),
+                maxWords = Some(250)
+            ).withFormField(form("description"))
+        )
+
+        @govukButton(Button(content = Text(msgs("common.continue-save"))))
+    }
 
 }
