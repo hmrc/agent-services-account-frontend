@@ -36,11 +36,6 @@ import uk.gov.hmrc.agentservicesaccount.stubs.SessionServiceMocks
 import scala.concurrent.Future
 
 class SuspendedJourneyControllerSpec extends BaseISpec with SessionServiceMocks{
-
-  trait Test{
-
-  }
-
   implicit val lang: Lang = Lang("en")
   implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   val controller: SuspendedJourneyController = app.injector.instanceOf[SuspendedJourneyController]
@@ -91,7 +86,6 @@ class SuspendedJourneyControllerSpec extends BaseISpec with SessionServiceMocks{
       signoutLink.attr("href") shouldBe "/agent-services-account/signed-out"
       signoutLink.text shouldBe "Return to Government Gateway sign in"
     }
-
     "redirect to home page when the agent is not suspended" in {
       givenAuthorisedAsAgentWith(arn)
       givenSuspensionStatus(SuspensionDetails(suspensionStatus = false, None))
@@ -102,6 +96,7 @@ class SuspendedJourneyControllerSpec extends BaseISpec with SessionServiceMocks{
       redirectLocation(response.futureValue) shouldBe Some(routes.AgentServicesController.showAgentServicesAccount().url)
     }
   }
+
   "showContactDetails" should {
     "return Ok and show the contact details page" in {
       givenAuthorisedAsAgentWith(arn)
@@ -144,7 +139,6 @@ class SuspendedJourneyControllerSpec extends BaseISpec with SessionServiceMocks{
       content should include(messagesApi("error.suspended-details.required.email"))
       content should include(messagesApi("error.suspended-details.required.telephone"))
     }
-
     "return SEE_OTHER  if the data is correct" in {
       givenAuthorisedAsAgentWith(arn)
       givenSuspensionStatus(SuspensionDetails(suspensionStatus = true, Some(Set("AGSV"))))
@@ -189,7 +183,6 @@ class SuspendedJourneyControllerSpec extends BaseISpec with SessionServiceMocks{
     }
   }
 
-
   "showSuspendedSummary" should {
     s"redirect to ${routes.SuspendedJourneyController.showContactDetails().url} when no details are present" in {
       givenAuthorisedAsAgentWith(arn)
@@ -222,8 +215,7 @@ class SuspendedJourneyControllerSpec extends BaseISpec with SessionServiceMocks{
 
   }
 
-
-  "submitSuspendedConfirmation" should {
+  "showSuspendedConfirmation" should {
     "return Ok and show the confirmation page" in {
       givenAuthorisedAsAgentWith(arn)
       givenSuspensionStatus(SuspensionDetails(suspensionStatus = true, Some(Set("AGSV"))))
@@ -239,5 +231,4 @@ class SuspendedJourneyControllerSpec extends BaseISpec with SessionServiceMocks{
       content should include(messagesApi ( "common.continue.gov"))
     }
   }
-
 }
