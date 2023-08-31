@@ -219,7 +219,7 @@ class SuspendedJourneyControllerSpec extends BaseISpec with SessionServiceMocks{
       givenAuthorisedAsAgentWith(arn)
       givenSuspensionStatus(SuspensionDetails(suspensionStatus = true, Some(Set("AGSV"))))
 
-      val response: Future[Result] = controller.showSuspendedConfirmation()(fakeRequest("POST", "/home"))
+      val response: Future[Result] = controller.showSuspendedConfirmation()(fakeRequest("GET", "/home"))
       status(response) shouldBe OK
       Helpers.contentType(response).get shouldBe HTML
       val content = Helpers.contentAsString(response)

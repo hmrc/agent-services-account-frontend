@@ -53,6 +53,8 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
 
   val emailBaseUrl: String = baseUrl("email")
 
+  val suspendedContactDetailsSendToAddress: String = getString("suspendedContactDetails.sendToAddress")
+
   val asaFrontendExternalUrl: String = getConfString("agent-services-account-frontend.external-url")
 
   val companyAuthFrontendExternalUrl: String = getConfString("company-auth-frontend.external-url")

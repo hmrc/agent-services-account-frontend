@@ -55,7 +55,7 @@
             CharacterCount(
                 label = Label(classes = "govuk-label govuk-label--s", content = Text(msgs("suspend.description.label"))),
                 hint = Option(Hint(Some(""), classes = "", attributes = Map.empty, content = Text(msgs("suspend.description.hint")))),
-                maxWords = Some(250)
+                maxLength = Some((250)),
             ).withFormField(form("description"))
         )
         @govukButton(Button(content = Text(msgs("common.continue-save"))))
