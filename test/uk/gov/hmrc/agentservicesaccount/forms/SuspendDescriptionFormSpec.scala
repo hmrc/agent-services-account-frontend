@@ -31,11 +31,8 @@ package uk.gov.hmrc.agentservicesaccount.forms
         val params = Map(
           descriptionField -> "This is the description",
         )
-
         SuspendDescriptionForm.form.bind(params).value shouldBe Some("This is the description")
-
       }
-
       s"error when $descriptionField is empty" in {
         val params = Map(
           descriptionField -> ""
@@ -45,7 +42,6 @@ package uk.gov.hmrc.agentservicesaccount.forms
         validatedForm.error(descriptionField).get.message shouldBe "error.suspended-description.empty"
         validatedForm.errors.length shouldBe 1
       }
-
       s"error when $descriptionField is too long" in {
         val params = Map(
           descriptionField -> RandomStringUtils.randomAlphanumeric(251),

@@ -26,21 +26,15 @@
 
 @this(main: main, p: p, h1: h1, h2: h2, a: a, govukPanel: GovukPanel)
 
-
 @()(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
 
-
-
 @main(pageTitle = msgs("suspend.confirmation.title")) {
-
     @govukPanel(
         Panel(
             title = Text(msgs("suspend.confirmation.h1"))
         )
     )
-
     @h2("common.what.happens.next")
     @p("suspend.confirmation.p1")
     @a(key = "common.continue.gov", href = s"${routes.SignOutController.signedOut().url}")
-
 }

@@ -21,7 +21,6 @@ GET        /recovery-description                    @uk.gov.hmrc.agentservicesac
 POST       /recovery-description                    @uk.gov.hmrc.agentservicesaccount.controllers.SuspendedJourneyController.submitSuspendedDescription()
 GET        /recovery-check-your-answers             @uk.gov.hmrc.agentservicesaccount.controllers.SuspendedJourneyController.showSuspendedSummary()
 POST       /recovery-check-your-answers             @uk.gov.hmrc.agentservicesaccount.controllers.SuspendedJourneyController.submitSuspendedSummary()
-
 GET        /recovery-request-confirmation           @uk.gov.hmrc.agentservicesaccount.controllers.SuspendedJourneyController.showSuspendedConfirmation()
 
 GET        /sign-out                                @uk.gov.hmrc.agentservicesaccount.controllers.SignOutController.signOut()

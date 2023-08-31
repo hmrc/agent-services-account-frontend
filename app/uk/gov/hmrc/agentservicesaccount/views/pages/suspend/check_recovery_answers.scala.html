@@ -47,17 +47,13 @@
         govukButton: GovukButton,
         formWithCSRF: FormWithCSRF)
 
-
 @(answer: AccountRecoverySummary)(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
-
 @main(pageTitle = msgs("suspend.check.title"), backLinkHref = Some(s"${routes.SuspendedJourneyController.showSuspendedDescription()}")) {
 
   @p(id = Some("recovery-hint"), classes= Some("govuk-hint"), key = "suspend.description.hint1")
     <h1 class="govuk-heading-xl">@msgs("suspend.check.h1")</h1>
 
-
     @formWithCSRF(action = routes.SuspendedJourneyController.submitSuspendedSummary()){
-
         @summary_list(
             Seq(
                 SummaryListData(
@@ -86,10 +82,6 @@
                 )
             )
         )
-
         @govukButton(Button(content = Text(msgs("common.continue-save"))))
     }
-
-
-
 }

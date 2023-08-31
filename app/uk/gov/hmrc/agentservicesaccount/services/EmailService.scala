@@ -81,5 +81,4 @@ class EmailService @Inject()(emailConnector: EmailConnector)(implicit langs: Lan
         "telephoneNumber" -> details.phone
       )
     )
-
 }

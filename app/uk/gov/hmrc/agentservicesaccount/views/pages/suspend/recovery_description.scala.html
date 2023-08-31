@@ -27,13 +27,6 @@
 @import uk.gov.hmrc.hmrcfrontend.views.Aliases.CharacterCount
 @import uk.gov.hmrc.hmrcfrontend.views.Implicits.RichCharacterCount
 
-
-
-@import views.html.helper.form
-
-
-
-
 @this(
         main: main,
         a: a,
@@ -54,10 +47,8 @@
     @if(form.hasErrors){
         @govukErrorSummary(ErrorSummary(errorList = form.errors.asTextErrorLinks, title = Text(msgs("survey.error.summary"))))
     }
-
     @p(id = Some("recovery-hint"), classes= Some("govuk-hint"), key = "suspend.description.hint1")
     <h1 class="govuk-heading-xl">@msgs("suspend.description.h1")</h1>
-
 
     @formWithCSRF(action = routes.SuspendedJourneyController.submitSuspendedDescription()) {
         @hmrcCharacterCount(
@@ -67,8 +58,6 @@
                 maxWords = Some(250)
             ).withFormField(form("description"))
         )
-
         @govukButton(Button(content = Text(msgs("common.continue-save"))))
     }
-
 }

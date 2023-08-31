@@ -212,7 +212,6 @@ class SuspendedJourneyControllerSpec extends BaseISpec with SessionServiceMocks{
       val response: Future[Result] = controller.showSuspendedSummary()(fakeRequest())
       status(response) shouldBe OK
     }
-
   }
 
   "showSuspendedConfirmation" should {
