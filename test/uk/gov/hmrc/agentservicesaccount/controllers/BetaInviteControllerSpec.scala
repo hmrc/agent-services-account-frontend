@@ -223,7 +223,6 @@ class BetaInviteControllerSpec extends BaseISpec {
       redirectLocation(result) shouldBe
         Some("/agent-services-account/private-beta-check-your-answers")
     }
-
     "render form with errors" in {
       givenAuthorisedAsAgentWith(arn)
 
@@ -240,7 +239,6 @@ class BetaInviteControllerSpec extends BaseISpec {
     }
   }
 
-
   "GET showInviteCheckYourAnswers" should {
     "render check your answers page" in {
       givenAuthorisedAsAgentWith(arn)
@@ -253,5 +251,4 @@ class BetaInviteControllerSpec extends BaseISpec {
       html.title() shouldBe "Check your answers - Agent services account - GOV.UK"
     }
   }
-
 }

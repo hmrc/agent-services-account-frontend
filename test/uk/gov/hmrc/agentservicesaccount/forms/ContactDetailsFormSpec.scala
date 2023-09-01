@@ -27,7 +27,6 @@ class ContactDetailsFormSpec extends AnyWordSpec with Matchers with GuiceOneAppP
   val nameField = "name"
   val emailField = "email"
   val phoneField = "phone"
-  val utrField = "utr"
 
   "BetaInviteContactDetailsForm binding" should {
     "be successful when not empty (no phone)" in {
@@ -142,7 +141,7 @@ class ContactDetailsFormSpec extends AnyWordSpec with Matchers with GuiceOneAppP
   }
 
   "ContactDetailsSuspendedForm binding" should {
-    "be successful when not empty (no utr)" in {
+    "be successful when not empty" in {
       val params = Map(
         nameField -> "Blah alkfh",
         emailField -> "asdlkj@eqkf.do",
@@ -150,20 +149,8 @@ class ContactDetailsFormSpec extends AnyWordSpec with Matchers with GuiceOneAppP
       )
 
       ContactDetailsSuspendForm.form.bind(params).value shouldBe
-        Some(SuspendContactDetails("Blah alkfh", "asdlkj@eqkf.do","01273 000 000", None))
+        Some(SuspendContactDetails("Blah alkfh", "asdlkj@eqkf.do","01273 000 000"))
 
-    }
-
-    "be successful when not empty (with utr)" in {
-      val params = Map(
-        nameField -> "Blah alkfh",
-        emailField -> "asdlkj@eqkf.do",
-        phoneField -> "32456 789896",
-        utrField -> "1234567890"
-      )
-
-      ContactDetailsSuspendForm.form.bind(params).value shouldBe
-        Some(SuspendContactDetails("Blah alkfh", "asdlkj@eqkf.do", "32456 789896", Some("1234567890")))
     }
 
     s"error when $nameField, $emailField and $phoneField are empty" in {
@@ -253,75 +240,6 @@ class ContactDetailsFormSpec extends AnyWordSpec with Matchers with GuiceOneAppP
       validatedForm.errors.length shouldBe 1
     }
 
-    s"error when $utrField is less than 10 characters" in {
-      val params = Map(
-        nameField -> RandomStringUtils.randomAlphanumeric(9),
-        emailField -> RandomStringUtils.randomAlphanumeric(25).concat("@a.a"),
-        phoneField -> RandomStringUtils.randomNumeric(11),
-        utrField -> "12312"
-      )
-      val validatedForm = ContactDetailsSuspendForm.form.bind(params)
-      validatedForm.hasErrors shouldBe true
-      validatedForm.error(utrField).get.message shouldBe "error.suspended-details.max-length.utr"
-      validatedForm.errors.length shouldBe 1
-    }
-
-    s"error when $utrField is more than 14 characters" in {
-      val params = Map(
-        nameField -> RandomStringUtils.randomAlphanumeric(9),
-        emailField -> RandomStringUtils.randomAlphanumeric(25).concat("@a.a"),
-        phoneField -> RandomStringUtils.randomNumeric(11),
-        utrField -> "123126565656567"
-      )
-      val validatedForm = ContactDetailsSuspendForm.form.bind(params)
-      validatedForm.hasErrors shouldBe true
-      validatedForm.error(utrField).get.message shouldBe "error.suspended-details.max-length.utr"
-      validatedForm.errors.length shouldBe 1
-    }
-
-    s"error when $utrField has invalid characters" in {
-      val params = Map(
-        nameField -> RandomStringUtils.randomAlphanumeric(9),
-        emailField -> RandomStringUtils.randomAlphanumeric(25).concat("@a.a"),
-        phoneField -> RandomStringUtils.randomNumeric(11),
-        utrField -> "1234567890M"
-      )
-      val validatedForm = ContactDetailsSuspendForm.form.bind(params)
-      validatedForm.hasErrors shouldBe true
-      validatedForm.error(utrField).get.message shouldBe "error.suspended-details.invalid.utr"
-      validatedForm.errors.length shouldBe 1
-    }
-
-    "unbind without utr" in {
-      val unboundForm = ContactDetailsSuspendForm.form.mapping.unbind(SuspendContactDetails(
-        "Blah alkfh",
-        "asdlkj@eqkf.do",
-        "123456",
-        None
-      ))
-
-      unboundForm shouldBe Map(
-        nameField -> "Blah alkfh",
-        emailField -> "asdlkj@eqkf.do",
-        phoneField -> "123456"
-      )
-    }
-
-    "unbind with utr" in {
-      val unboundForm = ContactDetailsSuspendForm.form.mapping.unbind(SuspendContactDetails(
-        "Blah alkfh",
-        "asdlkj@eqkf.do",
-        "123456",
-        Some("K1234567890")
-      ))
-
-      unboundForm shouldBe Map(
-        nameField -> "Blah alkfh",
-        emailField -> "asdlkj@eqkf.do",
-        phoneField -> "123456",
-        utrField -> "K1234567890"
-      )
-    }
   }
 
 }

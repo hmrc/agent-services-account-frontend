@@ -186,8 +186,8 @@ error.suspended-details.required.email=Enter an email address with a name, @ sym
 error.suspended-details.required.telephone=Enter your telephone number
 error.suspended-details.invalid.telephone=Enter a telephone number, like 01642 123 456, 07777 777 777 or +33 23 45 67 88
 error.suspended-details.max-length.telephone=Telephone number must be between 0 and 20 characters
-error.suspended-details.invalid.utr=Unique Taxpayer Reference must only include numbers and the letter 'k'
-error.suspended-details.max-length.utr=Unique Taxpayer Reference must be between 10 and 14 characters
+error.suspended-description.empty=Enter a description of the problem. For example, "I did not receive a letter".
+error.suspended-description.max-length=Description must be 250 characters or fewer.
 
 existing.client.relationships.link=Mynediad at berthnasoedd presennol â chleientiaid
 footer.links.accessibility.text=Hygyrchedd
@@ -390,6 +390,23 @@ suspend.contact-details.invite.details.label4=Unique Taxpayer Reference(optional
 suspend.contact-details.invite.details.hint=Account recovery
 suspend.contact-details.invite.details.heading=Contact Details
 suspend.contact-details.invite.details.inset=We can only talk to a director partner or sole trader.
+
+suspend.description.h1=Details of issue
+suspend.description.title=Recovery description | Agent services account
+suspend.description.hint1=Account recovery
+suspend.description.label=Tell us what happened
+suspend.description.hint=Do not include personal or financial information like your National Insurance number or credit card details.
+
+suspend.check.title=Check answers | Agent services account
+suspend.check.h1=Check your answers
+suspend.check.list.h1=Contact name
+suspend.check.list.h2=Contact email address
+suspend.check.list.h3=Telephone number
+suspend.check.list.h4=Details of issue
+
+suspend.confirmation.title=Request received | Agent services account
+suspend.confirmation.h1=We have received your details
+suspend.confirmation.p1=We will get in touch using the contact details you provided. We aim to do this within 5 working days.
 
 common.continue.gov=Return to Government Gateway sign in
 timeout-dialog.p1=Am resymau diogelwch, cewch eich allgofnodi o’ch cyfrif gwasanaethau asiant ymhen

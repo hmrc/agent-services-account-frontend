@@ -30,7 +30,7 @@ object AgentPermissionsStubs {
 
   def givenSyncEacdSuccess(arn: Arn): StubMapping =
     stubFor(
-      patch(urlEqualTo(s"/agent-permissions/arn/${arn.value}/sync"))
+      post(urlEqualTo(s"/agent-permissions/arn/${arn.value}/sync?fullSync=true"))
         .willReturn(aResponse()
           .withStatus(200)))
 

@@ -20,6 +20,7 @@ object AppDependencies {
     "uk.gov.hmrc"            %% "bootstrap-test-play-28"     % bootstrapVer % "test, it",
     "com.github.tomakehurst" %  "wiremock-jre8"              % "2.26.1"     % "test, it",
     "org.jsoup"              %  "jsoup"                      % "1.15.3"     % "test, it",
+    "org.scalamock"           %% "scalamock"                  % "5.2.0"    % "test, it",
     "com.vladsch.flexmark"   %  "flexmark-all"               % "0.35.10"    % "test, it"
   )
 

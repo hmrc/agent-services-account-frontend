@@ -20,13 +20,14 @@ import play.api.i18n.{Lang, Langs}
 import play.api.{LoggerLike, Logging}
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.connectors.EmailConnector
-import uk.gov.hmrc.agentservicesaccount.models.{BetaInviteDetailsForEmail, SendEmailData}
+import uk.gov.hmrc.agentservicesaccount.models.{AccountRecoverySummary, BetaInviteDetailsForEmail, SendEmailData}
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class EmailService @Inject()(emailConnector: EmailConnector)(implicit langs: Langs)
+class EmailService @Inject()(emailConnector: EmailConnector, appConfig: AppConfig)(implicit langs: Langs)
     extends Logging {
 
   implicit val lang: Lang = langs.availables.head
@@ -57,5 +58,22 @@ class EmailService @Inject()(emailConnector: EmailConnector)(implicit langs: Lan
         "telephoneNumber" -> details.phone.getOrElse("Not provided")
       )
     )
+  def sendSuspendedSummaryEmail(details: AccountRecoverySummary
+                               )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Unit] = {
 
+    if (appConfig.suspendedContactDetailsSendEmail){
+    val emailInfo: SendEmailData = SendEmailData(
+      to = Seq(appConfig.suspendedContactDetailsSendToAddress),
+      templateId = "suspended_contact_details",
+      parameters = Map(
+        "arn" -> details.arn,
+        "contactName" -> details.name,
+        "emailAddress" -> details.email,
+        "telephoneNumber" -> details.phone,
+      ),
+    )
+      emailConnector.sendEmail(emailInfo)
+    }
+    else Future successful logger.warn("email is disabled for send suspension email contact details")
+  }
 }

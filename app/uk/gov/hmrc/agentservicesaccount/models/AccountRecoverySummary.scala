@@ -15,17 +15,10 @@
  */
 
 package uk.gov.hmrc.agentservicesaccount.models
-import play.api.libs.json.{Json, OFormat}
 
-case class SendEmailData(
-  to: Seq[String],
-  templateId: String,
-  parameters: Map[String, String],
-  force: Boolean = false,
-  eventUrl: Option[String] = None,
-  onSendUrl: Option[String] = None
-)
-
-object SendEmailData {
-  implicit val formats: OFormat[SendEmailData] = Json.format[SendEmailData]
-}
+case class AccountRecoverySummary(
+                                  name: String,
+                                  email: String,
+                                  phone: String,
+                                  description: String,
+                                  arn: String)

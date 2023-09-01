@@ -17,7 +17,11 @@ GET        /account-limited                         @uk.gov.hmrc.agentservicesac
 
 GET        /recovery-contact-details                @uk.gov.hmrc.agentservicesaccount.controllers.SuspendedJourneyController.showContactDetails()
 POST       /recovery-contact-details                @uk.gov.hmrc.agentservicesaccount.controllers.SuspendedJourneyController.submitContactDetails()
-
+GET        /recovery-description                    @uk.gov.hmrc.agentservicesaccount.controllers.SuspendedJourneyController.showSuspendedDescription()
+POST       /recovery-description                    @uk.gov.hmrc.agentservicesaccount.controllers.SuspendedJourneyController.submitSuspendedDescription()
+GET        /recovery-check-your-answers             @uk.gov.hmrc.agentservicesaccount.controllers.SuspendedJourneyController.showSuspendedSummary()
+POST       /recovery-check-your-answers             @uk.gov.hmrc.agentservicesaccount.controllers.SuspendedJourneyController.submitSuspendedSummary()
+GET        /recovery-request-confirmation           @uk.gov.hmrc.agentservicesaccount.controllers.SuspendedJourneyController.showSuspendedConfirmation()
 
 GET        /sign-out                                @uk.gov.hmrc.agentservicesaccount.controllers.SignOutController.signOut()
 GET        /online/sign-in                          @uk.gov.hmrc.agentservicesaccount.controllers.SignOutController.onlineSignIn()

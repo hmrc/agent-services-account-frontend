@@ -36,8 +36,6 @@
 @(form: Form[SuspendContactDetails])(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
 
 @fieldsetHtml = {
-
-
 @govukInput(Input(
     label = Label(
         content = HtmlContent(msgs("suspend.contact-details.invite.details.label1")),
@@ -71,26 +69,12 @@
         msgs("suspend.contact-details.invite.details.label3.hint")))),
     autocomplete = Some("tel")
 ).withFormField(form("phone")))
-
-    @govukInput(Input(
-    label = Label(
-        content = HtmlContent(msgs("suspend.contact-details.invite.details.label4")),
-        classes = "govuk-body govuk-!-font-size-27 govuk-!-font-weight-bold",
-        isPageHeading = false
-    ),
-    classes = "",
-    spellcheck = Some(false),
-    autocomplete = Some("utr")
-).withFormField(form("utr")))
-
 }
-
 @main(
     pageTitle = withErrorPrefix(form.hasErrors, msgs("suspend.contact-details.invite.details.heading")),
     backLinkHref = Some(routes.BetaInviteController.showInviteDetails.url),
     showSecondaryNav = false
 ) {
-
     @if(form.hasErrors){
         @govukErrorSummary(ErrorSummary(errorList = form.errors.asTextErrorLinks, title = Text(msgs("survey.error.summary"))))
     }
@@ -101,8 +85,6 @@
         @govukFieldset(Fieldset(
             html = fieldsetHtml
         ))
-
         @govukButton(Button(content = Text(msgs("common.continue-save"))))
     }
-
 }
