@@ -225,7 +225,7 @@ class SuspendedJourneyControllerSpec extends BaseISpec with SessionServiceMocks{
       expectGetSessionItemNone[String](DESCRIPTION)
       expectGetSessionItemNone[String](ARN)
 
-      val response: Future[Result] = controller.showSuspendedSummary()(fakeRequest())
+      val response: Future[Result] = controller.submitSuspendedSummary()(fakeRequest())
       status(response) shouldBe 303
       redirectLocation(await(response)) shouldBe Some(routes.SuspendedJourneyController.showContactDetails().url)
     }
