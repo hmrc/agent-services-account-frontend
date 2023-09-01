@@ -62,6 +62,7 @@ class SuspendedJourneyController @Inject() (
       contactDetailsView(contactForm).toFuture.map(Ok(_))
     })
   }
+
   def submitContactDetails: Action[AnyContent] = actions.authActionOnlyForSuspended.async { implicit request =>
     ContactDetailsSuspendForm.form.bindFromRequest().fold(
       formWithErrors => {
@@ -84,6 +85,7 @@ class SuspendedJourneyController @Inject() (
       case _ => Ok(recoveryDescriptionView(SuspendDescriptionForm.form)).toFuture
     }
   }
+
   def submitSuspendedDescription: Action[AnyContent] = actions.authActionOnlyForSuspended.async { implicit request =>
     SuspendDescriptionForm.form
       .bindFromRequest()
@@ -111,12 +113,14 @@ class SuspendedJourneyController @Inject() (
     case _ => None
   }
 }
+
   def showSuspendedSummary: Action[AnyContent] = actions.authActionOnlyForSuspended.async { implicit request =>
     getSummaryDetails.flatMap{
       case Some(summaryDetails) => Ok(checkRecoveryAnswersView(summaryDetails)).toFuture
       case None => Redirect(routes.SuspendedJourneyController.showContactDetails()).toFuture
     }
   }
+
    def submitSuspendedSummary: Action[AnyContent] = actions.authActionOnlyForSuspended.async { implicit request =>
      getSummaryDetails.flatMap {
      case Some(summaryDetails) =>
@@ -126,7 +130,9 @@ class SuspendedJourneyController @Inject() (
      case None => Redirect(routes.SuspendedJourneyController.showContactDetails()).toFuture
      }
    }
+
   def showSuspendedConfirmation: Action[AnyContent] = actions.authActionOnlyForSuspended.async { implicit request =>
     Ok(confirmationReceived()).toFuture
   }
+
 }
