@@ -74,6 +74,6 @@ class EmailService @Inject()(emailConnector: EmailConnector, appConfig: AppConfi
     )
       emailConnector.sendEmail(emailInfo)
     }
-    else Future successful()
+    else Future successful logger.warn("email is disabled for send suspension email contact details")
   }
 }

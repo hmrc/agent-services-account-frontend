@@ -152,7 +152,7 @@ class SuspendedJourneyControllerSpec extends BaseISpec with SessionServiceMocks{
 
         .withFormUrlEncodedBody(
           "name" -> "Romel",
-        "email" -> "romel@romel.com",
+          "email" -> "romel@romel.com",
           "phone" -> "01711111111")
       val response = controller.submitContactDetails()(request)
 
@@ -180,6 +180,33 @@ class SuspendedJourneyControllerSpec extends BaseISpec with SessionServiceMocks{
       content should include(messagesApi("suspend.description.label"))
       content should include(messagesApi("suspend.description.hint"))
       content should include(messagesApi("common.continue-save"))
+    }
+  }
+
+  "submitSuspendedDescription" should {
+    "return 400 if form is submitted with errors" in {
+      givenAuthorisedAsAgentWith(arn)
+      givenSuspensionStatus(SuspensionDetails(suspensionStatus = true, None))
+
+
+      val response: Future[Result] = controller.submitSuspendedDescription()(fakeRequest("POST","/recovery-description")
+          .withFormUrlEncodedBody(
+          "description" -> ""))
+
+      status(response) shouldBe 400
+    }
+    s"redirect to ${routes.SuspendedJourneyController.showSuspendedSummary().url} when form is submitted with correct information" in {
+      givenAuthorisedAsAgentWith(arn)
+      givenSuspensionStatus(SuspensionDetails(suspensionStatus = true, None))
+
+      expectPutSessionItem[String](DESCRIPTION, "description added")
+
+      val response: Future[Result] = controller.submitSuspendedDescription()(fakeRequest("POST", "/recovery-description")
+        .withFormUrlEncodedBody(
+          "description" -> "description added")
+      )
+      status(response) shouldBe 303
+      redirectLocation(await(response)) shouldBe Some(routes.SuspendedJourneyController.showSuspendedSummary().url)
     }
   }
 
