@@ -58,30 +58,22 @@ class EmailService @Inject()(emailConnector: EmailConnector, appConfig: AppConfi
         "telephoneNumber" -> details.phone.getOrElse("Not provided")
       )
     )
+  def sendSuspendedSummaryEmail(details: AccountRecoverySummary
+                               )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Unit] = {
 
-  def sendSuspendedSummaryEmail(arn: Arn, details: AccountRecoverySummary)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Unit] =
-    if(appConfig.suspendedContactDetailsSendEmail)
-    sendSuspendedEmail(Seq(appConfig.suspendedContactDetailsSendToAddress), arn, details, "agent_suspended_details")
-    else Future successful()
-
-  def sendSuspendedEmail(sendTo: Seq[String],
-                         arn: Arn,
-                         details: AccountRecoverySummary,
-                         templateId: String
-                        )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Unit] = {
-    val emailInfo: SendEmailData = SuspendedEmailInformation(templateId, sendTo, arn.value, details)
-    emailConnector.sendEmail(emailInfo)
-  }
-
-  private def SuspendedEmailInformation(templateId: String, sendTo: Seq[String], arn: String, details: AccountRecoverySummary) =
-    SendEmailData(
-      sendTo,
-      templateId,
-      Map(
-        "arn" -> arn,
+    if (appConfig.suspendedContactDetailsSendEmail){
+    val emailInfo: SendEmailData = SendEmailData(
+      to = Seq(appConfig.suspendedContactDetailsSendToAddress),
+      templateId = "suspended_contact_details",
+      parameters = Map(
+        "arn" -> details.arn,
         "contactName" -> details.name,
         "emailAddress" -> details.email,
-        "telephoneNumber" -> details.phone
-      )
+        "telephoneNumber" -> details.phone,
+      ),
     )
+      emailConnector.sendEmail(emailInfo)
+    }
+    else Future successful()
+  }
 }
