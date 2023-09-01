@@ -54,7 +54,8 @@ abstract class BaseISpec
         "microservice.services.agent-user-client-details.port"            -> wireMockPort,
         "microservice.services.agent-permissions-frontend.external-url"   -> wireMockBaseUrlAsString,
         "auditing.enabled"                   -> false,
-        "metrics.enabled" -> false
+        "metrics.enabled" -> false,
+        "suspendedContactDetails.sendEmail" -> false
       )
       .configure(additionalConfiguration)
       .overrides(moduleWithOverrides)

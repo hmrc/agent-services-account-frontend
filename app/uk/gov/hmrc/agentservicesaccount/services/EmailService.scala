@@ -60,7 +60,9 @@ class EmailService @Inject()(emailConnector: EmailConnector, appConfig: AppConfi
     )
 
   def sendSuspendedSummaryEmail(arn: Arn, details: AccountRecoverySummary)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Unit] =
+    if(appConfig.suspendedContactDetailsSendEmail)
     sendSuspendedEmail(Seq(appConfig.suspendedContactDetailsSendToAddress), arn, details, "agent_suspended_details")
+    else Future successful()
 
   def sendSuspendedEmail(sendTo: Seq[String],
                          arn: Arn,

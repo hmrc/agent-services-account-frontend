@@ -119,8 +119,10 @@ class SuspendedJourneyController @Inject() (
   }
    def submitSuspendedSummary: Action[AnyContent] = actions.authActionOnlyForSuspended.async { implicit request =>
      getSummaryDetails.flatMap {
-     case Some(summaryDetails) => emailService.sendSuspendedSummaryEmail(request.agentInfo.arn,summaryDetails)
+     case Some(summaryDetails) =>
+          emailService.sendSuspendedSummaryEmail(request.agentInfo.arn,summaryDetails).flatMap(_ =>
                   Redirect(routes.SuspendedJourneyController.showSuspendedConfirmation()).toFuture
+       )
      case None => Redirect(routes.SuspendedJourneyController.showContactDetails()).toFuture
      }
    }

@@ -214,6 +214,39 @@ class SuspendedJourneyControllerSpec extends BaseISpec with SessionServiceMocks{
     }
   }
 
+  "submitSuspendedSummary" should {
+    s"redirect to ${routes.SuspendedJourneyController.showContactDetails().url} when no summary details are present" in {
+      givenAuthorisedAsAgentWith(arn)
+      givenSuspensionStatus(SuspensionDetails(suspensionStatus = true, None))
+
+      expectGetSessionItemNone[String](NAME)
+      expectGetSessionItemNone[String](EMAIL)
+      expectGetSessionItemNone[String](PHONE)
+      expectGetSessionItemNone[String](DESCRIPTION)
+      expectGetSessionItemNone[String](ARN)
+
+      val response: Future[Result] = controller.showSuspendedSummary()(fakeRequest())
+      status(response) shouldBe 303
+      redirectLocation(await(response)) shouldBe Some(routes.SuspendedJourneyController.showContactDetails().url)
+    }
+    s"redirect to ${routes.SuspendedJourneyController.showSuspendedConfirmation().url} when session details are found and send email" in {
+      givenAuthorisedAsAgentWith(arn)
+      givenSuspensionStatus(SuspensionDetails(suspensionStatus = true, None))
+
+      expectGetSessionItem[String](NAME, "Romel", 1)
+      expectGetSessionItem[String](EMAIL, "Romel@romel.com", 1)
+      expectGetSessionItem[String](PHONE, "017111111111", 1)
+      expectGetSessionItem[String](DESCRIPTION, "Some description", 1)
+      expectGetSessionItem[String](ARN, "XARN000001122", 1)
+
+
+      val response: Future[Result] = controller.submitSuspendedSummary()(fakeRequest())
+      status(response) shouldBe 303
+      redirectLocation(await(response)) shouldBe Some(routes.SuspendedJourneyController.showSuspendedConfirmation().url)
+
+    }
+  }
+
   "showSuspendedConfirmation" should {
     "return Ok and show the confirmation page" in {
       givenAuthorisedAsAgentWith(arn)
