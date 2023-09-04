@@ -70,6 +70,7 @@ class EmailService @Inject()(emailConnector: EmailConnector, appConfig: AppConfi
         "contactName" -> details.name,
         "emailAddress" -> details.email,
         "telephoneNumber" -> details.phone,
+        "description" -> details.description,
       ),
     )
       emailConnector.sendEmail(emailInfo)

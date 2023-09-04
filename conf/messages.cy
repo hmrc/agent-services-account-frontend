@@ -370,7 +370,7 @@ suspension-warning.p2=If you did not receive our letter, or think we have made a
 suspension-warning.p2.multi=Mae hyn yn golygu na fyddwch yn gallu defnyddio’r gwasanaeth hwn i ofyn i gleientiaid am awdurdodiad i wneud y canlynol:
 suspension-warning.p2.single=Mae hyn yn golygu na fyddwch yn gallu defnyddio’r gwasanaeth hwn i ofyn am awdurdodiad er mwyn {0}.
 suspension-warning.p3=Gallwch barhau i gael mynediad at unrhyw wasanaeth arall sydd ar gael i chi.
-suspension-warning.p4=suspension-warning.p4=If you want us to get in touch, select ''Continue''. You can enter the relevant contact details. 
+suspension-warning.p4=suspension-warning.p4=If you want us to get in touch, select ''Continue''. You can then enter the relevant contact details.
 suspension-warning.p5=We can only talk to people in the roles below:
 suspension-warning.single.CGT=rheoli cyfrif Treth Enillion Cyfalaf ar eiddo yn y DU ar gyfer cleient
 suspension-warning.single.ITSA=anfon diweddariadau Troi Treth yn Ddigidol ar gyfer Treth Incwm cleient drwy feddalwedd
