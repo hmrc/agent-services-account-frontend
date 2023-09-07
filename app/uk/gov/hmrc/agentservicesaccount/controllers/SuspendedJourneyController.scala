@@ -21,6 +21,7 @@ import play.api.i18n.MessagesApi
 import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
 import uk.gov.hmrc.agentservicesaccount.forms.{ContactDetailsSuspendForm, SuspendDescriptionForm}
 import uk.gov.hmrc.agentservicesaccount.models.{AccountRecoverySummary, SuspendContactDetails}
 import uk.gov.hmrc.agentservicesaccount.services.{EmailService, SessionCacheService}
@@ -32,6 +33,7 @@ import scala.concurrent.ExecutionContext
 class SuspendedJourneyController @Inject() (
                                              actions: Actions,
                                              emailService: EmailService,
+                                             agentClientAuthorisationConnector: AgentClientAuthorisationConnector,
                                              suspensionWarningView: suspension_warning,
                                              contactDetailsView: contact_details,
                                              recoveryDescriptionView: recovery_description,
@@ -124,9 +126,12 @@ class SuspendedJourneyController @Inject() (
    def submitSuspendedSummary: Action[AnyContent] = actions.authActionOnlyForSuspended.async { implicit request =>
      getSummaryDetails.flatMap {
      case Some(summaryDetails) =>
-          emailService.sendSuspendedSummaryEmail(summaryDetails).flatMap(_ =>
+         agentClientAuthorisationConnector.getAgencyDetails().flatMap(maybeAgentDetails =>
+         emailService.sendSuspendedSummaryEmail(summaryDetails, maybeAgentDetails).flatMap(_ =>
                   Redirect(routes.SuspendedJourneyController.showSuspendedConfirmation()).toFuture
        )
+       )
+
      case None => Redirect(routes.SuspendedJourneyController.showContactDetails()).toFuture
      }
    }

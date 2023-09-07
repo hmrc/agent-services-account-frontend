@@ -164,6 +164,7 @@ common.change=Newid
 common.continue.manage.account=Yn eich blaen i reoli’r cyfrif
 common.continue=Yn eich blaen
 common.continue-save=Save and Continue
+common.confirm-send=Confirm and send
 common.no=Na
 common.sign-out=Allgofnodi
 common.what.happens.next=Yr hyn sy’n digwydd nesaf
@@ -389,7 +390,7 @@ suspend.contact-details.invite.details.label3.hint=We need this to call you abou
 suspend.contact-details.invite.details.label4=Unique Taxpayer Reference(optional)
 suspend.contact-details.invite.details.hint=Account recovery
 suspend.contact-details.invite.details.heading=Contact Details
-suspend.contact-details.invite.details.inset=We can only talk to a director partner or sole trader.
+suspend.contact-details.invite.details.inset=We can only talk to a director, partner or sole trader.
 
 suspend.description.h1=Details of issue
 suspend.description.title=Recovery description | Agent services account

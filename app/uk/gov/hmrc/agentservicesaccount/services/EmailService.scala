@@ -20,7 +20,7 @@ import play.api.i18n.{Lang, Langs}
 import play.api.{LoggerLike, Logging}
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.connectors.EmailConnector
-import uk.gov.hmrc.agentservicesaccount.models.{AccountRecoverySummary, BetaInviteDetailsForEmail, SendEmailData}
+import uk.gov.hmrc.agentservicesaccount.models.{AccountRecoverySummary, AgencyDetails, BetaInviteDetailsForEmail, SendEmailData}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 
@@ -58,14 +58,16 @@ class EmailService @Inject()(emailConnector: EmailConnector, appConfig: AppConfi
         "telephoneNumber" -> details.phone.getOrElse("Not provided")
       )
     )
-  def sendSuspendedSummaryEmail(details: AccountRecoverySummary
+  def sendSuspendedSummaryEmail(details: AccountRecoverySummary, agencyDetails: Option[AgencyDetails]
                                )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Unit] = {
 
     if (appConfig.suspendedContactDetailsSendEmail){
+    val agencyName = agencyDetails.get.agencyName.get
     val emailInfo: SendEmailData = SendEmailData(
       to = Seq(appConfig.suspendedContactDetailsSendToAddress),
       templateId = "suspended_contact_details",
       parameters = Map(
+        "agencyName" -> agencyName,
         "arn" -> details.arn,
         "contactName" -> details.name,
         "emailAddress" -> details.email,
