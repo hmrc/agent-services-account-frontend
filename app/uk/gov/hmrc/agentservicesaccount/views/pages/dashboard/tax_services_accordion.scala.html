@@ -52,25 +52,25 @@
 }
 
 @mtdForVatAccordionItem = {
-    @h4("asa.section1.col1.h3")
+@h4("asa.section1.col1.h3")
     <p>
     @a("asa.section1.col1.p", href = appConfig.agentInvitationsFrontendClientTypeUrl)
     </p>
 
-    @h4("asa.section1.col2.h3")
-    @ul_html(
-        items = Seq[Html](
-            a(href = appConfig.vrsUrl,
-                key = "asa.section1.col2.link1",
-                openInNewWindow = true
-            ),
-            a(href = appConfig.vatUrl,
-                key = "asa.section1.col2.link2",
-                openInNewWindow = true
-            )
+@h4("asa.section1.col2.h3")
+@ul_html(
+    items = Seq[Html](
+        a(href = appConfig.vrsUrl,
+            key = "asa.section1.col2.link1",
+            openInNewWindow = true
         ),
-        classes = Some("govuk-list--bullet")
-    )
+        a(href = appConfig.vatUrl,
+            key = "asa.section1.col2.link2",
+            openInNewWindow = true
+        )
+    ),
+    classes = Some("govuk-list--bullet")
+)
 }
 
 @payeIncomeRecordAccordionItem = {
@@ -129,15 +129,15 @@
 
 
 }
-    @CounrtyByCountryAccordionItem = {
+@CounrtyByCountryAccordionItem = {
 
-            @h4("asa.section3.col1.h3")
-            @p(msgs("asa.cbc-section.col1.link1.p", appConfig.agentInvitationsFrontendClientTypeUrl))
+@h4("asa.section3.col1.h3")
+@p(msgs("asa.cbc-section.col1.link1.p", appConfig.agentInvitationsFrontendClientTypeUrl))
 
-            @h4("asa.cbc.col1.h2")
-            @p(html = Some(a(href = "https://www.tax.service.gov.uk/send-a-country-by-country-report",
-                key = "asa.cbc-section.col1.link2.p")))
-        }
+@h4("asa.cbc.col1.h2")
+@p(html = Some(a(href = "https://www.tax.service.gov.uk/send-a-country-by-country-report",
+    key = "asa.cbc-section.col1.link2.p")))
+}
 
 @otherTaxesItem = {
 @govukWarningText(WarningText(content = HtmlContent(span("asa.other.p1"))))
@@ -179,20 +179,17 @@
     if(appConfig.enableCbc) {
         items.append(
             Section(
-            headingContent = Text(msgs("asa.cbc.col1.h3")),
-            content = HtmlContent(CounrtyByCountryAccordionItem)
+                headingContent = Text(msgs("asa.cbc.col1.h3")),
+                content = HtmlContent(CounrtyByCountryAccordionItem)
             )
         )
     }
-
-    if(appConfig.enablePpt) {
-        items.append(
-            Section(
-                headingContent = Text(msgs("asa.ppt.col1.h2")),
-                content = HtmlContent(plasticPackagingItem)
-            )
+    items.append(
+        Section(
+            headingContent = Text(msgs("asa.ppt.col1.h2")),
+            content = HtmlContent(plasticPackagingItem)
         )
-    }
+    )
     items.append(
         Section(
             headingContent = Text(msgs("asa.other.heading")),
