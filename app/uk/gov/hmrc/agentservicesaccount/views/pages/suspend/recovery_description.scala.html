@@ -1,18 +1,18 @@
 @*
-* Copyright 2023 HM Revenue & Customs
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*     http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*@
+ * Copyright 2023 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
 
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.controllers.routes
@@ -47,7 +47,7 @@
     @if(form.hasErrors){
         @govukErrorSummary(ErrorSummary(errorList = form.errors.asTextErrorLinks, title = Text(msgs("survey.error.summary"))))
     }
-    @p(id = Some("recovery-hint"), classes= Some("govuk-hint govuk-!-font-size-27 govuk-!-static-margin-bottom-0"), key = "suspend.description.hint1")
+    <span class="govuk-caption-xl govuk-!-margin-top-5">@msgs("suspend.contact-details.invite.details.hint")</span>
     <h1 class="govuk-heading-xl">@msgs("suspend.description.h1")</h1>
 
     @formWithCSRF(action = routes.SuspendedJourneyController.submitSuspendedDescription()) {
@@ -59,7 +59,6 @@
                 classes = "govuk-!-padding-bottom-9",
             ).withFormField(form("description"))
         )
-        <div class="govuk-!-padding-bottom-5"></div>
-        @govukButton(Button(content = Text(msgs("common.continue-save"))))
+        @govukButton(Button(content = Text(msgs("common.continue-save")), classes = "govuk-!-margin-top-5"))
     }
 }
