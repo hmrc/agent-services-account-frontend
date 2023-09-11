@@ -47,7 +47,7 @@
     @if(form.hasErrors){
         @govukErrorSummary(ErrorSummary(errorList = form.errors.asTextErrorLinks, title = Text(msgs("survey.error.summary"))))
     }
-    @p(id = Some("recovery-hint"), classes= Some("govuk-hint"), key = "suspend.description.hint1")
+    <span class="govuk-caption-xl govuk-!-margin-top-5">@msgs("suspend.contact-details.invite.details.hint")</span>
     <h1 class="govuk-heading-xl">@msgs("suspend.description.h1")</h1>
 
     @formWithCSRF(action = routes.SuspendedJourneyController.submitSuspendedDescription()) {
@@ -56,8 +56,9 @@
                 label = Label(classes = "govuk-label govuk-label--s", content = Text(msgs("suspend.description.label"))),
                 hint = Option(Hint(Some(""), classes = "", attributes = Map.empty, content = Text(msgs("suspend.description.hint")))),
                 maxLength = Some((250)),
+                classes = "govuk-!-padding-bottom-9",
             ).withFormField(form("description"))
         )
-        @govukButton(Button(content = Text(msgs("common.continue-save"))))
+        @govukButton(Button(content = Text(msgs("common.continue-save")), classes = "govuk-!-margin-top-5"))
     }
 }

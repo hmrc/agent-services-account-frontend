@@ -39,7 +39,7 @@
 @govukInput(Input(
     label = Label(
         content = HtmlContent(msgs("suspend.contact-details.invite.details.label1")),
-        classes = "govuk-body govuk-!-font-size-27 govuk-!-font-weight-bold",
+        classes = "govuk-body govuk-!-font-size-20 govuk-!-font-weight-bold",
         isPageHeading = false
     ),
     classes = "",
@@ -50,7 +50,7 @@
 @govukInput(Input(
     label = Label(
         content = HtmlContent(msgs("suspend.contact-details.invite.details.label2")),
-        classes = "govuk-body govuk-!-font-size-27 govuk-!-font-weight-bold",
+        classes = "govuk-body govuk-!-font-size-20 govuk-!-font-weight-bold",
         isPageHeading = false
     ),
     classes = "",
@@ -61,7 +61,7 @@
 @govukInput(Input(
     label = Label(
         content = HtmlContent(msgs("suspend.contact-details.invite.details.label3")),
-        classes = "govuk-body govuk-!-font-size-27 govuk-!-font-weight-bold",
+        classes = "govuk-body govuk-!-font-size-20 govuk-!-font-weight-bold ",
         isPageHeading = false
     ),
     classes = "",
@@ -78,13 +78,13 @@
     @if(form.hasErrors){
         @govukErrorSummary(ErrorSummary(errorList = form.errors.asTextErrorLinks, title = Text(msgs("survey.error.summary"))))
     }
-    <p class="govuk-hint govuk-!-margin-50">@msgs("suspend.contact-details.invite.details.hint")</p>
-    <h1 class="govuk-fieldset__legend--l">@msgs("suspend.contact-details.invite.details.heading")</h1>
+    <span class="govuk-caption-xl govuk-!-margin-top-5">@msgs("suspend.contact-details.invite.details.hint")</span>
+    <h1 class="govuk-fieldset__legend--xl govuk-!-margin-top-0">@msgs("suspend.contact-details.invite.details.heading")</h1>
     <p class="govuk-inset-text govuk-!-margin-bottom-6">@msgs("suspend.contact-details.invite.details.inset")</p>
     @formWithCSRF(action = routes.SuspendedJourneyController.submitContactDetails()) {
         @govukFieldset(Fieldset(
             html = fieldsetHtml
         ))
-        @govukButton(Button(content = Text(msgs("common.continue-save"))))
+        @govukButton(Button(content = Text(msgs("common.continue-save")), classes = "govuk-!-margin-top-5"))
     }
 }
