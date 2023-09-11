@@ -184,15 +184,12 @@
             )
         )
     }
-
-    if(appConfig.enablePpt) {
-        items.append(
-            Section(
-                headingContent = Text(msgs("asa.ppt.col1.h2")),
-                content = HtmlContent(plasticPackagingItem)
-            )
+    items.append(
+        Section(
+            headingContent = Text(msgs("asa.ppt.col1.h2")),
+            content = HtmlContent(plasticPackagingItem)
         )
-    }
+    )
     items.append(
         Section(
             headingContent = Text(msgs("asa.other.heading")),
