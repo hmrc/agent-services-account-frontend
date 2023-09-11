@@ -104,18 +104,16 @@
         )
     </div>
 
-    @if(appConfig.enablePpt) {
-        @h3("help.ppt.h2")
-        @ul_html(
-            classes = Some("govuk-list--spaced"),
-            items = Seq[Html](
-                a(href = msgs("help.ppt.link1.href"),
-                    key="help.ppt.link1", openInNewWindow=true, classes = Some("govuk-link--no-visited-state")),
-                a(href = msgs("help.ppt.link2.href"),
-                    key="help.ppt.link2", openInNewWindow=true, classes = Some("govuk-link--no-visited-state"))
-            )
+    @h3("help.ppt.h2")
+    @ul_html(
+        classes = Some("govuk-list--spaced"),
+        items = Seq[Html](
+            a(href = msgs("help.ppt.link1.href"),
+                key="help.ppt.link1", openInNewWindow=true, classes = Some("govuk-link--no-visited-state")),
+            a(href = msgs("help.ppt.link2.href"),
+                key="help.ppt.link2", openInNewWindow=true, classes = Some("govuk-link--no-visited-state"))
         )
-    }
+    )
 
     @h3("help.cannot.h2")
     @ul_html(
