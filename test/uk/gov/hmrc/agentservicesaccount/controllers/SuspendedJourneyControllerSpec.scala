@@ -45,7 +45,7 @@ class SuspendedJourneyControllerSpec extends BaseISpec with SessionServiceMocks{
 
   private implicit val messages: Messages = messagesApi.preferred(Seq.empty[Lang])
 
-  override def moduleWithOverrides = new AbstractModule() {
+  override def moduleWithOverrides: AbstractModule = new AbstractModule() {
     override def configure(): Unit = {
       bind(classOf[SessionCacheService]).toInstance(mockSessionCacheService)
     }
@@ -68,6 +68,7 @@ class SuspendedJourneyControllerSpec extends BaseISpec with SessionServiceMocks{
       Helpers.contentType(response).get shouldBe HTML
       val content = Helpers.contentAsString(response)
 
+      content should include(messagesApi("generic.title",  messagesApi("suspension-warning.header1"), messagesApi("service.name")))
       content should include(messagesApi("suspension-warning.header1"))
       content should include(messagesApi("suspension-warning.p1"))
       content should include(messagesApi("suspension-warning.p2"))
@@ -108,12 +109,12 @@ class SuspendedJourneyControllerSpec extends BaseISpec with SessionServiceMocks{
       status(response) shouldBe OK
       Helpers.contentType(response).get shouldBe HTML
       val content = Helpers.contentAsString(response)
+      content should include(messagesApi("generic.title", messagesApi("suspend.contact-details.invite.details.heading"), messagesApi("service.name")))
+      content should include(messagesApi("suspend.contact-details.invite.details.heading"))
       content should include(messagesApi("suspend.contact-details.invite.details.label1"))
       content should include(messagesApi("suspend.contact-details.invite.details.label2"))
       content should include(messagesApi("suspend.contact-details.invite.details.label3"))
       content should include(messagesApi("suspend.contact-details.invite.details.label3.hint"))
-      content should include(messagesApi("suspend.contact-details.invite.details.heading"))
-
 
       val getHelpLink = Jsoup.parse(content).select(Css.getHelpWithThisPageLink)
       getHelpLink.attr("href") shouldBe "http://localhost:9250/contact/report-technical-problem?newTab=true&service=AOSS&referrerUrl=%2F"
@@ -174,7 +175,7 @@ class SuspendedJourneyControllerSpec extends BaseISpec with SessionServiceMocks{
       Helpers.contentType(response).get shouldBe HTML
 
       val content = Helpers.contentAsString(response)
-      content should include(messagesApi("suspend.description.title"))
+      content should include(messagesApi("generic.title", messagesApi("suspend.description.h1"), messagesApi("service.name")))
       content should include(messagesApi("suspend.description.hint1"))
       content should include(messagesApi("suspend.description.h1"))
       content should include(messagesApi("suspend.description.label"))
@@ -235,7 +236,6 @@ class SuspendedJourneyControllerSpec extends BaseISpec with SessionServiceMocks{
       expectGetSessionItem[String](DESCRIPTION, "Some description", 1)
       expectGetSessionItem[String](ARN, "XARN000001122", 1)
 
-
       val response: Future[Result] = controller.showSuspendedSummary()(fakeRequest())
       status(response) shouldBe OK
     }
@@ -283,11 +283,11 @@ class SuspendedJourneyControllerSpec extends BaseISpec with SessionServiceMocks{
       status(response) shouldBe OK
       Helpers.contentType(response).get shouldBe HTML
       val content = Helpers.contentAsString(response)
-      content should include(messagesApi("suspend.confirmation.title"))
-      content should include(messagesApi ("suspend.confirmation.h1"))
-      content should include(messagesApi  ("common.what.happens.next"))
+      content should include(messagesApi("generic.title", messagesApi("suspend.confirmation.h1"), messagesApi("service.name")))
+      content should include(messagesApi("suspend.confirmation.h1"))
+      content should include(messagesApi("common.what.happens.next"))
       content should include(messagesApi("suspend.confirmation.p1"))
-      content should include(messagesApi ( "common.continue.gov"))
+      content should include(messagesApi("common.continue.gov"))
     }
   }
 }

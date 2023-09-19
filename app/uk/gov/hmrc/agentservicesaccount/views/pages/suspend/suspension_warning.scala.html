@@ -24,7 +24,7 @@
 
 @suspendedServices = @{request.session.get("suspendedServices").getOrElse("").split(',').toSet}
 
-@main(pageTitle = msgs("suspension-warning.header"), isAdmin = isAdmin) {
+@main(pageTitle = msgs("suspension-warning.header1"), isAdmin = isAdmin) {
 
     @h1(key = "suspension-warning.header1", size = "xl")
     @p("suspension-warning.p1")
