@@ -108,7 +108,7 @@ class SuspendedJourneyControllerSpec extends BaseISpec with SessionServiceMocks{
       status(response) shouldBe OK
       Helpers.contentType(response).get shouldBe HTML
       val content = Helpers.contentAsString(response)
-      content should include(messagesApi("suspend.contact-details.invite.details.label1"))
+      content should include(messagesApi("suspend.contact-details.label1"))
       content should include(messagesApi("suspend.contact-details.invite.details.label2"))
       content should include(messagesApi("suspend.contact-details.invite.details.label3"))
       content should include(messagesApi("suspend.contact-details.invite.details.label3.hint"))
