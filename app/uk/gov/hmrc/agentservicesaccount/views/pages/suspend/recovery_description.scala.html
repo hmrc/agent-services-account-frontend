@@ -47,7 +47,7 @@
     @if(form.hasErrors){
         @govukErrorSummary(ErrorSummary(errorList = form.errors.asTextErrorLinks, title = Text(msgs("survey.error.summary"))))
     }
-    <span class="govuk-caption-xl govuk-!-margin-top-5">@msgs("suspend.contact-details.invite.details.hint")</span>
+    <span class="govuk-caption-xl govuk-!-margin-top-5">@msgs("suspend.contact-details.hint1")</span>
     <h1 class="govuk-heading-xl">@msgs("suspend.description.h1")</h1>
 
     @formWithCSRF(action = routes.SuspendedJourneyController.submitSuspendedDescription()) {

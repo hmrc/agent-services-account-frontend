@@ -115,7 +115,7 @@ class AgentServicesController @Inject()
     else Future.successful(())
   }
 
-  val yourAccount: Action[AnyContent] = Action.async { implicit request =>
+  val yourAccount: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     withFullUserDetails { (agentInfo: AgentInfo) =>
       if (!agentInfo.isAdmin) {
         if (appConfig.granPermsEnabled) {

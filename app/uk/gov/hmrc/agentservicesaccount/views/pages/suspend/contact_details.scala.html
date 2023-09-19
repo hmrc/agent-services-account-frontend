@@ -49,7 +49,7 @@
 
 @govukInput(Input(
     label = Label(
-        content = HtmlContent(msgs("suspend.contact-details.invite.details.label2")),
+        content = HtmlContent(msgs("suspend.contact-details.label2")),
         classes = "govuk-body govuk-!-font-size-20 govuk-!-font-weight-bold",
         isPageHeading = false
     ),
@@ -60,26 +60,26 @@
 
 @govukInput(Input(
     label = Label(
-        content = HtmlContent(msgs("suspend.contact-details.invite.details.label3")),
+        content = HtmlContent(msgs("suspend.contact-details.label3")),
         classes = "govuk-body govuk-!-font-size-20 govuk-!-font-weight-bold ",
         isPageHeading = false
     ),
     classes = "",
     hint = Some(Hint(content = HtmlContent(
-        msgs("suspend.contact-details.invite.details.label3.hint")))),
+        msgs("suspend.contact-details.hint")))),
     autocomplete = Some("tel")
 ).withFormField(form("phone")))
 }
 @main(
-    pageTitle = withErrorPrefix(form.hasErrors, msgs("suspend.contact-details.invite.details.heading")),
+    pageTitle = withErrorPrefix(form.hasErrors, msgs("suspend.contact-details.heading")),
     backLinkHref = Some(routes.BetaInviteController.showInviteDetails.url),
     showSecondaryNav = false
 ) {
     @if(form.hasErrors){
         @govukErrorSummary(ErrorSummary(errorList = form.errors.asTextErrorLinks, title = Text(msgs("survey.error.summary"))))
     }
-    <span class="govuk-caption-xl govuk-!-margin-top-5">@msgs("suspend.contact-details.invite.details.hint")</span>
-    <h1 class="govuk-fieldset__legend--xl govuk-!-margin-top-0">@msgs("suspend.contact-details.invite.details.heading")</h1>
+    <span class="govuk-caption-xl govuk-!-margin-top-5">@msgs("suspend.contact-details.hint1")</span>
+    <h1 class="govuk-fieldset__legend--xl govuk-!-margin-top-0">@msgs("suspend.contact-details.heading")</h1>
     <p class="govuk-inset-text govuk-!-margin-bottom-6">@msgs("suspend.contact-details.inset")</p>
     @formWithCSRF(action = routes.SuspendedJourneyController.submitContactDetails()) {
         @govukFieldset(Fieldset(
