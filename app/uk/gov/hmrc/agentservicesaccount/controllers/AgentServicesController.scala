@@ -21,7 +21,7 @@ import play.api.i18n.MessagesApi
 import play.api.mvc._
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agents.accessgroups.optin.{OptedInReady, OptinStatus}
-import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AgentInfo, AuthActions}
+import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.actions.CallOps._
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AgentClientAuthorisationConnector, AgentPermissionsConnector, AgentUserClientDetailsConnector}
@@ -115,19 +115,18 @@ class AgentServicesController @Inject()
     else Future.successful(())
   }
 
-  val yourAccount: Action[AnyContent] = Action.async { implicit request =>
-    withFullUserDetails { (agentInfo: AgentInfo) =>
-      if (!agentInfo.isAdmin) {
+  val yourAccount: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
+      if (!request.agentInfo.isAdmin) {
         if (appConfig.granPermsEnabled) {
-          agentInfo.credentials.fold(Ok(your_account(None)).toFuture) { credentials =>
+          request.agentInfo.credentials.fold(Ok(your_account(None)).toFuture) { credentials =>
             agentPermissionsConnector
-              .isOptedIn(agentInfo.arn)
+              .isOptedIn(request.agentInfo.arn)
               .flatMap(isOptedIn =>
                 if (isOptedIn)
-                  agentPermissionsConnector.getGroupsForTeamMember(agentInfo.arn, credentials.providerId)
-                    .map(maybeSummaries => Ok(your_account(Some(agentInfo), maybeSummaries)))
+                  agentPermissionsConnector.getGroupsForTeamMember(request.agentInfo.arn, credentials.providerId)
+                    .map(maybeSummaries => Ok(your_account(Some(request.agentInfo), maybeSummaries)))
                 else
-                  Ok(your_account(Some(agentInfo), None, optedIn = false)).toFuture
+                  Ok(your_account(Some(request.agentInfo), None, optedIn = false)).toFuture
               )
           }
         } else {
@@ -137,7 +136,7 @@ class AgentServicesController @Inject()
         Forbidden.toFuture
       }
     }
-  }
+
 
   val administrators: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
    val agentInfo= request.agentInfo
