@@ -63,12 +63,13 @@ class AuthActions @Inject()(appConfig: AppConfig,
         implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
         authorised(AuthProviders(GovernmentGateway) and AffinityGroup.Agent)
-          .retrieve(allEnrolments and credentials and credentialRole) {
-            case enrols ~ creds ~ credRole =>
+          .retrieve(allEnrolments and credentials and email and name and credentialRole) {
+            case enrols ~ creds ~ email ~ name ~ credRole =>
               getArn(enrols) match {
                 case Some(arn) =>
 
-                  Future.successful(Right(new  AuthRequestWithAgentInfo(AgentInfo(arn, credRole,credentials = creds),r)))
+                  Future.successful(Right(new  AuthRequestWithAgentInfo(
+                    AgentInfo(arn = arn, credentialRole = credRole, email = email, name = name , credentials = creds),r)))
                 case None =>
                   logger.warn("No HMRC-AS-AGENT enrolment found -- redirecting to /agent-subscription/start.")
                   Future successful Left(Redirect(appConfig.agentSubscriptionFrontendUrl))

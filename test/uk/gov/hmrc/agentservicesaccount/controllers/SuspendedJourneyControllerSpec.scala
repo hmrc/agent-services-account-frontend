@@ -109,12 +109,12 @@ class SuspendedJourneyControllerSpec extends BaseISpec with SessionServiceMocks{
       status(response) shouldBe OK
       Helpers.contentType(response).get shouldBe HTML
       val content = Helpers.contentAsString(response)
-      content should include(messagesApi("generic.title", messagesApi("suspend.contact-details.invite.details.heading"), messagesApi("service.name")))
-      content should include(messagesApi("suspend.contact-details.invite.details.heading"))
-      content should include(messagesApi("suspend.contact-details.invite.details.label1"))
-      content should include(messagesApi("suspend.contact-details.invite.details.label2"))
-      content should include(messagesApi("suspend.contact-details.invite.details.label3"))
-      content should include(messagesApi("suspend.contact-details.invite.details.label3.hint"))
+      content should include(messagesApi("generic.title", messagesApi("suspend.contact-details.heading"), messagesApi("service.name")))
+      content should include(messagesApi("suspend.contact-details.label1"))
+      content should include(messagesApi("suspend.contact-details.label2"))
+      content should include(messagesApi("suspend.contact-details.label3"))
+      content should include(messagesApi("suspend.contact-details.hint"))
+      content should include(messagesApi("suspend.contact-details.heading"))
 
       val getHelpLink = Jsoup.parse(content).select(Css.getHelpWithThisPageLink)
       getHelpLink.attr("href") shouldBe "http://localhost:9250/contact/report-technical-problem?newTab=true&service=AOSS&referrerUrl=%2F"

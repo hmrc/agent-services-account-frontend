@@ -20,11 +20,14 @@
 
 @this(main: main, p: p, h1: h1, h2: h2, h3: h3, h4: h4, ul: ul, a: a, link_as_button: link_as_button)
 
-@(isAdmin: Boolean)(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
+@()(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
 
 @suspendedServices = @{request.session.get("suspendedServices").getOrElse("").split(',').toSet}
 
-@main(pageTitle = msgs("suspension-warning.header1"), isAdmin = isAdmin) {
+@main(
+    pageTitle = msgs("suspension-warning.header1"),
+    showSecondaryNav = false
+) {
 
     @h1(key = "suspension-warning.header1", size = "xl")
     @p("suspension-warning.p1")

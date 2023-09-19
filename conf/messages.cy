@@ -382,13 +382,13 @@ suspension-warning.list1=cyfarwyddwr
 suspension-warning.list2=partner
 suspension-warning.list3=unig fasnachwr
 
-suspend.contact-details.invite.details.label1=Enw cyswllt
-suspend.contact-details.invite.details.label2=Cyfeiriad e-bost cyswllt
-suspend.contact-details.invite.details.label3=Rhif ffôn
-suspend.contact-details.invite.details.label3.hint=Mae angen hyn arnom i roi galwad i chi am eich cyfrif
-suspend.contact-details.invite.details.hint=Adfer cyfrif
-suspend.contact-details.invite.details.heading=Manylion cyswllt
-suspend.contact-details.invite.details.inset=Gallwn ond siarad â chyfarwyddwr, partner neu unig fasnachwr.
+suspend.contact-details.label1=Enw cyswllt
+suspend.contact-details.label2=Cyfeiriad e-bost cyswllt
+suspend.contact-details.label3=Rhif ffôn
+suspend.contact-details.hint=Mae angen hyn arnom i roi galwad i chi am eich cyfrif
+suspend.contact-details.hint1=Adfer cyfrif
+suspend.contact-details.heading=Manylion cyswllt
+suspend.contact-details.inset=Gallwn ond siarad â chyfarwyddwr, partner neu unig fasnachwr.
 
 suspend.description.h1=Manylion y broblem
 suspend.description.hint1=Adfer cyfrif

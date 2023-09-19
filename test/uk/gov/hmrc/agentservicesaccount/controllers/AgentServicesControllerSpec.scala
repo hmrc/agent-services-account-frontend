@@ -804,6 +804,7 @@ class AgentServicesControllerSpec extends BaseISpec {
     "render correctly for Standard User who’s Opted-In_READY without Access Groups" in {
       val providerId = RandomUtils.nextLong().toString
       givenFullAuthorisedAsAgentWith(arn, providerId)
+      givenSuspensionStatus(SuspensionDetails(suspensionStatus = false, regimes = None))
       givenOptinRecordExistsForArn(Arn(arn), exists = true)
       givenAccessGroupsForTeamMember(Arn(arn), providerId, Seq.empty)
       val response = await(controller.yourAccount()(fakeRequest("GET", yourAccountUrl)))
