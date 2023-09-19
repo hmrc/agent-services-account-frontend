@@ -28,7 +28,7 @@
 
 @()(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
 
-@main(pageTitle = msgs("suspend.confirmation.title")) {
+@main(pageTitle = msgs("suspend.confirmation.title"), showSecondaryNav = false) {
     @govukPanel(
         Panel(
             title = Text(msgs("suspend.confirmation.h1"))

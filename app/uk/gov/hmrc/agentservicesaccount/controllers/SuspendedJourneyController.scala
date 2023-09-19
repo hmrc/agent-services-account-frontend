@@ -48,7 +48,7 @@ class SuspendedJourneyController @Inject() (
                                            ) extends AgentServicesBaseController with Logging {
 
   def showSuspendedWarning: Action[AnyContent] = actions.authActionOnlyForSuspended { implicit request =>
-    Ok(suspensionWarningView(request.agentInfo.isAdmin))
+    Ok(suspensionWarningView())
   }
 
   def showContactDetails: Action[AnyContent] = actions.authActionOnlyForSuspended.async { implicit request =>

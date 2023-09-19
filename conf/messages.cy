@@ -383,14 +383,13 @@ suspension-warning.list1=director
 suspension-warning.list2=partner
 suspension-warning.list3=sole trader
 
-suspend.contact-details.invite.details.label1=Contact name
-suspend.contact-details.invite.details.label2=Contact email address
-suspend.contact-details.invite.details.label3=Telephone number
-suspend.contact-details.invite.details.label3.hint=We need this to call you about your account
-suspend.contact-details.invite.details.label4=Unique Taxpayer Reference(optional)
-suspend.contact-details.invite.details.hint=Account recovery
-suspend.contact-details.invite.details.heading=Contact Details
-suspend.contact-details.invite.details.inset=We can only talk to a director, partner or sole trader.
+suspend.contact-details.label1=Contact name
+suspend.contact-details.label2=Contact email address
+suspend.contact-details.label3=Telephone number
+suspend.contact-details.hint=We need this to call you about your account
+suspend.contact-details.hint1=Account recovery
+suspend.contact-details.heading=Contact Details
+suspend.contact-details.inset=We can only talk to a director, partner or sole trader.
 
 suspend.description.h1=Details of issue
 suspend.description.title=Recovery description | Agent services account
