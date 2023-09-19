@@ -333,7 +333,6 @@ nav.manage.account=Manage account
 nav.signout=Sign out
 nav.your.account=Your account
 service.name=Agent services account
-servicename.titleSuffix=- Agent services account - GOV.UK
 signed-out.header=You have been signed out
 signed-out.p1=You have not done anything for {0}, so we have signed you out to keep your account secure.
 signed-out.p2=<a class="govuk-link" href="{0}">Sign in again</a> to use this service.
@@ -371,7 +370,7 @@ suspension-warning.p2=If you did not receive our letter, or think we have made a
 suspension-warning.p2.multi=This means you will not be able to use this service to ask clients for authorisation to:
 suspension-warning.p2.single=This means you will not be able to use this service to ask for authorisation to {0}.
 suspension-warning.p3=You can still access any other service available to you.
-suspension-warning.p4=If you want us to get in touch, select ''Continue''. You can then enter the relevant contact details.
+suspension-warning.p4=If you want us to get in touch, select ‘Continue’. You can then enter the relevant contact details.
 suspension-warning.p5=We can only talk to people in the roles below:
 suspension-warning.single.CGT=manage a client’s Capital Gains Tax on UK property account
 suspension-warning.single.ITSA=manage a client’s Making Tax Digital for Income Tax
@@ -387,25 +386,21 @@ suspend.contact-details.invite.details.label1=Contact name
 suspend.contact-details.invite.details.label2=Contact email address
 suspend.contact-details.invite.details.label3=Telephone number
 suspend.contact-details.invite.details.label3.hint=We need this to call you about your account
-suspend.contact-details.invite.details.label4=Unique Taxpayer Reference(optional)
 suspend.contact-details.invite.details.hint=Account recovery
 suspend.contact-details.invite.details.heading=Contact Details
 suspend.contact-details.invite.details.inset=We can only talk to a director, partner or sole trader.
 
 suspend.description.h1=Details of issue
-suspend.description.title=Recovery description | Agent services account
 suspend.description.hint1=Account recovery
 suspend.description.label=Tell us what happened
 suspend.description.hint=Do not include personal or financial information like your National Insurance number or credit card details.
 
-suspend.check.title=Check answers | Agent services account
 suspend.check.h1=Check your answers
 suspend.check.list.h1=Contact name
 suspend.check.list.h2=Contact email address
 suspend.check.list.h3=Telephone number
 suspend.check.list.h4=Details of issue
 
-suspend.confirmation.title=Request received | Agent services account
 suspend.confirmation.h1=We have received your details
 suspend.confirmation.p1=We will get in touch using the contact details you provided. We aim to do this within 5 working days.
 
