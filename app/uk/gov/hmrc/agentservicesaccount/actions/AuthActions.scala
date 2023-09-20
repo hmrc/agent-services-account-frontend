@@ -93,23 +93,6 @@ class AuthActions @Inject()(appConfig: AppConfig,
       Left(Forbidden)
   }
 
-  def withFullUserDetails(body: AgentInfo => Future[Result])
-                         (implicit ec: ExecutionContext, hc: HeaderCarrier, request: Request[AnyContent])
-  : Future[Result] = {
-    authorised(AuthProviders(GovernmentGateway))
-      .retrieve(allEnrolments and credentialRole and email and name and credentials) {
-        case enrols ~ credRole ~ email ~ name ~ credentials =>
-          getArn(enrols) match {
-            case Some(arn) =>
-              val full = AgentInfo(arn, credRole, email, name, credentials)
-              body(full)
-            case _ =>
-              logger.warn("No HMRC-AS-AGENT enrolment found -- redirecting to /agent-subscription/start.")
-              Future successful Redirect(appConfig.agentSubscriptionFrontendUrl)
-          }
-      }
-  }.recover(handleFailure)
-
   def handleFailure(implicit request: Request[_]): PartialFunction[Throwable, Result] = {
     case _: NoActiveSession =>
       Redirect(s"$signInUrl?continue_url=$continueUrl${request.uri}&origin=$appName")
