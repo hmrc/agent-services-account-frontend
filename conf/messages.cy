@@ -163,8 +163,8 @@ common.cancel=Canslo
 common.change=Newid
 common.continue.manage.account=Yn eich blaen i reoli’r cyfrif
 common.continue=Yn eich blaen
-common.continue-save=Save and Continue
-common.confirm-send=Confirm and send
+common.continue-save=Cadw ac yn eich blaen
+common.confirm-send=Cadarnhau ac anfon
 common.no=Na
 common.sign-out=Allgofnodi
 common.what.happens.next=Yr hyn sy’n digwydd nesaf
@@ -180,15 +180,15 @@ error.max-length.name=Rhaid i’ch enw fod yn 80 o gymeriadau neu lai
 error.max-length.phone=Rhaid i’ch rhif ffôn fod yn 20 o gymeriadau neu lai
 error.required.email=Nodwch gyfeiriad e-bost
 error.required.name=Nodwch eich enw
-error.suspended-details.required.name=Enter the contact name
-error.suspended-details.max-length.name=Name must be between 0 and 80 characters
-error.suspended-details.invalid-chars.name=Name must not include the characters < and >
-error.suspended-details.required.email=Enter an email address with a name, @ symbol and a domain name, like name@example.com
-error.suspended-details.required.telephone=Enter your telephone number
-error.suspended-details.invalid.telephone=Enter a telephone number, like 01642 123 456, 07777 777 777 or +33 23 45 67 88
-error.suspended-details.max-length.telephone=Telephone number must be between 0 and 20 characters
-error.suspended-description.empty=Enter a description of the problem. For example, "I did not receive a letter".
-error.suspended-description.max-length=Description must be 250 characters or fewer.
+error.suspended-details.required.name=Nodwch yr enw cyswllt
+error.suspended-details.max-length.name=Mae’n rhaid i’r enw fod rhwng 0 a 80 o gymeriadau
+error.suspended-details.invalid-chars.name=Mae’n rhaid i’r enw beidio â chynnwys y cymeriadau < a >
+error.suspended-details.required.email=Nodwch gyfeiriad e-bost ag enw, y symbol @ ac enw parth, megis enw@enghraifft.com
+error.suspended-details.required.telephone=Nodwch eich rhif ffôn
+error.suspended-details.invalid.telephone=Nodwch rif ffôn, megis 01642 123 456, 07777 777 777 neu +33 23 45 67 88
+error.suspended-details.max-length.telephone=Mae’n rhaid i’r rhif ffôn fod rhwng 0 a 20 o gymeriadau
+error.suspended-description.empty=Nodwch ddisgrifiad o’r broblem. Er enghraifft, “Ni chefais lythyr”.
+error.suspended-description.max-length=Mae’n rhaid i’r disgrifiad fod yn 250 o gymeriadau neu lai.
 
 existing.client.relationships.link=Mynediad at berthnasoedd presennol â chleientiaid
 footer.links.accessibility.text=Hygyrchedd
@@ -333,7 +333,6 @@ nav.manage.account=Rheoli’r cyfrif
 nav.signout=Allgofnodi
 nav.your.account=Eich cyfrif
 service.name=Cyfrif gwasanaethau asiant
-servicename.titleSuffix=– Cyfrif gwasanaethau asiant – GOV.UK
 signed-out.header=Rydych wedi cael eich allgofnodi
 signed-out.p1=Nid ydych wedi gwneud dim byd ers {0}, felly rydym wedi’ch allgofnodi er mwyn cadw’ch cyfrif yn ddiogel.
 signed-out.p2=<a class="govuk-link" href="{0}">Mewngofnodwch eto</a> i ddefnyddio’r gwasanaeth hwn.
@@ -359,56 +358,53 @@ survey.whichService.title=Pa wasanaeth treth rydych am roi adborth i ni amdano?
 
 # Suspension
 suspension-warning.header=Rydym wedi cyfyngu ar eich defnydd o’r gwasanaeth hwn dros dro
-suspension-warning.header1=
+suspension-warning.header1=Rydym wedi atal eich mynediad at eich cyfrif gwasanaethau asiant
 suspension-warning.multi.CGT=rheoli ei gyfrif Treth Enillion Cyfalaf ar eiddo yn y DU
 suspension-warning.multi.ITSA=anfon eu diweddariadau Troi Treth yn Ddigidol ar gyfer Treth Incwm drwy feddalwedd
 suspension-warning.multi.PIR=bwrw golwg dros ei gofnod incwm
 suspension-warning.multi.PPT=rheoli ei Dreth Deunydd Pacio Plastig
 suspension-warning.multi.TRS=cynnal ymddiriedolaeth neu ystâd
 suspension-warning.multi.VATC=cyflwyno eu Ffurflenni TAW drwy feddalwedd
-suspension-warning.p1=Rydym wedi anfon llythyr atoch yn cadarnhau hyn.
-suspension-warning.p2=If you did not receive our letter, or think we have made a mistake, we can discuss this.
+suspension-warning.p1=Rydym wedi anfon llythyr atoch i gadarnhau hyn.
+suspension-warning.p2=Os na chawsoch ein llythyr, neu os ydych yn meddwl ein bod wedi gwneud camgymeriad, gallwn drafod hyn.
 suspension-warning.p2.multi=Mae hyn yn golygu na fyddwch yn gallu defnyddio’r gwasanaeth hwn i ofyn i gleientiaid am awdurdodiad i wneud y canlynol:
 suspension-warning.p2.single=Mae hyn yn golygu na fyddwch yn gallu defnyddio’r gwasanaeth hwn i ofyn am awdurdodiad er mwyn {0}.
 suspension-warning.p3=Gallwch barhau i gael mynediad at unrhyw wasanaeth arall sydd ar gael i chi.
-suspension-warning.p4=suspension-warning.p4=If you want us to get in touch, select ''Continue''. You can then enter the relevant contact details.
-suspension-warning.p5=We can only talk to people in the roles below:
+suspension-warning.p4=Os ydych am i ni gysylltu â chi, dewiswch ‘Yn eich blaen’. Yna, gallwch nodi’r manylion cyswllt perthnasol.
+suspension-warning.p5=Dim ond gyda phobl yn y rolau isod y gallwn ni siarad:
 suspension-warning.single.CGT=rheoli cyfrif Treth Enillion Cyfalaf ar eiddo yn y DU ar gyfer cleient
 suspension-warning.single.ITSA=anfon diweddariadau Troi Treth yn Ddigidol ar gyfer Treth Incwm cleient drwy feddalwedd
 suspension-warning.single.PIR=bwrw golwg dros ei gofnod incwm
 suspension-warning.single.PPT=rheoli ei Dreth Deunydd Pacio Plastig
 suspension-warning.single.TRS=cynnal ymddiriedolaeth neu ystâd
 suspension-warning.single.VATC=cyflwyno Ffurflenni TAW cleient drwy feddalwedd
-suspension-warning.list1=director
+suspension-warning.list1=cyfarwyddwr
 suspension-warning.list2=partner
-suspension-warning.list3=sole trader
+suspension-warning.list3=unig fasnachwr
 
-suspend.contact-details.label1=Contact name
-suspend.contact-details.label2=Contact email address
-suspend.contact-details.label3=Telephone number
-suspend.contact-details.hint=We need this to call you about your account
-suspend.contact-details.hint1=Account recovery
-suspend.contact-details.heading=Contact Details
-suspend.contact-details.inset=We can only talk to a director, partner or sole trader.
+suspend.contact-details.label1=Enw cyswllt
+suspend.contact-details.label2=Cyfeiriad e-bost cyswllt
+suspend.contact-details.label3=Rhif ffôn
+suspend.contact-details.hint=Mae angen hyn arnom i roi galwad i chi am eich cyfrif
+suspend.contact-details.hint1=Adfer cyfrif
+suspend.contact-details.heading=Manylion cyswllt
+suspend.contact-details.inset=Gallwn ond siarad â chyfarwyddwr, partner neu unig fasnachwr.
 
-suspend.description.h1=Details of issue
-suspend.description.title=Recovery description | Agent services account
-suspend.description.hint1=Account recovery
-suspend.description.label=Tell us what happened
-suspend.description.hint=Do not include personal or financial information like your National Insurance number or credit card details.
+suspend.description.h1=Manylion y broblem
+suspend.description.hint1=Adfer cyfrif
+suspend.description.label=Rhoi gwybod i ni beth sydd wedi digwydd
+suspend.description.hint=Peidiwch â chynnwys gwybodaeth bersonol nac ariannol, megis eich rhif Yswiriant Gwladol neu fanylion eich cerdyn credyd.
 
-suspend.check.title=Check answers | Agent services account
-suspend.check.h1=Check your answers
-suspend.check.list.h1=Contact name
-suspend.check.list.h2=Contact email address
-suspend.check.list.h3=Telephone number
-suspend.check.list.h4=Details of issue
+suspend.check.h1=Gwirio’ch atebion
+suspend.check.list.h1=Enw cyswllt
+suspend.check.list.h2=Cyfeiriad e-bost cyswllt
+suspend.check.list.h3=Rhif ffôn
+suspend.check.list.h4=Manylion y broblem
 
-suspend.confirmation.title=Request received | Agent services account
-suspend.confirmation.h1=We have received your details
-suspend.confirmation.p1=We will get in touch using the contact details you provided. We aim to do this within 5 working days.
+suspend.confirmation.h1=Mae’ch manylion wedi dod i law
+suspend.confirmation.p1=Byddwn yn cysylltu â chi gan ddefnyddio’r manylion cyswllt rydych wedi’u rhoi. Anelwn at wneud hyn cyn pen 5 diwrnod gwaith.
 
-common.continue.gov=Return to Government Gateway sign in
+common.continue.gov=Yn ôl i dudalen mewngofnodi Porth y Llywodraeth
 timeout-dialog.p1=Am resymau diogelwch, cewch eich allgofnodi o’ch cyfrif gwasanaethau asiant ymhen
 
 # Your account
