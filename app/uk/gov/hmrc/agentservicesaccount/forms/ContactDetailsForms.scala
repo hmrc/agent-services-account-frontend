@@ -21,7 +21,6 @@ import play.api.data._
 import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
 import uk.gov.hmrc.agentservicesaccount.models.{BetaInviteContactDetails, SuspendContactDetails}
 
-//todo refactor together
 object BetaInviteContactDetailsForm {
 
   // matches [anything]@[anything].[anything]
@@ -67,19 +66,16 @@ object ContactDetailsSuspendForm {
 
   private def suspendedDetailsTelephoneConstraint: Constraint[String] = Constraint[String] { input: String =>
     if (input.trim.isEmpty) Invalid(ValidationError("error.suspended-details.required.telephone"))
-    else if (input.trim.length > 20) Invalid(ValidationError("error.max-length.telephone"))
+    else if (input.trim.length > 20) Invalid(ValidationError("error.suspended-details.max-length.telephone"))
     else if (!input.trim.matches(phoneRegex)) Invalid(ValidationError("error.suspended-details.invalid.telephone"))
     else Valid
   }
 
-  private val suspendedDetailsNameMapping: Mapping[String] = text.verifying(suspendedDetailsNameConstraint)
-  private val suspendedDetailsEmailMapping: Mapping[String] = text.verifying(suspendedDetailsEmailConstraint)
-  private val suspendedDetailsTelephoneMapping: Mapping[String] = text.verifying(suspendedDetailsTelephoneConstraint)
   def form: Form[SuspendContactDetails] = Form(
     mapping(
-      "name"  -> suspendedDetailsNameMapping,
-      "email" -> suspendedDetailsEmailMapping,
-      "phone" -> suspendedDetailsTelephoneMapping,
+      "name"  -> text.verifying(suspendedDetailsNameConstraint),
+      "email" -> text.verifying(suspendedDetailsEmailConstraint),
+      "phone" -> text.verifying(suspendedDetailsTelephoneConstraint),
     )(SuspendContactDetails.apply)(SuspendContactDetails.unapply)
   )
 }

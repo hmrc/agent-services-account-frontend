@@ -186,7 +186,7 @@ error.suspended-details.invalid-chars.name=Name must not include the characters 
 error.suspended-details.required.email=Enter an email address with a name, @ symbol and a domain name, like name@example.com
 error.suspended-details.required.telephone=Enter your telephone number
 error.suspended-details.invalid.telephone=Enter a telephone number, like 01642 123 456, 07777 777 777 or +33 23 45 67 88
-error.suspended-details.max-length.telephone=Telephone number must be between 0 and 20 characters
+error.suspended-details.max-length.telephone=Telephone number must be between 1 and 20 characters
 error.suspended-description.empty=Enter a description of the problem. For example, "I did not receive a letter".
 error.suspended-description.max-length=Description must be 250 characters or fewer.
 
