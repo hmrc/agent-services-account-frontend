@@ -186,7 +186,7 @@ error.suspended-details.invalid-chars.name=Mae’n rhaid i’r enw beidio â chy
 error.suspended-details.required.email=Nodwch gyfeiriad e-bost ag enw, y symbol @ ac enw parth, megis enw@enghraifft.com
 error.suspended-details.required.telephone=Nodwch eich rhif ffôn
 error.suspended-details.invalid.telephone=Nodwch rif ffôn, megis 01642 123 456, 07777 777 777 neu +33 23 45 67 88
-error.suspended-details.max-length.telephone=Mae’n rhaid i’r rhif ffôn fod rhwng 0 a 20 o gymeriadau
+error.suspended-details.max-length.telephone=Mae’n rhaid i’r rhif ffôn fod rhwng 1 a 20 o gymeriadau
 error.suspended-description.empty=Nodwch ddisgrifiad o’r broblem. Er enghraifft, “Ni chefais lythyr”.
 error.suspended-description.max-length=Mae’n rhaid i’r disgrifiad fod yn 250 o gymeriadau neu lai.
 

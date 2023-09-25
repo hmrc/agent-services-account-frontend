@@ -224,7 +224,7 @@ class ContactDetailsFormSpec extends AnyWordSpec with Matchers with GuiceOneAppP
       )
       val validatedForm = ContactDetailsSuspendForm.form.bind(params)
       validatedForm.hasErrors shouldBe true
-      validatedForm.error(phoneField).get.message shouldBe "error.max-length.telephone"
+      validatedForm.error(phoneField).get.message shouldBe "error.suspended-details.max-length.telephone"
       validatedForm.errors.length shouldBe 1
     }
 
