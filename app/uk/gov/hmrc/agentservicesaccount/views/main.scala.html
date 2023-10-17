@@ -46,6 +46,7 @@
     fullWidth: Boolean = false,
     backLinkHref: Option[String] = None,
     showSecondaryNav: Boolean = true,
+    additionalBanner: Option[Html] = None
 )(contentBlock: Html)(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
 
 @scripts = {
@@ -90,6 +91,7 @@
     ),
     banners = Banners(
         phaseBanner = Some(standardBetaBanner(appConfig.betaFeedbackUrl)),
+        additionalBannersBlock = additionalBanner
     ),
     templateOverrides = TemplateOverrides(
         additionalHeadBlock = Some(head(hasTimeout)),

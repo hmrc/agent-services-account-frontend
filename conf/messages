@@ -132,11 +132,14 @@ asa.trusts-section.col2.h3=Manage your client’s trust
 asa.trusts-section.col2.register-trust-link.text=Use this service to update the details of your client’s trust or declare no changes on the trust register
 asa.trusts-section.h2=Trusts and estates
 
+# Custom UR banner
+banner.heading=Help improve HMRC services
+banner.link1=Try out our new access groups feature
+banner.link2=Sign up to take part in user research (opens in a new tab)
+banner.link3=No thanks
+banner.link3.hidden= I do not want to take part in research
+
 #BETA invite
-beta.invite.banner.heading=Help improve our new feature
-beta.invite.banner.link1=Tell me more
-beta.invite.banner.link2=No thanks
-beta.invite.banner.p=Try out access groups and tell us what you think.
 beta.invite.confirmation.heading=We have received your response
 beta.invite.confirmation.link=Return to agent services account home
 beta.invite.confirmation.p=We will get in touch with you using the contact details you provided.

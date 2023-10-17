@@ -146,13 +146,14 @@ class AgentServicesControllerSpec extends BaseISpec {
         assertPageContainsText(html, "Agent Reference Number: TARN 000 0001")
       }
 
-      def expectedBetaInviteContent(html: Document): Assertion = {
-        val betaBanner = html.select("#beta-invite-banner")
-        betaBanner.select("#govuk-notification-banner-title").text shouldBe "Help improve our new feature"
-        betaBanner.select("p").get(1).text shouldBe "Try out access groups and tell us what you think."
-        betaBanner.select("a").get(0).text shouldBe "Tell me more"
-        betaBanner.select("a").get(0).attr("href") shouldBe "/agent-services-account/private-beta-testing"
-        betaBanner.select("form button").get(0).text shouldBe "No thanks"
+      def expectedUrBannerContent(html: Document): Assertion = {
+        val banner = html.select("#beta-invite-banner")
+        banner.select("h2").text shouldBe "Help improve HMRC services"
+        banner.select("a").get(0).text shouldBe "Try out our new access groups feature"
+        banner.select("a").get(0).attr("href") shouldBe "/agent-services-account/private-beta-testing"
+        banner.select("a").get(1).text shouldBe "Sign up to take part in user research (opens in a new tab)"
+        banner.select("a").get(1).attr("href") shouldBe "/test-only/agents-ur-banner"
+        banner.select("button").get(0).text shouldBe "No thanks I do not want to take part in research"
       }
 
       def expectedClientAuthContent(html: Document, betaInviteContent: Boolean = true): Assertion = {
@@ -188,7 +189,7 @@ class AgentServicesControllerSpec extends BaseISpec {
         )
 
         expectedHomeBannerContent(html)
-        expectedBetaInviteContent(html)
+        expectedUrBannerContent(html)
         expectedClientAuthContent(html)
 
         // accordion includes Income Record Viewer section
