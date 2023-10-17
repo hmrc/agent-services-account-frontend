@@ -32,14 +32,13 @@
 @(
         arn: String,
         isShownRecruitmentBanner: Boolean = false,
-        customDimension: String,
         isAdmin: Boolean = false
 )(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
 
 @main(
     pageTitle = msgs("asa.heading"),
     isAdmin = isAdmin,
-    additionalBanner = Some(agents_ur_banner())
+    additionalBanner = Some(agents_ur_banner(isShownRecruitmentBanner))
 ) {
 
     @h1("asa.heading")

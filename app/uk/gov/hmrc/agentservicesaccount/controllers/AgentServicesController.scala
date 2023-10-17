@@ -53,20 +53,20 @@ class AgentServicesController @Inject()
 
   import authActions._
 
-  val customDimension: String = appConfig.customDimension
-
   val root: Action[AnyContent] = actions.authActionCheckSuspend {
     Redirect(routes.AgentServicesController.showAgentServicesAccount())
   }
 
   val showAgentServicesAccount: Action[AnyContent] = actions.authActionCheckSuspend.async  { implicit request =>
     val agentInfo = request.agentInfo
+    /* TODO remove call to withShowFeatureInvite if okay with 28 day duration on UR banner
+     *      showFeatureInvite is unused at the mo
+     * */
       withShowFeatureInvite(agentInfo.arn) { showFeatureInvite: Boolean =>
             Future successful Ok(
               asaDashboard(
                 formatArn(agentInfo.arn),
                 showFeatureInvite && agentInfo.isAdmin,
-                customDimension,
                 agentInfo.isAdmin)).addingToSession(toReturnFromMapping())
         }
       }

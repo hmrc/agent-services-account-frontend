@@ -45,8 +45,6 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
 
   private def baseUrl(key: String) = servicesConfig.baseUrl(key)
 
-  val customDimension: String = getString("customDimension")
-
   val authBaseUrl: String = baseUrl("auth")
 
   val acaBaseUrl: String = baseUrl("agent-client-authorisation")
