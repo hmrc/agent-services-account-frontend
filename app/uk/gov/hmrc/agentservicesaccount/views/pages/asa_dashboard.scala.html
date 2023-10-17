@@ -17,14 +17,14 @@
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.views.html.components._
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
-@import uk.gov.hmrc.agentservicesaccount.views.html.pages.dashboard._
+@import uk.gov.hmrc.agentservicesaccount.views.html.pages.dashboard_partials._
 
 @this(
         main: main,
         p: p, h1: h1, h2: h2, h3: h3, h4: h4,
         ul_html: ul_html, a: a, span: span,
+        agents_ur_banner: agents_ur_banner,
         tax_services_accordion: tax_services_accordion,
-        notification_content: notification_content,
         manage_section: manage_section,
         client_authorisations: client_authorisations,
 )
@@ -32,16 +32,17 @@
 @(
         arn: String,
         isShownRecruitmentBanner: Boolean = false,
-        customDimension: String,
         isAdmin: Boolean = false
 )(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
 
-@main(pageTitle = msgs("asa.heading"), isAdmin = isAdmin) {
+@main(
+    pageTitle = msgs("asa.heading"),
+    isAdmin = isAdmin,
+    additionalBanner = Some(agents_ur_banner(isShownRecruitmentBanner))
+) {
 
     @h1("asa.heading")
     @p(msgs("agent.accountNumber", arn))
-
-    @notification_content(isShownRecruitmentBanner)
 
     @client_authorisations()
     @manage_section()

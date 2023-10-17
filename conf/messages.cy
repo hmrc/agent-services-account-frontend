@@ -132,11 +132,14 @@ asa.trusts-section.col2.h3=Rheoli ymddiriedolaeth eich cleient
 asa.trusts-section.col2.register-trust-link.text=Defnyddiwch y gwasanaeth hwn i ddiweddaru manylion ymddiriedolaeth neu ystâd eich cleient neu i ddatgan dim newidiadau ar y gofrestr ymddiriedolaethau
 asa.trusts-section.h2=Ymddiriedolaethau ac ystadau
 
+# Custom UR banner
+banner.heading=Helpwch i wella CThEF
+banner.link1=Rhowch gynnig ar y nodwedd grwpiau mynediad
+banner.link2=Cofrestrwch i gymryd rhan mewn ymchwil (yn agor tab newydd)
+banner.link3=Dim diolch
+banner.link3.hidden= Dydw i ddim eisiau cymryd rhan mewn ymchwil
+
 # BETA invite
-beta.invite.banner.heading=Helpwch i wella ein nodwedd newydd
-beta.invite.banner.link1=Hoffwn wybod rhagor
-beta.invite.banner.link2=Dim diolch
-beta.invite.banner.p=Rhowch gynnig ar y nodwedd grwpiau mynediad a rhoi’ch barn.
 beta.invite.confirmation.heading=Gwiriwch eich atebion
 beta.invite.confirmation.link=Dychwelyd i hafan y cyfrif gwasanaethau asiant
 beta.invite.confirmation.p=Byddwn yn cysylltu â chi gan ddefnyddio’r manylion cyswllt rydych wedi’u rhoi.

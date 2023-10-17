@@ -45,8 +45,6 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
 
   private def baseUrl(key: String) = servicesConfig.baseUrl(key)
 
-  val customDimension: String = getString("customDimension")
-
   val authBaseUrl: String = baseUrl("auth")
 
   val acaBaseUrl: String = baseUrl("agent-client-authorisation")
@@ -113,6 +111,7 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
   val isDevEnv: Boolean = if (env.mode.equals(Mode.Test)) false else runMode.forall(Mode.Dev.toString.equals)
 
   val betaFeedbackUrl: String = getString("betaFeedbackUrl")
+  val userResearchLink: String = getString("userResearchLink")
 
   val hmrcOnlineGuidanceLink: String = getString("hmrcOnlineGuidanceLink")
   val hmrcOnlineSignInLink: String = getString("hmrcOnlineSignInLink")
@@ -150,7 +149,7 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
 
   val agentPermissionsOptInUrl = s"$agentPermissionsFrontendExternalUrl$agentPermissionsFrontendOptInPath"
   val agentPermissionsOptOutUrl = s"$agentPermissionsFrontendExternalUrl$agentPermissionsFrontendOptOutPath"
-  def getOptinInOrOutUrl(status: OptinStatus) = {
+  def getOptinInOrOutUrl(status: OptinStatus): String = {
     status match {
       case OptedOutEligible => agentPermissionsOptInUrl
       case OptedInNotReady => agentPermissionsOptOutUrl
