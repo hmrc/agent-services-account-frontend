@@ -19,12 +19,10 @@
 @(
     key: String,
     href: String,
-    classes: Option[String] = None,
     id: Option[String] = None,
     attrs: Map[String, String] = Map.empty,
     openInNewWindow: Boolean = false,
-    rel: Option[String] = None,
-    target: Option[String] = None,
+    classes: Option[String] = None,
     addStandardClasses: Boolean = true,
 )(implicit msgs: Messages)
 
@@ -34,8 +32,5 @@
     @if(id.nonEmpty){id="@id"}
     @if(openInNewWindow){
         target="_blank" rel="noreferrer noopener"
-    } else{
-        @if(rel.nonEmpty){rel="@rel"}
-        @if(target.nonEmpty){target="@target"}
     }
     @attrs.map(a => a._1 + "=" + a._2 + " ")>@Html(msgs(key))</a>
