@@ -110,7 +110,6 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
   val runMode: Option[String] = config.getOptional[String]("run.mode")
   val isDevEnv: Boolean = if (env.mode.equals(Mode.Test)) false else runMode.forall(Mode.Dev.toString.equals)
 
-  val betaFeedbackUrl: String = getString("betaFeedbackUrl")
   val userResearchLink: String = getString("userResearchLink")
 
   val hmrcOnlineGuidanceLink: String = getString("hmrcOnlineGuidanceLink")
