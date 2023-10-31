@@ -138,6 +138,29 @@
                 key = "asa.cbc-section.col1.link2.p")))
         }
 
+@pillar2Item = {
+
+    @h4("asa.pillar2.col1.h3")
+    @p(html = Some(
+        Html(
+            span("asa.pillar2.col1.text1") + "" +
+                    span(msgs("asa.pillar2.col1.link1",
+                        msgs("asa.pillar2.col1.link1.href")))
+        )
+    ))
+
+    @p(html = Some(
+        Html(
+            span("asa.pillar2.col1.text2") + " " +
+                    span(key = msgs("asa.pillar2.col1.link2", appConfig.agentInvitationsFrontendUrl)))
+    ))
+
+    @h4("asa.pillar2.col2.h3")
+    @p(msgs("asa.pillar2.col2.link1", msgs("asa.pillar2.col2.link1.href")))
+
+
+}
+
 @otherTaxesItem = {
 @govukWarningText(WarningText(content = HtmlContent(span("asa.other.p1"))))
 }
@@ -189,6 +212,16 @@
             content = HtmlContent(plasticPackagingItem)
         )
     )
+
+    if(appConfig.enablePillar2) {
+        items.append(
+            Section(
+                headingContent = Text(msgs("asa.pillar2.col1.h2")),
+                content = HtmlContent(pillar2Item)
+            )
+        )
+    }
+
     items.append(
         Section(
             headingContent = Text(msgs("asa.other.heading")),
