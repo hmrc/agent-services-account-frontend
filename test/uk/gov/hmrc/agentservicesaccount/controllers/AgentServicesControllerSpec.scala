@@ -202,7 +202,8 @@ class AgentServicesControllerSpec extends BaseISpec {
         accordion.select("#tax-services-accordion-heading-5").text() shouldBe  "Capital Gains Tax on UK property"
         accordion.select("#tax-services-accordion-heading-6").text() shouldBe  "Country-by-country reports"
         accordion.select("#tax-services-accordion-heading-7").text() shouldBe  "Plastic Packaging Tax"
-        accordion.select("#tax-services-accordion-heading-8").text() shouldBe  "Other tax services"
+        accordion.select("#tax-services-accordion-heading-8").text() shouldBe  "Pillar2 Tax"
+        accordion.select("#tax-services-accordion-heading-9").text() shouldBe  "Other tax services"
 //        tax-services-accordion-content-1
         val one = accordion.select("#tax-services-accordion-content-1")
         one.select("h4").get(0).text() shouldBe "Before you start"
@@ -304,11 +305,28 @@ class AgentServicesControllerSpec extends BaseISpec {
         sevenPs.get(2).select("a").get(0).text shouldBe "Report your client’s Plastic Packaging Tax and view payments, returns and penalties"
         sevenPs.get(2).select("a").get(0).attr("href") shouldBe "https://www.tax.service.gov.uk/plastic-packaging-tax/account"
 
-        //Other tax services
+//      Pillar2 Tax
         val eight = accordion.select("#tax-services-accordion-content-8")
-        eight.select(".govuk-warning-text").text shouldBe "! Warning The agent services account is the home for HMRC tax services launched from 2019. For any tax services not listed here, sign out of this account and log in to your HMRC online services for agents account (opens in a new tab)."
-        eight.select(".govuk-warning-text").select("a").get(0).text shouldBe "log in to your HMRC online services for agents account (opens in a new tab)"
-        eight.select(".govuk-warning-text").select("a").get(0).attr("href") shouldBe "https://www.gov.uk/government/collections/hmrc-online-services-for-agents#hmrc-online-services-for-agents-account"
+        eight.select("h4").get(0).text() shouldBe "Before you start"
+        eight.select("h4").get(1).text() shouldBe "Manage your client’s Pillar2 Tax"
+
+        val eightPs = eight.select("p")
+        eightPs.get(0).text shouldBe "Your client must first register for Pillar2 Tax (opens in a new tab)"
+        eightPs.get(0).select("a").get(0).text shouldBe "register for Pillar2 Tax (opens in a new tab)"
+        eightPs.get(0).select("a").get(0).attr("href") shouldBe "https://www.gov.uk/guidance/register-for-pillar2-tax"
+
+        eightPs.get(1).text shouldBe "They must then authorise you to act on their behalf"
+        eightPs.get(1).select("a").get(0).text shouldBe "authorise you to act on their behalf"
+        eightPs.get(1).select("a").get(0).attr("href") shouldBe "http://localhost:9448/invitations/agents"
+        eightPs.get(2).text shouldBe "Report your client’s Pillar2 Tax and view payments, returns and penalties"
+        eightPs.get(2).select("a").get(0).text shouldBe "Report your client’s Pillar2 Tax and view payments, returns and penalties"
+        eightPs.get(2).select("a").get(0).attr("href") shouldBe "https://www.tax.service.gov.uk/pillar2-tax/account"
+
+        //Other tax services
+        val nine = accordion.select("#tax-services-accordion-content-9")
+        nine.select(".govuk-warning-text").text shouldBe "! Warning The agent services account is the home for HMRC tax services launched from 2019. For any tax services not listed here, sign out of this account and log in to your HMRC online services for agents account (opens in a new tab)."
+        nine.select(".govuk-warning-text").select("a").get(0).text shouldBe "log in to your HMRC online services for agents account (opens in a new tab)"
+        nine.select(".govuk-warning-text").select("a").get(0).attr("href") shouldBe "https://www.gov.uk/government/collections/hmrc-online-services-for-agents#hmrc-online-services-for-agents-account"
         // end of accordion
 
         val helpAndGuidance = html.select("#help-and-guidance-section")
