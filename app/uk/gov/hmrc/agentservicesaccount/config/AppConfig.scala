@@ -132,6 +132,7 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
   val feedbackSurveyServiceSelect: Boolean = getBoolean("features.enable-feedback-survey-service-select")
   val granPermsEnabled: Boolean = getBoolean("features.enable-gran-perms")
   val enableCbc: Boolean = getBoolean("features.enable-cbc")
+  val enablePillar2: Boolean = getBoolean("features.enable-pillar2")
 
   //Gran Perms
   val agentPermissionsBaseUrl: String = baseUrl("agent-permissions")
