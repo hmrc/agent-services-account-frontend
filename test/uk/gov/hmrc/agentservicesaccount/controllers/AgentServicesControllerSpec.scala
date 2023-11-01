@@ -181,13 +181,6 @@ class AgentServicesControllerSpec extends BaseISpec {
 
         expectedTitle(html, "Welcome to your agent services account - Agent services account - GOV.UK")
 
-        // beta banner present - only when gran perms enabled?
-        assertElementContainsText(html, cssSelector = "div.govuk-phase-banner a", expectedText = "feedback")
-        assertAttributeValueForElement(
-          element = html.select("div.govuk-phase-banner a").get(0),
-          attributeValue = "http://localhost:9250/contact/beta-feedback?service=AOSS"
-        )
-
         expectedHomeBannerContent(html)
         expectedUrBannerContent(html)
         expectedClientAuthContent(html)

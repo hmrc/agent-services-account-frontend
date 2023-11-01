@@ -67,9 +67,8 @@
     @hmrcLanguageSelectHelper()
 
     @if(backLinkHref.isDefined) {
-        @govukBackLink(BackLink(
-            href = backLinkHref.get,
-            content = Text(msgs("common.back"))
+        @govukBackLink(BackLink.withDefaultText(
+            href = backLinkHref.get
         ))
     }
 
@@ -90,7 +89,6 @@
         signOutUrl = Some(routes.SignOutController.signOut.url)
     ),
     banners = Banners(
-        phaseBanner = Some(standardBetaBanner(appConfig.betaFeedbackUrl)),
         additionalBannersBlock = additionalBanner
     ),
     templateOverrides = TemplateOverrides(
