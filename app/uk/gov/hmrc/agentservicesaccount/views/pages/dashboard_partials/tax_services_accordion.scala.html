@@ -140,23 +140,12 @@
 
 @pillar2Item = {
 
-    @h4("asa.pillar2.col1.h3")
-    @p(html = Some(
-        Html(
-            span("asa.pillar2.col1.text1") + "" +
-                    span(msgs("asa.pillar2.col1.link1",
-                        msgs("asa.pillar2.col1.link1.href")))
-        )
-    ))
+    @h4("asa.section3.col1.h3")
+    @p(msgs("asa.pillar2-section.col1.link1.p", appConfig.agentInvitationsFrontendClientTypeUrl))
 
-    @p(html = Some(
-        Html(
-            span("asa.pillar2.col1.text2") + " " +
-                    span(key = msgs("asa.pillar2.col1.link2", appConfig.agentInvitationsFrontendUrl)))
-    ))
-
-    @h4("asa.pillar2.col2.h3")
-    @p(msgs("asa.pillar2.col2.link1", msgs("asa.pillar2.col2.link1.href")))
+    @h4("asa.pillar2.col1.h2")
+    @p(html = Some(a(href = "https://www.tax.service.gov.uk/send-a-pillar2-report",
+        key = "asa.pillar2-section.col1.link2.p")))
 
 
 }
@@ -216,7 +205,7 @@
     if(appConfig.enablePillar2) {
         items.append(
             Section(
-                headingContent = Text(msgs("asa.pillar2.col1.h2")),
+                headingContent = Text(msgs("asa.pillar2.col1.h3")),
                 content = HtmlContent(pillar2Item)
             )
         )
