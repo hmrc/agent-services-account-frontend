@@ -74,19 +74,16 @@ asa.ppt.col2.link1.href=https://www.tax.service.gov.uk/plastic-packaging-tax/acc
 asa.ppt.col2.link1=<a class="govuk-link" href="{0}" rel="noreferrer noopener">Rhoi gwybod am Dreth Deunydd Pacio Plastig eich cleient a bwrw golwg dros daliadau, ffurflenni a chosbau.</a>
 
 # Pillar2
-asa.pillar2.col1.h2=Treth Deunydd Pillar2
+asa.pillar2.col1.h2=Rhoi gwybod am drethi atodol Colofn 2
 asa.pillar2.col1.h3=Cyn i chi ddechrau
-# TODO - update link when we know what it should be - that will fail
 asa.pillar2.col1.link1.href=https://www.gov.uk/guidance/register-for-pillar2-tax
-asa.pillar2.col1.link1=<a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">gofrestru ar gyfer y Dreth Deunydd Pillar2 gyntaf (yn agor tab newydd)</a>
-asa.pillar2.col1.link2=<a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">eich awdurdodi i weithredu ar ei ran</a>
-asa.pillar2.col1.text1=Mae’n rhaid i’ch cleient
-asa.pillar2.col1.text2=Yna mae’n rhaid iddo:
-asa.pillar2.col2.h3=Rheoli Treth Deunydd Pillar2 eich cleient
-# TODO - update link when we know what it should be - that will fail
+asa.pillar2.col1.link1=<a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">gofrestru ar gyfer rhoi gwybod am drethi atodol Colofn 2.</a>
+asa.pillar2.col1.link2=<a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">drwy ofyn am ganiatâd.</a>
+asa.pillar2.col1.text1=Yn gyntaf, mae’n rhaid i’ch cleient
+asa.pillar2.col1.text2=Rhaid i chi gael awdurdodiad gan eich cleient yn gyntaf. Gallwch wneud hyn
+asa.pillar2.col2.h3=Rheoli trethi atodol Colofn 2 eich cleient
 asa.pillar2.col2.link1.href=https://www.tax.service.gov.uk/pillar2-tax/account
-asa.pillar2.col2.link1=<a class="govuk-link" href="{0}" rel="noreferrer noopener">Rhoi gwybod am Dreth Deunydd Pillar2 eich cleient a bwrw golwg dros daliadau, ffurflenni a chosbau.</a>
-
+asa.pillar2.col2.link1=<a class="govuk-link" href="{0}" rel="noreferrer noopener">Rhoi gwybod am drethi atodol Colofn 2 eich cleient a bwrw golwg dros daliadau, ffurflenni a chosbau</a>
 
 # CBC
 asa.cbc.col1.h2=Manage country-by-country reports

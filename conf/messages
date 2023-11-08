@@ -80,18 +80,17 @@ asa.cbc-section.col1.link1.p=You must first get an authorisation from your clien
 asa.cbc-section.col1.link2.p=Manage your clients'' country-by-country reports and your country-by-country agent contact details
 
 # Pillar2
-asa.pillar2.col1.h2=Pillar2 Tax
+asa.pillar2.col1.h2=Report Pillar 2 top-up taxes
 asa.pillar2.col1.h3=Before you start
-# TODO - update link when we know what it should be - that will fail
 asa.pillar2.col1.link1.href=https://www.gov.uk/guidance/register-for-pillar2-tax
-asa.pillar2.col1.link1=<a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">register for Pillar2 Tax (opens in a new tab)</a>
-asa.pillar2.col1.link2=<a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">authorise you to act on their behalf</a>
+asa.pillar2.col1.link1=<a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">register to Report Pillar 2 top-up taxes.</a>
+asa.pillar2.col1.link2=<a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">requesting an authorisation.</a>
 asa.pillar2.col1.text1=Your client must first
-asa.pillar2.col1.text2=They must then
-asa.pillar2.col2.h3=Manage your client’s Pillar2 Tax
-# TODO - update link when we know what it should be - that will fail
+asa.pillar2.col1.text2=You must first get authorisation from your client. You can do this by
+asa.pillar2.col2.h3=Manage your client’s Pillar 2 top-up taxes
 asa.pillar2.col2.link1.href=https://www.tax.service.gov.uk/pillar2-tax/account
-asa.pillar2.col2.link1=<a class="govuk-link" href="{0}" rel="noreferrer noopener">Report your client’s Pillar2 Tax and view payments, returns and penalties</a>
+asa.pillar2.col2.link1=<a class="govuk-link" href="{0}" rel="noreferrer noopener">Report your client’s Pillar 2 top-up taxes and view payments, returns and penalties</a>
+
 
 # VAT
 asa.section1.col1.h3=Before you start
