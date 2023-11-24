@@ -56,3 +56,16 @@ GET        /private-beta-check-your-answers         @uk.gov.hmrc.agentservicesac
 POST       /private-beta-check-your-answers         @uk.gov.hmrc.agentservicesaccount.controllers.BetaInviteController.submitDetailsToEmail()
 GET        /private-beta-confirmation               @uk.gov.hmrc.agentservicesaccount.controllers.BetaInviteController.showInviteConfirmation
 
+# Update contact details
+GET        /contact-details                         @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.showCurrentContactDetails
+GET        /update-business-name                    @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.showChangeBusinessName
+POST       /update-business-name                    @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.submitChangeBusinessName
+GET        /update-email-address                    @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.showChangeEmailAddress
+POST       /update-email-address                    @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.submitChangeEmailAddress
+GET        /update-telephone-number                 @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.showChangeTelephoneNumber
+POST       /update-telephone-number                 @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.submitChangeTelephoneNumber
+GET        /update-address                          @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.startAddressLookup
+GET        /address-lookup-finish                   @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.finishAddressLookup(id: Option[String])
+GET        /check-contact-details                   @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.showCheckNewDetails
+POST       /check-contact-details                   @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.submitCheckNewDetails
+GET        /contact-details-submitted               @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.showChangeSubmitted

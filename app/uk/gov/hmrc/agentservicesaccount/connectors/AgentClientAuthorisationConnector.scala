@@ -35,7 +35,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class AgentClientAuthorisationConnector @Inject()(http: HttpClient)(implicit val metrics: Metrics, appConfig: AppConfig)
   extends HttpAPIMonitor {
 
-  override val kenshooRegistry: MetricRegistry = metrics.defaultRegistry
+  override lazy val kenshooRegistry: MetricRegistry = metrics.defaultRegistry
 
   def getSuspensionDetails()(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[SuspensionDetails] =
     monitor("ConsumerAPI-Get-AgencySuspensionDetails-GET") {

@@ -439,3 +439,47 @@ your.account.your.contact.details.h2=Contact details
 your.account.your.groups.h2=Your access groups
 your.account.your.groups.off.p=Access groups are turned off. Only administrators can turn access groups on or off.
 your.account.your.groups.p=You are not currently assigned to any access groups.
+
+# View/update contact details
+
+update-contact-details.title=Contact details
+update-contact-details.summary-list.body.p1=To update these contact details, you must be one of the following:
+update-contact-details.summary-list.body.li1=a director
+update-contact-details.summary-list.body.li2=a proprietor
+update-contact-details.summary-list.body.li3=a company secretary
+update-contact-details.summary-list.body.li4=a partner
+update-contact-details.summary-list.body.li5=a sole trader
+update-contact-details.summary-list.body.p2=We aim to update your contact details within 28 days. We’ll send you a letter when this is done.
+update-contact-details.summary-list.email=Email address
+update-contact-details.summary-list.phone=Telephone number
+update-contact-details.summary-list.name=Business name
+update-contact-details.summary-list.address=Business address
+
+update-contact-details.name.heading=What is the name you want to show to your clients?
+update-contact-details.name.hint=Clients will see this name when they manage your authorisations and requests.
+update-contact-details.name.error.empty=Enter the name of your business
+update-contact-details.name.error.invalid=Business name must only include letters a to z, numbers, commas, full stops, apostrophes, hyphens, forward slashes and spaces
+
+update-contact-details.phone.heading=What is the telephone number you want to use for your agent services account?
+update-contact-details.phone.hint=Enter a UK telephone number, like 01632 960 001, 07700 900 982 or +44 808 157 0192.
+update-contact-details.phone.error.empty=Enter a UK telephone number
+update-contact-details.phone.error.invalid=Enter a UK telephone number in the right format
+
+update-contact-details.email.heading=What is the email address you want to use for your agent services account?
+update-contact-details.email.hint=We will use this email to contact you about your agent services account and to update you about your authorisation requests.
+update-contact-details.email.error.empty=Enter an email address
+update-contact-details.email.error.invalid=Enter an email address with a name, @ symbol and a domain name, like yourname@example.com
+
+update-contact-details.address.enter-country=What is the country where your business is based?
+update-contact-details.address.enter-postcode=What is your business address?
+update-contact-details.address.enter-address=What is your business address?
+
+update-contact-details.review.title=Check your new contact details
+update-contact-details.review.summary-list.body.p1=By submitting this change, you confirm you have one of the following roles in this business:
+update-contact-details.review.submit-change-of-details=Submit change of details
+
+update-contact-details.submitted.title=Change of details submitted
+update-contact-details.submitted.h2=What happens next
+update-contact-details.submitted.p1=We aim to update your contact details within 28 days.
+update-contact-details.submitted.p2=In the meantime, other teams in HMRC may try to contact you using your old details.
+update-contact-details.submitted.link=Return to manage account
