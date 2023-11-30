@@ -20,11 +20,13 @@
 @import uk.gov.hmrc.agentservicesaccount.actions.AgentInfo
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 @import uk.gov.hmrc.agentservicesaccount.views.components.models.SummaryListData
+@import uk.gov.hmrc.agentservicesaccount.views.html.pages.manage_account_partials.contact_details_link
 
 @this(
         main: main, h1: h1, h2: h2, h3: h3, p: p,
         a: a, ul_html: ul_html, span: span,
-        summary_list: summary_list
+        summary_list: summary_list,
+        contact_details_link: contact_details_link
 )
 
 @(
@@ -86,10 +88,8 @@
         <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
 
             @h2("manage.account.contact-details.heading")
-            @p(html = Some(
-                a(href = routes.AgentServicesController.accountDetails.url,
-                    key = "manage.account.contact-details.view"
-                )))
+            @p(html = Some(contact_details_link())
+                ))
     </div>
 
 }

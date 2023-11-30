@@ -51,6 +51,8 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
 
   val emailBaseUrl: String = baseUrl("email")
 
+  val addressLookupBaseUrl: String = baseUrl("address-lookup-frontend")
+
   val suspendedContactDetailsSendToAddress: String = getString("suspendedContactDetails.sendToAddress")
   val suspendedContactDetailsSendEmail: Boolean = getBoolean("suspendedContactDetails.sendEmail")
   
@@ -130,6 +132,7 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
 
   // feature flags
   val feedbackSurveyServiceSelect: Boolean = getBoolean("features.enable-feedback-survey-service-select")
+  val enableChangeContactDetails: Boolean = getBoolean("features.enable-change-contact-details")
   val granPermsEnabled: Boolean = getBoolean("features.enable-gran-perms")
   val enableCbc: Boolean = getBoolean("features.enable-cbc")
   val enablePillar2: Boolean = getBoolean("features.enable-pillar2")

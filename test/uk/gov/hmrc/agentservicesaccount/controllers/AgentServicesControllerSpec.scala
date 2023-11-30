@@ -344,8 +344,8 @@ class AgentServicesControllerSpec extends BaseISpec {
   def verifyContactSection(html: Document): Assertion = {
     val contactDetailsSection = html.select("#contact-details")
     contactDetailsSection.select("h2").text shouldBe "Contact details"
-    contactDetailsSection.select("p a").text shouldBe "View the contact details we have for your business"
-    contactDetailsSection.select("p a").attr("href") shouldBe "/agent-services-account/account-details"
+    contactDetailsSection.select("p a").text shouldBe "View or update your contact details"
+    contactDetailsSection.select("p a").attr("href") shouldBe "/agent-services-account/contact-details"
   }
 
   def verifyClientsSectionNotPresent(html: Document): Assertion = {
@@ -416,7 +416,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       content should include(messagesApi("manage.account.p"))
       content should include(messagesApi("manage.account.add-user"))
       content should include(messagesApi("manage.account.manage-user-access"))
-      content should include(messagesApi("manage.account.account-details"))
+      content should include(messagesApi("manage.account.view-or-update-contact-details"))
     }
 
     "return Status: OK and body containing existing manage account content when gran perms FF is on but there was an error getting optin-status" in {
@@ -435,7 +435,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       content should include(messagesApi("manage.account.p"))
       content should include(messagesApi("manage.account.add-user"))
       content should include(messagesApi("manage.account.manage-user-access"))
-      content should include(messagesApi("manage.account.account-details"))
+      content should include(messagesApi("manage.account.view-or-update-contact-details"))
     }
 
     "return Status: OK and body containing existing manage account content when gran perms FF is on but ARN is not on allowed list" in {
@@ -454,7 +454,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       content should include(messagesApi("manage.account.p"))
       content should include(messagesApi("manage.account.add-user"))
       content should include(messagesApi("manage.account.manage-user-access"))
-      content should include(messagesApi("manage.account.account-details"))
+      content should include(messagesApi("manage.account.view-or-update-contact-details"))
     }
 
     "return status: OK and body containing content for status Opted-In_READY (no access groups created yet)" in {
@@ -839,8 +839,8 @@ class AgentServicesControllerSpec extends BaseISpec {
       bottomPanel.select("a").get(0).text shouldBe "View administrators"
       bottomPanel.select("a").get(0).attr("href") shouldBe routes.AgentServicesController.administrators.url
       bottomPanel.select("h2").get(1).text shouldBe "Contact details"
-      bottomPanel.select("a").get(1).text shouldBe "View the contact details we have for your business"
-      bottomPanel.select("a").get(1).attr("href") shouldBe routes.AgentServicesController.accountDetails.url
+      bottomPanel.select("a").get(1).text shouldBe "View or update your contact details"
+      bottomPanel.select("a").get(1).attr("href") shouldBe routes.ContactDetailsController.showCurrentContactDetails.url
 
     }
 
@@ -876,8 +876,8 @@ class AgentServicesControllerSpec extends BaseISpec {
       bottomPanel.select("a").get(0).text shouldBe "View administrators"
       bottomPanel.select("a").get(0).attr("href") shouldBe routes.AgentServicesController.administrators.url
       bottomPanel.select("h2").get(1).text shouldBe "Contact details"
-      bottomPanel.select("a").get(1).text shouldBe "View the contact details we have for your business"
-      bottomPanel.select("a").get(1).attr("href") shouldBe routes.AgentServicesController.accountDetails.url
+      bottomPanel.select("a").get(1).text shouldBe "View or update your contact details"
+      bottomPanel.select("a").get(1).attr("href") shouldBe routes.ContactDetailsController.showCurrentContactDetails.url
 
     }
 
@@ -928,8 +928,8 @@ class AgentServicesControllerSpec extends BaseISpec {
       bottomPanel.select("a").get(0).text shouldBe "View administrators"
       bottomPanel.select("a").get(0).attr("href") shouldBe routes.AgentServicesController.administrators.url
       bottomPanel.select("h2").get(1).text shouldBe "Contact details"
-      bottomPanel.select("a").get(1).text shouldBe "View the contact details we have for your business"
-      bottomPanel.select("a").get(1).attr("href") shouldBe routes.AgentServicesController.accountDetails.url
+      bottomPanel.select("a").get(1).text shouldBe "View or update your contact details"
+      bottomPanel.select("a").get(1).attr("href") shouldBe routes.ContactDetailsController.showCurrentContactDetails.url
 
 
     }
