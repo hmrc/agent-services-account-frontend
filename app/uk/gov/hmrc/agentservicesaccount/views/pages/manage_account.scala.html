@@ -31,6 +31,7 @@
     manage_team_members_groups: manage_team_members_groups,
     team_members: team_members,
     info: info,
+    contact_details_link: contact_details_link
 )
 @(
     maybeOptinStatus: Option[OptinStatus] = None,
@@ -55,7 +56,7 @@
             items = Seq(
                 a("manage.account.add-user", href = appConfig.addUserUrl),
                 a("manage.account.manage-user-access", href = appConfig.manageUsersUrl, openInNewWindow = true),
-                a("manage.account.account-details", href = routes.AgentServicesController.accountDetails.url)
+                contact_details_link()
             )
         )
 

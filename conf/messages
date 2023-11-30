@@ -310,6 +310,7 @@ label.beta=BETA
 
 # Manage account
 manage.account.account-details=View the contact details we have for your business
+manage.account.view-or-update-contact-details=View or update your contact details
 manage.account.add-user=Add a new user
 manage.account.clients.heading=Clients
 manage.account.clients.manage-link=Manage clients

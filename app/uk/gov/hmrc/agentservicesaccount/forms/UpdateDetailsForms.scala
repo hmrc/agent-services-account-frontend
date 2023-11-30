@@ -20,7 +20,7 @@ import play.api.data.Form
 import play.api.data.Forms.{single, text}
 
 object UpdateDetailsForms {
-  // TODO - verify the validity of these regexes. There must be standard validators for these things in some HMRC library!
+  // TODO - verify the validity of these regexes.
   private val BusinessNameRegex = """^[A-Za-z0-9\,\.\'\-\/\ ]+$""".r
   private val TelephoneNumberRegex = """^\+[0-9 ]{1,18}$|^[0-9 ]{1,19}$|^(?=.{2,22}$)\+[0-9 ]*\(0\)[0-9 ]*$|^(?=.{1,22}$)[0-9 ]*\(0\)[0-9 ]*$""".r
   private val EmailAddressRegex = """^.+[@].+[.].+$""".r
@@ -42,5 +42,4 @@ object UpdateDetailsForms {
       .verifying("update-contact-details.email.error.empty", _.nonEmpty)
       .verifying("update-contact-details.email.error.invalid", x => x.isEmpty || EmailAddressRegex.matches(x))
   )
-  // TODO implement other forms as necessary
 }
