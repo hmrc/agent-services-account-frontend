@@ -18,15 +18,15 @@
 @import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 @import uk.gov.hmrc.govukfrontend.views.html.components._
-@import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
+@import uk.gov.hmrc.agentservicesaccount.views.html.pages.updatecontactdetails.partials.contact_details_summary_list_partial
 @import uk.gov.hmrc.agentservicesaccount.controllers.routes
 
 @this(
-        main: main, h1: h1, h2: h2, p: p, ul: ul,
+        main: main, h1: h1, p: p, ul: ul,
         formWithCSRF: FormWithCSRF,
         button: GovukButton,
-        govukSummaryList: GovukSummaryList,
-        inset_text:inset_text
+        inset_text:inset_text,
+        contact_details_summary_list_partial: contact_details_summary_list_partial
 )
 
 @(
@@ -43,51 +43,7 @@
 
     @h1("update-contact-details.review.title")
 
-    @govukSummaryList(SummaryList(
-        rows = Seq(
-            SummaryListRow(
-                key = Key(
-                    content = Text(msgs("update-contact-details.summary-list.email"))
-                ),
-                value = Value(
-                    content = Text(agencyDetails.agencyEmail.getOrElse(msgs("update-contact-details.summary-list.none")))
-                ),
-                actions = Some(Actions(items = Seq(ActionItem(href = routes.ContactDetailsController.showChangeEmailAddress.url, content = Text(msgs("common.change"))))))
-            ),
-            SummaryListRow(
-                key = Key(
-                    content = Text(msgs("update-contact-details.summary-list.phone"))
-                ),
-                value = Value(
-                    content = Text(agencyDetails.agencyTelephone.getOrElse(msgs("update-contact-details.summary-list.none")))
-                ),
-                actions = Some(Actions(items = Seq(ActionItem(href = routes.ContactDetailsController.showChangeTelephoneNumber.url, content = Text(msgs("common.change"))))))
-            ),
-            SummaryListRow(
-                key = Key(
-                    content = Text(msgs("update-contact-details.summary-list.name"))
-                ),
-                value = Value(
-                    content = Text(agencyDetails.agencyName.getOrElse(msgs("update-contact-details.summary-list.none")))
-                ),
-                actions = Some(Actions(items = Seq(ActionItem(href = routes.ContactDetailsController.showChangeBusinessName.url, content = Text(msgs("common.change"))))))
-            ),
-            SummaryListRow(
-                key = Key(
-                    content = Text(msgs("update-contact-details.summary-list.address"))
-                ),
-                value = Value(
-                    content = HtmlContent(
-                        s"""${
-                            agencyDetails.agencyAddress.map(
-                                ba => List(Some(ba.addressLine1), ba.addressLine2, ba.addressLine3, ba.addressLine4, ba.postalCode, Some(ba.countryCode)).flatten
-                            ).map(_.mkString("<br>")).getOrElse("")
-                        }""")
-                ),
-                actions = Some(Actions(items = Seq(ActionItem(href = routes.ContactDetailsController.startAddressLookup.url, content = Text(msgs("common.change"))))))
-            )
-        )
-    ))
+    @contact_details_summary_list_partial(agencyDetails, showChangeAction = true)
 
     @p("update-contact-details.review.summary-list.body.p1")
     @ul(items = Seq(

@@ -28,18 +28,21 @@ object UpdateDetailsForms {
   private val trimmedText = text.transform[String](x => x.trim, x => x)
 
   val businessNameForm: Form[String] = Form(
-    single("name" -> trimmedText)
+    single("name" -> trimmedText
       .verifying("update-contact-details.name.error.empty", _.nonEmpty)
       .verifying("update-contact-details.name.error.invalid", x => x.isEmpty || BusinessNameRegex.matches(x))
+    )
   )
   val telephoneNumberForm: Form[String] = Form(
-    single("telephoneNumber" -> trimmedText)
+    single("telephoneNumber" -> trimmedText
       .verifying("update-contact-details.phone.error.empty", _.nonEmpty)
       .verifying("update-contact-details.phone.error.invalid", x => x.isEmpty || TelephoneNumberRegex.matches(x))
+    )
   )
   val emailAddressForm: Form[String] = Form(
-    single("emailAddress" -> trimmedText)
+    single("emailAddress" -> trimmedText
       .verifying("update-contact-details.email.error.empty", _.nonEmpty)
       .verifying("update-contact-details.email.error.invalid", x => x.isEmpty || EmailAddressRegex.matches(x))
+    )
   )
 }

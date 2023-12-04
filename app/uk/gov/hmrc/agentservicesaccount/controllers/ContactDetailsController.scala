@@ -78,9 +78,12 @@ class ContactDetailsController @Inject()
     ifFeatureEnabled {
       for {
         _ <- sessionCache.delete(UPDATED_CONTACT_DETAILS) // on displaying the 'current details' page, we delete any unsubmitted changes that may still be in session
-        agencyDetails <- acaConnector.getAgencyDetails()
-      } yield {
-        Ok(contact_details(agencyDetails, request.agentInfo.isAdmin))
+        mAgencyDetails <- acaConnector.getAgencyDetails()
+      } yield mAgencyDetails match {
+        case Some(agencyDetails) => Ok(contact_details(agencyDetails, request.agentInfo.isAdmin))
+        case None =>
+          logger.error(s"Could not retrieve current agency details for ${request.agentInfo.arn}")
+          InternalServerError
       }
     }
   }
