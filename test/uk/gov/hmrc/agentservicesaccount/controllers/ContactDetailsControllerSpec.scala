@@ -28,8 +28,9 @@ import play.api.mvc.{AnyContent, Request}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.agentmtdidentifiers.model.SuspensionDetails
-import uk.gov.hmrc.agentservicesaccount.connectors.{AddressLookupConnector, AgentClientAuthorisationConnector}
+import uk.gov.hmrc.agentservicesaccount.connectors.{AddressLookupConnector, AgentClientAuthorisationConnector, EmailVerificationConnector}
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup.{ConfirmedResponseAddress, ConfirmedResponseAddressDetails, Country, JourneyConfigV2}
+import uk.gov.hmrc.agentservicesaccount.models.emailverification.{CompletedEmail, VerificationStatusResponse, VerifyEmailRequest, VerifyEmailResponse}
 import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress}
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.support.UnitSpec
@@ -75,8 +76,11 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
                       |  "allEnrolments": [{
                       |    "key": "HMRC-AS-AGENT",
                       |    "identifiers": [{ "key": "AgentReferenceNumber", "value": "XAARN0123456789" }]
-                      |  }]
-                      |
+                      |  }],
+                      |  "optionalCredentials": {
+                      |    "providerId": "foo",
+                      |    "providerType": "bar"
+                      |  }
                       |}""".stripMargin)
     def authorise[A](predicate: Predicate, retrieval: Retrieval[A])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[A] =
       Future.successful(retrieval.reads.reads(authJson).get)
@@ -86,6 +90,7 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
     override def configure(): Unit = {
       bind(classOf[AgentClientAuthorisationConnector]).toInstance(stub[AgentClientAuthorisationConnector])
       bind(classOf[AddressLookupConnector]).toInstance(stub[AddressLookupConnector])
+      bind(classOf[EmailVerificationConnector]).toInstance(stub[EmailVerificationConnector])
       bind(classOf[AuthConnector]).toInstance(stubAuthConnector)
     }
   }
@@ -105,11 +110,14 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
     (alfConnector.init(_: JourneyConfigV2)(_: HeaderCarrier)).when(*, *).returns(Future.successful("mock-address-lookup-url"))
     (alfConnector.getAddress(_: String)(_: HeaderCarrier)).when(*, *).returns(Future.successful(confirmedAddressResponse))
 
+    val evConnector: EmailVerificationConnector = app.injector.instanceOf[EmailVerificationConnector]
+
     val controller: ContactDetailsController = app.injector.instanceOf[ContactDetailsController]
     val sessionCache: SessionCacheService = app.injector.instanceOf[SessionCacheService]
 
-    // make sure this value is cleared from the session
+    // make sure these values are cleared from the session
     sessionCache.delete(UPDATED_CONTACT_DETAILS)(fakeRequest()).futureValue
+    sessionCache.delete(EMAIL_PENDING_VERIFICATION)(fakeRequest()).futureValue
   }
 
   private def fakeRequest(method: String = "GET", uri: String = "/") =
@@ -173,12 +181,41 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
   }
 
   "POST /update-email-address" should {
-    "store the new email address in session and redirect to review new details page" in new TestSetup {
+    "(if the email is already verified) store the new email address in session and redirect to review new details page" in new TestSetup {
+      (evConnector.checkEmail(_: String)(_: HeaderCarrier, _: ExecutionContext)).when(*, *, *).returns(Future.successful(Some(
+        VerificationStatusResponse(List(CompletedEmail("new@email.com", verified = true, locked = false)))
+      )))
       implicit val request = fakeRequest("POST").withFormUrlEncodedBody("emailAddress" -> "new@email.com")
       val result = controller.submitChangeEmailAddress()(request)
       status(result) shouldBe SEE_OTHER
       header("Location", result) shouldBe Some(routes.ContactDetailsController.showCheckNewDetails.url)
       sessionCache.get(UPDATED_CONTACT_DETAILS).futureValue.flatMap(_.agencyEmail) shouldBe Some("new@email.com")
+    }
+
+    "(if the email is locked) redirect to the email-locked page" in new TestSetup {
+      (evConnector.checkEmail(_: String)(_: HeaderCarrier, _: ExecutionContext)).when(*, *, *).returns(Future.successful(Some(
+        VerificationStatusResponse(List(CompletedEmail("new@email.com", verified = false, locked = true)))
+      )))
+      implicit val request = fakeRequest("POST").withFormUrlEncodedBody("emailAddress" -> "new@email.com")
+      val result = controller.submitChangeEmailAddress()(request)
+      status(result) shouldBe SEE_OTHER
+      header("Location", result) shouldBe Some(routes.ContactDetailsController.showEmailLocked.url)
+      sessionCache.get(UPDATED_CONTACT_DETAILS).futureValue.flatMap(_.agencyEmail) shouldBe None // there should be no change here
+    }
+
+    "(if the email is unverified) redirect to the verify-email external journey" in new TestSetup {
+      (evConnector.checkEmail(_: String)(_: HeaderCarrier, _: ExecutionContext)).when(*, *, *).returns(Future.successful(Some(
+        VerificationStatusResponse(List.empty)
+      )))
+      (evConnector.verifyEmail(_: VerifyEmailRequest)(_: HeaderCarrier, _: ExecutionContext)).when(*, *, *).returns(Future.successful(Some(
+        VerifyEmailResponse(redirectUri = "/fake-verify-email-journey")
+      )))
+      implicit val request = fakeRequest("POST").withFormUrlEncodedBody("emailAddress" -> "new@email.com")
+      val result = controller.submitChangeEmailAddress()(request)
+      status(result) shouldBe SEE_OTHER
+      header("Location", result).get should include("/fake-verify-email-journey")
+      sessionCache.get(UPDATED_CONTACT_DETAILS).futureValue.flatMap(_.agencyEmail) shouldBe None // there should be no change here
+      sessionCache.get(EMAIL_PENDING_VERIFICATION).futureValue shouldBe Some("new@email.com")
     }
 
     "display an error if the data submitted is invalid" in new TestSetup {
@@ -187,6 +224,21 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
       status(result) shouldBe OK
       contentAsString(result.futureValue) should include("There is a problem")
       sessionCache.get(UPDATED_CONTACT_DETAILS).futureValue.flatMap(_.agencyEmail) shouldBe None // new email not added to session
+    }
+  }
+
+  "POST /email-verification-finish (successful verification journey has finished)" should {
+    "store the new email address in session and redirect to review new details page (also clear email verification cache value)" in new TestSetup {
+      implicit val request = fakeRequest()
+      sessionCache.put(EMAIL_PENDING_VERIFICATION, "new@email.com").futureValue
+      (evConnector.checkEmail(_: String)(_: HeaderCarrier, _: ExecutionContext)).when(*, *, *).returns(Future.successful(Some(
+        VerificationStatusResponse(List(CompletedEmail("new@email.com", verified = true, locked = false)))
+      )))
+      val result = controller.finishEmailVerification()(request)
+      status(result) shouldBe SEE_OTHER
+      header("Location", result) shouldBe Some(routes.ContactDetailsController.showCheckNewDetails.url)
+      sessionCache.get(UPDATED_CONTACT_DETAILS).futureValue.flatMap(_.agencyEmail) shouldBe Some("new@email.com")
+      sessionCache.get(EMAIL_PENDING_VERIFICATION).futureValue shouldBe None
     }
   }
 

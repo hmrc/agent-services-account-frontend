@@ -484,3 +484,12 @@ update-contact-details.submitted.h2=What happens next
 update-contact-details.submitted.p1=We aim to update your contact details within 28 days.
 update-contact-details.submitted.p2=In the meantime, other teams in HMRC may try to contact you using your old details.
 update-contact-details.submitted.link=Return to manage account
+
+#Cannot verify email
+
+cannotVerifyEmail.locked.title=We could not confirm your identity
+cannotVerifyEmail.locked.p1=We cannot check your identity because you entered an incorrect verification code too many times.
+cannotVerifyEmail.locked.p2=The verification code was emailed to you.
+cannotVerifyEmail.locked.h2=What to do next
+cannotVerifyEmail.locked.p3=You can try again in 24 hours.
+cannotVerifyEmail.locked.p4=If you want to try again with a different email address <a href="{0}">you can change the email address you entered</a>.

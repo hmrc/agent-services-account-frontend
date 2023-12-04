@@ -53,6 +53,9 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
 
   val addressLookupBaseUrl: String = baseUrl("address-lookup-frontend")
 
+  val emailVerificationBaseUrl: String = baseUrl("email-verification")
+  val emailVerificationFrontendBaseUrl: String = getString("microservice.services.email-verification-frontend.external-url")
+
   val suspendedContactDetailsSendToAddress: String = getString("suspendedContactDetails.sendToAddress")
   val suspendedContactDetailsSendEmail: Boolean = getBoolean("suspendedContactDetails.sendEmail")
   

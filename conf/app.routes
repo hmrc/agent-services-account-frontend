@@ -62,6 +62,8 @@ GET        /update-business-name                    @uk.gov.hmrc.agentservicesac
 POST       /update-business-name                    @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.submitChangeBusinessName
 GET        /update-email-address                    @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.showChangeEmailAddress
 POST       /update-email-address                    @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.submitChangeEmailAddress
+GET        /email-verification-finish               @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.finishEmailVerification
+GET        /email-locked                            @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.showEmailLocked
 GET        /update-telephone-number                 @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.showChangeTelephoneNumber
 POST       /update-telephone-number                 @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.submitChangeTelephoneNumber
 GET        /update-address                          @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.startAddressLookup

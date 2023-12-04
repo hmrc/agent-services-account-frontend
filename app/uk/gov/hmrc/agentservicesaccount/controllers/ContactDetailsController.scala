@@ -22,9 +22,10 @@ import play.api.libs.json._
 import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.connectors.{AddressLookupConnector, AgentClientAuthorisationConnector}
+import uk.gov.hmrc.agentservicesaccount.connectors.{AddressLookupConnector, AgentClientAuthorisationConnector, EmailVerificationConnector}
 import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup._
+import uk.gov.hmrc.agentservicesaccount.models.emailverification.{Email, VerifyEmailRequest, VerifyEmailResponse}
 import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress}
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.updatecontactdetails._
@@ -39,6 +40,7 @@ class ContactDetailsController @Inject()
   sessionCache: SessionCacheService,
   acaConnector: AgentClientAuthorisationConnector,
   alfConnector: AddressLookupConnector,
+  evConnector: EmailVerificationConnector,
 //views
   contact_details: contact_details,
   check_updated_details: check_updated_details,
@@ -46,6 +48,7 @@ class ContactDetailsController @Inject()
   update_phone: update_phone,
   update_email: update_email,
   change_submitted: change_submitted,
+  email_locked: email_locked
 )(implicit val appConfig: AppConfig,
                   val cc: MessagesControllerComponents,
                   ec: ExecutionContext,
@@ -110,18 +113,35 @@ class ContactDetailsController @Inject()
   }
 
   val submitChangeEmailAddress: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    // TODO - email verification
     ifFeatureEnabled {
       UpdateDetailsForms.emailAddressForm
         .bindFromRequest()
         .fold(
           formWithErrors => Future.successful(Ok(update_email(formWithErrors))),
           newEmail => {
-            updateDraftDetails(_.copy(agencyEmail = Some(newEmail))).map(_ =>
-              Redirect(routes.ContactDetailsController.showCheckNewDetails)
-            )
+            val credId = request.agentInfo.credentials.map(_.providerId).getOrElse(throw new RuntimeException("no available cred id"))
+            emailVerificationLogic(newEmail, credId)
           }
         )
+    }
+  }
+
+  /* This is the callback endpoint (return url) from the email-verification service and not for use of our own frontend. */
+  val finishEmailVerification: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
+    ifFeatureEnabled {
+      sessionCache.get(EMAIL_PENDING_VERIFICATION).flatMap {
+        case Some(email) =>
+          val credId = request.agentInfo.credentials.map(_.providerId).getOrElse(throw new RuntimeException("no available cred id"))
+          emailVerificationLogic(email, credId)
+        case None => // this should not happen but if it does, return a graceful fallback response
+          Future.successful(Redirect(routes.ContactDetailsController.showCheckNewDetails))
+      }
+    }
+  }
+
+  val showEmailLocked: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
+    ifFeatureEnabled {
+      Future.successful(Ok(email_locked()))
     }
   }
 
@@ -148,7 +168,7 @@ class ContactDetailsController @Inject()
 
   val startAddressLookup: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     val continueUrl: String = {
-      val useAbsoluteUrls = true
+      val useAbsoluteUrls = appConfig.addressLookupBaseUrl.contains("localhost")
       val call = routes.ContactDetailsController.finishAddressLookup(None)
       if (useAbsoluteUrls) call.absoluteURL() else call.url
     }
@@ -232,6 +252,56 @@ class ContactDetailsController @Inject()
     ifFeatureEnabled {
       Future.successful(Ok(change_submitted())) // don't show if there is nothing submitted
     }
+  }
+
+  private def emailVerificationLogic(newEmail: String, credId: String)(implicit request: Request[_]): Future[Result] = {
+    val useAbsoluteUrls = appConfig.emailVerificationFrontendBaseUrl.contains("localhost")
+    def makeUrl(call: Call): String = {
+      if (useAbsoluteUrls) call.absoluteURL() else call.url
+    }
+    def emailCmp(l: String, r: String) = l.trim.equalsIgnoreCase(r.trim)
+
+    for {
+      mCurrentEmail <- acaConnector.getAgencyDetails().map(_.flatMap(_.agencyEmail))
+      isUnchanged = mCurrentEmail.fold(false)(emailCmp(_, newEmail))
+      previousVerifications <- evConnector.checkEmail(credId)
+      previousVerification = previousVerifications.flatMap(_.emails.find(ce => emailCmp(ce.emailAddress, newEmail)))
+      result <- previousVerification match {
+        case _ if isUnchanged =>
+          updateDraftDetails(_.copy(agencyEmail = Some(newEmail))).map(_ =>
+            Redirect(routes.ContactDetailsController.showCheckNewDetails)
+          )
+        case Some(pv) if pv.verified => // already verified
+          for {
+            _ <- updateDraftDetails(_.copy(agencyEmail = Some(newEmail)))
+            _ <- sessionCache.delete(EMAIL_PENDING_VERIFICATION)
+          } yield Redirect(routes.ContactDetailsController.showCheckNewDetails)
+        case Some(pv) if pv.locked => // email locked due to too many attempts
+          Future.successful(Redirect(routes.ContactDetailsController.showEmailLocked))
+        case None => // email is not verified, start verification journey
+          val lang = messagesApi.preferred(request).lang.code
+          val verifyEmailRequest = VerifyEmailRequest(
+            credId = credId,
+            continueUrl = makeUrl(routes.ContactDetailsController.finishEmailVerification),
+            origin = if (lang == "cy") "Gwasanaethau Asiant CThEM" else "HMRC Agent Services",
+            deskproServiceName = None,
+            accessibilityStatementUrl = "", // todo
+            email = Some(Email(newEmail, makeUrl(routes.ContactDetailsController.showChangeEmailAddress))),
+            lang = Some(lang),
+            backUrl = Some(makeUrl(routes.ContactDetailsController.showCheckNewDetails)),
+            pageTitle = None
+          )
+          for {
+            _ <- sessionCache.put(EMAIL_PENDING_VERIFICATION, newEmail)
+            mVerifyEmailResponse <- evConnector.verifyEmail(verifyEmailRequest)
+          } yield mVerifyEmailResponse match {
+            case Some(VerifyEmailResponse(redirectUri)) =>
+              val redirect = if (useAbsoluteUrls) appConfig.emailVerificationFrontendBaseUrl + redirectUri else redirectUri
+              Redirect(redirect)
+            case None => InternalServerError
+          }
+      }
+    } yield result
   }
 }
 
