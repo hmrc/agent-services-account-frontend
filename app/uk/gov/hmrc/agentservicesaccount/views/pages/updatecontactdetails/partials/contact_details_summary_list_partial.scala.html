@@ -1,0 +1,74 @@
+@*
+ * Copyright 2023 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
+@import uk.gov.hmrc.govukfrontend.views.html.components._
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
+@import uk.gov.hmrc.agentservicesaccount.controllers.routes
+
+@this(govukSummaryList: GovukSummaryList)
+
+@(agencyDetails: AgencyDetails, showChangeAction: Boolean)(implicit msgs: Messages, request: Request[_])
+
+@maybeActions(actions: Actions) = @{
+    if (showChangeAction) Some(actions) else None
+}
+
+@govukSummaryList(SummaryList(
+    rows = Seq(
+        SummaryListRow(
+            key = Key(
+                content = Text(msgs("update-contact-details.summary-list.name"))
+            ),
+            value = Value(
+                content = Text(agencyDetails.agencyName.getOrElse(msgs("update-contact-details.summary-list.none")))
+            ),
+            actions = maybeActions(Actions(items = Seq(ActionItem(href = routes.ContactDetailsController.showChangeBusinessName.url, content = Text(msgs("common.change"))))))
+        ),
+        SummaryListRow(
+            key = Key(
+                content = Text(msgs("update-contact-details.summary-list.address"))
+            ),
+            value = Value(
+                content = HtmlContent(
+                    s"""${
+                        agencyDetails.agencyAddress.map(
+                            ba => List(Some(ba.addressLine1), ba.addressLine2, ba.addressLine3, ba.addressLine4, ba.postalCode, Some(ba.countryCode)).flatten
+                        ).map(_.mkString("<br>")).getOrElse("")
+                    }""")
+            ),
+            actions = maybeActions(Actions(items = Seq(ActionItem(href = routes.ContactDetailsController.startAddressLookup   .url, content = Text(msgs("common.change"))))))
+        ),
+        SummaryListRow(
+            key = Key(
+                content = Text(msgs("update-contact-details.summary-list.email"))
+            ),
+            value = Value(
+                content = Text(agencyDetails.agencyEmail.getOrElse(msgs("update-contact-details.summary-list.none")))
+            ),
+            actions = maybeActions(Actions(items = Seq(ActionItem(href = routes.ContactDetailsController.showChangeEmailAddress.url, content = Text(msgs("common.change"))))))
+        ),
+        SummaryListRow(
+            key = Key(
+                content = Text(msgs("update-contact-details.summary-list.phone"))
+            ),
+            value = Value(
+                content = Text(agencyDetails.agencyTelephone.getOrElse(msgs("update-contact-details.summary-list.none")))
+            ),
+            actions = maybeActions(Actions(items = Seq(ActionItem(href = routes.ContactDetailsController.showChangeTelephoneNumber.url, content = Text(msgs("common.change"))))))
+        )
+    )
+))
