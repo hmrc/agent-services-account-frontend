@@ -33,7 +33,7 @@ package object controllers {
   val DESCRIPTION: DataKey[String] = DataKey("description")
 
   // when the user changes their own details, this is a 'draft' of the set of updated details before the user sends the update request
-  val UPDATED_CONTACT_DETAILS: DataKey[AgencyDetails] = DataKey("updatedContactDetails")
+  val DRAFT_NEW_CONTACT_DETAILS: DataKey[AgencyDetails] = DataKey("updatedContactDetails")
 
   // after an email verification request has been sent, this value is set to keep track of which address was being verified
   val EMAIL_PENDING_VERIFICATION: DataKey[String] = DataKey("emailPendingVerification")

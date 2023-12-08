@@ -20,16 +20,19 @@ import play.api.Logging
 import play.api.i18n.{Lang, MessagesApi}
 import play.api.libs.json._
 import play.api.mvc._
-import uk.gov.hmrc.agentservicesaccount.actions.Actions
+import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthRequestWithAgentInfo}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AddressLookupConnector, AgentClientAuthorisationConnector, EmailVerificationConnector}
 import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup._
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.{Email, VerifyEmailRequest, VerifyEmailResponse}
-import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress}
+import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress, PendingChangeOfDetails}
+import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.updatecontactdetails._
+import uk.gov.hmrc.http.HeaderCarrier
 
+import java.time.Instant
 import javax.inject._
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -41,6 +44,7 @@ class ContactDetailsController @Inject()
   acaConnector: AgentClientAuthorisationConnector,
   alfConnector: AddressLookupConnector,
   evConnector: EmailVerificationConnector,
+  pcodRepository: PendingChangeOfDetailsRepository,
 //views
   contact_details: contact_details,
   check_updated_details: check_updated_details,
@@ -60,16 +64,25 @@ class ContactDetailsController @Inject()
     if (appConfig.enableChangeContactDetails) action else Future.successful(NotFound)
   }
 
+  def ifFeatureEnabledAndNoPendingChanges(action: => Future[Result])(implicit request: AuthRequestWithAgentInfo[_]): Future[Result] = {
+    ifFeatureEnabled {
+      pcodRepository.find(request.agentInfo.arn).flatMap {
+        case None => action // no change is pending, we can proceed
+        case Some(_) => Future.successful(Redirect(routes.ContactDetailsController.showCurrentContactDetails)) // there is a pending change, further changes are locked. Redirect to the base page
+      }
+    }
+  }
+
   // utility function.
   def updateDraftDetails(f: AgencyDetails => AgencyDetails)(implicit request: Request[_]): Future[Unit] = for {
-    mDraftDetailsInSession <- sessionCache.get[AgencyDetails](UPDATED_CONTACT_DETAILS)
+    mDraftDetailsInSession <- sessionCache.get[AgencyDetails](DRAFT_NEW_CONTACT_DETAILS)
     draftDetails <- mDraftDetailsInSession match {
       case Some(details) => Future.successful(details)
       // if there is no 'draft' new set of details in session, get a fresh copy of the current stored details
       case None => acaConnector.getAgencyDetails().map(_.getOrElse(throw new RuntimeException("Current agency details are unavailable")))
     }
     updatedDraftDetails = f(draftDetails)
-    _ <- sessionCache.put[AgencyDetails](UPDATED_CONTACT_DETAILS, updatedDraftDetails)
+    _ <- sessionCache.put[AgencyDetails](DRAFT_NEW_CONTACT_DETAILS, updatedDraftDetails)
   } yield ()
 
 
@@ -77,25 +90,21 @@ class ContactDetailsController @Inject()
   val showCurrentContactDetails: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     ifFeatureEnabled {
       for {
-        _ <- sessionCache.delete(UPDATED_CONTACT_DETAILS) // on displaying the 'current details' page, we delete any unsubmitted changes that may still be in session
-        mAgencyDetails <- acaConnector.getAgencyDetails()
-      } yield mAgencyDetails match {
-        case Some(agencyDetails) => Ok(contact_details(agencyDetails, request.agentInfo.isAdmin))
-        case None =>
-          logger.error(s"Could not retrieve current agency details for ${request.agentInfo.arn}")
-          InternalServerError
-      }
+        _ <- sessionCache.delete(DRAFT_NEW_CONTACT_DETAILS) // on displaying the 'current details' page, we delete any unsubmitted changes that may still be in session
+        mPendingChange <- pcodRepository.find(request.agentInfo.arn)
+        agencyDetails <- getCurrentAgencyDetails()
+      } yield Ok(contact_details(agencyDetails, mPendingChange, request.agentInfo.isAdmin))
     }
   }
 
   val showChangeBusinessName: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    ifFeatureEnabled {
+    ifFeatureEnabledAndNoPendingChanges {
       Future.successful(Ok(update_name(UpdateDetailsForms.businessNameForm)))
     }
   }
 
   val submitChangeBusinessName: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    ifFeatureEnabled {
+    ifFeatureEnabledAndNoPendingChanges {
       UpdateDetailsForms.businessNameForm
         .bindFromRequest()
         .fold(
@@ -110,13 +119,13 @@ class ContactDetailsController @Inject()
   }
 
   val showChangeEmailAddress: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    ifFeatureEnabled {
+    ifFeatureEnabledAndNoPendingChanges {
       Future.successful(Ok(update_email(UpdateDetailsForms.emailAddressForm)))
     }
   }
 
   val submitChangeEmailAddress: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    ifFeatureEnabled {
+    ifFeatureEnabledAndNoPendingChanges {
       UpdateDetailsForms.emailAddressForm
         .bindFromRequest()
         .fold(
@@ -131,7 +140,7 @@ class ContactDetailsController @Inject()
 
   /* This is the callback endpoint (return url) from the email-verification service and not for use of our own frontend. */
   val finishEmailVerification: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    ifFeatureEnabled {
+    ifFeatureEnabledAndNoPendingChanges {
       sessionCache.get(EMAIL_PENDING_VERIFICATION).flatMap {
         case Some(email) =>
           val credId = request.agentInfo.credentials.map(_.providerId).getOrElse(throw new RuntimeException("no available cred id"))
@@ -143,19 +152,19 @@ class ContactDetailsController @Inject()
   }
 
   val showEmailLocked: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    ifFeatureEnabled {
+    ifFeatureEnabledAndNoPendingChanges {
       Future.successful(Ok(email_locked()))
     }
   }
 
   val showChangeTelephoneNumber: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    ifFeatureEnabled {
+    ifFeatureEnabledAndNoPendingChanges {
       Future.successful(Ok(update_phone(UpdateDetailsForms.telephoneNumberForm)))
     }
   }
 
   val submitChangeTelephoneNumber: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    ifFeatureEnabled {
+    ifFeatureEnabledAndNoPendingChanges {
       UpdateDetailsForms.telephoneNumberForm
         .bindFromRequest()
         .fold(
@@ -199,7 +208,7 @@ class ContactDetailsController @Inject()
       ))
     )
 
-    ifFeatureEnabled {
+    ifFeatureEnabledAndNoPendingChanges {
       alfConnector.init(alfJourneyConfig).map { addressLookupJourneyStartUrl =>
         Redirect(addressLookupJourneyStartUrl)
       }
@@ -207,7 +216,7 @@ class ContactDetailsController @Inject()
   }
 
   def finishAddressLookup(id: Option[String]): Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    ifFeatureEnabled {
+    ifFeatureEnabledAndNoPendingChanges {
       id match {
         case None => Future.successful(BadRequest)
         case Some(addressJourneyId) =>
@@ -231,8 +240,8 @@ class ContactDetailsController @Inject()
 
 
   val showCheckNewDetails: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    ifFeatureEnabled {
-      sessionCache.get[AgencyDetails](UPDATED_CONTACT_DETAILS).map {
+    ifFeatureEnabledAndNoPendingChanges {
+      sessionCache.get[AgencyDetails](DRAFT_NEW_CONTACT_DETAILS).map {
         case Some(updatedDetails) => Ok(check_updated_details(updatedDetails, request.agentInfo.isAdmin))
         case None => Redirect(routes.ContactDetailsController.showCurrentContactDetails)
       }
@@ -240,14 +249,25 @@ class ContactDetailsController @Inject()
   }
 
   val submitCheckNewDetails: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    ifFeatureEnabled {
-      for {
-        _ <- sessionCache.get[AgencyDetails](UPDATED_CONTACT_DETAILS)
-        //
-        // TODO actual connector call to submit the details goes here...
-        //
-        _ <- sessionCache.delete(UPDATED_CONTACT_DETAILS)
-      } yield NotImplemented("Not implemented")
+    ifFeatureEnabledAndNoPendingChanges {
+      val arn = request.agentInfo.arn
+      sessionCache.get[AgencyDetails](DRAFT_NEW_CONTACT_DETAILS).flatMap {
+        case None => Future.successful(Redirect(routes.ContactDetailsController.showCurrentContactDetails)) // graceful redirect in case of expired session data etc.
+        case Some(newContactDetails) => for {
+          oldContactDetails <- getCurrentAgencyDetails()
+          pendingChange = PendingChangeOfDetails(
+            arn = arn,
+            oldDetails = oldContactDetails,
+            newDetails = newContactDetails,
+            timeSubmitted = Instant.now()
+          )
+          //
+          // TODO actual connector call to submit the details goes here...
+          //
+          _ <- pcodRepository.insert(pendingChange)
+          _ <- sessionCache.delete(DRAFT_NEW_CONTACT_DETAILS)
+        } yield Redirect(routes.ContactDetailsController.showChangeSubmitted)
+      }
     }
   }
 
@@ -305,6 +325,13 @@ class ContactDetailsController @Inject()
           }
       }
     } yield result
+  }
+
+  private def getCurrentAgencyDetails()(implicit hc: HeaderCarrier, request: AuthRequestWithAgentInfo[_]): Future[AgencyDetails] = {
+    acaConnector.getAgencyDetails().map(_.getOrElse {
+      val arn = request.agentInfo.arn
+      throw new RuntimeException(s"Could not retrieve current agency details for $arn from the backend")
+    })
   }
 }
 

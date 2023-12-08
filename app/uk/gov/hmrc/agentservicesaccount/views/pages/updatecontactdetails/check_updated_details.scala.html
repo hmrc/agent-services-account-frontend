@@ -37,7 +37,7 @@
 @main(
     pageTitle = msgs("update-contact-details.review.title"),
     isAdmin = isAdmin,
-    backLinkHref = Some(s"${routes.AgentServicesController.manageAccount}"),
+    mimicBrowserBackLink = true, // as we can end up on this page from 4 different routes, the default browser 'back' works better than providing an explicit href
     analyticsAdditionalJs = None
 ) {
 

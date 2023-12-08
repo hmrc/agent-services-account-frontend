@@ -444,6 +444,8 @@ your.account.your.groups.p=You are not currently assigned to any access groups.
 # View/update contact details
 
 update-contact-details.title=Contact details
+update-contact-details.summary-list.changes-are-pending.title=Important
+update-contact-details.summary-list.changes-are-pending=You asked us to change these details on {0}. We aim to make these changes within 28 days.
 update-contact-details.summary-list.body.p1=To update these contact details, you must be one of the following:
 update-contact-details.summary-list.body.li1=a director
 update-contact-details.summary-list.body.li2=a proprietor
@@ -455,6 +457,7 @@ update-contact-details.summary-list.email=Email address
 update-contact-details.summary-list.phone=Telephone number
 update-contact-details.summary-list.name=Business name
 update-contact-details.summary-list.address=Business address
+update-contact-details.summary-list.none=None
 
 update-contact-details.name.heading=What is the name you want to show to your clients?
 update-contact-details.name.hint=Clients will see this name when they manage your authorisations and requests.
