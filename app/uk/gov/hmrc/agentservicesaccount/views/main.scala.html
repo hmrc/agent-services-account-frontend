@@ -45,6 +45,7 @@
     hasTimeout: Boolean = true,
     fullWidth: Boolean = false,
     backLinkHref: Option[String] = None,
+    mimicBrowserBackLink: Boolean = false, // mimic browser back button instead of specific href
     showSecondaryNav: Boolean = true,
     additionalBanner: Option[Html] = None
 )(contentBlock: Html)(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
@@ -70,6 +71,10 @@
         @govukBackLink(BackLink.withDefaultText(
             href = backLinkHref.get
         ))
+    } else {
+        @if(mimicBrowserBackLink) {
+            @govukBackLink(BackLink.mimicsBrowserBackButtonViaJavaScript(msgs))
+        }
     }
 
 }
