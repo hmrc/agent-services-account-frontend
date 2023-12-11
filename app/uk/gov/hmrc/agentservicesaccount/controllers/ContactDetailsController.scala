@@ -187,13 +187,22 @@ class ContactDetailsController @Inject()
 
     def languageLabels(implicit lang: Lang): JsObject = Json.obj(
       "countryPickerLabels" -> Json.obj(
-        "title" -> messagesApi("update-contact-details.address.enter-country"),
-        "heading" -> messagesApi("update-contact-details.address.enter-country"),
+        "title" -> messagesApi("update-contact-details.address.country-picker.title"),
+        "heading" -> messagesApi("update-contact-details.address.country-picker"),
         "countryLabel" -> ""
       ),
       "lookupPageLabels" -> Json.obj(
-        "title" -> messagesApi("update-contact-details.address.enter-postcode"),
-        "heading" -> messagesApi("update-contact-details.address.enter-postcode")
+        "title" -> messagesApi("update-contact-details.address.lookup.title"),
+        "heading" -> messagesApi("update-contact-details.address.lookup")
+      ),
+      "selectPageLabels" -> Json.obj(
+        "title" -> messagesApi("update-contact-details.address.select.title")
+      ),
+      "editPageLabels" -> Json.obj(
+        "title" -> messagesApi("update-contact-details.address.edit.title")
+      ),
+      "confirmPageLabels" -> Json.obj(
+        "title" -> messagesApi("update-contact-details.address.confirm.title")
       )
     )
 
