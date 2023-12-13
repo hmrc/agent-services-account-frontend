@@ -22,7 +22,7 @@
 
 @(isAdmin: Boolean)(implicit msgs: Messages, appConfig: AppConfig)
 
-<nav id="secondary-nav" class="hmrc-account-menu" aria-label="Account">
+<nav id="secondary-nav" class="hmrc-account-menu" aria-label='@msgs("nav.aria.account-menu")'>
     <a href="@routes.AgentServicesController.root().url"
         class="hmrc-account-menu__link hmrc-account-menu__link--home">
         @span("nav.home", classes = Some("hmrc-account-icon hmrc-account-icon--home"))
