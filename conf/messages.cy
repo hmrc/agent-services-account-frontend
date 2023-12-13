@@ -2,6 +2,8 @@ accordion.hideAllSections = Cuddio pob adran
 accordion.hideSection = Cuddio
 accordion.showAllSections = Dangos pob adran
 accordion.showSection = Dangos
+accordion.showSectionAria = Dangos yr adran hon
+accordion.hideSectionAria = Cuddio’r adran hon
 account-details.inset=Bydd angen i chi ysgrifennu atom er mwyn newid y manylion hyn. <a class="govuk-link" href={0} target="_blank" rel="noreferrer noopener">Dysgwch ragor drwy ddarllen yr arweiniad (yn agor tab newydd)</a>. Gallwch ond newid eich manylion os ydych yn gyfarwyddwr, ysgrifennydd cwmni, unig fasnachwr, perchennog neu’n bartner.
 account-details.summary-list.address=Cyfeiriad
 account-details.summary-list.email=E-bost

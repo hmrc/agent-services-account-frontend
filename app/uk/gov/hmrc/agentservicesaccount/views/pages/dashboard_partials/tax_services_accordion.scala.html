@@ -233,11 +233,11 @@
         id = "tax-services-accordion",
         headingLevel = 3,
         items = accordionItems.toSeq,
-        attributes = Map(
-            "data-i18n.show-section" -> msgs("accordion.showSection"),
-            "data-i18n.hide-section" -> msgs("accordion.hideSection"),
-            "data-i18n.show-all-sections" -> msgs("accordion.showAllSections"),
-            "data-i18n.hide-all-sections" -> msgs("accordion.hideAllSections")
-        )
+        hideSection = Some(msgs("accordion.hideSection")),
+        hideAllSections = Some(msgs("accordion.hideAllSections")),
+        hideSectionAriaLabel = Some(msgs("accordion.hideSectionAria")),
+        showSection = Some(msgs("accordion.showSection")),
+        showAllSections = Some(msgs("accordion.showAllSections")),
+        showSectionAriaLabel = Some(msgs("accordion.showSectionAria"))
     )
 )
