@@ -45,7 +45,10 @@
     @p(msgs("agent.accountNumber", arn))
 
     @client_authorisations()
-    @manage_section()
+
+    @if(isAdmin) {
+        @manage_section()
+    }
 
     <hr class="govuk-section-break hr-thick govuk-!-margin-bottom-6 govuk-!-margin-top-8">
 
