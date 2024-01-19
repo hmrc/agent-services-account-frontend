@@ -17,7 +17,7 @@
 package uk.gov.hmrc.agentservicesaccount.controllers
 
 import play.api.Logging
-import play.api.i18n.{Lang, MessagesApi}
+import play.api.i18n.{I18nSupport, Lang}
 import play.api.libs.json._
 import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthRequestWithAgentInfo}
@@ -31,34 +31,30 @@ import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsReposit
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.updatecontactdetails._
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import java.time.Instant
 import javax.inject._
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ContactDetailsController @Inject()
-(
-  actions:Actions,
-  sessionCache: SessionCacheService,
-  acaConnector: AgentClientAuthorisationConnector,
-  alfConnector: AddressLookupConnector,
-  evConnector: EmailVerificationConnector,
-  pcodRepository: PendingChangeOfDetailsRepository,
-//views
-  contact_details: contact_details,
-  check_updated_details: check_updated_details,
-  update_name: update_name,
-  update_phone: update_phone,
-  update_email: update_email,
-  change_submitted: change_submitted,
-  email_locked: email_locked
-)(implicit val appConfig: AppConfig,
-                  val cc: MessagesControllerComponents,
-                  ec: ExecutionContext,
-                  messagesApi: MessagesApi)
-  extends AgentServicesBaseController with Logging {
-
+class ContactDetailsController @Inject()(actions: Actions,
+                                         sessionCache: SessionCacheService,
+                                         acaConnector: AgentClientAuthorisationConnector,
+                                         alfConnector: AddressLookupConnector,
+                                         evConnector: EmailVerificationConnector,
+                                         pcodRepository: PendingChangeOfDetailsRepository,
+                                         //views
+                                         contact_details: contact_details,
+                                         check_updated_details: check_updated_details,
+                                         update_name: update_name,
+                                         update_phone: update_phone,
+                                         update_email: update_email,
+                                         change_submitted: change_submitted,
+                                         email_locked: email_locked
+                                        )(implicit appConfig: AppConfig,
+                                          cc: MessagesControllerComponents,
+                                          ec: ExecutionContext) extends FrontendController(cc) with I18nSupport with Logging {
 
   def ifFeatureEnabled(action: => Future[Result]): Future[Result] = {
     if (appConfig.enableChangeContactDetails) action else Future.successful(NotFound)
@@ -84,7 +80,6 @@ class ContactDetailsController @Inject()
     updatedDraftDetails = f(draftDetails)
     _ <- sessionCache.put[AgencyDetails](DRAFT_NEW_CONTACT_DETAILS, updatedDraftDetails)
   } yield ()
-
 
 
   val showCurrentContactDetails: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
@@ -288,9 +283,11 @@ class ContactDetailsController @Inject()
 
   private def emailVerificationLogic(newEmail: String, credId: String)(implicit request: Request[_]): Future[Result] = {
     val useAbsoluteUrls = appConfig.emailVerificationFrontendBaseUrl.contains("localhost")
+
     def makeUrl(call: Call): String = {
       if (useAbsoluteUrls) call.absoluteURL() else call.url
     }
+
     def emailCmp(l: String, r: String) = l.trim.equalsIgnoreCase(r.trim)
 
     for {

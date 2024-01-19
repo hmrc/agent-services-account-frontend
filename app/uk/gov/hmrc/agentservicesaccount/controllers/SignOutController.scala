@@ -16,27 +16,23 @@
 
 package uk.gov.hmrc.agentservicesaccount.controllers
 
-import javax.inject.Inject
 import play.api.data.Form
-import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.forms.{FeedbackWhichServiceForm, SignOutForm}
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.survey
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.survey_which_service
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.{survey, survey_which_service}
 import uk.gov.hmrc.agentservicesaccount.views.html.signed_out
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
+import javax.inject.Inject
 import scala.concurrent.Future
 
-class SignOutController @Inject()(
-  implicit val appConfig: AppConfig,
-  override val messagesApi: MessagesApi,
-  cc: MessagesControllerComponents,
-  surveyView: survey,
-  whichServiceView: survey_which_service,
-  signedOutView: signed_out)
-    extends FrontendController(cc) with I18nSupport {
+class SignOutController @Inject()(implicit appConfig: AppConfig,
+                                   cc: MessagesControllerComponents,
+                                   surveyView: survey,
+                                   whichServiceView: survey_which_service,
+                                   signedOutView: signed_out) extends FrontendController(cc) with I18nSupport {
 
   def showSurvey: Action[AnyContent] = Action.async { implicit request =>
     Future successful Ok(surveyView(SignOutForm.form))
