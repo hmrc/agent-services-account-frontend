@@ -20,8 +20,9 @@
 
 @this(hmrcTimeoutDialog: HmrcTimeoutDialog)
 
-@(hasTimeout: Boolean)(implicit appConfig: AppConfig, msgs: Messages)
+@(hasTimeout: Boolean, additionalCss: Option[Html] = None)(implicit appConfig: AppConfig, msgs: Messages)
 
+@additionalCss.getOrElse(Html(""))
 <link rel="stylesheet" href="@controllers.routes.Assets.at("stylesheets/asa.css")" >
 
 @if(hasTimeout) {

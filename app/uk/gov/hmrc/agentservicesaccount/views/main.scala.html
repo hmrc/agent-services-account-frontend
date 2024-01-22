@@ -47,12 +47,15 @@
     backLinkHref: Option[String] = None,
     mimicBrowserBackLink: Boolean = false, // mimic browser back button instead of specific href
     showSecondaryNav: Boolean = true,
-    additionalBanner: Option[Html] = None
+    additionalBanner: Option[Html] = None,
+    additionalCss: Option[Html] = None,
+    additionalScripts: Option[Html] = None
 )(contentBlock: Html)(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
 
 @scripts = {
     <script @{CSPNonce.attr} src="@controllers.routes.Assets.at("javascripts/jquery-3.6.3.min.js")"></script>
     <script @{CSPNonce.attr} src="@controllers.routes.Assets.at("javascripts/ga-events.js")"></script>
+    @additionalScripts.getOrElse(Html(""))
 }
 
 @beforeContent = {
