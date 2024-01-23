@@ -147,7 +147,7 @@ class BetaInviteControllerSpec extends BaseISpec {
     }
   }
 
-  "GET withFullUserDetails" should {
+  "GET authActionCheckSuspend" should {
     "redirect to subscription journey when there's no HMRC-AS-AGENT enrolments" in {
         stubFor(post(urlEqualTo("/auth/authorise")) // Created stub without any enrolments.
           .willReturn(
@@ -161,7 +161,7 @@ class BetaInviteControllerSpec extends BaseISpec {
                  |}""".stripMargin
             )))
 
-      val result = await(controller.showInviteDetails.apply(getRequest("/your-account"))) // withFullUserDetails is used by the /your-account route
+      val result = await(controller.showInviteDetails.apply(getRequest("/your-account"))) // authActionCheckSuspend is used by the /your-account route
       status(result) shouldBe SEE_OTHER // 303
       redirectLocation(result) shouldBe Some("http://localhost:9437/agent-subscription/start")
     }
