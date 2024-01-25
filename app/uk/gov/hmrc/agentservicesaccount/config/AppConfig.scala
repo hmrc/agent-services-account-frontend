@@ -139,6 +139,7 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
   val granPermsEnabled: Boolean = getBoolean("features.enable-gran-perms")
   val enableCbc: Boolean = getBoolean("features.enable-cbc")
   val enablePillar2: Boolean = getBoolean("features.enable-pillar2")
+  val enableNonHmrcSupervisoryBody: Boolean = getBoolean("features.enable-non-hmrc-supervisory-body")
 
   //Gran Perms
   val agentPermissionsBaseUrl: String = baseUrl("agent-permissions")

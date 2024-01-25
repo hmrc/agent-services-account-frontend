@@ -17,39 +17,37 @@
 package uk.gov.hmrc.agentservicesaccount.controllers
 
 import play.api.Logging
-import play.api.i18n.MessagesApi
+import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agents.accessgroups.optin.{OptedInReady, OptinStatus}
-import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.actions.CallOps._
+import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AgentClientAuthorisationConnector, AgentPermissionsConnector, AgentUserClientDetailsConnector}
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.assistant.{administrators, your_account}
 import uk.gov.hmrc.agentservicesaccount.views.html.pages._
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.assistant.{administrators, your_account}
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject._
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AgentServicesController @Inject()
-(
-  authActions: AuthActions,
-  actions:Actions,
-  agentClientAuthorisationConnector: AgentClientAuthorisationConnector,
-  agentPermissionsConnector: AgentPermissionsConnector,
-  agentUserClientDetailsConnector: AgentUserClientDetailsConnector,
-  manage_account: manage_account,
-  administrators_html: administrators,
-  your_account: your_account,
-  asaDashboard: asa_dashboard,
-  account_details: account_details,
-  helpView: help)(implicit val appConfig: AppConfig,
-                  val cc: MessagesControllerComponents,
-                  ec: ExecutionContext,
-                  messagesApi: MessagesApi)
-  extends AgentServicesBaseController with Logging {
+class AgentServicesController @Inject()(authActions: AuthActions,
+                                        actions: Actions,
+                                        agentClientAuthorisationConnector: AgentClientAuthorisationConnector,
+                                        agentPermissionsConnector: AgentPermissionsConnector,
+                                        agentUserClientDetailsConnector: AgentUserClientDetailsConnector,
+                                        manage_account: manage_account,
+                                        administrators_html: administrators,
+                                        your_account: your_account,
+                                        asaDashboard: asa_dashboard,
+                                        account_details: account_details,
+                                        helpView: help
+                                       )(implicit appConfig: AppConfig,
+                                         cc: MessagesControllerComponents,
+                                         ec: ExecutionContext) extends FrontendController(cc) with I18nSupport with Logging {
 
   import authActions._
 
@@ -57,21 +55,19 @@ class AgentServicesController @Inject()
     Redirect(routes.AgentServicesController.showAgentServicesAccount())
   }
 
-  val showAgentServicesAccount: Action[AnyContent] = actions.authActionCheckSuspend.async  { implicit request =>
+  val showAgentServicesAccount: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     val agentInfo = request.agentInfo
     /* TODO remove call to withShowFeatureInvite if okay with 28 day duration on UR banner
      *      showFeatureInvite is unused at the mo
      * */
-      withShowFeatureInvite(agentInfo.arn) { showFeatureInvite: Boolean =>
-            Future successful Ok(
-              asaDashboard(
-                formatArn(agentInfo.arn),
-                showFeatureInvite && agentInfo.isAdmin,
-                agentInfo.isAdmin)).addingToSession(toReturnFromMapping())
-        }
-      }
-
-
+    withShowFeatureInvite(agentInfo.arn) { showFeatureInvite: Boolean =>
+      Future successful Ok(
+        asaDashboard(
+          formatArn(agentInfo.arn),
+          showFeatureInvite && agentInfo.isAdmin,
+          agentInfo.isAdmin)).addingToSession(toReturnFromMapping())
+    }
+  }
 
 
   private def toReturnFromMapping()(implicit request: Request[AnyContent]) = {
@@ -80,32 +76,32 @@ class AgentServicesController @Inject()
   }
 
 
-  val manageAccount: Action[AnyContent] = actions.authActionCheckSuspend.async{ implicit request =>
-      val agentInfo = request.agentInfo
-      if (agentInfo.isAdmin) {
-        if (appConfig.granPermsEnabled) {
-          agentPermissionsConnector.isArnAllowed flatMap {
-            case true =>
-              for {
-                maybeOptinStatus <- agentPermissionsConnector.getOptinStatus(agentInfo.arn)
-                mGroups <- agentPermissionsConnector.getGroupsSummaries(agentInfo.arn)
-                hasAnyGroups = mGroups.exists(_.groups.nonEmpty)
-              } yield {
-                maybeOptinStatus.foreach(syncEacdIfOptedIn(agentInfo.arn, _))
-                Ok(manage_account(maybeOptinStatus, hasAnyGroups))
-              }
-            case false =>
-              Future successful Ok(manage_account())
-          }
-        } else {
-          Future.successful(Ok(manage_account()))
+  val manageAccount: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
+    val agentInfo = request.agentInfo
+    if (agentInfo.isAdmin) {
+      if (appConfig.granPermsEnabled) {
+        agentPermissionsConnector.isArnAllowed flatMap {
+          case true =>
+            for {
+              maybeOptinStatus <- agentPermissionsConnector.getOptinStatus(agentInfo.arn)
+              mGroups <- agentPermissionsConnector.getGroupsSummaries(agentInfo.arn)
+              hasAnyGroups = mGroups.exists(_.groups.nonEmpty)
+            } yield {
+              maybeOptinStatus.foreach(syncEacdIfOptedIn(agentInfo.arn, _))
+              Ok(manage_account(maybeOptinStatus, hasAnyGroups))
+            }
+          case false =>
+            Future successful Ok(manage_account())
         }
       } else {
-        if (appConfig.granPermsEnabled) {
-          Future.successful(Redirect(routes.AgentServicesController.yourAccount))
-        } else {
-          Future.successful(Forbidden)
-        }
+        Future.successful(Ok(manage_account()))
+      }
+    } else {
+      if (appConfig.granPermsEnabled) {
+        Future.successful(Redirect(routes.AgentServicesController.yourAccount))
+      } else {
+        Future.successful(Forbidden)
+      }
 
     }
   }
@@ -116,52 +112,52 @@ class AgentServicesController @Inject()
   }
 
   val yourAccount: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-      if (!request.agentInfo.isAdmin) {
-        if (appConfig.granPermsEnabled) {
-          request.agentInfo.credentials.fold(Ok(your_account(None)).toFuture) { credentials =>
-            agentPermissionsConnector
-              .isOptedIn(request.agentInfo.arn)
-              .flatMap(isOptedIn =>
-                if (isOptedIn)
-                  agentPermissionsConnector.getGroupsForTeamMember(request.agentInfo.arn, credentials.providerId)
-                    .map(maybeSummaries => Ok(your_account(Some(request.agentInfo), maybeSummaries)))
-                else
-                  Ok(your_account(Some(request.agentInfo), None, optedIn = false)).toFuture
-              )
-          }
-        } else {
-          Ok(your_account(None)).toFuture
+    if (!request.agentInfo.isAdmin) {
+      if (appConfig.granPermsEnabled) {
+        request.agentInfo.credentials.fold(Ok(your_account(None)).toFuture) { credentials =>
+          agentPermissionsConnector
+            .isOptedIn(request.agentInfo.arn)
+            .flatMap(isOptedIn =>
+              if (isOptedIn)
+                agentPermissionsConnector.getGroupsForTeamMember(request.agentInfo.arn, credentials.providerId)
+                  .map(maybeSummaries => Ok(your_account(Some(request.agentInfo), maybeSummaries)))
+              else
+                Ok(your_account(Some(request.agentInfo), None, optedIn = false)).toFuture
+            )
         }
       } else {
-        Forbidden.toFuture
+        Ok(your_account(None)).toFuture
       }
+    } else {
+      Forbidden.toFuture
     }
+  }
 
 
   val administrators: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-   val agentInfo= request.agentInfo
-      if (!agentInfo.isAdmin) {
-        agentUserClientDetailsConnector.getTeamMembers(agentInfo.arn).map { maybeMembers =>
-          Ok(
-            administrators_html(
-              maybeMembers.getOrElse(Seq.empty)
-                .filterNot(_.credentialRole.getOrElse("").equals("Assistant")))
-          )
-        }
-      } else Forbidden.toFuture
-    }
+    val agentInfo = request.agentInfo
+    if (!agentInfo.isAdmin) {
+      agentUserClientDetailsConnector.getTeamMembers(agentInfo.arn).map { maybeMembers =>
+        Ok(
+          administrators_html(
+            maybeMembers.getOrElse(Seq.empty)
+              .filterNot(_.credentialRole.getOrElse("").equals("Assistant")))
+        )
+      }
+    } else Forbidden.toFuture
+  }
 
 
   val accountDetails: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-      agentClientAuthorisationConnector.getAgencyDetails().map(agencyDetails =>
-        Ok(account_details(agencyDetails, request.agentInfo.isAdmin))
-      )
+    agentClientAuthorisationConnector.getAgencyDetails().map(agencyDetails =>
+      Ok(account_details(agencyDetails, request.agentInfo.isAdmin))
+    )
 
   }
 
-  val showHelp: Action[AnyContent] =  actions.authActionCheckSuspend { implicit request =>
+  val showHelp: Action[AnyContent] = actions.authActionCheckSuspend { implicit request =>
 
-   Ok(helpView(request.agentInfo.isAdmin))
+    Ok(helpView(request.agentInfo.isAdmin))
 
   }
 

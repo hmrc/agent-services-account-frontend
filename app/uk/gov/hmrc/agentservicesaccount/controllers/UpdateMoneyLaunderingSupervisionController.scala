@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,19 +16,15 @@
 
 package uk.gov.hmrc.agentservicesaccount.controllers
 
-import javax.inject.{Inject, Singleton}
-import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{MessagesControllerComponents, RequestHeader}
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.http.HeaderCarrierConverter
+import play.api.i18n.I18nSupport
+import play.api.mvc.MessagesControllerComponents
+//import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
-@Singleton
-class AgentServicesBaseController @Inject()(
-  implicit override val messagesApi: MessagesApi,
-  cc: MessagesControllerComponents)
-    extends FrontendController(cc) with I18nSupport {
+import javax.inject.{Inject, Singleton}
 
-  override implicit def hc(implicit rh: RequestHeader): HeaderCarrier =
-    HeaderCarrierConverter.fromRequestAndSession(rh, rh.session)
+@Singleton
+class UpdateMoneyLaunderingSupervisionController @Inject()()(//implicit appConfig: AppConfig,
+                                                             cc: MessagesControllerComponents) extends FrontendController(cc) with I18nSupport{
+
 }

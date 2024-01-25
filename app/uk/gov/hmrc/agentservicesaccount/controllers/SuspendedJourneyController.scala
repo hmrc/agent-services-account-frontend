@@ -17,7 +17,7 @@
 package uk.gov.hmrc.agentservicesaccount.controllers
 
 import play.api.Logging
-import play.api.i18n.MessagesApi
+import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
@@ -25,27 +25,24 @@ import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConne
 import uk.gov.hmrc.agentservicesaccount.forms.{ContactDetailsSuspendForm, SuspendDescriptionForm}
 import uk.gov.hmrc.agentservicesaccount.models.{AccountRecoverySummary, SuspendContactDetails}
 import uk.gov.hmrc.agentservicesaccount.services.{EmailService, SessionCacheService}
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.suspend.{check_recovery_answers, confirmation_received, contact_details, recovery_description, suspension_warning}
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.suspend._
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 
-class SuspendedJourneyController @Inject() (
-                                             actions: Actions,
-                                             emailService: EmailService,
-                                             agentClientAuthorisationConnector: AgentClientAuthorisationConnector,
-                                             suspensionWarningView: suspension_warning,
-                                             contactDetailsView: contact_details,
-                                             recoveryDescriptionView: recovery_description,
-                                             checkRecoveryAnswersView: check_recovery_answers,
-                                             confirmationReceived: confirmation_received,
-                                             cacheService: SessionCacheService
-                                           )(
-                                             implicit val appConfig: AppConfig,
-                                             val cc: MessagesControllerComponents,
-                                             ec: ExecutionContext,
-                                             messagesApi: MessagesApi
-                                           ) extends AgentServicesBaseController with Logging {
+class SuspendedJourneyController @Inject()(actions: Actions,
+                                            emailService: EmailService,
+                                            agentClientAuthorisationConnector: AgentClientAuthorisationConnector,
+                                            suspensionWarningView: suspension_warning,
+                                            contactDetailsView: contact_details,
+                                            recoveryDescriptionView: recovery_description,
+                                            checkRecoveryAnswersView: check_recovery_answers,
+                                            confirmationReceived: confirmation_received,
+                                            cacheService: SessionCacheService
+                                          )(implicit appConfig: AppConfig,
+                                            cc: MessagesControllerComponents,
+                                            ec: ExecutionContext) extends FrontendController(cc) with I18nSupport with Logging {
 
   def showSuspendedWarning: Action[AnyContent] = actions.authActionOnlyForSuspended { implicit request =>
     Ok(suspensionWarningView())
@@ -102,39 +99,39 @@ class SuspendedJourneyController @Inject() (
       )
   }
 
-  private def getSummaryDetails (implicit request: Request[_]) = {
-  for {
-     name <- cacheService.get(NAME)
-     email <- cacheService.get(EMAIL)
-     phone <- cacheService.get(PHONE)
-     description <- cacheService.get(DESCRIPTION)
-     arn <- cacheService.get(ARN)
-  } yield (name,email,phone, description, arn) match {
-    case (Some(n), Some(e),Some(p), Some(d), Some(a)) =>
-      Option(AccountRecoverySummary(n,e,p,d,a))
-    case _ => None
+  private def getSummaryDetails(implicit request: Request[_]) = {
+    for {
+      name <- cacheService.get(NAME)
+      email <- cacheService.get(EMAIL)
+      phone <- cacheService.get(PHONE)
+      description <- cacheService.get(DESCRIPTION)
+      arn <- cacheService.get(ARN)
+    } yield (name, email, phone, description, arn) match {
+      case (Some(n), Some(e), Some(p), Some(d), Some(a)) =>
+        Option(AccountRecoverySummary(n, e, p, d, a))
+      case _ => None
+    }
   }
-}
 
   def showSuspendedSummary: Action[AnyContent] = actions.authActionOnlyForSuspended.async { implicit request =>
-    getSummaryDetails.flatMap{
+    getSummaryDetails.flatMap {
       case Some(summaryDetails) => Ok(checkRecoveryAnswersView(summaryDetails)).toFuture
       case None => Redirect(routes.SuspendedJourneyController.showContactDetails()).toFuture
     }
   }
 
-   def submitSuspendedSummary: Action[AnyContent] = actions.authActionOnlyForSuspended.async { implicit request =>
-     getSummaryDetails.flatMap {
-     case Some(summaryDetails) =>
-         agentClientAuthorisationConnector.getAgencyDetails().flatMap(maybeAgentDetails =>
-         emailService.sendSuspendedSummaryEmail(summaryDetails, maybeAgentDetails).flatMap(_ =>
-                  Redirect(routes.SuspendedJourneyController.showSuspendedConfirmation()).toFuture
-       )
-       )
+  def submitSuspendedSummary: Action[AnyContent] = actions.authActionOnlyForSuspended.async { implicit request =>
+    getSummaryDetails.flatMap {
+      case Some(summaryDetails) =>
+        agentClientAuthorisationConnector.getAgencyDetails().flatMap(maybeAgentDetails =>
+          emailService.sendSuspendedSummaryEmail(summaryDetails, maybeAgentDetails).flatMap(_ =>
+            Redirect(routes.SuspendedJourneyController.showSuspendedConfirmation()).toFuture
+          )
+        )
 
-     case None => Redirect(routes.SuspendedJourneyController.showContactDetails()).toFuture
-     }
-   }
+      case None => Redirect(routes.SuspendedJourneyController.showContactDetails()).toFuture
+    }
+  }
 
   def showSuspendedConfirmation: Action[AnyContent] = actions.authActionOnlyForSuspended.async { implicit request =>
     Ok(confirmationReceived()).toFuture
