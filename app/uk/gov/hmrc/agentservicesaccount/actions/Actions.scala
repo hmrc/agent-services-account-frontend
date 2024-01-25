@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.agentservicesaccount.actions
 
-import play.api.mvc.Results.Redirect
+import play.api.mvc.Results.{Forbidden, Redirect}
 import play.api.mvc.{ActionBuilder, ActionFilter, AnyContent, DefaultActionBuilder, Request, Result}
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.routes
@@ -52,4 +52,8 @@ class Actions @Inject()(  agentClientAuthorisationConnector: AgentClientAuthoris
 
   def authActionOnlyForSuspended: ActionBuilder[AuthRequestWithAgentInfo, AnyContent] =
     actionBuilder andThen authActions.authActionRefiner andThen filterSuspendedAgent(true)
+
+  def ifFeatureEnabled(feature: Boolean)(action: => Future[Result]): Future[Result] = {
+    if (feature) action else Future.successful(Forbidden)
+  }
 }
