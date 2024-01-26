@@ -71,3 +71,6 @@ GET        /address-lookup-finish                   @uk.gov.hmrc.agentservicesac
 GET        /check-contact-details                   @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.showCheckNewDetails
 POST       /check-contact-details                   @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.submitCheckNewDetails
 GET        /contact-details-submitted               @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.showChangeSubmitted
+
+# AMLS
+GET        /manage-account/amls-details-updated     @uk.gov.hmrc.agentservicesaccount.controllers.AmlsConfirmationController.showUpdatedAmlsConfirmationPage

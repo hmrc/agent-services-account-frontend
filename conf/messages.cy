@@ -440,3 +440,9 @@ your.account.your.contact.details.h2=Manylion cyswllt
 your.account.your.groups.h2=Eich grwpiau mynediad
 your.account.your.groups.off.p=Mae’r grwpiau mynediad wedi’u hanalluogi. Dim ond gweinyddwyr sy’n gallu galluogi neu analluogi grwpiau mynediad.
 your.account.your.groups.p=Nid ydych wedi’ch neilltuo i unrhyw grŵp mynediad ar hyn o bryd
+
+#AMLS
+
+amls.confirmation.h1=Money laundering supervision details updated
+amls.confirmation.p1=We have updated your money laundering supervision details. We will get in touch if we have any questions.
+amls.confirmation.link=Return to manage account
