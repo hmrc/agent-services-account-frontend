@@ -27,4 +27,6 @@ import javax.inject.{Inject, Singleton}
 class UpdateMoneyLaunderingSupervisionController @Inject()()(//implicit appConfig: AppConfig,
                                                              cc: MessagesControllerComponents) extends FrontendController(cc) with I18nSupport{
 
+  //def showUpdateMoneyLaunderingSupervision()
+  //def submitUpdateMoneyLaunderingSupervision()
 }
