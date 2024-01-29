@@ -513,7 +513,8 @@ cannotVerifyEmail.locked.p3=You can try again in 24 hours.
 cannotVerifyEmail.locked.p4=If you want to try again with a different email address <a href="{0}">you can change the email address you entered</a>.
 
 #AMLS
-
+amls.is-hmrc.h1=Is HMRC your money laundering supervisory body?
+amls.is-hmrc.error=Select yes if HMRC is your money laundering supervisory body
 amls.confirmation.h1=Money laundering supervision details updated
 amls.confirmation.p1=We have updated your money laundering supervision details. We will get in touch if we have any questions.
 amls.confirmation.link=Return to manage account
