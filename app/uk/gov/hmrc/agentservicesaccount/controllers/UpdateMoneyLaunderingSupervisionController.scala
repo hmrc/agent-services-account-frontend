@@ -25,8 +25,11 @@ import javax.inject.{Inject, Singleton}
 
 @Singleton
 class UpdateMoneyLaunderingSupervisionController @Inject()()(//implicit appConfig: AppConfig,
+                                                             //amlsLoader: AmlsLoader
                                                              cc: MessagesControllerComponents) extends FrontendController(cc) with I18nSupport{
 
   //def showUpdateMoneyLaunderingSupervision()
+  // view(form, amlsLoader.load("/amls-no-hrmc.csv"))
+
   //def submitUpdateMoneyLaunderingSupervision()
 }

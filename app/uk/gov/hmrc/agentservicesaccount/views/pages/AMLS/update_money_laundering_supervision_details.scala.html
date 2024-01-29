@@ -5,7 +5,7 @@
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
 *
-*     http://www.apache.org/licenses/LICENSE-2.0
+* http://www.apache.org/licenses/LICENSE-2.0
 *
 * Unless required by applicable law or agreed to in writing, software
 * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,71 +13,59 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *@
-
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.controllers.routes
 @import uk.gov.hmrc.agentservicesaccount.models.UpdateMoneyLaunderingSupervisionDetails
-@import uk.gov.hmrc.agentservicesaccount.views.html.main
+@import uk.gov.hmrc.agentservicesaccount.views.html._
 @import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
-@import uk.gov.hmrc.govukfrontend.views.html.components.{GovukButton, GovukFieldset, GovukInput, GovukDateInput, Hint, Input, Label, Text, _}
+@import uk.gov.hmrc.govukfrontend.views.html.components.{ErrorSummary, FormWithCSRF, GovukButton, GovukErrorSummary, GovukFieldset, GovukInput, Input, Label, Text, _}
+@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.accessibleautocomplete.AccessibleAutocomplete
+
 
 @this(
         main: main,
         h1: h1, p: p,
         formWithCSRF: FormWithCSRF,
         govukInput: GovukInput,
-        govukDateInput: GovukDateInput,
+        inputDate: InputDate,
         govukFieldset: GovukFieldset,
         govukSummaryList: GovukSummaryList,
-        govukInsetText : GovukInsetText,
+        govukInsetText: GovukInsetText,
         govukButton: GovukButton,
+        govukSelect: GovukSelect,
         govukErrorSummary: GovukErrorSummary
 )
 
-@(form: Form[UpdateMoneyLaunderingSupervisionDetails])(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
+@(form: Form[UpdateMoneyLaunderingSupervisionDetails], amlsCodes: Map[String, String])(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
 
-@fieldsetHtml = {
-@govukInput(Input(
-    label = Label(
-        content = HtmlContent(msgs("Name of money laundering supervisory body")), // create msg
-        classes = "govuk-body govuk-!-font-size-20 govuk-!-font-weight-bold",
-        isPageHeading = false
-    ),
-    classes = "",
-    spellcheck = Some(false),
-    autocomplete = Some("name")
-).withFormField(form("name")))
 
-@govukInput(Input(
-    label = Label(
-        content = HtmlContent(msgs("Your registration number")), // create msg
-        classes = "govuk-body govuk-!-font-size-20 govuk-!-font-weight-bold",
-        isPageHeading = false
-    ),
-    classes = "",
-    spellcheck = Some(false),
-    autocomplete = Some("number")
-).withFormField(form("number")))
 
-@govukDateInput(Input(
-    label = Label(
-        content = HtmlContent(msgs("Your next registration renewal date")), // create msg
-        classes = "govuk-body govuk-!-font-size-20 govuk-!-font-weight-bold ",
-        isPageHeading = false
-    ),
-    classes = "",
-    hint = Some(Hint(content = HtmlContent(
-        msgs("For example, 31 3 2024")))), // create msg
-    autocomplete = Some("endDate")
-).withFormField(form("endDate")))
-
+@DayFieldError = @{
+    if(form("endDate.day").hasErrors)
+        "day-field-error"
 }
+
+@MonthFieldError = @{
+    if(form("endDate.month").hasErrors)
+        "month-field-error"
+}
+
+@YearFieldError = @{
+    if(form("endDate.year").hasErrors)
+        "year-field-error"
+}
+
+@DateFieldErrorsAll = @{
+    if(form("endDate").hasErrors && !form("endDate.day").hasErrors && !form("endDate.month").hasErrors && !form("endDate.year").hasErrors)
+        "date-field-errors-all"
+}
+
 @main(
     pageTitle = withErrorPrefix(form.hasErrors, msgs("What are your money laundering supervision registration details?")), // create msg
     backLinkHref = Some(routes.BetaInviteController.showInviteDetails.url),
     showSecondaryNav = false
 ) {
-    @if(form.hasErrors){
+    @if(form.hasErrors) {
         @govukErrorSummary(ErrorSummary(errorList = form.errors.asTextErrorLinks, title = Text(msgs("survey.error.summary"))))
     }
     <span class="govuk-caption-xl govuk-!-margin-top-5">@msgs("suspend.contact-details.hint1")</span>
@@ -89,4 +77,41 @@
         ))
         @govukButton(Button(content = Text(msgs("common.continue-save")), classes = "govuk-!-margin-top-5"))
     }
+}
+
+@fieldsetHtml = @{
+    govukSelect(Select(
+        id = "body",
+        name = "body",
+        items = amlsCodes.flatMap {
+            case (code, bodyName) => Seq(
+                SelectItem(
+                    value = Some(code),
+                    text = bodyName
+                )
+        }.toSeq,
+        label = Label(
+            content = HtmlContent(msgs("Name of money laundering supervisory body")),
+            classes = "govuk-body govuk-!-font-size-20 govuk-!-font-weight-bold",
+            isPageHeading = false
+        )
+    ).asAccessibleAutocomplete(Some(
+        AccessibleAutocomplete(
+            defaultValue = Some(""),
+            showAllValues = true)
+    ))
+    .withFormField(form("body")))
+
+    govukInput(Input(
+        label = Label(
+            content = HtmlContent(msgs("Your registration number")),
+            classes = "govuk-body govuk-!-font-size-20 govuk-!-font-weight-bold",
+            isPageHeading = false
+        ),
+        classes = "",
+        spellcheck = Some(false),
+        autocomplete = Some("number")
+    ).withFormField(form("number")))
+
+    //input date
 }
