@@ -19,17 +19,16 @@ package uk.gov.hmrc.agentservicesaccount.controllers
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import org.scalatestplus.mockito.MockitoSugar.mock
+import org.mockito.IdiomaticMockito
 import play.api.http.MimeTypes.HTML
 import play.api.http.Status.{OK, SEE_OTHER}
 import play.api.mvc.{MessagesControllerComponents, Result}
 import play.api.test.Helpers.{await, defaultAwaitTimeout, stubMessagesControllerComponents}
 import play.api.test.{FakeRequest, Helpers}
-import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, SuspensionDetails}
+import uk.gov.hmrc.agentmtdidentifiers.model.SuspensionDetails
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentClientAuthorisationStubs.givenSuspensionStatus
-import uk.gov.hmrc.agentservicesaccount.stubs.AgentPermissionsStubs.givenOptinRecordExistsForArn
 import uk.gov.hmrc.agentservicesaccount.stubs.AuthStubs
 import uk.gov.hmrc.agentservicesaccount.support.UnitSpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.AMLS.is_amls_hmrc
@@ -38,7 +37,7 @@ import uk.gov.hmrc.http.SessionKeys
 import scala.concurrent.Future
 
 
-class AmlsIsHmrcControllerSpec extends UnitSpec with AuthStubs {
+class AmlsIsHmrcControllerSpec extends UnitSpec with AuthStubs with IdiomaticMockito {
 
   private val cc: MessagesControllerComponents = stubMessagesControllerComponents()
   trait Setup {
@@ -47,8 +46,7 @@ class AmlsIsHmrcControllerSpec extends UnitSpec with AuthStubs {
     protected val actions: Actions = mock[Actions]
     protected val view: is_amls_hmrc = mock[is_amls_hmrc]
 
-    object TestController
-      extends AmlsIsHmrcController(actions, view, cc)(appConfig)
+    object TestController extends AmlsIsHmrcController(actions, view, cc)(appConfig)
   }
 
   private val arn = "BARN1234567"
@@ -62,10 +60,10 @@ class AmlsIsHmrcControllerSpec extends UnitSpec with AuthStubs {
   "showAmlsIsHMRC" should {
     "return Ok and show the 'is AMLS body HMRC?' page" in new Setup {
       givenAuthorisedAsAgentWith(arn)
-      givenOptinRecordExistsForArn(Arn(arn), exists = false)
       givenSuspensionStatus(SuspensionDetails(suspensionStatus = false, None))
 
       val response: Future[Result] = TestController.showAmlsIsHmrc(fakeRequest())
+
       status(response) shouldBe OK
       Helpers.contentType(response).get shouldBe HTML
       val html: Document = Jsoup.parse(contentAsString(await(response)))
@@ -83,11 +81,12 @@ class AmlsIsHmrcControllerSpec extends UnitSpec with AuthStubs {
         fakeRequest("POST")
           .withFormUrlEncodedBody("accept" -> "true")
       )
+
       status(response) shouldBe SEE_OTHER
 
     }
 
-    "redirect to capture-new-amls-details" in new Setup {
+    "redirect to manage-account/update-money-laundering-supervision" in new Setup {
       givenAuthorisedAsAgentWith(arn)
 
       val response: Future[Result] = TestController.submitAmlsIsHmrc(

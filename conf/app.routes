@@ -76,6 +76,6 @@ GET        /contact-details-submitted               @uk.gov.hmrc.agentservicesac
 GET        /manage-account/amls-details-updated              @uk.gov.hmrc.agentservicesaccount.controllers.AmlsConfirmationController.showUpdatedAmlsConfirmationPage
 GET        /manage-account/money-laundering-supervision      @uk.gov.hmrc.agentservicesaccount.controllers.AMLSDetailsController.showSupervisionDetails
 
-GET        /manage-account/money-laundering-supervisory-body @uk.gov.hmrc.agentservicesaccount.controllers.AntiMoneyLaunderingSupervisionIsHmrcController.showAmlsIsHmrc
-POST       /manage-account/money-laundering-supervisory-body @uk.gov.hmrc.agentservicesaccount.controllers.AntiMoneyLaunderingSupervisionIsHmrcController.submitAmlsIsHmrc
+GET        /manage-account/money-laundering-supervisory-body @uk.gov.hmrc.agentservicesaccount.controllers.AmlsIsHmrcController.showAmlsIsHmrc
+POST       /manage-account/money-laundering-supervisory-body @uk.gov.hmrc.agentservicesaccount.controllers.AmlsIsHmrcController.submitAmlsIsHmrc
 
