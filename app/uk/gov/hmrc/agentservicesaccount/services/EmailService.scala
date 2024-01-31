@@ -17,7 +17,7 @@
 package uk.gov.hmrc.agentservicesaccount.services
 
 import play.api.i18n.{Lang, Langs}
-import play.api.{LoggerLike, Logging}
+import play.api.Logging
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.connectors.EmailConnector
 import uk.gov.hmrc.agentservicesaccount.models.{AccountRecoverySummary, AgencyDetails, BetaInviteDetailsForEmail, SendEmailData}
@@ -31,8 +31,6 @@ class EmailService @Inject()(emailConnector: EmailConnector, appConfig: AppConfi
     extends Logging {
 
   implicit val lang: Lang = langs.availables.head
-
-  protected def getLogger: LoggerLike = logger
 
   def sendInviteAcceptedEmail(arn: Arn, details: BetaInviteDetailsForEmail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Unit] =
     sendEmail(Seq("mtdgpvolunteers@hmrc.gov.uk"), arn, details, "agent_permissions_beta_participant_details")
@@ -72,8 +70,8 @@ class EmailService @Inject()(emailConnector: EmailConnector, appConfig: AppConfi
         "contactName" -> details.name,
         "emailAddress" -> details.email,
         "telephoneNumber" -> details.phone,
-        "description" -> details.description,
-      ),
+        "description" -> details.description
+      )
     )
       emailConnector.sendEmail(emailInfo)
     }
