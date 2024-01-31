@@ -73,4 +73,5 @@ POST       /check-contact-details                   @uk.gov.hmrc.agentservicesac
 GET        /contact-details-submitted               @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.showChangeSubmitted
 
 # AMLS
-GET        /manage-account/amls-details-updated     @uk.gov.hmrc.agentservicesaccount.controllers.AmlsConfirmationController.showUpdatedAmlsConfirmationPage
+GET        /manage-account/amls-details-updated         @uk.gov.hmrc.agentservicesaccount.controllers.AmlsConfirmationController.showUpdatedAmlsConfirmationPage
+GET        /manage-account/money-laundering-supervision @uk.gov.hmrc.agentservicesaccount.controllers.AMLSDetailsController.showSupervisionDetails
