@@ -30,7 +30,7 @@ import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector}
 import uk.gov.hmrc.agentservicesaccount.models.AmlsDetails
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.AMLS.suspension_details
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.AMLS.supervision_details
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve.{Credentials, Email, Name, Retrieval, ~}
@@ -82,7 +82,7 @@ class AMLSDetailsControllerSpec extends PlaySpec
       new Actions(mockAgentClientAuthorisationConnector, authActions, actionBuilder)
 
     protected val mockAgentAssuranceConnector: AgentAssuranceConnector = mock[AgentAssuranceConnector]
-    protected val mockView: suspension_details = mock[suspension_details]
+    protected val mockView: supervision_details = mock[supervision_details]
     protected val cc: MessagesControllerComponents = stubMessagesControllerComponents()
 
     object TestController extends AMLSDetailsController(mockAgentAssuranceConnector, mockActions, mockView)(mockAppConfig, ec, cc)
@@ -93,6 +93,8 @@ class AMLSDetailsControllerSpec extends PlaySpec
       mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
         *[HeaderCarrier],
         *[ExecutionContext]) returns authResponse
+
+      mockAppConfig.enableNonHmrcSupervisoryBody returns true
 
       mockAgentClientAuthorisationConnector.getSuspensionDetails()(*[HeaderCarrier], *[ExecutionContext]) returns suspensionDetailsResponse
 

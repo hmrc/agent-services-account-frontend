@@ -36,7 +36,7 @@ class AgentAssuranceConnector @Inject()(httpV2: HttpClientV2)(implicit val metri
 
   override val kenshooRegistry: MetricRegistry = metrics.defaultRegistry
 
-  val baseUrl = appConfig.agentAssuranceBaseUrl
+  private val baseUrl = appConfig.agentAssuranceBaseUrl
 
   import uk.gov.hmrc.http.HttpReads.Implicits._
 
@@ -44,7 +44,7 @@ class AgentAssuranceConnector @Inject()(httpV2: HttpClientV2)(implicit val metri
     httpV2.get(new URL(s"$baseUrl/agent-assurance/amls/arn/$arn")).execute[HttpResponse].map { response =>
       response.status match {
         case OK => Json.parse(response.body).as[AmlsDetails]
-        case NO_CONTENT => throw UpstreamErrorResponse(s"Error $NO_CONTENT unable to get amls details", NO_CONTENT) //TODO update when designs are done
+        case NO_CONTENT => throw new Exception(s"Error $NO_CONTENT no amls details found") //TODO update when designs are done
         case BAD_REQUEST => throw UpstreamErrorResponse(s"Error $BAD_REQUEST invalid ARN when trying to get amls details", BAD_REQUEST)
         case e => throw UpstreamErrorResponse(s"Error $e unable to get amls details", e)
       }

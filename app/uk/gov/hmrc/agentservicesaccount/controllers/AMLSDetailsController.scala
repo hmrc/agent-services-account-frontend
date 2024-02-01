@@ -20,7 +20,7 @@ import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.AMLS._
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.AMLS.supervision_details
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
@@ -29,15 +29,17 @@ import scala.concurrent.ExecutionContext
 
 class AMLSDetailsController @Inject()(agentAssuranceConnector: AgentAssuranceConnector,
                                       actions: Actions,
-                                      suspension_details: suspension_details)(implicit val appConfig: AppConfig,
+                                      supervision_details: supervision_details)(implicit val appConfig: AppConfig,
                                                                               ec: ExecutionContext,
                                                                               val cc: MessagesControllerComponents)
   extends FrontendController(cc) with I18nSupport {
 
   val showSupervisionDetails: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    agentAssuranceConnector.getAMLSDetails(request.agentInfo.arn.value).map(amlsDetails =>
-      Ok(suspension_details(amlsDetails))
-    )
+    actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
+      agentAssuranceConnector.getAMLSDetails(request.agentInfo.arn.value).map(amlsDetails =>
+        Ok(supervision_details(amlsDetails))
+      )
+    }
   }
 
 }
