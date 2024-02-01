@@ -16,25 +16,23 @@
 
 package uk.gov.hmrc.agentservicesaccount.controllers
 
-import play.api.Logging
-import play.api.i18n.MessagesApi
+import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls_details._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
-
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject._
 import scala.concurrent.ExecutionContext
 
 class AMLSDetailsController @Inject()(agentAssuranceConnector: AgentAssuranceConnector,
-                                      actions:Actions,
+                                      actions: Actions,
                                       suspension_details: suspension_details)(implicit val appConfig: AppConfig,
                                                                               ec: ExecutionContext,
-                                                                              val cc: MessagesControllerComponents,
-                                                                              messagesApi: MessagesApi)
-  extends AgentServicesBaseController with Logging {
+                                                                              val cc: MessagesControllerComponents)
+  extends FrontendController(cc) with I18nSupport {
 
   val showSupervisionDetails: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     agentAssuranceConnector.getAMLSDetails(request.agentInfo.arn.value).map(amlsDetails =>
