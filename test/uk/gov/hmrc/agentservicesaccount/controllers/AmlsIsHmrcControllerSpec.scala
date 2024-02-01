@@ -19,37 +19,79 @@ package uk.gov.hmrc.agentservicesaccount.controllers
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import org.mockito.IdiomaticMockito
+import org.mockito.stubbing.ScalaOngoingStubbing
+import org.scalatestplus.play.PlaySpec
+import org.mockito.{ArgumentMatchersSugar, IdiomaticMockito}
+import play.api.Environment
 import play.api.http.MimeTypes.HTML
 import play.api.http.Status.{OK, SEE_OTHER}
-import play.api.mvc.{MessagesControllerComponents, Result}
-import play.api.test.Helpers.{await, defaultAwaitTimeout, stubMessagesControllerComponents}
+import play.api.mvc.{DefaultActionBuilderImpl, MessagesControllerComponents, Result}
+import play.api.test.Helpers.{defaultAwaitTimeout, stubMessagesControllerComponents}
 import play.api.test.{FakeRequest, Helpers}
-import uk.gov.hmrc.agentmtdidentifiers.model.SuspensionDetails
-import uk.gov.hmrc.agentservicesaccount.actions.Actions
+import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, SuspensionDetails}
+import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.stubs.AgentClientAuthorisationStubs.givenSuspensionStatus
-import uk.gov.hmrc.agentservicesaccount.stubs.AuthStubs
-import uk.gov.hmrc.agentservicesaccount.support.UnitSpec
+import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.AMLS.is_amls_hmrc
-import uk.gov.hmrc.http.SessionKeys
+import uk.gov.hmrc.auth.core.{AuthConnector, CredentialRole, Enrolment, EnrolmentIdentifier, Enrolments, User}
+import uk.gov.hmrc.auth.core.authorise.Predicate
+import uk.gov.hmrc.auth.core.retrieve.{Credentials, Email, Name, Retrieval, ~}
+import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 
-class AmlsIsHmrcControllerSpec extends UnitSpec with AuthStubs with IdiomaticMockito {
+class AmlsIsHmrcControllerSpec extends PlaySpec with IdiomaticMockito with ArgumentMatchersSugar {
 
-  private val cc: MessagesControllerComponents = stubMessagesControllerComponents()
-  trait Setup {
+  implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
 
-    protected val appConfig: AppConfig = mock[AppConfig]
-    protected val actions: Actions = mock[Actions]
-    protected val view: is_amls_hmrc = mock[is_amls_hmrc]
-
-    object TestController extends AmlsIsHmrcController(actions, view, cc)(appConfig)
+  //TODO move auth/suspend actions to common file for all unit tests
+  val mockAcaConnector: AgentClientAuthorisationConnector = mock[AgentClientAuthorisationConnector]
+  val notSuspendedDetails: Future[SuspensionDetails] = Future successful SuspensionDetails(suspensionStatus = false, None)
+  def givenNotSuspended(): ScalaOngoingStubbing[Future[SuspensionDetails]] = {
+    mockAcaConnector.getSuspensionDetails()(
+      *[HeaderCarrier],
+      *[ExecutionContext]) returns notSuspendedDetails
   }
 
-  private val arn = "BARN1234567"
+  private val arn = Arn("BARN1234567")
+
+  private val agentEnrolment: Set[Enrolment] = Set(
+    Enrolment("HMRC-AS-AGENT",
+      Seq(EnrolmentIdentifier("AgentReferenceNumber", arn.value)),
+      state = "Active",
+      delegatedAuthRule = None))
+
+  private val ggCredentials: Credentials =
+    Credentials("ggId", "GovernmentGateway")
+
+  private def authResponseAgent(credentialRole: CredentialRole): Future[Enrolments ~ Some[Credentials] ~ Some[Email] ~ Some[Name] ~ Some[CredentialRole]] =
+    Future.successful(new~(new~(new~(new~(
+      Enrolments(agentEnrolment), Some(ggCredentials)),
+      Some(Email("test@email.com"))),
+      Some(Name(Some("Troy"), Some("Barnes")))),
+      Some(credentialRole)))
+
+  val mockAuthConnector: AuthConnector = mock[AuthConnector]
+  def givenAuthorisedAgent(credentialRole: CredentialRole): ScalaOngoingStubbing[Future[Any]] = {
+    mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
+      *[HeaderCarrier],
+      *[ExecutionContext]) returns authResponseAgent(credentialRole)
+  }
+
+
+  trait Setup {
+    protected val mockAppConfig: AppConfig = mock[AppConfig]
+    protected val mockEnvironment: Environment = mock[Environment]
+    protected val authActions = new AuthActions(mockAppConfig, mockAuthConnector, mockEnvironment)
+    protected val actionBuilder = new DefaultActionBuilderImpl(Helpers.stubBodyParser())
+    protected val mockActions =
+      new Actions(mockAcaConnector, authActions, actionBuilder)
+
+    protected val cc: MessagesControllerComponents = stubMessagesControllerComponents()
+    protected val view: is_amls_hmrc = mock[is_amls_hmrc]
+    object TestController extends AmlsIsHmrcController(mockActions, view, cc)(mockAppConfig)
+  }
 
   private def fakeRequest(method: String = "GET", uri: String = "/") =
     FakeRequest(method, uri)
@@ -59,50 +101,58 @@ class AmlsIsHmrcControllerSpec extends UnitSpec with AuthStubs with IdiomaticMoc
 
   "showAmlsIsHMRC" should {
     "return Ok and show the 'is AMLS body HMRC?' page" in new Setup {
-      givenAuthorisedAsAgentWith(arn)
-      givenSuspensionStatus(SuspensionDetails(suspensionStatus = false, None))
+      givenAuthorisedAgent(User)
+      givenNotSuspended()
 
       val response: Future[Result] = TestController.showAmlsIsHmrc(fakeRequest())
 
-      status(response) shouldBe OK
-      Helpers.contentType(response).get shouldBe HTML
-      val html: Document = Jsoup.parse(contentAsString(await(response)))
+      Helpers.status(response) mustBe OK
+      Helpers.contentType(response).get mustBe HTML
+      val html: Document = Jsoup.parse(Helpers.contentAsString(response))
 
-      html.title shouldBe "not this"
-      html.select("h1") shouldBe "not this 2"
+      html.title mustBe "not this"
+      html.select("h1") mustBe "not this 2"
     }
   }
 
   "submitAmlsIsHmrc" should {
     "redirect to [not-implemented-hmrc-page]" in new Setup {
-      givenAuthorisedAsAgentWith(arn)
+      givenAuthorisedAgent(User)
+      givenNotSuspended()
 
       val response: Future[Result] = TestController.submitAmlsIsHmrc(
         fakeRequest("POST")
           .withFormUrlEncodedBody("accept" -> "true")
       )
 
-      status(response) shouldBe SEE_OTHER
+      Helpers.status(response) mustBe SEE_OTHER
 
     }
 
     "redirect to manage-account/update-money-laundering-supervision" in new Setup {
-      givenAuthorisedAsAgentWith(arn)
+      givenAuthorisedAgent(User)
+      givenNotSuspended()
 
       val response: Future[Result] = TestController.submitAmlsIsHmrc(
         fakeRequest("POST")
           .withFormUrlEncodedBody("accept" -> "false")
       )
-      status(response) shouldBe SEE_OTHER
+      Helpers.status(response) mustBe SEE_OTHER
 
     }
 
     "return form with errors" in new Setup {
-      givenAuthorisedAsAgentWith(arn)
+      givenAuthorisedAgent(User)
+      givenNotSuspended()
 
       val response: Future[Result] = TestController.submitAmlsIsHmrc(fakeRequest("POST") /* with no form body */)
 
-      status(response) shouldBe OK
+      Helpers.status(response) mustBe OK
+      Helpers.contentType(response).get mustBe HTML
+      val html: Document = Jsoup.parse(Helpers.contentAsString(response))
+      html.title mustBe "Error: not this"
+
     }
   }
+
 }

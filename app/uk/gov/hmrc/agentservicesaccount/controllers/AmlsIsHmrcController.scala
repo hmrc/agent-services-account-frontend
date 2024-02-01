@@ -28,9 +28,10 @@ import javax.inject.{Inject, Singleton}
 
 @Singleton
 class AmlsIsHmrcController @Inject()(actions: Actions,
-                                                               isAmlsHmrc: is_amls_hmrc,
-                                                               cc: MessagesControllerComponents)
-                                                              (implicit appConfig: AppConfig) extends FrontendController(cc) with I18nSupport {
+                                     isAmlsHmrc: is_amls_hmrc,
+                                     cc: MessagesControllerComponents
+                                    )(implicit appConfig: AppConfig) extends FrontendController(cc) with I18nSupport {
+
   def showAmlsIsHmrc: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
       Ok(isAmlsHmrc(YesNoForm.form("amls.is-hmrc.error"))).toFuture
