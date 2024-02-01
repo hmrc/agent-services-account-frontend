@@ -47,7 +47,6 @@ class AmlsIsHmrcController @Inject()(actions: Actions,
           Ok(isAmlsHmrc(formWithErrors)).toFuture
           },
           (isHmrcRegistered: Boolean) => {
-            // TODO do I need to save data to session cache?
             if (isHmrcRegistered) {
               Redirect("not-implemented-hmrc-page").toFuture
             } else {
