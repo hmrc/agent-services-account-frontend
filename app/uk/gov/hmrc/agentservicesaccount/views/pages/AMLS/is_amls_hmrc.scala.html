@@ -27,9 +27,9 @@
 
 @(form: Form[Boolean])(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
 
-@main(pageTitle = msgs("amls.is-hmrc.h1"), showSecondaryNav = false) {
+@main(pageTitle = withErrorPrefix(form.hasErrors, msgs("amls.is-hmrc.h1")), mimicBrowserBackLink = true, showSecondaryNav = false) {
 
-    @if(form.errors.nonEmpty){
+    @if(form.hasErrors){
         @govukErrorSummary(ErrorSummary(
             errorList = form.errors.asTextErrorLinks, title = Text(msgs("amls.is-hmrc.error"))
         ))
