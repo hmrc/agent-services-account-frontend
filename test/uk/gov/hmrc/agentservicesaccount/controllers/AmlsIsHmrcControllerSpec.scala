@@ -23,7 +23,7 @@ import org.mockito.{ArgumentMatchersSugar, IdiomaticMockito}
 import play.api.Environment
 import play.api.data.Form
 import play.api.http.MimeTypes.HTML
-import play.api.http.Status.{OK, SEE_OTHER}
+import play.api.http.Status.{FORBIDDEN, OK, SEE_OTHER}
 import play.api.i18n.Messages
 import play.api.mvc.{DefaultActionBuilderImpl, MessagesControllerComponents, Request, Result}
 import play.api.test.Helpers.{defaultAwaitTimeout, stubMessagesControllerComponents}
@@ -104,7 +104,7 @@ class AmlsIsHmrcControllerSpec extends PlaySpec with IdiomaticMockito with Argum
     "return Ok and show the 'is AMLS body HMRC?' page" in new Setup {
       givenAuthorisedAgent(User)
       givenNotSuspended()
-      //mockActions.ifFeatureEnabled(*[Boolean])(*[Future[Result]])
+      mockAppConfig.enableNonHmrcSupervisoryBody returns true
 
       view.apply(*[Form[Boolean]])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 
@@ -112,12 +112,26 @@ class AmlsIsHmrcControllerSpec extends PlaySpec with IdiomaticMockito with Argum
 
       Helpers.status(response) mustBe OK
     }
+
+    "return Forbidden when feature flag is off" in new Setup {
+      givenAuthorisedAgent(User)
+      givenNotSuspended()
+      mockAppConfig.enableNonHmrcSupervisoryBody returns false
+
+      view.apply(*[Form[Boolean]])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+
+      val response: Future[Result] = TestController.showAmlsIsHmrc(FakeRequest())
+
+      Helpers.status(response) mustBe FORBIDDEN
+    }
+
   }
 
   "submitAmlsIsHmrc" should {
     "redirect to [not-implemented-hmrc-page]" in new Setup {
       givenAuthorisedAgent(User)
       givenNotSuspended()
+      mockAppConfig.enableNonHmrcSupervisoryBody returns true
 
       val response: Future[Result] = TestController.submitAmlsIsHmrc(
         fakeRequest("POST")
@@ -125,24 +139,26 @@ class AmlsIsHmrcControllerSpec extends PlaySpec with IdiomaticMockito with Argum
       )
 
       Helpers.status(response) mustBe SEE_OTHER
-
+      Helpers.redirectLocation(response).get mustBe "not-implemented-hmrc-page"
     }
 
     "redirect to manage-account/update-money-laundering-supervision" in new Setup {
       givenAuthorisedAgent(User)
       givenNotSuspended()
+      mockAppConfig.enableNonHmrcSupervisoryBody returns true
 
       val response: Future[Result] = TestController.submitAmlsIsHmrc(
         fakeRequest("POST")
           .withFormUrlEncodedBody("accept" -> "false")
       )
       Helpers.status(response) mustBe SEE_OTHER
-
+      Helpers.redirectLocation(response).get mustBe "manage-account/update-money-laundering-supervision"
     }
 
     "return form with errors" in new Setup {
       givenAuthorisedAgent(User)
       givenNotSuspended()
+      mockAppConfig.enableNonHmrcSupervisoryBody returns true
       view.apply(*[Form[Boolean]])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 
       val response: Future[Result] = TestController.submitAmlsIsHmrc(fakeRequest("POST").withFormUrlEncodedBody("accept" -> "") /* with empty form body */)
@@ -151,6 +167,16 @@ class AmlsIsHmrcControllerSpec extends PlaySpec with IdiomaticMockito with Argum
       Helpers.contentType(response).get mustBe HTML
     }
 
+    "return Forbidden when feature flag is off" in new Setup {
+      givenAuthorisedAgent(User)
+      givenNotSuspended()
+      mockAppConfig.enableNonHmrcSupervisoryBody returns false
+      view.apply(*[Form[Boolean]])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+
+      val response: Future[Result] = TestController.submitAmlsIsHmrc(fakeRequest("POST").withFormUrlEncodedBody("accept" -> "true") /* doesn't matter */)
+
+      Helpers.status(response) mustBe FORBIDDEN
+    }
   }
 
 }

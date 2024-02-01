@@ -47,11 +47,12 @@ class AmlsIsHmrcController @Inject()(actions: Actions,
           Ok(isAmlsHmrc(formWithErrors)).toFuture
           },
           (isHmrcRegistered: Boolean) => {
-            //TODO save data to session cache?
+            // TODO do I need to save data to session cache?
             if (isHmrcRegistered) {
               Redirect("not-implemented-hmrc-page").toFuture
             } else {
-              Redirect("captue-new-amls-details").toFuture
+              // TODO update with route in APB-7547
+              Redirect("manage-account/update-money-laundering-supervision").toFuture
             }
           })
     }
