@@ -21,7 +21,7 @@ import play.api.test.{DefaultAwaitTimeout, FakeRequest, Helpers}
 import org.mockito.{ArgumentMatchersSugar, IdiomaticMockito}
 import play.api.Environment
 import play.api.http.Status.OK
-import play.api.i18n.{Messages, MessagesApi}
+import play.api.i18n.Messages
 import play.api.mvc.{DefaultActionBuilderImpl, MessagesControllerComponents, Request, Result}
 import play.api.test.Helpers.{status, stubMessagesControllerComponents}
 import play.twirl.api.Html
@@ -84,9 +84,8 @@ class AMLSDetailsControllerSpec extends PlaySpec
     protected val mockAgentAssuranceConnector: AgentAssuranceConnector = mock[AgentAssuranceConnector]
     protected val mockView: suspension_details = mock[suspension_details]
     protected val cc: MessagesControllerComponents = stubMessagesControllerComponents()
-    protected val mockMessagesApi: MessagesApi = mock[MessagesApi]
 
-    object TestController extends AMLSDetailsController(mockAgentAssuranceConnector, mockActions, mockView)(mockAppConfig, ec, cc, mockMessagesApi)
+    object TestController extends AMLSDetailsController(mockAgentAssuranceConnector, mockActions, mockView)(mockAppConfig, ec, cc)
   }
 
   "AMLSDetailsController.showSupervisionDetails" should {
