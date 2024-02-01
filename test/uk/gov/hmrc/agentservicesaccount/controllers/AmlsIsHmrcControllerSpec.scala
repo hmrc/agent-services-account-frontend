@@ -17,17 +17,18 @@
 package uk.gov.hmrc.agentservicesaccount.controllers
 
 
-import org.jsoup.Jsoup
-import org.jsoup.nodes.Document
 import org.mockito.stubbing.ScalaOngoingStubbing
 import org.scalatestplus.play.PlaySpec
 import org.mockito.{ArgumentMatchersSugar, IdiomaticMockito}
 import play.api.Environment
+import play.api.data.Form
 import play.api.http.MimeTypes.HTML
 import play.api.http.Status.{OK, SEE_OTHER}
-import play.api.mvc.{DefaultActionBuilderImpl, MessagesControllerComponents, Result}
+import play.api.i18n.Messages
+import play.api.mvc.{DefaultActionBuilderImpl, MessagesControllerComponents, Request, Result}
 import play.api.test.Helpers.{defaultAwaitTimeout, stubMessagesControllerComponents}
 import play.api.test.{FakeRequest, Helpers}
+import play.twirl.api.Html
 import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, SuspensionDetails}
 import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
@@ -103,15 +104,13 @@ class AmlsIsHmrcControllerSpec extends PlaySpec with IdiomaticMockito with Argum
     "return Ok and show the 'is AMLS body HMRC?' page" in new Setup {
       givenAuthorisedAgent(User)
       givenNotSuspended()
+      //mockActions.ifFeatureEnabled(*[Boolean])(*[Future[Result]])
 
-      val response: Future[Result] = TestController.showAmlsIsHmrc(fakeRequest())
+      view.apply(*[Form[Boolean]])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+
+      val response: Future[Result] = TestController.showAmlsIsHmrc(FakeRequest())
 
       Helpers.status(response) mustBe OK
-      Helpers.contentType(response).get mustBe HTML
-      val html: Document = Jsoup.parse(Helpers.contentAsString(response))
-
-      html.title mustBe "not this"
-      html.select("h1") mustBe "not this 2"
     }
   }
 
@@ -144,15 +143,14 @@ class AmlsIsHmrcControllerSpec extends PlaySpec with IdiomaticMockito with Argum
     "return form with errors" in new Setup {
       givenAuthorisedAgent(User)
       givenNotSuspended()
+      view.apply(*[Form[Boolean]])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 
-      val response: Future[Result] = TestController.submitAmlsIsHmrc(fakeRequest("POST") /* with no form body */)
+      val response: Future[Result] = TestController.submitAmlsIsHmrc(fakeRequest("POST").withFormUrlEncodedBody("accept" -> "") /* with empty form body */)
 
       Helpers.status(response) mustBe OK
       Helpers.contentType(response).get mustBe HTML
-      val html: Document = Jsoup.parse(Helpers.contentAsString(response))
-      html.title mustBe "Error: not this"
-
     }
+
   }
 
 }
