@@ -31,9 +31,9 @@ import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 class AuthRequestWithAgentInfo[A](
-                         val agentInfo: AgentInfo,
-                         val request: Request[A]
-                       ) extends WrappedRequest[A](request)
+                                   val agentInfo: AgentInfo,
+                                   val request: Request[A]
+                                 ) extends WrappedRequest[A](request)
 
 case class AgentInfo(arn: Arn,
                      credentialRole: Option[CredentialRole],
