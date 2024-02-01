@@ -30,7 +30,7 @@ import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector}
 import uk.gov.hmrc.agentservicesaccount.models.AmlsDetails
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls_details.suspension_details
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.AMLS.suspension_details
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve.{Credentials, Email, Name, Retrieval, ~}
