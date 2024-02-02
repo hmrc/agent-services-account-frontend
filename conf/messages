@@ -41,7 +41,7 @@ asa.additional.links.agent-afi.ga.manage-clients=Manage your clients
 asa.additional.links.agent-afi.ga.request-auth=Ask a client to authorise you
 asa.additional.links.agent-afi.ga.services-you-need=Services you might need
 asa.additional.links.agent-afi.ga.view-income-record=View a clients income record
-asa.additional.links.mapping.body2=<a href="{0}" id="{1}" >Copy across your existing Self Assessment and VAT clients to this account</a>
+asa.additional.links.mapping.body2=<a href="{0}" id="{1}" >Copy across your existing Self Assessment clients to this account</a>
 asa.client-authorisations.p=You must ask your client to authorise you through your agent services account before you can access any services. Copy across an old authorisation or create a new one.
 asa.h2.your-clients=Your clients
 asa.h3.agent-services=Agent services
@@ -132,7 +132,7 @@ asa.section3.col2.link1=<a class="govuk-link" href="{0}" rel="noreferrer noopene
 asa.section4.col1.h3=Ask a client to authorise you
 asa.section4.col1.link=Ask a client to authorise you
 asa.section4.col2.link1=Manage your authorisation requests from the last 30 days
-asa.section4.col2.link2=Copy across more VAT and Self Assessment client authorisations
+asa.section4.col2.link2=Copy across more Self Assessment client authorisations
 asa.section4.col2.link3=Cancel a client’s authorisation
 asa.section4.h2=Client authorisations
 
@@ -228,7 +228,7 @@ global.error.500.title=Sorry, we are experiencing technical difficulties - 500
 help.about-asa.p1=You can only have one agent services account, but you can add several team members to this account. They will need to have Government Gateway user IDs for you to add them.
 help.about-asa.p2=The ‘Account home’ screen includes links for managing client authorisations and certain tax services. For other tax services, you will need to log into your online services for agents account.
 help.about-asa.p3=The ‘Manage account’ screen will vary, depending on whether you have administrator or standard user access. Administrators can choose to manage access permissions using the new feature ‘access groups’. When access groups are turned on, standard users can only manage the clients they have been assigned to.
-help.about-guidance.list1.1=copy VAT and Income Tax for Self Assessment authorisations from other agent accounts
+help.about-guidance.list1.1=copy Income Tax for Self Assessment authorisations from other agent accounts
 help.about-guidance.list1.2=request and manage authorisations from clients
 help.about-guidance.list1.3=manage tax services launched since 2019
 help.about-guidance.list1.4=manage the tax affairs of your assigned clients
@@ -250,7 +250,7 @@ help.cgt.h2=Capital Gains Tax on UK property
 help.cgt.link=How to ask for authorisation, manage your client’s account and send returns as an agent
 help.client-auth.a=https://www.gov.uk/guidance/authorise-an-agent-to-deal-with-certain-tax-services-for-you
 help.client-auth.p1=This section allows you to create, view and manage authorisation requests.
-help.client-auth.p2=You can copy across authorisations for VAT and Income Tax for Self Assessment from your online services for agents accounts.
+help.client-auth.p2=You can copy across authorisations for Income Tax for Self Assessment from your online services for agents accounts.
 help.client-auth.p3=You can also create an authorisation request for a client, and view or manage your recent authorisation requests.
 help.client-auth.p4=When asking a client for authorisation, you can send them the link to this guidance:
 help.heading=Help and guidance

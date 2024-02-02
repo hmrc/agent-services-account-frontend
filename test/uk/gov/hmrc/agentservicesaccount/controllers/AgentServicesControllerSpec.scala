@@ -165,7 +165,7 @@ class AgentServicesControllerSpec extends BaseISpec {
         links.get(0).attr("href") shouldBe "http://localhost:9448/invitations/agents"
         links.get(1).text() shouldBe "Manage your authorisation requests from the last 30 days"
         links.get(1).attr("href") shouldBe "http://localhost:9448/invitations/track"
-        links.get(2).text() shouldBe "Copy across more VAT and Self Assessment client authorisations"
+        links.get(2).text() shouldBe "Copy across more Self Assessment client authorisations"
         links.get(2).attr("href") shouldBe "http://localhost:9438/agent-mapping/start"
         links.get(3).text() shouldBe "Cancel a client’s authorisation"
         links.get(3).attr("href") shouldBe "http://localhost:9448/invitations/agents/cancel-authorisation/client-type"
@@ -1019,7 +1019,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       // Accordion tab1
       h2.get(0).text shouldBe "About this guidance"
       p.get(1).text shouldBe "This help and guidance is for tax agents and advisors. It covers how to use your agent services account to:"
-      li.get(0).text shouldBe "copy VAT and Income Tax for Self Assessment authorisations from other agent accounts"
+      li.get(0).text shouldBe "copy Income Tax for Self Assessment authorisations from other agent accounts"
       li.get(1).text shouldBe "request and manage authorisations from clients"
       li.get(2).text shouldBe "manage tax services launched since 2019"
       li.get(3).text shouldBe "manage the tax affairs of your assigned clients"
@@ -1037,7 +1037,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       // Accordion tab3
       h2.get(2).text shouldBe "Account home: client authorisations"
       p.get(6).text shouldBe "This section allows you to create, view and manage authorisation requests."
-      p.get(7).text shouldBe "You can copy across authorisations for VAT and Income Tax for Self Assessment from your online services for agents accounts."
+      p.get(7).text shouldBe "You can copy across authorisations for Income Tax for Self Assessment from your online services for agents accounts."
       p.get(8).text shouldBe "You can also create an authorisation request for a client, and view or manage your recent authorisation requests."
       p.get(9).text shouldBe "When asking a client for authorisation, you can send them the link to this guidance:"
       a.get(0).text shouldBe "https://www.gov.uk/guidance/authorise-an-agent-to-deal-with-certain-tax-services-for-you"
