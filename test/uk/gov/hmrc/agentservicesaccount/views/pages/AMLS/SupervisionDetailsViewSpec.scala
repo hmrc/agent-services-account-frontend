@@ -98,7 +98,7 @@ class SupervisionDetailsViewSpec extends PlaySpec with GuiceOneAppPerSuite {
         doc.select("dd").get(1).text() mustBe ukAMLSDetails.membershipNumber.get
       }
 
-      "display the renewal date correctly in the thord row" in {
+      "display the renewal date correctly in the third row" in {
         doc.select("dt").get(2).text() mustBe "Your next registration renewal date"
         doc.select("dd").get(2).text() mustBe "07/12/2023"
       }
@@ -120,7 +120,7 @@ class SupervisionDetailsViewSpec extends PlaySpec with GuiceOneAppPerSuite {
         doc.select("dd").get(1).text() mustBe "Not provided"
       }
 
-      "display the renewal date correctly in the thord row" in {
+      "display the renewal date correctly in the third row" in {
         doc.select("dt").get(2).text() mustBe "Your next registration renewal date"
         doc.select("dd").get(2).text() mustBe "Not provided"
       }

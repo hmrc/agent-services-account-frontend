@@ -76,26 +76,22 @@ class AmlsIsHmrcViewSpec extends BaseISpec {
     "first viewing page" should {
       val doc: Document = Jsoup.parse(view.apply(form)(FakeRequest(), messages, appConfig).body)
 
+      testServiceStaticContent(doc)
+
+      testPageStaticContent(doc)
+
       "display the correct page title" in {
         doc.title() mustBe "Is HMRC your money laundering supervisory body? - Agent services account - GOV.UK"
       }
 
-      "display 'is amls hmrc' form page correctly" in {
-        testPageStaticContent(doc)
-      }
-
-      "display as standard hmrc page" in {
-        testServiceStaticContent(doc)
-      }
     }
 
     "form is submitted with errors should" should {
       val doc: Document = Jsoup.parse(view.apply(formWithErrors)(FakeRequest(), messages, appConfig).body)
 
-      "display 'is amls hmrc' form page correctly with standard hmrc elements" in {
-        testPageStaticContent(doc)
-        testServiceStaticContent(doc)
-      }
+      testServiceStaticContent(doc)
+
+      testPageStaticContent(doc)
 
       "display error prefix on page title" in {
         doc.title() mustBe "Error: Is HMRC your money laundering supervisory body? - Agent services account - GOV.UK"
