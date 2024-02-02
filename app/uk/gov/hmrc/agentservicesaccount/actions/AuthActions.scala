@@ -47,8 +47,6 @@ case class AgentInfo(arn: Arn,
   }
 }
 
-case class AgentRequest[A](arn: Arn, request: Request[A]) extends WrappedRequest[A](request)
-
 @Singleton
 class AuthActions @Inject()(appConfig: AppConfig,
                             override val authConnector: AuthConnector,
@@ -90,36 +88,6 @@ class AuthActions @Inject()(appConfig: AppConfig,
     case _: UnsupportedAffinityGroup =>
       logger.warn(s"user logged in with unsupported affinity group")
       Left(Forbidden)
-  }
-
-  def withFullUserDetails(body: AgentInfo => Future[Result])
-                         (implicit ec: ExecutionContext, hc: HeaderCarrier, request: Request[AnyContent])
-  : Future[Result] = {
-    authorised(AuthProviders(GovernmentGateway))
-      .retrieve(allEnrolments and credentialRole and email and name and credentials) {
-        case enrols ~ credRole ~ email ~ name ~ credentials =>
-          getArn(enrols) match {
-            case Some(arn) =>
-              val full = AgentInfo(arn, credRole, email, name, credentials)
-              body(full)
-            case _ =>
-              logger.warn("No HMRC-AS-AGENT enrolment found -- redirecting to /agent-subscription/start.")
-              Future successful Redirect(appConfig.agentSubscriptionFrontendUrl)
-          }
-      }
-  }.recover(handleFailure)
-
-  def handleFailure(implicit request: Request[_]): PartialFunction[Throwable, Result] = {
-    case _: NoActiveSession =>
-      Redirect(s"${appConfig.signInUrl}?continue_url=${appConfig.continueUrl}${request.uri}&origin=${appConfig.appName}")
-
-    case _: UnsupportedAuthProvider =>
-      logger.warn(s"user logged in with unsupported auth provider")
-      Forbidden
-
-    case _: UnsupportedAffinityGroup =>
-      logger.warn(s"user logged in with unsupported affinity group")
-      Forbidden
   }
 
   private def getArn(enrolments: Enrolments): Option[Arn] = {
