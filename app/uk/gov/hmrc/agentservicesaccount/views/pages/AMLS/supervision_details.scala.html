@@ -21,10 +21,12 @@
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
 @import uk.gov.hmrc.agentservicesaccount.controllers.routes
+@import uk.gov.hmrc.govukfrontend.views.html.components.{GovukButton, GovukSummaryList, FormWithCSRF}
 
 @this(
     main: main, a: a, p: p, h1: h1, h2: h2,
     govukSummaryList: GovukSummaryList,
+    formWithCSRF: FormWithCSRF,
     govukButton: GovukButton
 )
 
@@ -74,6 +76,10 @@
 
 @p("asa.p.update-amls-details")
 
-@govukButton(Button(content = Text(msgs("asa.button.label.update-amls-details"))))
-
+@formWithCSRF(action = routes.AmlsIsHmrcController.showAmlsIsHmrc) {
+    @govukButton(Button(
+        content = Text(msgs("asa.button.label.update-amls-details")),
+        classes = "govuk-button--secondary"
+    ))
+}
 }
