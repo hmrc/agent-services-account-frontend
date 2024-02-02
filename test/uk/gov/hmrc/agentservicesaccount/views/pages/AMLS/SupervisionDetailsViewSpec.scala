@@ -49,7 +49,7 @@ class SupervisionDetailsViewSpec extends PlaySpec with GuiceOneAppPerSuite {
   private val suspensionDetailsView: supervision_details = app.injector.instanceOf[supervision_details]
   private val fakeRequest = FakeRequest()
 
-  "suspension_details view" when {
+  "supervision_details view" when {
 
     def testStaticContent(doc: Document): Unit = {
       "have the correct page title" in {
