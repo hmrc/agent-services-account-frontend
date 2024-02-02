@@ -77,7 +77,7 @@ class AuthActions @Inject()(appConfig: AppConfig,
 
       override protected def executionContext: ExecutionContext = ec
     }
-  def handleFailureRefiner[A](implicit request: Request[_]): PartialFunction[Throwable, Either[Result, AuthRequestWithAgentInfo[A]]] = {
+  private def handleFailureRefiner[A](implicit request: Request[_]): PartialFunction[Throwable, Either[Result, AuthRequestWithAgentInfo[A]]] = {
     case _: NoActiveSession =>
       Left(Redirect(s"${appConfig.signInUrl}?continue_url=${appConfig.continueUrl}${request.uri}&origin=${appConfig.appName}"))
 
