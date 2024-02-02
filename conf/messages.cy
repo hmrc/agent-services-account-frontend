@@ -186,6 +186,7 @@ common.no=Na
 common.sign-out=Allgofnodi
 common.what.happens.next=Yr hyn sy’n digwydd nesaf
 common.yes=Iawn
+common.not-provided=Heb ei ddarparu
 details.link-hidden= ar gyfer {0}
 
 # Errors

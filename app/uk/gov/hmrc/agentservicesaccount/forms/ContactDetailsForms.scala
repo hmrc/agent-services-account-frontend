@@ -75,7 +75,7 @@ object ContactDetailsSuspendForm {
     mapping(
       "name"  -> text.verifying(suspendedDetailsNameConstraint),
       "email" -> text.verifying(suspendedDetailsEmailConstraint),
-      "phone" -> text.verifying(suspendedDetailsTelephoneConstraint),
+      "phone" -> text.verifying(suspendedDetailsTelephoneConstraint)
     )(SuspendContactDetails.apply)(SuspendContactDetails.unapply)
   )
 }

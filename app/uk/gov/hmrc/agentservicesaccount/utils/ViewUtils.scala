@@ -19,6 +19,9 @@ package uk.gov.hmrc.agentservicesaccount.utils
 import play.api.i18n.Messages
 import uk.gov.hmrc.agents.accessgroups.optin.{OptedInNotReady, OptedInReady, OptedInSingleUser, OptinStatus}
 
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+
 object ViewUtils {
 
   def withErrorPrefix(hasFormErrors: Boolean, str: String)(implicit mgs: Messages): String = {
@@ -32,5 +35,9 @@ object ViewUtils {
       case _ => false
     }
   }
+
+  //converts 2024-1-25 to 25/01/2024
+  def convertLocalDateToDisplayDate(localDate: LocalDate): String =
+    DateTimeFormatter.ofPattern("dd/MM/yyyy").format(localDate)
 
 }

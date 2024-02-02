@@ -18,6 +18,7 @@ object AppDependencies {
     "org.scalatestplus"      %% "mockito-3-12"               % "3.2.10.0"   % "test",
     "uk.gov.hmrc.mongo"      %% "hmrc-mongo-test-play-28"    % mongoVer     % "test, it",
     "uk.gov.hmrc"            %% "bootstrap-test-play-28"     % bootstrapVer % "test, it",
+    "org.mockito" %% "mockito-scala-scalatest" % "1.16.55" % "test, it",
     "com.github.tomakehurst" %  "wiremock-jre8"              % "2.26.1"     % "test, it",
     "org.jsoup"              %  "jsoup"                      % "1.15.3"     % "test, it",
     "org.scalamock"          %% "scalamock"                  % "5.2.0"      % "test, it",

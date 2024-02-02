@@ -45,6 +45,12 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
 
   private def baseUrl(key: String) = servicesConfig.baseUrl(key)
 
+  val agentAssuranceBaseUrl: String = baseUrl("agent-assurance")
+
+  val signInUrl = getString("bas-gateway.url")
+
+  val continueUrl = getString("login.continue")
+
   val authBaseUrl: String = baseUrl("auth")
 
   val acaBaseUrl: String = baseUrl("agent-client-authorisation")

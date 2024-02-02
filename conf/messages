@@ -57,6 +57,13 @@ asa.other.warning=Warning
 asa.p.agent-services=Access services for clients that have already authorised you to act on their behalf.
 asa.p.client-authorisations=Start a new authorisation request or link your current clients to your account.
 asa.p.manage=Allow other users in your organisation to access this agent services account, or restrict their access.
+asa.h1.money-laundering-supervision-details=Money laundering supervision details
+asa.td.label.name-of-amls-body=Name of money laundering supervisory body
+asa.td.label.amls-reg-number=Your registration number
+asa.td.label.amls-reg-renewal-date=Your next registration renewal date
+asa.h2.update-amls-details=Keep your details up to date
+asa.p.update-amls-details=Tell us when you renew your money laundering supervision registration each year. You can do this once your new registration is approved.
+asa.button.label.update-amls-details=Update money laundering supervision details
 
 # PAYE
 asa.paye-section.h2=View a client’s Income record
@@ -187,6 +194,7 @@ common.no=No
 common.sign-out=Sign out
 common.what.happens.next=What happens next
 common.yes=Yes
+common.not-provided=Not provided
 details.link-hidden= for {0}
 
 # Errors

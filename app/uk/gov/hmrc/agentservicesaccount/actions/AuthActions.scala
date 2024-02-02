@@ -18,7 +18,7 @@ package uk.gov.hmrc.agentservicesaccount.actions
 
 import play.api.mvc.Results._
 import play.api.mvc._
-import play.api.{Configuration, Environment, Logging}
+import play.api.{Environment, Logging}
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
@@ -52,8 +52,7 @@ case class AgentRequest[A](arn: Arn, request: Request[A]) extends WrappedRequest
 @Singleton
 class AuthActions @Inject()(appConfig: AppConfig,
                             override val authConnector: AuthConnector,
-                            val env: Environment,
-                            val config: Configuration)(implicit ec:ExecutionContext) extends AuthorisedFunctions with Logging {
+                            val env: Environment)(implicit ec:ExecutionContext) extends AuthorisedFunctions with Logging {
 
   def authActionRefiner: ActionRefiner[Request, AuthRequestWithAgentInfo] =
     new ActionRefiner[Request, AuthRequestWithAgentInfo] {
@@ -82,7 +81,7 @@ class AuthActions @Inject()(appConfig: AppConfig,
     }
   def handleFailureRefiner[A](implicit request: Request[_]): PartialFunction[Throwable, Either[Result, AuthRequestWithAgentInfo[A]]] = {
     case _: NoActiveSession =>
-      Left(Redirect(s"$signInUrl?continue_url=$continueUrl${request.uri}&origin=$appName"))
+      Left(Redirect(s"${appConfig.signInUrl}?continue_url=${appConfig.continueUrl}${request.uri}&origin=${appConfig.appName}"))
 
     case _: UnsupportedAuthProvider =>
       logger.warn(s"user logged in with unsupported auth provider")
@@ -93,6 +92,36 @@ class AuthActions @Inject()(appConfig: AppConfig,
       Left(Forbidden)
   }
 
+  def withFullUserDetails(body: AgentInfo => Future[Result])
+                         (implicit ec: ExecutionContext, hc: HeaderCarrier, request: Request[AnyContent])
+  : Future[Result] = {
+    authorised(AuthProviders(GovernmentGateway))
+      .retrieve(allEnrolments and credentialRole and email and name and credentials) {
+        case enrols ~ credRole ~ email ~ name ~ credentials =>
+          getArn(enrols) match {
+            case Some(arn) =>
+              val full = AgentInfo(arn, credRole, email, name, credentials)
+              body(full)
+            case _ =>
+              logger.warn("No HMRC-AS-AGENT enrolment found -- redirecting to /agent-subscription/start.")
+              Future successful Redirect(appConfig.agentSubscriptionFrontendUrl)
+          }
+      }
+  }.recover(handleFailure)
+
+  def handleFailure(implicit request: Request[_]): PartialFunction[Throwable, Result] = {
+    case _: NoActiveSession =>
+      Redirect(s"${appConfig.signInUrl}?continue_url=${appConfig.continueUrl}${request.uri}&origin=${appConfig.appName}")
+
+    case _: UnsupportedAuthProvider =>
+      logger.warn(s"user logged in with unsupported auth provider")
+      Forbidden
+
+    case _: UnsupportedAffinityGroup =>
+      logger.warn(s"user logged in with unsupported affinity group")
+      Forbidden
+  }
+
   private def getArn(enrolments: Enrolments): Option[Arn] = {
     for {
       agentEnrol <- enrolments.getEnrolment("HMRC-AS-AGENT")
@@ -101,12 +130,6 @@ class AuthActions @Inject()(appConfig: AppConfig,
       Arn(enrolId.value)
     }
   }
-
-  private def getString(key: String): String = config.underlying.getString(key)
-
-  private val signInUrl = getString("bas-gateway.url")
-  private val continueUrl = getString("login.continue")
-  private val appName = getString("appName")
 }
 
 object AuthActions {

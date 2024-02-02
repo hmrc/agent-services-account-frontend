@@ -151,7 +151,7 @@ class BetaInviteController @Inject()(actions: Actions,
         AgentSize(answers.head.getOrElse("")),
         answers(1).getOrElse(""),
         answers(2).getOrElse(""),
-        answers(3),
+        answers(3)
       )
       Ok(check_answers(detailsForEmail))
     }.toFuture)
@@ -164,7 +164,7 @@ class BetaInviteController @Inject()(actions: Actions,
         AgentSize(answers.head.getOrElse("")),
         answers(1).getOrElse(""),
         answers(2).getOrElse(""),
-        answers(3),
+        answers(3)
       )
       emailService.sendInviteAcceptedEmail(request.agentInfo.arn, detailsForEmail).map(_ =>
         Redirect(controller.showInviteConfirmation)
@@ -176,6 +176,5 @@ class BetaInviteController @Inject()(actions: Actions,
   val showInviteConfirmation: Action[AnyContent] = actions.authActionCheckSuspend { implicit request =>
     Ok(confirmation())
   }
-
 
 }
