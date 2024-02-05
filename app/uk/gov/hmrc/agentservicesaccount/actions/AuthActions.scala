@@ -18,7 +18,7 @@ package uk.gov.hmrc.agentservicesaccount.actions
 
 import play.api.mvc.Results._
 import play.api.mvc._
-import play.api.{Configuration, Environment, Logging}
+import play.api.{Environment, Logging}
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
@@ -31,9 +31,9 @@ import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 class AuthRequestWithAgentInfo[A](
-                         val agentInfo: AgentInfo,
-                         val request: Request[A]
-                       ) extends WrappedRequest[A](request)
+                                   val agentInfo: AgentInfo,
+                                   val request: Request[A]
+                                 ) extends WrappedRequest[A](request)
 
 case class AgentInfo(arn: Arn,
                      credentialRole: Option[CredentialRole],
@@ -47,13 +47,10 @@ case class AgentInfo(arn: Arn,
   }
 }
 
-case class AgentRequest[A](arn: Arn, request: Request[A]) extends WrappedRequest[A](request)
-
 @Singleton
 class AuthActions @Inject()(appConfig: AppConfig,
                             override val authConnector: AuthConnector,
-                            val env: Environment,
-                            val config: Configuration)(implicit ec:ExecutionContext) extends AuthorisedFunctions with Logging {
+                            val env: Environment)(implicit ec:ExecutionContext) extends AuthorisedFunctions with Logging {
 
   def authActionRefiner: ActionRefiner[Request, AuthRequestWithAgentInfo] =
     new ActionRefiner[Request, AuthRequestWithAgentInfo] {
@@ -80,9 +77,9 @@ class AuthActions @Inject()(appConfig: AppConfig,
 
       override protected def executionContext: ExecutionContext = ec
     }
-  def handleFailureRefiner[A](implicit request: Request[_]): PartialFunction[Throwable, Either[Result, AuthRequestWithAgentInfo[A]]] = {
+  private def handleFailureRefiner[A](implicit request: Request[_]): PartialFunction[Throwable, Either[Result, AuthRequestWithAgentInfo[A]]] = {
     case _: NoActiveSession =>
-      Left(Redirect(s"$signInUrl?continue_url=$continueUrl${request.uri}&origin=$appName"))
+      Left(Redirect(s"${appConfig.signInUrl}?continue_url=${appConfig.continueUrl}${request.uri}&origin=${appConfig.appName}"))
 
     case _: UnsupportedAuthProvider =>
       logger.warn(s"user logged in with unsupported auth provider")
@@ -101,12 +98,6 @@ class AuthActions @Inject()(appConfig: AppConfig,
       Arn(enrolId.value)
     }
   }
-
-  private def getString(key: String): String = config.underlying.getString(key)
-
-  private val signInUrl = getString("bas-gateway.url")
-  private val continueUrl = getString("login.continue")
-  private val appName = getString("appName")
 }
 
 object AuthActions {

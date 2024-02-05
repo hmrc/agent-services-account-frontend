@@ -32,7 +32,7 @@ class Actions @Inject()(  agentClientAuthorisationConnector: AgentClientAuthoris
                  actionBuilder:DefaultActionBuilder
               ) (implicit ec: ExecutionContext ) {
 
-  def filterSuspendedAgent(onlyForSuspended: Boolean): ActionFilter[AuthRequestWithAgentInfo] = new ActionFilter[AuthRequestWithAgentInfo] {
+  private def filterSuspendedAgent(onlyForSuspended: Boolean): ActionFilter[AuthRequestWithAgentInfo] = new ActionFilter[AuthRequestWithAgentInfo] {
     def executionContext: ExecutionContext = ec
     def filter[A](request: AuthRequestWithAgentInfo[A]): Future[Option[Result]] = {
       implicit val req: Request[A] = request.request

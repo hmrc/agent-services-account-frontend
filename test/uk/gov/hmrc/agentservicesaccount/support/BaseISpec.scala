@@ -28,6 +28,7 @@ import uk.gov.hmrc.agentservicesaccount.stubs.AgentClientAuthorisationStubs.give
 import uk.gov.hmrc.agentservicesaccount.stubs.AuthStubs
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 
+//TODO do we really need all these?
 abstract class BaseISpec
     extends UnitSpec
       with Matchers
@@ -49,13 +50,15 @@ abstract class BaseISpec
     new GuiceApplicationBuilder()
       .configure(
         "microservice.services.auth.port"                                 -> wireMockPort,
+        "microservice.services.agent-assurance.port"           -> wireMockPort,
         "microservice.services.agent-client-authorisation.port"           -> wireMockPort,
         "microservice.services.agent-permissions.port"                    -> wireMockPort,
         "microservice.services.agent-user-client-details.port"            -> wireMockPort,
         "microservice.services.agent-permissions-frontend.external-url"   -> wireMockBaseUrlAsString,
         "auditing.enabled"                   -> false,
         "metrics.enabled" -> false,
-        "suspendedContactDetails.sendEmail" -> false
+        "suspendedContactDetails.sendEmail" -> false,
+        "features.enable-non-hmrc-supervisory-body" -> true
       )
       .configure(additionalConfiguration)
       .overrides(moduleWithOverrides)
@@ -66,4 +69,5 @@ abstract class BaseISpec
     givenSuspensionStatus(SuspensionDetails(suspensionStatus = false, None))
     ()
   }
+
 }
