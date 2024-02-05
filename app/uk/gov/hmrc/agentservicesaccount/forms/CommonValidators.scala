@@ -40,37 +40,37 @@ object CommonValidators {
   }
 
    val invalidDateConstraint: Constraint[(String, String, String)] = Constraint[(String, String, String)] { data: (String, String, String) =>
-    val (year, month, day) = data
+    val (day, month, year)  = data
 
     Try {
       require(year.length == 4, "Year must be 4 digits")
       LocalDate.of(year.toInt, month.toInt, day.toInt)
     } match {
-      case Failure(_) => Invalid(ValidationError("error.moneyLaunderingCompliance.date.invalid"))
+      case Failure(_) => Invalid(ValidationError("error.updateMoneyLaunderingSupervisory.date.invalid"))
       case Success(_) => Valid
     }
   }
 
    val pastExpiryDateConstraint: Constraint[(String, String, String)] = Constraint[(String, String, String)] {
     data: (String, String, String) =>
-      val (year, month, day) = data
+      val (day, month, year) = data
 
       if (LocalDate.of(year.toInt, month.toInt, day.toInt).isAfter(LocalDate.now()))
         Valid
       else
-        Invalid(ValidationError("error.moneyLaunderingCompliance.date.past"))
+        Invalid(ValidationError("error.updateMoneyLaunderingSupervisory.date.past"))
   }
 
    val within13MonthsExpiryDateConstraint: Constraint[(String, String, String)] =
     Constraint[(String, String, String)] { data: (String, String, String) =>
-      val (year, month, day) = data
+      val (day, month, year ) = data
 
       val futureDate = LocalDate.now().plusMonths(13)
 
       if (LocalDate.of(year.toInt, month.toInt, day.toInt).isBefore(futureDate))
         Valid
       else
-        Invalid(ValidationError("error.moneyLaunderingCompliance.date.before"))
+        Invalid(ValidationError("error.updateMoneyLaunderingSupervisory.date.before"))
     }
 
 

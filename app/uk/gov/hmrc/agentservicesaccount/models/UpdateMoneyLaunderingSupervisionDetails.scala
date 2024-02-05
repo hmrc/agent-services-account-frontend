@@ -22,7 +22,7 @@ import java.time.LocalDate
 
 case class UpdateMoneyLaunderingSupervisionDetails(body: String,
                                                    number: String,
-                                                   endDate: LocalDate // date-input
+                                                   endDate: LocalDate
                                                   )
 
 object UpdateMoneyLaunderingSupervisionDetails{

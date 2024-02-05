@@ -17,7 +17,7 @@
 package uk.gov.hmrc.agentservicesaccount.forms
 
 import play.api.data.Form
-import play.api.data.Forms.{text, tuple}
+import play.api.data.Forms.{mapping, text, tuple}
 import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators._
 import uk.gov.hmrc.agentservicesaccount.models.UpdateMoneyLaunderingSupervisionDetails
 
@@ -26,31 +26,28 @@ import java.time.LocalDate
 
 object UpdateMoneyLaunderingSupervisionForm {
   private val supervisoryBodyRegex = """^[A-Za-z0-9\,\.\'\-\/\ ]{2,200}$""".r
-  private val supervisoryNumberRegex = """^(\+44|0)\d{9,12}$""".r // remove all spaces from input before matching to ensure correct digit count
+  private val supervisoryNumberRegex = """^[A-Za-z0-9\,\.\'\-\/\ ]{2,200}$""".r // remove all spaces from input before matching to ensure correct digit count
 
   private val trimmedText = text.transform[String](x => x.trim, x => x)
 
   val form: Form[UpdateMoneyLaunderingSupervisionDetails] =
-
     Form(
-      tuple(
+      mapping(
         "body" -> trimmedText
-          .verifying("update-contact-details.name.error.empty", _.nonEmpty) // message keys needs to change
-          .verifying("update-contact-details.name.error.invalid", x => x.isEmpty || supervisoryBodyRegex.matches(x)), // message keys needs to change
+          .verifying("update-contact-details.codes.body.error.empty", _.nonEmpty) // message keys needs to change
+          .verifying("update-contact-details.codes.body.error.invalid", x => supervisoryBodyRegex.matches(x)), // message keys needs to change
         "number" -> trimmedText
-          .verifying("update-contact-details.phone.error.empty", _.nonEmpty) // message keys needs to change
-          .verifying("update-contact-details.phone.error.invalid", x => x.isEmpty || supervisoryNumberRegex.matches(x.replace(" ", ""))),
+          .verifying("update-contact-details.reg.number.error.empty", _.nonEmpty) // message keys needs to change
+          .verifying("update-contact-details.reg.number.error.invalid", x => supervisoryNumberRegex.matches(x.replace(" ", ""))),
         "endDate" ->
           tuple(
-            "day" -> text.verifying("day", d => d.trim.nonEmpty || d.matches("^[0-9]{1,2}$")),
-            "month" -> text.verifying("month", y => y.trim.nonEmpty || y.matches("^[0-9]{1,2}$")),
-            "year" -> text.verifying("year", y => y.trim.nonEmpty || y.matches("^[0-9]{1,4}$"))
+            "day" -> text.verifying("error.updateMoneyLaunderingSupervisory.day", d => d.trim.nonEmpty || d.matches("^[0-9]{1,2}$")),
+            "month" -> text.verifying("error.updateMoneyLaunderingSupervisory.month", m => m.trim.nonEmpty || m.matches("^[0-9]{1,2}$")),
+            "year" -> text.verifying("error.updateMoneyLaunderingSupervisory.year", y => y.trim.nonEmpty || y.matches("^[0-9]{1,4}$"))
           ).verifying(checkOneAtATime(Seq(invalidDateConstraint, pastExpiryDateConstraint, within13MonthsExpiryDateConstraint)))
             .transform[LocalDate](
-              { case (y, m, d) => LocalDate.of(y.trim.toInt, m.trim.toInt, d.trim.toInt) },
-              (date: LocalDate) => (date.getYear.toString, date.getMonthValue.toString, date.getDayOfMonth.toString)
-            )
+              { case (d, m, y) => LocalDate.of( y.trim.toInt, m.trim.toInt, d.trim.toInt) },
+              (date: LocalDate) => (date.getYear.toString, date.getMonthValue.toString, date.getDayOfMonth.toString))
+      )(UpdateMoneyLaunderingSupervisionDetails.apply)(UpdateMoneyLaunderingSupervisionDetails.unapply)
       )
-    )
-
 }

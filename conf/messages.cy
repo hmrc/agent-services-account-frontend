@@ -441,6 +441,17 @@ your.account.your.groups.h2=Eich grwpiau mynediad
 your.account.your.groups.off.p=Mae’r grwpiau mynediad wedi’u hanalluogi. Dim ond gweinyddwyr sy’n gallu galluogi neu analluogi grwpiau mynediad.
 your.account.your.groups.p=Nid ydych wedi’ch neilltuo i unrhyw grŵp mynediad ar hyn o bryd
 
+#AMLS Errors
+
+error.updateMoneyLaunderingSupervisory.day=Registration renewal date must include a day
+error.updateMoneyLaunderingSupervisory.month=Registration renewal date must include a month
+error.updateMoneyLaunderingSupervisory.year=Registration renewal date must include a year
+error.updateMoneyLaunderingSupervisory.dayAndMonth=Registration renewal date must include a day and month
+
+error.updateMoneyLaunderingSupervisory.date.invalid=Enter a real date
+error.updateMoneyLaunderingSupervisory.date.past=Your next registration renewal date must be in the future
+error.updateMoneyLaunderingSupervisory.date.before=Your next registration renewal date must be within 13 months of today
+
 #AMLS
 
 amls.confirmation.h1=Money laundering supervision details updated

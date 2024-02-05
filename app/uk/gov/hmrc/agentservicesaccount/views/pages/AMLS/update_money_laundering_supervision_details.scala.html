@@ -1,18 +1,19 @@
 @*
-* Copyright 2023 HM Revenue & Customs
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-* http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*@
+ * Copyright 2023 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.controllers.routes
 @import uk.gov.hmrc.agentservicesaccount.models.UpdateMoneyLaunderingSupervisionDetails
@@ -20,14 +21,14 @@
 @import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
 @import uk.gov.hmrc.govukfrontend.views.html.components.{ErrorSummary, FormWithCSRF, GovukButton, GovukErrorSummary, GovukFieldset, GovukInput, Input, Label, Text, _}
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.accessibleautocomplete.AccessibleAutocomplete
-
+@import uk.gov.hmrc.hmrcfrontend.views.html.components.implicits._
 
 @this(
         main: main,
         h1: h1, p: p,
         formWithCSRF: FormWithCSRF,
         govukInput: GovukInput,
-        inputDate: InputDate,
+        inputDate: input_date,
         govukFieldset: GovukFieldset,
         govukSummaryList: GovukSummaryList,
         govukInsetText: GovukInsetText,
@@ -60,6 +61,11 @@
         "date-field-errors-all"
 }
 
+@dateFormWithRefinedErrors = @{
+    form.copy(errors = form.errors.filterNot(error => error.message == "" || error.key.contains("expiry.day")
+            || error.key.contains("expiry.month") || error.key.contains("expiry.year")))
+}
+
 @main(
     pageTitle = withErrorPrefix(form.hasErrors, msgs("What are your money laundering supervision registration details?")), // create msg
     backLinkHref = Some(routes.BetaInviteController.showInviteDetails.url),
@@ -71,25 +77,40 @@
     <span class="govuk-caption-xl govuk-!-margin-top-5">@msgs("suspend.contact-details.hint1")</span>
     <h1 class="govuk-fieldset__legend--xl govuk-!-margin-top-0">@msgs("suspend.contact-details.heading")</h1>
     <p class="govuk-inset-text govuk-!-margin-bottom-6">@msgs("suspend.contact-details.inset")</p>
-    @formWithCSRF(action = routes.SuspendedJourneyController.submitContactDetails()) { // change to sumbit UpdateAMLS
+    @formWithCSRF(action = routes.UpdateMoneyLaunderingSupervisionController.submitUpdateMoneyLaunderingSupervision) {
         @govukFieldset(Fieldset(
             html = fieldsetHtml
         ))
+    }
+
+    @if(form.hasErrors) {
+        @govukErrorSummary(ErrorSummary().withFormErrorsAsText(form))
+    }
+    <h1 class="govuk-heading-xl">@msgs("amls.enter-renewal-date.title")</h1>
+
+    @formWithCSRF(action = routes.UpdateMoneyLaunderingSupervisionController.submitUpdateMoneyLaunderingSupervision) { // add submit
+
+        @inputDate(
+            field = dateFormWithRefinedErrors("expiry"),
+            legend = msgs("amls.enter-renewal-date.form.title"),
+            hint = Some(msgs("amls.enter-renewal-date.hint"))
+        )
         @govukButton(Button(content = Text(msgs("common.continue-save")), classes = "govuk-!-margin-top-5"))
     }
+
 }
 
 @fieldsetHtml = @{
     govukSelect(Select(
         id = "body",
         name = "body",
-        items = amlsCodes.flatMap {
+        items = amlsCodes.flatMap{
             case (code, bodyName) => Seq(
                 SelectItem(
                     value = Some(code),
                     text = bodyName
-                )
-        }.toSeq,
+                ))}
+        .toSeq,
         label = Label(
             content = HtmlContent(msgs("Name of money laundering supervisory body")),
             classes = "govuk-body govuk-!-font-size-20 govuk-!-font-weight-bold",
@@ -112,6 +133,4 @@
         spellcheck = Some(false),
         autocomplete = Some("number")
     ).withFormField(form("number")))
-
-    //input date
 }
