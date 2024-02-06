@@ -30,6 +30,14 @@ class NoAccessGroupsAssignmentController @Inject()(actions: Actions,
                                                    adminInfoView: admin_access_for_access_groups
                                     )(implicit appConfig: AppConfig, cc: MessagesControllerComponents) extends FrontendController(cc) with I18nSupport {
 
+  def redirectForNoAssignment: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
+    if(request.agentInfo.isAdmin) {
+      Redirect(routes.NoAccessGroupsAssignmentController.showAdminAccessInformation()).toFuture
+    } else {
+      Redirect("not-implemented-standard-user-page").toFuture
+    }
+  }
+
   //For access groups
   def showAdminAccessInformation(): Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     if(request.agentInfo.isAdmin) {
@@ -38,5 +46,6 @@ class NoAccessGroupsAssignmentController @Inject()(actions: Actions,
       Forbidden.toFuture
     }
   }
+
 
 }
