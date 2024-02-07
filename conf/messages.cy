@@ -515,6 +515,16 @@ cannotVerifyEmail.locked.h2=What to do next TBC
 cannotVerifyEmail.locked.p3=You can try again in 24 hours. TBC
 cannotVerifyEmail.locked.p4=If you want to try again with a different email address <a href="{0}">you can change the email address you entered</a>. TBC
 
+#Admin access for access groups
+admin-access.h1=Mae gennych fynediad gweinyddol
+admin-access.p1=Fel gweinyddwr, gallwch roi mynediad at y cleient i chi'ch hun.
+admin-access.p2=Gallwch wneud hynny drwy:
+admin-access.list1=ychwanegu eich hun at grŵp mynediad y mae'r cleient eisoes ynddo
+admin-access.list2=ychwanegu'r cleient at grŵp mynediad rydych chi ynddo
+admin-access.list3=greu grŵp mynediad newydd sy'n cynnwys chi a'r cleient
+admin-access.p3=Os nad ydych yn siŵr sut i wneud hyn, gofynnwch i weinyddwr arall yn eich sefydliad.
+admin-access.button=Ewch i reoli'r cyfrif
+
 #AMLS
 amls.is-hmrc.h1=Is HMRC your money laundering supervisory body?
 amls.is-hmrc.error=Select yes if HMRC is your money laundering supervisory body
