@@ -34,13 +34,16 @@ The link to add users to the agency is in `application.conf` under `user-managem
 
 #### BE services needed to view ASA dashboard
 
-| **Microservice** | **Purpose**  | 
-|------------------|--------------|
-| agent-client-authorisation  | suspension check        | 
-| agent-permissions  | private beta invite check, also granular permissions in manage account         | 
+| **Microservice**           | **Purpose**                                                            | 
+|----------------------------|------------------------------------------------------------------------|
+| agent-client-authorisation | suspension check                                                       | 
+| agent-permissions          | private beta invite check, also granular permissions in manage account | 
 
-    sm --start AGENT_ONBOARDING -r
-    sm --stop AGENT_SERVICES_ACCOUNT_FRONTEND
+agent-assurance is not needed for dashboard, but required for the update AMLS details feature via manage account
+
+
+    sm2 --start AGENT_GRAN_PERMS -r
+    sm2 --stop AGENT_SERVICES_ACCOUNT_FRONTEND
     sbt run
 
 It should then be listening on port 9401
