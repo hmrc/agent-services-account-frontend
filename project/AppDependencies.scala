@@ -1,7 +1,7 @@
 import sbt.*
 
 object AppDependencies {
-  private val mongoVer: String = "1.3.0"
+  private val mongoVer: String = "1.7.0"
   private val bootstrapVer: String = "7.21.0"
 
   val compile = Seq(
@@ -10,7 +10,7 @@ object AppDependencies {
     "uk.gov.hmrc"       %% "agent-kenshoo-monitoring"   % "5.5.0",
     "uk.gov.hmrc"       %% "agent-mtd-identifiers"      % "1.15.0",
     "uk.gov.hmrc.mongo" %% "hmrc-mongo-play-28"         % mongoVer,
-    "uk.gov.hmrc"       %% "play-frontend-hmrc"         % "7.23.0-play-28"
+    "uk.gov.hmrc"       %% "play-frontend-hmrc"         % "7.29.0-play-28"
   )
 
   val test = Seq(

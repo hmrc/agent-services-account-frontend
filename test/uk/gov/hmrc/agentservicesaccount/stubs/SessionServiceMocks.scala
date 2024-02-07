@@ -40,8 +40,8 @@ trait SessionServiceMocks extends MockFactory {
 
   def expectPutSessionItem[T](key: DataKey[T], value: T)
                              (implicit service: SessionCacheService): Unit =
-    (service.put(_: DataKey[T], _: T)(_: Writes[T], _: Request[_], _: ExecutionContext))
-      .expects(key, value, *, *, *)
+    (service.put(_: DataKey[T], _: T)(_: Writes[T], _: Request[_]))
+      .expects(key, value, *, *)
       .returning(Future.successful(("", "")))
 
   def expectDeleteSessionItem[T](key: DataKey[T])

@@ -341,11 +341,14 @@ class AgentServicesControllerSpec extends BaseISpec {
   }
 
 
-  def verifyContactSection(html: Document): Assertion = {
-    val contactDetailsSection = html.select("#contact-details")
-    contactDetailsSection.select("h2").text shouldBe "Contact details"
-    contactDetailsSection.select("p a").text shouldBe "View or update your contact details"
-    contactDetailsSection.select("p a").attr("href") shouldBe "/agent-services-account/contact-details"
+  def verifyYourOrganisationSection(html: Document): Assertion = {
+    val contactDetailsSection = html.select("#your-organisation")
+    contactDetailsSection.select("h2").text shouldBe "Your organisation"
+    val links = contactDetailsSection.select("p a")
+    links.get(0).text shouldBe "View or update your contact details"
+    links.get(0).attr("href") shouldBe "/agent-services-account/contact-details"
+    links.get(1).text shouldBe "View administrators"
+    links.get(1).attr("href") shouldBe "/agent-services-account/administrators"
   }
 
   def verifyClientsSectionNotPresent(html: Document): Assertion = {
@@ -493,7 +496,7 @@ class AgentServicesControllerSpec extends BaseISpec {
 
       verifyClientsSection(html)
       verifyHowToManageSection(html)
-      verifyContactSection(html)
+      verifyYourOrganisationSection(html)
     }
 
     "return status: OK and body containing content for status Opted-In_READY (access groups already created)" in {
@@ -551,7 +554,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       verifyInfoSection(html, "on")
       verifyManageTeamMembersSection(html)
       verifyHowToManageSection(html)
-      verifyContactSection(html)
+      verifyYourOrganisationSection(html)
       verifyClientsSectionNotPresent(html)
 
     }
@@ -579,7 +582,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       verifyManageTeamMembersSection(html)
       verifyClientsSectionNotPresent(html)
       verifyHowToManageSection(html)
-      verifyContactSection(html)
+      verifyYourOrganisationSection(html)
     }
 
     "return status: OK and body containing content for status Opted-Out_WRONG_CLIENT_COUNT" in {
@@ -604,7 +607,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       verifyInfoSection(html, "off")
       verifyHowToManageSection(html)
       verifyClientsSectionNotPresent(html)
-      verifyContactSection(html)
+      verifyYourOrganisationSection(html)
 
     }
 
@@ -628,7 +631,7 @@ class AgentServicesControllerSpec extends BaseISpec {
 
       verifyInfoSection(html, "off")
       verifyHowToManageSection(html)
-      verifyContactSection(html)
+      verifyYourOrganisationSection(html)
       verifyClientsSectionNotPresent(html)
 
     }
@@ -978,14 +981,16 @@ class AgentServicesControllerSpec extends BaseISpec {
       adminEmails.get(2).text shouldBe "a.forger@builder.com"
     }
 
-    "return forbidden for admin users" in {
-      givenAuthorisedAsAgentWith(arn) // isAdmin = true
+    "allow admin users" in {
+      givenAuthorisedAsAgentWith(arn)
+      givenArnAllowedOk()
+      givenSyncEacdSuccess(Arn(arn))
+      givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInReady)
 
       val response = await(controller.administrators()(fakeRequest("GET", adminUrl)))
 
-      status(response) shouldBe 403
+      status(response) shouldBe 200
     }
-
   }
 
   "GET help" should {

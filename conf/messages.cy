@@ -57,6 +57,13 @@ asa.other.warning=Rhybudd
 asa.p.agent-services=Mynediad at wasanaethau ar gyfer cleientiaid sydd eisoes wedi eich awdurdodi i weithredu ar eu rhan.
 asa.p.client-authorisations=Dechrau cais am awdurdodiad newydd neu gysylltu’ch cleientiaid cyfredol â’ch cyfrif.
 asa.p.manage=Caniatáu i ddefnyddwyr eraill yn eich sefydliad gael mynediad at y cyfrif gwasanaethau asiant hwn, neu gyfyngu ar eu mynediad.
+asa.h1.money-laundering-supervision-details=Money laundering supervision details - TBC
+asa.td.label.name-of-amls-body=Name of money laundering supervisory body - TBC
+asa.td.label.amls-reg-number=Your registration number - TBC
+asa.td.label.amls-reg-renewal-date=Your next registration renewal date - TBC
+asa.h2.update-amls-details=Keep your details up to date - TBC
+asa.p.update-amls-details=Tell us when you renew your money laundering supervision registration each year. You can do this once your new registration is approved. - TBC
+asa.button.label.update-amls-details=Update money laundering supervision details - TBC
 
 # PAYE
 asa.paye-section.h2=Bwrw golwg dros gofnod incwm cleient
@@ -75,6 +82,12 @@ asa.ppt.col2.h3=Rheoli Treth Deunydd Pacio Plastig eich cleient
 asa.ppt.col2.link1.href=https://www.tax.service.gov.uk/plastic-packaging-tax/account
 asa.ppt.col2.link1=<a class="govuk-link" href="{0}" rel="noreferrer noopener">Rhoi gwybod am Dreth Deunydd Pacio Plastig eich cleient a bwrw golwg dros daliadau, ffurflenni a chosbau.</a>
 
+# CBC
+asa.cbc.col1.h2=Manage country-by-country reports
+asa.cbc.col1.h3=Country-by-country reports
+asa.cbc-section.col1.link1.p=You must first get an authorisation from your client. You can do this by <a class="govuk-link" href="{0}"> requesting an authorisation</a>
+asa.cbc-section.col1.link2.p=Manage your clients'' country-by-country reports and your country-by-country agent contact details
+
 # Pillar2
 asa.pillar2.col1.h2=Rhoi gwybod am drethi atodol Colofn 2
 asa.pillar2.col1.h3=Cyn i chi ddechrau
@@ -86,12 +99,6 @@ asa.pillar2.col1.text2=Rhaid i chi gael awdurdodiad gan eich cleient yn gyntaf. 
 asa.pillar2.col2.h3=Rheoli trethi atodol Colofn 2 eich cleient
 asa.pillar2.col2.link1.href=https://www.tax.service.gov.uk/pillar2-tax/account
 asa.pillar2.col2.link1=<a class="govuk-link" href="{0}" rel="noreferrer noopener">Rhoi gwybod am drethi atodol Colofn 2 eich cleient a bwrw golwg dros daliadau, ffurflenni a chosbau</a>
-
-# CBC
-asa.cbc.col1.h2=Manage country-by-country reports
-asa.cbc.col1.h3=Country-by-country reports
-asa.cbc-section.col1.link1.p=You must first get an authorisation from your client. You can do this by <a class="govuk-link" href="{0}"> requesting an authorisation</a>
-asa.cbc-section.col1.link2.p=Manage your clients'' country-by-country reports and your country-by-country agent contact details
 
 # VAT
 asa.section1.col1.h3=Cyn i chi ddechrau
@@ -312,11 +319,13 @@ label.beta=BETA
 
 # Manage account
 manage.account.account-details=Bwrw golwg dros y manylion cyswllt sydd gennym ar gyfer eich busnes
+manage.account.view-or-update-contact-details=View or update your contact details - TBC
 manage.account.add-user=Ychwanegu defnyddiwr newydd
 manage.account.clients.heading=Cleientiaid
 manage.account.clients.manage-link=Rheoli cleientiaid
 manage.account.clients.p=Bwrw golwg dros fanylion y cleient, diweddaru cyfeirnod y cleient a gweld pa grwpiau y mae’r cleient yn rhan ohonynt.
 manage.account.clients.unassigned-link=Cleientiaid nad ydynt mewn unrhyw grwpiau
+manage.account.your-organisation.heading=Your organisation TBC
 manage.account.contact-details.heading=Manylion cyswllt
 manage.account.contact-details.view=Bwrw golwg dros y manylion cyswllt sydd gennym ar gyfer eich busnes
 manage.account.h1=Rheoli’r cyfrif
@@ -434,7 +443,6 @@ your.account.role.p=Safonol - Fel defnyddiwr gyda chaniatâd safonol, gallwch fw
 your.account.role=Swydd
 your.account.unassigned-clients.a=Gweld cleientiaid eraill
 your.account.unassigned-clients.h2=Gallwch gael mynediad at y cleientiaid eraill hyn
-your.account.your.admins.a=Bwrw golwg dros y gweinyddwyr
 your.account.your.admins.h2=Gweinyddwyr eich sefydliad
 your.account.your.contact.details.a=Bwrw golwg dros y manylion cyswllt sydd gennym ar gyfer eich busnes
 your.account.your.contact.details.h2=Manylion cyswllt
@@ -509,3 +517,6 @@ amls.is-hmrc.error=Select yes if HMRC is your money laundering supervisory body
 amls.confirmation.h1=Money laundering supervision details updated
 amls.confirmation.p1=We have updated your money laundering supervision details. We will get in touch if we have any questions.
 amls.confirmation.link=Return to manage account
+
+#Administrators
+administrators.link-text=Bwrw golwg dros y gweinyddwyr

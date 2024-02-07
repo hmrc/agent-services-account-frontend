@@ -100,7 +100,6 @@ asa.pillar2.col2.h3=Manage your client’s Pillar 2 top-up taxes
 asa.pillar2.col2.link1.href=https://www.tax.service.gov.uk/pillar2-tax/account
 asa.pillar2.col2.link1=<a class="govuk-link" href="{0}" rel="noreferrer noopener">Report your client’s Pillar 2 top-up taxes and view payments, returns and penalties</a>
 
-
 # VAT
 asa.section1.col1.h3=Before you start
 asa.section1.col1.p2=Not all of your clients may have signed up to Making Tax Digital for VAT. If your client is not signed up, you can still manage and view their VAT details using this account.
@@ -326,6 +325,7 @@ manage.account.clients.heading=Clients
 manage.account.clients.manage-link=Manage clients
 manage.account.clients.p=View client details, update client reference and see what groups a client is in.
 manage.account.clients.unassigned-link=Clients who are not in any groups
+manage.account.your-organisation.heading=Your organisation
 manage.account.contact-details.heading=Contact details
 manage.account.contact-details.view=View the contact details we have for your business
 manage.account.h1=Manage account
@@ -443,7 +443,6 @@ your.account.role.p=You can view your assigned access groups and clients. You ca
 your.account.role=Role
 your.account.unassigned-clients.a=View other clients
 your.account.unassigned-clients.h2=Other clients you can access
-your.account.your.admins.a=View administrators
 your.account.your.admins.h2=Your organisation’s administrators
 your.account.your.contact.details.a=View the contact details we have for your business
 your.account.your.contact.details.h2=Contact details
@@ -518,3 +517,6 @@ amls.is-hmrc.error=Select yes if HMRC is your money laundering supervisory body
 amls.confirmation.h1=Money laundering supervision details updated
 amls.confirmation.p1=We have updated your money laundering supervision details. We will get in touch if we have any questions.
 amls.confirmation.link=Return to manage account
+
+#Administrators
+administrators.link-text=View administrators
