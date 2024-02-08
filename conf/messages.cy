@@ -449,7 +449,6 @@ your.account.role.p=Safonol - Fel defnyddiwr gyda chaniatâd safonol, gallwch fw
 your.account.role=Swydd
 your.account.unassigned-clients.a=Gweld cleientiaid eraill
 your.account.unassigned-clients.h2=Gallwch gael mynediad at y cleientiaid eraill hyn
-your.account.your.admins.a=Bwrw golwg dros y gweinyddwyr
 your.account.your.admins.h2=Gweinyddwyr eich sefydliad
 your.account.your.contact.details.a=Bwrw golwg dros y manylion cyswllt sydd gennym ar gyfer eich busnes
 your.account.your.contact.details.h2=Manylion cyswllt
