@@ -4,6 +4,7 @@ accordion.showAllSections = Dangos pob adran
 accordion.showSection = Dangos
 accordion.showSectionAria = Dangos yr adran hon
 accordion.hideSectionAria = Cuddio’r adran hon
+
 account-details.inset=Bydd angen i chi ysgrifennu atom er mwyn newid y manylion hyn. <a class="govuk-link" href={0} target="_blank" rel="noreferrer noopener">Dysgwch ragor drwy ddarllen yr arweiniad (yn agor tab newydd)</a>. Gallwch ond newid eich manylion os ydych yn gyfarwyddwr, ysgrifennydd cwmni, unig fasnachwr, perchennog neu’n bartner.
 account-details.summary-list.address=Cyfeiriad
 account-details.summary-list.email=E-bost
@@ -12,12 +13,14 @@ account-details.summary-list.header=Manylion y cyfrif gwasanaethau asiant
 account-details.summary-list.name=Enw
 account-details.summary-list.none=Dim
 account-details.title=Manylion y cyfrif
+
 administrators.h1=Gweinyddwyr
 administrators.ul.li.1=galluogi ac analluogi grwpiau mynediad
 administrators.ul.li.2=bwrw golwg dros wybodaeth am bob client a grŵp mynediad
 administrators.ul.li.3=creu, ailenwi a dileu grwpiau mynediad
 administrators.ul.li.4=neilltuo cleientiaid ac aelodau’r tîm i grwpiau mynediad
 administrators.ul.p=Gall gweinyddwyr:
+
 agent-service-bridging.p1= Ar gyfer y gwasanaeth treth hwn, defnyddiwch grwpiau mynediad i reoli pa aelodau o’r tîm sy’n gallu rheoli’r cleient hwn. Defnyddir eich cyfrif gwasanaethau asiant i wneud hyn.
 agent-service-bridging.p2= Rheolir y gwasanaeth treth hwn drwy’ch cyfrif gwasanaethau asiant. Mae caniatâd o ran mynediad ar gyfer y cyfrif gwasanaethau asiant yn gweithio mewn ffordd wahanol i wasanaethau ar-lein eraill CThEF.
 agent-service-bridging.p3= Gall eich sefydliad gyfyngu ar fynediad at drethi cleient drwy ddefnyddio grwpiau mynediad. Os nad yw cleient yn rhan o unrhyw grwpiau mynediad, gall unrhyw aelod o’r tîm reoli treth y cleient hwnnw. Os bydd cleient yn rhan o unrhyw grwpiau mynediad, dim ond aelodau tîm sy'n rhan o’r un grwpiau sy’n gallu rheoli treth y cleient hwnnw.
@@ -25,12 +28,14 @@ agent-service-bridging.p4= Mae’ch sefydliad wedi galluogi grwpiau mynediad. Ga
 agent-service-bridging.p5= Fel gosodiad diofyn, mae gan holl aelodau’ch tîm fynediad at eich holl gleientiaid. Gallwch gyfyngu ar fynediad at drethi cleient drwy ddefnyddio grwpiau mynediad.
 agent-service-bridging.p6= I ddysgu rhagor, dewiswch ‘Galluogi grwpiau mynediad’ ar y dudalen ‘Rheoli cyfrif’. Bydd rhagor o wybodaeth i’w gweld. Yna, gallwch ddewis galluogi grwpiau mynediad neu eu gadael nhw heb eu galluogi.
 agent-service-bridging.title= Mrheoli mynediad drwy’r cyfrif gwasanaethau asiant
+
 agent.accountNumber=Cyfeirnod Asiant: {0}
 agent.addNewUser.links.start=<a href="{0}" rel="noopener noreferrer" id="{1}">Ychwanegu defnyddiwr newydd</a>
 agent.invitations.links.cancel-auth=<a href="{0}" id="{1}" >Canslo awdurdodiad cleient</a>
 agent.invitations.links.start=<a href="{0}" id="{1}" >Gofyn i gleient eich awdurdodi</a>
 agent.invitations.links.track=<a href="{0}" id="{1}" >Rheoli’ch ceisiadau diweddar am awdurdodiad</a>
 agent.manageYourUsers.links.start=<a href="{0}" target="_blank" rel="noopener noreferrer" id="{1}">Rheoli mynediad aelod o’r tîm i’ch cyfrif gwasanaethau asiant<span class="visuallyhidden"> (yn agor tab newydd)</span></a>
+
 app.name=Cyfrif gwasanaethau asiant
 asa.account.home.manage.section.a=Rheoli eich cyfrif
 asa.account.home.manage.section.h2=Rheoli’r cyfrif
@@ -57,13 +62,14 @@ asa.other.warning=Rhybudd
 asa.p.agent-services=Mynediad at wasanaethau ar gyfer cleientiaid sydd eisoes wedi eich awdurdodi i weithredu ar eu rhan.
 asa.p.client-authorisations=Dechrau cais am awdurdodiad newydd neu gysylltu’ch cleientiaid cyfredol â’ch cyfrif.
 asa.p.manage=Caniatáu i ddefnyddwyr eraill yn eich sefydliad gael mynediad at y cyfrif gwasanaethau asiant hwn, neu gyfyngu ar eu mynediad.
-asa.h1.money-laundering-supervision-details=Money laundering supervision details
-asa.td.label.name-of-amls-body=Name of money laundering supervisory body
-asa.td.label.amls-reg-number=Your registration number
-asa.td.label.amls-reg-renewal-date=Your next registration renewal date
-asa.h2.update-amls-details=Keep your details up to date
-asa.p.update-amls-details=Tell us when you renew your money laundering supervision registration each year. You can do this once your new registration is approved.
-asa.button.label.update-amls-details=Update money laundering supervision details
+
+asa.h1.money-laundering-supervision-details=Money laundering supervision details TBC
+asa.td.label.name-of-amls-body=Name of money laundering supervisory body TBC
+asa.td.label.amls-reg-number=Your registration number TBC
+asa.td.label.amls-reg-renewal-date=Your next registration renewal date TBC
+asa.h2.update-amls-details=Keep your details up to date TBC
+asa.p.update-amls-details=Tell us when you renew your money laundering supervision registration each year. You can do this once your new registration is approved. TBC
+asa.button.label.update-amls-details=Update money laundering supervision details TBC
 
 # PAYE
 asa.paye-section.h2=Bwrw golwg dros gofnod incwm cleient
@@ -83,10 +89,10 @@ asa.ppt.col2.link1.href=https://www.tax.service.gov.uk/plastic-packaging-tax/acc
 asa.ppt.col2.link1=<a class="govuk-link" href="{0}" rel="noreferrer noopener">Rhoi gwybod am Dreth Deunydd Pacio Plastig eich cleient a bwrw golwg dros daliadau, ffurflenni a chosbau.</a>
 
 # CBC
-asa.cbc.col1.h2=Manage country-by-country reports
-asa.cbc.col1.h3=Country-by-country reports
-asa.cbc-section.col1.link1.p=You must first get an authorisation from your client. You can do this by <a class="govuk-link" href="{0}"> requesting an authorisation</a>
-asa.cbc-section.col1.link2.p=Manage your clients'' country-by-country reports and your country-by-country agent contact details
+asa.cbc.col1.h2=Manage country-by-country reports TBC
+asa.cbc.col1.h3=Country-by-country reports TBC
+asa.cbc-section.col1.link1.p=You must first get an authorisation from your client. You can do this by <a class="govuk-link" href="{0}"> requesting an authorisation</a> TBC
+asa.cbc-section.col1.link2.p=Manage your clients'' country-by-country reports and your country-by-country agent contact details TBC
 
 # Pillar2
 asa.pillar2.col1.h2=Rhoi gwybod am drethi atodol Colofn 2
@@ -99,7 +105,6 @@ asa.pillar2.col1.text2=Rhaid i chi gael awdurdodiad gan eich cleient yn gyntaf. 
 asa.pillar2.col2.h3=Rheoli trethi atodol Colofn 2 eich cleient
 asa.pillar2.col2.link1.href=https://www.tax.service.gov.uk/pillar2-tax/account
 asa.pillar2.col2.link1=<a class="govuk-link" href="{0}" rel="noreferrer noopener">Rhoi gwybod am drethi atodol Colofn 2 eich cleient a bwrw golwg dros daliadau, ffurflenni a chosbau</a>
-
 
 # VAT
 asa.section1.col1.h3=Cyn i chi ddechrau
@@ -320,7 +325,7 @@ label.beta=BETA
 
 # Manage account
 manage.account.account-details=Bwrw golwg dros y manylion cyswllt sydd gennym ar gyfer eich busnes
-manage.account.view-or-update-contact-details=View or update your contact details
+manage.account.view-or-update-contact-details=View or update your contact details TBC
 manage.account.add-user=Ychwanegu defnyddiwr newydd
 manage.account.clients.heading=Cleientiaid
 manage.account.clients.manage-link=Rheoli cleientiaid
@@ -452,65 +457,73 @@ your.account.your.groups.off.p=Mae’r grwpiau mynediad wedi’u hanalluogi. Dim
 your.account.your.groups.p=Nid ydych wedi’ch neilltuo i unrhyw grŵp mynediad ar hyn o bryd
 
 # View/update contact details
+update-contact-details.title=Contact details TBC
+update-contact-details.summary-list.changes-are-pending.title=Important TBC
+update-contact-details.summary-list.changes-are-pending=You asked us to change these details on {0}. We aim to make these changes within 28 days. TBC
+update-contact-details.summary-list.body.p1=To update these contact details, you must be one of the following: TBC
+update-contact-details.summary-list.body.li1=a director TBC
+update-contact-details.summary-list.body.li2=a proprietor TBC
+update-contact-details.summary-list.body.li3=a company secretary TBC
+update-contact-details.summary-list.body.li4=a partner TBC
+update-contact-details.summary-list.body.li5=a sole trader TBC
+update-contact-details.summary-list.body.p2=We aim to update your contact details within 28 days. We’ll send you a letter when this is done. TBC
+update-contact-details.summary-list.email=Email address TBC
+update-contact-details.summary-list.phone=Telephone number TBC
+update-contact-details.summary-list.name=Business name TBC
+update-contact-details.summary-list.address=Business address TBC
+update-contact-details.summary-list.none=None TBC
 
-update-contact-details.title=Contact details
-update-contact-details.summary-list.changes-are-pending.title=Important
-update-contact-details.summary-list.changes-are-pending=You asked us to change these details on {0}. We aim to make these changes within 28 days.
-update-contact-details.summary-list.body.p1=To update these contact details, you must be one of the following:
-update-contact-details.summary-list.body.li1=a director
-update-contact-details.summary-list.body.li2=a proprietor
-update-contact-details.summary-list.body.li3=a company secretary
-update-contact-details.summary-list.body.li4=a partner
-update-contact-details.summary-list.body.li5=a sole trader
-update-contact-details.summary-list.body.p2=We aim to update your contact details within 28 days. We’ll send you a letter when this is done.
-update-contact-details.summary-list.email=Email address
-update-contact-details.summary-list.phone=Telephone number
-update-contact-details.summary-list.name=Business name
-update-contact-details.summary-list.address=Business address
-update-contact-details.summary-list.none=None
+update-contact-details.name.heading=What is the name you want to show to your clients? TBC
+update-contact-details.name.hint=Clients will see this name when they manage your authorisations and requests. TBC
+update-contact-details.name.error.empty=Enter the name of your business TBC
+update-contact-details.name.error.invalid=Business name must only include letters a to z, numbers, commas, full stops, apostrophes, hyphens, forward slashes and spaces TBC
 
-update-contact-details.name.heading=What is the name you want to show to your clients?
-update-contact-details.name.hint=Clients will see this name when they manage your authorisations and requests.
-update-contact-details.name.error.empty=Enter the name of your business
-update-contact-details.name.error.invalid=Business name must only include letters a to z, numbers, commas, full stops, apostrophes, hyphens, forward slashes and spaces
+update-contact-details.phone.heading=What is the telephone number you want to use for your agent services account? TBC
+update-contact-details.phone.hint=Enter a UK telephone number, like 01632 960 001, 07700 900 982 or +44 808 157 0192. TBC
+update-contact-details.phone.error.empty=Enter a UK telephone number TBC
+update-contact-details.phone.error.invalid=Enter a UK telephone number in the right format TBC
 
-update-contact-details.phone.heading=What is the telephone number you want to use for your agent services account?
-update-contact-details.phone.hint=Enter a UK telephone number, like 01632 960 001, 07700 900 982 or +44 808 157 0192.
-update-contact-details.phone.error.empty=Enter a UK telephone number
-update-contact-details.phone.error.invalid=Enter a UK telephone number in the right format
+update-contact-details.email.heading=What is the email address you want to use for your agent services account? TBC
+update-contact-details.email.hint=We will use this email to contact you about your agent services account and to update you about your authorisation requests. TBC
+update-contact-details.email.error.empty=Enter an email address TBC
+update-contact-details.email.error.invalid=Enter an email address with a name, @ symbol and a domain name, like yourname@example.com TBC
 
-update-contact-details.email.heading=What is the email address you want to use for your agent services account?
-update-contact-details.email.hint=We will use this email to contact you about your agent services account and to update you about your authorisation requests.
-update-contact-details.email.error.empty=Enter an email address
-update-contact-details.email.error.invalid=Enter an email address with a name, @ symbol and a domain name, like yourname@example.com
+update-contact-details.address.country-picker.title=Select your country - Agent services account - GOV.UK TBC
+update-contact-details.address.country-picker=What is the country where your business is based? TBC
+update-contact-details.address.lookup.title=Find your address - Agent services account - GOV.UK TBC
+update-contact-details.address.lookup=What is your business address? TBC
+update-contact-details.address.select.title=Select your address - Agent services account - GOV.UK TBC
+update-contact-details.address.edit.title=Enter your address - Agent services account - GOV.UK TBC
+update-contact-details.address.confirm.title=Review and confirm - Agent services account - GOV.UK TBC
 
-update-contact-details.address.country-picker.title=Select your country - Agent services account - GOV.UK
-update-contact-details.address.country-picker=What is the country where your business is based?
-update-contact-details.address.lookup.title=Find your address - Agent services account - GOV.UK
-update-contact-details.address.lookup=What is your business address?
-update-contact-details.address.select.title=Select your address - Agent services account - GOV.UK
-update-contact-details.address.edit.title=Enter your address - Agent services account - GOV.UK
-update-contact-details.address.confirm.title=Review and confirm - Agent services account - GOV.UK
+update-contact-details.review.title=Check your new contact details TBC
+update-contact-details.review.p1=Check you have made all the necessary changes. You will not be able to submit any more changes for 28 days. TBC
+update-contact-details.review.p2=By submitting this change, you confirm you have one of the following roles in this business: TBC
+update-contact-details.review.submit-change-of-details=Submit change of details TBC
 
-update-contact-details.review.title=Check your new contact details
-update-contact-details.review.p1=Check you have made all the necessary changes. You will not be able to submit any more changes for 28 days.
-update-contact-details.review.p2=By submitting this change, you confirm you have one of the following roles in this business:
-update-contact-details.review.submit-change-of-details=Submit change of details
-
-update-contact-details.submitted.title=Change of details submitted
-update-contact-details.submitted.h2=What happens next
-update-contact-details.submitted.p1=We aim to update your contact details within 28 days.
-update-contact-details.submitted.p2=In the meantime, other teams in HMRC may try to contact you using your old details.
-update-contact-details.submitted.link=Return to manage account
+update-contact-details.submitted.title=Change of details submitted TBC
+update-contact-details.submitted.h2=What happens next TBC
+update-contact-details.submitted.p1=We aim to update your contact details within 28 days. TBC
+update-contact-details.submitted.p2=In the meantime, other teams in HMRC may try to contact you using your old details. TBC
+update-contact-details.submitted.link=Return to manage account TBC
 
 #Cannot verify email
+cannotVerifyEmail.locked.title=We could not confirm your identity TBC
+cannotVerifyEmail.locked.p1=We cannot check your identity because you entered an incorrect verification code too many times. TBC
+cannotVerifyEmail.locked.p2=The verification code was emailed to you. TBC
+cannotVerifyEmail.locked.h2=What to do next TBC
+cannotVerifyEmail.locked.p3=You can try again in 24 hours. TBC
+cannotVerifyEmail.locked.p4=If you want to try again with a different email address <a href="{0}">you can change the email address you entered</a>. TBC
 
-cannotVerifyEmail.locked.title=We could not confirm your identity
-cannotVerifyEmail.locked.p1=We cannot check your identity because you entered an incorrect verification code too many times.
-cannotVerifyEmail.locked.p2=The verification code was emailed to you.
-cannotVerifyEmail.locked.h2=What to do next
-cannotVerifyEmail.locked.p3=You can try again in 24 hours.
-cannotVerifyEmail.locked.p4=If you want to try again with a different email address <a href="{0}">you can change the email address you entered</a>.
+#Admin access for access groups
+admin-access.h1=Mae gennych fynediad gweinyddol
+admin-access.p1=Fel gweinyddwr, gallwch roi mynediad at y cleient i chi'ch hun.
+admin-access.p2=Gallwch wneud hynny drwy:
+admin-access.list1=ychwanegu eich hun at grŵp mynediad y mae'r cleient eisoes ynddo
+admin-access.list2=ychwanegu'r cleient at grŵp mynediad rydych chi ynddo
+admin-access.list3=greu grŵp mynediad newydd sy'n cynnwys chi a'r cleient
+admin-access.p3=Os nad ydych yn siŵr sut i wneud hyn, gofynnwch i weinyddwr arall yn eich sefydliad.
+admin-access.button=Ewch i reoli'r cyfrif
 
 #AMLS
 amls.is-hmrc.h1=Is HMRC your money laundering supervisory body?
