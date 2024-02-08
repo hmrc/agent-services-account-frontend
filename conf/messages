@@ -518,6 +518,13 @@ amls.is-hmrc.error=Select yes if HMRC is your money laundering supervisory body
 amls.confirmation.h1=Money laundering supervision details updated
 amls.confirmation.p1=We have updated your money laundering supervision details. We will get in touch if we have any questions.
 amls.confirmation.link=Return to manage account
+amls.enter-renewal-update.title=What are your money laundering supervision registration details?
+amls.enter-renewal.h1=What are your money laundering supervision registration details?
+amls.enter-renewal-body.hint=Start typing and select your supervisory body from the list.
+amls.enter-renewal-date.form.title=Your next registration renewal date
+amls.enter-renewal-date.hint=For example, 31 3 2024
+amls.enter-renewal-registration.number.h1=Your registration number
+amls.enter-renewal-body.h1=Name of money laundering supervisory body
 
 #AMLS Errors
 

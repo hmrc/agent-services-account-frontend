@@ -25,8 +25,8 @@ import java.time.LocalDate
 
 
 object UpdateMoneyLaunderingSupervisionForm {
-  private val supervisoryBodyRegex = """^[A-Za-z0-9\,\.\'\-\/\ ]{2,200}$""".r
-  private val supervisoryNumberRegex = """^[A-Za-z0-9\,\.\'\-\/\ ]{2,200}$""".r // remove all spaces from input before matching to ensure correct digit count
+  private val supervisoryBodyRegex = """^[A-Za-z0-9\,\.\'\-\/\ ]{0,200}$""".r
+  private val supervisoryNumberRegex = """^[A-Za-z0-9\,\.\'\-\/\ ]{0,200}$""".r // remove all spaces from input before matching to ensure correct digit count
 
   private val trimmedText = text.transform[String](x => x.trim, x => x)
 
@@ -34,10 +34,10 @@ object UpdateMoneyLaunderingSupervisionForm {
     Form(
       mapping(
         "body" -> trimmedText
-          .verifying("update-contact-details.codes.body.error.empty", _.nonEmpty) // message keys needs to change
-          .verifying("update-contact-details.codes.body.error.invalid", x => supervisoryBodyRegex.matches(x)), // message keys needs to change
+          .verifying("update-contact-details.codes.body.error.empty", _.nonEmpty)
+          .verifying("update-contact-details.codes.body.error.invalid", x => supervisoryBodyRegex.matches(x)),
         "number" -> trimmedText
-          .verifying("update-contact-details.reg.number.error.empty", _.nonEmpty) // message keys needs to change
+          .verifying("update-contact-details.reg.number.error.empty", _.nonEmpty)
           .verifying("update-contact-details.reg.number.error.invalid", x => supervisoryNumberRegex.matches(x.replace(" ", ""))),
         "endDate" ->
           tuple(

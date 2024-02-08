@@ -62,46 +62,12 @@
 }
 
 @dateFormWithRefinedErrors = @{
-    form.copy(errors = form.errors.filterNot(error => error.message == "" || error.key.contains("expiry.day")
-            || error.key.contains("expiry.month") || error.key.contains("expiry.year")))
+    form.copy(errors = form.errors.filterNot(error => error.message == "" || error.key.contains("endDate.day")
+            || error.key.contains("endDate.month") || error.key.contains("endDate.year")))
 }
 
-@main(
-    pageTitle = withErrorPrefix(form.hasErrors, msgs("What are your money laundering supervision registration details?")), // create msg
-    backLinkHref = Some(routes.BetaInviteController.showInviteDetails.url),
-    showSecondaryNav = false
-) {
-    @if(form.hasErrors) {
-        @govukErrorSummary(ErrorSummary(errorList = form.errors.asTextErrorLinks, title = Text(msgs("survey.error.summary"))))
-    }
-    <span class="govuk-caption-xl govuk-!-margin-top-5">@msgs("suspend.contact-details.hint1")</span>
-    <h1 class="govuk-fieldset__legend--xl govuk-!-margin-top-0">@msgs("suspend.contact-details.heading")</h1>
-    <p class="govuk-inset-text govuk-!-margin-bottom-6">@msgs("suspend.contact-details.inset")</p>
-    @formWithCSRF(action = routes.UpdateMoneyLaunderingSupervisionController.submitUpdateMoneyLaunderingSupervision) {
-        @govukFieldset(Fieldset(
-            html = fieldsetHtml
-        ))
-    }
-
-    @if(form.hasErrors) {
-        @govukErrorSummary(ErrorSummary().withFormErrorsAsText(form))
-    }
-    <h1 class="govuk-heading-xl">@msgs("amls.enter-renewal-date.title")</h1>
-
-    @formWithCSRF(action = routes.UpdateMoneyLaunderingSupervisionController.submitUpdateMoneyLaunderingSupervision) { // add submit
-
-        @inputDate(
-            field = dateFormWithRefinedErrors("expiry"),
-            legend = msgs("amls.enter-renewal-date.form.title"),
-            hint = Some(msgs("amls.enter-renewal-date.hint"))
-        )
-        @govukButton(Button(content = Text(msgs("common.continue-save")), classes = "govuk-!-margin-top-5"))
-    }
-
-}
-
-@fieldsetHtml = @{
-    govukSelect(Select(
+@fieldsetHtml = {
+    @govukSelect(Select(
         id = "body",
         name = "body",
         items = amlsCodes.flatMap{
@@ -110,27 +76,60 @@
                     value = Some(code),
                     text = bodyName
                 ))}
-        .toSeq,
+                .toSeq,
         label = Label(
-            content = HtmlContent(msgs("Name of money laundering supervisory body")),
+            content = HtmlContent(msgs("amls.enter-renewal-body.h1")),
             classes = "govuk-body govuk-!-font-size-20 govuk-!-font-weight-bold",
             isPageHeading = false
-        )
+        ),
+        hint = Some(Hint(content = Text(msgs("amls.enter-renewal-body.hint"))))
     ).asAccessibleAutocomplete(Some(
         AccessibleAutocomplete(
             defaultValue = Some(""),
             showAllValues = true)
-    ))
-    .withFormField(form("body")))
+    )).withFormField(form("body")))
 
-    govukInput(Input(
+    @govukInput(Input(
         label = Label(
-            content = HtmlContent(msgs("Your registration number")),
+            content = HtmlContent(msgs("amls.enter-renewal-registration.number.h1")),
             classes = "govuk-body govuk-!-font-size-20 govuk-!-font-weight-bold",
             isPageHeading = false
         ),
         classes = "",
         spellcheck = Some(false),
-        autocomplete = Some("number")
+        autocomplete = Some("number"),
+
+
     ).withFormField(form("number")))
+
+    @inputDate(
+        field = dateFormWithRefinedErrors("endDate"),
+        legend = msgs("amls.enter-renewal-date.form.title"),
+        hint = Some(msgs("amls.enter-renewal-date.hint"))
+    )
+
+}
+
+@main(
+    pageTitle = withErrorPrefix(form.hasErrors, msgs("amls.enter-renewal.h1")), // create msg
+    mimicBrowserBackLink = true,
+    showSecondaryNav = false
+) {
+    @if(form.hasErrors) {
+        @govukErrorSummary(ErrorSummary(errorList = form.errors.asTextErrorLinks, title = Text(msgs("survey.error.summary"))))
+    }
+
+    @formWithCSRF(action = routes.UpdateMoneyLaunderingSupervisionController.submitUpdateMoneyLaunderingSupervision) {
+        @govukFieldset(Fieldset(
+            html = fieldsetHtml,
+            legend = Some(Legend(
+                content = Text(msgs("amls.enter-renewal-update.title")),
+                classes = "govuk-fieldset__legend--xl",
+
+                isPageHeading = true
+            ))
+        ))
+
+        @govukButton(Button(content = Text(msgs("common.continue-save")), classes = "govuk-!-margin-top-5"))
+    }
 }

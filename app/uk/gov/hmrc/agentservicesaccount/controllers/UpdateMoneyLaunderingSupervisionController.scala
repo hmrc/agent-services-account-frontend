@@ -30,36 +30,39 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class UpdateMoneyLaunderingSupervisionController @Inject()()(implicit appConfig: AppConfig,
+class UpdateMoneyLaunderingSupervisionController @Inject()(implicit appConfig: AppConfig,
                                                              amlsLoader: AMLSLoader,
                                                              actions: Actions,
                                                              cacheService: SessionCacheService,
-                                                             //UpdateMoneySupervisonFormDetails: UpdateMoneyLaunderingSupervisionDetails,
-                                                             UpdateMoneySupervisonView: update_money_laundering_supervision_details,
+                                                             UpdateMoneySupervisionView: update_money_laundering_supervision_details,
                                                              cc: MessagesControllerComponents,
-                                                             ec: ExecutionContext) extends FrontendController(cc) with I18nSupport{
+                                                             ec: ExecutionContext,
+                                                             )
+                                                             extends FrontendController(cc) with I18nSupport{
 
-  private val amlsBodies: Map[String, String] = amlsLoader.load("/amls.csv")
+  private val amlsBodies: Map[String, String] = amlsLoader.load("/amls-no-hmrc.csv")
 
-  def showUpdateMoneyLaunderingSupervision: Action[AnyContent] = actions.authActionOnlyForSuspended.async { implicit request =>
+  def showUpdateMoneyLaunderingSupervision: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
       val updateAmlsForm = UpdateMoneyLaunderingSupervisionForm.form
-      //  UpdateMoneyLaunderingSupervisionDetails
-
-      Ok(UpdateMoneySupervisonView(updateAmlsForm, amlsBodies)).toFuture
+    actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
+      Ok(UpdateMoneySupervisionView(updateAmlsForm, amlsBodies)).toFuture
+    }
     }
 
-  def submitUpdateMoneyLaunderingSupervision: Action[AnyContent] = actions.authActionOnlyForSuspended.async { implicit request =>
-    UpdateMoneyLaunderingSupervisionForm.form.bindFromRequest().fold(
-      formWithErrors => {
-        UpdateMoneySupervisonView(formWithErrors, amlsBodies).toFuture.map(BadRequest(_))
-      },
-      formData => {
-        for {
-          _ <- cacheService.put(BODY,formData.body )
-          _ <- cacheService.put(REG_NUMBER, formData.number)
-          _ <- cacheService.put(END_DATE, formData.endDate)
-        } yield Redirect(routes.AmlsConfirmationController.showUpdatedAmlsConfirmationPage)
-      }
-    )
+  def submitUpdateMoneyLaunderingSupervision: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
+    actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
+      UpdateMoneyLaunderingSupervisionForm.form.bindFromRequest().fold(
+        formWithErrors => {
+          Ok(UpdateMoneySupervisionView(formWithErrors, amlsBodies)).toFuture
+        },
+        formData => {
+          for {
+            _ <- cacheService.put(BODY, formData.body)
+            _ <- cacheService.put(REG_NUMBER, formData.number)
+            _ <- cacheService.put(END_DATE, formData.endDate)
+          } yield Redirect(routes.AmlsConfirmationController.showUpdatedAmlsConfirmationPage)
+        }
+      )
+    }
   }
 }
