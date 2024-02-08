@@ -21,12 +21,14 @@
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 @import uk.gov.hmrc.agentservicesaccount.views.components.models.SummaryListData
 @import uk.gov.hmrc.agentservicesaccount.views.html.pages.manage_account_partials.contact_details_link
+@import uk.gov.hmrc.agentservicesaccount.views.html.pages.manage_account_partials.administrators_link
 
 @this(
         main: main, h1: h1, h2: h2, h3: h3, p: p,
         a: a, ul_html: ul_html, span: span,
         summary_list: summary_list,
-        contact_details_link: contact_details_link
+        contact_details_link: contact_details_link,
+        administrators_link: administrators_link
 )
 
 @(
@@ -79,17 +81,15 @@
         @p("your.account.your.groups.off.p")
     }
 
-
     <div id="bottom-panel">
         <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
         @h2("your.account.your.admins.h2")
-        @a("your.account.your.admins.a", href = routes.AgentServicesController.administrators.url)
+        @administrators_link()
 
         <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
 
             @h2("manage.account.contact-details.heading")
-            @p(html = Some(contact_details_link())
-                ))
+            @p(html = Some(contact_details_link()))
     </div>
 
 }

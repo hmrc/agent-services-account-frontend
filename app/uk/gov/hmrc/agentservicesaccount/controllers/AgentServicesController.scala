@@ -136,15 +136,14 @@ class AgentServicesController @Inject()(authActions: AuthActions,
 
   val administrators: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     val agentInfo = request.agentInfo
-    if (!agentInfo.isAdmin) {
       agentUserClientDetailsConnector.getTeamMembers(agentInfo.arn).map { maybeMembers =>
         Ok(
           administrators_html(
+            agentInfo.isAdmin,
             maybeMembers.getOrElse(Seq.empty)
               .filterNot(_.credentialRole.getOrElse("").equals("Assistant")))
         )
       }
-    } else Forbidden.toFuture
   }
 
 

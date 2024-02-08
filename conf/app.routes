@@ -32,6 +32,7 @@ GET        /keep-alive                              @uk.gov.hmrc.agentservicesac
 
 GET        /manage-account                          @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController.manageAccount
 GET        /account-details                         @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController.accountDetails
+GET        /administrators                          @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController.administrators
 
 GET        /manage-account/administrative-access    @uk.gov.hmrc.agentservicesaccount.controllers.NoAccessGroupsAssignmentController.showAdminAccessInformation()
 GET        /no-assignment                           @uk.gov.hmrc.agentservicesaccount.controllers.NoAccessGroupsAssignmentController.redirectForNoAssignment
@@ -41,7 +42,6 @@ GET        /agent-services-access                   @uk.gov.hmrc.agentservicesac
 
 # Assitant or 'Standard' user only
 GET        /your-account                            @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController.yourAccount
-GET        /your-account/administrators             @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController.administrators
 
 # Private beta feature testing
 POST       /private-beta-invite/decline             @uk.gov.hmrc.agentservicesaccount.controllers.BetaInviteController.hideInvite

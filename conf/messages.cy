@@ -331,6 +331,7 @@ manage.account.clients.heading=Cleientiaid
 manage.account.clients.manage-link=Rheoli cleientiaid
 manage.account.clients.p=Bwrw golwg dros fanylion y cleient, diweddaru cyfeirnod y cleient a gweld pa grwpiau y mae’r cleient yn rhan ohonynt.
 manage.account.clients.unassigned-link=Cleientiaid nad ydynt mewn unrhyw grwpiau
+manage.account.your-organisation.heading=Your organisation TBC
 manage.account.contact-details.heading=Manylion cyswllt
 manage.account.contact-details.view=Bwrw golwg dros y manylion cyswllt sydd gennym ar gyfer eich busnes
 manage.account.h1=Rheoli’r cyfrif
@@ -448,7 +449,6 @@ your.account.role.p=Safonol - Fel defnyddiwr gyda chaniatâd safonol, gallwch fw
 your.account.role=Swydd
 your.account.unassigned-clients.a=Gweld cleientiaid eraill
 your.account.unassigned-clients.h2=Gallwch gael mynediad at y cleientiaid eraill hyn
-your.account.your.admins.a=Bwrw golwg dros y gweinyddwyr
 your.account.your.admins.h2=Gweinyddwyr eich sefydliad
 your.account.your.contact.details.a=Bwrw golwg dros y manylion cyswllt sydd gennym ar gyfer eich busnes
 your.account.your.contact.details.h2=Manylion cyswllt
@@ -531,3 +531,6 @@ amls.is-hmrc.error=Select yes if HMRC is your money laundering supervisory body
 amls.confirmation.h1=Money laundering supervision details updated
 amls.confirmation.p1=We have updated your money laundering supervision details. We will get in touch if we have any questions.
 amls.confirmation.link=Return to manage account
+
+#Administrators
+administrators.link-text=Bwrw golwg dros y gweinyddwyr

@@ -42,7 +42,7 @@ class SessionCacheService @Inject()(
   }
 
   def put[T](dataKey: DataKey[T], value: T)
-            (implicit writes: Writes[T], request: Request[_], ec: ExecutionContext): Future[(String, String)] = {
+            (implicit writes: Writes[T], request: Request[_]): Future[(String, String)] = {
     sessionCacheRepository.putSession(dataKey, value)
   }
 

@@ -41,7 +41,6 @@ import uk.gov.hmrc.auth.core.retrieve.Retrieval
 import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
 
 import java.time.Instant
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 
 class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneAppPerSuite with ScalaFutures with IntegrationPatience with MockFactory {

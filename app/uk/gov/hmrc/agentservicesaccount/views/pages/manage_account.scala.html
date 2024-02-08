@@ -15,7 +15,6 @@
  *@
 
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-@import uk.gov.hmrc.agentservicesaccount.controllers.routes
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 @import uk.gov.hmrc.agentservicesaccount.views.html.pages.manage_account_partials._
 @import uk.gov.hmrc.agents.accessgroups.optin._
@@ -27,7 +26,7 @@
     maybe_inset_text: maybe_inset_text,
     access_groups_section: access_groups_section,
     clients: clients,
-    contact_details: contact_details,
+        your_organisation: your_organisation,
     manage_team_members_groups: manage_team_members_groups,
     team_members: team_members,
     info: info,
@@ -49,7 +48,7 @@
         @clients(maybeOptinStatus.get)
         @manage_team_members_groups(maybeOptinStatus.get)
         @team_members(maybeOptinStatus.get)
-        @contact_details()
+        @your_organisation()
     } else {
         @p("manage.account.p")
         @ul_html(
