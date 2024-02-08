@@ -34,7 +34,7 @@ GET        /manage-account                          @uk.gov.hmrc.agentservicesac
 GET        /account-details                         @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController.accountDetails
 
 GET        /manage-account/administrative-access    @uk.gov.hmrc.agentservicesaccount.controllers.NoAccessGroupsAssignmentController.showAdminAccessInformation()
-GET        /no-assignment                           @uk.gov.hmrc.agentservicesaccount.controllers.NoAccessGroupsAssignmentController.redirectForNoAssignemnt
+GET        /no-assignment                           @uk.gov.hmrc.agentservicesaccount.controllers.NoAccessGroupsAssignmentController.redirectForNoAssignment
 
 #Route for Optin or OptOut status
 GET        /agent-services-access                   @uk.gov.hmrc.agentservicesaccount.controllers.ManageLandingController.showAccessGroupSummaryForASA

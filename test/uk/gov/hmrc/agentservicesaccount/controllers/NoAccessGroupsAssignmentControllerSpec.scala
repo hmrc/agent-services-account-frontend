@@ -20,7 +20,7 @@ import org.mockito.stubbing.ScalaOngoingStubbing
 import org.mockito.{ArgumentMatchersSugar, IdiomaticMockito}
 import org.scalatestplus.play.PlaySpec
 import play.api.Environment
-import play.api.http.Status.{FORBIDDEN, OK}
+import play.api.http.Status.{FORBIDDEN, OK, SEE_OTHER}
 import play.api.i18n.Messages
 import play.api.mvc.{DefaultActionBuilderImpl, MessagesControllerComponents, Request, Result}
 import play.api.test.Helpers.stubMessagesControllerComponents
@@ -93,6 +93,28 @@ class NoAccessGroupsAssignmentControllerSpec extends PlaySpec
     protected val cc: MessagesControllerComponents = stubMessagesControllerComponents()
 
     object TestController extends NoAccessGroupsAssignmentController(mockActions, mockView)(mockAppConfig, cc)
+  }
+
+  "redirect for no assignment" should {
+    "redirect admin user to show admin access information" in new Setup {
+      givenAuthorisedAgent(User)
+      givenNotSuspended()
+
+      val result: Future[Result] = TestController.redirectForNoAssignment(fakeRequest)
+
+      Helpers.status(result) mustBe SEE_OTHER
+      Helpers.redirectLocation(result) mustBe Some("/agent-services-account/manage-account/administrative-access")
+    }
+
+    "redirect standard user to administrators list" in new Setup {
+      givenAuthorisedAgent(Assistant)
+      givenNotSuspended()
+
+      val result: Future[Result] = TestController.redirectForNoAssignment(fakeRequest)
+
+      Helpers.status(result) mustBe SEE_OTHER
+      Helpers.redirectLocation(result) mustBe Some("/agent-services-account/your-account/administrators")
+    }
   }
 
   "show admin access information" should {

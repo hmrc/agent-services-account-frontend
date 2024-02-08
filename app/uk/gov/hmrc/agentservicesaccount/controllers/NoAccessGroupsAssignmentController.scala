@@ -34,7 +34,7 @@ class NoAccessGroupsAssignmentController @Inject()(actions: Actions,
     if(request.agentInfo.isAdmin) {
       Redirect(routes.NoAccessGroupsAssignmentController.showAdminAccessInformation()).toFuture
     } else {
-      Redirect("not-implemented-standard-user-page").toFuture
+      Redirect(routes.AgentServicesController.administrators).toFuture
     }
   }
 
