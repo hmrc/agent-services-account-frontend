@@ -4,6 +4,7 @@ accordion.showAllSections = Show all sections
 accordion.showSection = Show
 accordion.showSectionAria = Show this section
 accordion.hideSectionAria = Hide this section
+
 account-details.inset=To change these details you will need to write to us. <a class="govuk-link" href={0} target="_blank" rel="noreferrer noopener">Find out more by reading the guidance (opens in a new tab)</a>. You can only change your details if you are a director, company secretary, sole trader, proprietor or partner.
 account-details.summary-list.address=Address
 account-details.summary-list.phone=Contact telephone number
@@ -12,12 +13,14 @@ account-details.summary-list.header=Agent services account details
 account-details.summary-list.name=Name
 account-details.summary-list.none=None
 account-details.title=Account details
+
 administrators.h1=Administrators
 administrators.ul.li.1=turn access groups on or off
 administrators.ul.li.2=view information about all clients and access groups
 administrators.ul.li.3=create, rename and delete access groups
 administrators.ul.li.4=assign clients and team members to access groups
 administrators.ul.p=Administrators can:
+
 agent-service-bridging.p1= For this tax service, use access groups to control which team members can manage this client. This is done in your agent services account.
 agent-service-bridging.p2= This tax service is managed through your agent services account. Access permissions for the agent services account work differently from other HMRC online services.
 agent-service-bridging.p3= Your organisation can restrict access to a client’s taxes using access groups. If a client is not in any access groups, any team member can manage their tax. If a client is in access groups, only team members in the same groups can manage their tax.
@@ -25,12 +28,14 @@ agent-service-bridging.p4= Your organisation has turned access groups on. You ca
 agent-service-bridging.p5= By default, all your team members have access to all your clients. You can restrict access to a client’s taxes using access groups.
 agent-service-bridging.p6= To find out more, select ‘Turn on access groups’ on the ‘Manage account’ page. You’ll be shown more information. You can then choose to turn access groups on or leave them off.
 agent-service-bridging.title= Manage access in the agent services account
+
 agent.accountNumber=Agent Reference Number: {0}
 agent.addNewUser.links.start=<a href="{0}" rel="noopener noreferrer" id="{1}">Add a new user</a>
 agent.invitations.links.cancel-auth=<a href="{0}" id="{1}" >Cancel a client’s authorisation</a>
 agent.invitations.links.start=<a href="{0}" id="{1}" >Ask a client to authorise you</a>
 agent.invitations.links.track=<a href="{0}" id="{1}" >Manage your recent authorisation requests</a>
 agent.manageYourUsers.links.start=<a href="{0}" target="_blank" rel="noopener noreferrer" id="{1}">Manage user access to your agent services account<span class="visuallyhidden"> (Opens in a new tab)</span></a>
+
 app.name=Agent services account
 asa.account.home.manage.section.a=Manage your account
 asa.account.home.manage.section.h2=Manage account
@@ -57,6 +62,7 @@ asa.other.warning=Warning
 asa.p.agent-services=Access services for clients that have already authorised you to act on their behalf.
 asa.p.client-authorisations=Start a new authorisation request or link your current clients to your account.
 asa.p.manage=Allow other users in your organisation to access this agent services account, or restrict their access.
+
 asa.h1.money-laundering-supervision-details=Money laundering supervision details
 asa.td.label.name-of-amls-body=Name of money laundering supervisory body
 asa.td.label.amls-reg-number=Your registration number
@@ -99,7 +105,6 @@ asa.pillar2.col1.text2=You must first get authorisation from your client. You ca
 asa.pillar2.col2.h3=Manage your client’s Pillar 2 top-up taxes
 asa.pillar2.col2.link1.href=https://www.tax.service.gov.uk/pillar2-tax/account
 asa.pillar2.col2.link1=<a class="govuk-link" href="{0}" rel="noreferrer noopener">Report your client’s Pillar 2 top-up taxes and view payments, returns and penalties</a>
-
 
 # VAT
 asa.section1.col1.h3=Before you start
@@ -452,7 +457,6 @@ your.account.your.groups.off.p=Access groups are turned off. Only administrators
 your.account.your.groups.p=You are not currently assigned to any access groups.
 
 # View/update contact details
-
 update-contact-details.title=Contact details
 update-contact-details.summary-list.changes-are-pending.title=Important
 update-contact-details.summary-list.changes-are-pending=You asked us to change these details on {0}. We aim to make these changes within 28 days.
@@ -504,13 +508,22 @@ update-contact-details.submitted.p2=In the meantime, other teams in HMRC may try
 update-contact-details.submitted.link=Return to manage account
 
 #Cannot verify email
-
 cannotVerifyEmail.locked.title=We could not confirm your identity
 cannotVerifyEmail.locked.p1=We cannot check your identity because you entered an incorrect verification code too many times.
 cannotVerifyEmail.locked.p2=The verification code was emailed to you.
 cannotVerifyEmail.locked.h2=What to do next
 cannotVerifyEmail.locked.p3=You can try again in 24 hours.
 cannotVerifyEmail.locked.p4=If you want to try again with a different email address <a href="{0}">you can change the email address you entered</a>.
+
+#admin access for access groups
+admin-access.h1=You have administrative access
+admin-access.p1=As an administrator, you can give yourself access to the client.
+admin-access.p2=You can do this by:
+admin-access.list1=adding yourself to an access group the client is already in
+admin-access.list2=adding the client to an access group you are in
+admin-access.list3=creating a new access group containing you and the client
+admin-access.p3=If you are not sure how to do this, ask another administrator in your organisation.
+admin-access.button=Go to manage account
 
 #AMLS
 amls.is-hmrc.h1=Is HMRC your money laundering supervisory body?
