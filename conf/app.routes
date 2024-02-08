@@ -1,5 +1,4 @@
 # microservice specific routes
-
 ->         /hmrc-frontend                           hmrcfrontend.Routes
 
 GET        /assets/*file                            controllers.Assets.at(path="/public", file)
@@ -35,8 +34,9 @@ GET        /manage-account                          @uk.gov.hmrc.agentservicesac
 GET        /account-details                         @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController.accountDetails
 GET        /administrators                          @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController.administrators
 
-#Route for Optin or OptOut status
+GET        /manage-account/administrative-access    @uk.gov.hmrc.agentservicesaccount.controllers.NoAccessGroupsAssignmentController.showAdminAccessInformation()
 
+#Route for Optin or OptOut status
 GET        /agent-services-access                   @uk.gov.hmrc.agentservicesaccount.controllers.ManageLandingController.showAccessGroupSummaryForASA
 
 # Assitant or 'Standard' user only

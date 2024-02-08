@@ -77,8 +77,9 @@ class SupervisionDetailsViewSpec extends PlaySpec with GuiceOneAppPerSuite {
         doc.select("p").first.text() mustBe
           "Tell us when you renew your money laundering supervision registration each year. You can do this once your new registration is approved."
       }
-      "have the correct update button" in {
+      "have the correct update button link" in {
         doc.select(".govuk-button").first.text() mustBe "Update money laundering supervision details"
+        doc.select(".govuk-button").first.attr("href") mustBe "/agent-services-account/manage-account/money-laundering-supervisory-body"
       }
     }
 
