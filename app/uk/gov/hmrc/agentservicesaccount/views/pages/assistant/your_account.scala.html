@@ -22,13 +22,15 @@
 @import uk.gov.hmrc.agentservicesaccount.views.components.models.SummaryListData
 @import uk.gov.hmrc.agentservicesaccount.views.html.pages.manage_account_partials.contact_details_link
 @import uk.gov.hmrc.agentservicesaccount.views.html.pages.manage_account_partials.administrators_link
+@import uk.gov.hmrc.agentservicesaccount.views.html.pages.manage_account_partials.your_organisation
 
 @this(
         main: main, h1: h1, h2: h2, h3: h3, p: p,
         a: a, ul_html: ul_html, span: span,
         summary_list: summary_list,
         contact_details_link: contact_details_link,
-        administrators_link: administrators_link
+        administrators_link: administrators_link,
+        your_organisation: your_organisation
 )
 
 @(
@@ -83,13 +85,8 @@
 
     <div id="bottom-panel">
         <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-        @h2("your.account.your.admins.h2")
-        @administrators_link()
-
-        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-
-            @h2("manage.account.contact-details.heading")
-            @p(html = Some(contact_details_link()))
+        @your_organisation("your.account.your.contact.details.a")
     </div>
+
 
 }

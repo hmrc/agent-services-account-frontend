@@ -20,11 +20,11 @@
 
 @this(p: p, h2: h2, a: a, contact_details_link: contact_details_link, administrators_link: administrators_link)
 
-@()(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
+@(contactDetailsMessageKey: String = "manage.account.view-or-update-contact-details")(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
 <section id="your-organisation">
 
     @h2("manage.account.your-organisation.heading")
 
-    @p(html = Some(contact_details_link()))
+    @p(html = Some(contact_details_link(contactDetailsMessageKey)))
     @p(html = Some(administrators_link()))
 </section>

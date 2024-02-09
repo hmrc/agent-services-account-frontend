@@ -19,16 +19,16 @@ package uk.gov.hmrc.agentservicesaccount.controllers
 
 import org.jsoup.Jsoup
 import play.api.i18n.{Lang, MessagesApi}
-import play.api.test.Helpers._
 import play.api.test.FakeRequest
+import play.api.test.Helpers._
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
-import uk.gov.hmrc.agents.accessgroups.optin.OptedInReady
+import uk.gov.hmrc.agents.accessgroups.optin.{OptedInReady, OptedOutSingleUser}
 import uk.gov.hmrc.agentservicesaccount.models.AccessGroupSummaries
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentPermissionsStubs.{givenAccessGroupsForArn, givenArnAllowedOk, givenOptinStatusSuccessReturnsForArn, givenSyncEacdSuccess}
 import uk.gov.hmrc.agentservicesaccount.support.Css.{H1, paragraphs}
 import uk.gov.hmrc.agentservicesaccount.support.{BaseISpec, Css}
-import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.auth.core.{Enrolment, EnrolmentIdentifier}
+import uk.gov.hmrc.http.SessionKeys
 
 
 class ManageLandingControllerSpec extends BaseISpec {
@@ -55,6 +55,7 @@ class ManageLandingControllerSpec extends BaseISpec {
     "return page correct content when OptOut" in {
       // Given: auth agent with no opt in status
       givenAuthorisedAsAgentWith(arn)
+      givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedOutSingleUser)
       // When:
       val response = await(controller.showAccessGroupSummaryForASA()(FakeRequest("GET", "/agent-services-access").withSession(SessionKeys.authToken -> "Bearer XYZ")))
       status(response) shouldBe 200

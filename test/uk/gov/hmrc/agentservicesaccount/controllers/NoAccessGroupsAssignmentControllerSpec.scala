@@ -113,7 +113,7 @@ class NoAccessGroupsAssignmentControllerSpec extends PlaySpec
       val result: Future[Result] = TestController.redirectForNoAssignment(fakeRequest)
 
       Helpers.status(result) mustBe SEE_OTHER
-      Helpers.redirectLocation(result) mustBe Some("/agent-services-account/your-account/administrators")
+      Helpers.redirectLocation(result) mustBe Some("/agent-services-account/administrators")
     }
   }
 
