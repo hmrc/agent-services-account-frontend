@@ -19,10 +19,10 @@
 
 @this(a: a)
 
-@()(implicit msgs: Messages, appConfig: AppConfig)
+@(key: String = "manage.account.view-or-update-contact-details")(implicit msgs: Messages, appConfig: AppConfig)
 
 @if(appConfig.enableChangeContactDetails) {
-  @a("manage.account.view-or-update-contact-details", href = routes.ContactDetailsController.showCurrentContactDetails.url)
+  @a(key, href = routes.ContactDetailsController.showCurrentContactDetails.url)
 } else {
   @a("manage.account.account-details", href = routes.AgentServicesController.accountDetails.url)
 }

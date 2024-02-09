@@ -838,12 +838,11 @@ class AgentServicesControllerSpec extends BaseISpec {
 
       //BOTTOM PANEL
       val bottomPanel = html.select("div#bottom-panel")
-      bottomPanel.select("h2").get(0).text shouldBe "Your organisation’s administrators"
-      bottomPanel.select("a").get(0).text shouldBe "View administrators"
-      bottomPanel.select("a").get(0).attr("href") shouldBe routes.AgentServicesController.administrators.url
-      bottomPanel.select("h2").get(1).text shouldBe "Contact details"
-      bottomPanel.select("a").get(1).text shouldBe "View or update your contact details"
-      bottomPanel.select("a").get(1).attr("href") shouldBe routes.ContactDetailsController.showCurrentContactDetails.url
+      bottomPanel.select("h2").get(0).text shouldBe "Your organisation"
+      bottomPanel.select("a").get(0).text shouldBe "View the contact details we have for your business"
+      bottomPanel.select("a").get(0).attr("href") shouldBe routes.ContactDetailsController.showCurrentContactDetails.url
+      bottomPanel.select("a").get(1).text shouldBe "View administrators"
+      bottomPanel.select("a").get(1).attr("href") shouldBe routes.AgentServicesController.administrators.url
 
     }
 
@@ -875,12 +874,11 @@ class AgentServicesControllerSpec extends BaseISpec {
       userGroupsPanel.isEmpty shouldBe true
 
       val bottomPanel = html.select("div#bottom-panel")
-      bottomPanel.select("h2").get(0).text shouldBe "Your organisation’s administrators"
-      bottomPanel.select("a").get(0).text shouldBe "View administrators"
-      bottomPanel.select("a").get(0).attr("href") shouldBe routes.AgentServicesController.administrators.url
-      bottomPanel.select("h2").get(1).text shouldBe "Contact details"
-      bottomPanel.select("a").get(1).text shouldBe "View or update your contact details"
-      bottomPanel.select("a").get(1).attr("href") shouldBe routes.ContactDetailsController.showCurrentContactDetails.url
+      bottomPanel.select("h2").get(0).text shouldBe "Your organisation"
+      bottomPanel.select("a").get(0).text shouldBe "View the contact details we have for your business"
+      bottomPanel.select("a").get(0).attr("href") shouldBe routes.ContactDetailsController.showCurrentContactDetails.url
+      bottomPanel.select("a").get(1).text shouldBe "View administrators"
+      bottomPanel.select("a").get(1).attr("href") shouldBe routes.AgentServicesController.administrators.url
 
     }
 
@@ -927,12 +925,11 @@ class AgentServicesControllerSpec extends BaseISpec {
 
       //BOTTOM PANEL
       val bottomPanel = html.select("div#bottom-panel")
-      bottomPanel.select("h2").get(0).text shouldBe "Your organisation’s administrators"
-      bottomPanel.select("a").get(0).text shouldBe "View administrators"
-      bottomPanel.select("a").get(0).attr("href") shouldBe routes.AgentServicesController.administrators.url
-      bottomPanel.select("h2").get(1).text shouldBe "Contact details"
-      bottomPanel.select("a").get(1).text shouldBe "View or update your contact details"
-      bottomPanel.select("a").get(1).attr("href") shouldBe routes.ContactDetailsController.showCurrentContactDetails.url
+      bottomPanel.select("h2").get(0).text shouldBe "Your organisation"
+      bottomPanel.select("a").get(0).text shouldBe "View the contact details we have for your business"
+      bottomPanel.select("a").get(0).attr("href") shouldBe routes.ContactDetailsController.showCurrentContactDetails.url
+      bottomPanel.select("a").get(1).text shouldBe "View administrators"
+      bottomPanel.select("a").get(1).attr("href") shouldBe routes.AgentServicesController.administrators.url
 
 
     }
@@ -940,7 +937,7 @@ class AgentServicesControllerSpec extends BaseISpec {
 
   val adminUrl: String = routes.AgentServicesController.administrators.url
 
-  s"GET on Administrators of your account at url: $adminUrl" should {
+  s"GET on Administrators at url: $adminUrl" should {
 
     "render static data and list of Admin Users for ARN if standard user" in {
       givenAuthorisedAsAgentWith(arn, isAdmin = false)
@@ -985,11 +982,21 @@ class AgentServicesControllerSpec extends BaseISpec {
       givenAuthorisedAsAgentWith(arn)
       givenArnAllowedOk()
       givenSyncEacdSuccess(Arn(arn))
+      val teamMembers = Seq(
+        UserDetails(credentialRole = Some("User"), name = Some("Robert Builder"), email = Some("bob@builder.com")),
+        UserDetails(credentialRole = Some("User"), name = Some("Steve Smith"), email = Some("steve@builder.com")),
+        UserDetails(credentialRole = Some("Admin"), name = Some("Albert Forger"), email = Some("a.forger@builder.com")),
+        //Assistant will be filtered out from the results we get back
+        UserDetails(credentialRole = Some("Assistant"), name = Some("irrelevant")),
+      )
+      stubGetTeamMembersForArn(Arn(arn), teamMembers)
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInReady)
 
       val response = await(controller.administrators()(fakeRequest("GET", adminUrl)))
 
       status(response) shouldBe 200
+      val html = Jsoup.parse(contentAsString(response))
+      html.select(backLink).get(0).attr("href") shouldBe "/agent-services-account/manage-account"
     }
   }
 
