@@ -23,7 +23,7 @@ administrators.ul.p=Gall gweinyddwyr:
 
 agent-service-bridging.p1= Ar gyfer y gwasanaeth treth hwn, defnyddiwch grwpiau mynediad i reoli pa aelodau o’r tîm sy’n gallu rheoli’r cleient hwn. Defnyddir eich cyfrif gwasanaethau asiant i wneud hyn.
 agent-service-bridging.p2= Rheolir y gwasanaeth treth hwn drwy’ch cyfrif gwasanaethau asiant. Mae caniatâd o ran mynediad ar gyfer y cyfrif gwasanaethau asiant yn gweithio mewn ffordd wahanol i wasanaethau ar-lein eraill CThEF.
-agent-service-bridging.p3= Gall eich sefydliad gyfyngu ar fynediad at drethi cleient drwy ddefnyddio grwpiau mynediad. Os nad yw cleient yn rhan o unrhyw grwpiau mynediad, gall unrhyw aelod o’r tîm reoli treth y cleient hwnnw. Os bydd cleient yn rhan o unrhyw grwpiau mynediad, dim ond aelodau tîm sy'n rhan o’r un grwpiau sy’n gallu rheoli treth y cleient hwnnw.
+agent-service-bridging.p3= Gall eich sefydliad gyfyngu ar fynediad at drethi cleient drwy ddefnyddio grwpiau mynediad. Os nad yw cleient yn rhan o unrhyw grwpiau mynediad, gall unrhyw aelod o’r tîm reoli treth y cleient hwnnw. Os bydd cleient yn rhan o unrhyw grwpiau mynediad, dim ond aelodau tîm sy’n rhan o’r un grwpiau sy’n gallu rheoli treth y cleient hwnnw.
 agent-service-bridging.p4= Mae’ch sefydliad wedi galluogi grwpiau mynediad. Gallwch greu grwpiau mynediad newydd, neu fwrw golwg dros grwpiau presennol, drwy’r sgrin ‘Rheoli cyfrif’.
 agent-service-bridging.p5= Fel gosodiad diofyn, mae gan holl aelodau’ch tîm fynediad at eich holl gleientiaid. Gallwch gyfyngu ar fynediad at drethi cleient drwy ddefnyddio grwpiau mynediad.
 agent-service-bridging.p6= I ddysgu rhagor, dewiswch ‘Galluogi grwpiau mynediad’ ar y dudalen ‘Rheoli cyfrif’. Bydd rhagor o wybodaeth i’w gweld. Yna, gallwch ddewis galluogi grwpiau mynediad neu eu gadael nhw heb eu galluogi.
@@ -39,7 +39,7 @@ agent.manageYourUsers.links.start=<a href="{0}" target="_blank" rel="noopener no
 app.name=Cyfrif gwasanaethau asiant
 asa.account.home.manage.section.a=Rheoli eich cyfrif
 asa.account.home.manage.section.h2=Rheoli’r cyfrif
-asa.account.home.manage.section.p=Gweld eich rhestr cleientiaid a diweddaru cyfeiriadau cleient. Rheoli mynediad aelodau eich tîm i'r cyfrif hwn a chleientiaid penodol.
+asa.account.home.manage.section.p=Gweld eich rhestr cleientiaid a diweddaru cyfeiriadau cleient. Rheoli mynediad aelodau eich tîm i’r cyfrif hwn a chleientiaid penodol.
 asa.additional.links.agent-afi.body2=<a href="{0}" id="{1}">Bwrw golwg dros gofnod incwm cleient</a>
 asa.additional.links.agent-afi.ga.link-view=cysylltiad – bwrw golwg
 asa.additional.links.agent-afi.ga.manage-clients=Rheoli eich cleientiaid
@@ -92,7 +92,7 @@ asa.ppt.col2.link1=<a class="govuk-link" href="{0}" rel="noreferrer noopener">Rh
 asa.cbc.col1.h2=Manage country-by-country reports TBC
 asa.cbc.col1.h3=Country-by-country reports TBC
 asa.cbc-section.col1.link1.p=You must first get an authorisation from your client. You can do this by <a class="govuk-link" href="{0}"> requesting an authorisation</a> TBC
-asa.cbc-section.col1.link2.p=Manage your clients'' country-by-country reports and your country-by-country agent contact details TBC
+asa.cbc-section.col1.link2.p=Manage your clients’ country-by-country reports and your country-by-country agent contact details TBC
 
 # Pillar2
 asa.pillar2.col1.h2=Rhoi gwybod am drethi atodol Colofn 2
@@ -149,7 +149,7 @@ asa.sectionITSA.col2.h3=Rheoli manylion Treth Incwm eich cleient
 asa.sectionITSA.col2.link1.text=Bwrw golwg dros fanylion Treth Incwm eich cleient
 asa.sectionITSA.col2.link2.text=Helpu cleientiaid i wirio a ydynt yn gymwys (yn agor tab newydd)
 asa.sectionITSA.h2=Troi Treth yn Ddigidol ar gyfer Treth Incwm
-asa.tax-services=Gwasanaethau treth y gallwch gael mynediad iddynt drwy'r cyfrif hwn
+asa.tax-services=Gwasanaethau treth y gallwch gael mynediad iddynt drwy’r cyfrif hwn
 
 # Trusts
 asa.trusts-section.col1.h3=Cyn i chi ddechrau
@@ -517,13 +517,13 @@ cannotVerifyEmail.locked.p4=If you want to try again with a different email addr
 
 #Admin access for access groups
 admin-access.h1=Mae gennych fynediad gweinyddol
-admin-access.p1=Fel gweinyddwr, gallwch roi mynediad at y cleient i chi'ch hun.
+admin-access.p1=Fel gweinyddwr, gallwch roi mynediad at y cleient i chi’ch hun.
 admin-access.p2=Gallwch wneud hynny drwy:
-admin-access.list1=ychwanegu eich hun at grŵp mynediad y mae'r cleient eisoes ynddo
-admin-access.list2=ychwanegu'r cleient at grŵp mynediad rydych chi ynddo
-admin-access.list3=greu grŵp mynediad newydd sy'n cynnwys chi a'r cleient
+admin-access.list1=ychwanegu eich hun at grŵp mynediad y mae’r cleient eisoes ynddo
+admin-access.list2=ychwanegu’r cleient at grŵp mynediad rydych chi ynddo
+admin-access.list3=greu grŵp mynediad newydd sy’n cynnwys chi a’r cleient
 admin-access.p3=Os nad ydych yn siŵr sut i wneud hyn, gofynnwch i weinyddwr arall yn eich sefydliad.
-admin-access.button=Ewch i reoli'r cyfrif
+admin-access.button=Ewch i reoli’r cyfrif
 
 #AMLS
 amls.is-hmrc.h1=Is HMRC your money laundering supervisory body?
