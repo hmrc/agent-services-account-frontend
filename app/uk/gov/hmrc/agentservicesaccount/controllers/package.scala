@@ -19,6 +19,7 @@ package uk.gov.hmrc.agentservicesaccount
 import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
 import uk.gov.hmrc.mongo.cache.DataKey
 
+import java.time.LocalDate
 import scala.concurrent.Future
 
 package object controllers {
@@ -32,6 +33,9 @@ package object controllers {
   val PHONE: DataKey[String] = DataKey("phone")
   val ARN: DataKey[String] = DataKey("arn")
   val DESCRIPTION: DataKey[String] = DataKey("description")
+  val BODY: DataKey[String] = DataKey("body")
+  val REG_NUMBER: DataKey[String] = DataKey("number")
+  val END_DATE: DataKey[LocalDate] = DataKey("endDate")
 
   // when the user changes their own details, this is a 'draft' of the set of updated details before the user sends the update request
   val DRAFT_NEW_CONTACT_DETAILS: DataKey[AgencyDetails] = DataKey("updatedContactDetails")

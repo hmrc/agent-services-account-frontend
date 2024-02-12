@@ -1,0 +1,135 @@
+@*
+ * Copyright 2023 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+@import uk.gov.hmrc.agentservicesaccount.controllers.routes
+@import uk.gov.hmrc.agentservicesaccount.models.UpdateMoneyLaunderingSupervisionDetails
+@import uk.gov.hmrc.agentservicesaccount.views.html._
+@import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
+@import uk.gov.hmrc.govukfrontend.views.html.components.{ErrorSummary, FormWithCSRF, GovukButton, GovukErrorSummary, GovukFieldset, GovukInput, Input, Label, Text, _}
+@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.accessibleautocomplete.AccessibleAutocomplete
+@import uk.gov.hmrc.hmrcfrontend.views.html.components.implicits._
+
+@this(
+        main: main,
+        h1: h1, p: p,
+        formWithCSRF: FormWithCSRF,
+        govukInput: GovukInput,
+        inputDate: input_date,
+        govukFieldset: GovukFieldset,
+        govukSummaryList: GovukSummaryList,
+        govukInsetText: GovukInsetText,
+        govukButton: GovukButton,
+        govukSelect: GovukSelect,
+        govukErrorSummary: GovukErrorSummary
+)
+
+@(form: Form[UpdateMoneyLaunderingSupervisionDetails], amlsCodes: Map[String, String])(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
+
+
+
+@DayFieldError = @{
+    if(form("endDate.day").hasErrors)
+        "day-field-error"
+}
+
+@MonthFieldError = @{
+    if(form("endDate.month").hasErrors)
+        "month-field-error"
+}
+
+@YearFieldError = @{
+    if(form("endDate.year").hasErrors)
+        "year-field-error"
+}
+
+@DateFieldErrorsAll = @{
+    if(form("endDate").hasErrors && !form("endDate.day").hasErrors && !form("endDate.month").hasErrors && !form("endDate.year").hasErrors)
+        "date-field-errors-all"
+}
+
+@dateFormWithRefinedErrors = @{
+    form.copy(errors = form.errors.filterNot(error => error.message == "" || error.key.contains("endDate.day")
+            || error.key.contains("endDate.month") || error.key.contains("endDate.year")))
+}
+
+@fieldsetHtml = {
+    @govukSelect(Select(
+        id = "body",
+        name = "body",
+        items = amlsCodes.flatMap{
+            case (code, bodyName) => Seq(
+                SelectItem(
+                    value = Some(code),
+                    text = bodyName
+                ))}
+                .toSeq,
+        label = Label(
+            content = HtmlContent(msgs("amls.enter-renewal-body.h1")),
+            classes = "govuk-body govuk-!-font-size-20 govuk-!-font-weight-bold",
+            isPageHeading = false
+        ),
+        hint = Some(Hint(content = Text(msgs("amls.enter-renewal-body.hint"))))
+    ).asAccessibleAutocomplete(Some(
+        AccessibleAutocomplete(
+            defaultValue = Some(""),
+            showAllValues = true)
+    )).withFormField(form("body")))
+
+    @govukInput(Input(
+        label = Label(
+            content = HtmlContent(msgs("amls.enter-renewal-registration.number.h1")),
+            classes = "govuk-body govuk-!-font-size-20 govuk-!-font-weight-bold",
+            isPageHeading = false
+        ),
+        classes = "",
+        spellcheck = Some(false),
+        autocomplete = Some("number"),
+
+
+    ).withFormField(form("number")))
+
+    @inputDate(
+        field = dateFormWithRefinedErrors("endDate"),
+        legend = msgs("amls.enter-renewal-date.form.title"),
+        hint = Some(msgs("amls.enter-renewal-date.hint"))
+    )
+
+}
+
+@main(
+    pageTitle = withErrorPrefix(form.hasErrors, msgs("amls.enter-renewal.h1")), // create msg
+    mimicBrowserBackLink = true,
+    showSecondaryNav = false
+) {
+    @if(form.hasErrors) {
+        @govukErrorSummary(ErrorSummary(errorList = form.errors.asTextErrorLinks, title = Text(msgs("survey.error.summary"))))
+    }
+
+    @formWithCSRF(action = routes.UpdateMoneyLaunderingSupervisionController.submitUpdateMoneyLaunderingSupervision) {
+        @govukFieldset(Fieldset(
+            html = fieldsetHtml,
+            legend = Some(Legend(
+                content = Text(msgs("amls.enter-renewal-update.title")),
+                classes = "govuk-fieldset__legend--xl",
+
+                isPageHeading = true
+            ))
+        ))
+
+        @govukButton(Button(content = Text(msgs("common.continue-save")), classes = "govuk-!-margin-top-5"))
+    }
+}

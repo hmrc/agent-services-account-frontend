@@ -531,6 +531,29 @@ amls.is-hmrc.error=Select yes if HMRC is your money laundering supervisory body
 amls.confirmation.h1=Money laundering supervision details updated
 amls.confirmation.p1=We have updated your money laundering supervision details. We will get in touch if we have any questions.
 amls.confirmation.link=Return to manage account
+amls.enter-renewal-update.title=What are your money laundering supervision registration details?
+amls.enter-renewal.h1=What are your money laundering supervision registration details?
+amls.enter-renewal-body.hint=Start typing and select your supervisory body from the list.
+amls.enter-renewal-date.form.title=Your next registration renewal date
+amls.enter-renewal-date.hint=For example, 31 3 2024
+amls.enter-renewal-registration.number.h1=Your registration number
+amls.enter-renewal-body.h1=Name of money laundering supervisory body
+
+#AMLS Errors
+
+error.updateMoneyLaunderingSupervisory.day=Registration renewal date must include a day
+error.updateMoneyLaunderingSupervisory.month=Registration renewal date must include a month
+error.updateMoneyLaunderingSupervisory.year=Registration renewal date must include a year
+error.updateMoneyLaunderingSupervisory.dayAndMonth=Registration renewal date must include a day and month
+
+error.updateMoneyLaunderingSupervisory.date.invalid=Enter a real date
+error.updateMoneyLaunderingSupervisory.date.past=Your next registration renewal date must be in the future
+error.updateMoneyLaunderingSupervisory.date.before=Your next registration renewal date must be within 13 months of today
+
+update-contact-details.reg.number.error.invalid=Registration number must include?.
+update-contact-details.reg.number.error.empty=Enter your money laundering supervision registration number
+update-contact-details.codes.body.error.invalid=Money laundering supervisory body must be on the list
+update-contact-details.codes.body.error.empty=Enter your money laundering supervisory body
 
 #Administrators
 administrators.link-text=Bwrw golwg dros y gweinyddwyr
