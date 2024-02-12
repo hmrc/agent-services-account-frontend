@@ -526,34 +526,33 @@ admin-access.p3=Os nad ydych yn siŵr sut i wneud hyn, gofynnwch i weinyddwr ara
 admin-access.button=Ewch i reoli’r cyfrif
 
 #AMLS
-amls.is-hmrc.h1=Is HMRC your money laundering supervisory body?
-amls.is-hmrc.error=Select yes if HMRC is your money laundering supervisory body
-amls.confirmation.h1=Money laundering supervision details updated
-amls.confirmation.p1=We have updated your money laundering supervision details. We will get in touch if we have any questions.
-amls.confirmation.link=Return to manage account
-amls.enter-renewal-update.title=What are your money laundering supervision registration details?
-amls.enter-renewal.h1=What are your money laundering supervision registration details?
-amls.enter-renewal-body.hint=Start typing and select your supervisory body from the list.
-amls.enter-renewal-date.form.title=Your next registration renewal date
-amls.enter-renewal-date.hint=For example, 31 3 2024
-amls.enter-renewal-registration.number.h1=Your registration number
-amls.enter-renewal-body.h1=Name of money laundering supervisory body
+amls.is-hmrc.h1=Is HMRC your money laundering supervisory body? TBC
+amls.is-hmrc.error=Select yes if HMRC is your money laundering supervisory body TBC
+amls.confirmation.h1=Money laundering supervision details updated TBC
+amls.confirmation.p1=We have updated your money laundering supervision details. We will get in touch if we have any questions. TBC
+amls.confirmation.link=Return to manage account TBC
+amls.enter-renewal-update.title=What are your money laundering supervision registration details? TBC
+amls.enter-renewal.h1=What are your money laundering supervision registration details? TBC
+amls.enter-renewal-body.hint=Start typing and select your supervisory body from the list. TBC
+amls.enter-renewal-date.form.title=Your next registration renewal date TBC
+amls.enter-renewal-date.hint=For example, 31 3 2024 TBC
+amls.enter-renewal-registration.number.h1=Your registration number TBC
+amls.enter-renewal-body.h1=Name of money laundering supervisory body TBC
 
 #AMLS Errors
+update-money-laundering-supervisory.error.day=Registration renewal date must include a day TBC
+update-money-laundering-supervisory.error.month=Registration renewal date must include a month TBC
+update-money-laundering-supervisory.error.year=Registration renewal date must include a year TBC
+update-money-laundering-supervisory.error.day-and-month=Registration renewal date must include a day and month TBC
 
-error.updateMoneyLaunderingSupervisory.day=Registration renewal date must include a day
-error.updateMoneyLaunderingSupervisory.month=Registration renewal date must include a month
-error.updateMoneyLaunderingSupervisory.year=Registration renewal date must include a year
-error.updateMoneyLaunderingSupervisory.dayAndMonth=Registration renewal date must include a day and month
+update-money-laundering-supervisory.error.date.invalid=Enter a real date TBC
+update-money-laundering-supervisory.error.date.past=Your next registration renewal date must be in the future TBC
+update-money-laundering-supervisory.error.date.before=Your next registration renewal date must be within 13 months of today TBC
 
-error.updateMoneyLaunderingSupervisory.date.invalid=Enter a real date
-error.updateMoneyLaunderingSupervisory.date.past=Your next registration renewal date must be in the future
-error.updateMoneyLaunderingSupervisory.date.before=Your next registration renewal date must be within 13 months of today
-
-update-contact-details.reg.number.error.invalid=Registration number must include?.
-update-contact-details.reg.number.error.empty=Enter your money laundering supervision registration number
-update-contact-details.codes.body.error.invalid=Money laundering supervisory body must be on the list
-update-contact-details.codes.body.error.empty=Enter your money laundering supervisory body
+update-money-laundering-supervisory.reg-number.error.invalid=Registration number must be a number TBC
+update-money-laundering-supervisory.reg-number.error.empty=Enter your money laundering supervision registration number TBC
+update-money-laundering-supervisory.body-codes.error.invalid=Money laundering supervisory body must be on the list TBC
+update-money-laundering-supervisory.body-codes.error.empty=Enter your money laundering supervisory body TBC
 
 #Administrators
 administrators.link-text=Bwrw golwg dros y gweinyddwyr

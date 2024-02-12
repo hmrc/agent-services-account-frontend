@@ -540,20 +540,19 @@ amls.enter-renewal-registration.number.h1=Your registration number
 amls.enter-renewal-body.h1=Name of money laundering supervisory body
 
 #AMLS Errors
+update-money-laundering-supervisory.error.day=Registration renewal date must include a day
+update-money-laundering-supervisory.error.month=Registration renewal date must include a month
+update-money-laundering-supervisory.error.year=Registration renewal date must include a year
+update-money-laundering-supervisory.error.day-and-month=Registration renewal date must include a day and month
 
-error.updateMoneyLaunderingSupervisory.day=Registration renewal date must include a day
-error.updateMoneyLaunderingSupervisory.month=Registration renewal date must include a month
-error.updateMoneyLaunderingSupervisory.year=Registration renewal date must include a year
-error.updateMoneyLaunderingSupervisory.dayAndMonth=Registration renewal date must include a day and month
+update-money-laundering-supervisory.error.date.invalid=Enter a real date
+update-money-laundering-supervisory.error.date.past=Your next registration renewal date must be in the future
+update-money-laundering-supervisory.error.date.before=Your next registration renewal date must be within 13 months of today
 
-error.updateMoneyLaunderingSupervisory.date.invalid=Enter a real date
-error.updateMoneyLaunderingSupervisory.date.past=Your next registration renewal date must be in the future
-error.updateMoneyLaunderingSupervisory.date.before=Your next registration renewal date must be within 13 months of today
-
-update-contact-details.reg.number.error.invalid=Registration number must include?.
-update-contact-details.reg.number.error.empty=Enter your money laundering supervision registration number
-update-contact-details.codes.body.error.invalid=Money laundering supervisory body must be on the list
-update-contact-details.codes.body.error.empty=Enter your money laundering supervisory body
+update-money-laundering-supervisory.reg-number.error.invalid=Registration number must be a number
+update-money-laundering-supervisory.reg-number.error.empty=Enter your money laundering supervision registration number
+update-money-laundering-supervisory.body-codes.error.invalid=Money laundering supervisory body must be on the list
+update-money-laundering-supervisory.body-codes.error.empty=Enter your money laundering supervisory body
 
 #Administrators
 administrators.link-text=View administrators
