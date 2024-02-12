@@ -26,8 +26,7 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class SessionCacheService @Inject()(
-                                     sessionCacheRepository: SessionCacheRepository) {
+class SessionCacheService @Inject()(sessionCacheRepository: SessionCacheRepository) {
 
 
   def withSessionItem[T](dataKey: DataKey[T])

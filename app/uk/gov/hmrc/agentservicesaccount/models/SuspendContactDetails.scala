@@ -23,6 +23,6 @@ case class SuspendContactDetails(name: String,
                                  email: String,
                                  phone: String)
 
-object SuspendContactDetails{
+object SuspendContactDetails {
   implicit val formats: OFormat[SuspendContactDetails] = Json.format[SuspendContactDetails]
 }

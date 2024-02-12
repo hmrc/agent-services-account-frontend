@@ -60,17 +60,19 @@ class ContactDetailsController @Inject()(actions: Actions,
     if (appConfig.enableChangeContactDetails) action else Future.successful(NotFound)
   }
 
-  def ifFeatureEnabledAndNoPendingChanges(action: => Future[Result])(implicit request: AuthRequestWithAgentInfo[_]): Future[Result] = {
+  private def ifFeatureEnabledAndNoPendingChanges(action: => Future[Result])(implicit request: AuthRequestWithAgentInfo[_]): Future[Result] = {
     ifFeatureEnabled {
       pcodRepository.find(request.agentInfo.arn).flatMap {
-        case None => action // no change is pending, we can proceed
-        case Some(_) => Future.successful(Redirect(routes.ContactDetailsController.showCurrentContactDetails)) // there is a pending change, further changes are locked. Redirect to the base page
+        case None => // no change is pending, we can proceed
+          action
+        case Some(_) => // there is a pending change, further changes are locked. Redirect to the base page
+          Future.successful(Redirect(routes.ContactDetailsController.showCurrentContactDetails))
       }
     }
   }
 
   // utility function.
-  def updateDraftDetails(f: AgencyDetails => AgencyDetails)(implicit request: Request[_]): Future[Unit] = for {
+  private def updateDraftDetails(f: AgencyDetails => AgencyDetails)(implicit request: Request[_]): Future[Unit] = for {
     mDraftDetailsInSession <- sessionCache.get[AgencyDetails](DRAFT_NEW_CONTACT_DETAILS)
     draftDetails <- mDraftDetailsInSession match {
       case Some(details) => Future.successful(details)
@@ -85,7 +87,8 @@ class ContactDetailsController @Inject()(actions: Actions,
   val showCurrentContactDetails: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     ifFeatureEnabled {
       for {
-        _ <- sessionCache.delete(DRAFT_NEW_CONTACT_DETAILS) // on displaying the 'current details' page, we delete any unsubmitted changes that may still be in session
+        // on displaying the 'current details' page, we delete any unsubmitted changes that may still be in session
+        _ <- sessionCache.delete(DRAFT_NEW_CONTACT_DETAILS)
         mPendingChange <- pcodRepository.find(request.agentInfo.arn)
         agencyDetails <- getCurrentAgencyDetails()
       } yield Ok(contact_details(agencyDetails, mPendingChange, request.agentInfo.isAdmin))
@@ -256,7 +259,8 @@ class ContactDetailsController @Inject()(actions: Actions,
     ifFeatureEnabledAndNoPendingChanges {
       val arn = request.agentInfo.arn
       sessionCache.get[AgencyDetails](DRAFT_NEW_CONTACT_DETAILS).flatMap {
-        case None => Future.successful(Redirect(routes.ContactDetailsController.showCurrentContactDetails)) // graceful redirect in case of expired session data etc.
+        case None => // graceful redirect in case of expired session data etc.
+        Future.successful(Redirect(routes.ContactDetailsController.showCurrentContactDetails))
         case Some(newContactDetails) => for {
           oldContactDetails <- getCurrentAgencyDetails()
           pendingChange = PendingChangeOfDetails(

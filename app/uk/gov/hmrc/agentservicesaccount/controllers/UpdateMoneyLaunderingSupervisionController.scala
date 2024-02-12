@@ -25,27 +25,24 @@ import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.utils.AMLSLoader
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.AMLS._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class UpdateMoneyLaunderingSupervisionController @Inject()(implicit appConfig: AppConfig,
-                                                             amlsLoader: AMLSLoader,
-                                                             actions: Actions,
-                                                             cacheService: SessionCacheService,
-                                                             UpdateMoneySupervisionView: update_money_laundering_supervision_details,
-                                                             cc: MessagesControllerComponents,
-                                                             ec: ExecutionContext,
-                                                             )
-                                                             extends FrontendController(cc) with I18nSupport{
+class UpdateMoneyLaunderingSupervisionController @Inject()(amlsLoader: AMLSLoader,
+                                                           actions: Actions,
+                                                           cacheService: SessionCacheService,
+                                                           updateMoneySupervisionView: update_money_laundering_supervision_details,
+                                                           cc: MessagesControllerComponents)
+                                                          (implicit appConfig: AppConfig,
+                                                           ec: ExecutionContext) extends FrontendController(cc) with I18nSupport {
 
   private val amlsBodies: Map[String, String] = amlsLoader.load("/amls-no-hmrc.csv")
 
   def showUpdateMoneyLaunderingSupervision: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
       val updateAmlsForm = UpdateMoneyLaunderingSupervisionForm.form
     actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
-      Ok(UpdateMoneySupervisionView(updateAmlsForm, amlsBodies)).toFuture
+      Ok(updateMoneySupervisionView(updateAmlsForm, amlsBodies)).toFuture
     }
     }
 
@@ -53,7 +50,7 @@ class UpdateMoneyLaunderingSupervisionController @Inject()(implicit appConfig: A
     actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
       UpdateMoneyLaunderingSupervisionForm.form.bindFromRequest().fold(
         formWithErrors => {
-          Ok(UpdateMoneySupervisionView(formWithErrors, amlsBodies)).toFuture
+          Ok(updateMoneySupervisionView(formWithErrors, amlsBodies)).toFuture
         },
         formData => {
           for {

@@ -52,7 +52,7 @@ class UpdateMoneyLaunderingSupervisionControllerSpec extends PlaySpec
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
   implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
-  val local_Valid_date_stub = LocalDate.now.plusMonths(6)
+  val local_valid_date_stub: LocalDate = LocalDate.now.plusMonths(6)
 
   private def fakeRequest(method: String = "GET", uri: String = "/") =
     FakeRequest(method, uri)
@@ -103,7 +103,7 @@ class UpdateMoneyLaunderingSupervisionControllerSpec extends PlaySpec
     protected val cc: MessagesControllerComponents = stubMessagesControllerComponents()
     protected val view: update_money_laundering_supervision_details = mock[update_money_laundering_supervision_details]
 
-    object TestController extends UpdateMoneyLaunderingSupervisionController()(mockAppConfig, mockAmlsLoader, mockActions, mockCacheService, view, cc, ec)
+    object TestController extends UpdateMoneyLaunderingSupervisionController(mockAmlsLoader, mockActions, mockCacheService, view, cc)(mockAppConfig, ec)
   }
 
   "showUpdateMoneyLaunderingSupervision" should {
@@ -140,18 +140,18 @@ class UpdateMoneyLaunderingSupervisionControllerSpec extends PlaySpec
       mockAppConfig.enableNonHmrcSupervisoryBody returns true
       view.apply(*[Form[UpdateMoneyLaunderingSupervisionDetails]], *[Map[String, String]])(*[Messages], *[Request[Any]], *[AppConfig]) returns Html("")
 
-      mockCacheService.put(BODY, *[String])(*[Writes[String]], *[Request[Any]], ec) returns Future.successful(("body", "test"))
-      mockCacheService.put(REG_NUMBER, *[String])(*[Writes[String]], *[Request[Any]], ec) returns Future.successful(("number", "test"))
-      mockCacheService.put(END_DATE, *[LocalDate])(*[Writes[LocalDate]], *[Request[Any]], ec) returns Future.successful(("endDate", ""))
+      mockCacheService.put(BODY, *[String])(*[Writes[String]], *[Request[Any]]) returns Future.successful(("body", "test"))
+      mockCacheService.put(REG_NUMBER, *[String])(*[Writes[String]], *[Request[Any]]) returns Future.successful(("number", "test"))
+      mockCacheService.put(END_DATE, *[LocalDate])(*[Writes[LocalDate]], *[Request[Any]]) returns Future.successful(("endDate", ""))
 
       val response: Future[Result] = TestController.submitUpdateMoneyLaunderingSupervision(
         fakeRequest("POST")
           .withFormUrlEncodedBody(
             "body" -> "AAA",
             "number" -> "987987",
-            "endDate.day" -> local_Valid_date_stub.getDayOfMonth.toString,
-            "endDate.month" -> local_Valid_date_stub.getMonthValue.toString,
-            "endDate.year" -> local_Valid_date_stub.getYear.toString)
+            "endDate.day" -> local_valid_date_stub.getDayOfMonth.toString,
+            "endDate.month" -> local_valid_date_stub.getMonthValue.toString,
+            "endDate.year" -> local_valid_date_stub.getYear.toString)
       )
 
       Helpers.status(response) mustBe SEE_OTHER
