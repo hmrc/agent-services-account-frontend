@@ -75,7 +75,7 @@ class UpdateMoneyLaunderingSupervisionFormSpec extends AnyWordSpec with Matchers
       val validatedForm = UpdateMoneyLaunderingSupervisionForm.form.bind(params)
       validatedForm.hasErrors shouldBe true
       validatedForm.errors.size shouldBe 4
-      validatedForm.error(bodyField).get.message shouldBe "update-money-laundering-supervisory.body-codes.error.invalid" // check msg
+      validatedForm.error(bodyField).get.message shouldBe "update-money-laundering-supervisory.body-codes.error.invalid"
     }
     s"error when $numberField is invalid" in {
       val params = Map(

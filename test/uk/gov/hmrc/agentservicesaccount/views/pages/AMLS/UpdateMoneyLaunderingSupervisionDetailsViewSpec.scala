@@ -29,7 +29,7 @@ import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.AMLS.update_money_laundering_supervision_details
 
 
-class UpdateMoneyLaunderingSupervisionDetailsSpec extends BaseISpec{
+class UpdateMoneyLaunderingSupervisionDetailsViewSpec extends BaseISpec {
 
   implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
@@ -54,32 +54,25 @@ class UpdateMoneyLaunderingSupervisionDetailsSpec extends BaseISpec{
       "display the correct page title" in {
         doc.title() mustBe "What are your money laundering supervision registration details? - Agent services account - GOV.UK"
       }
-      "display correct registration body label " in {
-        val errorLink: Element = doc.select(".govuk-label").get(0)
-        errorLink.text() mustBe "Name of money laundering supervisory body"
+      "display correct legend as heading" in {
+        doc.select("legend").html().contains("h1") mustBe true
+        doc.select("h1").get(0).text() mustBe "What are your money laundering supervision registration details?"
       }
-      "display correct amls codes hint" in {
+      "display correct registration body codes label" in {
+        doc.select(".govuk-label").get(0).text() mustBe "Name of money laundering supervisory body"
+      }
+      "display correct registration body codes hint" in {
         val firstHint: Element = doc.select(".govuk-hint").get(0)
         firstHint.text() mustBe "Start typing and select your supervisory body from the list."
       }
       "display correct registration number label" in {
         doc.select(".govuk-label").get(1).text() mustBe "Your registration number"
       }
-      "display correct heading title" in {
-        val errorLink: Element = doc.select("legend").get(0)
-        errorLink.text() mustBe "What are your money laundering supervision registration details?"
-      }
-      "display correct date title" in {
-        val errorLink: Element = doc.select(".govuk-hint").get(1)
-        errorLink.text() mustBe "For example, 31 3 2024"
-      }
       "display correct date hint" in {
-        val hint: Element = doc.select(".govuk-hint").get(1)
-        hint.text() mustBe "For example, 31 3 2024"
+        doc.select(".govuk-hint").get(1).text() mustBe "For example, 31 3 2024"
       }
-      "display correct error date " in {
-        val errorLink: Element = doc.select(".govuk-date-input").first()
-        errorLink.text() mustBe "Day Month Year"
+      "display correct date labels" in {
+        doc.select(".govuk-date-input").first().text() mustBe "Day Month Year"
       }
       "have the correct service name link" in {
         doc.select(".hmrc-header__service-name").first.text() mustBe "Agent services account"
@@ -118,7 +111,7 @@ class UpdateMoneyLaunderingSupervisionDetailsSpec extends BaseISpec{
       "display error message on form for date" in {
         doc.select(".govuk-error-message").get(2).text() mustBe "Error: Enter a real date"
       }
-      "display error message  on form for registration number" in {
+      "display error message on form for registration number" in {
         doc.select(".govuk-error-message").get(1).text() mustBe "Error: Enter your money laundering supervision registration number"
       }
       "display error styling on form" in {
