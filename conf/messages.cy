@@ -46,7 +46,7 @@ asa.additional.links.agent-afi.ga.manage-clients=Rheoli eich cleientiaid
 asa.additional.links.agent-afi.ga.request-auth=Gofyn i gleient eich awdurdodi
 asa.additional.links.agent-afi.ga.services-you-need=Gwasanaethau y mae’n bosibl y bydd eu hangen arnoch
 asa.additional.links.agent-afi.ga.view-income-record=Bwrw golwg dros gofnod incwm cleient
-asa.additional.links.mapping.body2=<a href="{0}" id="{1}">Copïo eich cleientiaid Hunanasesiad a TAW ar draws i’r cyfrif hwn</a>
+asa.additional.links.mapping.body2=<a href="{0}" id="{1}">Copïwch eich cleientiaid Hunanasesiad presennol ar draws i’r cyfrif hwn</a>
 asa.client-authorisations.p=Mae’n rhaid i chi ofyn i’ch cleient eich awdurdodi drwy eich cyfrif gwasanaethau asiant cyn y gallwch gael mynediad at unrhyw wasanaethau. Dylech gopïo hen awdurdodiad drosodd neu greu un newydd.
 asa.h2.your-clients=Eich cleientiaid
 asa.h3.agent-services=Gwasanaethau asiant
@@ -137,7 +137,7 @@ asa.section3.col2.link1=<a class="govuk-link" href="{0}">Rhoi gwybod am Dreth En
 asa.section4.col1.h3=Gofyn i gleient eich awdurdodi
 asa.section4.col1.link=Gofyn i gleient eich awdurdodi
 asa.section4.col2.link1=Rheoli’ch ceisiadau am awdurdodiad o’r 30 diwrnod diwethaf
-asa.section4.col2.link2=Copïo rhagor o awdurdodiadau cleientiaid TAW a Hunanasesiad ar draws
+asa.section4.col2.link2=Copïwch ragor o awdurdodiadau cleientiaid Hunanasesiad drosodd
 asa.section4.col2.link3=Canslo awdurdodiad cleient
 asa.section4.h2=Awdurdodiadau cleientiaid
 
@@ -233,7 +233,7 @@ global.error.500.title=Mae’n ddrwg gennym, rydym yn profi anawsterau technegol
 help.about-asa.p1=Dim ond un cyfrif gwasanaethau asiant y mae’n bosib i chi ei gael, ond gallwch ychwanegu sawl aelod o’r tîm at y cyfrif hwn. Bydd angen i bob un ohonynt gael Dynodydd Defnyddiwr (ID) ar gyfer Porth y Llywodraeth er mwyn i chi eu hychwanegu.
 help.about-asa.p2=Mae’r sgrin ‘Hafan ar gyfer y cyfrif’ yn cynnwys cysylltiadau er mwyn rheoli awdurdodiadau cleientiaid a gwasanaethau treth penodol. Ar gyfer gwasanaethau treth eraill, bydd angen i chi fewngofnodi i’ch cyfrif gwasanaethau ar-lein ar gyfer asiantau.
 help.about-asa.p3=Bydd y sgrin ‘Rheoli’r cyfrif’ yn amrywio, yn dibynnu a oes gennych fynediad fel gweinyddwr neu fynediad fel defnyddiwr safonol. Gall y gweinyddwyr ddewis rheoli caniatâd o ran mynediad drwy ddefnyddio’r nodwedd newydd ar gyfer ‘grwpiau mynediad’. Pan fydd y grwpiau mynediad wedi eu galluogi, bydd y defnyddwyr sydd â mynediad safonol yn gallu rheoli’r cleientiaid a neilltuwyd iddynt yn unig.
-help.about-guidance.list1.1=copïo awdurdodiadau TAW a Threth Incwm ar gyfer Hunanasesiad o gyfrifon eraill i asiantau
+help.about-guidance.list1.1=Copïwch awdurdodiadau Treth Incwm ar gyfer Hunanasesiad o gyfrifon asiantau eraill
 help.about-guidance.list1.2=gwneud cais am awdurdodiadau gan gleientiaid a’u rheoli
 help.about-guidance.list1.3=rheoli’r gwasanaethau treth a lansiwyd ers 2019
 help.about-guidance.list1.4=rheoli materion treth y cleientiaid sydd wedi’u neilltuo i chi
@@ -255,7 +255,7 @@ help.cgt.h2=Treth Enillion Cyfalaf ar eiddo yn y DU
 help.cgt.link=Sut i ofyn am awdurdodiad, rheoli cyfrif eich cleient ac anfon Ffurflenni Treth fel asiant
 help.client-auth.a=https://www.gov.uk/guidance/authorise-an-agent-to-deal-with-certain-tax-services-for-you
 help.client-auth.p1=Gallwch greu, rheoli a bwrw golwg dros geisiadau am awdurdodiadau yn yr adran hon
-help.client-auth.p2=Gallwch gopïo awdurdodiadau ar gyfer TAW a Threth Incwm ar gyfer Hunanasesiad o’ch cyfrifon gwasanaethau ar-lein ar gyfer asiantau.
+help.client-auth.p2=Gallwch gopïo awdurdodiadau Treth Incwm ar gyfer Hunanasesiad drosodd o’ch hen gyfrif gwasanaethau asiant.
 help.client-auth.p3=Gallwch hefyd greu cais am awdurdodiad ar gyfer cleient, yn ogystal â rheoli neu fwrw golwg dros eich ceisiadau diweddar am awdurdodiadau.
 help.client-auth.p4=Pan fyddwch yn gofyn i gleient am awdurdodiad, gallwch anfon y cysylltiad i’r arweiniad hwn ato:
 help.heading=Help ac arweiniad
