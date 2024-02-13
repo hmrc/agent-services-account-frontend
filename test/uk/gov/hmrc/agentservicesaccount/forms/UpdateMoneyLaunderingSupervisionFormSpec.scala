@@ -155,30 +155,27 @@ class UpdateMoneyLaunderingSupervisionFormSpec extends AnyWordSpec with Matchers
       validatedForm.error(endDateField).get.message shouldBe "update-money-laundering-supervisory.error.date.invalid"
     }
 
-    s"error when $endDateField range isn't within 13Months of today's date" in {
+    s"error when $endDateField range isn't within 13 Months of today's date" in {
       val params = Map(
         bodyField -> "Blah alkfh",
         numberField -> "1122334455",
-
         endDateDay -> local_future_date_stub.getDayOfMonth.toString,
         endDateMonth -> local_future_date_stub.getMonthValue.toString,
-        endDateYear -> local_valid_date_stub.getYear.toString
+        endDateYear -> local_future_date_stub.getYear.toString
       )
       val validatedForm = UpdateMoneyLaunderingSupervisionForm.form.bind(params)
-
-        validatedForm.error(endDateField).get.message shouldBe "update-money-laundering-supervisory.error.date.past"
+      validatedForm.error(endDateField).get.message shouldBe "update-money-laundering-supervisory.error.date.before"
     }
     s"error when $endDateField is before today's date" in {
       val params = Map(
         bodyField -> "Blah alkfh",
         numberField -> "1122334455",
-
         endDateDay -> local_past_date_stub.getDayOfMonth.toString,
         endDateMonth -> local_past_date_stub.getMonthValue.toString,
         endDateYear -> local_past_date_stub.getYear.toString,
       )
       val validatedForm = UpdateMoneyLaunderingSupervisionForm.form.bind(params)
-        validatedForm.error(endDateField).get.message shouldBe "update-money-laundering-supervisory.error.date.past"
+      validatedForm.error(endDateField).get.message shouldBe "update-money-laundering-supervisory.error.date.past"
     }
   }
 }
