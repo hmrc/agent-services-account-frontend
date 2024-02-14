@@ -49,6 +49,18 @@ class UpdateMoneyLaunderingSupervisionFormSpec extends AnyWordSpec with Matchers
       validatedForm.value shouldBe
         Some(UpdateMoneyLaunderingSupervisionDetails("Blah alkfh", "1122334455", local_valid_date_stub))
     }
+    "get form data from a completed 'UpdateMoneyLaunderingSupervisionDetails' model" in {
+      val model = UpdateMoneyLaunderingSupervisionDetails("Blah alkfh", "1122334455", local_past_date_stub)
+      val form = UpdateMoneyLaunderingSupervisionForm.form.fill(model)
+      val params = Map(
+        bodyField -> "Blah alkfh",
+        numberField -> "1122334455",
+        endDateDay -> local_past_date_stub.getDayOfMonth.toString,
+        endDateMonth -> local_past_date_stub.getMonthValue.toString,
+        endDateYear -> local_past_date_stub.getYear.toString,
+      )
+      form.data shouldBe params
+    }
     s"error when $bodyField and $numberField and $endDateField are empty" in {
       val params = Map(
         bodyField -> "",

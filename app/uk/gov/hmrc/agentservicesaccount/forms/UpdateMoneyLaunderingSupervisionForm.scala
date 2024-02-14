@@ -80,7 +80,7 @@ object UpdateMoneyLaunderingSupervisionForm {
           ).verifying(checkOneAtATime(Seq(invalidDateConstraint, pastExpiryDateConstraint, within13MonthsExpiryDateConstraint)))
             .transform[LocalDate](
               { case (d, m, y) => LocalDate.of( y.trim.toInt, m.trim.toInt, d.trim.toInt) },
-              (date: LocalDate) => (date.getYear.toString, date.getMonthValue.toString, date.getDayOfMonth.toString))
+              (date: LocalDate) => (date.getDayOfMonth.toString, date.getMonthValue.toString, date.getYear.toString))
       )(UpdateMoneyLaunderingSupervisionDetails.apply)(UpdateMoneyLaunderingSupervisionDetails.unapply)
       )
 }
