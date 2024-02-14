@@ -16,9 +16,11 @@
 
 package uk.gov.hmrc.agentservicesaccount.utils
 
+import javax.inject.{Inject, Singleton}
 import scala.util.{Failure, Success, Try}
 
-object AMLSLoader {
+@Singleton
+class AMLSLoader @Inject()(){
   def load(path: String): Map[String, String] =
     Try {
       require(path.nonEmpty, "AMLS file path cannot be empty")

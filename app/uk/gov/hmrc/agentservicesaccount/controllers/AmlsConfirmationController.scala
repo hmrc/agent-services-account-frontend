@@ -20,17 +20,16 @@ import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.AMLS._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.AMLS.update_confirmation_received
 
 import javax.inject.{Inject, Singleton}
 
-
 @Singleton
-class AmlsConfirmationController @Inject()(actions: Actions,
+class AmlsConfirmationController @Inject()(implicit appConfig: AppConfig,
+                                           actions: Actions,
                                           updateConfirmationReceived: update_confirmation_received,
-                                          cc: MessagesControllerComponents)
-                                         (implicit appConfig: AppConfig) extends FrontendController(cc) with I18nSupport {
+                                          cc: MessagesControllerComponents)extends FrontendController(cc) with I18nSupport {
   def showUpdatedAmlsConfirmationPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
       Ok(updateConfirmationReceived()).toFuture

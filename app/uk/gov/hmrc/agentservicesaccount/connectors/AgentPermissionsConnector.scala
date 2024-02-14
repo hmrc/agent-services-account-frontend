@@ -39,7 +39,8 @@ import scala.util.{Failure, Success, Try}
 
 
 @Singleton
-class AgentPermissionsConnector @Inject()(http: HttpClient, httpV2: HttpClientV2)(implicit val metrics: Metrics, appConfig: AppConfig) extends HttpAPIMonitor with Logging {
+class AgentPermissionsConnector @Inject()(http: HttpClient, httpV2: HttpClientV2)
+                                         (implicit val metrics: Metrics, appConfig: AppConfig) extends HttpAPIMonitor with Logging {
 
   override val kenshooRegistry: MetricRegistry = metrics.defaultRegistry
 

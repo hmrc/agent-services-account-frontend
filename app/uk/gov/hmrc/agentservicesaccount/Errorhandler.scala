@@ -50,7 +50,7 @@ class ErrorHandler @Inject() (
     super.onClientError(request,statusCode,message)
   }
 
-  override def resolveError(request: RequestHeader, exception: Throwable) = {
+  override def resolveError(request: RequestHeader, exception: Throwable): Result = {
     auditServerError(request,exception)
     logger.error(s"resolveError $exception")
     exception match {
@@ -98,14 +98,32 @@ trait ErrorAuditing extends HttpAuditEvent {
       case _: NotFoundException => notFoundError
       case _ => unexpectedError
     }
-    auditConnector.sendEvent(dataEvent(eventType, transactionName, request, Map(TransactionFailureReason -> ex.getMessage))(HeaderCarrierConverter.fromRequestAndSession(request, request.session)))
+    auditConnector.sendEvent(
+      dataEvent(
+        eventType,
+        transactionName,
+        request,
+        Map(TransactionFailureReason -> ex.getMessage)
+      )(HeaderCarrierConverter.fromRequestAndSession(request, request.session)))
   }
 
   def auditClientError(request: RequestHeader, statusCode: Int, message: String)(implicit ec: ExecutionContext): Unit = {
     import play.api.http.Status._
     statusCode match {
-      case NOT_FOUND => auditConnector.sendEvent(dataEvent(ResourceNotFound, notFoundError, request, Map(TransactionFailureReason -> message))(HeaderCarrierConverter.fromRequestAndSession(request, request.session))); ()
-      case BAD_REQUEST => auditConnector.sendEvent(dataEvent(ServerValidationError, badRequestError, request, Map(TransactionFailureReason -> message))(HeaderCarrierConverter.fromRequestAndSession(request, request.session))); ()
+      case NOT_FOUND => auditConnector.sendEvent(
+        dataEvent(
+          ResourceNotFound,
+          notFoundError,
+          request,
+          Map(TransactionFailureReason -> message)
+        )(HeaderCarrierConverter.fromRequestAndSession(request, request.session))); ()
+      case BAD_REQUEST => auditConnector.sendEvent(
+        dataEvent(
+          ServerValidationError,
+          badRequestError,
+          request,
+          Map(TransactionFailureReason -> message)
+        )(HeaderCarrierConverter.fromRequestAndSession(request, request.session))); ()
       case _ =>
     }
   }

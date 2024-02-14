@@ -28,7 +28,7 @@ object SuspendDescriptionForm {
     }
     private val suspendDescriptionMapping: Mapping[String] = text.verifying(suspendDescriptionConstraint)
 
-    val form: Form [String] =
+    val form: Form[String] =
       Form(
       single(
         "description" -> suspendDescriptionMapping
