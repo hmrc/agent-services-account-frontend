@@ -22,6 +22,9 @@
 @import uk.gov.hmrc.govukfrontend.views.html.components.{ErrorSummary, FormWithCSRF, GovukButton, GovukErrorSummary, GovukFieldset, GovukInput, Input, Label, Text, _}
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.accessibleautocomplete.AccessibleAutocomplete
 @import uk.gov.hmrc.hmrcfrontend.views.html.components.implicits._
+@import views.html.helper.CSPNonce
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcAccessibleAutocompleteJavascript
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcAccessibleAutocompleteCss
 
 @this(
         main: main,
@@ -34,12 +37,17 @@
         govukInsetText: GovukInsetText,
         govukButton: GovukButton,
         govukSelect: GovukSelect,
-        govukErrorSummary: GovukErrorSummary
+        govukErrorSummary: GovukErrorSummary,
+        autocompleteJavascript: HmrcAccessibleAutocompleteJavascript,
+        autocompleteCss: HmrcAccessibleAutocompleteCss
 )
 
 @(form: Form[UpdateMoneyLaunderingSupervisionDetails], amlsCodes: Map[String, String])(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
 
-
+    @scripts = {
+    @autocompleteJavascript()
+        <script @{CSPNonce.attr} src="@controllers.routes.Assets.at("javascripts/accessible-autocomplete-polyfill.js")"></script>
+    }
 
 @DayFieldError = @{
     if(form("endDate.day").hasErrors)
@@ -70,13 +78,16 @@
     @govukSelect(Select(
         id = "body",
         name = "body",
-        items = amlsCodes.flatMap{
+        items = Seq(SelectItem(
+            value = Some(""),
+            text = "")).++(
+        amlsCodes.flatMap{
             case (code, bodyName) => Seq(
                 SelectItem(
                     value = Some(code),
                     text = bodyName
                 ))}
-                .toSeq,
+        ),
         label = Label(
             content = HtmlContent(msgs("amls.enter-renewal-body.h1")),
             classes = "govuk-body govuk-!-font-size-20 govuk-!-font-weight-bold",
@@ -103,7 +114,7 @@
     ).withFormField(form("number")))
 
     @inputDate(
-        field = dateFormWithRefinedErrors("endDate"),
+        field = form("endDate"),
         legend = msgs("amls.enter-renewal-date.form.title"),
         hint = Some(msgs("amls.enter-renewal-date.hint"))
     )
@@ -113,7 +124,9 @@
 @main(
     pageTitle = withErrorPrefix(form.hasErrors, msgs("amls.enter-renewal.h1")),
     mimicBrowserBackLink = true,
-    showSecondaryNav = false
+    showSecondaryNav = false,
+    additionalCss = Some(autocompleteCss()),
+    additionalScripts = Some(scripts)
 ) {
     @if(form.hasErrors) {
         @govukErrorSummary(ErrorSummary(errorList = form.errors.asTextErrorLinks, title = Text(msgs("survey.error.summary"))))
