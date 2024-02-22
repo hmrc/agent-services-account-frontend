@@ -27,6 +27,7 @@
 @import uk.gov.hmrc.govukfrontend.views.html.components.TwoThirdsMainContent
 @import uk.gov.hmrc.agentservicesaccount.views.html.fullWidthMainContentLayout
 
+
 @this(
     hmrcStandardPage: HmrcStandardPage,
     head: head,
@@ -38,6 +39,7 @@
     twoThirdsLayout: TwoThirdsMainContent,
     fullWidthMainContent: fullWidthMainContentLayout
 )
+
 @(
     pageTitle: String,
     isAdmin: Boolean = false,
@@ -53,11 +55,10 @@
 )(contentBlock: Html)(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
 
 @scripts = {
+@additionalScripts.getOrElse(Html(""))
     <script @{CSPNonce.attr} src="@controllers.routes.Assets.at("javascripts/jquery-3.6.3.min.js")"></script>
     <script @{CSPNonce.attr} src="@controllers.routes.Assets.at("javascripts/ga-events.js")"></script>
-    @additionalScripts.getOrElse(Html(""))
 }
-
 @beforeContent = {
     @defining("https://www.googletagmanager.com/ns.html?id=GTM-P39VTVL"){ gtmUrl =>
         @if(!appConfig.isTest){
@@ -100,7 +101,7 @@
         additionalBannersBlock = additionalBanner
     ),
     templateOverrides = TemplateOverrides(
-        additionalHeadBlock = Some(head(hasTimeout)),
+        additionalHeadBlock = Some(head(hasTimeout,additionalCss)),
         additionalScriptsBlock = Some(scripts),
         beforeContentBlock = Some(beforeContent),
         mainContentLayout = if(fullWidth) Some(fullWidthMainContent(_)) else Some(twoThirdsLayout(_))

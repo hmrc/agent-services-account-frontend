@@ -17,10 +17,11 @@
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.controllers.routes
 @import uk.gov.hmrc.hmrcfrontend.views.html.components.{HmrcTimeoutDialog, TimeoutDialog}
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcAccessibleAutocompleteCss
 
 @this(hmrcTimeoutDialog: HmrcTimeoutDialog)
 
-@(hasTimeout: Boolean, additionalCss: Option[Html] = None)(implicit appConfig: AppConfig, msgs: Messages)
+@(hasTimeout: Boolean, additionalCss: Option[Html] = None)(implicit appConfig: AppConfig, msgs: Messages, request: Request[_])
 
 @additionalCss.getOrElse(Html(""))
 <link rel="stylesheet" href="@controllers.routes.Assets.at("stylesheets/asa.css")" >
