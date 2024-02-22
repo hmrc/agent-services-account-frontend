@@ -99,17 +99,21 @@ class UpdateMoneyLaunderingSupervisionDetailsViewSpec extends BaseISpec {
         errorLink.text() mustBe "Enter your money laundering supervision registration number"
         errorLink.attr("href") mustBe "#number"
       }
-
+      "display empty field for amls body before user start typing within the select component" in {
+        val component: Element = doc.select("#body").first()
+        component.select("option").get(0).text() mustBe ""
+        component.select("option").get(0).attr("value") mustBe ""
+      }
       "display correct amls codes within the select component" in {
         val component: Element = doc.select("#body").first()
-        component.select("option").get(0).text() mustBe "AgentService"
-        component.select("option").get(0).attr("value") mustBe "AA"
+        component.select("option").get(1).text() mustBe "AgentService"
+        component.select("option").get(1).attr("value") mustBe "AA"
       }
       "display error message on form for amls body" in {
         doc.select(".govuk-error-message").get(0).text() mustBe "Error: Enter your money laundering supervisory body"
       }
       "display error message on form for date" in {
-        doc.select(".govuk-error-message").get(2).text() mustBe "Error: Enter a real date"
+        doc.select(".govuk-error-message").get(2).text() mustBe "Error: Registration renewal date must include a day"
       }
       "display error message on form for registration number" in {
         doc.select(".govuk-error-message").get(1).text() mustBe "Error: Enter your money laundering supervision registration number"
@@ -118,9 +122,8 @@ class UpdateMoneyLaunderingSupervisionDetailsViewSpec extends BaseISpec {
         doc.select(".govuk-form-group--error").size() mustBe 3
       }
       "display correct error enter-renewal-date" in {
-        doc.select(".govuk-fieldset").get(1).text() mustBe "Your next registration renewal date For example, 31 3 2024 Error: Enter a real date Day Month Year"
+        doc.select(".govuk-fieldset").get(1).text() mustBe "Your next registration renewal date For example, 31 3 2024 Error: Registration renewal date must include a day Day Month Year"
       }
-
     }
   }
 }
