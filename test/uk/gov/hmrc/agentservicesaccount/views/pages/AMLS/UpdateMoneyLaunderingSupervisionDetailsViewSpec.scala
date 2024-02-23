@@ -84,7 +84,7 @@ class UpdateMoneyLaunderingSupervisionDetailsViewSpec extends BaseISpec {
       }
       "have the correct back link" in {
         doc.select(".govuk-back-link").first.text() mustBe "Back"
-        doc.select(".govuk-back-link").first.attr("href") mustBe "#"
+        doc.select(".govuk-back-link").first.attr("href") mustBe "/agent-services-account/manage-account/money-laundering-supervisory-body"
       }
     }
     "form is submitted with errors should" should {
@@ -113,7 +113,7 @@ class UpdateMoneyLaunderingSupervisionDetailsViewSpec extends BaseISpec {
         doc.select(".govuk-error-message").get(0).text() mustBe "Error: Enter your money laundering supervisory body"
       }
       "display error message on form for date" in {
-        doc.select(".govuk-error-message").get(2).text() mustBe "Error: Registration renewal date must include a day"
+        doc.select(".govuk-error-message").get(2).text() mustBe "Error: Your next registration renewal date must include a day"
       }
       "display error message on form for registration number" in {
         doc.select(".govuk-error-message").get(1).text() mustBe "Error: Enter your money laundering supervision registration number"
@@ -122,7 +122,7 @@ class UpdateMoneyLaunderingSupervisionDetailsViewSpec extends BaseISpec {
         doc.select(".govuk-form-group--error").size() mustBe 3
       }
       "display correct error enter-renewal-date" in {
-        doc.select(".govuk-fieldset").get(1).text() mustBe "Your next registration renewal date For example, 31 3 2024 Error: Registration renewal date must include a day Day Month Year"
+        doc.select(".govuk-fieldset").get(1).text() mustBe "Your next registration renewal date For example, 31 3 2024 Error: Your next registration renewal date must include a day Day Month Year"
       }
     }
   }

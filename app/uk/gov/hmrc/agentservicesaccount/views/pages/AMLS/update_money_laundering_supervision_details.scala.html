@@ -123,7 +123,8 @@
 
 @main(
     pageTitle = withErrorPrefix(form.hasErrors, msgs("amls.enter-renewal.h1")),
-    mimicBrowserBackLink = true,
+    mimicBrowserBackLink = false,
+    backLinkHref = Some(s"${routes.AmlsIsHmrcController.showAmlsIsHmrc}"),
     showSecondaryNav = false,
     additionalCss = Some(autocompleteCss()),
     additionalScripts = Some(scripts)

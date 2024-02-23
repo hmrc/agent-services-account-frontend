@@ -540,10 +540,10 @@ amls.enter-renewal-registration.number.h1=Your registration number TBC
 amls.enter-renewal-body.h1=Name of money laundering supervisory body TBC
 
 #AMLS Errors
-update-money-laundering-supervisory.error.day=Registration renewal date must include a day TBC
-update-money-laundering-supervisory.error.month=Registration renewal date must include a month TBC
-update-money-laundering-supervisory.error.year=Registration renewal date must include a year TBC
-update-money-laundering-supervisory.error.day-and-month=Registration renewal date must include a day and month TBC
+update-money-laundering-supervisory.error.day=Your next registration renewal date must include a day TBC
+update-money-laundering-supervisory.error.month=Your next registration renewal date must include a month TBC
+update-money-laundering-supervisory.error.year=Your next registration renewal date must include a year TBC
+update-money-laundering-supervisory.error.day-and-month=Your next registration renewal date must include a day and a month TBC
 
 update-money-laundering-supervisory.error.date.invalid=Enter a real date TBC
 update-money-laundering-supervisory.error.date.past=Your next registration renewal date must be in the future TBC
