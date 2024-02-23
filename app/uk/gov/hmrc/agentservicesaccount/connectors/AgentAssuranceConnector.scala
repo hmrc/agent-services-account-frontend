@@ -50,5 +50,4 @@ class AgentAssuranceConnector @Inject()(httpV2: HttpClientV2)(implicit val metri
       }
     }
   }
-
 }
