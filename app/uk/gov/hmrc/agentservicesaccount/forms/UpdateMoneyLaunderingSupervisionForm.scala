@@ -21,6 +21,7 @@ import play.api.data.Forms.{mapping, text, tuple}
 import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
 import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators._
 import uk.gov.hmrc.agentservicesaccount.models.UpdateMoneyLaunderingSupervisionDetails
+
 import java.time.LocalDate
 import scala.util.{Failure, Success, Try}
 
@@ -30,8 +31,9 @@ object UpdateMoneyLaunderingSupervisionForm {
   private val supervisoryNumberRegex = """^[A-Za-z0-9\,\.\'\-\/\ ]{0,200}$""".r // remove all spaces from input before matching to ensure correct digit count
   private val trimmedText = text.transform[String](x => x.trim, x => x)
 
-  private val invalidDateConstraint: Constraint[(String, String, String)] = Constraint[(String, String, String)] { data: (String, String, String) =>
-    val (day, month, year)  = data
+  private val invalidDateConstraint: Constraint[(String, String, String)] = Constraint[(String, String, String)] {
+    data: (String, String, String) =>
+      val (day, month, year)  = data
 
     Try {
       require(year.length == 4, "Year must be 4 digits")
@@ -52,8 +54,8 @@ object UpdateMoneyLaunderingSupervisionForm {
         Invalid(ValidationError("update-money-laundering-supervisory.error.date.past"))
   }
 
-  private val within13MonthsExpiryDateConstraint: Constraint[(String, String, String)] =
-    Constraint[(String, String, String)] { data: (String, String, String) =>
+  private val within13MonthsExpiryDateConstraint: Constraint[(String, String, String)] = Constraint[(String, String, String)] {
+    data: (String, String, String) =>
       val (day, month, year) = data
       val futureDate = LocalDate.now().plusMonths(13)
 
@@ -62,6 +64,24 @@ object UpdateMoneyLaunderingSupervisionForm {
       else
         Invalid(ValidationError("update-money-laundering-supervisory.error.date.before"))
     }
+
+  private val noDateConstraint: Constraint[(String, String, String)] = Constraint[(String, String, String)]{
+    data: (String, String, String) =>
+      val (day, month, year) = data
+
+      if(day.isEmpty && month.isEmpty && year.isEmpty){
+        Invalid(ValidationError("update-money-laundering-supervisory.error.date"))
+      } else Valid
+  }
+
+//  private val missingDayAndMonth: String = {
+//
+//    //val flag = true
+//   // val constraint[(String, String, String)] = trim.nonEmpty
+//
+//    if (true) "update-money-laundering-supervisory.error.day"
+//    else ("update-money-laundering-supervisory.error.day-and-month")
+//  }
 
   val form: Form[UpdateMoneyLaunderingSupervisionDetails] =
     Form(
@@ -74,13 +94,38 @@ object UpdateMoneyLaunderingSupervisionForm {
           .verifying("update-money-laundering-supervisory.reg-number.error.invalid", x => supervisoryNumberRegex.matches(x.replace(" ", ""))),
         "endDate" ->
           tuple(
-            "day" -> text.verifying("update-money-laundering-supervisory.error.day", d => d.trim.nonEmpty || d.matches("^[0-9]{1,2}$")),
-            "month" -> text.verifying("update-money-laundering-supervisory.error.month", m => m.trim.nonEmpty || m.matches("^[0-9]{1,2}$")),
-            "year" -> text.verifying("update-money-laundering-supervisory.error.year", y => y.trim.nonEmpty || y.matches("^[0-9]{1,4}$"))
-          ).verifying(checkOneAtATime(Seq(invalidDateConstraint, pastExpiryDateConstraint, within13MonthsExpiryDateConstraint)))
+            "day" -> trimmedText,
+            "month" -> trimmedText,
+            "year" -> trimmedText,
+
+          ).verifying(checkOneAtATime(Seq(noDateConstraint, invalidDateConstraint, pastExpiryDateConstraint, within13MonthsExpiryDateConstraint)))
             .transform[LocalDate](
               { case (d, m, y) => LocalDate.of( y.trim.toInt, m.trim.toInt, d.trim.toInt) },
               (date: LocalDate) => (date.getDayOfMonth.toString, date.getMonthValue.toString, date.getYear.toString))
       )(UpdateMoneyLaunderingSupervisionDetails.apply)(UpdateMoneyLaunderingSupervisionDetails.unapply)
       )
 }
+
+/*
+val form: Form[UpdateMoneyLaunderingSupervisionDetails] =
+  Form(
+    mapping(
+      "body" -> trimmedText
+        .verifying("update-money-laundering-supervisory.body-codes.error.empty", _.nonEmpty)
+        .verifying("update-money-laundering-supervisory.body-codes.error.invalid", x => supervisoryBodyRegex.matches(x)),
+      "number" -> trimmedText
+        .verifying("update-money-laundering-supervisory.reg-number.error.empty", _.nonEmpty)
+        .verifying("update-money-laundering-supervisory.reg-number.error.invalid", x => supervisoryNumberRegex.matches(x.replace(" ", ""))),
+      "endDate" ->
+        tuple(
+          "day" -> text.verifying("update-money-laundering-supervisory.error.day", d => d.trim.nonEmpty || d.matches("^[0-9]{1,2}$")),
+          "month" -> text.verifying("update-money-laundering-supervisory.error.month", m => m.trim.nonEmpty || m.matches("^[0-9]{1,2}$")),
+          "year" -> text.verifying("update-money-laundering-supervisory.error.year", y => y.trim.nonEmpty || y.matches("^[0-9]{1,4}$")),
+
+        ).verifying(checkOneAtATime(Seq(invalidDateConstraint, pastExpiryDateConstraint, within13MonthsExpiryDateConstraint)))
+          .transform[LocalDate](
+            { case (d, m, y) => LocalDate.of( y.trim.toInt, m.trim.toInt, d.trim.toInt) },
+            (date: LocalDate) => (date.getDayOfMonth.toString, date.getMonthValue.toString, date.getYear.toString))
+    )(UpdateMoneyLaunderingSupervisionDetails.apply)(UpdateMoneyLaunderingSupervisionDetails.unapply)
+    )
+ */

@@ -540,10 +540,13 @@ amls.enter-renewal-registration.number.h1=Your registration number
 amls.enter-renewal-body.h1=Name of money laundering supervisory body
 
 #AMLS Errors
+update-money-laundering-supervisory.error.date=Enter your next registration renewal date
 update-money-laundering-supervisory.error.day=Your next registration renewal date must include a day
 update-money-laundering-supervisory.error.month=Your next registration renewal date must include a month
 update-money-laundering-supervisory.error.year=Your next registration renewal date must include a year
 update-money-laundering-supervisory.error.day-and-month=Your next registration renewal date must include a day and a month
+update-money-laundering-supervisory.error.day-and-year=Your next registration renewal date must include a day and a year
+update-money-laundering-supervisory.error.month-and-year=Your next registration renewal date must include a month and a year
 
 update-money-laundering-supervisory.error.date.invalid=Enter a real date
 update-money-laundering-supervisory.error.date.past=Your next registration renewal date must be in the future

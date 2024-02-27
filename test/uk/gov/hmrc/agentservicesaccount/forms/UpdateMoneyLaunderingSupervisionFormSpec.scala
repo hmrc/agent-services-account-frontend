@@ -61,6 +61,19 @@ class UpdateMoneyLaunderingSupervisionFormSpec extends AnyWordSpec with Matchers
       )
       form.data shouldBe params
     }
+    "This should throw an error when date is not supplied " in {
+      val params = Map(
+        bodyField -> "Blah alkfh",
+        numberField -> "1122334455",
+        endDateDay -> "",
+        endDateMonth -> "",
+        endDateYear -> "",
+      )
+      val validatedForm = UpdateMoneyLaunderingSupervisionForm.form.bind(params)
+      validatedForm.hasErrors shouldBe true
+      println(validatedForm.errors.head.key)
+      validatedForm.error(endDateField).get.message shouldBe "update-money-laundering-supervisory.error.date"
+    }
     s"error when $bodyField and $numberField and $endDateField are empty" in {
       val params = Map(
         bodyField -> "",
@@ -73,10 +86,10 @@ class UpdateMoneyLaunderingSupervisionFormSpec extends AnyWordSpec with Matchers
       validatedForm.hasErrors shouldBe true
       validatedForm.error(bodyField).get.message shouldBe "update-money-laundering-supervisory.body-codes.error.empty"
       validatedForm.error(numberField).get.message shouldBe "update-money-laundering-supervisory.reg-number.error.empty"
-      validatedForm.error(endDateDay).get.message shouldBe "update-money-laundering-supervisory.error.day"
-      validatedForm.error(endDateMonth).get.message shouldBe "update-money-laundering-supervisory.error.month"
-      validatedForm.error(endDateYear).get.message shouldBe "update-money-laundering-supervisory.error.year"
-      validatedForm.errors.length shouldBe 5
+      validatedForm.error(endDateField).get.message shouldBe "update-money-laundering-supervisory.error.date"
+//      validatedForm.error(endDateMonth).get.message shouldBe "update-money-laundering-supervisory.error.month"
+//      validatedForm.error(endDateYear).get.message shouldBe "update-money-laundering-supervisory.error.year"
+      validatedForm.errors.length shouldBe 3
     }
     s"error when $bodyField is invalid" in {
       val params = Map(

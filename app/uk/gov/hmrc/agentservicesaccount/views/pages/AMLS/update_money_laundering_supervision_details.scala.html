@@ -59,6 +59,11 @@
         "month-field-error"
 }
 
+@DayAbdMonthFieldError = @{
+    if(form("endDate.day").hasErrors && form("endDate.month").hasErrors)
+        "day-month-field-error"
+}
+
 @YearFieldError = @{
     if(form("endDate.year").hasErrors)
         "year-field-error"
