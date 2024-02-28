@@ -74,14 +74,55 @@ object UpdateMoneyLaunderingSupervisionForm {
       } else Valid
   }
 
-//  private val missingDayAndMonth: String = {
-//
-//    //val flag = true
-//   // val constraint[(String, String, String)] = trim.nonEmpty
-//
-//    if (true) "update-money-laundering-supervisory.error.day"
-//    else ("update-money-laundering-supervisory.error.day-and-month")
-//  }
+  private val noDayAndMonthConstraint: Constraint[(String, String, String)] = Constraint[(String, String, String)] {
+    data: (String, String, String) =>
+      val (day, month, year) = data
+
+      if (day.isEmpty && month.isEmpty && year.nonEmpty) {
+        Invalid(ValidationError("update-money-laundering-supervisory.error.day-and-month"))
+      } else Valid
+  }
+  private val noDayAndYearConstraint: Constraint[(String, String, String)] = Constraint[(String, String, String)] {
+    data: (String, String, String) =>
+      val (day, month, year) = data
+
+      if (day.isEmpty && month.nonEmpty && year.isEmpty) {
+        Invalid(ValidationError("update-money-laundering-supervisory.error.day-and-year"))
+      } else Valid
+  }
+  private val noMonthAndYearConstraint: Constraint[(String, String, String)] = Constraint[(String, String, String)] {
+    data: (String, String, String) =>
+      val (day, month, year) = data
+
+      if (day.nonEmpty && month.isEmpty && year.isEmpty) {
+        Invalid(ValidationError("update-money-laundering-supervisory.error.month-and-year"))
+      } else Valid
+  }
+
+  private val noDayConstraint: Constraint[(String, String, String)] = Constraint[(String, String, String)] {
+    data: (String, String, String) =>
+      val (day, month, year) = data
+
+      if (day.isEmpty && month.nonEmpty && year.nonEmpty) {
+        Invalid(ValidationError("update-money-laundering-supervisory.error.day"))
+      } else Valid
+  }
+  private val noMonthConstraint: Constraint[(String, String, String)] = Constraint[(String, String, String)] {
+    data: (String, String, String) =>
+      val (day, month, year) = data
+
+      if (day.nonEmpty && month.isEmpty && year.nonEmpty) {
+        Invalid(ValidationError("update-money-laundering-supervisory.error.month"))
+      } else Valid
+  }
+  private val noYearConstraint: Constraint[(String, String, String)] = Constraint[(String, String, String)] {
+    data: (String, String, String) =>
+      val (day, month, year) = data
+
+      if (day.nonEmpty && month.nonEmpty && year.isEmpty) {
+        Invalid(ValidationError("update-money-laundering-supervisory.error.year"))
+      } else Valid
+  }
 
   val form: Form[UpdateMoneyLaunderingSupervisionDetails] =
     Form(
@@ -96,36 +137,22 @@ object UpdateMoneyLaunderingSupervisionForm {
           tuple(
             "day" -> trimmedText,
             "month" -> trimmedText,
-            "year" -> trimmedText,
+            "year" -> trimmedText
 
-          ).verifying(checkOneAtATime(Seq(noDateConstraint, invalidDateConstraint, pastExpiryDateConstraint, within13MonthsExpiryDateConstraint)))
+          ).verifying(checkOneAtATime(Seq(
+            noDateConstraint,
+            noDayAndMonthConstraint,
+            noDayAndYearConstraint,
+            noMonthAndYearConstraint,
+            noDayConstraint,
+            noMonthConstraint,
+            noYearConstraint,
+            invalidDateConstraint,
+            pastExpiryDateConstraint,
+            within13MonthsExpiryDateConstraint)))
             .transform[LocalDate](
               { case (d, m, y) => LocalDate.of( y.trim.toInt, m.trim.toInt, d.trim.toInt) },
               (date: LocalDate) => (date.getDayOfMonth.toString, date.getMonthValue.toString, date.getYear.toString))
       )(UpdateMoneyLaunderingSupervisionDetails.apply)(UpdateMoneyLaunderingSupervisionDetails.unapply)
       )
 }
-
-/*
-val form: Form[UpdateMoneyLaunderingSupervisionDetails] =
-  Form(
-    mapping(
-      "body" -> trimmedText
-        .verifying("update-money-laundering-supervisory.body-codes.error.empty", _.nonEmpty)
-        .verifying("update-money-laundering-supervisory.body-codes.error.invalid", x => supervisoryBodyRegex.matches(x)),
-      "number" -> trimmedText
-        .verifying("update-money-laundering-supervisory.reg-number.error.empty", _.nonEmpty)
-        .verifying("update-money-laundering-supervisory.reg-number.error.invalid", x => supervisoryNumberRegex.matches(x.replace(" ", ""))),
-      "endDate" ->
-        tuple(
-          "day" -> text.verifying("update-money-laundering-supervisory.error.day", d => d.trim.nonEmpty || d.matches("^[0-9]{1,2}$")),
-          "month" -> text.verifying("update-money-laundering-supervisory.error.month", m => m.trim.nonEmpty || m.matches("^[0-9]{1,2}$")),
-          "year" -> text.verifying("update-money-laundering-supervisory.error.year", y => y.trim.nonEmpty || y.matches("^[0-9]{1,4}$")),
-
-        ).verifying(checkOneAtATime(Seq(invalidDateConstraint, pastExpiryDateConstraint, within13MonthsExpiryDateConstraint)))
-          .transform[LocalDate](
-            { case (d, m, y) => LocalDate.of( y.trim.toInt, m.trim.toInt, d.trim.toInt) },
-            (date: LocalDate) => (date.getDayOfMonth.toString, date.getMonthValue.toString, date.getYear.toString))
-    )(UpdateMoneyLaunderingSupervisionDetails.apply)(UpdateMoneyLaunderingSupervisionDetails.unapply)
-    )
- */

@@ -74,6 +74,84 @@ class UpdateMoneyLaunderingSupervisionFormSpec extends AnyWordSpec with Matchers
       println(validatedForm.errors.head.key)
       validatedForm.error(endDateField).get.message shouldBe "update-money-laundering-supervisory.error.date"
     }
+    "This should throw an error when day is not supplied " in {
+      val params = Map(
+        bodyField -> "Blah alkfh",
+        numberField -> "1122334455",
+        endDateDay -> "",
+        endDateMonth -> local_past_date_stub.getMonthValue.toString,
+        endDateYear -> local_past_date_stub.getYear.toString,
+      )
+      val validatedForm = UpdateMoneyLaunderingSupervisionForm.form.bind(params)
+      validatedForm.hasErrors shouldBe true
+      println(validatedForm.errors.head.key)
+      validatedForm.error(endDateField).get.message shouldBe "update-money-laundering-supervisory.error.day"
+    }
+    "This should throw an error when month is not supplied " in {
+      val params = Map(
+        bodyField -> "Blah alkfh",
+        numberField -> "1122334455",
+        endDateDay -> local_past_date_stub.getDayOfMonth.toString,
+        endDateMonth -> "",
+        endDateYear -> local_past_date_stub.getYear.toString,
+      )
+      val validatedForm = UpdateMoneyLaunderingSupervisionForm.form.bind(params)
+      validatedForm.hasErrors shouldBe true
+      println(validatedForm.errors.head.key)
+      validatedForm.error(endDateField).get.message shouldBe "update-money-laundering-supervisory.error.month"
+    }
+    "This should throw an error when year is not supplied " in {
+      val params = Map(
+        bodyField -> "Blah alkfh",
+        numberField -> "1122334455",
+        endDateDay -> local_past_date_stub.getDayOfMonth.toString,
+        endDateMonth -> local_past_date_stub.getMonthValue.toString,
+        endDateYear -> "",
+      )
+      val validatedForm = UpdateMoneyLaunderingSupervisionForm.form.bind(params)
+      validatedForm.hasErrors shouldBe true
+      println(validatedForm.errors.head.key)
+      validatedForm.error(endDateField).get.message shouldBe "update-money-laundering-supervisory.error.year"
+    }
+    "This should throw an error when day and month is not supplied " in {
+      val params = Map(
+        bodyField -> "Blah alkfh",
+        numberField -> "1122334455",
+        endDateDay -> "",
+        endDateMonth -> "",
+        endDateYear -> local_valid_date_stub.getYear.toString,
+      )
+      val validatedForm = UpdateMoneyLaunderingSupervisionForm.form.bind(params)
+      validatedForm.hasErrors shouldBe true
+      println(validatedForm.errors.head.key)
+      validatedForm.error(endDateField).get.message shouldBe "update-money-laundering-supervisory.error.day-and-month"
+    }
+    "This should throw an error when day and year is not supplied " in {
+      val params = Map(
+        bodyField -> "Blah alkfh",
+        numberField -> "1122334455",
+        endDateDay -> "",
+        endDateMonth -> local_valid_date_stub.getMonthValue.toString,
+        endDateYear -> "",
+      )
+      val validatedForm = UpdateMoneyLaunderingSupervisionForm.form.bind(params)
+      validatedForm.hasErrors shouldBe true
+      println(validatedForm.errors.head.key)
+      validatedForm.error(endDateField).get.message shouldBe "update-money-laundering-supervisory.error.day-and-year"
+    }
+    "This should throw an error when month and year is not supplied " in {
+      val params = Map(
+        bodyField -> "Blah alkfh",
+        numberField -> "1122334455",
+        endDateDay -> local_valid_date_stub.getDayOfMonth.toString,
+        endDateMonth -> "",
+        endDateYear -> "",
+      )
+      val validatedForm = UpdateMoneyLaunderingSupervisionForm.form.bind(params)
+      validatedForm.hasErrors shouldBe true
+      println(validatedForm.errors.head.key)
+      validatedForm.error(endDateField).get.message shouldBe "update-money-laundering-supervisory.error.month-and-year"
+    }
     s"error when $bodyField and $numberField and $endDateField are empty" in {
       val params = Map(
         bodyField -> "",
