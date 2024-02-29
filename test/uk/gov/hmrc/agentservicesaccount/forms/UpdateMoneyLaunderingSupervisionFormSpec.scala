@@ -71,8 +71,7 @@ class UpdateMoneyLaunderingSupervisionFormSpec extends AnyWordSpec with Matchers
       )
       val validatedForm = UpdateMoneyLaunderingSupervisionForm.form.bind(params)
       validatedForm.hasErrors shouldBe true
-      println(validatedForm.errors.head.key)
-      validatedForm.error(endDateField).get.message shouldBe "update-money-laundering-supervisory.error.date"
+      validatedForm.error(endDateDay).get.message shouldBe "update-money-laundering-supervisory.error.date"
     }
     "This should throw an error when day is not supplied " in {
       val params = Map(
@@ -84,8 +83,7 @@ class UpdateMoneyLaunderingSupervisionFormSpec extends AnyWordSpec with Matchers
       )
       val validatedForm = UpdateMoneyLaunderingSupervisionForm.form.bind(params)
       validatedForm.hasErrors shouldBe true
-      println(validatedForm.errors.head.key)
-      validatedForm.error(endDateField).get.message shouldBe "update-money-laundering-supervisory.error.day"
+      validatedForm.error(endDateDay).get.message shouldBe "update-money-laundering-supervisory.error.day"
     }
     "This should throw an error when month is not supplied " in {
       val params = Map(
@@ -98,7 +96,7 @@ class UpdateMoneyLaunderingSupervisionFormSpec extends AnyWordSpec with Matchers
       val validatedForm = UpdateMoneyLaunderingSupervisionForm.form.bind(params)
       validatedForm.hasErrors shouldBe true
       println(validatedForm.errors.head.key)
-      validatedForm.error(endDateField).get.message shouldBe "update-money-laundering-supervisory.error.month"
+      validatedForm.error(endDateMonth).get.message shouldBe "update-money-laundering-supervisory.error.month"
     }
     "This should throw an error when year is not supplied " in {
       val params = Map(
@@ -110,8 +108,7 @@ class UpdateMoneyLaunderingSupervisionFormSpec extends AnyWordSpec with Matchers
       )
       val validatedForm = UpdateMoneyLaunderingSupervisionForm.form.bind(params)
       validatedForm.hasErrors shouldBe true
-      println(validatedForm.errors.head.key)
-      validatedForm.error(endDateField).get.message shouldBe "update-money-laundering-supervisory.error.year"
+      validatedForm.error(endDateYear).get.message shouldBe "update-money-laundering-supervisory.error.year"
     }
     "This should throw an error when day and month is not supplied " in {
       val params = Map(
@@ -123,8 +120,7 @@ class UpdateMoneyLaunderingSupervisionFormSpec extends AnyWordSpec with Matchers
       )
       val validatedForm = UpdateMoneyLaunderingSupervisionForm.form.bind(params)
       validatedForm.hasErrors shouldBe true
-      println(validatedForm.errors.head.key)
-      validatedForm.error(endDateField).get.message shouldBe "update-money-laundering-supervisory.error.day-and-month"
+      validatedForm.error(endDateDay).get.message shouldBe "update-money-laundering-supervisory.error.day-and-month"
     }
     "This should throw an error when day and year is not supplied " in {
       val params = Map(
@@ -136,8 +132,7 @@ class UpdateMoneyLaunderingSupervisionFormSpec extends AnyWordSpec with Matchers
       )
       val validatedForm = UpdateMoneyLaunderingSupervisionForm.form.bind(params)
       validatedForm.hasErrors shouldBe true
-      println(validatedForm.errors.head.key)
-      validatedForm.error(endDateField).get.message shouldBe "update-money-laundering-supervisory.error.day-and-year"
+      validatedForm.error(endDateDay).get.message shouldBe "update-money-laundering-supervisory.error.day-and-year"
     }
     "This should throw an error when month and year is not supplied " in {
       val params = Map(
@@ -149,8 +144,7 @@ class UpdateMoneyLaunderingSupervisionFormSpec extends AnyWordSpec with Matchers
       )
       val validatedForm = UpdateMoneyLaunderingSupervisionForm.form.bind(params)
       validatedForm.hasErrors shouldBe true
-      println(validatedForm.errors.head.key)
-      validatedForm.error(endDateField).get.message shouldBe "update-money-laundering-supervisory.error.month-and-year"
+      validatedForm.error(endDateMonth).get.message shouldBe "update-money-laundering-supervisory.error.month-and-year"
     }
     s"error when $bodyField and $numberField and $endDateField are empty" in {
       val params = Map(
@@ -164,9 +158,7 @@ class UpdateMoneyLaunderingSupervisionFormSpec extends AnyWordSpec with Matchers
       validatedForm.hasErrors shouldBe true
       validatedForm.error(bodyField).get.message shouldBe "update-money-laundering-supervisory.body-codes.error.empty"
       validatedForm.error(numberField).get.message shouldBe "update-money-laundering-supervisory.reg-number.error.empty"
-      validatedForm.error(endDateField).get.message shouldBe "update-money-laundering-supervisory.error.date"
-//      validatedForm.error(endDateMonth).get.message shouldBe "update-money-laundering-supervisory.error.month"
-//      validatedForm.error(endDateYear).get.message shouldBe "update-money-laundering-supervisory.error.year"
+      validatedForm.error(endDateDay).get.message shouldBe "update-money-laundering-supervisory.error.date"
       validatedForm.errors.length shouldBe 3
     }
     s"error when $bodyField is invalid" in {
@@ -204,7 +196,7 @@ class UpdateMoneyLaunderingSupervisionFormSpec extends AnyWordSpec with Matchers
       val validatedForm = UpdateMoneyLaunderingSupervisionForm.form.bind(params)
       validatedForm.hasErrors shouldBe true
       validatedForm.errors.size shouldBe 1
-      validatedForm.error(endDateField).get.message shouldBe "update-money-laundering-supervisory.error.date.invalid" // "day" check msg
+      validatedForm.error(endDateDay).get.message shouldBe "update-money-laundering-supervisory.error.date.invalid" // "day" check msg
     }
     s"error when $endDateMonth is invalid" in {
       val params = Map(
@@ -217,7 +209,7 @@ class UpdateMoneyLaunderingSupervisionFormSpec extends AnyWordSpec with Matchers
       val validatedForm = UpdateMoneyLaunderingSupervisionForm.form.bind(params)
       validatedForm.hasErrors shouldBe true
       validatedForm.errors.size shouldBe 1
-      validatedForm.error(endDateField).get.message shouldBe "update-money-laundering-supervisory.error.date.invalid" //"month" check msg
+      validatedForm.error(endDateDay).get.message shouldBe "update-money-laundering-supervisory.error.date.invalid" //"month" check msg
     }
     s"error when $endDateYear is invalid" in {
       val params = Map(
@@ -230,7 +222,7 @@ class UpdateMoneyLaunderingSupervisionFormSpec extends AnyWordSpec with Matchers
       val validatedForm = UpdateMoneyLaunderingSupervisionForm.form.bind(params)
       validatedForm.hasErrors shouldBe true
       validatedForm.errors.size shouldBe 1
-      validatedForm.error(endDateField).get.message shouldBe "update-money-laundering-supervisory.error.date.invalid" // "year" check msg
+      validatedForm.error(endDateDay).get.message shouldBe "update-money-laundering-supervisory.error.date.invalid" // "year" check msg
     }
     s"error when $endDateField passes the regex format however is an invalid date" in{
       val params = Map(
@@ -241,7 +233,7 @@ class UpdateMoneyLaunderingSupervisionFormSpec extends AnyWordSpec with Matchers
         endDateYear -> local_valid_date_stub.getYear.toString
       )
       val validatedForm = UpdateMoneyLaunderingSupervisionForm.form.bind(params)
-        validatedForm.error(endDateField).get.message shouldBe "update-money-laundering-supervisory.error.date.invalid"
+        validatedForm.error(endDateDay).get.message shouldBe "update-money-laundering-supervisory.error.date.invalid"
     }
 
     s"error when $endDateField passes the regex format however is an invalid date (edge case)" in {
@@ -253,7 +245,7 @@ class UpdateMoneyLaunderingSupervisionFormSpec extends AnyWordSpec with Matchers
         endDateYear -> local_valid_date_stub.getYear.toString
       )
       val validatedForm = UpdateMoneyLaunderingSupervisionForm.form.bind(params)
-      validatedForm.error(endDateField).get.message shouldBe "update-money-laundering-supervisory.error.date.invalid"
+      validatedForm.error(endDateDay).get.message shouldBe "update-money-laundering-supervisory.error.date.invalid"
     }
 
     s"error when $endDateField range isn't within 13 Months of today's date" in {
@@ -265,7 +257,7 @@ class UpdateMoneyLaunderingSupervisionFormSpec extends AnyWordSpec with Matchers
         endDateYear -> local_future_date_stub.getYear.toString
       )
       val validatedForm = UpdateMoneyLaunderingSupervisionForm.form.bind(params)
-      validatedForm.error(endDateField).get.message shouldBe "update-money-laundering-supervisory.error.date.before"
+      validatedForm.error(endDateDay).get.message shouldBe "update-money-laundering-supervisory.error.date.before"
     }
     s"error when $endDateField is before today's date" in {
       val params = Map(
@@ -276,7 +268,7 @@ class UpdateMoneyLaunderingSupervisionFormSpec extends AnyWordSpec with Matchers
         endDateYear -> local_past_date_stub.getYear.toString,
       )
       val validatedForm = UpdateMoneyLaunderingSupervisionForm.form.bind(params)
-      validatedForm.error(endDateField).get.message shouldBe "update-money-laundering-supervisory.error.date.past"
+      validatedForm.error(endDateDay).get.message shouldBe "update-money-laundering-supervisory.error.date.past"
     }
   }
 }
