@@ -38,9 +38,10 @@ class UpdateMoneyLaunderingSupervisionDetailsViewSpec extends BaseISpec {
   val view: update_money_laundering_supervision_details = app.injector.instanceOf[update_money_laundering_supervision_details]
   val messages: Messages = MessagesImpl(lang, messagesApi)
 
-  val form: Form[UpdateMoneyLaunderingSupervisionDetails] = UpdateMoneyLaunderingSupervisionForm.form
+  val knownBodies: Map[String, String] = Map("AA" -> "AgentService")
+  val form: Form[UpdateMoneyLaunderingSupervisionDetails] = UpdateMoneyLaunderingSupervisionForm.form(knownBodies)
   val formWithErrors: Form[UpdateMoneyLaunderingSupervisionDetails] =
-    UpdateMoneyLaunderingSupervisionForm.form
+    UpdateMoneyLaunderingSupervisionForm.form(knownBodies)
       .withError(key = "number", message = "update-money-laundering-supervisory.reg-number.error.empty")
       .withError(key = "body", message = "update-money-laundering-supervisory.body-codes.error.empty")
       .withError(key = "endDate", message = "update-money-laundering-supervisory.error.date.invalid")
@@ -49,7 +50,7 @@ class UpdateMoneyLaunderingSupervisionDetailsViewSpec extends BaseISpec {
 
   "update_money_laundering_supervision_details view" when {
     "first viewing page" should {
-      val doc: Document = Jsoup.parse(view.apply(form, Map[String, String](elems = "AA" -> "AgentService"))(messages, FakeRequest(), appConfig).body)
+      val doc: Document = Jsoup.parse(view.apply(form, knownBodies)(messages, FakeRequest(), appConfig).body)
 
       "display the correct page title" in {
         doc.title() mustBe "What are your money laundering supervision registration details? - Agent services account - GOV.UK"
@@ -88,7 +89,7 @@ class UpdateMoneyLaunderingSupervisionDetailsViewSpec extends BaseISpec {
       }
     }
     "form is submitted with errors should" should {
-      val doc: Document = Jsoup.parse(view.apply(formWithErrors, Map[String, String](elems = "AA" -> "AgentService"))(messages, FakeRequest(), appConfig).body)
+      val doc: Document = Jsoup.parse(view.apply(formWithErrors, knownBodies)(messages, FakeRequest(), appConfig).body)
 
       "display the correct page title (with error prefix)" in {
         doc.title() mustBe "Error: What are your money laundering supervision registration details? - Agent services account - GOV.UK"

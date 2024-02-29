@@ -26,7 +26,6 @@ import java.time.LocalDate
 import scala.util.{Failure, Success, Try}
 
 object UpdateMoneyLaunderingSupervisionForm {
-  private val supervisoryBodyRegex = """^[A-Za-z0-9\,\.\'\-\/\ ]{0,200}$""".r
   private val supervisoryNumberRegex = """^[A-Za-z0-9\,\.\'\-\/\ ]{0,200}$""".r // remove all spaces from input before matching to ensure correct digit count
   private val trimmedText = text.transform[String](x => x.trim, x => x)
 
@@ -127,12 +126,12 @@ object UpdateMoneyLaunderingSupervisionForm {
     )
   }
 
-  val form: Form[UpdateMoneyLaunderingSupervisionDetails] =
+  def form(amlsBodies: Map[String, String]): Form[UpdateMoneyLaunderingSupervisionDetails] =
     Form(
       mapping(
         "body" -> trimmedText
           .verifying("update-money-laundering-supervisory.body-codes.error.empty", _.nonEmpty)
-          .verifying("update-money-laundering-supervisory.body-codes.error.invalid", x => supervisoryBodyRegex.matches(x)),
+          .verifying("update-money-laundering-supervisory.body-codes.error.invalid", x => amlsBodies.keys.exists(_ == x) || x.isEmpty),
         "number" -> trimmedText
           .verifying("update-money-laundering-supervisory.reg-number.error.empty", _.nonEmpty)
           .verifying("update-money-laundering-supervisory.reg-number.error.invalid", x => supervisoryNumberRegex.matches(x.replace(" ", ""))),
