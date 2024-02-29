@@ -17,80 +17,80 @@
 package uk.gov.hmrc.agentservicesaccount.forms
 
 import play.api.data.{Form, FormError}
-import play.api.data.Forms.{mapping, text, of}
+import play.api.data.Forms.{mapping, of, text}
 import play.api.data.format.Formatter
+import play.api.data.validation.{Valid, ValidationResult}
 import uk.gov.hmrc.agentservicesaccount.models.UpdateMoneyLaunderingSupervisionDetails
 
 import java.time.LocalDate
 import scala.util.{Failure, Success, Try}
-
 
 object UpdateMoneyLaunderingSupervisionForm {
   private val supervisoryBodyRegex = """^[A-Za-z0-9\,\.\'\-\/\ ]{0,200}$""".r
   private val supervisoryNumberRegex = """^[A-Za-z0-9\,\.\'\-\/\ ]{0,200}$""".r // remove all spaces from input before matching to ensure correct digit count
   private val trimmedText = text.transform[String](x => x.trim, x => x)
 
-  private def invalidDateCheck(day: String, month: String, year: String): Either[(String, String), String] = {
+  private def invalidDateCheck(day: String, month: String, year: String): Either[(String, String), ValidationResult] = {
     Try {
       require(year.length == 4, "Year must be 4 digits")
       LocalDate.of(year.toInt, month.toInt, day.toInt)
     } match {
       case Failure(_) => Left("day" -> "update-money-laundering-supervisory.error.date.invalid")
-      case Success(_) => Right("")
+      case Success(_) => Right(Valid)
     }
   }
 
-  private def pastExpiryDateCheck(day: String, month: String, year: String): Either[(String, String), String] = {
-    if (LocalDate.of(year.toInt, month.toInt, day.toInt).isAfter(LocalDate.now())) Right("")
+  private def pastExpiryDateCheck(day: String, month: String, year: String): Either[(String, String), ValidationResult] = {
+    if (LocalDate.of(year.toInt, month.toInt, day.toInt).isAfter(LocalDate.now())) Right(Valid)
     else Left("day" -> "update-money-laundering-supervisory.error.date.past")
   }
 
-  private def within13MonthsExpiryDateCheck(day: String, month: String, year: String): Either[(String, String), String] = {
+  private def within13MonthsExpiryDateCheck(day: String, month: String, year: String): Either[(String, String), ValidationResult] = {
     val futureDate = LocalDate.now().plusMonths(13)
 
-    if (LocalDate.of(year.toInt, month.toInt, day.toInt).isBefore(futureDate)) Right("")
+    if (LocalDate.of(year.toInt, month.toInt, day.toInt).isBefore(futureDate)) Right(Valid)
     else Left("day" -> "update-money-laundering-supervisory.error.date.before")
   }
 
-  private def noDateCheck(day: String, month: String, year: String): Either[(String, String), String] = {
+  private def noDateCheck(day: String, month: String, year: String): Either[(String, String), ValidationResult] = {
     if (s"$day$month$year".isEmpty) Left("day" -> "update-money-laundering-supervisory.error.date")
-    else Right("")
+    else Right(Valid)
   }
 
-  private def noDayAndMonthCheck(day: String, month: String, year: String): Either[(String, String), String] = {
+  private def noDayAndMonthCheck(day: String, month: String, year: String): Either[(String, String), ValidationResult] = {
     if (day.isEmpty && month.isEmpty && year.nonEmpty) {
       Left("day" -> "update-money-laundering-supervisory.error.day-and-month")
-    } else Right("")
+    } else Right(Valid)
   }
 
-  private def noDayAndYearCheck(day: String, month: String, year: String): Either[(String, String), String] = {
+  private def noDayAndYearCheck(day: String, month: String, year: String): Either[(String, String), ValidationResult] = {
     if (day.isEmpty && month.nonEmpty && year.isEmpty) {
       Left("day" -> "update-money-laundering-supervisory.error.day-and-year")
-    } else Right("")
+    } else Right(Valid)
   }
 
-  private def noMonthAndYearCheck(day: String, month: String, year: String): Either[(String, String), String] = {
+  private def noMonthAndYearCheck(day: String, month: String, year: String): Either[(String, String), ValidationResult] = {
     if (day.nonEmpty && month.isEmpty && year.isEmpty) {
       Left("month" -> "update-money-laundering-supervisory.error.month-and-year")
-    } else Right("")
+    } else Right(Valid)
   }
 
-  private def noDayCheck(day: String, month: String, year: String): Either[(String, String), String] = {
+  private def noDayCheck(day: String, month: String, year: String): Either[(String, String), ValidationResult] = {
     if (day.isEmpty && month.nonEmpty && year.nonEmpty) {
       Left("day" -> "update-money-laundering-supervisory.error.day")
-    } else Right("")
+    } else Right(Valid)
   }
 
-  private def noMonthCheck(day: String, month: String, year: String): Either[(String, String), String] = {
+  private def noMonthCheck(day: String, month: String, year: String): Either[(String, String), ValidationResult] = {
     if (day.nonEmpty && month.isEmpty && year.nonEmpty) {
       Left("month" -> "update-money-laundering-supervisory.error.month")
-    } else Right("")
+    } else Right(Valid)
   }
 
-  private def noYearCheck(day: String, month: String, year: String): Either[(String, String), String] = {
+  private def noYearCheck(day: String, month: String, year: String): Either[(String, String), ValidationResult] = {
     if (day.nonEmpty && month.nonEmpty && year.isEmpty) {
       Left("year" -> "update-money-laundering-supervisory.error.year")
-    } else Right("")
+    } else Right(Valid)
   }
 
   implicit val dateFormatter: Formatter[LocalDate] = new Formatter[LocalDate] {
