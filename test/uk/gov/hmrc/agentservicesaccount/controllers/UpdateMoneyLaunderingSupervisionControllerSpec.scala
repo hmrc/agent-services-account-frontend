@@ -135,7 +135,7 @@ class UpdateMoneyLaunderingSupervisionControllerSpec extends PlaySpec
     "redirect to manage-account/update-money-laundering-supervision" in new Setup {
       givenAuthorisedAgent(User)
       givenNotSuspended()
-      mockAmlsLoader.load("/amls-no-hmrc.csv") returns Map("test" -> "test")
+      mockAmlsLoader.load("/amls-no-hmrc.csv") returns Map("AAA" -> "test")
 
       mockAppConfig.enableNonHmrcSupervisoryBody returns true
       view.apply(*[Form[UpdateMoneyLaunderingSupervisionDetails]], *[Map[String, String]])(*[Messages], *[Request[Any]], *[AppConfig]) returns Html("")
@@ -160,6 +160,8 @@ class UpdateMoneyLaunderingSupervisionControllerSpec extends PlaySpec
     "return form with errors" in new Setup {
       givenAuthorisedAgent(User)
       givenNotSuspended()
+      mockAmlsLoader.load("/amls-no-hmrc.csv") returns Map("AAA" -> "test")
+
       mockAppConfig.enableNonHmrcSupervisoryBody returns true
       view.apply(*[Form[UpdateMoneyLaunderingSupervisionDetails]], *[Map[String, String]])(*[Messages], *[Request[Any]], *[AppConfig]) returns Html("")
 

@@ -18,12 +18,11 @@ package uk.gov.hmrc.agentservicesaccount.forms
 
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import uk.gov.hmrc.agentservicesaccount.models.UpdateMoneyLaunderingSupervisionDetails
 
 import java.time.LocalDate
 
-class UpdateMoneyLaunderingSupervisionFormSpec extends AnyWordSpec with Matchers with GuiceOneAppPerSuite {
+class UpdateMoneyLaunderingSupervisionFormSpec extends AnyWordSpec with Matchers {
 
   val bodyField = "body"
   val numberField = "number"
@@ -36,32 +35,47 @@ class UpdateMoneyLaunderingSupervisionFormSpec extends AnyWordSpec with Matchers
   val local_future_date_stub: LocalDate = LocalDate.now.plusYears(2)
   val local_past_date_stub: LocalDate = LocalDate.now()
 
+  val KNOWN_BODY_CODE = "KNOWN-CODE"
+  val UNKNOWN_BODY_CODE = "UNKNOWN-CODE"
+  val knownSupervisoryBodies: Map[String, String] = Map(KNOWN_BODY_CODE -> "body description")
+
+  val validFormSubmission: Map[String, String] = Map(
+    bodyField -> KNOWN_BODY_CODE,
+    numberField -> "1122334455",
+    endDateDay -> local_valid_date_stub.getDayOfMonth.toString,
+    endDateMonth -> local_valid_date_stub.getMonthValue.toString,
+    endDateYear -> local_valid_date_stub.getYear.toString,
+  )
+
+  val formSubmissionWithNoRegDate: Map[String, String] = Map(
+    bodyField -> KNOWN_BODY_CODE,
+    numberField -> "1122334455",
+    endDateDay -> "",
+    endDateMonth -> "",
+    endDateYear -> ""
+  )
+
+  private def invalidateFormSubmission(badData: (String, String)): Map[String, String] =
+    (validFormSubmission - badData._1) ++ List(badData)
+
+  private def partialDateFormSubmission(datePart: (String, String)): Map[String, String] =
+    (formSubmissionWithNoRegDate - datePart._1) ++ List(datePart)
+
   "UpdateMoneyLaunderingSupervisionForm binding" should {
-    "be successful when not empty" in {
-      val params = Map(
-        bodyField -> "Blah alkfh",
-        numberField -> "1122334455",
-        endDateDay -> local_valid_date_stub.getDayOfMonth.toString,
-        endDateMonth -> local_valid_date_stub.getMonthValue.toString,
-        endDateYear-> local_valid_date_stub.getYear.toString,
-      )
-      val validatedForm = UpdateMoneyLaunderingSupervisionForm.form.bind(params)
+    "be successful valid data is submitted" in {
+      val params = validFormSubmission
+      val validatedForm = UpdateMoneyLaunderingSupervisionForm.form(knownSupervisoryBodies).bind(params)
       validatedForm.value shouldBe
-        Some(UpdateMoneyLaunderingSupervisionDetails("Blah alkfh", "1122334455", local_valid_date_stub))
+        Some(UpdateMoneyLaunderingSupervisionDetails(KNOWN_BODY_CODE, "1122334455", local_valid_date_stub))
     }
     "get form data from a completed 'UpdateMoneyLaunderingSupervisionDetails' model" in {
-      val model = UpdateMoneyLaunderingSupervisionDetails("Blah alkfh", "1122334455", local_past_date_stub)
-      val form = UpdateMoneyLaunderingSupervisionForm.form.fill(model)
-      val params = Map(
-        bodyField -> "Blah alkfh",
-        numberField -> "1122334455",
-        endDateDay -> local_past_date_stub.getDayOfMonth.toString,
-        endDateMonth -> local_past_date_stub.getMonthValue.toString,
-        endDateYear -> local_past_date_stub.getYear.toString,
-      )
+      val model = UpdateMoneyLaunderingSupervisionDetails(KNOWN_BODY_CODE, "1122334455", local_valid_date_stub)
+      val form = UpdateMoneyLaunderingSupervisionForm.form(knownSupervisoryBodies).fill(model)
+      val params = validFormSubmission
       form.data shouldBe params
     }
-    s"error when $bodyField and $numberField and $endDateField are empty" in {
+
+    s"error when no data is submitted" in {
       val params = Map(
         bodyField -> "",
         numberField -> "",
@@ -69,123 +83,140 @@ class UpdateMoneyLaunderingSupervisionFormSpec extends AnyWordSpec with Matchers
         endDateMonth -> "",
         endDateYear -> ""
       )
-      val validatedForm = UpdateMoneyLaunderingSupervisionForm.form.bind(params)
-      validatedForm.hasErrors shouldBe true
+      val validatedForm = UpdateMoneyLaunderingSupervisionForm.form(knownSupervisoryBodies).bind(params)
+      validatedForm.errors.length shouldBe 3
       validatedForm.error(bodyField).get.message shouldBe "update-money-laundering-supervisory.body-codes.error.empty"
       validatedForm.error(numberField).get.message shouldBe "update-money-laundering-supervisory.reg-number.error.empty"
-      validatedForm.error(endDateDay).get.message shouldBe "update-money-laundering-supervisory.error.day"
-      validatedForm.error(endDateMonth).get.message shouldBe "update-money-laundering-supervisory.error.month"
-      validatedForm.error(endDateYear).get.message shouldBe "update-money-laundering-supervisory.error.year"
-      validatedForm.errors.length shouldBe 5
+      validatedForm.error(endDateDay).get.message shouldBe "update-money-laundering-supervisory.error.date"
     }
-    s"error when $bodyField is invalid" in {
-      val params = Map(
-        bodyField -> "###",
-        numberField -> "11223344",
-        endDateDay -> local_valid_date_stub.getDayOfMonth.toString,
-        endDateMonth -> local_valid_date_stub.getMonthValue.toString,
-        endDateYear-> local_valid_date_stub.getYear.toString
-      )
-      val validatedForm = UpdateMoneyLaunderingSupervisionForm.form.bind(params)
+
+    s"error when the supervisory body is not submitted" in {
+      val params = invalidateFormSubmission(bodyField -> "")
+      val validatedForm = UpdateMoneyLaunderingSupervisionForm.form(knownSupervisoryBodies).bind(params)
+      validatedForm.errors.size shouldBe 1
+      validatedForm.error(bodyField).get.message shouldBe "update-money-laundering-supervisory.body-codes.error.empty"
+    }
+    s"error when the supervisory body is not in the provided list" in {
+      val params = invalidateFormSubmission(bodyField -> UNKNOWN_BODY_CODE)
+      val validatedForm = UpdateMoneyLaunderingSupervisionForm.form(knownSupervisoryBodies).bind(params)
       validatedForm.errors.size shouldBe 1
       validatedForm.error(bodyField).get.message shouldBe "update-money-laundering-supervisory.body-codes.error.invalid"
     }
-    s"error when $numberField is invalid" in {
-      val params = Map(
-        bodyField -> "AABBCC",
-        numberField -> "###",
-        endDateDay -> local_valid_date_stub.getDayOfMonth.toString,
-        endDateMonth -> local_valid_date_stub.getMonthValue.toString,
-        endDateYear-> local_valid_date_stub.getYear.toString
-      )
-      val validatedForm = UpdateMoneyLaunderingSupervisionForm.form.bind(params)
+
+    s"error when the registration number is not submitted" in {
+      val params = invalidateFormSubmission(numberField -> "")
+      val validatedForm = UpdateMoneyLaunderingSupervisionForm.form(knownSupervisoryBodies).bind(params)
+      validatedForm.errors.size shouldBe 1
+      validatedForm.error(numberField).get.message shouldBe "update-money-laundering-supervisory.reg-number.error.empty"
+    }
+    s"error when the registration number is invalid" in {
+      val params = invalidateFormSubmission(numberField -> "###")
+      val validatedForm = UpdateMoneyLaunderingSupervisionForm.form(knownSupervisoryBodies).bind(params)
       validatedForm.errors.size shouldBe 1
       validatedForm.error(numberField).get.message shouldBe "update-money-laundering-supervisory.reg-number.error.invalid"
     }
-    s"error when $endDateDay is invalid" in {
-      val params = Map(
-        bodyField -> "AABBCC",
-        numberField -> "11223344",
-        endDateDay -> "222",
-        endDateMonth -> local_valid_date_stub.getMonthValue.toString,
-        endDateYear -> local_valid_date_stub.getYear.toString
-      )
-      val validatedForm = UpdateMoneyLaunderingSupervisionForm.form.bind(params)
-      validatedForm.hasErrors shouldBe true
+
+    "error when date is not supplied" in {
+      val params = formSubmissionWithNoRegDate
+      val validatedForm = UpdateMoneyLaunderingSupervisionForm.form(knownSupervisoryBodies).bind(params)
       validatedForm.errors.size shouldBe 1
-      validatedForm.error(endDateField).get.message shouldBe "update-money-laundering-supervisory.error.date.invalid" // "day" check msg
+      validatedForm.error(endDateDay).get.message shouldBe "update-money-laundering-supervisory.error.date"
     }
-    s"error when $endDateMonth is invalid" in {
-      val params = Map(
-        bodyField -> "AABBCC",
-        numberField -> "11223344",
-        endDateDay -> local_valid_date_stub.getDayOfMonth.toString,
-        endDateMonth -> "333",
-        endDateYear -> local_valid_date_stub.getYear.toString
-      )
-      val validatedForm = UpdateMoneyLaunderingSupervisionForm.form.bind(params)
-      validatedForm.hasErrors shouldBe true
+    "error when day is not supplied" in {
+      val params = invalidateFormSubmission(endDateDay -> "")
+      val validatedForm = UpdateMoneyLaunderingSupervisionForm.form(knownSupervisoryBodies).bind(params)
       validatedForm.errors.size shouldBe 1
-      validatedForm.error(endDateField).get.message shouldBe "update-money-laundering-supervisory.error.date.invalid" //"month" check msg
+      validatedForm.error(endDateDay).get.message shouldBe "update-money-laundering-supervisory.error.day"
     }
-    s"error when $endDateYear is invalid" in {
-      val params = Map(
-        bodyField -> "AABBCC",
-        numberField -> "11223344",
-        endDateDay -> local_valid_date_stub.getDayOfMonth.toString,
-        endDateMonth -> local_valid_date_stub.getMonthValue.toString,
-        endDateYear -> "###"
-      )
-      val validatedForm = UpdateMoneyLaunderingSupervisionForm.form.bind(params)
-      validatedForm.hasErrors shouldBe true
+    "error when month is not supplied" in {
+      val params = invalidateFormSubmission(endDateMonth -> "")
+      val validatedForm = UpdateMoneyLaunderingSupervisionForm.form(knownSupervisoryBodies).bind(params)
       validatedForm.errors.size shouldBe 1
-      validatedForm.error(endDateField).get.message shouldBe "update-money-laundering-supervisory.error.date.invalid" // "year" check msg
+      validatedForm.error(endDateMonth).get.message shouldBe "update-money-laundering-supervisory.error.month"
     }
-    s"error when $endDateField passes the regex format however is an invalid date" in{
+    "error when year is not supplied" in {
+      val params = invalidateFormSubmission(endDateYear -> "")
+      val validatedForm = UpdateMoneyLaunderingSupervisionForm.form(knownSupervisoryBodies).bind(params)
+      validatedForm.errors.size shouldBe 1
+      validatedForm.error(endDateYear).get.message shouldBe "update-money-laundering-supervisory.error.year"
+    }
+    "error when day and month is not supplied" in {
+      val params = partialDateFormSubmission(endDateYear -> local_valid_date_stub.getYear.toString)
+      val validatedForm = UpdateMoneyLaunderingSupervisionForm.form(knownSupervisoryBodies).bind(params)
+      validatedForm.errors.size shouldBe 1
+      validatedForm.error(endDateDay).get.message shouldBe "update-money-laundering-supervisory.error.day-and-month"
+    }
+    "error when day and year is not supplied" in {
+      val params = partialDateFormSubmission(endDateMonth -> local_valid_date_stub.getMonthValue.toString)
+      val validatedForm = UpdateMoneyLaunderingSupervisionForm.form(knownSupervisoryBodies).bind(params)
+      validatedForm.errors.size shouldBe 1
+      validatedForm.error(endDateDay).get.message shouldBe "update-money-laundering-supervisory.error.day-and-year"
+    }
+    "error when month and year is not supplied" in {
+      val params = partialDateFormSubmission(endDateDay -> local_valid_date_stub.getDayOfMonth.toString)
+      val validatedForm = UpdateMoneyLaunderingSupervisionForm.form(knownSupervisoryBodies).bind(params)
+      validatedForm.errors.size shouldBe 1
+      validatedForm.error(endDateMonth).get.message shouldBe "update-money-laundering-supervisory.error.month-and-year"
+    }
+    s"error when the day is invalid" in {
+      val params = invalidateFormSubmission(endDateDay -> "222")
+      val validatedForm = UpdateMoneyLaunderingSupervisionForm.form(knownSupervisoryBodies).bind(params)
+      validatedForm.errors.size shouldBe 1
+      validatedForm.error(endDateDay).get.message shouldBe "update-money-laundering-supervisory.error.date.invalid"
+    }
+    s"error when the month is invalid" in {
+      val params = invalidateFormSubmission(endDateMonth -> "333")
+      val validatedForm = UpdateMoneyLaunderingSupervisionForm.form(knownSupervisoryBodies).bind(params)
+      validatedForm.errors.size shouldBe 1
+      validatedForm.error(endDateDay).get.message shouldBe "update-money-laundering-supervisory.error.date.invalid"
+    }
+    s"error when the year is invalid" in {
+      val params = invalidateFormSubmission(endDateYear -> "###")
+      val validatedForm = UpdateMoneyLaunderingSupervisionForm.form(knownSupervisoryBodies).bind(params)
+      validatedForm.errors.size shouldBe 1
+      validatedForm.error(endDateDay).get.message shouldBe "update-money-laundering-supervisory.error.date.invalid"
+    }
+    s"error when the registration date is not a real date" in {
       val params = Map(
-        bodyField -> "Blah alkfh",
+        bodyField -> KNOWN_BODY_CODE,
         numberField -> "1122334455",
         endDateDay -> "31",
         endDateMonth -> "02",
         endDateYear -> local_valid_date_stub.getYear.toString
       )
-      val validatedForm = UpdateMoneyLaunderingSupervisionForm.form.bind(params)
-        validatedForm.error(endDateField).get.message shouldBe "update-money-laundering-supervisory.error.date.invalid"
+      val validatedForm = UpdateMoneyLaunderingSupervisionForm.form(knownSupervisoryBodies).bind(params)
+      validatedForm.errors.size shouldBe 1
+      validatedForm.error(endDateDay).get.message shouldBe "update-money-laundering-supervisory.error.date.invalid"
     }
-
-    s"error when $endDateField passes the regex format however is an invalid date (edge case)" in {
-      val params = Map(
-        bodyField -> "Blah alkfh",
-        numberField -> "1122334455",
-        endDateDay -> "0",
-        endDateMonth -> "-1",
-        endDateYear -> local_valid_date_stub.getYear.toString
-      )
-      val validatedForm = UpdateMoneyLaunderingSupervisionForm.form.bind(params)
-      validatedForm.error(endDateField).get.message shouldBe "update-money-laundering-supervisory.error.date.invalid"
+    s"error when the registration date is an invalid date (edge case)" in {
+      val params = invalidateFormSubmission(endDateMonth -> "-1")
+      val validatedForm = UpdateMoneyLaunderingSupervisionForm.form(knownSupervisoryBodies).bind(params)
+      validatedForm.errors.size shouldBe 1
+      validatedForm.error(endDateDay).get.message shouldBe "update-money-laundering-supervisory.error.date.invalid"
     }
-
-    s"error when $endDateField range isn't within 13 Months of today's date" in {
+    s"error when the registration date is more than 13 Months in the future" in {
       val params = Map(
-        bodyField -> "Blah alkfh",
+        bodyField -> KNOWN_BODY_CODE,
         numberField -> "1122334455",
         endDateDay -> local_future_date_stub.getDayOfMonth.toString,
         endDateMonth -> local_future_date_stub.getMonthValue.toString,
         endDateYear -> local_future_date_stub.getYear.toString
       )
-      val validatedForm = UpdateMoneyLaunderingSupervisionForm.form.bind(params)
-      validatedForm.error(endDateField).get.message shouldBe "update-money-laundering-supervisory.error.date.before"
+      val validatedForm = UpdateMoneyLaunderingSupervisionForm.form(knownSupervisoryBodies).bind(params)
+      validatedForm.errors.size shouldBe 1
+      validatedForm.error(endDateDay).get.message shouldBe "update-money-laundering-supervisory.error.date.before"
     }
-    s"error when $endDateField is before today's date" in {
+    s"error when the registration date is before today's date" in {
       val params = Map(
-        bodyField -> "Blah alkfh",
+        bodyField -> KNOWN_BODY_CODE,
         numberField -> "1122334455",
         endDateDay -> local_past_date_stub.getDayOfMonth.toString,
         endDateMonth -> local_past_date_stub.getMonthValue.toString,
         endDateYear -> local_past_date_stub.getYear.toString,
       )
-      val validatedForm = UpdateMoneyLaunderingSupervisionForm.form.bind(params)
-      validatedForm.error(endDateField).get.message shouldBe "update-money-laundering-supervisory.error.date.past"
+      val validatedForm = UpdateMoneyLaunderingSupervisionForm.form(knownSupervisoryBodies).bind(params)
+      validatedForm.errors.size shouldBe 1
+      validatedForm.error(endDateDay).get.message shouldBe "update-money-laundering-supervisory.error.date.past"
     }
   }
 }

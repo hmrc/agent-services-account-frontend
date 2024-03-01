@@ -49,31 +49,6 @@
         <script @{CSPNonce.attr} src="@controllers.routes.Assets.at("javascripts/accessible-autocomplete-polyfill.js")"></script>
     }
 
-@DayFieldError = @{
-    if(form("endDate.day").hasErrors)
-        "day-field-error"
-}
-
-@MonthFieldError = @{
-    if(form("endDate.month").hasErrors)
-        "month-field-error"
-}
-
-@YearFieldError = @{
-    if(form("endDate.year").hasErrors)
-        "year-field-error"
-}
-
-@DateFieldErrorsAll = @{
-    if(form("endDate").hasErrors && !form("endDate.day").hasErrors && !form("endDate.month").hasErrors && !form("endDate.year").hasErrors)
-        "date-field-errors-all"
-}
-
-@dateFormWithRefinedErrors = @{
-    form.copy(errors = form.errors.filterNot(error => error.message == "" || error.key.contains("endDate.day")
-            || error.key.contains("endDate.month") || error.key.contains("endDate.year")))
-}
-
 @fieldsetHtml = {
     @govukSelect(Select(
         id = "body",
@@ -130,9 +105,8 @@
     additionalScripts = Some(scripts)
 ) {
     @if(form.hasErrors) {
-        @govukErrorSummary(ErrorSummary(errorList = form.errors.asTextErrorLinks, title = Text(msgs("survey.error.summary"))))
+        @govukErrorSummary(ErrorSummary().withFormErrorsAsText(form))
     }
-
     @formWithCSRF(action = routes.UpdateMoneyLaunderingSupervisionController.submitUpdateMoneyLaunderingSupervision) {
         @govukFieldset(Fieldset(
             html = fieldsetHtml,
