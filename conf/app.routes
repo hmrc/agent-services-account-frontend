@@ -1,85 +1,85 @@
 # microservice specific routes
-->         /hmrc-frontend                           hmrcfrontend.Routes
+->         /hmrc-frontend                                                 hmrcfrontend.Routes
 
-GET        /assets/*file                            controllers.Assets.at(path="/public", file)
-GET        /language/:lang                          @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesLanguageController.switchToLanguage(lang: String)
+GET        /assets/*file                                                  controllers.Assets.at(path="/public", file)
+GET        /language/:lang                                                @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesLanguageController.switchToLanguage(lang: String)
 
-GET        /                                        @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController.root()
-GET        /home                                    @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController.showAgentServicesAccount()
+GET        /                                                              @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController.root()
+GET        /home                                                          @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController.showAgentServicesAccount()
 
-GET        /home/survey                             @uk.gov.hmrc.agentservicesaccount.controllers.SignOutController.showSurvey()
-POST       /home/survey                             @uk.gov.hmrc.agentservicesaccount.controllers.SignOutController.submitSurvey()
-GET        /home/survey-service                     @uk.gov.hmrc.agentservicesaccount.controllers.SignOutController.showWhichService()
-POST       /home/survey-service                     @uk.gov.hmrc.agentservicesaccount.controllers.SignOutController.submitWhichService()
+GET        /home/survey                                                   @uk.gov.hmrc.agentservicesaccount.controllers.SignOutController.showSurvey()
+POST       /home/survey                                                   @uk.gov.hmrc.agentservicesaccount.controllers.SignOutController.submitSurvey()
+GET        /home/survey-service                                           @uk.gov.hmrc.agentservicesaccount.controllers.SignOutController.showWhichService()
+POST       /home/survey-service                                           @uk.gov.hmrc.agentservicesaccount.controllers.SignOutController.submitWhichService()
 
-GET        /account-limited                         @uk.gov.hmrc.agentservicesaccount.controllers.SuspendedJourneyController.showSuspendedWarning()
+GET        /account-limited                                               @uk.gov.hmrc.agentservicesaccount.controllers.SuspendedJourneyController.showSuspendedWarning()
 
-GET        /recovery-contact-details                @uk.gov.hmrc.agentservicesaccount.controllers.SuspendedJourneyController.showContactDetails()
-POST       /recovery-contact-details                @uk.gov.hmrc.agentservicesaccount.controllers.SuspendedJourneyController.submitContactDetails()
-GET        /recovery-description                    @uk.gov.hmrc.agentservicesaccount.controllers.SuspendedJourneyController.showSuspendedDescription()
-POST       /recovery-description                    @uk.gov.hmrc.agentservicesaccount.controllers.SuspendedJourneyController.submitSuspendedDescription()
-GET        /recovery-check-your-answers             @uk.gov.hmrc.agentservicesaccount.controllers.SuspendedJourneyController.showSuspendedSummary()
-POST       /recovery-check-your-answers             @uk.gov.hmrc.agentservicesaccount.controllers.SuspendedJourneyController.submitSuspendedSummary()
-GET        /recovery-request-confirmation           @uk.gov.hmrc.agentservicesaccount.controllers.SuspendedJourneyController.showSuspendedConfirmation()
+GET        /recovery-contact-details                                      @uk.gov.hmrc.agentservicesaccount.controllers.SuspendedJourneyController.showContactDetails()
+POST       /recovery-contact-details                                      @uk.gov.hmrc.agentservicesaccount.controllers.SuspendedJourneyController.submitContactDetails()
+GET        /recovery-description                                          @uk.gov.hmrc.agentservicesaccount.controllers.SuspendedJourneyController.showSuspendedDescription()
+POST       /recovery-description                                          @uk.gov.hmrc.agentservicesaccount.controllers.SuspendedJourneyController.submitSuspendedDescription()
+GET        /recovery-check-your-answers                                   @uk.gov.hmrc.agentservicesaccount.controllers.SuspendedJourneyController.showSuspendedSummary()
+POST       /recovery-check-your-answers                                   @uk.gov.hmrc.agentservicesaccount.controllers.SuspendedJourneyController.submitSuspendedSummary()
+GET        /recovery-request-confirmation                                 @uk.gov.hmrc.agentservicesaccount.controllers.SuspendedJourneyController.showSuspendedConfirmation()
 
-GET        /sign-out                                @uk.gov.hmrc.agentservicesaccount.controllers.SignOutController.signOut()
-GET        /online/sign-in                          @uk.gov.hmrc.agentservicesaccount.controllers.SignOutController.onlineSignIn()
-GET        /help-and-guidance                       @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController.showHelp()
+GET        /sign-out                                                      @uk.gov.hmrc.agentservicesaccount.controllers.SignOutController.signOut()
+GET        /online/sign-in                                                @uk.gov.hmrc.agentservicesaccount.controllers.SignOutController.onlineSignIn()
+GET        /help-and-guidance                                             @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController.showHelp()
 
-GET        /signed-out                              @uk.gov.hmrc.agentservicesaccount.controllers.SignOutController.signedOut()
-GET        /timed-out                               @uk.gov.hmrc.agentservicesaccount.controllers.SignOutController.timedOut()
-GET        /keep-alive                              @uk.gov.hmrc.agentservicesaccount.controllers.SignOutController.keepAlive
+GET        /signed-out                                                    @uk.gov.hmrc.agentservicesaccount.controllers.SignOutController.signedOut()
+GET        /timed-out                                                     @uk.gov.hmrc.agentservicesaccount.controllers.SignOutController.timedOut()
+GET        /keep-alive                                                    @uk.gov.hmrc.agentservicesaccount.controllers.SignOutController.keepAlive
 
-GET        /manage-account                          @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController.manageAccount
-GET        /account-details                         @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController.accountDetails
-GET        /administrators                          @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController.administrators
+GET        /manage-account                                                @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController.manageAccount
+GET        /account-details                                               @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController.accountDetails
+GET        /administrators                                                @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController.administrators
 
-GET        /manage-account/administrative-access    @uk.gov.hmrc.agentservicesaccount.controllers.NoAccessGroupsAssignmentController.showAdminAccessInformation()
-GET        /no-assignment                           @uk.gov.hmrc.agentservicesaccount.controllers.NoAccessGroupsAssignmentController.redirectForNoAssignment
+GET        /manage-account/administrative-access                          @uk.gov.hmrc.agentservicesaccount.controllers.NoAccessGroupsAssignmentController.showAdminAccessInformation()
+GET        /no-assignment                                                 @uk.gov.hmrc.agentservicesaccount.controllers.NoAccessGroupsAssignmentController.redirectForNoAssignment
 
 #Route for Optin or OptOut status
-GET        /agent-services-access                   @uk.gov.hmrc.agentservicesaccount.controllers.ManageLandingController.showAccessGroupSummaryForASA
+GET        /agent-services-access                                         @uk.gov.hmrc.agentservicesaccount.controllers.ManageLandingController.showAccessGroupSummaryForASA
 
 # Assitant or 'Standard' user only
-GET        /your-account                            @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController.yourAccount
+GET        /your-account                                                  @uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController.yourAccount
 
 # Private beta feature testing
-POST       /private-beta-invite/decline             @uk.gov.hmrc.agentservicesaccount.controllers.BetaInviteController.hideInvite
+POST       /private-beta-invite/decline                                   @uk.gov.hmrc.agentservicesaccount.controllers.BetaInviteController.hideInvite
 
-GET        /private-beta-testing                    @uk.gov.hmrc.agentservicesaccount.controllers.BetaInviteController.showInvite
-POST       /private-beta-testing                    @uk.gov.hmrc.agentservicesaccount.controllers.BetaInviteController.submitInvite()
+GET        /private-beta-testing                                          @uk.gov.hmrc.agentservicesaccount.controllers.BetaInviteController.showInvite
+POST       /private-beta-testing                                          @uk.gov.hmrc.agentservicesaccount.controllers.BetaInviteController.submitInvite()
 
-GET        /private-beta-testing-details            @uk.gov.hmrc.agentservicesaccount.controllers.BetaInviteController.showInviteDetails
-POST       /private-beta-testing-details            @uk.gov.hmrc.agentservicesaccount.controllers.BetaInviteController.submitInviteDetails()
-GET        /private-beta-testing-contact-details    @uk.gov.hmrc.agentservicesaccount.controllers.BetaInviteController.showInviteContactDetails
-POST       /private-beta-testing-contact-details    @uk.gov.hmrc.agentservicesaccount.controllers.BetaInviteController.submitInviteContactDetails()
-GET        /private-beta-check-your-answers         @uk.gov.hmrc.agentservicesaccount.controllers.BetaInviteController.showInviteCheckYourAnswers
-POST       /private-beta-check-your-answers         @uk.gov.hmrc.agentservicesaccount.controllers.BetaInviteController.submitDetailsToEmail()
-GET        /private-beta-confirmation               @uk.gov.hmrc.agentservicesaccount.controllers.BetaInviteController.showInviteConfirmation
+GET        /private-beta-testing-details                                  @uk.gov.hmrc.agentservicesaccount.controllers.BetaInviteController.showInviteDetails
+POST       /private-beta-testing-details                                  @uk.gov.hmrc.agentservicesaccount.controllers.BetaInviteController.submitInviteDetails()
+GET        /private-beta-testing-contact-details                          @uk.gov.hmrc.agentservicesaccount.controllers.BetaInviteController.showInviteContactDetails
+POST       /private-beta-testing-contact-details                          @uk.gov.hmrc.agentservicesaccount.controllers.BetaInviteController.submitInviteContactDetails()
+GET        /private-beta-check-your-answers                               @uk.gov.hmrc.agentservicesaccount.controllers.BetaInviteController.showInviteCheckYourAnswers
+POST       /private-beta-check-your-answers                               @uk.gov.hmrc.agentservicesaccount.controllers.BetaInviteController.submitDetailsToEmail()
+GET        /private-beta-confirmation                                     @uk.gov.hmrc.agentservicesaccount.controllers.BetaInviteController.showInviteConfirmation
 
 # Update contact details
-GET        /contact-details                         @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.showCurrentContactDetails
-GET        /update-business-name                    @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.showChangeBusinessName
-POST       /update-business-name                    @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.submitChangeBusinessName
-GET        /update-email-address                    @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.showChangeEmailAddress
-POST       /update-email-address                    @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.submitChangeEmailAddress
-GET        /email-verification-finish               @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.finishEmailVerification
-GET        /email-locked                            @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.showEmailLocked
-GET        /update-telephone-number                 @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.showChangeTelephoneNumber
-POST       /update-telephone-number                 @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.submitChangeTelephoneNumber
-GET        /update-address                          @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.startAddressLookup
-GET        /address-lookup-finish                   @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.finishAddressLookup(id: Option[String])
-GET        /check-contact-details                   @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.showCheckNewDetails
-POST       /check-contact-details                   @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.submitCheckNewDetails
-GET        /contact-details-submitted               @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.showChangeSubmitted
+GET        /manage-account/contact-details/view                           @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.showCurrentContactDetails
+GET        /update-business-name                                          @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.showChangeBusinessName
+POST       /update-business-name                                          @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.submitChangeBusinessName
+GET        /update-email-address                                          @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.showChangeEmailAddress
+POST       /update-email-address                                          @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.submitChangeEmailAddress
+GET        /email-verification-finish                                     @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.finishEmailVerification
+GET        /email-locked                                                  @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.showEmailLocked
+GET        /update-telephone-number                                       @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.showChangeTelephoneNumber
+POST       /update-telephone-number                                       @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.submitChangeTelephoneNumber
+GET        /update-address                                                @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.startAddressLookup
+GET        /address-lookup-finish                                         @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.finishAddressLookup(id: Option[String])
+GET        /check-contact-details                                         @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.showCheckNewDetails
+POST       /check-contact-details                                         @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.submitCheckNewDetails
+GET        /contact-details-submitted                                     @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.showChangeSubmitted
 
 # AMLS
-GET        /manage-account/amls-details-updated     @uk.gov.hmrc.agentservicesaccount.controllers.AmlsConfirmationController.showUpdatedAmlsConfirmationPage
+GET        /manage-account/amls-details-updated                           @uk.gov.hmrc.agentservicesaccount.controllers.AmlsConfirmationController.showUpdatedAmlsConfirmationPage
 
-GET        /manage-account/money-laundering-supervision      @uk.gov.hmrc.agentservicesaccount.controllers.AMLSDetailsController.showSupervisionDetails
+GET        /manage-account/money-laundering-supervision                   @uk.gov.hmrc.agentservicesaccount.controllers.AMLSDetailsController.showSupervisionDetails
 
-GET        /manage-account/money-laundering-supervisory-body @uk.gov.hmrc.agentservicesaccount.controllers.AmlsIsHmrcController.showAmlsIsHmrc
-POST       /manage-account/money-laundering-supervisory-body @uk.gov.hmrc.agentservicesaccount.controllers.AmlsIsHmrcController.submitAmlsIsHmrc
+GET        /manage-account/money-laundering-supervisory-body              @uk.gov.hmrc.agentservicesaccount.controllers.AmlsIsHmrcController.showAmlsIsHmrc
+POST       /manage-account/money-laundering-supervisory-body              @uk.gov.hmrc.agentservicesaccount.controllers.AmlsIsHmrcController.submitAmlsIsHmrc
 
 GET        /manage-account/update-money-laundering-supervision            @uk.gov.hmrc.agentservicesaccount.controllers.UpdateMoneyLaunderingSupervisionController.showUpdateMoneyLaunderingSupervision
 POST       /manage-account/update-money-laundering-supervision            @uk.gov.hmrc.agentservicesaccount.controllers.UpdateMoneyLaunderingSupervisionController.submitUpdateMoneyLaunderingSupervision

@@ -31,42 +31,42 @@
     rows = Seq(
         SummaryListRow(
             key = Key(
-                content = Text(msgs("update-contact-details.summary-list.name"))
+                content = Text(msgs("contact-details.summary-list.name"))
             ),
             value = Value(
-                content = Text(agencyDetails.agencyName.getOrElse(msgs("update-contact-details.summary-list.none")))
+                content = Text(agencyDetails.agencyName.getOrElse(msgs("contact-details.summary-list.none")))
             ),
             actions = maybeActions(Actions(items = Seq(ActionItem(href = routes.ContactDetailsController.showChangeBusinessName.url, content = Text(msgs("common.change"))))))
         ),
         SummaryListRow(
             key = Key(
-                content = Text(msgs("update-contact-details.summary-list.address"))
+                content = Text(msgs("contact-details.summary-list.address"))
             ),
             value = Value(
                 content = HtmlContent(
                     s"""${
                         agencyDetails.agencyAddress.map(
                             ba => List(Some(ba.addressLine1), ba.addressLine2, ba.addressLine3, ba.addressLine4, ba.postalCode, Some(ba.countryCode)).flatten
-                        ).map(_.mkString("<br>")).getOrElse("")
+                        ).map(_.mkString("<br>")).getOrElse(msgs("contact-details.summary-list.none"))
                     }""")
             ),
             actions = maybeActions(Actions(items = Seq(ActionItem(href = routes.ContactDetailsController.startAddressLookup   .url, content = Text(msgs("common.change"))))))
         ),
         SummaryListRow(
             key = Key(
-                content = Text(msgs("update-contact-details.summary-list.email"))
+                content = Text(msgs("contact-details.summary-list.email"))
             ),
             value = Value(
-                content = Text(agencyDetails.agencyEmail.getOrElse(msgs("update-contact-details.summary-list.none")))
+                content = Text(agencyDetails.agencyEmail.getOrElse(msgs("contact-details.summary-list.none")))
             ),
             actions = maybeActions(Actions(items = Seq(ActionItem(href = routes.ContactDetailsController.showChangeEmailAddress.url, content = Text(msgs("common.change"))))))
         ),
         SummaryListRow(
             key = Key(
-                content = Text(msgs("update-contact-details.summary-list.phone"))
+                content = Text(msgs("contact-details.summary-list.phone"))
             ),
             value = Value(
-                content = Text(agencyDetails.agencyTelephone.getOrElse(msgs("update-contact-details.summary-list.none")))
+                content = Text(agencyDetails.agencyTelephone.getOrElse(msgs("contact-details.summary-list.none")))
             ),
             actions = maybeActions(Actions(items = Seq(ActionItem(href = routes.ContactDetailsController.showChangeTelephoneNumber.url, content = Text(msgs("common.change"))))))
         )

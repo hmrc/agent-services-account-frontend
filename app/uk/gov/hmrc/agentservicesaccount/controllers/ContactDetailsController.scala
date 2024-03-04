@@ -29,7 +29,7 @@ import uk.gov.hmrc.agentservicesaccount.models.emailverification.{Email, VerifyE
 import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress, PendingChangeOfDetails}
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.updatecontactdetails._
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.contact_details._
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
@@ -45,7 +45,7 @@ class ContactDetailsController @Inject()(actions: Actions,
                                          evConnector: EmailVerificationConnector,
                                          pcodRepository: PendingChangeOfDetailsRepository,
                                          //views
-                                         contact_details: contact_details,
+                                         view_contact_details: view_contact_details,
                                          check_updated_details: check_updated_details,
                                          update_name: update_name,
                                          update_phone: update_phone,
@@ -91,7 +91,7 @@ class ContactDetailsController @Inject()(actions: Actions,
         _ <- sessionCache.delete(DRAFT_NEW_CONTACT_DETAILS)
         mPendingChange <- pcodRepository.find(request.agentInfo.arn)
         agencyDetails <- getCurrentAgencyDetails()
-      } yield Ok(contact_details(agencyDetails, mPendingChange, request.agentInfo.isAdmin))
+      } yield Ok(view_contact_details(agencyDetails, mPendingChange, request.agentInfo.isAdmin))
     }
   }
 
