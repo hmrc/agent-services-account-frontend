@@ -36,10 +36,9 @@ class ViewContactDetailsViewSpec extends BaseISpec {
 
   implicit private val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   implicit private val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
-  implicit private val lang: Lang = Lang("en")
+  implicit private val langs: Seq[Lang] = Seq(Lang("en"), Lang("cy"))
 
   private val view: view_contact_details = app.injector.instanceOf[view_contact_details]
-  private val messages: Messages = MessagesImpl(lang, messagesApi)
 
   private val testAgencyDetailsFull = AgencyDetails(
     agencyName = Some("Test Name"),
@@ -73,28 +72,58 @@ class ViewContactDetailsViewSpec extends BaseISpec {
   )
 
   object MessageLookup {
-    private val govUkSuffix: String = " - Agent services account - GOV.UK"
-    val heading: String = "Contact details"
-    val title: String = heading + govUkSuffix
 
-    def insetText(localDate: LocalDate) = {
-      val dateTimeFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
-      s"New contact details were submitted on ${localDate.format(dateTimeFormatter)}. " +
-        s"You cannot change contact details again until ${localDate.plusMonths(1).format(dateTimeFormatter)}."
+    object English {
+      private val govUkSuffix: String = " - Agent services account - GOV.UK"
+      val heading: String = "Contact details"
+      val title: String = heading + govUkSuffix
+
+      def insetText(localDate: LocalDate) = {
+        val dateTimeFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
+        s"New contact details were submitted on ${localDate.format(dateTimeFormatter)}. " +
+          s"You cannot change contact details again until ${localDate.plusMonths(1).format(dateTimeFormatter)}."
+      }
+
+      val addressKey: String = "Address for agent services account"
+      val emailKey: String = "Email address"
+      val telephoneKey: String = "Telephone number"
+      val businessNameKey: String = "Business name shown to clients"
+
+      val addressValue: String = "Test Street Test Town TE5 7ED GB"
+      val emailValue: String = "test@email.com"
+      val telephoneValue: String = "01234 567890"
+      val businessNameValue: String = "Test Name"
+      val noneValue: String = "None"
+
+      val link1 = "Update contact details"
+      val link2 = "Return to Manage account"
     }
 
-    val addressKey: String = "Address for agent services account"
-    val emailKey: String = "Email address"
-    val telephoneKey: String = "Telephone number"
-    val businessNameKey: String = "Business name shown to clients"
+    object Welsh {
+      private val govUkSuffix: String = " - Cyfrif gwasanaethau asiant - GOV.UK"
+      val heading: String = "Manylion cyswllt"
+      val title: String = heading + govUkSuffix
 
-    val addressValue: String = "Test Street Test Town TE5 7ED GB"
-    val emailValue: String = "test@email.com"
-    val telephoneValue: String = "01234 567890"
-    val businessNameValue: String = "Test Name"
+      def insetText(localDate: LocalDate) = {
+        val dateTimeFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
+        s"Cyflwynwyd manylion newydd ar ${localDate.format(dateTimeFormatter)}. " +
+          s"Ni allwch wneud unrhyw newidiadau pellach i’r manylion cyswllt tan ${localDate.plusMonths(1).format(dateTimeFormatter)}."
+      }
 
-    val link1 = "Update contact details"
-    val link2 = "Return to Manage account"
+      val addressKey: String = "Cyfeiriad ar gyfer y cyfrif gwasanaethau asiant"
+      val emailKey: String = "Cyfeiriad e-bost"
+      val telephoneKey: String = "Rhif ffôn"
+      val businessNameKey: String = "Enw’r busnes a ddangosir i gleientiaid"
+
+      val addressValue: String = "Test Street Test Town TE5 7ED GB"
+      val emailValue: String = "test@email.com"
+      val telephoneValue: String = "01234 567890"
+      val businessNameValue: String = "Test Name"
+      val noneValue: String = "Dim"
+
+      val link1 = "Diweddaru manylion cyswllt"
+      val link2 = "Dychwelyd i ‘Rheoli’r cyfrif’"
+    }
   }
 
   //TODO create test constants file for reuse of the test variable
@@ -102,88 +131,178 @@ class ViewContactDetailsViewSpec extends BaseISpec {
 
   "view_contact_details" should {
     "render correctly" when {
-      "there are contact details" in {
-        val doc: Document = Jsoup.parse(view.apply(testAgencyDetailsFull, None, isAdmin = true)(messages, FakeRequest(), appConfig).body)
+      "the selected lang is english" when {
+        val messages: Messages = MessagesImpl(langs.head, messagesApi)
+        "there are contact details" in {
+          val doc: Document = Jsoup.parse(view.apply(testAgencyDetailsFull, None, isAdmin = true)(messages, FakeRequest(), appConfig).body)
 
-        doc.title() mustBe MessageLookup.title
-        doc.select("h1").asScala.head.text mustBe MessageLookup.heading
-        val summaryListKeys = doc.select(".govuk-summary-list__key").asScala.toList.map(_.text)
-        val summaryListValues = doc.select(".govuk-summary-list__value").asScala.toList.map(_.text)
+          doc.title() mustBe MessageLookup.English.title
+          doc.select("h1").asScala.head.text mustBe MessageLookup.English.heading
+          val summaryListKeys = doc.select(".govuk-summary-list__key").asScala.toList.map(_.text)
+          val summaryListValues = doc.select(".govuk-summary-list__value").asScala.toList.map(_.text)
 
-        summaryListKeys.head mustBe MessageLookup.businessNameKey
-        summaryListKeys(1) mustBe MessageLookup.addressKey
-        summaryListKeys(2) mustBe MessageLookup.emailKey
-        summaryListKeys(3) mustBe MessageLookup.telephoneKey
+          summaryListKeys.head mustBe MessageLookup.English.businessNameKey
+          summaryListKeys(1) mustBe MessageLookup.English.addressKey
+          summaryListKeys(2) mustBe MessageLookup.English.emailKey
+          summaryListKeys(3) mustBe MessageLookup.English.telephoneKey
 
-        summaryListValues.head.trim mustBe MessageLookup.businessNameValue
-        summaryListValues(1) mustBe MessageLookup.addressValue
-        summaryListValues(2) mustBe MessageLookup.emailValue
-        summaryListValues(3) mustBe MessageLookup.telephoneValue
+          summaryListValues.head.trim mustBe MessageLookup.English.businessNameValue
+          summaryListValues(1) mustBe MessageLookup.English.addressValue
+          summaryListValues(2) mustBe MessageLookup.English.emailValue
+          summaryListValues(3) mustBe MessageLookup.English.telephoneValue
 
-        val links = doc.select(".govuk-link").asScala.toList
+          val links = doc.select(".govuk-link").asScala.toList
 
-        links(2).text() mustBe MessageLookup.link1
-        links(2).attributes().get("href") mustBe "/" //TODO - update to relevant route
+          links(2).text() mustBe MessageLookup.English.link1
+          links(2).attributes().get("href") mustBe "/" //TODO - update to relevant route
 
-        links(3).text() mustBe MessageLookup.link2
-        links(3).attributes().get("href") mustBe routes.AgentServicesController.manageAccount.url
+          links(3).text() mustBe MessageLookup.English.link2
+          links(3).attributes().get("href") mustBe routes.AgentServicesController.manageAccount.url
+        }
+
+        "there are pending changes to the contract details" in {
+          val doc: Document = Jsoup.parse(view.apply(testAgencyDetailsFull, Some(pendingChangeOfDetails), isAdmin = true)(messages, FakeRequest(), appConfig).body)
+
+          doc.title() mustBe MessageLookup.English.title
+          doc.select("h1").asScala.head.text mustBe MessageLookup.English.heading
+
+          doc.select(".govuk-inset-text").text() mustBe MessageLookup.English.insetText(LocalDate.now)
+
+          val summaryListKeys = doc.select(".govuk-summary-list__key").asScala.toList.map(_.text)
+          val summaryListValues = doc.select(".govuk-summary-list__value").asScala.toList.map(_.text)
+
+          summaryListKeys.head mustBe MessageLookup.English.businessNameKey
+          summaryListKeys(1) mustBe MessageLookup.English.addressKey
+          summaryListKeys(2) mustBe MessageLookup.English.emailKey
+          summaryListKeys(3) mustBe MessageLookup.English.telephoneKey
+
+          summaryListValues.head.trim mustBe MessageLookup.English.businessNameValue
+          summaryListValues(1) mustBe MessageLookup.English.addressValue
+          summaryListValues(2) mustBe MessageLookup.English.emailValue
+          summaryListValues(3) mustBe MessageLookup.English.telephoneValue
+
+          val links = doc.select(".govuk-link").asScala.toList
+
+          links(2).text() mustBe MessageLookup.English.link1
+          links(2).attributes().get("href") mustBe "/" //TODO - update to relevant route
+
+          links(3).text() mustBe MessageLookup.English.link2
+          links(3).attributes().get("href") mustBe routes.AgentServicesController.manageAccount.url
+        }
+
+        "there are no contact details" in {
+          val doc: Document = Jsoup.parse(view.apply(testAgencyDetailsEmpty, None, isAdmin = true)(messages, FakeRequest(), appConfig).body)
+
+          doc.title() mustBe MessageLookup.English.title
+          doc.select("h1").asScala.head.text mustBe MessageLookup.English.heading
+          val summaryListKeys = doc.select(".govuk-summary-list__key").asScala.toList.map(_.text)
+          val summaryListValues = doc.select(".govuk-summary-list__value").asScala.toList.map(_.text)
+
+          summaryListKeys.head mustBe MessageLookup.English.businessNameKey
+          summaryListKeys(1) mustBe MessageLookup.English.addressKey
+          summaryListKeys(2) mustBe MessageLookup.English.emailKey
+          summaryListKeys(3) mustBe MessageLookup.English.telephoneKey
+
+          summaryListValues.head mustBe MessageLookup.English.noneValue
+          summaryListValues(1) mustBe MessageLookup.English.noneValue
+          summaryListValues(2) mustBe MessageLookup.English.noneValue
+          summaryListValues(3) mustBe MessageLookup.English.noneValue
+
+          val links = doc.select(".govuk-link").asScala.toList
+
+          links(2).text() mustBe MessageLookup.English.link1
+          links(2).attributes().get("href") mustBe "/" //TODO - update to relevant route
+
+          links(3).text() mustBe MessageLookup.English.link2
+          links(3).attributes().get("href") mustBe routes.AgentServicesController.manageAccount.url
+        }
       }
 
-      "there are pending changes to the contract details" in {
-        val doc: Document = Jsoup.parse(view.apply(testAgencyDetailsFull, Some(pendingChangeOfDetails), isAdmin = true)(messages, FakeRequest(), appConfig).body)
+      "the selected lang is welsh" when {
+        val messages: Messages = MessagesImpl(langs.last, messagesApi)
+        "there are contact details" in {
+          val doc: Document = Jsoup.parse(view.apply(testAgencyDetailsFull, None, isAdmin = true)(messages, FakeRequest(), appConfig).body)
 
-        doc.title() mustBe MessageLookup.title
-        doc.select("h1").asScala.head.text mustBe MessageLookup.heading
+          doc.title() mustBe MessageLookup.Welsh.title
+          doc.select("h1").asScala.head.text mustBe MessageLookup.Welsh.heading
+          val summaryListKeys = doc.select(".govuk-summary-list__key").asScala.toList.map(_.text)
+          val summaryListValues = doc.select(".govuk-summary-list__value").asScala.toList.map(_.text)
 
-        doc.select(".govuk-inset-text").text() mustBe MessageLookup.insetText(LocalDate.now)
+          summaryListKeys.head mustBe MessageLookup.Welsh.businessNameKey
+          summaryListKeys(1) mustBe MessageLookup.Welsh.addressKey
+          summaryListKeys(2) mustBe MessageLookup.Welsh.emailKey
+          summaryListKeys(3) mustBe MessageLookup.Welsh.telephoneKey
 
-        val summaryListKeys = doc.select(".govuk-summary-list__key").asScala.toList.map(_.text)
-        val summaryListValues = doc.select(".govuk-summary-list__value").asScala.toList.map(_.text)
+          summaryListValues.head.trim mustBe MessageLookup.Welsh.businessNameValue
+          summaryListValues(1) mustBe MessageLookup.Welsh.addressValue
+          summaryListValues(2) mustBe MessageLookup.Welsh.emailValue
+          summaryListValues(3) mustBe MessageLookup.Welsh.telephoneValue
 
-        summaryListKeys.head mustBe MessageLookup.businessNameKey
-        summaryListKeys(1) mustBe MessageLookup.addressKey
-        summaryListKeys(2) mustBe MessageLookup.emailKey
-        summaryListKeys(3) mustBe MessageLookup.telephoneKey
+          val links = doc.select(".govuk-link").asScala.toList
 
-        summaryListValues.head.trim mustBe MessageLookup.businessNameValue
-        summaryListValues(1) mustBe MessageLookup.addressValue
-        summaryListValues(2) mustBe MessageLookup.emailValue
-        summaryListValues(3) mustBe MessageLookup.telephoneValue
+          links(2).text() mustBe MessageLookup.Welsh.link1
+          links(2).attributes().get("href") mustBe "/" //TODO - update to relevant route
 
-        val links = doc.select(".govuk-link").asScala.toList
+          links(3).text() mustBe MessageLookup.Welsh.link2
+          links(3).attributes().get("href") mustBe routes.AgentServicesController.manageAccount.url
+        }
 
-        links(2).text() mustBe MessageLookup.link1
-        links(2).attributes().get("href") mustBe "/" //TODO - update to relevant route
+        "there are pending changes to the contract details" in {
+          val doc: Document = Jsoup.parse(view.apply(testAgencyDetailsFull, Some(pendingChangeOfDetails), isAdmin = true)(messages, FakeRequest(), appConfig).body)
 
-        links(3).text() mustBe MessageLookup.link2
-        links(3).attributes().get("href") mustBe routes.AgentServicesController.manageAccount.url
-      }
+          doc.title() mustBe MessageLookup.Welsh.title
+          doc.select("h1").asScala.head.text mustBe MessageLookup.Welsh.heading
 
-      "there are no contact details" in {
-        val doc: Document = Jsoup.parse(view.apply(testAgencyDetailsEmpty, None, isAdmin = true)(messages, FakeRequest(), appConfig).body)
+          doc.select(".govuk-inset-text").text() mustBe MessageLookup.Welsh.insetText(LocalDate.now)
 
-        doc.title() mustBe MessageLookup.title
-        doc.select("h1").asScala.head.text mustBe MessageLookup.heading
-        val summaryListKeys = doc.select(".govuk-summary-list__key").asScala.toList.map(_.text)
-        val summaryListValues = doc.select(".govuk-summary-list__value").asScala.toList.map(_.text)
+          val summaryListKeys = doc.select(".govuk-summary-list__key").asScala.toList.map(_.text)
+          val summaryListValues = doc.select(".govuk-summary-list__value").asScala.toList.map(_.text)
 
-        summaryListKeys.head mustBe MessageLookup.businessNameKey
-        summaryListKeys(1) mustBe MessageLookup.addressKey
-        summaryListKeys(2) mustBe MessageLookup.emailKey
-        summaryListKeys(3) mustBe MessageLookup.telephoneKey
+          summaryListKeys.head mustBe MessageLookup.Welsh.businessNameKey
+          summaryListKeys(1) mustBe MessageLookup.Welsh.addressKey
+          summaryListKeys(2) mustBe MessageLookup.Welsh.emailKey
+          summaryListKeys(3) mustBe MessageLookup.Welsh.telephoneKey
 
-        summaryListValues.head mustBe "None"
-        summaryListValues(1) mustBe "None"
-        summaryListValues(2) mustBe "None"
-        summaryListValues(3) mustBe "None"
+          summaryListValues.head.trim mustBe MessageLookup.Welsh.businessNameValue
+          summaryListValues(1) mustBe MessageLookup.Welsh.addressValue
+          summaryListValues(2) mustBe MessageLookup.Welsh.emailValue
+          summaryListValues(3) mustBe MessageLookup.Welsh.telephoneValue
 
-        val links = doc.select(".govuk-link").asScala.toList
+          val links = doc.select(".govuk-link").asScala.toList
 
-        links(2).text() mustBe MessageLookup.link1
-        links(2).attributes().get("href") mustBe "/" //TODO - update to relevant route
+          links(2).text() mustBe MessageLookup.Welsh.link1
+          links(2).attributes().get("href") mustBe "/" //TODO - update to relevant route
 
-        links(3).text() mustBe MessageLookup.link2
-        links(3).attributes().get("href") mustBe routes.AgentServicesController.manageAccount.url
+          links(3).text() mustBe MessageLookup.Welsh.link2
+          links(3).attributes().get("href") mustBe routes.AgentServicesController.manageAccount.url
+        }
+
+        "there are no contact details" in {
+          val doc: Document = Jsoup.parse(view.apply(testAgencyDetailsEmpty, None, isAdmin = true)(messages, FakeRequest(), appConfig).body)
+
+          doc.title() mustBe MessageLookup.Welsh.title
+          doc.select("h1").asScala.head.text mustBe MessageLookup.Welsh.heading
+          val summaryListKeys = doc.select(".govuk-summary-list__key").asScala.toList.map(_.text)
+          val summaryListValues = doc.select(".govuk-summary-list__value").asScala.toList.map(_.text)
+
+          summaryListKeys.head mustBe MessageLookup.Welsh.businessNameKey
+          summaryListKeys(1) mustBe MessageLookup.Welsh.addressKey
+          summaryListKeys(2) mustBe MessageLookup.Welsh.emailKey
+          summaryListKeys(3) mustBe MessageLookup.Welsh.telephoneKey
+
+          summaryListValues.head mustBe MessageLookup.Welsh.noneValue
+          summaryListValues(1) mustBe MessageLookup.Welsh.noneValue
+          summaryListValues(2) mustBe MessageLookup.Welsh.noneValue
+          summaryListValues(3) mustBe MessageLookup.Welsh.noneValue
+
+          val links = doc.select(".govuk-link").asScala.toList
+
+          links(2).text() mustBe MessageLookup.Welsh.link1
+          links(2).attributes().get("href") mustBe "/" //TODO - update to relevant route
+
+          links(3).text() mustBe MessageLookup.Welsh.link2
+          links(3).attributes().get("href") mustBe routes.AgentServicesController.manageAccount.url
+        }
       }
     }
   }
