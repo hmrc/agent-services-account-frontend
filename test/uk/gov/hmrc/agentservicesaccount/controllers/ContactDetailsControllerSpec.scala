@@ -140,7 +140,7 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
       SessionKeys.sessionId -> "session-x"
     )
 
-  "GET /contact-details" should {
+  "GET /manage-account/contact-details/view" should {
     "display the current details page normally if there is no change pending" in new TestSetup {
       noPendingChangesInRepo()
       val result = controller.showCurrentContactDetails()(fakeRequest()).futureValue
@@ -154,7 +154,7 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
       status(result) shouldBe OK
       contentAsString(result) should include("Contact details")
       contentAsString(result) should include("My Agency")
-      contentAsString(result) should include("You asked us to change")
+      contentAsString(result) should include("New contact details were submitted on")
     }
     "clear any previous draft new contacts" in new TestSetup {
       noPendingChangesInRepo()

@@ -345,8 +345,8 @@ class AgentServicesControllerSpec extends BaseISpec {
     val contactDetailsSection = html.select("#your-organisation")
     contactDetailsSection.select("h2").text shouldBe "Your organisation"
     val links = contactDetailsSection.select("p a")
-    links.get(0).text shouldBe "View or update your contact details"
-    links.get(0).attr("href") shouldBe "/agent-services-account/contact-details"
+    links.get(0).text shouldBe "View or update contact details we have for your business"
+    links.get(0).attr("href") shouldBe "/agent-services-account/manage-account/contact-details/view"
     links.get(1).text shouldBe "View administrators"
     links.get(1).attr("href") shouldBe "/agent-services-account/administrators"
   }

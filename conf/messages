@@ -325,7 +325,7 @@ label.beta=BETA
 
 # Manage account
 manage.account.account-details=View the contact details we have for your business
-manage.account.view-or-update-contact-details=View or update your contact details
+manage.account.view-or-update-contact-details=View or update contact details we have for your business
 manage.account.add-user=Add a new user
 manage.account.clients.heading=Clients
 manage.account.clients.manage-link=Manage clients
@@ -457,21 +457,25 @@ your.account.your.groups.off.p=Access groups are turned off. Only administrators
 your.account.your.groups.p=You are not currently assigned to any access groups.
 
 # View/update contact details
-update-contact-details.title=Contact details
-update-contact-details.summary-list.changes-are-pending.title=Important
-update-contact-details.summary-list.changes-are-pending=You asked us to change these details on {0}. We aim to make these changes within 28 days.
-update-contact-details.summary-list.body.p1=To update these contact details, you must be one of the following:
-update-contact-details.summary-list.body.li1=a director
-update-contact-details.summary-list.body.li2=a proprietor
-update-contact-details.summary-list.body.li3=a company secretary
-update-contact-details.summary-list.body.li4=a partner
-update-contact-details.summary-list.body.li5=a sole trader
-update-contact-details.summary-list.body.p2=We aim to update your contact details within 28 days. We’ll send you a letter when this is done.
-update-contact-details.summary-list.email=Email address
-update-contact-details.summary-list.phone=Telephone number
-update-contact-details.summary-list.name=Business name
-update-contact-details.summary-list.address=Business address
-update-contact-details.summary-list.none=None
+view-contact-details.title=Contact details
+view-contact-details.heading=Contact details
+view-contact-details.update-details.link=Update contact details
+view-contact-details.return-to-account.link=Return to Manage account
+view-contact-details.pending-changes.insetText=New contact details were submitted on {0}. You cannot change contact details again until {1}.
+
+contact-details.summary-list.email=Email address
+contact-details.summary-list.phone=Telephone number
+contact-details.summary-list.name=Business name shown to clients
+contact-details.summary-list.address=Address for agent services account
+contact-details.summary-list.none=None
+
+update-contact-details.start-page.body.p1=To update contact details for {0}, you must be be authorised by a:
+update-contact-details.start-page.body.li1=director
+update-contact-details.start-page.body.li2=company secretary
+update-contact-details.start-page.body.li3=sole trader
+update-contact-details.start-page.body.li4=proprietor
+update-contact-details.start-page.body.li5=partner
+update-contact-details.start-page.body.p2=If your role is on this list, you do not need additional authorisation.
 
 update-contact-details.name.heading=What is the name you want to show to your clients?
 update-contact-details.name.hint=Clients will see this name when they manage your authorisations and requests.
