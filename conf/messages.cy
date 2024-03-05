@@ -325,7 +325,7 @@ label.beta=BETA
 
 # Manage account
 manage.account.account-details=Bwrw golwg dros y manylion cyswllt sydd gennym ar gyfer eich busnes
-manage.account.view-or-update-contact-details=View or update your contact details TBC
+manage.account.view-or-update-contact-details=Diweddaru neu fwrw golwg dros y manylion cyswllt sydd gennym ar gyfer eich busnes
 manage.account.add-user=Ychwanegu defnyddiwr newydd
 manage.account.clients.heading=Cleientiaid
 manage.account.clients.manage-link=Rheoli cleientiaid
@@ -457,21 +457,24 @@ your.account.your.groups.off.p=Mae’r grwpiau mynediad wedi’u hanalluogi. Dim
 your.account.your.groups.p=Nid ydych wedi’ch neilltuo i unrhyw grŵp mynediad ar hyn o bryd
 
 # View/update contact details
-update-contact-details.title=Contact details TBC
-update-contact-details.summary-list.changes-are-pending.title=Important TBC
-update-contact-details.summary-list.changes-are-pending=You asked us to change these details on {0}. We aim to make these changes within 28 days. TBC
-update-contact-details.summary-list.body.p1=To update these contact details, you must be one of the following: TBC
-update-contact-details.summary-list.body.li1=a director TBC
-update-contact-details.summary-list.body.li2=a proprietor TBC
-update-contact-details.summary-list.body.li3=a company secretary TBC
-update-contact-details.summary-list.body.li4=a partner TBC
-update-contact-details.summary-list.body.li5=a sole trader TBC
-update-contact-details.summary-list.body.p2=We aim to update your contact details within 28 days. We’ll send you a letter when this is done. TBC
-update-contact-details.summary-list.email=Email address TBC
-update-contact-details.summary-list.phone=Telephone number TBC
-update-contact-details.summary-list.name=Business name TBC
-update-contact-details.summary-list.address=Business address TBC
-update-contact-details.summary-list.none=None TBC
+view-contact-details.title=Manylion cyswllt
+view-contact-details.update-details.link=Diweddaru manylion cyswllt
+view-contact-details.return-to-account.link=Dychwelyd i ‘Rheoli’r cyfrif’
+view-contact-details.pending-changes.insetText=Cyflwynwyd manylion newydd ar {0}. Ni allwch wneud unrhyw newidiadau pellach i’r manylion cyswllt tan {1}.
+
+contact-details.summary-list.email=Cyfeiriad e-bost
+contact-details.summary-list.phone=Rhif ffôn
+contact-details.summary-list.name=Enw’r busnes a ddangosir i gleientiaid
+contact-details.summary-list.address=Cyfeiriad ar gyfer y cyfrif gwasanaethau asiant
+contact-details.summary-list.none=Dim
+
+update-contact-details.start-page.body.p1=I ddiweddaru’r manylion cyswllt ar gyfer {0}, mae’n rhaid eich bod wedi’ch awdurdodi gan y canlynol:
+update-contact-details.start-page.body.li1=cyfarwyddwr
+update-contact-details.start-page.body.li2=ysgrifennydd y cwmni
+update-contact-details.start-page.body.li3=unig fasnachwr
+update-contact-details.start-page.body.li4=perchennog
+update-contact-details.start-page.body.li5=partner
+update-contact-details.start-page.body.p2=Os yw’ch swydd wedi’i nodi ar y rhestr hon, does dim angen awdurdod ychwanegol arnoch.
 
 update-contact-details.name.heading=What is the name you want to show to your clients? TBC
 update-contact-details.name.hint=Clients will see this name when they manage your authorisations and requests. TBC
