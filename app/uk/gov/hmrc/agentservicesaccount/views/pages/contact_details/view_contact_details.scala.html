@@ -27,6 +27,7 @@
 @this(main: main,
         a: a,
         h1: h1,
+        p: p,
         govukInsetText: GovukInsetText,
         contact_details_summary_list_partial: contact_details_summary_list_partial)
 
@@ -55,8 +56,8 @@
 
     @contact_details_summary_list_partial(agencyDetails, showChangeAction = false)
 
-    @a("view-contact-details.update-details.link", href = "/") @* TODO - link to update contact details start page controller *@
-    @a("view-contact-details.return-to-account.link", href = routes.AgentServicesController.manageAccount.url)
+    @p(html = Some(a("view-contact-details.update-details.link", href = "/"))) @* TODO - link to update contact details start page controller *@
+    @p(html = Some(a("view-contact-details.return-to-account.link", href = routes.AgentServicesController.manageAccount.url)))
 
 
 }
