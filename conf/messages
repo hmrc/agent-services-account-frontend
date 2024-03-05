@@ -458,6 +458,7 @@ your.account.your.groups.p=You are not currently assigned to any access groups.
 
 # View/update contact details
 view-contact-details.title=Contact details
+view-contact-details.heading=Contact details
 view-contact-details.update-details.link=Update contact details
 view-contact-details.return-to-account.link=Return to Manage account
 view-contact-details.pending-changes.insetText=New contact details were submitted on {0}. You cannot change contact details again until {1}.
