@@ -154,10 +154,33 @@ class ViewContactDetailsViewSpec extends BaseISpec {
           val links = doc.select(".govuk-link").asScala.toList
 
           links(2).text() mustBe MessageLookup.English.link1
-          links(2).attributes().get("href") mustBe "/" //TODO - update to relevant route
+          links(2).attributes().get("href") mustBe "manage-account/contact-details/start-update" //TODO - update to relevant route
 
           links(3).text() mustBe MessageLookup.English.link2
           links(3).attributes().get("href") mustBe routes.AgentServicesController.manageAccount.url
+        }
+        "'update contact details' link hidden for standard user" in {
+          val doc: Document = Jsoup.parse(view.apply(testAgencyDetailsFull, None, isAdmin = false)(messages, FakeRequest(), appConfig).body)
+
+          doc.title() mustBe MessageLookup.English.title
+          doc.select("h1").asScala.head.text mustBe MessageLookup.English.heading
+          val summaryListKeys = doc.select(".govuk-summary-list__key").asScala.toList.map(_.text)
+          val summaryListValues = doc.select(".govuk-summary-list__value").asScala.toList.map(_.text)
+
+          summaryListKeys.head mustBe MessageLookup.English.businessNameKey
+          summaryListKeys(1) mustBe MessageLookup.English.addressKey
+          summaryListKeys(2) mustBe MessageLookup.English.emailKey
+          summaryListKeys(3) mustBe MessageLookup.English.telephoneKey
+
+          summaryListValues.head.trim mustBe MessageLookup.English.businessNameValue
+          summaryListValues(1) mustBe MessageLookup.English.addressValue
+          summaryListValues(2) mustBe MessageLookup.English.emailValue
+          summaryListValues(3) mustBe MessageLookup.English.telephoneValue
+
+          val links = doc.select(".govuk-link").asScala.toList
+
+          links(2).text() mustBe MessageLookup.English.link2
+          links(2).attributes().get("href") mustBe routes.AgentServicesController.manageAccount.url
         }
 
         "there are pending changes to the contract details" in {
@@ -184,7 +207,7 @@ class ViewContactDetailsViewSpec extends BaseISpec {
           val links = doc.select(".govuk-link").asScala.toList
 
           links(2).text() mustBe MessageLookup.English.link1
-          links(2).attributes().get("href") mustBe "/" //TODO - update to relevant route
+          links(2).attributes().get("href") mustBe "manage-account/contact-details/start-update" //TODO - update to relevant route
 
           links(3).text() mustBe MessageLookup.English.link2
           links(3).attributes().get("href") mustBe routes.AgentServicesController.manageAccount.url
@@ -211,7 +234,7 @@ class ViewContactDetailsViewSpec extends BaseISpec {
           val links = doc.select(".govuk-link").asScala.toList
 
           links(2).text() mustBe MessageLookup.English.link1
-          links(2).attributes().get("href") mustBe "/" //TODO - update to relevant route
+          links(2).attributes().get("href") mustBe "manage-account/contact-details/start-update" //TODO - update to relevant route
 
           links(3).text() mustBe MessageLookup.English.link2
           links(3).attributes().get("href") mustBe routes.AgentServicesController.manageAccount.url
@@ -241,10 +264,33 @@ class ViewContactDetailsViewSpec extends BaseISpec {
           val links = doc.select(".govuk-link").asScala.toList
 
           links(2).text() mustBe MessageLookup.Welsh.link1
-          links(2).attributes().get("href") mustBe "/" //TODO - update to relevant route
+          links(2).attributes().get("href") mustBe "manage-account/contact-details/start-update" //TODO - update to relevant route
 
           links(3).text() mustBe MessageLookup.Welsh.link2
           links(3).attributes().get("href") mustBe routes.AgentServicesController.manageAccount.url
+        }
+        "'update contact details' link hidden for standard user" in {
+          val doc: Document = Jsoup.parse(view.apply(testAgencyDetailsFull, None, isAdmin = false)(messages, FakeRequest(), appConfig).body)
+
+          doc.title() mustBe MessageLookup.Welsh.title
+          doc.select("h1").asScala.head.text mustBe MessageLookup.Welsh.heading
+          val summaryListKeys = doc.select(".govuk-summary-list__key").asScala.toList.map(_.text)
+          val summaryListValues = doc.select(".govuk-summary-list__value").asScala.toList.map(_.text)
+
+          summaryListKeys.head mustBe MessageLookup.Welsh.businessNameKey
+          summaryListKeys(1) mustBe MessageLookup.Welsh.addressKey
+          summaryListKeys(2) mustBe MessageLookup.Welsh.emailKey
+          summaryListKeys(3) mustBe MessageLookup.Welsh.telephoneKey
+
+          summaryListValues.head.trim mustBe MessageLookup.Welsh.businessNameValue
+          summaryListValues(1) mustBe MessageLookup.Welsh.addressValue
+          summaryListValues(2) mustBe MessageLookup.Welsh.emailValue
+          summaryListValues(3) mustBe MessageLookup.Welsh.telephoneValue
+
+          val links = doc.select(".govuk-link").asScala.toList
+
+          links(2).text() mustBe MessageLookup.Welsh.link2
+          links(2).attributes().get("href") mustBe routes.AgentServicesController.manageAccount.url
         }
 
         "there are pending changes to the contract details" in {
@@ -271,7 +317,7 @@ class ViewContactDetailsViewSpec extends BaseISpec {
           val links = doc.select(".govuk-link").asScala.toList
 
           links(2).text() mustBe MessageLookup.Welsh.link1
-          links(2).attributes().get("href") mustBe "/" //TODO - update to relevant route
+          links(2).attributes().get("href") mustBe "manage-account/contact-details/start-update" //TODO - update to relevant route
 
           links(3).text() mustBe MessageLookup.Welsh.link2
           links(3).attributes().get("href") mustBe routes.AgentServicesController.manageAccount.url
@@ -298,7 +344,7 @@ class ViewContactDetailsViewSpec extends BaseISpec {
           val links = doc.select(".govuk-link").asScala.toList
 
           links(2).text() mustBe MessageLookup.Welsh.link1
-          links(2).attributes().get("href") mustBe "/" //TODO - update to relevant route
+          links(2).attributes().get("href") mustBe "manage-account/contact-details/start-update" //TODO - update to relevant route
 
           links(3).text() mustBe MessageLookup.Welsh.link2
           links(3).attributes().get("href") mustBe routes.AgentServicesController.manageAccount.url
