@@ -85,7 +85,7 @@ class AMLSDetailsControllerSpec extends PlaySpec
     protected val mockView: supervision_details = mock[supervision_details]
     protected val cc: MessagesControllerComponents = stubMessagesControllerComponents()
 
-    object TestController extends AmlsDetailsController(mockAgentAssuranceConnector, mockActions, mockView)(mockAppConfig, ec, cc)
+    object TestController extends AMLSDetailsController(mockAgentAssuranceConnector, mockActions, mockView)(mockAppConfig, ec, cc)
   }
 
   "AMLSDetailsController.showSupervisionDetails" should {
