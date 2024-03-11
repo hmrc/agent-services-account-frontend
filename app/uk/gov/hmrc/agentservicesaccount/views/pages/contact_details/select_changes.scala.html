@@ -22,6 +22,9 @@
 @import uk.gov.hmrc.govukfrontend.views.html.components.{Checkboxes, Fieldset, Legend, Text, CheckboxItem}
 @import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
 @import uk.gov.hmrc.hmrcfrontend.views.html.components.implicits._
+@import uk.gov.hmrc.govukfrontend.views.Aliases.Hint
+@import scala.reflect.internal.util.NoSourceFile.content
+@import uk.gov.hmrc.agentservicesaccount.models.SelectChanges
 
 @this(main: main, h1: h1,
 formWithCSRF: FormWithCSRF,
@@ -29,9 +32,7 @@ govukCheckboxes: GovukCheckboxes,
 govukErrorSummary: GovukErrorSummary
 )
 
-@import uk.gov.hmrc.govukfrontend.views.Aliases.Hint
-@import scala.reflect.internal.util.NoSourceFile.content
-@(form: Form[Boolean])(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
+@(form: Form[SelectChanges])(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
 
 @main(pageTitle = withErrorPrefix(form.hasErrors, msgs("contact-details.select-changes.title")), mimicBrowserBackLink = true, showSecondaryNav = false) {
 

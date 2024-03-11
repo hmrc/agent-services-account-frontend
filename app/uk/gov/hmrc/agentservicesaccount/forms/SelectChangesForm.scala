@@ -16,21 +16,25 @@
 
 package uk.gov.hmrc.agentservicesaccount.forms
 
-import play.api.data.Form
+import play.api.data.{Form}
 import play.api.data.Forms._
+import uk.gov.hmrc.agentservicesaccount.models.SelectChanges
 
 object SelectChangesForm {
 
-  def form(errorMessageKey: String = "state.required"): Form[Boolean] = {
+  def form: Form[SelectChanges] = {
     Form(
-      tuple(
-        "businessName" -> optional(boolean),
-        "address" -> optional(boolean),
-        "email" -> optional(boolean),
-        "telephone" -> optional(boolean)
-          .verifying(errorMessageKey, _.isDefined)
-          .transform(_.get, (b: Boolean) => Option(b))
-      )
+      mapping(
+        "businessName" -> boolean,
+//          .verifying(errorMessageKey, _.isDefined),
+        "address" -> boolean,
+//          .verifying(errorMessageKey, _.isDefined),
+        "email" -> boolean,
+//          .verifying(errorMessageKey, _.isDefined),
+        "telephone" -> boolean
+//          .verifying(errorMessageKey, _.isDefined)
+//          .transform(_.get, (b: Boolean) => Option(b))
+      )(SelectChanges.apply)(SelectChanges.unapply)
     )
   }
 }

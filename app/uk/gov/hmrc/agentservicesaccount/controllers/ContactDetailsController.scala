@@ -23,10 +23,10 @@ import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthRequestWithAgentInfo}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AddressLookupConnector, AgentClientAuthorisationConnector, EmailVerificationConnector}
-import uk.gov.hmrc.agentservicesaccount.forms.{SelectChangesForm, UpdateDetailsForms, YesNoForm}
+import uk.gov.hmrc.agentservicesaccount.forms.{SelectChangesForm, UpdateDetailsForms}
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup._
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.{Email, VerifyEmailRequest, VerifyEmailResponse}
-import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress, PendingChangeOfDetails}
+import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress, PendingChangeOfDetails, SelectChanges}
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.AMLS.is_amls_hmrc
@@ -88,27 +88,28 @@ class ContactDetailsController @Inject()(actions: Actions,
 
   def showSelectChanges: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
-      Ok(select_changes(SelectChangesForm.form("amls.is-hmrc.error"))).toFuture
+      Ok(select_changes(SelectChangesForm.form)).toFuture
     }
   }
 
   def submitSelectChanges: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
-      SelectChangesForm.form("amls.is-hmrc.error")
+      SelectChangesForm.form
         .bindFromRequest()
         .fold(
           formWithErrors => {
             Ok(select_changes(formWithErrors)).toFuture
           },
-          (selectedChanges: Seq[Boolean]) => {
-            Future successful Redirect(routes.???)
-              .addingToSession( values = (
-                "changeBusinessName" -> selectedChanges.head.toString,
-                "changeAddress" -> selectedChanges(1).toString,
-                "changeEmail" -> selectedChanges(2).toString,
-                "changeTelephone" -> selectedChanges(3).toString
-              ))
-          })
+          (selectedChanges:SelectChanges) => {
+            Future successful Redirect(routes.ContactDetailsController.showCheckNewDetails)
+              .addingToSession(
+                "changeBusinessName" -> selectedChanges.businessName.toString,
+                "changeAddress" -> selectedChanges.address.toString,
+                "changeEmail" -> selectedChanges.email.toString,
+                "changeTelephone" -> selectedChanges.telephone.toString
+              )
+          }
+        )
     }
   }
 
