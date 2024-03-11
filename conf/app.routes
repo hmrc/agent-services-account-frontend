@@ -83,3 +83,5 @@ POST       /manage-account/money-laundering-supervisory-body              @uk.go
 
 GET        /manage-account/update-money-laundering-supervision            @uk.gov.hmrc.agentservicesaccount.controllers.UpdateMoneyLaunderingSupervisionController.showUpdateMoneyLaunderingSupervision
 POST       /manage-account/update-money-laundering-supervision            @uk.gov.hmrc.agentservicesaccount.controllers.UpdateMoneyLaunderingSupervisionController.submitUpdateMoneyLaunderingSupervision
+
+GET        /manage-account/contact-details/start-update                   @uk.gov.hmrc.agentservicesaccount.controllers.DesiDetailsBeforeYouStartController.showBeforeYouStartPage
