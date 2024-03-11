@@ -463,8 +463,9 @@ view-contact-details.return-to-account.link=Return to Manage account
 view-contact-details.pending-changes.insetText=New contact details were submitted on {0}. You cannot change contact details again until {1}.
 
 contact-details.select-changes.title=Select changes
-contact-details.select-changes.error=Select yes if HMRC is your money laundering supervisory body
+contact-details.select-changes.error=Tell us which contact details you want to change.
 contact-details.select-changes.h1=Which contact details do you want to change
+contact-details.select-changes.hint=Select all that apply.
 contact-details.select-changes.business-name=Business name shown to clients
 contact-details.select-changes.address=Address for agent services account
 contact-details.select-changes.email=Email address

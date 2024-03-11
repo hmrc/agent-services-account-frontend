@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.agentservicesaccount.forms
 
-import play.api.data.{Form}
+import play.api.data.Form
 import play.api.data.Forms._
 import uk.gov.hmrc.agentservicesaccount.models.SelectChanges
 
@@ -26,14 +26,9 @@ object SelectChangesForm {
     Form(
       mapping(
         "businessName" -> boolean,
-//          .verifying(errorMessageKey, _.isDefined),
         "address" -> boolean,
-//          .verifying(errorMessageKey, _.isDefined),
         "email" -> boolean,
-//          .verifying(errorMessageKey, _.isDefined),
         "telephone" -> boolean
-//          .verifying(errorMessageKey, _.isDefined)
-//          .transform(_.get, (b: Boolean) => Option(b))
       )(SelectChanges.apply)(SelectChanges.unapply)
     )
   }

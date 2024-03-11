@@ -29,7 +29,8 @@
 @this(main: main, h1: h1,
 formWithCSRF: FormWithCSRF,
 govukCheckboxes: GovukCheckboxes,
-govukErrorSummary: GovukErrorSummary
+govukErrorSummary: GovukErrorSummary,
+govukButton: GovukButton
 )
 
 @(form: Form[SelectChanges])(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
@@ -49,28 +50,38 @@ govukErrorSummary: GovukErrorSummary
                     isPageHeading = true
                 ))
             )),
-            hint = Some(Hint(Option("jgjh"))),
+            hint = Some(Hint(
+                content = Text(msgs("contact-details.select-changes.hint")))),
+            name = "Select Changes",
             items = Seq(
                 CheckboxItem(
                     content = Text(msgs("contact-details.select-changes.business-name")),
-                    value = "true"
+                    value = "true",
+                    id = Some("businessName"),
+                    name = Some("businessName")
                 ),
                 CheckboxItem(
-                content = Text(msgs("contact-details.select-changes.address")),
-                value = "false"
+                    content = Text(msgs("contact-details.select-changes.address")),
+                    value = "true",
+                    id =  Some("address"),
+                    name = Some("address")
                 ),
                 CheckboxItem(
                     content = Text(msgs("contact-details.select-changes.email")),
-                    value = "false"
+                    value = "true",
+                    id = Some("email"),
+                    name = Some("email")
                 ),
                 CheckboxItem(
                     content = Text(msgs("contact-details.select-changes.telephone")),
-                    value = "false"
+                    value = "true",
+                    id = Some("telephone"),
+                    name = Some("telephone")
                 )
             )
-        ).withFormField(form("accept")))
+        ))
 
-        <!-- (at)govukButton(Button(content = Text(msgs("common.continue-save")))) -->
+        @govukButton(Button(content = Text(msgs("common.continue-save"))))
     }
 
 }
