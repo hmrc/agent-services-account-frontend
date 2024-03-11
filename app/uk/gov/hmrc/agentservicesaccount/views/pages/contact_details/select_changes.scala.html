@@ -1,5 +1,5 @@
 @*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,52 +17,59 @@
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 @import uk.gov.hmrc.agentservicesaccount.controllers.routes
-@import uk.gov.hmrc.govukfrontend.views.html.components.{GovukErrorSummary, ErrorSummary, GovukButton, GovukRadios, FormWithCSRF}
+@import uk.gov.hmrc.govukfrontend.views.html.components.{GovukErrorSummary, ErrorSummary, GovukButton, GovukCheckboxes, FormWithCSRF}
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.button.Button
-@import uk.gov.hmrc.govukfrontend.views.html.components.{Radios, Fieldset, Legend, Text, HtmlContent, RadioItem}
+@import uk.gov.hmrc.govukfrontend.views.html.components.{Checkboxes, Fieldset, Legend, Text, CheckboxItem}
 @import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
 @import uk.gov.hmrc.hmrcfrontend.views.html.components.implicits._
 
 @this(main: main, h1: h1,
 formWithCSRF: FormWithCSRF,
-govukRadios: GovukRadios,
-govukButton: GovukButton,
+govukCheckboxes: GovukCheckboxes,
 govukErrorSummary: GovukErrorSummary
 )
 
+@import uk.gov.hmrc.govukfrontend.views.Aliases.Hint
+@import scala.reflect.internal.util.NoSourceFile.content
 @(form: Form[Boolean])(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
 
-@main(pageTitle = withErrorPrefix(form.hasErrors, msgs("amls.is-hmrc.h1")), mimicBrowserBackLink = true, showSecondaryNav = false) {
+@main(pageTitle = withErrorPrefix(form.hasErrors, msgs("contact-details.select-changes.title")), mimicBrowserBackLink = true, showSecondaryNav = false) {
 
     @if(form.hasErrors){
         @govukErrorSummary(ErrorSummary().withFormErrorsAsText(form))
     }
 
-    @formWithCSRF(action = routes.AmlsIsHmrcController.submitAmlsIsHmrc) {
-        @govukRadios(Radios(
+    @formWithCSRF(action = routes.ContactDetailsController.submitSelectChanges, 'id -> "input") {
+        @govukCheckboxes(Checkboxes(
             fieldset = Some(Fieldset(
-            legend = Some(Legend(
-                    content = Text(msgs("amls.is-hmrc.h1")),
+               legend = Some(Legend(
+                    content = Text(msgs("contact-details.select-changes.h1")),
                     classes = "govuk-fieldset__legend--l",
                     isPageHeading = true
                 ))
             )),
-            classes = "govuk-radios--inline",
-            idPrefix = Some("accept"),
-            name = "accept",
+            hint = Some(Hint(Option("jgjh"))),
             items = Seq(
-            RadioItem(
-                content = Text(msgs("common.yes")),
-                value = Some("true")
-            ),
-            RadioItem(
-                content = Text(msgs("common.no")),
-                value = Some("false")
-            )
+                CheckboxItem(
+                    content = Text(msgs("contact-details.select-changes.business-name")),
+                    value = "true"
+                ),
+                CheckboxItem(
+                content = Text(msgs("contact-details.select-changes.address")),
+                value = "false"
+                ),
+                CheckboxItem(
+                    content = Text(msgs("contact-details.select-changes.email")),
+                    value = "false"
+                ),
+                CheckboxItem(
+                    content = Text(msgs("contact-details.select-changes.telephone")),
+                    value = "false"
+                )
             )
         ).withFormField(form("accept")))
 
-        @govukButton(Button(content = Text(msgs("common.continue-save"))))
+        <!-- (at)govukButton(Button(content = Text(msgs("common.continue-save")))) -->
     }
 
 }

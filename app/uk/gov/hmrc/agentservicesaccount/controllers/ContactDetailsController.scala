@@ -23,12 +23,13 @@ import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthRequestWithAgentInfo}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AddressLookupConnector, AgentClientAuthorisationConnector, EmailVerificationConnector}
-import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms
+import uk.gov.hmrc.agentservicesaccount.forms.{SelectChangesForm, UpdateDetailsForms, YesNoForm}
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup._
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.{Email, VerifyEmailRequest, VerifyEmailResponse}
 import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress, PendingChangeOfDetails}
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.AMLS.is_amls_hmrc
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.contact_details._
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -45,6 +46,8 @@ class ContactDetailsController @Inject()(actions: Actions,
                                          evConnector: EmailVerificationConnector,
                                          pcodRepository: PendingChangeOfDetailsRepository,
                                          //views
+                                         select_changes: select_changes,
+                                         isAmlsHmrc: is_amls_hmrc,
                                          view_contact_details: view_contact_details,
                                          check_updated_details: check_updated_details,
                                          update_name: update_name,
@@ -83,6 +86,31 @@ class ContactDetailsController @Inject()(actions: Actions,
     _ <- sessionCache.put[AgencyDetails](DRAFT_NEW_CONTACT_DETAILS, updatedDraftDetails)
   } yield ()
 
+  def showSelectChanges: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
+    actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
+      Ok(select_changes(SelectChangesForm.form("amls.is-hmrc.error"))).toFuture
+    }
+  }
+
+  def submitSelectChanges: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
+    actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
+      SelectChangesForm.form("amls.is-hmrc.error")
+        .bindFromRequest()
+        .fold(
+          formWithErrors => {
+            Ok(select_changes(formWithErrors)).toFuture
+          },
+          (selectedChanges: Seq[Boolean]) => {
+            Future successful Redirect(routes.???)
+              .addingToSession( values = (
+                "changeBusinessName" -> selectedChanges.head.toString,
+                "changeAddress" -> selectedChanges(1).toString,
+                "changeEmail" -> selectedChanges(2).toString,
+                "changeTelephone" -> selectedChanges(3).toString
+              ))
+          })
+    }
+  }
 
   val showCurrentContactDetails: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     ifFeatureEnabled {

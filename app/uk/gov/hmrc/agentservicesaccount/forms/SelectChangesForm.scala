@@ -19,16 +19,18 @@ package uk.gov.hmrc.agentservicesaccount.forms
 import play.api.data.Form
 import play.api.data.Forms._
 
-object YesNoForm {
+object SelectChangesForm {
 
   def form(errorMessageKey: String = "state.required"): Form[Boolean] = {
     Form(
-      single(
-        "accept" -> optional(boolean)
+      tuple(
+        "businessName" -> optional(boolean),
+        "address" -> optional(boolean),
+        "email" -> optional(boolean),
+        "telephone" -> optional(boolean)
           .verifying(errorMessageKey, _.isDefined)
           .transform(_.get, (b: Boolean) => Option(b))
       )
     )
-
   }
 }
