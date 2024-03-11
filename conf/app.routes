@@ -76,10 +76,14 @@ GET        /contact-details-submitted                                     @uk.go
 # AMLS
 GET        /manage-account/amls-details-updated                           @uk.gov.hmrc.agentservicesaccount.controllers.AmlsConfirmationController.showUpdatedAmlsConfirmationPage
 
-GET        /manage-account/money-laundering-supervision                   @uk.gov.hmrc.agentservicesaccount.controllers.AMLSDetailsController.showSupervisionDetails
+GET        /manage-account/money-laundering-supervision                   @uk.gov.hmrc.agentservicesaccount.controllers.AmlsDetailsController.showSupervisionDetails
 
 GET        /manage-account/money-laundering-supervisory-body              @uk.gov.hmrc.agentservicesaccount.controllers.AmlsIsHmrcController.showAmlsIsHmrc
 POST       /manage-account/money-laundering-supervisory-body              @uk.gov.hmrc.agentservicesaccount.controllers.AmlsIsHmrcController.submitAmlsIsHmrc
 
 GET        /manage-account/update-money-laundering-supervision            @uk.gov.hmrc.agentservicesaccount.controllers.UpdateMoneyLaunderingSupervisionController.showUpdateMoneyLaunderingSupervision
 POST       /manage-account/update-money-laundering-supervision            @uk.gov.hmrc.agentservicesaccount.controllers.UpdateMoneyLaunderingSupervisionController.submitUpdateMoneyLaunderingSupervision
+
+
+GET        /manage-account/money-laundering-supervision/new-supervisory-body @uk.gov.hmrc.agentservicesaccount.controllers.AmlsNewSupervisoryBodyController.showNewSupervisoryBody
+POST       /manage-account/money-laundering-supervision/new-supervisory-body @uk.gov.hmrc.agentservicesaccount.controllers.AmlsNewSupervisoryBodyController.submitNewSupervisoryBody
