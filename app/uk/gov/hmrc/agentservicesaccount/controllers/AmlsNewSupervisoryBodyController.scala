@@ -44,7 +44,7 @@ class AmlsNewSupervisoryBodyController @Inject() (actions: Actions,
       amlsJourneyRecord { journey =>
         val amlsBodies = amlsLoader.load("/amls-no-hmrc.csv")
         val form = NewAmlsSupervisoryBodyForm.form(amlsBodies)(journey.isUkAgent).fill(journey.newAmlsBody.getOrElse(""))
-        // TODO // define the backlink (either '/confirm-supervisory-body' or '/check-your-answers' - awaiting routing logic
+        // TODO // define the backlink (either '/confirm-supervisory-body' or '/check-your-answers' - awaiting routing logic APB-7796
         Future successful Ok(newSupervisoryBody(form, amlsBodies, journey.isUkAgent))
       }
     }
@@ -60,7 +60,7 @@ class AmlsNewSupervisoryBodyController @Inject() (actions: Actions,
             formWithErrors => Future successful Ok(newSupervisoryBody(formWithErrors, amlsBodies, journey.isUkAgent)),
             data => {
               agentAssuranceConnector.putAmlsJourney(journey.copy(newAmlsBody = Some(data))).map(_ =>
-              Redirect("/not-implemented")) //TODO - next page (/supervisory-number)
+              Redirect("/not-implemented")) //TODO - next page (/supervisory-number) APB-7794
             }
           )
       }

@@ -28,11 +28,6 @@ trait AmlsJourneySupport {
 
   val agentAssuranceConnector: AgentAssuranceConnector
 
-  def maybeAmlsJourneyRecord(body: Option[AmlsJourney] => Future[Result])(
-    implicit hc: HeaderCarrier, ec: ExecutionContext) = {
-    agentAssuranceConnector.getAmlsJourney.flatMap(amls => body(amls))
-  }
-
   def amlsJourneyRecord(body: AmlsJourney => Future[Result])(
     implicit hc: HeaderCarrier, ec: ExecutionContext) = {
     agentAssuranceConnector.getAmlsJourney.flatMap{

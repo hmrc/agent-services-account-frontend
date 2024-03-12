@@ -33,13 +33,41 @@ class NewAmlsSupervisoryBodyFormSpec extends AnyWordSpec with Matchers {
       NewAmlsSupervisoryBodyForm.form(amlsBodies)(isUk = true).bind(data).value shouldBe Some("ACCA")
     }
 
-    "generate error when invalid entry for UK agent" in {
+    "generate error when nothing entered for UK agent" in {
 
       val data = Map(
         "body" -> ""
       )
 
       val result = NewAmlsSupervisoryBodyForm.form(amlsBodies)(isUk = true).bind(data)
+
+      result.value shouldBe None
+
+      result.errors.size shouldBe 1
+      result.errors.head.message shouldBe "amls.new-supervisory-body.error"
+    }
+
+    "generate error when invalid entry for UK agent" in {
+
+      val data = Map(
+        "body" -> "%^$"
+      )
+
+      val result = NewAmlsSupervisoryBodyForm.form(amlsBodies)(isUk = true).bind(data)
+
+      result.value shouldBe None
+
+      result.errors.size shouldBe 1
+      result.errors.head.message shouldBe "amls.new-supervisory-body.error"
+    }
+
+    "generate error when nothing entered for overseas agent" in {
+
+      val data = Map(
+        "body" -> ""
+      )
+
+      val result = NewAmlsSupervisoryBodyForm.form(amlsBodies)(isUk = false).bind(data)
 
       result.value shouldBe None
 
