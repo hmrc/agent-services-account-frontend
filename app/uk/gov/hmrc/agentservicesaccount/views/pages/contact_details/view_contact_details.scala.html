@@ -58,7 +58,7 @@
     @contact_details_summary_list_partial(agencyDetails, showChangeAction = false)
 
     @if(isAdmin){
-    @p(html = Some(a("view-contact-details.update-details.link", href = routes.DesiDetailsBeforeYouStartController.showBeforeYouStartPage.url)))
+    @p(html = Some(a("view-contact-details.update-details.link", href = routes.ContactDetailsBeforeYouStartController.showBeforeYouStartPage.url)))
     }
     @p(html = Some(a("view-contact-details.return-to-account.link", href = routes.AgentServicesController.manageAccount.url)))
 }

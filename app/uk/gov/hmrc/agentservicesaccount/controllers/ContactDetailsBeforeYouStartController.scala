@@ -20,21 +20,23 @@ import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.desiDetails.beforeYouStartPage
+import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.contact_details.before_you_start_page
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject.Inject
+import scala.concurrent.ExecutionContext
 
-class DesiDetailsBeforeYouStartController @Inject()(implicit appConfig: AppConfig,
-                                                    actions: Actions,
-                                                    beforeYouStartPage: beforeYouStartPage,
-                                                    cc: MessagesControllerComponents)extends FrontendController(cc) with I18nSupport {
+class ContactDetailsBeforeYouStartController @Inject()(implicit appConfig: AppConfig,
+                                                       agentClientAuthorisationConnector: AgentClientAuthorisationConnector,
+                                                       actions: Actions,
+                                                       beforeYouStartPage: before_you_start_page,
+                                                       ec: ExecutionContext,
+                                                       cc: MessagesControllerComponents)extends FrontendController(cc) with I18nSupport {
   def showBeforeYouStartPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
-      Ok(beforeYouStartPage()).toFuture
+    actions.ifFeatureEnabled(appConfig.enableChangeContactDetails) {
+      agentClientAuthorisationConnector.getAgencyDetails().map(agencyDetails =>
+      Ok(beforeYouStartPage(agencyDetails, request.agentInfo.isAdmin)))
     }
   }
-
-
-
 }
