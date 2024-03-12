@@ -61,6 +61,18 @@ class NewAmlsSupervisoryBodyFormSpec extends AnyWordSpec with Matchers {
       result.errors.head.message shouldBe "amls.new-supervisory-body.error"
     }
 
+    "accept for overseas agent" in {
+
+      val data = Map(
+        "body" -> "OS AMLS"
+      )
+
+      val result = NewAmlsSupervisoryBodyForm.form(amlsBodies)(isUk = false).bind(data)
+
+      result.value shouldBe Some("OS AMLS")
+
+    }
+
     "generate error when nothing entered for overseas agent" in {
 
       val data = Map(
