@@ -16,8 +16,8 @@
 
 package uk.gov.hmrc.agentservicesaccount.models
 
-case class SelectChanges (businessName: Boolean, address: Boolean,  email:Boolean, telephone:Boolean)
+case class SelectChanges (businessName: Boolean, address: Boolean,  email:Boolean, telephone:Boolean) {
 
-//object SelectChanges {
-//
-//}
+  def atLeastOneSelected: Boolean = businessName || address || email || telephone
+}
+

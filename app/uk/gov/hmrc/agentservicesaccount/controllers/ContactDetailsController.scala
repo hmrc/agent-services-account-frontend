@@ -100,18 +100,23 @@ class ContactDetailsController @Inject()(actions: Actions,
           formWithErrors => {
             Ok(select_changes(formWithErrors)).toFuture
           },
-          (selectedChanges:SelectChanges) => {
-            Future successful Redirect(routes.ContactDetailsController.showCheckNewDetails)
-              .addingToSession(
-                "changeBusinessName" -> selectedChanges.businessName.toString,
-                "changeAddress" -> selectedChanges.address.toString,
-                "changeEmail" -> selectedChanges.email.toString,
-                "changeTelephone" -> selectedChanges.telephone.toString
-              )
+          (selectedChanges: SelectChanges) => {
+              Future successful Redirect(routes.ContactDetailsController.showCheckNewDetails)
+                .addingToSession(
+                  "changeBusinessName" -> selectedChanges.businessName.toString,
+                  "changeAddress" -> selectedChanges.address.toString,
+                  "changeEmail" -> selectedChanges.email.toString,
+                  "changeTelephone" -> selectedChanges.telephone.toString
+                )
           }
         )
     }
   }
+
+  private def redirectToNextPage(userIsOnCheckYourAnswersFlow: Boolean, pagesRequired: Set[String]): String =
+    pagesRequired
+      .headOption
+      .getOrElse( if (userIsOnCheckYourAnswersFlow) "/check-your-answers" else "/update-other-services" )
 
   val showCurrentContactDetails: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     ifFeatureEnabled {

@@ -30,6 +30,7 @@ object SelectChangesForm {
         "email" -> boolean,
         "telephone" -> boolean
       )(SelectChanges.apply)(SelectChanges.unapply)
+        .verifying("contact-details.select-changes.error", _.atLeastOneSelected)
     )
   }
 }
