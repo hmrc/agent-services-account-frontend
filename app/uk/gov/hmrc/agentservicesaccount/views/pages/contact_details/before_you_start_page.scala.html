@@ -33,8 +33,9 @@
 
   @h1("view-contact-details.update-details.link")
 
-    @agencyDetails.map(x =>
-        p(msgs("update-contact-details.start-page.body.p1", x.agencyName.getOrElse(p(msgs("update-contact-details.start-page.body.p1.none"))))))
+    @agencyDetails.flatMap(_.agencyName).fold(
+        p(msgs("update-contact-details.start-page.body.p1.none")))(
+        agencyName => p(msgs("update-contact-details.start-page.body.p1", agencyName)))
 
     @ul(items = Seq(
         "update-contact-details.start-page.body.li1",
