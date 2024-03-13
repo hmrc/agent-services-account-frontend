@@ -89,7 +89,7 @@ class AMLSDetailsControllerSpec extends PlaySpec
   }
 
   "AMLSDetailsController.showSupervisionDetails" should {
-    "display the page if AMLS suspension details were successfully retrieved from agent-assurance" in new Setup {
+    "return Ok and show the 'What's the name of your supervisory body?' page" in new Setup {
       mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
         *[HeaderCarrier],
         *[ExecutionContext]) returns authResponse
