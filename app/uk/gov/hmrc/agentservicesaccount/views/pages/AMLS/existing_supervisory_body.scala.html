@@ -1,0 +1,33 @@
+@import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+@import uk.gov.hmrc.agentservicesaccount.controllers.routes
+@import uk.gov.hmrc.agentservicesaccount.views.html.main
+@import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
+@import uk.gov.hmrc.govukfrontend.views.html.components.{FormWithCSRF, GovukButton, GovukErrorSummary, GovukFieldset, GovukInput, GovukSelect}
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.button.Button
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.errorsummary.ErrorSummary
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.fieldset.{Fieldset, Legend}
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.hint.Hint
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.input.Input
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.select.{Select, SelectItem}
+@import uk.gov.hmrc.hmrcfrontend.views.Implicits.RichErrorSummary
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.{HmrcAccessibleAutocompleteCss, HmrcAccessibleAutocompleteJavascript}
+@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.accessibleautocomplete.AccessibleAutocomplete
+@import views.html.helper.CSPNonce
+
+
+@this(
+        main: main,
+        h1: h1, p: p,
+        formWithCSRF: FormWithCSRF,
+        govukSelect: GovukSelect,
+        govukInput: GovukInput,
+        govukButton: GovukButton,
+        govukFieldset: GovukFieldset,
+        govukErrorSummary: GovukErrorSummary,
+        autocompleteJavascript: HmrcAccessibleAutocompleteJavascript,
+        autocompleteCss: HmrcAccessibleAutocompleteCss
+)
+
+
+@main()
