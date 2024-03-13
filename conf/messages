@@ -468,13 +468,18 @@ contact-details.summary-list.name=Business name shown to clients
 contact-details.summary-list.address=Address for agent services account
 contact-details.summary-list.none=None
 
-update-contact-details.start-page.body.p1=To update contact details for {0}, you must be be authorised by a:
+update-contact-details.start-page.body.p1=To update contact details for {0}, you must be authorised by a:
+update-contact-details.start-page.body.p1.none=To update contact details, you must be authorised by a:
 update-contact-details.start-page.body.li1=director
 update-contact-details.start-page.body.li2=company secretary
 update-contact-details.start-page.body.li3=sole trader
 update-contact-details.start-page.body.li4=proprietor
 update-contact-details.start-page.body.li5=partner
 update-contact-details.start-page.body.p2=If your role is on this list, you do not need additional authorisation.
+update-contact-details.start-page.body.h2=Before you start
+update-contact-details.start-page.body.p3=We'll ask you to confirm that you have authorisation before you submit any changes. We'll also need your name and telephone number.
+update-contact-details.start-page.body.p4=In some circumstances we'll ask for your agent codes for Self Assessment and Corporation Tax. The codes were sent by letter when your organisation asked for agent access to those services.
+update-contact-details.start-page.body.p5=Once you submit changes, you cannot amend the contact details again for 4 weeks.
 
 update-contact-details.name.heading=What is the name you want to show to your clients?
 update-contact-details.name.hint=Clients will see this name when they manage your authorisations and requests.
