@@ -28,12 +28,14 @@
 
 @this(main: main, p: p, h1: h1, h2: h2, a: a, ul:ul, govukButton: GovukButton)
 
-@(agencyDetails: Option[AgencyDetails], isAdmin: Boolean)(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
+@(agencyDetails: Option[AgencyDetails])(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
 
-@main(pageTitle = msgs("view-contact-details.title"), showSecondaryNav = false, isAdmin = isAdmin) {
+@main(pageTitle = msgs("view-contact-details.title"), showSecondaryNav = false) {
 
   @h1("view-contact-details.update-details.link")
-    @p(msgs("update-contact-details.start-page.body.p1", agencyDetails.flatMap(_.agencyName).getOrElse(None)))
+
+    @agencyDetails.map(x =>
+        p(msgs("update-contact-details.start-page.body.p1", x.agencyName.getOrElse(p(msgs("update-contact-details.start-page.body.p1.none"))))))
 
     @ul(items = Seq(
         "update-contact-details.start-page.body.li1",

@@ -45,57 +45,65 @@ class ContactDetailsBeforeYouStartControllerSpec extends UnitSpec
   with IntegrationPatience
   with MockFactory {
 
-  private val testArn = Arn("XXARN0123456789")
 
-  private val agencyDetails = AgencyDetails(
-    agencyName = Some("My Agency"),
-    agencyEmail = Some("abc@abc.com"),
-    agencyTelephone = Some("07345678901"),
-    agencyAddress = Some(BusinessAddress(
-      "25 Any Street",
-      Some("Central Grange"),
-      Some("Telford"),
-      None,
-      Some("TF4 3TR"),
-      "GB"))
-  )
+  class TestSetup(isAssistant: Boolean = false) {
+    private val testArn = Arn("XXARN0123456789")
 
-  private val stubAuthConnector = new AuthConnector {
-    private val authJson = Json.parse(
-      s"""{
-         |  "internalId": "some-id",
-         |  "affinityGroup": "Agent",
-         |  "credentialRole": "User",
-         |  "allEnrolments": [{
-         |    "key": "HMRC-AS-AGENT",
-         |    "identifiers": [{ "key": "AgentReferenceNumber", "value": "${testArn.value}" }]
-         |  }],
-         |  "optionalCredentials": {
-         |    "providerId": "foo",
-         |    "providerType": "bar"
-         |  }
-         |}""".stripMargin)
+    private val agencyDetails = AgencyDetails(
+      agencyName = Some("My Agency"),
+      agencyEmail = Some("abc@abc.com"),
+      agencyTelephone = Some("07345678901"),
+      agencyAddress = Some(BusinessAddress(
+        "25 Any Street",
+        Some("Central Grange"),
+        Some("Telford"),
+        None,
+        Some("TF4 3TR"),
+        "GB"))
+    )
 
-    def authorise[A](predicate: Predicate, retrieval: Retrieval[A])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[A] =
-      Future.successful(retrieval.reads.reads(authJson).get)
-  }
+    private val stubAuthConnector = new AuthConnector {
+      private val authJson = Json.obj(
+        "allEnrolments" -> Json.arr(
+          Json.obj(
+            "key" -> "HMRC-AS-AGENT",
+            "identifiers" -> Json.arr(
+              Json.obj(
+                "key" -> "AgentReferenceNumber",
+                "value" -> testArn.value
+              )
+            )
+          )
+        ),
+        "affinityGroup" -> "Agent",
+        "credentialRole" -> {
+          if (isAssistant) "Assistant" else "User"
+        },
+        "optionalCredentials" -> Json.obj(
+          "providerId" -> "foo",
+          "providerType" -> "bar"
+        )
+      )
 
 
-  val overrides = new AbstractModule() {
-    override def configure(): Unit = {
-      bind(classOf[AgentClientAuthorisationConnector]).toInstance(stub[AgentClientAuthorisationConnector])
-      bind(classOf[AuthConnector]).toInstance(stubAuthConnector)
+      def authorise[A](predicate: Predicate, retrieval: Retrieval[A])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[A] =
+        Future.successful(retrieval.reads.reads(authJson).get)
     }
-  }
-
-  override implicit lazy val app: Application = new GuiceApplicationBuilder().configure(
-    "auditing.enabled" -> false,
-    "metrics.enabled" -> false,
-    "suspendedContactDetails.sendEmail" -> false
-  ).overrides(overrides).build()
 
 
-  trait TestSetup {
+    val overrides = new AbstractModule() {
+      override def configure(): Unit = {
+        bind(classOf[AgentClientAuthorisationConnector]).toInstance(stub[AgentClientAuthorisationConnector])
+        bind(classOf[AuthConnector]).toInstance(stubAuthConnector)
+      }
+    }
+
+    implicit lazy val app: Application = new GuiceApplicationBuilder().configure(
+      "auditing.enabled" -> false,
+      "metrics.enabled" -> false,
+      "suspendedContactDetails.sendEmail" -> false
+    ).overrides(overrides).build()
+
     val acaConnector: AgentClientAuthorisationConnector = app.injector.instanceOf[AgentClientAuthorisationConnector]
     (acaConnector.getSuspensionDetails()(_: HeaderCarrier, _: ExecutionContext)).when(*, *).returns(Future.successful(SuspensionDetails(false, None)))
     (acaConnector.getAgencyDetails()(_: HeaderCarrier, _: ExecutionContext)).when(*, *).returns(Future.successful(Some(agencyDetails)))
@@ -116,11 +124,17 @@ class ContactDetailsBeforeYouStartControllerSpec extends UnitSpec
 
 
   "GET /manage-account/contact-details/start-update" should {
-    "display the current details page normally if there is no change pending" in new TestSetup {
+    "display the current details page normally" in new TestSetup {
       val result = controller.showBeforeYouStartPage()(fakeRequest()).futureValue
       status(result) shouldBe OK
       contentAsString(result) should include("Contact details")
       contentAsString(result) should include("My Agency")
+    }
+  }
+  "GET /manage-account/contact-details/start-update" should {
+    "display the forbidden page for standard users" in new TestSetup(isAssistant = true) {
+      val result = controller.showBeforeYouStartPage()(fakeRequest()).futureValue
+      status(result) shouldBe FORBIDDEN
     }
   }
 }

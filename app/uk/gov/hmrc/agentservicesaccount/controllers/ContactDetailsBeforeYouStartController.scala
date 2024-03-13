@@ -25,18 +25,22 @@ import uk.gov.hmrc.agentservicesaccount.views.html.pages.contact_details.before_
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject.Inject
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 class ContactDetailsBeforeYouStartController @Inject()(implicit appConfig: AppConfig,
                                                        agentClientAuthorisationConnector: AgentClientAuthorisationConnector,
                                                        actions: Actions,
                                                        beforeYouStartPage: before_you_start_page,
                                                        ec: ExecutionContext,
-                                                       cc: MessagesControllerComponents)extends FrontendController(cc) with I18nSupport {
+                                                       cc: MessagesControllerComponents) extends FrontendController(cc) with I18nSupport {
   def showBeforeYouStartPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     actions.ifFeatureEnabled(appConfig.enableChangeContactDetails) {
-      agentClientAuthorisationConnector.getAgencyDetails().map(agencyDetails =>
-      Ok(beforeYouStartPage(agencyDetails, request.agentInfo.isAdmin)))
+      if (request.agentInfo.isAdmin) {
+        agentClientAuthorisationConnector.getAgencyDetails().map(agencyDetails =>
+          Ok(beforeYouStartPage(agencyDetails)))
+      } else {
+        Future.successful(Forbidden)
+      }
     }
   }
 }

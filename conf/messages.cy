@@ -469,6 +469,7 @@ contact-details.summary-list.address=Cyfeiriad ar gyfer y cyfrif gwasanaethau as
 contact-details.summary-list.none=Dim
 
 update-contact-details.start-page.body.p1=I ddiweddaru''r manylion cyswllt ar gyfer {0}, mae''n rhaid eich bod wedi''ch awdurdodi gan y canlynol:
+update-contact-details.start-page.body.p1.none=I ddiweddaru''r manylion cyswllt ar, mae''n rhaid eich bod wedi''ch awdurdodi gan y canlynol:
 update-contact-details.start-page.body.li1=cyfarwyddwr
 update-contact-details.start-page.body.li2=ysgrifennydd y cwmni
 update-contact-details.start-page.body.li3=unig fasnachwr
