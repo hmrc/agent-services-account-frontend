@@ -19,7 +19,7 @@ package uk.gov.hmrc.agentservicesaccount.stubs
 import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.libs.json.Json
-import uk.gov.hmrc.agentservicesaccount.models.{AmlsDetails, AmlsJourney}
+import uk.gov.hmrc.agentservicesaccount.models.AmlsDetails
 
 object AgentAssuranceStubs {
 
@@ -51,43 +51,4 @@ object AgentAssuranceStubs {
         aResponse()
           .withStatus(500)
       ))
-
-  def givenPutAmlsJourneySuccess(amlsJourney: AmlsJourney): StubMapping =
-    stubFor(put(urlEqualTo("/agent-assurance/amls-journey"))
-      .withRequestBody(equalToJson(Json.toJson(amlsJourney).toString()))
-      .willReturn(
-        aResponse().withStatus(202)
-      ))
-
-  def givenPutAmlsJourneyError(amlsJourney: AmlsJourney): StubMapping =
-    stubFor(put(urlEqualTo("/agent-assurance/amls-journey"))
-      .withRequestBody(equalToJson(Json.toJson(amlsJourney).toString()))
-      .willReturn(
-        aResponse().withStatus(500)
-      ))
-
-  def givenGetAmlsJourneySuccess(amlsJourney: Option[AmlsJourney], status: Int = 200): StubMapping =
-    stubFor(get(urlEqualTo("/agent-assurance/amls-journey"))
-      .willReturn(
-        aResponse()
-          .withStatus(status)
-          .withBody(amlsJourney.fold("")(journey =>   Json.toJson(journey).toString()))))
-
-  def givenGetAmlsJourneyError: StubMapping =
-    stubFor(get(urlEqualTo("/agent-assurance/amls-journey"))
-      .willReturn(
-        aResponse()
-          .withStatus(500)))
-
-  def givenDeleteAmlsJourneySuccess: StubMapping =
-    stubFor(delete(urlEqualTo("/agent-assurance/amls-journey"))
-      .willReturn(
-        aResponse()
-          .withStatus(204)))
-
-  def givenDeleteAmlsJourneyError: StubMapping =
-    stubFor(delete(urlEqualTo("/agent-assurance/amls-journey"))
-      .willReturn(
-        aResponse()
-          .withStatus(500)))
 }
