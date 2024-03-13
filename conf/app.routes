@@ -59,7 +59,7 @@ GET        /private-beta-confirmation                                     @uk.go
 
 # Update contact details
 GET        /manage-account/contact-details/view                           @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.showCurrentContactDetails
-GET        /manage-account/contact-details/start-update                   @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsBeforeYouStartController.showBeforeYouStartPage
+GET        /manage-account/contact-details/start-update                   @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.showBeforeYouStartPage
 GET        /update-business-name                                          @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.showChangeBusinessName
 POST       /update-business-name                                          @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.submitChangeBusinessName
 GET        /update-email-address                                          @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.showChangeEmailAddress

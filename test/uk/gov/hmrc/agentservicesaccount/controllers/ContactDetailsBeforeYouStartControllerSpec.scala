@@ -108,7 +108,7 @@ class ContactDetailsBeforeYouStartControllerSpec extends UnitSpec
     (acaConnector.getSuspensionDetails()(_: HeaderCarrier, _: ExecutionContext)).when(*, *).returns(Future.successful(SuspensionDetails(false, None)))
     (acaConnector.getAgencyDetails()(_: HeaderCarrier, _: ExecutionContext)).when(*, *).returns(Future.successful(Some(agencyDetails)))
 
-    val controller: ContactDetailsBeforeYouStartController = app.injector.instanceOf[ContactDetailsBeforeYouStartController]
+    val controller: ContactDetailsController = app.injector.instanceOf[ContactDetailsController]
     val sessionCache: SessionCacheService = app.injector.instanceOf[SessionCacheService]
 
     // make sure these values are cleared from the session
