@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.agentservicesaccount.controllers
+package uk.gov.hmrc.agentservicesaccount.controllers.amls
 
 import org.mockito.{ArgumentMatchersSugar, IdiomaticMockito}
 import org.scalatestplus.play.PlaySpec
@@ -31,10 +31,10 @@ import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, SuspensionDetails}
 import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
-import uk.gov.hmrc.agentservicesaccount.models.{AmlsDetails, AmlsJourney}
-import uk.gov.hmrc.agentservicesaccount.repository.AmlsJourneySessionRepository
+import uk.gov.hmrc.agentservicesaccount.models.{AmlsDetails, UpdateAmlsJourney}
+import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
 import uk.gov.hmrc.agentservicesaccount.utils.AMLSLoader
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.AMLS.new_supervisory_body
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.new_supervisory_body
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve._
@@ -76,18 +76,15 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
   private val amlsDetails = AmlsDetails("HMRC")
   private val amlsDetailsResponse = Future.successful(amlsDetails)
 
-  private val ukAmlsJourney = AmlsJourney(
-    status = "UKAmls",
-    newAmlsBody = None,
-    None,
-    None
+  private val ukAmlsJourney = UpdateAmlsJourney(
+    status = "UKAmls"
   )
 
-  private val overseasAmlsJourney = AmlsJourney(
+  private val overseasAmlsJourney = UpdateAmlsJourney(
     status = "OSAmls",
     newAmlsBody = Some("OS AMLS"),
-    Some("AMLS123"),
-    Some(LocalDate.parse("2024-10-10"))
+    newMembershipNumber = Some("AMLS123"),
+    newExpirationDate = Some(LocalDate.parse("2024-10-10"))
   )
 
   private val amlsBodies = Map("ACCA" -> "Association of Certified Chartered Accountants")
@@ -104,11 +101,11 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
     protected val mockActions =
       new Actions(mockAgentClientAuthorisationConnector, authActions, actionBuilder)
 
-    protected val mockAmlsJourneySessionRepository: AmlsJourneySessionRepository = mock[AmlsJourneySessionRepository]
+    protected val mockAmlsJourneySessionRepository: UpdateAmlsJourneyRepository = mock[UpdateAmlsJourneyRepository]
     protected val mockAmlsLoader: AMLSLoader = mock[AMLSLoader]
     protected val mockView: new_supervisory_body = mock[new_supervisory_body]
     protected val cc: MessagesControllerComponents = stubMessagesControllerComponents()
-    protected val dataKey = DataKey[AmlsJourney]("amlsJourney")
+    protected val dataKey = DataKey[UpdateAmlsJourney]("amlsJourney")
 
     object TestController extends AmlsNewSupervisoryBodyController(mockActions, mockAmlsLoader, mockAmlsJourneySessionRepository, mockView, cc)(mockAppConfig, ec)
   }
@@ -125,7 +122,7 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
 
       mockAgentClientAuthorisationConnector.getSuspensionDetails()(*[HeaderCarrier], *[ExecutionContext]) returns suspensionDetailsResponse
 
-      mockAmlsJourneySessionRepository.getFromSession(*[DataKey[AmlsJourney]])(*[Reads[AmlsJourney]],*[Request[_]]) returns
+      mockAmlsJourneySessionRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]],*[Request[_]]) returns
         Future.successful(Some(ukAmlsJourney))
 
       mockView.apply(*[Form[String]], *[Map[String, String]], isUk = true)(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
@@ -167,10 +164,10 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
 
       mockAgentClientAuthorisationConnector.getSuspensionDetails()(*[HeaderCarrier], *[ExecutionContext]) returns suspensionDetailsResponse
 
-      mockAmlsJourneySessionRepository.getFromSession(dataKey)(*[Reads[AmlsJourney]], *[Request[Any]]) returns Future.successful(Some(ukAmlsJourney))
+      mockAmlsJourneySessionRepository.getFromSession(dataKey)(*[Reads[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful(Some(ukAmlsJourney))
 
       mockAmlsJourneySessionRepository.putSession(
-        dataKey, ukAmlsJourney.copy(newAmlsBody = Some("ACCA")))(*[Writes[AmlsJourney]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
+        dataKey, ukAmlsJourney.copy(newAmlsBody = Some("ACCA")))(*[Writes[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
 
       mockView.apply(*[Form[String]], *[Map[String, String]], isUk = true)(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 
@@ -193,7 +190,7 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
 
       mockAgentClientAuthorisationConnector.getSuspensionDetails()(*[HeaderCarrier], *[ExecutionContext]) returns suspensionDetailsResponse
 
-      mockAmlsJourneySessionRepository.getFromSession(*[DataKey[AmlsJourney]])(*[Reads[AmlsJourney]], *[Request[Any]]) returns
+      mockAmlsJourneySessionRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[Request[Any]]) returns
         Future.successful(Some(ukAmlsJourney))
 
       mockView.apply(*[Form[String]], *[Map[String, String]], isUk = true)(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
