@@ -17,9 +17,11 @@
 package uk.gov.hmrc.agentservicesaccount.actions
 
 import play.api.mvc.Results.{Forbidden, Redirect}
-import play.api.mvc.{ActionBuilder, ActionFilter, AnyContent, DefaultActionBuilder, Request, Result}
-import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
+import play.api.mvc._
+import uk.gov.hmrc.agentmtdidentifiers.model.Arn
+import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector}
 import uk.gov.hmrc.agentservicesaccount.controllers.routes
+import uk.gov.hmrc.agentservicesaccount.models.AmlsDetails
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
@@ -28,6 +30,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class Actions @Inject()(  agentClientAuthorisationConnector: AgentClientAuthorisationConnector,
+                          agentAssuranceConnector: AgentAssuranceConnector,
                  authActions: AuthActions,
                  actionBuilder:DefaultActionBuilder
               ) (implicit ec: ExecutionContext ) {
@@ -56,4 +59,10 @@ class Actions @Inject()(  agentClientAuthorisationConnector: AgentClientAuthoris
   def ifFeatureEnabled(feature: Boolean)(action: => Future[Result]): Future[Result] = {
     if (feature) action else Future.successful(Forbidden)
   }
+
+  def withCurrentAmlsDetails(arn: Arn)(action: AmlsDetails => Future[Result])(implicit hc: HeaderCarrier): Future[Result] = {
+    agentAssuranceConnector.getAMLSDetails(arn.value)
+      .flatMap(amlsDetails => action(amlsDetails) )
+  }
+
 }

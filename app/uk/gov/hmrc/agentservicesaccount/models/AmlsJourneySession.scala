@@ -20,15 +20,16 @@ import play.api.libs.json.Json
 
 import java.time.LocalDate
 
-case class AmlsJourney(
+case class AmlsJourneySession(
                         status: String,
-                        newAmlsBody: Option[String],
-                        newMembershipNumber: Option[String],
-                        newExpirationDate: Option[LocalDate]
+                        useExistingAmlsSupervisoryBody: Option[Boolean] = None,
+                        newAmlsBody: Option[String] = None,
+                        newMembershipNumber: Option[String] = None,
+                        newExpirationDate: Option[LocalDate] = None
                       ){
   val isUkAgent = status.contains("UK")
 }
 
-object AmlsJourney{
-  implicit val format = Json.format[AmlsJourney]
+object AmlsJourneySession{
+  implicit val format = Json.format[AmlsJourneySession]
 }

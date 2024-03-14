@@ -17,7 +17,7 @@
 package uk.gov.hmrc.agentservicesaccount.connectors
 
 import play.api.test.Helpers._
-import uk.gov.hmrc.agentservicesaccount.models.{AmlsDetails, AmlsJourney}
+import uk.gov.hmrc.agentservicesaccount.models.{AmlsDetails, AmlsJourneySession}
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentAssuranceStubs._
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
@@ -87,70 +87,6 @@ class AgentAssuranceConnectorSpec extends BaseISpec {
       intercept[UpstreamErrorResponse] {
         await(connector.getAMLSDetails(arn))
       }.getMessage shouldBe "Error 500 unable to get amls details"
-    }
-  }
-
-  "putAmlsJourney" should {
-    "save journey" in {
-      givenPutAmlsJourneySuccess(amlsJourney)
-
-      val result = connector.putAmlsJourney(amlsJourney)
-
-      await(result) shouldBe ()
-    }
-
-    "handle error" in {
-      givenPutAmlsJourneyError(amlsJourney)
-
-      intercept[UpstreamErrorResponse]{
-        await(connector.putAmlsJourney(amlsJourney))
-      }.getMessage shouldBe "Error 500 unable to save amls journey"
-
-    }
-
-  }
-  "getAmlsJourney" should {
-    "return 200 OK with journey" in {
-      givenGetAmlsJourneySuccess(Some(amlsJourney))
-
-      val result = connector.getAmlsJourney
-
-      await(result) shouldBe Some(amlsJourney)
-
-    }
-
-    "return 204 No Content" in {
-      givenGetAmlsJourneySuccess(None, 204)
-
-      val result = connector.getAmlsJourney
-
-      await(result) shouldBe None
-    }
-
-    "handle error" in {
-      givenGetAmlsJourneyError
-
-      intercept[UpstreamErrorResponse]{
-        await(connector.getAmlsJourney)
-      }.getMessage() shouldBe "Error 500 unable to get amls journey"
-    }
-
-  }
-  "deleteAmlsJourney" should {
-      "return 204 No Content" in {
-        givenDeleteAmlsJourneySuccess
-
-        val result = connector.deleteAmlsJourney
-
-        await(result) shouldBe ()
-      }
-
-    "handle error" in {
-      givenDeleteAmlsJourneyError
-
-      intercept[UpstreamErrorResponse]{
-        await(connector.deleteAmlsJourney)
-      }.getMessage() shouldBe "Error 500 unable to delete amls journey"
     }
   }
 }

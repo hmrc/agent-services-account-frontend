@@ -20,8 +20,8 @@ import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.forms.NewAmlsSupervisoryBodyForm
+import uk.gov.hmrc.agentservicesaccount.repository.AmlsJourneySessionRepository
 import uk.gov.hmrc.agentservicesaccount.utils.AMLSLoader
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.AMLS.new_supervisory_body
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -33,7 +33,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class AmlsNewSupervisoryBodyController @Inject() (actions: Actions,
                                                   amlsLoader: AMLSLoader,
-                                                  val agentAssuranceConnector: AgentAssuranceConnector,
+                                                  val amlsJourneySessionRepository: AmlsJourneySessionRepository,
                                                   newSupervisoryBody: new_supervisory_body,
                                                    cc: MessagesControllerComponents
 )(implicit appConfig: AppConfig, ec: ExecutionContext) extends FrontendController(cc) with AmlsJourneySupport with I18nSupport {
@@ -41,7 +41,7 @@ class AmlsNewSupervisoryBodyController @Inject() (actions: Actions,
 
   def showNewSupervisoryBody: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request  =>
     actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
-      amlsJourneyRecord { journey =>
+      withAmlsJourneySession { journey =>
         val amlsBodies = amlsLoader.load("/amls-no-hmrc.csv")
         val form = NewAmlsSupervisoryBodyForm.form(amlsBodies)(journey.isUkAgent).fill(journey.newAmlsBody.getOrElse(""))
         // TODO // define the backlink (either '/confirm-supervisory-body' or '/check-your-answers' - awaiting routing logic APB-7796
@@ -50,16 +50,16 @@ class AmlsNewSupervisoryBodyController @Inject() (actions: Actions,
     }
   }
 
-  def submitNewSupervisoryBody: Action[AnyContent] = Action.async { implicit request =>
+  def submitNewSupervisoryBody: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
-      amlsJourneyRecord { journey =>
+      withAmlsJourneySession { journey =>
         val amlsBodies = amlsLoader.load("/amls-no-hmrc.csv")
         NewAmlsSupervisoryBodyForm.form(amlsBodies)(journey.isUkAgent)
           .bindFromRequest()
           .fold(
             formWithErrors => Future successful Ok(newSupervisoryBody(formWithErrors, amlsBodies, journey.isUkAgent)),
             data => {
-              agentAssuranceConnector.putAmlsJourney(journey.copy(newAmlsBody = Some(data))).map(_ =>
+              saveAmlsJourneySession(journey.copy(newAmlsBody = Some(data))).map(_ =>
               Redirect("/not-implemented")) //TODO - next page (/supervisory-number) APB-7794
             }
           )
