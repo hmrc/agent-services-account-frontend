@@ -479,7 +479,7 @@ update-contact-details.start-page.body.p2=Os yw''ch swydd wedi''i nodi ar y rhes
 update-contact-details.start-page.body.h2=Cyn i chi ddechrau
 update-contact-details.start-page.body.p3=Byddwn yn gofyn i chi gadarnhau fod gennych awdurdod cyn i chi gyflwyno unrhyw newidiadau. Bydd angen eich enw a''ch rhif ffon arnom hefyd.
 update-contact-details.start-page.body.p4=Mewn rhai amgylchiadau, byddwn yn gofyn am eich codau asiant ar gyfer Hunanasesiad a Threth Gorfforaeth.Anfonwyd y codau mewn llythyr pan ofynnodd eich sefydliad am fynediad asiant i''r gwasanaethau hynny.
-update-contact-details.start-page.body.p5=Ar &#244;l i chi gyflwyno newidiadau, ni fyddwch yn gallu diwygio''r manylion cyswllt eto am 4 wythnos.
+update-contact-details.start-page.body.p5=Ar ôl i chi gyflwyno newidiadau, ni fyddwch yn gallu diwygio''r manylion cyswllt eto am 4 wythnos.
 
 update-contact-details.name.heading=What is the name you want to show to your clients? TBC
 update-contact-details.name.hint=Clients will see this name when they manage your authorisations and requests. TBC
