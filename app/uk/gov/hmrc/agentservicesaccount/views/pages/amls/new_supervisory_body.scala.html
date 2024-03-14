@@ -89,7 +89,7 @@
         @govukErrorSummary(ErrorSummary().withFormErrorsAsText(form))
     }
 
-    @formWithCSRF(action = routes.AmlsNewSupervisoryBodyController.submitNewSupervisoryBody) {
+    @formWithCSRF(action = routes.AmlsNewSupervisoryBodyController.onSubmit) {
         @govukFieldset(Fieldset(
             html = fieldsetHtml,
             legend = Some(Legend(

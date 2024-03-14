@@ -152,7 +152,7 @@ class AmlsIsHmrcControllerSpec extends PlaySpec with IdiomaticMockito with Argum
           .withFormUrlEncodedBody("accept" -> "false")
       )
       Helpers.status(response) mustBe SEE_OTHER
-      Helpers.redirectLocation(response).get mustBe "manage-account/update-money-laundering-supervision"
+      Helpers.redirectLocation(response).get mustBe "/agent-services-account/manage-account/money-laundering-supervision/new-supervisory-body"
     }
 
     "return form with errors" in new Setup {

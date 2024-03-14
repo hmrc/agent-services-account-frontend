@@ -51,8 +51,7 @@ class AmlsIsHmrcController @Inject()(actions: Actions,
             if (isHmrcRegistered) {
               Redirect("not-implemented-hmrc-page").toFuture
             } else {
-              // TODO update with route in APB-7547
-              Redirect("manage-account/update-money-laundering-supervision").toFuture
+              Redirect(routes.AmlsNewSupervisoryBodyController.showPage).toFuture
             }
           })
     }

@@ -39,7 +39,7 @@ class AmlsNewSupervisoryBodyController @Inject() (actions: Actions,
 )(implicit appConfig: AppConfig, ec: ExecutionContext) extends FrontendController(cc) with AmlsJourneySupport with I18nSupport {
 
 
-  def showNewSupervisoryBody: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request  =>
+  def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request  =>
     actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
       withAmlsJourneySession { journey =>
         val amlsBodies = amlsLoader.load("/amls-no-hmrc.csv")
@@ -50,7 +50,7 @@ class AmlsNewSupervisoryBodyController @Inject() (actions: Actions,
     }
   }
 
-  def submitNewSupervisoryBody: Action[AnyContent] = Action.async { implicit request =>
+  def onSubmit: Action[AnyContent] = Action.async { implicit request =>
     actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
       withAmlsJourneySession { journey =>
         val amlsBodies = amlsLoader.load("/amls-no-hmrc.csv")

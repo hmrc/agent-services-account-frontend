@@ -128,7 +128,7 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
 
       mockView.apply(*[Form[String]], *[Map[String, String]], isUk = true)(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 
-      val result: Future[Result] = TestController.showNewSupervisoryBody(fakeRequest)
+      val result: Future[Result] = TestController.showPage(fakeRequest)
 
       status(result) mustBe OK
 
@@ -144,7 +144,7 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
 
       mockAgentClientAuthorisationConnector.getSuspensionDetails()(*[HeaderCarrier], *[ExecutionContext]) returns suspensionDetailsResponse
 
-      val result: Future[Result] = TestController.showNewSupervisoryBody(fakeRequest)
+      val result: Future[Result] = TestController.showPage(fakeRequest)
 
       status(result) mustBe FORBIDDEN
 
@@ -172,7 +172,7 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
 
       mockView.apply(*[Form[String]], *[Map[String, String]], isUk = true)(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 
-      val result: Future[Result] = TestController.submitNewSupervisoryBody(
+      val result: Future[Result] = TestController.onSubmit(
         FakeRequest("POST", "/").withFormUrlEncodedBody("body" -> "ACCA"))
 
       status(result) mustBe SEE_OTHER
@@ -196,7 +196,7 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
 
       mockView.apply(*[Form[String]], *[Map[String, String]], isUk = true)(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 
-      val result: Future[Result] = TestController.submitNewSupervisoryBody(
+      val result: Future[Result] = TestController.onSubmit(
         FakeRequest("POST", "/").withFormUrlEncodedBody("body" -> ""))
 
       status(result) mustBe OK
