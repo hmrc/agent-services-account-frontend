@@ -547,13 +547,13 @@ amls.enter-renewal-date.hint=For example, 31 3 2024 TBC
 amls.enter-renewal-registration.number.h1=Your registration number TBC
 amls.enter-renewal-body.h1=Name of money laundering supervisory body TBC
 
-amls.new-supervisory-body.title=What’s the name of your supervisory body?
-amls.new-supervisory-body.hint=Start typing and select the anti-money laundering supervisor from the list
-amls.new-supervisory-body.error=Tell us the name of your supervisory body
+amls.new-supervisory-body.title=Beth yw enw’ch corff goruchwylio?
+amls.new-supervisory-body.hint=Dechreuwch deipio ac yna dewiswch eich corff goruchwylio o’r rhestr
+amls.new-supervisory-body.error=Rhowch enw eich corff goruchwylio i ni
 amls.new-supervisory-body.error.os.max-length=Name of supervisory body must be 100 characters or less
 amls.new-supervisory-body.error.os.regex=Name of supervisory body must only include letters a to z, numbers, apostrophes, commas, ampersands (&), round brackets, forward slashes, full stops, hyphens and spaces
-amls.confirm-supervisory-body.h1=Are you still registered with {0}?
-amls.confirm-supervisory-body.error=Select yes if you are still registered with {0}
+amls.confirm-supervisory-body.h1=A ydych wedi’ch cofrestru â {0} o hyd?
+amls.confirm-supervisory-body.error=Dewiswch ‘Iawn’ os ydych wedi’ch cofrestru â {0} o hyd
 
 #AMLS Errors
 update-money-laundering-supervisory.error.date=Enter your next registration renewal date TBC
