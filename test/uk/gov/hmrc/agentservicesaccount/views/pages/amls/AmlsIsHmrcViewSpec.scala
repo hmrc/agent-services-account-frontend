@@ -25,7 +25,7 @@ import play.api.test.FakeRequest
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.forms.YesNoForm
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.is_amls_hmrc
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.AMLS.is_amls_hmrc
 
 class AmlsIsHmrcViewSpec extends BaseISpec {
 

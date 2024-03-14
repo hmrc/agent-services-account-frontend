@@ -30,7 +30,7 @@ class UpdateAmlsJourneyRepository @Inject()(mongoComponent: MongoComponent,
 extends HmrcSessionCacheRepository(
   mongoComponent = mongoComponent,
   collectionName = "update-amls-journey",
-  ttl = 5.hours, //sessions can last for a maximum of 4 hours
+  ttl = 4.hours, //sessions can last for a maximum of 4 hours
   timestampSupport = timestampSupport,
   sessionIdKey = SessionKeys.sessionId
 )

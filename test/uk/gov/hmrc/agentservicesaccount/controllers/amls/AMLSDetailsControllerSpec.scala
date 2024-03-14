@@ -30,7 +30,7 @@ import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector}
 import uk.gov.hmrc.agentservicesaccount.models.AmlsDetails
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.supervision_details
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.AMLS.supervision_details
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve._
 import uk.gov.hmrc.auth.core.{AuthConnector, Nino => _, _}
@@ -77,10 +77,10 @@ class AMLSDetailsControllerSpec extends PlaySpec
 
     protected val mockAgentClientAuthorisationConnector: AgentClientAuthorisationConnector = mock[AgentClientAuthorisationConnector]
     protected val actionBuilder = new DefaultActionBuilderImpl(Helpers.stubBodyParser())
-    protected val mockActions =
-      new Actions(mockAgentClientAuthorisationConnector, authActions, actionBuilder)
-
     protected val mockAgentAssuranceConnector: AgentAssuranceConnector = mock[AgentAssuranceConnector]
+    protected val mockActions =
+      new Actions(mockAgentClientAuthorisationConnector, mockAgentAssuranceConnector, authActions, actionBuilder)
+
     protected val mockView: supervision_details = mock[supervision_details]
     protected val cc: MessagesControllerComponents = stubMessagesControllerComponents()
 

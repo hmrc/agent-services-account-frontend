@@ -23,7 +23,7 @@ import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.forms.NewAmlsSupervisoryBodyForm
 import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
 import uk.gov.hmrc.agentservicesaccount.utils.AMLSLoader
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.new_supervisory_body
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.AMLS.new_supervisory_body
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject.{Inject, Singleton}

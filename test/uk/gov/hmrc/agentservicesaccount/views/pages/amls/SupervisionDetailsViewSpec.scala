@@ -26,7 +26,7 @@ import play.api.test.FakeRequest
 import play.twirl.api.Html
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models.AmlsDetails
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.supervision_details
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.AMLS.supervision_details
 
 import java.time.LocalDate
 

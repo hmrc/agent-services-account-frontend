@@ -32,13 +32,13 @@ import play.twirl.api.Html
 import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, SuspensionDetails}
 import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
+import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector}
 import uk.gov.hmrc.agentservicesaccount.controllers.{BODY, END_DATE, REG_NUMBER}
 import uk.gov.hmrc.agentservicesaccount.controllers.amls.routes
 import uk.gov.hmrc.agentservicesaccount.models.UpdateMoneyLaunderingSupervisionDetails
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.utils.AMLSLoader
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.update_money_laundering_supervision_details
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.AMLS.update_money_laundering_supervision_details
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve._
 import uk.gov.hmrc.auth.core.{AuthConnector, CredentialRole, Enrolment, EnrolmentIdentifier, Enrolments, User, Nino => _}
@@ -63,6 +63,7 @@ class UpdateMoneyLaunderingSupervisionControllerSpec extends PlaySpec
 
   //TODO move auth/suspend actions to common file for all unit tests
   val mockAcaConnector: AgentClientAuthorisationConnector = mock[AgentClientAuthorisationConnector]
+  val mockAgentAssuranceConnector: AgentAssuranceConnector = mock[AgentAssuranceConnector]
   val notSuspendedDetails: Future[SuspensionDetails] = Future successful SuspensionDetails(suspensionStatus = false, None)
   def givenNotSuspended(): ScalaOngoingStubbing[Future[SuspensionDetails]] = {
     mockAcaConnector.getSuspensionDetails()(
@@ -100,7 +101,7 @@ class UpdateMoneyLaunderingSupervisionControllerSpec extends PlaySpec
     protected val mockAmlsLoader: AMLSLoader = mock[AMLSLoader]
     protected val mockCacheService: SessionCacheService = mock[SessionCacheService]
     protected val mockActions =
-      new Actions(mockAcaConnector, authActions, actionBuilder)
+      new Actions(mockAcaConnector,mockAgentAssuranceConnector,authActions, actionBuilder)
 
     protected val cc: MessagesControllerComponents = stubMessagesControllerComponents()
     protected val view: update_money_laundering_supervision_details = mock[update_money_laundering_supervision_details]

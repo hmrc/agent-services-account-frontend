@@ -30,11 +30,11 @@ import play.twirl.api.Html
 import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, SuspensionDetails}
 import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
+import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector}
 import uk.gov.hmrc.agentservicesaccount.models.{AmlsDetails, UpdateAmlsJourney}
 import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
 import uk.gov.hmrc.agentservicesaccount.utils.AMLSLoader
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.new_supervisory_body
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.AMLS.new_supervisory_body
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve._
@@ -97,9 +97,10 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
     protected val authActions = new AuthActions(mockAppConfig, mockAuthConnector, mockEnvironment)
 
     protected val mockAgentClientAuthorisationConnector: AgentClientAuthorisationConnector = mock[AgentClientAuthorisationConnector]
+    protected val mockAgentAssuranceConnector: AgentAssuranceConnector = mock[AgentAssuranceConnector]
     protected val actionBuilder = new DefaultActionBuilderImpl(Helpers.stubBodyParser())
     protected val mockActions =
-      new Actions(mockAgentClientAuthorisationConnector, authActions, actionBuilder)
+      new Actions(mockAgentClientAuthorisationConnector, mockAgentAssuranceConnector, authActions, actionBuilder)
 
     protected val mockAmlsJourneySessionRepository: UpdateAmlsJourneyRepository = mock[UpdateAmlsJourneyRepository]
     protected val mockAmlsLoader: AMLSLoader = mock[AMLSLoader]
