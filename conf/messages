@@ -555,7 +555,6 @@ amls.new-supervisory-body.error.os.regex=Name of supervisory body must only incl
 amls.confirm-supervisory-body.h1=Are you still registered with {0}?
 amls.confirm-supervisory-body.error=Select yes if you are still registered with {0}
 
-
 #AMLS Errors
 update-money-laundering-supervisory.error.date=Enter your next registration renewal date
 update-money-laundering-supervisory.error.day=Your next registration renewal date must include a day
