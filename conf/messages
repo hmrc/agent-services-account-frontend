@@ -536,8 +536,8 @@ admin-access.button=Go to manage account
 #AMLS
 amls.is-hmrc.h1=Is HMRC your money laundering supervisory body?
 amls.is-hmrc.error=Select yes if HMRC is your money laundering supervisory body
-amls.confirmation.h1=Money laundering supervision details updated
-amls.confirmation.p1=We have updated your money laundering supervision details. We will get in touch if we have any questions.
+amls.confirmation.h1=You''ve changed your supervision details
+amls.confirmation.p1=We''ll update your anti-money laundering supervision details on your agent services accounts.
 amls.confirmation.link=Return to manage account
 amls.enter-renewal-update.title=What are your money laundering supervision registration details?
 amls.enter-renewal.h1=What are your money laundering supervision registration details?
