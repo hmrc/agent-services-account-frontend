@@ -552,6 +552,8 @@ amls.new-supervisory-body.hint=Start typing and select the anti-money laundering
 amls.new-supervisory-body.error=Tell us the name of your supervisory body
 amls.new-supervisory-body.error.os.max-length=Name of supervisory body must be 100 characters or less
 amls.new-supervisory-body.error.os.regex=Name of supervisory body must only include letters a to z, numbers, apostrophes, commas, ampersands (&), round brackets, forward slashes, full stops, hyphens and spaces
+amls.confirm-supervisory-body.h1=Are you still registered with {0}?
+amls.confirm-supervisory-body.error=Select yes if you are still registered with {0}
 
 #AMLS Errors
 update-money-laundering-supervisory.error.date=Enter your next registration renewal date

@@ -17,7 +17,7 @@
 package uk.gov.hmrc.agentservicesaccount.actions
 
 import play.api.mvc.Results.{Forbidden, Redirect}
-import play.api.mvc.{ActionBuilder, ActionFilter, AnyContent, DefaultActionBuilder, Request, Result}
+import play.api.mvc._
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector}
 import uk.gov.hmrc.agentservicesaccount.controllers.routes
@@ -64,4 +64,5 @@ class Actions @Inject()(  agentClientAuthorisationConnector: AgentClientAuthoris
     agentAssuranceConnector.getAMLSDetails(arn.value)
       .flatMap(amlsDetails => action(amlsDetails) )
   }
+
 }
