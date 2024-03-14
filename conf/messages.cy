@@ -536,9 +536,9 @@ admin-access.button=Ewch i reoli’r cyfrif
 #AMLS
 amls.is-hmrc.h1=Is HMRC your money laundering supervisory body? TBC
 amls.is-hmrc.error=Select yes if HMRC is your money laundering supervisory body TBC
-amls.confirmation.h1=Money laundering supervision details updated TBC
-amls.confirmation.p1=We have updated your money laundering supervision details. We will get in touch if we have any questions. TBC
-amls.confirmation.link=Return to manage account TBC
+amls.confirmation.h1=''Rydych wedi ychwanegu eich manylion o ran goruchwyliaeth
+amls.confirmation.p1=Byddwn yn diweddaru eich manylion ynghylch goruchwyliaeth gwrth-wyngalchu arian ar eich cyfrif gwasanaethau asiant.
+amls.confirmation.link=''Dychwelyd i ''Rheoli''r cyfrif''
 amls.enter-renewal-update.title=What are your money laundering supervision registration details? TBC
 amls.enter-renewal.h1=What are your money laundering supervision registration details? TBC
 amls.enter-renewal-body.hint=Start typing and select your supervisory body from the list. TBC
