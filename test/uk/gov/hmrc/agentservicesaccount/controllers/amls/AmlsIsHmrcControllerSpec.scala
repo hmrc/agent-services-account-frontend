@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.agentservicesaccount.controllers
-
+package uk.gov.hmrc.agentservicesaccount.controllers.amls
 
 import org.mockito.stubbing.ScalaOngoingStubbing
-import org.scalatestplus.play.PlaySpec
 import org.mockito.{ArgumentMatchersSugar, IdiomaticMockito}
+import org.scalatestplus.play.PlaySpec
 import play.api.Environment
 import play.api.data.Form
 import play.api.http.MimeTypes.HTML
@@ -32,11 +31,11 @@ import play.twirl.api.Html
 import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, SuspensionDetails}
 import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.AMLS.is_amls_hmrc
-import uk.gov.hmrc.auth.core.{AuthConnector, CredentialRole, Enrolment, EnrolmentIdentifier, Enrolments, User}
+import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector}
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.is_amls_hmrc
 import uk.gov.hmrc.auth.core.authorise.Predicate
-import uk.gov.hmrc.auth.core.retrieve.{Credentials, Email, Name, Retrieval, ~}
+import uk.gov.hmrc.auth.core.retrieve._
+import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -48,6 +47,7 @@ class AmlsIsHmrcControllerSpec extends PlaySpec with IdiomaticMockito with Argum
 
   //TODO move auth/suspend actions to common file for all unit tests
   val mockAcaConnector: AgentClientAuthorisationConnector = mock[AgentClientAuthorisationConnector]
+  val mockAgentAssuranceConnector: AgentAssuranceConnector = mock[AgentAssuranceConnector]
   val notSuspendedDetails: Future[SuspensionDetails] = Future successful SuspensionDetails(suspensionStatus = false, None)
   def givenNotSuspended(): ScalaOngoingStubbing[Future[SuspensionDetails]] = {
     mockAcaConnector.getSuspensionDetails()(
@@ -87,7 +87,7 @@ class AmlsIsHmrcControllerSpec extends PlaySpec with IdiomaticMockito with Argum
     protected val authActions = new AuthActions(mockAppConfig, mockAuthConnector, mockEnvironment)
     protected val actionBuilder = new DefaultActionBuilderImpl(Helpers.stubBodyParser())
     protected val mockActions =
-      new Actions(mockAcaConnector, authActions, actionBuilder)
+      new Actions(mockAcaConnector, mockAgentAssuranceConnector, authActions, actionBuilder)
 
     protected val cc: MessagesControllerComponents = stubMessagesControllerComponents()
     protected val view: is_amls_hmrc = mock[is_amls_hmrc]
@@ -152,7 +152,7 @@ class AmlsIsHmrcControllerSpec extends PlaySpec with IdiomaticMockito with Argum
           .withFormUrlEncodedBody("accept" -> "false")
       )
       Helpers.status(response) mustBe SEE_OTHER
-      Helpers.redirectLocation(response).get mustBe "manage-account/update-money-laundering-supervision"
+      Helpers.redirectLocation(response).get mustBe "/agent-services-account/manage-account/money-laundering-supervision/new-supervisory-body"
     }
 
     "return form with errors" in new Setup {

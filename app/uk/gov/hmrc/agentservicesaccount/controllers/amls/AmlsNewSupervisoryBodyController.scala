@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.agentservicesaccount.controllers
+package uk.gov.hmrc.agentservicesaccount.controllers.amls
 
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.forms.NewAmlsSupervisoryBodyForm
-import uk.gov.hmrc.agentservicesaccount.repository.AmlsJourneySessionRepository
+import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
 import uk.gov.hmrc.agentservicesaccount.utils.AMLSLoader
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.AMLS.new_supervisory_body
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.new_supervisory_body
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject.{Inject, Singleton}
@@ -33,13 +33,13 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class AmlsNewSupervisoryBodyController @Inject() (actions: Actions,
                                                   amlsLoader: AMLSLoader,
-                                                  val amlsJourneySessionRepository: AmlsJourneySessionRepository,
+                                                  val amlsJourneySessionRepository: UpdateAmlsJourneyRepository,
                                                   newSupervisoryBody: new_supervisory_body,
-                                                   cc: MessagesControllerComponents
+                                                  cc: MessagesControllerComponents
 )(implicit appConfig: AppConfig, ec: ExecutionContext) extends FrontendController(cc) with AmlsJourneySupport with I18nSupport {
 
 
-  def showNewSupervisoryBody: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request  =>
+  def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request  =>
     actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
       withAmlsJourneySession { journey =>
         val amlsBodies = amlsLoader.load("/amls-no-hmrc.csv")
@@ -50,7 +50,7 @@ class AmlsNewSupervisoryBodyController @Inject() (actions: Actions,
     }
   }
 
-  def submitNewSupervisoryBody: Action[AnyContent] = Action.async { implicit request =>
+  def onSubmit: Action[AnyContent] = Action.async { implicit request =>
     actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
       withAmlsJourneySession { journey =>
         val amlsBodies = amlsLoader.load("/amls-no-hmrc.csv")
