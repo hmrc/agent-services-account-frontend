@@ -21,7 +21,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.ToFuture
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.AMLS.update_confirmation_received
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.update_confirmation_received
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject.{Inject, Singleton}

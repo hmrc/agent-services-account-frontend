@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.agentservicesaccount.views.pages.AMLS
+package uk.gov.hmrc.agentservicesaccount.views.pages.amls
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.{Document, Element}
@@ -26,7 +26,7 @@ import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.forms.UpdateMoneyLaunderingSupervisionForm
 import uk.gov.hmrc.agentservicesaccount.models.UpdateMoneyLaunderingSupervisionDetails
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.AMLS.update_money_laundering_supervision_details
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.update_money_laundering_supervision_details
 
 
 class UpdateMoneyLaunderingSupervisionDetailsViewSpec extends BaseISpec {

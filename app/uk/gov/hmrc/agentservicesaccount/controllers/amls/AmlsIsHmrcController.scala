@@ -22,7 +22,7 @@ import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.ToFuture
 import uk.gov.hmrc.agentservicesaccount.forms.YesNoForm
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.AMLS.is_amls_hmrc
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.is_amls_hmrc
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject.{Inject, Singleton}

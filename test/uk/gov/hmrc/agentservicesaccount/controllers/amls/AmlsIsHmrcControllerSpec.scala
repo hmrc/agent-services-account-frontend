@@ -32,7 +32,7 @@ import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, SuspensionDetails}
 import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector}
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.AMLS.is_amls_hmrc
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.is_amls_hmrc
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve._
 import uk.gov.hmrc.auth.core._

@@ -38,7 +38,7 @@ import uk.gov.hmrc.agentservicesaccount.controllers.amls.routes
 import uk.gov.hmrc.agentservicesaccount.models.UpdateMoneyLaunderingSupervisionDetails
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.utils.AMLSLoader
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.AMLS.update_money_laundering_supervision_details
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.update_money_laundering_supervision_details
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve._
 import uk.gov.hmrc.auth.core.{AuthConnector, CredentialRole, Enrolment, EnrolmentIdentifier, Enrolments, User, Nino => _}

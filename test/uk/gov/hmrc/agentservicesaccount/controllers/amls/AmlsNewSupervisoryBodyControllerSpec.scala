@@ -34,7 +34,7 @@ import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, Age
 import uk.gov.hmrc.agentservicesaccount.models.{AmlsDetails, UpdateAmlsJourney}
 import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
 import uk.gov.hmrc.agentservicesaccount.utils.AMLSLoader
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.AMLS.new_supervisory_body
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.new_supervisory_body
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve._
