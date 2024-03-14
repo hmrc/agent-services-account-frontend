@@ -16,20 +16,21 @@
 
 package uk.gov.hmrc.agentservicesaccount.models
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 import java.time.LocalDate
 
-case class AmlsJourneySession(
-                        status: String,
-                        useExistingAmlsSupervisoryBody: Option[Boolean] = None,
-                        newAmlsBody: Option[String] = None,
-                        newMembershipNumber: Option[String] = None,
-                        newExpirationDate: Option[LocalDate] = None
-                      ){
-  val isUkAgent = status.contains("UK")
+
+case class UpdateAmlsJourney(status: String,
+                             isAmlsBodyStillTheSame: Option[Boolean] = None,
+                             newAmlsBody: Option[String] = None,
+                             isMembershipNumberStillTheSame: Option[Boolean] = None,
+                             newMembershipNumber: Option[String] = None,
+                             newExpirationDate: Option[LocalDate] = None
+                            ){
+  val isUkAgent: Boolean = !status.contains("NonUK")
 }
 
-object AmlsJourneySession{
-  implicit val format = Json.format[AmlsJourneySession]
+object UpdateAmlsJourney{
+  implicit val format: OFormat[UpdateAmlsJourney] = Json.format[UpdateAmlsJourney]
 }

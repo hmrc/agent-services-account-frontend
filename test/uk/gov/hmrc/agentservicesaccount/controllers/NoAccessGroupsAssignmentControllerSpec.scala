@@ -29,7 +29,7 @@ import play.twirl.api.Html
 import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, SuspensionDetails}
 import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
+import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector}
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.admin_access_for_access_groups
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve._
@@ -75,6 +75,7 @@ class NoAccessGroupsAssignmentControllerSpec extends PlaySpec
       Some(credentialRole)))
 
   val mockAuthConnector: AuthConnector = mock[AuthConnector]
+  val mockAgentAssuranceConnector: AgentAssuranceConnector = mock[AgentAssuranceConnector]
   def givenAuthorisedAgent(credentialRole: CredentialRole): ScalaOngoingStubbing[Future[Any]] = {
     mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
       *[HeaderCarrier],
@@ -87,7 +88,7 @@ class NoAccessGroupsAssignmentControllerSpec extends PlaySpec
     protected val actionBuilder = new DefaultActionBuilderImpl(Helpers.stubBodyParser())
 
     protected val mockActions =
-      new Actions(mockAcaConnector, authActions, actionBuilder)
+      new Actions(mockAcaConnector, mockAgentAssuranceConnector, authActions, actionBuilder)
 
     protected val mockView: admin_access_for_access_groups = mock[admin_access_for_access_groups]
     protected val cc: MessagesControllerComponents = stubMessagesControllerComponents()

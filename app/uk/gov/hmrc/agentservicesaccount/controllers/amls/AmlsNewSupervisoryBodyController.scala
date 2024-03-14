@@ -14,52 +14,53 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.agentservicesaccount.controllers
+package uk.gov.hmrc.agentservicesaccount.controllers.amls
 
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+import uk.gov.hmrc.agentservicesaccount.controllers.ToFuture
 import uk.gov.hmrc.agentservicesaccount.forms.NewAmlsSupervisoryBodyForm
-import uk.gov.hmrc.agentservicesaccount.repository.AmlsJourneySessionRepository
+import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
 import uk.gov.hmrc.agentservicesaccount.utils.AMLSLoader
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.AMLS.new_supervisory_body
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.new_supervisory_body
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 
 @Singleton
 class AmlsNewSupervisoryBodyController @Inject() (actions: Actions,
                                                   amlsLoader: AMLSLoader,
-                                                  val amlsJourneySessionRepository: AmlsJourneySessionRepository,
+                                                  val updateAmlsJourneyRepository: UpdateAmlsJourneyRepository,
                                                   newSupervisoryBody: new_supervisory_body,
-                                                   cc: MessagesControllerComponents
+                                                  cc: MessagesControllerComponents
 )(implicit appConfig: AppConfig, ec: ExecutionContext) extends FrontendController(cc) with AmlsJourneySupport with I18nSupport {
 
 
-  def showNewSupervisoryBody: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request  =>
+  def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request  =>
     actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
-      withAmlsJourneySession { journey =>
+      withUpdateAmlsJourney { amlsJourney =>
         val amlsBodies = amlsLoader.load("/amls-no-hmrc.csv")
-        val form = NewAmlsSupervisoryBodyForm.form(amlsBodies)(journey.isUkAgent).fill(journey.newAmlsBody.getOrElse(""))
+        val form = NewAmlsSupervisoryBodyForm.form(amlsBodies)(amlsJourney.isUkAgent).fill(amlsJourney.newAmlsBody.getOrElse(""))
         // TODO // define the backlink (either '/confirm-supervisory-body' or '/check-your-answers' - awaiting routing logic APB-7796
-        Future successful Ok(newSupervisoryBody(form, amlsBodies, journey.isUkAgent))
+        Ok(newSupervisoryBody(form, amlsBodies, amlsJourney.isUkAgent)).toFuture
       }
     }
   }
 
-  def submitNewSupervisoryBody: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
+  def onSubmit: Action[AnyContent] = Action.async { implicit request =>
     actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
-      withAmlsJourneySession { journey =>
+      withUpdateAmlsJourney { journey =>
         val amlsBodies = amlsLoader.load("/amls-no-hmrc.csv")
         NewAmlsSupervisoryBodyForm.form(amlsBodies)(journey.isUkAgent)
           .bindFromRequest()
           .fold(
-            formWithErrors => Future successful Ok(newSupervisoryBody(formWithErrors, amlsBodies, journey.isUkAgent)),
+            formWithErrors => Ok(newSupervisoryBody(formWithErrors, amlsBodies, journey.isUkAgent)).toFuture,
             data => {
-              saveAmlsJourneySession(journey.copy(newAmlsBody = Some(data))).map(_ =>
+              saveAmlsJourney(journey.copy(newAmlsBody = Some(data))).map(_ =>
               Redirect("/not-implemented")) //TODO - next page (/supervisory-number) APB-7794
             }
           )

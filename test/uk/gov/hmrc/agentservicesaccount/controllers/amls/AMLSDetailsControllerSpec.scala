@@ -14,27 +14,26 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.agentservicesaccount.controllers
+package uk.gov.hmrc.agentservicesaccount.controllers.amls
 
-import org.scalatestplus.play.PlaySpec
-import play.api.test.{DefaultAwaitTimeout, FakeRequest, Helpers}
 import org.mockito.{ArgumentMatchersSugar, IdiomaticMockito}
+import org.scalatestplus.play.PlaySpec
 import play.api.Environment
 import play.api.http.Status.OK
 import play.api.i18n.Messages
 import play.api.mvc.{DefaultActionBuilderImpl, MessagesControllerComponents, Request, Result}
 import play.api.test.Helpers.{status, stubMessagesControllerComponents}
+import play.api.test.{DefaultAwaitTimeout, FakeRequest, Helpers}
 import play.twirl.api.Html
 import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, SuspensionDetails}
 import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector}
 import uk.gov.hmrc.agentservicesaccount.models.AmlsDetails
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.AMLS.supervision_details
-import uk.gov.hmrc.auth.core.AuthConnector
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.supervision_details
 import uk.gov.hmrc.auth.core.authorise.Predicate
-import uk.gov.hmrc.auth.core.retrieve.{Credentials, Email, Name, Retrieval, ~}
-import uk.gov.hmrc.auth.core.{Nino => _, _}
+import uk.gov.hmrc.auth.core.retrieve._
+import uk.gov.hmrc.auth.core.{AuthConnector, Nino => _, _}
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -78,10 +77,10 @@ class AMLSDetailsControllerSpec extends PlaySpec
 
     protected val mockAgentClientAuthorisationConnector: AgentClientAuthorisationConnector = mock[AgentClientAuthorisationConnector]
     protected val actionBuilder = new DefaultActionBuilderImpl(Helpers.stubBodyParser())
-    protected val mockActions =
-      new Actions(mockAgentClientAuthorisationConnector, authActions, actionBuilder)
-
     protected val mockAgentAssuranceConnector: AgentAssuranceConnector = mock[AgentAssuranceConnector]
+    protected val mockActions =
+      new Actions(mockAgentClientAuthorisationConnector, mockAgentAssuranceConnector, authActions, actionBuilder)
+
     protected val mockView: supervision_details = mock[supervision_details]
     protected val cc: MessagesControllerComponents = stubMessagesControllerComponents()
 

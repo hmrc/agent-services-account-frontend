@@ -12,3 +12,6 @@
 # Add all the application routes to the prod.routes file
 
 ->         /                          prod.Routes
+
+#if no query param provided then it's going to be a UK AMLS record
+GET        /test-only/initialise-amls      @uk.gov.hmrc.agentservicesaccount.controllers.testOnly.TestOnlyController.initialiseAmls(amlsStatus: Option[String] ?= None)

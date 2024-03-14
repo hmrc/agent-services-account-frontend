@@ -75,18 +75,21 @@ POST       /check-contact-details                                         @uk.go
 GET        /contact-details-submitted                                     @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.showChangeSubmitted
 
 # AMLS
-GET        /manage-account/amls-details-updated                           @uk.gov.hmrc.agentservicesaccount.controllers.AmlsConfirmationController.showUpdatedAmlsConfirmationPage
+GET        /manage-account/amls-details-updated                           @uk.gov.hmrc.agentservicesaccount.controllers.amls.AmlsConfirmationController.showUpdatedAmlsConfirmationPage
 
-GET        /manage-account/money-laundering-supervision                   @uk.gov.hmrc.agentservicesaccount.controllers.AMLSDetailsController.showSupervisionDetails
+GET        /manage-account/money-laundering-supervision                   @uk.gov.hmrc.agentservicesaccount.controllers.amls.AMLSDetailsController.showSupervisionDetails
 
-GET        /manage-account/money-laundering-supervisory-body              @uk.gov.hmrc.agentservicesaccount.controllers.AmlsIsHmrcController.showAmlsIsHmrc
-POST       /manage-account/money-laundering-supervisory-body              @uk.gov.hmrc.agentservicesaccount.controllers.AmlsIsHmrcController.submitAmlsIsHmrc
+GET        /manage-account/money-laundering-supervisory-body              @uk.gov.hmrc.agentservicesaccount.controllers.amls.AmlsIsHmrcController.showAmlsIsHmrc
+POST       /manage-account/money-laundering-supervisory-body              @uk.gov.hmrc.agentservicesaccount.controllers.amls.AmlsIsHmrcController.submitAmlsIsHmrc
 
-GET        /manage-account/update-money-laundering-supervision            @uk.gov.hmrc.agentservicesaccount.controllers.UpdateMoneyLaunderingSupervisionController.showUpdateMoneyLaunderingSupervision
-POST       /manage-account/update-money-laundering-supervision            @uk.gov.hmrc.agentservicesaccount.controllers.UpdateMoneyLaunderingSupervisionController.submitUpdateMoneyLaunderingSupervision
+GET        /manage-account/update-money-laundering-supervision            @uk.gov.hmrc.agentservicesaccount.controllers.amls.UpdateMoneyLaunderingSupervisionController.showUpdateMoneyLaunderingSupervision
+POST       /manage-account/update-money-laundering-supervision            @uk.gov.hmrc.agentservicesaccount.controllers.amls.UpdateMoneyLaunderingSupervisionController.submitUpdateMoneyLaunderingSupervision
 
-GET        /manage-account/money-laundering-supervision/confirm-supervisory-body @uk.gov.hmrc.agentservicesaccount.controllers.AmlsExistingSupervisoryBodyController.showExistingSupervisoryBody
-POST       /manage-account/money-laundering-supervision/confirm-supervisory-body @uk.gov.hmrc.agentservicesaccount.controllers.AmlsExistingSupervisoryBodyController.submitConfirmExistingSupervisoryBody
+GET        /manage-account/money-laundering-supervision/new-supervisory-body @uk.gov.hmrc.agentservicesaccount.controllers.amls.AmlsNewSupervisoryBodyController.showPage
+POST       /manage-account/money-laundering-supervision/new-supervisory-body @uk.gov.hmrc.agentservicesaccount.controllers.amls.AmlsNewSupervisoryBodyController.onSubmit
 
-GET        /manage-account/money-laundering-supervision/new-supervisory-body @uk.gov.hmrc.agentservicesaccount.controllers.AmlsNewSupervisoryBodyController.showNewSupervisoryBody
-POST       /manage-account/money-laundering-supervision/new-supervisory-body @uk.gov.hmrc.agentservicesaccount.controllers.AmlsNewSupervisoryBodyController.submitNewSupervisoryBody
+GET        /manage-account/money-laundering-supervision/confirm-supervisory-body @uk.gov.hmrc.agentservicesaccount.controllers.amls.ConfirmSupervisoryBodyController.showPage
+POST        /manage-account/money-laundering-supervision/confirm-supervisory-body @uk.gov.hmrc.agentservicesaccount.controllers.amls.ConfirmSupervisoryBodyController.onSubmit
+
+GET        /manage-account/money-laundering-supervision/confirm-registration-number @uk.gov.hmrc.agentservicesaccount.controllers.amls.ConfirmRegistrationNumberController.showPage
+POST       /manage-account/money-laundering-supervision/confirm-registration-number @uk.gov.hmrc.agentservicesaccount.controllers.amls.ConfirmRegistrationNumberController.onSubmit

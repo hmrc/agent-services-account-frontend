@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.agentservicesaccount.controllers
+package uk.gov.hmrc.agentservicesaccount.controllers.amls
 
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+import uk.gov.hmrc.agentservicesaccount.controllers.ToFuture
 import uk.gov.hmrc.agentservicesaccount.forms.YesNoForm
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.AMLS.is_amls_hmrc
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.is_amls_hmrc
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject.{Inject, Singleton}
@@ -50,8 +51,7 @@ class AmlsIsHmrcController @Inject()(actions: Actions,
             if (isHmrcRegistered) {
               Redirect("not-implemented-hmrc-page").toFuture
             } else {
-              // TODO update with route in APB-7547
-              Redirect("manage-account/update-money-laundering-supervision").toFuture
+              Redirect(routes.AmlsNewSupervisoryBodyController.showPage).toFuture
             }
           })
     }

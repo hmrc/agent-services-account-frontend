@@ -15,7 +15,7 @@
  *@
 
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-@import uk.gov.hmrc.agentservicesaccount.controllers.routes
+@import uk.gov.hmrc.agentservicesaccount.controllers.amls.routes
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 @import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
 @import uk.gov.hmrc.govukfrontend.views.html.components.{FormWithCSRF, GovukButton, GovukErrorSummary, GovukFieldset, GovukInput, GovukSelect}
@@ -89,7 +89,7 @@
         @govukErrorSummary(ErrorSummary().withFormErrorsAsText(form))
     }
 
-    @formWithCSRF(action = routes.AmlsNewSupervisoryBodyController.submitNewSupervisoryBody) {
+    @formWithCSRF(action = routes.AmlsNewSupervisoryBodyController.onSubmit) {
         @govukFieldset(Fieldset(
             html = fieldsetHtml,
             legend = Some(Legend(

@@ -23,13 +23,14 @@ import uk.gov.hmrc.mongo.cache.{SessionCacheRepository => HmrcSessionCacheReposi
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration.DurationInt
+
 @Singleton
-class AmlsJourneySessionRepository @Inject()(mongoComponent: MongoComponent,
-                                             timestampSupport: TimestampSupport)(implicit ec: ExecutionContext)
+class UpdateAmlsJourneyRepository @Inject()(mongoComponent: MongoComponent,
+                                            timestampSupport: TimestampSupport)(implicit ec: ExecutionContext)
 extends HmrcSessionCacheRepository(
   mongoComponent = mongoComponent,
-  collectionName = "amls-journey-session",
-  ttl = 15.minutes,
+  collectionName = "update-amls-journey",
+  ttl = 4.hours, //sessions can last for a maximum of 4 hours
   timestampSupport = timestampSupport,
   sessionIdKey = SessionKeys.sessionId
 )

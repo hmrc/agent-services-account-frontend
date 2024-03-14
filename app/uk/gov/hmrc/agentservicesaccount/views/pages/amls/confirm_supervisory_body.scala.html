@@ -16,7 +16,7 @@
 
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
-@import uk.gov.hmrc.agentservicesaccount.controllers.routes
+@import uk.gov.hmrc.agentservicesaccount.controllers.amls.routes
 @import uk.gov.hmrc.govukfrontend.views.html.components.{GovukErrorSummary, ErrorSummary, GovukButton, GovukRadios, FormWithCSRF}
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.button.Button
 @import uk.gov.hmrc.govukfrontend.views.html.components.{Radios, Fieldset, Legend, Text, HtmlContent, RadioItem}
@@ -35,17 +35,21 @@
 
 @(form: Form[Boolean], supervisoryBody: String)(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
 
-@main(pageTitle = withErrorPrefix(form.hasErrors, msgs("amls.use-existing-registration-number.h1", supervisoryBody)), mimicBrowserBackLink = true, showSecondaryNav = false){
+@main(
+ pageTitle = withErrorPrefix(form.hasErrors, msgs("amls.confirm-supervisory-body.h1", supervisoryBody)),
+ mimicBrowserBackLink = false,
+ backLinkHref = Some(s"${routes.AMLSDetailsController.showSupervisionDetails}"),
+ showSecondaryNav = false){
 
  @if(form.hasErrors){
   @govukErrorSummary(ErrorSummary().withFormErrorsAsText(form))
  }
 
- @formWithCSRF(action = routes.AmlsExistingSupervisoryBodyController.submitConfirmExistingSupervisoryBody) {
+ @formWithCSRF(action = routes.ConfirmSupervisoryBodyController.onSubmit) {
   @govukRadios(Radios(
    fieldset = Some(Fieldset(
     legend = Some(Legend(
-     content = Text(msgs("amls.use-existing-registration-number.h1", supervisoryBody)),
+     content = Text(msgs("amls.confirm-supervisory-body.h1", supervisoryBody)),
      classes = "govuk-fieldset__legend--l",
      isPageHeading = true
     ))
@@ -65,10 +69,6 @@
    )
   ).withFormField(form("accept")))
 
-  @govukButton(Button(content = Text(msgs("common.continue-save"))))
+  @govukButton(Button(content = Text(msgs("common.continue"))))
  }
-
-
-
-
 }
