@@ -101,22 +101,36 @@ class ContactDetailsController @Inject()(actions: Actions,
             Ok(select_changes(formWithErrors)).toFuture
           },
           (selectedChanges: SelectChanges) => {
-              Future successful Redirect(routes.ContactDetailsController.showCheckNewDetails)
-                .addingToSession(
-                  "changeBusinessName" -> selectedChanges.businessName.toString,
-                  "changeAddress" -> selectedChanges.address.toString,
-                  "changeEmail" -> selectedChanges.email.toString,
-                  "changeTelephone" -> selectedChanges.telephone.toString
-                )
+            sessionCache.put(SELECT_CHANGES_CONTACT_DETAILS, selectedChanges.pagesSelected)
+            getNextPage(selectedChanges.pagesSelected)
           }
         )
     }
   }
 
-  private def redirectToNextPage(userIsOnCheckYourAnswersFlow: Boolean, pagesRequired: Set[String]): String =
-    pagesRequired
-      .headOption
-      .getOrElse( if (userIsOnCheckYourAnswersFlow) "/check-your-answers" else "/update-other-services" )
+  private def getNextPage(pagesRequired: Set[String], userIsOnCheckYourAnswersFlow: Boolean = false): Future[Result] = {
+    val nextPage: String =
+      pagesRequired
+        .headOption
+        .getOrElse( if (userIsOnCheckYourAnswersFlow) "/check-your-answers" else "/update-other-services" )
+
+    nextPage match {
+      case "/name" => Future successful Redirect(routes.ContactDetailsController.showChangeBusinessName)
+      case "/address" => Future successful Redirect(routes.ContactDetailsController.showChangeEmailAddress) //TODO: Update routing
+      case "/email" => Future successful Redirect(routes.ContactDetailsController.showChangeEmailAddress)
+      case "/telephone" => Future successful Redirect(routes.ContactDetailsController.showChangeTelephoneNumber)
+      case "/check-your-answers" => Future successful Redirect(routes.ContactDetailsController.showCheckNewDetails)
+      case _ => Future successful Redirect(routes.ContactDetailsController.showCurrentContactDetails) //TODO: Check routing
+    }
+  }
+
+  private def updatePagesList(implicit request: Request[_]) = {
+    sessionCache.get(SELECT_CHANGES_CONTACT_DETAILS).flatMap(selectedPages => {
+      val remainingSelectedPages: Set[String] = selectedPages.get.drop(1)
+      sessionCache.put(SELECT_CHANGES_CONTACT_DETAILS, remainingSelectedPages)
+      remainingSelectedPages
+    })
+  }
 
   val showCurrentContactDetails: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     ifFeatureEnabled {
@@ -142,8 +156,8 @@ class ContactDetailsController @Inject()(actions: Actions,
         .fold(
           formWithErrors => Future.successful(Ok(update_name(formWithErrors))),
           newAgencyName => {
-            updateDraftDetails(_.copy(agencyName = Some(newAgencyName))).map(_ =>
-              Redirect(routes.ContactDetailsController.showCheckNewDetails)
+            updateDraftDetails(_.copy(agencyName = Some(newAgencyName))).flatMap(_ =>
+              getNextPage(updatePagesList)
             )
           }
         )

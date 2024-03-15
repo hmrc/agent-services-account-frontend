@@ -40,6 +40,9 @@ package object controllers {
   // when the user changes their own details, this is a 'draft' of the set of updated details before the user sends the update request
   val DRAFT_NEW_CONTACT_DETAILS: DataKey[AgencyDetails] = DataKey("updatedContactDetails")
 
+  // when the user changes their own details, this is set of urls for the page that matches each checkbox selected
+  val SELECT_CHANGES_CONTACT_DETAILS: DataKey[Set[String]] = DataKey("selectChangesContactDetails")
+
   // after an email verification request has been sent, this value is set to keep track of which address was being verified
   val EMAIL_PENDING_VERIFICATION: DataKey[String] = DataKey("emailPendingVerification")
 
