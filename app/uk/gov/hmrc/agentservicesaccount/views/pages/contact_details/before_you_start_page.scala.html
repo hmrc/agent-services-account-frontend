@@ -29,7 +29,7 @@
 
 @(agencyDetails: Option[AgencyDetails])(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
 
-@main(pageTitle = msgs("view-contact-details.title"), showSecondaryNav = false) {
+@main(pageTitle = msgs("view-contact-details.title"), mimicBrowserBackLink = true, showSecondaryNav = false) {
 
   @h1("view-contact-details.update-details.link")
 
