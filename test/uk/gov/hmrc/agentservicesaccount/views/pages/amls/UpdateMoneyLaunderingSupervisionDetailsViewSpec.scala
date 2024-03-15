@@ -70,7 +70,7 @@ class UpdateMoneyLaunderingSupervisionDetailsViewSpec extends BaseISpec {
         doc.select(".govuk-label").get(1).text() mustBe "Your registration number"
       }
       "display correct date hint" in {
-        doc.select(".govuk-hint").get(1).text() mustBe "For example, 31 3 2024"
+        doc.select(".govuk-hint").get(1).text() mustBe "For example, 31 3 2025"
       }
       "display correct date labels" in {
         doc.select(".govuk-date-input").first().text() mustBe "Day Month Year"
@@ -123,7 +123,7 @@ class UpdateMoneyLaunderingSupervisionDetailsViewSpec extends BaseISpec {
         doc.select(".govuk-form-group--error").size() mustBe 3
       }
       "display correct error enter-renewal-date" in {
-        doc.select(".govuk-fieldset").get(1).text() mustBe "Your next registration renewal date For example, 31 3 2024 Error: Your next registration renewal date must include a day Day Month Year"
+        doc.select(".govuk-fieldset").get(1).text() mustBe "Your next registration renewal date For example, 31 3 2025 Error: Your next registration renewal date must include a day Day Month Year"
       }
     }
   }

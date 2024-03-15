@@ -93,3 +93,6 @@ POST        /manage-account/money-laundering-supervision/confirm-supervisory-bod
 
 GET        /manage-account/money-laundering-supervision/confirm-registration-number @uk.gov.hmrc.agentservicesaccount.controllers.amls.ConfirmRegistrationNumberController.showPage
 POST       /manage-account/money-laundering-supervision/confirm-registration-number @uk.gov.hmrc.agentservicesaccount.controllers.amls.ConfirmRegistrationNumberController.onSubmit
+
+GET        /manage-account/money-laundering-supervision/renewal-date      @uk.gov.hmrc.agentservicesaccount.controllers.amls.EnterRenewalDateController.showPage
+POST       /manage-account/money-laundering-supervision/renewal-date      @uk.gov.hmrc.agentservicesaccount.controllers.amls.EnterRenewalDateController.onSubmit
