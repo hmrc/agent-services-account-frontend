@@ -33,8 +33,7 @@ import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector}
 import uk.gov.hmrc.agentservicesaccount.models.{AmlsDetails, UpdateAmlsJourney}
 import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
-import uk.gov.hmrc.agentservicesaccount.utils.AMLSLoader
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.new_supervisory_body
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.enter_registration_number
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve._
@@ -44,7 +43,7 @@ import uk.gov.hmrc.mongo.cache.DataKey
 import java.time.LocalDate
 import scala.concurrent.{ExecutionContext, Future}
 
-class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
+class EnterRegistrationNumberControllerSpec extends PlaySpec
   with DefaultAwaitTimeout
   with IdiomaticMockito
   with ArgumentMatchersSugar {
@@ -81,13 +80,11 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
   )
 
   private val overseasAmlsJourney = UpdateAmlsJourney(
-    status = "OSAmls",
+    status = "NonUK",
     newAmlsBody = Some("OS AMLS"),
     newMembershipNumber = Some("AMLS123"),
     newExpirationDate = Some(LocalDate.parse("2024-10-10"))
   )
-
-  private val amlsBodies = Map("ACCA" -> "Association of Certified Chartered Accountants")
 
 
   trait Setup {
@@ -103,30 +100,27 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
       new Actions(mockAgentClientAuthorisationConnector, mockAgentAssuranceConnector, authActions, actionBuilder)
 
     protected val mockAmlsJourneySessionRepository: UpdateAmlsJourneyRepository = mock[UpdateAmlsJourneyRepository]
-    protected val mockAmlsLoader: AMLSLoader = mock[AMLSLoader]
-    protected val mockView: new_supervisory_body = mock[new_supervisory_body]
+    protected val mockView: enter_registration_number = mock[enter_registration_number]
     protected val cc: MessagesControllerComponents = stubMessagesControllerComponents()
     protected val dataKey = DataKey[UpdateAmlsJourney]("amlsJourney")
 
-    object TestController extends AmlsNewSupervisoryBodyController(mockActions, mockAmlsLoader, mockAmlsJourneySessionRepository, mockView, cc)(mockAppConfig, ec)
+    object TestController extends EnterRegistrationNumberController(mockActions, mockAmlsJourneySessionRepository, mockView, cc)(mockAppConfig, ec)
   }
 
-  "AmlsNewSupervisoryBodyController.showNewSupervisoryBody" should {
-    "display the page for UK agent" in new Setup {
+  "showPage" should {
+    "display the page" in new Setup {
       mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
         *[HeaderCarrier],
         *[ExecutionContext]) returns authResponse
 
       mockAppConfig.enableNonHmrcSupervisoryBody returns true
 
-      mockAmlsLoader.load(*[String]) returns amlsBodies
-
       mockAgentClientAuthorisationConnector.getSuspensionDetails()(*[HeaderCarrier], *[ExecutionContext]) returns suspensionDetailsResponse
 
       mockAmlsJourneySessionRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]],*[Request[_]]) returns
         Future.successful(Some(ukAmlsJourney))
 
-      mockView.apply(*[Form[String]], *[Map[String, String]], isUk = true)(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+      mockView.apply(*[Form[String]])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 
       val result: Future[Result] = TestController.showPage(fakeRequest)
 
@@ -151,9 +145,9 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
     }
   }
 
-  "AmlsNewSupervisoryBodyController.submitNewSupervisoryBody" should {
+  "onSubmit" should {
 
-    "return 303 SEE_OTHER and save new amls supervisory body to session" in new Setup {
+    "return 303 SEE_OTHER and store data for UK agent " in new Setup {
 
       mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
         *[HeaderCarrier],
@@ -161,19 +155,41 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
 
       mockAppConfig.enableNonHmrcSupervisoryBody returns true
 
-      mockAmlsLoader.load(*[String]) returns amlsBodies
-
       mockAgentClientAuthorisationConnector.getSuspensionDetails()(*[HeaderCarrier], *[ExecutionContext]) returns suspensionDetailsResponse
 
       mockAmlsJourneySessionRepository.getFromSession(dataKey)(*[Reads[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful(Some(ukAmlsJourney))
 
       mockAmlsJourneySessionRepository.putSession(
-        dataKey, ukAmlsJourney.copy(newAmlsBody = Some("ACCA")))(*[Writes[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
+        dataKey, ukAmlsJourney.copy(newMembershipNumber = Some("XAML00000123456")))(*[Writes[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
 
-      mockView.apply(*[Form[String]], *[Map[String, String]], isUk = true)(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+      mockView.apply(*[Form[String]])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 
       val result: Future[Result] = TestController.onSubmit(
-        FakeRequest("POST", "/").withFormUrlEncodedBody("body" -> "ACCA"))
+        FakeRequest("POST", "/").withFormUrlEncodedBody("number" -> "XAML00000123456"))
+
+      status(result) mustBe SEE_OTHER
+      Helpers.redirectLocation(result).get mustBe "/agent-services-account/manage-account/money-laundering-supervision/renewal-date"
+    }
+
+    "return 303 SEE_OTHER and store data for overseas agent " in new Setup {
+
+      mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
+        *[HeaderCarrier],
+        *[ExecutionContext]) returns authResponse
+
+      mockAppConfig.enableNonHmrcSupervisoryBody returns true
+
+      mockAgentClientAuthorisationConnector.getSuspensionDetails()(*[HeaderCarrier], *[ExecutionContext]) returns suspensionDetailsResponse
+
+      mockAmlsJourneySessionRepository.getFromSession(dataKey)(*[Reads[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful(Some(overseasAmlsJourney))
+
+      mockAmlsJourneySessionRepository.putSession(
+        dataKey, overseasAmlsJourney.copy(newMembershipNumber = Some("XX1234")))(*[Writes[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
+
+      mockView.apply(*[Form[String]])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+
+      val result: Future[Result] = TestController.onSubmit(
+        FakeRequest("POST", "/").withFormUrlEncodedBody("number" -> "XX1234"))
 
       status(result) mustBe SEE_OTHER
       Helpers.redirectLocation(result).get mustBe "/not-implemented"
@@ -187,14 +203,12 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
 
       mockAppConfig.enableNonHmrcSupervisoryBody returns true
 
-      mockAmlsLoader.load(*[String]) returns amlsBodies
-
       mockAgentClientAuthorisationConnector.getSuspensionDetails()(*[HeaderCarrier], *[ExecutionContext]) returns suspensionDetailsResponse
 
       mockAmlsJourneySessionRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[Request[Any]]) returns
         Future.successful(Some(ukAmlsJourney))
 
-      mockView.apply(*[Form[String]], *[Map[String, String]], isUk = true)(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+      mockView.apply(*[Form[String]])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 
       val result: Future[Result] = TestController.onSubmit(
         FakeRequest("POST", "/").withFormUrlEncodedBody("body" -> ""))

@@ -29,6 +29,7 @@ case class UpdateAmlsJourney(status: String,
                              newExpirationDate: Option[LocalDate] = None
                             ){
   val isUkAgent: Boolean = !status.contains("NonUK")
+  val isHmrc: Boolean = status.contains("HMRC")
 }
 
 object UpdateAmlsJourney{

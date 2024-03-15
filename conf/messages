@@ -556,6 +556,10 @@ amls.confirm-supervisory-body.h1=Are you still registered with {0}?
 amls.confirm-supervisory-body.error=Select yes if you are still registered with {0}
 amls.enter-renewal-date.h1=When do you need to renew your registration?
 amls.enter-renewal-date.hint=For example, 31 3 2025
+amls.enter-registration-number.h1=What’s your registration number?
+amls.enter-registration-number.error.empty=Enter your registration number
+amls.enter-registration-number.error.not-hmrc.invalid=Registration number must include only letters and numbers
+amls.enter-registration-number.error.hmrc.invalid=Enter a registration number in the correct format, for example XAML00000123456
 
 #AMLS Errors
 update-money-laundering-supervisory.error.date=Enter your next registration renewal date
