@@ -125,9 +125,11 @@ class ContactDetailsController @Inject()(actions: Actions,
     }
   }
 
-  private def dropAndGetRemainingPages(implicit request: Request[_]) =
-    sessionCache.get(SELECT_CHANGES_CONTACT_DETAILS).map(_.get.drop(1))
-
+  private def updateRemainingPages(implicit request: Request[_]): Future[Set[String]] = {
+    val remainingPages: Future[Set[String]] = sessionCache.get(SELECT_CHANGES_CONTACT_DETAILS).map(_.get.drop(1))
+    remainingPages.flatMap(pages => sessionCache.put(SELECT_CHANGES_CONTACT_DETAILS, pages))
+    remainingPages
+  }
 
   val showCurrentContactDetails: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     ifFeatureEnabled {
@@ -154,11 +156,9 @@ class ContactDetailsController @Inject()(actions: Actions,
           formWithErrors => Future.successful(Ok(update_name(formWithErrors))),
           newAgencyName => {
             updateDraftDetails(_.copy(agencyName = Some(newAgencyName))).flatMap(_ =>
-              dropAndGetRemainingPages.flatMap{ remaningPages =>
-                sessionCache.put(SELECT_CHANGES_CONTACT_DETAILS, remaningPages).flatMap {
-                  _ => getNextPage(remaningPages)
-                }
-              }
+              updateRemainingPages.flatMap( remainingPages =>
+                getNextPage(remainingPages)
+              )
             )
           }
         )
