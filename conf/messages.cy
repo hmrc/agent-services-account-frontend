@@ -554,6 +554,8 @@ amls.new-supervisory-body.error.os.max-length=Name of supervisory body must be 1
 amls.new-supervisory-body.error.os.regex=Name of supervisory body must only include letters a to z, numbers, apostrophes, commas, ampersands (&), round brackets, forward slashes, full stops, hyphens and spaces
 amls.confirm-supervisory-body.h1=A ydych wedi’ch cofrestru â {0} o hyd?
 amls.confirm-supervisory-body.error=Dewiswch ‘Iawn’ os ydych wedi’ch cofrestru â {0} o hyd
+amls.enter-renewal-date.h1=Pryd y mae angen i chi adnewyddu’ch cofrestriad?
+amls.enter-renewal-date.hint=Er enghraifft, 31 3 2025
 
 #AMLS Errors
 update-money-laundering-supervisory.error.date=Enter your next registration renewal date TBC
