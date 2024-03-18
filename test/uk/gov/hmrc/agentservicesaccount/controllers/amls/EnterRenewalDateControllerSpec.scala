@@ -31,7 +31,7 @@ import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, SuspensionDetails}
 import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector}
-import uk.gov.hmrc.agentservicesaccount.models.UpdateAmlsJourney
+import uk.gov.hmrc.agentservicesaccount.models.{AmlsStatus, UpdateAmlsJourney}
 import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.enter_renewal_date
 import uk.gov.hmrc.auth.core._
@@ -73,11 +73,11 @@ class EnterRenewalDateControllerSpec extends PlaySpec
   private val suspensionDetailsResponse: Future[SuspensionDetails] = Future.successful(SuspensionDetails(suspensionStatus = false, None))
 
   private val ukUpdateAmlsJourney = UpdateAmlsJourney(
-    status = "UKAmls"
+    status = AmlsStatus.ValidAmlsDetailsUK
   )
 
   private val overseasUpdateAmlsJourney = UpdateAmlsJourney(
-    status = "NonUK"
+    status = AmlsStatus.ValidAmlsNonUK
   )
 
   private val newExpirationDate = LocalDate.now.plusMonths(11)
@@ -115,7 +115,7 @@ class EnterRenewalDateControllerSpec extends PlaySpec
       mockUpdateAmlsJourneyRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[Request[_]]) returns
         Future.successful(Some(ukUpdateAmlsJourney))
 
-      mockView.apply(*[Form[LocalDate]])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+      mockView.apply(*[Form[LocalDate]], *[String])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 
       val result: Future[Result] = TestController.showPage(fakeRequest)
 
@@ -134,7 +134,7 @@ class EnterRenewalDateControllerSpec extends PlaySpec
       mockUpdateAmlsJourneyRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[Request[_]]) returns
         Future.successful(Some(ukUpdateAmlsJourney.copy(newExpirationDate = Some(LocalDate.now().plusMonths(11)))))
 
-      mockView.apply(*[Form[LocalDate]])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+      mockView.apply(*[Form[LocalDate]], *[String])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 
       val result: Future[Result] = TestController.showPage(fakeRequest)
 
@@ -153,7 +153,7 @@ class EnterRenewalDateControllerSpec extends PlaySpec
       mockUpdateAmlsJourneyRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[Request[_]]) returns
         Future.successful(Some(overseasUpdateAmlsJourney))
 
-      mockView.apply(*[Form[LocalDate]])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+      mockView.apply(*[Form[LocalDate]], *[String])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 
       val result: Future[Result] = TestController.showPage(fakeRequest)
 
@@ -177,7 +177,7 @@ class EnterRenewalDateControllerSpec extends PlaySpec
         mockUpdateAmlsJourneyRepository.putSession(
           dataKey, ukUpdateAmlsJourney.copy(newExpirationDate = Some(newExpirationDate)))(*[Writes[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
 
-        mockView.apply(*[Form[LocalDate]])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+        mockView.apply(*[Form[LocalDate]], *[String])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 
         val result: Future[Result] = TestController.onSubmit(
           FakeRequest("POST", "/").withFormUrlEncodedBody(
@@ -187,7 +187,7 @@ class EnterRenewalDateControllerSpec extends PlaySpec
         )
 
         status(result) mustBe SEE_OTHER
-        Helpers.redirectLocation(result).get mustBe "/page-not-implemented"
+        Helpers.redirectLocation(result).get mustBe "/cya"
       }
 
 
@@ -204,7 +204,7 @@ class EnterRenewalDateControllerSpec extends PlaySpec
         mockUpdateAmlsJourneyRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[Request[Any]]) returns
           Future.successful(Some(ukUpdateAmlsJourney))
 
-        mockView.apply(*[Form[LocalDate]])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+        mockView.apply(*[Form[LocalDate]], *[String])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 
         val result: Future[Result] = TestController.onSubmit(
           FakeRequest("POST", "/").withFormUrlEncodedBody(

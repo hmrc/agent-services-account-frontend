@@ -72,7 +72,7 @@ class ConfirmSupervisoryBodyViewSpec extends BaseISpec {
 
     "first viewing page" should {
 
-      val doc: Document = Jsoup.parse(view.apply(form, "HMRC")(FakeRequest(), messages, appConfig).body)
+      val doc: Document = Jsoup.parse(view.apply(form, "HMRC", "/back")(FakeRequest(), messages, appConfig).body)
 
       testServiceStaticContent(doc)
 
@@ -86,7 +86,7 @@ class ConfirmSupervisoryBodyViewSpec extends BaseISpec {
 
     "form is submitted with errors should" should {
 
-      val doc: Document = Jsoup.parse(view.apply(formWithErrors, "HMRC")(FakeRequest(), messages, appConfig).body)
+      val doc: Document = Jsoup.parse(view.apply(formWithErrors, "HMRC", "/back")(FakeRequest(), messages, appConfig).body)
 
       testServiceStaticContent(doc)
 

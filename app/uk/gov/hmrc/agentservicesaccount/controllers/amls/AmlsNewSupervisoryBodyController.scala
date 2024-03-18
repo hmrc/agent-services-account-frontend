@@ -73,8 +73,10 @@ class AmlsNewSupervisoryBodyController @Inject() (actions: Actions,
     else if (journey.isAmlsBodyStillTheSame.contains(false)) routes.ConfirmSupervisoryBodyController.showPage.url
     else routes.AMLSDetailsController.showSupervisionDetails.url
 
-  private def nextPage(journey: UpdateAmlsJourney): String =
+  private def nextPage(journey: UpdateAmlsJourney): String = {
+    if(journey.isChange)
     if(journey.isUkAgent & journey.hasExistingAmls) routes.ConfirmRegistrationNumberController.showPage.url
     else routes.EnterRegistrationNumberController.showPage.url
+  }
 
 }

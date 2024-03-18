@@ -10,7 +10,8 @@ object AppDependencies {
     "uk.gov.hmrc"       %% "agent-kenshoo-monitoring"   % "5.5.0",
     "uk.gov.hmrc"       %% "agent-mtd-identifiers"      % "1.15.0",
     "uk.gov.hmrc.mongo" %% "hmrc-mongo-play-28"         % mongoVer,
-    "uk.gov.hmrc"       %% "play-frontend-hmrc-play-28" % "8.5.0"
+    "uk.gov.hmrc"       %% "play-frontend-hmrc-play-28" % "8.5.0",
+    "org.julienrf"      %% "play-json-derived-codecs"   % "7.0.0"
   )
 
   val test: Seq[ModuleID] = Seq(

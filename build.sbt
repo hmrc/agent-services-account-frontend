@@ -1,3 +1,4 @@
+import play.sbt.routes.RoutesKeys
 import uk.gov.hmrc.SbtAutoBuildPlugin
 
 TwirlKeys.templateImports ++= Seq(
@@ -17,6 +18,7 @@ lazy val root = (project in file("."))
       "-feature",
       "-language:implicitConversions",
       "-Xlint",
+      "-Xlint:-byname-implicit",
       "-Wconf:src=target/.*:s", // silence warnings from compiled files
       "-Wconf:src=*html:w", // silence html warnings as they are wrong
       "-Wconf:cat=unused-privates:s",
@@ -34,7 +36,10 @@ lazy val root = (project in file("."))
     IntegrationTest / Keys.fork := false,
     Defaults.itSettings,
     IntegrationTest / unmanagedSourceDirectories += baseDirectory(_ / "it").value,
-    IntegrationTest / parallelExecution := false
+    IntegrationTest / parallelExecution := false,
+    RoutesKeys.routesImport ++= Seq(
+      "uk.gov.hmrc.agentservicesaccount.models.AmlsStatus"
+    ),
   )
   .enablePlugins(PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin)
   .disablePlugins(JUnitXmlReportPlugin) //Required to prevent https://github.com/scalatest/scalatest/issues/1427
