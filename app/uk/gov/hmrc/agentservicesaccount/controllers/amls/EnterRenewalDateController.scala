@@ -22,6 +22,7 @@ import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.ToFuture
 import uk.gov.hmrc.agentservicesaccount.forms.RenewalDateForm
+import uk.gov.hmrc.agentservicesaccount.models.UpdateAmlsJourney
 import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.enter_renewal_date
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -44,7 +45,7 @@ class EnterRenewalDateController @Inject()(actions: Actions,
         withUpdateAmlsJourney { amlsJourney =>
           if(amlsJourney.isUkAgent) {
           val form = amlsJourney.newExpirationDate.fold(renewalDateForm)(renewalDateForm.fill)
-          Ok(enterRenewalDate(form)).toFuture
+          Ok(enterRenewalDate(form, backLink(amlsJourney))).toFuture
         } else {
             Forbidden.toFuture
           }}
@@ -58,15 +59,21 @@ class EnterRenewalDateController @Inject()(actions: Actions,
             renewalDateForm
             .bindFromRequest()
             .fold(
-              formWithError => Ok(enterRenewalDate(formWithError)).toFuture,
+              formWithError => Ok(enterRenewalDate(formWithError, backLink(amlsJourney))).toFuture,
               data =>
                 saveAmlsJourney(amlsJourney.copy(newExpirationDate = Option(data))).map(_ =>
-                    Redirect("/page-not-implemented") //TODO - routing
+                    Redirect("/cya")
                 )
             )
       }
     }
   }
 
+
+  private def backLink(journey: UpdateAmlsJourney): String = {
+    if(journey.isChange) "/cya"
+    else if (journey.isMembershipNumberStillTheSame.contains(true)) routes.ConfirmRegistrationNumberController.showPage.url
+    else routes.EnterRegistrationNumberController.showPage.url
+  }
 }
 

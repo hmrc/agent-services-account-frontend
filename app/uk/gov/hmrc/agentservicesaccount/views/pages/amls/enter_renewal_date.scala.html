@@ -36,7 +36,7 @@
 )
 
 
-@(form: Form[LocalDate])(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
+@(form: Form[LocalDate], backLinkHref: String)(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
 
 @fieldSetHtml = {
     @inputDate(
@@ -51,7 +51,7 @@
 @main(
     pageTitle = withErrorPrefix(form.hasErrors, msgs("amls.enter-renewal-date.h1")),
     mimicBrowserBackLink = false,
-    backLinkHref = Some("/todo/not-implemented"),
+    backLinkHref = Some(backLinkHref),
     showSecondaryNav = false) {
 
     @if(form.hasErrors) {

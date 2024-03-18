@@ -22,6 +22,7 @@ import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.ToFuture
 import uk.gov.hmrc.agentservicesaccount.forms.YesNoForm
+import uk.gov.hmrc.agentservicesaccount.models.UpdateAmlsJourney
 import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.confirm_supervisory_body
@@ -42,8 +43,8 @@ class ConfirmSupervisoryBodyController @Inject()(actions: Actions,
     actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
       actions.withCurrentAmlsDetails(request.agentInfo.arn){ amlsDetails =>
         withUpdateAmlsJourney { amlsJourney =>
-          val form = amlsJourney.isAmlsBodyStillTheSame.fold(YesNoForm.form(""))(x => YesNoForm.form().fill(x))
-          Ok(confirmSupervisoryBody(form, amlsDetails.supervisoryBody)).toFuture
+          val form = amlsJourney.isAmlsBodyStillTheSame.fold(YesNoForm.form(""))(YesNoForm.form().fill)
+          Ok(confirmSupervisoryBody(form, amlsDetails.supervisoryBody, backLink(amlsJourney))).toFuture
         }
       }
     }
@@ -57,18 +58,23 @@ class ConfirmSupervisoryBodyController @Inject()(actions: Actions,
           YesNoForm.form(Messages("amls.confirm-supervisory-body.error", amlsDetails.supervisoryBody))
             .bindFromRequest()
             .fold(
-              formWithError => Future successful Ok(confirmSupervisoryBody(formWithError, amlsDetails.supervisoryBody)),
+              formWithError => Future successful Ok(confirmSupervisoryBody(formWithError, amlsDetails.supervisoryBody, backLink(amlsJourney))),
               data =>
                 saveAmlsJourney(amlsJourney.copy(isAmlsBodyStillTheSame = Option(data))).map(_ =>
-                  if(data.booleanValue())
-                    Redirect(routes.ConfirmRegistrationNumberController.showPage)
-                  else
-                    Redirect(routes.AmlsNewSupervisoryBodyController.showPage)
+                  Redirect(nextPage(data)(amlsJourney))
                 )
             )
         }
       }
     }
   }
+
+  private def backLink(journey: UpdateAmlsJourney): String =
+    routes.AMLSDetailsController.showSupervisionDetails.url
+
+  private def nextPage(confirm: Boolean)(journey: UpdateAmlsJourney): String =
+    if(confirm) if(journey.isUkAgent) routes.ConfirmRegistrationNumberController.showPage.url
+    else routes.EnterRegistrationNumberController.showPage.url
+    else routes.AmlsNewSupervisoryBodyController.showPage.url
 
 }

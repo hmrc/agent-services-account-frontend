@@ -26,10 +26,13 @@ case class UpdateAmlsJourney(status: String,
                              newAmlsBody: Option[String] = None,
                              isMembershipNumberStillTheSame: Option[Boolean] = None,
                              newMembershipNumber: Option[String] = None,
-                             newExpirationDate: Option[LocalDate] = None
+                             newExpirationDate: Option[LocalDate] = None,
+                             changeAnswerUrl: Option[String] = None
                             ){
   val isUkAgent: Boolean = !status.contains("NonUK")
   val isHmrc: Boolean = status.contains("HMRC")
+  val hasExistingAmls: Boolean = status.contains("Existing")
+  val isChange: Boolean = changeAnswerUrl.isDefined
 }
 
 object UpdateAmlsJourney{

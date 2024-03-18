@@ -21,6 +21,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.ToFuture
+import uk.gov.hmrc.agentservicesaccount.models.UpdateAmlsJourney
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject.{Inject, Singleton}
@@ -41,5 +42,13 @@ class ConfirmRegistrationNumberController @Inject()(implicit appConfig: AppConfi
       Ok("").toFuture
     }
   }
+
+  private def backLink(journey: UpdateAmlsJourney): String =
+    if(journey.isAmlsBodyStillTheSame.contains(true)) routes.ConfirmSupervisoryBodyController.showPage.url
+    else routes.AmlsNewSupervisoryBodyController.showPage.url
+
+  private def nextPage(confirm: Boolean): String =
+    if(confirm) routes.EnterRenewalDateController.showPage.url
+    else routes.EnterRegistrationNumberController.showPage.url
 
 }

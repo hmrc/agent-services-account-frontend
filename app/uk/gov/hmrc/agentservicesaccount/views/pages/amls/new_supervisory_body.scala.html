@@ -45,7 +45,7 @@
 )
 
 
-@(form: Form[String], amlsCodes: Map[String, String], isUk: Boolean)(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
+@(form: Form[String], amlsCodes: Map[String, String], isUk: Boolean, backLinkHref: String)(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
 
 
 @scripts = {
@@ -82,7 +82,12 @@
 }
 
 
-@main(pageTitle = withErrorPrefix(form.hasErrors, msgs("amls.new-supervisory-body.title")), mimicBrowserBackLink = true, showSecondaryNav = false, additionalCss = Some(autocompleteCss()),
+@main(
+    pageTitle = withErrorPrefix(form.hasErrors, msgs("amls.new-supervisory-body.title")),
+    mimicBrowserBackLink = true,
+    backLinkHref = Some(backLinkHref),
+    showSecondaryNav = false,
+    additionalCss = Some(autocompleteCss()),
     additionalScripts = Some(scripts)) {
 
     @if(form.hasErrors) {

@@ -22,6 +22,7 @@ import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.ToFuture
 import uk.gov.hmrc.agentservicesaccount.forms.NewAmlsSupervisoryBodyForm
+import uk.gov.hmrc.agentservicesaccount.models.UpdateAmlsJourney
 import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
 import uk.gov.hmrc.agentservicesaccount.utils.AMLSLoader
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.new_supervisory_body
@@ -45,8 +46,7 @@ class AmlsNewSupervisoryBodyController @Inject() (actions: Actions,
       withUpdateAmlsJourney { amlsJourney =>
         val amlsBodies = amlsLoader.load("/amls-no-hmrc.csv")
         val form = NewAmlsSupervisoryBodyForm.form(amlsBodies)(amlsJourney.isUkAgent).fill(amlsJourney.newAmlsBody.getOrElse(""))
-        // TODO // define the backlink (either '/confirm-supervisory-body' or '/check-your-answers' - awaiting routing logic APB-7796
-        Ok(newSupervisoryBody(form, amlsBodies, amlsJourney.isUkAgent)).toFuture
+        Ok(newSupervisoryBody(form, amlsBodies, amlsJourney.isUkAgent, backLink(amlsJourney))).toFuture
       }
     }
   }
@@ -58,14 +58,23 @@ class AmlsNewSupervisoryBodyController @Inject() (actions: Actions,
         NewAmlsSupervisoryBodyForm.form(amlsBodies)(journey.isUkAgent)
           .bindFromRequest()
           .fold(
-            formWithErrors => Ok(newSupervisoryBody(formWithErrors, amlsBodies, journey.isUkAgent)).toFuture,
+            formWithErrors => Ok(newSupervisoryBody(formWithErrors, amlsBodies, journey.isUkAgent, backLink(journey))).toFuture,
             data => {
               saveAmlsJourney(journey.copy(newAmlsBody = Some(data))).map(_ =>
-              Redirect("/not-implemented")) //TODO - next page (/supervisory-number) APB-7794
+              Redirect(nextPage(journey)))
             }
           )
       }
     }
   }
+
+  private def backLink(journey: UpdateAmlsJourney): String =
+    if(journey.isChange) "/cya"
+    else if (journey.isAmlsBodyStillTheSame.contains(false)) routes.ConfirmSupervisoryBodyController.showPage.url
+    else routes.AMLSDetailsController.showSupervisionDetails.url
+
+  private def nextPage(journey: UpdateAmlsJourney): String =
+    if(journey.isUkAgent & journey.hasExistingAmls) routes.ConfirmRegistrationNumberController.showPage.url
+    else routes.EnterRegistrationNumberController.showPage.url
 
 }
