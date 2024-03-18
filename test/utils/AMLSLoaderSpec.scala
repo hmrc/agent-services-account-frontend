@@ -25,9 +25,9 @@ class AMLSLoaderSpec extends PlaySpec {
 
   "AMLSLoader.load" should {
     "load the data" in {
-      val result = amlsLoader.load("/amls-no-hmrc.csv")
+      val result = amlsLoader.load("/amls.csv")
       result.isInstanceOf[Map[String, String]] mustBe true
-      result.size mustBe 26
+      result.size mustBe 27
     }
 
     "throw AMLSLoaderException when no path specified" in {

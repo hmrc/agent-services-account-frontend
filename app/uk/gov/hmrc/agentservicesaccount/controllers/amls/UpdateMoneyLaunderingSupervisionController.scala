@@ -40,7 +40,7 @@ class UpdateMoneyLaunderingSupervisionController @Inject()(amlsLoader: AMLSLoade
                                                           (implicit appConfig: AppConfig,
                                                            ec: ExecutionContext) extends FrontendController(cc) with I18nSupport {
 
-  private val amlsBodies: Map[String, String] = amlsLoader.load("/amls-no-hmrc.csv")
+  private val amlsBodies: Map[String, String] = amlsLoader.load("/amls.csv")
 
   def showUpdateMoneyLaunderingSupervision: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
       val updateAmlsForm = UpdateMoneyLaunderingSupervisionForm.form(amlsBodies)

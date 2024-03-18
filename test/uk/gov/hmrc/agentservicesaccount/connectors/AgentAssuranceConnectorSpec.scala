@@ -45,7 +45,7 @@ class AgentAssuranceConnectorSpec extends BaseISpec {
   private val amlsJourney = UpdateAmlsJourney(
     status = AmlsStatus.ValidAmlsDetailsUK,
     newAmlsBody = Some("UK AMLS"),
-    newMembershipNumber = Some("AMLS123"),
+    newRegistrationNumber = Some("AMLS123"),
     newExpirationDate = Some(LocalDate.parse("2024-10-10"))
   )
 

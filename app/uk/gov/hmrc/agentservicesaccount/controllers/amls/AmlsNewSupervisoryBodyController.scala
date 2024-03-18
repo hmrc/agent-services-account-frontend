@@ -44,7 +44,7 @@ class AmlsNewSupervisoryBodyController @Inject() (actions: Actions,
   def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request  =>
     actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
       withUpdateAmlsJourney { amlsJourney =>
-        val amlsBodies = amlsLoader.load("/amls-no-hmrc.csv")
+        val amlsBodies = amlsLoader.load("/amls.csv")
         val form = NewAmlsSupervisoryBodyForm.form(amlsBodies)(amlsJourney.isUkAgent).fill(amlsJourney.newAmlsBody.getOrElse(""))
         Ok(newSupervisoryBody(form, amlsBodies, amlsJourney.isUkAgent, backLink(amlsJourney))).toFuture
       }
@@ -54,7 +54,7 @@ class AmlsNewSupervisoryBodyController @Inject() (actions: Actions,
   def onSubmit: Action[AnyContent] = Action.async { implicit request =>
     actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
       withUpdateAmlsJourney { journey =>
-        val amlsBodies = amlsLoader.load("/amls-no-hmrc.csv")
+        val amlsBodies = amlsLoader.load("/amls.csv")
         NewAmlsSupervisoryBodyForm.form(amlsBodies)(journey.isUkAgent)
           .bindFromRequest()
           .fold(
@@ -74,9 +74,10 @@ class AmlsNewSupervisoryBodyController @Inject() (actions: Actions,
     else routes.AMLSDetailsController.showSupervisionDetails.url
 
   private def nextPage(journey: UpdateAmlsJourney): String = {
-    if(journey.isChange)
-    if(journey.isUkAgent & journey.hasExistingAmls) routes.ConfirmRegistrationNumberController.showPage.url
-    else routes.EnterRegistrationNumberController.showPage.url
+    if(journey.isChange) "/cya"
+    else if (journey.isUkAgent & journey.hasExistingAmls) routes.ConfirmRegistrationNumberController.showPage.url
+      else routes.EnterRegistrationNumberController.showPage.url
+
   }
 
 }

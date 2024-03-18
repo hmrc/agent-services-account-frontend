@@ -72,7 +72,7 @@ class EnterRenewalDateController @Inject()(actions: Actions,
 
   private def backLink(journey: UpdateAmlsJourney): String = {
     if(journey.isChange) "/cya"
-    else if (journey.isMembershipNumberStillTheSame.contains(true)) routes.ConfirmRegistrationNumberController.showPage.url
+    else if (journey.isRegistrationNumberStillTheSame.contains(true)) routes.ConfirmRegistrationNumberController.showPage.url
     else routes.EnterRegistrationNumberController.showPage.url
   }
 }

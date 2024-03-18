@@ -16,30 +16,65 @@
 
 package uk.gov.hmrc.agentservicesaccount.controllers.amls
 
-import play.api.i18n.I18nSupport
+import play.api.Logging
+import play.api.i18n.{I18nSupport, Messages}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.ToFuture
+import uk.gov.hmrc.agentservicesaccount.forms.YesNoForm
+import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
 import uk.gov.hmrc.agentservicesaccount.models.UpdateAmlsJourney
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.confirm_registration_number
 
 import javax.inject.{Inject, Singleton}
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ConfirmRegistrationNumberController @Inject()(implicit appConfig: AppConfig,
-                                                    actions: Actions,
-                                                    cc: MessagesControllerComponents)extends FrontendController(cc) with I18nSupport {
+class ConfirmRegistrationNumberController @Inject()(actions: Actions,
+                                                    val updateAmlsJourneyRepository: UpdateAmlsJourneyRepository,
+                                                    confirmRegistrationNumber: confirm_registration_number,
+                                                    cc: MessagesControllerComponents
+                                                   )(implicit appConfig: AppConfig, ec: ExecutionContext) extends FrontendController(cc) with AmlsJourneySupport with I18nSupport with Logging {
 
-  def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async {
+  def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
-      Ok("").toFuture
+      actions.withCurrentAmlsDetails(request.agentInfo.arn) { amlsDetails =>
+        amlsDetails.membershipNumber match {
+          case Some(registrationNumber) =>
+            withUpdateAmlsJourney { amlsJourney =>
+              val form = amlsJourney.isRegistrationNumberStillTheSame.fold(YesNoForm.form(""))(x => YesNoForm.form().fill(x))
+              Ok(confirmRegistrationNumber(form, registrationNumber, backLink(amlsJourney))).toFuture
+            }
+          case None =>
+            logger.info("No AMLS registration number found, redirecting to 'Enter Registration Number'")
+            Redirect(routes.EnterRegistrationNumberController.showPage).toFuture
+        }
+      }
     }
   }
 
-  def onSubmit: Action[AnyContent] = actions.authActionCheckSuspend.async {
+
+  def onSubmit: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
-      Ok("").toFuture
+      actions.withCurrentAmlsDetails(request.agentInfo.arn) { amlsDetails =>
+        amlsDetails.membershipNumber match {
+          case Some(registrationNumber) =>
+            withUpdateAmlsJourney { amlsJourney =>
+              YesNoForm.form(Messages("amls.confirm-registration-number.error", registrationNumber))
+                .bindFromRequest()
+                .fold(
+                  formWithError => Future successful Ok(confirmRegistrationNumber(formWithError, registrationNumber, backLink(amlsJourney))),
+                  data =>
+                    saveAmlsJourney(amlsJourney.copy(isRegistrationNumberStillTheSame = Option(data))).map(_ =>
+                      Redirect(nextPage(data))
+                    )
+                )
+            }
+          case None => Redirect(routes.EnterRegistrationNumberController.showPage).toFuture
+        }
+      }
     }
   }
 

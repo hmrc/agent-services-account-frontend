@@ -25,22 +25,22 @@ import play.api.test.FakeRequest
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.forms.YesNoForm
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.confirm_supervisory_body
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.confirm_registration_number
 
-class ConfirmSupervisoryBodyViewSpec extends BaseISpec {
+class ConfirmRegistrationNumberViewSpec extends BaseISpec {
 
 
   implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
   implicit val lang: Lang = Lang("en")
-  val view: confirm_supervisory_body  = app.injector.instanceOf[confirm_supervisory_body]
+  val view: confirm_registration_number  = app.injector.instanceOf[confirm_registration_number]
   implicit val messages: Messages = MessagesImpl(lang, messagesApi)
 
   def form: Form[Boolean] = YesNoForm.form("")
-  def formWithErrors: Form[Boolean] = form.withError(key ="accept", message = Messages("amls.confirm-supervisory-body.error", "HMRC"))
+  def formWithErrors: Form[Boolean] = form.withError(key ="accept", message = Messages("amls.confirm-registration-number.error", "7"))
 
 
-  "confirm_supervisory_body" when {
+  "confirm_registration_number" when {
 
     def testServiceStaticContent(doc: Document): Unit = {
 
@@ -52,17 +52,13 @@ class ConfirmSupervisoryBodyViewSpec extends BaseISpec {
         doc.select(".hmrc-sign-out-nav__link").first.text() mustBe "Sign out"
         doc.select(".hmrc-sign-out-nav__link").first.attr("href") mustBe "/agent-services-account/sign-out"
       }
-      "have the correct back link" in {
-        doc.select(".govuk-back-link").first.text() mustBe "Back"
-        doc.select(".govuk-back-link").first.attr("href") mustBe "/back"
-      }
     }
 
     def testPageStaticContent(doc: Document): Unit = {
 
       "have the correct h1 heading and legend" in {
-        doc.select("h1").first.text() mustBe "Are you still registered with HMRC?"
-        doc.select("legend").text() mustBe "Are you still registered with HMRC?"
+        doc.select("h1").first.text() mustBe "Is your registration number still 7?"
+        doc.select("legend").text() mustBe "Is your registration number still 7?"
       }
 
       "have the correct continue button" in {
@@ -72,33 +68,33 @@ class ConfirmSupervisoryBodyViewSpec extends BaseISpec {
 
     "first viewing page" should {
 
-      val doc: Document = Jsoup.parse(view.apply(form, "HMRC", "/back")(FakeRequest(), messages, appConfig).body)
+      val doc: Document = Jsoup.parse(view.apply(form, "7", "/back")(FakeRequest(), messages, appConfig).body)
 
       testServiceStaticContent(doc)
 
       testPageStaticContent(doc)
 
       "display the correct page title" in {
-        doc.title() mustBe "Are you still registered with HMRC? - Agent services account - GOV.UK"
+        doc.title() mustBe "Is your registration number still 7? - Agent services account - GOV.UK"
       }
     }
 
 
     "form is submitted with errors should" should {
 
-      val doc: Document = Jsoup.parse(view.apply(formWithErrors, "HMRC", "/back")(FakeRequest(), messages, appConfig).body)
+      val doc: Document = Jsoup.parse(view.apply(formWithErrors, "7", "/back")(FakeRequest(), messages, appConfig).body)
 
       testServiceStaticContent(doc)
 
       testPageStaticContent(doc)
 
       "display error prefix on page title" in {
-        doc.title() mustBe "Error: Are you still registered with HMRC? - Agent services account - GOV.UK"
+        doc.title() mustBe "Error: Is your registration number still 7? - Agent services account - GOV.UK"
       }
 
       "display correct error summary link" in {
         val errorLink: Element = doc.select(".govuk-error-summary__list a").first()
-        errorLink.text() mustBe "Select yes if you are still registered with HMRC"
+        errorLink.text() mustBe "Select yes if your registration number is still 7"
         errorLink.attr("href") mustBe "#accept"
       }
 
@@ -107,7 +103,7 @@ class ConfirmSupervisoryBodyViewSpec extends BaseISpec {
       }
 
       "display error message on form" in {
-        doc.select(".govuk-error-message").text() mustBe "Error: Select yes if you are still registered with HMRC"
+        doc.select(".govuk-error-message").text() mustBe "Error: Select yes if your registration number is still 7"
       }
     }
   }
