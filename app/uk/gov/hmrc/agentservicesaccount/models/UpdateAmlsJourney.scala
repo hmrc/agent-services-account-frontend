@@ -21,15 +21,40 @@ import play.api.libs.json.{Json, OFormat}
 import java.time.LocalDate
 
 
-case class UpdateAmlsJourney(status: String,
+case class UpdateAmlsJourney(status: AmlsStatus,
                              isAmlsBodyStillTheSame: Option[Boolean] = None,
                              newAmlsBody: Option[String] = None,
                              isMembershipNumberStillTheSame: Option[Boolean] = None,
                              newMembershipNumber: Option[String] = None,
                              newExpirationDate: Option[LocalDate] = None
                             ){
-  val isUkAgent: Boolean = !status.contains("NonUK")
-  val isHmrc: Boolean = status.contains("HMRC")
+
+  val isUkAgent: Boolean = status match {
+    case AmlsStatus.NoAmlsDetailsNonUK => false
+    case AmlsStatus.ValidAmlsNonUK => false
+    case AmlsStatus.NoAmlsDetailsUK => true
+    case AmlsStatus.ValidAmlsDetailsUK => true
+    case AmlsStatus.ExpiredAmlsDetailsUK => true
+    case AmlsStatus.NoAmlsDetailsHmrcUK => true
+    case AmlsStatus.ValidAmlsDetailsHmrcUK => true
+    case AmlsStatus.ExpiredAmlsDetailsHmrcUK => true
+    case AmlsStatus.PendingAmlsDetails => true
+    case AmlsStatus.PendingAmlsDetailsRejected => true
+  }
+
+  val isHmrc:Boolean = status match {
+    case AmlsStatus.NoAmlsDetailsNonUK => false
+    case AmlsStatus.ValidAmlsNonUK => false
+    case AmlsStatus.NoAmlsDetailsUK => false
+    case AmlsStatus.ValidAmlsDetailsUK => false
+    case AmlsStatus.ExpiredAmlsDetailsUK => false
+    case AmlsStatus.NoAmlsDetailsHmrcUK => true
+    case AmlsStatus.ValidAmlsDetailsHmrcUK => true
+    case AmlsStatus.ExpiredAmlsDetailsHmrcUK => true
+    case AmlsStatus.PendingAmlsDetails => true
+    case AmlsStatus.PendingAmlsDetailsRejected => true
+  }
+
 }
 
 object UpdateAmlsJourney{

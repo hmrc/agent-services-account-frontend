@@ -17,7 +17,7 @@
 package uk.gov.hmrc.agentservicesaccount.connectors
 
 import play.api.test.Helpers._
-import uk.gov.hmrc.agentservicesaccount.models.{AmlsDetails, UpdateAmlsJourney}
+import uk.gov.hmrc.agentservicesaccount.models.{AmlsDetails, AmlsStatus, UpdateAmlsJourney}
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentAssuranceStubs._
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
@@ -43,7 +43,7 @@ class AgentAssuranceConnectorSpec extends BaseISpec {
   )
 
   private val amlsJourney = UpdateAmlsJourney(
-    status = "UKAmls",
+    status = AmlsStatus.ValidAmlsDetailsUK,
     newAmlsBody = Some("UK AMLS"),
     newMembershipNumber = Some("AMLS123"),
     newExpirationDate = Some(LocalDate.parse("2024-10-10"))

@@ -31,7 +31,7 @@ import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, SuspensionDetails}
 import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector}
-import uk.gov.hmrc.agentservicesaccount.models.{AmlsDetails, UpdateAmlsJourney}
+import uk.gov.hmrc.agentservicesaccount.models.{AmlsDetails, AmlsStatus, UpdateAmlsJourney}
 import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.enter_registration_number
 import uk.gov.hmrc.auth.core._
@@ -76,11 +76,11 @@ class EnterRegistrationNumberControllerSpec extends PlaySpec
   private val amlsDetailsResponse = Future.successful(amlsDetails)
 
   private val ukAmlsJourney = UpdateAmlsJourney(
-    status = "UKAmls"
+    status = AmlsStatus.ValidAmlsDetailsUK
   )
 
   private val overseasAmlsJourney = UpdateAmlsJourney(
-    status = "NonUK",
+    status = AmlsStatus.ValidAmlsNonUK,
     newAmlsBody = Some("OS AMLS"),
     newMembershipNumber = Some("AMLS123"),
     newExpirationDate = Some(LocalDate.parse("2024-10-10"))
