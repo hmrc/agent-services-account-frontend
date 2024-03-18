@@ -18,7 +18,7 @@ package uk.gov.hmrc.agentservicesaccount.controllers.testOnly
 
 
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.agentservicesaccount.models.UpdateAmlsJourney
+import uk.gov.hmrc.agentservicesaccount.models.{AmlsStatus, UpdateAmlsJourney}
 import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
 import uk.gov.hmrc.mongo.cache.DataKey
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -30,9 +30,9 @@ import scala.concurrent.ExecutionContext
 class TestOnlyController @Inject()(updateAmlsJourneyRepository: UpdateAmlsJourneyRepository)(implicit
                                                                                              ec: ExecutionContext,
                                                                                              cc: MessagesControllerComponents) extends FrontendController(cc) {
-  def initialiseAmls(amlsStatus: Option[String]): Action[AnyContent] = Action.async { implicit request =>
+  def initialiseAmls(amlsStatus: Option[AmlsStatus]): Action[AnyContent] = Action.async { implicit request =>
     updateAmlsJourneyRepository.putSession(DataKey[UpdateAmlsJourney]("amlsJourney"),
-      UpdateAmlsJourney(status = amlsStatus.getOrElse("UkAmls"))).map(_ => Ok("successfully created amls"))
+      UpdateAmlsJourney(status = amlsStatus.getOrElse(AmlsStatus.ValidAmlsDetailsUK))).map(_ => Ok("successfully created amls"))
   }
 
 }
