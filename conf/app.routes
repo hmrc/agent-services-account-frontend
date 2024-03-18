@@ -89,7 +89,7 @@ GET        /manage-account/money-laundering-supervision/new-supervisory-body @uk
 POST       /manage-account/money-laundering-supervision/new-supervisory-body @uk.gov.hmrc.agentservicesaccount.controllers.amls.AmlsNewSupervisoryBodyController.onSubmit
 
 GET        /manage-account/money-laundering-supervision/confirm-supervisory-body @uk.gov.hmrc.agentservicesaccount.controllers.amls.ConfirmSupervisoryBodyController.showPage
-POST        /manage-account/money-laundering-supervision/confirm-supervisory-body @uk.gov.hmrc.agentservicesaccount.controllers.amls.ConfirmSupervisoryBodyController.onSubmit
+POST       /manage-account/money-laundering-supervision/confirm-supervisory-body @uk.gov.hmrc.agentservicesaccount.controllers.amls.ConfirmSupervisoryBodyController.onSubmit
 
 GET        /manage-account/money-laundering-supervision/confirm-registration-number @uk.gov.hmrc.agentservicesaccount.controllers.amls.ConfirmRegistrationNumberController.showPage
 POST       /manage-account/money-laundering-supervision/confirm-registration-number @uk.gov.hmrc.agentservicesaccount.controllers.amls.ConfirmRegistrationNumberController.onSubmit
