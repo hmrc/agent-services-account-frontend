@@ -82,7 +82,7 @@ class ConfirmSupervisoryBodyControllerSpec extends PlaySpec
   private val overseasAmlsJourney = UpdateAmlsJourney(
     status = "OSAmls",
     newAmlsBody = Some("OS AMLS"),
-    newMembershipNumber = Some("AMLS123"),
+    newRegistrationNumber = Some("AMLS123"),
     newExpirationDate = Some(LocalDate.parse("2024-10-10"))
   )
 
@@ -107,7 +107,7 @@ class ConfirmSupervisoryBodyControllerSpec extends PlaySpec
   }
 
   "showPage" should {
-    "display the page" in new Setup {
+    "display the page with an empty form if first time" in new Setup {
       mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
         *[HeaderCarrier],
         *[ExecutionContext]) returns authResponse
@@ -120,6 +120,27 @@ class ConfirmSupervisoryBodyControllerSpec extends PlaySpec
 
       mockUpdateAmlsJourneyRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[Request[_]]) returns
         Future.successful(Some(ukAmlsJourney))
+
+      mockView.apply(*[Form[Boolean]], *[String])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+
+      val result: Future[Result] = TestController.showPage(fakeRequest)
+
+      status(result) mustBe OK
+    }
+
+    "display the page with a filled out form if user is revisiting" in new Setup {
+      mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
+        *[HeaderCarrier],
+        *[ExecutionContext]) returns authResponse
+
+      mockAppConfig.enableNonHmrcSupervisoryBody returns true
+
+      mockAgentClientAuthorisationConnector.getSuspensionDetails()(*[HeaderCarrier], *[ExecutionContext]) returns suspensionDetailsResponse
+
+      mockAgentAssuranceConnector.getAMLSDetails(*[String])(*[ExecutionContext], *[HeaderCarrier]) returns amlsDetailsResponse
+
+      mockUpdateAmlsJourneyRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[Request[_]]) returns
+        Future.successful(Some(ukAmlsJourney.copy(isAmlsBodyStillTheSame = Some(false))))
 
       mockView.apply(*[Form[Boolean]], *[String])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 

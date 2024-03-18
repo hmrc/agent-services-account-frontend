@@ -24,8 +24,8 @@ import java.time.LocalDate
 case class UpdateAmlsJourney(status: String,
                              isAmlsBodyStillTheSame: Option[Boolean] = None,
                              newAmlsBody: Option[String] = None,
-                             isMembershipNumberStillTheSame: Option[Boolean] = None,
-                             newMembershipNumber: Option[String] = None,
+                             isRegistrationNumberStillTheSame: Option[Boolean] = None,
+                             newRegistrationNumber: Option[String] = None,
                              newExpirationDate: Option[LocalDate] = None
                             ){
   val isUkAgent: Boolean = !status.contains("NonUK")

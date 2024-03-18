@@ -83,7 +83,7 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
   private val overseasAmlsJourney = UpdateAmlsJourney(
     status = "OSAmls",
     newAmlsBody = Some("OS AMLS"),
-    newMembershipNumber = Some("AMLS123"),
+    newRegistrationNumber = Some("AMLS123"),
     newExpirationDate = Some(LocalDate.parse("2024-10-10"))
   )
 

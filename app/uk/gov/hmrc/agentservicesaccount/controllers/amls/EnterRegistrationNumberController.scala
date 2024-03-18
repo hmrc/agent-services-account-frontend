@@ -43,7 +43,7 @@ class EnterRegistrationNumberController @Inject()(actions: Actions,
     actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
       withUpdateAmlsJourney { amlsJourney =>
         val form = amlsJourney
-          .newMembershipNumber
+          .newRegistrationNumber
           .fold(registrationNumberForm(amlsJourney.isHmrc))(registrationNumberForm(amlsJourney.isHmrc).fill)
         Ok(enterRegistrationNumber(form)).toFuture
       }
@@ -59,7 +59,7 @@ class EnterRegistrationNumberController @Inject()(actions: Actions,
           .fold(
             formWithError => Ok(enterRegistrationNumber(formWithError)).toFuture,
             data =>
-              saveAmlsJourney(amlsJourney.copy(newMembershipNumber = Option(data))).map(_ => {
+              saveAmlsJourney(amlsJourney.copy(newRegistrationNumber = Option(data))).map(_ => {
                 val nextPage = if (amlsJourney.isUkAgent) routes.EnterRenewalDateController.showPage.url
                 else "/not-implemented"
                 Redirect(nextPage)
