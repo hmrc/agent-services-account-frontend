@@ -29,14 +29,15 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class Actions @Inject()(  agentClientAuthorisationConnector: AgentClientAuthorisationConnector,
-                          agentAssuranceConnector: AgentAssuranceConnector,
-                 authActions: AuthActions,
-                 actionBuilder:DefaultActionBuilder
-              ) (implicit ec: ExecutionContext ) {
+class Actions @Inject()(agentClientAuthorisationConnector: AgentClientAuthorisationConnector,
+                        agentAssuranceConnector: AgentAssuranceConnector,
+                        authActions: AuthActions,
+                        actionBuilder: DefaultActionBuilder
+                       )(implicit ec: ExecutionContext) {
 
   private def filterSuspendedAgent(onlyForSuspended: Boolean): ActionFilter[AuthRequestWithAgentInfo] = new ActionFilter[AuthRequestWithAgentInfo] {
     def executionContext: ExecutionContext = ec
+
     def filter[A](request: AuthRequestWithAgentInfo[A]): Future[Option[Result]] = {
       implicit val req: Request[A] = request.request
       implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(req, req.session)
@@ -46,10 +47,11 @@ class Actions @Inject()(  agentClientAuthorisationConnector: AgentClientAuthoris
           case (true, false) => Some(Redirect(routes.AgentServicesController.showAgentServicesAccount()))
           case (false, true) => Some(Redirect(routes.SuspendedJourneyController.showSuspendedWarning()))
         }
-        }
+      }
       }
     }
   }
+
   def authActionCheckSuspend: ActionBuilder[AuthRequestWithAgentInfo, AnyContent] =
     actionBuilder andThen authActions.authActionRefiner andThen filterSuspendedAgent(false)
 
@@ -62,7 +64,7 @@ class Actions @Inject()(  agentClientAuthorisationConnector: AgentClientAuthoris
 
   def withCurrentAmlsDetails(arn: Arn)(action: AmlsDetails => Future[Result])(implicit hc: HeaderCarrier): Future[Result] = {
     agentAssuranceConnector.getAMLSDetails(arn.value)
-      .flatMap(amlsDetails => action(amlsDetails) )
+      .flatMap(amlsDetails => action(amlsDetails))
   }
 
 }
