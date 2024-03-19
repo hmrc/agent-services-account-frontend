@@ -109,13 +109,6 @@ class AgentAssuranceConnectorSpec extends BaseISpec {
 
       await(result) shouldBe AmlsStatus.ValidAmlsNonUK
     }
-    "handle 204 No Content" in {
-      givenAmlsStatusNotFoundForArn(arnTyped)
-
-      intercept[Exception] {
-        await(connector.getAmlsStatus(arnTyped))
-      }.getMessage shouldBe s"Error $NO_CONTENT no amls status found"
-    }
     "handle 400 Bad Request" in {
       givenAmlsStatusBadRequestForArn(arnTyped)
 

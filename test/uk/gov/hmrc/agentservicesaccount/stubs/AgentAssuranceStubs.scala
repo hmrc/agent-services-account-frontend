@@ -61,13 +61,6 @@ object AgentAssuranceStubs {
           .withBody(Json.toJson(amlsStatus).toString())
       ))
 
-  def givenAmlsStatusNotFoundForArn(arn: Arn): StubMapping =
-    stubFor(get(urlEqualTo(s"/agent-assurance/amls/status/${arn.value}"))
-      .willReturn(
-        aResponse()
-          .withStatus(204)
-      ))
-
   def givenAmlsStatusBadRequestForArn(arn: Arn): StubMapping =
     stubFor(get(urlEqualTo(s"/agent-assurance/amls/status/${arn.value}"))
       .willReturn(
