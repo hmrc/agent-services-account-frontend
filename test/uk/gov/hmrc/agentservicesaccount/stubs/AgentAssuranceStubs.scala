@@ -19,7 +19,8 @@ package uk.gov.hmrc.agentservicesaccount.stubs
 import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.libs.json.Json
-import uk.gov.hmrc.agentservicesaccount.models.AmlsDetails
+import uk.gov.hmrc.agentmtdidentifiers.model.Arn
+import uk.gov.hmrc.agentservicesaccount.models.{AmlsDetails, AmlsStatus}
 
 object AgentAssuranceStubs {
 
@@ -47,6 +48,35 @@ object AgentAssuranceStubs {
 
   def givenAMLSDetailsServerErrorForArn(arn: String): StubMapping =
     stubFor(get(urlEqualTo(s"/agent-assurance/amls/arn/$arn"))
+      .willReturn(
+        aResponse()
+          .withStatus(500)
+      ))
+
+  def givenAmlsStatusForArn(amlsStatus: AmlsStatus, arn: Arn): StubMapping =
+    stubFor(get(urlEqualTo(s"/agent-assurance/amls/status/${arn.value}"))
+      .willReturn(
+        aResponse()
+          .withStatus(200)
+          .withBody(Json.toJson(amlsStatus).toString())
+      ))
+
+  def givenAmlsStatusNotFoundForArn(arn: Arn): StubMapping =
+    stubFor(get(urlEqualTo(s"/agent-assurance/amls/status/${arn.value}"))
+      .willReturn(
+        aResponse()
+          .withStatus(204)
+      ))
+
+  def givenAmlsStatusBadRequestForArn(arn: Arn): StubMapping =
+    stubFor(get(urlEqualTo(s"/agent-assurance/amls/status/${arn.value}"))
+      .willReturn(
+        aResponse()
+          .withStatus(400)
+      ))
+
+  def givenAmlsStatusServerErrorForArn(arn: Arn): StubMapping =
+    stubFor(get(urlEqualTo(s"/agent-assurance/amls/status/${arn.value}"))
       .willReturn(
         aResponse()
           .withStatus(500)

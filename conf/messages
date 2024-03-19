@@ -327,6 +327,8 @@ label.beta=BETA
 manage.account.account-details=View the contact details we have for your business
 manage.account.view-or-update-contact-details=View or update contact details we have for your business
 manage.account.add-user=Add a new user
+manage.account.amls.add=Action: Add anti-money laundering supervision details
+manage.account.amls.update=Action: View or update anti-money laundering supervision details
 manage.account.clients.heading=Clients
 manage.account.clients.manage-link=Manage clients
 manage.account.clients.p=View client details, update client reference and see what groups a client is in.
@@ -534,6 +536,7 @@ admin-access.p3=If you are not sure how to do this, ask another administrator in
 admin-access.button=Go to manage account
 
 #AMLS
+amls.add-details.h1=Anti-money laundering supervision details
 amls.is-hmrc.h1=Is HMRC your money laundering supervisory body?
 amls.is-hmrc.error=Select yes if HMRC is your money laundering supervisory body
 amls.confirmation.h1=You''ve changed your supervision details

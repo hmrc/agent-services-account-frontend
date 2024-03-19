@@ -30,6 +30,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
+import uk.gov.hmrc.agentservicesaccount.models.ModelExtensionMethods._
 
 
 @Singleton
@@ -54,11 +55,11 @@ class AmlsNewSupervisoryBodyController @Inject() (actions: Actions,
   def onSubmit: Action[AnyContent] = Action.async { implicit request =>
     actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
       withUpdateAmlsJourney { journey =>
-        val amlsBodies = amlsLoader.load("/amls.csv")
-        NewAmlsSupervisoryBodyForm.form(amlsBodies)(journey.isUkAgent)
+        val amlsBodies = amlsLoader.load("/amls-no-hmrc.csv")
+        NewAmlsSupervisoryBodyForm.form(amlsBodies)(journey.status.isUkAgent())
           .bindFromRequest()
           .fold(
-            formWithErrors => Ok(newSupervisoryBody(formWithErrors, amlsBodies, journey.isUkAgent)).toFuture,
+            formWithErrors => Ok(newSupervisoryBody(formWithErrors, amlsBodies, journey.status.isUkAgent())).toFuture,
             data => {
               saveAmlsJourney(journey.copy(newAmlsBody = Some(data))).map(_ =>
               Redirect(nextPage(journey)))

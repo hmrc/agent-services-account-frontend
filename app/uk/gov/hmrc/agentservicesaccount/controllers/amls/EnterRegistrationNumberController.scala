@@ -26,6 +26,7 @@ import uk.gov.hmrc.agentservicesaccount.models.UpdateAmlsJourney
 import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.enter_registration_number
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
+import uk.gov.hmrc.agentservicesaccount.models.ModelExtensionMethods._
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
@@ -45,7 +46,7 @@ class EnterRegistrationNumberController @Inject()(actions: Actions,
       withUpdateAmlsJourney { amlsJourney =>
         val form = amlsJourney
           .newRegistrationNumber
-          .fold(registrationNumberForm(amlsJourney.isHmrc))(registrationNumberForm(amlsJourney.isHmrc).fill)
+          .fold(registrationNumberForm(amlsJourney.status.isHmrc()))(registrationNumberForm(amlsJourney.status.isHmrc()).fill)
         Ok(enterRegistrationNumber(form)).toFuture
       }
     }
@@ -55,13 +56,16 @@ class EnterRegistrationNumberController @Inject()(actions: Actions,
   def onSubmit: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
       withUpdateAmlsJourney { amlsJourney =>
-        registrationNumberForm(amlsJourney.isHmrc)
+        registrationNumberForm(amlsJourney.status.isHmrc())
           .bindFromRequest()
           .fold(
             formWithError => Ok(enterRegistrationNumber(formWithError)).toFuture,
             data =>
-              saveAmlsJourney(amlsJourney.copy(newRegistrationNumber = Option(data))).map(_ =>
-                Redirect(nextPage(amlsJourney))
+              saveAmlsJourney(amlsJourney.copy(newRegistrationNumber = Option(data))).map(_ => {
+                val nextPage = if (amlsJourney.status.isUkAgent()) routes.EnterRenewalDateController.showPage.url
+                else "/not-implemented"
+                Redirect(nextPage)
+              }
               )
           )
       }

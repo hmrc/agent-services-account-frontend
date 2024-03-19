@@ -18,6 +18,7 @@
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 @import uk.gov.hmrc.agentservicesaccount.views.html.pages.manage_account_partials._
 @import uk.gov.hmrc.agents.accessgroups.optin._
+@import uk.gov.hmrc.agentservicesaccount.models.AmlsStatus
 
 @this(
     main: main, h1: h1,
@@ -30,9 +31,13 @@
     manage_team_members_groups: manage_team_members_groups,
     team_members: team_members,
     info: info,
-    contact_details_link: contact_details_link
+    contact_details_link: contact_details_link,
+    amls_details_link:amls_details_link
 )
+
 @(
+    amlsKey: Option[String] = None,
+    amlsLinkHref:Option[String] = None,
     maybeOptinStatus: Option[OptinStatus] = None,
     hasAnyGroups: Boolean = false
 )(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
@@ -48,7 +53,7 @@
         @clients(maybeOptinStatus.get)
         @manage_team_members_groups(maybeOptinStatus.get)
         @team_members(maybeOptinStatus.get)
-        @your_organisation()
+        @your_organisation(amlsKey, amlsLinkHref)
     } else {
         @p("manage.account.p")
         @ul_html(

@@ -34,9 +34,6 @@ object AmlsStatus {
   final case object ValidAmlsDetailsUK extends AmlsStatus
   final case object ExpiredAmlsDetailsUK extends AmlsStatus
 
-  final case object NoAmlsDetailsHmrcUK extends AmlsStatus
-  final case object ValidAmlsDetailsHmrcUK extends AmlsStatus
-  final case object ExpiredAmlsDetailsHmrcUK extends AmlsStatus
   final case object PendingAmlsDetails  extends AmlsStatus
   final case object PendingAmlsDetailsRejected  extends AmlsStatus
 
