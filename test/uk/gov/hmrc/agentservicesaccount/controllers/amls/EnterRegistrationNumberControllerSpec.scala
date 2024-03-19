@@ -168,7 +168,7 @@ class EnterRegistrationNumberControllerSpec extends PlaySpec
         FakeRequest("POST", "/").withFormUrlEncodedBody("number" -> "XAML00000123456"))
 
       status(result) mustBe SEE_OTHER
-      Helpers.redirectLocation(result).get mustBe "/manage-account/money-laundering-supervision/renewal-date"
+      Helpers.redirectLocation(result).get mustBe "/agent-services-account/manage-account/money-laundering-supervision/renewal-date"
     }
 
     "return 303 SEE_OTHER and store data for overseas agent " in new Setup {

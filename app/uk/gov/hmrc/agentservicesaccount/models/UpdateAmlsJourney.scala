@@ -30,6 +30,7 @@ case class UpdateAmlsJourney(status: AmlsStatus,
                              changeAnswerUrl: Option[String] = None
                             ){
   val isChange: Boolean = changeAnswerUrl.isDefined
+  val isHmrc: Boolean = newAmlsBody.map(_.contains("HMRC")).getOrElse(false)
 }
 
 object UpdateAmlsJourney{

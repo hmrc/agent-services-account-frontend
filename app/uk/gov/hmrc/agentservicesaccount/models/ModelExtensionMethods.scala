@@ -17,7 +17,7 @@
 package uk.gov.hmrc.agentservicesaccount.models
 
 object ModelExtensionMethods {
-  implicit class JourneyCardFeesExt(val amlsStatus: AmlsStatus) {
+  implicit class AmlsStatusExt(val amlsStatus: AmlsStatus) {
 
     def isUkAgent(): Boolean = amlsStatus match {
       case AmlsStatus.NoAmlsDetailsUK => true
@@ -28,17 +28,6 @@ object ModelExtensionMethods {
       case AmlsStatus.NoAmlsDetailsNonUK => false
       case AmlsStatus.ValidAmlsNonUK => false
     }
-
-    def isHmrc():Boolean = amlsStatus match {
-      case AmlsStatus.PendingAmlsDetails => true
-      case AmlsStatus.PendingAmlsDetailsRejected => true
-      case AmlsStatus.NoAmlsDetailsNonUK => false
-      case AmlsStatus.ValidAmlsNonUK => false
-      case AmlsStatus.NoAmlsDetailsUK => false
-      case AmlsStatus.ValidAmlsDetailsUK => false
-      case AmlsStatus.ExpiredAmlsDetailsUK => false
-    }
-
 
     def isValid():Boolean = amlsStatus match {
       case AmlsStatus.ValidAmlsNonUK => true

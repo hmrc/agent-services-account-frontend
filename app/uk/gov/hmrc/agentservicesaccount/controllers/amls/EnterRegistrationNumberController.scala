@@ -46,7 +46,7 @@ class EnterRegistrationNumberController @Inject()(actions: Actions,
       withUpdateAmlsJourney { amlsJourney =>
         val form = amlsJourney
           .newRegistrationNumber
-          .fold(registrationNumberForm(amlsJourney.status.isHmrc()))(registrationNumberForm(amlsJourney.status.isHmrc()).fill)
+          .fold(registrationNumberForm(amlsJourney.isHmrc))(registrationNumberForm(amlsJourney.isHmrc).fill)
         Ok(enterRegistrationNumber(form)).toFuture
       }
     }
@@ -56,7 +56,7 @@ class EnterRegistrationNumberController @Inject()(actions: Actions,
   def onSubmit: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
       withUpdateAmlsJourney { amlsJourney =>
-        registrationNumberForm(amlsJourney.status.isHmrc())
+        registrationNumberForm(amlsJourney.isHmrc)
           .bindFromRequest()
           .fold(
             formWithError => Ok(enterRegistrationNumber(formWithError)).toFuture,
