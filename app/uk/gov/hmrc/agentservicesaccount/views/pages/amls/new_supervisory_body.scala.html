@@ -82,7 +82,11 @@
 }
 
 
-@main(pageTitle = withErrorPrefix(form.hasErrors, msgs("amls.new-supervisory-body.title")), mimicBrowserBackLink = true, showSecondaryNav = false, additionalCss = Some(autocompleteCss()),
+@main(
+    pageTitle = withErrorPrefix(form.hasErrors, msgs("amls.new-supervisory-body.title")),
+    mimicBrowserBackLink = true,
+    showSecondaryNav = false,
+    additionalCss = Some(autocompleteCss()),
     additionalScripts = Some(scripts)) {
 
     @if(form.hasErrors) {

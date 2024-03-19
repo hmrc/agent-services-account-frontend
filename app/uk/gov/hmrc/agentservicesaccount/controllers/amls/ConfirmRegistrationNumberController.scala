@@ -24,8 +24,8 @@ import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.ToFuture
 import uk.gov.hmrc.agentservicesaccount.forms.YesNoForm
 import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.confirm_registration_number
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -67,10 +67,7 @@ class ConfirmRegistrationNumberController @Inject()(actions: Actions,
                   formWithError => Future successful Ok(confirmRegistrationNumber(formWithError, registrationNumber)),
                   data =>
                     saveAmlsJourney(amlsJourney.copy(isRegistrationNumberStillTheSame = Option(data))).map(_ =>
-                      if (data.booleanValue())
-                        Redirect("/not-implemented") //TODO check your answers?
-                      else
-                        Redirect(routes.EnterRegistrationNumberController.showPage)
+                      Redirect(nextPage(data))
                     )
                 )
             }
@@ -79,5 +76,9 @@ class ConfirmRegistrationNumberController @Inject()(actions: Actions,
       }
     }
   }
+
+  private def nextPage(confirm: Boolean): String =
+    if(confirm) routes.EnterRenewalDateController.showPage.url
+    else routes.EnterRegistrationNumberController.showPage.url
 
 }

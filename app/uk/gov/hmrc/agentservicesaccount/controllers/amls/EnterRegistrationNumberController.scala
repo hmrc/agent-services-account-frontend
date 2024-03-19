@@ -21,7 +21,8 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.ToFuture
-import uk.gov.hmrc.agentservicesaccount.forms.{NewRegistrationNumberForm}
+import uk.gov.hmrc.agentservicesaccount.forms.NewRegistrationNumberForm
+import uk.gov.hmrc.agentservicesaccount.models.UpdateAmlsJourney
 import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.enter_registration_number
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -59,15 +60,17 @@ class EnterRegistrationNumberController @Inject()(actions: Actions,
           .fold(
             formWithError => Ok(enterRegistrationNumber(formWithError)).toFuture,
             data =>
-              saveAmlsJourney(amlsJourney.copy(newRegistrationNumber = Option(data))).map(_ => {
-                val nextPage = if (amlsJourney.isUkAgent) routes.EnterRenewalDateController.showPage.url
-                else "/not-implemented"
-                Redirect(nextPage)
-              }
+              saveAmlsJourney(amlsJourney.copy(newRegistrationNumber = Option(data))).map(_ =>
+                Redirect(nextPage(amlsJourney))
               )
           )
       }
     }
+  }
+
+  private def nextPage(journey: UpdateAmlsJourney): String = {
+    if(journey.isChange | !journey.isUkAgent) "/cya"
+    else routes.EnterRenewalDateController.showPage.url
   }
 }
 

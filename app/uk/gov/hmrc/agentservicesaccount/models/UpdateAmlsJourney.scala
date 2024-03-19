@@ -26,7 +26,8 @@ case class UpdateAmlsJourney(status: AmlsStatus,
                              newAmlsBody: Option[String] = None,
                              isRegistrationNumberStillTheSame: Option[Boolean] = None,
                              newRegistrationNumber: Option[String] = None,
-                             newExpirationDate: Option[LocalDate] = None
+                             newExpirationDate: Option[LocalDate] = None,
+                             changeAnswerUrl: Option[String] = None
                             ){
 
   val isUkAgent: Boolean = status match {
@@ -55,6 +56,19 @@ case class UpdateAmlsJourney(status: AmlsStatus,
     case AmlsStatus.PendingAmlsDetailsRejected => true
   }
 
+  val hasExistingAmls: Boolean = status match {
+    case AmlsStatus.NoAmlsDetailsNonUK => false
+    case AmlsStatus.ValidAmlsNonUK => true
+    case AmlsStatus.NoAmlsDetailsUK => false
+    case AmlsStatus.ValidAmlsDetailsUK => true
+    case AmlsStatus.ExpiredAmlsDetailsUK => true
+    case AmlsStatus.NoAmlsDetailsHmrcUK => false
+    case AmlsStatus.ValidAmlsDetailsHmrcUK => true
+    case AmlsStatus.ExpiredAmlsDetailsHmrcUK => true
+    case AmlsStatus.PendingAmlsDetails => true
+    case AmlsStatus.PendingAmlsDetailsRejected => true
+  }
+  val isChange: Boolean = changeAnswerUrl.isDefined
 }
 
 object UpdateAmlsJourney{

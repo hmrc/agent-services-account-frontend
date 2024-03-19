@@ -22,6 +22,7 @@ import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.ToFuture
 import uk.gov.hmrc.agentservicesaccount.forms.NewAmlsSupervisoryBodyForm
+import uk.gov.hmrc.agentservicesaccount.models.UpdateAmlsJourney
 import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
 import uk.gov.hmrc.agentservicesaccount.utils.AMLSLoader
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.new_supervisory_body
@@ -43,9 +44,8 @@ class AmlsNewSupervisoryBodyController @Inject() (actions: Actions,
   def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request  =>
     actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
       withUpdateAmlsJourney { amlsJourney =>
-        val amlsBodies = amlsLoader.load("/amls-no-hmrc.csv")
+        val amlsBodies = amlsLoader.load("/amls.csv")
         val form = NewAmlsSupervisoryBodyForm.form(amlsBodies)(amlsJourney.isUkAgent).fill(amlsJourney.newAmlsBody.getOrElse(""))
-        // TODO // define the backlink (either '/confirm-supervisory-body' or '/check-your-answers' - awaiting routing logic APB-7796
         Ok(newSupervisoryBody(form, amlsBodies, amlsJourney.isUkAgent)).toFuture
       }
     }
@@ -54,18 +54,25 @@ class AmlsNewSupervisoryBodyController @Inject() (actions: Actions,
   def onSubmit: Action[AnyContent] = Action.async { implicit request =>
     actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
       withUpdateAmlsJourney { journey =>
-        val amlsBodies = amlsLoader.load("/amls-no-hmrc.csv")
+        val amlsBodies = amlsLoader.load("/amls.csv")
         NewAmlsSupervisoryBodyForm.form(amlsBodies)(journey.isUkAgent)
           .bindFromRequest()
           .fold(
             formWithErrors => Ok(newSupervisoryBody(formWithErrors, amlsBodies, journey.isUkAgent)).toFuture,
             data => {
               saveAmlsJourney(journey.copy(newAmlsBody = Some(data))).map(_ =>
-              Redirect("/not-implemented")) //TODO - next page (/supervisory-number) APB-7794
+              Redirect(nextPage(journey)))
             }
           )
       }
     }
+  }
+
+  private def nextPage(journey: UpdateAmlsJourney): String = {
+    if(journey.isChange) "/cya"
+    else if (journey.isUkAgent & journey.hasExistingAmls) routes.ConfirmRegistrationNumberController.showPage.url
+      else routes.EnterRegistrationNumberController.showPage.url
+
   }
 
 }

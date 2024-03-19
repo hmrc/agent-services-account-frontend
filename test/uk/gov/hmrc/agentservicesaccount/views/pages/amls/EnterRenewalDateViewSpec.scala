@@ -56,7 +56,7 @@ class EnterRenewalDateViewSpec extends BaseISpec {
       }
       "have the correct back link" in {
         doc.select(".govuk-back-link").first.text() mustBe "Back"
-        doc.select(".govuk-back-link").first.attr("href") mustBe "/todo/not-implemented"
+        doc.select(".govuk-back-link").first.attr("href") mustBe "#"
       }
     }
 

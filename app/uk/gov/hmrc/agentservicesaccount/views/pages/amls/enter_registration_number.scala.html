@@ -51,8 +51,7 @@
 
 @main(
     pageTitle = withErrorPrefix(form.hasErrors, msgs("amls.enter-registration-number.h1")),
-    mimicBrowserBackLink = false,
-    backLinkHref = Some("/todo/not-implemented"),
+    mimicBrowserBackLink = true,
     showSecondaryNav = false){
 
     @if(form.hasErrors) {

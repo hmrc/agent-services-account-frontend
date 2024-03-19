@@ -24,7 +24,7 @@ object NewRegistrationNumberForm {
 
   // remove all spaces from input before matching to ensure correct digit count
   private val trimmedText = text.transform[String](x => x.trim, x => x)
-  private val supervisoryNumberRegexNonHmrc = """^[A-Za-z0-9\,\.\'\-\/\ ]{0,200}$""".r
+  private val supervisoryNumberRegexNonHmrc = """^[A-Za-z0-9\,\.\'\-\/\ ]{0,100}$""".r
   private val supervisoryNumberRegexHmrc = "X[A-Z]ML00000[0-9]{6}".r
 
 

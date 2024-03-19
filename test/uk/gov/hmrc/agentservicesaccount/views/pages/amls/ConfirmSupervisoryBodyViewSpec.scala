@@ -54,7 +54,7 @@ class ConfirmSupervisoryBodyViewSpec extends BaseISpec {
       }
       "have the correct back link" in {
         doc.select(".govuk-back-link").first.text() mustBe "Back"
-        doc.select(".govuk-back-link").first.attr("href") mustBe "/agent-services-account/manage-account/money-laundering-supervision"
+        doc.select(".govuk-back-link").first.attr("href") mustBe "#"
       }
     }
 

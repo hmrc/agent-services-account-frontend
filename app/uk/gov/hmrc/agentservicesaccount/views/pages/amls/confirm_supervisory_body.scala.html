@@ -37,8 +37,7 @@
 
 @main(
  pageTitle = withErrorPrefix(form.hasErrors, msgs("amls.confirm-supervisory-body.h1", supervisoryBody)),
- mimicBrowserBackLink = false,
- backLinkHref = Some(s"${routes.AMLSDetailsController.showSupervisionDetails}"),
+ mimicBrowserBackLink = true,
  showSecondaryNav = false){
 
  @if(form.hasErrors){

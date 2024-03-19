@@ -111,7 +111,7 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
     object TestController extends AmlsNewSupervisoryBodyController(mockActions, mockAmlsLoader, mockAmlsJourneySessionRepository, mockView, cc)(mockAppConfig, ec)
   }
 
-  "AmlsNewSupervisoryBodyController.showNewSupervisoryBody" should {
+  "showPage" should {
     "display the page for UK agent" in new Setup {
       mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
         *[HeaderCarrier],
@@ -151,7 +151,7 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
     }
   }
 
-  "AmlsNewSupervisoryBodyController.submitNewSupervisoryBody" should {
+  "onSubmit" should {
 
     "return 303 SEE_OTHER and save new amls supervisory body to session" in new Setup {
 
@@ -176,7 +176,7 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
         FakeRequest("POST", "/").withFormUrlEncodedBody("body" -> "ACCA"))
 
       status(result) mustBe SEE_OTHER
-      Helpers.redirectLocation(result).get mustBe "/not-implemented"
+      Helpers.redirectLocation(result).get mustBe "/agent-services-account/manage-account/money-laundering-supervision/confirm-registration-number"
     }
 
     "return 200 OK when invalid form submission" in new Setup {
