@@ -26,8 +26,11 @@ case class UpdateAmlsJourney(status: AmlsStatus,
                              newAmlsBody: Option[String] = None,
                              isRegistrationNumberStillTheSame: Option[Boolean] = None,
                              newRegistrationNumber: Option[String] = None,
-                             newExpirationDate: Option[LocalDate] = None
-                            )
+                             newExpirationDate: Option[LocalDate] = None,
+                             changeAnswerUrl: Option[String] = None
+                            ){
+  val isChange: Boolean = changeAnswerUrl.isDefined
+}
 
 object UpdateAmlsJourney{
   implicit val format: OFormat[UpdateAmlsJourney] = Json.format[UpdateAmlsJourney]

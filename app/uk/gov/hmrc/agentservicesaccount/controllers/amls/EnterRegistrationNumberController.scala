@@ -73,7 +73,7 @@ class EnterRegistrationNumberController @Inject()(actions: Actions,
   }
 
   private def nextPage(journey: UpdateAmlsJourney): String = {
-    if(journey.isChange | !journey.isUkAgent) "/cya"
+    if(journey.isChange | !journey.status.isUkAgent()) "/cya"
     else routes.EnterRenewalDateController.showPage.url
   }
 }

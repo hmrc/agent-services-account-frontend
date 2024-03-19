@@ -46,8 +46,8 @@ class AmlsNewSupervisoryBodyController @Inject() (actions: Actions,
     actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
       withUpdateAmlsJourney { amlsJourney =>
         val amlsBodies = amlsLoader.load("/amls.csv")
-        val form = NewAmlsSupervisoryBodyForm.form(amlsBodies)(amlsJourney.isUkAgent).fill(amlsJourney.newAmlsBody.getOrElse(""))
-        Ok(newSupervisoryBody(form, amlsBodies, amlsJourney.isUkAgent)).toFuture
+        val form = NewAmlsSupervisoryBodyForm.form(amlsBodies)(amlsJourney.status.isUkAgent()).fill(amlsJourney.newAmlsBody.getOrElse(""))
+        Ok(newSupervisoryBody(form, amlsBodies, amlsJourney.status.isUkAgent())).toFuture
       }
     }
   }
@@ -71,7 +71,7 @@ class AmlsNewSupervisoryBodyController @Inject() (actions: Actions,
 
   private def nextPage(journey: UpdateAmlsJourney): String = {
     if(journey.isChange) "/cya"
-    else if (journey.isUkAgent & journey.hasExistingAmls) routes.ConfirmRegistrationNumberController.showPage.url
+    else if (journey.status.isUkAgent() & journey.status.hasExistingAmls()) routes.ConfirmRegistrationNumberController.showPage.url
       else routes.EnterRegistrationNumberController.showPage.url
 
   }

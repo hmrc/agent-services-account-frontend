@@ -70,6 +70,15 @@ object ModelExtensionMethods {
       case AmlsStatus.PendingAmlsDetailsRejected => false
     }
 
+    def hasExistingAmls(): Boolean = amlsStatus match {
+      case AmlsStatus.NoAmlsDetailsNonUK => false
+      case AmlsStatus.ValidAmlsNonUK => true
+      case AmlsStatus.NoAmlsDetailsUK => false
+      case AmlsStatus.ValidAmlsDetailsUK => true
+      case AmlsStatus.ExpiredAmlsDetailsUK => true
+      case AmlsStatus.PendingAmlsDetails => true
+      case AmlsStatus.PendingAmlsDetailsRejected => true
+    }
 
   }
 
