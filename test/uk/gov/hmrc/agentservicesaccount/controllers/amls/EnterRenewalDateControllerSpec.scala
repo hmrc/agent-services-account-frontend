@@ -115,7 +115,7 @@ class EnterRenewalDateControllerSpec extends PlaySpec
       mockUpdateAmlsJourneyRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[Request[_]]) returns
         Future.successful(Some(ukUpdateAmlsJourney))
 
-      mockView.apply(*[Form[LocalDate]], *[String])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+      mockView.apply(*[Form[LocalDate]])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 
       val result: Future[Result] = TestController.showPage(fakeRequest)
 
@@ -134,7 +134,7 @@ class EnterRenewalDateControllerSpec extends PlaySpec
       mockUpdateAmlsJourneyRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[Request[_]]) returns
         Future.successful(Some(ukUpdateAmlsJourney.copy(newExpirationDate = Some(LocalDate.now().plusMonths(11)))))
 
-      mockView.apply(*[Form[LocalDate]], *[String])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+      mockView.apply(*[Form[LocalDate]])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 
       val result: Future[Result] = TestController.showPage(fakeRequest)
 
@@ -153,7 +153,7 @@ class EnterRenewalDateControllerSpec extends PlaySpec
       mockUpdateAmlsJourneyRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[Request[_]]) returns
         Future.successful(Some(overseasUpdateAmlsJourney))
 
-      mockView.apply(*[Form[LocalDate]], *[String])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+      mockView.apply(*[Form[LocalDate]])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 
       val result: Future[Result] = TestController.showPage(fakeRequest)
 
@@ -177,7 +177,7 @@ class EnterRenewalDateControllerSpec extends PlaySpec
         mockUpdateAmlsJourneyRepository.putSession(
           dataKey, ukUpdateAmlsJourney.copy(newExpirationDate = Some(newExpirationDate)))(*[Writes[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
 
-        mockView.apply(*[Form[LocalDate]], *[String])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+        mockView.apply(*[Form[LocalDate]])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 
         val result: Future[Result] = TestController.onSubmit(
           FakeRequest("POST", "/").withFormUrlEncodedBody(
@@ -204,7 +204,7 @@ class EnterRenewalDateControllerSpec extends PlaySpec
         mockUpdateAmlsJourneyRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[Request[Any]]) returns
           Future.successful(Some(ukUpdateAmlsJourney))
 
-        mockView.apply(*[Form[LocalDate]], *[String])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+        mockView.apply(*[Form[LocalDate]])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 
         val result: Future[Result] = TestController.onSubmit(
           FakeRequest("POST", "/").withFormUrlEncodedBody(

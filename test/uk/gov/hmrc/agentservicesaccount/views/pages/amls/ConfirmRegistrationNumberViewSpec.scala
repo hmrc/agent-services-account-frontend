@@ -68,7 +68,7 @@ class ConfirmRegistrationNumberViewSpec extends BaseISpec {
 
     "first viewing page" should {
 
-      val doc: Document = Jsoup.parse(view.apply(form, "7", "/back")(FakeRequest(), messages, appConfig).body)
+      val doc: Document = Jsoup.parse(view.apply(form, "7")(FakeRequest(), messages, appConfig).body)
 
       testServiceStaticContent(doc)
 
@@ -82,7 +82,7 @@ class ConfirmRegistrationNumberViewSpec extends BaseISpec {
 
     "form is submitted with errors should" should {
 
-      val doc: Document = Jsoup.parse(view.apply(formWithErrors, "7", "/back")(FakeRequest(), messages, appConfig).body)
+      val doc: Document = Jsoup.parse(view.apply(formWithErrors, "7")(FakeRequest(), messages, appConfig).body)
 
       testServiceStaticContent(doc)
 

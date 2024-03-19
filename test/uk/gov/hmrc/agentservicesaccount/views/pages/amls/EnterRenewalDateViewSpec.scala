@@ -56,7 +56,7 @@ class EnterRenewalDateViewSpec extends BaseISpec {
       }
       "have the correct back link" in {
         doc.select(".govuk-back-link").first.text() mustBe "Back"
-        doc.select(".govuk-back-link").first.attr("href") mustBe "/back"
+        doc.select(".govuk-back-link").first.attr("href") mustBe "#"
       }
     }
 
@@ -74,7 +74,7 @@ class EnterRenewalDateViewSpec extends BaseISpec {
 
     "first viewing page" should {
 
-      val doc: Document = Jsoup.parse(view.apply(form, "/back")(FakeRequest(), messages, appConfig).body)
+      val doc: Document = Jsoup.parse(view.apply(form)(FakeRequest(), messages, appConfig).body)
 
       testServiceStaticContent(doc)
 
@@ -88,7 +88,7 @@ class EnterRenewalDateViewSpec extends BaseISpec {
 
     "form is submitted with errors should" should {
 
-      val doc: Document = Jsoup.parse(view.apply(formWithErrors, "/back")(FakeRequest(), messages, appConfig).body)
+      val doc: Document = Jsoup.parse(view.apply(formWithErrors)(FakeRequest(), messages, appConfig).body)
 
       testServiceStaticContent(doc)
 

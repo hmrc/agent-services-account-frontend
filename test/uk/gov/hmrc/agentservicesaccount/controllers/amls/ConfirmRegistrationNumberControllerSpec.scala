@@ -113,7 +113,7 @@ class ConfirmRegistrationNumberControllerSpec extends PlaySpec
       mockUpdateAmlsJourneyRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[Request[_]]) returns
         Future.successful(Some(ukAmlsJourney))
 
-      mockView.apply(*[Form[Boolean]],*[String], *[String])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+      mockView.apply(*[Form[Boolean]],*[String])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 
       val result: Future[Result] = TestController.showPage(fakeRequest)
 
@@ -134,7 +134,7 @@ class ConfirmRegistrationNumberControllerSpec extends PlaySpec
       mockUpdateAmlsJourneyRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[Request[_]]) returns
         Future.successful(Some(ukAmlsJourney.copy(isRegistrationNumberStillTheSame = Some(true))))
 
-      mockView.apply(*[Form[Boolean]], *[String], *[String])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+      mockView.apply(*[Form[Boolean]], *[String])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 
       val result: Future[Result] = TestController.showPage(fakeRequest)
 
@@ -196,7 +196,7 @@ class ConfirmRegistrationNumberControllerSpec extends PlaySpec
       mockUpdateAmlsJourneyRepository.putSession(
         dataKey, ukAmlsJourney.copy(isRegistrationNumberStillTheSame = Some(true)))(*[Writes[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
 
-      mockView.apply(*[Form[Boolean]], "7", *[String])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+      mockView.apply(*[Form[Boolean]], "7")(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 
       val result: Future[Result] = TestController.onSubmit(
         FakeRequest("POST", "/").withFormUrlEncodedBody("accept" -> "true"))
@@ -222,7 +222,7 @@ class ConfirmRegistrationNumberControllerSpec extends PlaySpec
       mockUpdateAmlsJourneyRepository.putSession(
         dataKey, ukAmlsJourney.copy(isRegistrationNumberStillTheSame = Some(false)))(*[Writes[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
 
-      mockView.apply(*[Form[Boolean]], "7", *[String])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+      mockView.apply(*[Form[Boolean]], "7")(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 
       val result: Future[Result] = TestController.onSubmit(
         FakeRequest("POST", "/").withFormUrlEncodedBody("accept" -> "false"))
@@ -246,7 +246,7 @@ class ConfirmRegistrationNumberControllerSpec extends PlaySpec
       mockUpdateAmlsJourneyRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[Request[Any]]) returns
         Future.successful(Some(ukAmlsJourney))
 
-      mockView.apply(*[Form[Boolean]], "7", *[String])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+      mockView.apply(*[Form[Boolean]], "7")(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 
       val result: Future[Result] = TestController.onSubmit(FakeRequest("POST", "/"))
 

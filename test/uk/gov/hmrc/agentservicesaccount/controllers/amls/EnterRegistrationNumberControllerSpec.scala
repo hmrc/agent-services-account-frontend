@@ -120,7 +120,7 @@ class EnterRegistrationNumberControllerSpec extends PlaySpec
       mockAmlsJourneySessionRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]],*[Request[_]]) returns
         Future.successful(Some(ukAmlsJourney))
 
-      mockView.apply(*[Form[String]], *[String])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+      mockView.apply(*[Form[String]])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 
       val result: Future[Result] = TestController.showPage(fakeRequest)
 
@@ -162,7 +162,7 @@ class EnterRegistrationNumberControllerSpec extends PlaySpec
       mockAmlsJourneySessionRepository.putSession(
         dataKey, ukAmlsJourney.copy(newRegistrationNumber = Some("XAML00000123456")))(*[Writes[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
 
-      mockView.apply(*[Form[String]], *[String])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+      mockView.apply(*[Form[String]])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 
       val result: Future[Result] = TestController.onSubmit(
         FakeRequest("POST", "/").withFormUrlEncodedBody("number" -> "XAML00000123456"))
@@ -186,7 +186,7 @@ class EnterRegistrationNumberControllerSpec extends PlaySpec
       mockAmlsJourneySessionRepository.putSession(
         dataKey, overseasAmlsJourney.copy(newRegistrationNumber = Some("XX1234")))(*[Writes[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
 
-      mockView.apply(*[Form[String]], *[String])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+      mockView.apply(*[Form[String]])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 
       val result: Future[Result] = TestController.onSubmit(
         FakeRequest("POST", "/").withFormUrlEncodedBody("number" -> "XX1234"))
@@ -208,7 +208,7 @@ class EnterRegistrationNumberControllerSpec extends PlaySpec
       mockAmlsJourneySessionRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[Request[Any]]) returns
         Future.successful(Some(ukAmlsJourney))
 
-      mockView.apply(*[Form[String]], *[String])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+      mockView.apply(*[Form[String]])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 
       val result: Future[Result] = TestController.onSubmit(
         FakeRequest("POST", "/").withFormUrlEncodedBody("body" -> ""))

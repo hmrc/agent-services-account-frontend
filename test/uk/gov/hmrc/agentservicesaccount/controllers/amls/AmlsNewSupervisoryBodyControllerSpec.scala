@@ -126,7 +126,7 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
       mockAmlsJourneySessionRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]],*[Request[_]]) returns
         Future.successful(Some(ukAmlsJourney))
 
-      mockView.apply(*[Form[String]], *[Map[String, String]], isUk = true, *[String])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+      mockView.apply(*[Form[String]], *[Map[String, String]], isUk = true)(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 
       val result: Future[Result] = TestController.showPage(fakeRequest)
 
@@ -170,7 +170,7 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
       mockAmlsJourneySessionRepository.putSession(
         dataKey, ukAmlsJourney.copy(newAmlsBody = Some("ACCA")))(*[Writes[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
 
-      mockView.apply(*[Form[String]], *[Map[String, String]], isUk = true, *[String])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+      mockView.apply(*[Form[String]], *[Map[String, String]], isUk = true)(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 
       val result: Future[Result] = TestController.onSubmit(
         FakeRequest("POST", "/").withFormUrlEncodedBody("body" -> "ACCA"))
@@ -194,7 +194,7 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
       mockAmlsJourneySessionRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[Request[Any]]) returns
         Future.successful(Some(ukAmlsJourney))
 
-      mockView.apply(*[Form[String]], *[Map[String, String]], isUk = true, *[String])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+      mockView.apply(*[Form[String]], *[Map[String, String]], isUk = true)(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 
       val result: Future[Result] = TestController.onSubmit(
         FakeRequest("POST", "/").withFormUrlEncodedBody("body" -> ""))

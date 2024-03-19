@@ -121,7 +121,7 @@ class ConfirmSupervisoryBodyControllerSpec extends PlaySpec
       mockUpdateAmlsJourneyRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[Request[_]]) returns
         Future.successful(Some(ukAmlsJourney))
 
-      mockView.apply(*[Form[Boolean]], *[String], *[String])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+      mockView.apply(*[Form[Boolean]], *[String])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 
       val result: Future[Result] = TestController.showPage(fakeRequest)
 
@@ -142,7 +142,7 @@ class ConfirmSupervisoryBodyControllerSpec extends PlaySpec
       mockUpdateAmlsJourneyRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[Request[_]]) returns
         Future.successful(Some(ukAmlsJourney.copy(isAmlsBodyStillTheSame = Some(false))))
 
-      mockView.apply(*[Form[Boolean]], *[String], *[String])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+      mockView.apply(*[Form[Boolean]], *[String])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 
       val result: Future[Result] = TestController.showPage(fakeRequest)
 
@@ -168,7 +168,7 @@ class ConfirmSupervisoryBodyControllerSpec extends PlaySpec
         mockUpdateAmlsJourneyRepository.putSession(
           dataKey, ukAmlsJourney.copy(isAmlsBodyStillTheSame = Some(true)))(*[Writes[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
 
-        mockView.apply(*[Form[Boolean]], "HMRC", *[String])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+        mockView.apply(*[Form[Boolean]], "HMRC")(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 
         val result: Future[Result] = TestController.onSubmit(
           FakeRequest("POST", "/").withFormUrlEncodedBody("accept" -> "true"))
@@ -194,7 +194,7 @@ class ConfirmSupervisoryBodyControllerSpec extends PlaySpec
         mockUpdateAmlsJourneyRepository.putSession(
           dataKey, ukAmlsJourney.copy(isAmlsBodyStillTheSame = Some(false)))(*[Writes[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
 
-        mockView.apply(*[Form[Boolean]], "HMRC", *[String])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+        mockView.apply(*[Form[Boolean]], "HMRC")(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 
         val result: Future[Result] = TestController.onSubmit(
           FakeRequest("POST", "/").withFormUrlEncodedBody("accept" -> "false"))
@@ -218,7 +218,7 @@ class ConfirmSupervisoryBodyControllerSpec extends PlaySpec
         mockUpdateAmlsJourneyRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[Request[Any]]) returns
           Future.successful(Some(ukAmlsJourney))
 
-        mockView.apply(*[Form[Boolean]], "HMRC", *[String])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+        mockView.apply(*[Form[Boolean]], "HMRC")(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 
         val result: Future[Result] = TestController.onSubmit(
           FakeRequest("POST", "/").withFormUrlEncodedBody("accept" -> ""))

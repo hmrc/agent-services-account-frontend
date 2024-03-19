@@ -55,7 +55,7 @@ class AmlsNewSupervisoryBodyViewSpec extends BaseISpec {
       }
       "have the correct back link" in {
         doc.select(".govuk-back-link").first.text() mustBe "Back"
-        doc.select(".govuk-back-link").first.attr("href") mustBe "/back"
+        doc.select(".govuk-back-link").first.attr("href") mustBe "#"
       }
     }
 
@@ -80,7 +80,7 @@ class AmlsNewSupervisoryBodyViewSpec extends BaseISpec {
     "first viewing page for UK agent" should {
       val isUk = true
 
-      val doc: Document = Jsoup.parse(view.apply(form(isUk), amlsBodies, isUk, "/back")(FakeRequest(), messages, appConfig).body)
+      val doc: Document = Jsoup.parse(view.apply(form(isUk), amlsBodies, isUk)(FakeRequest(), messages, appConfig).body)
 
       testServiceStaticContent(doc)
 
@@ -94,7 +94,7 @@ class AmlsNewSupervisoryBodyViewSpec extends BaseISpec {
     "first viewing page for overseas agent" should {
       val isUk = false
 
-      val doc: Document = Jsoup.parse(view.apply(form(isUk), amlsBodies, isUk, "/back")(FakeRequest(), messages, appConfig).body)
+      val doc: Document = Jsoup.parse(view.apply(form(isUk), amlsBodies, isUk)(FakeRequest(), messages, appConfig).body)
 
       testServiceStaticContent(doc)
 
@@ -108,7 +108,7 @@ class AmlsNewSupervisoryBodyViewSpec extends BaseISpec {
     "form is submitted with errors should" should {
       val isUk = true
 
-      val doc: Document = Jsoup.parse(view.apply(formWithErrors(isUk), amlsBodies, isUk, "/back")(FakeRequest(), messages, appConfig).body)
+      val doc: Document = Jsoup.parse(view.apply(formWithErrors(isUk), amlsBodies, isUk)(FakeRequest(), messages, appConfig).body)
 
       testServiceStaticContent(doc)
 
