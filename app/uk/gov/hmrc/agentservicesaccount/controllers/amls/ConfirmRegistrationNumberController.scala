@@ -24,9 +24,8 @@ import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.ToFuture
 import uk.gov.hmrc.agentservicesaccount.forms.YesNoForm
 import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
-import uk.gov.hmrc.agentservicesaccount.models.UpdateAmlsJourney
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.confirm_registration_number
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -45,7 +44,7 @@ class ConfirmRegistrationNumberController @Inject()(actions: Actions,
           case Some(registrationNumber) =>
             withUpdateAmlsJourney { amlsJourney =>
               val form = amlsJourney.isRegistrationNumberStillTheSame.fold(YesNoForm.form(""))(x => YesNoForm.form().fill(x))
-              Ok(confirmRegistrationNumber(form, registrationNumber, backLink(amlsJourney))).toFuture
+              Ok(confirmRegistrationNumber(form, registrationNumber)).toFuture
             }
           case None =>
             logger.info("No AMLS registration number found, redirecting to 'Enter Registration Number'")
@@ -65,7 +64,7 @@ class ConfirmRegistrationNumberController @Inject()(actions: Actions,
               YesNoForm.form(Messages("amls.confirm-registration-number.error", registrationNumber))
                 .bindFromRequest()
                 .fold(
-                  formWithError => Future successful Ok(confirmRegistrationNumber(formWithError, registrationNumber, backLink(amlsJourney))),
+                  formWithError => Future successful Ok(confirmRegistrationNumber(formWithError, registrationNumber)),
                   data =>
                     saveAmlsJourney(amlsJourney.copy(isRegistrationNumberStillTheSame = Option(data))).map(_ =>
                       Redirect(nextPage(data))
@@ -77,10 +76,6 @@ class ConfirmRegistrationNumberController @Inject()(actions: Actions,
       }
     }
   }
-
-  private def backLink(journey: UpdateAmlsJourney): String =
-    if(journey.isAmlsBodyStillTheSame.contains(true)) routes.ConfirmSupervisoryBodyController.showPage.url
-    else routes.AmlsNewSupervisoryBodyController.showPage.url
 
   private def nextPage(confirm: Boolean): String =
     if(confirm) routes.EnterRenewalDateController.showPage.url

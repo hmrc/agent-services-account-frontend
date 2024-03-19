@@ -44,7 +44,7 @@ class ConfirmSupervisoryBodyController @Inject()(actions: Actions,
       actions.withCurrentAmlsDetails(request.agentInfo.arn){ amlsDetails =>
         withUpdateAmlsJourney { amlsJourney =>
           val form = amlsJourney.isAmlsBodyStillTheSame.fold(YesNoForm.form(""))(YesNoForm.form().fill)
-          Ok(confirmSupervisoryBody(form, amlsDetails.supervisoryBody, backLink(amlsJourney))).toFuture
+          Ok(confirmSupervisoryBody(form, amlsDetails.supervisoryBody)).toFuture
         }
       }
     }
@@ -58,7 +58,7 @@ class ConfirmSupervisoryBodyController @Inject()(actions: Actions,
           YesNoForm.form(Messages("amls.confirm-supervisory-body.error", amlsDetails.supervisoryBody))
             .bindFromRequest()
             .fold(
-              formWithError => Future successful Ok(confirmSupervisoryBody(formWithError, amlsDetails.supervisoryBody, backLink(amlsJourney))),
+              formWithError => Future successful Ok(confirmSupervisoryBody(formWithError, amlsDetails.supervisoryBody)),
               data =>
                 saveAmlsJourney(amlsJourney.copy(isAmlsBodyStillTheSame = Option(data))).map(_ =>
                   Redirect(nextPage(data)(amlsJourney))

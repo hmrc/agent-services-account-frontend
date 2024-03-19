@@ -32,7 +32,9 @@ class TestOnlyController @Inject()(updateAmlsJourneyRepository: UpdateAmlsJourne
                                                                                              cc: MessagesControllerComponents) extends FrontendController(cc) {
   def initialiseAmls(amlsStatus: Option[AmlsStatus]): Action[AnyContent] = Action.async { implicit request =>
     updateAmlsJourneyRepository.putSession(DataKey[UpdateAmlsJourney]("amlsJourney"),
-      UpdateAmlsJourney(status = amlsStatus.getOrElse(AmlsStatus.ValidAmlsDetailsUK))).map(_ => Ok("successfully created amls"))
+      UpdateAmlsJourney(
+        status = amlsStatus.getOrElse(AmlsStatus.ValidAmlsDetailsUK
+      ))).map(_ => Ok("successfully created amls"))
   }
 
 }

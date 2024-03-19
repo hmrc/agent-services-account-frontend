@@ -46,7 +46,7 @@ class EnterRegistrationNumberController @Inject()(actions: Actions,
         val form = amlsJourney
           .newRegistrationNumber
           .fold(registrationNumberForm(amlsJourney.isHmrc))(registrationNumberForm(amlsJourney.isHmrc).fill)
-        Ok(enterRegistrationNumber(form, backLink(amlsJourney))).toFuture
+        Ok(enterRegistrationNumber(form)).toFuture
       }
     }
   }
@@ -58,7 +58,7 @@ class EnterRegistrationNumberController @Inject()(actions: Actions,
         registrationNumberForm(amlsJourney.isHmrc)
           .bindFromRequest()
           .fold(
-            formWithError => Ok(enterRegistrationNumber(formWithError, backLink(amlsJourney))).toFuture,
+            formWithError => Ok(enterRegistrationNumber(formWithError)).toFuture,
             data =>
               saveAmlsJourney(amlsJourney.copy(newRegistrationNumber = Option(data))).map(_ =>
                 Redirect(nextPage(amlsJourney))
@@ -66,13 +66,6 @@ class EnterRegistrationNumberController @Inject()(actions: Actions,
           )
       }
     }
-  }
-
-
-  private def backLink(journey: UpdateAmlsJourney): String = {
-    if(journey.isChange) "/cya"
-    else if (journey.isRegistrationNumberStillTheSame.contains(false)) routes.ConfirmRegistrationNumberController.showPage.url
-    else routes.AmlsNewSupervisoryBodyController.showPage.url
   }
 
   private def nextPage(journey: UpdateAmlsJourney): String = {

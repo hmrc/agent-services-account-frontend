@@ -46,7 +46,7 @@ class AmlsNewSupervisoryBodyController @Inject() (actions: Actions,
       withUpdateAmlsJourney { amlsJourney =>
         val amlsBodies = amlsLoader.load("/amls.csv")
         val form = NewAmlsSupervisoryBodyForm.form(amlsBodies)(amlsJourney.isUkAgent).fill(amlsJourney.newAmlsBody.getOrElse(""))
-        Ok(newSupervisoryBody(form, amlsBodies, amlsJourney.isUkAgent, backLink(amlsJourney))).toFuture
+        Ok(newSupervisoryBody(form, amlsBodies, amlsJourney.isUkAgent)).toFuture
       }
     }
   }
@@ -58,7 +58,7 @@ class AmlsNewSupervisoryBodyController @Inject() (actions: Actions,
         NewAmlsSupervisoryBodyForm.form(amlsBodies)(journey.isUkAgent)
           .bindFromRequest()
           .fold(
-            formWithErrors => Ok(newSupervisoryBody(formWithErrors, amlsBodies, journey.isUkAgent, backLink(journey))).toFuture,
+            formWithErrors => Ok(newSupervisoryBody(formWithErrors, amlsBodies, journey.isUkAgent)).toFuture,
             data => {
               saveAmlsJourney(journey.copy(newAmlsBody = Some(data))).map(_ =>
               Redirect(nextPage(journey)))
@@ -67,11 +67,6 @@ class AmlsNewSupervisoryBodyController @Inject() (actions: Actions,
       }
     }
   }
-
-  private def backLink(journey: UpdateAmlsJourney): String =
-    if(journey.isChange) "/cya"
-    else if (journey.isAmlsBodyStillTheSame.contains(false)) routes.ConfirmSupervisoryBodyController.showPage.url
-    else routes.AMLSDetailsController.showSupervisionDetails.url
 
   private def nextPage(journey: UpdateAmlsJourney): String = {
     if(journey.isChange) "/cya"

@@ -33,12 +33,11 @@
 )
 
 
-@(form: Form[Boolean], registrationNumber: String, backLinkHref: String)(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
+@(form: Form[Boolean], registrationNumber: String)(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
 
 @main(
  pageTitle = withErrorPrefix(form.hasErrors, msgs("amls.confirm-registration-number.h1", registrationNumber)),
  mimicBrowserBackLink = true,
- backLinkHref = Some(backLinkHref),
  showSecondaryNav = false){
 
  @if(form.hasErrors){
@@ -50,7 +49,7 @@
    fieldset = Some(Fieldset(
     legend = Some(Legend(
      content = Text(msgs("amls.confirm-registration-number.h1", registrationNumber)),
-     classes = "govuk-fieldset__legend--l",
+     classes = "govuk-fieldset__legend--xl",
      isPageHeading = true
     ))
    )),
