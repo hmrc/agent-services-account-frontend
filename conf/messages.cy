@@ -556,6 +556,7 @@ amls.confirm-supervisory-body.error=Dewiswch ‘Iawn’ os ydych wedi’ch cofre
 amls.confirm-registration-number.h1=Ai {0} yw’ch rhif cofrestru o hyd?
 amls.confirm-registration-number.error=Dewiswch ‘Iawn’ os mai {0} yw’ch rhif cofrestru o hyd
 amls.enter-renewal-date.h1=Pryd y mae angen i chi adnewyddu’ch cofrestriad?
+amls.enter-renewal-date.hint=Er enghraifft, 31 3 2025
 amls.enter-registration-number.h1=Beth yw’ch rhif cofrestru?
 amls.enter-registration-number.error.empty=Nodwch eich rhif cofrestru
 amls.enter-registration-number.error.not-hmrc.invalid=Registration number must include only letters and numbers
