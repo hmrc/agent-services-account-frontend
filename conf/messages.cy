@@ -8,7 +8,7 @@ accordion.hideSectionAria = Cuddio’r adran hon
 account-details.inset=Bydd angen i chi ysgrifennu atom er mwyn newid y manylion hyn. <a class="govuk-link" href={0} target="_blank" rel="noreferrer noopener">Dysgwch ragor drwy ddarllen yr arweiniad (yn agor tab newydd)</a>. Gallwch ond newid eich manylion os ydych yn gyfarwyddwr, ysgrifennydd cwmni, unig fasnachwr, perchennog neu’n bartner.
 account-details.summary-list.address=Cyfeiriad
 account-details.summary-list.email=E-bost
-account-details.summary-list.phone=rhif Ffon
+account-details.summary-list.phone=rhif ffôn
 account-details.summary-list.header=Manylion y cyfrif gwasanaethau asiant
 account-details.summary-list.name=Enw
 account-details.summary-list.none=Dim
@@ -477,7 +477,7 @@ update-contact-details.start-page.body.li4=perchennog
 update-contact-details.start-page.body.li5=partner
 update-contact-details.start-page.body.p2=Os yw’ch swydd wedi’i nodi ar y rhestr hon, does dim angen awdurdod ychwanegol arnoch.
 update-contact-details.start-page.body.h2=Cyn i chi ddechrau
-update-contact-details.start-page.body.p3=Byddwn yn gofyn i chi gadarnhau fod gennych awdurdod cyn i chi gyflwyno unrhyw newidiadau. Bydd angen eich enw a’ch rhif ffon arnom hefyd.
+update-contact-details.start-page.body.p3=Byddwn yn gofyn i chi gadarnhau fod gennych awdurdod cyn i chi gyflwyno unrhyw newidiadau. Bydd angen eich enw a’ch rhif ffôn arnom hefyd.
 update-contact-details.start-page.body.p4=Mewn rhai amgylchiadau, byddwn yn gofyn am eich codau asiant ar gyfer Hunanasesiad a Threth Gorfforaeth.Anfonwyd y codau mewn llythyr pan ofynnodd eich sefydliad am fynediad asiant i’r gwasanaethau hynny.
 update-contact-details.start-page.body.p5=Ar ôl i chi gyflwyno newidiadau, ni fyddwch yn gallu diwygio’r manylion cyswllt eto am 4 wythnos.
 
@@ -543,7 +543,6 @@ amls.enter-renewal-update.title=What are your money laundering supervision regis
 amls.enter-renewal.h1=What are your money laundering supervision registration details? TBC
 amls.enter-renewal-body.hint=Start typing and select your supervisory body from the list. TBC
 amls.enter-renewal-date.form.title=Your next registration renewal date TBC
-amls.enter-renewal-date.hint=For example, 31 3 2024 TBC
 amls.enter-renewal-registration.number.h1=Your registration number TBC
 amls.enter-renewal-body.h1=Name of money laundering supervisory body TBC
 
@@ -557,7 +556,6 @@ amls.confirm-supervisory-body.error=Dewiswch ‘Iawn’ os ydych wedi’ch cofre
 amls.confirm-registration-number.h1=Ai {0} yw’ch rhif cofrestru o hyd?
 amls.confirm-registration-number.error=Dewiswch ‘Iawn’ os mai {0} yw’ch rhif cofrestru o hyd
 amls.enter-renewal-date.h1=Pryd y mae angen i chi adnewyddu’ch cofrestriad?
-amls.enter-renewal-date.hint=Er enghraifft, 31 3 2025
 amls.enter-registration-number.h1=Beth yw’ch rhif cofrestru?
 amls.enter-registration-number.error.empty=Nodwch eich rhif cofrestru
 amls.enter-registration-number.error.not-hmrc.invalid=Registration number must include only letters and numbers
