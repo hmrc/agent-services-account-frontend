@@ -25,6 +25,7 @@ import uk.gov.hmrc.agentservicesaccount.forms.RenewalDateForm
 import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.enter_renewal_date
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
+import uk.gov.hmrc.agentservicesaccount.models.ModelExtensionMethods._
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
@@ -42,7 +43,7 @@ class EnterRenewalDateController @Inject()(actions: Actions,
   def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
         withUpdateAmlsJourney { amlsJourney =>
-          if(amlsJourney.isUkAgent) {
+          if(amlsJourney.status.isUkAgent()) {
           val form = amlsJourney.newExpirationDate.fold(renewalDateForm)(renewalDateForm.fill)
           Ok(enterRenewalDate(form)).toFuture
         } else {

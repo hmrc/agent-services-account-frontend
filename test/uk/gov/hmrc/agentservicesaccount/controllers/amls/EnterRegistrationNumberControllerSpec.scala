@@ -192,7 +192,7 @@ class EnterRegistrationNumberControllerSpec extends PlaySpec
         FakeRequest("POST", "/").withFormUrlEncodedBody("number" -> "XX1234"))
 
       status(result) mustBe SEE_OTHER
-      Helpers.redirectLocation(result).get mustBe "/cya"
+      Helpers.redirectLocation(result).get mustBe "/not-implemented"
     }
 
     "return 200 OK when invalid form submission" in new Setup {

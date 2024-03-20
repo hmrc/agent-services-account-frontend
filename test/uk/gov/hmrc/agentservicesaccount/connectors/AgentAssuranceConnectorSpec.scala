@@ -17,6 +17,7 @@
 package uk.gov.hmrc.agentservicesaccount.connectors
 
 import play.api.test.Helpers._
+import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.models.{AmlsDetails, AmlsStatus, UpdateAmlsJourney}
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentAssuranceStubs._
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
@@ -32,6 +33,8 @@ class AgentAssuranceConnectorSpec extends BaseISpec {
   private implicit val hc: HeaderCarrier = HeaderCarrier()
 
   private val arn: String = "TARN0000001"
+
+  private val arnTyped = Arn(arn)
 
   private val ukAMLSDetails = AmlsDetails(
     "HMRC",
@@ -87,6 +90,38 @@ class AgentAssuranceConnectorSpec extends BaseISpec {
       intercept[UpstreamErrorResponse] {
         await(connector.getAMLSDetails(arn))
       }.getMessage shouldBe "Error 500 unable to get amls details"
+    }
+  }
+
+
+  "getAmlsStatus" should {
+    "return UK AMLS Status" in {
+      givenAmlsStatusForArn(AmlsStatus.ValidAmlsDetailsUK, arnTyped)
+
+      val result = connector.getAmlsStatus(arnTyped)
+
+      await(result) shouldBe AmlsStatus.ValidAmlsDetailsUK
+    }
+    "return Overseas AMLS details" in {
+      givenAmlsStatusForArn(AmlsStatus.ValidAmlsNonUK, arnTyped)
+
+      val result = connector.getAmlsStatus(arnTyped)
+
+      await(result) shouldBe AmlsStatus.ValidAmlsNonUK
+    }
+    "handle 400 Bad Request" in {
+      givenAmlsStatusBadRequestForArn(arnTyped)
+
+      intercept[UpstreamErrorResponse] {
+        await(connector.getAmlsStatus(arnTyped))
+      }.getMessage shouldBe "Error 400 invalid ARN when trying to get amls status"
+    }
+    "handle 500 Internal Server Error" in {
+      givenAmlsStatusServerErrorForArn(arnTyped)
+
+      intercept[UpstreamErrorResponse] {
+        await(connector.getAmlsStatus(arnTyped))
+      }.getMessage shouldBe "Error 500 unable to get amls status"
     }
   }
 }

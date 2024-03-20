@@ -26,6 +26,7 @@ import uk.gov.hmrc.agentservicesaccount.models.UpdateAmlsJourney
 import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.enter_registration_number
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
+import uk.gov.hmrc.agentservicesaccount.models.ModelExtensionMethods._
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
@@ -60,8 +61,11 @@ class EnterRegistrationNumberController @Inject()(actions: Actions,
           .fold(
             formWithError => Ok(enterRegistrationNumber(formWithError)).toFuture,
             data =>
-              saveAmlsJourney(amlsJourney.copy(newRegistrationNumber = Option(data))).map(_ =>
-                Redirect(nextPage(amlsJourney))
+              saveAmlsJourney(amlsJourney.copy(newRegistrationNumber = Option(data))).map(_ => {
+                val nextPage = if (amlsJourney.status.isUkAgent()) routes.EnterRenewalDateController.showPage.url
+                else "/not-implemented"
+                Redirect(nextPage)
+              }
               )
           )
       }
@@ -69,7 +73,7 @@ class EnterRegistrationNumberController @Inject()(actions: Actions,
   }
 
   private def nextPage(journey: UpdateAmlsJourney): String = {
-    if(journey.isChange | !journey.isUkAgent) "/cya"
+    if(journey.isChange | !journey.status.isUkAgent()) "/cya"
     else routes.EnterRenewalDateController.showPage.url
   }
 }

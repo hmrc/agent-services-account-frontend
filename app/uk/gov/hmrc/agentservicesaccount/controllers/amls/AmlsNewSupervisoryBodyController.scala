@@ -30,6 +30,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
+import uk.gov.hmrc.agentservicesaccount.models.ModelExtensionMethods._
 
 
 @Singleton
@@ -45,8 +46,8 @@ class AmlsNewSupervisoryBodyController @Inject() (actions: Actions,
     actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
       withUpdateAmlsJourney { amlsJourney =>
         val amlsBodies = amlsLoader.load("/amls.csv")
-        val form = NewAmlsSupervisoryBodyForm.form(amlsBodies)(amlsJourney.isUkAgent).fill(amlsJourney.newAmlsBody.getOrElse(""))
-        Ok(newSupervisoryBody(form, amlsBodies, amlsJourney.isUkAgent)).toFuture
+        val form = NewAmlsSupervisoryBodyForm.form(amlsBodies)(amlsJourney.status.isUkAgent()).fill(amlsJourney.newAmlsBody.getOrElse(""))
+        Ok(newSupervisoryBody(form, amlsBodies, amlsJourney.status.isUkAgent())).toFuture
       }
     }
   }
@@ -54,11 +55,11 @@ class AmlsNewSupervisoryBodyController @Inject() (actions: Actions,
   def onSubmit: Action[AnyContent] = Action.async { implicit request =>
     actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
       withUpdateAmlsJourney { journey =>
-        val amlsBodies = amlsLoader.load("/amls.csv")
-        NewAmlsSupervisoryBodyForm.form(amlsBodies)(journey.isUkAgent)
+        val amlsBodies = amlsLoader.load("/amls-no-hmrc.csv")
+        NewAmlsSupervisoryBodyForm.form(amlsBodies)(journey.status.isUkAgent())
           .bindFromRequest()
           .fold(
-            formWithErrors => Ok(newSupervisoryBody(formWithErrors, amlsBodies, journey.isUkAgent)).toFuture,
+            formWithErrors => Ok(newSupervisoryBody(formWithErrors, amlsBodies, journey.status.isUkAgent())).toFuture,
             data => {
               saveAmlsJourney(journey.copy(newAmlsBody = Some(data))).map(_ =>
               Redirect(nextPage(journey)))
@@ -70,7 +71,7 @@ class AmlsNewSupervisoryBodyController @Inject() (actions: Actions,
 
   private def nextPage(journey: UpdateAmlsJourney): String = {
     if(journey.isChange) "/cya"
-    else if (journey.isUkAgent & journey.hasExistingAmls) routes.ConfirmRegistrationNumberController.showPage.url
+    else if (journey.status.isUkAgent() & journey.status.hasExistingAmls()) routes.ConfirmRegistrationNumberController.showPage.url
       else routes.EnterRegistrationNumberController.showPage.url
 
   }
