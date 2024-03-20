@@ -51,7 +51,7 @@ class AmlsIsHmrcController @Inject()(actions: Actions,
             if (isHmrcRegistered) {
               Redirect("not-implemented-hmrc-page").toFuture
             } else {
-              Redirect(routes.AmlsNewSupervisoryBodyController.showPage).toFuture
+              Redirect(routes.AmlsNewSupervisoryBodyController.showPage()).toFuture
             }
           })
     }

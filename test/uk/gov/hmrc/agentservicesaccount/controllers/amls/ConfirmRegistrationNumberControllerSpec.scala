@@ -194,7 +194,7 @@ class ConfirmRegistrationNumberControllerSpec extends PlaySpec
       mockUpdateAmlsJourneyRepository.getFromSession(dataKey)(*[Reads[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful(Some(ukAmlsJourney))
 
       mockUpdateAmlsJourneyRepository.putSession(
-        dataKey, ukAmlsJourney.copy(isRegistrationNumberStillTheSame = Some(true)))(*[Writes[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
+        dataKey, ukAmlsJourney.copy(isRegistrationNumberStillTheSame = Some(true), newRegistrationNumber = Some("7")))(*[Writes[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
 
       mockView.apply(*[Form[Boolean]], "7")(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 

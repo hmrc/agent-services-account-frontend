@@ -26,7 +26,6 @@ import uk.gov.hmrc.agentservicesaccount.models.UpdateAmlsJourney
 import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.confirm_supervisory_body
-import uk.gov.hmrc.agentservicesaccount.models.ModelExtensionMethods._
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -60,22 +59,23 @@ class ConfirmSupervisoryBodyController @Inject()(actions: Actions,
             .bindFromRequest()
             .fold(
               formWithError => Future successful Ok(confirmSupervisoryBody(formWithError, amlsDetails.supervisoryBody)),
-              data =>
-                saveAmlsJourney(amlsJourney.copy(isAmlsBodyStillTheSame = Option(data))).map(_ =>
-                  Redirect(nextPage(data)(amlsJourney))
-                )
+              data => {
+                val maybeCopySupervisoryBody = if(data) Option(amlsDetails.supervisoryBody) else amlsJourney.newAmlsBody
+                saveAmlsJourney(amlsJourney.copy(
+                  isAmlsBodyStillTheSame = Option(data),
+                  newAmlsBody = maybeCopySupervisoryBody)
+                ).map(_ =>
+                  Redirect(nextPage(data)(amlsJourney)))
+              }
             )
         }
       }
     }
   }
 
-  private def backLink(journey: UpdateAmlsJourney): String =
-    routes.AMLSDetailsController.showSupervisionDetails.url
-
   private def nextPage(confirm: Boolean)(journey: UpdateAmlsJourney): String =
-    if(confirm) if(journey.status.isUkAgent()) routes.ConfirmRegistrationNumberController.showPage.url
-    else routes.EnterRegistrationNumberController.showPage.url
-    else routes.AmlsNewSupervisoryBodyController.showPage.url
+    if(confirm) if(journey.isUkAgent) routes.ConfirmRegistrationNumberController.showPage.url
+    else routes.EnterRegistrationNumberController.showPage().url
+    else routes.AmlsNewSupervisoryBodyController.showPage().url
 
 }

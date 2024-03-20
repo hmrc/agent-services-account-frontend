@@ -76,14 +76,17 @@ class EnterRegistrationNumberControllerSpec extends PlaySpec
   private val amlsDetailsResponse = Future.successful(amlsDetails)
 
   private val ukAmlsJourney = UpdateAmlsJourney(
-    status = AmlsStatus.ValidAmlsDetailsUK
+    status = AmlsStatus.ValidAmlsDetailsUK,
+    newAmlsBody = Some("ACCA"),
+    newRegistrationNumber = Some("XAML00000123456")
   )
 
   private val overseasAmlsJourney = UpdateAmlsJourney(
     status = AmlsStatus.ValidAmlsNonUK,
     newAmlsBody = Some("OS AMLS"),
     newRegistrationNumber = Some("AMLS123"),
-    newExpirationDate = Some(LocalDate.parse("2024-10-10"))
+    newExpirationDate = Some(LocalDate.parse("2024-10-10")),
+    isRegistrationNumberStillTheSame = Some(true)
   )
 
 
@@ -120,9 +123,9 @@ class EnterRegistrationNumberControllerSpec extends PlaySpec
       mockAmlsJourneySessionRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]],*[Request[_]]) returns
         Future.successful(Some(ukAmlsJourney))
 
-      mockView.apply(*[Form[String]])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+      mockView.apply(*[Form[String]], *[Boolean])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 
-      val result: Future[Result] = TestController.showPage(fakeRequest)
+      val result: Future[Result] = TestController.showPage(cya = false)(fakeRequest)
 
       status(result) mustBe OK
 
@@ -138,7 +141,7 @@ class EnterRegistrationNumberControllerSpec extends PlaySpec
 
       mockAgentClientAuthorisationConnector.getSuspensionDetails()(*[HeaderCarrier], *[ExecutionContext]) returns suspensionDetailsResponse
 
-      val result: Future[Result] = TestController.showPage(fakeRequest)
+      val result: Future[Result] = TestController.showPage(cya = false)(fakeRequest)
 
       status(result) mustBe FORBIDDEN
 
@@ -162,9 +165,9 @@ class EnterRegistrationNumberControllerSpec extends PlaySpec
       mockAmlsJourneySessionRepository.putSession(
         dataKey, ukAmlsJourney.copy(newRegistrationNumber = Some("XAML00000123456")))(*[Writes[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
 
-      mockView.apply(*[Form[String]])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+      mockView.apply(*[Form[String]], *[Boolean])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 
-      val result: Future[Result] = TestController.onSubmit(
+      val result: Future[Result] = TestController.onSubmit(cya = false)(
         FakeRequest("POST", "/").withFormUrlEncodedBody("number" -> "XAML00000123456"))
 
       status(result) mustBe SEE_OTHER
@@ -184,15 +187,15 @@ class EnterRegistrationNumberControllerSpec extends PlaySpec
       mockAmlsJourneySessionRepository.getFromSession(dataKey)(*[Reads[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful(Some(overseasAmlsJourney))
 
       mockAmlsJourneySessionRepository.putSession(
-        dataKey, overseasAmlsJourney.copy(newRegistrationNumber = Some("XX1234")))(*[Writes[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
+        dataKey, overseasAmlsJourney.copy(newRegistrationNumber = Some("AMLS123")))(*[Writes[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
 
-      mockView.apply(*[Form[String]])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+      mockView.apply(*[Form[String]], *[Boolean])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 
-      val result: Future[Result] = TestController.onSubmit(
-        FakeRequest("POST", "/").withFormUrlEncodedBody("number" -> "XX1234"))
+      val result: Future[Result] = TestController.onSubmit(cya = false)(
+        FakeRequest("POST", "/").withFormUrlEncodedBody("number" -> "AMLS123"))
 
       status(result) mustBe SEE_OTHER
-      Helpers.redirectLocation(result).get mustBe "/not-implemented"
+      Helpers.redirectLocation(result).get mustBe "/cya"
     }
 
     "return 200 OK when invalid form submission" in new Setup {
@@ -208,9 +211,9 @@ class EnterRegistrationNumberControllerSpec extends PlaySpec
       mockAmlsJourneySessionRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[Request[Any]]) returns
         Future.successful(Some(ukAmlsJourney))
 
-      mockView.apply(*[Form[String]])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+      mockView.apply(*[Form[String]], *[Boolean])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 
-      val result: Future[Result] = TestController.onSubmit(
+      val result: Future[Result] = TestController.onSubmit(cya = false)(
         FakeRequest("POST", "/").withFormUrlEncodedBody("body" -> ""))
 
       status(result) mustBe OK
