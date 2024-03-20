@@ -26,7 +26,6 @@ import uk.gov.hmrc.agentservicesaccount.models.UpdateAmlsJourney
 import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.enter_registration_number
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import uk.gov.hmrc.agentservicesaccount.models.ModelExtensionMethods._
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
@@ -41,39 +40,45 @@ class EnterRegistrationNumberController @Inject()(actions: Actions,
 
   private def registrationNumberForm(isHmrc: Boolean) = NewRegistrationNumberForm.form(isHmrc)
 
-  def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
+  def showPage(cya: Option[Boolean]): Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
       withUpdateAmlsJourney { amlsJourney =>
         val form = amlsJourney
           .newRegistrationNumber
           .fold(registrationNumberForm(amlsJourney.isHmrc))(registrationNumberForm(amlsJourney.isHmrc).fill)
-        Ok(enterRegistrationNumber(form)).toFuture
+        Ok(enterRegistrationNumber(form, cya)).toFuture
       }
     }
   }
 
 
-  def onSubmit: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
+  def onSubmit(cya: Option[Boolean]): Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
       withUpdateAmlsJourney { amlsJourney =>
         registrationNumberForm(amlsJourney.isHmrc)
           .bindFromRequest()
           .fold(
-            formWithError => Ok(enterRegistrationNumber(formWithError)).toFuture,
+            formWithError => Ok(enterRegistrationNumber(formWithError, cya)).toFuture,
             data =>
-              saveAmlsJourney(amlsJourney.copy(newRegistrationNumber = Option(data))).map(_ => {
-                val nextPage = if (amlsJourney.status.isUkAgent()) routes.EnterRenewalDateController.showPage.url
-                else "/not-implemented"
-                Redirect(nextPage)
-              }
+              saveAmlsJourney(amlsJourney.copy(
+                newRegistrationNumber = Option(data),
+                isRegistrationNumberStillTheSame = maybeChangePreviousAnswer(data, amlsJourney))
+              ).map(_ =>
+                Redirect(nextPage(cya, amlsJourney))
               )
           )
       }
     }
   }
 
-  private def nextPage(journey: UpdateAmlsJourney): String = {
-    if(journey.isChange | !journey.status.isUkAgent()) "/cya"
+  private def maybeChangePreviousAnswer(answer: String, journey: UpdateAmlsJourney): Option[Boolean] =
+    for {
+      x <- journey.isRegistrationNumberStillTheSame
+      y = journey.newRegistrationNumber.contains(answer)
+    } yield x && y
+
+  private def nextPage(cya: Option[Boolean], journey: UpdateAmlsJourney): String = {
+    if(cya.contains(true) | !journey.isUkAgent) "/cya"
     else routes.EnterRenewalDateController.showPage.url
   }
 }

@@ -45,7 +45,7 @@
 )
 
 
-@(form: Form[String], amlsCodes: Map[String, String], isUk: Boolean)(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
+@(form: Form[String], amlsCodes: Map[String, String], isUk: Boolean, cya: Option[Boolean])(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
 
 
 @scripts = {
@@ -93,7 +93,7 @@
         @govukErrorSummary(ErrorSummary().withFormErrorsAsText(form))
     }
 
-    @formWithCSRF(action = routes.AmlsNewSupervisoryBodyController.onSubmit) {
+    @formWithCSRF(action = routes.AmlsNewSupervisoryBodyController.onSubmit(cya)) {
         @govukFieldset(Fieldset(
             html = fieldsetHtml,
             legend = Some(Legend(

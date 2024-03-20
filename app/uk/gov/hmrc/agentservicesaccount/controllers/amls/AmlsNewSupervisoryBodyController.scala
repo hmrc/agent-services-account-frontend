@@ -30,7 +30,6 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
-import uk.gov.hmrc.agentservicesaccount.models.ModelExtensionMethods._
 
 
 @Singleton
@@ -42,37 +41,47 @@ class AmlsNewSupervisoryBodyController @Inject() (actions: Actions,
 )(implicit appConfig: AppConfig, ec: ExecutionContext) extends FrontendController(cc) with AmlsJourneySupport with I18nSupport {
 
 
-  def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request  =>
+  def showPage(cya: Option[Boolean]): Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request  =>
     actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
       withUpdateAmlsJourney { amlsJourney =>
         val amlsBodies = amlsLoader.load("/amls.csv")
-        val form = NewAmlsSupervisoryBodyForm.form(amlsBodies)(amlsJourney.status.isUkAgent()).fill(amlsJourney.newAmlsBody.getOrElse(""))
-        Ok(newSupervisoryBody(form, amlsBodies, amlsJourney.status.isUkAgent())).toFuture
+        val form = NewAmlsSupervisoryBodyForm.form(amlsBodies)(amlsJourney.isUkAgent).fill(amlsJourney.newAmlsBody.getOrElse(""))
+        Ok(newSupervisoryBody(form, amlsBodies, amlsJourney.isUkAgent, cya)).toFuture
       }
     }
   }
 
-  def onSubmit: Action[AnyContent] = Action.async { implicit request =>
+  def onSubmit(cya: Option[Boolean]): Action[AnyContent] = Action.async { implicit request =>
     actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
       withUpdateAmlsJourney { journey =>
-        val amlsBodies = amlsLoader.load("/amls-no-hmrc.csv")
-        NewAmlsSupervisoryBodyForm.form(amlsBodies)(journey.status.isUkAgent())
+        val amlsBodies = amlsLoader.load("/amls.csv")
+        NewAmlsSupervisoryBodyForm.form(amlsBodies)(journey.isUkAgent)
           .bindFromRequest()
           .fold(
-            formWithErrors => Ok(newSupervisoryBody(formWithErrors, amlsBodies, journey.status.isUkAgent())).toFuture,
+            formWithErrors => Ok(newSupervisoryBody(formWithErrors, amlsBodies, journey.isUkAgent, cya)).toFuture,
             data => {
-              saveAmlsJourney(journey.copy(newAmlsBody = Some(data))).map(_ =>
-              Redirect(nextPage(journey)))
+              saveAmlsJourney(journey.copy(
+                newAmlsBody = Some(data),
+                isAmlsBodyStillTheSame = maybeChangePreviousAnswer(data, journey))
+              ).map(_ =>
+              Redirect(nextPage(cya, journey)))
             }
           )
       }
     }
   }
 
-  private def nextPage(journey: UpdateAmlsJourney): String = {
-    if(journey.isChange) "/cya"
-    else if (journey.status.isUkAgent() & journey.status.hasExistingAmls()) routes.ConfirmRegistrationNumberController.showPage.url
-      else routes.EnterRegistrationNumberController.showPage.url
+  private def maybeChangePreviousAnswer(answer: String, journey: UpdateAmlsJourney): Option[Boolean] =
+    for {
+      x <- journey.isAmlsBodyStillTheSame
+      y = journey.newAmlsBody.contains(answer)
+    } yield x && y
+
+
+  private def nextPage(cya: Option[Boolean], journey: UpdateAmlsJourney): String = {
+    if(cya.contains(true)) "/cya"
+    else if (journey.isUkAgent & journey.hasExistingAmls) routes.ConfirmRegistrationNumberController.showPage.url
+      else routes.EnterRegistrationNumberController.showPage().url
 
   }
 

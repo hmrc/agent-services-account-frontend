@@ -38,7 +38,7 @@
 )
 
 
-@(form: Form[String])(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
+@(form: Form[String], cya: Option[Boolean])(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
 
 
 @fieldsetHtml = {
@@ -58,7 +58,7 @@
         @govukErrorSummary(ErrorSummary().withFormErrorsAsText(form))
     }
 
-    @formWithCSRF(action = routes.EnterRegistrationNumberController.onSubmit) {
+    @formWithCSRF(action = routes.EnterRegistrationNumberController.onSubmit(cya)) {
         @govukFieldset(Fieldset(
             html = fieldsetHtml,
             legend = Some(Legend(

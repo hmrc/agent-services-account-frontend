@@ -48,7 +48,7 @@ class ConfirmRegistrationNumberController @Inject()(actions: Actions,
             }
           case None =>
             logger.info("No AMLS registration number found, redirecting to 'Enter Registration Number'")
-            Redirect(routes.EnterRegistrationNumberController.showPage).toFuture
+            Redirect(routes.EnterRegistrationNumberController.showPage()).toFuture
         }
       }
     }
@@ -65,20 +65,26 @@ class ConfirmRegistrationNumberController @Inject()(actions: Actions,
                 .bindFromRequest()
                 .fold(
                   formWithError => Future successful Ok(confirmRegistrationNumber(formWithError, registrationNumber)),
-                  data =>
-                    saveAmlsJourney(amlsJourney.copy(isRegistrationNumberStillTheSame = Option(data))).map(_ =>
+                  data => {
+                    val maybeCopyRegistrationNumber = if (data) amlsDetails.membershipNumber else amlsJourney.newRegistrationNumber
+                    saveAmlsJourney(amlsJourney.copy(
+                      isRegistrationNumberStillTheSame = Option(data),
+                      newRegistrationNumber = maybeCopyRegistrationNumber)
+                    ).map(_ =>
                       Redirect(nextPage(data))
                     )
+                  }
                 )
             }
-          case None => Redirect(routes.EnterRegistrationNumberController.showPage).toFuture
+          case None => Redirect(routes.EnterRegistrationNumberController.showPage()).toFuture
         }
       }
     }
   }
 
+
   private def nextPage(confirm: Boolean): String =
     if(confirm) routes.EnterRenewalDateController.showPage.url
-    else routes.EnterRegistrationNumberController.showPage.url
+    else routes.EnterRegistrationNumberController.showPage().url
 
 }

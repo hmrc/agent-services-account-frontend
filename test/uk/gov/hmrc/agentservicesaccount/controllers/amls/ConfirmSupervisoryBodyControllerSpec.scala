@@ -166,7 +166,7 @@ class ConfirmSupervisoryBodyControllerSpec extends PlaySpec
         mockUpdateAmlsJourneyRepository.getFromSession(dataKey)(*[Reads[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful(Some(ukAmlsJourney))
 
         mockUpdateAmlsJourneyRepository.putSession(
-          dataKey, ukAmlsJourney.copy(isAmlsBodyStillTheSame = Some(true)))(*[Writes[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
+          dataKey, ukAmlsJourney.copy(isAmlsBodyStillTheSame = Some(true), newAmlsBody = Some("HMRC")))(*[Writes[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
 
         mockView.apply(*[Form[Boolean]], "HMRC")(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 
@@ -177,7 +177,33 @@ class ConfirmSupervisoryBodyControllerSpec extends PlaySpec
         Helpers.redirectLocation(result).get mustBe "/agent-services-account/manage-account/money-laundering-supervision/confirm-registration-number"
       }
 
-      "return 303 SEE_OTHER and redirect to /not-implemented when NO is selected" in new Setup {
+      "return 303 SEE_OTHER and redirect to /enter-registration-number when YES is selected for overseas agent" in new Setup {
+
+        mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
+          *[HeaderCarrier],
+          *[ExecutionContext]) returns authResponse
+
+        mockAppConfig.enableNonHmrcSupervisoryBody returns true
+
+        mockAgentClientAuthorisationConnector.getSuspensionDetails()(*[HeaderCarrier], *[ExecutionContext]) returns suspensionDetailsResponse
+
+        mockAgentAssuranceConnector.getAMLSDetails(*[String])(*[ExecutionContext], *[HeaderCarrier]) returns amlsDetailsResponse
+
+        mockUpdateAmlsJourneyRepository.getFromSession(dataKey)(*[Reads[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful(Some(overseasAmlsJourney))
+
+        mockUpdateAmlsJourneyRepository.putSession(
+          dataKey, overseasAmlsJourney.copy(isAmlsBodyStillTheSame = Some(true), newAmlsBody = Some("HMRC")))(*[Writes[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
+
+        mockView.apply(*[Form[Boolean]], "HMRC")(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+
+        val result: Future[Result] = TestController.onSubmit(
+          FakeRequest("POST", "/").withFormUrlEncodedBody("accept" -> "true"))
+
+        status(result) mustBe SEE_OTHER
+        Helpers.redirectLocation(result).get mustBe "/agent-services-account/manage-account/money-laundering-supervision/new-registration-number"
+      }
+
+      "return 303 SEE_OTHER and redirect to /new-supervisory-body when NO is selected" in new Setup {
 
         mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
           *[HeaderCarrier],
@@ -202,6 +228,7 @@ class ConfirmSupervisoryBodyControllerSpec extends PlaySpec
         status(result) mustBe SEE_OTHER
         Helpers.redirectLocation(result).get mustBe "/agent-services-account/manage-account/money-laundering-supervision/new-supervisory-body"
       }
+
 
       "return 200 OK when invalid form submission" in new Setup {
 
