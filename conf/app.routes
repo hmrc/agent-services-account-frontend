@@ -85,8 +85,8 @@ POST       /manage-account/money-laundering-supervisory-body              @uk.go
 GET        /manage-account/update-money-laundering-supervision            @uk.gov.hmrc.agentservicesaccount.controllers.amls.UpdateMoneyLaunderingSupervisionController.showUpdateMoneyLaunderingSupervision
 POST       /manage-account/update-money-laundering-supervision            @uk.gov.hmrc.agentservicesaccount.controllers.amls.UpdateMoneyLaunderingSupervisionController.submitUpdateMoneyLaunderingSupervision
 
-GET        /manage-account/money-laundering-supervision/new-supervisory-body @uk.gov.hmrc.agentservicesaccount.controllers.amls.AmlsNewSupervisoryBodyController.showPage(cya: Option[Boolean] ?= None)
-POST       /manage-account/money-laundering-supervision/new-supervisory-body @uk.gov.hmrc.agentservicesaccount.controllers.amls.AmlsNewSupervisoryBodyController.onSubmit(cya: Option[Boolean] ?= None)
+GET        /manage-account/money-laundering-supervision/new-supervisory-body @uk.gov.hmrc.agentservicesaccount.controllers.amls.AmlsNewSupervisoryBodyController.showPage(cya: Boolean ?= false)
+POST       /manage-account/money-laundering-supervision/new-supervisory-body @uk.gov.hmrc.agentservicesaccount.controllers.amls.AmlsNewSupervisoryBodyController.onSubmit(cya: Boolean ?= false)
 
 GET        /manage-account/money-laundering-supervision/confirm-supervisory-body @uk.gov.hmrc.agentservicesaccount.controllers.amls.ConfirmSupervisoryBodyController.showPage
 POST       /manage-account/money-laundering-supervision/confirm-supervisory-body @uk.gov.hmrc.agentservicesaccount.controllers.amls.ConfirmSupervisoryBodyController.onSubmit
@@ -97,5 +97,5 @@ POST       /manage-account/money-laundering-supervision/confirm-registration-num
 GET        /manage-account/money-laundering-supervision/renewal-date      @uk.gov.hmrc.agentservicesaccount.controllers.amls.EnterRenewalDateController.showPage
 POST       /manage-account/money-laundering-supervision/renewal-date      @uk.gov.hmrc.agentservicesaccount.controllers.amls.EnterRenewalDateController.onSubmit
 
-GET        /manage-account/money-laundering-supervision/new-registration-number      @uk.gov.hmrc.agentservicesaccount.controllers.amls.EnterRegistrationNumberController.showPage(cya: Option[Boolean] ?= None)
-POST       /manage-account/money-laundering-supervision/new-registration-number      @uk.gov.hmrc.agentservicesaccount.controllers.amls.EnterRegistrationNumberController.onSubmit(cya: Option[Boolean] ?= None)
+GET        /manage-account/money-laundering-supervision/new-registration-number      @uk.gov.hmrc.agentservicesaccount.controllers.amls.EnterRegistrationNumberController.showPage(cya: Boolean ?= false)
+POST       /manage-account/money-laundering-supervision/new-registration-number      @uk.gov.hmrc.agentservicesaccount.controllers.amls.EnterRegistrationNumberController.onSubmit(cya: Boolean ?= false)

@@ -41,7 +41,7 @@ class AmlsNewSupervisoryBodyController @Inject() (actions: Actions,
 )(implicit appConfig: AppConfig, ec: ExecutionContext) extends FrontendController(cc) with AmlsJourneySupport with I18nSupport {
 
 
-  def showPage(cya: Option[Boolean]): Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request  =>
+  def showPage(cya: Boolean): Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request  =>
     actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
       withUpdateAmlsJourney { amlsJourney =>
         val amlsBodies = amlsLoader.load("/amls.csv")
@@ -51,7 +51,7 @@ class AmlsNewSupervisoryBodyController @Inject() (actions: Actions,
     }
   }
 
-  def onSubmit(cya: Option[Boolean]): Action[AnyContent] = Action.async { implicit request =>
+  def onSubmit(cya: Boolean): Action[AnyContent] = Action.async { implicit request =>
     actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
       withUpdateAmlsJourney { journey =>
         val amlsBodies = amlsLoader.load("/amls.csv")
@@ -78,11 +78,10 @@ class AmlsNewSupervisoryBodyController @Inject() (actions: Actions,
     } yield x && y
 
 
-  private def nextPage(cya: Option[Boolean], journey: UpdateAmlsJourney): String = {
-    if(cya.contains(true)) "/cya"
-    else if (journey.isUkAgent & journey.hasExistingAmls) routes.ConfirmRegistrationNumberController.showPage.url
+  private def nextPage(cya: Boolean, journey: UpdateAmlsJourney): String = {
+    if(cya) "/cya"
+    else if (
+      journey.isUkAgent & journey.isAmlsBodyStillTheSame.contains(true)) routes.ConfirmRegistrationNumberController.showPage.url
       else routes.EnterRegistrationNumberController.showPage().url
-
   }
-
 }

@@ -39,15 +39,7 @@ case class UpdateAmlsJourney(status: AmlsStatus,
     case AmlsStatus.PendingAmlsDetailsRejected => true
   }
 
-  val isHmrc:Boolean = status match {
-    case AmlsStatus.NoAmlsDetailsNonUK => false
-    case AmlsStatus.ValidAmlsNonUK => false
-    case AmlsStatus.NoAmlsDetailsUK => false
-    case AmlsStatus.ValidAmlsDetailsUK => false
-    case AmlsStatus.ExpiredAmlsDetailsUK => false
-    case AmlsStatus.PendingAmlsDetails => true
-    case AmlsStatus.PendingAmlsDetailsRejected => true
-  }
+  val isHmrc:Boolean = isUkAgent && newAmlsBody.contains("HMRC")
 
   val hasExistingAmls: Boolean = status match {
     case AmlsStatus.NoAmlsDetailsNonUK => false

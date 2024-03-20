@@ -38,7 +38,7 @@
 )
 
 
-@(form: Form[String], cya: Option[Boolean])(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
+@(form: Form[String], cya: Boolean)(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
 
 
 @fieldsetHtml = {

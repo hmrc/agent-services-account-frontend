@@ -128,9 +128,9 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
       mockAmlsJourneySessionRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]],*[Request[_]]) returns
         Future.successful(Some(ukAmlsJourney))
 
-      mockView.apply(*[Form[String]], *[Map[String, String]], isUk = true, *[Option[Boolean]])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+      mockView.apply(*[Form[String]], *[Map[String, String]], isUk = true, *[Boolean])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 
-      val result: Future[Result] = TestController.showPage(cya = None)(fakeRequest)
+      val result: Future[Result] = TestController.showPage(cya = false)(fakeRequest)
 
       status(result) mustBe OK
 
@@ -146,7 +146,7 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
 
       mockAgentClientAuthorisationConnector.getSuspensionDetails()(*[HeaderCarrier], *[ExecutionContext]) returns suspensionDetailsResponse
 
-      val result: Future[Result] = TestController.showPage(cya = None)(fakeRequest)
+      val result: Future[Result] = TestController.showPage(false)(fakeRequest)
 
       status(result) mustBe FORBIDDEN
 
@@ -172,9 +172,9 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
       mockAmlsJourneySessionRepository.putSession(
         dataKey, ukAmlsJourney.copy(newAmlsBody = Some("ACCA"), isAmlsBodyStillTheSame = Some(true)))(*[Writes[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
 
-      mockView.apply(*[Form[String]], *[Map[String, String]], isUk = true, *[Option[Boolean]])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+      mockView.apply(*[Form[String]], *[Map[String, String]], isUk = true, *[Boolean])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 
-      val result: Future[Result] = TestController.onSubmit(cya = None)(
+      val result: Future[Result] = TestController.onSubmit(cya = false)(
         FakeRequest("POST", "/").withFormUrlEncodedBody("body" -> "ACCA"))
 
       status(result) mustBe SEE_OTHER
@@ -198,9 +198,9 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
       mockAmlsJourneySessionRepository.putSession(
         dataKey, ukAmlsJourney.copy(newAmlsBody = Some("ACCA"), isAmlsBodyStillTheSame = Some(true)))(*[Writes[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
 
-      mockView.apply(*[Form[String]], *[Map[String, String]], isUk = true, *[Option[Boolean]])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+      mockView.apply(*[Form[String]], *[Map[String, String]], isUk = true, *[Boolean])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 
-      val result: Future[Result] = TestController.onSubmit(cya = Some(true))(
+      val result: Future[Result] = TestController.onSubmit(cya = true)(
         FakeRequest("POST", "/").withFormUrlEncodedBody("body" -> "ACCA"))
 
       status(result) mustBe SEE_OTHER
@@ -224,9 +224,9 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
       mockAmlsJourneySessionRepository.putSession(
         dataKey, overseasAmlsJourney.copy(newAmlsBody = Some("OS AMLS")))(*[Writes[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
 
-      mockView.apply(*[Form[String]], *[Map[String, String]], isUk = true, *[Option[Boolean]])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+      mockView.apply(*[Form[String]], *[Map[String, String]], isUk = true, *[Boolean])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 
-      val result: Future[Result] = TestController.onSubmit(cya = None)(
+      val result: Future[Result] = TestController.onSubmit(cya = false)(
         FakeRequest("POST", "/").withFormUrlEncodedBody("body" -> "OS AMLS"))
 
       status(result) mustBe SEE_OTHER
@@ -248,9 +248,9 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
       mockAmlsJourneySessionRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[Request[Any]]) returns
         Future.successful(Some(ukAmlsJourney))
 
-      mockView.apply(*[Form[String]], *[Map[String, String]], isUk = true, *[Option[Boolean]])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+      mockView.apply(*[Form[String]], *[Map[String, String]], isUk = true, *[Boolean])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 
-      val result: Future[Result] = TestController.onSubmit(cya = None)(
+      val result: Future[Result] = TestController.onSubmit(cya = false)(
         FakeRequest("POST", "/").withFormUrlEncodedBody("body" -> ""))
 
       status(result) mustBe OK

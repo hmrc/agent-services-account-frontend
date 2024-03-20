@@ -80,7 +80,7 @@ class AmlsNewSupervisoryBodyViewSpec extends BaseISpec {
     "first viewing page for UK agent" should {
       val isUk = true
 
-      val doc: Document = Jsoup.parse(view.apply(form(isUk), amlsBodies, isUk, None)(FakeRequest(), messages, appConfig).body)
+      val doc: Document = Jsoup.parse(view.apply(form(isUk), amlsBodies, isUk, cya = false)(FakeRequest(), messages, appConfig).body)
 
       testServiceStaticContent(doc)
 
@@ -94,7 +94,7 @@ class AmlsNewSupervisoryBodyViewSpec extends BaseISpec {
     "first viewing page for overseas agent" should {
       val isUk = false
 
-      val doc: Document = Jsoup.parse(view.apply(form(isUk), amlsBodies, isUk, None)(FakeRequest(), messages, appConfig).body)
+      val doc: Document = Jsoup.parse(view.apply(form(isUk), amlsBodies, isUk, cya = false)(FakeRequest(), messages, appConfig).body)
 
       testServiceStaticContent(doc)
 
@@ -108,7 +108,7 @@ class AmlsNewSupervisoryBodyViewSpec extends BaseISpec {
     "form is submitted with errors should" should {
       val isUk = true
 
-      val doc: Document = Jsoup.parse(view.apply(formWithErrors(isUk), amlsBodies, isUk, None)(FakeRequest(), messages, appConfig).body)
+      val doc: Document = Jsoup.parse(view.apply(formWithErrors(isUk), amlsBodies, isUk, cya = false)(FakeRequest(), messages, appConfig).body)
 
       testServiceStaticContent(doc)
 

@@ -40,7 +40,7 @@ class EnterRegistrationNumberController @Inject()(actions: Actions,
 
   private def registrationNumberForm(isHmrc: Boolean) = NewRegistrationNumberForm.form(isHmrc)
 
-  def showPage(cya: Option[Boolean]): Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
+  def showPage(cya: Boolean): Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
       withUpdateAmlsJourney { amlsJourney =>
         val form = amlsJourney
@@ -52,7 +52,7 @@ class EnterRegistrationNumberController @Inject()(actions: Actions,
   }
 
 
-  def onSubmit(cya: Option[Boolean]): Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
+  def onSubmit(cya: Boolean): Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
       withUpdateAmlsJourney { amlsJourney =>
         registrationNumberForm(amlsJourney.isHmrc)
@@ -77,8 +77,8 @@ class EnterRegistrationNumberController @Inject()(actions: Actions,
       y = journey.newRegistrationNumber.contains(answer)
     } yield x && y
 
-  private def nextPage(cya: Option[Boolean], journey: UpdateAmlsJourney): String = {
-    if(cya.contains(true) | !journey.isUkAgent) "/cya"
+  private def nextPage(cya: Boolean, journey: UpdateAmlsJourney): String = {
+    if(cya | !journey.isUkAgent) "/cya"
     else routes.EnterRenewalDateController.showPage.url
   }
 }
