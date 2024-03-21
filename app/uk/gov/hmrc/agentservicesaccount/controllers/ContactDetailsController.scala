@@ -217,8 +217,10 @@ class ContactDetailsController @Inject()(actions: Actions,
         .fold(
           formWithErrors => Future.successful(Ok(update_phone(formWithErrors))),
           newPhoneNumber => {
-            updateDraftDetails(_.copy(agencyTelephone = Some(newPhoneNumber))).map(_ =>
-              Redirect(routes.ContactDetailsController.showCheckNewDetails)
+            updateDraftDetails(_.copy(agencyTelephone = Some(newPhoneNumber))).flatMap(_ =>
+              updateRemainingPages.flatMap( remainingPages =>
+                getNextPage(remainingPages)
+              )
             )
           }
         )
