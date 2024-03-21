@@ -29,7 +29,6 @@ import uk.gov.hmrc.agentservicesaccount.models.emailverification.{Email, VerifyE
 import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress, PendingChangeOfDetails, SelectChanges}
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.AMLS.is_amls_hmrc
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.contact_details._
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -48,7 +47,6 @@ class ContactDetailsController @Inject()(actions: Actions,
                                          agentClientAuthorisationConnector: AgentClientAuthorisationConnector,
                                          //views
                                          select_changes: select_changes,
-                                         isAmlsHmrc: is_amls_hmrc,
                                          view_contact_details: view_contact_details,
                                          check_updated_details: check_updated_details,
                                          update_name: update_name,
