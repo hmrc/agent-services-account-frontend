@@ -24,7 +24,9 @@ import uk.gov.hmrc.agents.accessgroups.optin.{OptedInReady, OptinStatus}
 import uk.gov.hmrc.agentservicesaccount.actions.CallOps._
 import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.connectors.{AgentClientAuthorisationConnector, AgentPermissionsConnector, AgentUserClientDetailsConnector}
+import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector, AgentPermissionsConnector, AgentUserClientDetailsConnector}
+import uk.gov.hmrc.agentservicesaccount.models.AmlsStatus
+import uk.gov.hmrc.agentservicesaccount.models.AmlsStatus._
 import uk.gov.hmrc.agentservicesaccount.views.html.pages._
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.assistant.{administrators, your_account}
 import uk.gov.hmrc.http.HeaderCarrier
@@ -39,6 +41,7 @@ class AgentServicesController @Inject()(authActions: AuthActions,
                                         agentClientAuthorisationConnector: AgentClientAuthorisationConnector,
                                         agentPermissionsConnector: AgentPermissionsConnector,
                                         agentUserClientDetailsConnector: AgentUserClientDetailsConnector,
+                                        agentAssuranceConnector: AgentAssuranceConnector,
                                         manage_account: manage_account,
                                         administrators_html: administrators,
                                         your_account: your_account,
@@ -86,9 +89,11 @@ class AgentServicesController @Inject()(authActions: AuthActions,
               maybeOptinStatus <- agentPermissionsConnector.getOptinStatus(agentInfo.arn)
               mGroups <- agentPermissionsConnector.getGroupsSummaries(agentInfo.arn)
               hasAnyGroups = mGroups.exists(_.groups.nonEmpty)
+              amlsStatus <- agentAssuranceConnector.getAmlsStatus(agentInfo.arn)
+              (amlsKey, amlsLinkHref) = getAmlsStatusLink(amlsStatus)
             } yield {
               maybeOptinStatus.foreach(syncEacdIfOptedIn(agentInfo.arn, _))
-              Ok(manage_account(maybeOptinStatus, hasAnyGroups))
+              Ok(manage_account(Some(amlsKey), Some(amlsLinkHref), maybeOptinStatus, hasAnyGroups))
             }
           case false =>
             Future successful Ok(manage_account())
@@ -103,6 +108,21 @@ class AgentServicesController @Inject()(authActions: AuthActions,
         Future.successful(Forbidden)
       }
 
+    }
+  }
+
+  private def getAmlsStatusLink(amlsStatus: AmlsStatus): (String, String) = {
+    amlsStatus match {
+      case NoAmlsDetailsNonUK =>
+        ("manage.account.amls.add","/not-implemented") //next slide 21
+      case ValidAmlsNonUK =>
+        ("manage.account.amls.update","/not-implemented") //next slide 25
+      case NoAmlsDetailsUK =>
+        ("manage.account.amls.add","/not-implemented") //next slide 4
+      case ValidAmlsDetailsUK =>
+        ("manage.account.amls.update","/not-implemented") //next slide 8
+      case ExpiredAmlsDetailsUK | PendingAmlsDetails | PendingAmlsDetailsRejected=>
+        ("manage.account.amls.update","/not-implemented") //next slide 11
     }
   }
 

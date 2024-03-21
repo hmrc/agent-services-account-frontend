@@ -12,3 +12,6 @@
 # Add all the application routes to the prod.routes file
 
 ->         /                          prod.Routes
+
+#if no query param provided then a session will be created with a UK AMLS status. Login first before use!
+GET        /test-only/initialise-amls      @uk.gov.hmrc.agentservicesaccount.controllers.testOnly.TestOnlyController.initialiseAmls(amlsStatus: Option[AmlsStatus] ?= None)

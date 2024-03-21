@@ -21,8 +21,9 @@ import com.kenshoo.play.metrics.Metrics
 import play.api.http.Status.{BAD_REQUEST, NO_CONTENT, OK}
 import play.api.libs.json.Json
 import uk.gov.hmrc.agent.kenshoo.monitoring.HttpAPIMonitor
+import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.models.AmlsDetails
+import uk.gov.hmrc.agentservicesaccount.models.{AmlsDetails, AmlsStatus}
 import uk.gov.hmrc.http._
 import uk.gov.hmrc.http.client.HttpClientV2
 
@@ -47,6 +48,16 @@ class AgentAssuranceConnector @Inject()(httpV2: HttpClientV2)(implicit val metri
         case NO_CONTENT => throw new Exception(s"Error $NO_CONTENT no amls details found") //TODO update when designs are done
         case BAD_REQUEST => throw UpstreamErrorResponse(s"Error $BAD_REQUEST invalid ARN when trying to get amls details", BAD_REQUEST)
         case e => throw UpstreamErrorResponse(s"Error $e unable to get amls details", e)
+      }
+    }
+  }
+
+  def getAmlsStatus(arn: Arn)(implicit ec: ExecutionContext, hc: HeaderCarrier): Future[AmlsStatus] = {
+    httpV2.get(new URL(s"$baseUrl/agent-assurance/amls/status/${arn.value}")).execute[HttpResponse].map { response =>
+      response.status match {
+        case OK => Json.parse(response.body).as[AmlsStatus]
+        case BAD_REQUEST => throw UpstreamErrorResponse(s"Error $BAD_REQUEST invalid ARN when trying to get amls status", BAD_REQUEST)
+        case e => throw UpstreamErrorResponse(s"Error $e unable to get amls status", e)
       }
     }
   }

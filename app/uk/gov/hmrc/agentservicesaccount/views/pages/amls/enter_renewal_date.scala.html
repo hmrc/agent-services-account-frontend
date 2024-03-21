@@ -1,0 +1,70 @@
+@*
+ * Copyright 2024 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+@import uk.gov.hmrc.agentservicesaccount.controllers.amls.routes
+@import uk.gov.hmrc.agentservicesaccount.views.html._
+@import uk.gov.hmrc.govukfrontend.views.html.components.{ErrorSummary, FormWithCSRF, GovukButton, GovukErrorSummary, GovukFieldset, Text, _}
+@import uk.gov.hmrc.hmrcfrontend.views.html.components.implicits._
+
+@import java.time.LocalDate
+
+@this(
+  main: main,
+  h1: h1, p: p,
+  formWithCSRF: FormWithCSRF,
+  inputDate: input_date,
+  govukFieldset: GovukFieldset,
+  govukSummaryList: GovukSummaryList,
+  govukInsetText: GovukInsetText,
+  govukButton: GovukButton,
+  govukSelect: GovukSelect,
+  govukErrorSummary: GovukErrorSummary
+)
+
+
+@(form: Form[LocalDate])(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
+
+@fieldSetHtml = {
+    @inputDate(
+        field = form("endDate"),
+        legend = msgs("amls.enter-renewal-date.h1"),
+        legendClass = "govuk-fieldset__legend--xl",
+        hint = Some(msgs("amls.enter-renewal-date.hint")),
+        legendAsHeading = true
+    )
+}
+
+@main(
+    pageTitle = withErrorPrefix(form.hasErrors, msgs("amls.enter-renewal-date.h1")),
+    mimicBrowserBackLink = true,
+    showSecondaryNav = false) {
+
+    @if(form.hasErrors) {
+        @govukErrorSummary(ErrorSummary().withFormErrorsAsText(form))
+    }
+
+    @formWithCSRF(action = routes.EnterRenewalDateController.onSubmit) {
+        @govukFieldset(Fieldset(
+            html = fieldSetHtml,
+            legend = None,
+        ))
+
+        @govukButton(Button(content = Text(msgs("common.continue"))))
+    }
+
+
+}

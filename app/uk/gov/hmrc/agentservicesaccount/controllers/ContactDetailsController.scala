@@ -45,6 +45,7 @@ class ContactDetailsController @Inject()(actions: Actions,
                                          alfConnector: AddressLookupConnector,
                                          evConnector: EmailVerificationConnector,
                                          pcodRepository: PendingChangeOfDetailsRepository,
+                                         agentClientAuthorisationConnector: AgentClientAuthorisationConnector,
                                          //views
                                          select_changes: select_changes,
                                          isAmlsHmrc: is_amls_hmrc,
@@ -54,7 +55,8 @@ class ContactDetailsController @Inject()(actions: Actions,
                                          update_phone: update_phone,
                                          update_email: update_email,
                                          change_submitted: change_submitted,
-                                         email_locked: email_locked
+                                         email_locked: email_locked,
+                                         beforeYouStartPage: before_you_start_page
                                         )(implicit appConfig: AppConfig,
                                           cc: MessagesControllerComponents,
                                           ec: ExecutionContext) extends FrontendController(cc) with I18nSupport with Logging {
@@ -311,7 +313,7 @@ class ContactDetailsController @Inject()(actions: Actions,
       val arn = request.agentInfo.arn
       sessionCache.get[AgencyDetails](DRAFT_NEW_CONTACT_DETAILS).flatMap {
         case None => // graceful redirect in case of expired session data etc.
-        Future.successful(Redirect(routes.ContactDetailsController.showCurrentContactDetails))
+          Future.successful(Redirect(routes.ContactDetailsController.showCurrentContactDetails))
         case Some(newContactDetails) => for {
           oldContactDetails <- getCurrentAgencyDetails()
           pendingChange = PendingChangeOfDetails(
@@ -333,6 +335,17 @@ class ContactDetailsController @Inject()(actions: Actions,
   val showChangeSubmitted: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     ifFeatureEnabled {
       Future.successful(Ok(change_submitted())) // don't show if there is nothing submitted
+    }
+  }
+
+  def showBeforeYouStartPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
+    actions.ifFeatureEnabled(appConfig.enableChangeContactDetails) {
+      if (request.agentInfo.isAdmin) {
+        agentClientAuthorisationConnector.getAgencyDetails().map(agencyDetails =>
+          Ok(beforeYouStartPage(agencyDetails)))
+      } else {
+        Future.successful(Forbidden)
+      }
     }
   }
 

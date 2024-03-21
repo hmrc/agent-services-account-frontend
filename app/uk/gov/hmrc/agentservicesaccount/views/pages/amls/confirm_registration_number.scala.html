@@ -1,0 +1,73 @@
+@*
+ * Copyright 2024 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+@import uk.gov.hmrc.agentservicesaccount.views.html.main
+@import uk.gov.hmrc.agentservicesaccount.controllers.amls.routes
+@import uk.gov.hmrc.govukfrontend.views.html.components.{GovukErrorSummary, ErrorSummary, GovukButton, GovukRadios, FormWithCSRF}
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.button.Button
+@import uk.gov.hmrc.govukfrontend.views.html.components.{Radios, Fieldset, Legend, Text, HtmlContent, RadioItem}
+@import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
+@import uk.gov.hmrc.hmrcfrontend.views.html.components.implicits._
+
+
+@this(
+        main: main, h1: h1,
+        formWithCSRF: FormWithCSRF,
+        govukRadios: GovukRadios,
+        govukButton: GovukButton,
+        govukErrorSummary: GovukErrorSummary
+)
+
+
+@(form: Form[Boolean], registrationNumber: String)(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
+
+@main(
+ pageTitle = withErrorPrefix(form.hasErrors, msgs("amls.confirm-registration-number.h1", registrationNumber)),
+ mimicBrowserBackLink = true,
+ showSecondaryNav = false){
+
+ @if(form.hasErrors){
+  @govukErrorSummary(ErrorSummary().withFormErrorsAsText(form))
+ }
+
+ @formWithCSRF(action = routes.ConfirmRegistrationNumberController.onSubmit) {
+  @govukRadios(Radios(
+   fieldset = Some(Fieldset(
+    legend = Some(Legend(
+     content = Text(msgs("amls.confirm-registration-number.h1", registrationNumber)),
+     classes = "govuk-fieldset__legend--xl",
+     isPageHeading = true
+    ))
+   )),
+   classes = "govuk-radios--inline",
+   idPrefix = Some("accept"),
+   name = "accept",
+   items = Seq(
+    RadioItem(
+     content = Text(msgs("common.yes")),
+     value = Some("true")
+    ),
+    RadioItem(
+     content = Text(msgs("common.no")),
+     value = Some("false")
+    )
+   )
+  ).withFormField(form("accept")))
+
+  @govukButton(Button(content = Text(msgs("common.continue"))))
+ }
+}

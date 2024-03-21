@@ -52,13 +52,12 @@
         }
     }
 
-
     @h1("view-contact-details.title")
 
     @contact_details_summary_list_partial(agencyDetails, showChangeAction = false)
 
     @if(isAdmin){
-    @p(html = Some(a("view-contact-details.update-details.link", href = "/manage-account/contact-details/start-update")))
+    @p(html = Some(a("view-contact-details.update-details.link", href = routes.ContactDetailsController.showBeforeYouStartPage.url)))
     }
     @p(html = Some(a("view-contact-details.return-to-account.link", href = routes.AgentServicesController.manageAccount.url)))
 }

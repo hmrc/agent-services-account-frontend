@@ -17,7 +17,8 @@
 package uk.gov.hmrc.agentservicesaccount.connectors
 
 import play.api.test.Helpers._
-import uk.gov.hmrc.agentservicesaccount.models.AmlsDetails
+import uk.gov.hmrc.agentmtdidentifiers.model.Arn
+import uk.gov.hmrc.agentservicesaccount.models.{AmlsDetails, AmlsStatus, UpdateAmlsJourney}
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentAssuranceStubs._
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
@@ -33,6 +34,8 @@ class AgentAssuranceConnectorSpec extends BaseISpec {
 
   private val arn: String = "TARN0000001"
 
+  private val arnTyped = Arn(arn)
+
   private val ukAMLSDetails = AmlsDetails(
     "HMRC",
     Some("123456789"),
@@ -41,6 +44,14 @@ class AgentAssuranceConnectorSpec extends BaseISpec {
     Some(LocalDate.of(2022, 12, 25)),
     Some(LocalDate.of(2023, 12, 25))
   )
+
+  private val amlsJourney = UpdateAmlsJourney(
+    status = AmlsStatus.ValidAmlsDetailsUK,
+    newAmlsBody = Some("UK AMLS"),
+    newRegistrationNumber = Some("AMLS123"),
+    newExpirationDate = Some(LocalDate.parse("2024-10-10"))
+  )
+
 
   private val overseasAMLSDetails = AmlsDetails("notHMRC")
 
@@ -82,4 +93,35 @@ class AgentAssuranceConnectorSpec extends BaseISpec {
     }
   }
 
+
+  "getAmlsStatus" should {
+    "return UK AMLS Status" in {
+      givenAmlsStatusForArn(AmlsStatus.ValidAmlsDetailsUK, arnTyped)
+
+      val result = connector.getAmlsStatus(arnTyped)
+
+      await(result) shouldBe AmlsStatus.ValidAmlsDetailsUK
+    }
+    "return Overseas AMLS details" in {
+      givenAmlsStatusForArn(AmlsStatus.ValidAmlsNonUK, arnTyped)
+
+      val result = connector.getAmlsStatus(arnTyped)
+
+      await(result) shouldBe AmlsStatus.ValidAmlsNonUK
+    }
+    "handle 400 Bad Request" in {
+      givenAmlsStatusBadRequestForArn(arnTyped)
+
+      intercept[UpstreamErrorResponse] {
+        await(connector.getAmlsStatus(arnTyped))
+      }.getMessage shouldBe "Error 400 invalid ARN when trying to get amls status"
+    }
+    "handle 500 Internal Server Error" in {
+      givenAmlsStatusServerErrorForArn(arnTyped)
+
+      intercept[UpstreamErrorResponse] {
+        await(connector.getAmlsStatus(arnTyped))
+      }.getMessage shouldBe "Error 500 unable to get amls status"
+    }
+  }
 }

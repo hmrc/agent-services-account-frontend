@@ -21,11 +21,11 @@ import play.api.libs.json.{Format, Json}
 import java.time.LocalDate
 
 case class AmlsDetails(supervisoryBody: String,
-                         membershipNumber: Option[String] = None,
-                         amlsSafeId: Option[String] = None,
-                         agentBPRSafeId: Option[String] = None,
-                         appliedOn: Option[LocalDate] = None,
-                         membershipExpiresOn: Option[LocalDate] = None)
+                       membershipNumber: Option[String] = None,
+                       amlsSafeId: Option[String] = None,
+                       agentBPRSafeId: Option[String] = None,
+                       appliedOn: Option[LocalDate] = None,
+                       membershipExpiresOn: Option[LocalDate] = None)
 
 object AmlsDetails {
   implicit val format: Format[AmlsDetails] = Json.format[AmlsDetails]
