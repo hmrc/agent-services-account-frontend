@@ -347,7 +347,7 @@ class AgentServicesControllerSpec extends BaseISpec {
     contactDetailsSection.select("h2").text shouldBe "Your organisation"
     val links = contactDetailsSection.select("p a")
     links.get(0).text shouldBe "View or update anti-money laundering supervision details"
-    links.get(0).attr("href") shouldBe "/not-implemented"
+    links.get(0).attr("href") shouldBe "/agent-services-account/manage-account/money-laundering-supervision/view-details"
     links.get(1).text shouldBe "View or update contact details we have for your business"
     links.get(1).attr("href") shouldBe "/agent-services-account/manage-account/contact-details/view"
     links.get(2).text shouldBe "View administrators"
@@ -681,7 +681,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       contactDetailsSection.select("h2").text shouldBe "Your organisation"
       val links = contactDetailsSection.select("p a")
       links.get(0).text shouldBe "View or update anti-money laundering supervision details"
-      links.get(0).attr("href") shouldBe "/not-implemented"
+      links.get(0).attr("href") shouldBe "/agent-services-account/manage-account/money-laundering-supervision/view-details"
     }
 
     "return add AMLS link" in {
@@ -700,7 +700,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       contactDetailsSection.select("h2").text shouldBe "Your organisation"
       val links = contactDetailsSection.select("p a")
       links.get(0).text shouldBe "Action: Add anti-money laundering supervision details"
-      links.get(0).attr("href") shouldBe "/not-implemented"
+      links.get(0).attr("href") shouldBe "/agent-services-account/manage-account/money-laundering-supervision/view-details"
     }
 
     "return update AMLS link" in {
@@ -719,7 +719,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       contactDetailsSection.select("h2").text shouldBe "Your organisation"
       val links = contactDetailsSection.select("p a")
       links.get(0).text shouldBe "Action: Update anti-money laundering supervision details"
-      links.get(0).attr("href") shouldBe "/not-implemented"
+      links.get(0).attr("href") shouldBe "/agent-services-account/manage-account/money-laundering-supervision/view-details"
     }
 
   }
