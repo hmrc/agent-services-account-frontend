@@ -570,6 +570,7 @@ amls.check-your-answers.p=Anti-money laundering supervision details
 amls.check-your-answers.supervisory-body=Supervisory body
 amls.check-your-answers.registration-number=Registration number
 amls.check-your-answers.renewal-date=Next renewal date
+amls.check-your-answers.submit-button=Submit your details 
 
 #AMLS Errors
 update-money-laundering-supervisory.error.date=Enter your next registration renewal date

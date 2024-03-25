@@ -537,6 +537,7 @@ admin-access.p3=Os nad ydych yn siŵr sut i wneud hyn, gofynnwch i weinyddwr ara
 admin-access.button=Ewch i reoli’r cyfrif
 
 #AMLS
+amls.add-details.h1=Manylion ynghylch goruchwyliaeth gwrth-wyngalchu arian
 amls.is-hmrc.h1=Is HMRC your money laundering supervisory body? TBC
 amls.is-hmrc.error=Select yes if HMRC is your money laundering supervisory body TBC
 amls.confirmation.h1=''Rydych wedi ychwanegu eich manylion o ran goruchwyliaeth
@@ -564,6 +565,12 @@ amls.enter-registration-number.h1=Beth yw’ch rhif cofrestru?
 amls.enter-registration-number.error.empty=Nodwch eich rhif cofrestru
 amls.enter-registration-number.error.not-hmrc.invalid=Registration number must include only letters and numbers
 amls.enter-registration-number.error.hmrc.invalid=Enter a registration number in the correct format, for example XAML00000123456
+amls.check-your-answers.h1=Gwirio’ch atebion
+amls.check-your-answers.p=Manylion ynghylch goruchwyliaeth gwrth-wyngalchu arian
+amls.check-your-answers.supervisory-body=Corff goruchwylio
+amls.check-your-answers.registration-number='Rhif cofrestru
+amls.check-your-answers.renewal-date=Dyddiad nesaf ar gyfer adnewyddu
+amls.check-your-answers.submit-button=Cyflwyno’ch manylion
 
 #AMLS Errors
 update-money-laundering-supervisory.error.date=Enter your next registration renewal date TBC
