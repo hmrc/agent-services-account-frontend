@@ -62,7 +62,7 @@ class EnterRenewalDateController @Inject()(actions: Actions,
               formWithError => Ok(enterRenewalDate(formWithError)).toFuture,
               data =>
                 saveAmlsJourney(amlsJourney.copy(newExpirationDate = Option(data))).map(_ =>
-                    Redirect("/cya")
+                    Redirect(routes.CheckYourAnswersController.showPage)
                 )
             )
       }

@@ -537,18 +537,18 @@ admin-access.p3=Os nad ydych yn siŵr sut i wneud hyn, gofynnwch i weinyddwr ara
 admin-access.button=Ewch i reoli’r cyfrif
 
 #AMLS
-amls.add-details.h1=Anti-money laundering supervision details
-amls.is-hmrc.error=Select yes if HMRC is your money laundering supervisory body
-amls.is-hmrc.h1=Is HMRC your money laundering supervisory body?
-amls.confirmation.h1=You''ve changed your supervision details
-amls.confirmation.p1=We''ll update your anti-money laundering supervision details on your agent services accounts.
-amls.confirmation.link=Return to manage account
-amls.enter-renewal-update.title=What are your money laundering supervision registration details?
-amls.enter-renewal.h1=What are your money laundering supervision registration details?
-amls.enter-renewal-body.hint=Start typing and select your supervisory body from the list.
-amls.enter-renewal-date.form.title=Your next registration renewal date
-amls.enter-renewal-registration.number.h1=Your registration number
-amls.enter-renewal-body.h1=Name of money laundering supervisory body
+amls.add-details.h1=Manylion ynghylch goruchwyliaeth gwrth-wyngalchu arian
+amls.is-hmrc.h1=Is HMRC your money laundering supervisory body? TBC
+amls.is-hmrc.error=Select yes if HMRC is your money laundering supervisory body TBC
+amls.confirmation.h1=''Rydych wedi ychwanegu eich manylion o ran goruchwyliaeth
+amls.confirmation.p1=Byddwn yn diweddaru eich manylion ynghylch goruchwyliaeth gwrth-wyngalchu arian ar eich cyfrif gwasanaethau asiant.
+amls.confirmation.link=''Dychwelyd i ''Rheoli''r cyfrif''
+amls.enter-renewal-update.title=What are your money laundering supervision registration details? TBC
+amls.enter-renewal.h1=What are your money laundering supervision registration details? TBC
+amls.enter-renewal-body.hint=Start typing and select your supervisory body from the list. TBC
+amls.enter-renewal-date.form.title=Your next registration renewal date TBC
+amls.enter-renewal-registration.number.h1=Your registration number TBC
+amls.enter-renewal-body.h1=Name of money laundering supervisory body TBC
 
 amls.view-details.h1=Manylion ynghylch goruchwyliaeth gwrth-wyngalchu arian
 amls.view-details.supervisory-name=Corff goruchwylio
@@ -606,6 +606,12 @@ amls.enter-registration-number.h1=Beth yw’ch rhif cofrestru?
 amls.enter-registration-number.error.empty=Nodwch eich rhif cofrestru
 amls.enter-registration-number.error.not-hmrc.invalid=Registration number must include only letters and numbers
 amls.enter-registration-number.error.hmrc.invalid=Enter a registration number in the correct format, for example XAML00000123456
+amls.check-your-answers.h1=Gwirio’ch atebion
+amls.check-your-answers.p=Manylion ynghylch goruchwyliaeth gwrth-wyngalchu arian
+amls.check-your-answers.supervisory-body=Corff goruchwylio
+amls.check-your-answers.registration-number='Rhif cofrestru
+amls.check-your-answers.renewal-date=Dyddiad nesaf ar gyfer adnewyddu
+amls.check-your-answers.submit-button=Cyflwyno’ch manylion
 
 #AMLS Errors
 update-money-laundering-supervisory.error.date=Enter your next registration renewal date TBC

@@ -101,3 +101,6 @@ POST       /manage-account/money-laundering-supervision/renewal-date      @uk.go
 
 GET        /manage-account/money-laundering-supervision/new-registration-number      @uk.gov.hmrc.agentservicesaccount.controllers.amls.EnterRegistrationNumberController.showPage(cya: Boolean ?= false)
 POST       /manage-account/money-laundering-supervision/new-registration-number      @uk.gov.hmrc.agentservicesaccount.controllers.amls.EnterRegistrationNumberController.onSubmit(cya: Boolean ?= false)
+
+GET        /manage-account/money-laundering-supervision/check-your-answers           @uk.gov.hmrc.agentservicesaccount.controllers.amls.CheckYourAnswersController.showPage
+#POST       /manage-account/money-laundering-supervision/check-your-answers           @uk.gov.hmrc.agentservicesaccount.controllers.amls.CheckYourAnswersController.onSubmit

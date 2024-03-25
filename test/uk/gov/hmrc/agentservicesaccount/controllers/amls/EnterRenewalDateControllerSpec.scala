@@ -187,7 +187,7 @@ class EnterRenewalDateControllerSpec extends PlaySpec
         )
 
         status(result) mustBe SEE_OTHER
-        Helpers.redirectLocation(result).get mustBe "/cya"
+        Helpers.redirectLocation(result).get mustBe routes.CheckYourAnswersController.showPage.url
       }
 
 
