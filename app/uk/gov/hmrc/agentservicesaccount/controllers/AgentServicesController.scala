@@ -32,7 +32,6 @@ import uk.gov.hmrc.agentservicesaccount.views.html.pages.assistant.{administrato
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.agentservicesaccount.controllers.amls.{routes => amlsRoutes}
-//import uk.gov.hmrc.agentservicesaccount.controllers._
 
 import javax.inject._
 import scala.concurrent.{ExecutionContext, Future}
