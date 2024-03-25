@@ -114,13 +114,13 @@ class AgentServicesController @Inject()(authActions: AuthActions,
   private def getAmlsStatusLink(amlsStatus: AmlsStatus): (String, String) = {
     amlsStatus match {
       case NoAmlsDetailsNonUK =>
-        ("manage.account.amls.add","/not-implemented") //next slide 21
+        ("manage.account.amls.view","/not-implemented") //next slide 21
       case ValidAmlsNonUK =>
-        ("manage.account.amls.update","/not-implemented") //next slide 25
+        ("manage.account.amls.view","/not-implemented") //next slide 25
       case NoAmlsDetailsUK =>
         ("manage.account.amls.add","/not-implemented") //next slide 4
       case ValidAmlsDetailsUK =>
-        ("manage.account.amls.update","/not-implemented") //next slide 8
+        ("manage.account.amls.view","/not-implemented") //next slide 8
       case ExpiredAmlsDetailsUK | PendingAmlsDetails | PendingAmlsDetailsRejected=>
         ("manage.account.amls.update","/not-implemented") //next slide 11
     }
