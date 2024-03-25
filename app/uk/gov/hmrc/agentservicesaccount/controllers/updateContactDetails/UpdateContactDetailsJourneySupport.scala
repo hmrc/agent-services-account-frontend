@@ -1,0 +1,7 @@
+package uk.gov.hmrc.agentservicesaccount.controllers.updateContactDetails
+
+import uk.gov.hmrc.agentservicesaccount.repository.UpdateContactDetailsJourneyRepository
+
+trait UpdateContactDetailsJourneySupport {
+  val updateContactDetailsJourneyRepository: UpdateContactDetailsJourneyRepository
+}

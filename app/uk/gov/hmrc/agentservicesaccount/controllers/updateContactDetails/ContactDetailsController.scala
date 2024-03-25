@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.agentservicesaccount.controllers
+package uk.gov.hmrc.agentservicesaccount.controllers.updateContactDetails
 
 import play.api.Logging
 import play.api.i18n.{I18nSupport, Lang}
@@ -23,10 +23,12 @@ import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthRequestWithAgentInfo}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AddressLookupConnector, AgentClientAuthorisationConnector, EmailVerificationConnector}
-import uk.gov.hmrc.agentservicesaccount.forms.{SelectChangesForm, UpdateDetailsForms}
+import uk.gov.hmrc.agentservicesaccount.controllers.updateContactDetails.util.NextPageSelector.getNextPage
+import uk.gov.hmrc.agentservicesaccount.controllers.{DRAFT_NEW_CONTACT_DETAILS, EMAIL_PENDING_VERIFICATION, SELECT_CHANGES_CONTACT_DETAILS, routes}
+import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup._
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.{Email, VerifyEmailRequest, VerifyEmailResponse}
-import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress, PendingChangeOfDetails, SelectChanges}
+import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress, PendingChangeOfDetails}
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.contact_details._
@@ -46,7 +48,6 @@ class ContactDetailsController @Inject()(actions: Actions,
                                          pcodRepository: PendingChangeOfDetailsRepository,
                                          agentClientAuthorisationConnector: AgentClientAuthorisationConnector,
                                          //views
-                                         select_changes: select_changes,
                                          view_contact_details: view_contact_details,
                                          check_updated_details: check_updated_details,
                                          update_name: update_name,
@@ -86,51 +87,6 @@ class ContactDetailsController @Inject()(actions: Actions,
     _ <- sessionCache.put[AgencyDetails](DRAFT_NEW_CONTACT_DETAILS, updatedDraftDetails)
   } yield ()
 
-  def showSelectChanges: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
-      Ok(select_changes(SelectChangesForm.form)).toFuture
-    }
-  }
-
-  def submitSelectChanges: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
-      SelectChangesForm.form
-        .bindFromRequest()
-        .fold(
-          formWithErrors => {
-            Ok(select_changes(formWithErrors)).toFuture
-          },
-          (selectedChanges: SelectChanges) => {
-            sessionCache.put(SELECT_CHANGES_CONTACT_DETAILS, selectedChanges.pagesSelected).flatMap {
-              _ => getNextPage(selectedChanges.pagesSelected)
-            }
-          }
-        )
-    }
-  }
-
-  private def getNextPage(pagesRequired: Set[String], userIsOnCheckYourAnswersFlow: Boolean = false): Future[Result] = {
-    val nextPage: String =
-      pagesRequired
-        .headOption
-        .getOrElse( if (userIsOnCheckYourAnswersFlow) "/check-your-answers" else "/update-other-services" )
-
-    nextPage match {
-      case "/name" => Future successful Redirect(routes.ContactDetailsController.showChangeBusinessName)
-      case "/address" => Future successful Redirect(routes.ContactDetailsController.showChangeEmailAddress) //TODO: Update routing
-      case "/email" => Future successful Redirect(routes.ContactDetailsController.showChangeEmailAddress)
-      case "/telephone" => Future successful Redirect(routes.ContactDetailsController.showChangeTelephoneNumber)
-      case "/check-your-answers" => Future successful Redirect(routes.ContactDetailsController.showCheckNewDetails)
-      case _ => Future successful Redirect(routes.ContactDetailsController.showCurrentContactDetails) //TODO: Check routing
-    }
-  }
-
-  private def updateRemainingPages(implicit request: Request[_]): Future[Set[String]] = {
-    val remainingPages: Future[Set[String]] = sessionCache.get(SELECT_CHANGES_CONTACT_DETAILS).map(_.get.drop(1))
-    remainingPages.flatMap(pages => sessionCache.put(SELECT_CHANGES_CONTACT_DETAILS, pages))
-    remainingPages
-  }
-
   val showCurrentContactDetails: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     ifFeatureEnabled {
       for {
@@ -156,9 +112,7 @@ class ContactDetailsController @Inject()(actions: Actions,
           formWithErrors => Future.successful(Ok(update_name(formWithErrors))),
           newAgencyName => {
             updateDraftDetails(_.copy(agencyName = Some(newAgencyName))).flatMap(_ =>
-              updateRemainingPages.flatMap( remainingPages =>
-                getNextPage(remainingPages)
-              )
+                getNextPage(sessionCache)
             )
           }
         )
@@ -218,9 +172,7 @@ class ContactDetailsController @Inject()(actions: Actions,
           formWithErrors => Future.successful(Ok(update_phone(formWithErrors))),
           newPhoneNumber => {
             updateDraftDetails(_.copy(agencyTelephone = Some(newPhoneNumber))).flatMap(_ =>
-              updateRemainingPages.flatMap( remainingPages =>
-                getNextPage(remainingPages)
-              )
+                getNextPage(sessionCache)
             )
           }
         )
@@ -406,4 +358,3 @@ class ContactDetailsController @Inject()(actions: Actions,
     })
   }
 }
-

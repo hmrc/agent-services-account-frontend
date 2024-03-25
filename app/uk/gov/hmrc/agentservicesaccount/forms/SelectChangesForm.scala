@@ -25,10 +25,10 @@ object SelectChangesForm {
   def form: Form[SelectChanges] = {
     Form(
       mapping(
-        "businessName" -> optional(nonEmptyText),
-        "address" -> optional(nonEmptyText),
-        "email" -> optional(nonEmptyText),
-        "telephone" -> optional(nonEmptyText)
+        "businessName" -> optional(nonEmptyText).verifying(value => value.isEmpty || value.get == "businessName"),
+        "address" -> optional(nonEmptyText).verifying(value => value.isEmpty || value.get == "address"),
+        "email" -> optional(nonEmptyText).verifying(value => value.isEmpty || value.get == "email"),
+        "telephone" -> optional(nonEmptyText).verifying(value => value.isEmpty || value.get == "telephone")
       )(SelectChanges.apply)(SelectChanges.unapply)
         .verifying("contact-details.select-changes.error", _.atLeastOneSelected)
     )
