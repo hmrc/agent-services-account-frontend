@@ -5,7 +5,7 @@ import scoverage.ScoverageKeys
 object CodeCoverageSettings {
 
   private val excludedFiles: Seq[String] = Seq(
-    ".*.template",
+    //".*.template",
     ".*CallOps.*",
     ".*EmailService.*",
     ".*ManageAccessPermissionsConfig.*",
