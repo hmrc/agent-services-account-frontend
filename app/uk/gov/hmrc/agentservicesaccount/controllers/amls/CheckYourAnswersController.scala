@@ -37,77 +37,71 @@ import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers._
-import uk.gov.hmrc.agentservicesaccount.models.{AmlsCheckYourAnswers, UpdateAmlsJourney}
+import uk.gov.hmrc.agentservicesaccount.models.UpdateAmlsJourney
 import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
+import uk.gov.hmrc.agentservicesaccount.utils.AMLSLoader
 import uk.gov.hmrc.agentservicesaccount.views.components.models.SummaryListData
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.check_your_answers
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 
 @Singleton
-class CheckYourAnswersController @Inject()(actions: Actions,
+class CheckYourAnswersController @Inject()(amlsLoader: AMLSLoader,
+                                           actions: Actions,
                                            val updateAmlsJourneyRepository: UpdateAmlsJourneyRepository,
                                            checkYourAnswers: check_your_answers,
                                            cc: MessagesControllerComponents
-                                          )(implicit appConfig: AppConfig, ec: ExecutionContext) extends FrontendController(cc) with AmlsJourneySupport with I18nSupport {
+                                          )(implicit appConfig: AppConfig, ec: ExecutionContext)
+  extends FrontendController(cc) with AmlsJourneySupport with I18nSupport {
+
+  private lazy val supervisoryBodies: Map[String, String] = amlsLoader.load("/amls.csv")
 
   def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
-      withUpdateAmlsJourney { amlsJourney =>
-        checkJourneyData(amlsJourney) { checkYourAnswersData =>
-          Ok(checkYourAnswers(checkYourAnswersData)).toFuture
-        }
+      withUpdateAmlsJourney { journeyData =>
+        val model = buildSummaryListItems(journeyData.isUkAgent, journeyData, request.messages.lang.locale)
+        Ok(checkYourAnswers(model)).toFuture
       }
     }
   }
 
-  private[amls] def buildViewModel(userInTheUk: Boolean, journey: UpdateAmlsJourney): Seq[SummaryListData] = {
+  private[amls] def buildSummaryListItems(isUkAgent: Boolean, journey: UpdateAmlsJourney, lang: Locale): Seq[SummaryListData] = {
     for {
-      body <- journey.newAmlsBody
+      body <- journey.newAmlsBody.map {
+        case body if isUkAgent => supervisoryBodies(body)
+        case body => body
+      }
       regNumber <- journey.newRegistrationNumber
-      renewalDate <- journey.newExpirationDate
     } yield {
       val items = Seq(
         SummaryListData(
-          key = "replace this with the supervisory body message key",
+          key = "amls.check-your-answers.supervisory-body",
           value = body,
-          link = Some(amls.routes.AmlsNewSupervisoryBodyController.showPage)
+          link = Some(amls.routes.AmlsNewSupervisoryBodyController.showPage(true))
         ),
         SummaryListData(
-          key = "replace this with the registration number message key",
+          key = "amls.check-your-answers.registration-number",
           value = regNumber,
-          link = Some(amls.routes.ConfirmRegistrationNumberController.showPage)
-        ),
-
-        SummaryListData(
-          key = "replace this with the renewal date message key",
-          value = renewalDate.toString,
-          link = Some(amls.routes.EnterRenewalDateController.showPage)
+          link = Some(amls.routes.EnterRegistrationNumberController.showPage(true))
         )
-
       )
-      items
+
+      (isUkAgent, journey.newExpirationDate) match {
+        case (false, _) => items
+        case (true, Some(date)) =>
+          val formatter = DateTimeFormatter.ofPattern("d MMMM yyyy", lang)
+          items ++ Seq(SummaryListData(
+            key = "amls.check-your-answers.renewal-date",
+            value = date.format(formatter),
+            link = Some(amls.routes.EnterRenewalDateController.showPage)
+          ))
+      }
     }
-  }.getOrElse(Seq.empty)
+  }.getOrElse(throw new Exception("Expected AMLS journey data missing"))
 
-  private def checkJourneyData(updateAmlsJourney: UpdateAmlsJourney)
-                              (action: AmlsCheckYourAnswers => Future[Result]): Future[Result] = {
-
-    (updateAmlsJourney.newAmlsBody, updateAmlsJourney.newRegistrationNumber, updateAmlsJourney.newExpirationDate) match {
-      case (Some(body), Some(regNum), Some(renewalDate))
-        if updateAmlsJourney.isUkAgent => action(AmlsCheckYourAnswers(body, regNum, Some(renewalDate)))
-      case (Some(body), Some(regNum), mRenewalDate) =>
-        if (!updateAmlsJourney.isUkAgent) action(AmlsCheckYourAnswers(body, regNum, mRenewalDate))
-        else Redirect(amls.routes.EnterRenewalDateController.showPage).toFuture
-      case (Some(_), None, _) => Redirect(amls.routes.EnterRegistrationNumberController.showPage).toFuture
-      case (None, _, _) => Redirect(amls.routes.AmlsNewSupervisoryBodyController.showPage).toFuture
-      case _ =>
-        Redirect(routes.AgentServicesController.manageAccount).toFuture
-
-    }
-  }
 }
-

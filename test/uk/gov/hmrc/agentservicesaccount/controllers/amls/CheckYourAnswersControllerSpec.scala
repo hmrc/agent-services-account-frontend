@@ -29,8 +29,10 @@ import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, SuspensionDetails}
 import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector}
-import uk.gov.hmrc.agentservicesaccount.models.{AmlsCheckYourAnswers, AmlsStatus, UpdateAmlsJourney}
+import uk.gov.hmrc.agentservicesaccount.models.{AmlsStatus, UpdateAmlsJourney}
 import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
+import uk.gov.hmrc.agentservicesaccount.utils.AMLSLoader
+import uk.gov.hmrc.agentservicesaccount.views.components.models.SummaryListData
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.check_your_answers
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.authorise.Predicate
@@ -39,11 +41,12 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.mongo.cache.DataKey
 
 import java.time.LocalDate
+import java.util.Locale
 import scala.concurrent.{ExecutionContext, Future}
 
-class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with ArgumentMatchersSugar{
-implicit val ec: ExecutionContext = ExecutionContext.global
-  val fakeRequest: FakeRequest[AnyContent] = FakeRequest()
+class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with ArgumentMatchersSugar {
+  implicit val ec: ExecutionContext = ExecutionContext.global
+  private val fakeRequest = FakeRequest().withCookies(Cookie("PLAY_LANG", "en_GB")).withTransientLang(Locale.UK)
 
   private val arn: Arn = Arn("arn")
   private val credentialRole: User.type = User
@@ -55,26 +58,29 @@ implicit val ec: ExecutionContext = ExecutionContext.global
   private val ggCredentials: Credentials =
     Credentials("ggId", "GovernmentGateway")
   private val authResponse: Future[Enrolments ~ Some[Credentials] ~ Some[Email] ~ Some[Name] ~ Some[User.type]] =
-    Future.successful(new ~(new ~(new ~(new ~(
+    Future.successful(new~(new~(new~(new~(
       Enrolments(agentEnrolment), Some(ggCredentials)),
       Some(Email("test@email.com"))),
       Some(Name(Some("Troy"), Some("Barnes")))),
       Some(credentialRole)))
   private val invalidAuthResponse: Future[Enrolments ~ Some[Credentials] ~ Some[Email] ~ Some[Name] ~ Some[Assistant.type]] =
-    Future.successful(new ~(new ~(new ~(new ~(
+    Future.successful(new~(new~(new~(new~(
       Enrolments(agentEnrolment), Some(ggCredentials)),
       Some(Email("test@email.com"))),
       Some(Name(Some("Troy"), Some("Barnes")))),
       Some(Assistant)))
   private val invalidCredentialAuthResponse: Future[Enrolments ~ None.type ~ Some[Email] ~ Some[Name] ~ Some[User.type]] =
-    Future.successful(new ~(new ~(new ~(new ~(
+    Future.successful(new~(new~(new~(new~(
       Enrolments(agentEnrolment), None),
       Some(Email("test@email.com"))),
       Some(Name(Some("Troy"), Some("Barnes")))),
       Some(credentialRole)))
 
   private val ukAmlsJourney = UpdateAmlsJourney(
-    status = AmlsStatus.ValidAmlsDetailsUK
+    status = AmlsStatus.ValidAmlsDetailsUK,
+    newAmlsBody = Some("ABC"),
+    newRegistrationNumber = Some("1234567890"),
+    newExpirationDate = Some(LocalDate.now())
   )
 
   private val suspensionDetailsResponse: Future[SuspensionDetails] = Future.successful(SuspensionDetails(suspensionStatus = false, None))
@@ -86,6 +92,7 @@ implicit val ec: ExecutionContext = ExecutionContext.global
     protected val mockEnvironment: Environment = mock[Environment]
     protected val authActions = new AuthActions(mockAppConfig, mockAuthConnector, mockEnvironment)
 
+    protected val mockAmlsLoader: AMLSLoader = mock[AMLSLoader]
     protected val mockAgentClientAuthorisationConnector: AgentClientAuthorisationConnector = mock[AgentClientAuthorisationConnector]
     protected val mockAgentAssuranceConnector: AgentAssuranceConnector = mock[AgentAssuranceConnector]
     protected val actionBuilder = new DefaultActionBuilderImpl(stubBodyParser())
@@ -95,12 +102,14 @@ implicit val ec: ExecutionContext = ExecutionContext.global
     protected val mockUpdateAmlsJourneyRepository: UpdateAmlsJourneyRepository = mock[UpdateAmlsJourneyRepository]
     protected val mockView: check_your_answers = mock[check_your_answers]
     protected val cc: MessagesControllerComponents = stubMessagesControllerComponents()
-    protected val dataKey = DataKey[UpdateAmlsJourney]("amlsJourney")
+    protected val dataKey: DataKey[UpdateAmlsJourney] = DataKey[UpdateAmlsJourney]("amlsJourney")
 
-    object TestController extends CheckYourAnswersController(mockActions, mockUpdateAmlsJourneyRepository, mockView, cc)(mockAppConfig, ec)
+    mockAmlsLoader.load(*[String]) returns Map("ABC" -> "Alphabet")
+
+    object TestController extends CheckYourAnswersController(mockAmlsLoader,mockActions, mockUpdateAmlsJourneyRepository, mockView, cc)(mockAppConfig, ec)
   }
 
-  "ShowPage" should{
+  "ShowPage" should {
     "render view" when {
       "agent has successfully entered all the data for CYA page" in new Setup {
 
@@ -112,9 +121,9 @@ implicit val ec: ExecutionContext = ExecutionContext.global
         mockUpdateAmlsJourneyRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[Request[_]]) returns
           Future.successful(Some(ukAmlsJourney))
 
-        mockView.apply(*[AmlsCheckYourAnswers])(*[Messages], *[Request[_]], *[AppConfig]) returns Html("")
+        mockView.apply(*[Seq[SummaryListData]])(*[Messages], *[Request[_]], *[AppConfig]) returns Html("")
 
-        val result: Future[Result] = TestController.showPage(fakeRequest)
+        val result: Future[Result] = TestController.showPage()(fakeRequest)
         status(result) mustBe OK
 
       }
@@ -131,13 +140,13 @@ implicit val ec: ExecutionContext = ExecutionContext.global
         mockUpdateAmlsJourneyRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[Request[_]]) returns
           Future.successful(None)
 
-        mockView.apply(*[AmlsCheckYourAnswers])(*[Messages], *[Request[_]], *[AppConfig]) returns Html("")
+        mockView.apply(*[Seq[SummaryListData]])(*[Messages], *[Request[_]], *[AppConfig]) returns Html("")
 
         val result: Future[Result] = TestController.showPage(fakeRequest)
 
         status(result) mustBe SEE_OTHER
 
-        redirectLocation(result) mustBe Some("/manage-account")
+        redirectLocation(result) mustBe Some(uk.gov.hmrc.agentservicesaccount.controllers.routes.AgentServicesController.manageAccount.url)
       }
     }
     "Returns forbidden" when {
@@ -174,57 +183,73 @@ implicit val ec: ExecutionContext = ExecutionContext.global
     }
   }
 
-  "buildViewModel" when {
-    "journey data is for an overseas user" should {
-      val supervisoryBody = "A Body"
-      val registrationNumber = "1234567890"
-      val renewalDate = LocalDate.now()
+  "buildSummaryListItems" when {
+
+    val supervisoryBodyMessageKey = "amls.check-your-answers.supervisory-body"
+    val registrationNumberMessageKey = "amls.check-your-answers.registration-number"
+
+    val registrationNumber = "1234567890"
+    val supervisoryBody = "ABC"
+    val supervisoryBodyDescription = "Alphabet"
+
+    "expected journey data is missing" should {
+      val journey = UpdateAmlsJourney(
+        status = AmlsStatus.ValidAmlsNonUK,
+        newAmlsBody = None,
+        newRegistrationNumber = Some(registrationNumber),
+        newExpirationDate = None
+      )
+
+      "throw an exception" in new Setup {
+        val expectedException: Exception = intercept[Exception] {
+          TestController.buildSummaryListItems(isUkAgent = false, journey, Locale.UK)
+        }
+        expectedException.getMessage mustBe "Expected AMLS journey data missing"
+      }
+    }
+
+    "journey data is for an overseas agent" should {
       val journey = UpdateAmlsJourney(
         status = AmlsStatus.ValidAmlsNonUK,
         newAmlsBody = Some(supervisoryBody),
         newRegistrationNumber = Some(registrationNumber),
-        newExpirationDate = Some(renewalDate)
+        newExpirationDate = None
       )
 
-      "build a sequence with two items" in new Setup {
-        TestController.buildViewModel(false, journey).length mustBe 3
+      "build a summary list with two items" in new Setup {
+        TestController.buildSummaryListItems(isUkAgent = false, journey, Locale.UK).length mustBe 2
       }
 
       "render the correct message key for supervisory body" in new Setup {
-        private val data = TestController.buildViewModel(false, journey)
-        data.head.key mustBe "replace this with the supervisory body message key"
+        private val data = TestController.buildSummaryListItems(isUkAgent = false, journey, Locale.UK)
+        data.head.key mustBe supervisoryBodyMessageKey
       }
-
       "render the correct URL to change the supervisory body" in new Setup {
-        private val data = TestController.buildViewModel(false, journey)
-        data.head.link.get.url mustBe "/manage-account/money-laundering-supervision/new-supervisory-body"
+        private val data = TestController.buildSummaryListItems(isUkAgent = false, journey, Locale.UK)
+        data.head.link mustBe Some(routes.AmlsNewSupervisoryBodyController.showPage(true))
       }
-
       "render the correct supervisory body entered by the user" in new Setup {
-        private val data = TestController.buildViewModel(false, journey)
+        private val data = TestController.buildSummaryListItems(isUkAgent = false, journey, Locale.UK)
         data.head.value mustBe supervisoryBody
       }
 
       "render the correct message key for registration number" in new Setup {
-        private val data = TestController.buildViewModel(false, journey)
-        data(1).key mustBe "replace this with the registration number message key"
+        private val data = TestController.buildSummaryListItems(isUkAgent = false, journey, Locale.UK)
+        data(1).key mustBe registrationNumberMessageKey
       }
-
       "render the correct URL to change the registration number" in new Setup {
-        private val data = TestController.buildViewModel(false, journey)
-        data(1).link.get.url mustBe "/manage-account/money-laundering-supervision/confirm-registration-number"
+        private val data = TestController.buildSummaryListItems(isUkAgent = false, journey, Locale.UK)
+        data(1).link mustBe Some(routes.EnterRegistrationNumberController.showPage(true))
       }
-
       "render the correct renewal date entered by the user" in new Setup {
-        private val data = TestController.buildViewModel(false, journey)
+        private val data = TestController.buildSummaryListItems(isUkAgent = false, journey, Locale.UK)
         data(1).value mustBe registrationNumber
       }
     }
 
-    "journey data is for an UK user" should {
-      val supervisoryBody = "A Body"
-      val registrationNumber = "1234567890"
-      val renewalDate = LocalDate.now()
+    "journey data is for an UK agent" should {
+      val renewalDateMessageKey = "amls.check-your-answers.renewal-date"
+      val renewalDate = LocalDate.of(2001, 1, 1)
       val journey = UpdateAmlsJourney(
         status = AmlsStatus.ValidAmlsDetailsUK,
         newAmlsBody = Some(supervisoryBody),
@@ -232,22 +257,52 @@ implicit val ec: ExecutionContext = ExecutionContext.global
         newExpirationDate = Some(renewalDate)
       )
 
-        "render the correct message key for renewal date" in new Setup {
-          private val data = TestController.buildViewModel(true, journey)
-          data(2).key mustBe "replace this with the renewal date message key"
-        }
+      "build a summary list with three items" in new Setup {
+        TestController.buildSummaryListItems(isUkAgent = true, journey, Locale.UK).length mustBe 3
+      }
 
-        "render the correct URL to change the renewal date" in new Setup {
-          private val data = TestController.buildViewModel(true, journey)
-          data(2).link.get.url mustBe "/manage-account/money-laundering-supervision/renewal-date"
-        }
+      "render the correct message key for supervisory body" in new Setup {
+        private val data = TestController.buildSummaryListItems(isUkAgent = true, journey, Locale.UK)
+        data.head.key mustBe supervisoryBodyMessageKey
+      }
+      "render the correct URL to change the supervisory body" in new Setup {
+        private val data = TestController.buildSummaryListItems(isUkAgent = true, journey, Locale.UK)
+        data.head.link mustBe Some(routes.AmlsNewSupervisoryBodyController.showPage(true))
+      }
+      "render the supervisory body description entered by the user" in new Setup {
+        private val data = TestController.buildSummaryListItems(isUkAgent = true, journey, Locale.UK)
+        data.head.value mustBe supervisoryBodyDescription
+      }
 
-        "render the correct renewal date entered by the user" in new Setup {
-          private val data = TestController.buildViewModel(true, journey)
-          data(2).value mustBe renewalDate.toString
-        }
+      "render the correct message key for registration number" in new Setup {
+        private val data = TestController.buildSummaryListItems(isUkAgent = true, journey, Locale.UK)
+        data(1).key mustBe registrationNumberMessageKey
+      }
+      "render the correct URL to change the registration number" in new Setup {
+        private val data = TestController.buildSummaryListItems(isUkAgent = true, journey, Locale.UK)
+        data(1).link mustBe Some(routes.EnterRegistrationNumberController.showPage(true))
+      }
+      "render the registration number entered by the user" in new Setup {
+        private val data = TestController.buildSummaryListItems(isUkAgent = true, journey, Locale.UK)
+        data(1).value mustBe registrationNumber
+      }
+
+      "render the correct message key for renewal date" in new Setup {
+        private val data = TestController.buildSummaryListItems(isUkAgent = true, journey, Locale.UK)
+        data(2).key mustBe renewalDateMessageKey
+      }
+      "render the correct URL to change the renewal date" in new Setup {
+        private val data = TestController.buildSummaryListItems(isUkAgent = true, journey, Locale.UK)
+        data(2).link mustBe Some(routes.EnterRenewalDateController.showPage)
+      }
+      "render the renewal date entered by the user in long [English] format" in new Setup {
+        private val data = TestController.buildSummaryListItems(isUkAgent = true, journey, Locale.UK)
+        data(2).value mustBe "1 January 2001"
+      }
+      "render the renewal date entered by the user in long [Welsh] format" in new Setup {
+        private val data = TestController.buildSummaryListItems(isUkAgent = true, journey, new Locale("cy"))
+        data(2).value mustBe "1 Ionawr 2001"
       }
     }
   }
-
-
+}
