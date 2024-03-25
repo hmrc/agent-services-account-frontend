@@ -537,8 +537,8 @@ admin-access.button=Go to manage account
 
 #AMLS
 amls.add-details.h1=Anti-money laundering supervision details
-amls.is-hmrc.h1=Is HMRC your money laundering supervisory body?
 amls.is-hmrc.error=Select yes if HMRC is your money laundering supervisory body
+amls.is-hmrc.h1=Is HMRC your money laundering supervisory body?
 amls.confirmation.h1=You''ve changed your supervision details
 amls.confirmation.p1=We''ll update your anti-money laundering supervision details on your agent services accounts.
 amls.confirmation.link=Return to manage account
@@ -548,6 +548,47 @@ amls.enter-renewal-body.hint=Start typing and select your supervisory body from 
 amls.enter-renewal-date.form.title=Your next registration renewal date
 amls.enter-renewal-registration.number.h1=Your registration number
 amls.enter-renewal-body.h1=Name of money laundering supervisory body
+
+amls.view-details.h1=Anti-money laundering supervision details
+amls.view-details.supervisory-name=Supervisory body
+amls.view-details.registration-number=Registration number
+amls.view-details.renewal-date=Next renewal date
+amls.view-details.pending-status=Registration status
+amls.view-details.pending-status-Pending=Pending
+amls.view-details.pending-status-Rejected=Rejected
+
+amls.view-details.noAMLSDetailsUK.p1=Agents need to register with an anti-money laundering supervisor.
+amls.view-details.noAMLSDetailsUK.p2=Tell us your supervision details, including:
+amls.view-details.noAMLSDetailsNonUK.p1=If you are registered, tell us your anti-money laundering supervision details, including:
+amls.view-details.expiredAMLSDetailsUK.inset=This registration has expired.
+
+amls.view-details.validAMLSDetailsUK.non-hmrc.p=You need to confirm your anti-money laundering supervisions details with us:
+amls.view-details.validAMLSDetailsUK.non-hmrc.list.item1=once a year, after you renew your registration with the same provider
+amls.view-details.validAMLSDetailsUK.non-hmrc.list.item2=whenever you change to a new supervision provider
+amls.view-details.validAMLSDetailsUK.hmrc.p=You need to confirm your anti-money laundering supervisions details with us whenever you change to a new provider.
+
+amls.view-details.validAMLSDetailsNonUK.p=You need to confirm your anti-money laundering supervisions details with us whenever you change them.
+
+amls.view-details.pendingAMLSDetails.inset=If HMRC agrees to act as your supervisory body, we’ll update these automatically.
+amls.view-details.pendingAMLSDetails.details.summary=What to do if HMRC cannot act as your supervisory body
+amls.view-details.pendingAMLSDetails.details.content.p1=If HMRC rejects your application, you’ll still need to find a supervisory.
+amls.view-details.pendingAMLSDetails.details.content.p2=When you’ve found an organisation to act as your supervisor, you’ll need to provide the details to HMRC.
+
+amls.view-details.pendingAMLSDetailsRejected.inset.p1=You need to find a supervisor.
+amls.view-details.pendingAMLSDetailsRejected.inset.p2=When you’ve found an organisation to act as your supervisor, you’ll need to tell us the details.
+
+amls.view-details.noAMLSDetails.list.item1=the name of your supervisory body
+amls.view-details.noAMLSDetails.list.item2=your registration number
+amls.view-details.noAMLSDetails.list.item3=the renewal date of your registration
+
+amls.view-details.noAMLSDetails.link=Read more about registration (opens in a new tab)
+
+amls.view-details.common.h2=Keep your details up to date
+amls.view-details.common.start-journey=Update anti-money laundering supervision details
+amls.view-details.common.return-to-manage-account=Return to Manage account
+amls.view-details.common.add-details=Add supervision details
+amls.view-details.common.add-new-supervision-details=Add new supervision details
+amls.view-details.common.update-details=Update details
 
 amls.new-supervisory-body.title=What’s the name of your supervisory body?
 amls.new-supervisory-body.hint=Start typing and select the anti-money laundering supervisor from the list
