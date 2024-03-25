@@ -550,6 +550,47 @@ amls.enter-renewal-date.form.title=Your next registration renewal date TBC
 amls.enter-renewal-registration.number.h1=Your registration number TBC
 amls.enter-renewal-body.h1=Name of money laundering supervisory body TBC
 
+amls.view-details.h1=Manylion ynghylch goruchwyliaeth gwrth-wyngalchu arian
+amls.view-details.supervisory-name=Corff goruchwylio
+amls.view-details.registration-number=Rhif cofrestru
+amls.view-details.renewal-date=Dyddiad nesaf ar gyfer adnewyddu
+amls.view-details.pending-status=Statws cofrestru
+amls.view-details.pending-status-Pending=Ar y gweill
+amls.view-details.pending-status-Rejected=Wedi’i wrthod
+
+amls.view-details.noAMLSDetailsUK.p1=Mae angen i asiantau gofrestru â goruchwyliwr gwrth-wyngalchu arian.
+amls.view-details.noAMLSDetailsUK.p2=Rhowch wybod i ni am eich manylion o ran goruchwyliaeth, gan gynnwys:
+amls.view-details.noAMLSDetailsNonUK.p1=Os ydych wedi’ch cofrestru, rhowch wybod i ni am eich manylion ynghylch goruchwyliaeth gwrth-wyngalchu arian, gan gynnwys:
+amls.view-details.expiredAMLSDetailsUK.inset=Mae’r cofrestriad hwn wedi dod i ben.
+
+amls.view-details.validAMLSDetailsUK.non-hmrc.p=Mae angen i chi gadarnhau’ch manylion ynghylch goruchwyliaeth gwrth-wyngalchu arian gyda ni:
+amls.view-details.validAMLSDetailsUK.non-hmrc.list.item1=unwaith y flwyddyn, ar ôl i chi adnewyddu’ch cofrestriad â’r un darparwr
+amls.view-details.validAMLSDetailsUK.non-hmrc.list.item2=pa bryd bynnag rydych yn newid i ddarparwr newydd o ran goruchwyliaeth
+amls.view-details.validAMLSDetailsUK.hmrc.p=Mae angen i chi gadarnhau’ch manylion ynghylch goruchwyliaeth gwrth-wyngalchu arian gyda ni bob tro yr ydych yn newid i ddarparwr newydd.
+
+amls.view-details.validAMLSDetailsNonUK.p=Mae angen i chi gadarnhau eich manylion ynghylch goruchwyliaeth gwrth-wyngalchu arian gyda ni bob tro yr ydych yn eu newid.
+
+amls.view-details.pendingAMLSDetails.inset=Os yw CThEF yn cytuno i weithredu fel eich corff goruchwylio, byddwn yn diweddaru’r manylion hyn yn awtomatig.
+amls.view-details.pendingAMLSDetails.details.summary=Yr hyn i’w wneud os na all CThEF weithredu fel eich corff goruchwylio
+amls.view-details.pendingAMLSDetails.details.content.p1=Os yw CThEF yn gwrthod eich cais, bydd dal angen i chi ddod o hyd i oruchwyliwr.
+amls.view-details.pendingAMLSDetails.details.content.p2=Pan fyddwch wedi dod o hyd i sefydliad i weithredu fel eich goruchwyliwr, bydd angen i chi ddarparu’r manylion i CThEF.
+
+amls.view-details.pendingAMLSDetailsRejected.inset.p1=Mae dal angen i chi ddod o hyd i oruchwyliwr.
+amls.view-details.pendingAMLSDetailsRejected.inset.p2=Pan fyddwch wedi dod o hyd i sefydliad i weithredu fel eich goruchwyliwr, bydd angen i chi rhoi’r manylion i ni.
+
+amls.view-details.noAMLSDetails.list.item1=enw’r corff goruchwylio
+amls.view-details.noAMLSDetails.list.item2=eich rhif cofrestru
+amls.view-details.noAMLSDetails.list.item3=dyddiad adnewyddu eich cofrestriad
+
+amls.view-details.noAMLSDetails.link=Darllenwch ragor am gofrestru (yn agor tab newydd)
+
+amls.view-details.common.h2=Cadw’ch manylion yn gyfredol
+amls.view-details.common.start-journey=Diweddaru manylion ynghylch goruchwyliaeth gwrth-wyngalchu arian
+amls.view-details.common.return-to-manage-account=Dychwelyd i ‘Rheoli’r cyfrif’
+amls.view-details.common.add-details=Ychwanegu manylion o ran goruchwyliaeth
+amls.view-details.common.add-new-supervision-details=Ychwanegu manylion newydd o ran goruchwyliaeth
+amls.view-details.common.update-details=Diweddaru’r manylion
+
 amls.new-supervisory-body.title=Beth yw enw’ch corff goruchwylio?
 amls.new-supervisory-body.hint=Dechreuwch deipio ac yna dewiswch eich corff goruchwylio o’r rhestr
 amls.new-supervisory-body.error=Rhowch enw eich corff goruchwylio i ni

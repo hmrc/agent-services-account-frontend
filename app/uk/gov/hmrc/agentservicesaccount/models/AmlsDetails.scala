@@ -25,7 +25,9 @@ case class AmlsDetails(supervisoryBody: String,
                        amlsSafeId: Option[String] = None,
                        agentBPRSafeId: Option[String] = None,
                        appliedOn: Option[LocalDate] = None,
-                       membershipExpiresOn: Option[LocalDate] = None)
+                       membershipExpiresOn: Option[LocalDate] = None) {
+  val isHmrc = supervisoryBody.contains("HMRC")
+}
 
 object AmlsDetails {
   implicit val format: Format[AmlsDetails] = Json.format[AmlsDetails]
