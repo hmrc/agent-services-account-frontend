@@ -44,25 +44,3 @@ object AmlsStatuses  extends Enum[AmlsStatus] {
   override def values: immutable.IndexedSeq[AmlsStatus] = findValues
 
 }
-
-//sealed trait TaxType extends EnumEntry
-//
-//object TaxType {
-//  implicit val format: Format[TaxType] = EnumFormat(TaxTypes)
-//  implicit val queryBindable: QueryStringBindable[TaxType] = ValueClassBinder.queryStringValueBinder[TaxType](_.entryName)
-//}
-//
-//object TaxTypes extends Enum[TaxType] {
-//  override def values: immutable.IndexedSeq[TaxType] = findValues
-//
-//  sealed trait BasicTax extends TaxType
-//
-//  case object COTAX extends BasicTax
-//  case object NPS extends TaxType
-//  case object NTC extends BasicTax
-//  case object PAYE extends TaxType
-//  case object SA extends BasicTax
-//  case object SAFE extends BasicTax
-//  case object SDLT extends BasicTax
-//  case object VAT extends TaxType
-//}
