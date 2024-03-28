@@ -29,11 +29,11 @@ import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, SuspensionDetails, Suspension
 import uk.gov.hmrc.agents.accessgroups.optin._
 import uk.gov.hmrc.agents.accessgroups.{GroupSummary, UserDetails}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.models.{AccessGroupSummaries, AgencyDetails, AmlsStatus, BusinessAddress}
+import uk.gov.hmrc.agentservicesaccount.models.{AccessGroupSummaries, AgencyDetails, AmlsDetailsResponse, AmlsStatuses, BusinessAddress}
+import uk.gov.hmrc.agentservicesaccount.stubs.AgentAssuranceStubs._
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentClientAuthorisationStubs._
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentPermissionsStubs._
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentUserClientDetailsStubs._
-import uk.gov.hmrc.agentservicesaccount.stubs.AgentAssuranceStubs._
 import uk.gov.hmrc.agentservicesaccount.support.Css._
 import uk.gov.hmrc.agentservicesaccount.support.{BaseISpec, Css}
 import uk.gov.hmrc.auth.core.{Enrolment, EnrolmentIdentifier}
@@ -431,7 +431,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       givenSyncEacdFailure(Arn(arn))
       givenOptinStatusFailedForArn(Arn(arn))
       givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq.empty))
-      givenAmlsStatusForArn(AmlsStatus.ValidAmlsDetailsUK, Arn(arn))
+      givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), Arn(arn))
       val response = controller.manageAccount().apply(fakeRequest("GET", "/manage-account"))
 
       status(response) shouldBe OK
@@ -451,7 +451,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       givenSyncEacdSuccess(Arn(arn))
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInReady)
       givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq.empty))
-      givenAmlsStatusForArn(AmlsStatus.ValidAmlsDetailsUK, Arn(arn))
+      givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), Arn(arn))
       val response = controller.manageAccount().apply(fakeRequest("GET", "/manage-account"))
 
       status(response) shouldBe OK
@@ -471,7 +471,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       givenSyncEacdSuccess(Arn(arn))
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInReady)
       givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq.empty)) // no access groups yet
-      givenAmlsStatusForArn(AmlsStatus.ValidAmlsDetailsUK, Arn(arn))
+      givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), Arn(arn))
       val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
@@ -511,7 +511,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       givenSyncEacdSuccess(Arn(arn))
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInReady)
       givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq(customSummary))) // there is already an access group
-      givenAmlsStatusForArn(AmlsStatus.ValidAmlsDetailsUK, Arn(arn))
+      givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), Arn(arn))
       val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
@@ -547,7 +547,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       givenSyncEacdSuccess(Arn(arn))
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInNotReady)
       givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq.empty))
-      givenAmlsStatusForArn(AmlsStatus.ValidAmlsDetailsUK, Arn(arn))
+      givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), Arn(arn))
       val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
@@ -573,7 +573,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       givenSyncEacdSuccess(Arn(arn))
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInSingleUser)
       givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq.empty))
-      givenAmlsStatusForArn(AmlsStatus.ValidAmlsDetailsUK, Arn(arn))
+      givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), Arn(arn))
       val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
@@ -600,7 +600,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       givenSyncEacdSuccess(Arn(arn))
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedOutWrongClientCount)
       givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq.empty))
-      givenAmlsStatusForArn(AmlsStatus.ValidAmlsDetailsUK, Arn(arn))
+      givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), Arn(arn))
       val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
@@ -627,7 +627,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       givenSyncEacdSuccess(Arn(arn))
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedOutSingleUser)
       givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq.empty))
-      givenAmlsStatusForArn(AmlsStatus.ValidAmlsDetailsUK, Arn(arn))
+      givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), Arn(arn))
       val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
@@ -653,7 +653,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       givenSyncEacdSuccess(Arn(arn))
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedOutEligible)
       givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq.empty))
-      givenAmlsStatusForArn(AmlsStatus.ValidAmlsDetailsUK, Arn(arn))
+      givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), Arn(arn))
       val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
@@ -671,7 +671,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       givenSyncEacdSuccess(Arn(arn))
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInNotReady)
       givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq.empty))
-      givenAmlsStatusForArn(AmlsStatus.ValidAmlsDetailsUK, Arn(arn))
+      givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), Arn(arn))
       val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
@@ -690,7 +690,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       givenSyncEacdSuccess(Arn(arn))
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInNotReady)
       givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq.empty))
-      givenAmlsStatusForArn(AmlsStatus.NoAmlsDetailsUK, Arn(arn))
+      givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatuses.NoAmlsDetailsUK, None), Arn(arn))
       val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
@@ -709,7 +709,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       givenSyncEacdSuccess(Arn(arn))
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInNotReady)
       givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq.empty))
-      givenAmlsStatusForArn(AmlsStatus.ExpiredAmlsDetailsUK, Arn(arn))
+      givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatuses.ExpiredAmlsDetailsUK, None), Arn(arn))
       val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200

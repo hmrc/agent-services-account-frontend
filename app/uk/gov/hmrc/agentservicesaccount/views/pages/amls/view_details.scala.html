@@ -19,6 +19,7 @@
 @import uk.gov.hmrc.agentservicesaccount.models.AmlsDetails
 @import uk.gov.hmrc.agentservicesaccount.models.AmlsStatus
 @import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.partials._
+@import uk.gov.hmrc.agentservicesaccount.models.AmlsStatuses
 
 @this(
         main: main,
@@ -35,23 +36,22 @@
         return_to_manage_account_link: return_to_manage_account_link
 )
 
-
 @(amlsStatus: AmlsStatus, mAmlsDetails: Option[AmlsDetails])(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
 
 @htmlPartial = @{
  mAmlsDetails.fold(
   amlsStatus match {
-   case AmlsStatus.NoAmlsDetailsUK => no_amls_details_uk()
-   case AmlsStatus.NoAmlsDetailsNonUK => no_amls_details_non_uk()
+   case AmlsStatuses.NoAmlsDetailsUK => no_amls_details_uk()
+   case AmlsStatuses.NoAmlsDetailsNonUK => no_amls_details_non_uk()
    case status => throw new RuntimeException(s"unexpected status $status when no amls details present")
   }){ amls =>
   amlsStatus match {
-   case AmlsStatus.ValidAmlsDetailsUK if amls.isHmrc  => valid_amls_details_uk_hmrc(amls)
-   case AmlsStatus.ValidAmlsDetailsUK                 => valid_amls_details_uk_non_hmrc(amls)
-   case AmlsStatus.ValidAmlsNonUK                     => valid_amls_details_non_uk(amls)
-   case AmlsStatus.PendingAmlsDetails                 => pending_amls_details(amls)
-   case AmlsStatus.PendingAmlsDetailsRejected         => pending_amls_details_rejected(amls)
-   case AmlsStatus.ExpiredAmlsDetailsUK               => expired_amls_details_uk(amls)
+   case AmlsStatuses.ValidAmlsDetailsUK if amls.isHmrc  => valid_amls_details_uk_hmrc(amls)
+   case AmlsStatuses.ValidAmlsDetailsUK                 => valid_amls_details_uk_non_hmrc(amls)
+   case AmlsStatuses.ValidAmlsNonUK                     => valid_amls_details_non_uk(amls)
+   case AmlsStatuses.PendingAmlsDetails                 => pending_amls_details(amls)
+   case AmlsStatuses.PendingAmlsDetailsRejected         => pending_amls_details_rejected(amls)
+   case AmlsStatuses.ExpiredAmlsDetailsUK               => expired_amls_details_uk(amls)
    case status => throw new RuntimeException(s"unexpected status $status when amls details present")
   }
  }

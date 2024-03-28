@@ -16,17 +16,21 @@
 
 package uk.gov.hmrc.agentservicesaccount.models
 
+import enumeratum.{Enum, EnumEntry}
 import play.api.libs.json.Format
-import julienrf.json.derived
 import play.api.mvc.QueryStringBindable
-import uk.gov.hmrc.agentservicesaccount.utils.ValueClassBinder
+import uk.gov.hmrc.agentservicesaccount.utils.{EnumFormat, ValueClassBinder}
 
-sealed trait AmlsStatus
+import scala.collection.immutable
+
+sealed trait AmlsStatus extends EnumEntry
 
 object AmlsStatus {
-  implicit val formatAmlsSource: Format[AmlsStatus] = derived.oformat[AmlsStatus]()
-  implicit val queryBindable: QueryStringBindable[AmlsStatus] = ValueClassBinder.queryStringValueBinder[AmlsStatus](_.toString)
+  implicit val format: Format[AmlsStatus] = EnumFormat(AmlsStatuses)
+  implicit val queryBindable: QueryStringBindable[AmlsStatus] = ValueClassBinder.queryStringValueBinder[AmlsStatus](_.entryName)
+}
 
+object AmlsStatuses  extends Enum[AmlsStatus] {
   final case object NoAmlsDetailsNonUK extends AmlsStatus
   final case object ValidAmlsNonUK extends AmlsStatus
 
@@ -37,4 +41,28 @@ object AmlsStatus {
   final case object PendingAmlsDetails  extends AmlsStatus
   final case object PendingAmlsDetailsRejected  extends AmlsStatus
 
+  override def values: immutable.IndexedSeq[AmlsStatus] = findValues
+
 }
+
+//sealed trait TaxType extends EnumEntry
+//
+//object TaxType {
+//  implicit val format: Format[TaxType] = EnumFormat(TaxTypes)
+//  implicit val queryBindable: QueryStringBindable[TaxType] = ValueClassBinder.queryStringValueBinder[TaxType](_.entryName)
+//}
+//
+//object TaxTypes extends Enum[TaxType] {
+//  override def values: immutable.IndexedSeq[TaxType] = findValues
+//
+//  sealed trait BasicTax extends TaxType
+//
+//  case object COTAX extends BasicTax
+//  case object NPS extends TaxType
+//  case object NTC extends BasicTax
+//  case object PAYE extends TaxType
+//  case object SA extends BasicTax
+//  case object SAFE extends BasicTax
+//  case object SDLT extends BasicTax
+//  case object VAT extends TaxType
+//}

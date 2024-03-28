@@ -18,7 +18,7 @@ package uk.gov.hmrc.agentservicesaccount.connectors
 
 import play.api.test.Helpers._
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
-import uk.gov.hmrc.agentservicesaccount.models.{AmlsDetails, AmlsStatus, UpdateAmlsJourney}
+import uk.gov.hmrc.agentservicesaccount.models.{AmlsDetails, AmlsDetailsResponse, AmlsStatuses, UpdateAmlsJourney}
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentAssuranceStubs._
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
@@ -44,9 +44,10 @@ class AgentAssuranceConnectorSpec extends BaseISpec {
     Some(LocalDate.of(2022, 12, 25)),
     Some(LocalDate.of(2023, 12, 25))
   )
+  private val ukAMLSDetailsResponse = AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK,Some(ukAMLSDetails))
 
   private val amlsJourney = UpdateAmlsJourney(
-    status = AmlsStatus.ValidAmlsDetailsUK,
+    status = AmlsStatuses.ValidAmlsDetailsUK,
     newAmlsBody = Some("UK AMLS"),
     newRegistrationNumber = Some("AMLS123"),
     newExpirationDate = Some(LocalDate.parse("2024-10-10"))
@@ -54,17 +55,18 @@ class AgentAssuranceConnectorSpec extends BaseISpec {
 
 
   private val overseasAMLSDetails = AmlsDetails("notHMRC")
+  private val overseasAMLSDetailsResponse = AmlsDetailsResponse(AmlsStatuses.ValidAmlsNonUK,Some(overseasAMLSDetails))
 
   "getAMLSDetails" should {
     "return UK AMLS details" in {
-      givenAMLSDetailsForArn(ukAMLSDetails, arn)
+      givenAMLSDetailsForArn(ukAMLSDetailsResponse, arn)
 
       val result = connector.getAMLSDetails(arn)
 
       await(result) shouldBe ukAMLSDetails
     }
     "return Overseas AMLS details" in {
-      givenAMLSDetailsForArn(overseasAMLSDetails, arn)
+      givenAMLSDetailsForArn(overseasAMLSDetailsResponse, arn)
 
       val result = connector.getAMLSDetails(arn)
 
@@ -96,32 +98,32 @@ class AgentAssuranceConnectorSpec extends BaseISpec {
 
   "getAmlsStatus" should {
     "return UK AMLS Status" in {
-      givenAmlsStatusForArn(AmlsStatus.ValidAmlsDetailsUK, arnTyped)
+      givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), arnTyped)
 
       val result = connector.getAmlsStatus(arnTyped)
 
-      await(result) shouldBe AmlsStatus.ValidAmlsDetailsUK
+      await(result) shouldBe AmlsStatuses.ValidAmlsDetailsUK
     }
     "return Overseas AMLS details" in {
-      givenAmlsStatusForArn(AmlsStatus.ValidAmlsNonUK, arnTyped)
+      givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsNonUK, None), arnTyped)
 
       val result = connector.getAmlsStatus(arnTyped)
 
-      await(result) shouldBe AmlsStatus.ValidAmlsNonUK
+      await(result) shouldBe AmlsStatuses.ValidAmlsNonUK
     }
     "handle 400 Bad Request" in {
       givenAmlsStatusBadRequestForArn(arnTyped)
 
       intercept[UpstreamErrorResponse] {
         await(connector.getAmlsStatus(arnTyped))
-      }.getMessage shouldBe "Error 400 invalid ARN when trying to get amls status"
+      }.getMessage shouldBe "Error 400 invalid ARN when trying to get amls details"
     }
     "handle 500 Internal Server Error" in {
       givenAmlsStatusServerErrorForArn(arnTyped)
 
       intercept[UpstreamErrorResponse] {
         await(connector.getAmlsStatus(arnTyped))
-      }.getMessage shouldBe "Error 500 unable to get amls status"
+      }.getMessage shouldBe "Error 500 unable to get amls details"
     }
   }
 }

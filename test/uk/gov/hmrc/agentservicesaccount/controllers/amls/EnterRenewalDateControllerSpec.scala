@@ -31,7 +31,7 @@ import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, SuspensionDetails}
 import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector}
-import uk.gov.hmrc.agentservicesaccount.models.{AmlsStatus, UpdateAmlsJourney}
+import uk.gov.hmrc.agentservicesaccount.models.{AmlsStatuses, UpdateAmlsJourney}
 import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.enter_renewal_date
 import uk.gov.hmrc.auth.core._
@@ -73,11 +73,11 @@ class EnterRenewalDateControllerSpec extends PlaySpec
   private val suspensionDetailsResponse: Future[SuspensionDetails] = Future.successful(SuspensionDetails(suspensionStatus = false, None))
 
   private val ukUpdateAmlsJourney = UpdateAmlsJourney(
-    status = AmlsStatus.ValidAmlsDetailsUK
+    status = AmlsStatuses.ValidAmlsDetailsUK
   )
 
   private val overseasUpdateAmlsJourney = UpdateAmlsJourney(
-    status = AmlsStatus.ValidAmlsNonUK
+    status = AmlsStatuses.ValidAmlsNonUK
   )
 
   private val newExpirationDate = LocalDate.now.plusMonths(11)
