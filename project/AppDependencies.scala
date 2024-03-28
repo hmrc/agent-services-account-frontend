@@ -3,6 +3,7 @@ import sbt._
 object AppDependencies {
   private val mongoVer: String = "1.7.0"
   private val bootstrapVer: String = "7.23.0"
+  private val enumeratumVersion = "1.7.0"
 
   val compile: Seq[ModuleID] = Seq(
     "uk.gov.hmrc"       %% "bootstrap-frontend-play-28" % bootstrapVer,
@@ -11,6 +12,7 @@ object AppDependencies {
     "uk.gov.hmrc"       %% "agent-mtd-identifiers"      % "1.15.0",
     "uk.gov.hmrc.mongo" %% "hmrc-mongo-play-28"         % mongoVer,
     "uk.gov.hmrc"       %% "play-frontend-hmrc-play-28" % "8.5.0",
+    "com.beachape"      %% "enumeratum-play"            % enumeratumVersion,
     "org.julienrf"      %% "play-json-derived-codecs"   % "7.0.0"
   )
 

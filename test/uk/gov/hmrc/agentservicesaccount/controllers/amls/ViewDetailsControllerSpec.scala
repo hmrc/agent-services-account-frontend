@@ -21,7 +21,7 @@ import org.scalatestplus.play.PlaySpec
 import play.api.Environment
 import play.api.http.Status.OK
 import play.api.i18n.Messages
-import play.api.libs.json.Reads
+import play.api.libs.json.Writes
 import play.api.mvc.{DefaultActionBuilderImpl, MessagesControllerComponents, Request, Result}
 import play.api.test.Helpers.{status, stubMessagesControllerComponents}
 import play.api.test.{DefaultAwaitTimeout, FakeRequest, Helpers}
@@ -30,7 +30,7 @@ import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, SuspensionDetails}
 import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector}
-import uk.gov.hmrc.agentservicesaccount.models.{AmlsDetails, AmlsStatus, UpdateAmlsJourney}
+import uk.gov.hmrc.agentservicesaccount.models._
 import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.view_details
 import uk.gov.hmrc.auth.core._
@@ -70,9 +70,12 @@ class ViewDetailsControllerSpec extends PlaySpec
 
   private val suspensionDetailsResponse: Future[SuspensionDetails] = Future.successful(SuspensionDetails(suspensionStatus = false, None))
 
-  private val ukUpdateAmlsJourneyWithAmlsExists = UpdateAmlsJourney(status = AmlsStatus.ValidAmlsDetailsUK)
-  private val ukUpdateAmlsJourneyWithoutAmls = UpdateAmlsJourney(status = AmlsStatus.NoAmlsDetailsUK)
+  private val ukUpdateAmlsJourneyWithAmlsExists = UpdateAmlsJourney(status = AmlsStatuses.ValidAmlsDetailsUK)
+  private val ukUpdateAmlsJourneyWithoutAmls = UpdateAmlsJourney(status = AmlsStatuses.NoAmlsDetailsUK)
   private val amlsDetails = AmlsDetails(supervisoryBody = "HMRC")
+  private val amlsDetailsResponsse = AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK,  Some(amlsDetails))
+  private val amlsNoDetailsResponsse = AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None)
+  private val amlsUpdateJourney = UpdateAmlsJourney(status = AmlsStatuses.ValidAmlsDetailsUK)
 
   trait Setup {
     protected val mockAppConfig: AppConfig = mock[AppConfig]
@@ -91,7 +94,7 @@ class ViewDetailsControllerSpec extends PlaySpec
     protected val cc: MessagesControllerComponents = stubMessagesControllerComponents()
     protected val dataKey = DataKey[UpdateAmlsJourney]("amlsJourney")
 
-    object TestController extends ViewDetailsController(mockActions, mockUpdateAmlsJourneyRepository, mockView, cc)(mockAppConfig, ec)
+    object TestController extends ViewDetailsController(mockActions, mockUpdateAmlsJourneyRepository, mockAgentAssuranceConnector, mockView, cc)(mockAppConfig, ec)
   }
 
   "showPage" should {
@@ -104,10 +107,10 @@ class ViewDetailsControllerSpec extends PlaySpec
 
       mockAgentClientAuthorisationConnector.getSuspensionDetails()(*[HeaderCarrier], *[ExecutionContext]) returns suspensionDetailsResponse
 
-      mockUpdateAmlsJourneyRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[Request[_]]) returns
-        Future.successful(Some(ukUpdateAmlsJourneyWithAmlsExists))
+      mockUpdateAmlsJourneyRepository.putSession(*[DataKey[UpdateAmlsJourney]], amlsUpdateJourney)(*[Writes[UpdateAmlsJourney]], *[Request[_]]) returns
+        Future.successful(("",""))
 
-      mockAgentAssuranceConnector.getAMLSDetails(*[String])(*[ExecutionContext], *[HeaderCarrier]) returns Future.successful(amlsDetails)
+      mockAgentAssuranceConnector.getAMLSDetailsResponse(*[String])(*[ExecutionContext], *[HeaderCarrier]) returns Future.successful(amlsDetailsResponsse)
 
       mockView.apply(*[AmlsStatus], *[Option[AmlsDetails]])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 
@@ -125,8 +128,10 @@ class ViewDetailsControllerSpec extends PlaySpec
 
       mockAgentClientAuthorisationConnector.getSuspensionDetails()(*[HeaderCarrier], *[ExecutionContext]) returns suspensionDetailsResponse
 
-      mockUpdateAmlsJourneyRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[Request[_]]) returns
-        Future.successful(Some(ukUpdateAmlsJourneyWithoutAmls))
+      mockUpdateAmlsJourneyRepository.putSession(*[DataKey[UpdateAmlsJourney]], amlsUpdateJourney)(*[Writes[UpdateAmlsJourney]], *[Request[_]]) returns
+        Future.successful(("",""))
+
+      mockAgentAssuranceConnector.getAMLSDetailsResponse(*[String])(*[ExecutionContext], *[HeaderCarrier]) returns Future.successful(amlsNoDetailsResponsse)
 
       mockView.apply(*[AmlsStatus], *[Option[AmlsDetails]])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 

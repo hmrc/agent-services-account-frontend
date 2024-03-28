@@ -16,50 +16,31 @@
 
 package uk.gov.hmrc.agentservicesaccount.models
 
-import julienrf.json.derived
+import enumeratum.{Enum, EnumEntry}
 import play.api.libs.json.Format
 import play.api.mvc.QueryStringBindable
+import uk.gov.hmrc.agentservicesaccount.utils.{EnumFormat, ValueClassBinder}
 
-sealed trait AmlsStatus
+import scala.collection.immutable
+
+sealed trait AmlsStatus extends EnumEntry
 
 object AmlsStatus {
-  implicit val formatAmlsSource: Format[AmlsStatus] = derived.oformat[AmlsStatus]()
+  implicit val format: Format[AmlsStatus] = EnumFormat(AmlsStatuses)
+  implicit val queryBindable: QueryStringBindable[AmlsStatus] = ValueClassBinder.queryStringValueBinder[AmlsStatus](_.entryName)
+}
 
-  implicit def queryStringBindable(implicit stringBinder: QueryStringBindable[String]): QueryStringBindable[AmlsStatus] =
-    new QueryStringBindable[AmlsStatus] {
-      override def bind(key: String, params: Map[String, Seq[String]]): Option[Either[String, AmlsStatus]] = {
-        for {
-          value <- stringBinder.bind(key, params)
-        } yield {
-          val result = value match {
-            case Right("NoAmlsDetailsNonUK") => Right(AmlsStatus.NoAmlsDetailsNonUK)
-            case Right("ValidAmlsNonUK") => Right(AmlsStatus.ValidAmlsNonUK)
-            case Right("NoAmlsDetailsUK") => Right(AmlsStatus.NoAmlsDetailsUK)
-            case Right("ValidAmlsDetailsUK") => Right(AmlsStatus.ValidAmlsDetailsUK)
-            case Right("ExpiredAmlsDetailsUK") => Right(AmlsStatus.ExpiredAmlsDetailsUK)
-            case Right("PendingAmlsDetails") => Right(AmlsStatus.PendingAmlsDetails)
-            case Right("PendingAmlsDetailsRejected") => Right(AmlsStatus.PendingAmlsDetailsRejected)
-            case _ => Left("Unable to bind an AmlsStatus")
-          }
-          result
-        }
-      }
-
-      override def unbind(key: String, status: AmlsStatus): String = stringBinder.unbind(key, status.toString)
-    }
-
+object AmlsStatuses  extends Enum[AmlsStatus] {
   final case object NoAmlsDetailsNonUK extends AmlsStatus
-
   final case object ValidAmlsNonUK extends AmlsStatus
 
   final case object NoAmlsDetailsUK extends AmlsStatus
-
   final case object ValidAmlsDetailsUK extends AmlsStatus
-
   final case object ExpiredAmlsDetailsUK extends AmlsStatus
 
-  final case object PendingAmlsDetails extends AmlsStatus
+  final case object PendingAmlsDetails  extends AmlsStatus
+  final case object PendingAmlsDetailsRejected  extends AmlsStatus
 
-  final case object PendingAmlsDetailsRejected extends AmlsStatus
+  override def values: immutable.IndexedSeq[AmlsStatus] = findValues
 
 }
