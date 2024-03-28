@@ -606,6 +606,12 @@ amls.enter-registration-number.h1=What’s your registration number?
 amls.enter-registration-number.error.empty=Enter your registration number
 amls.enter-registration-number.error.not-hmrc.invalid=Registration number must include only letters and numbers
 amls.enter-registration-number.error.hmrc.invalid=Enter a registration number in the correct format, for example XAML00000123456
+amls.check-your-answers.h1=Check your answers
+amls.check-your-answers.p=Anti-money laundering supervision details
+amls.check-your-answers.supervisory-body=Supervisory body
+amls.check-your-answers.registration-number=Registration number
+amls.check-your-answers.renewal-date=Next renewal date
+amls.check-your-answers.submit-button=Submit your details 
 
 #AMLS Errors
 update-money-laundering-supervisory.error.date=Enter your next registration renewal date

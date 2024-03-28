@@ -204,7 +204,7 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
         FakeRequest("POST", "/").withFormUrlEncodedBody("body" -> "ACCA"))
 
       status(result) mustBe SEE_OTHER
-      Helpers.redirectLocation(result).get mustBe "/cya"
+      Helpers.redirectLocation(result).get mustBe routes.CheckYourAnswersController.showPage.url
     }
 
     "return 303 SEE_OTHER to /enter-registration-number for overseas agent" in new Setup {

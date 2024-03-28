@@ -195,7 +195,7 @@ class EnterRegistrationNumberControllerSpec extends PlaySpec
         FakeRequest("POST", "/").withFormUrlEncodedBody("number" -> "AMLS123"))
 
       status(result) mustBe SEE_OTHER
-      Helpers.redirectLocation(result).get mustBe "/cya"
+      Helpers.redirectLocation(result).get mustBe routes.CheckYourAnswersController.showPage.url
     }
 
     "return 200 OK when invalid form submission" in new Setup {
