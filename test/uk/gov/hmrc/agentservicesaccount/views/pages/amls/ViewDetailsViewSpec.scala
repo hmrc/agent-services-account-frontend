@@ -22,7 +22,7 @@ import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.i18n._
 import play.api.test.FakeRequest
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.models.{AmlsDetails, AmlsStatuses}
+import uk.gov.hmrc.agentservicesaccount.models.{AmlsDetails, AmlsStatus}
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.view_details
 
@@ -71,9 +71,9 @@ class ViewDetailsViewSpec extends BaseISpec {
       }
     }
 
-   s"amlsStatus is ${AmlsStatuses.NoAmlsDetailsUK}" should {
+   s"amlsStatus is ${AmlsStatus.NoAmlsDetailsUK}" should {
 
-     val doc: Document = Jsoup.parse(view.apply(AmlsStatuses.NoAmlsDetailsUK, None)(FakeRequest(), messages, appConfig).body)
+     val doc: Document = Jsoup.parse(view.apply(AmlsStatus.NoAmlsDetailsUK, None)(FakeRequest(), messages, appConfig).body)
 
      testServiceStaticContent(doc)
 
@@ -99,9 +99,9 @@ class ViewDetailsViewSpec extends BaseISpec {
      }
    }
 
-    s"amlsStatus is ${AmlsStatuses.NoAmlsDetailsNonUK}" should {
+    s"amlsStatus is ${AmlsStatus.NoAmlsDetailsNonUK}" should {
 
-      val doc: Document = Jsoup.parse(view.apply(AmlsStatuses.NoAmlsDetailsNonUK, None)(FakeRequest(), messages, appConfig).body)
+      val doc: Document = Jsoup.parse(view.apply(AmlsStatus.NoAmlsDetailsNonUK, None)(FakeRequest(), messages, appConfig).body)
 
       testServiceStaticContent(doc)
 
@@ -120,10 +120,10 @@ class ViewDetailsViewSpec extends BaseISpec {
       }
     }
 
-    s"amlsStatus is ${AmlsStatuses.ExpiredAmlsDetailsUK}" should {
+    s"amlsStatus is ${AmlsStatus.ExpiredAmlsDetailsUK}" should {
 
       val amlsDetails = AmlsDetails(supervisoryBody = "HMRC", membershipNumber = Some("123"), membershipExpiresOn = Some(LocalDate.parse("2024-02-10")))
-      val doc: Document = Jsoup.parse(view.apply(AmlsStatuses.ExpiredAmlsDetailsUK, Some(amlsDetails))(FakeRequest(), messages, appConfig).body)
+      val doc: Document = Jsoup.parse(view.apply(AmlsStatus.ExpiredAmlsDetailsUK, Some(amlsDetails))(FakeRequest(), messages, appConfig).body)
 
       testServiceStaticContent(doc)
 
@@ -146,10 +146,10 @@ class ViewDetailsViewSpec extends BaseISpec {
       }
     }
 
-    s"amlsStatus is ${AmlsStatuses.ValidAmlsDetailsUK} when HMRC registered" should {
+    s"amlsStatus is ${AmlsStatus.ValidAmlsDetailsUK} when HMRC registered" should {
 
       val amlsDetails = AmlsDetails(supervisoryBody = "HMRC", membershipNumber = Some("123"), membershipExpiresOn = Some(LocalDate.parse("2025-02-10")))
-      val doc: Document = Jsoup.parse(view.apply(AmlsStatuses.ValidAmlsDetailsUK, Some(amlsDetails))(FakeRequest(), messages, appConfig).body)
+      val doc: Document = Jsoup.parse(view.apply(AmlsStatus.ValidAmlsDetailsUK, Some(amlsDetails))(FakeRequest(), messages, appConfig).body)
 
       testServiceStaticContent(doc)
 
@@ -176,10 +176,10 @@ class ViewDetailsViewSpec extends BaseISpec {
       }
     }
 
-    s"amlsStatus is ${AmlsStatuses.ValidAmlsDetailsUK} when not HMRC registered" should {
+    s"amlsStatus is ${AmlsStatus.ValidAmlsDetailsUK} when not HMRC registered" should {
 
       val amlsDetails = AmlsDetails(supervisoryBody = "ICAEW", membershipNumber = Some("123"), membershipExpiresOn = Some(LocalDate.parse("2025-02-10")))
-      val doc: Document = Jsoup.parse(view.apply(AmlsStatuses.ValidAmlsDetailsUK, Some(amlsDetails))(FakeRequest(), messages, appConfig).body)
+      val doc: Document = Jsoup.parse(view.apply(AmlsStatus.ValidAmlsDetailsUK, Some(amlsDetails))(FakeRequest(), messages, appConfig).body)
 
       testServiceStaticContent(doc)
 
@@ -210,10 +210,10 @@ class ViewDetailsViewSpec extends BaseISpec {
       }
     }
 
-    s"amlsStatus is ${AmlsStatuses.ValidAmlsNonUK}" should {
+    s"amlsStatus is ${AmlsStatus.ValidAmlsNonUK}" should {
 
       val amlsDetails = AmlsDetails(supervisoryBody = "ICA", membershipNumber = Some("123"), membershipExpiresOn = None)
-      val doc: Document = Jsoup.parse(view.apply(AmlsStatuses.ValidAmlsNonUK, Some(amlsDetails))(FakeRequest(), messages, appConfig).body)
+      val doc: Document = Jsoup.parse(view.apply(AmlsStatus.ValidAmlsNonUK, Some(amlsDetails))(FakeRequest(), messages, appConfig).body)
 
       testServiceStaticContent(doc)
 
@@ -237,10 +237,10 @@ class ViewDetailsViewSpec extends BaseISpec {
       }
     }
 
-    s"amlsStatus is ${AmlsStatuses.PendingAmlsDetails}" should {
+    s"amlsStatus is ${AmlsStatus.PendingAmlsDetails}" should {
 
       val amlsDetails = AmlsDetails(supervisoryBody = "HMRC", membershipNumber = Some("123"), appliedOn = Some(LocalDate.parse("2024-10-10")))
-      val doc: Document = Jsoup.parse(view.apply(AmlsStatuses.PendingAmlsDetails, Some(amlsDetails))(FakeRequest(), messages, appConfig).body)
+      val doc: Document = Jsoup.parse(view.apply(AmlsStatus.PendingAmlsDetails, Some(amlsDetails))(FakeRequest(), messages, appConfig).body)
 
       testServiceStaticContent(doc)
 
@@ -264,10 +264,10 @@ class ViewDetailsViewSpec extends BaseISpec {
       }
     }
 
-    s"amlsStatus is ${AmlsStatuses.PendingAmlsDetailsRejected}" should {
+    s"amlsStatus is ${AmlsStatus.PendingAmlsDetailsRejected}" should {
 
       val amlsDetails = AmlsDetails(supervisoryBody = "HMRC", membershipNumber = Some("123"), appliedOn = Some(LocalDate.parse("2024-10-10")))
-      val doc: Document = Jsoup.parse(view.apply(AmlsStatuses.PendingAmlsDetailsRejected, Some(amlsDetails))(FakeRequest(), messages, appConfig).body)
+      val doc: Document = Jsoup.parse(view.apply(AmlsStatus.PendingAmlsDetailsRejected, Some(amlsDetails))(FakeRequest(), messages, appConfig).body)
 
       testServiceStaticContent(doc)
 
@@ -294,7 +294,7 @@ class ViewDetailsViewSpec extends BaseISpec {
     "amlsStatus expects amlsDetails but none provided" should {
       "throw exception" in {
         an[RuntimeException] mustBe thrownBy{
-          Jsoup.parse(view.apply(AmlsStatuses.PendingAmlsDetailsRejected, None)(FakeRequest(), messages, appConfig).body)
+          Jsoup.parse(view.apply(AmlsStatus.PendingAmlsDetailsRejected, None)(FakeRequest(), messages, appConfig).body)
         }
       }
     }
@@ -302,7 +302,7 @@ class ViewDetailsViewSpec extends BaseISpec {
       "throw exception" in {
         val amlsDetails = AmlsDetails(supervisoryBody = "HMRC", membershipNumber = Some("123"), appliedOn = Some(LocalDate.parse("2024-10-10")))
         an[RuntimeException] mustBe thrownBy{
-          Jsoup.parse(view.apply(AmlsStatuses.NoAmlsDetailsUK, Some(amlsDetails))(FakeRequest(), messages, appConfig).body)
+          Jsoup.parse(view.apply(AmlsStatus.NoAmlsDetailsUK, Some(amlsDetails))(FakeRequest(), messages, appConfig).body)
         }
       }
     }
