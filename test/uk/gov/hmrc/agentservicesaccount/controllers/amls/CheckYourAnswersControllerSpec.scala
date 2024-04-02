@@ -106,7 +106,8 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
 
     mockAmlsLoader.load(*[String]) returns Map("ABC" -> "Alphabet")
 
-    object TestController extends CheckYourAnswersController(mockAmlsLoader,mockActions, mockUpdateAmlsJourneyRepository, mockView, cc)(mockAppConfig, ec)
+    object TestController extends CheckYourAnswersController(
+      mockAmlsLoader,mockActions, mockAgentAssuranceConnector ,mockUpdateAmlsJourneyRepository, mockView, cc)(mockAppConfig, ec)
   }
 
   "ShowPage" should {
@@ -207,7 +208,6 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
         expectedException.getMessage mustBe "Expected AMLS journey data missing"
       }
     }
-
     "journey data is for an overseas agent" should {
       val journey = UpdateAmlsJourney(
         status = AmlsStatus.ValidAmlsNonUK,
@@ -244,6 +244,28 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
       "render the correct renewal date entered by the user" in new Setup {
         private val data = TestController.buildSummaryListItems(isUkAgent = false, journey, Locale.UK)
         data(1).value mustBe registrationNumber
+      }
+    }
+
+    "onSubmit" should {
+      "Submit answers" when {
+        "agent has successfully entered all the data for CYA page" in new Setup {
+
+          mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
+            *[HeaderCarrier],
+            *[ExecutionContext]) returns authResponse
+          mockAppConfig.enableNonHmrcSupervisoryBody returns true
+          mockAgentClientAuthorisationConnector.getSuspensionDetails()(*[HeaderCarrier], *[ExecutionContext]) returns suspensionDetailsResponse
+          mockAgentAssuranceConnector.postAmlsDetails(arn)(*[ExecutionContext], *[HeaderCarrier]) returns
+            Future.successful(AmlsStatus.ValidAmlsDetailsUK)
+          mockUpdateAmlsJourneyRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[Request[_]]) returns
+            Future.successful(Some(ukAmlsJourney))
+
+
+          val result: Future[Result] = TestController.onSubmit()(fakeRequest)
+          status(result) mustBe SEE_OTHER
+
+        }
       }
     }
 

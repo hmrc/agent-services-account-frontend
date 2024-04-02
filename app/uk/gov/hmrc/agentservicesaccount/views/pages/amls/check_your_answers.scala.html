@@ -15,7 +15,7 @@
  *@
 
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-@import uk.gov.hmrc.agentservicesaccount.controllers
+@import uk.gov.hmrc.agentservicesaccount.controllers._
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 @import uk.gov.hmrc.govukfrontend.views.html.components.GovukHint
 @import uk.gov.hmrc.govukfrontend.views.Aliases.Hint
@@ -60,12 +60,8 @@
   <h1 class="govuk-heading-l">@msgs("amls.check-your-answers.h1")</h1>
   <h2 class="govuk-heading-m">@msgs("amls.check-your-answers.p")</h2>
 
-    @summary_list(model)
-
-    @link_as_button(
-      key = "amls.check-your-answers.submit-button",
-      href = s"${uk.gov.hmrc.agentservicesaccount.controllers.amls.routes.AmlsConfirmationController.showUpdatedAmlsConfirmationPage}",
-      classes = Some("govuk-button")
-    )
-
-  }
+    @formWithCSRF(action = amls.routes.CheckYourAnswersController.onSubmit) {
+        @summary_list(model)
+        @govukButton(Button(content = Text(msgs("amls.check-your-answers.submit-button"))))
+    }
+    }
