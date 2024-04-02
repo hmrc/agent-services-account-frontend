@@ -36,12 +36,12 @@ object NextPageSelector {
           previous <- previousSelectedChanges
         } yield current.diff(previous)
       }
-      nextPage = getPage(pagesRequired, currentPage)
+      nextPage = getPage(pagesRequired, currentPage, false)
     } yield nextPage
   }
 
   //TODO: use enums
-  private def getPage(pagesRequired: Option[Set[String]], currentPage: String): Result = {
+  private def getPage(pagesRequired: Option[Set[String]], currentPage: String, userIsOnCheckYourAnswersFlow: Boolean): Result = {
     val nextPage: Option[String] = pagesRequired.flatMap { pages =>
       if (pages.contains(currentPage)) {
         pages.toSeq.sliding(2).find {
@@ -59,7 +59,10 @@ object NextPageSelector {
       case Some("address") => Redirect(updateContactDetails.routes.ContactDetailsController.showChangeEmailAddress) //TODO: Update routing
       case Some("email") => Redirect(updateContactDetails.routes.ContactDetailsController.showChangeEmailAddress)
       case Some("telephone") => Redirect(updateContactDetails.routes.ContactDetailsController.showChangeTelephoneNumber)
-      case None => Redirect(updateContactDetails.routes.ContactDetailsController.showCheckNewDetails) //TODO add other option
+      case None => {
+        if (userIsOnCheckYourAnswersFlow) Redirect(updateContactDetails.routes.ContactDetailsController.showCheckNewDetails)
+        else Redirect(updateContactDetails.routes.SACodeController.showPage)
+      }
     }
   }
 }

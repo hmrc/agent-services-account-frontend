@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.agentservicesaccount.controllers
+package uk.gov.hmrc.agentservicesaccount.controllers.updateContactDetails.util
 
 import com.google.inject.AbstractModule
 import org.scalamock.scalatest.MockFactory
@@ -30,6 +30,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, SuspensionDetails}
 import uk.gov.hmrc.agentservicesaccount.connectors.{AddressLookupConnector, AgentClientAuthorisationConnector, EmailVerificationConnector}
 import uk.gov.hmrc.agentservicesaccount.controllers.updateContactDetails.ContactDetailsController
+import uk.gov.hmrc.agentservicesaccount.controllers.{DRAFT_NEW_CONTACT_DETAILS, EMAIL_PENDING_VERIFICATION, updateContactDetails}
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup.{ConfirmedResponseAddress, ConfirmedResponseAddressDetails, Country, JourneyConfigV2}
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.{CompletedEmail, VerificationStatusResponse, VerifyEmailRequest, VerifyEmailResponse}
 import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress, PendingChangeOfDetails}
@@ -181,12 +182,12 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
   }
 
   "POST /update-business-name" should {
-    "store the new name in session and redirect to review new details page" in new TestSetup {
+    "store the new name in session and redirect to apply-code-SA page" in new TestSetup {
       noPendingChangesInRepo()
       implicit val request = fakeRequest("POST").withFormUrlEncodedBody("name" -> "New and Improved Agency")
       val result = controller.submitChangeBusinessName()(request)
       status(result) shouldBe SEE_OTHER
-      header("Location", result) shouldBe Some(updateContactDetails.routes.ContactDetailsController.showCheckNewDetails.url)
+      header("Location", result) shouldBe Some(updateContactDetails.routes.SACodeController.showPage.url)
       sessionCache.get(DRAFT_NEW_CONTACT_DETAILS).futureValue.flatMap(_.agencyName) shouldBe Some("New and Improved Agency")
     }
 
@@ -286,12 +287,12 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
   }
 
   "POST /update-telephone-number" should {
-    "store the new telephone number in session and redirect to review new details page" in new TestSetup {
+    "store the new telephone number in session and redirect to apply-code-SA page" in new TestSetup {
       noPendingChangesInRepo()
       implicit val request = fakeRequest("POST").withFormUrlEncodedBody("telephoneNumber" -> "01234 567 890")
       val result = controller.submitChangeTelephoneNumber()(request)
       status(result) shouldBe SEE_OTHER
-      header("Location", result) shouldBe Some(updateContactDetails.routes.ContactDetailsController.showCheckNewDetails.url)
+      header("Location", result) shouldBe Some(updateContactDetails.routes.SACodeController.showPage.url)
       sessionCache.get(DRAFT_NEW_CONTACT_DETAILS).futureValue.flatMap(_.agencyTelephone) shouldBe Some("01234 567 890")
     }
 

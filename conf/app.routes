@@ -75,6 +75,7 @@ GET        /manage-account/contact-details/email-locked                   @uk.go
 GET        /manage-account/contact-details/new-telephone                  @uk.gov.hmrc.agentservicesaccount.controllers.updateContactDetails.ContactDetailsController.showChangeTelephoneNumber
 POST       /manage-account/contact-details/new-telephone                  @uk.gov.hmrc.agentservicesaccount.controllers.updateContactDetails.ContactDetailsController.submitChangeTelephoneNumber
 
+GET         /manage-account/contact-details/apply-code-SA                 @uk.gov.hmrc.agentservicesaccount.controllers.updateContactDetails.SACodeController.showPage
 #GET        /manage-account/contact-details/enter-SA-code
 #GET        /manage-account/contact-details/apply-code-CT
 #GET        /manage-account/contact-details/enter-CT-code
