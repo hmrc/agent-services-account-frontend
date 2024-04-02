@@ -29,11 +29,11 @@ import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, SuspensionDetails, Suspension
 import uk.gov.hmrc.agents.accessgroups.optin._
 import uk.gov.hmrc.agents.accessgroups.{GroupSummary, UserDetails}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.models.{AccessGroupSummaries, AgencyDetails, AmlsStatus, BusinessAddress}
+import uk.gov.hmrc.agentservicesaccount.models.{AccessGroupSummaries, AgencyDetails, AmlsDetailsResponse, AmlsStatuses, BusinessAddress}
+import uk.gov.hmrc.agentservicesaccount.stubs.AgentAssuranceStubs._
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentClientAuthorisationStubs._
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentPermissionsStubs._
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentUserClientDetailsStubs._
-import uk.gov.hmrc.agentservicesaccount.stubs.AgentAssuranceStubs._
 import uk.gov.hmrc.agentservicesaccount.support.Css._
 import uk.gov.hmrc.agentservicesaccount.support.{BaseISpec, Css}
 import uk.gov.hmrc.auth.core.{Enrolment, EnrolmentIdentifier}
@@ -346,8 +346,8 @@ class AgentServicesControllerSpec extends BaseISpec {
     val contactDetailsSection = html.select("#your-organisation")
     contactDetailsSection.select("h2").text shouldBe "Your organisation"
     val links = contactDetailsSection.select("p a")
-    links.get(0).text shouldBe "Action: View or update anti-money laundering supervision details"
-    links.get(0).attr("href") shouldBe "/not-implemented"
+    links.get(0).text shouldBe "View or update anti-money laundering supervision details"
+    links.get(0).attr("href") shouldBe "/agent-services-account/manage-account/money-laundering-supervision/view-details"
     links.get(1).text shouldBe "View or update contact details we have for your business"
     links.get(1).attr("href") shouldBe "/agent-services-account/manage-account/contact-details/view"
     links.get(2).text shouldBe "View administrators"
@@ -431,7 +431,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       givenSyncEacdFailure(Arn(arn))
       givenOptinStatusFailedForArn(Arn(arn))
       givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq.empty))
-      givenAmlsStatusForArn(AmlsStatus.ValidAmlsDetailsUK, Arn(arn))
+      givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), Arn(arn))
       val response = controller.manageAccount().apply(fakeRequest("GET", "/manage-account"))
 
       status(response) shouldBe OK
@@ -451,7 +451,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       givenSyncEacdSuccess(Arn(arn))
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInReady)
       givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq.empty))
-      givenAmlsStatusForArn(AmlsStatus.ValidAmlsDetailsUK, Arn(arn))
+      givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), Arn(arn))
       val response = controller.manageAccount().apply(fakeRequest("GET", "/manage-account"))
 
       status(response) shouldBe OK
@@ -471,7 +471,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       givenSyncEacdSuccess(Arn(arn))
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInReady)
       givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq.empty)) // no access groups yet
-      givenAmlsStatusForArn(AmlsStatus.ValidAmlsDetailsUK, Arn(arn))
+      givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), Arn(arn))
       val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
@@ -511,7 +511,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       givenSyncEacdSuccess(Arn(arn))
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInReady)
       givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq(customSummary))) // there is already an access group
-      givenAmlsStatusForArn(AmlsStatus.ValidAmlsDetailsUK, Arn(arn))
+      givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), Arn(arn))
       val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
@@ -547,7 +547,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       givenSyncEacdSuccess(Arn(arn))
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInNotReady)
       givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq.empty))
-      givenAmlsStatusForArn(AmlsStatus.ValidAmlsDetailsUK, Arn(arn))
+      givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), Arn(arn))
       val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
@@ -573,7 +573,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       givenSyncEacdSuccess(Arn(arn))
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInSingleUser)
       givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq.empty))
-      givenAmlsStatusForArn(AmlsStatus.ValidAmlsDetailsUK, Arn(arn))
+      givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), Arn(arn))
       val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
@@ -600,7 +600,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       givenSyncEacdSuccess(Arn(arn))
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedOutWrongClientCount)
       givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq.empty))
-      givenAmlsStatusForArn(AmlsStatus.ValidAmlsDetailsUK, Arn(arn))
+      givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), Arn(arn))
       val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
@@ -627,7 +627,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       givenSyncEacdSuccess(Arn(arn))
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedOutSingleUser)
       givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq.empty))
-      givenAmlsStatusForArn(AmlsStatus.ValidAmlsDetailsUK, Arn(arn))
+      givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), Arn(arn))
       val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
@@ -653,7 +653,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       givenSyncEacdSuccess(Arn(arn))
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedOutEligible)
       givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq.empty))
-      givenAmlsStatusForArn(AmlsStatus.ValidAmlsDetailsUK, Arn(arn))
+      givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), Arn(arn))
       val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
@@ -665,13 +665,13 @@ class AgentServicesControllerSpec extends BaseISpec {
       verifyClientsSectionNotPresent(html)
     }
 
-    "return update AMLS link" in {
+    "return view AMLS link" in {
       givenAuthorisedAsAgentWith(arn)
       givenArnAllowedOk()
       givenSyncEacdSuccess(Arn(arn))
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInNotReady)
       givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq.empty))
-      givenAmlsStatusForArn(AmlsStatus.ValidAmlsDetailsUK, Arn(arn))
+      givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), Arn(arn))
       val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
@@ -680,8 +680,8 @@ class AgentServicesControllerSpec extends BaseISpec {
       val contactDetailsSection = html.select("#your-organisation")
       contactDetailsSection.select("h2").text shouldBe "Your organisation"
       val links = contactDetailsSection.select("p a")
-      links.get(0).text shouldBe "Action: View or update anti-money laundering supervision details"
-      links.get(0).attr("href") shouldBe "/not-implemented"
+      links.get(0).text shouldBe "View or update anti-money laundering supervision details"
+      links.get(0).attr("href") shouldBe "/agent-services-account/manage-account/money-laundering-supervision/view-details"
     }
 
     "return add AMLS link" in {
@@ -690,7 +690,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       givenSyncEacdSuccess(Arn(arn))
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInNotReady)
       givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq.empty))
-      givenAmlsStatusForArn(AmlsStatus.NoAmlsDetailsUK, Arn(arn))
+      givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatuses.NoAmlsDetailsUK, None), Arn(arn))
       val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
@@ -700,7 +700,26 @@ class AgentServicesControllerSpec extends BaseISpec {
       contactDetailsSection.select("h2").text shouldBe "Your organisation"
       val links = contactDetailsSection.select("p a")
       links.get(0).text shouldBe "Action: Add anti-money laundering supervision details"
-      links.get(0).attr("href") shouldBe "/not-implemented"
+      links.get(0).attr("href") shouldBe "/agent-services-account/manage-account/money-laundering-supervision/view-details"
+    }
+
+    "return update AMLS link" in {
+      givenAuthorisedAsAgentWith(arn)
+      givenArnAllowedOk()
+      givenSyncEacdSuccess(Arn(arn))
+      givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInNotReady)
+      givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq.empty))
+      givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatuses.ExpiredAmlsDetailsUK, None), Arn(arn))
+      val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
+
+      status(response) shouldBe 200
+
+      val html = Jsoup.parse(contentAsString(response))
+      val contactDetailsSection = html.select("#your-organisation")
+      contactDetailsSection.select("h2").text shouldBe "Your organisation"
+      val links = contactDetailsSection.select("p a")
+      links.get(0).text shouldBe "Action: Update anti-money laundering supervision details"
+      links.get(0).attr("href") shouldBe "/agent-services-account/manage-account/money-laundering-supervision/view-details"
     }
 
   }

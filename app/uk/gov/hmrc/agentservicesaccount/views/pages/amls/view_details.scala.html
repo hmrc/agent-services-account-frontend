@@ -1,0 +1,71 @@
+@*
+ * Copyright 2024 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import uk.gov.hmrc.agentservicesaccount.views.html.main
+@import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+@import uk.gov.hmrc.agentservicesaccount.models.AmlsDetails
+@import uk.gov.hmrc.agentservicesaccount.models.AmlsStatus
+@import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.partials._
+@import uk.gov.hmrc.agentservicesaccount.models.AmlsStatuses
+
+@this(
+        main: main,
+        h1: h1,
+        amls_details_summary_list: amls_details_summary_list,
+        expired_amls_details_uk: expired_amls_details_uk,
+        no_amls_details_non_uk: no_amls_details_non_uk,
+        no_amls_details_uk: no_amls_details_uk,
+        pending_amls_details: pending_amls_details,
+        pending_amls_details_rejected: pending_amls_details_rejected,
+        valid_amls_details_non_uk: valid_amls_details_non_uk,
+        valid_amls_details_uk_hmrc: valid_amls_details_uk_hmrc,
+        valid_amls_details_uk_non_hmrc: valid_amls_details_uk_non_hmrc,
+        return_to_manage_account_link: return_to_manage_account_link
+)
+
+@(amlsStatus: AmlsStatus, mAmlsDetails: Option[AmlsDetails])(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
+
+@htmlPartial = @{
+ mAmlsDetails.fold(
+  amlsStatus match {
+   case AmlsStatuses.NoAmlsDetailsUK => no_amls_details_uk()
+   case AmlsStatuses.NoAmlsDetailsNonUK => no_amls_details_non_uk()
+   case status => throw new RuntimeException(s"unexpected status $status when no amls details present")
+  }){ amls =>
+  amlsStatus match {
+   case AmlsStatuses.ValidAmlsDetailsUK if amls.isHmrc  => valid_amls_details_uk_hmrc(amls)
+   case AmlsStatuses.ValidAmlsDetailsUK                 => valid_amls_details_uk_non_hmrc(amls)
+   case AmlsStatuses.ValidAmlsNonUK                     => valid_amls_details_non_uk(amls)
+   case AmlsStatuses.PendingAmlsDetails                 => pending_amls_details(amls)
+   case AmlsStatuses.PendingAmlsDetailsRejected         => pending_amls_details_rejected(amls)
+   case AmlsStatuses.ExpiredAmlsDetailsUK               => expired_amls_details_uk(amls)
+   case status => throw new RuntimeException(s"unexpected status $status when amls details present")
+  }
+ }
+}
+
+@main(
+    pageTitle = msgs("amls.view-details.h1"),
+    mimicBrowserBackLink = true,
+    showSecondaryNav = false){
+
+ @h1(key = msgs("amls.view-details.h1"))
+
+ @htmlPartial
+
+ @return_to_manage_account_link()
+
+}

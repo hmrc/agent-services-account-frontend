@@ -18,17 +18,12 @@ package uk.gov.hmrc.agentservicesaccount.models
 
 import play.api.libs.json.{Format, Json}
 
-import java.time.LocalDate
 
-case class AmlsDetails(supervisoryBody: String,
-                       membershipNumber: Option[String] = None,
-                       amlsSafeId: Option[String] = None,
-                       agentBPRSafeId: Option[String] = None,
-                       appliedOn: Option[LocalDate] = None,
-                       membershipExpiresOn: Option[LocalDate] = None) {
-  val isHmrc = supervisoryBody.contains("HMRC")
-}
+case class AmlsDetailsResponse(status: AmlsStatus, details: Option[AmlsDetails])
 
-object AmlsDetails {
-  implicit val format: Format[AmlsDetails] = Json.format[AmlsDetails]
+object AmlsDetailsResponse {
+
+  implicit val format: Format[AmlsDetailsResponse] = Json.format[AmlsDetailsResponse]
+
+
 }

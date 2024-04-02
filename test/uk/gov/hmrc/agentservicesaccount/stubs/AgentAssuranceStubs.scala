@@ -20,16 +20,16 @@ import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.libs.json.Json
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
-import uk.gov.hmrc.agentservicesaccount.models.{AmlsDetails, AmlsStatus}
+import uk.gov.hmrc.agentservicesaccount.models.AmlsDetailsResponse
 
 object AgentAssuranceStubs {
 
-  def givenAMLSDetailsForArn(amlsDetails: AmlsDetails, arn: String): StubMapping =
+  def givenAMLSDetailsForArn(amlsDetailsResponse: AmlsDetailsResponse, arn: String): StubMapping =
     stubFor(get(urlEqualTo(s"/agent-assurance/amls/arn/$arn"))
       .willReturn(
         aResponse()
           .withStatus(200)
-          .withBody(Json.toJson(amlsDetails).toString())
+          .withBody(Json.toJson(amlsDetailsResponse).toString())
       ))
 
   def givenAMLSDetailsNotFoundForArn(arn: String): StubMapping =
@@ -53,23 +53,23 @@ object AgentAssuranceStubs {
           .withStatus(500)
       ))
 
-  def givenAmlsStatusForArn(amlsStatus: AmlsStatus, arn: Arn): StubMapping =
-    stubFor(get(urlEqualTo(s"/agent-assurance/amls/status/${arn.value}"))
+  def givenAmlsStatusForArn(amlsDetailsResponse: AmlsDetailsResponse, arn: Arn): StubMapping =
+    stubFor(get(urlEqualTo(s"/agent-assurance/amls/arn/${arn.value}"))
       .willReturn(
         aResponse()
           .withStatus(200)
-          .withBody(Json.toJson(amlsStatus).toString())
+          .withBody(Json.toJson(amlsDetailsResponse).toString())
       ))
 
   def givenAmlsStatusBadRequestForArn(arn: Arn): StubMapping =
-    stubFor(get(urlEqualTo(s"/agent-assurance/amls/status/${arn.value}"))
+    stubFor(get(urlEqualTo(s"/agent-assurance/amls/arn/${arn.value}"))
       .willReturn(
         aResponse()
           .withStatus(400)
       ))
 
   def givenAmlsStatusServerErrorForArn(arn: Arn): StubMapping =
-    stubFor(get(urlEqualTo(s"/agent-assurance/amls/status/${arn.value}"))
+    stubFor(get(urlEqualTo(s"/agent-assurance/amls/arn/${arn.value}"))
       .willReturn(
         aResponse()
           .withStatus(500)

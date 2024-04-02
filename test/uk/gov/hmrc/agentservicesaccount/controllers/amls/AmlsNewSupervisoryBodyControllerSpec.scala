@@ -31,7 +31,7 @@ import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, SuspensionDetails}
 import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector}
-import uk.gov.hmrc.agentservicesaccount.models.{AmlsDetails, AmlsStatus, UpdateAmlsJourney}
+import uk.gov.hmrc.agentservicesaccount.models.{AmlsDetails, AmlsStatuses, UpdateAmlsJourney}
 import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
 import uk.gov.hmrc.agentservicesaccount.utils.AMLSLoader
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.new_supervisory_body
@@ -77,13 +77,13 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
   private val amlsDetailsResponse = Future.successful(amlsDetails)
 
   private val ukAmlsJourney = UpdateAmlsJourney(
-    status = AmlsStatus.ValidAmlsDetailsUK,
+    status = AmlsStatuses.ValidAmlsDetailsUK,
     isAmlsBodyStillTheSame = Some(true),
     newAmlsBody = Some("ACCA")
   )
 
   private val overseasAmlsJourney = UpdateAmlsJourney(
-    status = AmlsStatus.ValidAmlsNonUK,
+    status = AmlsStatuses.ValidAmlsNonUK,
     newAmlsBody = Some("OS AMLS"),
     newRegistrationNumber = Some("AMLS123"),
     newExpirationDate = Some(LocalDate.parse("2024-10-10"))
@@ -204,7 +204,7 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
         FakeRequest("POST", "/").withFormUrlEncodedBody("body" -> "ACCA"))
 
       status(result) mustBe SEE_OTHER
-      Helpers.redirectLocation(result).get mustBe "/cya"
+      Helpers.redirectLocation(result).get mustBe routes.CheckYourAnswersController.showPage.url
     }
 
     "return 303 SEE_OTHER to /enter-registration-number for overseas agent" in new Setup {

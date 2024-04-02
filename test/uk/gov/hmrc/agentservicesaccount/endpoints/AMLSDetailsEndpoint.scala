@@ -21,7 +21,7 @@ import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.Application
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import play.api.libs.ws.{WSClient, WSRequest}
-import uk.gov.hmrc.agentservicesaccount.models.AmlsDetails
+import uk.gov.hmrc.agentservicesaccount.models.{AmlsDetails, AmlsDetailsResponse, AmlsStatuses}
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentAssuranceStubs.{givenAMLSDetailsForArn, givenAMLSDetailsServerErrorForArn}
 import uk.gov.hmrc.agentservicesaccount.stubs.CookieHelper
 
@@ -44,6 +44,7 @@ class AMLSDetailsEndpoint extends BaseISpec with GuiceOneServerPerSuite with Coo
   override implicit lazy val app: Application = appBuilder().build()
 
   private val arn: String = "TARN0000001"
+
   private val ukAMLSDetails = AmlsDetails(
     "HMRC",
     Some("123456789"),
@@ -52,11 +53,12 @@ class AMLSDetailsEndpoint extends BaseISpec with GuiceOneServerPerSuite with Coo
     Some(LocalDate.of(2022, 1, 25)),
     Some(LocalDate.of(2023, 12, 7))
   )
+  private val ukAMLSDetailsResponse = AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK,Some(ukAMLSDetails))
 
   "View AMLS Supervision Details endpoint" should {
     "return successfully when everything works" in {
       givenAuthorisedAsAgentWith(arn)
-      givenAMLSDetailsForArn(ukAMLSDetails, arn)
+      givenAMLSDetailsForArn(ukAMLSDetailsResponse, arn)
 
       val result = await(makeRequest("/manage-account/money-laundering-supervision").get())
 
