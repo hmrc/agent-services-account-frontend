@@ -29,7 +29,7 @@ import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, SuspensionDetails}
 import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector}
-import uk.gov.hmrc.agentservicesaccount.models.{AmlsStatus, UpdateAmlsJourney}
+import uk.gov.hmrc.agentservicesaccount.models.{AmlsRequest, AmlsStatus, UpdateAmlsJourney}
 import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
 import uk.gov.hmrc.agentservicesaccount.utils.AMLSLoader
 import uk.gov.hmrc.agentservicesaccount.views.components.models.SummaryListData
@@ -49,6 +49,12 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
   private val fakeRequest = FakeRequest().withCookies(Cookie("PLAY_LANG", "en_GB")).withTransientLang(Locale.UK)
 
   private val arn: Arn = Arn("arn")
+  private val amlsRequest: AmlsRequest = new AmlsRequest(
+    ukRecord = true,
+    supervisoryBody = "test body",
+    membershipNumber = "1122334455",
+    membershipExpiresOn = Option[LocalDate]
+  )
   private val credentialRole: User.type = User
   private val agentEnrolment: Set[Enrolment] = Set(
     Enrolment("HMRC-AS-AGENT",
@@ -256,7 +262,7 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
             *[ExecutionContext]) returns authResponse
           mockAppConfig.enableNonHmrcSupervisoryBody returns true
           mockAgentClientAuthorisationConnector.getSuspensionDetails()(*[HeaderCarrier], *[ExecutionContext]) returns suspensionDetailsResponse
-          mockAgentAssuranceConnector.postAmlsDetails(arn)(*[ExecutionContext], *[HeaderCarrier]) returns
+          mockAgentAssuranceConnector.postAmlsDetails(arn, amlsRequest)(*[ExecutionContext], *[HeaderCarrier]) returns
             Future.successful(AmlsStatus.ValidAmlsDetailsUK)
           mockUpdateAmlsJourneyRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[Request[_]]) returns
             Future.successful(Some(ukAmlsJourney))
