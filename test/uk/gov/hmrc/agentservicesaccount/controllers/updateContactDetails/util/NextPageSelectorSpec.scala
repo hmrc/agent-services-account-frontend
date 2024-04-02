@@ -21,7 +21,7 @@ import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import play.api.mvc.{AnyContentAsEmpty, Result}
 import play.api.test.Helpers.{await, defaultAwaitTimeout}
 import uk.gov.hmrc.agentservicesaccount.controllers.updateContactDetails.util.NextPageSelector.getNextPage
-import uk.gov.hmrc.agentservicesaccount.controllers.{CURRENT_SELECTED_CHANGES, PREVIOUS_SELECTED_CHANGES, updateContactDetails}
+import uk.gov.hmrc.agentservicesaccount.controllers.{CURRENT_SELECTED_CHANGES, PREVIOUS_SELECTED_CHANGES, desiDetails, updateContactDetails}
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.stubs.SessionServiceMocks
 
@@ -64,14 +64,14 @@ class NextPageSelectorSpec extends BaseISpec with SessionServiceMocks {
       }
     }
 
-    "redirect to enter SA code" when {
+    "redirect to ApplySACodeChanges page" when {
       "given the last page in list" in {
         expectGetSessionItem[Set[String]](PREVIOUS_SELECTED_CHANGES, Set.empty, 1)
         expectGetSessionItem[Set[String]](CURRENT_SELECTED_CHANGES, Set("businessName", "address", "email", "telephone"), 1)
 
         val response: Future[Result] = getNextPage(mockSessionCacheService, "telephone")
 
-        redirectLocation(await(response)) shouldBe Some(updateContactDetails.routes.SACodeController.showPage.url)
+        redirectLocation(await(response)) shouldBe Some(desiDetails.routes.ApplySACodeChanges.showPage.url)
       }
     }
   }

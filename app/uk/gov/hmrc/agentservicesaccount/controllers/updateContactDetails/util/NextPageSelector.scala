@@ -61,7 +61,7 @@ object NextPageSelector {
       case Some("telephone") => Redirect(updateContactDetails.routes.ContactDetailsController.showChangeTelephoneNumber)
       case None => {
         if (userIsOnCheckYourAnswersFlow) Redirect(updateContactDetails.routes.ContactDetailsController.showCheckNewDetails)
-        else Redirect(updateContactDetails.routes.SACodeController.showPage)
+        else Redirect(desiDetails.routes.ApplySACodeChanges.showPage)
       }
     }
   }
