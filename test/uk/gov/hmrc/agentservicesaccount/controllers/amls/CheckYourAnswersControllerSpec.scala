@@ -29,7 +29,7 @@ import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, SuspensionDetails}
 import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector}
-import uk.gov.hmrc.agentservicesaccount.models.{AmlsRequest, AmlsStatus, UpdateAmlsJourney}
+import uk.gov.hmrc.agentservicesaccount.models.{AmlsRequest, AmlsStatuses, UpdateAmlsJourney}
 import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
 import uk.gov.hmrc.agentservicesaccount.utils.AMLSLoader
 import uk.gov.hmrc.agentservicesaccount.views.components.models.SummaryListData
@@ -53,7 +53,7 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
     ukRecord = true,
     supervisoryBody = "test body",
     membershipNumber = "1122334455",
-    membershipExpiresOn = Option[LocalDate]
+    membershipExpiresOn = Some(LocalDate.now())
   )
   private val credentialRole: User.type = User
   private val agentEnrolment: Set[Enrolment] = Set(
@@ -83,7 +83,7 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
       Some(credentialRole)))
 
   private val ukAmlsJourney = UpdateAmlsJourney(
-    status = AmlsStatus.ValidAmlsDetailsUK,
+    status = AmlsStatuses.ValidAmlsDetailsUK,
     newAmlsBody = Some("ABC"),
     newRegistrationNumber = Some("1234567890"),
     newExpirationDate = Some(LocalDate.now())
@@ -201,7 +201,7 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
 
     "expected journey data is missing" should {
       val journey = UpdateAmlsJourney(
-        status = AmlsStatus.ValidAmlsNonUK,
+        status = AmlsStatuses.ValidAmlsNonUK,
         newAmlsBody = None,
         newRegistrationNumber = Some(registrationNumber),
         newExpirationDate = None
@@ -214,9 +214,10 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
         expectedException.getMessage mustBe "Expected AMLS journey data missing"
       }
     }
+
     "journey data is for an overseas agent" should {
       val journey = UpdateAmlsJourney(
-        status = AmlsStatus.ValidAmlsNonUK,
+        status = AmlsStatuses.ValidAmlsNonUK,
         newAmlsBody = Some(supervisoryBody),
         newRegistrationNumber = Some(registrationNumber),
         newExpirationDate = None
@@ -263,7 +264,7 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
           mockAppConfig.enableNonHmrcSupervisoryBody returns true
           mockAgentClientAuthorisationConnector.getSuspensionDetails()(*[HeaderCarrier], *[ExecutionContext]) returns suspensionDetailsResponse
           mockAgentAssuranceConnector.postAmlsDetails(arn, amlsRequest)(*[ExecutionContext], *[HeaderCarrier]) returns
-            Future.successful(AmlsStatus.ValidAmlsDetailsUK)
+            Future.successful(AmlsStatuses.ValidAmlsDetailsUK)
           mockUpdateAmlsJourneyRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[Request[_]]) returns
             Future.successful(Some(ukAmlsJourney))
 
@@ -279,7 +280,7 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
       val renewalDateMessageKey = "amls.check-your-answers.renewal-date"
       val renewalDate = LocalDate.of(2001, 1, 1)
       val journey = UpdateAmlsJourney(
-        status = AmlsStatus.ValidAmlsDetailsUK,
+        status = AmlsStatuses.ValidAmlsDetailsUK,
         newAmlsBody = Some(supervisoryBody),
         newRegistrationNumber = Some(registrationNumber),
         newExpirationDate = Some(renewalDate)

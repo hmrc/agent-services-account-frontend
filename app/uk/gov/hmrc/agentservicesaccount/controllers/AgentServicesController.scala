@@ -26,11 +26,12 @@ import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector, AgentPermissionsConnector, AgentUserClientDetailsConnector}
 import uk.gov.hmrc.agentservicesaccount.models.AmlsStatus
-import uk.gov.hmrc.agentservicesaccount.models.AmlsStatus._
+import uk.gov.hmrc.agentservicesaccount.models.AmlsStatuses._
 import uk.gov.hmrc.agentservicesaccount.views.html.pages._
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.assistant.{administrators, your_account}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
+import uk.gov.hmrc.agentservicesaccount.controllers.amls.{routes => amlsRoutes}
 
 import javax.inject._
 import scala.concurrent.{ExecutionContext, Future}
@@ -114,15 +115,15 @@ class AgentServicesController @Inject()(authActions: AuthActions,
   private def getAmlsStatusLink(amlsStatus: AmlsStatus): (String, String) = {
     amlsStatus match {
       case NoAmlsDetailsNonUK =>
-        ("manage.account.amls.view","/not-implemented") //next slide 21
+        ("manage.account.amls.view",amlsRoutes.ViewDetailsController.showPage.url)
       case ValidAmlsNonUK =>
-        ("manage.account.amls.view","/not-implemented") //next slide 25
+        ("manage.account.amls.view",amlsRoutes.ViewDetailsController.showPage.url)
       case NoAmlsDetailsUK =>
-        ("manage.account.amls.add","/not-implemented") //next slide 4
+        ("manage.account.amls.add",amlsRoutes.ViewDetailsController.showPage.url)
       case ValidAmlsDetailsUK =>
-        ("manage.account.amls.view","/not-implemented") //next slide 8
+        ("manage.account.amls.view",amlsRoutes.ViewDetailsController.showPage.url)
       case ExpiredAmlsDetailsUK | PendingAmlsDetails | PendingAmlsDetailsRejected=>
-        ("manage.account.amls.update","/not-implemented") //next slide 11
+        ("manage.account.amls.update",amlsRoutes.ViewDetailsController.showPage.url)
     }
   }
 

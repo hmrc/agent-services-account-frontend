@@ -20,9 +20,11 @@ import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.controllers.ToFuture
+import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
+import uk.gov.hmrc.agentservicesaccount.models.UpdateAmlsJourney
 import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls._
+import uk.gov.hmrc.mongo.cache.DataKey
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject.{Inject, Singleton}
@@ -32,6 +34,7 @@ import scala.concurrent.ExecutionContext
 @Singleton
 class ViewDetailsController @Inject()(actions: Actions,
                                                   val updateAmlsJourneyRepository: UpdateAmlsJourneyRepository,
+                                      agentAssuranceConnector: AgentAssuranceConnector,
                                                   viewDetails: view_details,
                                       cc: MessagesControllerComponents
                                                  )(implicit appConfig: AppConfig,
@@ -40,15 +43,17 @@ class ViewDetailsController @Inject()(actions: Actions,
 
   def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
-      withUpdateAmlsJourney { amlsJourney =>
-        if(amlsJourney.hasExistingAmls){
-          actions.withCurrentAmlsDetails(request.agentInfo.arn) { amlsDetails =>
-            //there are 8 different versions of view_details, depending on the amlsStatus
-            Ok(viewDetails(amlsJourney.status, Some(amlsDetails))).toFuture
+      agentAssuranceConnector.getAMLSDetailsResponse(request.agentInfo.arn.value).flatMap {amlsDetailsResponce =>
+
+        updateAmlsJourneyRepository.putSession(DataKey[UpdateAmlsJourney]("amlsJourney"),
+          UpdateAmlsJourney(status = amlsDetailsResponce.status)).map { _ =>
+          amlsDetailsResponce.details match {
+            case details@Some(_) =>  Ok(viewDetails(amlsDetailsResponce.status, details))
+            case None => Ok(viewDetails(amlsDetailsResponce.status, None))
           }
-        } else Ok(viewDetails(amlsJourney.status, None)).toFuture
-      }
+        }
       }
     }
+  }
 
 }
