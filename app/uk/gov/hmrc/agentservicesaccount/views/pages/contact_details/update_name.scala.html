@@ -18,7 +18,7 @@
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 @import uk.gov.hmrc.govukfrontend.views.html.components.{GovukButton, GovukInput, GovukFieldset}
 @import uk.gov.hmrc.govukfrontend.views.html.components._
-@import uk.gov.hmrc.agentservicesaccount.controllers.updateContactDetails
+@import uk.gov.hmrc.agentservicesaccount.controllers.{updateContactDetails, desiDetails}
 @import uk.gov.hmrc.govukfrontend.views.html.components.{Input, Text, Label}
 @import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
 @import uk.gov.hmrc.hmrcfrontend.views.Implicits.RichErrorSummary
@@ -39,7 +39,7 @@
 
 @main(
     pageTitle = withErrorPrefix(form.hasErrors, msgs("update-contact-details.name.heading")),
-    backLinkHref = Some(updateContactDetails.routes.ContactDetailsController.showCheckNewDetails.url),
+    backLinkHref = Some(desiDetails.routes.CheckYourAnswers.showPage.url),
     showSecondaryNav = false
 ) {
 

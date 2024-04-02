@@ -60,7 +60,7 @@ object NextPageSelector {
       case Some("email") => Redirect(updateContactDetails.routes.ContactDetailsController.showChangeEmailAddress)
       case Some("telephone") => Redirect(updateContactDetails.routes.ContactDetailsController.showChangeTelephoneNumber)
       case None => {
-        if (userIsOnCheckYourAnswersFlow) Redirect(updateContactDetails.routes.ContactDetailsController.showCheckNewDetails)
+        if (userIsOnCheckYourAnswersFlow) Redirect(desiDetails.routes.CheckYourAnswers.showPage)
         else Redirect(desiDetails.routes.ApplySACodeChanges.showPage)
       }
     }

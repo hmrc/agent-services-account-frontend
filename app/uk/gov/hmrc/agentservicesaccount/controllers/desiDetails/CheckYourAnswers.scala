@@ -16,18 +16,87 @@
 
 package uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
 
+import play.api.Logging
 import play.api.i18n.I18nSupport
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.agentservicesaccount.controllers.ToFuture
+import play.api.mvc._
+import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthRequestWithAgentInfo}
+import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
+import uk.gov.hmrc.agentservicesaccount.controllers._
+import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, PendingChangeOfDetails}
+import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
+import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.contact_details._
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
-import javax.inject.{Inject, Singleton}
+import java.time.Instant
+import javax.inject._
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CheckYourAnswers @Inject()(cc: MessagesControllerComponents) extends FrontendController(cc) with I18nSupport {
+class CheckYourAnswers @Inject()(actions: Actions,
+                                         sessionCache: SessionCacheService,
+                                         acaConnector: AgentClientAuthorisationConnector,
+                                         pcodRepository: PendingChangeOfDetailsRepository,
+                                         check_updated_details: check_updated_details,
+                                        )(implicit appConfig: AppConfig,
+                                          cc: MessagesControllerComponents,
+                                          ec: ExecutionContext) extends FrontendController(cc) with I18nSupport with Logging {
 
-  def showPage: Action[AnyContent] = Action.async { _ => Ok("").toFuture }
+  def ifFeatureEnabled(action: => Future[Result]): Future[Result] = {
+    if (appConfig.enableChangeContactDetails) action else Future.successful(NotFound)
+  }
 
-  def onSubmit: Action[AnyContent] = Action.async { _ => Ok("").toFuture }
+  private def ifFeatureEnabledAndNoPendingChanges(action: => Future[Result])(implicit request: AuthRequestWithAgentInfo[_]): Future[Result] = {
+    ifFeatureEnabled {
+      pcodRepository.find(request.agentInfo.arn).flatMap {
+        case None => // no change is pending, we can proceed
+          action
+        case Some(_) => // there is a pending change, further changes are locked. Redirect to the base page
+          Future.successful(Redirect(updateContactDetails.routes.ContactDetailsController.showCurrentContactDetails))
+      }
+    }
+  }
+
+  def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
+    ifFeatureEnabledAndNoPendingChanges {
+      sessionCache.get[AgencyDetails](DRAFT_NEW_CONTACT_DETAILS).map {
+        case Some(updatedDetails) => Ok(check_updated_details(updatedDetails, request.agentInfo.isAdmin))
+        case None => Redirect(updateContactDetails.routes.ContactDetailsController.showCurrentContactDetails)
+      }
+    }
+  }
+
+  def onSubmit: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
+    ifFeatureEnabledAndNoPendingChanges {
+      val arn = request.agentInfo.arn
+      sessionCache.get[AgencyDetails](DRAFT_NEW_CONTACT_DETAILS).flatMap {
+        case None => // graceful redirect in case of expired session data etc.
+          Future.successful(Redirect(updateContactDetails.routes.ContactDetailsController.showCurrentContactDetails))
+        case Some(newContactDetails) => for {
+          oldContactDetails <- getCurrentAgencyDetails()
+          pendingChange = PendingChangeOfDetails(
+            arn = arn,
+            oldDetails = oldContactDetails,
+            newDetails = newContactDetails,
+            timeSubmitted = Instant.now()
+          )
+          //
+          // TODO actual connector call to submit the details goes here...
+          //
+          _ <- pcodRepository.insert(pendingChange)
+          _ <- sessionCache.delete(DRAFT_NEW_CONTACT_DETAILS)
+        } yield Redirect(updateContactDetails.routes.ContactDetailsController.showChangeSubmitted)
+      }
+    }
+  }
+
+  //TODO: make separate util (repeated in ContactDetailsController)
+  private def getCurrentAgencyDetails()(implicit hc: HeaderCarrier, request: AuthRequestWithAgentInfo[_]): Future[AgencyDetails] = {
+    acaConnector.getAgencyDetails().map(_.getOrElse {
+      val arn = request.agentInfo.arn
+      throw new RuntimeException(s"Could not retrieve current agency details for $arn from the backend")
+    })
+  }
 }
-

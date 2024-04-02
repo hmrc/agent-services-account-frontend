@@ -29,6 +29,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, SuspensionDetails}
 import uk.gov.hmrc.agentservicesaccount.connectors.{AddressLookupConnector, AgentClientAuthorisationConnector, EmailVerificationConnector}
+import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.CheckYourAnswers
 import uk.gov.hmrc.agentservicesaccount.controllers.updateContactDetails.ContactDetailsController
 import uk.gov.hmrc.agentservicesaccount.controllers.{DRAFT_NEW_CONTACT_DETAILS, EMAIL_PENDING_VERIFICATION, desiDetails, updateContactDetails}
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup.{ConfirmedResponseAddress, ConfirmedResponseAddressDetails, Country, JourneyConfigV2}
@@ -118,7 +119,8 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
 
     val evConnector: EmailVerificationConnector = app.injector.instanceOf[EmailVerificationConnector]
 
-    val controller: ContactDetailsController = app.injector.instanceOf[ContactDetailsController]
+    val contactDetailsController: ContactDetailsController = app.injector.instanceOf[ContactDetailsController]
+    val checkYourAnswersController: CheckYourAnswers = app.injector.instanceOf[CheckYourAnswers]
     val sessionCache: SessionCacheService = app.injector.instanceOf[SessionCacheService]
     val pcodRepository: PendingChangeOfDetailsRepository = app.injector.instanceOf[PendingChangeOfDetailsRepository]
 
@@ -145,14 +147,14 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
   "GET /manage-account/contact-details/view" should {
     "display the current details page normally if there is no change pending" in new TestSetup {
       noPendingChangesInRepo()
-      val result = controller.showCurrentContactDetails()(fakeRequest()).futureValue
+      val result = contactDetailsController.showCurrentContactDetails()(fakeRequest()).futureValue
       status(result) shouldBe OK
       contentAsString(result) should include("Contact details")
       contentAsString(result) should include("My Agency")
     }
     "display the current details page with a warning and change locked-out if there is a change pending" in new TestSetup {
       pendingChangesExistInRepo()
-      val result = controller.showCurrentContactDetails()(fakeRequest()).futureValue
+      val result = contactDetailsController.showCurrentContactDetails()(fakeRequest()).futureValue
       status(result) shouldBe OK
       contentAsString(result) should include("Contact details")
       contentAsString(result) should include("My Agency")
@@ -163,7 +165,7 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
       implicit val request: Request[AnyContent] = fakeRequest()
       sessionCache.put(DRAFT_NEW_CONTACT_DETAILS, agencyDetails.copy(agencyName = Some("New and Improved Agency"))).futureValue
 
-      val result = controller.showCurrentContactDetails(fakeRequest())
+      val result = contactDetailsController.showCurrentContactDetails(fakeRequest())
       status(result) shouldBe OK
       contentAsString(result.futureValue) should include("Contact details")
       contentAsString(result.futureValue) should include("My Agency")
@@ -175,7 +177,7 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
   "GET /update-business-name" should {
     "display the enter business name page" in new TestSetup {
       noPendingChangesInRepo()
-      val result = controller.showChangeBusinessName()(fakeRequest())
+      val result = contactDetailsController.showChangeBusinessName()(fakeRequest())
       status(result) shouldBe OK
       contentAsString(result.futureValue) should include("What is the name")
     }
@@ -185,7 +187,7 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
     "store the new name in session and redirect to apply SA code page" in new TestSetup {
       noPendingChangesInRepo()
       implicit val request = fakeRequest("POST").withFormUrlEncodedBody("name" -> "New and Improved Agency")
-      val result = controller.submitChangeBusinessName()(request)
+      val result = contactDetailsController.submitChangeBusinessName()(request)
       status(result) shouldBe SEE_OTHER
       header("Location", result) shouldBe Some(desiDetails.routes.ApplySACodeChanges.showPage.url)
       sessionCache.get(DRAFT_NEW_CONTACT_DETAILS).futureValue.flatMap(_.agencyName) shouldBe Some("New and Improved Agency")
@@ -194,7 +196,7 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
     "display an error if the data submitted is invalid" in new TestSetup {
       noPendingChangesInRepo()
       implicit val request = fakeRequest("POST").withFormUrlEncodedBody("name" -> "&^%£$)(")
-      val result = controller.submitChangeBusinessName()(request)
+      val result = contactDetailsController.submitChangeBusinessName()(request)
       status(result) shouldBe OK
       contentAsString(result.futureValue) should include("There is a problem")
       sessionCache.get(DRAFT_NEW_CONTACT_DETAILS).futureValue.flatMap(_.agencyName) shouldBe None // new name not added to session
@@ -204,7 +206,7 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
   "GET /update-email-address" should {
     "display the enter email address page" in new TestSetup {
       noPendingChangesInRepo()
-      val result = controller.showChangeEmailAddress()(fakeRequest())
+      val result = contactDetailsController.showChangeEmailAddress()(fakeRequest())
       status(result) shouldBe OK
       contentAsString(result.futureValue) should include("What is the email")
     }
@@ -217,9 +219,9 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
         VerificationStatusResponse(List(CompletedEmail("new@email.com", verified = true, locked = false)))
       )))
       implicit val request = fakeRequest("POST").withFormUrlEncodedBody("emailAddress" -> "new@email.com")
-      val result = controller.submitChangeEmailAddress()(request)
+      val result = contactDetailsController.submitChangeEmailAddress()(request)
       status(result) shouldBe SEE_OTHER
-      header("Location", result) shouldBe Some(updateContactDetails.routes.ContactDetailsController.showCheckNewDetails.url)
+      header("Location", result) shouldBe Some(desiDetails.routes.CheckYourAnswers.showPage.url)
       sessionCache.get(DRAFT_NEW_CONTACT_DETAILS).futureValue.flatMap(_.agencyEmail) shouldBe Some("new@email.com")
     }
 
@@ -229,7 +231,7 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
         VerificationStatusResponse(List(CompletedEmail("new@email.com", verified = false, locked = true)))
       )))
       implicit val request = fakeRequest("POST").withFormUrlEncodedBody("emailAddress" -> "new@email.com")
-      val result = controller.submitChangeEmailAddress()(request)
+      val result = contactDetailsController.submitChangeEmailAddress()(request)
       status(result) shouldBe SEE_OTHER
       header("Location", result) shouldBe Some(updateContactDetails.routes.ContactDetailsController.showEmailLocked.url)
       sessionCache.get(DRAFT_NEW_CONTACT_DETAILS).futureValue.flatMap(_.agencyEmail) shouldBe None // there should be no change here
@@ -244,7 +246,7 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
         VerifyEmailResponse(redirectUri = "/fake-verify-email-journey")
       )))
       implicit val request = fakeRequest("POST").withFormUrlEncodedBody("emailAddress" -> "new@email.com")
-      val result = controller.submitChangeEmailAddress()(request)
+      val result = contactDetailsController.submitChangeEmailAddress()(request)
       status(result) shouldBe SEE_OTHER
       header("Location", result).get should include("/fake-verify-email-journey")
       sessionCache.get(DRAFT_NEW_CONTACT_DETAILS).futureValue.flatMap(_.agencyEmail) shouldBe None // there should be no change here
@@ -254,7 +256,7 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
     "display an error if the data submitted is invalid" in new TestSetup {
       noPendingChangesInRepo()
       implicit val request = fakeRequest("POST").withFormUrlEncodedBody("emailAddress" -> "invalid at email dot com")
-      val result = controller.submitChangeEmailAddress()(request)
+      val result = contactDetailsController.submitChangeEmailAddress()(request)
       status(result) shouldBe OK
       contentAsString(result.futureValue) should include("There is a problem")
       sessionCache.get(DRAFT_NEW_CONTACT_DETAILS).futureValue.flatMap(_.agencyEmail) shouldBe None // new email not added to session
@@ -269,9 +271,9 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
       (evConnector.checkEmail(_: String)(_: HeaderCarrier, _: ExecutionContext)).when(*, *, *).returns(Future.successful(Some(
         VerificationStatusResponse(List(CompletedEmail("new@email.com", verified = true, locked = false)))
       )))
-      val result = controller.finishEmailVerification()(request)
+      val result = contactDetailsController.finishEmailVerification()(request)
       status(result) shouldBe SEE_OTHER
-      header("Location", result) shouldBe Some(updateContactDetails.routes.ContactDetailsController.showCheckNewDetails.url)
+      header("Location", result) shouldBe Some(desiDetails.routes.CheckYourAnswers.showPage.url)
       sessionCache.get(DRAFT_NEW_CONTACT_DETAILS).futureValue.flatMap(_.agencyEmail) shouldBe Some("new@email.com")
       sessionCache.get(EMAIL_PENDING_VERIFICATION).futureValue shouldBe None
     }
@@ -280,7 +282,7 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
   "GET /update-telephone-number" should {
     "display the enter telephone number page" in new TestSetup {
       noPendingChangesInRepo()
-      val result = controller.showChangeTelephoneNumber()(fakeRequest())
+      val result = contactDetailsController.showChangeTelephoneNumber()(fakeRequest())
       status(result) shouldBe OK
       contentAsString(result.futureValue) should include("What is the telephone")
     }
@@ -290,7 +292,7 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
     "store the new telephone number in session and redirect to apply SA code page" in new TestSetup {
       noPendingChangesInRepo()
       implicit val request = fakeRequest("POST").withFormUrlEncodedBody("telephoneNumber" -> "01234 567 890")
-      val result = controller.submitChangeTelephoneNumber()(request)
+      val result = contactDetailsController.submitChangeTelephoneNumber()(request)
       status(result) shouldBe SEE_OTHER
       header("Location", result) shouldBe Some(desiDetails.routes.ApplySACodeChanges.showPage.url)
       sessionCache.get(DRAFT_NEW_CONTACT_DETAILS).futureValue.flatMap(_.agencyTelephone) shouldBe Some("01234 567 890")
@@ -299,7 +301,7 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
     "display an error if the data submitted is invalid" in new TestSetup {
       noPendingChangesInRepo()
       implicit val request = fakeRequest("POST").withFormUrlEncodedBody("telephoneNumber" -> "0800 FAKE NO")
-      val result = controller.submitChangeTelephoneNumber()(request)
+      val result = contactDetailsController.submitChangeTelephoneNumber()(request)
       status(result) shouldBe OK
       contentAsString(result.futureValue) should include("There is a problem")
       sessionCache.get(DRAFT_NEW_CONTACT_DETAILS).futureValue.flatMap(_.agencyTelephone) shouldBe None // new email not added to session
@@ -309,7 +311,7 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
   "GET /update-address" should {
     "redirect to the external service to look up an address" in new TestSetup {
       noPendingChangesInRepo()
-      val result = controller.startAddressLookup()(fakeRequest())
+      val result = contactDetailsController.startAddressLookup()(fakeRequest())
       status(result) shouldBe SEE_OTHER
       header("Location", result).get should include("mock-address-lookup-url")
     }
@@ -319,9 +321,9 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
     "store the new address in session and redirect to review new details page" in new TestSetup {
       noPendingChangesInRepo()
       implicit val request = fakeRequest()
-      val result = controller.finishAddressLookup(Some("foo"))(request)
+      val result = contactDetailsController.finishAddressLookup(Some("foo"))(request)
       status(result) shouldBe SEE_OTHER
-      header("Location", result) shouldBe Some(updateContactDetails.routes.ContactDetailsController.showCheckNewDetails.url)
+      header("Location", result) shouldBe Some(desiDetails.routes.CheckYourAnswers.showPage.url)
       sessionCache.get(DRAFT_NEW_CONTACT_DETAILS).futureValue.flatMap(_.agencyAddress).map(_.addressLine1) shouldBe Some("26 New Street") // the new address
     }
   }
@@ -331,7 +333,7 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
       noPendingChangesInRepo()
       implicit val request = fakeRequest()
       sessionCache.put(DRAFT_NEW_CONTACT_DETAILS, agencyDetails.copy(agencyName = Some("New and Improved Agency"))).futureValue
-      val result = controller.showCheckNewDetails()(fakeRequest())
+      val result = checkYourAnswersController.showPage()(fakeRequest())
       status(result) shouldBe OK
       contentAsString(result.futureValue) should include("Check your new contact details")
       contentAsString(result.futureValue) should include("New and Improved Agency")
@@ -341,7 +343,7 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
       noPendingChangesInRepo()
       implicit val request = fakeRequest()
       sessionCache.delete(DRAFT_NEW_CONTACT_DETAILS).futureValue
-      val result = controller.showCheckNewDetails()(fakeRequest())
+      val result = checkYourAnswersController.showPage()(fakeRequest())
       status(result) shouldBe SEE_OTHER
       header("Location", result) shouldBe Some(updateContactDetails.routes.ContactDetailsController.showCurrentContactDetails.url)
     }
@@ -353,7 +355,7 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
       implicit val request = fakeRequest("POST")
       val newDetails = agencyDetails.copy(agencyName = Some("New and Improved Agency"))
       sessionCache.put(DRAFT_NEW_CONTACT_DETAILS, newDetails).futureValue
-      val result = controller.submitCheckNewDetails()(request)
+      val result = checkYourAnswersController.onSubmit()(request)
       status(result) shouldBe SEE_OTHER
       header("Location", result) shouldBe Some(updateContactDetails.routes.ContactDetailsController.showChangeSubmitted.url)
       sessionCache.get(DRAFT_NEW_CONTACT_DETAILS).futureValue.flatMap(_.agencyTelephone) shouldBe None // the 'draft' details should be cleared from cache
@@ -370,7 +372,7 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
   "GET /contact-details-submitted" should {
     "display the enter telephone number page" in new TestSetup {
       pendingChangesExistInRepo()
-      val result = controller.showChangeSubmitted()(fakeRequest())
+      val result = contactDetailsController.showChangeSubmitted()(fakeRequest())
       status(result) shouldBe OK
       contentAsString(result.futureValue) should include("Change of details submitted")
     }
@@ -385,17 +387,17 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
       }
 
       pendingChangesExistInRepo()
-      shouldRedirect(controller.showChangeBusinessName())
-      shouldRedirect(controller.submitChangeBusinessName())
-      shouldRedirect(controller.showChangeEmailAddress())
-      shouldRedirect(controller.submitChangeEmailAddress())
-      shouldRedirect(controller.finishEmailVerification())
-      shouldRedirect(controller.showChangeTelephoneNumber())
-      shouldRedirect(controller.submitChangeTelephoneNumber())
-      shouldRedirect(controller.startAddressLookup())
-      shouldRedirect(controller.finishAddressLookup(None))
-      shouldRedirect(controller.showCheckNewDetails)
-      shouldRedirect(controller.submitCheckNewDetails)
+      shouldRedirect(contactDetailsController.showChangeBusinessName())
+      shouldRedirect(contactDetailsController.submitChangeBusinessName())
+      shouldRedirect(contactDetailsController.showChangeEmailAddress())
+      shouldRedirect(contactDetailsController.submitChangeEmailAddress())
+      shouldRedirect(contactDetailsController.finishEmailVerification())
+      shouldRedirect(contactDetailsController.showChangeTelephoneNumber())
+      shouldRedirect(contactDetailsController.submitChangeTelephoneNumber())
+      shouldRedirect(contactDetailsController.startAddressLookup())
+      shouldRedirect(contactDetailsController.finishAddressLookup(None))
+      shouldRedirect(checkYourAnswersController.showPage)
+      shouldRedirect(checkYourAnswersController.onSubmit)
     }
   }
 }

@@ -19,7 +19,7 @@
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 @import uk.gov.hmrc.agentservicesaccount.views.html.pages.contact_details.partials.contact_details_summary_list_partial
-@import uk.gov.hmrc.agentservicesaccount.controllers.updateContactDetails
+@import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
 
 @this(
         main: main, h1: h1, p: p, ul: ul,
@@ -55,7 +55,7 @@
         "update-contact-details.summary-list.body.li5"
     ))
 
-    @formWithCSRF(action = updateContactDetails.routes.ContactDetailsController.submitCheckNewDetails) {
+    @formWithCSRF(action = desiDetails.routes.CheckYourAnswers.showPage) {
         @button(Button(content = Text(msgs("update-contact-details.review.submit-change-of-details"))))
     }
 

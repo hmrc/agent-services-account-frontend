@@ -16,7 +16,7 @@
 
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
-@import uk.gov.hmrc.agentservicesaccount.controllers.updateContactDetails
+@import uk.gov.hmrc.agentservicesaccount.controllers.{updateContactDetails, desiDetails}
 
 @this(
     main: main,
@@ -27,7 +27,7 @@
 
 @main(
     pageTitle = msgs("cannotVerifyEmail.locked.title"),
-    backLinkHref = Some(updateContactDetails.routes.ContactDetailsController.showCheckNewDetails.url),
+    backLinkHref = Some(desiDetails.routes.CheckYourAnswers.showPage.url),
     showSecondaryNav = false
 ) {
 
