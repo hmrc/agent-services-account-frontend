@@ -186,7 +186,7 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
       implicit val request = fakeRequest("POST").withFormUrlEncodedBody("name" -> "New and Improved Agency")
       val result = controller.submitChangeBusinessName()(request)
       status(result) shouldBe SEE_OTHER
-      header("Location", result) shouldBe Some(routes.ContactDetailsController.showCheckNewDetails.url)
+      header("Location", result) shouldBe Some(updateContactDetails.routes.ContactDetailsController.showCheckNewDetails.url)
       sessionCache.get(DRAFT_NEW_CONTACT_DETAILS).futureValue.flatMap(_.agencyName) shouldBe Some("New and Improved Agency")
     }
 
@@ -218,7 +218,7 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
       implicit val request = fakeRequest("POST").withFormUrlEncodedBody("emailAddress" -> "new@email.com")
       val result = controller.submitChangeEmailAddress()(request)
       status(result) shouldBe SEE_OTHER
-      header("Location", result) shouldBe Some(routes.ContactDetailsController.showCheckNewDetails.url)
+      header("Location", result) shouldBe Some(updateContactDetails.routes.ContactDetailsController.showCheckNewDetails.url)
       sessionCache.get(DRAFT_NEW_CONTACT_DETAILS).futureValue.flatMap(_.agencyEmail) shouldBe Some("new@email.com")
     }
 
@@ -230,7 +230,7 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
       implicit val request = fakeRequest("POST").withFormUrlEncodedBody("emailAddress" -> "new@email.com")
       val result = controller.submitChangeEmailAddress()(request)
       status(result) shouldBe SEE_OTHER
-      header("Location", result) shouldBe Some(routes.ContactDetailsController.showEmailLocked.url)
+      header("Location", result) shouldBe Some(updateContactDetails.routes.ContactDetailsController.showEmailLocked.url)
       sessionCache.get(DRAFT_NEW_CONTACT_DETAILS).futureValue.flatMap(_.agencyEmail) shouldBe None // there should be no change here
     }
 
@@ -270,7 +270,7 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
       )))
       val result = controller.finishEmailVerification()(request)
       status(result) shouldBe SEE_OTHER
-      header("Location", result) shouldBe Some(routes.ContactDetailsController.showCheckNewDetails.url)
+      header("Location", result) shouldBe Some(updateContactDetails.routes.ContactDetailsController.showCheckNewDetails.url)
       sessionCache.get(DRAFT_NEW_CONTACT_DETAILS).futureValue.flatMap(_.agencyEmail) shouldBe Some("new@email.com")
       sessionCache.get(EMAIL_PENDING_VERIFICATION).futureValue shouldBe None
     }
@@ -291,7 +291,7 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
       implicit val request = fakeRequest("POST").withFormUrlEncodedBody("telephoneNumber" -> "01234 567 890")
       val result = controller.submitChangeTelephoneNumber()(request)
       status(result) shouldBe SEE_OTHER
-      header("Location", result) shouldBe Some(routes.ContactDetailsController.showCheckNewDetails.url)
+      header("Location", result) shouldBe Some(updateContactDetails.routes.ContactDetailsController.showCheckNewDetails.url)
       sessionCache.get(DRAFT_NEW_CONTACT_DETAILS).futureValue.flatMap(_.agencyTelephone) shouldBe Some("01234 567 890")
     }
 
@@ -320,7 +320,7 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
       implicit val request = fakeRequest()
       val result = controller.finishAddressLookup(Some("foo"))(request)
       status(result) shouldBe SEE_OTHER
-      header("Location", result) shouldBe Some(routes.ContactDetailsController.showCheckNewDetails.url)
+      header("Location", result) shouldBe Some(updateContactDetails.routes.ContactDetailsController.showCheckNewDetails.url)
       sessionCache.get(DRAFT_NEW_CONTACT_DETAILS).futureValue.flatMap(_.agencyAddress).map(_.addressLine1) shouldBe Some("26 New Street") // the new address
     }
   }
@@ -342,7 +342,7 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
       sessionCache.delete(DRAFT_NEW_CONTACT_DETAILS).futureValue
       val result = controller.showCheckNewDetails()(fakeRequest())
       status(result) shouldBe SEE_OTHER
-      header("Location", result) shouldBe Some(routes.ContactDetailsController.showCurrentContactDetails.url)
+      header("Location", result) shouldBe Some(updateContactDetails.routes.ContactDetailsController.showCurrentContactDetails.url)
     }
   }
 
@@ -354,7 +354,7 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
       sessionCache.put(DRAFT_NEW_CONTACT_DETAILS, newDetails).futureValue
       val result = controller.submitCheckNewDetails()(request)
       status(result) shouldBe SEE_OTHER
-      header("Location", result) shouldBe Some(routes.ContactDetailsController.showChangeSubmitted.url)
+      header("Location", result) shouldBe Some(updateContactDetails.routes.ContactDetailsController.showChangeSubmitted.url)
       sessionCache.get(DRAFT_NEW_CONTACT_DETAILS).futureValue.flatMap(_.agencyTelephone) shouldBe None // the 'draft' details should be cleared from cache
       // should have stored the pending change in the repo
       (pcodRepository.insert(_: PendingChangeOfDetails)).verify(argAssert { pcod: PendingChangeOfDetails =>
@@ -380,7 +380,7 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
       def shouldRedirect(endpoint: Action[AnyContent]): Unit = {
         val result = endpoint(fakeRequest())
         status(result) shouldBe SEE_OTHER
-        header("Location", result) shouldBe Some(routes.ContactDetailsController.showCurrentContactDetails.url)
+        header("Location", result) shouldBe Some(updateContactDetails.routes.ContactDetailsController.showCurrentContactDetails.url)
       }
 
       pendingChangesExistInRepo()

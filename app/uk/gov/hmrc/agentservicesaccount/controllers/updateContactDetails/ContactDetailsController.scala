@@ -23,8 +23,8 @@ import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthRequestWithAgentInfo}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AddressLookupConnector, AgentClientAuthorisationConnector, EmailVerificationConnector}
+import uk.gov.hmrc.agentservicesaccount.controllers._
 import uk.gov.hmrc.agentservicesaccount.controllers.updateContactDetails.util.NextPageSelector.getNextPage
-import uk.gov.hmrc.agentservicesaccount.controllers.{DRAFT_NEW_CONTACT_DETAILS, EMAIL_PENDING_VERIFICATION, SELECT_CHANGES_CONTACT_DETAILS, routes}
 import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup._
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.{Email, VerifyEmailRequest, VerifyEmailResponse}
@@ -70,7 +70,7 @@ class ContactDetailsController @Inject()(actions: Actions,
         case None => // no change is pending, we can proceed
           action
         case Some(_) => // there is a pending change, further changes are locked. Redirect to the base page
-          Future.successful(Redirect(routes.ContactDetailsController.showCurrentContactDetails))
+          Future.successful(Redirect(updateContactDetails.routes.ContactDetailsController.showCurrentContactDetails))
       }
     }
   }
@@ -112,7 +112,7 @@ class ContactDetailsController @Inject()(actions: Actions,
           formWithErrors => Future.successful(Ok(update_name(formWithErrors))),
           newAgencyName => {
             updateDraftDetails(_.copy(agencyName = Some(newAgencyName))).flatMap(_ =>
-                getNextPage(sessionCache)
+                getNextPage(sessionCache, "businessName")
             )
           }
         )
@@ -147,7 +147,7 @@ class ContactDetailsController @Inject()(actions: Actions,
           val credId = request.agentInfo.credentials.map(_.providerId).getOrElse(throw new RuntimeException("no available cred id"))
           emailVerificationLogic(email, credId)
         case None => // this should not happen but if it does, return a graceful fallback response
-          Future.successful(Redirect(routes.ContactDetailsController.showCheckNewDetails))
+          Future.successful(Redirect(updateContactDetails.routes.ContactDetailsController.showCheckNewDetails))
       }
     }
   }
@@ -172,7 +172,7 @@ class ContactDetailsController @Inject()(actions: Actions,
           formWithErrors => Future.successful(Ok(update_phone(formWithErrors))),
           newPhoneNumber => {
             updateDraftDetails(_.copy(agencyTelephone = Some(newPhoneNumber))).flatMap(_ =>
-                getNextPage(sessionCache)
+                getNextPage(sessionCache, "telephone")
             )
           }
         )
@@ -182,7 +182,7 @@ class ContactDetailsController @Inject()(actions: Actions,
   val startAddressLookup: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     val continueUrl: String = {
       val useAbsoluteUrls = appConfig.addressLookupBaseUrl.contains("localhost")
-      val call = routes.ContactDetailsController.finishAddressLookup(None)
+      val call = updateContactDetails.routes.ContactDetailsController.finishAddressLookup(None)
       if (useAbsoluteUrls) call.absoluteURL() else call.url
     }
 
@@ -242,7 +242,7 @@ class ContactDetailsController @Inject()(actions: Actions,
             )
             _ <- updateDraftDetails(_.copy(agencyAddress = Some(newBusinessAddress)))
           } yield {
-            Redirect(routes.ContactDetailsController.showCheckNewDetails)
+            Redirect(updateContactDetails.routes.ContactDetailsController.showCheckNewDetails)
           }
       }
     }
@@ -253,7 +253,7 @@ class ContactDetailsController @Inject()(actions: Actions,
     ifFeatureEnabledAndNoPendingChanges {
       sessionCache.get[AgencyDetails](DRAFT_NEW_CONTACT_DETAILS).map {
         case Some(updatedDetails) => Ok(check_updated_details(updatedDetails, request.agentInfo.isAdmin))
-        case None => Redirect(routes.ContactDetailsController.showCurrentContactDetails)
+        case None => Redirect(updateContactDetails.routes.ContactDetailsController.showCurrentContactDetails)
       }
     }
   }
@@ -263,7 +263,7 @@ class ContactDetailsController @Inject()(actions: Actions,
       val arn = request.agentInfo.arn
       sessionCache.get[AgencyDetails](DRAFT_NEW_CONTACT_DETAILS).flatMap {
         case None => // graceful redirect in case of expired session data etc.
-          Future.successful(Redirect(routes.ContactDetailsController.showCurrentContactDetails))
+          Future.successful(Redirect(updateContactDetails.routes.ContactDetailsController.showCurrentContactDetails))
         case Some(newContactDetails) => for {
           oldContactDetails <- getCurrentAgencyDetails()
           pendingChange = PendingChangeOfDetails(
@@ -277,7 +277,7 @@ class ContactDetailsController @Inject()(actions: Actions,
           //
           _ <- pcodRepository.insert(pendingChange)
           _ <- sessionCache.delete(DRAFT_NEW_CONTACT_DETAILS)
-        } yield Redirect(routes.ContactDetailsController.showChangeSubmitted)
+        } yield Redirect(updateContactDetails.routes.ContactDetailsController.showChangeSubmitted)
       }
     }
   }
@@ -316,26 +316,26 @@ class ContactDetailsController @Inject()(actions: Actions,
       result <- previousVerification match {
         case _ if isUnchanged =>
           updateDraftDetails(_.copy(agencyEmail = Some(newEmail))).map(_ =>
-            Redirect(routes.ContactDetailsController.showCheckNewDetails)
+            Redirect(updateContactDetails.routes.ContactDetailsController.showCheckNewDetails)
           )
         case Some(pv) if pv.verified => // already verified
           for {
             _ <- updateDraftDetails(_.copy(agencyEmail = Some(newEmail)))
             _ <- sessionCache.delete(EMAIL_PENDING_VERIFICATION)
-          } yield Redirect(routes.ContactDetailsController.showCheckNewDetails)
+          } yield Redirect(updateContactDetails.routes.ContactDetailsController.showCheckNewDetails)
         case Some(pv) if pv.locked => // email locked due to too many attempts
-          Future.successful(Redirect(routes.ContactDetailsController.showEmailLocked))
+          Future.successful(Redirect(updateContactDetails.routes.ContactDetailsController.showEmailLocked))
         case None => // email is not verified, start verification journey
           val lang = messagesApi.preferred(request).lang.code
           val verifyEmailRequest = VerifyEmailRequest(
             credId = credId,
-            continueUrl = makeUrl(routes.ContactDetailsController.finishEmailVerification),
+            continueUrl = makeUrl(updateContactDetails.routes.ContactDetailsController.finishEmailVerification),
             origin = if (lang == "cy") "Gwasanaethau Asiant CThEM" else "HMRC Agent Services",
             deskproServiceName = None,
             accessibilityStatementUrl = "", // todo
-            email = Some(Email(newEmail, makeUrl(routes.ContactDetailsController.showChangeEmailAddress))),
+            email = Some(Email(newEmail, makeUrl(updateContactDetails.routes.ContactDetailsController.showChangeEmailAddress))),
             lang = Some(lang),
-            backUrl = Some(makeUrl(routes.ContactDetailsController.showCheckNewDetails)),
+            backUrl = Some(makeUrl(updateContactDetails.routes.ContactDetailsController.showCheckNewDetails)),
             pageTitle = None
           )
           for {

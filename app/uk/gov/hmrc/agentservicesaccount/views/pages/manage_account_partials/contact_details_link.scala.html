@@ -15,6 +15,7 @@
  *@
 
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+@import uk.gov.hmrc.agentservicesaccount.controllers.updateContactDetails
 @import uk.gov.hmrc.agentservicesaccount.controllers.routes
 
 @this(a: a)
@@ -22,7 +23,7 @@
 @(key: String = "manage.account.view-or-update-contact-details")(implicit msgs: Messages, appConfig: AppConfig)
 
 @if(appConfig.enableChangeContactDetails) {
-  @a(key, href = routes.ContactDetailsController.showCurrentContactDetails.url)
+  @a(key, href = updateContactDetails.routes.ContactDetailsController.showCurrentContactDetails.url)
 } else {
   @a("manage.account.account-details", href = routes.AgentServicesController.accountDetails.url)
 }

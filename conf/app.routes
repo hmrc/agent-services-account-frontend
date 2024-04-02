@@ -58,25 +58,31 @@ POST       /private-beta-check-your-answers                               @uk.go
 GET        /private-beta-confirmation                                     @uk.gov.hmrc.agentservicesaccount.controllers.BetaInviteController.showInviteConfirmation
 
 # Update contact details
-GET        /manage-account/contact-details/view                           @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.showCurrentContactDetails
+GET        /manage-account/contact-details/view                           @uk.gov.hmrc.agentservicesaccount.controllers.updateContactDetails.ContactDetailsController.showCurrentContactDetails
+GET        /manage-account/contact-details/start-update                   @uk.gov.hmrc.agentservicesaccount.controllers.updateContactDetails.ContactDetailsController.showBeforeYouStartPage
 
-GET        /manage-account/contact-changes/select-changes                 @uk.gov.hmrc.agentservicesaccount.controllers.updateContactDetails.selectDetailsController.showPage
-POST       /manage-account/contact-changes/select-changes                 @uk.gov.hmrc.agentservicesaccount.controllers.updateContactDetails.selectDetailsController.onSubmit
+GET        /manage-account/contact-changes/select-changes                 @uk.gov.hmrc.agentservicesaccount.controllers.updateContactDetails.SelectDetailsController.showPage
+POST       /manage-account/contact-changes/select-changes                 @uk.gov.hmrc.agentservicesaccount.controllers.updateContactDetails.SelectDetailsController.onSubmit
 
-GET        /manage-account/contact-details/start-update                   @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.showBeforeYouStartPage
-GET        /update-business-name                                          @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.showChangeBusinessName
-POST       /update-business-name                                          @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.submitChangeBusinessName
-GET        /update-email-address                                          @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.showChangeEmailAddress
-POST       /update-email-address                                          @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.submitChangeEmailAddress
-GET        /email-verification-finish                                     @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.finishEmailVerification
-GET        /email-locked                                                  @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.showEmailLocked
-GET        /update-telephone-number                                       @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.showChangeTelephoneNumber
-POST       /update-telephone-number                                       @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.submitChangeTelephoneNumber
-GET        /update-address                                                @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.startAddressLookup
-GET        /address-lookup-finish                                         @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.finishAddressLookup(id: Option[String])
-GET        /check-contact-details                                         @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.showCheckNewDetails
-POST       /check-contact-details                                         @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.submitCheckNewDetails
-GET        /contact-details-submitted                                     @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.showChangeSubmitted
+GET        /manage-account/contact-details/new-name                       @uk.gov.hmrc.agentservicesaccount.controllers.updateContactDetails.ContactDetailsController.showChangeBusinessName
+POST       /manage-account/contact-details/new-name                       @uk.gov.hmrc.agentservicesaccount.controllers.updateContactDetails.ContactDetailsController.submitChangeBusinessName
+GET        /manage-account/contact-details/new-address                    @uk.gov.hmrc.agentservicesaccount.controllers.updateContactDetails.ContactDetailsController.startAddressLookup
+GET        /manage-account/contact-details/address-lookup-finish          @uk.gov.hmrc.agentservicesaccount.controllers.updateContactDetails.ContactDetailsController.finishAddressLookup(id: Option[String])
+GET        /manage-account/contact-details/new-email                      @uk.gov.hmrc.agentservicesaccount.controllers.updateContactDetails.ContactDetailsController.showChangeEmailAddress
+POST       /manage-account/contact-details/new-email                      @uk.gov.hmrc.agentservicesaccount.controllers.updateContactDetails.ContactDetailsController.submitChangeEmailAddress
+GET        /manage-account/contact-details/email-verification-finish      @uk.gov.hmrc.agentservicesaccount.controllers.updateContactDetails.ContactDetailsController.finishEmailVerification
+GET        /manage-account/contact-details/email-locked                   @uk.gov.hmrc.agentservicesaccount.controllers.updateContactDetails.ContactDetailsController.showEmailLocked
+GET        /manage-account/contact-details/new-telephone                  @uk.gov.hmrc.agentservicesaccount.controllers.updateContactDetails.ContactDetailsController.showChangeTelephoneNumber
+POST       /manage-account/contact-details/new-telephone                  @uk.gov.hmrc.agentservicesaccount.controllers.updateContactDetails.ContactDetailsController.submitChangeTelephoneNumber
+
+#GET        /manage-account/contact-details/enter-SA-code
+#GET        /manage-account/contact-details/apply-code-CT
+#GET        /manage-account/contact-details/enter-CT-code
+#GET        /manage-account/contact-details/your-details
+
+GET        /manage-account/contact-details/check-your-answers             @uk.gov.hmrc.agentservicesaccount.controllers.updateContactDetails.ContactDetailsController.showCheckNewDetails
+POST       /manage-account/contact-details/check-your-answers             @uk.gov.hmrc.agentservicesaccount.controllers.updateContactDetails.ContactDetailsController.submitCheckNewDetails
+GET        /manage-account/contact-details/confirmation                   @uk.gov.hmrc.agentservicesaccount.controllers.updateContactDetails.ContactDetailsController.showChangeSubmitted
 
 # AMLS
 GET        /manage-account/money-laundering-supervision/confirmation-new-supervision                   @uk.gov.hmrc.agentservicesaccount.controllers.amls.AmlsConfirmationController.showUpdatedAmlsConfirmationPage

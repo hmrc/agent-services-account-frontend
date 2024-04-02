@@ -16,14 +16,12 @@
 
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
-@import uk.gov.hmrc.agentservicesaccount.controllers.routes
+@import uk.gov.hmrc.agentservicesaccount.controllers.updateContactDetails
 @import uk.gov.hmrc.govukfrontend.views.html.components.{GovukErrorSummary, ErrorSummary, GovukButton, GovukCheckboxes, FormWithCSRF}
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.button.Button
 @import uk.gov.hmrc.govukfrontend.views.html.components.{Checkboxes, Fieldset, Legend, Text, CheckboxItem}
-@import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
 @import uk.gov.hmrc.hmrcfrontend.views.html.components.implicits._
 @import uk.gov.hmrc.govukfrontend.views.Aliases.Hint
-@import scala.reflect.internal.util.NoSourceFile.content
 @import uk.gov.hmrc.agentservicesaccount.models.SelectChanges
 
 @this(main: main, h1: h1,
@@ -41,7 +39,7 @@ govukButton: GovukButton
         @govukErrorSummary(ErrorSummary().withFormErrorsAsText(form))
     }
 
-    @formWithCSRF(action = routes.ContactDetailsController.submitSelectChanges, 'id -> "input") {
+    @formWithCSRF(action = updateContactDetails.routes.SelectDetailsController.onSubmit, 'id -> "input") {
         @govukCheckboxes(Checkboxes(
             fieldset = Some(Fieldset(
                legend = Some(Legend(
