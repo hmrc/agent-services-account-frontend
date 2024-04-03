@@ -366,7 +366,7 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
   }
 
   "GET /manage-account/contact-details/confirmation" should {
-    "display the enter telephone number page" in new TestSetup {
+    "display the confirmation page" in new TestSetup {
       pendingChangesExistInRepo()
       val result = controller.showChangeSubmitted()(fakeRequest())
       status(result) shouldBe OK
