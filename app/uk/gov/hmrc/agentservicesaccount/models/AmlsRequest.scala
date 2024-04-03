@@ -21,10 +21,11 @@ import play.api.libs.json.Json
 import java.time.LocalDate
 
 case class AmlsRequest(ukRecord: Boolean,
-                                          supervisoryBody: String,
-                                          membershipNumber: String,
-                                          membershipExpiresOn: Option[LocalDate]
+                       supervisoryBody: String,
+                       membershipNumber: String,
+                       membershipExpiresOn: Option[LocalDate]
                       )
-object AmlsRequest{
+
+object AmlsRequest {
   implicit val format = Json.format[AmlsRequest]
 }
