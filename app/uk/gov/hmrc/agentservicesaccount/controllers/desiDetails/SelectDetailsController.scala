@@ -41,8 +41,8 @@ class SelectDetailsController @Inject()(actions: Actions,
                                        )(implicit appConfig: AppConfig,
                                          cc: MessagesControllerComponents,
                                          ec: ExecutionContext
-                                        ) extends FrontendController(cc)
-                                          with UpdateContactDetailsJourneySupport with I18nSupport with Logging{
+                                       ) extends FrontendController(cc)
+  with UpdateContactDetailsJourneySupport with I18nSupport with Logging{
 
   def ifFeatureEnabled(action: => Future[Result]): Future[Result] = {
     if (appConfig.enableChangeContactDetails) action else Future.successful(NotFound)

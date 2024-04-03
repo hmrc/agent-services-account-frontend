@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -111,7 +111,7 @@ class ContactDetailsController @Inject()(actions: Actions,
           formWithErrors => Future.successful(Ok(update_name(formWithErrors))),
           newAgencyName => {
             updateDraftDetails(_.copy(agencyName = Some(newAgencyName))).flatMap(_ =>
-                getNextPage(sessionCache, "businessName")
+              getNextPage(sessionCache, "businessName")
             )
           }
         )
@@ -171,7 +171,7 @@ class ContactDetailsController @Inject()(actions: Actions,
           formWithErrors => Future.successful(Ok(update_phone(formWithErrors))),
           newPhoneNumber => {
             updateDraftDetails(_.copy(agencyTelephone = Some(newPhoneNumber))).flatMap(_ =>
-                getNextPage(sessionCache, "telephone")
+              getNextPage(sessionCache, "telephone")
             )
           }
         )
