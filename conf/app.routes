@@ -82,8 +82,8 @@ GET        /manage-account/contact-details/apply-code-CT                  @uk.go
 POST       /manage-account/contact-details/apply-code-CT                  @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.ApplyCTCodeChanges.onSubmit
 GET        /manage-account/contact-details/enter-CT-code                  @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.EnterCTCode.showPage
 POST       /manage-account/contact-details/enter-CT-code                  @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.EnterCTCode.onSubmit
-GET        /manage-account/contact-details/your-details                   @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.YourDetails.showPage
-POST       /manage-account/contact-details/your-details                   @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.YourDetails.onSubmit
+GET        /manage-account/contact-details/your-details                   @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.YourDetailsController.showPage
+POST       /manage-account/contact-details/your-details                   @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.YourDetailsController.onSubmit
 GET        /manage-account/contact-details/check-your-answers             @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.CheckYourAnswers.showPage
 POST       /manage-account/contact-details/check-your-answers             @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.CheckYourAnswers.onSubmit
 

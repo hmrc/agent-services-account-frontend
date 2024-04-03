@@ -21,7 +21,7 @@ import org.scalatest.concurrent.{Eventually, IntegrationPatience, ScalaFutures}
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.time.{Seconds, Span}
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
-import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress, PendingChangeOfDetails}
+import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress, PendingChangeOfDetails, YourDetails}
 import uk.gov.hmrc.agentservicesaccount.support.UnitSpec
 import uk.gov.hmrc.mongo.test.CleanMongoCollectionSupport
 
@@ -47,11 +47,17 @@ class PendingChangeOfDetailsRepositorySpec extends UnitSpec with Matchers  with 
       "GB"))
   )
 
+  private val submittedByDetails = YourDetails(
+    fullName = "John Tester",
+    telephone = "01903 209919"
+  )
+
   private def aPendingChangeOfDetails(timeSubmitted: Instant = Instant.now()) = PendingChangeOfDetails(
     arn = testArn,
     oldDetails = agencyDetails,
     newDetails = agencyDetails.copy(agencyName = Some("New and Improved Agency")),
-    timeSubmitted = timeSubmitted.truncatedTo(ChronoUnit.SECONDS) // truncating allows us to compare timestamps more easily as mongo round-trip loses time precision
+    timeSubmitted = timeSubmitted.truncatedTo(ChronoUnit.SECONDS), // truncating allows us to compare timestamps more easily as mongo round-trip loses time precision
+    submittedBy = submittedByDetails
   )
 
   "PendingChangeOfDetailsRepositoryImpl" should {

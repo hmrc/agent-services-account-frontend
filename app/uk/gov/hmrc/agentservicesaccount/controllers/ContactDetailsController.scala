@@ -26,7 +26,7 @@ import uk.gov.hmrc.agentservicesaccount.connectors.{AddressLookupConnector, Agen
 import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup._
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.{Email, VerifyEmailRequest, VerifyEmailResponse}
-import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress, PendingChangeOfDetails}
+import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress, PendingChangeOfDetails, YourDetails}
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.contact_details._
@@ -264,12 +264,14 @@ class ContactDetailsController @Inject()(actions: Actions,
         case None => // graceful redirect in case of expired session data etc.
           Future.successful(Redirect(routes.ContactDetailsController.showCurrentContactDetails))
         case Some(newContactDetails) => for {
+          submittedBy <- sessionCache.get[YourDetails](DRAFT_SUBMITTED_BY)
           oldContactDetails <- getCurrentAgencyDetails()
           pendingChange = PendingChangeOfDetails(
             arn = arn,
             oldDetails = oldContactDetails,
             newDetails = newContactDetails,
-            timeSubmitted = Instant.now()
+            timeSubmitted = Instant.now(),
+            submittedBy = submittedBy.getOrElse(throw new RuntimeException("Cannot submit without submittedBy details"))
           )
           //
           // TODO actual connector call to submit the details goes here...

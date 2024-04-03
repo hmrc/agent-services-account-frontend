@@ -29,9 +29,10 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, SuspensionDetails}
 import uk.gov.hmrc.agentservicesaccount.connectors.{AddressLookupConnector, AgentClientAuthorisationConnector, EmailVerificationConnector}
+import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.YourDetailsController
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup.{ConfirmedResponseAddress, ConfirmedResponseAddressDetails, Country, JourneyConfigV2}
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.{CompletedEmail, VerificationStatusResponse, VerifyEmailRequest, VerifyEmailResponse}
-import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress, PendingChangeOfDetails}
+import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress, PendingChangeOfDetails, YourDetails}
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.support.UnitSpec
@@ -58,6 +59,11 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
       None,
       Some("TF4 3TR"),
       "GB"))
+  )
+
+  private val submittedByDetails = YourDetails(
+    fullName = "John Tester",
+    telephone = "01903 209919"
   )
 
   private val confirmedAddressResponse = ConfirmedResponseAddress(
@@ -117,6 +123,7 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
     val evConnector: EmailVerificationConnector = app.injector.instanceOf[EmailVerificationConnector]
 
     val controller: ContactDetailsController = app.injector.instanceOf[ContactDetailsController]
+    val yourDetailsController: YourDetailsController = app.injector.instanceOf[YourDetailsController]
     val sessionCache: SessionCacheService = app.injector.instanceOf[SessionCacheService]
     val pcodRepository: PendingChangeOfDetailsRepository = app.injector.instanceOf[PendingChangeOfDetailsRepository]
 
@@ -124,7 +131,14 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
       (pcodRepository.find(_: Arn)).when(*).returns(Future.successful(None))
     }
     def pendingChangesExistInRepo(): Unit = {
-      (pcodRepository.find(_: Arn)).when(*).returns(Future.successful(Some(PendingChangeOfDetails(testArn, agencyDetails, agencyDetails, Instant.now()))))
+      (pcodRepository.find(_: Arn)).when(*).returns(Future.successful(
+        Some(PendingChangeOfDetails(
+          testArn,
+          agencyDetails,
+          agencyDetails,
+          Instant.now(),
+          submittedByDetails
+        ))))
     }
 
     (pcodRepository.insert(_: PendingChangeOfDetails)).when(*).returns(Future.successful(()))
@@ -132,6 +146,7 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
     // make sure these values are cleared from the session
     sessionCache.delete(DRAFT_NEW_CONTACT_DETAILS)(fakeRequest()).futureValue
     sessionCache.delete(EMAIL_PENDING_VERIFICATION)(fakeRequest()).futureValue
+    sessionCache.delete(DRAFT_SUBMITTED_BY)(fakeRequest()).futureValue
   }
 
   private def fakeRequest(method: String = "GET", uri: String = "/") =
@@ -351,6 +366,7 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
       implicit val request = fakeRequest("POST")
       val newDetails = agencyDetails.copy(agencyName = Some("New and Improved Agency"))
       sessionCache.put(DRAFT_NEW_CONTACT_DETAILS, newDetails).futureValue
+      sessionCache.put(DRAFT_SUBMITTED_BY, submittedByDetails).futureValue
       val result = controller.submitCheckNewDetails()(request)
       status(result) shouldBe SEE_OTHER
       header("Location", result) shouldBe Some(routes.ContactDetailsController.showChangeSubmitted.url)
@@ -361,6 +377,7 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
         pcod.oldDetails shouldBe agencyDetails
         pcod.newDetails shouldBe newDetails
         Math.abs(Instant.now().toEpochMilli - pcod.timeSubmitted.toEpochMilli) should be < 5000L // approximate time comparison
+        pcod.submittedBy shouldBe submittedByDetails
       })
     }
   }

@@ -24,7 +24,7 @@ import play.api.test.FakeRequest
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.routes
-import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress, PendingChangeOfDetails}
+import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress, PendingChangeOfDetails, YourDetails}
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.contact_details.view_contact_details
 
@@ -64,11 +64,18 @@ class ViewContactDetailsViewSpec extends BaseISpec {
       "GB"))
   )
 
+  private val submittedByDetails = YourDetails(
+    fullName = "John Tester",
+    telephone = "01903 209919"
+  )
+
+
   private val pendingChangeOfDetails = PendingChangeOfDetails(
     arn = testArn,
     oldDetails = agencyDetails,
     newDetails = agencyDetails.copy(agencyName = Some("New and Improved Agency")),
-    timeSubmitted = Instant.now
+    timeSubmitted = Instant.now,
+    submittedBy = submittedByDetails
   )
 
   object MessageLookup {
