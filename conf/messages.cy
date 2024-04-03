@@ -467,12 +467,13 @@ view-contact-details.pending-changes.insetText=Cyflwynwyd manylion newydd ar {0}
 
 contact-details.select-changes.title=Select changes
 contact-details.select-changes.error=Tell us which contact details you want to change.
-contact-details.select-changes.h1=Which contact details do you want to change
+contact-details.select-changes.h1=Which contact details do you want to change?
 contact-details.select-changes.hint=Select all that apply.
 contact-details.select-changes.business-name=Business name shown to clients
 contact-details.select-changes.address=Address for agent services account
 contact-details.select-changes.email=Email address
 contact-details.select-changes.telephone=Telephone number
+contact-details.select-changes.button=Continue
 
 contact-details.summary-list.email=Cyfeiriad e-bost
 contact-details.summary-list.phone=Rhif ffôn
