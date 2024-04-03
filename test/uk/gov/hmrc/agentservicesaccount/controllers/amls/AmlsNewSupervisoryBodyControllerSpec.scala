@@ -178,7 +178,7 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
         FakeRequest("POST", "/").withFormUrlEncodedBody("body" -> "ACCA"))
 
       status(result) mustBe SEE_OTHER
-      Helpers.redirectLocation(result).get mustBe "/manage-account/money-laundering-supervision/confirm-registration-number"
+      Helpers.redirectLocation(result).get mustBe "/agent-services-account/manage-account/money-laundering-supervision/confirm-registration-number"
     }
 
     "return 303 SEE_OTHER for CYA" in new Setup {
@@ -196,7 +196,7 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
       mockAmlsJourneySessionRepository.getFromSession(dataKey)(*[Reads[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful(Some(ukAmlsJourney))
 
       mockAmlsJourneySessionRepository.putSession(
-        dataKey, ukAmlsJourney.copy(newAmlsBody = Some("Association of Certified Chartered Accountants"), isAmlsBodyStillTheSame = Some(true)))(*[Writes[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
+        dataKey, ukAmlsJourney.copy(newAmlsBody = Some("Association of Certified Chartered Accountants"), isAmlsBodyStillTheSame = Some(true)))(*[Writes[UpdateAmlsJourney]], *[Request[Any]])returns Future.successful((SessionKeys.sessionId -> "session-123"))
 
       mockView.apply(*[Form[String]], *[Map[String, String]], isUk = true, *[Boolean])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 
@@ -230,7 +230,7 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
         FakeRequest("POST", "/").withFormUrlEncodedBody("body" -> "OS AMLS"))
 
       status(result) mustBe SEE_OTHER
-      Helpers.redirectLocation(result).get mustBe "/manage-account/money-laundering-supervision/new-registration-number"
+      Helpers.redirectLocation(result).get mustBe "/agent-services-account/manage-account/money-laundering-supervision/new-registration-number"
     }
 
     "return 200 OK when invalid form submission" in new Setup {

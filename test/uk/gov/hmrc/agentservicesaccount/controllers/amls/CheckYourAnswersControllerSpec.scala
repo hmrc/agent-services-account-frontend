@@ -263,7 +263,8 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
             *[ExecutionContext]) returns authResponse
           mockAppConfig.enableNonHmrcSupervisoryBody returns true
           mockAgentClientAuthorisationConnector.getSuspensionDetails()(*[HeaderCarrier], *[ExecutionContext]) returns suspensionDetailsResponse
-          mockUpdateAmlsJourneyRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[Request[_]]) returns Future.successful(Some(ukAmlsJourney))
+          mockUpdateAmlsJourneyRepository
+            .getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]],*[Request[_]])returns Future.successful(Some(ukAmlsJourney))
           mockAgentAssuranceConnector.postAmlsDetails(arn, amlsRequest)(*[ExecutionContext], *[HeaderCarrier]) returns Future.successful(())
 
           val result: Future[Result] = TestController.onSubmit()(fakeRequest)
