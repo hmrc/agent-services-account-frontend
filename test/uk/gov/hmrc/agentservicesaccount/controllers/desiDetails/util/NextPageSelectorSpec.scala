@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.agentservicesaccount.controllers.updateContactDetails.util
+package uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util
 
-import play.api.test.FakeRequest
-import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import play.api.mvc.{AnyContentAsEmpty, Result}
+import play.api.test.FakeRequest
 import play.api.test.Helpers.{await, defaultAwaitTimeout}
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.NextPageSelector.{getNextPage, moveToCheckYourAnswersFlow}
 import uk.gov.hmrc.agentservicesaccount.controllers.{CURRENT_SELECTED_CHANGES, PREVIOUS_SELECTED_CHANGES, desiDetails}
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.stubs.SessionServiceMocks
+import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 
 import scala.concurrent.{ExecutionContextExecutor, Future}
 
