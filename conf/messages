@@ -512,10 +512,10 @@ update-contact-details.review.p1=Check you have made all the necessary changes. 
 update-contact-details.review.p2=By submitting this change, you confirm you have one of the following roles in this business:
 update-contact-details.review.submit-change-of-details=Submit change of details
 
-update-contact-details.submitted.title=Change of details submitted
+update-contact-details.submitted.title=You have submitted new contact details
 update-contact-details.submitted.h2=What happens next
-update-contact-details.submitted.p1=We aim to update your contact details within 28 days.
-update-contact-details.submitted.p2=In the meantime, other teams in HMRC may try to contact you using your old details.
+update-contact-details.submitted.p1=We’ll carry out checks and update details in the next 4 weeks.
+update-contact-details.submitted.p2=In the meantime, the old details will still show on your account.
 update-contact-details.submitted.link=Return to manage account
 
 #Cannot verify email

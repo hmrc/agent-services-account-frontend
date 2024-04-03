@@ -72,7 +72,7 @@ GET        /update-address                                                @uk.go
 GET        /address-lookup-finish                                         @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.finishAddressLookup(id: Option[String])
 GET        /check-contact-details                                         @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.showCheckNewDetails
 POST       /check-contact-details                                         @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.submitCheckNewDetails
-GET        /contact-details-submitted                                     @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.showChangeSubmitted
+GET        /manage-account/contact-details/confirmation                   @uk.gov.hmrc.agentservicesaccount.controllers.ContactDetailsController.showChangeSubmitted
 
 GET        /manage-account/contact-details/apply-code-SA                  @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.ApplySACodeChanges.showPage
 POST       /manage-account/contact-details/apply-code-SA                  @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.ApplySACodeChanges.onSubmit

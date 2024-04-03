@@ -512,11 +512,11 @@ update-contact-details.review.p1=Check you have made all the necessary changes. 
 update-contact-details.review.p2=By submitting this change, you confirm you have one of the following roles in this business: TBC
 update-contact-details.review.submit-change-of-details=Submit change of details TBC
 
-update-contact-details.submitted.title=Change of details submitted TBC
-update-contact-details.submitted.h2=What happens next TBC
-update-contact-details.submitted.p1=We aim to update your contact details within 28 days. TBC
-update-contact-details.submitted.p2=In the meantime, other teams in HMRC may try to contact you using your old details. TBC
-update-contact-details.submitted.link=Return to manage account TBC
+update-contact-details.submitted.title=Rydych wedi cyflwyno manylion cyswllt newydd
+update-contact-details.submitted.h2=Yr hyn sy’n digwydd nesaf
+update-contact-details.submitted.p1=Mae’n cymryd 4 wythnos i CThEF i roi’r newidiadau hyn i’ch cyfrif gwasanaethau asiant ar waith.
+update-contact-details.submitted.p2=Yn y cyfamser, bydd yr hen fanylion yn ymddangos ar eich cyfrif o hyd.
+update-contact-details.submitted.link=Dychwelyd i ‘Rheoli’r cyfrif’
 
 #Cannot verify email
 cannotVerifyEmail.locked.title=We could not confirm your identity TBC
