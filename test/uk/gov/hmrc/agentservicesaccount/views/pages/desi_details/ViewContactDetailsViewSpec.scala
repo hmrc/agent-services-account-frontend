@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.agentservicesaccount.views.pages.contactDetails
+package uk.gov.hmrc.agentservicesaccount.views.pages.desi_details
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
