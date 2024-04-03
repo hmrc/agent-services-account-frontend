@@ -61,8 +61,6 @@ class CheckYourAnswersController @Inject()(amlsLoader: AMLSLoader,
                                           )(implicit appConfig: AppConfig, ec: ExecutionContext)
   extends FrontendController(cc) with AmlsJourneySupport with I18nSupport {
 
-  private lazy val supervisoryBodies: Map[String, String] = amlsLoader.load("/amls.csv")
-
   def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
       withUpdateAmlsJourney { journeyData =>
@@ -79,7 +77,7 @@ class CheckYourAnswersController @Inject()(amlsLoader: AMLSLoader,
 
         (journeyData.newAmlsBody, journeyData.newRegistrationNumber) match {
           case (Some(newAmlsBody), Some(newRegistrationNumber)) =>
-            val amlsRequest = AmlsRequest(journeyData.isUkAgent, supervisoryBodies(newAmlsBody), newRegistrationNumber, journeyData.newExpirationDate)
+            val amlsRequest = AmlsRequest(journeyData.isUkAgent, newAmlsBody, newRegistrationNumber, journeyData.newExpirationDate)
 
             agentAssuranceConnector.postAmlsDetails(request.agentInfo.arn, amlsRequest).map {
               _ => Redirect(amls.routes.AmlsConfirmationController.showUpdatedAmlsConfirmationPage)
@@ -96,14 +94,7 @@ class CheckYourAnswersController @Inject()(amlsLoader: AMLSLoader,
 
   private[amls] def buildSummaryListItems(isUkAgent: Boolean, journey: UpdateAmlsJourney, lang: Locale): Seq[SummaryListData] = {
     for {
-      body <- journey.newAmlsBody.map {
-        case body if isUkAgent =>
-          supervisoryBodies.collectFirst {
-            case (_, value) if value == body => value
-          }.getOrElse(body)
-
-        case body => body
-      }
+      body <- journey.newAmlsBody
       regNumber <- journey.newRegistrationNumber
     } yield {
       val items = Seq(
