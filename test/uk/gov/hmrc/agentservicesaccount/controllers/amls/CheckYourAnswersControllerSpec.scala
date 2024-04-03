@@ -51,7 +51,7 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
   private val arn: Arn = Arn("arn")
   private val amlsRequest: AmlsRequest = new AmlsRequest(
     ukRecord = true,
-    supervisoryBody = "Alphabet",
+    supervisoryBody = "ABC",
     membershipNumber = "1234567890",
     membershipExpiresOn = Some(LocalDate.now())
   )
