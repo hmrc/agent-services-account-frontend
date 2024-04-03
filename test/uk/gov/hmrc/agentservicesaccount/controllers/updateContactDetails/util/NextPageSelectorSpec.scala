@@ -116,5 +116,16 @@ class NextPageSelectorSpec extends BaseISpec with SessionServiceMocks {
         redirectLocation(await(response)) shouldBe Some(updateContactDetails.routes.ContactDetailsController.showChangeTelephoneNumber.url)
       }
     }
+
+    "redirect to Check Your Answers page" when {
+      "given the last page in list" in {
+        expectGetSessionItem[Set[String]](PREVIOUS_SELECTED_CHANGES, Set("businessName", "email"), 1)
+        expectGetSessionItem[Set[String]](CURRENT_SELECTED_CHANGES, Set("businessName", "address", "email", "telephone"), 1)
+
+        val response: Future[Result] = getNextPage(mockSessionCacheService, "telephone")
+
+        redirectLocation(await(response)) shouldBe Some(desiDetails.routes.CheckYourAnswers.showPage.url)
+      }
+    }
   }
 }

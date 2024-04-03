@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.agentservicesaccount.controllers.updateContactDetails.util
+package uk.gov.hmrc.agentservicesaccount.controllers.updateContactDetails
 
 import com.google.inject.AbstractModule
 import org.scalamock.scalatest.MockFactory

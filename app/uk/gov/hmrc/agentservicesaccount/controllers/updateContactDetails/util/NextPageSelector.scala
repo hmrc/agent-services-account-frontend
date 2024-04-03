@@ -36,7 +36,7 @@ object NextPageSelector {
           previous <- previousSelectedChanges
         } yield current.diff(previous)
       }
-      nextPage = getPage(pagesRequired, currentPage, false)
+      nextPage = getPage(pagesRequired, currentPage, previousSelectedChanges.getOrElse(Set.empty).nonEmpty)
     } yield nextPage
   }
 
