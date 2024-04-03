@@ -26,7 +26,6 @@ class NewRegistrationNumberFormSpec extends AnyWordSpec with Matchers {
     "for HMRC AMLS" when {
 
       "succeed when valid data provided" in {
-
         val data = Map(
           "number" -> "XAML00000123456"
         )
@@ -46,7 +45,6 @@ class NewRegistrationNumberFormSpec extends AnyWordSpec with Matchers {
         result.value shouldBe None
         result.errors.size shouldBe 1
         result.errors.head.message shouldBe "amls.enter-registration-number.error.empty"
-
       }
 
       "fail when invalid data provided" in {
@@ -63,9 +61,7 @@ class NewRegistrationNumberFormSpec extends AnyWordSpec with Matchers {
     }
 
     "for not HMRC AMLS" when {
-
       "succeed when valid data provided" in {
-
         val data = Map(
           "number" -> "GGG12345X"
         )
@@ -100,5 +96,4 @@ class NewRegistrationNumberFormSpec extends AnyWordSpec with Matchers {
       }
     }
   }
-
-  }
+}

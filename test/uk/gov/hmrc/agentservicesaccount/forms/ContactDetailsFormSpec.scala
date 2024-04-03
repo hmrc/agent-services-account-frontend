@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -150,7 +150,6 @@ class ContactDetailsFormSpec extends AnyWordSpec with Matchers with GuiceOneAppP
 
       ContactDetailsSuspendForm.form.bind(params).value shouldBe
         Some(SuspendContactDetails("Blah alkfh", "asdlkj@eqkf.do","01273 000 000"))
-
     }
 
     s"error when $nameField, $emailField and $phoneField are empty" in {
@@ -160,6 +159,7 @@ class ContactDetailsFormSpec extends AnyWordSpec with Matchers with GuiceOneAppP
         phoneField -> ""
       )
       val validatedForm = ContactDetailsSuspendForm.form.bind(params)
+
       validatedForm.hasErrors shouldBe true
       validatedForm.error(nameField).get.message shouldBe "error.suspended-details.required.name"
       validatedForm.error(emailField).get.message shouldBe "error.suspended-details.required.email"
@@ -174,6 +174,7 @@ class ContactDetailsFormSpec extends AnyWordSpec with Matchers with GuiceOneAppP
         phoneField -> RandomStringUtils.randomNumeric(20)
       )
       val validatedForm = ContactDetailsSuspendForm.form.bind(params)
+
       validatedForm.hasErrors shouldBe true
       validatedForm.error(nameField).get.message shouldBe "error.max-length.name"
       validatedForm.errors.length shouldBe 1
@@ -186,6 +187,7 @@ class ContactDetailsFormSpec extends AnyWordSpec with Matchers with GuiceOneAppP
         phoneField -> RandomStringUtils.randomNumeric(20)
       )
       val validatedForm = ContactDetailsSuspendForm.form.bind(params)
+
       validatedForm.hasErrors shouldBe true
       validatedForm.error(nameField).get.message shouldBe "error.suspended-details.invalid-chars.name"
       validatedForm.errors.length shouldBe 1
@@ -199,6 +201,7 @@ class ContactDetailsFormSpec extends AnyWordSpec with Matchers with GuiceOneAppP
         phoneField -> RandomStringUtils.randomNumeric(20)
       )
       val validatedForm = ContactDetailsSuspendForm.form.bind(params)
+
       validatedForm.hasErrors shouldBe true
       validatedForm.error(emailField).get.message shouldBe "error.max-length.email"
       validatedForm.errors.length shouldBe 1
@@ -211,6 +214,7 @@ class ContactDetailsFormSpec extends AnyWordSpec with Matchers with GuiceOneAppP
         phoneField -> "1 2 3 4 5 6 7 8 9 0 "
       )
       val validatedForm = ContactDetailsSuspendForm.form.bind(params)
+
       validatedForm.hasErrors shouldBe true
       validatedForm.error(emailField).get.message shouldBe "error.suspended-details.required.email"
       validatedForm.errors.length shouldBe 1
@@ -223,6 +227,7 @@ class ContactDetailsFormSpec extends AnyWordSpec with Matchers with GuiceOneAppP
         phoneField -> "+44 32456 78989 6345678"
       )
       val validatedForm = ContactDetailsSuspendForm.form.bind(params)
+
       validatedForm.hasErrors shouldBe true
       validatedForm.error(phoneField).get.message shouldBe "error.suspended-details.max-length.telephone"
       validatedForm.errors.length shouldBe 1
@@ -235,11 +240,10 @@ class ContactDetailsFormSpec extends AnyWordSpec with Matchers with GuiceOneAppP
         phoneField -> RandomStringUtils.randomAlphanumeric(11)
       )
       val validatedForm = ContactDetailsSuspendForm.form.bind(params)
+
       validatedForm.hasErrors shouldBe true
       validatedForm.error(phoneField).get.message shouldBe "error.suspended-details.invalid.telephone"
       validatedForm.errors.length shouldBe 1
     }
-
   }
-
 }
