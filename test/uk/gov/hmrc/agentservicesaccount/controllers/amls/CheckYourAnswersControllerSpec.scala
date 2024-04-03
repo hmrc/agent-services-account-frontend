@@ -273,6 +273,23 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
           status(result) mustBe SEE_OTHER
 
         }
+        "agent has unsuccessfully entered data for CYA page" in new Setup {
+
+          mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
+            *[HeaderCarrier],
+            *[ExecutionContext]) returns authResponse
+          mockAppConfig.enableNonHmrcSupervisoryBody returns true
+          mockAgentClientAuthorisationConnector.getSuspensionDetails()(*[HeaderCarrier], *[ExecutionContext]) returns suspensionDetailsResponse
+         // mockAgentAssuranceConnector.postAmlsDetails(arn, amlsRequest)(*[ExecutionContext], *[HeaderCarrier]) returns
+         // Future.successful(AmlsStatuses.NoAmlsDetailsUK)
+          mockUpdateAmlsJourneyRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[Request[_]]) returns
+            Future.successful(Some(ukAmlsJourney))
+
+
+          val result: Future[Result] = TestController.onSubmit()(fakeRequest)
+          status(result) mustBe SEE_OTHER
+
+        }
       }
     }
 

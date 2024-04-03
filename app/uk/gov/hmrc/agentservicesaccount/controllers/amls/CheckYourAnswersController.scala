@@ -79,7 +79,7 @@ class CheckYourAnswersController @Inject()(amlsLoader: AMLSLoader,
 
         (journeyData.newAmlsBody, journeyData.newRegistrationNumber) match {
           case (Some(newAmlsBody), Some(newRegistrationNumber)) =>
-            val amlsRequest = AmlsRequest(journeyData.isUkAgent, newAmlsBody, newRegistrationNumber, journeyData.newExpirationDate)
+            val amlsRequest = AmlsRequest(journeyData.isUkAgent, supervisoryBodies(newAmlsBody), newRegistrationNumber, journeyData.newExpirationDate)
 
             agentAssuranceConnector.postAmlsDetails(request.agentInfo.arn, amlsRequest)
               .map(_ => Redirect(amls.routes.AmlsConfirmationController.showUpdatedAmlsConfirmationPage))
@@ -96,6 +96,7 @@ class CheckYourAnswersController @Inject()(amlsLoader: AMLSLoader,
   private[amls] def buildSummaryListItems(isUkAgent: Boolean, journey: UpdateAmlsJourney, lang: Locale): Seq[SummaryListData] = {
     for {
       body <- journey.newAmlsBody.map {
+        case supervisoryBodies(body) if isUkAgent => supervisoryBodies(body)
         case body if isUkAgent => supervisoryBodies(body)
         case body => body
       }
