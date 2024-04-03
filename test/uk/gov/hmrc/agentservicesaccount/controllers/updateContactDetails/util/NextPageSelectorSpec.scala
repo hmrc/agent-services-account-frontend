@@ -20,8 +20,8 @@ import play.api.test.FakeRequest
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import play.api.mvc.{AnyContentAsEmpty, Result}
 import play.api.test.Helpers.{await, defaultAwaitTimeout}
-import uk.gov.hmrc.agentservicesaccount.controllers.updateContactDetails.util.NextPageSelector.{getNextPage, moveToCheckYourAnswersFlow}
-import uk.gov.hmrc.agentservicesaccount.controllers.{CURRENT_SELECTED_CHANGES, PREVIOUS_SELECTED_CHANGES, desiDetails, updateContactDetails}
+import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.NextPageSelector.{getNextPage, moveToCheckYourAnswersFlow}
+import uk.gov.hmrc.agentservicesaccount.controllers.{CURRENT_SELECTED_CHANGES, PREVIOUS_SELECTED_CHANGES, desiDetails}
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.stubs.SessionServiceMocks
 
@@ -40,7 +40,7 @@ class NextPageSelectorSpec extends BaseISpec with SessionServiceMocks {
 
         val response: Future[Result] = getNextPage(mockSessionCacheService)
 
-        redirectLocation(await(response)) shouldBe Some(updateContactDetails.routes.ContactDetailsController.showChangeBusinessName.url)
+        redirectLocation(await(response)) shouldBe Some(desiDetails.routes.ContactDetailsController.showChangeBusinessName.url)
       }
 
       "some pages selected" in {
@@ -49,7 +49,7 @@ class NextPageSelectorSpec extends BaseISpec with SessionServiceMocks {
 
         val response: Future[Result] = getNextPage(mockSessionCacheService)
 
-        redirectLocation(await(response)) shouldBe Some(updateContactDetails.routes.ContactDetailsController.showChangeEmailAddress.url)
+        redirectLocation(await(response)) shouldBe Some(desiDetails.routes.ContactDetailsController.showChangeEmailAddress.url)
       }
     }
 
@@ -60,7 +60,7 @@ class NextPageSelectorSpec extends BaseISpec with SessionServiceMocks {
 
         val response: Future[Result] = getNextPage(mockSessionCacheService, "email")
 
-        redirectLocation(await(response)) shouldBe Some(updateContactDetails.routes.ContactDetailsController.showChangeTelephoneNumber.url)
+        redirectLocation(await(response)) shouldBe Some(desiDetails.routes.ContactDetailsController.showChangeTelephoneNumber.url)
       }
     }
 
@@ -84,7 +84,7 @@ class NextPageSelectorSpec extends BaseISpec with SessionServiceMocks {
 
         val response: Future[Result] = getNextPage(mockSessionCacheService)
 
-        redirectLocation(await(response)) shouldBe Some(updateContactDetails.routes.ContactDetailsController.showChangeEmailAddress.url)
+        redirectLocation(await(response)) shouldBe Some(desiDetails.routes.ContactDetailsController.showChangeEmailAddress.url)
       }
     }
 
@@ -95,7 +95,7 @@ class NextPageSelectorSpec extends BaseISpec with SessionServiceMocks {
 
         val response: Future[Result] = getNextPage(mockSessionCacheService, "address")
 
-        redirectLocation(await(response)) shouldBe Some(updateContactDetails.routes.ContactDetailsController.showChangeTelephoneNumber.url)
+        redirectLocation(await(response)) shouldBe Some(desiDetails.routes.ContactDetailsController.showChangeTelephoneNumber.url)
       }
 
       "given a page that was part of the previous journey" in {
@@ -104,7 +104,7 @@ class NextPageSelectorSpec extends BaseISpec with SessionServiceMocks {
 
         val response: Future[Result] = getNextPage(mockSessionCacheService, "email")
 
-        redirectLocation(await(response)) shouldBe Some(updateContactDetails.routes.ContactDetailsController.showChangeTelephoneNumber.url)
+        redirectLocation(await(response)) shouldBe Some(desiDetails.routes.ContactDetailsController.showChangeTelephoneNumber.url)
       }
 
       "given a page that shouldn't have been part of journey" in {
@@ -113,7 +113,7 @@ class NextPageSelectorSpec extends BaseISpec with SessionServiceMocks {
 
         val response: Future[Result] = getNextPage(mockSessionCacheService, "address")
 
-        redirectLocation(await(response)) shouldBe Some(updateContactDetails.routes.ContactDetailsController.showChangeTelephoneNumber.url)
+        redirectLocation(await(response)) shouldBe Some(desiDetails.routes.ContactDetailsController.showChangeTelephoneNumber.url)
       }
     }
 

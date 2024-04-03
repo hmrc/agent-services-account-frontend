@@ -54,7 +54,7 @@ class CheckYourAnswers @Inject()(actions: Actions,
         case None => // no change is pending, we can proceed
           action
         case Some(_) => // there is a pending change, further changes are locked. Redirect to the base page
-          Future.successful(Redirect(updateContactDetails.routes.ContactDetailsController.showCurrentContactDetails))
+          Future.successful(Redirect(desiDetails.routes.ContactDetailsController.showCurrentContactDetails))
       }
     }
   }
@@ -63,7 +63,7 @@ class CheckYourAnswers @Inject()(actions: Actions,
     ifFeatureEnabledAndNoPendingChanges {
       sessionCache.get[AgencyDetails](DRAFT_NEW_CONTACT_DETAILS).map {
         case Some(updatedDetails) => Ok(check_updated_details(updatedDetails, request.agentInfo.isAdmin))
-        case None => Redirect(updateContactDetails.routes.ContactDetailsController.showCurrentContactDetails)
+        case None => Redirect(desiDetails.routes.ContactDetailsController.showCurrentContactDetails)
       }
     }
   }
@@ -73,7 +73,7 @@ class CheckYourAnswers @Inject()(actions: Actions,
       val arn = request.agentInfo.arn
       sessionCache.get[AgencyDetails](DRAFT_NEW_CONTACT_DETAILS).flatMap {
         case None => // graceful redirect in case of expired session data etc.
-          Future.successful(Redirect(updateContactDetails.routes.ContactDetailsController.showCurrentContactDetails))
+          Future.successful(Redirect(desiDetails.routes.ContactDetailsController.showCurrentContactDetails))
         case Some(newContactDetails) => for {
           oldContactDetails <- getCurrentAgencyDetails()
           pendingChange = PendingChangeOfDetails(
@@ -87,7 +87,7 @@ class CheckYourAnswers @Inject()(actions: Actions,
           //
           _ <- pcodRepository.insert(pendingChange)
           _ <- sessionCache.delete(DRAFT_NEW_CONTACT_DETAILS)
-        } yield Redirect(updateContactDetails.routes.ContactDetailsController.showChangeSubmitted)
+        } yield Redirect(desiDetails.routes.ContactDetailsController.showChangeSubmitted)
       }
     }
   }

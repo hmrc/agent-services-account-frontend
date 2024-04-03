@@ -909,7 +909,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       val bottomPanel = html.select("div#bottom-panel")
       bottomPanel.select("h2").get(0).text shouldBe "Your organisation"
       bottomPanel.select("a").get(0).text shouldBe "View the contact details we have for your business"
-      bottomPanel.select("a").get(0).attr("href") shouldBe updateContactDetails.routes.ContactDetailsController.showCurrentContactDetails.url
+      bottomPanel.select("a").get(0).attr("href") shouldBe desiDetails.routes.ContactDetailsController.showCurrentContactDetails.url
       bottomPanel.select("a").get(1).text shouldBe "View administrators"
       bottomPanel.select("a").get(1).attr("href") shouldBe routes.AgentServicesController.administrators.url
 
@@ -945,7 +945,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       val bottomPanel = html.select("div#bottom-panel")
       bottomPanel.select("h2").get(0).text shouldBe "Your organisation"
       bottomPanel.select("a").get(0).text shouldBe "View the contact details we have for your business"
-      bottomPanel.select("a").get(0).attr("href") shouldBe updateContactDetails.routes.ContactDetailsController.showCurrentContactDetails.url
+      bottomPanel.select("a").get(0).attr("href") shouldBe desiDetails.routes.ContactDetailsController.showCurrentContactDetails.url
       bottomPanel.select("a").get(1).text shouldBe "View administrators"
       bottomPanel.select("a").get(1).attr("href") shouldBe routes.AgentServicesController.administrators.url
 
@@ -996,7 +996,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       val bottomPanel = html.select("div#bottom-panel")
       bottomPanel.select("h2").get(0).text shouldBe "Your organisation"
       bottomPanel.select("a").get(0).text shouldBe "View the contact details we have for your business"
-      bottomPanel.select("a").get(0).attr("href") shouldBe updateContactDetails.routes.ContactDetailsController.showCurrentContactDetails.url
+      bottomPanel.select("a").get(0).attr("href") shouldBe desiDetails.routes.ContactDetailsController.showCurrentContactDetails.url
       bottomPanel.select("a").get(1).text shouldBe "View administrators"
       bottomPanel.select("a").get(1).attr("href") shouldBe routes.AgentServicesController.administrators.url
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.agentservicesaccount.controllers.updateContactDetails
+package uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
 
 import play.api.Logging
 import play.api.i18n.{I18nSupport, Lang}
@@ -24,7 +24,7 @@ import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthRequestWithAgentIn
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AddressLookupConnector, AgentClientAuthorisationConnector, EmailVerificationConnector}
 import uk.gov.hmrc.agentservicesaccount.controllers._
-import uk.gov.hmrc.agentservicesaccount.controllers.updateContactDetails.util.NextPageSelector.getNextPage
+import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.NextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup._
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.{Email, VerifyEmailRequest, VerifyEmailResponse}
@@ -69,7 +69,7 @@ class ContactDetailsController @Inject()(actions: Actions,
         case None => // no change is pending, we can proceed
           action
         case Some(_) => // there is a pending change, further changes are locked. Redirect to the base page
-          Future.successful(Redirect(updateContactDetails.routes.ContactDetailsController.showCurrentContactDetails))
+          Future.successful(Redirect(desiDetails.routes.ContactDetailsController.showCurrentContactDetails))
       }
     }
   }
@@ -181,7 +181,7 @@ class ContactDetailsController @Inject()(actions: Actions,
   val startAddressLookup: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     val continueUrl: String = {
       val useAbsoluteUrls = appConfig.addressLookupBaseUrl.contains("localhost")
-      val call = updateContactDetails.routes.ContactDetailsController.finishAddressLookup(None)
+      val call = desiDetails.routes.ContactDetailsController.finishAddressLookup(None)
       if (useAbsoluteUrls) call.absoluteURL() else call.url
     }
 
@@ -289,16 +289,16 @@ class ContactDetailsController @Inject()(actions: Actions,
             _ <- sessionCache.delete(EMAIL_PENDING_VERIFICATION)
           } yield Redirect(desiDetails.routes.CheckYourAnswers.showPage)
         case Some(pv) if pv.locked => // email locked due to too many attempts
-          Future.successful(Redirect(updateContactDetails.routes.ContactDetailsController.showEmailLocked))
+          Future.successful(Redirect(desiDetails.routes.ContactDetailsController.showEmailLocked))
         case None => // email is not verified, start verification journey
           val lang = messagesApi.preferred(request).lang.code
           val verifyEmailRequest = VerifyEmailRequest(
             credId = credId,
-            continueUrl = makeUrl(updateContactDetails.routes.ContactDetailsController.finishEmailVerification),
+            continueUrl = makeUrl(desiDetails.routes.ContactDetailsController.finishEmailVerification),
             origin = if (lang == "cy") "Gwasanaethau Asiant CThEM" else "HMRC Agent Services",
             deskproServiceName = None,
             accessibilityStatementUrl = "", // todo
-            email = Some(Email(newEmail, makeUrl(updateContactDetails.routes.ContactDetailsController.showChangeEmailAddress))),
+            email = Some(Email(newEmail, makeUrl(desiDetails.routes.ContactDetailsController.showChangeEmailAddress))),
             lang = Some(lang),
             backUrl = Some(makeUrl(desiDetails.routes.CheckYourAnswers.showPage)),
             pageTitle = None

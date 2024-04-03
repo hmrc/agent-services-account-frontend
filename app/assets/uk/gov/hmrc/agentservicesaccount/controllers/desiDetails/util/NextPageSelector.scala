@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.agentservicesaccount.controllers.updateContactDetails.util
+package uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util
 
-import play.api.mvc.{Request, Result}
 import play.api.mvc.Results.Redirect
+import play.api.mvc.{Request, Result}
+import uk.gov.hmrc.agentservicesaccount.controllers.{CURRENT_SELECTED_CHANGES, PREVIOUS_SELECTED_CHANGES, desiDetails}
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
-import uk.gov.hmrc.agentservicesaccount.controllers._
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -63,10 +63,10 @@ object NextPageSelector {
     }
 
     nextPage match {
-      case Some("businessName") => Redirect(updateContactDetails.routes.ContactDetailsController.showChangeBusinessName)
-      case Some("address") => Redirect(updateContactDetails.routes.ContactDetailsController.showChangeEmailAddress) //TODO: Update routing
-      case Some("email") => Redirect(updateContactDetails.routes.ContactDetailsController.showChangeEmailAddress)
-      case Some("telephone") => Redirect(updateContactDetails.routes.ContactDetailsController.showChangeTelephoneNumber)
+      case Some("businessName") => Redirect(desiDetails.routes.ContactDetailsController.showChangeBusinessName)
+      case Some("address") => Redirect(desiDetails.routes.ContactDetailsController.showChangeEmailAddress) //TODO: Update routing
+      case Some("email") => Redirect(desiDetails.routes.ContactDetailsController.showChangeEmailAddress)
+      case Some("telephone") => Redirect(desiDetails.routes.ContactDetailsController.showChangeTelephoneNumber)
       case None => {
         if (userIsOnCheckYourAnswersFlow) Redirect(desiDetails.routes.CheckYourAnswers.showPage)
         else Redirect(desiDetails.routes.ApplySACodeChanges.showPage)

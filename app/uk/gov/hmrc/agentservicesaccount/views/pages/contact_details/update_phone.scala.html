@@ -18,7 +18,7 @@
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 @import uk.gov.hmrc.govukfrontend.views.html.components.{GovukButton, GovukInput, GovukFieldset}
 @import uk.gov.hmrc.govukfrontend.views.html.components._
-@import uk.gov.hmrc.agentservicesaccount.controllers.{updateContactDetails, desiDetails}
+@import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
 @import uk.gov.hmrc.govukfrontend.views.html.components.{Input, Text, Label}
 @import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
 @import uk.gov.hmrc.hmrcfrontend.views.Implicits.RichErrorSummary
@@ -47,7 +47,7 @@
         @govukErrorSummary(ErrorSummary().withFormErrorsAsText(form))
     }
 
-    @formWithCSRF(action = updateContactDetails.routes.ContactDetailsController.submitChangeTelephoneNumber) {
+    @formWithCSRF(action = desiDetails.routes.ContactDetailsController.submitChangeTelephoneNumber) {
         @govukInput(Input(
             label = Label(
                 classes = "govuk-label--l",

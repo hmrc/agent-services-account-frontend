@@ -18,7 +18,7 @@
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 @import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
-@import uk.gov.hmrc.agentservicesaccount.controllers.{updateContactDetails, desiDetails}
+@import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
 @import uk.gov.hmrc.hmrcfrontend.views.Implicits.RichErrorSummary
 
 @this(
@@ -45,7 +45,7 @@
         @govukErrorSummary(ErrorSummary().withFormErrorsAsText(form))
     }
 
-    @formWithCSRF(action = updateContactDetails.routes.ContactDetailsController.submitChangeEmailAddress) {
+    @formWithCSRF(action = desiDetails.routes.ContactDetailsController.submitChangeEmailAddress) {
         @govukInput(Input(
             label = Label(
                 classes = "govuk-label--l",

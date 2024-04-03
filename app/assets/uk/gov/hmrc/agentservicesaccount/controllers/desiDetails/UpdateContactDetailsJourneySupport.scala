@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.agentservicesaccount.controllers.updateContactDetails
+package uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
 
 import uk.gov.hmrc.agentservicesaccount.repository.UpdateContactDetailsJourneyRepository
 
