@@ -373,6 +373,7 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
       contentAsString(result.futureValue) should include("You have submitted new contact details")
     }
   }
+
   "existing pending changes" should {
     "cause the user to be redirected away from any 'update' endpoints" in new TestSetup {
       def shouldRedirect(endpoint: Action[AnyContent]): Unit = {
