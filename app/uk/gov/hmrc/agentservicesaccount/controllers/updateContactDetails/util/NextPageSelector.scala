@@ -25,6 +25,14 @@ import scala.concurrent.{ExecutionContext, Future}
 
 object NextPageSelector {
 
+  def moveToCheckYourAnswersFlow(sessionCache: SessionCacheService)(implicit request: Request[_], ec: ExecutionContext): Future[(String, String)] = {
+    for {
+      currentSelectedPages <- sessionCache.get(CURRENT_SELECTED_CHANGES)
+      selectedPages: Set[String] = currentSelectedPages.getOrElse(Set.empty)
+      previousSelectedPages <- sessionCache.put(PREVIOUS_SELECTED_CHANGES, selectedPages)
+    } yield previousSelectedPages
+  }
+
   //ToDo: Use enums
   def getNextPage(sessionCache: SessionCacheService, currentPage: String = "selectChanges")(implicit request: Request[_], ec: ExecutionContext): Future[Result] = {
     for {

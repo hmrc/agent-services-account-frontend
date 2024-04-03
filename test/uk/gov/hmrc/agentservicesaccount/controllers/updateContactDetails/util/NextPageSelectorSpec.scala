@@ -20,7 +20,7 @@ import play.api.test.FakeRequest
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import play.api.mvc.{AnyContentAsEmpty, Result}
 import play.api.test.Helpers.{await, defaultAwaitTimeout}
-import uk.gov.hmrc.agentservicesaccount.controllers.updateContactDetails.util.NextPageSelector.getNextPage
+import uk.gov.hmrc.agentservicesaccount.controllers.updateContactDetails.util.NextPageSelector.{getNextPage, moveToCheckYourAnswersFlow}
 import uk.gov.hmrc.agentservicesaccount.controllers.{CURRENT_SELECTED_CHANGES, PREVIOUS_SELECTED_CHANGES, desiDetails, updateContactDetails}
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.stubs.SessionServiceMocks
@@ -125,6 +125,23 @@ class NextPageSelectorSpec extends BaseISpec with SessionServiceMocks {
         val response: Future[Result] = getNextPage(mockSessionCacheService, "telephone")
 
         redirectLocation(await(response)) shouldBe Some(desiDetails.routes.CheckYourAnswers.showPage.url)
+      }
+    }
+  }
+
+  "moveToCheckYourAnswersFlow" should {
+    "return the current selected items as previously selected items" when {
+      "given a set of currently selected items" in {
+
+        val currentlySelectedItems: Set[String] = Set("address", "email")
+
+        expectGetSessionItem[Set[String]](CURRENT_SELECTED_CHANGES, currentlySelectedItems, 1)
+
+        for {
+          previouslySelectedItems <- moveToCheckYourAnswersFlow(mockSessionCacheService).map{
+            case (string1, string2) => Set(string1, string2)
+          }
+        } yield  previouslySelectedItems shouldBe currentlySelectedItems
       }
     }
   }
