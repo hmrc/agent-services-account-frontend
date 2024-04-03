@@ -51,8 +51,8 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
   private val arn: Arn = Arn("arn")
   private val amlsRequest: AmlsRequest = new AmlsRequest(
     ukRecord = true,
-    supervisoryBody = "test body",
-    membershipNumber = "1122334455",
+    supervisoryBody = "Alphabet",
+    membershipNumber = "1234567890",
     membershipExpiresOn = Some(LocalDate.now())
   )
   private val credentialRole: User.type = User
@@ -113,7 +113,7 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
     mockAmlsLoader.load(*[String]) returns Map("ABC" -> "Alphabet")
 
     object TestController extends CheckYourAnswersController(
-      mockAmlsLoader,mockActions, mockAgentAssuranceConnector ,mockUpdateAmlsJourneyRepository, mockView, cc)(mockAppConfig, ec)
+      mockAmlsLoader, mockActions, mockAgentAssuranceConnector, mockUpdateAmlsJourneyRepository, mockView, cc)(mockAppConfig, ec)
   }
 
   "ShowPage" should {
@@ -263,11 +263,8 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
             *[ExecutionContext]) returns authResponse
           mockAppConfig.enableNonHmrcSupervisoryBody returns true
           mockAgentClientAuthorisationConnector.getSuspensionDetails()(*[HeaderCarrier], *[ExecutionContext]) returns suspensionDetailsResponse
-          mockAgentAssuranceConnector.postAmlsDetails(arn, amlsRequest)(*[ExecutionContext], *[HeaderCarrier]) returns
-            Future.successful(AmlsStatuses.ValidAmlsDetailsUK)
-          mockUpdateAmlsJourneyRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[Request[_]]) returns
-            Future.successful(Some(ukAmlsJourney))
-
+          mockUpdateAmlsJourneyRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[Request[_]]) returns Future.successful(Some(ukAmlsJourney))
+          mockAgentAssuranceConnector.postAmlsDetails(arn, amlsRequest)(*[ExecutionContext], *[HeaderCarrier]) returns Future.successful(())
 
           val result: Future[Result] = TestController.onSubmit()(fakeRequest)
           status(result) mustBe SEE_OTHER
@@ -280,14 +277,12 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
             *[ExecutionContext]) returns authResponse
           mockAppConfig.enableNonHmrcSupervisoryBody returns true
           mockAgentClientAuthorisationConnector.getSuspensionDetails()(*[HeaderCarrier], *[ExecutionContext]) returns suspensionDetailsResponse
-         // mockAgentAssuranceConnector.postAmlsDetails(arn, amlsRequest)(*[ExecutionContext], *[HeaderCarrier]) returns
-         // Future.successful(AmlsStatuses.NoAmlsDetailsUK)
           mockUpdateAmlsJourneyRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[Request[_]]) returns
-            Future.successful(Some(ukAmlsJourney))
+            Future.successful(Some(UpdateAmlsJourney(AmlsStatuses.ValidAmlsDetailsUK, None, None, None, None)))
 
 
           val result: Future[Result] = TestController.onSubmit()(fakeRequest)
-          status(result) mustBe SEE_OTHER
+          status(result) mustBe BAD_REQUEST
 
         }
       }
@@ -298,7 +293,7 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
       val renewalDate = LocalDate.of(2001, 1, 1)
       val journey = UpdateAmlsJourney(
         status = AmlsStatuses.ValidAmlsDetailsUK,
-        newAmlsBody = Some(supervisoryBody),
+        newAmlsBody = Some(supervisoryBodyDescription),
         newRegistrationNumber = Some(registrationNumber),
         newExpirationDate = Some(renewalDate)
       )

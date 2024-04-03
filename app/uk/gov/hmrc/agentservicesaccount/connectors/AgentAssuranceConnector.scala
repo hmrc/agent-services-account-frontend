@@ -59,19 +59,19 @@ class AgentAssuranceConnector @Inject()(httpV2: HttpClientV2)(implicit val metri
     getAMLSDetailsResponse(arn.value).map(_.status)
 
 
-def postAmlsDetails (arn: Arn, amlsRequest: AmlsRequest) (implicit ec: ExecutionContext, hc: HeaderCarrier): Future[Unit] = {
-  httpV2
-  .post (new URL (s"$baseUrl/agent-assurance/amls/arn/${
-  arn.value
-  }") ).withBody (Json.toJson (amlsRequest) ).execute[HttpResponse]
-  .map {
-  response =>
-  response.status match {
-  case CREATED => Future.successful (() )
-  case BAD_REQUEST => throw UpstreamErrorResponse (s"Error $BAD_REQUEST invalid request", BAD_REQUEST)
-  case e => throw UpstreamErrorResponse (s"Error $e unable to post amls details", e)
-  }
-  }
+  def postAmlsDetails(arn: Arn, amlsRequest: AmlsRequest)(implicit ec: ExecutionContext, hc: HeaderCarrier): Future[Unit] = {
+    httpV2
+      .post(new URL(s"$baseUrl/agent-assurance/amls/arn/${
+        arn.value
+      }")).withBody(Json.toJson(amlsRequest)).execute[HttpResponse]
+      .map {
+        response =>
+          response.status match {
+            case CREATED => Future.successful(())
+            case BAD_REQUEST => throw UpstreamErrorResponse(s"Error $BAD_REQUEST invalid request", BAD_REQUEST)
+            case e => throw UpstreamErrorResponse(s"Error $e unable to post amls details", e)
+          }
+      }
   }
 
 }

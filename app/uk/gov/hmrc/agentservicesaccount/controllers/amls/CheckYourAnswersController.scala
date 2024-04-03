@@ -81,8 +81,9 @@ class CheckYourAnswersController @Inject()(amlsLoader: AMLSLoader,
           case (Some(newAmlsBody), Some(newRegistrationNumber)) =>
             val amlsRequest = AmlsRequest(journeyData.isUkAgent, supervisoryBodies(newAmlsBody), newRegistrationNumber, journeyData.newExpirationDate)
 
-            agentAssuranceConnector.postAmlsDetails(request.agentInfo.arn, amlsRequest)
-              .map(_ => Redirect(amls.routes.AmlsConfirmationController.showUpdatedAmlsConfirmationPage))
+            agentAssuranceConnector.postAmlsDetails(request.agentInfo.arn, amlsRequest).map {
+              _ => Redirect(amls.routes.AmlsConfirmationController.showUpdatedAmlsConfirmationPage)
+            }
 
           case (optNewAmlsBody, optNewRegistrationNumber) =>
             Future.successful(BadRequest(s"[checkYourAnswersController][onSubmit] missing mandatory field(s): newAmlsBody.isEmpty = " +
@@ -96,8 +97,11 @@ class CheckYourAnswersController @Inject()(amlsLoader: AMLSLoader,
   private[amls] def buildSummaryListItems(isUkAgent: Boolean, journey: UpdateAmlsJourney, lang: Locale): Seq[SummaryListData] = {
     for {
       body <- journey.newAmlsBody.map {
-        case supervisoryBodies(body) if isUkAgent => supervisoryBodies(body)
-        case body if isUkAgent => supervisoryBodies(body)
+        case body if isUkAgent =>
+          supervisoryBodies.collectFirst {
+            case (_, value) if value == body => value
+          }.getOrElse(body)
+
         case body => body
       }
       regNumber <- journey.newRegistrationNumber
