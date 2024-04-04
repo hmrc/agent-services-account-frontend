@@ -40,7 +40,6 @@ import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.controllers._
 import uk.gov.hmrc.agentservicesaccount.models.{AmlsRequest, UpdateAmlsJourney}
 import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
-import uk.gov.hmrc.agentservicesaccount.utils.AMLSLoader
 import uk.gov.hmrc.agentservicesaccount.views.components.models.SummaryListData
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.check_your_answers
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -52,8 +51,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 
 @Singleton
-class CheckYourAnswersController @Inject()(amlsLoader: AMLSLoader,
-                                           actions: Actions,
+class CheckYourAnswersController @Inject()(actions: Actions,
                                            agentAssuranceConnector: AgentAssuranceConnector,
                                            val updateAmlsJourneyRepository: UpdateAmlsJourneyRepository,
                                            checkYourAnswers: check_your_answers,

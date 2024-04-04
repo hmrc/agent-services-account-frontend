@@ -113,7 +113,7 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
     mockAmlsLoader.load(*[String]) returns Map("ABC" -> "Alphabet")
 
     object TestController extends CheckYourAnswersController(
-      mockAmlsLoader, mockActions, mockAgentAssuranceConnector, mockUpdateAmlsJourneyRepository, mockView, cc)(mockAppConfig, ec)
+      mockActions, mockAgentAssuranceConnector, mockUpdateAmlsJourneyRepository, mockView, cc)(mockAppConfig, ec)
   }
 
   "ShowPage" should {
