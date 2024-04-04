@@ -110,8 +110,6 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
     protected val cc: MessagesControllerComponents = stubMessagesControllerComponents()
     protected val dataKey: DataKey[UpdateAmlsJourney] = DataKey[UpdateAmlsJourney]("amlsJourney")
 
-    mockAmlsLoader.load(*[String]) returns Map("ABC" -> "Alphabet")
-
     object TestController extends CheckYourAnswersController(
       mockActions, mockAgentAssuranceConnector, mockUpdateAmlsJourneyRepository, mockView, cc)(mockAppConfig, ec)
   }
