@@ -26,8 +26,6 @@ class SelectChangesFormSpec extends AnyWordSpec with Matchers with GuiceOneAppPe
 
   private val form: Form[SelectChanges] = SelectChangesForm.form
 
-  println(s"${Console.YELLOW_B}${Console.BLACK} | 🟥 ℹ️ 🟥 SelectChangesFormSpec 🟥 ℹ️ 🟥 | ${Console.RESET}")
-
   "SelectChangesForm bound with values for field names" should {
     "return Some SelectChanges containing those fields" when {
       "field names are valid" in {

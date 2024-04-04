@@ -74,11 +74,9 @@ class SelectDetailsController @Inject()(actions: Actions,
     }
   }
 
-  //ToDo: use enums
-  //ToDo: Remove session data for unchecked
+
   def removeUnchecked(selectedChanges: SelectChanges)(implicit request: Request[_], ec: ExecutionContext): Unit = {
-    // val allPages: Set[String] = Set("businessName", "address", "email", "telephone")
-    // val unchecked: Set[String] = allPages.diff(selectedChanges.pagesSelected)
+    //ToDo: Remove session data for unchecked
     for {
       previousPages <- sessionCache.get(PREVIOUS_SELECTED_CHANGES)
       checkedPreviousPages = selectedChanges.pagesSelected.intersect(previousPages.getOrElse(Set()))

@@ -33,7 +33,6 @@ object NextPageSelector {
     } yield previousSelectedPages
   }
 
-  //ToDo: Use enums
   def getNextPage(sessionCache: SessionCacheService, currentPage: String = "selectChanges")(implicit request: Request[_], ec: ExecutionContext): Future[Result] = {
     for {
       currentSelectedChanges <- sessionCache.get(CURRENT_SELECTED_CHANGES)
@@ -48,7 +47,6 @@ object NextPageSelector {
     } yield nextPage
   }
 
-  //TODO: use enums
   private def getPage(pagesRequired: Option[Set[String]], currentPage: String, userIsOnCheckYourAnswersFlow: Boolean): Result = {
     val nextPage: Option[String] = pagesRequired.flatMap { pages =>
       if (pages.contains(currentPage)) {

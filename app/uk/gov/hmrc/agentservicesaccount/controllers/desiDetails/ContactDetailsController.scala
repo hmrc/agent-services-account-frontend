@@ -48,7 +48,6 @@ class ContactDetailsController @Inject()(actions: Actions,
                                          agentClientAuthorisationConnector: AgentClientAuthorisationConnector,
                                          //views
                                          view_contact_details: view_contact_details,
-                                         check_updated_details: check_updated_details,
                                          update_name: update_name,
                                          update_phone: update_phone,
                                          update_email: update_email,
