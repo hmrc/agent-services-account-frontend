@@ -33,7 +33,7 @@ govukButton: GovukButton
 
 @(form: Form[SelectChanges])(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
 
-@main(pageTitle = withErrorPrefix(form.hasErrors, msgs("contact-details.select-changes.title")), mimicBrowserBackLink = true, showSecondaryNav = false) {
+@main(pageTitle = withErrorPrefix(form.hasErrors, msgs("update-contact-details.select-changes.title")), mimicBrowserBackLink = true, showSecondaryNav = false) {
 
     @if(form.hasErrors){
         @govukErrorSummary(ErrorSummary().withFormErrorsAsText(form))
@@ -43,35 +43,35 @@ govukButton: GovukButton
         @govukCheckboxes(Checkboxes(
             fieldset = Some(Fieldset(
                legend = Some(Legend(
-                    content = Text(msgs("contact-details.select-changes.h1")),
+                    content = Text(msgs("update-contact-details.select-changes.h1")),
                     classes = "govuk-fieldset__legend--l",
                     isPageHeading = true
                 ))
             )),
             hint = Some(Hint(
-                content = Text(msgs("contact-details.select-changes.hint")))),
+                content = Text(msgs("update-contact-details.select-changes.hint")))),
             name = "Select Changes",
             items = Seq(
                 CheckboxItem(
-                    content = Text(msgs("contact-details.select-changes.business-name")),
+                    content = Text(msgs("update-contact-details.select-changes.business-name")),
                     value = "businessName",
                     id = Some("businessName"),
                     name = Some("businessName")
                 ),
                 CheckboxItem(
-                    content = Text(msgs("contact-details.select-changes.address")),
+                    content = Text(msgs("update-contact-details.select-changes.address")),
                     value = "address",
                     id =  Some("address"),
                     name = Some("address")
                 ),
                 CheckboxItem(
-                    content = Text(msgs("contact-details.select-changes.email")),
+                    content = Text(msgs("update-contact-details.select-changes.email")),
                     value = "email",
                     id = Some("email"),
                     name = Some("email")
                 ),
                 CheckboxItem(
-                    content = Text(msgs("contact-details.select-changes.telephone")),
+                    content = Text(msgs("update-contact-details.select-changes.telephone")),
                     value = "telephone",
                     id = Some("telephone"),
                     name = Some("telephone")
@@ -79,7 +79,7 @@ govukButton: GovukButton
             )
         ))
 
-        @govukButton(Button(content = Text(msgs("contact-details.select-changes.button"))))
+        @govukButton(Button(content = Text(msgs("update-contact-details.select-changes.button"))))
     }
 
 }

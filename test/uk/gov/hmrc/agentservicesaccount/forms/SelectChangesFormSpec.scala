@@ -50,7 +50,7 @@ class SelectChangesFormSpec extends AnyWordSpec with Matchers with GuiceOneAppPe
       "no field names are present in params" in {
         val params: Map[String, String] = Map.empty
         form.bind(params).hasErrors shouldBe true
-        form.bind(params).errors.head.message shouldBe "contact-details.select-changes.error"
+        form.bind(params).errors.head.message shouldBe "update-contact-details.select-changes.error"
       }
     }
 

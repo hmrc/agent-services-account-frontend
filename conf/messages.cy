@@ -465,16 +465,6 @@ view-contact-details.update-details.link=Diweddaru manylion cyswllt
 view-contact-details.return-to-account.link=Dychwelyd i ‘Rheoli’r cyfrif’
 view-contact-details.pending-changes.insetText=Cyflwynwyd manylion newydd ar {0}. Ni allwch wneud unrhyw newidiadau pellach i’r manylion cyswllt tan {1}.
 
-contact-details.select-changes.title=Select changes
-contact-details.select-changes.error=Tell us which contact details you want to change.
-contact-details.select-changes.h1=Which contact details do you want to change?
-contact-details.select-changes.hint=Select all that apply.
-contact-details.select-changes.business-name=Business name shown to clients
-contact-details.select-changes.address=Address for agent services account
-contact-details.select-changes.email=Email address
-contact-details.select-changes.telephone=Telephone number
-contact-details.select-changes.button=Continue
-
 contact-details.summary-list.email=Cyfeiriad e-bost
 contact-details.summary-list.phone=Rhif ffôn
 contact-details.summary-list.name=Enw’r busnes a ddangosir i gleientiaid
@@ -493,6 +483,16 @@ update-contact-details.start-page.body.h2=Cyn i chi ddechrau
 update-contact-details.start-page.body.p3=Byddwn yn gofyn i chi gadarnhau fod gennych awdurdod cyn i chi gyflwyno unrhyw newidiadau. Bydd angen eich enw a’ch rhif ffôn arnom hefyd.
 update-contact-details.start-page.body.p4=Mewn rhai amgylchiadau, byddwn yn gofyn am eich codau asiant ar gyfer Hunanasesiad a Threth Gorfforaeth.Anfonwyd y codau mewn llythyr pan ofynnodd eich sefydliad am fynediad asiant i’r gwasanaethau hynny.
 update-contact-details.start-page.body.p5=Ar ôl i chi gyflwyno newidiadau, ni fyddwch yn gallu diwygio’r manylion cyswllt eto am 4 wythnos.
+
+update-contact-details.select-changes.title=Select changes
+update-contact-details.select-changes.error=Tell us which contact details you want to change.
+update-contact-details.select-changes.h1=Which contact details do you want to change?
+update-contact-details.select-changes.hint=Select all that apply.
+update-contact-details.select-changes.business-name=Business name shown to clients
+update-contact-details.select-changes.address=Address for agent services account
+update-contact-details.select-changes.email=Email address
+update-contact-details.select-changes.telephone=Telephone number
+update-contact-details.select-changes.button=Continue
 
 update-contact-details.name.heading=What is the name you want to show to your clients? TBC
 update-contact-details.name.hint=Clients will see this name when they manage your authorisations and requests. TBC

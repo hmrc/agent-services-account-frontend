@@ -30,7 +30,7 @@ object SelectChangesForm {
         "email" -> optional(nonEmptyText).verifying(value => value.isEmpty || value.get == "email"),
         "telephone" -> optional(nonEmptyText).verifying(value => value.isEmpty || value.get == "telephone")
       )(SelectChanges.apply)(SelectChanges.unapply)
-        .verifying("contact-details.select-changes.error", _.atLeastOneSelected)
+        .verifying("update-contact-details.select-changes.error", _.atLeastOneSelected)
     )
   }
 }

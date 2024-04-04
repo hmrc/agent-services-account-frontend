@@ -465,16 +465,6 @@ view-contact-details.update-details.link=Update contact details
 view-contact-details.return-to-account.link=Return to Manage account
 view-contact-details.pending-changes.insetText=New contact details were submitted on {0}. You cannot change contact details again until {1}.
 
-contact-details.select-changes.title=Select changes
-contact-details.select-changes.error=Tell us which contact details you want to change.
-contact-details.select-changes.h1=Which contact details do you want to change?
-contact-details.select-changes.hint=Select all that apply.
-contact-details.select-changes.business-name=Business name shown to clients
-contact-details.select-changes.address=Address for agent services account
-contact-details.select-changes.email=Email address
-contact-details.select-changes.telephone=Telephone number
-contact-details.select-changes.button=Continue
-
 contact-details.summary-list.email=Email address
 contact-details.summary-list.phone=Telephone number
 contact-details.summary-list.name=Business name shown to clients
@@ -493,6 +483,16 @@ update-contact-details.start-page.body.h2=Before you start
 update-contact-details.start-page.body.p3=We’ll ask you to confirm that you have authorisation before you submit any changes. We’ll also need your name and telephone number.
 update-contact-details.start-page.body.p4=In some circumstances we’ll ask for your agent codes for Self Assessment and Corporation Tax. The codes were sent by letter when your organisation asked for agent access to those services.
 update-contact-details.start-page.body.p5=Once you submit changes, you cannot amend the contact details again for 4 weeks.
+
+update-contact-details.select-changes.title=Select changes
+update-contact-details.select-changes.error=Tell us which contact details you want to change.
+update-contact-details.select-changes.h1=Which contact details do you want to change?
+update-contact-details.select-changes.hint=Select all that apply.
+update-contact-details.select-changes.business-name=Business name shown to clients
+update-contact-details.select-changes.address=Address for agent services account
+update-contact-details.select-changes.email=Email address
+update-contact-details.select-changes.telephone=Telephone number
+update-contact-details.select-changes.button=Continue
 
 update-contact-details.name.heading=What is the name you want to show to your clients?
 update-contact-details.name.hint=Clients will see this name when they manage your authorisations and requests.
