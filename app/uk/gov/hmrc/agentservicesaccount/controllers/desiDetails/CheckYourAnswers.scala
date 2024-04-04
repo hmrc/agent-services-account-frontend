@@ -27,8 +27,8 @@ import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, PendingChangeOfDe
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details._
-import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
+import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util._
 
 import java.time.Instant
 import javax.inject._
@@ -75,7 +75,7 @@ class CheckYourAnswers @Inject()(actions: Actions,
         case None => // graceful redirect in case of expired session data etc.
           Future.successful(Redirect(desiDetails.routes.ContactDetailsController.showCurrentContactDetails))
         case Some(newContactDetails) => for {
-          oldContactDetails <- getCurrentAgencyDetails()
+          oldContactDetails <- CurrentAgencyDetails.get(acaConnector)
           pendingChange = PendingChangeOfDetails(
             arn = arn,
             oldDetails = oldContactDetails,
@@ -90,13 +90,5 @@ class CheckYourAnswers @Inject()(actions: Actions,
         } yield Redirect(desiDetails.routes.ContactDetailsController.showChangeSubmitted)
       }
     }
-  }
-
-  //TODO: make separate util (repeated in ContactDetailsController)
-  private def getCurrentAgencyDetails()(implicit hc: HeaderCarrier, request: AuthRequestWithAgentInfo[_]): Future[AgencyDetails] = {
-    acaConnector.getAgencyDetails().map(_.getOrElse {
-      val arn = request.agentInfo.arn
-      throw new RuntimeException(s"Could not retrieve current agency details for $arn from the backend")
-    })
   }
 }

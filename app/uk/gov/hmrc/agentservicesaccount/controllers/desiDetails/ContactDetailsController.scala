@@ -24,6 +24,7 @@ import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthRequestWithAgentIn
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AddressLookupConnector, AgentClientAuthorisationConnector, EmailVerificationConnector}
 import uk.gov.hmrc.agentservicesaccount.controllers._
+import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.CurrentAgencyDetails
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.NextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup._
@@ -32,7 +33,6 @@ import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress}
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details._
-import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject._
@@ -92,7 +92,7 @@ class ContactDetailsController @Inject()(actions: Actions,
         // on displaying the 'current details' page, we delete any unsubmitted changes that may still be in session
         _ <- sessionCache.delete(DRAFT_NEW_CONTACT_DETAILS)
         mPendingChange <- pcodRepository.find(request.agentInfo.arn)
-        agencyDetails <- getCurrentAgencyDetails()
+        agencyDetails <- CurrentAgencyDetails.get(acaConnector)
       } yield Ok(view_contact_details(agencyDetails, mPendingChange, request.agentInfo.isAdmin))
     }
   }
@@ -314,13 +314,5 @@ class ContactDetailsController @Inject()(actions: Actions,
           }
       }
     } yield result
-  }
-
-  //TODO: make separate util (repeated in CheckYourAnswers controller)
-  private def getCurrentAgencyDetails()(implicit hc: HeaderCarrier, request: AuthRequestWithAgentInfo[_]): Future[AgencyDetails] = {
-    acaConnector.getAgencyDetails().map(_.getOrElse {
-      val arn = request.agentInfo.arn
-      throw new RuntimeException(s"Could not retrieve current agency details for $arn from the backend")
-    })
   }
 }

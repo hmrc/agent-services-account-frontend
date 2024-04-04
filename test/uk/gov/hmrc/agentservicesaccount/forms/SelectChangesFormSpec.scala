@@ -40,8 +40,6 @@ class SelectChangesFormSpec extends AnyWordSpec with Matchers with GuiceOneAppPe
     "return Some SelectChanges without that field" when {
       "field name is not valid" in {
         val params = Map("businessName" -> "businessName", "notAThing" -> "notAThing")
-        //TODO: Add validation
-//        form.bind(params).hasErrors shouldBe true
         form.bind(params).value shouldBe Some(SelectChanges(Some("businessName"), None, None, None))
       }
     }
