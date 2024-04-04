@@ -142,7 +142,7 @@ class ViewDetailsViewSpec extends BaseISpec {
       }
       "display a link styled as button" in {
         doc.select(".govuk-button").first().text() shouldBe "Update details"
-        doc.select(".govuk-button").first().attr("href") shouldBe "/agent-services-account/manage-account/money-laundering-supervision/new-supervisory-body"
+        doc.select(".govuk-button").first().attr("href") shouldBe "/agent-services-account/manage-account/money-laundering-supervision/confirm-supervisory-body"
       }
     }
 
