@@ -368,12 +368,12 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
     }
   }
 
-  "GET /contact-details-submitted" should {
-    "display the enter telephone number page" in new TestSetup {
+  "GET /manage-account/contact-details/confirmation" should {
+    "display the confirmation page" in new TestSetup {
       pendingChangesExistInRepo()
       val result = contactDetailsController.showChangeSubmitted()(fakeRequest())
       status(result) shouldBe OK
-      contentAsString(result.futureValue) should include("Change of details submitted")
+      contentAsString(result.futureValue) should include("You have submitted new contact details")
     }
   }
 

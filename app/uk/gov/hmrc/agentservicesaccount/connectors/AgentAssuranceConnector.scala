@@ -18,12 +18,12 @@ package uk.gov.hmrc.agentservicesaccount.connectors
 
 import com.codahale.metrics.MetricRegistry
 import com.kenshoo.play.metrics.Metrics
-import play.api.http.Status.{BAD_REQUEST, NO_CONTENT, OK}
+import play.api.http.Status.{BAD_REQUEST, CREATED, NO_CONTENT, OK}
 import play.api.libs.json.Json
 import uk.gov.hmrc.agent.kenshoo.monitoring.HttpAPIMonitor
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.models.{AmlsDetails, AmlsDetailsResponse, AmlsStatus}
+import uk.gov.hmrc.agentservicesaccount.models.{AmlsDetails, AmlsDetailsResponse, AmlsRequest, AmlsStatus}
 import uk.gov.hmrc.http._
 import uk.gov.hmrc.http.client.HttpClientV2
 
@@ -57,4 +57,21 @@ class AgentAssuranceConnector @Inject()(httpV2: HttpClientV2)(implicit val metri
 
   def getAmlsStatus(arn: Arn)(implicit ec: ExecutionContext, hc: HeaderCarrier): Future[AmlsStatus] =
     getAMLSDetailsResponse(arn.value).map(_.status)
+
+
+  def postAmlsDetails(arn: Arn, amlsRequest: AmlsRequest)(implicit ec: ExecutionContext, hc: HeaderCarrier): Future[Unit] = {
+    httpV2
+      .post(new URL(s"$baseUrl/agent-assurance/amls/arn/${
+        arn.value
+      }")).withBody(Json.toJson(amlsRequest)).execute[HttpResponse]
+      .map {
+        response =>
+          response.status match {
+            case CREATED => Future.successful(())
+            case BAD_REQUEST => throw UpstreamErrorResponse(s"Error $BAD_REQUEST invalid request", BAD_REQUEST)
+            case e => throw UpstreamErrorResponse(s"Error $e unable to post amls details", e)
+          }
+      }
+  }
+
 }

@@ -29,7 +29,7 @@ import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, SuspensionDetails}
 import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector}
-import uk.gov.hmrc.agentservicesaccount.models.{AmlsStatuses, UpdateAmlsJourney}
+import uk.gov.hmrc.agentservicesaccount.models.{AmlsRequest, AmlsStatuses, UpdateAmlsJourney}
 import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
 import uk.gov.hmrc.agentservicesaccount.utils.AMLSLoader
 import uk.gov.hmrc.agentservicesaccount.views.components.models.SummaryListData
@@ -49,6 +49,12 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
   private val fakeRequest = FakeRequest().withCookies(Cookie("PLAY_LANG", "en_GB")).withTransientLang(Locale.UK)
 
   private val arn: Arn = Arn("arn")
+  private val amlsRequest: AmlsRequest = new AmlsRequest(
+    ukRecord = true,
+    supervisoryBody = "ABC",
+    membershipNumber = "1234567890",
+    membershipExpiresOn = Some(LocalDate.now())
+  )
   private val credentialRole: User.type = User
   private val agentEnrolment: Set[Enrolment] = Set(
     Enrolment("HMRC-AS-AGENT",
@@ -104,9 +110,8 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
     protected val cc: MessagesControllerComponents = stubMessagesControllerComponents()
     protected val dataKey: DataKey[UpdateAmlsJourney] = DataKey[UpdateAmlsJourney]("amlsJourney")
 
-    mockAmlsLoader.load(*[String]) returns Map("ABC" -> "Alphabet")
-
-    object TestController extends CheckYourAnswersController(mockAmlsLoader,mockActions, mockUpdateAmlsJourneyRepository, mockView, cc)(mockAppConfig, ec)
+    object TestController extends CheckYourAnswersController(
+      mockActions, mockAgentAssuranceConnector, mockUpdateAmlsJourneyRepository, mockView, cc)(mockAppConfig, ec)
   }
 
   "ShowPage" should {
@@ -247,12 +252,47 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
       }
     }
 
+    "onSubmit" should {
+      "Submit answers" when {
+        "agent has successfully entered all the data for CYA page" in new Setup {
+
+          mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
+            *[HeaderCarrier],
+            *[ExecutionContext]) returns authResponse
+          mockAppConfig.enableNonHmrcSupervisoryBody returns true
+          mockAgentClientAuthorisationConnector.getSuspensionDetails()(*[HeaderCarrier], *[ExecutionContext]) returns suspensionDetailsResponse
+          mockUpdateAmlsJourneyRepository
+            .getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]],*[Request[_]])returns Future.successful(Some(ukAmlsJourney))
+          mockAgentAssuranceConnector.postAmlsDetails(arn, amlsRequest)(*[ExecutionContext], *[HeaderCarrier]) returns Future.successful(())
+
+          val result: Future[Result] = TestController.onSubmit()(fakeRequest)
+          status(result) mustBe SEE_OTHER
+
+        }
+        "agent has unsuccessfully entered data for CYA page" in new Setup {
+
+          mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
+            *[HeaderCarrier],
+            *[ExecutionContext]) returns authResponse
+          mockAppConfig.enableNonHmrcSupervisoryBody returns true
+          mockAgentClientAuthorisationConnector.getSuspensionDetails()(*[HeaderCarrier], *[ExecutionContext]) returns suspensionDetailsResponse
+          mockUpdateAmlsJourneyRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[Request[_]]) returns
+            Future.successful(Some(UpdateAmlsJourney(AmlsStatuses.ValidAmlsDetailsUK, None, None, None, None)))
+
+
+          val result: Future[Result] = TestController.onSubmit()(fakeRequest)
+          status(result) mustBe BAD_REQUEST
+
+        }
+      }
+    }
+
     "journey data is for an UK agent" should {
       val renewalDateMessageKey = "amls.check-your-answers.renewal-date"
       val renewalDate = LocalDate.of(2001, 1, 1)
       val journey = UpdateAmlsJourney(
         status = AmlsStatuses.ValidAmlsDetailsUK,
-        newAmlsBody = Some(supervisoryBody),
+        newAmlsBody = Some(supervisoryBodyDescription),
         newRegistrationNumber = Some(registrationNumber),
         newExpirationDate = Some(renewalDate)
       )
