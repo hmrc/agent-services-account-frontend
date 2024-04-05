@@ -120,6 +120,7 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
 
     val contactDetailsController: ContactDetailsController = app.injector.instanceOf[ContactDetailsController]
     val checkYourAnswersController: CheckYourAnswersController = app.injector.instanceOf[CheckYourAnswersController]
+    val selectDetailsController: SelectDetailsController = app.injector.instanceOf[SelectDetailsController]
     val sessionCache: SessionCacheService = app.injector.instanceOf[SessionCacheService]
     val pcodRepository: PendingChangeOfDetailsRepository = app.injector.instanceOf[PendingChangeOfDetailsRepository]
 
@@ -397,6 +398,8 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
       shouldRedirect(contactDetailsController.finishAddressLookup(None))
       shouldRedirect(checkYourAnswersController.showPage)
       shouldRedirect(checkYourAnswersController.onSubmit)
+      shouldRedirect(selectDetailsController.showPage)
+      shouldRedirect(selectDetailsController.onSubmit)
     }
   }
 }
