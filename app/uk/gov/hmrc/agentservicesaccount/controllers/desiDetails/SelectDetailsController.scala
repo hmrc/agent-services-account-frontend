@@ -19,13 +19,13 @@ package uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
 import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc._
-import uk.gov.hmrc.agentservicesaccount.actions.Actions
+import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthRequestWithAgentInfo}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.NextPageSelector.getNextPage
-import uk.gov.hmrc.agentservicesaccount.controllers.{CURRENT_SELECTED_CHANGES, PREVIOUS_SELECTED_CHANGES, ToFuture}
+import uk.gov.hmrc.agentservicesaccount.controllers.{CURRENT_SELECTED_CHANGES, PREVIOUS_SELECTED_CHANGES, ToFuture, desiDetails}
 import uk.gov.hmrc.agentservicesaccount.forms.SelectChangesForm
 import uk.gov.hmrc.agentservicesaccount.models.SelectChanges
-import uk.gov.hmrc.agentservicesaccount.repository.UpdateContactDetailsJourneyRepository
+import uk.gov.hmrc.agentservicesaccount.repository.{PendingChangeOfDetailsRepository, UpdateContactDetailsJourneyRepository}
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details.select_changes
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -37,6 +37,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class SelectDetailsController @Inject()(actions: Actions,
                                         val updateContactDetailsJourneyRepository: UpdateContactDetailsJourneyRepository,
                                         sessionCache: SessionCacheService,
+                                        pcodRepository: PendingChangeOfDetailsRepository,
                                         select_changes_view: select_changes
                                        )(implicit appConfig: AppConfig,
                                          cc: MessagesControllerComponents,
@@ -44,18 +45,29 @@ class SelectDetailsController @Inject()(actions: Actions,
                                        ) extends FrontendController(cc)
   with UpdateContactDetailsJourneySupport with I18nSupport with Logging{
 
-  def ifFeatureEnabled(action: => Future[Result]): Future[Result] = {
+  private def ifFeatureEnabled(action: => Future[Result]): Future[Result] = {
     if (appConfig.enableChangeContactDetails) action else Future.successful(NotFound)
   }
 
+  private def ifFeatureEnabledAndNoPendingChanges(action: => Future[Result])(implicit request: AuthRequestWithAgentInfo[_]): Future[Result] = {
+    ifFeatureEnabled {
+      pcodRepository.find(request.agentInfo.arn).flatMap {
+        case None => // no change is pending, we can proceed
+          action
+        case Some(_) => // there is a pending change, further changes are locked. Redirect to the base page
+          Future.successful(Redirect(desiDetails.routes.ContactDetailsController.showCurrentContactDetails))
+      }
+    }
+  }
+
   def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
+    ifFeatureEnabledAndNoPendingChanges {
       Ok(select_changes_view(SelectChangesForm.form)).toFuture
     }
   }
 
   def onSubmit: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
+    ifFeatureEnabledAndNoPendingChanges {
       SelectChangesForm.form
         .bindFromRequest()
         .fold(

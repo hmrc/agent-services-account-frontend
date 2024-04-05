@@ -58,7 +58,7 @@ class ContactDetailsController @Inject()(actions: Actions,
                                           cc: MessagesControllerComponents,
                                           ec: ExecutionContext) extends FrontendController(cc) with I18nSupport with Logging {
 
-  def ifFeatureEnabled(action: => Future[Result]): Future[Result] = {
+  private def ifFeatureEnabled(action: => Future[Result]): Future[Result] = {
     if (appConfig.enableChangeContactDetails) action else Future.successful(NotFound)
   }
 
