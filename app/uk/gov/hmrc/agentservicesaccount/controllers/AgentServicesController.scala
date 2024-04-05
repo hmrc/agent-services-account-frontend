@@ -114,15 +114,11 @@ class AgentServicesController @Inject()(authActions: AuthActions,
 
   private def getAmlsStatusLink(amlsStatus: AmlsStatus): (String, String) = {
     amlsStatus match {
-      case NoAmlsDetailsNonUK =>
+      case NoAmlsDetailsNonUK | ValidAmlsNonUK | ValidAmlsDetailsUK | PendingAmlsDetails =>
         ("manage.account.amls.view",amlsRoutes.ViewDetailsController.showPage.url)
-      case ValidAmlsNonUK =>
-        ("manage.account.amls.view",amlsRoutes.ViewDetailsController.showPage.url)
-      case NoAmlsDetailsUK =>
+      case NoAmlsDetailsUK | PendingAmlsDetailsRejected=>
         ("manage.account.amls.add",amlsRoutes.ViewDetailsController.showPage.url)
-      case ValidAmlsDetailsUK =>
-        ("manage.account.amls.view",amlsRoutes.ViewDetailsController.showPage.url)
-      case ExpiredAmlsDetailsUK | PendingAmlsDetails | PendingAmlsDetailsRejected=>
+      case ExpiredAmlsDetailsUK =>
         ("manage.account.amls.update",amlsRoutes.ViewDetailsController.showPage.url)
     }
   }

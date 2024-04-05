@@ -33,15 +33,15 @@ import scala.concurrent.ExecutionContext
 
 
 @Singleton
-class AmlsNewSupervisoryBodyController @Inject() (actions: Actions,
-                                                  amlsLoader: AMLSLoader,
-                                                  val updateAmlsJourneyRepository: UpdateAmlsJourneyRepository,
-                                                  newSupervisoryBody: new_supervisory_body,
-                                                  cc: MessagesControllerComponents
-)(implicit appConfig: AppConfig, ec: ExecutionContext) extends FrontendController(cc) with AmlsJourneySupport with I18nSupport {
+class AmlsNewSupervisoryBodyController @Inject()(actions: Actions,
+                                                 amlsLoader: AMLSLoader,
+                                                 val updateAmlsJourneyRepository: UpdateAmlsJourneyRepository,
+                                                 newSupervisoryBody: new_supervisory_body,
+                                                 cc: MessagesControllerComponents
+                                                )(implicit appConfig: AppConfig, ec: ExecutionContext) extends FrontendController(cc) with AmlsJourneySupport with I18nSupport {
 
 
-  def showPage(cya: Boolean): Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request  =>
+  def showPage(cya: Boolean): Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
       withUpdateAmlsJourney { amlsJourney =>
         val amlsBodies = amlsLoader.load("/amls.csv")
@@ -61,10 +61,10 @@ class AmlsNewSupervisoryBodyController @Inject() (actions: Actions,
             formWithErrors => Ok(newSupervisoryBody(formWithErrors, amlsBodies, journey.isUkAgent, cya)).toFuture,
             data => {
               saveAmlsJourney(journey.copy(
-                newAmlsBody = Some(data),
+                newAmlsBody = if (journey.isUkAgent) Some(amlsBodies(data)) else Some(data),
                 isAmlsBodyStillTheSame = maybeChangePreviousAnswer(data, journey))
               ).map(_ =>
-              Redirect(nextPage(cya, journey)))
+                Redirect(nextPage(cya, journey)))
             }
           )
       }

@@ -665,7 +665,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       verifyClientsSectionNotPresent(html)
     }
 
-    "return view AMLS link" in {
+    "return view AMLS link for ValidAmlsDetailsUK" in {
       givenAuthorisedAsAgentWith(arn)
       givenArnAllowedOk()
       givenSyncEacdSuccess(Arn(arn))
@@ -684,7 +684,66 @@ class AgentServicesControllerSpec extends BaseISpec {
       links.get(0).attr("href") shouldBe "/agent-services-account/manage-account/money-laundering-supervision/view-details"
     }
 
-    "return add AMLS link" in {
+    "return view AMLS link for NoAmlsDetailsNonUK" in {
+      givenAuthorisedAsAgentWith(arn)
+      givenArnAllowedOk()
+      givenSyncEacdSuccess(Arn(arn))
+      givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInNotReady)
+      givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq.empty))
+      givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatuses.NoAmlsDetailsNonUK, None), Arn(arn))
+      val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
+
+      status(response) shouldBe 200
+
+      val html = Jsoup.parse(contentAsString(response))
+      val contactDetailsSection = html.select("#your-organisation")
+      contactDetailsSection.select("h2").text shouldBe "Your organisation"
+      val links = contactDetailsSection.select("p a")
+      links.get(0).text shouldBe "View or update anti-money laundering supervision details"
+      links.get(0).attr("href") shouldBe "/agent-services-account/manage-account/money-laundering-supervision/view-details"
+    }
+
+    "return view AMLS link for ValidAmlsNonUK" in {
+      givenAuthorisedAsAgentWith(arn)
+      givenArnAllowedOk()
+      givenSyncEacdSuccess(Arn(arn))
+      givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInNotReady)
+      givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq.empty))
+      givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsNonUK, None), Arn(arn))
+      val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
+
+      status(response) shouldBe 200
+
+      val html = Jsoup.parse(contentAsString(response))
+      val contactDetailsSection = html.select("#your-organisation")
+      contactDetailsSection.select("h2").text shouldBe "Your organisation"
+      val links = contactDetailsSection.select("p a")
+      links.get(0).text shouldBe "View or update anti-money laundering supervision details"
+      links.get(0).attr("href") shouldBe "/agent-services-account/manage-account/money-laundering-supervision/view-details"
+    }
+
+
+    "return view AMLS link for PendingAmlsDetails" in {
+      givenAuthorisedAsAgentWith(arn)
+      givenArnAllowedOk()
+      givenSyncEacdSuccess(Arn(arn))
+      givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInNotReady)
+      givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq.empty))
+      givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatuses.PendingAmlsDetails, None), Arn(arn))
+      val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
+
+      status(response) shouldBe 200
+
+      val html = Jsoup.parse(contentAsString(response))
+      val contactDetailsSection = html.select("#your-organisation")
+      contactDetailsSection.select("h2").text shouldBe "Your organisation"
+      val links = contactDetailsSection.select("p a")
+      links.get(0).text shouldBe "View or update anti-money laundering supervision details"
+      links.get(0).attr("href") shouldBe "/agent-services-account/manage-account/money-laundering-supervision/view-details"
+    }
+
+
+    "return add AMLS link for NoAmlsDetailsUK " in {
       givenAuthorisedAsAgentWith(arn)
       givenArnAllowedOk()
       givenSyncEacdSuccess(Arn(arn))
@@ -703,7 +762,27 @@ class AgentServicesControllerSpec extends BaseISpec {
       links.get(0).attr("href") shouldBe "/agent-services-account/manage-account/money-laundering-supervision/view-details"
     }
 
-    "return update AMLS link" in {
+    "return add AMLS link for PendingAmlsDetailsRejected " in {
+      givenAuthorisedAsAgentWith(arn)
+      givenArnAllowedOk()
+      givenSyncEacdSuccess(Arn(arn))
+      givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInNotReady)
+      givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq.empty))
+      givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatuses.PendingAmlsDetailsRejected, None), Arn(arn))
+      val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
+
+      status(response) shouldBe 200
+
+      val html = Jsoup.parse(contentAsString(response))
+      val contactDetailsSection = html.select("#your-organisation")
+      contactDetailsSection.select("h2").text shouldBe "Your organisation"
+      val links = contactDetailsSection.select("p a")
+      links.get(0).text shouldBe "Action: Add anti-money laundering supervision details"
+      links.get(0).attr("href") shouldBe "/agent-services-account/manage-account/money-laundering-supervision/view-details"
+    }
+
+
+    "return update AMLS link for ExpiredAmlsDetailsUK" in {
       givenAuthorisedAsAgentWith(arn)
       givenArnAllowedOk()
       givenSyncEacdSuccess(Arn(arn))

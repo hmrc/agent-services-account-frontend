@@ -36,10 +36,10 @@ import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.controllers._
-import uk.gov.hmrc.agentservicesaccount.models.UpdateAmlsJourney
+import uk.gov.hmrc.agentservicesaccount.models.{AmlsRequest, UpdateAmlsJourney}
 import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
-import uk.gov.hmrc.agentservicesaccount.utils.AMLSLoader
 import uk.gov.hmrc.agentservicesaccount.views.components.models.SummaryListData
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.check_your_answers
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -47,19 +47,17 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 
 @Singleton
-class CheckYourAnswersController @Inject()(amlsLoader: AMLSLoader,
-                                           actions: Actions,
+class CheckYourAnswersController @Inject()(actions: Actions,
+                                           agentAssuranceConnector: AgentAssuranceConnector,
                                            val updateAmlsJourneyRepository: UpdateAmlsJourneyRepository,
                                            checkYourAnswers: check_your_answers,
                                            cc: MessagesControllerComponents
                                           )(implicit appConfig: AppConfig, ec: ExecutionContext)
   extends FrontendController(cc) with AmlsJourneySupport with I18nSupport {
-
-  private lazy val supervisoryBodies: Map[String, String] = amlsLoader.load("/amls.csv")
 
   def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
@@ -70,12 +68,31 @@ class CheckYourAnswersController @Inject()(amlsLoader: AMLSLoader,
     }
   }
 
+  def onSubmit: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
+    actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
+
+      withUpdateAmlsJourney { journeyData =>
+
+        (journeyData.newAmlsBody, journeyData.newRegistrationNumber) match {
+          case (Some(newAmlsBody), Some(newRegistrationNumber)) =>
+            val amlsRequest = AmlsRequest(journeyData.isUkAgent, newAmlsBody, newRegistrationNumber, journeyData.newExpirationDate)
+
+            agentAssuranceConnector.postAmlsDetails(request.agentInfo.arn, amlsRequest).map {
+              _ => Redirect(amls.routes.AmlsConfirmationController.showUpdatedAmlsConfirmationPage)
+            }
+
+          case (optNewAmlsBody, optNewRegistrationNumber) =>
+            Future.successful(BadRequest(s"[checkYourAnswersController][onSubmit] missing mandatory field(s): newAmlsBody.isEmpty = " +
+              s"${optNewAmlsBody.isEmpty}, newRegistrationNumber.isEmpty = ${optNewRegistrationNumber.isEmpty}"))
+        }
+      }
+    }
+  }
+
+
   private[amls] def buildSummaryListItems(isUkAgent: Boolean, journey: UpdateAmlsJourney, lang: Locale): Seq[SummaryListData] = {
     for {
-      body <- journey.newAmlsBody.map {
-        case body if isUkAgent => supervisoryBodies(body)
-        case body => body
-      }
+      body <- journey.newAmlsBody
       regNumber <- journey.newRegistrationNumber
     } yield {
       val items = Seq(
