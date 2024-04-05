@@ -96,7 +96,6 @@ class SelectDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneAp
     (acaConnector.getSuspensionDetails()(_: HeaderCarrier, _: ExecutionContext)).when(*, *).returns(Future.successful(SuspensionDetails(false, None)))
     (acaConnector.getAgencyDetails()(_: HeaderCarrier, _: ExecutionContext)).when(*, *).returns(Future.successful(Some(agencyDetails)))
 
-    val checkYourAnswersController: CheckYourAnswersController = app.injector.instanceOf[CheckYourAnswersController]
     val selectDetailsController: SelectDetailsController = app.injector.instanceOf[SelectDetailsController]
     val sessionCache: SessionCacheService = app.injector.instanceOf[SessionCacheService]
     val pcodRepository: PendingChangeOfDetailsRepository = app.injector.instanceOf[PendingChangeOfDetailsRepository]
