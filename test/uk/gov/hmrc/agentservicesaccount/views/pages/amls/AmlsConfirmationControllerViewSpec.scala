@@ -40,7 +40,7 @@ class AmlsConfirmationControllerViewSpec extends BaseISpec{
 
   "update_confirmation_received view" when {
     "the user has changed existing amls details should render the page correctly" in {
-      val doc: Document = Jsoup.parse(view.apply(amlsDetailsAlreadyExist = true)(FakeRequest(), messages, appConfig).body)
+      val doc: Document = Jsoup.parse(view.apply(amlsDetailsAlreadyExisted = true)(FakeRequest(), messages, appConfig).body)
       doc.select(".hmrc-header__service-name").first.text() mustBe "Agent services account"
       doc.select(".hmrc-header__service-name").first.attr("href") mustBe "/agent-services-account"
 
@@ -54,7 +54,7 @@ class AmlsConfirmationControllerViewSpec extends BaseISpec{
       doc.select(".hmrc-sign-out-nav__link").first.attr("href") mustBe "/agent-services-account/sign-out"
     }
     "the user has provided amls details for the first time should render the page correctly" in {
-      val doc: Document = Jsoup.parse(view.apply(amlsDetailsAlreadyExist = false)(FakeRequest(), messages, appConfig).body)
+      val doc: Document = Jsoup.parse(view.apply(amlsDetailsAlreadyExisted = false)(FakeRequest(), messages, appConfig).body)
       doc.select(".hmrc-header__service-name").first.text() mustBe "Agent services account"
       doc.select(".hmrc-header__service-name").first.attr("href") mustBe "/agent-services-account"
 
