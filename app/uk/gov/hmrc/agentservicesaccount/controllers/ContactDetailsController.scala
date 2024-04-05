@@ -25,6 +25,7 @@ import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AddressLookupConnector, AgentClientAuthorisationConnector, EmailVerificationConnector}
 import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup._
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, DesiDetails, OtherServices, SaChanges}
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.{Email, VerifyEmailRequest, VerifyEmailResponse}
 import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress, PendingChangeOfDetails}
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
@@ -74,15 +75,28 @@ class ContactDetailsController @Inject()(actions: Actions,
   }
 
   // utility function.
-  private def updateDraftDetails(f: AgencyDetails => AgencyDetails)(implicit request: Request[_]): Future[Unit] = for {
-    mDraftDetailsInSession <- sessionCache.get[AgencyDetails](DRAFT_NEW_CONTACT_DETAILS)
+  private def updateDraftDetails(f: DesiDetails => DesiDetails)(implicit request: Request[_]): Future[Unit] = for {
+    mDraftDetailsInSession <- sessionCache.get[DesiDetails](DRAFT_NEW_CONTACT_DETAILS)
     draftDetails <- mDraftDetailsInSession match {
       case Some(details) => Future.successful(details)
       // if there is no 'draft' new set of details in session, get a fresh copy of the current stored details
-      case None => acaConnector.getAgencyDetails().map(_.getOrElse(throw new RuntimeException("Current agency details are unavailable")))
+      case None =>
+        acaConnector.getAgencyDetails()
+          .map(_.getOrElse(throw new RuntimeException("Current agency details are unavailable")))
+        .map(agencyDetails=>
+          DesiDetails(
+            agencyDetails = agencyDetails,
+            otherServices = OtherServices(
+              saChanges = SaChanges(
+                applyChanges = false,
+                saAgentReference = None),
+              ctChanges = CtChanges(
+                applyChanges = false,
+                ctAgentReference = None
+              ))))
     }
     updatedDraftDetails = f(draftDetails)
-    _ <- sessionCache.put[AgencyDetails](DRAFT_NEW_CONTACT_DETAILS, updatedDraftDetails)
+    _ <- sessionCache.put[DesiDetails](DRAFT_NEW_CONTACT_DETAILS, updatedDraftDetails)
   } yield ()
 
 
@@ -110,7 +124,7 @@ class ContactDetailsController @Inject()(actions: Actions,
         .fold(
           formWithErrors => Future.successful(Ok(update_name(formWithErrors))),
           newAgencyName => {
-            updateDraftDetails(_.copy(agencyName = Some(newAgencyName))).map(_ =>
+            updateDraftDetails(desiDetails => desiDetails.copy(agencyDetails = desiDetails.agencyDetails.copy(agencyName = Some(newAgencyName)))).map(_ =>
               Redirect(routes.ContactDetailsController.showCheckNewDetails)
             )
           }
@@ -170,7 +184,7 @@ class ContactDetailsController @Inject()(actions: Actions,
         .fold(
           formWithErrors => Future.successful(Ok(update_phone(formWithErrors))),
           newPhoneNumber => {
-            updateDraftDetails(_.copy(agencyTelephone = Some(newPhoneNumber))).map(_ =>
+            updateDraftDetails(desiDetails => desiDetails.copy(agencyDetails = desiDetails.agencyDetails.copy(agencyTelephone = Some(newPhoneNumber)))).map(_ =>
               Redirect(routes.ContactDetailsController.showCheckNewDetails)
             )
           }
@@ -239,7 +253,7 @@ class ContactDetailsController @Inject()(actions: Actions,
               postalCode = confirmedAddressResponse.address.postcode,
               countryCode = confirmedAddressResponse.address.country.map(_.code).get
             )
-            _ <- updateDraftDetails(_.copy(agencyAddress = Some(newBusinessAddress)))
+            _ <- updateDraftDetails(desiDetails => desiDetails.copy(agencyDetails = desiDetails.agencyDetails.copy(agencyAddress = Some(newBusinessAddress))))
           } yield {
             Redirect(routes.ContactDetailsController.showCheckNewDetails)
           }
@@ -250,8 +264,8 @@ class ContactDetailsController @Inject()(actions: Actions,
 
   val showCheckNewDetails: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     ifFeatureEnabledAndNoPendingChanges {
-      sessionCache.get[AgencyDetails](DRAFT_NEW_CONTACT_DETAILS).map {
-        case Some(updatedDetails) => Ok(check_updated_details(updatedDetails, request.agentInfo.isAdmin))
+      sessionCache.get[DesiDetails](DRAFT_NEW_CONTACT_DETAILS).map {
+        case Some(desiDetails) => Ok(check_updated_details(desiDetails.agencyDetails, request.agentInfo.isAdmin))
         case None => Redirect(routes.ContactDetailsController.showCurrentContactDetails)
       }
     }
@@ -260,15 +274,16 @@ class ContactDetailsController @Inject()(actions: Actions,
   val submitCheckNewDetails: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     ifFeatureEnabledAndNoPendingChanges {
       val arn = request.agentInfo.arn
-      sessionCache.get[AgencyDetails](DRAFT_NEW_CONTACT_DETAILS).flatMap {
+      sessionCache.get[DesiDetails](DRAFT_NEW_CONTACT_DETAILS).flatMap {
         case None => // graceful redirect in case of expired session data etc.
           Future.successful(Redirect(routes.ContactDetailsController.showCurrentContactDetails))
-        case Some(newContactDetails) => for {
+        case Some(desiDetails) => for {
           oldContactDetails <- getCurrentAgencyDetails()
           pendingChange = PendingChangeOfDetails(
             arn = arn,
             oldDetails = oldContactDetails,
-            newDetails = newContactDetails,
+            newDetails = desiDetails.agencyDetails,
+            otherServices = desiDetails.otherServices,
             timeSubmitted = Instant.now()
           )
           //
@@ -314,12 +329,12 @@ class ContactDetailsController @Inject()(actions: Actions,
       previousVerification = previousVerifications.flatMap(_.emails.find(ce => emailCmp(ce.emailAddress, newEmail)))
       result <- previousVerification match {
         case _ if isUnchanged =>
-          updateDraftDetails(_.copy(agencyEmail = Some(newEmail))).map(_ =>
+          updateDraftDetails(desiDetails => desiDetails.copy(agencyDetails = desiDetails.agencyDetails.copy(agencyEmail = Some(newEmail)))).map(_ =>
             Redirect(routes.ContactDetailsController.showCheckNewDetails)
           )
         case Some(pv) if pv.verified => // already verified
           for {
-            _ <- updateDraftDetails(_.copy(agencyEmail = Some(newEmail)))
+            _ <- updateDraftDetails(desiDetails => desiDetails.copy(agencyDetails = desiDetails.agencyDetails.copy(agencyEmail = Some(newEmail))))
             _ <- sessionCache.delete(EMAIL_PENDING_VERIFICATION)
           } yield Redirect(routes.ContactDetailsController.showCheckNewDetails)
         case Some(pv) if pv.locked => // email locked due to too many attempts

@@ -518,6 +518,9 @@ update-contact-details.submitted.p1=We aim to update your contact details within
 update-contact-details.submitted.p2=In the meantime, other teams in HMRC may try to contact you using your old details. TBC
 update-contact-details.submitted.link=Return to manage account TBC
 
+update-contact-details.apply-sa-code-changes.heading=A ydych chi am roi’r newidiadau hyn i’ch cod asiant ar gyfer Hunanasesiad ar waith?
+update-contact-details.apply-sa-code-changes.error.empty=Dewiswch ‘Iawn’ os ydych am roi’r newidiadau hyn i’ch cod asiant ar gyfer Hunanasesiad ar waith.
+
 #Cannot verify email
 cannotVerifyEmail.locked.title=We could not confirm your identity TBC
 cannotVerifyEmail.locked.p1=We cannot check your identity because you entered an incorrect verification code too many times. TBC

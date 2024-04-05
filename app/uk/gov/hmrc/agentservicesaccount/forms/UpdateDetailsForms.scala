@@ -17,7 +17,8 @@
 package uk.gov.hmrc.agentservicesaccount.forms
 
 import play.api.data.Form
-import play.api.data.Forms.{single, text}
+import play.api.data.Forms.{boolean, mapping, optional, single, text}
+import uk.gov.hmrc.agentservicesaccount.models.ApplySaCodeChanges
 
 object UpdateDetailsForms {
   private val BusinessNameRegex = """^[A-Za-z0-9\,\.\'\-\/\ ]{2,200}$""".r
@@ -43,5 +44,13 @@ object UpdateDetailsForms {
       .verifying("update-contact-details.email.error.empty", _.nonEmpty)
       .verifying("update-contact-details.email.error.invalid", x => x.isEmpty || EmailAddressRegex.matches(x))
     )
+  )
+
+  val applySaCodeChangesForm: Form[ApplySaCodeChanges] = Form(
+    mapping(
+      "applyChanges" -> optional(boolean)
+        .verifying("update-contact-details.apply-sa-code-changes.error.empty", _.isDefined)
+        .transform(_.get, (b: Boolean) => Some(b))
+    )(ApplySaCodeChanges.apply)(ApplySaCodeChanges.unapply)
   )
 }
