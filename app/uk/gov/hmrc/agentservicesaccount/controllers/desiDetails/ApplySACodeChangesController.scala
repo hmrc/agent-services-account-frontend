@@ -21,8 +21,9 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthRequestWithAgentInfo}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
-import uk.gov.hmrc.agentservicesaccount.controllers.{ToFuture, routes}
+import uk.gov.hmrc.agentservicesaccount.controllers.routes
 import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.SaChanges
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.contact_details.apply_sa_code_changes
@@ -44,28 +45,25 @@ class ApplySACodeChangesController @Inject()(
 
   def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     ifFeatureEnabledAndNoPendingChanges {
-      println(s"${Console.MAGENTA} Wojciech showPage ifFeatureEnabledAndNoPendingChanges pass  ${Console.RESET}")
       Future.successful(Ok(applySaCodeChangesView(UpdateDetailsForms.applySaCodeChangesForm)))
     }
   }
 
   def  onSubmit: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     ifFeatureEnabledAndNoPendingChanges {
-//      withUpdateAmlsJourney { amlsJourney =>
+      withUpdateDesiDetailsJourney { desiDetails =>
         UpdateDetailsForms.applySaCodeChangesForm
           .bindFromRequest()
           .fold(
             formWithErrors => Future.successful(Ok(applySaCodeChangesView(formWithErrors))),
-//            applySaCodeChanges => {
-//              updateDraftDetails(_.copy(agencyName = Some(newAgencyName))).map(_ =>
-//                Redirect (uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.routes.EnterSACodeController.showPage)
-//              )
-//            }
-
-            _ => Redirect (uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.routes.EnterSACodeController.showPage).toFuture
+            applySaCodeChanges => {
+              updateDraftDetails(_.copy(otherServices = desiDetails.otherServices.copy(saChanges = SaChanges(applySaCodeChanges.apply, None)) )).map(_ =>
+                Redirect (uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.routes.EnterSACodeController.showPage)
+              )
+            }
           )
       }
-//    }
+    }
   }
 
 
@@ -77,10 +75,8 @@ class ApplySACodeChangesController @Inject()(
     ifFeatureEnabled {
       pcodRepository.find(request.agentInfo.arn).flatMap {
         case None => // no change is pending, we can proceed
-          println(s"${Console.MAGENTA} Wojciech ifFeatureEnabledAndNoPendingChanges None ${Console.RESET}")
           action
         case Some(_) => // there is a pending change, further changes are locked. Redirect to the base page
-          println(s"${Console.MAGENTA} Wojciech ifFeatureEnabledAndNoPendingChanges: Some  ${Console.RESET}")
           Future.successful(Redirect(routes.ContactDetailsController.showCurrentContactDetails))
       }
     }

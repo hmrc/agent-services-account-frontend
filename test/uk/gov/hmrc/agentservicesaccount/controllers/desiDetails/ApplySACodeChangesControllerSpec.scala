@@ -22,6 +22,7 @@ import play.api.Environment
 import play.api.data.Form
 import play.api.http.Status.{NOT_FOUND, OK, SEE_OTHER}
 import play.api.i18n.Messages
+import play.api.libs.json.{Reads, Writes}
 import play.api.mvc.{DefaultActionBuilderImpl, MessagesControllerComponents, Request, Result}
 import play.api.test.Helpers.{status, stubMessagesControllerComponents}
 import play.api.test.{DefaultAwaitTimeout, FakeRequest, Helpers}
@@ -30,14 +31,16 @@ import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, SuspensionDetails}
 import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector}
-import uk.gov.hmrc.agentservicesaccount.models.ApplySaCodeChanges
+import uk.gov.hmrc.agentservicesaccount.controllers.DRAFT_NEW_CONTACT_DETAILS
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, DesiDetails, OtherServices, SaChanges}
+import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, ApplySaCodeChanges, BusinessAddress}
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.contact_details.apply_sa_code_changes
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve._
-import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -69,6 +72,33 @@ class ApplySACodeChangesControllerSpec extends PlaySpec
       Some(credentialRole)))
 
   private val suspensionDetailsResponse: Future[SuspensionDetails] = Future.successful(SuspensionDetails(suspensionStatus = false, None))
+
+  private val agencyDetails = AgencyDetails(
+    agencyName = Some("My Agency"),
+    agencyEmail = Some("abc@abc.com"),
+    agencyTelephone = Some("07345678901"),
+    agencyAddress = Some(BusinessAddress(
+      "25 Any Street",
+      Some("Central Grange"),
+      Some("Telford"),
+      None,
+      Some("TF4 3TR"),
+      "GB"))
+  )
+
+  private val emptyOtherServices = OtherServices(
+    saChanges = SaChanges(
+      applyChanges = false,
+      saAgentReference = None
+    ),
+    ctChanges = CtChanges(
+      applyChanges = false,
+      ctAgentReference = None
+    )
+  )
+
+  private val desiDetailsWithEmptyOtherServices = DesiDetails(agencyDetails, emptyOtherServices)
+
 
   trait Setup {
     protected val mockAppConfig: AppConfig = mock[AppConfig]
@@ -141,8 +171,9 @@ class ApplySACodeChangesControllerSpec extends PlaySpec
 
       mockPendingChangeOfDetailsRepository.find(arn) returns Future.successful(None)
 
-//      mockAmlsJourneySessionRepository.putSession(
-//        dataKey, ukAmlsJourney.copy(newRegistrationNumber = Some("XAML00000123456")))(*[Writes[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
+      mockSessionCache.get[DesiDetails](DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesiDetails]], *[Request[Any]]) returns Future.successful(Some(desiDetailsWithEmptyOtherServices))
+
+      mockSessionCache.put[DesiDetails](DRAFT_NEW_CONTACT_DETAILS, desiDetailsWithEmptyOtherServices.copy(otherServices = desiDetailsWithEmptyOtherServices.otherServices.copy(saChanges = SaChanges(true, None))))(*[Writes[DesiDetails]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
 
       mockView.apply(*[Form[ApplySaCodeChanges]])(*[Messages], *[Request[_]], *[AppConfig]) returns Html("")
 
@@ -165,8 +196,9 @@ class ApplySACodeChangesControllerSpec extends PlaySpec
 
       mockPendingChangeOfDetailsRepository.find(arn) returns Future.successful(None)
 
-//      mockAmlsJourneySessionRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[Request[Any]]) returns
-//        Future.successful(Some(ukAmlsJourney))
+      mockSessionCache.get[DesiDetails](DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesiDetails]], *[Request[Any]]) returns Future.successful(Some(desiDetailsWithEmptyOtherServices))
+
+      mockSessionCache.put[DesiDetails](DRAFT_NEW_CONTACT_DETAILS, desiDetailsWithEmptyOtherServices.copy(otherServices = desiDetailsWithEmptyOtherServices.otherServices.copy(saChanges = SaChanges(true, None))))(*[Writes[DesiDetails]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
 
       mockView.apply(*[Form[ApplySaCodeChanges]])(*[Messages], *[Request[_]], *[AppConfig]) returns Html("")
 

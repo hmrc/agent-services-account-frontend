@@ -16,9 +16,10 @@
 
 package uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
 
-import play.api.mvc.Request
+import play.api.mvc.Results.Redirect
+import play.api.mvc.{Request, Result}
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
-import uk.gov.hmrc.agentservicesaccount.controllers.DRAFT_NEW_CONTACT_DETAILS
+import uk.gov.hmrc.agentservicesaccount.controllers.{DRAFT_NEW_CONTACT_DETAILS, routes}
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, DesiDetails, OtherServices, SaChanges}
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.http.HeaderCarrier
@@ -60,6 +61,15 @@ trait DesiDetailsJourneySupport {
     updatedDraftDetails = f(draftDetails)
     _ <- sessionCache.put[DesiDetails](DRAFT_NEW_CONTACT_DETAILS, updatedDraftDetails)
   } yield ()
+
+  def withUpdateDesiDetailsJourney(body: DesiDetails => Future[Result])(
+    implicit request: Request[_], ec: ExecutionContext): Future[Result] = {
+    sessionCache.get[DesiDetails](DRAFT_NEW_CONTACT_DETAILS).flatMap{
+      case Some(desiDetails: DesiDetails) => body(desiDetails)
+      case None =>
+        Future successful Redirect(routes.AgentServicesController.manageAccount)
+    }
+  }
 
 
 }
