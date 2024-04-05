@@ -550,6 +550,7 @@ admin-access.button=Go to manage account
 amls.add-details.h1=Anti-money laundering supervision details
 amls.is-hmrc.error=Select yes if HMRC is your money laundering supervisory body
 amls.is-hmrc.h1=Is HMRC your money laundering supervisory body?
+add.amls.confirmation.h1=You''ve added your supervision details
 amls.confirmation.h1=You''ve changed your supervision details
 amls.confirmation.p1=We''ll update your anti-money laundering supervision details on your agent services accounts.
 amls.confirmation.link=Return to manage account
