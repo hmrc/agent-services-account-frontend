@@ -88,7 +88,7 @@ GET        /manage-account/contact-details/check-your-answers             @uk.go
 POST       /manage-account/contact-details/check-your-answers             @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.CheckYourAnswers.onSubmit
 
 # AMLS
-GET        /manage-account/money-laundering-supervision/confirmation-new-supervision                   @uk.gov.hmrc.agentservicesaccount.controllers.amls.AmlsConfirmationController.showUpdatedAmlsConfirmationPage
+GET        /manage-account/money-laundering-supervision/confirmation-new-supervision                   @uk.gov.hmrc.agentservicesaccount.controllers.amls.AmlsConfirmationController.showUpdatedAmlsConfirmationPage(updated: Boolean ?= true)
 
 GET        /manage-account/money-laundering-supervision                   @uk.gov.hmrc.agentservicesaccount.controllers.amls.AMLSDetailsController.showSupervisionDetails
 
