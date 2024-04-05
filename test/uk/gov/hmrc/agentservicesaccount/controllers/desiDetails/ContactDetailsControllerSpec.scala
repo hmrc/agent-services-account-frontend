@@ -322,7 +322,7 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
       implicit val request = fakeRequest()
       val result = contactDetailsController.finishAddressLookup(Some("foo"))(request)
       status(result) shouldBe SEE_OTHER
-      header("Location", result) shouldBe Some(desiDetails.routes.CheckYourAnswersController.showPage.url)
+      header("Location", result) shouldBe Some(desiDetails.routes.ApplySACodeChangesController.showPage.url)
       sessionCache.get(DRAFT_NEW_CONTACT_DETAILS).futureValue.flatMap(_.agencyAddress).map(_.addressLine1) shouldBe Some("26 New Street") // the new address
     }
   }

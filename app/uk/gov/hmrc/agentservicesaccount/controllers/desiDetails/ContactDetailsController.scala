@@ -239,8 +239,9 @@ class ContactDetailsController @Inject()(actions: Actions,
               countryCode = confirmedAddressResponse.address.country.map(_.code).get
             )
             _ <- updateDraftDetails(_.copy(agencyAddress = Some(newBusinessAddress)))
+            nextPage <- getNextPage(sessionCache, "address")
           } yield {
-            Redirect(desiDetails.routes.CheckYourAnswersController.showPage)
+            nextPage
           }
       }
     }
