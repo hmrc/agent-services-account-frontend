@@ -69,7 +69,7 @@ class AmlsConfirmationControllerSpec extends UnitSpec with AuthStubs with GuiceO
         givenAuthorisedAsAgentWith(arn)
         givenSuspensionStatus(SuspensionDetails(suspensionStatus = false, None))
 
-        val response: Future[Result] = controller.showUpdatedAmlsConfirmationPage(fakeRequest("GET", "/home"))
+        val response: Future[Result] = controller.showUpdatedAmlsConfirmationPage(true)(fakeRequest("GET", "/home"))
 
         status(response) shouldBe OK
         Helpers.contentType(response).get shouldBe HTML
@@ -79,7 +79,7 @@ class AmlsConfirmationControllerSpec extends UnitSpec with AuthStubs with GuiceO
         givenAuthorisedAsAgentWith(arn)
         givenSuspensionStatus(SuspensionDetails(suspensionStatus = false, None))
 
-        val response: Future[Result] = controller.showUpdatedAmlsConfirmationPage(fakeRequest("GET", "/home"))
+        val response: Future[Result] = controller.showUpdatedAmlsConfirmationPage(true)(fakeRequest("GET", "/home"))
         status(response) shouldBe FORBIDDEN
       }
     }

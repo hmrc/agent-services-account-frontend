@@ -78,7 +78,7 @@ class CheckYourAnswersController @Inject()(actions: Actions,
             val amlsRequest = AmlsRequest(journeyData.isUkAgent, newAmlsBody, newRegistrationNumber, journeyData.newExpirationDate)
 
             agentAssuranceConnector.postAmlsDetails(request.agentInfo.arn, amlsRequest).map {
-              _ => Redirect(amls.routes.AmlsConfirmationController.showUpdatedAmlsConfirmationPage)
+              _ => Redirect(amls.routes.AmlsConfirmationController.showUpdatedAmlsConfirmationPage(journeyData.hasExistingAmls))
             }
 
           case (optNewAmlsBody, optNewRegistrationNumber) =>
