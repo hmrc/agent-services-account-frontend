@@ -26,15 +26,28 @@
 
 @this(main: main, p: p, h1: h1, h2: h2, a: a, govukPanel: GovukPanel)
 
-@()(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
+@(amlsDetailsAlreadyExist: Boolean)(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
 
-@main(pageTitle = msgs("amls.confirmation.h1"), showSecondaryNav = false) {
-    @govukPanel(
-        Panel(
-            title = Text(msgs("amls.confirmation.h1"))
+@if(amlsDetailsAlreadyExist) {
+    @main(pageTitle = msgs("amls.confirmation.h1"), showSecondaryNav = false) {
+        @govukPanel(
+            Panel(
+                title = Text(msgs("amls.confirmation.h1"))
+            )
         )
-    )
-    @h2("common.what.happens.next")
-    @p("amls.confirmation.p1")
-    @a(key = "amls.confirmation.link", href = AgentServicesController.manageAccount.url)
+        @h2("common.what.happens.next")
+        @p("amls.confirmation.p1")
+        @a(key = "amls.confirmation.link", href = AgentServicesController.manageAccount.url)
+    }
+} else {
+    @main(pageTitle = msgs("add.amls.confirmation.h1"), showSecondaryNav = false) {
+        @govukPanel(
+            Panel(
+                title = Text(msgs("add.amls.confirmation.h1"))
+            )
+        )
+        @h2("common.what.happens.next")
+        @p("amls.confirmation.p1")
+        @a(key = "amls.confirmation.link", href = AgentServicesController.manageAccount.url)
+    }
 }

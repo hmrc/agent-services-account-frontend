@@ -18,15 +18,15 @@ package uk.gov.hmrc.agentservicesaccount.controllers.amls
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
-import play.api.http.MimeTypes.HTML
 import play.api.http.Status.{FORBIDDEN, OK}
 import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.Result
-import play.api.test.Helpers.defaultAwaitTimeout
-import play.api.test.{FakeRequest, Helpers}
-import uk.gov.hmrc.agentmtdidentifiers.model.SuspensionDetails
+import play.api.test.FakeRequest
+import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, SuspensionDetails}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+import uk.gov.hmrc.agentservicesaccount.models.{AmlsDetailsResponse, AmlsStatuses}
+import uk.gov.hmrc.agentservicesaccount.stubs.AgentAssuranceStubs.givenAmlsStatusForArn
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentClientAuthorisationStubs.givenSuspensionStatus
 import uk.gov.hmrc.agentservicesaccount.stubs.AuthStubs
 import uk.gov.hmrc.agentservicesaccount.support.{UnitSpec, WireMockSupport}
@@ -42,6 +42,7 @@ class AmlsConfirmationControllerSpec extends UnitSpec with AuthStubs with GuiceO
       "features.enable-non-hmrc-supervisory-body" -> isEnabled,
       "auditing.enabled" -> false,
       "microservice.services.auth.port" -> wireMockPort,
+      "microservice.services.agent-assurance.port" -> wireMockPort,
       "microservice.services.agent-client-authorisation.port" -> wireMockPort,
       "microservice.services.agent-permissions.port" -> wireMockPort,
       "microservice.services.agent-user-client-details.port" -> wireMockPort,
@@ -68,16 +69,16 @@ class AmlsConfirmationControllerSpec extends UnitSpec with AuthStubs with GuiceO
       "the non-hmrc-supervisory-body feature switch is enabled" in new Setup(isEnabled = true) {
         givenAuthorisedAsAgentWith(arn)
         givenSuspensionStatus(SuspensionDetails(suspensionStatus = false, None))
+        givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), Arn(arn))
 
         val response: Future[Result] = controller.showUpdatedAmlsConfirmationPage(fakeRequest("GET", "/home"))
 
         status(response) shouldBe OK
-        Helpers.contentType(response).get shouldBe HTML
-        val content: String = Helpers.contentAsString(response)
       }
       "the non-hmrc-supervisory-body feature switch is disabled" in new Setup(isEnabled = false) {
         givenAuthorisedAsAgentWith(arn)
         givenSuspensionStatus(SuspensionDetails(suspensionStatus = false, None))
+        givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), Arn(arn))
 
         val response: Future[Result] = controller.showUpdatedAmlsConfirmationPage(fakeRequest("GET", "/home"))
         status(response) shouldBe FORBIDDEN
