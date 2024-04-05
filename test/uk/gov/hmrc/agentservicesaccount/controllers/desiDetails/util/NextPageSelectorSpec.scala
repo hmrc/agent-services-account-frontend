@@ -71,7 +71,7 @@ class NextPageSelectorSpec extends BaseISpec with SessionServiceMocks {
 
         val response: Future[Result] = getNextPage(mockSessionCacheService, "telephone")
 
-        redirectLocation(await(response)) shouldBe Some(desiDetails.routes.ApplySACodeChanges.showPage.url)
+        redirectLocation(await(response)) shouldBe Some(desiDetails.routes.ApplySACodeChangesController.showPage.url)
       }
     }
   }
@@ -124,7 +124,7 @@ class NextPageSelectorSpec extends BaseISpec with SessionServiceMocks {
 
         val response: Future[Result] = getNextPage(mockSessionCacheService, "telephone")
 
-        redirectLocation(await(response)) shouldBe Some(desiDetails.routes.CheckYourAnswers.showPage.url)
+        redirectLocation(await(response)) shouldBe Some(desiDetails.routes.CheckYourAnswersController.showPage.url)
       }
     }
   }

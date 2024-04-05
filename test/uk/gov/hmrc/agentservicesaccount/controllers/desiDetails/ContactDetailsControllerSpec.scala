@@ -29,7 +29,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, SuspensionDetails}
 import uk.gov.hmrc.agentservicesaccount.connectors.{AddressLookupConnector, AgentClientAuthorisationConnector, EmailVerificationConnector}
-import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.{CheckYourAnswers, ContactDetailsController}
+import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.{CheckYourAnswersController, ContactDetailsController}
 import uk.gov.hmrc.agentservicesaccount.controllers.{DRAFT_NEW_CONTACT_DETAILS, EMAIL_PENDING_VERIFICATION, desiDetails}
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup.{ConfirmedResponseAddress, ConfirmedResponseAddressDetails, Country, JourneyConfigV2}
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.{CompletedEmail, VerificationStatusResponse, VerifyEmailRequest, VerifyEmailResponse}
@@ -119,7 +119,7 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
     val evConnector: EmailVerificationConnector = app.injector.instanceOf[EmailVerificationConnector]
 
     val contactDetailsController: ContactDetailsController = app.injector.instanceOf[ContactDetailsController]
-    val checkYourAnswersController: CheckYourAnswers = app.injector.instanceOf[CheckYourAnswers]
+    val checkYourAnswersController: CheckYourAnswersController = app.injector.instanceOf[CheckYourAnswersController]
     val sessionCache: SessionCacheService = app.injector.instanceOf[SessionCacheService]
     val pcodRepository: PendingChangeOfDetailsRepository = app.injector.instanceOf[PendingChangeOfDetailsRepository]
 
@@ -188,7 +188,7 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
       implicit val request = fakeRequest("POST").withFormUrlEncodedBody("name" -> "New and Improved Agency")
       val result = contactDetailsController.submitChangeBusinessName()(request)
       status(result) shouldBe SEE_OTHER
-      header("Location", result) shouldBe Some(desiDetails.routes.ApplySACodeChanges.showPage.url)
+      header("Location", result) shouldBe Some(desiDetails.routes.ApplySACodeChangesController.showPage.url)
       sessionCache.get(DRAFT_NEW_CONTACT_DETAILS).futureValue.flatMap(_.agencyName) shouldBe Some("New and Improved Agency")
     }
 
@@ -220,7 +220,7 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
       implicit val request = fakeRequest("POST").withFormUrlEncodedBody("emailAddress" -> "new@email.com")
       val result = contactDetailsController.submitChangeEmailAddress()(request)
       status(result) shouldBe SEE_OTHER
-      header("Location", result) shouldBe Some(desiDetails.routes.CheckYourAnswers.showPage.url)
+      header("Location", result) shouldBe Some(desiDetails.routes.CheckYourAnswersController.showPage.url)
       sessionCache.get(DRAFT_NEW_CONTACT_DETAILS).futureValue.flatMap(_.agencyEmail) shouldBe Some("new@email.com")
     }
 
@@ -272,7 +272,7 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
       )))
       val result = contactDetailsController.finishEmailVerification()(request)
       status(result) shouldBe SEE_OTHER
-      header("Location", result) shouldBe Some(desiDetails.routes.CheckYourAnswers.showPage.url)
+      header("Location", result) shouldBe Some(desiDetails.routes.CheckYourAnswersController.showPage.url)
       sessionCache.get(DRAFT_NEW_CONTACT_DETAILS).futureValue.flatMap(_.agencyEmail) shouldBe Some("new@email.com")
       sessionCache.get(EMAIL_PENDING_VERIFICATION).futureValue shouldBe None
     }
@@ -293,7 +293,7 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
       implicit val request = fakeRequest("POST").withFormUrlEncodedBody("telephoneNumber" -> "01234 567 890")
       val result = contactDetailsController.submitChangeTelephoneNumber()(request)
       status(result) shouldBe SEE_OTHER
-      header("Location", result) shouldBe Some(desiDetails.routes.ApplySACodeChanges.showPage.url)
+      header("Location", result) shouldBe Some(desiDetails.routes.ApplySACodeChangesController.showPage.url)
       sessionCache.get(DRAFT_NEW_CONTACT_DETAILS).futureValue.flatMap(_.agencyTelephone) shouldBe Some("01234 567 890")
     }
 
@@ -322,7 +322,7 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
       implicit val request = fakeRequest()
       val result = contactDetailsController.finishAddressLookup(Some("foo"))(request)
       status(result) shouldBe SEE_OTHER
-      header("Location", result) shouldBe Some(desiDetails.routes.CheckYourAnswers.showPage.url)
+      header("Location", result) shouldBe Some(desiDetails.routes.CheckYourAnswersController.showPage.url)
       sessionCache.get(DRAFT_NEW_CONTACT_DETAILS).futureValue.flatMap(_.agencyAddress).map(_.addressLine1) shouldBe Some("26 New Street") // the new address
     }
   }

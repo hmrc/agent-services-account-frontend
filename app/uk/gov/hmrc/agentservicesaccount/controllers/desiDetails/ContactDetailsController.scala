@@ -145,7 +145,7 @@ class ContactDetailsController @Inject()(actions: Actions,
           val credId = request.agentInfo.credentials.map(_.providerId).getOrElse(throw new RuntimeException("no available cred id"))
           emailVerificationLogic(email, credId)
         case None => // this should not happen but if it does, return a graceful fallback response
-          Future.successful(Redirect(desiDetails.routes.CheckYourAnswers.showPage))
+          Future.successful(Redirect(desiDetails.routes.CheckYourAnswersController.showPage))
       }
     }
   }
@@ -240,7 +240,7 @@ class ContactDetailsController @Inject()(actions: Actions,
             )
             _ <- updateDraftDetails(_.copy(agencyAddress = Some(newBusinessAddress)))
           } yield {
-            Redirect(desiDetails.routes.CheckYourAnswers.showPage)
+            Redirect(desiDetails.routes.CheckYourAnswersController.showPage)
           }
       }
     }
@@ -280,13 +280,13 @@ class ContactDetailsController @Inject()(actions: Actions,
       result <- previousVerification match {
         case _ if isUnchanged =>
           updateDraftDetails(_.copy(agencyEmail = Some(newEmail))).map(_ =>
-            Redirect(desiDetails.routes.CheckYourAnswers.showPage)
+            Redirect(desiDetails.routes.CheckYourAnswersController.showPage)
           )
         case Some(pv) if pv.verified => // already verified
           for {
             _ <- updateDraftDetails(_.copy(agencyEmail = Some(newEmail)))
             _ <- sessionCache.delete(EMAIL_PENDING_VERIFICATION)
-          } yield Redirect(desiDetails.routes.CheckYourAnswers.showPage)
+          } yield Redirect(desiDetails.routes.CheckYourAnswersController.showPage)
         case Some(pv) if pv.locked => // email locked due to too many attempts
           Future.successful(Redirect(desiDetails.routes.ContactDetailsController.showEmailLocked))
         case None => // email is not verified, start verification journey
@@ -299,7 +299,7 @@ class ContactDetailsController @Inject()(actions: Actions,
             accessibilityStatementUrl = "", // todo
             email = Some(Email(newEmail, makeUrl(desiDetails.routes.ContactDetailsController.showChangeEmailAddress))),
             lang = Some(lang),
-            backUrl = Some(makeUrl(desiDetails.routes.CheckYourAnswers.showPage)),
+            backUrl = Some(makeUrl(desiDetails.routes.CheckYourAnswersController.showPage)),
             pageTitle = None
           )
           for {

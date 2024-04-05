@@ -35,11 +35,11 @@ import javax.inject._
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CheckYourAnswers @Inject()(actions: Actions,
-                                         sessionCache: SessionCacheService,
-                                         acaConnector: AgentClientAuthorisationConnector,
-                                         pcodRepository: PendingChangeOfDetailsRepository,
-                                         check_updated_details: check_updated_details,
+class CheckYourAnswersController @Inject()(actions: Actions,
+                                           sessionCache: SessionCacheService,
+                                           acaConnector: AgentClientAuthorisationConnector,
+                                           pcodRepository: PendingChangeOfDetailsRepository,
+                                           check_updated_details: check_updated_details,
                                         )(implicit appConfig: AppConfig,
                                           cc: MessagesControllerComponents,
                                           ec: ExecutionContext) extends FrontendController(cc) with I18nSupport with Logging {
