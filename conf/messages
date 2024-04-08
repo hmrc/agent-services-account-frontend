@@ -192,6 +192,7 @@ common.back=Back
 common.cancel=Cancel
 common.change=Change
 common.continue.manage.account=Continue to manage account
+common.continue.without.code=Continue without code
 common.continue=Continue
 common.continue-save=Save and continue
 common.confirm-send=Confirm and send
@@ -520,6 +521,12 @@ update-contact-details.submitted.link=Return to manage account
 
 update-contact-details.apply-sa-code-changes.heading=Do you want to apply these changes to your Self Assessment agent code?
 update-contact-details.apply-sa-code-changes.error.empty=Select yes if you want to apply these changes to your Self Assessment agent code.
+
+update-contact-details.sa-code.heading=What's the agent code you use for Self Assessment?
+update-contact-details.sa-code.hint=This is a 6-character code made up of numbers and letters. For example, A1234B or 5678CD.
+update-contact-details.sa-code.p1=If you cannot find the code, select 'Continue without code'.
+update-contact-details.sa-code.error.empty=Enter the agent code you use for Self Assessment.
+update-contact-details.sa-code.error.invalid=Enter an agent code that is 6 characters long.
 
 #Cannot verify email
 cannotVerifyEmail.locked.title=We could not confirm your identity

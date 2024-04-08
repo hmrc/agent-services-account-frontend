@@ -17,17 +17,77 @@
 package uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
 
 import play.api.i18n.I18nSupport
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.agentservicesaccount.controllers.ToFuture
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
+import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthRequestWithAgentInfo}
+import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
+import uk.gov.hmrc.agentservicesaccount.controllers.routes
+import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.SaChanges
+import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
+import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.contact_details.enter_sa_code
+import uk.gov.hmrc.domain.SaUtr
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject.{Inject, Singleton}
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class EnterSACodeController @Inject()(cc: MessagesControllerComponents) extends FrontendController(cc) with I18nSupport {
+class EnterSACodeController @Inject()(
+                                       actions: Actions,
+                                       val sessionCache: SessionCacheService,
+                                       val acaConnector: AgentClientAuthorisationConnector,
+                                       enterSaCodeView: enter_sa_code,
+                                       pcodRepository: PendingChangeOfDetailsRepository
+                                     )(implicit appConfig: AppConfig,
+                                       cc: MessagesControllerComponents,
+                                       ec: ExecutionContext) extends FrontendController(cc) with DesiDetailsJourneySupport with I18nSupport {
 
-  def showPage: Action[AnyContent] = Action.async { _ => Ok("").toFuture }
+  def showPage: Action[AnyContent]= actions.authActionCheckSuspend.async { implicit request =>
+    ifFeatureEnabledAndNoPendingChanges {
+      Future.successful(Ok(enterSaCodeView(UpdateDetailsForms.saCodeForm)))
+    }
+  }
 
-  def onSubmit: Action[AnyContent] = Action.async { _ => Ok("").toFuture }
+  def onSubmit: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
+    ifFeatureEnabledAndNoPendingChanges {
+      withUpdateDesiDetailsJourney { desiDetails =>
+        UpdateDetailsForms.saCodeForm
+          .bindFromRequest()
+          .fold(
+            formWithErrors => Future.successful(Ok(enterSaCodeView(formWithErrors))),
+            saCode => {
+              updateDraftDetails(_.copy(otherServices = desiDetails.otherServices.copy(saChanges = SaChanges(true, Some(SaUtr(saCode)))) )).map(_ =>
+                Redirect (uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.routes.ApplyCTCodeChanges.showPage))
+            }
+          )
+      }
+    }
+  }
+
+  def continueWithoutCode: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
+    ifFeatureEnabledAndNoPendingChanges {
+      withUpdateDesiDetailsJourney { desiDetails =>
+        updateDraftDetails(_.copy(otherServices = desiDetails.otherServices.copy(saChanges = SaChanges(false, None)) )).map(_ =>
+          Redirect (uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.routes.ApplyCTCodeChanges.showPage))
+      }
+    }
+  }
+
+  private def ifFeatureEnabled(action: => Future[Result]): Future[Result] = {
+    if (appConfig.enableChangeContactDetails) action else Future.successful(NotFound)
+  }
+
+  private def ifFeatureEnabledAndNoPendingChanges(action: => Future[Result])(implicit request: AuthRequestWithAgentInfo[_]): Future[Result] = {
+    ifFeatureEnabled {
+      pcodRepository.find(request.agentInfo.arn).flatMap {
+        case None => // no change is pending, we can proceed
+          action
+        case Some(_) => // there is a pending change, further changes are locked. Redirect to the base page
+          Future.successful(Redirect(routes.ContactDetailsController.showCurrentContactDetails))
+      }
+    }
+  }
 }
 

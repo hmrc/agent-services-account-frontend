@@ -24,6 +24,7 @@ object UpdateDetailsForms {
   private val BusinessNameRegex = """^[A-Za-z0-9\,\.\'\-\/\ ]{2,200}$""".r
   private val TelephoneNumberRegex = """^(\+44|0)\d{9,12}$""".r // remove all spaces from input before matching to ensure correct digit count
   private val EmailAddressRegex = """^.{1,252}@.{1,256}\..{1,256}$""".r
+  private val SaCodeRegex = """^[A-Za-z0-9\,\.\'\-\/\ ]{6}$""".r
 
   private val trimmedText = text.transform[String](x => x.trim, x => x)
 
@@ -52,5 +53,12 @@ object UpdateDetailsForms {
         .verifying("update-contact-details.apply-sa-code-changes.error.empty", _.isDefined)
         .transform(_.get, (b: Boolean) => Some(b))
     )(ApplySaCodeChanges.apply)(ApplySaCodeChanges.unapply)
+  )
+
+  val saCodeForm: Form[String] = Form(
+    single("saCode" -> trimmedText
+      .verifying("update-contact-details.sa-code.error.empty", _.nonEmpty)
+      .verifying("update-contact-details.sa-code.error.invalid", x => x.isEmpty || SaCodeRegex.matches(x.replace(" ","")))
+    )
   )
 }
