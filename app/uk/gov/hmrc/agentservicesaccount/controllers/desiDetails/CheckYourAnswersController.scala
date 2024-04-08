@@ -23,12 +23,13 @@ import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthRequestWithAgentIn
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
 import uk.gov.hmrc.agentservicesaccount.controllers._
-import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, PendingChangeOfDetails}
+import uk.gov.hmrc.agentservicesaccount.models.PendingChangeOfDetails
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util._
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.DesignatoryDetails
 
 import java.time.Instant
 import javax.inject._
@@ -39,7 +40,7 @@ class CheckYourAnswersController @Inject()(actions: Actions,
                                            sessionCache: SessionCacheService,
                                            acaConnector: AgentClientAuthorisationConnector,
                                            pcodRepository: PendingChangeOfDetailsRepository,
-                                           check_updated_details: check_updated_details,
+                                           checkUpdatedDetailsView: check_updated_details,
                                         )(implicit appConfig: AppConfig,
                                           cc: MessagesControllerComponents,
                                           ec: ExecutionContext) extends FrontendController(cc) with I18nSupport with Logging {
@@ -61,25 +62,26 @@ class CheckYourAnswersController @Inject()(actions: Actions,
 
   def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     ifFeatureEnabledAndNoPendingChanges {
-      sessionCache.get[AgencyDetails](DRAFT_NEW_CONTACT_DETAILS).map {
-        case Some(updatedDetails) => Ok(check_updated_details(updatedDetails, request.agentInfo.isAdmin))
+      sessionCache.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS).map {
+        case Some(desiDetails) => Ok(checkUpdatedDetailsView(desiDetails.agencyDetails, request.agentInfo.isAdmin))
         case None => Redirect(desiDetails.routes.ContactDetailsController.showCurrentContactDetails)
       }
     }
   }
 
-  def onSubmit: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
+  val onSubmit: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     ifFeatureEnabledAndNoPendingChanges {
       val arn = request.agentInfo.arn
-      sessionCache.get[AgencyDetails](DRAFT_NEW_CONTACT_DETAILS).flatMap {
+      sessionCache.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS).flatMap {
         case None => // graceful redirect in case of expired session data etc.
           Future.successful(Redirect(desiDetails.routes.ContactDetailsController.showCurrentContactDetails))
-        case Some(newContactDetails) => for {
+        case Some(details) => for {
           oldContactDetails <- CurrentAgencyDetails.get(acaConnector)
           pendingChange = PendingChangeOfDetails(
             arn = arn,
             oldDetails = oldContactDetails,
-            newDetails = newContactDetails,
+            newDetails = details.agencyDetails,
+            otherServices = details.otherServices,
             timeSubmitted = Instant.now()
           )
           //

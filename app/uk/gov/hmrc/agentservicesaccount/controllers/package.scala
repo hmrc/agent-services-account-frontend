@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.agentservicesaccount
 
-import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.DesignatoryDetails
 import uk.gov.hmrc.mongo.cache.DataKey
 
 import java.time.LocalDate
@@ -38,7 +38,7 @@ package object controllers {
   val END_DATE: DataKey[LocalDate] = DataKey("endDate")
 
   // when the user changes their own details, this is a 'draft' of the set of updated details before the user sends the update request
-  val DRAFT_NEW_CONTACT_DETAILS: DataKey[AgencyDetails] = DataKey("updatedContactDetails")
+  val DRAFT_NEW_CONTACT_DETAILS: DataKey[DesignatoryDetails] = DataKey("updatedContactDetails")
 
   // when the user chooses which details to change, this is set of each detail they have selected
   val CURRENT_SELECTED_CHANGES: DataKey[Set[String]] = DataKey("currentSelectedChanges")

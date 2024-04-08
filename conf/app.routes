@@ -79,6 +79,7 @@ GET        /manage-account/contact-details/apply-code-SA                  @uk.go
 POST       /manage-account/contact-details/apply-code-SA                  @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.ApplySACodeChangesController.onSubmit
 GET        /manage-account/contact-details/enter-SA-code                  @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.EnterSACodeController.showPage
 POST       /manage-account/contact-details/enter-SA-code                  @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.EnterSACodeController.onSubmit
+GET        /manage-account/contact-details/continue-without-code          @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.EnterSACodeController.continueWithoutCode
 GET        /manage-account/contact-details/apply-code-CT                  @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.ApplyCTCodeChangesController.showPage
 POST       /manage-account/contact-details/apply-code-CT                  @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.ApplyCTCodeChangesController.onSubmit
 GET        /manage-account/contact-details/enter-CT-code                  @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.EnterCTCodeController.showPage

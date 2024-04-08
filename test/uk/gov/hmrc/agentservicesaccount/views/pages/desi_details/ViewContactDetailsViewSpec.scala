@@ -24,6 +24,7 @@ import play.api.test.FakeRequest
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.routes
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, OtherServices, SaChanges}
 import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress, PendingChangeOfDetails}
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details.view_contact_details
@@ -64,10 +65,22 @@ class ViewContactDetailsViewSpec extends BaseISpec {
       "GB"))
   )
 
+  private val emptyOtherServices = OtherServices(
+    saChanges = SaChanges(
+      applyChanges = false,
+      saAgentReference = None
+    ),
+    ctChanges = CtChanges(
+      applyChanges = false,
+      ctAgentReference = None
+    )
+  )
+
   private val pendingChangeOfDetails = PendingChangeOfDetails(
     arn = testArn,
     oldDetails = agencyDetails,
     newDetails = agencyDetails.copy(agencyName = Some("New and Improved Agency")),
+    otherServices = emptyOtherServices,
     timeSubmitted = Instant.now
   )
 

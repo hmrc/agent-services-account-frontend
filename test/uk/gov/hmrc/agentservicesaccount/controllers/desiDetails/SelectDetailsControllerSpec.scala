@@ -30,6 +30,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, SuspensionDetails}
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.{CURRENT_SELECTED_CHANGES, DRAFT_NEW_CONTACT_DETAILS, EMAIL_PENDING_VERIFICATION, desiDetails}
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, OtherServices, SaChanges}
 import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress, PendingChangeOfDetails}
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
@@ -57,6 +58,17 @@ class SelectDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneAp
       None,
       Some("TF4 3TR"),
       "GB"))
+  )
+
+  private val emptyOtherServices = OtherServices(
+    saChanges = SaChanges(
+      applyChanges = false,
+      saAgentReference = None
+    ),
+    ctChanges = CtChanges(
+      applyChanges = false,
+      ctAgentReference = None
+    )
   )
 
   private val stubAuthConnector = new AuthConnector {
@@ -104,7 +116,7 @@ class SelectDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneAp
       (pcodRepository.find(_: Arn)).when(*).returns(Future.successful(None))
     }
     def pendingChangesExistInRepo(): Unit = {
-      (pcodRepository.find(_: Arn)).when(*).returns(Future.successful(Some(PendingChangeOfDetails(testArn, agencyDetails, agencyDetails, Instant.now()))))
+      (pcodRepository.find(_: Arn)).when(*).returns(Future.successful(Some(PendingChangeOfDetails(testArn, agencyDetails, agencyDetails, emptyOtherServices, Instant.now()))))
     }
 
     (pcodRepository.insert(_: PendingChangeOfDetails)).when(*).returns(Future.successful(()))
