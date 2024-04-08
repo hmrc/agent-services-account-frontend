@@ -36,8 +36,10 @@ class AmlsNewSupervisoryBodyViewSpec extends BaseISpec {
   val view: new_supervisory_body  = app.injector.instanceOf[new_supervisory_body]
   val messages: Messages = MessagesImpl(lang, messagesApi)
   val amlsBodies = Map("ACCA" -> "Association of Certified Chartered Accountant")
+  val selectedBody = "Association of Certified Chartered Accountant"
 
   def form(isUk: Boolean): Form[String] = NewAmlsSupervisoryBodyForm.form(amlsBodies)(isUk)
+  def prePopulateForm(isUk: Boolean): Form[String] = NewAmlsSupervisoryBodyForm.form(amlsBodies)(isUk).fill(selectedBody)
   def formWithErrors(isUk: Boolean): Form[String] = form(isUk).withError(key ="body", message = "amls.new-supervisory-body.error")
 
 
@@ -88,7 +90,24 @@ class AmlsNewSupervisoryBodyViewSpec extends BaseISpec {
 
       "display the correct page title" in {
         doc.title() mustBe "What’s the name of your supervisory body? - Agent services account - GOV.UK"
-        doc.select(".govuk-select").text mustBe "Association of Certified Chartered Accountant"
+      }
+    }
+
+    "viewing page with form data for UK agent" should {
+      val isUk = true
+
+      val doc: Document = Jsoup.parse(view.apply(prePopulateForm(isUk), amlsBodies, isUk, cya = false)(FakeRequest(), messages, appConfig).body)
+
+      testServiceStaticContent(doc)
+
+      testPageStaticContent(doc)(isUk)
+
+      "display the correct page title" in {
+        doc.title() mustBe "What’s the name of your supervisory body? - Agent services account - GOV.UK"
+      }
+
+      "display pre-populated selected supervisory body" in {
+        doc.select("option[selected]").text mustBe selectedBody
       }
     }
 
