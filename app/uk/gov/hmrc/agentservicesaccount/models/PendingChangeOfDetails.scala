@@ -18,13 +18,16 @@ package uk.gov.hmrc.agentservicesaccount.models
 
 import play.api.libs.json._
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.OtherServices
 import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
+
 import java.time.{Instant, LocalDate, ZoneId}
 
 case class PendingChangeOfDetails(
                                  arn: Arn,
                                  oldDetails: AgencyDetails,
                                  newDetails: AgencyDetails,
+                                 otherServices: OtherServices,
                                  timeSubmitted: Instant
                                  ) {
   def localDateSubmitted: LocalDate = timeSubmitted.atZone(ZoneId.of("Europe/London")).toLocalDate

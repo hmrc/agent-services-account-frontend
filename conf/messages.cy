@@ -192,6 +192,7 @@ common.back=Yn ôl
 common.cancel=Canslo
 common.change=Newid
 common.continue.manage.account=Yn eich blaen i reoli’r cyfrif
+common.continue.without.code=Yn eich blaen heb god
 common.continue=Yn eich blaen
 common.continue-save=Cadw ac yn eich blaen
 common.confirm-send=Cadarnhau ac anfon
@@ -517,6 +518,15 @@ update-contact-details.submitted.h2=Yr hyn sy’n digwydd nesaf
 update-contact-details.submitted.p1=Mae’n cymryd 4 wythnos i CThEF i roi’r newidiadau hyn i’ch cyfrif gwasanaethau asiant ar waith.
 update-contact-details.submitted.p2=Yn y cyfamser, bydd yr hen fanylion yn ymddangos ar eich cyfrif o hyd.
 update-contact-details.submitted.link=Dychwelyd i ‘Rheoli’r cyfrif’
+
+update-contact-details.apply-sa-code-changes.heading=A ydych chi am roi’r newidiadau hyn i’ch cod asiant ar gyfer Hunanasesiad ar waith?
+update-contact-details.apply-sa-code-changes.error.empty=Dewiswch ‘Iawn’ os ydych am roi’r newidiadau hyn i’ch cod asiant ar gyfer Hunanasesiad ar waith.
+
+update-contact-details.sa-code.heading=Beth yw’r cod asiant yr ydych yn ei ddefnyddio ar gyfer Hunanasesiad?
+update-contact-details.sa-code.hint=Cod 6 cymeriad yw hwn, sy’n cynnwys rhifau a llythrennau. Er enghraifft, A1234B neu 5678CD.
+update-contact-details.sa-code.p1=Os na allwch chi ddod o hyd i’r cod, dewiswch ‘Yn eich blaen heb god’.
+update-contact-details.sa-code.error.empty=Nodwch y cod asiant yr ydych yn ei ddefnyddio ar gyfer Hunanasesiad.
+update-contact-details.sa-code.error.invalid=Nodwch god asiant sy’n 6 chymeriad o hyd.
 
 #Cannot verify email
 cannotVerifyEmail.locked.title=We could not confirm your identity TBC
