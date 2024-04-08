@@ -43,8 +43,8 @@ case class UpdateAmlsJourney(status: AmlsStatus,
 
   val hasExistingAmls: Boolean = status match {
     case AmlsStatuses.NoAmlsDetailsNonUK => false
-    case AmlsStatuses.ValidAmlsNonUK => true
     case AmlsStatuses.NoAmlsDetailsUK => false
+    case AmlsStatuses.ValidAmlsNonUK => true
     case AmlsStatuses.ValidAmlsDetailsUK => true
     case AmlsStatuses.ExpiredAmlsDetailsUK => true
     case AmlsStatuses.PendingAmlsDetails => true
