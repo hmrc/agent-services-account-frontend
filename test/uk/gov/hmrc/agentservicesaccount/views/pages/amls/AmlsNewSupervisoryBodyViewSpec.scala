@@ -88,6 +88,7 @@ class AmlsNewSupervisoryBodyViewSpec extends BaseISpec {
 
       "display the correct page title" in {
         doc.title() mustBe "What’s the name of your supervisory body? - Agent services account - GOV.UK"
+        doc.select(".govuk-select").text mustBe "Association of Certified Chartered Accountant"
       }
     }
 
