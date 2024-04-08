@@ -70,25 +70,29 @@ govukButton: GovukButton
                     content = Text(msgs("update-contact-details.select-changes.business-name")),
                     value = "businessName",
                     id = Some("businessName"),
-                    name = Some("businessName")
+                    name = Some("businessName"),
+                    checked = form.data.contains("businessName")
                 ),
                 CheckboxItem(
                     content = Text(msgs("update-contact-details.select-changes.address")),
                     value = "address",
                     id =  Some("address"),
-                    name = Some("address")
+                    name = Some("address"),
+                    checked = form.data.contains("address")
                 ),
                 CheckboxItem(
                     content = Text(msgs("update-contact-details.select-changes.email")),
                     value = "email",
                     id = Some("email"),
-                    name = Some("email")
+                    name = Some("email"),
+                    checked = form.data.contains("email")
                 ),
                 CheckboxItem(
                     content = Text(msgs("update-contact-details.select-changes.telephone")),
                     value = "telephone",
                     id = Some("telephone"),
-                    name = Some("telephone")
+                    name = Some("telephone"),
+                    checked = form.data.contains("telephone")
                 )
             )
         ))

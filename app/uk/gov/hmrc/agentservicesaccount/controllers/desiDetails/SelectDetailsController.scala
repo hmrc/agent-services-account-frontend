@@ -62,7 +62,19 @@ class SelectDetailsController @Inject()(actions: Actions,
 
   def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     ifFeatureEnabledAndNoPendingChanges {
-      Ok(select_changes_view(SelectChangesForm.form)).toFuture
+      sessionCache.get[Set[String]](CURRENT_SELECTED_CHANGES).map {
+        case Some(data) => {
+          val savedAnswers: SelectChanges =
+            SelectChanges(
+              businessName = Some("businessName").filter(data.contains),
+              address = Some("address").filter(data.contains),
+              email = Some("email").filter(data.contains),
+              telephone = Some("telephone").filter(data.contains)
+            )
+          Ok(select_changes_view(SelectChangesForm.form.fill(savedAnswers)))
+        }
+        case _ => Ok(select_changes_view(SelectChangesForm.form))
+      }
     }
   }
 
