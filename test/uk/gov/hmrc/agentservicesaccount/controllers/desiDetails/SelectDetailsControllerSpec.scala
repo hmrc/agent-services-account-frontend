@@ -155,6 +155,7 @@ class SelectDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneAp
       val result: Future[Result] = selectDetailsController.onSubmit()(request)
       status(result) shouldBe OK
       contentAsString(result.futureValue) should include("There is a problem")
+      contentAsString(result.futureValue) should include("Tell us which contact details you want to change.")
       sessionCache.get(CURRENT_SELECTED_CHANGES).futureValue shouldBe None
     }
   }

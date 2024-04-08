@@ -21,7 +21,7 @@
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.button.Button
 @import uk.gov.hmrc.govukfrontend.views.html.components.{Checkboxes, Fieldset, Legend, Text, CheckboxItem}
 @import uk.gov.hmrc.hmrcfrontend.views.html.components.implicits._
-@import uk.gov.hmrc.govukfrontend.views.Aliases.Hint
+@import uk.gov.hmrc.govukfrontend.views.Aliases._
 @import uk.gov.hmrc.agentservicesaccount.models.SelectChanges
 
 @this(main: main, h1: h1,
@@ -36,7 +36,16 @@ govukButton: GovukButton
 @main(pageTitle = withErrorPrefix(form.hasErrors, msgs("update-contact-details.select-changes.title")), mimicBrowserBackLink = true, showSecondaryNav = false) {
 
     @if(form.hasErrors){
-        @govukErrorSummary(ErrorSummary().withFormErrorsAsText(form))
+        @govukErrorSummary(ErrorSummary(
+            errorList = Seq(
+                ErrorLink(
+                    href = Some("#businessName"),
+                    content = Text(msgs("update-contact-details.select-changes.error"))
+                )
+            ),
+            title = Text("There is a problem")
+            )
+        )
     }
 
     @formWithCSRF(action = desiDetails.routes.SelectDetailsController.onSubmit, 'id -> "input") {
@@ -50,6 +59,11 @@ govukButton: GovukButton
             )),
             hint = Some(Hint(
                 content = Text(msgs("update-contact-details.select-changes.hint")))),
+            errorMessage = if(form.hasErrors) {
+                Some(ErrorMessage(
+                    content = Text(msgs("update-contact-details.select-changes.error"))
+                ))
+            } else None,
             name = "Select Changes",
             items = Seq(
                 CheckboxItem(
