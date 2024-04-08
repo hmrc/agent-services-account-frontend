@@ -16,11 +16,14 @@
 
 package uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
 
-import play.api.mvc.Results.Redirect
+import play.api.mvc.Results.{NotFound, Redirect}
 import play.api.mvc.{Request, Result}
+import uk.gov.hmrc.agentservicesaccount.actions.AuthRequestWithAgentInfo
+import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.{DRAFT_NEW_CONTACT_DETAILS, routes}
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, DesignatoryDetails, OtherServices, SaChanges}
+import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendHeaderCarrierProvider
@@ -71,5 +74,24 @@ trait DesiDetailsJourneySupport {
     }
   }
 
+
+  def ifChangeContactDetailsFeatureEnabled(action: => Future[Result])(implicit appConfig: AppConfig): Future[Result] = {
+    if (appConfig.enableChangeContactDetails) action else Future.successful(NotFound)
+  }
+
+  def ifChangeContactFeatureEnabledAndNoPendingChanges(action: => Future[Result])
+                                         (implicit request: AuthRequestWithAgentInfo[_],
+                                          appConfig: AppConfig,
+                                          pcodRepository: PendingChangeOfDetailsRepository,
+                                          ec: ExecutionContext): Future[Result] = {
+    ifChangeContactDetailsFeatureEnabled {
+      pcodRepository.find(request.agentInfo.arn).flatMap {
+        case None => // no change is pending, we can proceed
+          action
+        case Some(_) => // there is a pending change, further changes are locked. Redirect to the base page
+          Future.successful(Redirect(routes.ContactDetailsController.showCurrentContactDetails))
+      }
+    }
+  }
 
 }

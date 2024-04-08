@@ -522,6 +522,10 @@ update-contact-details.submitted.link=Dychwelyd i ‘Rheoli’r cyfrif’
 update-contact-details.apply-sa-code-changes.heading=A ydych chi am roi’r newidiadau hyn i’ch cod asiant ar gyfer Hunanasesiad ar waith?
 update-contact-details.apply-sa-code-changes.error.empty=Dewiswch ‘Iawn’ os ydych am roi’r newidiadau hyn i’ch cod asiant ar gyfer Hunanasesiad ar waith.
 
+update-contact-details.apply-ct-code-changes.heading=A ydych chi am wneud y newidiadau hyn i’ch cod asiant ar gyfer Treth Gorfforaeth?
+update-contact-details.apply-ct-code-changes.error.empty=Dewiswch ‘Iawn’ os ydych am roi’r newidiadau hyn i’ch cod asiant ar gyfer Treth Gorfforaeth ar waith.
+
+
 update-contact-details.sa-code.heading=Beth yw’r cod asiant yr ydych yn ei ddefnyddio ar gyfer Hunanasesiad?
 update-contact-details.sa-code.hint=Cod 6 cymeriad yw hwn, sy’n cynnwys rhifau a llythrennau. Er enghraifft, A1234B neu 5678CD.
 update-contact-details.sa-code.p1=Os na allwch chi ddod o hyd i’r cod, dewiswch ‘Yn eich blaen heb god’.

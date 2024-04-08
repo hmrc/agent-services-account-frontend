@@ -80,10 +80,10 @@ GET        /manage-account/contact-details/enter-SA-code                  @uk.go
 POST       /manage-account/contact-details/enter-SA-code                  @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.EnterSACodeController.onSubmit
 GET        /manage-account/contact-details/continue-without-code          @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.EnterSACodeController.continueWithoutCode
 
-GET        /manage-account/contact-details/apply-code-CT                  @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.ApplyCTCodeChanges.showPage
-POST       /manage-account/contact-details/apply-code-CT                  @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.ApplyCTCodeChanges.onSubmit
-GET        /manage-account/contact-details/enter-CT-code                  @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.EnterCTCode.showPage
-POST       /manage-account/contact-details/enter-CT-code                  @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.EnterCTCode.onSubmit
+GET        /manage-account/contact-details/apply-code-CT                  @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.ApplyCTCodeChangesController.showPage
+POST       /manage-account/contact-details/apply-code-CT                  @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.ApplyCTCodeChangesController.onSubmit
+GET        /manage-account/contact-details/enter-CT-code                  @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.EnterCTCodeController.showPage
+POST       /manage-account/contact-details/enter-CT-code                  @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.EnterCTCodeController.onSubmit
 GET        /manage-account/contact-details/your-details                   @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.YourDetails.showPage
 POST       /manage-account/contact-details/your-details                   @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.YourDetails.onSubmit
 GET        /manage-account/contact-details/check-your-answers             @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.CheckYourAnswers.showPage

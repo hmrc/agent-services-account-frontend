@@ -519,6 +519,9 @@ update-contact-details.submitted.p1=We’ll carry out checks and update details 
 update-contact-details.submitted.p2=In the meantime, the old details will still show on your account.
 update-contact-details.submitted.link=Return to manage account
 
+update-contact-details.apply-ct-code-changes.heading=Do you want to apply these changes to your Corporation Tax agent code?
+update-contact-details.apply-ct-code-changes.error.empty=Select yes if you want to apply these changes to your Corporation Tax agent code.
+
 update-contact-details.apply-sa-code-changes.heading=Do you want to apply these changes to your Self Assessment agent code?
 update-contact-details.apply-sa-code-changes.error.empty=Select yes if you want to apply these changes to your Self Assessment agent code.
 

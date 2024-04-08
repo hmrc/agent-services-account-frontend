@@ -59,7 +59,7 @@ class EnterSACodeController @Inject()(
             formWithErrors => Future.successful(Ok(enterSaCodeView(formWithErrors))),
             saCode => {
               updateDraftDetails(_.copy(otherServices = desiDetails.otherServices.copy(saChanges = SaChanges(true, Some(SaUtr(saCode)))) )).map(_ =>
-                Redirect (uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.routes.ApplyCTCodeChanges.showPage))
+                Redirect (uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.routes.ApplyCTCodeChangesController.showPage))
             }
           )
       }
@@ -70,7 +70,7 @@ class EnterSACodeController @Inject()(
     ifFeatureEnabledAndNoPendingChanges {
       withUpdateDesiDetailsJourney { desiDetails =>
         updateDraftDetails(_.copy(otherServices = desiDetails.otherServices.copy(saChanges = SaChanges(false, None)) )).map(_ =>
-          Redirect (uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.routes.ApplyCTCodeChanges.showPage))
+          Redirect (uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.routes.ApplyCTCodeChangesController.showPage))
       }
     }
   }
