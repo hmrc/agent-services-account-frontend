@@ -30,7 +30,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, SuspensionDetails}
 import uk.gov.hmrc.agentservicesaccount.connectors.{AddressLookupConnector, AgentClientAuthorisationConnector, EmailVerificationConnector}
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup.{ConfirmedResponseAddress, ConfirmedResponseAddressDetails, Country, JourneyConfigV2}
-import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, DesiDetails, OtherServices, SaChanges}
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, DesignatoryDetails, OtherServices, SaChanges}
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.{CompletedEmail, VerificationStatusResponse, VerifyEmailRequest, VerifyEmailResponse}
 import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress, PendingChangeOfDetails}
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
@@ -72,7 +72,7 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
     )
   )
 
-  private val desiDetails = DesiDetails(agencyDetails, emptyOtherServices)
+  private val desiDetails = DesignatoryDetails(agencyDetails, emptyOtherServices)
 
   private val confirmedAddressResponse = ConfirmedResponseAddress(
     auditRef = "foo",
@@ -364,7 +364,7 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
       noPendingChangesInRepo()
       implicit val request = fakeRequest("POST")
       val newDetails = agencyDetails.copy(agencyName = Some("New and Improved Agency"))
-      sessionCache.put(DRAFT_NEW_CONTACT_DETAILS, DesiDetails(newDetails,emptyOtherServices)).futureValue
+      sessionCache.put(DRAFT_NEW_CONTACT_DETAILS, DesignatoryDetails(newDetails,emptyOtherServices)).futureValue
       val result = controller.submitCheckNewDetails()(request)
       status(result) shouldBe SEE_OTHER
       header("Location", result) shouldBe Some(routes.ContactDetailsController.showChangeSubmitted.url)

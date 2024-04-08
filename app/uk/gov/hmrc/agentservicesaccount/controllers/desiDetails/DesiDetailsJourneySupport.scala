@@ -20,7 +20,7 @@ import play.api.mvc.Results.Redirect
 import play.api.mvc.{Request, Result}
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.{DRAFT_NEW_CONTACT_DETAILS, routes}
-import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, DesiDetails, OtherServices, SaChanges}
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, DesignatoryDetails, OtherServices, SaChanges}
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendHeaderCarrierProvider
@@ -38,8 +38,8 @@ trait DesiDetailsJourneySupport {
     def headerCarrier(implicit request: Request[_]): HeaderCarrier = hc(request)
   }
 
-  def updateDraftDetails(f: DesiDetails => DesiDetails)(implicit request: Request[_], ec: ExecutionContext): Future[Unit] = for {
-    mDraftDetailsInSession <- sessionCache.get[DesiDetails](DRAFT_NEW_CONTACT_DETAILS)
+  def updateDraftDetails(f: DesignatoryDetails => DesignatoryDetails)(implicit request: Request[_], ec: ExecutionContext): Future[Unit] = for {
+    mDraftDetailsInSession <- sessionCache.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS)
     draftDetails <- mDraftDetailsInSession match {
       case Some(details) => Future.successful(details)
       // if there is no 'draft' new set of details in session, get a fresh copy of the current stored details
@@ -47,7 +47,7 @@ trait DesiDetailsJourneySupport {
         acaConnector.getAgencyDetails()
           .map(_.getOrElse(throw new RuntimeException("Current agency details are unavailable")))
           .map(agencyDetails=>
-            DesiDetails(
+            DesignatoryDetails(
               agencyDetails = agencyDetails,
               otherServices = OtherServices(
                 saChanges = SaChanges(
@@ -59,13 +59,13 @@ trait DesiDetailsJourneySupport {
                 ))))
     }
     updatedDraftDetails = f(draftDetails)
-    _ <- sessionCache.put[DesiDetails](DRAFT_NEW_CONTACT_DETAILS, updatedDraftDetails)
+    _ <- sessionCache.put[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS, updatedDraftDetails)
   } yield ()
 
-  def withUpdateDesiDetailsJourney(body: DesiDetails => Future[Result])(
+  def withUpdateDesiDetailsJourney(body: DesignatoryDetails => Future[Result])(
     implicit request: Request[_], ec: ExecutionContext): Future[Result] = {
-    sessionCache.get[DesiDetails](DRAFT_NEW_CONTACT_DETAILS).flatMap{
-      case Some(desiDetails: DesiDetails) => body(desiDetails)
+    sessionCache.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS).flatMap{
+      case Some(desiDetails: DesignatoryDetails) => body(desiDetails)
       case None =>
         Future successful Redirect(routes.AgentServicesController.manageAccount)
     }

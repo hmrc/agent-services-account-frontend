@@ -32,7 +32,7 @@ import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector}
 import uk.gov.hmrc.agentservicesaccount.controllers.DRAFT_NEW_CONTACT_DETAILS
-import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, DesiDetails, OtherServices, SaChanges}
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, DesignatoryDetails, OtherServices, SaChanges}
 import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress}
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
@@ -109,9 +109,9 @@ class EnterSACodeControllerSpec extends PlaySpec
     )
   )
 
-  private val desiDetailsWithEmptyOtherServices = DesiDetails(agencyDetails, emptyOtherServices)
+  private val desiDetailsWithEmptyOtherServices = DesignatoryDetails(agencyDetails, emptyOtherServices)
 
-  private val desiDetailsSaChangesOtherServices = DesiDetails(agencyDetails, saChangesOtherServices)
+  private val desiDetailsSaChangesOtherServices = DesignatoryDetails(agencyDetails, saChangesOtherServices)
 
 
   trait Setup {
@@ -185,9 +185,9 @@ class EnterSACodeControllerSpec extends PlaySpec
 
       mockPendingChangeOfDetailsRepository.find(arn) returns Future.successful(None)
 
-      mockSessionCache.get[DesiDetails](DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesiDetails]], *[Request[Any]]) returns Future.successful(Some(desiDetailsWithEmptyOtherServices))
+      mockSessionCache.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[Request[Any]]) returns Future.successful(Some(desiDetailsWithEmptyOtherServices))
 
-      mockSessionCache.put[DesiDetails](DRAFT_NEW_CONTACT_DETAILS, desiDetailsWithEmptyOtherServices.copy(otherServices = desiDetailsWithEmptyOtherServices.otherServices.copy(saChanges = SaChanges(true, Some(SaUtr("123456"))))))(*[Writes[DesiDetails]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
+      mockSessionCache.put[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS, desiDetailsWithEmptyOtherServices.copy(otherServices = desiDetailsWithEmptyOtherServices.otherServices.copy(saChanges = SaChanges(true, Some(SaUtr("123456"))))))(*[Writes[DesignatoryDetails]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
 
       mockView.apply(*[Form[String]])(*[Messages], *[Request[_]], *[AppConfig]) returns Html("")
 
@@ -209,9 +209,9 @@ class EnterSACodeControllerSpec extends PlaySpec
 
       mockPendingChangeOfDetailsRepository.find(arn) returns Future.successful(None)
 
-      mockSessionCache.get[DesiDetails](DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesiDetails]], *[Request[Any]]) returns Future.successful(Some(desiDetailsSaChangesOtherServices))
+      mockSessionCache.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[Request[Any]]) returns Future.successful(Some(desiDetailsSaChangesOtherServices))
 
-      mockSessionCache.put[DesiDetails](DRAFT_NEW_CONTACT_DETAILS, desiDetailsWithEmptyOtherServices)(*[Writes[DesiDetails]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
+      mockSessionCache.put[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS, desiDetailsWithEmptyOtherServices)(*[Writes[DesignatoryDetails]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
 
       mockView.apply(*[Form[String]])(*[Messages], *[Request[_]], *[AppConfig]) returns Html("")
 
@@ -235,9 +235,9 @@ class EnterSACodeControllerSpec extends PlaySpec
 
       mockPendingChangeOfDetailsRepository.find(arn) returns Future.successful(None)
 
-      mockSessionCache.get[DesiDetails](DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesiDetails]], *[Request[Any]]) returns Future.successful(Some(desiDetailsWithEmptyOtherServices))
+      mockSessionCache.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[Request[Any]]) returns Future.successful(Some(desiDetailsWithEmptyOtherServices))
 
-      mockSessionCache.put[DesiDetails](DRAFT_NEW_CONTACT_DETAILS, desiDetailsWithEmptyOtherServices.copy(otherServices = desiDetailsWithEmptyOtherServices.otherServices.copy(saChanges = SaChanges(true, None))))(*[Writes[DesiDetails]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
+      mockSessionCache.put[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS, desiDetailsWithEmptyOtherServices.copy(otherServices = desiDetailsWithEmptyOtherServices.otherServices.copy(saChanges = SaChanges(true, None))))(*[Writes[DesignatoryDetails]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
 
       mockView.apply(*[Form[String]])(*[Messages], *[Request[_]], *[AppConfig]) returns Html("")
 

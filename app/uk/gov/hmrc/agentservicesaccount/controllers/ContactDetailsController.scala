@@ -25,7 +25,7 @@ import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AddressLookupConnector, AgentClientAuthorisationConnector, EmailVerificationConnector}
 import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup._
-import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, DesiDetails, OtherServices, SaChanges}
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, DesignatoryDetails, OtherServices, SaChanges}
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.{Email, VerifyEmailRequest, VerifyEmailResponse}
 import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress, PendingChangeOfDetails}
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
@@ -75,8 +75,8 @@ class ContactDetailsController @Inject()(actions: Actions,
   }
 
   // utility function.
-  private def updateDraftDetails(f: DesiDetails => DesiDetails)(implicit request: Request[_]): Future[Unit] = for {
-    mDraftDetailsInSession <- sessionCache.get[DesiDetails](DRAFT_NEW_CONTACT_DETAILS)
+  private def updateDraftDetails(f: DesignatoryDetails => DesignatoryDetails)(implicit request: Request[_]): Future[Unit] = for {
+    mDraftDetailsInSession <- sessionCache.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS)
     draftDetails <- mDraftDetailsInSession match {
       case Some(details) => Future.successful(details)
       // if there is no 'draft' new set of details in session, get a fresh copy of the current stored details
@@ -84,7 +84,7 @@ class ContactDetailsController @Inject()(actions: Actions,
         acaConnector.getAgencyDetails()
           .map(_.getOrElse(throw new RuntimeException("Current agency details are unavailable")))
         .map(agencyDetails=>
-          DesiDetails(
+          DesignatoryDetails(
             agencyDetails = agencyDetails,
             otherServices = OtherServices(
               saChanges = SaChanges(
@@ -96,7 +96,7 @@ class ContactDetailsController @Inject()(actions: Actions,
               ))))
     }
     updatedDraftDetails = f(draftDetails)
-    _ <- sessionCache.put[DesiDetails](DRAFT_NEW_CONTACT_DETAILS, updatedDraftDetails)
+    _ <- sessionCache.put[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS, updatedDraftDetails)
   } yield ()
 
 
@@ -264,7 +264,7 @@ class ContactDetailsController @Inject()(actions: Actions,
 
   val showCheckNewDetails: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     ifFeatureEnabledAndNoPendingChanges {
-      sessionCache.get[DesiDetails](DRAFT_NEW_CONTACT_DETAILS).map {
+      sessionCache.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS).map {
         case Some(desiDetails) => Ok(check_updated_details(desiDetails.agencyDetails, request.agentInfo.isAdmin))
         case None => Redirect(routes.ContactDetailsController.showCurrentContactDetails)
       }
@@ -274,7 +274,7 @@ class ContactDetailsController @Inject()(actions: Actions,
   val submitCheckNewDetails: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     ifFeatureEnabledAndNoPendingChanges {
       val arn = request.agentInfo.arn
-      sessionCache.get[DesiDetails](DRAFT_NEW_CONTACT_DETAILS).flatMap {
+      sessionCache.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS).flatMap {
         case None => // graceful redirect in case of expired session data etc.
           Future.successful(Redirect(routes.ContactDetailsController.showCurrentContactDetails))
         case Some(desiDetails) => for {
