@@ -25,6 +25,7 @@ object UpdateDetailsForms {
   private val TelephoneNumberRegex = """^(\+44|0)\d{9,12}$""".r // remove all spaces from input before matching to ensure correct digit count
   private val EmailAddressRegex = """^.{1,252}@.{1,256}\..{1,256}$""".r
   private val SaCodeRegex = """^[A-Za-z0-9\,\.\'\-\/\ ]{6}$""".r
+  private val CtCodeRegex = """^[A-Za-z0-9\,\.\'\-\/\ ]{6}$""".r
 
   private val trimmedText = text.transform[String](x => x.trim, x => x)
 
@@ -68,5 +69,12 @@ object UpdateDetailsForms {
         .verifying("update-contact-details.apply-ct-code-changes.error.empty", _.isDefined)
         .transform(_.get, (b: Boolean) => Some(b))
     )(ApplyCtCodeChanges.apply)(ApplyCtCodeChanges.unapply)
+  )
+
+  val ctCodeForm: Form[String] = Form(
+    single("ctCode" -> trimmedText
+      .verifying("update-contact-details.ct-code.error.empty", _.nonEmpty)
+      .verifying("update-contact-details.ct-code.error.invalid", x => x.isEmpty || CtCodeRegex.matches(x.replace(" ","")))
+    )
   )
 }

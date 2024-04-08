@@ -532,6 +532,12 @@ update-contact-details.sa-code.p1=Os na allwch chi ddod o hyd i’r cod, dewiswc
 update-contact-details.sa-code.error.empty=Nodwch y cod asiant yr ydych yn ei ddefnyddio ar gyfer Hunanasesiad.
 update-contact-details.sa-code.error.invalid=Nodwch god asiant sy’n 6 chymeriad o hyd.
 
+update-contact-details.ct-code.heading=Beth yw’r cod asiant yr ydych yn ei ddefnyddio ar gyfer Treth Gorfforaeth?
+update-contact-details.ct-code.hint=Cod 6 cymeriad yw hwn, sy’n cynnwys rhifau a llythrennau. Er enghraifft, A1234B neu 5678CD.
+update-contact-details.ct-code.p1=Os na allwch chi ddod o hyd i’r cod, dewiswch ‘Yn eich blaen heb god’.
+update-contact-details.ct-code.error.empty=Nodwch god yr asiant yr ydych yn ei ddefnyddio ar gyfer Treth Gorfforaeth.
+update-contact-details.ct-code.error.invalid=Nodwch god asiant sy’n 6 chymeriad o hyd.
+
 #Cannot verify email
 cannotVerifyEmail.locked.title=We could not confirm your identity TBC
 cannotVerifyEmail.locked.p1=We cannot check your identity because you entered an incorrect verification code too many times. TBC

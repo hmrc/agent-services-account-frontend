@@ -18,16 +18,63 @@ package uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
 
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.agentservicesaccount.controllers.ToFuture
+import uk.gov.hmrc.agentservicesaccount.actions.Actions
+import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
+import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.CtChanges
+import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
+import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.contact_details.enter_ct_code
+import uk.gov.hmrc.domain.CtUtr
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject.{Inject, Singleton}
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class EnterCTCodeController @Inject()(cc: MessagesControllerComponents) extends FrontendController(cc) with I18nSupport {
+class EnterCTCodeController @Inject()(
+                                       actions: Actions,
+                                       val sessionCache: SessionCacheService,
+                                       val acaConnector: AgentClientAuthorisationConnector,
+                                       enterCtCodeView: enter_ct_code
+                                     )(implicit appConfig: AppConfig,
+                                       cc: MessagesControllerComponents,
+                                       ec: ExecutionContext,
+                                       pcodRepository: PendingChangeOfDetailsRepository)
+  extends FrontendController(cc) with DesiDetailsJourneySupport with I18nSupport {
 
-  def showPage: Action[AnyContent] = Action.async { _ => Ok("").toFuture }
+  def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
+    ifChangeContactFeatureEnabledAndNoPendingChanges {
+      Future.successful(Ok(enterCtCodeView(UpdateDetailsForms.ctCodeForm)))
+    }
+  }
 
-  def onSubmit: Action[AnyContent] = Action.async { _ => Ok("").toFuture }
+  def onSubmit: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
+    ifChangeContactFeatureEnabledAndNoPendingChanges {
+      withUpdateDesiDetailsJourney { desiDetails =>
+        UpdateDetailsForms.ctCodeForm
+          .bindFromRequest()
+          .fold(
+            formWithErrors => Future.successful(Ok(enterCtCodeView(formWithErrors))),
+            saCode => {
+              updateDraftDetails(_.copy(otherServices = desiDetails.otherServices.copy(ctChanges = CtChanges(true, Some(CtUtr(saCode)))) )).map(_ =>
+                //TODO WG - replace to correct route
+                Redirect (uk.gov.hmrc.agentservicesaccount.controllers.routes.ContactDetailsController.showChangeTelephoneNumber))
+            }
+          )
+      }
+    }
+  }
+
+  def continueWithoutCtCode: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
+    ifChangeContactFeatureEnabledAndNoPendingChanges {
+      withUpdateDesiDetailsJourney { desiDetails =>
+        updateDraftDetails(_.copy(otherServices = desiDetails.otherServices.copy(ctChanges = CtChanges(false, None)) )).map(_ =>
+          //TODO WG - replace to correct route
+          Redirect (uk.gov.hmrc.agentservicesaccount.controllers.routes.ContactDetailsController.showChangeTelephoneNumber))
+      }
+    }
+  }
 }
 

@@ -66,7 +66,7 @@ class EnterSACodeController @Inject()(
     }
   }
 
-  def continueWithoutCode: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
+  def continueWithoutSaCode: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     ifFeatureEnabledAndNoPendingChanges {
       withUpdateDesiDetailsJourney { desiDetails =>
         updateDraftDetails(_.copy(otherServices = desiDetails.otherServices.copy(saChanges = SaChanges(false, None)) )).map(_ =>
