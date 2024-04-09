@@ -546,13 +546,13 @@ update-contact-details.apply-ct-code-changes.error.empty=Select yes if you want 
 update-contact-details.apply-sa-code-changes.heading=Do you want to apply these changes to your Self Assessment agent code?
 update-contact-details.apply-sa-code-changes.error.empty=Select yes if you want to apply these changes to your Self Assessment agent code.
 
-update-contact-details.sa-code.heading=What's the agent code you use for Self Assessment?
+update-contact-details.sa-code.heading=What''s the agent code you use for Self Assessment?
 update-contact-details.sa-code.hint=This is a 6-character code made up of numbers and letters. For example, A1234B or 5678CD.
 update-contact-details.sa-code.p1=If you cannot find the code, select 'Continue without code'.
 update-contact-details.sa-code.error.empty=Enter the agent code you use for Self Assessment.
 update-contact-details.sa-code.error.invalid=Enter an agent code that is 6 characters long.
 
-update-contact-details.ct-code.heading=What's the agent code you use for Corporation Tax?
+update-contact-details.ct-code.heading=What''s the agent code you use for Corporation Tax?
 update-contact-details.ct-code.hint=This is a 6-character code made up of numbers and letters. For example, A1234B or 5678CD.
 update-contact-details.ct-code.p1=If you cannot find the code, select 'Continue without code'.
 update-contact-details.ct-code.error.empty=Enter the agent code you use for Corporation Tax.

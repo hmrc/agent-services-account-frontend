@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.agentservicesaccount.views.pages.contactDetails
+package uk.gov.hmrc.agentservicesaccount.views.pages.desi_details
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.{Document, Element}
@@ -23,23 +23,23 @@ import play.api.data.Form
 import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.test.FakeRequest
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms.saCodeForm
+import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms.ctCodeForm
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details._
 
-class EnterSaCodePageSpec extends BaseISpec {
+class EnterCtCodePageSpec extends BaseISpec {
 
   implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
   implicit val lang: Lang = Lang("en")
-  val view: enter_sa_code  = app.injector.instanceOf[enter_sa_code]
+  val view: enter_ct_code  = app.injector.instanceOf[enter_ct_code]
   implicit val messages: Messages = MessagesImpl(lang, messagesApi)
 
-  val form: Form[String] = saCodeForm
-  val formWithNameErrors: Form[String] = form.withError(key ="saCode", message = Messages("update-contact-details.sa-code.error.empty"))
+  val form: Form[String] = ctCodeForm
+  val formWithNameErrors: Form[String] = form.withError(key ="ctCode", message = Messages("update-contact-details.ct-code.error.empty"))
 
 
-  "enter_sa_code" when {
+  "enter_ct_code" when {
 
     def testServiceStaticContent(doc: Document): Unit = {
 
@@ -60,7 +60,7 @@ class EnterSaCodePageSpec extends BaseISpec {
     def testPageStaticContent(doc: Document): Unit = {
 
       "have the correct h1 heading and introduction" in {
-        doc.select("h1").first.text() mustBe "What's the agent code you use for Self Assessment?"
+        doc.select("h1").first.text() mustBe "What's the agent code you use for Corporation Tax?"
       }
 
       "have the correct hint" in {
@@ -86,7 +86,7 @@ class EnterSaCodePageSpec extends BaseISpec {
       testPageStaticContent(doc)
 
       "display the correct page title" in {
-        doc.title() mustBe "What's the agent code you use for Self Assessment? - Agent services account - GOV.UK"
+        doc.title() mustBe "What's the agent code you use for Corporation Tax? - Agent services account - GOV.UK"
       }
     }
 
@@ -100,13 +100,13 @@ class EnterSaCodePageSpec extends BaseISpec {
       testPageStaticContent(doc)
 
       "display error prefix on page title" in {
-        doc.title() mustBe "Error: What's the agent code you use for Self Assessment? - Agent services account - GOV.UK"
+        doc.title() mustBe "Error: What's the agent code you use for Corporation Tax? - Agent services account - GOV.UK"
       }
 
       "display correct error summary link" in {
         val errorLink: Element = doc.select(".govuk-error-summary__list a").first()
-        errorLink.text() mustBe "Enter the agent code you use for Self Assessment."
-        errorLink.attr("href") mustBe "#saCode"
+        errorLink.text() mustBe "Enter the agent code you use for Corporation Tax."
+        errorLink.attr("href") mustBe "#ctCode"
       }
 
       "display error styling on form" in {
@@ -114,7 +114,7 @@ class EnterSaCodePageSpec extends BaseISpec {
       }
 
       "display error message on form" in {
-        doc.select(".govuk-error-message").text() mustBe "Error: Enter the agent code you use for Self Assessment."
+        doc.select(".govuk-error-message").text() mustBe "Error: Enter the agent code you use for Corporation Tax."
       }
     }
 
