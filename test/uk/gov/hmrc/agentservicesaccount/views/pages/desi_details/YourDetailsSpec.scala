@@ -24,7 +24,7 @@ import play.api.i18n._
 import play.api.test.FakeRequest
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms.yourDetailsForm
-import uk.gov.hmrc.agentservicesaccount.models.YourDetails
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.YourDetails
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details.your_details
 

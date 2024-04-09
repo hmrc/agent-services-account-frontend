@@ -31,8 +31,8 @@ import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, SuspensionDetails}
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.DRAFT_SUBMITTED_BY
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.routes
-import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, OtherServices, SaChanges}
-import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress, PendingChangeOfDetails, YourDetails}
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, OtherServices, SaChanges, YourDetails}
+import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress, PendingChangeOfDetails}
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.support.UnitSpec

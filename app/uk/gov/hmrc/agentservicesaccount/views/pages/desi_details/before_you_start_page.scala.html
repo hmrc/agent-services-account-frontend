@@ -15,7 +15,7 @@
  *@
 
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-
+@import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.routes
 @import uk.gov.hmrc.agentservicesaccount.views.html._
 @import uk.gov.hmrc.agentservicesaccount.views.html.components._
 
@@ -51,5 +51,5 @@
     @p("update-contact-details.start-page.body.p4")
     @p("update-contact-details.start-page.body.p5")
 
-    @govukButton(Button(content = Text(msgs("common.continue")), classes = "govuk-!-margin-top-5", href = Some("/"))) @* TODO - link to 'Which details do you want to change' page *@
+    @govukButton(Button(content = Text(msgs("common.continue")), classes = "govuk-!-margin-top-5", href = Some(routes.SelectDetailsController.showPage.url)))
 }

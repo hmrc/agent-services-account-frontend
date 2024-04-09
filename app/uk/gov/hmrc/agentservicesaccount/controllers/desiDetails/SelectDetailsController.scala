@@ -24,7 +24,7 @@ import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.NextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.controllers.{CURRENT_SELECTED_CHANGES, PREVIOUS_SELECTED_CHANGES, ToFuture, desiDetails}
 import uk.gov.hmrc.agentservicesaccount.forms.SelectChangesForm
-import uk.gov.hmrc.agentservicesaccount.models.SelectChanges
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.SelectChanges
 import uk.gov.hmrc.agentservicesaccount.repository.{PendingChangeOfDetailsRepository, UpdateContactDetailsJourneyRepository}
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details.select_changes

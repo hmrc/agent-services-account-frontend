@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.agentservicesaccount.models
+package uk.gov.hmrc.agentservicesaccount.models.desiDetails
 
-case class SelectChanges (businessName: Option[String], address: Option[String],  email: Option[String], telephone: Option[String]) {
-
-  def atLeastOneSelected: Boolean = businessName.nonEmpty || address.nonEmpty || email.nonEmpty || telephone.nonEmpty
-
-  def pagesSelected: Set[String] = Set(businessName, address, email, telephone).filter(_.nonEmpty).map(_.get)
+import play.api.libs.json.{Format, Json}
+case class YourDetails(fullName: String,
+                       telephone: String)
+object YourDetails {
+  implicit val format: Format[YourDetails] = Json.format[YourDetails]
 }
-
