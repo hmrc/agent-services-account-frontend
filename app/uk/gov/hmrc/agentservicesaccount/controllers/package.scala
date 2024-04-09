@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.agentservicesaccount
 
+import uk.gov.hmrc.agentservicesaccount.models.YourDetails
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.DesignatoryDetails
 import uk.gov.hmrc.mongo.cache.DataKey
 
@@ -39,6 +40,7 @@ package object controllers {
 
   // when the user changes their own details, this is a 'draft' of the set of updated details before the user sends the update request
   val DRAFT_NEW_CONTACT_DETAILS: DataKey[DesignatoryDetails] = DataKey("updatedContactDetails")
+  val DRAFT_SUBMITTED_BY: DataKey[YourDetails] = DataKey("submittedBy")
 
   // when the user chooses which details to change, this is set of each detail they have selected
   val CURRENT_SELECTED_CHANGES: DataKey[Set[String]] = DataKey("currentSelectedChanges")

@@ -18,13 +18,15 @@ package uk.gov.hmrc.agentservicesaccount.forms
 
 import play.api.data.Form
 import play.api.data.Forms.{boolean, mapping, optional, single, text}
-import uk.gov.hmrc.agentservicesaccount.models.ApplySaCodeChanges
+import uk.gov.hmrc.agentservicesaccount.models.{ApplySaCodeChanges, YourDetails}
 
 object UpdateDetailsForms {
   private val BusinessNameRegex = """^[A-Za-z0-9\,\.\'\-\/\ ]{2,200}$""".r
   private val TelephoneNumberRegex = """^(\+44|0)\d{9,12}$""".r // remove all spaces from input before matching to ensure correct digit count
   private val EmailAddressRegex = """^.{1,252}@.{1,256}\..{1,256}$""".r
   private val SaCodeRegex = """^[A-Za-z0-9\,\.\'\-\/\ ]{6}$""".r
+  private val InternationalTelephoneRegex = """^[0-9 +()]{0,25}$""".r
+  private val NameRegex = "^[A-Za-z0-9 \\-,.&'\\/]*$".r
 
   private val trimmedText = text.transform[String](x => x.trim, x => x)
 
@@ -60,5 +62,17 @@ object UpdateDetailsForms {
       .verifying("update-contact-details.sa-code.error.empty", _.nonEmpty)
       .verifying("update-contact-details.sa-code.error.invalid", x => x.isEmpty || SaCodeRegex.matches(x.replace(" ","")))
     )
+  )
+
+  val yourDetailsForm: Form[YourDetails] = Form(
+    mapping(
+      "fullName" -> trimmedText
+        .verifying("update-contact-details.your-details.name.error.empty", _.nonEmpty)
+        .verifying("update-contact-details.your-details.name.error.invalid", x => x.isEmpty || NameRegex.matches(x.replace(" ","")))
+        .verifying("update-contact-details.your-details.name.error.tooLong", x => x.isEmpty || x.length < 41),
+      "telephone" -> trimmedText
+        .verifying("update-contact-details.your-details.telephone.error.empty", _.nonEmpty)
+        .verifying("update-contact-details.your-details.telephone.error.invalid", x => x.isEmpty || InternationalTelephoneRegex.matches(x.replace(" ","")))
+    )(YourDetails.apply)(YourDetails.unapply)
   )
 }

@@ -23,7 +23,7 @@ import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthRequestWithAgentIn
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
 import uk.gov.hmrc.agentservicesaccount.controllers._
-import uk.gov.hmrc.agentservicesaccount.models.PendingChangeOfDetails
+import uk.gov.hmrc.agentservicesaccount.models.{PendingChangeOfDetails, YourDetails}
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details._
@@ -76,13 +76,15 @@ class CheckYourAnswersController @Inject()(actions: Actions,
         case None => // graceful redirect in case of expired session data etc.
           Future.successful(Redirect(desiDetails.routes.ContactDetailsController.showCurrentContactDetails))
         case Some(details) => for {
+          submittedBy <- sessionCache.get[YourDetails](DRAFT_SUBMITTED_BY)
           oldContactDetails <- CurrentAgencyDetails.get(acaConnector)
           pendingChange = PendingChangeOfDetails(
             arn = arn,
             oldDetails = oldContactDetails,
             newDetails = details.agencyDetails,
             otherServices = details.otherServices,
-            timeSubmitted = Instant.now()
+            timeSubmitted = Instant.now(),
+            submittedBy = submittedBy.getOrElse(throw new RuntimeException("Cannot submit without submittedBy details"))
           )
           //
           // TODO actual connector call to submit the details goes here...
