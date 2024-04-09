@@ -36,16 +36,16 @@ import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, Designato
 import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress}
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details.enter_sa_code
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details.enter_ct_code
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve._
-import uk.gov.hmrc.domain.SaUtr
+import uk.gov.hmrc.domain.CtUtr
 import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class EnterSACodeControllerSpec extends PlaySpec
+class EnterCTCodeControllerSpec extends PlaySpec
   with DefaultAwaitTimeout
   with IdiomaticMockito
   with ArgumentMatchersSugar{
@@ -98,20 +98,20 @@ class EnterSACodeControllerSpec extends PlaySpec
     )
   )
 
-  private val saChangesOtherServices = OtherServices(
+  private val ctChangesOtherServices = OtherServices(
     saChanges = SaChanges(
-      applyChanges = true,
+      applyChanges = false,
       saAgentReference = None
     ),
     ctChanges = CtChanges(
-      applyChanges = false,
+      applyChanges = true,
       ctAgentReference = None
     )
   )
 
   private val desiDetailsWithEmptyOtherServices = DesignatoryDetails(agencyDetails, emptyOtherServices)
 
-  private val desiDetailsSaChangesOtherServices = DesignatoryDetails(agencyDetails, saChangesOtherServices)
+  private val desiDetailsSaChangesOtherServices = DesignatoryDetails(agencyDetails, ctChangesOtherServices)
 
 
   trait Setup {
@@ -127,12 +127,12 @@ class EnterSACodeControllerSpec extends PlaySpec
       new Actions(mockAgentClientAuthorisationConnector, mockAgentAssuranceConnector, authActions, actionBuilder)
 
     protected val mockPendingChangeOfDetailsRepository = mock[PendingChangeOfDetailsRepository]
-    protected val mockView: enter_sa_code = mock[enter_sa_code]
+    protected val mockView: enter_ct_code = mock[enter_ct_code]
     protected val mockSessionCache: SessionCacheService = mock[SessionCacheService]
     protected val mockAcaConnector: AgentClientAuthorisationConnector = mock[AgentClientAuthorisationConnector]
     protected val cc: MessagesControllerComponents = stubMessagesControllerComponents()
 
-    object TestController extends EnterSACodeController(mockActions, mockSessionCache, mockAcaConnector, mockView, mockPendingChangeOfDetailsRepository)(mockAppConfig, cc, ec)
+    object TestController extends EnterCTCodeController(mockActions, mockSessionCache, mockAcaConnector, mockView)(mockAppConfig, cc, ec, mockPendingChangeOfDetailsRepository)
   }
 
   "showPage" should {
@@ -187,15 +187,15 @@ class EnterSACodeControllerSpec extends PlaySpec
 
       mockSessionCache.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[Request[Any]]) returns Future.successful(Some(desiDetailsWithEmptyOtherServices))
 
-      mockSessionCache.put[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS, desiDetailsWithEmptyOtherServices.copy(otherServices = desiDetailsWithEmptyOtherServices.otherServices.copy(saChanges = SaChanges(true, Some(SaUtr("123456"))))))(*[Writes[DesignatoryDetails]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
+      mockSessionCache.put[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS, desiDetailsWithEmptyOtherServices.copy(otherServices = desiDetailsWithEmptyOtherServices.otherServices.copy(ctChanges = CtChanges(true, Some(CtUtr("123456"))))))(*[Writes[DesignatoryDetails]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
 
       mockView.apply(*[Form[String]])(*[Messages], *[Request[_]], *[AppConfig]) returns Html("")
 
       val result: Future[Result] = TestController.onSubmit(
-        FakeRequest("POST", "/").withFormUrlEncodedBody("saCode" -> "123456"))
+        FakeRequest("POST", "/").withFormUrlEncodedBody("ctCode" -> "123456"))
 
       status(result) mustBe SEE_OTHER
-      Helpers.redirectLocation(result).get mustBe "/agent-services-account/manage-account/contact-details/apply-code-CT"
+      Helpers.redirectLocation(result).get mustBe "/agent-services-account/manage-account/contact-details/your-details"
     }
 
     "return 303 SEE_OTHER and DO NOT store data for continueWithoutCode " in new Setup {
@@ -215,11 +215,11 @@ class EnterSACodeControllerSpec extends PlaySpec
 
       mockView.apply(*[Form[String]])(*[Messages], *[Request[_]], *[AppConfig]) returns Html("")
 
-      val result: Future[Result] = TestController.continueWithoutSaCode(
+      val result: Future[Result] = TestController.continueWithoutCtCode(
         FakeRequest("GET", "/").withFormUrlEncodedBody("body" -> ""))
 
       status(result) mustBe SEE_OTHER
-      Helpers.redirectLocation(result).get mustBe "/agent-services-account/manage-account/contact-details/apply-code-CT"
+      Helpers.redirectLocation(result).get mustBe "/agent-services-account/manage-account/contact-details/your-details"
     }
 
 
@@ -237,7 +237,7 @@ class EnterSACodeControllerSpec extends PlaySpec
 
       mockSessionCache.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[Request[Any]]) returns Future.successful(Some(desiDetailsWithEmptyOtherServices))
 
-      mockSessionCache.put[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS, desiDetailsWithEmptyOtherServices.copy(otherServices = desiDetailsWithEmptyOtherServices.otherServices.copy(saChanges = SaChanges(true, None))))(*[Writes[DesignatoryDetails]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
+      mockSessionCache.put[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS, desiDetailsWithEmptyOtherServices.copy(otherServices = desiDetailsWithEmptyOtherServices.otherServices.copy(ctChanges = CtChanges(true, None))))(*[Writes[DesignatoryDetails]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
 
       mockView.apply(*[Form[String]])(*[Messages], *[Request[_]], *[AppConfig]) returns Html("")
 

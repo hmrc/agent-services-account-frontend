@@ -17,14 +17,15 @@
 package uk.gov.hmrc.agentservicesaccount.forms
 
 import play.api.data.Form
-import play.api.data.Forms.{boolean, mapping, optional, single, text}
-import uk.gov.hmrc.agentservicesaccount.models.{ApplySaCodeChanges, YourDetails}
+import play.api.data.Forms._
+import uk.gov.hmrc.agentservicesaccount.models.{ApplyCtCodeChanges, ApplySaCodeChanges, YourDetails}
 
 object UpdateDetailsForms {
   private val BusinessNameRegex = """^[A-Za-z0-9\,\.\'\-\/\ ]{2,200}$""".r
   private val TelephoneNumberRegex = """^(\+44|0)\d{9,12}$""".r // remove all spaces from input before matching to ensure correct digit count
   private val EmailAddressRegex = """^.{1,252}@.{1,256}\..{1,256}$""".r
   private val SaCodeRegex = """^[A-Za-z0-9\,\.\'\-\/\ ]{6}$""".r
+  private val CtCodeRegex = """^[A-Za-z0-9\,\.\'\-\/\ ]{6}$""".r
   private val InternationalTelephoneRegex = """^[0-9 +()]{0,25}$""".r
   private val NameRegex = "^[A-Za-z0-9 \\-,.&'\\/]*$".r
 
@@ -74,5 +75,20 @@ object UpdateDetailsForms {
         .verifying("update-contact-details.your-details.telephone.error.empty", _.nonEmpty)
         .verifying("update-contact-details.your-details.telephone.error.invalid", x => x.isEmpty || InternationalTelephoneRegex.matches(x.replace(" ","")))
     )(YourDetails.apply)(YourDetails.unapply)
+  )
+
+  val applyCtCodeChangesForm: Form[ApplyCtCodeChanges] = Form(
+    mapping(
+      "applyChanges" -> optional(boolean)
+        .verifying("update-contact-details.apply-ct-code-changes.error.empty", _.isDefined)
+        .transform(_.get, (b: Boolean) => Some(b))
+    )(ApplyCtCodeChanges.apply)(ApplyCtCodeChanges.unapply)
+  )
+
+  val ctCodeForm: Form[String] = Form(
+    single("ctCode" -> trimmedText
+      .verifying("update-contact-details.ct-code.error.empty", _.nonEmpty)
+      .verifying("update-contact-details.ct-code.error.invalid", x => x.isEmpty || CtCodeRegex.matches(x.replace(" ","")))
+    )
   )
 }
