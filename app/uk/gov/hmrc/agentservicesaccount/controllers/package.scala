@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,6 +39,10 @@ package object controllers {
 
   // when the user changes their own details, this is a 'draft' of the set of updated details before the user sends the update request
   val DRAFT_NEW_CONTACT_DETAILS: DataKey[DesignatoryDetails] = DataKey("updatedContactDetails")
+
+  // when the user chooses which details to change, this is set of each detail they have selected
+  val CURRENT_SELECTED_CHANGES: DataKey[Set[String]] = DataKey("currentSelectedChanges")
+  val PREVIOUS_SELECTED_CHANGES: DataKey[Set[String]] = DataKey("previousSelectedChanges")
 
   // after an email verification request has been sent, this value is set to keep track of which address was being verified
   val EMAIL_PENDING_VERIFICATION: DataKey[String] = DataKey("emailPendingVerification")

@@ -25,7 +25,6 @@ class NewAmlsSupervisoryBodyFormSpec extends AnyWordSpec with Matchers {
 
   "NewAmlsSupervisoryBodyForm binding" should {
     "succeed when valid data provided" in {
-
       val data = Map(
         "body" -> "ACCA"
       )
@@ -34,7 +33,6 @@ class NewAmlsSupervisoryBodyFormSpec extends AnyWordSpec with Matchers {
     }
 
     "generate error when nothing entered for UK agent" in {
-
       val data = Map(
         "body" -> ""
       )
@@ -42,13 +40,11 @@ class NewAmlsSupervisoryBodyFormSpec extends AnyWordSpec with Matchers {
       val result = NewAmlsSupervisoryBodyForm.form(amlsBodies)(isUk = true).bind(data)
 
       result.value shouldBe None
-
       result.errors.size shouldBe 1
       result.errors.head.message shouldBe "amls.new-supervisory-body.error"
     }
 
     "generate error when invalid entry for UK agent" in {
-
       val data = Map(
         "body" -> "%^$"
       )
@@ -56,13 +52,11 @@ class NewAmlsSupervisoryBodyFormSpec extends AnyWordSpec with Matchers {
       val result = NewAmlsSupervisoryBodyForm.form(amlsBodies)(isUk = true).bind(data)
 
       result.value shouldBe None
-
       result.errors.size shouldBe 1
       result.errors.head.message shouldBe "amls.new-supervisory-body.error"
     }
 
     "accept for overseas agent" in {
-
       val data = Map(
         "body" -> "OS AMLS"
       )
@@ -70,11 +64,9 @@ class NewAmlsSupervisoryBodyFormSpec extends AnyWordSpec with Matchers {
       val result = NewAmlsSupervisoryBodyForm.form(amlsBodies)(isUk = false).bind(data)
 
       result.value shouldBe Some("OS AMLS")
-
     }
 
     "generate error when nothing entered for overseas agent" in {
-
       val data = Map(
         "body" -> ""
       )
@@ -82,13 +74,11 @@ class NewAmlsSupervisoryBodyFormSpec extends AnyWordSpec with Matchers {
       val result = NewAmlsSupervisoryBodyForm.form(amlsBodies)(isUk = false).bind(data)
 
       result.value shouldBe None
-
       result.errors.size shouldBe 1
       result.errors.head.message shouldBe "amls.new-supervisory-body.error"
     }
 
     "generate error when invalid characters are entered for overseas agent" in {
-
       val data = Map(
         "body" -> "&%$"
       )
@@ -96,13 +86,11 @@ class NewAmlsSupervisoryBodyFormSpec extends AnyWordSpec with Matchers {
       val result = NewAmlsSupervisoryBodyForm.form(amlsBodies)(isUk = false).bind(data)
 
       result.value shouldBe None
-
       result.errors.size shouldBe 1
       result.errors.head.message shouldBe "amls.new-supervisory-body.error.os.regex"
     }
 
     "generate error when too many characters are entered for overseas agent" in {
-
       val data = Map(
         "body" -> new scala.util.Random().alphanumeric.take(101).mkString
       )
@@ -110,10 +98,8 @@ class NewAmlsSupervisoryBodyFormSpec extends AnyWordSpec with Matchers {
       val result = NewAmlsSupervisoryBodyForm.form(amlsBodies)(isUk = false).bind(data)
 
       result.value shouldBe None
-
       result.errors.size shouldBe 1
       result.errors.head.message shouldBe "amls.new-supervisory-body.error.os.max-length"
     }
   }
-
 }

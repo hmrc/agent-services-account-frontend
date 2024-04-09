@@ -1,5 +1,5 @@
 @*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,25 +16,28 @@
 
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
+@import uk.gov.hmrc.govukfrontend.views.html.components._
 @import uk.gov.hmrc.agentservicesaccount.controllers.routes
+@import uk.gov.hmrc.govukfrontend.views.html.components.Text
 
 @this(
-    main: main,
-    h1: h1, h2: h2, p: p
+        main: main,
+        h2: h2, p: p, a: a,
+        govukPanel: GovukPanel
 )
 
 @()(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
 
-@main(
-    pageTitle = msgs("cannotVerifyEmail.locked.title"),
-    backLinkHref = Some(routes.ContactDetailsController.showCheckNewDetails.url),
-    showSecondaryNav = false
-) {
+@main(pageTitle = msgs("update-contact-details.submitted.title")) {
 
-    @h1("cannotVerifyEmail.locked.title")
-    @p("cannotVerifyEmail.locked.p1")
-    @p("cannotVerifyEmail.locked.p2")
-    @h2("cannotVerifyEmail.locked.h2")
-    @p("cannotVerifyEmail.locked.p3")
-    @p(msgs("cannotVerifyEmail.locked.p4", routes.ContactDetailsController.showChangeEmailAddress.url))
+    @govukPanel(
+        Panel(
+            title = Text(msgs("update-contact-details.submitted.title"))
+        )
+    )
+
+    @h2("update-contact-details.submitted.h2")
+    @p("update-contact-details.submitted.p1")
+    @p("update-contact-details.submitted.p2")
+    @a("update-contact-details.submitted.link", href = routes.AgentServicesController.manageAccount.url)
 }

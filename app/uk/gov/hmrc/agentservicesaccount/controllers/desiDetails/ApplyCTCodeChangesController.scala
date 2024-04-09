@@ -24,7 +24,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class EnterCTCode @Inject()(cc: MessagesControllerComponents) extends FrontendController(cc) with I18nSupport {
+class ApplyCTCodeChangesController @Inject()(cc: MessagesControllerComponents) extends FrontendController(cc) with I18nSupport {
 
   def showPage: Action[AnyContent] = Action.async { _ => Ok("").toFuture }
 
