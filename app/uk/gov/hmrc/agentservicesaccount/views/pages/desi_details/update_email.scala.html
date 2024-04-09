@@ -1,5 +1,5 @@
 @*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,9 @@
 
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
-@import uk.gov.hmrc.govukfrontend.views.html.components.{GovukButton, GovukInput, GovukFieldset}
 @import uk.gov.hmrc.govukfrontend.views.html.components._
-@import uk.gov.hmrc.agentservicesaccount.controllers.routes
-@import uk.gov.hmrc.govukfrontend.views.html.components.{Input, Text, Label}
 @import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
+@import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
 @import uk.gov.hmrc.hmrcfrontend.views.Implicits.RichErrorSummary
 
 @this(
@@ -39,7 +37,7 @@
 
 @main(
     pageTitle = withErrorPrefix(form.hasErrors, msgs("update-contact-details.email.heading")),
-    backLinkHref = Some(routes.ContactDetailsController.showCheckNewDetails.url),
+    backLinkHref = Some(desiDetails.routes.CheckYourAnswersController.showPage.url),
     showSecondaryNav = false
 ) {
 
@@ -47,7 +45,7 @@
         @govukErrorSummary(ErrorSummary().withFormErrorsAsText(form))
     }
 
-    @formWithCSRF(action = routes.ContactDetailsController.submitChangeEmailAddress) {
+    @formWithCSRF(action = desiDetails.routes.ContactDetailsController.submitChangeEmailAddress) {
         @govukInput(Input(
             label = Label(
                 classes = "govuk-label--l",

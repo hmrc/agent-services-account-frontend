@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ package uk.gov.hmrc.agentservicesaccount.forms
 import play.api.data.Form
 import play.api.data.Forms.{boolean, mapping, optional, single, text}
 import uk.gov.hmrc.agentservicesaccount.models.{ApplyCtCodeChanges, ApplySaCodeChanges}
+import uk.gov.hmrc.agentservicesaccount.models.{ApplySaCodeChanges, YourDetails}
 
 object UpdateDetailsForms {
   private val BusinessNameRegex = """^[A-Za-z0-9\,\.\'\-\/\ ]{2,200}$""".r
@@ -26,6 +27,8 @@ object UpdateDetailsForms {
   private val EmailAddressRegex = """^.{1,252}@.{1,256}\..{1,256}$""".r
   private val SaCodeRegex = """^[A-Za-z0-9\,\.\'\-\/\ ]{6}$""".r
   private val CtCodeRegex = """^[A-Za-z0-9\,\.\'\-\/\ ]{6}$""".r
+  private val InternationalTelephoneRegex = """^[0-9 +()]{0,25}$""".r
+  private val NameRegex = "^[A-Za-z0-9 \\-,.&'\\/]*$".r
 
   private val trimmedText = text.transform[String](x => x.trim, x => x)
 
@@ -61,6 +64,18 @@ object UpdateDetailsForms {
       .verifying("update-contact-details.sa-code.error.empty", _.nonEmpty)
       .verifying("update-contact-details.sa-code.error.invalid", x => x.isEmpty || SaCodeRegex.matches(x.replace(" ","")))
     )
+  )
+
+  val yourDetailsForm: Form[YourDetails] = Form(
+    mapping(
+      "fullName" -> trimmedText
+        .verifying("update-contact-details.your-details.name.error.empty", _.nonEmpty)
+        .verifying("update-contact-details.your-details.name.error.invalid", x => x.isEmpty || NameRegex.matches(x.replace(" ","")))
+        .verifying("update-contact-details.your-details.name.error.tooLong", x => x.isEmpty || x.length < 41),
+      "telephone" -> trimmedText
+        .verifying("update-contact-details.your-details.telephone.error.empty", _.nonEmpty)
+        .verifying("update-contact-details.your-details.telephone.error.invalid", x => x.isEmpty || InternationalTelephoneRegex.matches(x.replace(" ","")))
+    )(YourDetails.apply)(YourDetails.unapply)
   )
 
   val applyCtCodeChangesForm: Form[ApplyCtCodeChanges] = Form(

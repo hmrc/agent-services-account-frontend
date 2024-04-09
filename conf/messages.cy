@@ -485,6 +485,16 @@ update-contact-details.start-page.body.p3=Byddwn yn gofyn i chi gadarnhau fod ge
 update-contact-details.start-page.body.p4=Mewn rhai amgylchiadau, byddwn yn gofyn am eich codau asiant ar gyfer Hunanasesiad a Threth Gorfforaeth.Anfonwyd y codau mewn llythyr pan ofynnodd eich sefydliad am fynediad asiant i’r gwasanaethau hynny.
 update-contact-details.start-page.body.p5=Ar ôl i chi gyflwyno newidiadau, ni fyddwch yn gallu diwygio’r manylion cyswllt eto am 4 wythnos.
 
+update-contact-details.select-changes.title=Select changes
+update-contact-details.select-changes.error=Tell us which contact details you want to change.
+update-contact-details.select-changes.h1=Which contact details do you want to change?
+update-contact-details.select-changes.hint=Select all that apply.
+update-contact-details.select-changes.business-name=Business name shown to clients
+update-contact-details.select-changes.address=Address for agent services account
+update-contact-details.select-changes.email=Email address
+update-contact-details.select-changes.telephone=Telephone number
+update-contact-details.select-changes.button=Continue
+
 update-contact-details.name.heading=What is the name you want to show to your clients? TBC
 update-contact-details.name.hint=Clients will see this name when they manage your authorisations and requests. TBC
 update-contact-details.name.error.empty=Enter the name of your business TBC
@@ -507,6 +517,17 @@ update-contact-details.address.lookup=What is your business address? TBC
 update-contact-details.address.select.title=Select your address - Agent services account - GOV.UK TBC
 update-contact-details.address.edit.title=Enter your address - Agent services account - GOV.UK TBC
 update-contact-details.address.confirm.title=Review and confirm - Agent services account - GOV.UK TBC
+
+update-contact-details.your-details.heading=Eich manylion
+update-contact-details.your-details.body.p=Byddwn yn defnyddio’r rhain os oes angen i ni siarad â chi am y newidiadau yr ydych wedi’u gwneud.
+update-contact-details.your-details.name.label=Enw llawn
+update-contact-details.your-details.name.error.empty = Nodwch eich enw llawn
+update-contact-details.your-details.name.error.invalid = Mae’cn rhaid i’cch enw llawn gynnwys y llythrennau a i z, rhifau, comas, atalnodau llawn, collnodau, cysylltnodau, blaenslaesys a bylchau yn unig
+update-contact-details.your-details.name.error.tooLong = Mae’n rhaid i’ch enw llawn fod yn 40 o gymeriadau neu lai
+update-contact-details.your-details.telephone.label=Rhif ffôn
+update-contact-details.your-details.telephone.hint=Ar gyfer rhifau rhyngwladol, cofiwch gynnwys cod y wlad.
+update-contact-details.your-details.telephone.error.empty=Nodwch eich rhif ffôn
+update-contact-details.your-details.telephone.error.invalid=Nodwch rif ffôn, megis 01632 960 001, 07700 900 982 neu +33 808 157 0192
 
 update-contact-details.review.title=Check your new contact details TBC
 update-contact-details.review.p1=Check you have made all the necessary changes. You will not be able to submit any more changes for 28 days. TBC

@@ -485,6 +485,16 @@ update-contact-details.start-page.body.p3=We’ll ask you to confirm that you ha
 update-contact-details.start-page.body.p4=In some circumstances we’ll ask for your agent codes for Self Assessment and Corporation Tax. The codes were sent by letter when your organisation asked for agent access to those services.
 update-contact-details.start-page.body.p5=Once you submit changes, you cannot amend the contact details again for 4 weeks.
 
+update-contact-details.select-changes.title=Select changes
+update-contact-details.select-changes.error=Tell us which contact details you want to change.
+update-contact-details.select-changes.h1=Which contact details do you want to change?
+update-contact-details.select-changes.hint=Select all that apply.
+update-contact-details.select-changes.business-name=Business name shown to clients
+update-contact-details.select-changes.address=Address for agent services account
+update-contact-details.select-changes.email=Email address
+update-contact-details.select-changes.telephone=Telephone number
+update-contact-details.select-changes.button=Continue
+
 update-contact-details.name.heading=What is the name you want to show to your clients?
 update-contact-details.name.hint=Clients will see this name when they manage your authorisations and requests.
 update-contact-details.name.error.empty=Enter the name of your business
@@ -507,6 +517,17 @@ update-contact-details.address.lookup=What is your business address?
 update-contact-details.address.select.title=Select your address - Agent services account - GOV.UK
 update-contact-details.address.edit.title=Enter your address - Agent services account - GOV.UK
 update-contact-details.address.confirm.title=Review and confirm - Agent services account - GOV.UK
+
+update-contact-details.your-details.heading=Your details
+update-contact-details.your-details.body.p=We’ll use these if we need to speak to you about changes you’ve made.
+update-contact-details.your-details.name.label=Full name
+update-contact-details.your-details.name.error.empty = Enter your full name
+update-contact-details.your-details.name.error.invalid = Your full name must only include letters a to z, numbers, commas, full stops, apostrophes, hyphens, forward slashes and spaces
+update-contact-details.your-details.name.error.tooLong = Your full name must be 40 characters or less
+update-contact-details.your-details.telephone.label=Telephone number
+update-contact-details.your-details.telephone.hint=For international numbers include the country code.
+update-contact-details.your-details.telephone.error.empty=Enter your telephone number
+update-contact-details.your-details.telephone.error.invalid=Enter a telephone number, like 01632 960 001, 07700 900 982 or +33 808 157 0192
 
 update-contact-details.review.title=Check your new contact details
 update-contact-details.review.p1=Check you have made all the necessary changes. You will not be able to submit any more changes for 28 days.

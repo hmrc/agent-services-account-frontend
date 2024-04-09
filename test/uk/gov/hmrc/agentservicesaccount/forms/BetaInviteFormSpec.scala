@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,6 +32,7 @@ class BetaInviteFormSpec extends AnyWordSpec with Matchers with GuiceOneAppPerSu
       BetaInviteForm.form.bind(params).value shouldBe Some("small")
 
     }
+
     "be medium when field value is 'medium' " in {
       val params = Map(fieldName -> "medium")
       BetaInviteForm.form.bind(params).value shouldBe Some("medium")
@@ -41,7 +42,6 @@ class BetaInviteFormSpec extends AnyWordSpec with Matchers with GuiceOneAppPerSu
       val params = Map(fieldName -> "large")
       BetaInviteForm.form.bind(params).value shouldBe Some("large")
     }
-
 
     "Be invalid with provided error message key when 'size' field not present in params" in {
       val params: Map[String, String] = Map.empty
@@ -55,5 +55,4 @@ class BetaInviteFormSpec extends AnyWordSpec with Matchers with GuiceOneAppPerSu
         "size" -> "small")
     }
   }
-
 }

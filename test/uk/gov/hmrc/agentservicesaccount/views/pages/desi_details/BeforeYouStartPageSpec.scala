@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.agentservicesaccount.views.pages.contactDetails
+package uk.gov.hmrc.agentservicesaccount.views.pages.desi_details
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -24,7 +24,7 @@ import play.api.test.FakeRequest
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress}
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.contact_details._
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details._
 
 import scala.jdk.CollectionConverters.CollectionHasAsScala
 

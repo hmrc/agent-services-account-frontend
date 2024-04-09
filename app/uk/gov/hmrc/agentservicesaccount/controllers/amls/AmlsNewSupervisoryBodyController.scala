@@ -40,13 +40,14 @@ class AmlsNewSupervisoryBodyController @Inject()(actions: Actions,
                                                  cc: MessagesControllerComponents
                                                 )(implicit appConfig: AppConfig, ec: ExecutionContext) extends FrontendController(cc) with AmlsJourneySupport with I18nSupport {
 
-
   def showPage(cya: Boolean): Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
-      withUpdateAmlsJourney { amlsJourney =>
-        val amlsBodies = amlsLoader.load("/amls.csv")
-        val form = NewAmlsSupervisoryBodyForm.form(amlsBodies)(amlsJourney.isUkAgent).fill(amlsJourney.newAmlsBody.getOrElse(""))
-        Ok(newSupervisoryBody(form, amlsBodies, amlsJourney.isUkAgent, cya)).toFuture
+      actions.withCurrentAmlsDetails(request.agentInfo.arn) { amlsDetails =>
+        withUpdateAmlsJourney { amlsJourney =>
+          val amlsBodies = amlsLoader.load("/amls.csv")
+          val form = NewAmlsSupervisoryBodyForm.form(amlsBodies)(amlsJourney.isUkAgent).fill(amlsJourney.newAmlsBody.getOrElse(amlsDetails.supervisoryBody))
+          Ok(newSupervisoryBody(form, amlsBodies, amlsJourney.isUkAgent, cya)).toFuture
+        }
       }
     }
   }

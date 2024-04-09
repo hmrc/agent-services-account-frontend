@@ -16,18 +16,8 @@
 
 package uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
 
-import play.api.i18n.I18nSupport
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.agentservicesaccount.controllers.ToFuture
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
+import uk.gov.hmrc.agentservicesaccount.repository.UpdateContactDetailsJourneyRepository
 
-import javax.inject.{Inject, Singleton}
-
-@Singleton
-class YourDetails @Inject()(cc: MessagesControllerComponents) extends FrontendController(cc) with I18nSupport {
-
-  def showPage: Action[AnyContent] = Action.async { _ => Ok("").toFuture }
-
-  def onSubmit: Action[AnyContent] = Action.async { _ => Ok("").toFuture }
+trait UpdateContactDetailsJourneySupport {
+  val updateContactDetailsJourneyRepository: UpdateContactDetailsJourneyRepository
 }
-

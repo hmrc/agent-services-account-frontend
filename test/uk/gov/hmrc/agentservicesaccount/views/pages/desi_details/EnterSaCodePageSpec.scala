@@ -24,7 +24,7 @@ import play.api.test.FakeRequest
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms.saCodeForm
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.contact_details._
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details._
 
 import scala.jdk.CollectionConverters.CollectionHasAsScala
 

@@ -1,5 +1,5 @@
 @*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,10 @@
 
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.controllers.routes
+@import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
 @import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, PendingChangeOfDetails}
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
-@import uk.gov.hmrc.agentservicesaccount.views.html.pages.contact_details.partials.contact_details_summary_list_partial
+@import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details.partials.contact_details_summary_list_partial
 @import uk.gov.hmrc.govukfrontend.views.Aliases.{InsetText, Text}
 @import uk.gov.hmrc.govukfrontend.views.html.components.GovukInsetText
 
@@ -52,13 +53,12 @@
         }
     }
 
-
     @h1("view-contact-details.title")
 
     @contact_details_summary_list_partial(agencyDetails, showChangeAction = false)
 
     @if(isAdmin){
-    @p(html = Some(a("view-contact-details.update-details.link", href = routes.ContactDetailsController.showBeforeYouStartPage.url)))
+    @p(html = Some(a("view-contact-details.update-details.link", href = desiDetails.routes.ContactDetailsController.showBeforeYouStartPage.url)))
     }
     @p(html = Some(a("view-contact-details.return-to-account.link", href = routes.AgentServicesController.manageAccount.url)))
 }

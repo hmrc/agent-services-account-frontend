@@ -21,12 +21,12 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthRequestWithAgentInfo}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
-import uk.gov.hmrc.agentservicesaccount.controllers.routes
+import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
 import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.SaChanges
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.contact_details.enter_sa_code
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details._
 import uk.gov.hmrc.domain.SaUtr
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
@@ -85,7 +85,7 @@ class EnterSACodeController @Inject()(
         case None => // no change is pending, we can proceed
           action
         case Some(_) => // there is a pending change, further changes are locked. Redirect to the base page
-          Future.successful(Redirect(routes.ContactDetailsController.showCurrentContactDetails))
+          Future.successful(Redirect(desiDetails.routes.ContactDetailsController.showCurrentContactDetails))
       }
     }
   }
