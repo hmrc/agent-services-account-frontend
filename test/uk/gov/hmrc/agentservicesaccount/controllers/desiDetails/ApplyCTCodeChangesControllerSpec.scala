@@ -36,7 +36,7 @@ import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, Designato
 import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, ApplyCtCodeChanges, BusinessAddress}
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.contact_details.apply_ct_code_changes
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details.apply_ct_code_changes
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve._

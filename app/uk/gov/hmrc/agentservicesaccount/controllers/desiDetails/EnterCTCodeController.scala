@@ -25,7 +25,7 @@ import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.CtChanges
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.contact_details.enter_ct_code
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details.enter_ct_code
 import uk.gov.hmrc.domain.CtUtr
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
@@ -59,8 +59,7 @@ class EnterCTCodeController @Inject()(
             formWithErrors => Future.successful(Ok(enterCtCodeView(formWithErrors))),
             saCode => {
               updateDraftDetails(_.copy(otherServices = desiDetails.otherServices.copy(ctChanges = CtChanges(true, Some(CtUtr(saCode)))) )).map(_ =>
-                //TODO WG - replace to correct route
-                Redirect (uk.gov.hmrc.agentservicesaccount.controllers.routes.ContactDetailsController.showChangeTelephoneNumber))
+                Redirect (routes.YourDetailsController.showPage))
             }
           )
       }
@@ -71,8 +70,7 @@ class EnterCTCodeController @Inject()(
     ifChangeContactFeatureEnabledAndNoPendingChanges {
       withUpdateDesiDetailsJourney { desiDetails =>
         updateDraftDetails(_.copy(otherServices = desiDetails.otherServices.copy(ctChanges = CtChanges(false, None)) )).map(_ =>
-          //TODO WG - replace to correct route
-          Redirect (uk.gov.hmrc.agentservicesaccount.controllers.routes.ContactDetailsController.showChangeTelephoneNumber))
+          Redirect (routes.YourDetailsController.showPage))
       }
     }
   }

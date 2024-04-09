@@ -17,9 +17,8 @@
 package uk.gov.hmrc.agentservicesaccount.forms
 
 import play.api.data.Form
-import play.api.data.Forms.{boolean, mapping, optional, single, text}
-import uk.gov.hmrc.agentservicesaccount.models.{ApplyCtCodeChanges, ApplySaCodeChanges}
-import uk.gov.hmrc.agentservicesaccount.models.{ApplySaCodeChanges, YourDetails}
+import play.api.data.Forms._
+import uk.gov.hmrc.agentservicesaccount.models.{ApplyCtCodeChanges, ApplySaCodeChanges, YourDetails}
 
 object UpdateDetailsForms {
   private val BusinessNameRegex = """^[A-Za-z0-9\,\.\'\-\/\ ]{2,200}$""".r

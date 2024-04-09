@@ -21,7 +21,7 @@ import play.api.mvc.{Request, Result}
 import uk.gov.hmrc.agentservicesaccount.actions.AuthRequestWithAgentInfo
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
-import uk.gov.hmrc.agentservicesaccount.controllers.{DRAFT_NEW_CONTACT_DETAILS, routes}
+import uk.gov.hmrc.agentservicesaccount.controllers.{DRAFT_NEW_CONTACT_DETAILS, desiDetails, routes}
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, DesignatoryDetails, OtherServices, SaChanges}
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
@@ -89,7 +89,7 @@ trait DesiDetailsJourneySupport {
         case None => // no change is pending, we can proceed
           action
         case Some(_) => // there is a pending change, further changes are locked. Redirect to the base page
-          Future.successful(Redirect(routes.ContactDetailsController.showCurrentContactDetails))
+          Future.successful(Redirect(desiDetails.routes.ContactDetailsController.showCurrentContactDetails))
       }
     }
   }

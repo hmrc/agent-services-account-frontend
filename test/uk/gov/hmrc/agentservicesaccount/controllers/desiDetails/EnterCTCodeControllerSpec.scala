@@ -36,7 +36,7 @@ import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, Designato
 import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress}
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.contact_details.enter_ct_code
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details.enter_ct_code
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve._
@@ -195,7 +195,7 @@ class EnterCTCodeControllerSpec extends PlaySpec
         FakeRequest("POST", "/").withFormUrlEncodedBody("ctCode" -> "123456"))
 
       status(result) mustBe SEE_OTHER
-      Helpers.redirectLocation(result).get mustBe "/agent-services-account/update-telephone-number"
+      Helpers.redirectLocation(result).get mustBe "/agent-services-account/manage-account/contact-details/your-details"
     }
 
     "return 303 SEE_OTHER and DO NOT store data for continueWithoutCode " in new Setup {
@@ -219,7 +219,7 @@ class EnterCTCodeControllerSpec extends PlaySpec
         FakeRequest("GET", "/").withFormUrlEncodedBody("body" -> ""))
 
       status(result) mustBe SEE_OTHER
-      Helpers.redirectLocation(result).get mustBe "/agent-services-account/update-telephone-number"
+      Helpers.redirectLocation(result).get mustBe "/agent-services-account/manage-account/contact-details/your-details"
     }
 
 
