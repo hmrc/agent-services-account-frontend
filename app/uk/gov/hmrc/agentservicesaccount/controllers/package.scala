@@ -16,8 +16,7 @@
 
 package uk.gov.hmrc.agentservicesaccount
 
-import uk.gov.hmrc.agentservicesaccount.models.YourDetails
-import uk.gov.hmrc.agentservicesaccount.models.desiDetails.DesignatoryDetails
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{DesignatoryDetails, YourDetails}
 import uk.gov.hmrc.mongo.cache.DataKey
 
 import java.time.LocalDate

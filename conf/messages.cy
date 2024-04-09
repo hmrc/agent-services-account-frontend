@@ -534,6 +534,18 @@ update-contact-details.review.p1=Check you have made all the necessary changes. 
 update-contact-details.review.p2=By submitting this change, you confirm you have one of the following roles in this business: TBC
 update-contact-details.review.submit-change-of-details=Submit change of details TBC
 
+update-contact-details.check-your-answers.title=Gwirio’ch atebion
+update-contact-details.check-your-answers.inset=Mae’n cymryd 4 wythnos i CThEF i roi’r newidiadau hyn i’ch cyfrif gwasanaethau asiant ar waith. Yn ystod y cyfnod hwnnw, ni allwch ddiwygio’r manylion cyswllt eto.
+update-contact-details.check-your-answers.declaration.p1=Fe’m hawdurdodir i wneud y newidiadau hyn i fanylion cyswllt y busnes.
+update-contact-details.check-your-answers.declaration.p2=Rwy’n gyfarwyddwr, yn ysgrifenydd y cwmni, yn unig fasnachwr, yn feddiannydd neu’n bartner, neu mae gen i ganiatâd gan rywun sy’n gweithio fel un o’r rheiny.
+update-contact-details.check-your-answers.other-services=Diweddaru gwasanaethau eraill
+update-contact-details.check-your-answers.applySA=Rhoi’r newidiadau i Hunanasesiad ar waith
+update-contact-details.check-your-answers.SACode=Cod asiant ar gyfer Hunanasesiad
+update-contact-details.check-your-answers.applyCT=Rhoi’r newidiadau i Dreth Gorfforaeth ar waith
+update-contact-details.check-your-answers.CTCode=Cod Asiant Treth Gorfforaeth
+update-contact-details.check-your-answers.submit=Cyflwyno
+update-contact-details.check-your-answers.select-changes.label=Yr hyn yr hoffech ei newid
+
 update-contact-details.submitted.title=Rydych wedi cyflwyno manylion cyswllt newydd
 update-contact-details.submitted.h2=Yr hyn sy’n digwydd nesaf
 update-contact-details.submitted.p1=Mae’n cymryd 4 wythnos i CThEF i roi’r newidiadau hyn i’ch cyfrif gwasanaethau asiant ar waith.

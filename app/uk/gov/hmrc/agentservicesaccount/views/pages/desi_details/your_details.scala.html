@@ -20,7 +20,7 @@
 @import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.routes
 @import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
 @import uk.gov.hmrc.hmrcfrontend.views.Implicits.RichErrorSummary
-@import uk.gov.hmrc.agentservicesaccount.models.YourDetails
+@import uk.gov.hmrc.agentservicesaccount.models.desiDetails.YourDetails
 @import play.api.data.Form
 
 @this(
@@ -31,7 +31,6 @@
         govukButton: GovukButton,
         govukErrorSummary: GovukErrorSummary
 )
-
 
 @(form: Form[YourDetails])(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
 

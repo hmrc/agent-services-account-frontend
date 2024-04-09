@@ -534,6 +534,18 @@ update-contact-details.review.p1=Check you have made all the necessary changes. 
 update-contact-details.review.p2=By submitting this change, you confirm you have one of the following roles in this business:
 update-contact-details.review.submit-change-of-details=Submit change of details
 
+update-contact-details.check-your-answers.title=Check your answers
+update-contact-details.check-your-answers.inset=It takes 4 weeks for HMRC to apply these changes to your agent services account. During that time, you cannot amend the contact details again.
+update-contact-details.check-your-answers.declaration.p1=I am authorised to make changes to the business contact details.
+update-contact-details.check-your-answers.declaration.p2=I am a director, company secretary, sole trader, proprietor or partner in the business, or I have permission from someone in one of those roles.
+update-contact-details.check-your-answers.other-services=Update other services
+update-contact-details.check-your-answers.applySA=Apply changes to Self Assessment
+update-contact-details.check-your-answers.SACode=Self Assessment agent code
+update-contact-details.check-your-answers.applyCT=Apply changes to Corporation Tax
+update-contact-details.check-your-answers.CTCode=Corporation Tax agent code
+update-contact-details.check-your-answers.submit=Submit details
+update-contact-details.check-your-answers.select-changes.label=What you want to change
+
 update-contact-details.submitted.title=You have submitted new contact details
 update-contact-details.submitted.h2=What happens next
 update-contact-details.submitted.p1=We’ll carry out checks and update details in the next 4 weeks.

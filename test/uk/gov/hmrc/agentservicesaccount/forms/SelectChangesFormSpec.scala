@@ -20,7 +20,7 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.data.Form
-import uk.gov.hmrc.agentservicesaccount.models.SelectChanges
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.SelectChanges
 
 class SelectChangesFormSpec extends AnyWordSpec with Matchers with GuiceOneAppPerSuite {
 

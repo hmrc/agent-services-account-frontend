@@ -1,0 +1,137 @@
+@*
+ * Copyright 2024 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
+@import uk.gov.hmrc.govukfrontend.views.html.components._
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
+@import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
+
+@this(govukSummaryList: GovukSummaryList, p: p, ul: ul)
+
+@(agencyDetails: AgencyDetails, selectChanges: Set[String])(implicit msgs: Messages, request: Request[_])
+
+@businessNameRow = @{
+    SummaryListRow(
+        key = Key(
+            content = Text(msgs("contact-details.summary-list.name"))
+        ),
+        value = Value(
+            content = Text(agencyDetails.agencyName.getOrElse(msgs("contact-details.summary-list.none")))
+        ),
+        actions = Some(Actions(
+            items = Seq(ActionItem(
+                href = desiDetails.routes.ContactDetailsController.showChangeBusinessName.url,
+                content = Text(msgs("common.change")),
+                visuallyHiddenText = Some(msgs("contact-details.summary-list.phone"))
+            ))
+        ))
+    )
+}
+
+@addressRow = @{
+    SummaryListRow(
+        key = Key(
+            content = Text(msgs("contact-details.summary-list.address"))
+        ),
+        value = Value(
+            content = HtmlContent(
+                s"""${
+                    agencyDetails.agencyAddress.map(
+                        ba => List(Some(ba.addressLine1), ba.addressLine2, ba.addressLine3, ba.addressLine4, ba.postalCode, Some(ba.countryCode)).flatten
+                    ).map(_.mkString("<br>")).getOrElse(msgs("contact-details.summary-list.none"))
+                }""")
+        ),
+        actions = Some(Actions(
+            items = Seq(ActionItem(
+                href = desiDetails.routes.ContactDetailsController.startAddressLookup.url,
+                content = Text(msgs("common.change")),
+                visuallyHiddenText = Some(msgs("contact-details.summary-list.address"))
+            ))
+        ))
+    )
+}
+
+@emailRow = @{
+    SummaryListRow(
+        key = Key(
+            content = Text(msgs("contact-details.summary-list.email"))
+        ),
+        value = Value(
+            content = Text(agencyDetails.agencyEmail.getOrElse(msgs("contact-details.summary-list.none")))
+        ),
+        actions = Some(Actions(
+            items = Seq(ActionItem(
+                href = desiDetails.routes.ContactDetailsController.showChangeEmailAddress.url,
+                content = Text(msgs("common.change")),
+                visuallyHiddenText = Some(msgs("contact-details.summary-list.email"))
+            ))
+        ))
+    )
+}
+
+@telephoneRow = @{
+    SummaryListRow(
+        key = Key(
+            content = Text(msgs("contact-details.summary-list.phone"))
+        ),
+        value = Value(
+            content = Text(agencyDetails.agencyTelephone.getOrElse(msgs("contact-details.summary-list.none")))
+        ),
+        actions = Some(Actions(
+            items = Seq(ActionItem(
+                href = desiDetails.routes.ContactDetailsController.showChangeTelephoneNumber.url,
+                content = Text(msgs("common.change")),
+                visuallyHiddenText = Some(msgs("contact-details.summary-list.phone"))
+            ))
+        ))
+    )
+}
+
+@labelMap = @{Map(
+    "businessName" -> "contact-details.summary-list.name",
+    "address" -> "contact-details.summary-list.address",
+    "email" -> "update-contact-details.email.heading",
+    "telephone" -> "contact-details.summary-list.phone"
+)}
+
+@selectChangesRow = @{
+    SummaryListRow(
+        key = Key(
+            content = Text(msgs("update-contact-details.check-your-answers.select-changes.label"))
+        ),
+        value = Value(content = HtmlContent(ul(items = selectChanges.map(page => labelMap(page)).toSeq))),
+        actions = Some(Actions(
+            items = Seq(ActionItem(
+                href = desiDetails.routes.SelectDetailsController.showPage.url,
+                content = Text(msgs("common.change")),
+                visuallyHiddenText = Some(msgs("update-contact-details.check-your-answers.select-changes.label"))
+            ))
+        ))
+    )
+}
+
+@contactDetailsRows = @{Map(
+    "businessName" -> businessNameRow,
+    "address" -> addressRow,
+    "email" -> emailRow,
+    "telephone" -> telephoneRow
+)}
+
+@rows = @{Seq(selectChangesRow) ++ selectChanges.map(row => contactDetailsRows(row)).toSeq}
+
+@govukSummaryList(SummaryList(
+    rows = rows
+))

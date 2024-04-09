@@ -23,13 +23,13 @@ import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthRequestWithAgentIn
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
 import uk.gov.hmrc.agentservicesaccount.controllers._
-import uk.gov.hmrc.agentservicesaccount.models.{PendingChangeOfDetails, YourDetails}
+import uk.gov.hmrc.agentservicesaccount.models.{PendingChangeOfDetails}
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util._
-import uk.gov.hmrc.agentservicesaccount.models.desiDetails.DesignatoryDetails
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{DesignatoryDetails, YourDetails}
 
 import java.time.Instant
 import javax.inject._
@@ -62,8 +62,18 @@ class CheckYourAnswersController @Inject()(actions: Actions,
 
   def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     ifFeatureEnabledAndNoPendingChanges {
-      sessionCache.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS).map {
-        case Some(desiDetails) => Ok(checkUpdatedDetailsView(desiDetails.agencyDetails, request.agentInfo.isAdmin))
+      for {
+        submittedBy <- sessionCache.get[YourDetails](DRAFT_SUBMITTED_BY)
+        selectChanges <- sessionCache.get[Set[String]](CURRENT_SELECTED_CHANGES)
+        desiDetailsData <- sessionCache.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS)
+      } yield desiDetailsData match {
+        case Some(desiDetails) => Ok(checkUpdatedDetailsView(
+            desiDetails.agencyDetails,
+            request.agentInfo.isAdmin,
+            desiDetails.otherServices,
+            submittedBy.get,
+            selectChanges.get
+          ))
         case None => Redirect(desiDetails.routes.ContactDetailsController.showCurrentContactDetails)
       }
     }
@@ -91,6 +101,7 @@ class CheckYourAnswersController @Inject()(actions: Actions,
           //
           _ <- pcodRepository.insert(pendingChange)
           _ <- sessionCache.delete(DRAFT_NEW_CONTACT_DETAILS)
+          _ <- sessionCache.delete(DRAFT_SUBMITTED_BY)
         } yield Redirect(desiDetails.routes.ContactDetailsController.showChangeSubmitted)
       }
     }

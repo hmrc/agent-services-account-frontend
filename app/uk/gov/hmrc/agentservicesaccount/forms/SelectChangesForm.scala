@@ -18,7 +18,7 @@ package uk.gov.hmrc.agentservicesaccount.forms
 
 import play.api.data.Form
 import play.api.data.Forms._
-import uk.gov.hmrc.agentservicesaccount.models.SelectChanges
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.SelectChanges
 
 object SelectChangesForm {
 

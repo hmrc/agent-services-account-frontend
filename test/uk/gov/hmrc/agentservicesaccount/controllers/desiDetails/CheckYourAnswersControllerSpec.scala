@@ -30,8 +30,8 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, SuspensionDetails}
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.{CURRENT_SELECTED_CHANGES, DRAFT_NEW_CONTACT_DETAILS, DRAFT_SUBMITTED_BY, EMAIL_PENDING_VERIFICATION, desiDetails}
-import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, DesignatoryDetails, OtherServices, SaChanges}
-import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress, PendingChangeOfDetails, YourDetails}
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, DesignatoryDetails, OtherServices, SaChanges, YourDetails}
+import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress, PendingChangeOfDetails}
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.support.UnitSpec
@@ -151,15 +151,22 @@ class CheckYourAnswersControllerSpec extends UnitSpec with Matchers with GuiceOn
     )
 
   "GET /manage-account/contact-details/check-your-answers" should {
-    "display the review details page if there are any pending new details in session" in new TestSetup {
+    "display the review details page if there are no pending new details in session" in new TestSetup {
       noPendingChangesInRepo()
       implicit val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequest()
-      sessionCache.put(DRAFT_NEW_CONTACT_DETAILS, details.copy(agencyDetails = details.agencyDetails.copy(agencyName = Some("New and Improved Agency")))).futureValue
+      sessionCache.put(DRAFT_NEW_CONTACT_DETAILS, details.copy(
+        agencyDetails = details.agencyDetails.copy(agencyName = Some("New and Improved Agency"))
+      )).futureValue
       sessionCache.put(DRAFT_SUBMITTED_BY, submittedByDetails).futureValue
+      sessionCache.put(CURRENT_SELECTED_CHANGES, Set("businessName"))
       val result: Future[Result] = checkYourAnswersController.showPage()(fakeRequest())
       status(result) shouldBe OK
-      contentAsString(result.futureValue) should include("Check your new contact details")
-      contentAsString(result.futureValue) should include("New and Improved Agency")
+      val resultAsString: String = contentAsString(result.futureValue)
+      resultAsString should include("Check your answers")
+      resultAsString should include("Business name shown to clients")
+      resultAsString should include("New and Improved Agency")
+      resultAsString should include("Update other services")
+      resultAsString should include("Your details")
     }
 
     "redirect to 'view current details' if there are no new details in session" in new TestSetup {
@@ -167,6 +174,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with Matchers with GuiceOn
       implicit val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequest()
       sessionCache.delete(DRAFT_NEW_CONTACT_DETAILS).futureValue
       sessionCache.delete(DRAFT_SUBMITTED_BY).futureValue
+      sessionCache.delete(CURRENT_SELECTED_CHANGES).futureValue
       val result: Future[Result] = checkYourAnswersController.showPage()(fakeRequest())
       status(result) shouldBe SEE_OTHER
       header("Location", result) shouldBe Some(desiDetails.routes.ContactDetailsController.showCurrentContactDetails.url)
