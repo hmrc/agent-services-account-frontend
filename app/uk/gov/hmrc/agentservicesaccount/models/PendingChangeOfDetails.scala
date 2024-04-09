@@ -28,7 +28,8 @@ case class PendingChangeOfDetails(
                                  oldDetails: AgencyDetails,
                                  newDetails: AgencyDetails,
                                  otherServices: OtherServices,
-                                 timeSubmitted: Instant
+                                 timeSubmitted: Instant,
+                                 submittedBy: YourDetails
                                  ) {
   def localDateSubmitted: LocalDate = timeSubmitted.atZone(ZoneId.of("Europe/London")).toLocalDate
 }

@@ -29,9 +29,9 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, SuspensionDetails}
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
-import uk.gov.hmrc.agentservicesaccount.controllers.{CURRENT_SELECTED_CHANGES, DRAFT_NEW_CONTACT_DETAILS, EMAIL_PENDING_VERIFICATION, desiDetails}
+import uk.gov.hmrc.agentservicesaccount.controllers.{CURRENT_SELECTED_CHANGES, DRAFT_NEW_CONTACT_DETAILS, DRAFT_SUBMITTED_BY, EMAIL_PENDING_VERIFICATION, desiDetails}
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, DesignatoryDetails, OtherServices, SaChanges}
-import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress, PendingChangeOfDetails}
+import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress, PendingChangeOfDetails, YourDetails}
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.support.UnitSpec
@@ -69,6 +69,12 @@ class CheckYourAnswersControllerSpec extends UnitSpec with Matchers with GuiceOn
       applyChanges = false,
       ctAgentReference = None
     )
+  )
+
+
+  private val submittedByDetails = YourDetails(
+    fullName = "John Tester",
+    telephone = "01903 209919"
   )
 
   private val details = DesignatoryDetails(agencyDetails, emptyOtherServices)
@@ -118,13 +124,22 @@ class CheckYourAnswersControllerSpec extends UnitSpec with Matchers with GuiceOn
       (pcodRepository.find(_: Arn)).when(*).returns(Future.successful(None))
     }
     def pendingChangesExistInRepo(): Unit = {
-      (pcodRepository.find(_: Arn)).when(*).returns(Future.successful(Some(PendingChangeOfDetails(testArn, agencyDetails, agencyDetails, emptyOtherServices, Instant.now()))))
+      (pcodRepository.find(_: Arn)).when(*).returns(Future.successful(Some(
+        PendingChangeOfDetails(
+          testArn,
+          agencyDetails,
+          agencyDetails,
+          emptyOtherServices,
+          Instant.now(),
+          submittedByDetails
+        ))))
     }
 
     (pcodRepository.insert(_: PendingChangeOfDetails)).when(*).returns(Future.successful(()))
 
     // make sure these values are cleared from the session
     sessionCache.delete(DRAFT_NEW_CONTACT_DETAILS)(fakeRequest()).futureValue
+    sessionCache.delete(DRAFT_SUBMITTED_BY)(fakeRequest()).futureValue
     sessionCache.delete(EMAIL_PENDING_VERIFICATION)(fakeRequest()).futureValue
     sessionCache.delete(CURRENT_SELECTED_CHANGES)(fakeRequest()).futureValue
   }
@@ -140,6 +155,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with Matchers with GuiceOn
       noPendingChangesInRepo()
       implicit val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequest()
       sessionCache.put(DRAFT_NEW_CONTACT_DETAILS, details.copy(agencyDetails = details.agencyDetails.copy(agencyName = Some("New and Improved Agency")))).futureValue
+      sessionCache.put(DRAFT_SUBMITTED_BY, submittedByDetails).futureValue
       val result: Future[Result] = checkYourAnswersController.showPage()(fakeRequest())
       status(result) shouldBe OK
       contentAsString(result.futureValue) should include("Check your new contact details")
@@ -150,6 +166,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with Matchers with GuiceOn
       noPendingChangesInRepo()
       implicit val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequest()
       sessionCache.delete(DRAFT_NEW_CONTACT_DETAILS).futureValue
+      sessionCache.delete(DRAFT_SUBMITTED_BY).futureValue
       val result: Future[Result] = checkYourAnswersController.showPage()(fakeRequest())
       status(result) shouldBe SEE_OTHER
       header("Location", result) shouldBe Some(desiDetails.routes.ContactDetailsController.showCurrentContactDetails.url)
@@ -162,6 +179,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with Matchers with GuiceOn
       implicit val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequest("POST")
       val newDetails: AgencyDetails = agencyDetails.copy(agencyName = Some("New and Improved Agency"))
       sessionCache.put(DRAFT_NEW_CONTACT_DETAILS, DesignatoryDetails(newDetails,emptyOtherServices)).futureValue
+      sessionCache.put(DRAFT_SUBMITTED_BY, submittedByDetails).futureValue
       val result: Future[Result] = checkYourAnswersController.onSubmit()(request)
       status(result) shouldBe SEE_OTHER
       header("Location", result) shouldBe Some(desiDetails.routes.ContactDetailsController.showChangeSubmitted.url)
@@ -172,6 +190,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with Matchers with GuiceOn
         pcod.oldDetails shouldBe agencyDetails
         pcod.newDetails shouldBe newDetails
         Math.abs(Instant.now().toEpochMilli - pcod.timeSubmitted.toEpochMilli) should be < 5000L // approximate time comparison
+        pcod.submittedBy shouldBe submittedByDetails
       })
     }
   }
