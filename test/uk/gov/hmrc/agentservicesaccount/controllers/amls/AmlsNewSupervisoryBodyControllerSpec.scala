@@ -125,6 +125,8 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
 
       mockAgentClientAuthorisationConnector.getSuspensionDetails()(*[HeaderCarrier], *[ExecutionContext]) returns suspensionDetailsResponse
 
+      mockAgentAssuranceConnector.getAMLSDetails(arn.value)( *[ExecutionContext], *[HeaderCarrier]) returns amlsDetailsResponse
+
       mockAmlsJourneySessionRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]],*[Request[_]]) returns
         Future.successful(Some(ukAmlsJourney))
 

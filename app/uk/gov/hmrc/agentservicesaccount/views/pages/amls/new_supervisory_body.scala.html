@@ -63,10 +63,20 @@
                 text = "")).++(
                 amlsCodes.flatMap {
                     case (code, bodyName) => Seq(
-                        SelectItem(
-                            value = Some(code),
-                            text = bodyName
-                        ))
+                        if(form.value.getOrElse("").equals(bodyName)) {
+                            SelectItem(
+                                value = Some(code),
+                                text = bodyName,
+                                selected = true
+                            )
+                        } else{
+                            SelectItem(
+                                value = Some(code),
+                                text = bodyName
+                            )
+                        }
+                    )
+
                 }
             ),
             hint = Some(Hint(content = Text(msgs("amls.new-supervisory-body.hint"))))
