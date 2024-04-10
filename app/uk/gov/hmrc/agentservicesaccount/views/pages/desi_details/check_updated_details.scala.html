@@ -18,45 +18,53 @@
 @import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 @import uk.gov.hmrc.govukfrontend.views.html.components._
-@import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details.partials.contact_details_summary_list_partial
+@import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details.partials._
 @import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
+@import uk.gov.hmrc.agentservicesaccount.models.desiDetails._
 
 @this(
-        main: main, h1: h1, p: p, ul: ul,
+        main: main, h1: h1, h2: h2, p: p, ul: ul,
         formWithCSRF: FormWithCSRF,
         button: GovukButton,
         inset_text:inset_text,
-        contact_details_summary_list_partial: contact_details_summary_list_partial
+        contact_details_cya_partial: contact_details_cya_partial,
+        other_services_cya: other_services_cya_partial,
+        your_details_cya: your_details_cya_partial
 )
 
 @(
         agencyDetails: AgencyDetails,
-        isAdmin: Boolean
+        isAdmin: Boolean,
+        otherServices: OtherServices,
+        submittedBy: YourDetails,
+        selectChanges: Set[String]
 )(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
 
 @main(
-    pageTitle = msgs("update-contact-details.review.title"),
+    pageTitle = msgs("update-contact-details.check-your-answers.title"),
     isAdmin = isAdmin,
     mimicBrowserBackLink = true, // as we can end up on this page from 4 different routes, the default browser 'back' works better than providing an explicit href
-    analyticsAdditionalJs = None
+    analyticsAdditionalJs = None,
+    showSecondaryNav = false
 ) {
 
-    @h1("update-contact-details.review.title")
-    @p("update-contact-details.review.p1")
+    @h1("update-contact-details.check-your-answers.title")
+    @inset_text("update-contact-details.check-your-answers.inset")
 
-    @contact_details_summary_list_partial(agencyDetails, showChangeAction = true)
+    @h2("manage.account.contact-details.heading")
+    @contact_details_cya_partial(agencyDetails, selectChanges)
 
-    @p("update-contact-details.review.p2")
-    @ul(items = Seq(
-        "update-contact-details.summary-list.body.li1",
-        "update-contact-details.summary-list.body.li2",
-        "update-contact-details.summary-list.body.li3",
-        "update-contact-details.summary-list.body.li4",
-        "update-contact-details.summary-list.body.li5"
-    ))
+    @h2("update-contact-details.check-your-answers.other-services")
+    @other_services_cya(otherServices)
 
-    @formWithCSRF(action = desiDetails.routes.CheckYourAnswersController.showPage) {
-        @button(Button(content = Text(msgs("update-contact-details.review.submit-change-of-details"))))
+    @h2("update-contact-details.your-details.heading")
+    @your_details_cya(submittedBy)
+
+    @p("update-contact-details.check-your-answers.declaration.p1")
+    @p("update-contact-details.check-your-answers.declaration.p2")
+
+    @formWithCSRF(action = desiDetails.routes.CheckYourAnswersController.onSubmit) {
+        @button(Button(content = Text(msgs("update-contact-details.check-your-answers.submit"))))
     }
 
 }

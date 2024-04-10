@@ -24,7 +24,7 @@ import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.test.FakeRequest
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.forms.SelectChangesForm
-import uk.gov.hmrc.agentservicesaccount.models.SelectChanges
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.SelectChanges
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details._
 

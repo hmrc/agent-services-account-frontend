@@ -21,7 +21,7 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms.yourDetailsForm
-import uk.gov.hmrc.agentservicesaccount.models.YourDetails
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.YourDetails
 
 class YourDetailsFormSpec extends AnyWordSpec with Matchers with GuiceOneAppPerSuite {
 
