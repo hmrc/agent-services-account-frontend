@@ -40,7 +40,7 @@ class CheckYourAnswersController @Inject()(actions: Actions,
                                            sessionCache: SessionCacheService,
                                            acaConnector: AgentClientAuthorisationConnector,
                                            pcodRepository: PendingChangeOfDetailsRepository,
-                                           checkUpdatedDetailsView: check_updated_details,
+                                           checkUpdatedDetailsView: check_updated_details
                                         )(implicit appConfig: AppConfig,
                                           cc: MessagesControllerComponents,
                                           ec: ExecutionContext) extends FrontendController(cc) with I18nSupport with Logging {
