@@ -40,10 +40,10 @@ class CheckYourAnswersController @Inject()(actions: Actions,
                                            sessionCache: SessionCacheService,
                                            acaConnector: AgentClientAuthorisationConnector,
                                            pcodRepository: PendingChangeOfDetailsRepository,
-                                           checkUpdatedDetailsView: check_updated_details,
-                                        )(implicit appConfig: AppConfig,
-                                          cc: MessagesControllerComponents,
-                                          ec: ExecutionContext) extends FrontendController(cc) with I18nSupport with Logging {
+                                           checkUpdatedDetailsView: check_updated_details
+                                          )(implicit appConfig: AppConfig,
+                                            cc: MessagesControllerComponents,
+                                            ec: ExecutionContext) extends FrontendController(cc) with I18nSupport with Logging {
 
   private def ifFeatureEnabled(action: => Future[Result]): Future[Result] = {
     if (appConfig.enableChangeContactDetails) action else Future.successful(NotFound)
