@@ -17,15 +17,43 @@
 package uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
 
 import play.api.i18n.I18nSupport
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.agentservicesaccount.controllers.ToFuture
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
+import uk.gov.hmrc.agentservicesaccount.actions.Actions
+import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
+import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.CurrentAgencyDetails
+import uk.gov.hmrc.agentservicesaccount.controllers.DRAFT_NEW_CONTACT_DETAILS
+import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
+import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details.view_contact_details
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject.{Inject, Singleton}
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ViewContactDetailsController @Inject() (cc: MessagesControllerComponents) extends FrontendController(cc) with I18nSupport {
+class ViewContactDetailsController @Inject() (
+                                               actions: Actions,
+                                               sessionCache: SessionCacheService,
+                                               acaConnector: AgentClientAuthorisationConnector,
+                                               pcodRepository: PendingChangeOfDetailsRepository,
+                                               view_contact_details: view_contact_details
+                                             )(implicit appConfig: AppConfig,
+                                               cc: MessagesControllerComponents,
+                                               ec: ExecutionContext) extends FrontendController(cc) with I18nSupport {
 
-  def showPage: Action[AnyContent] = Action.async { _ => Ok("").toFuture }
+  private def ifFeatureEnabled(action: => Future[Result]): Future[Result] = {
+    if (appConfig.enableChangeContactDetails) action else Future.successful(NotFound)
+  }
+
+  def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
+    ifFeatureEnabled {
+      for {
+        _ <- sessionCache.delete(DRAFT_NEW_CONTACT_DETAILS)
+        mPendingChange <- pcodRepository.find(request.agentInfo.arn)
+        agencyDetails <- CurrentAgencyDetails.get(acaConnector)
+      } yield Ok(view_contact_details(agencyDetails, mPendingChange, request.agentInfo.isAdmin))
+    }
+  }
 }
 

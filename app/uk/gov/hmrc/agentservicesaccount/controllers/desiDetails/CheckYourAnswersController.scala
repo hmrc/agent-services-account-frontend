@@ -55,7 +55,7 @@ class CheckYourAnswersController @Inject()(actions: Actions,
         case None => // no change is pending, we can proceed
           action
         case Some(_) => // there is a pending change, further changes are locked. Redirect to the base page
-          Future.successful(Redirect(desiDetails.routes.ContactDetailsController.showCurrentContactDetails))
+          Future.successful(Redirect(desiDetails.routes.ViewContactDetailsController.showPage))
       }
     }
   }
@@ -74,7 +74,7 @@ class CheckYourAnswersController @Inject()(actions: Actions,
             submittedBy.get,
             selectChanges.get
           ))
-        case None => Redirect(desiDetails.routes.ContactDetailsController.showCurrentContactDetails)
+        case None => Redirect(desiDetails.routes.ViewContactDetailsController.showPage)
       }
     }
   }
@@ -84,7 +84,7 @@ class CheckYourAnswersController @Inject()(actions: Actions,
       val arn = request.agentInfo.arn
       sessionCache.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS).flatMap {
         case None => // graceful redirect in case of expired session data etc.
-          Future.successful(Redirect(desiDetails.routes.ContactDetailsController.showCurrentContactDetails))
+          Future.successful(Redirect(desiDetails.routes.ViewContactDetailsController.showPage))
         case Some(details) => for {
           submittedBy <- sessionCache.get[YourDetails](DRAFT_SUBMITTED_BY)
           oldContactDetails <- CurrentAgencyDetails.get(acaConnector)

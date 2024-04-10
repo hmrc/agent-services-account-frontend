@@ -24,7 +24,6 @@ import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthRequestWithAgentIn
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AddressLookupConnector, AgentClientAuthorisationConnector, EmailVerificationConnector}
 import uk.gov.hmrc.agentservicesaccount.controllers._
-import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.CurrentAgencyDetails
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.NextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup._
@@ -48,7 +47,6 @@ class ContactDetailsController @Inject()(actions: Actions,
                                          pcodRepository: PendingChangeOfDetailsRepository,
                                          agentClientAuthorisationConnector: AgentClientAuthorisationConnector,
                                          //views
-                                         view_contact_details: view_contact_details,
                                          update_name: update_name,
                                          update_phone: update_phone,
                                          update_email: update_email,
@@ -69,7 +67,7 @@ class ContactDetailsController @Inject()(actions: Actions,
         case None => // no change is pending, we can proceed
           action
         case Some(_) => // there is a pending change, further changes are locked. Redirect to the base page
-          Future.successful(Redirect(desiDetails.routes.ContactDetailsController.showCurrentContactDetails))
+          Future.successful(Redirect(desiDetails.routes.ViewContactDetailsController.showPage))
       }
     }
   }
@@ -98,17 +96,6 @@ class ContactDetailsController @Inject()(actions: Actions,
     updatedDraftDetails = f(draftDetails)
     _ <- sessionCache.put[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS, updatedDraftDetails)
   } yield ()
-
-  val showCurrentContactDetails: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    ifFeatureEnabled {
-      for {
-        // on displaying the 'current details' page, we delete any unsubmitted changes that may still be in session
-        _ <- sessionCache.delete(DRAFT_NEW_CONTACT_DETAILS)
-        mPendingChange <- pcodRepository.find(request.agentInfo.arn)
-        agencyDetails <- CurrentAgencyDetails.get(acaConnector)
-      } yield Ok(view_contact_details(agencyDetails, mPendingChange, request.agentInfo.isAdmin))
-    }
-  }
 
   val showChangeBusinessName: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     ifFeatureEnabledAndNoPendingChanges {

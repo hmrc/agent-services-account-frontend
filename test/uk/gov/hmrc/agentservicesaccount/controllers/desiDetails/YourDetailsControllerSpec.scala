@@ -156,7 +156,7 @@ class YourDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneAppP
       pendingChangesExistInRepo()
       val result: Future[Result] = controller.showPage()(fakeRequest())
       status(result) shouldBe SEE_OTHER
-      header("Location", result) shouldBe Some(routes.ContactDetailsController.showCurrentContactDetails.url)
+      header("Location", result) shouldBe Some(routes.ViewContactDetailsController.showPage.url)
     }
   }
 
@@ -186,7 +186,7 @@ class YourDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneAppP
       def shouldRedirect(endpoint: Action[AnyContent]): Unit = {
         val result = endpoint(fakeRequest())
         status(result) shouldBe SEE_OTHER
-        header("Location", result) shouldBe Some(routes.ContactDetailsController.showCurrentContactDetails.url)
+        header("Location", result) shouldBe Some(routes.ViewContactDetailsController.showPage.url)
       }
 
       pendingChangesExistInRepo()
