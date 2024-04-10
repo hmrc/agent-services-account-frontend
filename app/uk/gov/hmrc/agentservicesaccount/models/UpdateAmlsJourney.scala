@@ -39,7 +39,9 @@ case class UpdateAmlsJourney(status: AmlsStatus,
     case AmlsStatuses.PendingAmlsDetailsRejected => true
   }
 
-  val isHmrc:Boolean = isUkAgent && newAmlsBody.contains("HMRC")
+  val isHmrc:Boolean = isUkAgent && newAmlsBody.contains("HM Revenue and Customs (HMRC)")
+  // calling .contains directly on an option checks the value inside is _exactly_ equal to the provided value
+  // calling .map(_.contains("foo")) would check if the value inside the option _contains_ the provided value but still maintains the optionality
 
   val hasExistingAmls: Boolean = status match {
     case AmlsStatuses.NoAmlsDetailsNonUK => false

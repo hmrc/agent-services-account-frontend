@@ -16,9 +16,9 @@
 
 package uk.gov.hmrc.agentservicesaccount.forms
 
-import play.api.data.{Form, Mapping}
+import play.api.data.Form
 import play.api.data.Forms.{single, text}
-import play.api.data.validation.{Constraint, Constraints, Invalid, Valid, ValidationError}
+import play.api.data.validation._
 
 object NewRegistrationNumberForm {
 
@@ -28,24 +28,21 @@ object NewRegistrationNumberForm {
   private val supervisoryNumberRegexHmrc = "X[A-Z]ML00000[0-9]{6}".r
 
 
-
-  private def registrationNumberConstraint(isHmrc: Boolean): Constraint[String] = Constraint[String]{ fieldValue: String =>
-    Constraints.nonEmpty.apply(fieldValue) match {
-      case _: Invalid => Invalid(ValidationError("amls.enter-registration-number.error.empty"))
-      case _ if isHmrc  => if (!supervisoryNumberRegexHmrc.matches(fieldValue))
-        Invalid(ValidationError("amls.enter-registration-number.error.hmrc.invalid"))
-      else Valid
-      case _ if !supervisoryNumberRegexNonHmrc.matches(fieldValue) =>
-        Invalid(ValidationError("amls.enter-registration-number.error.not-hmrc.invalid"))
-      case _ => Valid
+  private def registrationNumberConstraint(isHmrc: Boolean): Constraint[String] =
+    Constraint[String] {
+      fieldValue: String =>
+        if (fieldValue.isEmpty)
+          Invalid(ValidationError("amls.enter-registration-number.error.empty"))
+        else if (isHmrc && !supervisoryNumberRegexHmrc.matches(fieldValue))
+          Invalid(ValidationError("amls.enter-registration-number.error.hmrc.invalid"))
+        else if (!supervisoryNumberRegexNonHmrc.matches(fieldValue))
+          Invalid(ValidationError("amls.enter-registration-number.error.not-hmrc.invalid"))
+        else Valid
     }
-  }
-
-  private def registrationNumberMapping(isHmrc: Boolean): Mapping[String] =
-    trimmedText verifying(registrationNumberConstraint(isHmrc))
 
   def form(isHmrc: Boolean): Form[String] = Form(
     single(
-      "number" -> registrationNumberMapping(isHmrc))
+      "number" -> text.verifying(registrationNumberConstraint(isHmrc))
+    )
   )
 }
