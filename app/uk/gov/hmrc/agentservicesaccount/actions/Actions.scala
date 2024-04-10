@@ -66,5 +66,4 @@ class Actions @Inject()(agentClientAuthorisationConnector: AgentClientAuthorisat
     agentAssuranceConnector.getAMLSDetails(arn.value)
       .flatMap(amlsDetails => action(amlsDetails))
   }
-
 }
