@@ -27,6 +27,7 @@ import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsReposit
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details.apply_ct_code_changes
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
+import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -51,15 +52,16 @@ class ApplyCTCodeChangesController @Inject()(
 
   def onSubmit: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     ifChangeContactFeatureEnabledAndNoPendingChanges {
-      withUpdateDesiDetailsJourney { desiDetails =>
+      withUpdateDesiDetailsJourney { newDesiDetails =>
         UpdateDetailsForms.applyCtCodeChangesForm
           .bindFromRequest()
           .fold(
             formWithErrors => Future.successful(Ok(applyCtCodeChangesView(formWithErrors))),
-            applySaCodeChanges => {
-              updateDraftDetails(_.copy(otherServices = desiDetails.otherServices.copy(ctChanges = CtChanges(applySaCodeChanges.apply, None)) )).map(_ =>
-                Redirect (uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.routes.EnterCTCodeController.showPage)
-              )
+            applyCtCodeChanges => {
+              updateDraftDetails(_.copy(otherServices = newDesiDetails.otherServices.copy(ctChanges = CtChanges(applyCtCodeChanges.apply, None)) )).map { _ =>
+                if (applyCtCodeChanges.apply) Redirect(desiDetails.routes.EnterCTCodeController.showPage)
+                else Redirect(routes.YourDetailsController.showPage)
+              }
             }
           )
       }
