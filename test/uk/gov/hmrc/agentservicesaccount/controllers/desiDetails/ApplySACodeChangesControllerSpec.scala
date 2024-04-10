@@ -118,7 +118,7 @@ class ApplySACodeChangesControllerSpec extends PlaySpec
     protected val mockAcaConnector: AgentClientAuthorisationConnector = mock[AgentClientAuthorisationConnector]
     protected val cc: MessagesControllerComponents = stubMessagesControllerComponents()
 
-    object TestController extends ApplySACodeChangesController(mockActions, mockSessionCache, mockAcaConnector, mockView, mockPendingChangeOfDetailsRepository)(mockAppConfig, cc, ec)
+    object TestController extends ApplySACodeChangesController(mockActions, mockSessionCache, mockAcaConnector, mockView)(mockAppConfig, cc, ec, mockPendingChangeOfDetailsRepository)
   }
 
   "showPage" should {
