@@ -120,15 +120,12 @@ class SuspendedJourneyController @Inject()(actions: Actions,
     }
   }
 
-  def submitSuspendedSummary: Action[AnyContent] = actions.authActionOnlyForSuspended.async { implicit request =>
+  def submitSuspendedSummary: Action[AnyContent] = actions.authActionForSuspendedAgentWithAgentRecord.async { implicit request =>
     getSummaryDetails.flatMap {
       case Some(summaryDetails) =>
-        agentClientAuthorisationConnector.getAgencyDetails().flatMap(maybeAgentDetails =>
-          emailService.sendSuspendedSummaryEmail(summaryDetails, maybeAgentDetails).flatMap(_ =>
+          emailService.sendSuspendedSummaryEmail(summaryDetails, request.agentDetailsDesResponse.agencyDetails).flatMap(_ =>
             Redirect(routes.SuspendedJourneyController.showSuspendedConfirmation()).toFuture
           )
-        )
-
       case None => Redirect(routes.SuspendedJourneyController.showContactDetails()).toFuture
     }
   }

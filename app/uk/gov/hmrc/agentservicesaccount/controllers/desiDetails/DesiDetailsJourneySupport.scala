@@ -47,11 +47,10 @@ trait DesiDetailsJourneySupport {
       case Some(details) => Future.successful(details)
       // if there is no 'draft' new set of details in session, get a fresh copy of the current stored details
       case None =>
-        acaConnector.getAgencyDetails()
-          .map(_.getOrElse(throw new RuntimeException("Current agency details are unavailable")))
+        acaConnector.getAgentRecord()
           .map(agencyDetails=>
             DesignatoryDetails(
-              agencyDetails = agencyDetails,
+              agencyDetails = agencyDetails.agencyDetails.getOrElse(throw new RuntimeException("Agent record did not contain agency details")),
               otherServices = OtherServices(
                 saChanges = SaChanges(
                   applyChanges = false,

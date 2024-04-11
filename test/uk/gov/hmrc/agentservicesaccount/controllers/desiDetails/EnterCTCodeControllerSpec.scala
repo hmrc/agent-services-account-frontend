@@ -36,6 +36,7 @@ import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, Designato
 import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress}
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
+import uk.gov.hmrc.agentservicesaccount.support.TestConstants
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details.enter_ct_code
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.authorise.Predicate
@@ -48,7 +49,8 @@ import scala.concurrent.{ExecutionContext, Future}
 class EnterCTCodeControllerSpec extends PlaySpec
   with DefaultAwaitTimeout
   with IdiomaticMockito
-  with ArgumentMatchersSugar{
+  with ArgumentMatchersSugar
+  with TestConstants {
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
   implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
@@ -143,7 +145,7 @@ class EnterCTCodeControllerSpec extends PlaySpec
 
       mockAppConfig.enableChangeContactDetails returns true
 
-      mockAgentClientAuthorisationConnector.getSuspensionDetails()(*[HeaderCarrier], *[ExecutionContext]) returns suspensionDetailsResponse
+      mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
       mockPendingChangeOfDetailsRepository.find(arn) returns Future.successful(None)
 
@@ -163,7 +165,7 @@ class EnterCTCodeControllerSpec extends PlaySpec
 
       mockAppConfig.enableChangeContactDetails returns false
 
-      mockAgentClientAuthorisationConnector.getSuspensionDetails()(*[HeaderCarrier], *[ExecutionContext]) returns suspensionDetailsResponse
+      mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
       val result: Future[Result] = TestController.showPage(fakeRequest)
 
@@ -181,7 +183,7 @@ class EnterCTCodeControllerSpec extends PlaySpec
 
       mockAppConfig.enableChangeContactDetails returns true
 
-      mockAgentClientAuthorisationConnector.getSuspensionDetails()(*[HeaderCarrier], *[ExecutionContext]) returns suspensionDetailsResponse
+      mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
       mockPendingChangeOfDetailsRepository.find(arn) returns Future.successful(None)
 
@@ -205,7 +207,7 @@ class EnterCTCodeControllerSpec extends PlaySpec
 
       mockAppConfig.enableChangeContactDetails returns true
 
-      mockAgentClientAuthorisationConnector.getSuspensionDetails()(*[HeaderCarrier], *[ExecutionContext]) returns suspensionDetailsResponse
+      mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
       mockPendingChangeOfDetailsRepository.find(arn) returns Future.successful(None)
 
@@ -231,7 +233,7 @@ class EnterCTCodeControllerSpec extends PlaySpec
 
       mockAppConfig.enableChangeContactDetails returns true
 
-      mockAgentClientAuthorisationConnector.getSuspensionDetails()(*[HeaderCarrier], *[ExecutionContext]) returns suspensionDetailsResponse
+      mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
       mockPendingChangeOfDetailsRepository.find(arn) returns Future.successful(None)
 

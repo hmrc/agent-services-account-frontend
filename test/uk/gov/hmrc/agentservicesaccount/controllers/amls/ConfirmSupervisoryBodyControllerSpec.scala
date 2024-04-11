@@ -33,6 +33,7 @@ import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector}
 import uk.gov.hmrc.agentservicesaccount.models.{AmlsDetails, AmlsStatuses, UpdateAmlsJourney}
 import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
+import uk.gov.hmrc.agentservicesaccount.support.TestConstants
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.confirm_supervisory_body
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.authorise.Predicate
@@ -46,7 +47,8 @@ import scala.concurrent.{ExecutionContext, Future}
 class ConfirmSupervisoryBodyControllerSpec extends PlaySpec
   with DefaultAwaitTimeout
   with IdiomaticMockito
-  with ArgumentMatchersSugar {
+  with ArgumentMatchersSugar
+  with TestConstants {
 
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
@@ -114,7 +116,7 @@ class ConfirmSupervisoryBodyControllerSpec extends PlaySpec
 
       mockAppConfig.enableNonHmrcSupervisoryBody returns true
 
-      mockAgentClientAuthorisationConnector.getSuspensionDetails()(*[HeaderCarrier], *[ExecutionContext]) returns suspensionDetailsResponse
+      mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
       mockAgentAssuranceConnector.getAMLSDetails(*[String])(*[ExecutionContext], *[HeaderCarrier]) returns amlsDetailsResponse
 
@@ -135,7 +137,7 @@ class ConfirmSupervisoryBodyControllerSpec extends PlaySpec
 
       mockAppConfig.enableNonHmrcSupervisoryBody returns true
 
-      mockAgentClientAuthorisationConnector.getSuspensionDetails()(*[HeaderCarrier], *[ExecutionContext]) returns suspensionDetailsResponse
+      mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
       mockAgentAssuranceConnector.getAMLSDetails(*[String])(*[ExecutionContext], *[HeaderCarrier]) returns amlsDetailsResponse
 
@@ -159,7 +161,7 @@ class ConfirmSupervisoryBodyControllerSpec extends PlaySpec
 
         mockAppConfig.enableNonHmrcSupervisoryBody returns true
 
-        mockAgentClientAuthorisationConnector.getSuspensionDetails()(*[HeaderCarrier], *[ExecutionContext]) returns suspensionDetailsResponse
+        mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
         mockAgentAssuranceConnector.getAMLSDetails(*[String])(*[ExecutionContext], *[HeaderCarrier]) returns amlsDetailsResponse
 
@@ -185,7 +187,7 @@ class ConfirmSupervisoryBodyControllerSpec extends PlaySpec
 
         mockAppConfig.enableNonHmrcSupervisoryBody returns true
 
-        mockAgentClientAuthorisationConnector.getSuspensionDetails()(*[HeaderCarrier], *[ExecutionContext]) returns suspensionDetailsResponse
+        mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
         mockAgentAssuranceConnector.getAMLSDetails(*[String])(*[ExecutionContext], *[HeaderCarrier]) returns amlsDetailsResponse
 
@@ -211,7 +213,7 @@ class ConfirmSupervisoryBodyControllerSpec extends PlaySpec
 
         mockAppConfig.enableNonHmrcSupervisoryBody returns true
 
-        mockAgentClientAuthorisationConnector.getSuspensionDetails()(*[HeaderCarrier], *[ExecutionContext]) returns suspensionDetailsResponse
+        mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
         mockAgentAssuranceConnector.getAMLSDetails(*[String])(*[ExecutionContext], *[HeaderCarrier]) returns amlsDetailsResponse
 
@@ -238,7 +240,7 @@ class ConfirmSupervisoryBodyControllerSpec extends PlaySpec
 
         mockAppConfig.enableNonHmrcSupervisoryBody returns true
 
-        mockAgentClientAuthorisationConnector.getSuspensionDetails()(*[HeaderCarrier], *[ExecutionContext]) returns suspensionDetailsResponse
+        mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
         mockAgentAssuranceConnector.getAMLSDetails(*[String])(*[ExecutionContext], *[HeaderCarrier]) returns amlsDetailsResponse
 

@@ -23,6 +23,7 @@ import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import play.api.libs.ws.{WSClient, WSRequest}
 import uk.gov.hmrc.agentservicesaccount.models.{AmlsDetails, AmlsDetailsResponse, AmlsStatuses}
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentAssuranceStubs.{givenAMLSDetailsForArn, givenAMLSDetailsServerErrorForArn}
+import uk.gov.hmrc.agentservicesaccount.stubs.AgentClientAuthorisationStubs.givenAgentRecordFound
 import uk.gov.hmrc.agentservicesaccount.stubs.CookieHelper
 
 import java.time.LocalDate
@@ -58,6 +59,7 @@ class AMLSDetailsEndpoint extends BaseISpec with GuiceOneServerPerSuite with Coo
   "View AMLS Supervision Details endpoint" should {
     "return successfully when everything works" in {
       givenAuthorisedAsAgentWith(arn)
+      givenAgentRecordFound(agentRecord)
       givenAMLSDetailsForArn(ukAMLSDetailsResponse, arn)
 
       val result = await(makeRequest("/manage-account/money-laundering-supervision").get())
@@ -67,6 +69,7 @@ class AMLSDetailsEndpoint extends BaseISpec with GuiceOneServerPerSuite with Coo
     }
     "return an error if the call to get AMLS details fails" in {
       givenAuthorisedAsAgentWith(arn)
+      givenAgentRecordFound(agentRecord)
       givenAMLSDetailsServerErrorForArn(arn)
 
       val result = await(makeRequest("/manage-account/money-laundering-supervision").get())
