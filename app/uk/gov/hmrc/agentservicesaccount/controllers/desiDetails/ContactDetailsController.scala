@@ -156,27 +156,6 @@ class ContactDetailsController @Inject()(actions: Actions,
     }
   }
 
-  val showChangeTelephoneNumber: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    ifFeatureEnabledAndNoPendingChanges {
-      Future.successful(Ok(update_phone(UpdateDetailsForms.telephoneNumberForm)))
-    }
-  }
-
-  val submitChangeTelephoneNumber: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    ifFeatureEnabledAndNoPendingChanges {
-      UpdateDetailsForms.telephoneNumberForm
-        .bindFromRequest()
-        .fold(
-          formWithErrors => Future.successful(Ok(update_phone(formWithErrors))),
-          newPhoneNumber => {
-            updateDraftDetails(desiDetails => desiDetails.copy(agencyDetails = desiDetails.agencyDetails.copy(agencyTelephone = Some(newPhoneNumber)))).flatMap(_ =>
-              getNextPage(sessionCache, "telephone")
-            )
-          }
-        )
-    }
-  }
-
   val startAddressLookup: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     val continueUrl: String = {
       val useAbsoluteUrls = appConfig.addressLookupBaseUrl.contains("localhost")

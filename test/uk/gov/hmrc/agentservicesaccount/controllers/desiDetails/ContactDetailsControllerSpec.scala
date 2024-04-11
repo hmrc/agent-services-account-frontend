@@ -280,35 +280,6 @@ class ContactDetailsControllerSpec extends UnitSpec
     }
   }
 
-  "GET /manage-account/contact-details/new-telephone" should {
-    "display the enter telephone number page" in new TestSetup {
-      noPendingChangesInRepo()
-      val result = contactDetailsController.showChangeTelephoneNumber()(fakeRequest())
-      status(result) shouldBe OK
-      contentAsString(result.futureValue) should include("What is the telephone")
-    }
-  }
-
-  "POST /manage-account/contact-details/new-telephone" should {
-    "store the new telephone number in session and redirect to apply SA code page" in new TestSetup {
-      noPendingChangesInRepo()
-      implicit val request = fakeRequest("POST").withFormUrlEncodedBody("telephoneNumber" -> "01234 567 890")
-      val result = contactDetailsController.submitChangeTelephoneNumber()(request)
-      status(result) shouldBe SEE_OTHER
-      header("Location", result) shouldBe Some(desiDetails.routes.ApplySACodeChangesController.showPage.url)
-      sessionCache.get(DRAFT_NEW_CONTACT_DETAILS).futureValue.flatMap(_.agencyDetails.agencyTelephone) shouldBe Some("01234 567 890")
-    }
-
-    "display an error if the data submitted is invalid" in new TestSetup {
-      noPendingChangesInRepo()
-      implicit val request = fakeRequest("POST").withFormUrlEncodedBody("telephoneNumber" -> "0800 FAKE NO")
-      val result = contactDetailsController.submitChangeTelephoneNumber()(request)
-      status(result) shouldBe OK
-      contentAsString(result.futureValue) should include("There is a problem")
-      sessionCache.get(DRAFT_NEW_CONTACT_DETAILS).futureValue.flatMap(_.agencyDetails.agencyTelephone) shouldBe None // new email not added to session
-    }
-  }
-
   "GET /manage-account/contact-details/new-address" should {
     "redirect to the external service to look up an address" in new TestSetup {
       noPendingChangesInRepo()
@@ -352,8 +323,6 @@ class ContactDetailsControllerSpec extends UnitSpec
       shouldRedirect(contactDetailsController.showChangeEmailAddress())
       shouldRedirect(contactDetailsController.submitChangeEmailAddress())
       shouldRedirect(contactDetailsController.finishEmailVerification())
-      shouldRedirect(contactDetailsController.showChangeTelephoneNumber())
-      shouldRedirect(contactDetailsController.submitChangeTelephoneNumber())
       shouldRedirect(contactDetailsController.startAddressLookup())
       shouldRedirect(contactDetailsController.finishAddressLookup(None))
     }

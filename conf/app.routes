@@ -72,8 +72,8 @@ GET        /manage-account/contact-details/new-email                      @uk.go
 POST       /manage-account/contact-details/new-email                      @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.ContactDetailsController.submitChangeEmailAddress
 GET        /manage-account/contact-details/email-verification-finish      @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.ContactDetailsController.finishEmailVerification
 GET        /manage-account/contact-details/email-locked                   @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.ContactDetailsController.showEmailLocked
-GET        /manage-account/contact-details/new-telephone                  @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.ContactDetailsController.showChangeTelephoneNumber
-POST       /manage-account/contact-details/new-telephone                  @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.ContactDetailsController.submitChangeTelephoneNumber
+GET        /manage-account/contact-details/new-telephone                  @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.UpdateTelephoneController.showPage
+POST       /manage-account/contact-details/new-telephone                  @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.UpdateTelephoneController.onSubmit
 
 GET        /manage-account/contact-details/apply-code-SA                  @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.ApplySACodeChangesController.showPage
 POST       /manage-account/contact-details/apply-code-SA                  @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.ApplySACodeChangesController.onSubmit
