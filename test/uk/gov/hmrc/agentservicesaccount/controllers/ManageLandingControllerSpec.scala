@@ -29,7 +29,7 @@ import uk.gov.hmrc.agentservicesaccount.support.Css.{H1, paragraphs}
 import uk.gov.hmrc.agentservicesaccount.support.{BaseISpec, Css}
 import uk.gov.hmrc.auth.core.{Enrolment, EnrolmentIdentifier}
 import uk.gov.hmrc.http.SessionKeys
-
+import uk.gov.hmrc.agentservicesaccount.stubs.AgentClientAuthorisationStubs._
 
 class ManageLandingControllerSpec extends BaseISpec {
 
@@ -45,8 +45,10 @@ class ManageLandingControllerSpec extends BaseISpec {
 
     val ASAAccountTitle = "Manage access in the agent services account - Agent services account - GOV.UK"
 
+
     "return Status: Forbidden" in {
       givenAuthorisedAsAgentWith(arn, isAdmin = false)
+      givenAgentRecordFound(agentRecord)
       val response = await(controller.showAccessGroupSummaryForASA(FakeRequest("GET", "/agent-services-access").withSession(SessionKeys.authToken -> "Bearer XYZ"))) //URL response created to mock webpage
 
       status(response) shouldBe 403
@@ -56,6 +58,7 @@ class ManageLandingControllerSpec extends BaseISpec {
       // Given: auth agent with no opt in status
       givenAuthorisedAsAgentWith(arn)
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedOutSingleUser)
+      givenAgentRecordFound(agentRecord)
       // When:
       val response = await(controller.showAccessGroupSummaryForASA()(FakeRequest("GET", "/agent-services-access").withSession(SessionKeys.authToken -> "Bearer XYZ")))
       status(response) shouldBe 200
@@ -72,6 +75,7 @@ class ManageLandingControllerSpec extends BaseISpec {
 
     "return Status: OK & page with correct content whilst Optin" in {
       givenAuthorisedAsAgentWith(arn)
+      givenAgentRecordFound(agentRecord)
       givenArnAllowedOk()
       givenSyncEacdSuccess(Arn(arn))
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInReady) // access groups turned on

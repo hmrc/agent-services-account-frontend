@@ -164,11 +164,8 @@ class AgentServicesController @Inject()(authActions: AuthActions,
   }
 
 
-  val accountDetails: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    agentClientAuthorisationConnector.getAgencyDetails().map(agencyDetails =>
-      Ok(account_details(agencyDetails, request.agentInfo.isAdmin))
-    )
-
+  val accountDetails: Action[AnyContent] = actions.authActionWithSuspensionCheckWithAgentRecord.async { implicit request  =>
+    Ok(account_details(request.agentDetailsDesResponse.agencyDetails, request.authRequestWithAgentInfo.agentInfo.isAdmin)).toFuture
   }
 
   val showHelp: Action[AnyContent] = actions.authActionCheckSuspend { implicit request =>

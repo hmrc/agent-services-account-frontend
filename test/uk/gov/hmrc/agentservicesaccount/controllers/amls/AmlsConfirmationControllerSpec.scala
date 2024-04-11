@@ -25,17 +25,17 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.Result
 import play.api.test.Helpers.defaultAwaitTimeout
 import play.api.test.{FakeRequest, Helpers}
-import uk.gov.hmrc.agentmtdidentifiers.model.SuspensionDetails
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.stubs.AgentClientAuthorisationStubs.givenSuspensionStatus
+import uk.gov.hmrc.agentservicesaccount.stubs.AgentClientAuthorisationStubs.givenAgentRecordFound
 import uk.gov.hmrc.agentservicesaccount.stubs.AuthStubs
-import uk.gov.hmrc.agentservicesaccount.support.{UnitSpec, WireMockSupport}
+import uk.gov.hmrc.agentservicesaccount.support.{TestConstants, UnitSpec, WireMockSupport}
 import uk.gov.hmrc.http.SessionKeys
 
 import scala.concurrent.Future
 
 
-class AmlsConfirmationControllerSpec extends UnitSpec with AuthStubs with GuiceOneAppPerSuite with WireMockSupport {
+class AmlsConfirmationControllerSpec extends UnitSpec with AuthStubs with GuiceOneAppPerSuite with WireMockSupport
+  with TestConstants {
 
   class Setup(isEnabled: Boolean) {
     def application(isEnabled: Boolean): Application = new GuiceApplicationBuilder().configure(
@@ -67,7 +67,7 @@ class AmlsConfirmationControllerSpec extends UnitSpec with AuthStubs with GuiceO
     "return Ok and show the confirmation page for AMLS details updated" when {
       "the non-hmrc-supervisory-body feature switch is enabled" in new Setup(isEnabled = true) {
         givenAuthorisedAsAgentWith(arn)
-        givenSuspensionStatus(SuspensionDetails(suspensionStatus = false, None))
+        givenAgentRecordFound(agentRecord)
 
         val response: Future[Result] = controller.showUpdatedAmlsConfirmationPage(true)(fakeRequest("GET", "/home"))
 
@@ -77,7 +77,7 @@ class AmlsConfirmationControllerSpec extends UnitSpec with AuthStubs with GuiceO
       }
       "the non-hmrc-supervisory-body feature switch is disabled" in new Setup(isEnabled = false) {
         givenAuthorisedAsAgentWith(arn)
-        givenSuspensionStatus(SuspensionDetails(suspensionStatus = false, None))
+        givenAgentRecordFound(agentRecord)
 
         val response: Future[Result] = controller.showUpdatedAmlsConfirmationPage(true)(fakeRequest("GET", "/home"))
         status(response) shouldBe FORBIDDEN

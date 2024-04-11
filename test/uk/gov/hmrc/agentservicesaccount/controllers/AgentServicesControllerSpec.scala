@@ -25,7 +25,7 @@ import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
 import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, SuspensionDetails, SuspensionDetailsNotFound}
+import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, SuspensionDetails}
 import uk.gov.hmrc.agents.accessgroups.optin._
 import uk.gov.hmrc.agents.accessgroups.{GroupSummary, UserDetails}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
@@ -37,7 +37,7 @@ import uk.gov.hmrc.agentservicesaccount.stubs.AgentUserClientDetailsStubs._
 import uk.gov.hmrc.agentservicesaccount.support.Css._
 import uk.gov.hmrc.agentservicesaccount.support.{BaseISpec, Css}
 import uk.gov.hmrc.auth.core.{Enrolment, EnrolmentIdentifier}
-import uk.gov.hmrc.http.SessionKeys
+import uk.gov.hmrc.http.{SessionKeys, UpstreamErrorResponse}
 
 import java.util.UUID
 
@@ -67,7 +67,7 @@ class AgentServicesControllerSpec extends BaseISpec {
 
     "redirect to agent service account when the user is not suspended" in {
       givenAuthorisedAsAgentWith(arn)
-      givenSuspensionStatus(SuspensionDetails(suspensionStatus = false, None))
+      givenAgentRecordFound(agentRecord)
 
       val response = controller.root()(fakeRequest())
 
@@ -77,7 +77,8 @@ class AgentServicesControllerSpec extends BaseISpec {
 
     "redirect to suspended warning when user is suspended" in {
       givenAuthorisedAsAgentWith(arn)
-      givenSuspensionStatus(SuspensionDetails(suspensionStatus = true, Some(Set("ITSA"))))
+      givenAgentRecordFound(
+        agentRecord.copy(suspensionDetails = Some(SuspensionDetails(suspensionStatus = true, regimes = Some(Set("ALL"))))))
 
       val response = controller.root()(fakeRequest())
 
@@ -87,7 +88,9 @@ class AgentServicesControllerSpec extends BaseISpec {
 
     "redirect to suspended warning when user is suspended for AGSV" in {
       givenAuthorisedAsAgentWith(arn)
-      givenSuspensionStatus(SuspensionDetails(suspensionStatus = true, Some(Set("AGSV"))))
+      givenAgentRecordFound(
+        agentRecord.copy(suspensionDetails = Some(SuspensionDetails(suspensionStatus = true, regimes = Some(Set("AGSV"))))))
+
 
       val response = controller.root()(fakeRequest())
 
@@ -97,7 +100,9 @@ class AgentServicesControllerSpec extends BaseISpec {
 
     "redirect to suspended warning when user is suspended for ALL" in {
       givenAuthorisedAsAgentWith(arn)
-      givenSuspensionStatus(SuspensionDetails(suspensionStatus = true, Some(Set("ALL"))))
+      givenAgentRecordFound(
+        agentRecord.copy(suspensionDetails = Some(SuspensionDetails(suspensionStatus = true, regimes = Some(Set("ALL"))))))
+
 
       val response = controller.root()(fakeRequest())
 
@@ -105,12 +110,12 @@ class AgentServicesControllerSpec extends BaseISpec {
       Helpers.redirectLocation(response) shouldBe Some(routes.SuspendedJourneyController.showSuspendedWarning().url)
     }
 
-    "throw an exception when suspension status returns NOT_FOUND for user" in {
+    "throw an exception when get agent record returns NOT_FOUND for user" in {
       givenAuthorisedAsAgentWith(arn)
-      givenAgentRecordNotFound
+      givenAgentDetailsErrorResponse(404)
 
 
-      intercept[SuspensionDetailsNotFound] {
+      intercept[UpstreamErrorResponse] {
         await(controller.root()(fakeRequest()))
       }
     }
@@ -120,8 +125,10 @@ class AgentServicesControllerSpec extends BaseISpec {
 
     "return status: OK" when {
 
-      "No suspension status" in {
-        givenSuspensionStatusNotFound
+      "No suspension details on the agent record" in {
+        givenAgentRecordFound(
+          agentRecord.copy(suspensionDetails = None))
+
         givenAuthorisedAsAgentWith(arn)
         givenHidePrivateBetaInviteNotFound()
 
@@ -130,7 +137,9 @@ class AgentServicesControllerSpec extends BaseISpec {
       }
 
       "Agent is suspended should be redirected" in {
-        givenSuspensionStatus(SuspensionDetails(suspensionStatus = true, None))
+        givenAgentRecordFound(
+          agentRecord.copy(suspensionDetails = Some(SuspensionDetails(suspensionStatus = true, regimes = Some(Set("ALL"))))))
+
         givenAuthorisedAsAgentWith(arn)
         givenHidePrivateBetaInviteNotFound()
 
@@ -174,7 +183,8 @@ class AgentServicesControllerSpec extends BaseISpec {
 
       "an authorised agent with no suspension" in {
         givenAuthorisedAsAgentWith(arn)
-        givenSuspensionStatus(SuspensionDetails(suspensionStatus = false, None))
+        givenAgentRecordFound(agentRecord)
+
         givenHidePrivateBetaInviteNotFound()
 
         val response = await(controller.showAgentServicesAccount()(fakeRequest("GET", "/home")))
@@ -318,7 +328,8 @@ class AgentServicesControllerSpec extends BaseISpec {
       }
 
       "agent with showFeatureInvite being false" in {
-        givenSuspensionStatus(SuspensionDetails(suspensionStatus = false, None))
+        givenAgentRecordFound(agentRecord)
+
         givenAuthorisedAsAgentWith(arn)
         givenHidePrivateBetaInvite()
 
@@ -413,6 +424,7 @@ class AgentServicesControllerSpec extends BaseISpec {
           .injector.instanceOf[AgentServicesController]
 
       givenAuthorisedAsAgentWith(arn)
+      givenAgentRecordFound(agentRecord)
       val response = controllerWithGranPermsDisabled.manageAccount().apply(fakeRequest("GET", "/manage-account"))
 
       status(response) shouldBe OK
@@ -427,6 +439,7 @@ class AgentServicesControllerSpec extends BaseISpec {
 
     "return Status: OK and body containing existing manage account content when gran perms FF is on but there was an error getting optin-status" in {
       givenAuthorisedAsAgentWith(arn)
+      givenAgentRecordFound(agentRecord)
       givenArnAllowedOk()
       givenSyncEacdFailure(Arn(arn))
       givenOptinStatusFailedForArn(Arn(arn))
@@ -447,6 +460,7 @@ class AgentServicesControllerSpec extends BaseISpec {
     "return Status: OK and body containing existing manage account content when gran perms FF is on but ARN is not on allowed list" in {
 
       givenAuthorisedAsAgentWith(arn)
+      givenAgentRecordFound(agentRecord)
       givenArnAllowedNotOk() // agent-permissions allowlist
       givenSyncEacdSuccess(Arn(arn))
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInReady)
@@ -467,6 +481,7 @@ class AgentServicesControllerSpec extends BaseISpec {
     "return status: OK and body containing content for status Opted-In_READY (no access groups created yet)" in {
 
       givenAuthorisedAsAgentWith(arn)
+      givenAgentRecordFound(agentRecord)
       givenArnAllowedOk()
       givenSyncEacdSuccess(Arn(arn))
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInReady)
@@ -507,6 +522,7 @@ class AgentServicesControllerSpec extends BaseISpec {
     "return status: OK and body containing content for status Opted-In_READY (access groups already created)" in {
 
       givenAuthorisedAsAgentWith(arn)
+      givenAgentRecordFound(agentRecord)
       givenArnAllowedOk()
       givenSyncEacdSuccess(Arn(arn))
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInReady)
@@ -544,6 +560,7 @@ class AgentServicesControllerSpec extends BaseISpec {
 
       givenAuthorisedAsAgentWith(arn)
       givenArnAllowedOk()
+      givenAgentRecordFound(agentRecord)
       givenSyncEacdSuccess(Arn(arn))
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInNotReady)
       givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq.empty))
@@ -570,6 +587,7 @@ class AgentServicesControllerSpec extends BaseISpec {
 
       givenAuthorisedAsAgentWith(arn)
       givenArnAllowedOk()
+      givenAgentRecordFound(agentRecord)
       givenSyncEacdSuccess(Arn(arn))
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInSingleUser)
       givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq.empty))
@@ -597,6 +615,7 @@ class AgentServicesControllerSpec extends BaseISpec {
 
       givenAuthorisedAsAgentWith(arn)
       givenArnAllowedOk()
+      givenAgentRecordFound(agentRecord)
       givenSyncEacdSuccess(Arn(arn))
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedOutWrongClientCount)
       givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq.empty))
@@ -624,6 +643,7 @@ class AgentServicesControllerSpec extends BaseISpec {
 
       givenAuthorisedAsAgentWith(arn)
       givenArnAllowedOk()
+      givenAgentRecordFound(agentRecord)
       givenSyncEacdSuccess(Arn(arn))
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedOutSingleUser)
       givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq.empty))
@@ -650,6 +670,7 @@ class AgentServicesControllerSpec extends BaseISpec {
 
       givenAuthorisedAsAgentWith(arn)
       givenArnAllowedOk()
+      givenAgentRecordFound(agentRecord)
       givenSyncEacdSuccess(Arn(arn))
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedOutEligible)
       givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq.empty))
@@ -668,6 +689,7 @@ class AgentServicesControllerSpec extends BaseISpec {
     "return view AMLS link for ValidAmlsDetailsUK" in {
       givenAuthorisedAsAgentWith(arn)
       givenArnAllowedOk()
+      givenAgentRecordFound(agentRecord)
       givenSyncEacdSuccess(Arn(arn))
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInNotReady)
       givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq.empty))
@@ -687,6 +709,7 @@ class AgentServicesControllerSpec extends BaseISpec {
     "return view AMLS link for NoAmlsDetailsNonUK" in {
       givenAuthorisedAsAgentWith(arn)
       givenArnAllowedOk()
+      givenAgentRecordFound(agentRecord)
       givenSyncEacdSuccess(Arn(arn))
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInNotReady)
       givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq.empty))
@@ -706,6 +729,7 @@ class AgentServicesControllerSpec extends BaseISpec {
     "return view AMLS link for ValidAmlsNonUK" in {
       givenAuthorisedAsAgentWith(arn)
       givenArnAllowedOk()
+      givenAgentRecordFound(agentRecord)
       givenSyncEacdSuccess(Arn(arn))
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInNotReady)
       givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq.empty))
@@ -726,6 +750,7 @@ class AgentServicesControllerSpec extends BaseISpec {
     "return view AMLS link for PendingAmlsDetails" in {
       givenAuthorisedAsAgentWith(arn)
       givenArnAllowedOk()
+      givenAgentRecordFound(agentRecord)
       givenSyncEacdSuccess(Arn(arn))
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInNotReady)
       givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq.empty))
@@ -746,6 +771,7 @@ class AgentServicesControllerSpec extends BaseISpec {
     "return add AMLS link for NoAmlsDetailsUK " in {
       givenAuthorisedAsAgentWith(arn)
       givenArnAllowedOk()
+      givenAgentRecordFound(agentRecord)
       givenSyncEacdSuccess(Arn(arn))
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInNotReady)
       givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq.empty))
@@ -765,6 +791,7 @@ class AgentServicesControllerSpec extends BaseISpec {
     "return add AMLS link for PendingAmlsDetailsRejected " in {
       givenAuthorisedAsAgentWith(arn)
       givenArnAllowedOk()
+      givenAgentRecordFound(agentRecord)
       givenSyncEacdSuccess(Arn(arn))
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInNotReady)
       givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq.empty))
@@ -785,6 +812,7 @@ class AgentServicesControllerSpec extends BaseISpec {
     "return update AMLS link for ExpiredAmlsDetailsUK" in {
       givenAuthorisedAsAgentWith(arn)
       givenArnAllowedOk()
+      givenAgentRecordFound(agentRecord)
       givenSyncEacdSuccess(Arn(arn))
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInNotReady)
       givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(Seq.empty))
@@ -808,30 +836,15 @@ class AgentServicesControllerSpec extends BaseISpec {
     "return status OK" when {
       "agent is admin and details found" in {
         givenAuthorisedAsAgentWith(arn)
-        givenAgentDetailsFound(
-          AgencyDetails(
-              Some("My Agency"),
-              Some("abc@abc.com"),
-              Some("07345678901"),
-              Some(BusinessAddress("25 Any Street", Some("Any Town"), None, None, Some("TF3 4TR"), "GB"))
-          )
-        )
+        givenAgentRecordFound(agentRecord)
 
         val response = await(controller.accountDetails().apply(fakeRequest("GET", "/account-details")))
         status(response) shouldBe OK
       }
 
-      "agent is admin and details not found" in {
-        givenAuthorisedAsAgentWith(arn)
-        givenAgentDetailsNoContent()
-
-        val response = await(controller.accountDetails().apply(fakeRequest("GET", "/account-details")))
-        status(response) shouldBe OK
-      }
-
-      "agent is assistant" in {
+      "agent is assistant and details found" in {
         givenAuthorisedAsAgentWith(arn, isAdmin = false)
-        givenAgentDetailsNoContent()
+        givenAgentRecordFound(agentRecord)
 
         val response = await(controller.accountDetails().apply(fakeRequest("GET", "/account-details")))
         status(response) shouldBe OK
@@ -841,14 +854,12 @@ class AgentServicesControllerSpec extends BaseISpec {
     "display correct content" when {
       "agent is admin and details found" in {
         givenAuthorisedAsAgentWith(arn)
-        givenAgentDetailsFound(
-          AgencyDetails(
-              Some("My Agency"),
-              Some("abc@abc.com"),
-              Some("07345678901"),
-              Some(BusinessAddress("25 Any Street", Some("Any Town"), None, None, Some("TF3 4TR"), "GB"))
-          )
-        )
+        givenAgentRecordFound(agentRecord.copy(agencyDetails = Some(AgencyDetails(
+          Some("My Agency"),
+          Some("abc@abc.com"),
+          Some("07345678901"),
+          Some(BusinessAddress("25 Any Street", Some("Any Town"), None, None, Some("TF3 4TR"), "GB"))
+        ))))
 
         val response = await(controller.accountDetails().apply(fakeRequest("GET", "/account-details")))
         val html = Jsoup.parse(contentAsString(response))
@@ -874,50 +885,18 @@ class AgentServicesControllerSpec extends BaseISpec {
         html.select(summaryListValues).get(2).text shouldBe "My Agency"
         html.select(summaryListKeys).get(3).text shouldBe "Address"
         html.select(summaryListValues).get(3).text shouldBe "25 Any Street Any Town TF3 4TR GB"
-
-      }
-
-      "agent is admin and details not found" in {
-        givenAuthorisedAsAgentWith(arn)
-        givenAgentDetailsNoContent()
-
-        val response = await(controller.accountDetails().apply(fakeRequest("GET", "/account-details")))
-        val html = Jsoup.parse(contentAsString(response))
-
-        html.title() shouldBe "Account details - Agent services account - GOV.UK"
-        html.select(H1).get(0).text shouldBe "Account details"
-
-        html.select(secondaryNavLinks).get(1).text shouldBe "Manage account New"
-        html.select(secondaryNavLinks).get(1).select("span").text shouldBe "Manage account"
-        html.select(secondaryNavLinks).get(1).select("strong").text shouldBe "New"
-
-        html.select(backLink).get(0).attr("href") shouldBe "/agent-services-account/manage-account"
-
-        html.select(H2).get(0).text shouldBe "Agent services account details"
-
-        html.select(insetText).text() shouldBe "To change these details you will need to write to us. Find out more by reading the guidance (opens in a new tab). You can only change your details if you are a director, company secretary, sole trader, proprietor or partner."
-
-        html.select(summaryListKeys).get(0).text shouldBe "Email"
-        html.select(summaryListValues).get(0).text shouldBe "None"
-        html.select(summaryListKeys).get(1).text shouldBe "Contact telephone number"
-        html.select(summaryListValues).get(1).text shouldBe "None"
-        html.select(summaryListKeys).get(2).text shouldBe "Name"
-        html.select(summaryListValues).get(2).text shouldBe "None"
-        html.select(summaryListKeys).get(3).text shouldBe "Address"
-        html.select(summaryListValues).get(3).text shouldBe ""
-
       }
 
       "the agent is not Admin" in {
         givenAuthorisedAsAgentWith(arn, isAdmin = false)
-        givenAgentDetailsFound(
-          AgencyDetails(
+        givenAgentRecordFound(agentRecord.copy( agencyDetails =
+          Some(AgencyDetails(
               Some("My Agency"),
               Some("abc@abc.com"),
               Some("07345678901"),
               Some(BusinessAddress("25 Any Street", Some("Any Town"), None, None, Some("TF3 4TR"), "GB"))
-          )
-        )
+          ))
+        ))
 
         val response = await(controller.accountDetails().apply(fakeRequest("GET", "/account-details")))
         val html = Jsoup.parse(contentAsString(response))
@@ -954,7 +933,7 @@ class AgentServicesControllerSpec extends BaseISpec {
     "render correctly for Standard User who’s Opted-In_READY without Access Groups" in {
       val providerId = RandomUtils.nextLong().toString
       givenFullAuthorisedAsAgentWith(arn, providerId)
-      givenSuspensionStatus(SuspensionDetails(suspensionStatus = false, regimes = None))
+      givenAgentRecordFound(agentRecord)
       givenOptinRecordExistsForArn(Arn(arn), exists = true)
       givenAccessGroupsForTeamMember(Arn(arn), providerId, Seq.empty)
       val response = await(controller.yourAccount()(fakeRequest("GET", yourAccountUrl)))
@@ -997,6 +976,7 @@ class AgentServicesControllerSpec extends BaseISpec {
     "render correctly for Standard User who’s NOT Opted-In_READY without Access Groups" in {
       val providerId = RandomUtils.nextLong().toString
       givenFullAuthorisedAsAgentWith(arn, providerId)
+      givenAgentRecordFound(agentRecord)
       givenOptinRecordExistsForArn(Arn(arn), exists = false)
       givenAccessGroupsForTeamMember(Arn(arn), providerId, Seq.empty)
       val response = await(controller.yourAccount()(fakeRequest("GET", yourAccountUrl)))
@@ -1041,6 +1021,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       )
       givenFullAuthorisedAsAgentWith(arn, providerId)
       givenOptinRecordExistsForArn(Arn(arn), exists = true)
+      givenAgentRecordFound(agentRecord)
       givenAccessGroupsForArn(Arn(arn), AccessGroupSummaries(groupSummaries)) // there is already an access group
       givenAccessGroupsForTeamMember(Arn(arn), providerId, groupSummaries)
       val response = await(controller.yourAccount()(fakeRequest("GET", yourAccountUrl)))
@@ -1090,6 +1071,7 @@ class AgentServicesControllerSpec extends BaseISpec {
     "render static data and list of Admin Users for ARN if standard user" in {
       givenAuthorisedAsAgentWith(arn, isAdmin = false)
       givenArnAllowedOk()
+      givenAgentRecordFound(agentRecord)
       givenSyncEacdSuccess(Arn(arn))
       givenOptinStatusSuccessReturnsForArn(Arn(arn), OptedInReady)
       val teamMembers = Seq(
@@ -1129,6 +1111,7 @@ class AgentServicesControllerSpec extends BaseISpec {
     "allow admin users" in {
       givenAuthorisedAsAgentWith(arn)
       givenArnAllowedOk()
+      givenAgentRecordFound(agentRecord)
       givenSyncEacdSuccess(Arn(arn))
       val teamMembers = Seq(
         UserDetails(credentialRole = Some("User"), name = Some("Robert Builder"), email = Some("bob@builder.com")),
@@ -1152,12 +1135,14 @@ class AgentServicesControllerSpec extends BaseISpec {
 
     "return Status: OK" in {
       givenAuthorisedAsAgentWith(arn)
+      givenAgentRecordFound(agentRecord)
       val response = await(controller.showHelp().apply(fakeRequest("GET", "/help")))
       status(response) shouldBe OK
     }
 
     "contain matching heading in page title" in {
       givenAuthorisedAsAgentWith(arn)
+      givenAgentRecordFound(agentRecord)
       val response = await(controller.showHelp().apply(fakeRequest("GET", "/help")))
       val html = Jsoup.parse(contentAsString(response))
       html.title() shouldBe "Help and guidance - Agent services account - GOV.UK"
@@ -1166,6 +1151,7 @@ class AgentServicesControllerSpec extends BaseISpec {
 
     "contain body with correct content" in {
       givenAuthorisedAsAgentWith(arn)
+      givenAgentRecordFound(agentRecord)
       val response = await(controller.showHelp().apply(fakeRequest("GET", "/help")))
       val html = Jsoup.parse(contentAsString(response))
       val h2 = html.select(H2)

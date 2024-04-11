@@ -26,10 +26,11 @@ import play.api.mvc.{DefaultActionBuilderImpl, MessagesControllerComponents, Req
 import play.api.test.Helpers.stubMessagesControllerComponents
 import play.api.test.{DefaultAwaitTimeout, FakeRequest, Helpers}
 import play.twirl.api.Html
-import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, SuspensionDetails}
+import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector}
+import uk.gov.hmrc.agentservicesaccount.support.TestConstants
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.admin_access_for_access_groups
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve._
@@ -41,7 +42,8 @@ import scala.concurrent.{ExecutionContext, Future}
 class NoAccessGroupsAssignmentControllerSpec extends PlaySpec
   with DefaultAwaitTimeout
   with IdiomaticMockito
-  with ArgumentMatchersSugar {
+  with ArgumentMatchersSugar
+  with TestConstants {
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
   implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
@@ -49,12 +51,6 @@ class NoAccessGroupsAssignmentControllerSpec extends PlaySpec
 
   //TODO move auth/suspend actions to common file for all unit tests
   val mockAcaConnector: AgentClientAuthorisationConnector = mock[AgentClientAuthorisationConnector]
-  val notSuspendedDetails: Future[SuspensionDetails] = Future successful SuspensionDetails(suspensionStatus = false, None)
-  def givenNotSuspended(): ScalaOngoingStubbing[Future[SuspensionDetails]] = {
-    mockAcaConnector.getSuspensionDetails()(
-      *[HeaderCarrier],
-      *[ExecutionContext]) returns notSuspendedDetails
-  }
 
   private val arn = Arn("BARN1234567")
 
@@ -73,6 +69,8 @@ class NoAccessGroupsAssignmentControllerSpec extends PlaySpec
       Some(Email("test@email.com"))),
       Some(Name(Some("Troy"), Some("Barnes")))),
       Some(credentialRole)))
+
+  def givenAgentRecord = mockAcaConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
   val mockAuthConnector: AuthConnector = mock[AuthConnector]
   val mockAgentAssuranceConnector: AgentAssuranceConnector = mock[AgentAssuranceConnector]
@@ -99,7 +97,7 @@ class NoAccessGroupsAssignmentControllerSpec extends PlaySpec
   "redirect for no assignment" should {
     "redirect admin user to show admin access information" in new Setup {
       givenAuthorisedAgent(User)
-      givenNotSuspended()
+      givenAgentRecord
 
       val result: Future[Result] = TestController.redirectForNoAssignment(fakeRequest)
 
@@ -109,7 +107,6 @@ class NoAccessGroupsAssignmentControllerSpec extends PlaySpec
 
     "redirect standard user to administrators list" in new Setup {
       givenAuthorisedAgent(Assistant)
-      givenNotSuspended()
 
       val result: Future[Result] = TestController.redirectForNoAssignment(fakeRequest)
 
@@ -121,7 +118,7 @@ class NoAccessGroupsAssignmentControllerSpec extends PlaySpec
   "show admin access information" should {
     "display the page if user is an admin" in new Setup {
       givenAuthorisedAgent(User)
-      givenNotSuspended()
+      givenAgentRecord
 
       mockView.apply()(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 
@@ -131,7 +128,7 @@ class NoAccessGroupsAssignmentControllerSpec extends PlaySpec
     }
     "return forbidden if user is an Assistant" in new Setup {
       givenAuthorisedAgent(Assistant)
-      givenNotSuspended()
+      givenAgentRecord
 
       mockView.apply()(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 

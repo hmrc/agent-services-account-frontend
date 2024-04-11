@@ -26,10 +26,10 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, SuspensionDetails}
+import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, SuspensionDetails, Utr}
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.ContactDetailsController
-import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress}
+import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, AgentDetailsDesResponse, BusinessAddress}
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.support.UnitSpec
 import uk.gov.hmrc.auth.core.AuthConnector
@@ -61,6 +61,14 @@ class ContactDetailsBeforeYouStartControllerSpec extends UnitSpec
         None,
         Some("TF4 3TR"),
         "GB"))
+    )
+
+    private val suspensionDetails = SuspensionDetails(suspensionStatus = false, regimes = None)
+
+    private val agentRecord = AgentDetailsDesResponse(
+      uniqueTaxReference = Some(Utr("0123456789")),
+      agencyDetails = Some(agencyDetails),
+      suspensionDetails = Some(suspensionDetails)
     )
 
     private val stubAuthConnector = new AuthConnector {
@@ -106,8 +114,8 @@ class ContactDetailsBeforeYouStartControllerSpec extends UnitSpec
     ).overrides(overrides).build()
 
     val acaConnector: AgentClientAuthorisationConnector = app.injector.instanceOf[AgentClientAuthorisationConnector]
-    (acaConnector.getSuspensionDetails()(_: HeaderCarrier, _: ExecutionContext)).when(*, *).returns(Future.successful(SuspensionDetails(false, None)))
-    (acaConnector.getAgencyDetails()(_: HeaderCarrier, _: ExecutionContext)).when(*, *).returns(Future.successful(Some(agencyDetails)))
+
+    (acaConnector.getAgentRecord()(_: HeaderCarrier, _: ExecutionContext)).when(*, *).returns(Future.successful(agentRecord))
 
     val controller: ContactDetailsController = app.injector.instanceOf[ContactDetailsController]
     val sessionCache: SessionCacheService = app.injector.instanceOf[SessionCacheService]

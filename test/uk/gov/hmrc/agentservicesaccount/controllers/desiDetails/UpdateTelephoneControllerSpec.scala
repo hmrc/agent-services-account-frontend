@@ -27,15 +27,15 @@ import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, AnyContentAsFormUrlEncoded, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, SuspensionDetails}
+import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.connectors.{AddressLookupConnector, AgentClientAuthorisationConnector, EmailVerificationConnector}
 import uk.gov.hmrc.agentservicesaccount.controllers.{CURRENT_SELECTED_CHANGES, DRAFT_NEW_CONTACT_DETAILS, DRAFT_SUBMITTED_BY, desiDetails}
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup.{ConfirmedResponseAddress, ConfirmedResponseAddressDetails, Country, JourneyConfigV2}
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, OtherServices, SaChanges, YourDetails}
-import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress, PendingChangeOfDetails}
+import uk.gov.hmrc.agentservicesaccount.models.PendingChangeOfDetails
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
-import uk.gov.hmrc.agentservicesaccount.support.UnitSpec
+import uk.gov.hmrc.agentservicesaccount.support.{TestConstants, UnitSpec}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve.Retrieval
@@ -44,22 +44,15 @@ import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
 import java.time.Instant
 import scala.concurrent.{ExecutionContext, Future}
 
-class UpdateTelephoneControllerSpec extends UnitSpec with Matchers with GuiceOneAppPerSuite with ScalaFutures with IntegrationPatience with MockFactory {
+class UpdateTelephoneControllerSpec extends UnitSpec
+  with Matchers
+  with GuiceOneAppPerSuite
+  with ScalaFutures
+  with IntegrationPatience
+  with MockFactory
+  with TestConstants {
 
   private val testArn = Arn("XXARN0123456789")
-
-  private val agencyDetails = AgencyDetails(
-    agencyName = Some("My Agency"),
-    agencyEmail = Some("abc@abc.com"),
-    agencyTelephone = Some("07345678901"),
-    agencyAddress = Some(BusinessAddress(
-      "25 Any Street",
-      Some("Central Grange"),
-      Some("Telford"),
-      None,
-      Some("TF4 3TR"),
-      "GB"))
-  )
 
   private val emptyOtherServices = OtherServices(
     saChanges = SaChanges(
@@ -124,8 +117,7 @@ class UpdateTelephoneControllerSpec extends UnitSpec with Matchers with GuiceOne
 
   trait TestSetup {
     val acaConnector: AgentClientAuthorisationConnector = app.injector.instanceOf[AgentClientAuthorisationConnector]
-    (acaConnector.getSuspensionDetails()(_: HeaderCarrier, _: ExecutionContext)).when(*, *).returns(Future.successful(SuspensionDetails(false, None)))
-    (acaConnector.getAgencyDetails()(_: HeaderCarrier, _: ExecutionContext)).when(*, *).returns(Future.successful(Some(agencyDetails)))
+    (acaConnector.getAgentRecord()(_: HeaderCarrier, _: ExecutionContext)).when(*, *).returns(Future.successful(agentRecord))
 
     val alfConnector: AddressLookupConnector = app.injector.instanceOf[AddressLookupConnector]
     (alfConnector.init(_: JourneyConfigV2)(_: HeaderCarrier)).when(*, *).returns(Future.successful("mock-address-lookup-url"))
@@ -144,8 +136,8 @@ class UpdateTelephoneControllerSpec extends UnitSpec with Matchers with GuiceOne
       (pcodRepository.find(_: Arn)).when(*).returns(Future.successful(Some(
         PendingChangeOfDetails(
           testArn,
-          agencyDetails,
-          agencyDetails,
+          agentDetails,
+          agentDetails,
           emptyOtherServices,
           Instant.now(),
           submittedByDetails
