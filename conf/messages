@@ -485,6 +485,8 @@ update-contact-details.start-page.body.p3=We’ll ask you to confirm that you ha
 update-contact-details.start-page.body.p4=In some circumstances we’ll ask for your agent codes for Self Assessment and Corporation Tax. The codes were sent by letter when your organisation asked for agent access to those services.
 update-contact-details.start-page.body.p5=Once you submit changes, you cannot amend the contact details again for 4 weeks.
 
+update-contact-details.button=Continue
+
 update-contact-details.select-changes.title=Select changes
 update-contact-details.select-changes.error=Tell us which contact details you want to change.
 update-contact-details.select-changes.h1=Which contact details do you want to change?
@@ -493,10 +495,9 @@ update-contact-details.select-changes.business-name=Business name shown to clien
 update-contact-details.select-changes.address=Address for agent services account
 update-contact-details.select-changes.email=Email address
 update-contact-details.select-changes.telephone=Telephone number
-update-contact-details.select-changes.button=Continue
 
-update-contact-details.name.heading=What is the name you want to show to your clients?
-update-contact-details.name.hint=Clients will see this name when they manage your authorisations and requests.
+update-contact-details.name.heading=What’s the new name you want to show to clients?
+update-contact-details.name.hint=Clients will see this name when they accept or manage your authorisations.
 update-contact-details.name.error.empty=Enter the name of your business
 update-contact-details.name.error.invalid=Business name must only include letters a to z, numbers, commas, full stops, apostrophes, hyphens, forward slashes and spaces
 

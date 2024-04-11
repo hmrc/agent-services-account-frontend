@@ -485,6 +485,8 @@ update-contact-details.start-page.body.p3=Byddwn yn gofyn i chi gadarnhau fod ge
 update-contact-details.start-page.body.p4=Mewn rhai amgylchiadau, byddwn yn gofyn am eich codau asiant ar gyfer Hunanasesiad a Threth Gorfforaeth.Anfonwyd y codau mewn llythyr pan ofynnodd eich sefydliad am fynediad asiant i’r gwasanaethau hynny.
 update-contact-details.start-page.body.p5=Ar ôl i chi gyflwyno newidiadau, ni fyddwch yn gallu diwygio’r manylion cyswllt eto am 4 wythnos.
 
+update-contact-details.button=Yn eich blaen
+
 update-contact-details.select-changes.title=Select changes
 update-contact-details.select-changes.error=Rhowch wybod i ni pa fanylion cyswllt yr ydych yn dymuno newid. 
 update-contact-details.select-changes.h1=Pa fanylion cyswllt yr hoffech eu newid?
@@ -493,10 +495,9 @@ update-contact-details.select-changes.business-name=Enw?r busnes a ddangosir i g
 update-contact-details.select-changes.address=Cyfeiriad ar gyfer y cyfrif gwasanaethau asiant
 update-contact-details.select-changes.email=Cyfeiriad e-bost
 update-contact-details.select-changes.telephone=Rhif ff�n
-update-contact-details.select-changes.button=Yn eich blaen
 
-update-contact-details.name.heading=What is the name you want to show to your clients? TBC
-update-contact-details.name.hint=Clients will see this name when they manage your authorisations and requests. TBC
+update-contact-details.name.heading=Beth yw’r enw newydd yr hoffech ei ddangos i gleientiaid?
+update-contact-details.name.hint=Bydd cleientiaid yn gweld yr enw hwn wrth dderbyn neu reoli’ch awdurdodiadau.
 update-contact-details.name.error.empty=Enter the name of your business TBC
 update-contact-details.name.error.invalid=Business name must only include letters a to z, numbers, commas, full stops, apostrophes, hyphens, forward slashes and spaces TBC
 
