@@ -36,10 +36,10 @@
 )
 
 @(form: Form[String])(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
-
+@title = @{msgs("update-contact-details.phone.heading")}
 @main(
-    pageTitle = withErrorPrefix(form.hasErrors, msgs("update-contact-details.phone.heading")),
-    backLinkHref = Some(desiDetails.routes.CheckYourAnswersController.showPage.url),
+    pageTitle = withErrorPrefix(form.hasErrors, title),
+    mimicBrowserBackLink = true,
     showSecondaryNav = false
 ) {
 
@@ -47,17 +47,19 @@
         @govukErrorSummary(ErrorSummary().withFormErrorsAsText(form))
     }
 
-    @formWithCSRF(action = desiDetails.routes.ContactDetailsController.submitChangeTelephoneNumber) {
+    @formWithCSRF(action = desiDetails.routes.UpdateTelephoneController.onSubmit) {
         @govukInput(Input(
             label = Label(
                 classes = "govuk-label--l",
-                content = HtmlContent(msgs("update-contact-details.phone.heading")),
+                content = Text(title),
                 isPageHeading = true
             ),
-            hint = Some(Hint(content = Text(msgs("update-contact-details.phone.hint"))))
+            hint = Some(Hint(content = Text(msgs("update-contact-details.phone.hint")))),
+            autocomplete = Some("tel"),
+            inputType = "tel"
         ).withFormField(form("telephoneNumber")))
 
-        @govukButton(Button(content = Text(msgs("common.continue-save"))))
+        @govukButton(Button(content = Text(msgs("common.continue"))))
     }
 
 }
