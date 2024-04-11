@@ -190,7 +190,7 @@ class SelectDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneAp
       def shouldRedirect(endpoint: Action[AnyContent]): Unit = {
         val result: Future[Result] = endpoint(fakeRequest())
         status(result) shouldBe SEE_OTHER
-        header("Location", result) shouldBe Some(desiDetails.routes.ContactDetailsController.showCurrentContactDetails.url)
+        header("Location", result) shouldBe Some(desiDetails.routes.ViewContactDetailsController.showPage.url)
       }
 
       pendingChangesExistInRepo()

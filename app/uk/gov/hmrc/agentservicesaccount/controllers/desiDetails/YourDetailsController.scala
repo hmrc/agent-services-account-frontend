@@ -53,7 +53,7 @@ class YourDetailsController @Inject()(
         case None => // no change is pending, we can proceed
           action
         case Some(_) => // there is a pending change, further changes are locked. Redirect to the base page
-          Future.successful(Redirect(desiDetails.routes.ContactDetailsController.showCurrentContactDetails))
+          Future.successful(Redirect(desiDetails.routes.ViewContactDetailsController.showPage))
       }
     }
   }

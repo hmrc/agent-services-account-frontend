@@ -24,15 +24,14 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
-import play.api.mvc.{Action, AnyContent, Request}
+import play.api.mvc.{Action, AnyContent}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, SuspensionDetails}
 import uk.gov.hmrc.agentservicesaccount.connectors.{AddressLookupConnector, AgentClientAuthorisationConnector, EmailVerificationConnector}
-import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.ContactDetailsController
 import uk.gov.hmrc.agentservicesaccount.controllers.{CURRENT_SELECTED_CHANGES, DRAFT_NEW_CONTACT_DETAILS, DRAFT_SUBMITTED_BY, EMAIL_PENDING_VERIFICATION, desiDetails}
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup.{ConfirmedResponseAddress, ConfirmedResponseAddressDetails, Country, JourneyConfigV2}
-import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, DesignatoryDetails, OtherServices, SaChanges, YourDetails}
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, OtherServices, SaChanges, YourDetails}
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.{CompletedEmail, VerificationStatusResponse, VerifyEmailRequest, VerifyEmailResponse}
 import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress, PendingChangeOfDetails}
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
@@ -78,8 +77,6 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
     fullName = "John Tester",
     telephone = "01903 209919"
   )
-
-  private val details = DesignatoryDetails(agencyDetails, emptyOtherServices)
 
   private val confirmedAddressResponse = ConfirmedResponseAddress(
     auditRef = "foo",
@@ -170,36 +167,6 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
       SessionKeys.authToken -> "Bearer XYZ",
       SessionKeys.sessionId -> "session-x"
     )
-
-  "GET /manage-account/contact-details/view" should {
-    "display the current details page normally if there is no change pending" in new TestSetup {
-      noPendingChangesInRepo()
-      val result = contactDetailsController.showCurrentContactDetails()(fakeRequest()).futureValue
-      status(result) shouldBe OK
-      contentAsString(result) should include("Contact details")
-      contentAsString(result) should include("My Agency")
-    }
-    "display the current details page with a warning and change locked-out if there is a change pending" in new TestSetup {
-      pendingChangesExistInRepo()
-      val result = contactDetailsController.showCurrentContactDetails()(fakeRequest()).futureValue
-      status(result) shouldBe OK
-      contentAsString(result) should include("Contact details")
-      contentAsString(result) should include("My Agency")
-      contentAsString(result) should include("New contact details were submitted on")
-    }
-    "clear any previous draft new contacts" in new TestSetup {
-      noPendingChangesInRepo()
-      implicit val request: Request[AnyContent] = fakeRequest()
-      sessionCache.put(DRAFT_NEW_CONTACT_DETAILS,details.copy(agencyDetails = details.agencyDetails.copy(agencyName = Some("New and Improved Agency")))).futureValue
-
-      val result = contactDetailsController.showCurrentContactDetails(fakeRequest())
-      status(result) shouldBe OK
-      contentAsString(result.futureValue) should include("Contact details")
-      contentAsString(result.futureValue) should include("My Agency")
-
-      sessionCache.get(DRAFT_NEW_CONTACT_DETAILS).futureValue shouldBe None
-    }
-  }
 
   "GET /manage-account/contact-details/new-name" should {
     "display the enter business name page" in new TestSetup {
@@ -369,7 +336,7 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
       def shouldRedirect(endpoint: Action[AnyContent]): Unit = {
         val result = endpoint(fakeRequest())
         status(result) shouldBe SEE_OTHER
-        header("Location", result) shouldBe Some(desiDetails.routes.ContactDetailsController.showCurrentContactDetails.url)
+        header("Location", result) shouldBe Some(desiDetails.routes.ViewContactDetailsController.showPage.url)
       }
 
       pendingChangesExistInRepo()
