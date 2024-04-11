@@ -41,7 +41,7 @@ object UpdateDetailsForms {
   val telephoneNumberForm: Form[String] = Form(
     single("telephoneNumber" -> trimmedText
       .verifying("update-contact-details.phone.error.empty", _.nonEmpty)
-      .verifying("update-contact-details.phone.error.invalid", x => x.isEmpty || TelephoneNumberRegex.matches(x.replace(" ","")))
+      .verifying("update-contact-details.phone.error.invalid", x => x.isEmpty || InternationalTelephoneRegex.matches(x.replace(" ","")))
     )
   )
   val emailAddressForm: Form[String] = Form(
