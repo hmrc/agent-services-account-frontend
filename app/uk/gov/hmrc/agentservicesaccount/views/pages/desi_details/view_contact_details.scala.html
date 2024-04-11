@@ -36,6 +36,7 @@
 
 @main(pageTitle = msgs("view-contact-details.title"), isAdmin = isAdmin, backLinkHref = Some(routes.AgentServicesController.manageAccount.url)) {
 
+    @h1("view-contact-details.title")
 
     @{
         mPendingChange match {
@@ -53,12 +54,10 @@
         }
     }
 
-    @h1("view-contact-details.title")
-
     @contact_details_summary_list_partial(agencyDetails, showChangeAction = false)
 
-    @if(isAdmin){
-    @p(html = Some(a("view-contact-details.update-details.link", href = desiDetails.routes.ContactDetailsController.showBeforeYouStartPage.url)))
+    @if(isAdmin && mPendingChange.isEmpty){
+        @p(html = Some(a("view-contact-details.update-details.link", href = desiDetails.routes.ContactDetailsController.showBeforeYouStartPage.url)))
     }
     @p(html = Some(a("view-contact-details.return-to-account.link", href = routes.AgentServicesController.manageAccount.url)))
 }

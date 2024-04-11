@@ -58,7 +58,7 @@ POST       /private-beta-check-your-answers                               @uk.go
 GET        /private-beta-confirmation                                     @uk.gov.hmrc.agentservicesaccount.controllers.BetaInviteController.showInviteConfirmation
 
 # Update contact details
-GET        /manage-account/contact-details/view                           @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.ContactDetailsController.showCurrentContactDetails
+GET        /manage-account/contact-details/view                           @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.ViewContactDetailsController.showPage
 GET        /manage-account/contact-details/start-update                   @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.ContactDetailsController.showBeforeYouStartPage
 
 GET        /manage-account/contact-changes/select-changes                 @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.SelectDetailsController.showPage

@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,13 +24,13 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
-import play.api.mvc.{Action, AnyContent, Result}
+import play.api.mvc.{AnyContent, Request, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
-import uk.gov.hmrc.agentservicesaccount.controllers.{CURRENT_SELECTED_CHANGES, DRAFT_NEW_CONTACT_DETAILS, EMAIL_PENDING_VERIFICATION, desiDetails}
-import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, OtherServices, SaChanges, YourDetails}
+import uk.gov.hmrc.agentservicesaccount.controllers.{DRAFT_NEW_CONTACT_DETAILS, DRAFT_SUBMITTED_BY}
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, DesignatoryDetails, OtherServices, SaChanges, YourDetails}
 import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress, PendingChangeOfDetails}
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
@@ -43,13 +43,13 @@ import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
 import java.time.Instant
 import scala.concurrent.{ExecutionContext, Future}
 
-class SelectDetailsControllerSpec extends UnitSpec
+class ViewContactDetailsControllerSpec extends UnitSpec
   with Matchers
   with GuiceOneAppPerSuite
   with ScalaFutures
   with IntegrationPatience
   with MockFactory
-  with TestConstants {
+  with TestConstants{
 
   private val testArn = Arn("XXARN0123456789")
 
@@ -66,6 +66,11 @@ class SelectDetailsControllerSpec extends UnitSpec
       "GB"))
   )
 
+  private val submittedByDetails = YourDetails(
+    fullName = "John Tester",
+    telephone = "01903 209919"
+  )
+
   private val emptyOtherServices = OtherServices(
     saChanges = SaChanges(
       applyChanges = false,
@@ -77,10 +82,7 @@ class SelectDetailsControllerSpec extends UnitSpec
     )
   )
 
-  private val submittedByDetails = YourDetails(
-    fullName = "John Tester",
-    telephone = "01903 209919"
-  )
+  private val details = DesignatoryDetails(agencyDetails, emptyOtherServices)
 
   private val stubAuthConnector = new AuthConnector {
     private val authJson = Json.parse(s"""{
@@ -100,7 +102,7 @@ class SelectDetailsControllerSpec extends UnitSpec
       Future.successful(retrieval.reads.reads(authJson).get)
   }
 
-  val overrides: AbstractModule = new AbstractModule() {
+  val overrides = new AbstractModule() {
     override def configure(): Unit = {
       bind(classOf[AgentClientAuthorisationConnector]).toInstance(stub[AgentClientAuthorisationConnector])
       bind(classOf[PendingChangeOfDetailsRepository]).toInstance(stub[PendingChangeOfDetailsRepository])
@@ -118,16 +120,15 @@ class SelectDetailsControllerSpec extends UnitSpec
     val acaConnector: AgentClientAuthorisationConnector = app.injector.instanceOf[AgentClientAuthorisationConnector]
     (acaConnector.getAgentRecord()(_: HeaderCarrier, _: ExecutionContext)).when(*, *).returns(Future.successful(agentRecord))
 
-    val selectDetailsController: SelectDetailsController = app.injector.instanceOf[SelectDetailsController]
+    val controller: ViewContactDetailsController = app.injector.instanceOf[ViewContactDetailsController]
     val sessionCache: SessionCacheService = app.injector.instanceOf[SessionCacheService]
     val pcodRepository: PendingChangeOfDetailsRepository = app.injector.instanceOf[PendingChangeOfDetailsRepository]
-
     def noPendingChangesInRepo(): Unit = {
       (pcodRepository.find(_: Arn)).when(*).returns(Future.successful(None))
     }
     def pendingChangesExistInRepo(): Unit = {
-      (pcodRepository.find(_: Arn)).when(*).returns(Future.successful(Some(
-        PendingChangeOfDetails(
+      (pcodRepository.find(_: Arn)).when(*).returns(Future.successful(
+        Some(PendingChangeOfDetails(
           testArn,
           agencyDetails,
           agencyDetails,
@@ -140,9 +141,7 @@ class SelectDetailsControllerSpec extends UnitSpec
     (pcodRepository.insert(_: PendingChangeOfDetails)).when(*).returns(Future.successful(()))
 
     // make sure these values are cleared from the session
-    sessionCache.delete(DRAFT_NEW_CONTACT_DETAILS)(fakeRequest()).futureValue
-    sessionCache.delete(EMAIL_PENDING_VERIFICATION)(fakeRequest()).futureValue
-    sessionCache.delete(CURRENT_SELECTED_CHANGES)(fakeRequest()).futureValue
+    sessionCache.delete(DRAFT_SUBMITTED_BY)(fakeRequest()).futureValue
   }
 
   private def fakeRequest(method: String = "GET", uri: String = "/") =
@@ -151,57 +150,38 @@ class SelectDetailsControllerSpec extends UnitSpec
       SessionKeys.sessionId -> "session-x"
     )
 
-  "GET /manage-account/contact-changes/select-changes" should {
-    "display the select changes page" in new TestSetup {
+  "GET /manage-account/contact-details/view" should {
+    "display the current details page normally if there is no change pending" in new TestSetup {
       noPendingChangesInRepo()
-      val result: Future[Result] = selectDetailsController.showPage()(fakeRequest())
+      val result: Result = controller.showPage()(fakeRequest()).futureValue
       status(result) shouldBe OK
-      contentAsString(result.futureValue) should include("Which contact details do you want to change?")
+      contentAsString(result) should include("Contact details")
+      contentAsString(result) should include("My Agency")
     }
-  }
-
-  "POST /manage-account/contact-changes/select-changes" should {
-    "store the selected changes in session and redirect to first selected page" in new TestSetup {
-      noPendingChangesInRepo()
-      implicit val request = fakeRequest("POST").withFormUrlEncodedBody("email" -> "email")
-      val result: Future[Result] = selectDetailsController.onSubmit()(request)
-      status(result) shouldBe SEE_OTHER
-      header("Location", result) shouldBe Some(desiDetails.routes.ContactDetailsController.showChangeEmailAddress.url)
-      sessionCache.get(CURRENT_SELECTED_CHANGES).futureValue.get shouldBe Set("email")
-    }
-
-    "display an error if the data submitted is invalid" in new TestSetup {
-      noPendingChangesInRepo()
-      implicit val request = fakeRequest("POST").withFormUrlEncodedBody("businessName" -> "sdfhgdf")
-      val result: Future[Result] = selectDetailsController.onSubmit()(request)
-      status(result) shouldBe OK
-      contentAsString(result.futureValue) should include("There is a problem")
-      sessionCache.get(CURRENT_SELECTED_CHANGES).futureValue shouldBe None
-    }
-
-    "display an error if the data submitted is empty" in new TestSetup {
-      noPendingChangesInRepo()
-      implicit val request = fakeRequest("POST").withFormUrlEncodedBody()
-      val result: Future[Result] = selectDetailsController.onSubmit()(request)
-      status(result) shouldBe OK
-      contentAsString(result.futureValue) should include("There is a problem")
-      contentAsString(result.futureValue) should include("Tell us which contact details you want to change.")
-      sessionCache.get(CURRENT_SELECTED_CHANGES).futureValue shouldBe None
-    }
-  }
-
-  "existing pending changes" should {
-    "cause the user to be redirected away from any 'update' endpoints" in new TestSetup {
-      def shouldRedirect(endpoint: Action[AnyContent]): Unit = {
-        val result: Future[Result] = endpoint(fakeRequest())
-        status(result) shouldBe SEE_OTHER
-        header("Location", result) shouldBe Some(desiDetails.routes.ViewContactDetailsController.showPage.url)
-      }
-
+    "display the current details page with a warning and change locked-out if there is a change pending" in new TestSetup {
       pendingChangesExistInRepo()
-      shouldRedirect(selectDetailsController.showPage)
-      shouldRedirect(selectDetailsController.onSubmit)
+      val result: Result = controller.showPage()(fakeRequest()).futureValue
+      status(result) shouldBe OK
+      contentAsString(result) should include("Contact details")
+      contentAsString(result) should include("My Agency")
+      contentAsString(result) should include("New contact details were submitted on")
+    }
+    "clear any previous draft new contacts" in new TestSetup {
+      noPendingChangesInRepo()
+      implicit val request: Request[AnyContent] = fakeRequest()
+      sessionCache.put(DRAFT_NEW_CONTACT_DETAILS, details.copy(
+        agencyDetails = details.agencyDetails.copy(agencyName = Some("New and Improved Agency"))
+      )).futureValue
+
+      val result: Future[Result] = controller.showPage(fakeRequest())
+      status(result) shouldBe OK
+      contentAsString(result.futureValue) should include("Contact details")
+      contentAsString(result.futureValue) should include("My Agency")
+
+      sessionCache.get(DRAFT_NEW_CONTACT_DETAILS).futureValue shouldBe None
     }
   }
+
+
 }
 

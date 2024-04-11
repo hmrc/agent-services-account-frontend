@@ -182,7 +182,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec
       sessionCache.delete(CURRENT_SELECTED_CHANGES).futureValue
       val result: Future[Result] = checkYourAnswersController.showPage()(fakeRequest())
       status(result) shouldBe SEE_OTHER
-      header("Location", result) shouldBe Some(desiDetails.routes.ContactDetailsController.showCurrentContactDetails.url)
+      header("Location", result) shouldBe Some(desiDetails.routes.ViewContactDetailsController.showPage.url)
     }
   }
 
@@ -213,7 +213,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec
       def shouldRedirect(endpoint: Action[AnyContent]): Unit = {
         val result: Future[Result] = endpoint(fakeRequest())
         status(result) shouldBe SEE_OTHER
-        header("Location", result) shouldBe Some(desiDetails.routes.ContactDetailsController.showCurrentContactDetails.url)
+        header("Location", result) shouldBe Some(desiDetails.routes.ViewContactDetailsController.showPage.url)
       }
 
       pendingChangesExistInRepo()

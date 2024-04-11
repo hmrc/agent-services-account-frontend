@@ -225,11 +225,8 @@ class ViewContactDetailsViewSpec extends BaseISpec {
 
           val links = doc.select(".govuk-link").asScala.toList
 
-          links(2).text() mustBe MessageLookup.English.link1
-          links(2).attributes().get("href") mustBe "/agent-services-account/manage-account/contact-details/start-update"
-
-          links(3).text() mustBe MessageLookup.English.link2
-          links(3).attributes().get("href") mustBe routes.AgentServicesController.manageAccount.url
+          links(2).text() mustBe MessageLookup.English.link2
+          links(2).attributes().get("href") mustBe routes.AgentServicesController.manageAccount.url
         }
 
         "there are no contact details" in {
@@ -335,11 +332,8 @@ class ViewContactDetailsViewSpec extends BaseISpec {
 
           val links = doc.select(".govuk-link").asScala.toList
 
-          links(2).text() mustBe MessageLookup.Welsh.link1
-          links(2).attributes().get("href") mustBe "/agent-services-account/manage-account/contact-details/start-update"
-
-          links(3).text() mustBe MessageLookup.Welsh.link2
-          links(3).attributes().get("href") mustBe routes.AgentServicesController.manageAccount.url
+          links(2).text() mustBe MessageLookup.Welsh.link2
+          links(2).attributes().get("href") mustBe routes.AgentServicesController.manageAccount.url
         }
 
         "there are no contact details" in {
