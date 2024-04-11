@@ -28,14 +28,13 @@
 
 @()(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
 
-@main(pageTitle = msgs("update-contact-details.submitted.title")) {
+@main(pageTitle = msgs("update-contact-details.submitted.title"), showSecondaryNav = false) {
 
     @govukPanel(
         Panel(
             title = Text(msgs("update-contact-details.submitted.title"))
         )
     )
-
     @h2("update-contact-details.submitted.h2")
     @p("update-contact-details.submitted.p1")
     @p("update-contact-details.submitted.p2")
