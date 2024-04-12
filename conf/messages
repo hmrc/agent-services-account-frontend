@@ -485,7 +485,6 @@ update-contact-details.start-page.body.p3=We’ll ask you to confirm that you ha
 update-contact-details.start-page.body.p4=In some circumstances we’ll ask for your agent codes for Self Assessment and Corporation Tax. The codes were sent by letter when your organisation asked for agent access to those services.
 update-contact-details.start-page.body.p5=Once you submit changes, you cannot amend the contact details again for 4 weeks.
 
-update-contact-details.select-changes.title=Select changes
 update-contact-details.select-changes.error=Tell us which contact details you want to change.
 update-contact-details.select-changes.h1=Which contact details do you want to change?
 update-contact-details.select-changes.hint=Select all that apply.
