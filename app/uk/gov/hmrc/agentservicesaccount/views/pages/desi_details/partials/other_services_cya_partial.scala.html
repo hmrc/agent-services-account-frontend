@@ -46,7 +46,7 @@
                     content = Text(msgs("update-contact-details.check-your-answers.SACode"))
                 ),
                 value = Value(
-                    content = Text(otherServices.saChanges.saAgentReference.get.toString())
+                    content = Text(otherServices.saChanges.saAgentReference.getOrElse(msgs("common.not-provided")).toString)
                 ),
                 actions = Some(Actions(items = Seq(
                     ActionItem(
@@ -61,7 +61,7 @@
         Seq(
             SummaryListRow(
                 key = Key(
-                    content = Text(msgs("update-contact-details.check-your-answers.applyCT"))
+                    content = Text(msgs("update-contact-details.check-your-answers.applySA"))
                 ),
                 value = Value(
                     content = Text(msgs("common.no"))
@@ -70,7 +70,7 @@
                     ActionItem(
                         href = desiDetails.routes.ApplySACodeChangesController.showPage.url,
                         content = Text(msgs("common.change")),
-                        visuallyHiddenText = Some(msgs("update-contact-details.check-your-answers.applyCT"))
+                        visuallyHiddenText = Some(msgs("update-contact-details.check-your-answers.applySA"))
                     ))
                 ))
             )
@@ -101,7 +101,7 @@
                     content = Text(msgs("update-contact-details.check-your-answers.CTCode"))
                 ),
                 value = Value(
-                    content = Text(otherServices.ctChanges.ctAgentReference.get.toString())
+                    content = Text(otherServices.ctChanges.ctAgentReference.getOrElse(msgs("common.not-provided")).toString)
                 ),
                 actions = Some(Actions(items = Seq(
                     ActionItem(
