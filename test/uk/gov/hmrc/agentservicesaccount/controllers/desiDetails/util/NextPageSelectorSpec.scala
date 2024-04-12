@@ -60,7 +60,7 @@ class NextPageSelectorSpec extends BaseISpec with SessionServiceMocks {
 
         val response: Future[Result] = getNextPage(mockSessionCacheService, "email")
 
-        redirectLocation(await(response)) shouldBe Some(desiDetails.routes.ContactDetailsController.showChangeTelephoneNumber.url)
+        redirectLocation(await(response)) shouldBe Some(desiDetails.routes.UpdateTelephoneController.showPage.url)
       }
     }
 
@@ -95,7 +95,7 @@ class NextPageSelectorSpec extends BaseISpec with SessionServiceMocks {
 
         val response: Future[Result] = getNextPage(mockSessionCacheService, "address")
 
-        redirectLocation(await(response)) shouldBe Some(desiDetails.routes.ContactDetailsController.showChangeTelephoneNumber.url)
+        redirectLocation(await(response)) shouldBe Some(desiDetails.routes.UpdateTelephoneController.showPage.url)
       }
 
       "given a page that was part of the previous journey" in {
@@ -104,7 +104,7 @@ class NextPageSelectorSpec extends BaseISpec with SessionServiceMocks {
 
         val response: Future[Result] = getNextPage(mockSessionCacheService, "email")
 
-        redirectLocation(await(response)) shouldBe Some(desiDetails.routes.ContactDetailsController.showChangeTelephoneNumber.url)
+        redirectLocation(await(response)) shouldBe Some(desiDetails.routes.UpdateTelephoneController.showPage.url)
       }
 
       "given a page that shouldn't have been part of journey" in {
@@ -113,7 +113,7 @@ class NextPageSelectorSpec extends BaseISpec with SessionServiceMocks {
 
         val response: Future[Result] = getNextPage(mockSessionCacheService, "address")
 
-        redirectLocation(await(response)) shouldBe Some(desiDetails.routes.ContactDetailsController.showChangeTelephoneNumber.url)
+        redirectLocation(await(response)) shouldBe Some(desiDetails.routes.UpdateTelephoneController.showPage.url)
       }
     }
 

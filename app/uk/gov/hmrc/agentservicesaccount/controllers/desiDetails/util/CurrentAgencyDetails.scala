@@ -29,10 +29,9 @@ object CurrentAgencyDetails {
                                      (implicit hc: HeaderCarrier,
                                       request: AuthRequestWithAgentInfo[_],
                                       ec: ExecutionContext): Future[AgencyDetails] = {
-    acaConnector.getAgencyDetails().map(_.getOrElse {
+    acaConnector.getAgentRecord().map(_.agencyDetails.getOrElse {
       val arn = request.agentInfo.arn
       throw new RuntimeException(s"Could not retrieve current agency details for $arn from the backend")
     })
   }
-
 }

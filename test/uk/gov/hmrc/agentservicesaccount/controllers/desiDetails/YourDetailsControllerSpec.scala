@@ -27,15 +27,14 @@ import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, AnyContentAsFormUrlEncoded, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, SuspensionDetails}
+import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.DRAFT_SUBMITTED_BY
-import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.routes
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, OtherServices, SaChanges, YourDetails}
 import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress, PendingChangeOfDetails}
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
-import uk.gov.hmrc.agentservicesaccount.support.UnitSpec
+import uk.gov.hmrc.agentservicesaccount.support.{TestConstants, UnitSpec}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve.Retrieval
@@ -44,7 +43,13 @@ import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
 import java.time.Instant
 import scala.concurrent.{ExecutionContext, Future}
 
-class YourDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneAppPerSuite with ScalaFutures with IntegrationPatience with MockFactory {
+class YourDetailsControllerSpec extends UnitSpec
+  with Matchers
+  with GuiceOneAppPerSuite
+  with ScalaFutures
+  with IntegrationPatience
+  with MockFactory
+  with TestConstants {
 
   private val testArn = Arn("XXARN0123456789")
 
@@ -111,8 +116,7 @@ class YourDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneAppP
 
   trait TestSetup {
     val acaConnector: AgentClientAuthorisationConnector = app.injector.instanceOf[AgentClientAuthorisationConnector]
-    (acaConnector.getSuspensionDetails()(_: HeaderCarrier, _: ExecutionContext)).when(*, *).returns(Future.successful(SuspensionDetails(false, None)))
-    (acaConnector.getAgencyDetails()(_: HeaderCarrier, _: ExecutionContext)).when(*, *).returns(Future.successful(Some(agencyDetails)))
+    (acaConnector.getAgentRecord()(_: HeaderCarrier, _: ExecutionContext)).when(*, *).returns(Future.successful(agentRecord))
 
     val controller: YourDetailsController = app.injector.instanceOf[YourDetailsController]
     val sessionCache: SessionCacheService = app.injector.instanceOf[SessionCacheService]

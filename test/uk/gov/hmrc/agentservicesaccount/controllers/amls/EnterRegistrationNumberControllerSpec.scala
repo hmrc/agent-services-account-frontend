@@ -33,6 +33,7 @@ import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector}
 import uk.gov.hmrc.agentservicesaccount.models.{AmlsDetails, AmlsStatuses, UpdateAmlsJourney}
 import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
+import uk.gov.hmrc.agentservicesaccount.support.TestConstants
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.enter_registration_number
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.authorise.Predicate
@@ -46,7 +47,8 @@ import scala.concurrent.{ExecutionContext, Future}
 class EnterRegistrationNumberControllerSpec extends PlaySpec
   with DefaultAwaitTimeout
   with IdiomaticMockito
-  with ArgumentMatchersSugar {
+  with ArgumentMatchersSugar
+  with TestConstants {
 
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
@@ -118,7 +120,7 @@ class EnterRegistrationNumberControllerSpec extends PlaySpec
 
       mockAppConfig.enableNonHmrcSupervisoryBody returns true
 
-      mockAgentClientAuthorisationConnector.getSuspensionDetails()(*[HeaderCarrier], *[ExecutionContext]) returns suspensionDetailsResponse
+      mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
       mockAmlsJourneySessionRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]],*[Request[_]]) returns
         Future.successful(Some(ukAmlsJourney))
@@ -139,7 +141,7 @@ class EnterRegistrationNumberControllerSpec extends PlaySpec
 
       mockAppConfig.enableNonHmrcSupervisoryBody returns false
 
-      mockAgentClientAuthorisationConnector.getSuspensionDetails()(*[HeaderCarrier], *[ExecutionContext]) returns suspensionDetailsResponse
+      mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
       val result: Future[Result] = TestController.showPage(cya = false)(fakeRequest)
 
@@ -158,7 +160,7 @@ class EnterRegistrationNumberControllerSpec extends PlaySpec
 
       mockAppConfig.enableNonHmrcSupervisoryBody returns true
 
-      mockAgentClientAuthorisationConnector.getSuspensionDetails()(*[HeaderCarrier], *[ExecutionContext]) returns suspensionDetailsResponse
+      mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
       mockAmlsJourneySessionRepository.getFromSession(dataKey)(*[Reads[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful(Some(ukAmlsJourney))
 
@@ -182,7 +184,7 @@ class EnterRegistrationNumberControllerSpec extends PlaySpec
 
       mockAppConfig.enableNonHmrcSupervisoryBody returns true
 
-      mockAgentClientAuthorisationConnector.getSuspensionDetails()(*[HeaderCarrier], *[ExecutionContext]) returns suspensionDetailsResponse
+      mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
       mockAmlsJourneySessionRepository.getFromSession(dataKey)(*[Reads[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful(Some(overseasAmlsJourney))
 
@@ -206,7 +208,7 @@ class EnterRegistrationNumberControllerSpec extends PlaySpec
 
       mockAppConfig.enableNonHmrcSupervisoryBody returns true
 
-      mockAgentClientAuthorisationConnector.getSuspensionDetails()(*[HeaderCarrier], *[ExecutionContext]) returns suspensionDetailsResponse
+      mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
       mockAmlsJourneySessionRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[Request[Any]]) returns
         Future.successful(Some(ukAmlsJourney))

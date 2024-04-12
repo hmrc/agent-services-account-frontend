@@ -485,26 +485,23 @@ update-contact-details.start-page.body.p3=Byddwn yn gofyn i chi gadarnhau fod ge
 update-contact-details.start-page.body.p4=Mewn rhai amgylchiadau, byddwn yn gofyn am eich codau asiant ar gyfer Hunanasesiad a Threth Gorfforaeth.Anfonwyd y codau mewn llythyr pan ofynnodd eich sefydliad am fynediad asiant i’r gwasanaethau hynny.
 update-contact-details.start-page.body.p5=Ar ôl i chi gyflwyno newidiadau, ni fyddwch yn gallu diwygio’r manylion cyswllt eto am 4 wythnos.
 
-update-contact-details.button=Yn eich blaen
-
-update-contact-details.select-changes.title=Select changes
-update-contact-details.select-changes.error=Rhowch wybod i ni pa fanylion cyswllt yr ydych yn dymuno newid. 
+update-contact-details.select-changes.error=Rhowch wybod i ni pa fanylion cyswllt yr ydych yn dymuno newid.
 update-contact-details.select-changes.h1=Pa fanylion cyswllt yr hoffech eu newid?
-update-contact-details.select-changes.hint=Dewiswch bob un sy?n berthnasol.
-update-contact-details.select-changes.business-name=Enw?r busnes a ddangosir i gleientiaid
+update-contact-details.select-changes.hint=Dewiswch bob un sy’n berthnasol.
+update-contact-details.select-changes.business-name=Enw’r busnes a ddangosir i gleientiaid
 update-contact-details.select-changes.address=Cyfeiriad ar gyfer y cyfrif gwasanaethau asiant
 update-contact-details.select-changes.email=Cyfeiriad e-bost
-update-contact-details.select-changes.telephone=Rhif ff�n
+update-contact-details.select-changes.telephone=Rhif ffôn
 
 update-contact-details.name.heading=Beth yw’r enw newydd yr hoffech ei ddangos i gleientiaid?
 update-contact-details.name.hint=Bydd cleientiaid yn gweld yr enw hwn wrth dderbyn neu reoli’ch awdurdodiadau.
 update-contact-details.name.error.empty=Enter the name of your business TBC
 update-contact-details.name.error.invalid=Business name must only include letters a to z, numbers, commas, full stops, apostrophes, hyphens, forward slashes and spaces TBC
 
-update-contact-details.phone.heading=What is the telephone number you want to use for your agent services account? TBC
-update-contact-details.phone.hint=Enter a UK telephone number, like 01632 960 001, 07700 900 982 or +44 808 157 0192. TBC
-update-contact-details.phone.error.empty=Enter a UK telephone number TBC
-update-contact-details.phone.error.invalid=Enter a UK telephone number in the right format TBC
+update-contact-details.phone.heading=Beth yw’cr rhif ffôn newydd?
+update-contact-details.phone.hint=Ar gyfer rhifau rhyngwladol, cofiwch gynnwys cod y wlad.
+update-contact-details.phone.error.empty=Nodwch eich rhif ffôn
+update-contact-details.phone.error.invalid=Nodwch rif ffôn, megis 01632 960 001, 07700 900 982 neu +33 808 157 0192
 
 update-contact-details.email.heading=What is the email address you want to use for your agent services account? TBC
 update-contact-details.email.hint=We will use this email to contact you about your agent services account and to update you about your authorisation requests. TBC

@@ -21,7 +21,7 @@ import play.api.mvc._
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector}
 import uk.gov.hmrc.agentservicesaccount.controllers.routes
-import uk.gov.hmrc.agentservicesaccount.models.AmlsDetails
+import uk.gov.hmrc.agentservicesaccount.models.{AgentDetailsDesResponse, AmlsDetails}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
@@ -41,8 +41,9 @@ class Actions @Inject()(agentClientAuthorisationConnector: AgentClientAuthorisat
     def filter[A](request: AuthRequestWithAgentInfo[A]): Future[Option[Result]] = {
       implicit val req: Request[A] = request.request
       implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(req, req.session)
-      agentClientAuthorisationConnector.getSuspensionDetails().map { suspensionDetails => {
-        (onlyForSuspended, suspensionDetails.suspensionStatus) match {
+
+      agentClientAuthorisationConnector.getAgentRecord().map { agentRecord => {
+        (onlyForSuspended, agentRecord.suspensionDetails.exists(_.suspensionStatus)) match {
           case (true, true) | (false, false) => None
           case (true, false) => Some(Redirect(routes.AgentServicesController.showAgentServicesAccount()))
           case (false, true) => Some(Redirect(routes.SuspendedJourneyController.showSuspendedWarning()))
@@ -62,8 +63,38 @@ class Actions @Inject()(agentClientAuthorisationConnector: AgentClientAuthorisat
     if (feature) action else Future.successful(Forbidden)
   }
 
+  case class AuthRequestWithAgentProfile[A](
+                                             authRequestWithAgentInfo: AuthRequestWithAgentInfo[A],
+                                             agentDetailsDesResponse: AgentDetailsDesResponse
+                                           ) extends WrappedRequest(authRequestWithAgentInfo.request)
+
   def withCurrentAmlsDetails(arn: Arn)(action: AmlsDetails => Future[Result])(implicit hc: HeaderCarrier): Future[Result] = {
     agentAssuranceConnector.getAMLSDetails(arn.value)
       .flatMap(amlsDetails => action(amlsDetails))
   }
+
+  def withAgentRecord(onlyForSuspended: Boolean): ActionRefiner[AuthRequestWithAgentInfo, AuthRequestWithAgentProfile] =
+    new ActionRefiner[AuthRequestWithAgentInfo, AuthRequestWithAgentProfile] {
+
+      override protected def refine[A](request: AuthRequestWithAgentInfo[A]): Future[Either[Result, AuthRequestWithAgentProfile[A]]] = {
+        implicit val req: Request[_] = request.request
+        implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(req, req.session)
+
+        agentClientAuthorisationConnector.getAgentRecord().map( agentRecord => {
+          (onlyForSuspended, agentRecord.suspensionDetails.exists(_.suspensionStatus)) match {
+            case (true, true) | (false, false) => Right(AuthRequestWithAgentProfile(request, agentRecord))
+            case (true, false) => Left(Redirect(routes.AgentServicesController.showAgentServicesAccount()))
+            case (false, true) => Left(Redirect(routes.SuspendedJourneyController.showSuspendedWarning()))
+          }
+        }
+        )
+      }
+      override protected def executionContext: ExecutionContext = ec
+    }
+
+  def authActionForSuspendedAgentWithAgentRecord: ActionBuilder[AuthRequestWithAgentProfile, AnyContent] =
+    actionBuilder andThen authActions.authActionRefiner andThen withAgentRecord(true)
+
+  def authActionWithSuspensionCheckWithAgentRecord: ActionBuilder[AuthRequestWithAgentProfile, AnyContent] =
+    actionBuilder andThen authActions.authActionRefiner andThen withAgentRecord(false)
 }

@@ -27,16 +27,16 @@ import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, SuspensionDetails}
+import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.connectors.{AddressLookupConnector, AgentClientAuthorisationConnector, EmailVerificationConnector}
 import uk.gov.hmrc.agentservicesaccount.controllers.{CURRENT_SELECTED_CHANGES, DRAFT_NEW_CONTACT_DETAILS, DRAFT_SUBMITTED_BY, EMAIL_PENDING_VERIFICATION, desiDetails}
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup.{ConfirmedResponseAddress, ConfirmedResponseAddressDetails, Country, JourneyConfigV2}
-import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, OtherServices, SaChanges, YourDetails}
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, OtherServices, SaChanges, YourDetails, DesignatoryDetails}
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.{CompletedEmail, VerificationStatusResponse, VerifyEmailRequest, VerifyEmailResponse}
 import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress, PendingChangeOfDetails}
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
-import uk.gov.hmrc.agentservicesaccount.support.UnitSpec
+import uk.gov.hmrc.agentservicesaccount.support.{TestConstants, UnitSpec}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve.Retrieval
@@ -45,7 +45,13 @@ import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
 import java.time.Instant
 import scala.concurrent.{ExecutionContext, Future}
 
-class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneAppPerSuite with ScalaFutures with IntegrationPatience with MockFactory {
+class ContactDetailsControllerSpec extends UnitSpec
+  with Matchers
+  with GuiceOneAppPerSuite
+  with ScalaFutures
+  with IntegrationPatience
+  with MockFactory
+  with TestConstants {
 
   private val testArn = Arn("XXARN0123456789")
 
@@ -77,6 +83,8 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
     fullName = "John Tester",
     telephone = "01903 209919"
   )
+
+  private val details = DesignatoryDetails(agencyDetails, emptyOtherServices)
 
   private val confirmedAddressResponse = ConfirmedResponseAddress(
     auditRef = "foo",
@@ -125,8 +133,7 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
 
   trait TestSetup {
     val acaConnector: AgentClientAuthorisationConnector = app.injector.instanceOf[AgentClientAuthorisationConnector]
-    (acaConnector.getSuspensionDetails()(_: HeaderCarrier, _: ExecutionContext)).when(*, *).returns(Future.successful(SuspensionDetails(false, None)))
-    (acaConnector.getAgencyDetails()(_: HeaderCarrier, _: ExecutionContext)).when(*, *).returns(Future.successful(Some(agencyDetails)))
+    (acaConnector.getAgentRecord()(_: HeaderCarrier, _: ExecutionContext)).when(*, *).returns(Future.successful(agentRecord))
 
     val alfConnector: AddressLookupConnector = app.injector.instanceOf[AddressLookupConnector]
     (alfConnector.init(_: JourneyConfigV2)(_: HeaderCarrier)).when(*, *).returns(Future.successful("mock-address-lookup-url"))
@@ -273,35 +280,6 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
     }
   }
 
-  "GET /manage-account/contact-details/new-telephone" should {
-    "display the enter telephone number page" in new TestSetup {
-      noPendingChangesInRepo()
-      val result = contactDetailsController.showChangeTelephoneNumber()(fakeRequest())
-      status(result) shouldBe OK
-      contentAsString(result.futureValue) should include("What is the telephone")
-    }
-  }
-
-  "POST /manage-account/contact-details/new-telephone" should {
-    "store the new telephone number in session and redirect to apply SA code page" in new TestSetup {
-      noPendingChangesInRepo()
-      implicit val request = fakeRequest("POST").withFormUrlEncodedBody("telephoneNumber" -> "01234 567 890")
-      val result = contactDetailsController.submitChangeTelephoneNumber()(request)
-      status(result) shouldBe SEE_OTHER
-      header("Location", result) shouldBe Some(desiDetails.routes.ApplySACodeChangesController.showPage.url)
-      sessionCache.get(DRAFT_NEW_CONTACT_DETAILS).futureValue.flatMap(_.agencyDetails.agencyTelephone) shouldBe Some("01234 567 890")
-    }
-
-    "display an error if the data submitted is invalid" in new TestSetup {
-      noPendingChangesInRepo()
-      implicit val request = fakeRequest("POST").withFormUrlEncodedBody("telephoneNumber" -> "0800 FAKE NO")
-      val result = contactDetailsController.submitChangeTelephoneNumber()(request)
-      status(result) shouldBe OK
-      contentAsString(result.futureValue) should include("There is a problem")
-      sessionCache.get(DRAFT_NEW_CONTACT_DETAILS).futureValue.flatMap(_.agencyDetails.agencyTelephone) shouldBe None // new email not added to session
-    }
-  }
-
   "GET /manage-account/contact-details/new-address" should {
     "redirect to the external service to look up an address" in new TestSetup {
       noPendingChangesInRepo()
@@ -345,8 +323,6 @@ class ContactDetailsControllerSpec extends UnitSpec with Matchers with GuiceOneA
       shouldRedirect(contactDetailsController.showChangeEmailAddress())
       shouldRedirect(contactDetailsController.submitChangeEmailAddress())
       shouldRedirect(contactDetailsController.finishEmailVerification())
-      shouldRedirect(contactDetailsController.showChangeTelephoneNumber())
-      shouldRedirect(contactDetailsController.submitChangeTelephoneNumber())
       shouldRedirect(contactDetailsController.startAddressLookup())
       shouldRedirect(contactDetailsController.finishAddressLookup(None))
     }

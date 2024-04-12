@@ -32,6 +32,7 @@ import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector}
 import uk.gov.hmrc.agentservicesaccount.models._
 import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
+import uk.gov.hmrc.agentservicesaccount.support.TestConstants
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.view_details
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.authorise.Predicate
@@ -44,7 +45,8 @@ import scala.concurrent.{ExecutionContext, Future}
 class ViewDetailsControllerSpec extends PlaySpec
   with DefaultAwaitTimeout
   with IdiomaticMockito
-  with ArgumentMatchersSugar {
+  with ArgumentMatchersSugar
+  with TestConstants {
 
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
@@ -105,7 +107,7 @@ class ViewDetailsControllerSpec extends PlaySpec
 
       mockAppConfig.enableNonHmrcSupervisoryBody returns true
 
-      mockAgentClientAuthorisationConnector.getSuspensionDetails()(*[HeaderCarrier], *[ExecutionContext]) returns suspensionDetailsResponse
+      mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
       mockUpdateAmlsJourneyRepository.putSession(*[DataKey[UpdateAmlsJourney]], amlsUpdateJourney)(*[Writes[UpdateAmlsJourney]], *[Request[_]]) returns
         Future.successful(("",""))
@@ -126,7 +128,7 @@ class ViewDetailsControllerSpec extends PlaySpec
 
       mockAppConfig.enableNonHmrcSupervisoryBody returns true
 
-      mockAgentClientAuthorisationConnector.getSuspensionDetails()(*[HeaderCarrier], *[ExecutionContext]) returns suspensionDetailsResponse
+      mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
       mockUpdateAmlsJourneyRepository.putSession(*[DataKey[UpdateAmlsJourney]], amlsUpdateJourney)(*[Writes[UpdateAmlsJourney]], *[Request[_]]) returns
         Future.successful(("",""))

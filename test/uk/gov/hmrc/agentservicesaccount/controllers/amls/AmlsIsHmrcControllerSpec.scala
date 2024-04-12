@@ -28,32 +28,30 @@ import play.api.mvc.{DefaultActionBuilderImpl, MessagesControllerComponents, Req
 import play.api.test.Helpers.{defaultAwaitTimeout, stubMessagesControllerComponents}
 import play.api.test.{FakeRequest, Helpers}
 import play.twirl.api.Html
-import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, SuspensionDetails}
+import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector}
+import uk.gov.hmrc.agentservicesaccount.support.TestConstants
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.is_amls_hmrc
+import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve._
-import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
 
 import scala.concurrent.{ExecutionContext, Future}
 
 
-class AmlsIsHmrcControllerSpec extends PlaySpec with IdiomaticMockito with ArgumentMatchersSugar {
+class AmlsIsHmrcControllerSpec extends PlaySpec
+    with IdiomaticMockito
+    with ArgumentMatchersSugar
+    with TestConstants {
 
   implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
 
   //TODO move auth/suspend actions to common file for all unit tests
   val mockAcaConnector: AgentClientAuthorisationConnector = mock[AgentClientAuthorisationConnector]
   val mockAgentAssuranceConnector: AgentAssuranceConnector = mock[AgentAssuranceConnector]
-  val notSuspendedDetails: Future[SuspensionDetails] = Future successful SuspensionDetails(suspensionStatus = false, None)
-  def givenNotSuspended(): ScalaOngoingStubbing[Future[SuspensionDetails]] = {
-    mockAcaConnector.getSuspensionDetails()(
-      *[HeaderCarrier],
-      *[ExecutionContext]) returns notSuspendedDetails
-  }
 
   private val arn = Arn("BARN1234567")
 
@@ -80,6 +78,8 @@ class AmlsIsHmrcControllerSpec extends PlaySpec with IdiomaticMockito with Argum
       *[ExecutionContext]) returns authResponseAgent(credentialRole)
   }
 
+  def givenAgentRecord = mockAcaConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+
 
   trait Setup {
     protected val mockAppConfig: AppConfig = mock[AppConfig]
@@ -103,7 +103,7 @@ class AmlsIsHmrcControllerSpec extends PlaySpec with IdiomaticMockito with Argum
   "showAmlsIsHMRC" should {
     "return Ok and show the 'is AMLS body HMRC?' page" in new Setup {
       givenAuthorisedAgent(User)
-      givenNotSuspended()
+      givenAgentRecord
       mockAppConfig.enableNonHmrcSupervisoryBody returns true
 
       view.apply(*[Form[Boolean]])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
@@ -115,7 +115,7 @@ class AmlsIsHmrcControllerSpec extends PlaySpec with IdiomaticMockito with Argum
 
     "return Forbidden when feature flag is off" in new Setup {
       givenAuthorisedAgent(User)
-      givenNotSuspended()
+      givenAgentRecord
       mockAppConfig.enableNonHmrcSupervisoryBody returns false
 
       view.apply(*[Form[Boolean]])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
@@ -130,7 +130,7 @@ class AmlsIsHmrcControllerSpec extends PlaySpec with IdiomaticMockito with Argum
   "submitAmlsIsHmrc" should {
     "redirect to [not-implemented-hmrc-page]" in new Setup {
       givenAuthorisedAgent(User)
-      givenNotSuspended()
+      givenAgentRecord
       mockAppConfig.enableNonHmrcSupervisoryBody returns true
 
       val response: Future[Result] = TestController.submitAmlsIsHmrc(
@@ -144,7 +144,7 @@ class AmlsIsHmrcControllerSpec extends PlaySpec with IdiomaticMockito with Argum
 
     "redirect to manage-account/update-money-laundering-supervision" in new Setup {
       givenAuthorisedAgent(User)
-      givenNotSuspended()
+      givenAgentRecord
       mockAppConfig.enableNonHmrcSupervisoryBody returns true
 
       val response: Future[Result] = TestController.submitAmlsIsHmrc(
@@ -157,7 +157,7 @@ class AmlsIsHmrcControllerSpec extends PlaySpec with IdiomaticMockito with Argum
 
     "return form with errors" in new Setup {
       givenAuthorisedAgent(User)
-      givenNotSuspended()
+      givenAgentRecord
       mockAppConfig.enableNonHmrcSupervisoryBody returns true
       view.apply(*[Form[Boolean]])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 
@@ -169,7 +169,7 @@ class AmlsIsHmrcControllerSpec extends PlaySpec with IdiomaticMockito with Argum
 
     "return Forbidden when feature flag is off" in new Setup {
       givenAuthorisedAgent(User)
-      givenNotSuspended()
+      givenAgentRecord
       mockAppConfig.enableNonHmrcSupervisoryBody returns false
       view.apply(*[Form[Boolean]])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 

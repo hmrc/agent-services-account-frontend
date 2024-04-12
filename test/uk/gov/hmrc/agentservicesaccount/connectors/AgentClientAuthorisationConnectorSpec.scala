@@ -16,13 +16,10 @@
 
 package uk.gov.hmrc.agentservicesaccount.connectors
 
-import uk.gov.hmrc.agentmtdidentifiers.model.Arn
-import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress}
+import play.api.test.Helpers._
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentClientAuthorisationStubs._
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
-import uk.gov.hmrc.http.HeaderCarrier
-import play.api.test.Helpers._
-import uk.gov.hmrc.agentmtdidentifiers.model.{SuspensionDetails, SuspensionDetailsNotFound}
+import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -32,52 +29,19 @@ class AgentClientAuthorisationConnectorSpec extends BaseISpec {
 
   private implicit val hc: HeaderCarrier = HeaderCarrier()
 
-  val arn: Arn = Arn("TARN0000001")
+  "getAgentRecord" should {
+    "return the agent record for a given agent" in {
 
-  "getSuspensionDetails" should {
-    "return the suspension details for a given agent" in {
-      val suspensionDetails = SuspensionDetails(suspensionStatus = true, Some(Set("ITSA")))
-      givenSuspensionStatus(suspensionDetails)
-      await(connector.getSuspensionDetails()) shouldBe suspensionDetails
+      givenAgentRecordFound(agentRecord)
+
+      await(connector.getAgentRecord()) shouldBe agentRecord
     }
 
-    "return false suspension details when no status is found" in {
-      givenSuspensionStatusNotFound
-      await(connector.getSuspensionDetails()) shouldBe SuspensionDetails(suspensionStatus = false, None)
-    }
-
-    "return not found error response when no agent record is found" in {
-      givenAgentRecordNotFound
-      intercept[SuspensionDetailsNotFound] {
-        await(connector.getSuspensionDetails())
-      }.getMessage shouldBe "No record found for this agent"
-    }
-  }
-
-  "getAgencyDetails" should {
-    "return agency details for a given agent" in {
-
-      val agentDetails = AgencyDetails(
-          Some("My Agency"),
-          Some("abc@abc.com"),
-          Some("07345678901"),
-          Some(BusinessAddress(
-            "25 Any Street",
-            Some("Central Grange"),
-            Some("Telford"),
-            None,
-            Some("TF4 3TR"),
-            "GB"))
-        )
-
-      givenAgentDetailsFound(agentDetails)
-
-      await(connector.getAgencyDetails()) shouldBe Some(agentDetails)
-    }
-
-    "return None when response is 204" in {
-      givenAgentDetailsNoContent()
-      await(connector.getAgencyDetails()) shouldBe None
+    "throw exception when 204 response" in {
+      givenAgentDetailsErrorResponse(204)
+      intercept[UpstreamErrorResponse]{
+        await(connector.getAgentRecord())
+      }
     }
   }
 

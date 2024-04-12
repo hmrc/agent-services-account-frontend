@@ -19,45 +19,22 @@ package uk.gov.hmrc.agentservicesaccount.stubs
 import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.libs.json.Json
-import uk.gov.hmrc.agentmtdidentifiers.model.SuspensionDetails
-import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
+import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
 
 object AgentClientAuthorisationStubs {
 
-  def givenSuspensionStatus(suspensionDetails: SuspensionDetails): StubMapping =
-    stubFor(get(urlEqualTo("/agent-client-authorisation/agent/suspension-details"))
-    .willReturn(
-      aResponse()
-        .withStatus(200)
-        .withBody(Json.toJson(suspensionDetails).toString())
-    ))
-
-  def givenSuspensionStatusNotFound: StubMapping =
-    stubFor(get(urlEqualTo("/agent-client-authorisation/agent/suspension-details"))
-      .willReturn(
-        aResponse()
-          .withStatus(204)
-      ))
-
-  def givenAgentRecordNotFound: StubMapping =
-    stubFor(get(urlEqualTo("/agent-client-authorisation/agent/suspension-details"))
-      .willReturn(
-        aResponse()
-          .withStatus(404)
-      ))
-
-  def givenAgentDetailsFound(agencyDetails: AgencyDetails): StubMapping =
+  def givenAgentRecordFound(agentRecord: AgentDetailsDesResponse): StubMapping =
     stubFor(get(urlEqualTo("/agent-client-authorisation/agent/agency-details"))
     .willReturn(
       aResponse()
         .withStatus(200)
-        .withBody(Json.toJson(agencyDetails).toString)
+        .withBody(Json.toJson(agentRecord).toString)
     ))
 
-  def givenAgentDetailsNoContent(): StubMapping =
+  def givenAgentDetailsErrorResponse(status: Int): StubMapping =
     stubFor(get(urlEqualTo("/agent-client-authorisation/agent/agency-details"))
       .willReturn(
         aResponse()
-          .withStatus(204)
+          .withStatus(status)
       ))
 }

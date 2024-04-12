@@ -79,11 +79,10 @@ class ContactDetailsController @Inject()(actions: Actions,
       case Some(details) => Future.successful(details)
       // if there is no 'draft' new set of details in session, get a fresh copy of the current stored details
       case None =>
-        acaConnector.getAgencyDetails()
-          .map(_.getOrElse(throw new RuntimeException("Current agency details are unavailable")))
+        acaConnector.getAgentRecord()
         .map(agencyDetails=>
           DesignatoryDetails(
-            agencyDetails = agencyDetails,
+            agencyDetails = agencyDetails.agencyDetails.getOrElse(throw new RuntimeException("No agency details on agent record")),
             otherServices = OtherServices(
               saChanges = SaChanges(
                 applyChanges = false,
@@ -154,27 +153,6 @@ class ContactDetailsController @Inject()(actions: Actions,
   val showEmailLocked: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     ifFeatureEnabledAndNoPendingChanges {
       Future.successful(Ok(email_locked()))
-    }
-  }
-
-  val showChangeTelephoneNumber: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    ifFeatureEnabledAndNoPendingChanges {
-      Future.successful(Ok(update_phone(UpdateDetailsForms.telephoneNumberForm)))
-    }
-  }
-
-  val submitChangeTelephoneNumber: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    ifFeatureEnabledAndNoPendingChanges {
-      UpdateDetailsForms.telephoneNumberForm
-        .bindFromRequest()
-        .fold(
-          formWithErrors => Future.successful(Ok(update_phone(formWithErrors))),
-          newPhoneNumber => {
-            updateDraftDetails(desiDetails => desiDetails.copy(agencyDetails = desiDetails.agencyDetails.copy(agencyTelephone = Some(newPhoneNumber)))).flatMap(_ =>
-              getNextPage(sessionCache, "telephone")
-            )
-          }
-        )
     }
   }
 
@@ -257,8 +235,8 @@ class ContactDetailsController @Inject()(actions: Actions,
   def showBeforeYouStartPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     actions.ifFeatureEnabled(appConfig.enableChangeContactDetails) {
       if (request.agentInfo.isAdmin) {
-        agentClientAuthorisationConnector.getAgencyDetails().map(agencyDetails =>
-          Ok(beforeYouStartPage(agencyDetails)))
+        agentClientAuthorisationConnector.getAgentRecord().map(agentRecord =>
+          Ok(beforeYouStartPage(agentRecord.agencyDetails)))
       } else {
         Future.successful(Forbidden)
       }
@@ -275,7 +253,7 @@ class ContactDetailsController @Inject()(actions: Actions,
     def emailCmp(l: String, r: String) = l.trim.equalsIgnoreCase(r.trim)
 
     for {
-      mCurrentEmail <- acaConnector.getAgencyDetails().map(_.flatMap(_.agencyEmail))
+      mCurrentEmail <- acaConnector.getAgentRecord().map(_.agencyDetails.flatMap(_.agencyEmail))
       isUnchanged = mCurrentEmail.fold(false)(emailCmp(_, newEmail))
       previousVerifications <- evConnector.checkEmail(credId)
       previousVerification = previousVerifications.flatMap(_.emails.find(ce => emailCmp(ce.emailAddress, newEmail)))

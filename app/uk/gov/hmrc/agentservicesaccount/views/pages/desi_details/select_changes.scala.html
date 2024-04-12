@@ -33,7 +33,7 @@ govukButton: GovukButton
 
 @(form: Form[SelectChanges])(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
 
-@main(pageTitle = withErrorPrefix(form.hasErrors, msgs("update-contact-details.select-changes.title")), mimicBrowserBackLink = true, showSecondaryNav = false) {
+@main(pageTitle = withErrorPrefix(form.hasErrors, msgs("update-contact-details.select-changes.h1")), mimicBrowserBackLink = true, showSecondaryNav = false) {
 
     @if(form.hasErrors){
         @govukErrorSummary(ErrorSummary(
@@ -97,7 +97,7 @@ govukButton: GovukButton
             )
         ))
 
-        @govukButton(Button(content = Text(msgs("update-contact-details.button"))))
+        @govukButton(Button(content = Text(msgs("common.continue"))))
     }
 
 }

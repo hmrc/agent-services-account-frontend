@@ -485,9 +485,6 @@ update-contact-details.start-page.body.p3=We’ll ask you to confirm that you ha
 update-contact-details.start-page.body.p4=In some circumstances we’ll ask for your agent codes for Self Assessment and Corporation Tax. The codes were sent by letter when your organisation asked for agent access to those services.
 update-contact-details.start-page.body.p5=Once you submit changes, you cannot amend the contact details again for 4 weeks.
 
-update-contact-details.button=Continue
-
-update-contact-details.select-changes.title=Select changes
 update-contact-details.select-changes.error=Tell us which contact details you want to change.
 update-contact-details.select-changes.h1=Which contact details do you want to change?
 update-contact-details.select-changes.hint=Select all that apply.
@@ -501,10 +498,10 @@ update-contact-details.name.hint=Clients will see this name when they accept or 
 update-contact-details.name.error.empty=Enter the name of your business
 update-contact-details.name.error.invalid=Business name must only include letters a to z, numbers, commas, full stops, apostrophes, hyphens, forward slashes and spaces
 
-update-contact-details.phone.heading=What is the telephone number you want to use for your agent services account?
-update-contact-details.phone.hint=Enter a UK telephone number, like 01632 960 001, 07700 900 982 or +44 808 157 0192.
-update-contact-details.phone.error.empty=Enter a UK telephone number
-update-contact-details.phone.error.invalid=Enter a UK telephone number in the right format
+update-contact-details.phone.heading=What’s the new telephone number?
+update-contact-details.phone.hint=For international numbers include the country code.
+update-contact-details.phone.error.empty=Enter a telephone number
+update-contact-details.phone.error.invalid=Enter a telephone number, like 01632 960 001, 07700 900 982 or +33 808 157 0192
 
 update-contact-details.email.heading=What is the email address you want to use for your agent services account?
 update-contact-details.email.hint=We will use this email to contact you about your agent services account and to update you about your authorisation requests.
