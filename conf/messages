@@ -495,7 +495,7 @@ update-contact-details.select-changes.telephone=Telephone number
 
 update-contact-details.name.heading=What’s the new name you want to show to clients?
 update-contact-details.name.hint=Clients will see this name when they accept or manage your authorisations.
-update-contact-details.name.error.empty=Enter the name of your business
+update-contact-details.name.error.empty=Enter the new name you want to show to clients.
 update-contact-details.name.error.invalid=Business name must only include letters a to z, numbers, commas, full stops, apostrophes, hyphens, forward slashes and spaces
 
 update-contact-details.phone.heading=What’s the new telephone number?
