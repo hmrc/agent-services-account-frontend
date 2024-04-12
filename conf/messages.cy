@@ -492,7 +492,6 @@ update-contact-details.select-changes.business-name=Enw’r busnes a ddangosir i
 update-contact-details.select-changes.address=Cyfeiriad ar gyfer y cyfrif gwasanaethau asiant
 update-contact-details.select-changes.email=Cyfeiriad e-bost
 update-contact-details.select-changes.telephone=Rhif ffôn
-update-contact-details.select-changes.button=Yn eich blaen
 
 update-contact-details.name.heading=What is the name you want to show to your clients? TBC
 update-contact-details.name.hint=Clients will see this name when they manage your authorisations and requests. TBC
