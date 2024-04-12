@@ -71,7 +71,7 @@ class YourDetailsSpec extends BaseISpec {
       }
 
       "have the correct continue button" in {
-        doc.select(".govuk-button").first.text() mustBe "Save and continue"
+        doc.select(".govuk-button").first.text() mustBe "Continue"
       }
     }
 
