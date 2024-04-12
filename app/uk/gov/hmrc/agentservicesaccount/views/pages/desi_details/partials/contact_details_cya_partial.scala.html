@@ -21,7 +21,7 @@
 
 @this(govukSummaryList: GovukSummaryList, p: p, ul: ul)
 
-@(agencyDetails: AgencyDetails, selectChanges: Set[String])(implicit msgs: Messages, request: Request[_])
+@(agencyDetails: AgencyDetails, selectChanges: Set[String], forPdf: Boolean = false)(implicit msgs: Messages, request: Request[_])
 
 @businessNameRow = @{
     SummaryListRow(
@@ -31,7 +31,7 @@
         value = Value(
             content = Text(agencyDetails.agencyName.getOrElse(msgs("contact-details.summary-list.none")))
         ),
-        actions = Some(Actions(
+        actions = if(forPdf) None else Some(Actions(
             items = Seq(ActionItem(
                 href = desiDetails.routes.ContactDetailsController.showChangeBusinessName.url,
                 content = Text(msgs("common.change")),
@@ -54,7 +54,7 @@
                     ).map(_.mkString("<br>")).getOrElse(msgs("contact-details.summary-list.none"))
                 }""")
         ),
-        actions = Some(Actions(
+        actions = if(forPdf) None else Some(Actions(
             items = Seq(ActionItem(
                 href = desiDetails.routes.ContactDetailsController.startAddressLookup.url,
                 content = Text(msgs("common.change")),
@@ -72,7 +72,7 @@
         value = Value(
             content = Text(agencyDetails.agencyEmail.getOrElse(msgs("contact-details.summary-list.none")))
         ),
-        actions = Some(Actions(
+        actions = if(forPdf) None else Some(Actions(
             items = Seq(ActionItem(
                 href = desiDetails.routes.ContactDetailsController.showChangeEmailAddress.url,
                 content = Text(msgs("common.change")),
@@ -90,7 +90,7 @@
         value = Value(
             content = Text(agencyDetails.agencyTelephone.getOrElse(msgs("contact-details.summary-list.none")))
         ),
-        actions = Some(Actions(
+        actions = if(forPdf) None else Some(Actions(
             items = Seq(ActionItem(
                 href = desiDetails.routes.UpdateTelephoneController.showPage.url,
                 content = Text(msgs("common.change")),
@@ -130,7 +130,10 @@
     "telephone" -> telephoneRow
 )}
 
-@rows = @{Seq(selectChangesRow) ++ selectChanges.map(row => contactDetailsRows(row)).toSeq}
+@rows = @{
+    if(forPdf) selectChanges.map(row => contactDetailsRows(row)).toSeq
+    else Seq(selectChangesRow) ++ selectChanges.map(row => contactDetailsRows(row)).toSeq
+}
 
 @govukSummaryList(SummaryList(
     rows = rows

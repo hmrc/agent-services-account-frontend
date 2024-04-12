@@ -19,11 +19,12 @@ package uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
 import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc._
+import uk.gov.hmrc.agentmtdidentifiers.model.Utr
 import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthRequestWithAgentInfo}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
 import uk.gov.hmrc.agentservicesaccount.controllers._
-import uk.gov.hmrc.agentservicesaccount.models.{PendingChangeOfDetails}
+import uk.gov.hmrc.agentservicesaccount.models.PendingChangeOfDetails
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details._
@@ -40,7 +41,8 @@ class CheckYourAnswersController @Inject()(actions: Actions,
                                            sessionCache: SessionCacheService,
                                            acaConnector: AgentClientAuthorisationConnector,
                                            pcodRepository: PendingChangeOfDetailsRepository,
-                                           checkUpdatedDetailsView: check_updated_details
+                                           checkUpdatedDetailsView: check_updated_details,
+                                           summary_pdf: summaryPdf
                                           )(implicit appConfig: AppConfig,
                                             cc: MessagesControllerComponents,
                                             ec: ExecutionContext) extends FrontendController(cc) with I18nSupport with Logging {
@@ -86,6 +88,7 @@ class CheckYourAnswersController @Inject()(actions: Actions,
         case None => // graceful redirect in case of expired session data etc.
           Future.successful(Redirect(desiDetails.routes.ViewContactDetailsController.showPage))
         case Some(details) => for {
+          selectChanges <- sessionCache.get[Set[String]](CURRENT_SELECTED_CHANGES)
           submittedBy <- sessionCache.get[YourDetails](DRAFT_SUBMITTED_BY)
           oldContactDetails <- CurrentAgencyDetails.get(acaConnector)
           pendingChange = PendingChangeOfDetails(
@@ -96,13 +99,17 @@ class CheckYourAnswersController @Inject()(actions: Actions,
             timeSubmitted = Instant.now(),
             submittedBy = submittedBy.getOrElse(throw new RuntimeException("Cannot submit without submittedBy details"))
           )
+          htmlForPdf = summary_pdf(Utr("12356"), pendingChange, isAdmin = true, selectChanges.get).toString
           //
           // TODO actual connector call to submit the details goes here...
           //
           _ <- pcodRepository.insert(pendingChange)
           _ <- sessionCache.delete(DRAFT_NEW_CONTACT_DETAILS)
           _ <- sessionCache.delete(DRAFT_SUBMITTED_BY)
-        } yield Redirect(desiDetails.routes.ContactDetailsController.showChangeSubmitted)
+        } yield {
+          println(htmlForPdf)
+          Redirect(desiDetails.routes.ContactDetailsController.showChangeSubmitted)
+        }
       }
     }
   }

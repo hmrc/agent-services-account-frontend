@@ -21,7 +21,7 @@
 
 @this(govukSummaryList: GovukSummaryList)
 
-@(otherServices: OtherServices)(implicit msgs: Messages, request: Request[_])
+@(otherServices: OtherServices, forPdf: Boolean = false)(implicit msgs: Messages, request: Request[_])
 
 @saRows = @{
     if(otherServices.saChanges.applyChanges) {
@@ -33,7 +33,7 @@
                 value = Value(
                     content = Text(msgs("common.yes"))
                 ),
-                actions = Some(Actions(items = Seq(
+                actions = if(forPdf) None else Some(Actions(items = Seq(
                     ActionItem(
                         href = desiDetails.routes.ApplySACodeChangesController.showPage.url,
                         content = Text(msgs("common.change")),
@@ -48,7 +48,7 @@
                 value = Value(
                     content = Text(otherServices.saChanges.saAgentReference.get.toString())
                 ),
-                actions = Some(Actions(items = Seq(
+                actions = if(forPdf) None else Some(Actions(items = Seq(
                     ActionItem(
                         href = desiDetails.routes.EnterSACodeController.showPage.url,
                         content = Text(msgs("common.change")),
@@ -66,7 +66,7 @@
                 value = Value(
                     content = Text(msgs("common.no"))
                 ),
-                actions = Some(Actions(items = Seq(
+                actions = if(forPdf) None else Some(Actions(items = Seq(
                     ActionItem(
                         href = desiDetails.routes.ApplySACodeChangesController.showPage.url,
                         content = Text(msgs("common.change")),
@@ -88,7 +88,7 @@
                 value = Value(
                     content = Text(msgs("common.yes"))
                 ),
-                actions = Some(Actions(items = Seq(
+                actions = if(forPdf) None else Some(Actions(items = Seq(
                     ActionItem(
                         href = desiDetails.routes.ApplyCTCodeChangesController.showPage.url,
                         content = Text(msgs("common.change")),
@@ -103,7 +103,7 @@
                 value = Value(
                     content = Text(otherServices.ctChanges.ctAgentReference.get.toString())
                 ),
-                actions = Some(Actions(items = Seq(
+                actions = if(forPdf) None else Some(Actions(items = Seq(
                     ActionItem(
                         href = desiDetails.routes.EnterCTCodeController.showPage.url,
                         content = Text(msgs("common.change")),
@@ -121,7 +121,7 @@
                 value = Value(
                     content = Text(msgs("common.no"))
                 ),
-                actions = Some(Actions(items = Seq(
+                actions = if(forPdf) None else Some(Actions(items = Seq(
                     ActionItem(
                         href = desiDetails.routes.ApplyCTCodeChangesController.showPage.url,
                         content = Text(msgs("common.change")),
