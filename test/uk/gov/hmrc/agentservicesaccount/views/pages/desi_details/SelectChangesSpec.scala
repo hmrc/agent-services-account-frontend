@@ -42,10 +42,8 @@ class SelectChangesSpec extends BaseISpec {
   object MessageLookup {
     object English {
       private val govUkSuffix: String = " - Agent services account - GOV.UK"
-      val heading: String = "Select changes"
+      val heading: String = "Which contact details do you want to change?"
       val title: String = heading + govUkSuffix
-
-      val header: String = "Which contact details do you want to change?"
       val hint: String = "Select all that apply."
 
       val checkboxLabel1: String = "Business name shown to clients"
@@ -54,6 +52,20 @@ class SelectChangesSpec extends BaseISpec {
       val checkboxLabel4: String = "Telephone number"
 
       val button: String = "Continue"
+    }
+
+    object Welsh {
+      private val govUkSuffix: String = " - Cyfrif gwasanaethau asiant - GOV.UK"
+      val heading: String = "Pa fanylion cyswllt yr hoffech eu newid?"
+      val title: String = heading + govUkSuffix
+      val hint: String = "Dewiswch bob un sy’n berthnasol."
+
+      val checkboxLabel1: String = "Enw’r busnes a ddangosir i gleientiaid"
+      val checkboxLabel2: String = "Cyfeiriad ar gyfer y cyfrif gwasanaethau asiant"
+      val checkboxLabel3: String = "Cyfeiriad e-bost"
+      val checkboxLabel4: String = "Rhif ffôn"
+
+      val button: String = "Yn eich blaen"
     }
   }
 
@@ -64,7 +76,7 @@ class SelectChangesSpec extends BaseISpec {
         val doc: Document = Jsoup.parse(view.apply(form)(FakeRequest(), messages, appConfig).body)
 
         doc.title() mustBe MessageLookup.English.title
-        doc.select("h1").asScala.head.text mustBe MessageLookup.English.header
+        doc.select("h1").asScala.head.text mustBe MessageLookup.English.heading
         doc.select(".govuk-hint").asScala.head.text mustBe MessageLookup.English.hint
 
         val checkboxLabels = doc.select(".govuk-checkboxes__label").asScala.toList.map(_.text)
@@ -74,6 +86,23 @@ class SelectChangesSpec extends BaseISpec {
         checkboxLabels.last mustBe MessageLookup.English.checkboxLabel4
 
         doc.select(".govuk-button").asScala.head.text mustBe MessageLookup.English.button
+      }
+
+      "the selected lang is Welsh" in {
+        val messages: Messages = MessagesImpl(langs.last, messagesApi)
+        val doc: Document = Jsoup.parse(view.apply(form)(FakeRequest(), messages, appConfig).body)
+
+        doc.title() mustBe MessageLookup.Welsh.title
+        doc.select("h1").asScala.head.text mustBe MessageLookup.Welsh.heading
+        doc.select(".govuk-hint").asScala.head.text mustBe MessageLookup.Welsh.hint
+
+        val checkboxLabels = doc.select(".govuk-checkboxes__label").asScala.toList.map(_.text)
+        checkboxLabels.head mustBe MessageLookup.Welsh.checkboxLabel1
+        checkboxLabels(1) mustBe MessageLookup.Welsh.checkboxLabel2
+        checkboxLabels(2) mustBe MessageLookup.Welsh.checkboxLabel3
+        checkboxLabels.last mustBe MessageLookup.Welsh.checkboxLabel4
+
+        doc.select(".govuk-button").asScala.head.text mustBe MessageLookup.Welsh.button
       }
     }
   }
