@@ -84,8 +84,6 @@ class ContactDetailsControllerSpec extends UnitSpec
     telephone = "01903 209919"
   )
 
-  private val details = DesignatoryDetails(agencyDetails, emptyOtherServices)
-
   private val confirmedAddressResponse = ConfirmedResponseAddress(
     auditRef = "foo",
     id = Some("bar"),

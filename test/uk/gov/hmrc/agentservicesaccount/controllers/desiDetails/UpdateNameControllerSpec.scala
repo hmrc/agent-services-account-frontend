@@ -163,7 +163,7 @@ class UpdateNameControllerSpec extends UnitSpec
       noPendingChangesInRepo()
       val result = controller.showPage()(fakeRequest())
       status(result) shouldBe OK
-//      contentAsString(result.futureValue) should include("What's the new name") TODO
+      contentAsString(result.futureValue) should include("What’s the new name")
     }
   }
 
