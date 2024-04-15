@@ -37,7 +37,7 @@
 
 @main(
     pageTitle = withErrorPrefix(form.hasErrors, msgs("update-contact-details.email.heading")),
-    backLinkHref = Some(desiDetails.routes.CheckYourAnswersController.showPage.url),
+    mimicBrowserBackLink = true,
     showSecondaryNav = false
 ) {
 

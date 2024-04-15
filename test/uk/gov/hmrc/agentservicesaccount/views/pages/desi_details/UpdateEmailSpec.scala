@@ -29,38 +29,26 @@ import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details._
 
 import scala.jdk.CollectionConverters.CollectionHasAsScala
 
-class UpdateNameSpec extends BaseISpec {
+class UpdateEmailSpec extends BaseISpec {
 
   implicit private val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   implicit private val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
   implicit private val langs: Seq[Lang] = Seq(Lang("en"), Lang("cy"))
 
-  private val view: update_name = app.injector.instanceOf[update_name]
-  private val form: Form[String] = UpdateDetailsForms.businessNameForm
+  private val view: update_email = app.injector.instanceOf[update_email]
+  private val form: Form[String] = UpdateDetailsForms.emailAddressForm
 
   object MessageLookup {
     object English {
       private val govUkSuffix: String = " - Agent services account - GOV.UK"
-      val heading: String = "What’s the new name you want to show to clients?"
+      val heading: String = "What is the email address you want to use for your agent services account?"
       val title: String = heading + govUkSuffix
 
-      val header: String = "What’s the new name you want to show to clients?"
-      val hint: String = "Clients will see this name when they accept or manage your authorisations."
+      val header: String = "What is the email address you want to use for your agent services account?"
+      val hint: String = "We will use this email to contact you about your agent services account and to update you about your authorisation requests."
 
-      val button: String = "Continue"
+      val button: String = "Save and continue"
       val back: String = "Back"
-    }
-
-    object Welsh {
-      private val govUkSuffix: String = " - Cyfrif gwasanaethau asiant - GOV.UK"
-      val heading: String = "Beth yw’r enw newydd yr hoffech ei ddangos i gleientiaid?"
-      val title: String = heading + govUkSuffix
-
-      val header: String = "Beth yw’r enw newydd yr hoffech ei ddangos i gleientiaid?"
-      val hint: String = "Bydd cleientiaid yn gweld yr enw hwn wrth dderbyn neu reoli’ch awdurdodiadau."
-
-      val button: String = "Yn eich blaen"
-      val back: String = "Yn ôl"
     }
   }
 
@@ -78,19 +66,6 @@ class UpdateNameSpec extends BaseISpec {
 
         doc.select(".govuk-back-link").first.text() mustBe MessageLookup.English.back
         doc.select(".govuk-back-link").first.attr("href") mustBe "#"
-      }
-
-      "the selected lang is welsh" in {
-        val messages: Messages = MessagesImpl(langs.last, messagesApi)
-        val doc: Document = Jsoup.parse(view.apply(form)(messages, FakeRequest(), appConfig).body)
-
-        doc.title() mustBe MessageLookup.Welsh.title
-        doc.select("h1").asScala.head.text mustBe MessageLookup.Welsh.header
-        doc.select(".govuk-hint").asScala.head.text mustBe MessageLookup.Welsh.hint
-
-        doc.select(".govuk-button").asScala.head.text mustBe MessageLookup.Welsh.button
-
-        doc.select(".govuk-back-link").first.text() mustBe MessageLookup.Welsh.back
       }
     }
   }
