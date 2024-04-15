@@ -36,7 +36,7 @@
             value = Value(
                 content = Text(agencyDetails.agencyName.getOrElse(msgs("contact-details.summary-list.none")))
             ),
-            actions = maybeActions(Actions(items = Seq(ActionItem(href = desiDetails.routes.ContactDetailsController.showChangeBusinessName.url, content = Text(msgs("common.change"))))))
+            actions = maybeActions(Actions(items = Seq(ActionItem(href = desiDetails.routes.UpdateNameController.showPage.url, content = Text(msgs("common.change"))))))
         ),
         SummaryListRow(
             key = Key(

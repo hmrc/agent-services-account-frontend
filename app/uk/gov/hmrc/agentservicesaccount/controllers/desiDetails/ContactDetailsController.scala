@@ -96,27 +96,6 @@ class ContactDetailsController @Inject()(actions: Actions,
     _ <- sessionCache.put[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS, updatedDraftDetails)
   } yield ()
 
-  val showChangeBusinessName: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    ifFeatureEnabledAndNoPendingChanges {
-      Future.successful(Ok(update_name(UpdateDetailsForms.businessNameForm)))
-    }
-  }
-
-  val submitChangeBusinessName: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    ifFeatureEnabledAndNoPendingChanges {
-      UpdateDetailsForms.businessNameForm
-        .bindFromRequest()
-        .fold(
-          formWithErrors => Future.successful(Ok(update_name(formWithErrors))),
-          newAgencyName => {
-              updateDraftDetails(desiDetails => desiDetails.copy(agencyDetails = desiDetails.agencyDetails.copy(agencyName = Some(newAgencyName)))).flatMap(_ =>
-                getNextPage(sessionCache, "businessName")
-            )
-          }
-        )
-    }
-  }
-
   val showChangeEmailAddress: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     ifFeatureEnabledAndNoPendingChanges {
       Future.successful(Ok(update_email(UpdateDetailsForms.emailAddressForm)))
