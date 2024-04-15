@@ -31,7 +31,7 @@ import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.connectors.{AddressLookupConnector, AgentClientAuthorisationConnector, EmailVerificationConnector}
 import uk.gov.hmrc.agentservicesaccount.controllers.{CURRENT_SELECTED_CHANGES, DRAFT_NEW_CONTACT_DETAILS, DRAFT_SUBMITTED_BY, EMAIL_PENDING_VERIFICATION, desiDetails}
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup.{ConfirmedResponseAddress, ConfirmedResponseAddressDetails, Country, JourneyConfigV2}
-import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, OtherServices, SaChanges, YourDetails, DesignatoryDetails}
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, OtherServices, SaChanges, YourDetails}
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.{CompletedEmail, VerificationStatusResponse, VerifyEmailRequest, VerifyEmailResponse}
 import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress, PendingChangeOfDetails}
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
@@ -83,8 +83,6 @@ class ContactDetailsControllerSpec extends UnitSpec
     fullName = "John Tester",
     telephone = "01903 209919"
   )
-
-  private val details = DesignatoryDetails(agencyDetails, emptyOtherServices)
 
   private val confirmedAddressResponse = ConfirmedResponseAddress(
     auditRef = "foo",
@@ -142,6 +140,7 @@ class ContactDetailsControllerSpec extends UnitSpec
     val evConnector: EmailVerificationConnector = app.injector.instanceOf[EmailVerificationConnector]
 
     val contactDetailsController: ContactDetailsController = app.injector.instanceOf[ContactDetailsController]
+    val updateNameController: UpdateNameController = app.injector.instanceOf[UpdateNameController]
     val sessionCache: SessionCacheService = app.injector.instanceOf[SessionCacheService]
     val pcodRepository: PendingChangeOfDetailsRepository = app.injector.instanceOf[PendingChangeOfDetailsRepository]
 
@@ -174,35 +173,6 @@ class ContactDetailsControllerSpec extends UnitSpec
       SessionKeys.authToken -> "Bearer XYZ",
       SessionKeys.sessionId -> "session-x"
     )
-
-  "GET /manage-account/contact-details/new-name" should {
-    "display the enter business name page" in new TestSetup {
-      noPendingChangesInRepo()
-      val result = contactDetailsController.showChangeBusinessName()(fakeRequest())
-      status(result) shouldBe OK
-//      contentAsString(result.futureValue) should include("What's the new name") TODO
-    }
-  }
-
-  "POST /manage-account/contact-details/new-name" should {
-    "store the new name in session and redirect to apply SA code page" in new TestSetup {
-      noPendingChangesInRepo()
-      implicit val request = fakeRequest("POST").withFormUrlEncodedBody("name" -> "New and Improved Agency")
-      val result = contactDetailsController.submitChangeBusinessName()(request)
-      status(result) shouldBe SEE_OTHER
-      header("Location", result) shouldBe Some(desiDetails.routes.ApplySACodeChangesController.showPage.url)
-      sessionCache.get(DRAFT_NEW_CONTACT_DETAILS).futureValue.flatMap(_.agencyDetails.agencyName) shouldBe Some("New and Improved Agency")
-    }
-
-    "display an error if the data submitted is invalid" in new TestSetup {
-      noPendingChangesInRepo()
-      implicit val request = fakeRequest("POST").withFormUrlEncodedBody("name" -> "&^%£$)(")
-      val result = contactDetailsController.submitChangeBusinessName()(request)
-      status(result) shouldBe OK
-      contentAsString(result.futureValue) should include("There is a problem")
-      sessionCache.get(DRAFT_NEW_CONTACT_DETAILS).futureValue.flatMap(_.agencyDetails.agencyName) shouldBe None // new name not added to session
-    }
-  }
 
   "GET /manage-account/contact-details/new-email" should {
     "display the enter email address page" in new TestSetup {
@@ -318,8 +288,6 @@ class ContactDetailsControllerSpec extends UnitSpec
       }
 
       pendingChangesExistInRepo()
-      shouldRedirect(contactDetailsController.showChangeBusinessName())
-      shouldRedirect(contactDetailsController.submitChangeBusinessName())
       shouldRedirect(contactDetailsController.showChangeEmailAddress())
       shouldRedirect(contactDetailsController.submitChangeEmailAddress())
       shouldRedirect(contactDetailsController.finishEmailVerification())

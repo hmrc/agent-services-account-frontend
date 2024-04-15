@@ -47,8 +47,6 @@ class ContactDetailsController @Inject()(actions: Actions,
                                          pcodRepository: PendingChangeOfDetailsRepository,
                                          agentClientAuthorisationConnector: AgentClientAuthorisationConnector,
                                          //views
-                                         update_name: update_name,
-                                         update_phone: update_phone,
                                          update_email: update_email,
                                          change_submitted: change_submitted,
                                          email_locked: email_locked,
@@ -95,27 +93,6 @@ class ContactDetailsController @Inject()(actions: Actions,
     updatedDraftDetails = f(draftDetails)
     _ <- sessionCache.put[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS, updatedDraftDetails)
   } yield ()
-
-  val showChangeBusinessName: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    ifFeatureEnabledAndNoPendingChanges {
-      Future.successful(Ok(update_name(UpdateDetailsForms.businessNameForm)))
-    }
-  }
-
-  val submitChangeBusinessName: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    ifFeatureEnabledAndNoPendingChanges {
-      UpdateDetailsForms.businessNameForm
-        .bindFromRequest()
-        .fold(
-          formWithErrors => Future.successful(Ok(update_name(formWithErrors))),
-          newAgencyName => {
-              updateDraftDetails(desiDetails => desiDetails.copy(agencyDetails = desiDetails.agencyDetails.copy(agencyName = Some(newAgencyName)))).flatMap(_ =>
-                getNextPage(sessionCache, "businessName")
-            )
-          }
-        )
-    }
-  }
 
   val showChangeEmailAddress: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     ifFeatureEnabledAndNoPendingChanges {

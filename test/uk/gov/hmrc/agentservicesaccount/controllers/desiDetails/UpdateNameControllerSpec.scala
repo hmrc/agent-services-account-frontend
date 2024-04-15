@@ -24,14 +24,14 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
-import play.api.mvc.{Action, AnyContent, AnyContentAsFormUrlEncoded, Result}
+import play.api.mvc.{Action, AnyContent}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.connectors.{AddressLookupConnector, AgentClientAuthorisationConnector, EmailVerificationConnector}
 import uk.gov.hmrc.agentservicesaccount.controllers.{CURRENT_SELECTED_CHANGES, DRAFT_NEW_CONTACT_DETAILS, DRAFT_SUBMITTED_BY, desiDetails}
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup.{ConfirmedResponseAddress, ConfirmedResponseAddressDetails, Country, JourneyConfigV2}
-import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, OtherServices, SaChanges, YourDetails}
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails._
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeOfDetails
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
@@ -44,7 +44,7 @@ import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
 import java.time.Instant
 import scala.concurrent.{ExecutionContext, Future}
 
-class UpdateTelephoneControllerSpec extends UnitSpec
+class UpdateNameControllerSpec extends UnitSpec
   with Matchers
   with GuiceOneAppPerSuite
   with ScalaFutures
@@ -125,7 +125,7 @@ class UpdateTelephoneControllerSpec extends UnitSpec
 
     val evConnector: EmailVerificationConnector = app.injector.instanceOf[EmailVerificationConnector]
 
-    val controller: UpdateTelephoneController = app.injector.instanceOf[UpdateTelephoneController]
+    val controller: UpdateNameController = app.injector.instanceOf[UpdateNameController]
     val sessionCache: SessionCacheService = app.injector.instanceOf[SessionCacheService]
     val pcodRepository: PendingChangeOfDetailsRepository = app.injector.instanceOf[PendingChangeOfDetailsRepository]
 
@@ -158,36 +158,34 @@ class UpdateTelephoneControllerSpec extends UnitSpec
       SessionKeys.sessionId -> "session-x"
     )
 
-  "GET /manage-account/contact-details/new-telephone" should {
-    "display the enter telephone number page" in new TestSetup {
+  "GET /manage-account/contact-details/new-name" should {
+    "display the enter business name page" in new TestSetup {
       noPendingChangesInRepo()
-      val result: Future[Result] = controller.showPage()(fakeRequest())
+      val result = controller.showPage()(fakeRequest())
       status(result) shouldBe OK
-      contentAsString(result.futureValue) should include("What’s the new telephone number?")
+      contentAsString(result.futureValue) should include("What’s the new name")
     }
   }
 
-  "POST /manage-account/contact-details/new-telephone" should {
-    "store the new telephone number in session and redirect to apply SA code page" in new TestSetup {
+  "POST /manage-account/contact-details/new-name" should {
+    "store the new name in session and redirect to apply SA code page" in new TestSetup {
       noPendingChangesInRepo()
-      implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = fakeRequest("POST").withFormUrlEncodedBody("telephoneNumber" -> "01234 567 890")
-      val result: Future[Result] = controller.onSubmit()(request)
+      implicit val request = fakeRequest("POST").withFormUrlEncodedBody("name" -> "New and Improved Agency")
+      val result = controller.onSubmit()(request)
       status(result) shouldBe SEE_OTHER
       header("Location", result) shouldBe Some(desiDetails.routes.ApplySACodeChangesController.showPage.url)
-      sessionCache.get(DRAFT_NEW_CONTACT_DETAILS).futureValue.flatMap(_.agencyDetails.agencyTelephone) shouldBe Some("01234 567 890")
+      sessionCache.get(DRAFT_NEW_CONTACT_DETAILS).futureValue.flatMap(_.agencyDetails.agencyName) shouldBe Some("New and Improved Agency")
     }
 
     "display an error if the data submitted is invalid" in new TestSetup {
       noPendingChangesInRepo()
-      implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = fakeRequest("POST").withFormUrlEncodedBody("telephoneNumber" -> "0800 FAKE NO")
-      val result: Future[Result] = controller.onSubmit()(request)
+      implicit val request = fakeRequest("POST").withFormUrlEncodedBody("name" -> "&^%£$)(")
+      val result = controller.onSubmit()(request)
       status(result) shouldBe OK
       contentAsString(result.futureValue) should include("There is a problem")
-      sessionCache.get(DRAFT_NEW_CONTACT_DETAILS).futureValue.flatMap(_.agencyDetails.agencyTelephone) shouldBe None
+      sessionCache.get(DRAFT_NEW_CONTACT_DETAILS).futureValue.flatMap(_.agencyDetails.agencyName) shouldBe None // new name not added to session
     }
   }
-
-
 
   "existing pending changes" should {
     "cause the user to be redirected away from any 'update' endpoints" in new TestSetup {

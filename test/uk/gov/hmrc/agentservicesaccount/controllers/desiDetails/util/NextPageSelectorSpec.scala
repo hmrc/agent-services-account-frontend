@@ -40,7 +40,7 @@ class NextPageSelectorSpec extends BaseISpec with SessionServiceMocks {
 
         val response: Future[Result] = getNextPage(mockSessionCacheService)
 
-        redirectLocation(await(response)) shouldBe Some(desiDetails.routes.ContactDetailsController.showChangeBusinessName.url)
+        redirectLocation(await(response)) shouldBe Some(desiDetails.routes.UpdateNameController.showPage.url)
       }
 
       "some pages selected" in {
