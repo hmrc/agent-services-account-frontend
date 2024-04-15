@@ -211,18 +211,23 @@ class AgentServicesControllerSpec extends BaseISpec {
 //        tax-services-accordion-content-1
         val one = accordion.select("#tax-services-accordion-content-1")
         one.select("h4").get(0).text() shouldBe "Before you start"
-        one.select("h4").get(1).text() shouldBe "Manage your client’s Income Tax details"
+        one.select("p").get(0).text() shouldBe "Make sure you copy across existing authorisations."
+        one.select("a").get(0).attr("href") shouldBe "http://localhost:9438/agent-mapping/start"
 
-        val p1 = one.select("p").get(0)
-        p1.text shouldBe "You must first get an authorisation from your client. You can do this by copying across your authorisations or requesting an authorisation."
-        p1.select("a").get(0).attr("href") shouldBe "http://localhost:9438/agent-mapping/start"
-        p1.select("a").get(1).attr("href") shouldBe "http://localhost:9448/invitations/agents/client-type"
-        one.select("p").get(1).text shouldBe "If you copy your client across, you will need to sign them up to Making Tax Digital for Income Tax (opens in a new tab)"
-        one.select("p").get(1).select("a").attr("href") shouldBe "https://www.gov.uk/guidance/sign-up-your-client-for-making-tax-digital-for-income-tax"
-        one.select("p").get(2).text shouldBe "View your client’s Income Tax"
-        one.select("p").get(2).select("a").attr("href") shouldBe "http://localhost:9081/report-quarterly/income-and-expenses/view/agents"
-        one.select("p").get(3).text shouldBe "Help clients check whether they are eligible (opens in a new tab)"
-        one.select("p").get(3).select("a").attr("href") shouldBe "https://www.gov.uk/guidance/follow-the-rules-for-making-tax-digital-for-income-tax#who-can-follow-the-rules"
+        one.select("p").get(1).text() shouldBe "Get new authorisations for clients if you need them."
+        one.select("a").get(1).attr("href") shouldBe "http://localhost:9448/invitations/agents/client-type"
+
+        one.select("h4").get(1).text() shouldBe "Sign up your clients"
+        one.select("a").get(2).text shouldBe "Find out if your clients are eligible to sign up (opens in a new tab)."
+        one.select("a").get(2).attr("href") shouldBe "https://www.gov.uk/guidance/sign-up-your-client-for-making-tax-digital-for-income-tax"
+        one.select("p").get(3).text() shouldBe "Read the guidance about what you need to do after signing up (opens in a new tab)."
+        one.select("a").get(3).attr("href") shouldBe "https://www.gov.uk/guidance/using-making-tax-digital-for-income-tax"
+        one.select("p").get(4).text() shouldBe "Then enter a client’s details to sign them up."
+        one.select("a").get(4).attr("href") shouldBe "http://localhost:9081/report-quarterly/income-and-expenses/sign-up/client/"
+
+        one.select("h4").get(2).text() shouldBe "Manage your client’s Income Tax details"
+        one.select("p").get(5).text() shouldBe "View your client’s Income Tax."
+        one.select("a").get(5).attr("href") shouldBe "http://localhost:9081/report-quarterly/income-and-expenses/view/agents"
 
         val two = accordion.select("#tax-services-accordion-content-2")
         two.select("h4").get(0).text() shouldBe "Before you start"

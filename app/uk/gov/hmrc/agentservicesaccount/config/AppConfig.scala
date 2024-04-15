@@ -91,6 +91,8 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
 
   val incomeTaxSubscriptionAgentFrontendUrl: String = s"$incomeTaxSubscriptionAgentFrontendExternalUrl/report-quarterly/income-and-expenses/view/agents"
 
+  val incomeTaxSubscriptionSignupClientUrl: String = s"$incomeTaxSubscriptionAgentFrontendExternalUrl/report-quarterly/income-and-expenses/sign-up/client/"
+
   val agentInvitationsTrackUrl: String = s"$agentInvitationsFrontendExternalUrl/invitations/track"
 
   val agentInvitationsCancelAuthUrl: String = s"$agentInvitationsFrontendExternalUrl/invitations/agents/cancel-authorisation/client-type"
