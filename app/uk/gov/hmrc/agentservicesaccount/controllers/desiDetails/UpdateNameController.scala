@@ -19,13 +19,11 @@ package uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
 import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc._
-import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthRequestWithAgentInfo}
+import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.connectors.{AddressLookupConnector, AgentClientAuthorisationConnector, EmailVerificationConnector}
-import uk.gov.hmrc.agentservicesaccount.controllers._
+import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.NextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms
-import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, DesignatoryDetails, OtherServices, SaChanges}
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details._
@@ -36,70 +34,23 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class UpdateNameController @Inject()(actions: Actions,
-                                     sessionCache: SessionCacheService,
-                                     acaConnector: AgentClientAuthorisationConnector,
-                                     alfConnector: AddressLookupConnector,
-                                     evConnector: EmailVerificationConnector,
-                                     pcodRepository: PendingChangeOfDetailsRepository,
-                                     agentClientAuthorisationConnector: AgentClientAuthorisationConnector,
-                                     //views
-                                     update_name: update_name,
-                                     update_phone: update_phone,
-                                     update_email: update_email,
-                                     change_submitted: change_submitted,
-                                     email_locked: email_locked,
-                                     beforeYouStartPage: before_you_start_page
+                                     val sessionCache: SessionCacheService,
+                                     val acaConnector: AgentClientAuthorisationConnector,
+                                     update_name: update_name
                                         )(implicit appConfig: AppConfig,
                                           cc: MessagesControllerComponents,
-                                          ec: ExecutionContext) extends FrontendController(cc) with I18nSupport with Logging {
-
-  private def ifFeatureEnabled(action: => Future[Result]): Future[Result] = {
-    if (appConfig.enableChangeContactDetails) action else Future.successful(NotFound)
-  }
-
-  private def ifFeatureEnabledAndNoPendingChanges(action: => Future[Result])(implicit request: AuthRequestWithAgentInfo[_]): Future[Result] = {
-    ifFeatureEnabled {
-      pcodRepository.find(request.agentInfo.arn).flatMap {
-        case None => // no change is pending, we can proceed
-          action
-        case Some(_) => // there is a pending change, further changes are locked. Redirect to the base page
-          Future.successful(Redirect(desiDetails.routes.ViewContactDetailsController.showPage))
-      }
-    }
-  }
-
-  // utility function.
-  private def updateDraftDetails(f: DesignatoryDetails => DesignatoryDetails)(implicit request: Request[_]): Future[Unit] = for {
-    mDraftDetailsInSession <- sessionCache.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS)
-    draftDetails <- mDraftDetailsInSession match {
-      case Some(details) => Future.successful(details)
-      // if there is no 'draft' new set of details in session, get a fresh copy of the current stored details
-      case None =>
-        acaConnector.getAgentRecord()
-        .map(agencyDetails=>
-          DesignatoryDetails(
-            agencyDetails = agencyDetails.agencyDetails.getOrElse(throw new RuntimeException("No agency details on agent record")),
-            otherServices = OtherServices(
-              saChanges = SaChanges(
-                applyChanges = false,
-                saAgentReference = None),
-              ctChanges = CtChanges(
-                applyChanges = false,
-                ctAgentReference = None
-              ))))
-    }
-    updatedDraftDetails = f(draftDetails)
-    _ <- sessionCache.put[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS, updatedDraftDetails)
-  } yield ()
+                                          ec: ExecutionContext,
+                                          pcodRepository: PendingChangeOfDetailsRepository
+) extends FrontendController(cc) with DesiDetailsJourneySupport with I18nSupport with Logging {
 
   val showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    ifFeatureEnabledAndNoPendingChanges {
+    ifChangeContactFeatureEnabledAndNoPendingChanges {
       Future.successful(Ok(update_name(UpdateDetailsForms.businessNameForm)))
     }
   }
 
   val onSubmit: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    ifFeatureEnabledAndNoPendingChanges {
+    ifChangeContactFeatureEnabledAndNoPendingChanges {
       UpdateDetailsForms.businessNameForm
         .bindFromRequest()
         .fold(

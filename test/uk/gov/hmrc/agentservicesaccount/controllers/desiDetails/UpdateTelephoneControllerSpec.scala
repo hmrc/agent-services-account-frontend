@@ -158,7 +158,6 @@ class UpdateTelephoneControllerSpec extends UnitSpec
       SessionKeys.sessionId -> "session-x"
     )
 
-
   "GET /manage-account/contact-details/new-telephone" should {
     "display the enter telephone number page" in new TestSetup {
       noPendingChangesInRepo()
@@ -204,4 +203,3 @@ class UpdateTelephoneControllerSpec extends UnitSpec
     }
   }
 }
-

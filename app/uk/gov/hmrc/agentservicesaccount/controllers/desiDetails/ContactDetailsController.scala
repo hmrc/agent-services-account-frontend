@@ -47,8 +47,6 @@ class ContactDetailsController @Inject()(actions: Actions,
                                          pcodRepository: PendingChangeOfDetailsRepository,
                                          agentClientAuthorisationConnector: AgentClientAuthorisationConnector,
                                          //views
-                                         update_name: update_name,
-                                         update_phone: update_phone,
                                          update_email: update_email,
                                          change_submitted: change_submitted,
                                          email_locked: email_locked,

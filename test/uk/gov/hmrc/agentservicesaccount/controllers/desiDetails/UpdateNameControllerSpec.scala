@@ -29,10 +29,10 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.connectors.{AddressLookupConnector, AgentClientAuthorisationConnector, EmailVerificationConnector}
-import uk.gov.hmrc.agentservicesaccount.controllers.{CURRENT_SELECTED_CHANGES, DRAFT_NEW_CONTACT_DETAILS, DRAFT_SUBMITTED_BY, EMAIL_PENDING_VERIFICATION, desiDetails}
+import uk.gov.hmrc.agentservicesaccount.controllers.{CURRENT_SELECTED_CHANGES, DRAFT_NEW_CONTACT_DETAILS, DRAFT_SUBMITTED_BY, desiDetails}
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup.{ConfirmedResponseAddress, ConfirmedResponseAddressDetails, Country, JourneyConfigV2}
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails._
-import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress, PendingChangeOfDetails}
+import uk.gov.hmrc.agentservicesaccount.models.PendingChangeOfDetails
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.support.{TestConstants, UnitSpec}
@@ -54,19 +54,6 @@ class UpdateNameControllerSpec extends UnitSpec
 
   private val testArn = Arn("XXARN0123456789")
 
-  private val agencyDetails = AgencyDetails(
-    agencyName = Some("My Agency"),
-    agencyEmail = Some("abc@abc.com"),
-    agencyTelephone = Some("07345678901"),
-    agencyAddress = Some(BusinessAddress(
-      "25 Any Street",
-      Some("Central Grange"),
-      Some("Telford"),
-      None,
-      Some("TF4 3TR"),
-      "GB"))
-  )
-
   private val emptyOtherServices = OtherServices(
     saChanges = SaChanges(
       applyChanges = false,
@@ -82,8 +69,6 @@ class UpdateNameControllerSpec extends UnitSpec
     fullName = "John Tester",
     telephone = "01903 209919"
   )
-
-  private val details = DesignatoryDetails(agencyDetails, emptyOtherServices)
 
   private val confirmedAddressResponse = ConfirmedResponseAddress(
     auditRef = "foo",
@@ -140,7 +125,7 @@ class UpdateNameControllerSpec extends UnitSpec
 
     val evConnector: EmailVerificationConnector = app.injector.instanceOf[EmailVerificationConnector]
 
-    val updateNameController: UpdateNameController = app.injector.instanceOf[UpdateNameController]
+    val controller: UpdateNameController = app.injector.instanceOf[UpdateNameController]
     val sessionCache: SessionCacheService = app.injector.instanceOf[SessionCacheService]
     val pcodRepository: PendingChangeOfDetailsRepository = app.injector.instanceOf[PendingChangeOfDetailsRepository]
 
@@ -151,8 +136,8 @@ class UpdateNameControllerSpec extends UnitSpec
       (pcodRepository.find(_: Arn)).when(*).returns(Future.successful(Some(
         PendingChangeOfDetails(
           testArn,
-          agencyDetails,
-          agencyDetails,
+          agentDetails,
+          agentDetails,
           emptyOtherServices,
           Instant.now(),
           submittedByDetails
@@ -164,7 +149,6 @@ class UpdateNameControllerSpec extends UnitSpec
     // make sure these values are cleared from the session
     sessionCache.delete(DRAFT_NEW_CONTACT_DETAILS)(fakeRequest()).futureValue
     sessionCache.delete(DRAFT_SUBMITTED_BY)(fakeRequest()).futureValue
-    sessionCache.delete(EMAIL_PENDING_VERIFICATION)(fakeRequest()).futureValue
     sessionCache.delete(CURRENT_SELECTED_CHANGES)(fakeRequest()).futureValue
   }
 
@@ -177,7 +161,7 @@ class UpdateNameControllerSpec extends UnitSpec
   "GET /manage-account/contact-details/new-name" should {
     "display the enter business name page" in new TestSetup {
       noPendingChangesInRepo()
-      val result = updateNameController.showPage()(fakeRequest())
+      val result = controller.showPage()(fakeRequest())
       status(result) shouldBe OK
 //      contentAsString(result.futureValue) should include("What's the new name") TODO
     }
@@ -187,7 +171,7 @@ class UpdateNameControllerSpec extends UnitSpec
     "store the new name in session and redirect to apply SA code page" in new TestSetup {
       noPendingChangesInRepo()
       implicit val request = fakeRequest("POST").withFormUrlEncodedBody("name" -> "New and Improved Agency")
-      val result = updateNameController.onSubmit()(request)
+      val result = controller.onSubmit()(request)
       status(result) shouldBe SEE_OTHER
       header("Location", result) shouldBe Some(desiDetails.routes.ApplySACodeChangesController.showPage.url)
       sessionCache.get(DRAFT_NEW_CONTACT_DETAILS).futureValue.flatMap(_.agencyDetails.agencyName) shouldBe Some("New and Improved Agency")
@@ -196,7 +180,7 @@ class UpdateNameControllerSpec extends UnitSpec
     "display an error if the data submitted is invalid" in new TestSetup {
       noPendingChangesInRepo()
       implicit val request = fakeRequest("POST").withFormUrlEncodedBody("name" -> "&^%£$)(")
-      val result = updateNameController.onSubmit()(request)
+      val result = controller.onSubmit()(request)
       status(result) shouldBe OK
       contentAsString(result.futureValue) should include("There is a problem")
       sessionCache.get(DRAFT_NEW_CONTACT_DETAILS).futureValue.flatMap(_.agencyDetails.agencyName) shouldBe None // new name not added to session
@@ -212,9 +196,8 @@ class UpdateNameControllerSpec extends UnitSpec
       }
 
       pendingChangesExistInRepo()
-      shouldRedirect(updateNameController.showPage())
-      shouldRedirect(updateNameController.onSubmit())
+      shouldRedirect(controller.showPage())
+      shouldRedirect(controller.onSubmit())
     }
   }
 }
-
