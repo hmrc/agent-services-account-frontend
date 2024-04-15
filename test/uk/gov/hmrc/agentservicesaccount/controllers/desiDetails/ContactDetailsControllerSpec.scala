@@ -31,7 +31,7 @@ import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.connectors.{AddressLookupConnector, AgentClientAuthorisationConnector, EmailVerificationConnector}
 import uk.gov.hmrc.agentservicesaccount.controllers.{CURRENT_SELECTED_CHANGES, DRAFT_NEW_CONTACT_DETAILS, DRAFT_SUBMITTED_BY, EMAIL_PENDING_VERIFICATION, desiDetails}
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup.{ConfirmedResponseAddress, ConfirmedResponseAddressDetails, Country, JourneyConfigV2}
-import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, OtherServices, SaChanges, YourDetails, DesignatoryDetails}
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, OtherServices, SaChanges, YourDetails}
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.{CompletedEmail, VerificationStatusResponse, VerifyEmailRequest, VerifyEmailResponse}
 import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress, PendingChangeOfDetails}
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
