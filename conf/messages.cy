@@ -144,6 +144,14 @@ asa.section4.h2=Awdurdodiadau cleientiaid
 # ITSA
 asa.sectionITSA.col1.h3=Cyn i chi ddechrau
 asa.sectionITSA.col1.link=Os ydych yn copïo manylion eich cleient drosodd, bydd angen i chi<a class="govuk-link" href="https://www.gov.uk/guidance/sign-up-your-client-for-making-tax-digital-for-income-tax.cy" target="_blank" rel="noreferrer noopener"> ei gofrestru ar gyfer y cynllun Troi Treth yn Ddigidol ar gyfer Treth Incwm (yn agor tab newydd)</a>
+asa.sectionITSA.col1.p1=Gwnewch yn siŵr eich bod yn <a class="govuk-link" href="{0}">copïo’r awdurdodiadau presennol ar draws</a>.
+asa.sectionITSA.col1.p2=<a class="govuk-link" href="{0}">Dylech gael awdurdodiadau newydd</a> ar gyfer cleientiaid, os oes angen.
+asa.sectionITSA.col2.h3=Cofrestru’ch cleientiaid
+asa.sectionITSA.col2.p1=Cael gwybod a yw’ch cleientiaid yn gymwys i gofrestru (yn agor tab newydd).
+asa.sectionITSA.col2.p2=Darllenwch yr arweiniad ynghylch <a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">yr hyn y mae angen i chi ei wneud ar ôl cofrestru’ch cleientiaid (yn agor tab newydd).</a>
+asa.sectionITSA.col2.p3=Wedyn, <a class="govuk-link" href="{0}">nodwch fanylion eich cleient er mwyn ei gofrestru.</a>
+asa.sectionITSA.col3.h3=Rheoli manylion Treth Incwm eich cleient
+asa.sectionITSA.col3.p=Bwrw golwg dros Dreth Incwm eich cleient.
 asa.sectionITSA.col1.p=Yn gyntaf mae’n rhaid i chi gael awdurdodiad gan eich cleient. Gallwch wneud hyn drwy<a class="govuk-link" href="{0}"> gopïo’ch awdurdodiadau drosodd</a> neu <a class="govuk-link" href="{1}">wneud cais am awdurdodiad</a>.
 asa.sectionITSA.col2.h3=Rheoli manylion Treth Incwm eich cleient
 asa.sectionITSA.col2.link1.text=Bwrw golwg dros fanylion Treth Incwm eich cleient
