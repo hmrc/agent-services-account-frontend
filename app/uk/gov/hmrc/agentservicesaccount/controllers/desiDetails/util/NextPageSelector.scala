@@ -63,7 +63,7 @@ object NextPageSelector {
     nextPage match {
       case Some("businessName") => Redirect(desiDetails.routes.UpdateNameController.showPage)
       case Some("address") => Redirect(desiDetails.routes.ContactDetailsController.startAddressLookup)
-      case Some("email") => Redirect(desiDetails.routes.ContactDetailsController.showChangeEmailAddress)
+      case Some("email") => Redirect(desiDetails.routes.UpdateEmailAddressController.showChangeEmailAddress)
       case Some("telephone") => Redirect(desiDetails.routes.UpdateTelephoneController.showPage)
       case None => {
         if (userIsOnCheckYourAnswersFlow) Redirect(desiDetails.routes.CheckYourAnswersController.showPage)

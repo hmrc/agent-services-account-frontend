@@ -26,7 +26,6 @@ import play.api.mvc.{DefaultActionBuilderImpl, MessagesControllerComponents, Req
 import play.api.test.Helpers.{status, stubMessagesControllerComponents}
 import play.api.test.{DefaultAwaitTimeout, FakeRequest, Helpers}
 import play.twirl.api.Html
-import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, SuspensionDetails}
 import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector}
@@ -53,27 +52,6 @@ class ViewDetailsControllerSpec extends PlaySpec
   implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
   private val fakeRequest = FakeRequest()
 
-  private val arn: Arn = Arn("arn")
-  private val credentialRole: User.type = User
-  private val agentEnrolment: Set[Enrolment] = Set(
-    Enrolment("HMRC-AS-AGENT",
-      Seq(EnrolmentIdentifier("AgentReferenceNumber", arn.value)),
-      state = "Active",
-      delegatedAuthRule = None))
-  private val ggCredentials: Credentials =
-    Credentials("ggId", "GovernmentGateway")
-
-  private val authResponse: Future[Enrolments ~ Some[Credentials] ~ Some[Email] ~ Some[Name] ~ Some[User.type]] =
-    Future.successful(new~(new~(new~(new~(
-      Enrolments(agentEnrolment), Some(ggCredentials)),
-      Some(Email("test@email.com"))),
-      Some(Name(Some("Troy"), Some("Barnes")))),
-      Some(credentialRole)))
-
-  private val suspensionDetailsResponse: Future[SuspensionDetails] = Future.successful(SuspensionDetails(suspensionStatus = false, None))
-
-  private val ukUpdateAmlsJourneyWithAmlsExists = UpdateAmlsJourney(status = AmlsStatuses.ValidAmlsDetailsUK)
-  private val ukUpdateAmlsJourneyWithoutAmls = UpdateAmlsJourney(status = AmlsStatuses.NoAmlsDetailsUK)
   private val amlsDetails = AmlsDetails(supervisoryBody = "HMRC")
   private val amlsDetailsResponsse = AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK,  Some(amlsDetails))
   private val amlsNoDetailsResponsse = AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None)

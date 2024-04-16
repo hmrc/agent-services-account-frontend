@@ -31,7 +31,7 @@ import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.{CURRENT_SELECTED_CHANGES, DRAFT_NEW_CONTACT_DETAILS, DRAFT_SUBMITTED_BY, EMAIL_PENDING_VERIFICATION, desiDetails}
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails._
-import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress, PendingChangeOfDetails}
+import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, PendingChangeOfDetails}
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.support.{TestConstants, UnitSpec}
@@ -52,31 +52,6 @@ class CheckYourAnswersControllerSpec extends UnitSpec
   with TestConstants {
 
   private val testArn = Arn("XXARN0123456789")
-
-  private val agencyDetails = AgencyDetails(
-    agencyName = Some("My Agency"),
-    agencyEmail = Some("abc@abc.com"),
-    agencyTelephone = Some("07345678901"),
-    agencyAddress = Some(BusinessAddress(
-      "25 Any Street",
-      Some("Central Grange"),
-      Some("Telford"),
-      None,
-      Some("TF4 3TR"),
-      "GB"))
-  )
-
-  private val emptyOtherServices = OtherServices(
-    saChanges = SaChanges(
-      applyChanges = false,
-      saAgentReference = None
-    ),
-    ctChanges = CtChanges(
-      applyChanges = false,
-      ctAgentReference = None
-    )
-  )
-
 
   private val submittedByDetails = YourDetails(
     fullName = "John Tester",

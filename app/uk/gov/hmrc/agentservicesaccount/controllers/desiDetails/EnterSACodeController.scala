@@ -17,15 +17,14 @@
 package uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
 
 import play.api.i18n.I18nSupport
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
-import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthRequestWithAgentInfo}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
-import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
+import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.DesiDetailsJourneySupport
 import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.SaChanges
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
-import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
+import uk.gov.hmrc.agentservicesaccount.services.{DraftDetailsService, SessionCacheService}
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details._
 import uk.gov.hmrc.domain.SaUtr
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -34,32 +33,36 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class EnterSACodeController @Inject()(
-                                       actions: Actions,
-                                       val sessionCache: SessionCacheService,
-                                       val acaConnector: AgentClientAuthorisationConnector,
-                                       enterSaCodeView: enter_sa_code,
-                                       pcodRepository: PendingChangeOfDetailsRepository
+class EnterSACodeController @Inject()(actions: Actions,
+                                      val sessionCache: SessionCacheService,
+                                      draftDetailsService: DraftDetailsService,
+                                      enterSaCodeView: enter_sa_code,
+                                      cc: MessagesControllerComponents
                                      )(implicit appConfig: AppConfig,
-                                       cc: MessagesControllerComponents,
-                                       ec: ExecutionContext) extends FrontendController(cc) with DesiDetailsJourneySupport with I18nSupport {
+                                       ec: ExecutionContext,
+                                       pcodRepository: PendingChangeOfDetailsRepository
+                                     ) extends FrontendController(cc) with DesiDetailsJourneySupport with I18nSupport {
 
-  def showPage: Action[AnyContent]= actions.authActionCheckSuspend.async { implicit request =>
-    ifFeatureEnabledAndNoPendingChanges {
+  def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
+    ifChangeContactFeatureEnabledAndNoPendingChanges {
       Future.successful(Ok(enterSaCodeView(UpdateDetailsForms.saCodeForm)))
     }
   }
 
   def onSubmit: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    ifFeatureEnabledAndNoPendingChanges {
+    ifChangeContactFeatureEnabledAndNoPendingChanges {
       withUpdateDesiDetailsJourney { desiDetails =>
         UpdateDetailsForms.saCodeForm
           .bindFromRequest()
           .fold(
-            formWithErrors => Future.successful(Ok(enterSaCodeView(formWithErrors))),
+            formWithErrors => Future.successful(BadRequest(enterSaCodeView(formWithErrors))),
             saCode => {
-              updateDraftDetails(_.copy(otherServices = desiDetails.otherServices.copy(saChanges = SaChanges(true, Some(SaUtr(saCode)))) )).map(_ =>
-                Redirect (uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.routes.ApplyCTCodeChangesController.showPage))
+              draftDetailsService.updateDraftDetails(
+                _.copy(otherServices = desiDetails.otherServices.copy(saChanges = SaChanges(true, Some(SaUtr(saCode)))))
+              ).map {
+                _ =>
+                  Redirect(uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.routes.ApplyCTCodeChangesController.showPage)
+              }
             }
           )
       }
@@ -67,27 +70,18 @@ class EnterSACodeController @Inject()(
   }
 
   def continueWithoutSaCode: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    ifFeatureEnabledAndNoPendingChanges {
+    ifChangeContactFeatureEnabledAndNoPendingChanges {
       withUpdateDesiDetailsJourney { desiDetails =>
-        updateDraftDetails(_.copy(otherServices = desiDetails.otherServices.copy(saChanges = SaChanges(false, None)) )).map(_ =>
-          Redirect (uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.routes.ApplyCTCodeChangesController.showPage))
+        draftDetailsService
+          .updateDraftDetails(
+            _.copy(otherServices = desiDetails.otherServices.copy(saChanges = SaChanges(false, None)))
+          ).map {
+            _ =>
+              Redirect(uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.routes.ApplyCTCodeChangesController.showPage)
+          }
       }
     }
   }
 
-  private def ifFeatureEnabled(action: => Future[Result]): Future[Result] = {
-    if (appConfig.enableChangeContactDetails) action else Future.successful(NotFound)
-  }
-
-  private def ifFeatureEnabledAndNoPendingChanges(action: => Future[Result])(implicit request: AuthRequestWithAgentInfo[_]): Future[Result] = {
-    ifFeatureEnabled {
-      pcodRepository.find(request.agentInfo.arn).flatMap {
-        case None => // no change is pending, we can proceed
-          action
-        case Some(_) => // there is a pending change, further changes are locked. Redirect to the base page
-          Future.successful(Redirect(desiDetails.routes.ViewContactDetailsController.showPage))
-      }
-    }
-  }
 }
 

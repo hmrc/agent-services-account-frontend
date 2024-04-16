@@ -59,7 +59,7 @@ class EnterRenewalDateController @Inject()(actions: Actions,
             renewalDateForm
             .bindFromRequest()
             .fold(
-              formWithError => Ok(enterRenewalDate(formWithError)).toFuture,
+              formWithError => BadRequest(enterRenewalDate(formWithError)).toFuture,
               data =>
                 saveAmlsJourney(amlsJourney.copy(newExpirationDate = Option(data))).map(_ =>
                     Redirect(routes.CheckYourAnswersController.showPage)

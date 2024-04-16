@@ -68,10 +68,10 @@ GET        /manage-account/contact-details/new-name                       @uk.go
 POST       /manage-account/contact-details/new-name                       @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.UpdateNameController.onSubmit
 GET        /manage-account/contact-details/new-address                    @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.ContactDetailsController.startAddressLookup
 GET        /manage-account/contact-details/address-lookup-finish          @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.ContactDetailsController.finishAddressLookup(id: Option[String])
-GET        /manage-account/contact-details/new-email                      @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.ContactDetailsController.showChangeEmailAddress
-POST       /manage-account/contact-details/new-email                      @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.ContactDetailsController.submitChangeEmailAddress
-GET        /manage-account/contact-details/email-verification-finish      @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.ContactDetailsController.finishEmailVerification
-GET        /manage-account/contact-details/email-locked                   @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.ContactDetailsController.showEmailLocked
+GET        /manage-account/contact-details/new-email                      @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.UpdateEmailAddressController.showChangeEmailAddress
+POST       /manage-account/contact-details/new-email                      @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.UpdateEmailAddressController.submitChangeEmailAddress
+GET        /manage-account/contact-details/email-verification-finish      @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.EmailVerificationEndpointController.finishEmailVerification
+GET        /manage-account/contact-details/email-locked                   @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.UpdateEmailAddressController.showEmailLocked
 GET        /manage-account/contact-details/new-telephone                  @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.UpdateTelephoneController.showPage
 POST       /manage-account/contact-details/new-telephone                  @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.UpdateTelephoneController.onSubmit
 

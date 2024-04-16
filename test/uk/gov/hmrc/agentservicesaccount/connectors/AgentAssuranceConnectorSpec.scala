@@ -17,7 +17,6 @@
 package uk.gov.hmrc.agentservicesaccount.connectors
 
 import play.api.test.Helpers._
-import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.models.{AmlsDetails, AmlsDetailsResponse, AmlsStatuses, UpdateAmlsJourney}
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentAssuranceStubs._
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
@@ -31,10 +30,6 @@ class AgentAssuranceConnectorSpec extends BaseISpec {
   private lazy val connector = app.injector.instanceOf[AgentAssuranceConnector]
 
   private implicit val hc: HeaderCarrier = HeaderCarrier()
-
-  private val arn: String = "TARN0000001"
-
-  private val arnTyped = Arn(arn)
 
   private val ukAMLSDetails = AmlsDetails(
     "HMRC",
@@ -59,38 +54,38 @@ class AgentAssuranceConnectorSpec extends BaseISpec {
 
   "getAMLSDetails" should {
     "return UK AMLS details" in {
-      givenAMLSDetailsForArn(ukAMLSDetailsResponse, arn)
+      givenAMLSDetailsForArn(ukAMLSDetailsResponse, arn.value)
 
-      val result = connector.getAMLSDetails(arn)
+      val result = connector.getAMLSDetails(arn.value)
 
       await(result) shouldBe ukAMLSDetails
     }
     "return Overseas AMLS details" in {
-      givenAMLSDetailsForArn(overseasAMLSDetailsResponse, arn)
+      givenAMLSDetailsForArn(overseasAMLSDetailsResponse, arn.value)
 
-      val result = connector.getAMLSDetails(arn)
+      val result = connector.getAMLSDetails(arn.value)
 
       await(result) shouldBe overseasAMLSDetails
     }
     "handle 204 No Content" in {
-      givenAMLSDetailsNotFoundForArn(arn)
+      givenAMLSDetailsNotFoundForArn(arn.value)
 
       intercept[Exception] {
-        await(connector.getAMLSDetails(arn))
+        await(connector.getAMLSDetails(arn.value))
       }.getMessage shouldBe s"Error $NO_CONTENT no amls details found"
     }
     "handle 400 Bad Request" in {
-      givenAMLSDetailsBadRequestForArn(arn)
+      givenAMLSDetailsBadRequestForArn(arn.value)
 
       intercept[UpstreamErrorResponse] {
-        await(connector.getAMLSDetails(arn))
+        await(connector.getAMLSDetails(arn.value))
       }.getMessage shouldBe "Error 400 invalid ARN when trying to get amls details"
     }
     "handle 500 Internal Server Error" in {
-      givenAMLSDetailsServerErrorForArn(arn)
+      givenAMLSDetailsServerErrorForArn(arn.value)
 
       intercept[UpstreamErrorResponse] {
-        await(connector.getAMLSDetails(arn))
+        await(connector.getAMLSDetails(arn.value))
       }.getMessage shouldBe "Error 500 unable to get amls details"
     }
   }
@@ -98,31 +93,31 @@ class AgentAssuranceConnectorSpec extends BaseISpec {
 
   "getAmlsStatus" should {
     "return UK AMLS Status" in {
-      givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), arnTyped)
+      givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), arn)
 
-      val result = connector.getAmlsStatus(arnTyped)
+      val result = connector.getAmlsStatus(arn)
 
       await(result) shouldBe AmlsStatuses.ValidAmlsDetailsUK
     }
     "return Overseas AMLS details" in {
-      givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsNonUK, None), arnTyped)
+      givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsNonUK, None), arn)
 
-      val result = connector.getAmlsStatus(arnTyped)
+      val result = connector.getAmlsStatus(arn)
 
       await(result) shouldBe AmlsStatuses.ValidAmlsNonUK
     }
     "handle 400 Bad Request" in {
-      givenAmlsStatusBadRequestForArn(arnTyped)
+      givenAmlsStatusBadRequestForArn(arn)
 
       intercept[UpstreamErrorResponse] {
-        await(connector.getAmlsStatus(arnTyped))
+        await(connector.getAmlsStatus(arn))
       }.getMessage shouldBe "Error 400 invalid ARN when trying to get amls details"
     }
     "handle 500 Internal Server Error" in {
-      givenAmlsStatusServerErrorForArn(arnTyped)
+      givenAmlsStatusServerErrorForArn(arn)
 
       intercept[UpstreamErrorResponse] {
-        await(connector.getAmlsStatus(arnTyped))
+        await(connector.getAmlsStatus(arn))
       }.getMessage shouldBe "Error 500 unable to get amls details"
     }
   }

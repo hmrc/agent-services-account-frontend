@@ -30,10 +30,9 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.connectors.{AddressLookupConnector, AgentClientAuthorisationConnector, EmailVerificationConnector}
 import uk.gov.hmrc.agentservicesaccount.controllers.{CURRENT_SELECTED_CHANGES, DRAFT_NEW_CONTACT_DETAILS, DRAFT_SUBMITTED_BY, EMAIL_PENDING_VERIFICATION, desiDetails}
+import uk.gov.hmrc.agentservicesaccount.models.PendingChangeOfDetails
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup.{ConfirmedResponseAddress, ConfirmedResponseAddressDetails, Country, JourneyConfigV2}
-import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, OtherServices, SaChanges, YourDetails}
-import uk.gov.hmrc.agentservicesaccount.models.emailverification.{CompletedEmail, VerificationStatusResponse, VerifyEmailRequest, VerifyEmailResponse}
-import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress, PendingChangeOfDetails}
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails._
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.support.{TestConstants, UnitSpec}
@@ -55,29 +54,6 @@ class ContactDetailsControllerSpec extends UnitSpec
 
   private val testArn = Arn("XXARN0123456789")
 
-  private val agencyDetails = AgencyDetails(
-    agencyName = Some("My Agency"),
-    agencyEmail = Some("abc@abc.com"),
-    agencyTelephone = Some("07345678901"),
-    agencyAddress = Some(BusinessAddress(
-      "25 Any Street",
-      Some("Central Grange"),
-      Some("Telford"),
-      None,
-      Some("TF4 3TR"),
-      "GB"))
-  )
-
-  private val emptyOtherServices = OtherServices(
-    saChanges = SaChanges(
-      applyChanges = false,
-      saAgentReference = None
-    ),
-    ctChanges = CtChanges(
-      applyChanges = false,
-      ctAgentReference = None
-    )
-  )
 
   private val submittedByDetails = YourDetails(
     fullName = "John Tester",
@@ -174,83 +150,7 @@ class ContactDetailsControllerSpec extends UnitSpec
       SessionKeys.sessionId -> "session-x"
     )
 
-  "GET /manage-account/contact-details/new-email" should {
-    "display the enter email address page" in new TestSetup {
-      noPendingChangesInRepo()
-      val result = contactDetailsController.showChangeEmailAddress()(fakeRequest())
-      status(result) shouldBe OK
-      contentAsString(result.futureValue) should include("What is the email")
-    }
-  }
-
-  "POST /manage-account/contact-details/new-email" should {
-    "(if the email is already verified) store the new email address in session and redirect to review new details page" in new TestSetup {
-      noPendingChangesInRepo()
-      (evConnector.checkEmail(_: String)(_: HeaderCarrier, _: ExecutionContext)).when(*, *, *).returns(Future.successful(Some(
-        VerificationStatusResponse(List(CompletedEmail("new@email.com", verified = true, locked = false)))
-      )))
-      implicit val request = fakeRequest("POST").withFormUrlEncodedBody("emailAddress" -> "new@email.com")
-      val result = contactDetailsController.submitChangeEmailAddress()(request)
-      status(result) shouldBe SEE_OTHER
-      header("Location", result) shouldBe Some(desiDetails.routes.CheckYourAnswersController.showPage.url)
-      sessionCache.get(DRAFT_NEW_CONTACT_DETAILS).futureValue.flatMap(_.agencyDetails.agencyEmail) shouldBe Some("new@email.com")
-    }
-
-    "(if the email is locked) redirect to the email-locked page" in new TestSetup {
-      noPendingChangesInRepo()
-      (evConnector.checkEmail(_: String)(_: HeaderCarrier, _: ExecutionContext)).when(*, *, *).returns(Future.successful(Some(
-        VerificationStatusResponse(List(CompletedEmail("new@email.com", verified = false, locked = true)))
-      )))
-      implicit val request = fakeRequest("POST").withFormUrlEncodedBody("emailAddress" -> "new@email.com")
-      val result = contactDetailsController.submitChangeEmailAddress()(request)
-      status(result) shouldBe SEE_OTHER
-      header("Location", result) shouldBe Some(desiDetails.routes.ContactDetailsController.showEmailLocked.url)
-      sessionCache.get(DRAFT_NEW_CONTACT_DETAILS).futureValue.flatMap(_.agencyDetails.agencyEmail) shouldBe None // there should be no change here
-    }
-
-    "(if the email is unverified) redirect to the verify-email external journey" in new TestSetup {
-      noPendingChangesInRepo()
-      (evConnector.checkEmail(_: String)(_: HeaderCarrier, _: ExecutionContext)).when(*, *, *).returns(Future.successful(Some(
-        VerificationStatusResponse(List.empty)
-      )))
-      (evConnector.verifyEmail(_: VerifyEmailRequest)(_: HeaderCarrier, _: ExecutionContext)).when(*, *, *).returns(Future.successful(Some(
-        VerifyEmailResponse(redirectUri = "/fake-verify-email-journey")
-      )))
-      implicit val request = fakeRequest("POST").withFormUrlEncodedBody("emailAddress" -> "new@email.com")
-      val result = contactDetailsController.submitChangeEmailAddress()(request)
-      status(result) shouldBe SEE_OTHER
-      header("Location", result).get should include("/fake-verify-email-journey")
-      sessionCache.get(DRAFT_NEW_CONTACT_DETAILS).futureValue.flatMap(_.agencyDetails.agencyEmail) shouldBe None // there should be no change here
-      sessionCache.get(EMAIL_PENDING_VERIFICATION).futureValue shouldBe Some("new@email.com")
-    }
-
-    "display an error if the data submitted is invalid" in new TestSetup {
-      noPendingChangesInRepo()
-      implicit val request = fakeRequest("POST").withFormUrlEncodedBody("emailAddress" -> "invalid at email dot com")
-      val result = contactDetailsController.submitChangeEmailAddress()(request)
-      status(result) shouldBe OK
-      contentAsString(result.futureValue) should include("There is a problem")
-      sessionCache.get(DRAFT_NEW_CONTACT_DETAILS).futureValue.flatMap(_.agencyDetails.agencyEmail) shouldBe None // new email not added to session
-    }
-  }
-
-  "POST manage-account/contact-details/email-verification-finish (successful verification journey has finished)" should {
-    "store the new email address in session and redirect to review new details page (also clear email verification cache value)" in new TestSetup {
-      noPendingChangesInRepo()
-      implicit val request = fakeRequest()
-      sessionCache.put(EMAIL_PENDING_VERIFICATION, "new@email.com").futureValue
-      (evConnector.checkEmail(_: String)(_: HeaderCarrier, _: ExecutionContext)).when(*, *, *).returns(Future.successful(Some(
-        VerificationStatusResponse(List(CompletedEmail("new@email.com", verified = true, locked = false)))
-      )))
-      val result = contactDetailsController.finishEmailVerification()(request)
-      status(result) shouldBe SEE_OTHER
-      header("Location", result) shouldBe Some(desiDetails.routes.CheckYourAnswersController.showPage.url)
-      sessionCache.get(DRAFT_NEW_CONTACT_DETAILS).futureValue.flatMap(_.agencyDetails.agencyEmail) shouldBe Some("new@email.com")
-      sessionCache.get(EMAIL_PENDING_VERIFICATION).futureValue shouldBe None
-    }
-  }
-
-  "GET /manage-account/contact-details/new-address" should {
+    "GET /manage-account/contact-details/new-address" should {
     "redirect to the external service to look up an address" in new TestSetup {
       noPendingChangesInRepo()
       val result = contactDetailsController.startAddressLookup()(fakeRequest())
@@ -288,9 +188,6 @@ class ContactDetailsControllerSpec extends UnitSpec
       }
 
       pendingChangesExistInRepo()
-      shouldRedirect(contactDetailsController.showChangeEmailAddress())
-      shouldRedirect(contactDetailsController.submitChangeEmailAddress())
-      shouldRedirect(contactDetailsController.finishEmailVerification())
       shouldRedirect(contactDetailsController.startAddressLookup())
       shouldRedirect(contactDetailsController.finishAddressLookup(None))
     }

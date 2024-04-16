@@ -74,7 +74,7 @@
         ),
         actions = if(forPdf) None else Some(Actions(
             items = Seq(ActionItem(
-                href = desiDetails.routes.ContactDetailsController.showChangeEmailAddress.url,
+                href = desiDetails.routes.UpdateEmailAddressController.showChangeEmailAddress.url,
                 content = Text(msgs("common.change")),
                 visuallyHiddenText = Some(msgs("contact-details.summary-list.email"))
             ))

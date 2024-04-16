@@ -64,7 +64,7 @@ class ConfirmRegistrationNumberController @Inject()(actions: Actions,
               YesNoForm.form(Messages("amls.confirm-registration-number.error", registrationNumber))
                 .bindFromRequest()
                 .fold(
-                  formWithError => Future successful Ok(confirmRegistrationNumber(formWithError, registrationNumber)),
+                  formWithError => Future successful BadRequest(confirmRegistrationNumber(formWithError, registrationNumber)),
                   data => {
                     val maybeCopyRegistrationNumber = if (data) amlsDetails.membershipNumber else amlsJourney.newRegistrationNumber
                     saveAmlsJourney(amlsJourney.copy(

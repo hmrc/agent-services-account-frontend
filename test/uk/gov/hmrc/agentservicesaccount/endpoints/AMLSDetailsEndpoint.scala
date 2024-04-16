@@ -16,15 +16,15 @@
 
 package uk.gov.hmrc.agentservicesaccount.endpoints
 
-import play.api.test.Helpers._
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.Application
-import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import play.api.libs.ws.{WSClient, WSRequest}
+import play.api.test.Helpers._
 import uk.gov.hmrc.agentservicesaccount.models.{AmlsDetails, AmlsDetailsResponse, AmlsStatuses}
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentAssuranceStubs.{givenAMLSDetailsForArn, givenAMLSDetailsServerErrorForArn}
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentClientAuthorisationStubs.givenAgentRecordFound
 import uk.gov.hmrc.agentservicesaccount.stubs.CookieHelper
+import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 
 import java.time.LocalDate
 
@@ -44,7 +44,6 @@ class AMLSDetailsEndpoint extends BaseISpec with GuiceOneServerPerSuite with Coo
 
   override implicit lazy val app: Application = appBuilder().build()
 
-  private val arn: String = "TARN0000001"
 
   private val ukAMLSDetails = AmlsDetails(
     "HMRC",
@@ -58,9 +57,9 @@ class AMLSDetailsEndpoint extends BaseISpec with GuiceOneServerPerSuite with Coo
 
   "View AMLS Supervision Details endpoint" should {
     "return successfully when everything works" in {
-      givenAuthorisedAsAgentWith(arn)
+      givenAuthorisedAsAgentWith(arn.value)
       givenAgentRecordFound(agentRecord)
-      givenAMLSDetailsForArn(ukAMLSDetailsResponse, arn)
+      givenAMLSDetailsForArn(ukAMLSDetailsResponse, arn.value)
 
       val result = await(makeRequest("/manage-account/money-laundering-supervision").get())
 
@@ -68,9 +67,9 @@ class AMLSDetailsEndpoint extends BaseISpec with GuiceOneServerPerSuite with Coo
       result.body should include("Money laundering supervision details")
     }
     "return an error if the call to get AMLS details fails" in {
-      givenAuthorisedAsAgentWith(arn)
+      givenAuthorisedAsAgentWith(arn.value)
       givenAgentRecordFound(agentRecord)
-      givenAMLSDetailsServerErrorForArn(arn)
+      givenAMLSDetailsServerErrorForArn(arn.value)
 
       val result = await(makeRequest("/manage-account/money-laundering-supervision").get())
 

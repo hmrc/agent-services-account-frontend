@@ -20,29 +20,28 @@ import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
+import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
+import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.DesiDetailsJourneySupport
 import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.CtChanges
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
-import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
+import uk.gov.hmrc.agentservicesaccount.services.{DraftDetailsService, SessionCacheService}
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details.apply_ct_code_changes
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ApplyCTCodeChangesController @Inject()(
-                                              actions: Actions,
-                                              val sessionCache: SessionCacheService,
-                                              val acaConnector: AgentClientAuthorisationConnector,
-                                              applyCtCodeChangesView: apply_ct_code_changes
+class ApplyCTCodeChangesController @Inject()(actions: Actions,
+                                             val sessionCache: SessionCacheService,
+                                             draftDetailsService: DraftDetailsService,
+                                             applyCtCodeChangesView: apply_ct_code_changes,
+                                             cc: MessagesControllerComponents
                                             )(implicit appConfig: AppConfig,
-                                              cc: MessagesControllerComponents,
                                               ec: ExecutionContext,
-                                              pcodRepository: PendingChangeOfDetailsRepository)
-  extends FrontendController(cc) with DesiDetailsJourneySupport with I18nSupport {
+                                              pcodRepository: PendingChangeOfDetailsRepository
+                                            ) extends FrontendController(cc) with DesiDetailsJourneySupport with I18nSupport {
 
   def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     ifChangeContactFeatureEnabledAndNoPendingChanges {
@@ -56,13 +55,14 @@ class ApplyCTCodeChangesController @Inject()(
         UpdateDetailsForms.applyCtCodeChangesForm
           .bindFromRequest()
           .fold(
-            formWithErrors => Future.successful(Ok(applyCtCodeChangesView(formWithErrors))),
-            applyCtCodeChanges => {
-              updateDraftDetails(_.copy(otherServices = newDesiDetails.otherServices.copy(ctChanges = CtChanges(applyCtCodeChanges.apply, None)) )).map { _ =>
+            formWithErrors => Future.successful(BadRequest(applyCtCodeChangesView(formWithErrors))),
+            applyCtCodeChanges =>
+              draftDetailsService.updateDraftDetails(
+                _.copy(otherServices = newDesiDetails.otherServices.copy(ctChanges = CtChanges(applyCtCodeChanges.apply, None)))
+              ).map { _ =>
                 if (applyCtCodeChanges.apply) Redirect(desiDetails.routes.EnterCTCodeController.showPage)
                 else Redirect(routes.YourDetailsController.showPage)
               }
-            }
           )
       }
     }

@@ -22,16 +22,13 @@ import play.api.libs.json._
 import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthRequestWithAgentInfo}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.connectors.{AddressLookupConnector, AgentClientAuthorisationConnector, EmailVerificationConnector}
+import uk.gov.hmrc.agentservicesaccount.connectors.{AddressLookupConnector, AgentClientAuthorisationConnector}
 import uk.gov.hmrc.agentservicesaccount.controllers._
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.NextPageSelector.getNextPage
-import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms
-import uk.gov.hmrc.agentservicesaccount.models.addresslookup._
-import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, DesignatoryDetails, OtherServices, SaChanges}
-import uk.gov.hmrc.agentservicesaccount.models.emailverification.{Email, VerifyEmailRequest, VerifyEmailResponse}
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
+import uk.gov.hmrc.agentservicesaccount.models.addresslookup._
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
-import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
+import uk.gov.hmrc.agentservicesaccount.services.{DraftDetailsService, SessionCacheService}
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
@@ -41,15 +38,11 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class ContactDetailsController @Inject()(actions: Actions,
                                          sessionCache: SessionCacheService,
-                                         acaConnector: AgentClientAuthorisationConnector,
+                                         draftDetailsService: DraftDetailsService,
                                          alfConnector: AddressLookupConnector,
-                                         evConnector: EmailVerificationConnector,
                                          pcodRepository: PendingChangeOfDetailsRepository,
                                          agentClientAuthorisationConnector: AgentClientAuthorisationConnector,
-                                         //views
-                                         update_email: update_email,
                                          change_submitted: change_submitted,
-                                         email_locked: email_locked,
                                          beforeYouStartPage: before_you_start_page
                                         )(implicit appConfig: AppConfig,
                                           cc: MessagesControllerComponents,
@@ -67,69 +60,6 @@ class ContactDetailsController @Inject()(actions: Actions,
         case Some(_) => // there is a pending change, further changes are locked. Redirect to the base page
           Future.successful(Redirect(desiDetails.routes.ViewContactDetailsController.showPage))
       }
-    }
-  }
-
-  // utility function.
-  private def updateDraftDetails(f: DesignatoryDetails => DesignatoryDetails)(implicit request: Request[_]): Future[Unit] = for {
-    mDraftDetailsInSession <- sessionCache.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS)
-    draftDetails <- mDraftDetailsInSession match {
-      case Some(details) => Future.successful(details)
-      // if there is no 'draft' new set of details in session, get a fresh copy of the current stored details
-      case None =>
-        acaConnector.getAgentRecord()
-        .map(agencyDetails=>
-          DesignatoryDetails(
-            agencyDetails = agencyDetails.agencyDetails.getOrElse(throw new RuntimeException("No agency details on agent record")),
-            otherServices = OtherServices(
-              saChanges = SaChanges(
-                applyChanges = false,
-                saAgentReference = None),
-              ctChanges = CtChanges(
-                applyChanges = false,
-                ctAgentReference = None
-              ))))
-    }
-    updatedDraftDetails = f(draftDetails)
-    _ <- sessionCache.put[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS, updatedDraftDetails)
-  } yield ()
-
-  val showChangeEmailAddress: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    ifFeatureEnabledAndNoPendingChanges {
-      Future.successful(Ok(update_email(UpdateDetailsForms.emailAddressForm)))
-    }
-  }
-
-  val submitChangeEmailAddress: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    ifFeatureEnabledAndNoPendingChanges {
-      UpdateDetailsForms.emailAddressForm
-        .bindFromRequest()
-        .fold(
-          formWithErrors => Future.successful(Ok(update_email(formWithErrors))),
-          newEmail => {
-            val credId = request.agentInfo.credentials.map(_.providerId).getOrElse(throw new RuntimeException("no available cred id"))
-            emailVerificationLogic(newEmail, credId)
-          }
-        )
-    }
-  }
-
-  /* This is the callback endpoint (return url) from the email-verification service and not for use of our own frontend. */
-  val finishEmailVerification: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    ifFeatureEnabledAndNoPendingChanges {
-      sessionCache.get(EMAIL_PENDING_VERIFICATION).flatMap {
-        case Some(email) =>
-          val credId = request.agentInfo.credentials.map(_.providerId).getOrElse(throw new RuntimeException("no available cred id"))
-          emailVerificationLogic(email, credId)
-        case None => // this should not happen but if it does, return a graceful fallback response
-          Future.successful(Redirect(desiDetails.routes.CheckYourAnswersController.showPage))
-      }
-    }
-  }
-
-  val showEmailLocked: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    ifFeatureEnabledAndNoPendingChanges {
-      Future.successful(Ok(email_locked()))
     }
   }
 
@@ -194,7 +124,10 @@ class ContactDetailsController @Inject()(actions: Actions,
               postalCode = confirmedAddressResponse.address.postcode,
               countryCode = confirmedAddressResponse.address.country.map(_.code).get
             )
-            _ <- updateDraftDetails(desiDetails => desiDetails.copy(agencyDetails = desiDetails.agencyDetails.copy(agencyAddress = Some(newBusinessAddress))))
+            _ <- draftDetailsService.updateDraftDetails(
+              desiDetails =>
+                desiDetails.copy(agencyDetails = desiDetails.agencyDetails.copy(agencyAddress = Some(newBusinessAddress)))
+            )
             nextPage <- getNextPage(sessionCache, "address")
           } yield {
             nextPage
@@ -220,55 +153,4 @@ class ContactDetailsController @Inject()(actions: Actions,
     }
   }
 
-  private def emailVerificationLogic(newEmail: String, credId: String)(implicit request: Request[_]): Future[Result] = {
-    val useAbsoluteUrls = appConfig.emailVerificationFrontendBaseUrl.contains("localhost")
-
-    def makeUrl(call: Call): String = {
-      if (useAbsoluteUrls) call.absoluteURL() else call.url
-    }
-
-    def emailCmp(l: String, r: String) = l.trim.equalsIgnoreCase(r.trim)
-
-    for {
-      mCurrentEmail <- acaConnector.getAgentRecord().map(_.agencyDetails.flatMap(_.agencyEmail))
-      isUnchanged = mCurrentEmail.fold(false)(emailCmp(_, newEmail))
-      previousVerifications <- evConnector.checkEmail(credId)
-      previousVerification = previousVerifications.flatMap(_.emails.find(ce => emailCmp(ce.emailAddress, newEmail)))
-      result <- previousVerification match {
-        case _ if isUnchanged =>
-          updateDraftDetails(desiDetails => desiDetails.copy(agencyDetails = desiDetails.agencyDetails.copy(agencyEmail = Some(newEmail)))).map(_ =>
-            Redirect(desiDetails.routes.CheckYourAnswersController.showPage)
-          )
-        case Some(pv) if pv.verified => // already verified
-          for {
-            _ <- updateDraftDetails(desiDetails => desiDetails.copy(agencyDetails = desiDetails.agencyDetails.copy(agencyEmail = Some(newEmail))))
-            _ <- sessionCache.delete(EMAIL_PENDING_VERIFICATION)
-          } yield Redirect(desiDetails.routes.CheckYourAnswersController.showPage)
-        case Some(pv) if pv.locked => // email locked due to too many attempts
-          Future.successful(Redirect(desiDetails.routes.ContactDetailsController.showEmailLocked))
-        case None => // email is not verified, start verification journey
-          val lang = messagesApi.preferred(request).lang.code
-          val verifyEmailRequest = VerifyEmailRequest(
-            credId = credId,
-            continueUrl = makeUrl(desiDetails.routes.ContactDetailsController.finishEmailVerification),
-            origin = if (lang == "cy") "Gwasanaethau Asiant CThEM" else "HMRC Agent Services",
-            deskproServiceName = None,
-            accessibilityStatementUrl = "", // todo
-            email = Some(Email(newEmail, makeUrl(desiDetails.routes.ContactDetailsController.showChangeEmailAddress))),
-            lang = Some(lang),
-            backUrl = Some(makeUrl(desiDetails.routes.CheckYourAnswersController.showPage)),
-            pageTitle = None
-          )
-          for {
-            _ <- sessionCache.put(EMAIL_PENDING_VERIFICATION, newEmail)
-            mVerifyEmailResponse <- evConnector.verifyEmail(verifyEmailRequest)
-          } yield mVerifyEmailResponse match {
-            case Some(VerifyEmailResponse(redirectUri)) =>
-              val redirect = if (useAbsoluteUrls) appConfig.emailVerificationFrontendBaseUrl + redirectUri else redirectUri
-              Redirect(redirect)
-            case None => InternalServerError
-          }
-      }
-    } yield result
-  }
 }

@@ -41,7 +41,7 @@ class SuspendedJourneyControllerSpec extends BaseISpec with SessionServiceMocks{
   val controller: SuspendedJourneyController = app.injector.instanceOf[SuspendedJourneyController]
   implicit lazy val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
   implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
-  val arn = "TARN0000001"
+
 
   private implicit val messages: Messages = messagesApi.preferred(Seq.empty[Lang])
 
@@ -57,9 +57,9 @@ class SuspendedJourneyControllerSpec extends BaseISpec with SessionServiceMocks{
       .withSession(SessionKeys.sessionId -> "session-x")
   protected def htmlEscapedMessage(key: String): String = HtmlFormat.escape(Messages(key)).toString
 
-  "showSuspensionWarning" should {
-    "return Ok and show the suspension warning page" in {
-      givenAuthorisedAsAgentWith(arn)
+  "showSuspensionWarn.valueing" should {
+    "return Ok and show the suspension warn.valueing page" in {
+      givenAuthorisedAsAgentWith(arn.value)
       givenAgentRecordFound(agentRecord.copy(suspensionDetails = Some(SuspensionDetails(suspensionStatus = true, Some(Set("AGSV"))))))
 
       val response = controller.showSuspendedWarning()(fakeRequest())
@@ -88,7 +88,7 @@ class SuspendedJourneyControllerSpec extends BaseISpec with SessionServiceMocks{
       signoutLink.text shouldBe "Return to Government Gateway sign in"
     }
     "redirect to home page when the agent is not suspended" in {
-      givenAuthorisedAsAgentWith(arn)
+      givenAuthorisedAsAgentWith(arn.value)
       givenAgentRecordFound(agentRecord)
 
       val response = controller.showSuspendedWarning()(fakeRequest())
@@ -100,7 +100,7 @@ class SuspendedJourneyControllerSpec extends BaseISpec with SessionServiceMocks{
 
   "showContactDetails" should {
     "return Ok and show the contact details page" in {
-      givenAuthorisedAsAgentWith(arn)
+      givenAuthorisedAsAgentWith(arn.value)
       givenAgentRecordFound(agentRecord.copy(suspensionDetails = Some(SuspensionDetails(suspensionStatus = true, Some(Set("AGSV"))))))
 
       getAllSessionItems(List(Some(""),Some(""),Some(""), Some("")))
@@ -123,7 +123,7 @@ class SuspendedJourneyControllerSpec extends BaseISpec with SessionServiceMocks{
   }
   "submitContactDetails" should {
     "return Bad request and show error messages if the data is wrong" in {
-      givenAuthorisedAsAgentWith(arn)
+      givenAuthorisedAsAgentWith(arn.value)
       givenAgentRecordFound(agentRecord.copy(suspensionDetails = Some(SuspensionDetails(suspensionStatus = true, Some(Set("AGSV"))))))
       val response: Future[Result] = controller.submitContactDetails()(fakeRequest("POST", "/recovery-contact-details")
 
@@ -141,7 +141,7 @@ class SuspendedJourneyControllerSpec extends BaseISpec with SessionServiceMocks{
       content should include(messagesApi("error.suspended-details.required.telephone"))
     }
     "return SEE_OTHER  if the data is correct" in {
-      givenAuthorisedAsAgentWith(arn)
+      givenAuthorisedAsAgentWith(arn.value)
       givenAgentRecordFound(agentRecord.copy(suspensionDetails = Some(SuspensionDetails(suspensionStatus = true, Some(Set("AGSV"))))))
 
       expectPutSessionItem[String](NAME, "Romel")
@@ -165,7 +165,7 @@ class SuspendedJourneyControllerSpec extends BaseISpec with SessionServiceMocks{
 
   "showSuspendedDescription" should {
     "return Ok and show the description recovery page" in {
-      givenAuthorisedAsAgentWith(arn)
+      givenAuthorisedAsAgentWith(arn.value)
       givenAgentRecordFound(agentRecord.copy(suspensionDetails = Some(SuspensionDetails(suspensionStatus = true, Some(Set("AGSV"))))))
 
       expectGetSessionItemNone[String](DESCRIPTION)
@@ -186,7 +186,7 @@ class SuspendedJourneyControllerSpec extends BaseISpec with SessionServiceMocks{
 
   "submitSuspendedDescription" should {
     "return 400 if form is submitted with errors" in {
-      givenAuthorisedAsAgentWith(arn)
+      givenAuthorisedAsAgentWith(arn.value)
       givenAgentRecordFound(agentRecord.copy(suspensionDetails = Some(SuspensionDetails(suspensionStatus = true, Some(Set("AGSV"))))))
 
 
@@ -197,7 +197,7 @@ class SuspendedJourneyControllerSpec extends BaseISpec with SessionServiceMocks{
       status(response) shouldBe 400
     }
     s"redirect to ${routes.SuspendedJourneyController.showSuspendedSummary().url} when form is submitted with correct information" in {
-      givenAuthorisedAsAgentWith(arn)
+      givenAuthorisedAsAgentWith(arn.value)
       givenAgentRecordFound(agentRecord.copy(suspensionDetails = Some(SuspensionDetails(suspensionStatus = true, Some(Set("AGSV"))))))
 
       expectPutSessionItem[String](DESCRIPTION, "description added")
@@ -213,7 +213,7 @@ class SuspendedJourneyControllerSpec extends BaseISpec with SessionServiceMocks{
 
   "showSuspendedSummary" should {
     s"redirect to ${routes.SuspendedJourneyController.showContactDetails().url} when no details are present" in {
-      givenAuthorisedAsAgentWith(arn)
+      givenAuthorisedAsAgentWith(arn.value)
       givenAgentRecordFound(agentRecord.copy(suspensionDetails = Some(SuspensionDetails(suspensionStatus = true, Some(Set("AGSV"))))))
 
       expectGetSessionItemNone[String](NAME)
@@ -227,7 +227,7 @@ class SuspendedJourneyControllerSpec extends BaseISpec with SessionServiceMocks{
       redirectLocation(await(response)) shouldBe Some(routes.SuspendedJourneyController.showContactDetails().url)
     }
     s"return Ok when session details are found" in {
-      givenAuthorisedAsAgentWith(arn)
+      givenAuthorisedAsAgentWith(arn.value)
       givenAgentRecordFound(agentRecord.copy(suspensionDetails = Some(SuspensionDetails(suspensionStatus = true, Some(Set("AGSV"))))))
 
       expectGetSessionItem[String](NAME, "Romel", 1)
@@ -243,7 +243,7 @@ class SuspendedJourneyControllerSpec extends BaseISpec with SessionServiceMocks{
 
   "submitSuspendedSummary" should {
     s"redirect to ${routes.SuspendedJourneyController.showContactDetails().url} when no summary details are present" in {
-      givenAuthorisedAsAgentWith(arn)
+      givenAuthorisedAsAgentWith(arn.value)
       givenAgentRecordFound(agentRecord.copy(suspensionDetails = Some(SuspensionDetails(suspensionStatus = true, Some(Set("AGSV"))))))
 
       expectGetSessionItemNone[String](NAME)
@@ -257,7 +257,7 @@ class SuspendedJourneyControllerSpec extends BaseISpec with SessionServiceMocks{
       redirectLocation(await(response)) shouldBe Some(routes.SuspendedJourneyController.showContactDetails().url)
     }
     s"redirect to ${routes.SuspendedJourneyController.showSuspendedConfirmation().url} when session details are found and send email" in {
-      givenAuthorisedAsAgentWith(arn)
+      givenAuthorisedAsAgentWith(arn.value)
       givenAgentRecordFound(agentRecord.copy(suspensionDetails = Some(SuspensionDetails(suspensionStatus = true, Some(Set("AGSV"))))))
 
       expectGetSessionItem[String](NAME, "Romel", 1)
@@ -276,7 +276,7 @@ class SuspendedJourneyControllerSpec extends BaseISpec with SessionServiceMocks{
 
   "showSuspendedConfirmation" should {
     "return Ok and show the confirmation page" in {
-      givenAuthorisedAsAgentWith(arn)
+      givenAuthorisedAsAgentWith(arn.value)
       givenAgentRecordFound(agentRecord.copy(suspensionDetails = Some(SuspensionDetails(suspensionStatus = true, Some(Set("AGSV"))))))
 
       val response: Future[Result] = controller.showSuspendedConfirmation()(fakeRequest("GET", "/home"))

@@ -26,7 +26,6 @@ import play.api.mvc.{DefaultActionBuilderImpl, MessagesControllerComponents, Req
 import play.api.test.Helpers.stubMessagesControllerComponents
 import play.api.test.{DefaultAwaitTimeout, FakeRequest, Helpers}
 import play.twirl.api.Html
-import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector}
@@ -51,17 +50,6 @@ class NoAccessGroupsAssignmentControllerSpec extends PlaySpec
 
   //TODO move auth/suspend actions to common file for all unit tests
   val mockAcaConnector: AgentClientAuthorisationConnector = mock[AgentClientAuthorisationConnector]
-
-  private val arn = Arn("BARN1234567")
-
-  private val agentEnrolment: Set[Enrolment] = Set(
-    Enrolment("HMRC-AS-AGENT",
-      Seq(EnrolmentIdentifier("AgentReferenceNumber", arn.value)),
-      state = "Active",
-      delegatedAuthRule = None))
-
-  private val ggCredentials: Credentials =
-    Credentials("ggId", "GovernmentGateway")
 
   private def authResponseAgent(credentialRole: CredentialRole): Future[Enrolments ~ Some[Credentials] ~ Some[Email] ~ Some[Name] ~ Some[CredentialRole]] =
     Future.successful(new~(new~(new~(new~(

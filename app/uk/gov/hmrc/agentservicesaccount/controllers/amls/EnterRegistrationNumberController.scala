@@ -58,7 +58,7 @@ class EnterRegistrationNumberController @Inject()(actions: Actions,
           registrationNumberForm(amlsJourney.isHmrc)
             .bindFromRequest()
             .fold(
-              formWithError => Ok(enterRegistrationNumber(formWithError, cya)).toFuture,
+              formWithError => BadRequest(enterRegistrationNumber(formWithError, cya)).toFuture,
               data =>
                 saveAmlsJourney(amlsJourney.copy(
                   newRegistrationNumber = Option(data),

@@ -25,23 +25,22 @@ import uk.gov.hmrc.agentservicesaccount.controllers.{DRAFT_SUBMITTED_BY, desiDet
 import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.YourDetails
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details.your_details
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details.your_details
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class YourDetailsController @Inject()(
-                                       actions: Actions,
-                                       sessionCache: SessionCacheService,
-                                       pcodRepository: PendingChangeOfDetailsRepository,
-                                       updateYourDetailsView: your_details
-                           )(implicit appConfig: AppConfig,
-                              cc: MessagesControllerComponents,
-                              ec: ExecutionContext
-) extends FrontendController(cc) with I18nSupport with Logging {
+class YourDetailsController @Inject()(actions: Actions,
+                                      sessionCache: SessionCacheService,
+                                      pcodRepository: PendingChangeOfDetailsRepository,
+                                      updateYourDetailsView: your_details
+                                     )(implicit appConfig: AppConfig,
+                                       cc: MessagesControllerComponents,
+                                       ec: ExecutionContext
+                                     ) extends FrontendController(cc) with I18nSupport with Logging {
 
   def ifFeatureEnabled(action: => Future[Result]): Future[Result] = {
     if (appConfig.enableChangeContactDetails) action else Future.successful(NotFound)
@@ -57,6 +56,7 @@ class YourDetailsController @Inject()(
       }
     }
   }
+
   def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     ifFeatureEnabledAndNoPendingChanges {
       sessionCache.get[YourDetails](DRAFT_SUBMITTED_BY).map {
@@ -71,7 +71,7 @@ class YourDetailsController @Inject()(
       UpdateDetailsForms.yourDetailsForm
         .bindFromRequest()
         .fold(
-          formWithErrors => Future.successful(Ok(updateYourDetailsView(formWithErrors))),
+          formWithErrors => Future.successful(BadRequest(updateYourDetailsView(formWithErrors))),
           submittedBy => {
             updateSubmittedBy(submittedBy).map(_ =>
               Redirect(desiDetails.routes.CheckYourAnswersController.showPage)

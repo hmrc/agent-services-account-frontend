@@ -45,7 +45,7 @@ class AmlsIsHmrcController @Inject()(actions: Actions,
         .bindFromRequest()
         .fold(
           formWithErrors => {
-          Ok(isAmlsHmrc(formWithErrors)).toFuture
+          BadRequest(isAmlsHmrc(formWithErrors)).toFuture
           },
           (isHmrcRegistered: Boolean) => {
             if (isHmrcRegistered) {

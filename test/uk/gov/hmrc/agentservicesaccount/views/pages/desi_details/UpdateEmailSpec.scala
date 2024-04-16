@@ -41,18 +41,29 @@ class UpdateEmailSpec extends BaseISpec {
   object MessageLookup {
     object English {
       private val govUkSuffix: String = " - Agent services account - GOV.UK"
-      val heading: String = "What is the email address you want to use for your agent services account?"
+      val heading: String = "What’s the new email address?"
       val title: String = heading + govUkSuffix
 
-      val header: String = "What is the email address you want to use for your agent services account?"
-      val hint: String = "We will use this email to contact you about your agent services account and to update you about your authorisation requests."
+      val header: String = "What’s the new email address?"
+      val hint: String = "We’ll use this email address to contact the business about the agent services account, and to send updates about authorisation requests."
 
-      val button: String = "Save and continue"
+      val button: String = "Continue"
       val back: String = "Back"
+    }
+    object Welsh {
+      private val govUkSuffix: String = " - Cyfrif gwasanaethau asiant - GOV.UK"
+      val heading: String = "Beth yw’r cyfeiriad e-bost newydd?"
+      val title: String = heading + govUkSuffix
+
+      val header: String = "Beth yw’r cyfeiriad e-bost newydd?"
+      val hint: String = "Byddwn yn defnyddio’r cyfeiriad e-bost hwn i gysylltu â’r busnes ynghylch y cyfrif gwasanaethau asiant, ac i anfon diweddariadau ynghylch ceisiadau am awdurdodiad."
+
+      val button: String = "Yn eich blaen"
+      val back: String = "Yn ôl"
     }
   }
 
-  "update_name" should {
+  "update_email" should {
     "render correctly" when {
       "the selected lang is english" in {
         val messages: Messages = MessagesImpl(langs.head, messagesApi)
@@ -66,6 +77,18 @@ class UpdateEmailSpec extends BaseISpec {
 
         doc.select(".govuk-back-link").first.text() mustBe MessageLookup.English.back
         doc.select(".govuk-back-link").first.attr("href") mustBe "#"
+      }
+      "the selected lang is welsh" in {
+        val messages: Messages = MessagesImpl(langs.last, messagesApi)
+        val doc: Document = Jsoup.parse(view.apply(form)(messages, FakeRequest(), appConfig).body)
+
+        doc.title() mustBe MessageLookup.Welsh.title
+        doc.select("h1").asScala.head.text mustBe MessageLookup.Welsh.header
+        doc.select(".govuk-hint").asScala.head.text mustBe MessageLookup.Welsh.hint
+
+        doc.select(".govuk-button").asScala.head.text mustBe MessageLookup.Welsh.button
+
+        doc.select(".govuk-back-link").first.text() mustBe MessageLookup.Welsh.back
       }
     }
   }

@@ -506,10 +506,10 @@ update-contact-details.phone.hint=For international numbers include the country 
 update-contact-details.phone.error.empty=Enter the new telephone number
 update-contact-details.phone.error.invalid=Enter a telephone number, like 01632 960 001, 07700 900 982 or +33 808 157 0192
 
-update-contact-details.email.heading=What is the email address you want to use for your agent services account?
-update-contact-details.email.hint=We will use this email to contact you about your agent services account and to update you about your authorisation requests.
+update-contact-details.email.heading=What’s the new email address?
+update-contact-details.email.hint=We’ll use this email address to contact the business about the agent services account, and to send updates about authorisation requests.
 update-contact-details.email.error.empty=Enter an email address
-update-contact-details.email.error.invalid=Enter an email address with a name, @ symbol and a domain name, like yourname@example.com
+update-contact-details.email.error.invalid=Enter an email address with a name, @ symbol and a domain name, like name@example.com
 
 update-contact-details.address.country-picker.title=Select your country - Agent services account - GOV.UK
 update-contact-details.address.country-picker=What is the country where your business is based?

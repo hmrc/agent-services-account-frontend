@@ -68,7 +68,7 @@ class BetaInviteController @Inject()(actions: Actions,
       .bindFromRequest()
       .fold(
         formWithErrors => {
-          Ok(participate(formWithErrors)).toFuture
+          BadRequest(participate(formWithErrors)).toFuture
         },
         (acceptInvite: Boolean) => {
           if (acceptInvite) {
@@ -99,7 +99,7 @@ class BetaInviteController @Inject()(actions: Actions,
       .bindFromRequest()
       .fold(
         formWithErrors => {
-          Ok(number_of_clients(formWithErrors))
+          BadRequest(number_of_clients(formWithErrors))
         },
         formData => {
           cacheService.put(AGENT_SIZE, formData)
@@ -132,7 +132,7 @@ class BetaInviteController @Inject()(actions: Actions,
       .bindFromRequest()
       .fold(
         formWithErrors => {
-          Ok(your_details(formWithErrors))
+          BadRequest(your_details(formWithErrors))
         },
         formData => {
           cacheService.put(NAME, formData.name)

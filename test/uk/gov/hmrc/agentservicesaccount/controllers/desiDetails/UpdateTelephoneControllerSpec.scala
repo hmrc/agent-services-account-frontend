@@ -30,9 +30,9 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.connectors.{AddressLookupConnector, AgentClientAuthorisationConnector, EmailVerificationConnector}
 import uk.gov.hmrc.agentservicesaccount.controllers.{CURRENT_SELECTED_CHANGES, DRAFT_NEW_CONTACT_DETAILS, DRAFT_SUBMITTED_BY, desiDetails}
-import uk.gov.hmrc.agentservicesaccount.models.addresslookup.{ConfirmedResponseAddress, ConfirmedResponseAddressDetails, Country, JourneyConfigV2}
-import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, OtherServices, SaChanges, YourDetails}
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeOfDetails
+import uk.gov.hmrc.agentservicesaccount.models.addresslookup.{ConfirmedResponseAddress, ConfirmedResponseAddressDetails, Country, JourneyConfigV2}
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.YourDetails
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.support.{TestConstants, UnitSpec}
@@ -53,17 +53,6 @@ class UpdateTelephoneControllerSpec extends UnitSpec
   with TestConstants {
 
   private val testArn = Arn("XXARN0123456789")
-
-  private val emptyOtherServices = OtherServices(
-    saChanges = SaChanges(
-      applyChanges = false,
-      saAgentReference = None
-    ),
-    ctChanges = CtChanges(
-      applyChanges = false,
-      ctAgentReference = None
-    )
-  )
 
   private val submittedByDetails = YourDetails(
     fullName = "John Tester",
@@ -181,7 +170,7 @@ class UpdateTelephoneControllerSpec extends UnitSpec
       noPendingChangesInRepo()
       implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = fakeRequest("POST").withFormUrlEncodedBody("telephoneNumber" -> "0800 FAKE NO")
       val result: Future[Result] = controller.onSubmit()(request)
-      status(result) shouldBe OK
+      status(result) shouldBe BAD_REQUEST
       contentAsString(result.futureValue) should include("There is a problem")
       sessionCache.get(DRAFT_NEW_CONTACT_DETAILS).futureValue.flatMap(_.agencyDetails.agencyTelephone) shouldBe None
     }
