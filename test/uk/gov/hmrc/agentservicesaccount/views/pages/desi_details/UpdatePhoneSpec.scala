@@ -103,7 +103,7 @@ class UpdatePhoneSpec extends BaseISpec {
 
       "display correct error summary link" in {
         val errorLink: Element = doc.select(".govuk-error-summary__list a").first()
-        errorLink.text() mustBe "Enter a telephone number"
+        errorLink.text() mustBe "Enter the new telephone number"
         errorLink.attr("href") mustBe "#telephoneNumber"
       }
 
@@ -112,7 +112,7 @@ class UpdatePhoneSpec extends BaseISpec {
       }
 
       "display error message on form" in {
-        doc.select(".govuk-error-message").text() mustBe "Error: Enter a telephone number"
+        doc.select(".govuk-error-message").text() mustBe "Error: Enter the new telephone number"
       }
     }
   }

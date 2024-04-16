@@ -500,7 +500,7 @@ update-contact-details.name.error.invalid=Business name must only include letter
 
 update-contact-details.phone.heading=What’s the new telephone number?
 update-contact-details.phone.hint=For international numbers include the country code.
-update-contact-details.phone.error.empty=Enter a telephone number
+update-contact-details.phone.error.empty=Enter the new telephone number
 update-contact-details.phone.error.invalid=Enter a telephone number, like 01632 960 001, 07700 900 982 or +33 808 157 0192
 
 update-contact-details.email.heading=What is the email address you want to use for your agent services account?

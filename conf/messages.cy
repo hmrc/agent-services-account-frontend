@@ -500,7 +500,7 @@ update-contact-details.name.error.invalid=Business name must only include letter
 
 update-contact-details.phone.heading=Beth yw’cr rhif ffôn newydd?
 update-contact-details.phone.hint=Ar gyfer rhifau rhyngwladol, cofiwch gynnwys cod y wlad.
-update-contact-details.phone.error.empty=Nodwch eich rhif ffôn
+update-contact-details.phone.error.empty=Nodwch y rhif ffôn newydd
 update-contact-details.phone.error.invalid=Nodwch rif ffôn, megis 01632 960 001, 07700 900 982 neu +33 808 157 0192
 
 update-contact-details.email.heading=What is the email address you want to use for your agent services account? TBC
