@@ -22,7 +22,7 @@ import uk.gov.hmrc.agentservicesaccount.actions.AuthRequestWithAgentInfo
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.{DRAFT_NEW_CONTACT_DETAILS, desiDetails, routes}
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.DesignatoryDetails
-import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
+import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -47,7 +47,7 @@ trait DesiDetailsJourneySupport {
   def ifChangeContactFeatureEnabledAndNoPendingChanges(action: => Future[Result])
                                                       (implicit request: AuthRequestWithAgentInfo[_],
                                                        appConfig: AppConfig,
-                                                       pcodRepository: PendingChangeOfDetailsRepository,
+                                                       pcodRepository: PendingChangeRequestRepository,
                                                        ec: ExecutionContext): Future[Result] =
     ifChangeContactDetailsFeatureEnabled {
       pcodRepository.find(request.agentInfo.arn).flatMap {

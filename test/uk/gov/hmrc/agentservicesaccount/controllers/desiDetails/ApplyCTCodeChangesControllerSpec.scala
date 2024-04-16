@@ -32,7 +32,7 @@ import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, Age
 import uk.gov.hmrc.agentservicesaccount.controllers.DRAFT_NEW_CONTACT_DETAILS
 import uk.gov.hmrc.agentservicesaccount.models.ApplyCtCodeChanges
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, DesignatoryDetails}
-import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
+import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
 import uk.gov.hmrc.agentservicesaccount.services.{DraftDetailsService, SessionCacheService}
 import uk.gov.hmrc.agentservicesaccount.support.TestConstants
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details.apply_ct_code_changes
@@ -68,7 +68,7 @@ class ApplyCTCodeChangesControllerSpec extends PlaySpec
     protected val mockActions =
       new Actions(mockAgentClientAuthorisationConnector, mockAgentAssuranceConnector, authActions, actionBuilder)
 
-    protected val mockPendingChangeOfDetailsRepository = mock[PendingChangeOfDetailsRepository]
+    protected val mockPendingChangeRequestRepository: PendingChangeRequestRepository = mock[PendingChangeRequestRepository]
     protected val mockView: apply_ct_code_changes = mock[apply_ct_code_changes]
     protected val mockSessionCache: SessionCacheService = mock[SessionCacheService]
     protected val cc: MessagesControllerComponents = stubMessagesControllerComponents()
@@ -79,7 +79,7 @@ class ApplyCTCodeChangesControllerSpec extends PlaySpec
       mockDraftDetailsService,
       mockView,
       cc
-    )(mockAppConfig, ec, mockPendingChangeOfDetailsRepository)
+    )(mockAppConfig, ec, mockPendingChangeRequestRepository)
   }
 
   "showPage" should {
@@ -94,7 +94,7 @@ class ApplyCTCodeChangesControllerSpec extends PlaySpec
 
       mockDraftDetailsService.updateDraftDetails(*[DesignatoryDetails => DesignatoryDetails])(*[Request[_]], *[HeaderCarrier]) returns Future.successful(())
 
-      mockPendingChangeOfDetailsRepository.find(arn) returns Future.successful(None)
+      mockPendingChangeRequestRepository.find(arn) returns Future.successful(None)
 
       mockView.apply(*[Form[ApplyCtCodeChanges]])(*[Messages], *[Request[_]], *[AppConfig]) returns Html("")
 
@@ -136,7 +136,7 @@ class ApplyCTCodeChangesControllerSpec extends PlaySpec
 
       mockDraftDetailsService.updateDraftDetails(*[DesignatoryDetails => DesignatoryDetails])(*[Request[_]], *[HeaderCarrier]) returns Future.successful(())
 
-      mockPendingChangeOfDetailsRepository.find(arn) returns Future.successful(None)
+      mockPendingChangeRequestRepository.find(arn) returns Future.successful(None)
 
       mockSessionCache.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[Request[Any]]) returns Future.successful(Some(desiDetailsWithEmptyOtherServices))
 
@@ -163,7 +163,7 @@ class ApplyCTCodeChangesControllerSpec extends PlaySpec
 
       mockDraftDetailsService.updateDraftDetails(*[DesignatoryDetails => DesignatoryDetails])(*[Request[_]], *[HeaderCarrier]) returns Future.successful(())
 
-      mockPendingChangeOfDetailsRepository.find(arn) returns Future.successful(None)
+      mockPendingChangeRequestRepository.find(arn) returns Future.successful(None)
 
       mockSessionCache.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[Request[Any]]) returns Future.successful(Some(desiDetailsWithEmptyOtherServices))
 

@@ -23,7 +23,7 @@ import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.DRAFT_NEW_CONTACT_DETAILS
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.CurrentAgencyDetails
-import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
+import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details.view_contact_details
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -35,7 +35,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class ViewContactDetailsController @Inject()(actions: Actions,
                                              sessionCache: SessionCacheService,
                                              acaConnector: AgentClientAuthorisationConnector,
-                                             pcodRepository: PendingChangeOfDetailsRepository,
+                                             pcodRepository: PendingChangeRequestRepository,
                                              view_contact_details: view_contact_details
                                             )(implicit appConfig: AppConfig,
                                               cc: MessagesControllerComponents,

@@ -24,7 +24,7 @@ import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.DesiDetailsJourneySupport
 import uk.gov.hmrc.agentservicesaccount.controllers.{EMAIL_PENDING_VERIFICATION, desiDetails}
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.{EmailHasNotChanged, EmailIsAlreadyVerified, EmailIsLocked, EmailNeedsVerifying}
-import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
+import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
 import uk.gov.hmrc.agentservicesaccount.services.{DraftDetailsService, EmailVerificationService, SessionCacheService}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
@@ -39,7 +39,7 @@ class EmailVerificationEndpointController @Inject()(actions: Actions,
                                                     cc: MessagesControllerComponents
                                                    )(implicit appConfig: AppConfig,
                                                      ec: ExecutionContext,
-                                                     pcodRepository: PendingChangeOfDetailsRepository
+                                                     pcodRepository: PendingChangeRequestRepository
                                                    ) extends FrontendController(cc) with DesiDetailsJourneySupport with I18nSupport with Logging {
 
 

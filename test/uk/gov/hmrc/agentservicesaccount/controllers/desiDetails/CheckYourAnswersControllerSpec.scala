@@ -28,11 +28,11 @@ import play.api.mvc.{Action, AnyContent, AnyContentAsEmpty, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
-import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
+import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector}
 import uk.gov.hmrc.agentservicesaccount.controllers.{CURRENT_SELECTED_CHANGES, DRAFT_NEW_CONTACT_DETAILS, DRAFT_SUBMITTED_BY, EMAIL_PENDING_VERIFICATION, desiDetails}
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails._
-import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, PendingChangeOfDetails}
-import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
+import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, PendingChangeRequest}
+import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.support.{TestConstants, UnitSpec}
 import uk.gov.hmrc.auth.core.AuthConnector
@@ -81,7 +81,8 @@ class CheckYourAnswersControllerSpec extends UnitSpec
   val overrides: AbstractModule = new AbstractModule() {
     override def configure(): Unit = {
       bind(classOf[AgentClientAuthorisationConnector]).toInstance(stub[AgentClientAuthorisationConnector])
-      bind(classOf[PendingChangeOfDetailsRepository]).toInstance(stub[PendingChangeOfDetailsRepository])
+      bind(classOf[AgentAssuranceConnector]).toInstance(stub[AgentAssuranceConnector])
+      bind(classOf[PendingChangeRequestRepository]).toInstance(stub[PendingChangeRequestRepository])
       bind(classOf[AuthConnector]).toInstance(stubAuthConnector)
     }
   }
@@ -96,26 +97,25 @@ class CheckYourAnswersControllerSpec extends UnitSpec
     val acaConnector: AgentClientAuthorisationConnector = app.injector.instanceOf[AgentClientAuthorisationConnector]
     (acaConnector.getAgentRecord()(_: HeaderCarrier, _: ExecutionContext)).when(*, *).returns(Future.successful(agentRecord))
 
+    val agentAssuranceConnector: AgentAssuranceConnector = app.injector.instanceOf[AgentAssuranceConnector]
+    (agentAssuranceConnector.postDesignatoryDetails(_: Arn, _: String)(_: ExecutionContext, _: HeaderCarrier)).when(*, *, *, *).returns(Future.successful(()))
+
     val checkYourAnswersController: CheckYourAnswersController = app.injector.instanceOf[CheckYourAnswersController]
     val sessionCache: SessionCacheService = app.injector.instanceOf[SessionCacheService]
-    val pcodRepository: PendingChangeOfDetailsRepository = app.injector.instanceOf[PendingChangeOfDetailsRepository]
+    val pcodRepository: PendingChangeRequestRepository = app.injector.instanceOf[PendingChangeRequestRepository]
 
     def noPendingChangesInRepo(): Unit = {
       (pcodRepository.find(_: Arn)).when(*).returns(Future.successful(None))
     }
     def pendingChangesExistInRepo(): Unit = {
       (pcodRepository.find(_: Arn)).when(*).returns(Future.successful(Some(
-        PendingChangeOfDetails(
+        PendingChangeRequest(
           testArn,
-          agencyDetails,
-          agencyDetails,
-          emptyOtherServices,
-          Instant.now(),
-          submittedByDetails
+          Instant.now()
         ))))
     }
 
-    (pcodRepository.insert(_: PendingChangeOfDetails)).when(*).returns(Future.successful(()))
+    (pcodRepository.insert(_: PendingChangeRequest)).when(*).returns(Future.successful(()))
 
     // make sure these values are cleared from the session
     sessionCache.delete(DRAFT_NEW_CONTACT_DETAILS)(fakeRequest()).futureValue
@@ -166,6 +166,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec
       noPendingChangesInRepo()
       implicit val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequest("POST")
       val newDetails: AgencyDetails = agencyDetails.copy(agencyName = Some("New and Improved Agency"))
+      sessionCache.put(CURRENT_SELECTED_CHANGES, Set("businessName"))
       sessionCache.put(DRAFT_NEW_CONTACT_DETAILS, DesignatoryDetails(newDetails,emptyOtherServices)).futureValue
       sessionCache.put(DRAFT_SUBMITTED_BY, submittedByDetails).futureValue
       val result: Future[Result] = checkYourAnswersController.onSubmit()(request)
@@ -173,12 +174,9 @@ class CheckYourAnswersControllerSpec extends UnitSpec
       header("Location", result) shouldBe Some(desiDetails.routes.ContactDetailsController.showChangeSubmitted.url)
       sessionCache.get(DRAFT_NEW_CONTACT_DETAILS).futureValue.flatMap(_.agencyDetails.agencyTelephone) shouldBe None // the 'draft' details should be cleared from cache
       // should have stored the pending change in the repo
-      (pcodRepository.insert(_: PendingChangeOfDetails)).verify(argAssert { pcod: PendingChangeOfDetails =>
+      (pcodRepository.insert(_: PendingChangeRequest)).verify(argAssert { pcod: PendingChangeRequest =>
         pcod.arn shouldBe testArn
-        pcod.oldDetails shouldBe agencyDetails
-        pcod.newDetails shouldBe newDetails
         Math.abs(Instant.now().toEpochMilli - pcod.timeSubmitted.toEpochMilli) should be < 5000L // approximate time comparison
-        pcod.submittedBy shouldBe submittedByDetails
       })
     }
   }

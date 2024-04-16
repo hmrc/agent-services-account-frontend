@@ -27,7 +27,7 @@ import uk.gov.hmrc.agentservicesaccount.controllers._
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.NextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup._
-import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
+import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
 import uk.gov.hmrc.agentservicesaccount.services.{DraftDetailsService, SessionCacheService}
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -40,7 +40,7 @@ class ContactDetailsController @Inject()(actions: Actions,
                                          sessionCache: SessionCacheService,
                                          draftDetailsService: DraftDetailsService,
                                          alfConnector: AddressLookupConnector,
-                                         pcodRepository: PendingChangeOfDetailsRepository,
+                                         pcodRepository: PendingChangeRequestRepository,
                                          agentClientAuthorisationConnector: AgentClientAuthorisationConnector,
                                          change_submitted: change_submitted,
                                          beforeYouStartPage: before_you_start_page

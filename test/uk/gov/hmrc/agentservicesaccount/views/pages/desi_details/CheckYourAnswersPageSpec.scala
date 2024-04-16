@@ -23,12 +23,11 @@ import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.test.FakeRequest
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, OtherServices, SaChanges, YourDetails}
-import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress, PendingChangeOfDetails}
+import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress}
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details.check_updated_details
 import uk.gov.hmrc.domain.{CtUtr, SaUtr}
 
-import java.time.Instant
 import scala.jdk.CollectionConverters.CollectionHasAsScala
 
 class CheckYourAnswersPageSpec extends BaseISpec {
@@ -65,15 +64,6 @@ class CheckYourAnswersPageSpec extends BaseISpec {
   private val submittedByDetails = YourDetails(
     fullName = "John Tester",
     telephone = "01903 209919"
-  )
-
-  private val pendingChangeOfDetails = PendingChangeOfDetails(
-    arn = arn,
-    oldDetails = agencyDetails,
-    newDetails = agencyDetails.copy(agencyName = Some("New and Improved Agency")),
-    otherServices = emptyOtherServices,
-    timeSubmitted = Instant.now,
-    submittedBy = submittedByDetails
   )
 
   object MessageLookup {

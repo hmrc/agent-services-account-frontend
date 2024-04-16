@@ -27,9 +27,8 @@
 )
 
 @(
-        utr: Utr,
+        utr: Option[Utr],
         pendingChangeOfDetails:PendingChangeOfDetails,
-        isAdmin: Boolean,
         selectChanges: Set[String]
 )(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
 
@@ -48,8 +47,10 @@
         @h1("Request to amend contact details")
 
         @h2("Business details")
-        <p>Unique Taxpayer Reference: @utr</p>
-        <p>Agent reference number: @pendingChangeOfDetails.arn</p>
+        @if(utr.isDefined) {
+            <p>Unique Taxpayer Reference: @{utr.get.value}</p>
+        }
+        <p>Agent reference number: @{pendingChangeOfDetails.arn.value}</p>
 
         @h2("Existing contact details")
         @contact_details_cya_partial(pendingChangeOfDetails.oldDetails, selectChanges, forPdf = true)

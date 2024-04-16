@@ -21,12 +21,12 @@ import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
+import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector}
 import uk.gov.hmrc.agentservicesaccount.controllers._
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util._
-import uk.gov.hmrc.agentservicesaccount.models.PendingChangeOfDetails
+import uk.gov.hmrc.agentservicesaccount.models.{PendingChangeOfDetails, PendingChangeRequest}
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{DesignatoryDetails, YourDetails}
-import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
+import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -39,12 +39,13 @@ import scala.concurrent.{ExecutionContext, Future}
 class CheckYourAnswersController @Inject()(actions: Actions,
                                            val sessionCache: SessionCacheService,
                                            acaConnector: AgentClientAuthorisationConnector,
+                                           agentAssuranceConnector: AgentAssuranceConnector,
                                            checkUpdatedDetailsView: check_updated_details,
                                            summary_pdf: summaryPdf
                                           )(implicit appConfig: AppConfig,
                                             cc: MessagesControllerComponents,
                                             ec: ExecutionContext,
-                                            pcodRepository: PendingChangeOfDetailsRepository
+                                            pcodRepository: PendingChangeRequestRepository
                                           ) extends FrontendController(cc) with DesiDetailsJourneySupport with I18nSupport with Logging {
 
 
@@ -75,6 +76,7 @@ class CheckYourAnswersController @Inject()(actions: Actions,
           Future.successful(Redirect(desiDetails.routes.ViewContactDetailsController.showPage))
         case Some(details) => for {
           selectChanges <- sessionCache.get[Set[String]](CURRENT_SELECTED_CHANGES)
+          optUtr <- acaConnector.getAgentRecord().map(_.uniqueTaxReference)
           submittedBy <- sessionCache.get[YourDetails](DRAFT_SUBMITTED_BY)
           oldContactDetails <- CurrentAgencyDetails.get(acaConnector)
           pendingChange = PendingChangeOfDetails(
@@ -85,10 +87,13 @@ class CheckYourAnswersController @Inject()(actions: Actions,
             timeSubmitted = Instant.now(),
             submittedBy = submittedBy.getOrElse(throw new RuntimeException("Cannot submit without submittedBy details"))
           )
-          //
-          // TODO actual connector call to submit the details goes here...
-          //
-          _ <- pcodRepository.insert(pendingChange)
+          htmlForPdf: String = summary_pdf(
+            optUtr,
+            pendingChange,
+            selectChanges.getOrElse(throw new RuntimeException("Cannot submit without select changes details"))
+          ).toString()
+          result <- agentAssuranceConnector.postDesignatoryDetails(arn, java.util.Base64.getEncoder.encodeToString(htmlForPdf.getBytes()))
+          _ <- pcodRepository.insert(PendingChangeRequest(arn, pendingChange.timeSubmitted))
           _ <- sessionCache.delete(DRAFT_NEW_CONTACT_DETAILS)
           _ <- sessionCache.delete(DRAFT_SUBMITTED_BY)
         } yield {

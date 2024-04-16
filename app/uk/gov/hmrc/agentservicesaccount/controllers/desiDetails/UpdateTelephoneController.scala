@@ -26,7 +26,7 @@ import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.DesiDetails
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.NextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.DesignatoryDetails
-import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
+import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
 import uk.gov.hmrc.agentservicesaccount.services.{DraftDetailsService, SessionCacheService}
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -42,7 +42,7 @@ class UpdateTelephoneController @Inject()(actions: Actions,
                                          )(implicit appConfig: AppConfig,
                                            cc: MessagesControllerComponents,
                                            ec: ExecutionContext,
-                                           pcodRepository: PendingChangeOfDetailsRepository
+                                           pcodRepository: PendingChangeRequestRepository
                                          ) extends FrontendController(cc) with DesiDetailsJourneySupport with I18nSupport with Logging {
 
   val showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>

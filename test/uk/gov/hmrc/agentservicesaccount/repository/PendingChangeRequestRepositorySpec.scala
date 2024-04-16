@@ -21,8 +21,7 @@ import org.scalatest.concurrent.{Eventually, IntegrationPatience, ScalaFutures}
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.time.{Seconds, Span}
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
-import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, OtherServices, SaChanges, YourDetails}
-import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress, PendingChangeOfDetails}
+import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest
 import uk.gov.hmrc.agentservicesaccount.support.UnitSpec
 import uk.gov.hmrc.mongo.test.CleanMongoCollectionSupport
 
@@ -30,59 +29,27 @@ import java.time.Instant
 import java.time.temporal.ChronoUnit
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class PendingChangeOfDetailsRepositorySpec extends UnitSpec with Matchers  with ScalaFutures with IntegrationPatience with Eventually with CleanMongoCollectionSupport {
+class PendingChangeRequestRepositorySpec extends UnitSpec with Matchers  with ScalaFutures with IntegrationPatience with Eventually with CleanMongoCollectionSupport {
 
   private val testArn = Arn("XXARN0123456789")
   private val anotherArn = Arn("XZARN1111111111")
 
-  private val agencyDetails = AgencyDetails(
-    agencyName = Some("My Agency"),
-    agencyEmail = Some("abc@abc.com"),
-    agencyTelephone = Some("07345678901"),
-    agencyAddress = Some(BusinessAddress(
-      "25 Any Street",
-      Some("Central Grange"),
-      Some("Telford"),
-      None,
-      Some("TF4 3TR"),
-      "GB"))
-  )
 
-  private val submittedByDetails = YourDetails(
-    fullName = "John Tester",
-    telephone = "01903 209919"
-  )
-
-  private val emptyOtherServices = OtherServices(
-    saChanges = SaChanges(
-      applyChanges = false,
-      saAgentReference = None
-    ),
-    ctChanges = CtChanges(
-      applyChanges = false,
-      ctAgentReference = None
-    )
-  )
-
-  private def aPendingChangeOfDetails(timeSubmitted: Instant = Instant.now()) = PendingChangeOfDetails(
+  private def aPendingChangeOfDetails(timeSubmitted: Instant = Instant.now()) = PendingChangeRequest(
     arn = testArn,
-    oldDetails = agencyDetails,
-    newDetails = agencyDetails.copy(agencyName = Some("New and Improved Agency")),
-    otherServices = emptyOtherServices,
-    timeSubmitted = timeSubmitted.truncatedTo(ChronoUnit.SECONDS), // truncating allows us to compare timestamps more easily as mongo round-trip loses time precision
-    submittedBy = submittedByDetails
+    timeSubmitted = timeSubmitted.truncatedTo(ChronoUnit.SECONDS) // truncating allows us to compare timestamps more easily as mongo round-trip loses time precision
   )
 
-  "PendingChangeOfDetailsRepositoryImpl" should {
+  "PendingChangeRequestRepositoryImpl" should {
     "store a pending change of details" in {
-      val pcodRepository: PendingChangeOfDetailsRepositoryImpl = new PendingChangeOfDetailsRepositoryImpl(mongoComponent)
+      val pcodRepository: PendingChangeRequestRepositoryImpl = new PendingChangeRequestRepositoryImpl(mongoComponent)
       val pcod = aPendingChangeOfDetails()
       pcodRepository.insert(pcod).futureValue
       // verify document is stored
       pcodRepository.collection.find().toFuture().futureValue shouldBe Seq(pcod)
     }
     "retrieve a pending change of details with the correct arn" in {
-      val pcodRepository: PendingChangeOfDetailsRepositoryImpl = new PendingChangeOfDetailsRepositoryImpl(mongoComponent)
+      val pcodRepository: PendingChangeRequestRepositoryImpl = new PendingChangeRequestRepositoryImpl(mongoComponent)
       val pcod = aPendingChangeOfDetails()
       val anotherPcod = aPendingChangeOfDetails().copy(arn = anotherArn)
       pcodRepository.collection.insertMany(Seq(pcod, anotherPcod)).toFuture().futureValue
@@ -91,7 +58,7 @@ class PendingChangeOfDetailsRepositorySpec extends UnitSpec with Matchers  with 
     }
     "expire documents with timestamps older than the expiry period (28 days)" in {
       // Note: Slow test but may be worth having due to how easy it is to end up with a silently-failing TTL index on mongo
-      val pcodRepository: PendingChangeOfDetailsRepositoryImpl = new PendingChangeOfDetailsRepositoryImpl(mongoComponent)
+      val pcodRepository: PendingChangeRequestRepositoryImpl = new PendingChangeRequestRepositoryImpl(mongoComponent)
       val oldPcod = aPendingChangeOfDetails().copy(timeSubmitted = Instant.now().minus(30, ChronoUnit.DAYS))
       pcodRepository.collection.insertOne(oldPcod).toFuture().futureValue
 

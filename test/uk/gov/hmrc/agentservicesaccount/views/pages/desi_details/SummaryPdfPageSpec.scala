@@ -139,9 +139,8 @@ class SummaryPdfPageSpec extends BaseISpec {
 
     "render correctly with all populated fields" when {
       val doc: Document = Jsoup.parse(view.apply(
-        testUtr,
+        Some(testUtr),
         pendingChangeOfDetails1,
-        isAdmin = true,
         selectChanges = selectChanges1,
       )(messages, FakeRequest(), appConfig).body)
 
@@ -162,8 +161,8 @@ class SummaryPdfPageSpec extends BaseISpec {
       }
 
       "display the correct page paragraph" in {
-        doc.select("p").first().text() mustBe s"Unique Taxpayer Reference: $testUtr"
-        doc.select("p").get(1).text() mustBe s"Agent reference number: $testArn"
+        doc.select("p").first().text() mustBe s"Unique Taxpayer Reference: ${testUtr.value}"
+        doc.select("p").get(1).text() mustBe s"Agent reference number: ${testArn.value}"
       }
     }
   }
@@ -172,10 +171,9 @@ class SummaryPdfPageSpec extends BaseISpec {
     "render correctly with businessName as the only updated answer" when {
       val messages: Messages = MessagesImpl(lang, messagesApi)
       val doc: Document = Jsoup.parse(view.apply(
-        testUtr,
+        Some(testUtr),
         pendingChangeOfDetails1,
-        isAdmin = true,
-        selectChanges = selectChanges1,
+        selectChanges = selectChanges1
       )(messages, FakeRequest(), appConfig).body)
 
       "businessName is the only selected update" in {
@@ -206,10 +204,9 @@ class SummaryPdfPageSpec extends BaseISpec {
     "render correctly with email and telephone as the only updated answers" when {
       val messages: Messages = MessagesImpl(lang, messagesApi)
       val doc: Document = Jsoup.parse(view.apply(
-        testUtr,
+        Some(testUtr),
         pendingChangeOfDetails2,
-        isAdmin = true,
-        selectChanges = selectChanges2,
+        selectChanges = selectChanges2
       )(messages, FakeRequest(), appConfig).body)
 
 
@@ -247,9 +244,8 @@ class SummaryPdfPageSpec extends BaseISpec {
   "render correctly with all contact details and agent codes updated" when {
     val messages: Messages = MessagesImpl(lang, messagesApi)
     val doc: Document = Jsoup.parse(view.apply(
-      testUtr,
+      Some(testUtr),
       pendingChangeOfDetailsAll,
-      isAdmin = true,
       selectChanges = selectChangesAll,
     )(messages, FakeRequest(), appConfig).body)
 

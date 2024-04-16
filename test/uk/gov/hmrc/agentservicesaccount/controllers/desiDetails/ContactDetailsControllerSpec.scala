@@ -30,10 +30,10 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.connectors.{AddressLookupConnector, AgentClientAuthorisationConnector, EmailVerificationConnector}
 import uk.gov.hmrc.agentservicesaccount.controllers.{CURRENT_SELECTED_CHANGES, DRAFT_NEW_CONTACT_DETAILS, DRAFT_SUBMITTED_BY, EMAIL_PENDING_VERIFICATION, desiDetails}
-import uk.gov.hmrc.agentservicesaccount.models.PendingChangeOfDetails
+import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup.{ConfirmedResponseAddress, ConfirmedResponseAddressDetails, Country, JourneyConfigV2}
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails._
-import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
+import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.support.{TestConstants, UnitSpec}
 import uk.gov.hmrc.auth.core.AuthConnector
@@ -94,7 +94,7 @@ class ContactDetailsControllerSpec extends UnitSpec
       bind(classOf[AgentClientAuthorisationConnector]).toInstance(stub[AgentClientAuthorisationConnector])
       bind(classOf[AddressLookupConnector]).toInstance(stub[AddressLookupConnector])
       bind(classOf[EmailVerificationConnector]).toInstance(stub[EmailVerificationConnector])
-      bind(classOf[PendingChangeOfDetailsRepository]).toInstance(stub[PendingChangeOfDetailsRepository])
+      bind(classOf[PendingChangeRequestRepository]).toInstance(stub[PendingChangeRequestRepository])
       bind(classOf[AuthConnector]).toInstance(stubAuthConnector)
     }
   }
@@ -118,24 +118,20 @@ class ContactDetailsControllerSpec extends UnitSpec
     val contactDetailsController: ContactDetailsController = app.injector.instanceOf[ContactDetailsController]
     val updateNameController: UpdateNameController = app.injector.instanceOf[UpdateNameController]
     val sessionCache: SessionCacheService = app.injector.instanceOf[SessionCacheService]
-    val pcodRepository: PendingChangeOfDetailsRepository = app.injector.instanceOf[PendingChangeOfDetailsRepository]
+    val pcodRepository: PendingChangeRequestRepository = app.injector.instanceOf[PendingChangeRequestRepository]
 
     def noPendingChangesInRepo(): Unit = {
       (pcodRepository.find(_: Arn)).when(*).returns(Future.successful(None))
     }
     def pendingChangesExistInRepo(): Unit = {
       (pcodRepository.find(_: Arn)).when(*).returns(Future.successful(Some(
-        PendingChangeOfDetails(
+        PendingChangeRequest(
           testArn,
-          agencyDetails,
-          agencyDetails,
-          emptyOtherServices,
-          Instant.now(),
-          submittedByDetails
+          Instant.now()
         ))))
     }
 
-    (pcodRepository.insert(_: PendingChangeOfDetails)).when(*).returns(Future.successful(()))
+    (pcodRepository.insert(_: PendingChangeRequest)).when(*).returns(Future.successful(()))
 
     // make sure these values are cleared from the session
     sessionCache.delete(DRAFT_NEW_CONTACT_DETAILS)(fakeRequest()).futureValue

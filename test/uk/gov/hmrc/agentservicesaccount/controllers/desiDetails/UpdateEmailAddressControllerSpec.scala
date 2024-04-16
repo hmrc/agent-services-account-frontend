@@ -33,7 +33,7 @@ import uk.gov.hmrc.agentservicesaccount.controllers
 import uk.gov.hmrc.agentservicesaccount.controllers.EMAIL_PENDING_VERIFICATION
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.DesignatoryDetails
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.{EmailIsAlreadyVerified, EmailIsLocked, EmailNeedsVerifying}
-import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
+import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
 import uk.gov.hmrc.agentservicesaccount.services.{DraftDetailsService, EmailVerificationService, SessionCacheService}
 import uk.gov.hmrc.agentservicesaccount.support.TestConstants
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details.{email_locked, update_email}
@@ -68,7 +68,7 @@ class UpdateEmailAddressControllerSpec extends PlaySpec
     protected val mockActions =
       new Actions(mockAgentClientAuthorisationConnector, mockAgentAssuranceConnector, authActions, actionBuilder)
 
-    protected val mockPendingChangeOfDetailsRepository = mock[PendingChangeOfDetailsRepository]
+    protected val mockPendingChangeRequestRepository = mock[PendingChangeRequestRepository]
     protected val mockUpdateEmailView: update_email = mock[update_email]
     protected val mockEmailLockedView: email_locked = mock[email_locked]
     protected val mockSessionCache: SessionCacheService = mock[SessionCacheService]
@@ -82,7 +82,7 @@ class UpdateEmailAddressControllerSpec extends PlaySpec
       mockUpdateEmailView,
       mockEmailLockedView,
       cc
-    )(mockAppConfig, ec, mockPendingChangeOfDetailsRepository)
+    )(mockAppConfig, ec, mockPendingChangeRequestRepository)
   }
 
 
@@ -96,7 +96,7 @@ class UpdateEmailAddressControllerSpec extends PlaySpec
 
       mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
-      mockPendingChangeOfDetailsRepository.find(arn) returns Future.successful(None)
+      mockPendingChangeRequestRepository.find(arn) returns Future.successful(None)
 
       mockUpdateEmailView.apply(*[Form[String]])(*[Messages], *[Request[_]], *[AppConfig]) returns Html("")
 
@@ -118,7 +118,7 @@ class UpdateEmailAddressControllerSpec extends PlaySpec
 
       mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
-      mockPendingChangeOfDetailsRepository.find(arn) returns Future.successful(None)
+      mockPendingChangeRequestRepository.find(arn) returns Future.successful(None)
 
       mockEmailVerificationService.getEmailVerificationStatus("new@email.com", ggCredentials.providerId)(*[HeaderCarrier]) returns Future.successful(EmailIsAlreadyVerified)
 
@@ -143,7 +143,7 @@ class UpdateEmailAddressControllerSpec extends PlaySpec
 
       mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
-      mockPendingChangeOfDetailsRepository.find(arn) returns Future.successful(None)
+      mockPendingChangeRequestRepository.find(arn) returns Future.successful(None)
 
       mockEmailVerificationService.getEmailVerificationStatus("new@email.com", ggCredentials.providerId)(*[HeaderCarrier]) returns Future.successful(EmailIsLocked)
 
@@ -163,7 +163,7 @@ class UpdateEmailAddressControllerSpec extends PlaySpec
 
       mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
-      mockPendingChangeOfDetailsRepository.find(arn) returns Future.successful(None)
+      mockPendingChangeRequestRepository.find(arn) returns Future.successful(None)
 
       mockEmailVerificationService.getEmailVerificationStatus("new@email.com", ggCredentials.providerId)(*[HeaderCarrier]) returns Future.successful(EmailNeedsVerifying)
 
@@ -187,7 +187,7 @@ class UpdateEmailAddressControllerSpec extends PlaySpec
 
       mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
-      mockPendingChangeOfDetailsRepository.find(arn) returns Future.successful(None)
+      mockPendingChangeRequestRepository.find(arn) returns Future.successful(None)
 
       mockUpdateEmailView.apply(*[Form[String]])(*[Messages], *[Request[_]], *[AppConfig]) returns Html("")
 
