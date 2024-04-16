@@ -23,13 +23,13 @@ import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthRequestWithAgentIn
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
 import uk.gov.hmrc.agentservicesaccount.controllers._
-import uk.gov.hmrc.agentservicesaccount.models.{PendingChangeOfDetails}
+import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util._
+import uk.gov.hmrc.agentservicesaccount.models.PendingChangeOfDetails
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{DesignatoryDetails, YourDetails}
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util._
-import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{DesignatoryDetails, YourDetails}
 
 import java.time.Instant
 import javax.inject._
@@ -40,7 +40,8 @@ class CheckYourAnswersController @Inject()(actions: Actions,
                                            sessionCache: SessionCacheService,
                                            acaConnector: AgentClientAuthorisationConnector,
                                            pcodRepository: PendingChangeOfDetailsRepository,
-                                           checkUpdatedDetailsView: check_updated_details
+                                           checkUpdatedDetailsView: check_updated_details,
+                                           summary_pdf: summaryPdf
                                           )(implicit appConfig: AppConfig,
                                             cc: MessagesControllerComponents,
                                             ec: ExecutionContext) extends FrontendController(cc) with I18nSupport with Logging {
@@ -86,6 +87,7 @@ class CheckYourAnswersController @Inject()(actions: Actions,
         case None => // graceful redirect in case of expired session data etc.
           Future.successful(Redirect(desiDetails.routes.ViewContactDetailsController.showPage))
         case Some(details) => for {
+          selectChanges <- sessionCache.get[Set[String]](CURRENT_SELECTED_CHANGES)
           submittedBy <- sessionCache.get[YourDetails](DRAFT_SUBMITTED_BY)
           oldContactDetails <- CurrentAgencyDetails.get(acaConnector)
           pendingChange = PendingChangeOfDetails(
@@ -102,7 +104,9 @@ class CheckYourAnswersController @Inject()(actions: Actions,
           _ <- pcodRepository.insert(pendingChange)
           _ <- sessionCache.delete(DRAFT_NEW_CONTACT_DETAILS)
           _ <- sessionCache.delete(DRAFT_SUBMITTED_BY)
-        } yield Redirect(desiDetails.routes.ContactDetailsController.showChangeSubmitted)
+        } yield {
+          Redirect(desiDetails.routes.ContactDetailsController.showChangeSubmitted)
+        }
       }
     }
   }
