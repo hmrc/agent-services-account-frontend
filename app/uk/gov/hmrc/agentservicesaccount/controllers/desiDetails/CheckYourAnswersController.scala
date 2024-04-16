@@ -19,18 +19,17 @@ package uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
 import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc._
-import uk.gov.hmrc.agentmtdidentifiers.model.Utr
 import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthRequestWithAgentInfo}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
 import uk.gov.hmrc.agentservicesaccount.controllers._
+import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util._
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeOfDetails
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{DesignatoryDetails, YourDetails}
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util._
-import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{DesignatoryDetails, YourDetails}
 
 import java.time.Instant
 import javax.inject._
@@ -99,7 +98,6 @@ class CheckYourAnswersController @Inject()(actions: Actions,
             timeSubmitted = Instant.now(),
             submittedBy = submittedBy.getOrElse(throw new RuntimeException("Cannot submit without submittedBy details"))
           )
-          htmlForPdf = summary_pdf(Utr("12356"), pendingChange, isAdmin = true, selectChanges.get).toString
           //
           // TODO actual connector call to submit the details goes here...
           //
@@ -107,7 +105,6 @@ class CheckYourAnswersController @Inject()(actions: Actions,
           _ <- sessionCache.delete(DRAFT_NEW_CONTACT_DETAILS)
           _ <- sessionCache.delete(DRAFT_SUBMITTED_BY)
         } yield {
-          println(htmlForPdf)
           Redirect(desiDetails.routes.ContactDetailsController.showChangeSubmitted)
         }
       }

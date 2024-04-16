@@ -38,7 +38,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class UpdateTelephoneController @Inject()(actions: Actions,
                                           val sessionCache: SessionCacheService,
                                           val acaConnector: AgentClientAuthorisationConnector,
-                                          update_phone: update_phone,
+                                          update_phone: update_phone
                                         )(implicit appConfig: AppConfig,
                                            cc: MessagesControllerComponents,
                                            ec: ExecutionContext,
