@@ -57,8 +57,8 @@ class SuspendedJourneyControllerSpec extends BaseISpec with SessionServiceMocks{
       .withSession(SessionKeys.sessionId -> "session-x")
   protected def htmlEscapedMessage(key: String): String = HtmlFormat.escape(Messages(key)).toString
 
-  "showSuspensionWarn.valueing" should {
-    "return Ok and show the suspension warn.valueing page" in {
+  "showSuspensionWarning" should {
+    "return Ok and show the suspension warning page" in {
       givenAuthorisedAsAgentWith(arn.value)
       givenAgentRecordFound(agentRecord.copy(suspensionDetails = Some(SuspensionDetails(suspensionStatus = true, Some(Set("AGSV"))))))
 
