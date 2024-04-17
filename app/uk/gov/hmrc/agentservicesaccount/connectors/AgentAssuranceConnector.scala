@@ -76,7 +76,7 @@ class AgentAssuranceConnector @Inject()(httpV2: HttpClientV2)(implicit val metri
 
   def postDesignatoryDetails(arn: Arn, base64HtmlForPdf: String)(implicit ec: ExecutionContext, hc: HeaderCarrier): Future[Unit] = {
     httpV2
-      .post(new URL(s"$baseUrl/agent-assurance/agents/agency-details/arn/${
+      .post(new URL(s"$baseUrl/agent-assurance/agent/agency-details/arn/${
         arn.value
       }")).withBody(base64HtmlForPdf).execute[HttpResponse]
       .map {
