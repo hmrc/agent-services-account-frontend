@@ -55,31 +55,6 @@ class SummaryPdfPageSpec extends BaseISpec {
   private val selectChanges2: Set[String] = Set("email", "telephone")
   private val selectChangesAll: Set[String] = Set("businessName", "address", "email", "telephone")
 
-  private val agencyDetails = AgencyDetails(
-    agencyName = Some("My Agency"),
-    agencyEmail = Some("abc@abc.com"),
-    agencyTelephone = Some("07345678901"),
-    agencyAddress = Some(BusinessAddress(
-      "25 Any Street",
-      Some("Central Grange"),
-      Some("Telford"),
-      None,
-      Some("TF4 3TR"),
-      "GB"))
-  )
-
-
-  private val emptyOtherServices = OtherServices(
-    saChanges = SaChanges(
-      applyChanges = false,
-      saAgentReference = None
-    ),
-    ctChanges = CtChanges(
-      applyChanges = false,
-      ctAgentReference = None
-    )
-  )
-
   private val fullOtherServices = OtherServices(
     saChanges = SaChanges(
       applyChanges = true,

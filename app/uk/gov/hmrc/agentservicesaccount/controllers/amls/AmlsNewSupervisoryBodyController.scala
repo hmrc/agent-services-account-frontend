@@ -57,7 +57,7 @@ class AmlsNewSupervisoryBodyController @Inject()(actions: Actions,
         NewAmlsSupervisoryBodyForm.form(amlsBodies)(journey.isUkAgent)
           .bindFromRequest()
           .fold(
-            formWithErrors => Ok(newSupervisoryBody(formWithErrors, amlsBodies, journey.isUkAgent, cya)).toFuture,
+            formWithErrors => BadRequest(newSupervisoryBody(formWithErrors, amlsBodies, journey.isUkAgent, cya)).toFuture,
             data => {
               saveAmlsJourney(journey.copy(
                 newAmlsBody = if (journey.isUkAgent) Some(amlsBodies(data)) else Some(data),

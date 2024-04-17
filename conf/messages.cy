@@ -511,10 +511,10 @@ update-contact-details.phone.hint=Ar gyfer rhifau rhyngwladol, cofiwch gynnwys c
 update-contact-details.phone.error.empty=Nodwch y rhif ffôn newydd
 update-contact-details.phone.error.invalid=Nodwch rif ffôn, megis 01632 960 001, 07700 900 982 neu +33 808 157 0192
 
-update-contact-details.email.heading=What is the email address you want to use for your agent services account? TBC
-update-contact-details.email.hint=We will use this email to contact you about your agent services account and to update you about your authorisation requests. TBC
-update-contact-details.email.error.empty=Enter an email address TBC
-update-contact-details.email.error.invalid=Enter an email address with a name, @ symbol and a domain name, like yourname@example.com TBC
+update-contact-details.email.heading=Beth yw’r cyfeiriad e-bost newydd?
+update-contact-details.email.hint=Byddwn yn defnyddio’r cyfeiriad e-bost hwn i gysylltu â’r busnes ynghylch y cyfrif gwasanaethau asiant, ac i anfon diweddariadau ynghylch ceisiadau am awdurdodiad.
+update-contact-details.email.error.empty=Nodwch y cyfeiriad e-bost newydd
+update-contact-details.email.error.invalid=Nodwch gyfeiriad e-bost ag enw, y symbol @ ac enw parth, megis enw@enghraifft.com
 
 update-contact-details.address.country-picker.title=Select your country - Agent services account - GOV.UK TBC
 update-contact-details.address.country-picker=What is the country where your business is based? TBC

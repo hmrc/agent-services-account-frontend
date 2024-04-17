@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
+package uk.gov.hmrc.agentservicesaccount.models.emailverification
 
-import uk.gov.hmrc.agentservicesaccount.repository.UpdateContactDetailsJourneyRepository
+sealed trait EmailVerificationStatus
 
-trait UpdateContactDetailsJourneySupport {
-  val updateContactDetailsJourneyRepository: UpdateContactDetailsJourneyRepository
-}
+case object EmailHasNotChanged extends EmailVerificationStatus
+case object EmailIsLocked extends EmailVerificationStatus
+case object EmailIsAlreadyVerified extends EmailVerificationStatus
+case object EmailNeedsVerifying extends EmailVerificationStatus

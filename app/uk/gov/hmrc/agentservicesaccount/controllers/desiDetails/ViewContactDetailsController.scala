@@ -21,8 +21,8 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
-import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.CurrentAgencyDetails
 import uk.gov.hmrc.agentservicesaccount.controllers.DRAFT_NEW_CONTACT_DETAILS
+import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.CurrentAgencyDetails
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details.view_contact_details
@@ -32,15 +32,14 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ViewContactDetailsController @Inject() (
-                                               actions: Actions,
-                                               sessionCache: SessionCacheService,
-                                               acaConnector: AgentClientAuthorisationConnector,
-                                               pcodRepository: PendingChangeOfDetailsRepository,
-                                               view_contact_details: view_contact_details
-                                             )(implicit appConfig: AppConfig,
-                                               cc: MessagesControllerComponents,
-                                               ec: ExecutionContext) extends FrontendController(cc) with I18nSupport {
+class ViewContactDetailsController @Inject()(actions: Actions,
+                                             sessionCache: SessionCacheService,
+                                             acaConnector: AgentClientAuthorisationConnector,
+                                             pcodRepository: PendingChangeOfDetailsRepository,
+                                             view_contact_details: view_contact_details
+                                            )(implicit appConfig: AppConfig,
+                                              cc: MessagesControllerComponents,
+                                              ec: ExecutionContext) extends FrontendController(cc) with I18nSupport {
 
   private def ifFeatureEnabled(action: => Future[Result]): Future[Result] = {
     if (appConfig.enableChangeContactDetails) action else Future.successful(NotFound)

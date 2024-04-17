@@ -59,7 +59,7 @@
             value = Value(
                 content = Text(agencyDetails.agencyEmail.getOrElse(msgs("contact-details.summary-list.none")))
             ),
-            actions = maybeActions(Actions(items = Seq(ActionItem(href = desiDetails.routes.ContactDetailsController.showChangeEmailAddress.url, content = Text(msgs("common.change"))))))
+            actions = maybeActions(Actions(items = Seq(ActionItem(href = desiDetails.routes.UpdateEmailAddressController.showChangeEmailAddress.url, content = Text(msgs("common.change"))))))
         ),
         SummaryListRow(
             key = Key(

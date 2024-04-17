@@ -19,49 +19,33 @@ package uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
 import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc._
-import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthRequestWithAgentInfo}
+import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.DesiDetailsJourneySupport
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.NextPageSelector.getNextPage
-import uk.gov.hmrc.agentservicesaccount.controllers.{CURRENT_SELECTED_CHANGES, PREVIOUS_SELECTED_CHANGES, ToFuture, desiDetails}
+import uk.gov.hmrc.agentservicesaccount.controllers.{CURRENT_SELECTED_CHANGES, PREVIOUS_SELECTED_CHANGES, ToFuture}
 import uk.gov.hmrc.agentservicesaccount.forms.SelectChangesForm
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.SelectChanges
-import uk.gov.hmrc.agentservicesaccount.repository.{PendingChangeOfDetailsRepository, UpdateContactDetailsJourneyRepository}
+import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details.select_changes
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class SelectDetailsController @Inject()(actions: Actions,
-                                        val updateContactDetailsJourneyRepository: UpdateContactDetailsJourneyRepository,
-                                        sessionCache: SessionCacheService,
-                                        pcodRepository: PendingChangeOfDetailsRepository,
+                                        val sessionCache: SessionCacheService,
                                         select_changes_view: select_changes
                                        )(implicit appConfig: AppConfig,
                                          cc: MessagesControllerComponents,
-                                         ec: ExecutionContext
-                                       ) extends FrontendController(cc)
-  with UpdateContactDetailsJourneySupport with I18nSupport with Logging{
-
-  private def ifFeatureEnabled(action: => Future[Result]): Future[Result] = {
-    if (appConfig.enableChangeContactDetails) action else Future.successful(NotFound)
-  }
-
-  private def ifFeatureEnabledAndNoPendingChanges(action: => Future[Result])(implicit request: AuthRequestWithAgentInfo[_]): Future[Result] = {
-    ifFeatureEnabled {
-      pcodRepository.find(request.agentInfo.arn).flatMap {
-        case None => // no change is pending, we can proceed
-          action
-        case Some(_) => // there is a pending change, further changes are locked. Redirect to the base page
-          Future.successful(Redirect(desiDetails.routes.ViewContactDetailsController.showPage))
-      }
-    }
-  }
+                                         ec: ExecutionContext,
+                                         pcodRepository: PendingChangeOfDetailsRepository
+                                       ) extends FrontendController(cc) with DesiDetailsJourneySupport with I18nSupport with Logging {
 
   def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    ifFeatureEnabledAndNoPendingChanges {
+    ifChangeContactFeatureEnabledAndNoPendingChanges {
       sessionCache.get[Set[String]](CURRENT_SELECTED_CHANGES).map {
         case Some(data) => {
           val savedAnswers: SelectChanges =
@@ -79,12 +63,12 @@ class SelectDetailsController @Inject()(actions: Actions,
   }
 
   def onSubmit: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    ifFeatureEnabledAndNoPendingChanges {
+    ifChangeContactFeatureEnabledAndNoPendingChanges {
       SelectChangesForm.form
         .bindFromRequest()
         .fold(
           formWithErrors => {
-            Ok(select_changes_view(formWithErrors)).toFuture
+            BadRequest(select_changes_view(formWithErrors)).toFuture
           },
           (selectedChanges: SelectChanges) => {
             sessionCache.put(CURRENT_SELECTED_CHANGES, selectedChanges.pagesSelected).flatMap {
@@ -98,8 +82,7 @@ class SelectDetailsController @Inject()(actions: Actions,
     }
   }
 
-
-  def removeUnchecked(selectedChanges: SelectChanges)(implicit request: Request[_], ec: ExecutionContext): Unit = {
+  def removeUnchecked(selectedChanges: SelectChanges)(implicit request: Request[_]): Unit = {
     //ToDo: Remove session data for unchecked
     for {
       previousPages <- sessionCache.get(PREVIOUS_SELECTED_CHANGES)

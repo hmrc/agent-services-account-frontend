@@ -25,7 +25,6 @@ import play.api.mvc.{DefaultActionBuilderImpl, MessagesControllerComponents, Req
 import play.api.test.Helpers.{status, stubMessagesControllerComponents}
 import play.api.test.{DefaultAwaitTimeout, FakeRequest, Helpers}
 import play.twirl.api.Html
-import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, SuspensionDetails}
 import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector}
@@ -34,7 +33,7 @@ import uk.gov.hmrc.agentservicesaccount.support.TestConstants
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.supervision_details
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve._
-import uk.gov.hmrc.auth.core.{AuthConnector, Nino => _, _}
+import uk.gov.hmrc.auth.core.{AuthConnector, Nino => _}
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -49,24 +48,7 @@ class AMLSDetailsControllerSpec extends PlaySpec
   implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
   private val fakeRequest = FakeRequest()
 
-  private val arn: Arn = Arn("arn")
-  private val credentialRole: User.type = User
-  private val agentEnrolment: Set[Enrolment] = Set(
-    Enrolment("HMRC-AS-AGENT",
-      Seq(EnrolmentIdentifier("AgentReferenceNumber", arn.value)),
-      state = "Active",
-      delegatedAuthRule = None))
-  private val ggCredentials: Credentials =
-    Credentials("ggId", "GovernmentGateway")
 
-  private val authResponse: Future[Enrolments ~ Some[Credentials] ~ Some[Email] ~ Some[Name] ~ Some[User.type]] =
-    Future.successful(new~(new~(new~(new~(
-      Enrolments(agentEnrolment), Some(ggCredentials)),
-      Some(Email("test@email.com"))),
-      Some(Name(Some("Troy"), Some("Barnes")))),
-      Some(credentialRole)))
-
-  private val suspensionDetailsResponse: Future[SuspensionDetails] = Future.successful(SuspensionDetails(suspensionStatus = false, None))
 
   private val amlsDetails = AmlsDetails("HMRC")
   private val amlsDetailsResponse = Future.successful(amlsDetails)

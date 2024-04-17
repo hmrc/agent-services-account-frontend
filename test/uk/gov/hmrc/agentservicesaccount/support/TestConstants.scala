@@ -16,12 +16,63 @@
 
 package uk.gov.hmrc.agentservicesaccount.support
 
-import uk.gov.hmrc.agentmtdidentifiers.model.{SuspensionDetails, Utr}
+import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, SuspensionDetails, Utr}
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, DesignatoryDetails, OtherServices, SaChanges}
 import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, AgentDetailsDesResponse, BusinessAddress}
+import uk.gov.hmrc.auth.core.{Enrolment, EnrolmentIdentifier, Enrolments, User}
+import uk.gov.hmrc.auth.core.retrieve.{Credentials, Email, Name, ~}
+
+import scala.concurrent.Future
 
 trait TestConstants {
 
-  val agentDetails = AgencyDetails(
+  val arn: Arn = Arn("TARN0000001")
+  val credentialRole: User.type = User
+  val agentEnrolment: Set[Enrolment] = Set(
+    Enrolment("HMRC-AS-AGENT",
+      Seq(EnrolmentIdentifier("AgentReferenceNumber", arn.value)),
+      state = "Active",
+      delegatedAuthRule = None))
+  val ggCredentials: Credentials =
+    Credentials("ggId", "GovernmentGateway")
+
+  val authResponse: Future[Enrolments ~ Some[Credentials] ~ Some[Email] ~ Some[Name] ~ Some[User.type]] =
+    Future.successful(new~(new~(new~(new~(
+      Enrolments(agentEnrolment), Some(ggCredentials)),
+      Some(Email("test@email.com"))),
+      Some(Name(Some("Troy"), Some("Barnes")))),
+      Some(credentialRole)))
+
+  val suspensionDetailsResponse: Future[SuspensionDetails] = Future.successful(SuspensionDetails(suspensionStatus = false, None))
+
+  val agencyDetails: AgencyDetails = AgencyDetails(
+    agencyName = Some("My Agency"),
+    agencyEmail = Some("abc@abc.com"),
+    agencyTelephone = Some("07345678901"),
+    agencyAddress = Some(BusinessAddress(
+      "25 Any Street",
+      Some("Central Grange"),
+      Some("Telford"),
+      None,
+      Some("TF4 3TR"),
+      "GB"))
+  )
+
+  val emptyOtherServices: OtherServices = OtherServices(
+    saChanges = SaChanges(
+      applyChanges = false,
+      saAgentReference = None
+    ),
+    ctChanges = CtChanges(
+      applyChanges = false,
+      ctAgentReference = None
+    )
+  )
+
+  val desiDetailsWithEmptyOtherServices: DesignatoryDetails = DesignatoryDetails(agencyDetails, emptyOtherServices)
+
+
+  val agentDetails: AgencyDetails = AgencyDetails(
     Some("My Agency"),
     Some("abc@abc.com"),
     Some("07345678901"),
@@ -34,12 +85,39 @@ trait TestConstants {
       "GB"))
   )
 
-  val suspensionDetails = SuspensionDetails(suspensionStatus = false, None)
+  val suspensionDetails: SuspensionDetails = SuspensionDetails(suspensionStatus = false, None)
 
-  val agentRecord = AgentDetailsDesResponse(
+  val agentRecord: AgentDetailsDesResponse = AgentDetailsDesResponse(
     uniqueTaxReference = Some(Utr("0123456789")),
     agencyDetails = Some(agentDetails),
     suspensionDetails = Some(suspensionDetails)
   )
+
+  val ctChangesOtherServices = OtherServices(
+    saChanges = SaChanges(
+      applyChanges = false,
+      saAgentReference = None
+    ),
+    ctChanges = CtChanges(
+      applyChanges = true,
+      ctAgentReference = None
+    )
+  )
+
+  val saChangesOtherServices = OtherServices(
+    saChanges = SaChanges(
+      applyChanges = true,
+      saAgentReference = None
+    ),
+    ctChanges = CtChanges(
+      applyChanges = false,
+      ctAgentReference = None
+    )
+  )
+
+  val desiDetailsCtChangesOtherServices = DesignatoryDetails(agencyDetails, ctChangesOtherServices)
+  val desiDetailsSaChangesOtherServices = DesignatoryDetails(agencyDetails, saChangesOtherServices)
+
+
 
 }

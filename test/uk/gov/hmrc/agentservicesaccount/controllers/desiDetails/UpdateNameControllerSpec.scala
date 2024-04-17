@@ -52,18 +52,6 @@ class UpdateNameControllerSpec extends UnitSpec
   with MockFactory
   with TestConstants {
 
-  private val testArn = Arn("XXARN0123456789")
-
-  private val emptyOtherServices = OtherServices(
-    saChanges = SaChanges(
-      applyChanges = false,
-      saAgentReference = None
-    ),
-    ctChanges = CtChanges(
-      applyChanges = false,
-      ctAgentReference = None
-    )
-  )
 
   private val submittedByDetails = YourDetails(
     fullName = "John Tester",
@@ -88,7 +76,7 @@ class UpdateNameControllerSpec extends UnitSpec
                       |  "credentialRole": "User",
                       |  "allEnrolments": [{
                       |    "key": "HMRC-AS-AGENT",
-                      |    "identifiers": [{ "key": "AgentReferenceNumber", "value": "${testArn.value}" }]
+                      |    "identifiers": [{ "key": "AgentReferenceNumber", "value": "${arn.value}" }]
                       |  }],
                       |  "optionalCredentials": {
                       |    "providerId": "foo",
@@ -135,7 +123,7 @@ class UpdateNameControllerSpec extends UnitSpec
     def pendingChangesExistInRepo(): Unit = {
       (pcodRepository.find(_: Arn)).when(*).returns(Future.successful(Some(
         PendingChangeOfDetails(
-          testArn,
+          arn,
           agentDetails,
           agentDetails,
           emptyOtherServices,
@@ -181,7 +169,7 @@ class UpdateNameControllerSpec extends UnitSpec
       noPendingChangesInRepo()
       implicit val request = fakeRequest("POST").withFormUrlEncodedBody("name" -> "&^%£$)(")
       val result = controller.onSubmit()(request)
-      status(result) shouldBe OK
+      status(result) shouldBe BAD_REQUEST
       contentAsString(result.futureValue) should include("There is a problem")
       sessionCache.get(DRAFT_NEW_CONTACT_DETAILS).futureValue.flatMap(_.agencyDetails.agencyName) shouldBe None // new name not added to session
     }

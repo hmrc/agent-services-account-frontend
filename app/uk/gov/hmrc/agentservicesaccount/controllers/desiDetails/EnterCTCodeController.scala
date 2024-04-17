@@ -20,11 +20,11 @@ import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
+import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.DesiDetailsJourneySupport
 import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.CtChanges
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
-import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
+import uk.gov.hmrc.agentservicesaccount.services.{DraftDetailsService, SessionCacheService}
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details.enter_ct_code
 import uk.gov.hmrc.domain.CtUtr
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -33,16 +33,15 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class EnterCTCodeController @Inject()(
-                                       actions: Actions,
-                                       val sessionCache: SessionCacheService,
-                                       val acaConnector: AgentClientAuthorisationConnector,
-                                       enterCtCodeView: enter_ct_code
+class EnterCTCodeController @Inject()(actions: Actions,
+                                      val sessionCache: SessionCacheService,
+                                      draftDetailsService: DraftDetailsService,
+                                      enterCtCodeView: enter_ct_code,
+                                      cc: MessagesControllerComponents
                                      )(implicit appConfig: AppConfig,
-                                       cc: MessagesControllerComponents,
                                        ec: ExecutionContext,
-                                       pcodRepository: PendingChangeOfDetailsRepository)
-  extends FrontendController(cc) with DesiDetailsJourneySupport with I18nSupport {
+                                       pcodRepository: PendingChangeOfDetailsRepository
+                                     ) extends FrontendController(cc) with DesiDetailsJourneySupport with I18nSupport {
 
   def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     ifChangeContactFeatureEnabledAndNoPendingChanges {
@@ -56,10 +55,14 @@ class EnterCTCodeController @Inject()(
         UpdateDetailsForms.ctCodeForm
           .bindFromRequest()
           .fold(
-            formWithErrors => Future.successful(Ok(enterCtCodeView(formWithErrors))),
+            formWithErrors => Future.successful(BadRequest(enterCtCodeView(formWithErrors))),
             saCode => {
-              updateDraftDetails(_.copy(otherServices = desiDetails.otherServices.copy(ctChanges = CtChanges(true, Some(CtUtr(saCode)))) )).map(_ =>
-                Redirect (routes.YourDetailsController.showPage))
+              draftDetailsService.updateDraftDetails(
+                _.copy(otherServices = desiDetails.otherServices.copy(ctChanges = CtChanges(true, Some(CtUtr(saCode)))))
+              ).map {
+                _ =>
+                  Redirect(routes.YourDetailsController.showPage)
+              }
             }
           )
       }
@@ -69,8 +72,12 @@ class EnterCTCodeController @Inject()(
   def continueWithoutCtCode: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     ifChangeContactFeatureEnabledAndNoPendingChanges {
       withUpdateDesiDetailsJourney { desiDetails =>
-        updateDraftDetails(_.copy(otherServices = desiDetails.otherServices.copy(ctChanges = CtChanges(false, None)) )).map(_ =>
-          Redirect (routes.YourDetailsController.showPage))
+        draftDetailsService.updateDraftDetails(
+          _.copy(otherServices = desiDetails.otherServices.copy(ctChanges = CtChanges(false, None)))
+        ).map {
+          _ =>
+            Redirect(routes.YourDetailsController.showPage)
+        }
       }
     }
   }

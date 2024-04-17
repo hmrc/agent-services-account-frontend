@@ -30,14 +30,13 @@ import uk.gov.hmrc.http.HttpReads.Implicits._
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class EmailVerificationConnector @Inject()(http: HttpClient, metrics: Metrics)(implicit val appConfig: AppConfig)
-  extends HttpAPIMonitor with Logging {
+class EmailVerificationConnector @Inject()(http: HttpClient, metrics: Metrics)
+                                          (implicit val appConfig: AppConfig) extends HttpAPIMonitor with Logging {
 
   override lazy val kenshooRegistry: MetricRegistry = metrics.defaultRegistry
 
-  def verifyEmail(request: VerifyEmailRequest)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext): Future[Option[VerifyEmailResponse]] = {
+  def verifyEmail(request: VerifyEmailRequest)
+                 (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[VerifyEmailResponse]] = {
     val url = s"${appConfig.emailVerificationBaseUrl}/email-verification/verify-email"
 
     monitor(s"ConsumedAPI-email-verify-POST") {
@@ -52,8 +51,8 @@ class EmailVerificationConnector @Inject()(http: HttpClient, metrics: Metrics)(i
     }
   }
 
-  def checkEmail(
-                  credId: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[VerificationStatusResponse]] = {
+  def checkEmail(credId: String)
+                (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[VerificationStatusResponse]] = {
     val url = s"${appConfig.emailVerificationBaseUrl}/email-verification/verification-status/$credId"
 
     monitor(s"ConsumedAPI-email-verification-status-GET") {

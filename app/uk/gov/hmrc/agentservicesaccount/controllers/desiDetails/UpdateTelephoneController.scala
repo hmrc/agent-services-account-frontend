@@ -21,13 +21,13 @@ import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.DRAFT_NEW_CONTACT_DETAILS
+import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.DesiDetailsJourneySupport
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.NextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.DesignatoryDetails
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
-import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
+import uk.gov.hmrc.agentservicesaccount.services.{DraftDetailsService, SessionCacheService}
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
@@ -37,13 +37,13 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class UpdateTelephoneController @Inject()(actions: Actions,
                                           val sessionCache: SessionCacheService,
-                                          val acaConnector: AgentClientAuthorisationConnector,
+                                          draftDetailsService: DraftDetailsService,
                                           update_phone: update_phone
-                                        )(implicit appConfig: AppConfig,
+                                         )(implicit appConfig: AppConfig,
                                            cc: MessagesControllerComponents,
                                            ec: ExecutionContext,
                                            pcodRepository: PendingChangeOfDetailsRepository
-) extends FrontendController(cc) with DesiDetailsJourneySupport with I18nSupport with Logging {
+                                         ) extends FrontendController(cc) with DesiDetailsJourneySupport with I18nSupport with Logging {
 
   val showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     ifChangeContactFeatureEnabledAndNoPendingChanges {
@@ -60,9 +60,9 @@ class UpdateTelephoneController @Inject()(actions: Actions,
       UpdateDetailsForms.telephoneNumberForm
         .bindFromRequest()
         .fold(
-          formWithErrors => Future.successful(Ok(update_phone(formWithErrors))),
+          formWithErrors => Future.successful(BadRequest(update_phone(formWithErrors))),
           newPhoneNumber => {
-            updateDraftDetails(desiDetails =>
+            draftDetailsService.updateDraftDetails(desiDetails =>
               desiDetails.copy(agencyDetails = desiDetails.agencyDetails.copy(agencyTelephone = Some(newPhoneNumber)))
             ).flatMap(_ =>
               getNextPage(sessionCache, "telephone")

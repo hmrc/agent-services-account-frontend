@@ -22,13 +22,11 @@ import org.scalatestplus.play.PlaySpec
 import play.api.Environment
 import play.api.data.Form
 import play.api.http.MimeTypes.HTML
-import play.api.http.Status.{FORBIDDEN, OK, SEE_OTHER}
 import play.api.i18n.Messages
 import play.api.mvc.{DefaultActionBuilderImpl, MessagesControllerComponents, Request, Result}
-import play.api.test.Helpers.{defaultAwaitTimeout, stubMessagesControllerComponents}
+import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
 import play.twirl.api.Html
-import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector}
@@ -53,16 +51,6 @@ class AmlsIsHmrcControllerSpec extends PlaySpec
   val mockAcaConnector: AgentClientAuthorisationConnector = mock[AgentClientAuthorisationConnector]
   val mockAgentAssuranceConnector: AgentAssuranceConnector = mock[AgentAssuranceConnector]
 
-  private val arn = Arn("BARN1234567")
-
-  private val agentEnrolment: Set[Enrolment] = Set(
-    Enrolment("HMRC-AS-AGENT",
-      Seq(EnrolmentIdentifier("AgentReferenceNumber", arn.value)),
-      state = "Active",
-      delegatedAuthRule = None))
-
-  private val ggCredentials: Credentials =
-    Credentials("ggId", "GovernmentGateway")
 
   private def authResponseAgent(credentialRole: CredentialRole): Future[Enrolments ~ Some[Credentials] ~ Some[Email] ~ Some[Name] ~ Some[CredentialRole]] =
     Future.successful(new~(new~(new~(new~(
@@ -163,7 +151,7 @@ class AmlsIsHmrcControllerSpec extends PlaySpec
 
       val response: Future[Result] = TestController.submitAmlsIsHmrc(fakeRequest("POST").withFormUrlEncodedBody("accept" -> "") /* with empty form body */)
 
-      Helpers.status(response) mustBe OK
+      Helpers.status(response) mustBe BAD_REQUEST
       Helpers.contentType(response).get mustBe HTML
     }
 

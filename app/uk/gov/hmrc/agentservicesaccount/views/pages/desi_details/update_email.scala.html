@@ -45,7 +45,7 @@
         @govukErrorSummary(ErrorSummary().withFormErrorsAsText(form))
     }
 
-    @formWithCSRF(action = desiDetails.routes.ContactDetailsController.submitChangeEmailAddress) {
+    @formWithCSRF(action = desiDetails.routes.UpdateEmailAddressController.submitChangeEmailAddress) {
         @govukInput(Input(
             label = Label(
                 classes = "govuk-label--l",
@@ -55,7 +55,7 @@
             hint = Some(Hint(content = Text(msgs("update-contact-details.email.hint"))))
         ).withFormField(form("emailAddress")))
 
-        @govukButton(Button(content = Text(msgs("common.continue-save"))))
+        @govukButton(Button(content = Text(msgs("common.continue"))))
     }
 
 }

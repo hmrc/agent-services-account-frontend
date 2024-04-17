@@ -58,7 +58,7 @@ class ConfirmSupervisoryBodyController @Inject()(actions: Actions,
           YesNoForm.form(Messages("amls.confirm-supervisory-body.error", amlsDetails.supervisoryBody))
             .bindFromRequest()
             .fold(
-              formWithError => Future successful Ok(confirmSupervisoryBody(formWithError, amlsDetails.supervisoryBody)),
+              formWithError => Future successful BadRequest(confirmSupervisoryBody(formWithError, amlsDetails.supervisoryBody)),
               data => {
                 val maybeCopySupervisoryBody = if(data) Option(amlsDetails.supervisoryBody) else amlsJourney.newAmlsBody
                 saveAmlsJourney(amlsJourney.copy(

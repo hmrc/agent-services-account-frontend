@@ -49,7 +49,7 @@ class NextPageSelectorSpec extends BaseISpec with SessionServiceMocks {
 
         val response: Future[Result] = getNextPage(mockSessionCacheService)
 
-        redirectLocation(await(response)) shouldBe Some(desiDetails.routes.ContactDetailsController.showChangeEmailAddress.url)
+        redirectLocation(await(response)) shouldBe Some(desiDetails.routes.UpdateEmailAddressController.showChangeEmailAddress.url)
       }
     }
 
@@ -84,7 +84,7 @@ class NextPageSelectorSpec extends BaseISpec with SessionServiceMocks {
 
         val response: Future[Result] = getNextPage(mockSessionCacheService)
 
-        redirectLocation(await(response)) shouldBe Some(desiDetails.routes.ContactDetailsController.showChangeEmailAddress.url)
+        redirectLocation(await(response)) shouldBe Some(desiDetails.routes.UpdateEmailAddressController.showChangeEmailAddress.url)
       }
     }
 
