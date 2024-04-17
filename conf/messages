@@ -508,7 +508,7 @@ update-contact-details.phone.error.invalid=Enter a telephone number, like 01632 
 
 update-contact-details.email.heading=What’s the new email address?
 update-contact-details.email.hint=We’ll use this email address to contact the business about the agent services account, and to send updates about authorisation requests.
-update-contact-details.email.error.empty=Enter an email address
+update-contact-details.email.error.empty=Enter the new email address
 update-contact-details.email.error.invalid=Enter an email address with a name, @ symbol and a domain name, like name@example.com
 
 update-contact-details.address.country-picker.title=Select your country - Agent services account - GOV.UK
