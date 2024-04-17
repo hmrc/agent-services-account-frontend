@@ -61,7 +61,7 @@ class YourDetailsFormSpec extends AnyWordSpec with Matchers with GuiceOneAppPerS
       )
       val validatedForm = yourDetailsForm.bind(params)
       validatedForm.hasErrors shouldBe true
-      validatedForm.error(nameField).get.message shouldBe "update-contact-details.your-details.name.error.empty"
+      validatedForm.error(nameField).get.message shouldBe "update-contact-details.name.error.empty"
       validatedForm.error(phoneField).get.message shouldBe "update-contact-details.your-details.telephone.error.empty"
       validatedForm.errors.length shouldBe 2
     }
@@ -73,7 +73,18 @@ class YourDetailsFormSpec extends AnyWordSpec with Matchers with GuiceOneAppPerS
       )
       val validatedForm = yourDetailsForm.bind(params)
       validatedForm.hasErrors shouldBe true
-      validatedForm.error(nameField).get.message shouldBe "update-contact-details.your-details.name.error.tooLong"
+      validatedForm.error(nameField).get.message shouldBe "update-contact-details.name.error.length"
+      validatedForm.errors.length shouldBe 1
+    }
+
+    s"error when $nameField contains '<'" in {
+      val params = Map(
+        nameField -> "<somename",
+        phoneField -> validPhone
+      )
+      val validatedForm = yourDetailsForm.bind(params)
+      validatedForm.hasErrors shouldBe true
+      validatedForm.error(nameField).get.message shouldBe "update-contact-details.name.error.invalid"
       validatedForm.errors.length shouldBe 1
     }
 
