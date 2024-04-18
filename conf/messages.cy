@@ -143,7 +143,6 @@ asa.section4.h2=Awdurdodiadau cleientiaid
 
 # ITSA
 asa.sectionITSA.col1.h3=Cyn i chi ddechrau
-asa.sectionITSA.col1.link=Os ydych yn copïo manylion eich cleient drosodd, bydd angen i chi<a class="govuk-link" href="https://www.gov.uk/guidance/sign-up-your-client-for-making-tax-digital-for-income-tax.cy" target="_blank" rel="noreferrer noopener"> ei gofrestru ar gyfer y cynllun Troi Treth yn Ddigidol ar gyfer Treth Incwm (yn agor tab newydd)</a>
 asa.sectionITSA.col1.p1=Gwnewch yn siŵr eich bod yn <a class="govuk-link" href="{0}">copïo’r awdurdodiadau presennol ar draws</a>.
 asa.sectionITSA.col1.p2=<a class="govuk-link" href="{0}">Dylech gael awdurdodiadau newydd</a> ar gyfer cleientiaid, os oes angen.
 asa.sectionITSA.col2.h3=Cofrestru’ch cleientiaid
@@ -152,10 +151,6 @@ asa.sectionITSA.col2.p2=Darllenwch yr arweiniad ynghylch <a class="govuk-link" h
 asa.sectionITSA.col2.p3=Wedyn, <a class="govuk-link" href="{0}">nodwch fanylion eich cleient er mwyn ei gofrestru.</a>
 asa.sectionITSA.col3.h3=Rheoli manylion Treth Incwm eich cleient
 asa.sectionITSA.col3.p=Bwrw golwg dros Dreth Incwm eich cleient.
-asa.sectionITSA.col1.p=Yn gyntaf mae’n rhaid i chi gael awdurdodiad gan eich cleient. Gallwch wneud hyn drwy<a class="govuk-link" href="{0}"> gopïo’ch awdurdodiadau drosodd</a> neu <a class="govuk-link" href="{1}">wneud cais am awdurdodiad</a>.
-asa.sectionITSA.col2.h3=Rheoli manylion Treth Incwm eich cleient
-asa.sectionITSA.col2.link1.text=Bwrw golwg dros fanylion Treth Incwm eich cleient
-asa.sectionITSA.col2.link2.text=Helpu cleientiaid i wirio a ydynt yn gymwys (yn agor tab newydd)
 asa.sectionITSA.h2=Troi Treth yn Ddigidol ar gyfer Treth Incwm
 asa.tax-services=Gwasanaethau treth y gallwch gael mynediad iddynt drwy’r cyfrif hwn
 
@@ -504,7 +499,8 @@ update-contact-details.select-changes.telephone=Rhif ffôn
 update-contact-details.name.heading=Beth yw’r enw newydd yr hoffech ei ddangos i gleientiaid?
 update-contact-details.name.hint=Bydd cleientiaid yn gweld yr enw hwn wrth dderbyn neu reoli’ch awdurdodiadau.
 update-contact-details.name.error.empty=Nodwch yr enw yr hoffech ei ddangos i gleientiaid.
-update-contact-details.name.error.invalid=Business name must only include letters a to z, numbers, commas, full stops, apostrophes, hyphens, forward slashes and spaces TBC
+update-contact-details.name.error.invalid=Mae?n rhaid i?r enw a ddangosir i gleientiaid gynnwys llythrennau a i z, rhifau, comas, atalnodau llawn, collnodau, cysylltnodau, blaenslaesau a bylchau yn unig.
+update-contact-details.name.error.length=Mae?n rhaid i?r enw a ddangosir i gleientiaid fod yn 40 o gymeriadau neu lai.
 
 update-contact-details.phone.heading=Beth yw’cr rhif ffôn newydd?
 update-contact-details.phone.hint=Ar gyfer rhifau rhyngwladol, cofiwch gynnwys cod y wlad.
@@ -527,9 +523,6 @@ update-contact-details.address.confirm.title=Review and confirm - Agent services
 update-contact-details.your-details.heading=Eich manylion
 update-contact-details.your-details.body.p=Byddwn yn defnyddio’r rhain os oes angen i ni siarad â chi am y newidiadau yr ydych wedi’u gwneud.
 update-contact-details.your-details.name.label=Enw llawn
-update-contact-details.your-details.name.error.empty = Nodwch eich enw llawn
-update-contact-details.your-details.name.error.invalid = Mae’cn rhaid i’cch enw llawn gynnwys y llythrennau a i z, rhifau, comas, atalnodau llawn, collnodau, cysylltnodau, blaenslaesys a bylchau yn unig
-update-contact-details.your-details.name.error.tooLong = Mae’n rhaid i’ch enw llawn fod yn 40 o gymeriadau neu lai
 update-contact-details.your-details.telephone.label=Rhif ffôn
 update-contact-details.your-details.telephone.hint=Ar gyfer rhifau rhyngwladol, cofiwch gynnwys cod y wlad.
 update-contact-details.your-details.telephone.error.empty=Nodwch eich rhif ffôn

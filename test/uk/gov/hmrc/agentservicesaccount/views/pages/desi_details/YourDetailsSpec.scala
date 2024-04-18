@@ -38,7 +38,7 @@ class YourDetailsSpec extends BaseISpec {
   implicit val messages: Messages = MessagesImpl(lang, messagesApi)
 
   val form: Form[YourDetails] = yourDetailsForm
-  val formWithNameErrors: Form[YourDetails] = form.withError(key ="fullName", message = Messages("update-contact-details.your-details.name.error.empty"))
+  val formWithNameErrors: Form[YourDetails] = form.withError(key ="fullName", message = Messages("update-contact-details.name.error.empty"))
   val formWithTelephoneErrors: Form[YourDetails] = form.withError(key ="telephone", message = Messages("update-contact-details.your-details.telephone.error.empty"))
 
 
@@ -103,7 +103,7 @@ class YourDetailsSpec extends BaseISpec {
 
       "display correct error summary link" in {
         val errorLink: Element = doc.select(".govuk-error-summary__list a").first()
-        errorLink.text() mustBe "Enter your full name"
+        errorLink.text() mustBe "Enter the new name you want to show to clients."
         errorLink.attr("href") mustBe "#fullName"
       }
 
@@ -112,7 +112,7 @@ class YourDetailsSpec extends BaseISpec {
       }
 
       "display error message on form" in {
-        doc.select(".govuk-error-message").text() mustBe "Error: Enter your full name"
+        doc.select(".govuk-error-message").text() mustBe "Error: Enter the new name you want to show to clients."
       }
     }
 

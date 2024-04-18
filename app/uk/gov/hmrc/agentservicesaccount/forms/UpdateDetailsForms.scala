@@ -69,9 +69,9 @@ object UpdateDetailsForms {
   val yourDetailsForm: Form[YourDetails] = Form(
     mapping(
       "fullName" -> trimmedText
-        .verifying("update-contact-details.your-details.name.error.empty", _.nonEmpty)
-        .verifying("update-contact-details.your-details.name.error.invalid", x => x.isEmpty || NameRegex.matches(x.replace(" ","")))
-        .verifying("update-contact-details.your-details.name.error.tooLong", x => x.isEmpty || x.length < 41),
+        .verifying("update-contact-details.name.error.empty", _.nonEmpty)
+        .verifying("update-contact-details.name.error.invalid", x => x.isEmpty || NameRegex.matches(x.replace(" ","")))
+        .verifying("update-contact-details.name.error.length", x => x.isEmpty || x.length < 41),
       "telephone" -> trimmedText
         .verifying("update-contact-details.your-details.telephone.error.empty", _.nonEmpty)
         .verifying("update-contact-details.your-details.telephone.error.invalid", x => x.isEmpty || InternationalTelephoneRegex.matches(x.replace(" ","")))
