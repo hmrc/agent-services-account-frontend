@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.agentservicesaccount.repository
 
-import org.scalamock.scalatest.MockFactory
+
 import org.scalatest.concurrent.PatienceConfiguration.{Interval, Timeout}
 import org.scalatest.concurrent.{Eventually, IntegrationPatience, ScalaFutures}
 import org.scalatest.matchers.should.Matchers
@@ -36,7 +36,7 @@ class PendingChangeRequestRepositorySpec extends UnitSpec
   with ScalaFutures
   with IntegrationPatience
   with Eventually
-  with CleanMongoCollectionSupport with MockFactory {
+  with CleanMongoCollectionSupport {
 
   private val testArn = Arn("XXARN0123456789")
   private val anotherArn = Arn("XZARN1111111111")
