@@ -19,14 +19,14 @@ package uk.gov.hmrc.agentservicesaccount.repository
 import com.google.inject.ImplementedBy
 import org.mongodb.scala.model.Filters.equal
 import org.mongodb.scala.model.{IndexModel, IndexOptions, Indexes, ReplaceOptions}
-import play.api.Logging
+import play.api.{Configuration, Logging}
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest
 import uk.gov.hmrc.mongo.MongoComponent
 import uk.gov.hmrc.mongo.play.json.PlayMongoRepository
 
+import java.util.concurrent.TimeUnit
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.duration.DAYS
 import scala.concurrent.{ExecutionContext, Future}
 
 @ImplementedBy(classOf[PendingChangeRequestRepositoryImpl])
@@ -37,15 +37,19 @@ trait PendingChangeRequestRepository {
 
 @Singleton
 class PendingChangeRequestRepositoryImpl @Inject()(
-    val mongoComponent: MongoComponent)(implicit ec: ExecutionContext)
+    val mongoComponent: MongoComponent, configuration: Configuration)(implicit ec: ExecutionContext)
   extends PlayMongoRepository[PendingChangeRequest](
         collectionName = "pending-change-request",
         domainFormat = PendingChangeRequest.format,
         mongoComponent = mongoComponent,
         indexes = Seq(
           IndexModel(Indexes.ascending("arn"), new IndexOptions().unique(true)),
-          IndexModel(Indexes.ascending("timeSubmitted"), new IndexOptions().expireAfter(28, DAYS))
-        )
+          IndexModel(
+            Indexes.ascending("timeSubmitted"),
+            new IndexOptions()
+              .expireAfter(configuration.get[Long]("mongodb.desi-details.lockout-period"), TimeUnit.MINUTES)
+        )),
+    replaceIndexes = true
   ) with PendingChangeRequestRepository with Logging {
 
   def find(arn: Arn): Future[Option[PendingChangeRequest]] = collection
