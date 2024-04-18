@@ -20,6 +20,7 @@ import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.DesiDetailsJourneySupport
 import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.CtChanges
@@ -40,12 +41,16 @@ class EnterCTCodeController @Inject()(actions: Actions,
                                       cc: MessagesControllerComponents
                                      )(implicit appConfig: AppConfig,
                                        ec: ExecutionContext,
-                                       pcodRepository: PendingChangeRequestRepository
+                                       pcodRepository: PendingChangeRequestRepository,
+                                       acaConnector: AgentClientAuthorisationConnector
                                      ) extends FrontendController(cc) with DesiDetailsJourneySupport with I18nSupport {
 
   def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     ifChangeContactFeatureEnabledAndNoPendingChanges {
-      Future.successful(Ok(enterCtCodeView(UpdateDetailsForms.ctCodeForm)))
+      isOtherServicesPageRequestValid().flatMap {
+        case true => Future.successful(Ok(enterCtCodeView(UpdateDetailsForms.ctCodeForm)))
+        case _ => Future.successful(Redirect(routes.ViewContactDetailsController.showPage))
+      }
     }
   }
 
@@ -59,10 +64,13 @@ class EnterCTCodeController @Inject()(actions: Actions,
             saCode => {
               draftDetailsService.updateDraftDetails(
                 _.copy(otherServices = desiDetails.otherServices.copy(ctChanges = CtChanges(true, Some(CtUtr(saCode)))))
-              ).map {
-                _ =>
-                  Redirect(routes.YourDetailsController.showPage)
-              }
+              ).flatMap {
+                  _ =>
+                    isJourneyComplete().map(journey =>
+                      if(journey.journeyComplete) Redirect(routes.CheckYourAnswersController.showPage)
+                      else Redirect(routes.YourDetailsController.showPage)
+                    )
+                }
             }
           )
       }
@@ -74,10 +82,13 @@ class EnterCTCodeController @Inject()(actions: Actions,
       withUpdateDesiDetailsJourney { desiDetails =>
         draftDetailsService.updateDraftDetails(
           _.copy(otherServices = desiDetails.otherServices.copy(ctChanges = CtChanges(false, None)))
-        ).map {
-          _ =>
-            Redirect(routes.YourDetailsController.showPage)
-        }
+        ).flatMap {
+            _ =>
+              isJourneyComplete().map(journey =>
+                if(journey.journeyComplete) Redirect(routes.CheckYourAnswersController.showPage)
+                else Redirect(routes.YourDetailsController.showPage)
+              )
+          }
       }
     }
   }

@@ -20,10 +20,12 @@ import play.api.mvc.Results.{NotFound, Redirect}
 import play.api.mvc.{Request, Result}
 import uk.gov.hmrc.agentservicesaccount.actions.AuthRequestWithAgentInfo
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.controllers.{DRAFT_NEW_CONTACT_DETAILS, desiDetails, routes}
-import uk.gov.hmrc.agentservicesaccount.models.desiDetails.DesignatoryDetails
+import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
+import uk.gov.hmrc.agentservicesaccount.controllers.{CURRENT_SELECTED_CHANGES, DRAFT_NEW_CONTACT_DETAILS, DRAFT_SUBMITTED_BY, desiDetails, routes}
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{DesiDetailsJourney, DesignatoryDetails, OtherServices, YourDetails}
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
+import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -57,5 +59,72 @@ trait DesiDetailsJourneySupport {
           Future.successful(Redirect(desiDetails.routes.ViewContactDetailsController.showPage))
       }
     }
+
+  def contactChangesNeeded()(
+    implicit request: AuthRequestWithAgentInfo[_], acaConnector: AgentClientAuthorisationConnector, hc: HeaderCarrier, ec: ExecutionContext
+  ): Future[Option[Set[String]]] = {
+    for {
+      selectChanges <- sessionCache.get[Set[String]](CURRENT_SELECTED_CHANGES)
+      desiDetailsData <- sessionCache.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS)
+      oldContactDetails <- CurrentAgencyDetails.get(acaConnector)
+    } yield desiDetailsData match {
+      case Some(details) => {
+        val detailsUpdated: Map[String, Boolean] = Map(
+          "businessName" -> details.agencyDetails.agencyName.equals(oldContactDetails.agencyName),
+          "address" -> details.agencyDetails.agencyAddress.equals(oldContactDetails.agencyAddress),
+          "email" -> details.agencyDetails.agencyEmail.equals(oldContactDetails.agencyEmail),
+          "telephone" -> details.agencyDetails.agencyTelephone.equals(oldContactDetails.agencyTelephone)
+        )
+
+        selectChanges.map(changes => changes.filter(change => detailsUpdated(change)))
+      }
+      case _ => {
+        selectChanges
+      }
+    }
+  }
+
+  def isContactPageRequestValid(currentPage: String)(
+    implicit request: AuthRequestWithAgentInfo[_], ec: ExecutionContext
+  ): Future[Boolean] = {
+    sessionCache.get[Set[String]](CURRENT_SELECTED_CHANGES).map { selectChanges =>
+      selectChanges.fold(false)(changes => changes.contains(currentPage))
+    }
+  }
+
+  def isOtherServicesPageRequestValid()(
+    implicit
+    request: AuthRequestWithAgentInfo[_],
+    ec: ExecutionContext,
+    acaConnector: AgentClientAuthorisationConnector,
+    hc: HeaderCarrier
+  ): Future[Boolean] = {
+    for {
+      selectChanges <- sessionCache.get[Set[String]](CURRENT_SELECTED_CHANGES)
+      changesStillNeeded <- contactChangesNeeded()
+    } yield selectChanges.isDefined && changesStillNeeded.isEmpty || changesStillNeeded.contains(Set.empty)
+  }
+
+  def isJourneyComplete()(
+    implicit request: AuthRequestWithAgentInfo[_], acaConnector: AgentClientAuthorisationConnector, hc: HeaderCarrier, ec: ExecutionContext
+  ): Future[DesiDetailsJourney] = {
+    for {
+      submittedBy <- sessionCache.get[YourDetails](DRAFT_SUBMITTED_BY)
+      desiDetailsData <- sessionCache.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS)
+      unchangedDetails <- contactChangesNeeded()
+    } yield desiDetailsData match {
+      case Some(details) => {
+        (unchangedDetails, submittedBy, details.otherServices) match {
+          case (Some(changes: Set[String]), Some(_: YourDetails), _: OtherServices) if changes.isEmpty =>
+            DesiDetailsJourney(None, journeyComplete = true)
+          case (None, Some(_: YourDetails), _: OtherServices) =>
+            DesiDetailsJourney(None, journeyComplete = true)
+          case _ =>
+            DesiDetailsJourney(unchangedDetails, journeyComplete = false)
+        }
+      }
+      case _ => DesiDetailsJourney(unchangedDetails, journeyComplete = false)
+    }
+  }
 
 }

@@ -18,60 +18,72 @@ package uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util
 
 import play.api.mvc.{AnyContentAsEmpty, Result}
 import play.api.test.FakeRequest
-import play.api.test.Helpers.{await, defaultAwaitTimeout}
-import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.NextPageSelector.{getNextPage, moveToCheckYourAnswersFlow}
-import uk.gov.hmrc.agentservicesaccount.controllers.{CURRENT_SELECTED_CHANGES, PREVIOUS_SELECTED_CHANGES, desiDetails}
+import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
+import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.NextPageSelector.getNextPage
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails._
+import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress}
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.stubs.SessionServiceMocks
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 
-import scala.concurrent.{ExecutionContextExecutor, Future}
+import scala.concurrent.ExecutionContextExecutor
 
 class NextPageSelectorSpec extends BaseISpec with SessionServiceMocks {
   implicit val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
   implicit val ec: ExecutionContextExecutor = scala.concurrent.ExecutionContext.global
   implicit val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
+  val mockJourney1: DesiDetailsJourney = DesiDetailsJourney(Some(Set("businessName")), journeyComplete = false)
+  val mockJourney2: DesiDetailsJourney = DesiDetailsJourney(Some(Set("email", "telephone")), journeyComplete = false)
+  val mockJourney3: DesiDetailsJourney = DesiDetailsJourney(Some(Set("businessName", "email", "telephone")), journeyComplete = false)
+  val mockJourneyAll: DesiDetailsJourney = DesiDetailsJourney(Some(Set("businessName", "address", "email", "telephone")), journeyComplete = false)
+  val mockJourneyComplete: DesiDetailsJourney = DesiDetailsJourney(None, journeyComplete = true)
+  val mockJourneyContactComplete: DesiDetailsJourney = DesiDetailsJourney(None, journeyComplete = false)
+  val oldAgencyDetails: AgencyDetails = AgencyDetails(
+    agencyName = Some("Old Name"),
+    agencyAddress = Some(BusinessAddress("Old Address", None, None, None, Some("ZZ9Z 9TT"), "GB")),
+    agencyEmail = Some("old@test.com"),
+    agencyTelephone = Some("01234 55678")
+  )
+  val completeNewAgencyDetails: AgencyDetails = AgencyDetails(
+    agencyName = Some("New Name"),
+    agencyAddress = Some(BusinessAddress("New Address", None, None, None, Some("ZZ9Z 9TT"), "GB")),
+    agencyEmail = Some("new@test.com"),
+    agencyTelephone = Some("07999 999999")
+  )
+
+  val mockDesiDetails: DesignatoryDetails = DesignatoryDetails(
+    agencyDetails = oldAgencyDetails,
+    otherServices = OtherServices(
+      saChanges = SaChanges(applyChanges = false, None),
+      ctChanges = CtChanges(applyChanges = false, None)
+    )
+  )
+
   "getNextPage with no previous selections" should {
     "redirect to first page in list" when {
       "all pages selected" in {
-        expectGetSessionItem[Set[String]](PREVIOUS_SELECTED_CHANGES, Set.empty, 1)
-        expectGetSessionItem[Set[String]](CURRENT_SELECTED_CHANGES, Set("businessName", "address", "email", "telephone"), 1)
-
-        val response: Future[Result] = getNextPage(mockSessionCacheService)
-
-        redirectLocation(await(response)) shouldBe Some(desiDetails.routes.UpdateNameController.showPage.url)
+        val response: Result = getNextPage(mockJourneyAll, "selectChanges")
+        redirectLocation(response) shouldBe Some(desiDetails.routes.UpdateNameController.showPage.url)
       }
 
       "some pages selected" in {
-        expectGetSessionItem[Set[String]](PREVIOUS_SELECTED_CHANGES, Set.empty, 1)
-        expectGetSessionItem[Set[String]](CURRENT_SELECTED_CHANGES, Set("email", "telephone"), 1)
-
-        val response: Future[Result] = getNextPage(mockSessionCacheService)
-
-        redirectLocation(await(response)) shouldBe Some(desiDetails.routes.UpdateEmailAddressController.showChangeEmailAddress.url)
+        val response: Result = getNextPage(mockJourney2, "selectChanges")
+        redirectLocation(response) shouldBe Some(desiDetails.routes.UpdateEmailAddressController.showChangeEmailAddress.url)
       }
     }
 
     "redirect to next page in list" when {
       "given a page part way through the list" in {
-        expectGetSessionItem[Set[String]](PREVIOUS_SELECTED_CHANGES, Set.empty, 1)
-        expectGetSessionItem[Set[String]](CURRENT_SELECTED_CHANGES, Set("businessName", "address", "email", "telephone"), 1)
-
-        val response: Future[Result] = getNextPage(mockSessionCacheService, "email")
-
-        redirectLocation(await(response)) shouldBe Some(desiDetails.routes.UpdateTelephoneController.showPage.url)
+        val response: Result = getNextPage(mockJourneyAll.copy(contactChangesNeeded = Some(Set("telephone"))), "email")
+        redirectLocation(response) shouldBe Some(desiDetails.routes.UpdateTelephoneController.showPage.url)
       }
     }
 
     "redirect to ApplySACodeChanges page" when {
       "given the last page in list" in {
-        expectGetSessionItem[Set[String]](PREVIOUS_SELECTED_CHANGES, Set.empty, 1)
-        expectGetSessionItem[Set[String]](CURRENT_SELECTED_CHANGES, Set("businessName", "address", "email", "telephone"), 1)
-
-        val response: Future[Result] = getNextPage(mockSessionCacheService, "telephone")
-
-        redirectLocation(await(response)) shouldBe Some(desiDetails.routes.ApplySACodeChangesController.showPage.url)
+        val response: Result = getNextPage(mockJourneyContactComplete, "telephone")
+        redirectLocation(response) shouldBe Some(desiDetails.routes.ApplySACodeChangesController.showPage.url)
       }
     }
   }
@@ -79,70 +91,36 @@ class NextPageSelectorSpec extends BaseISpec with SessionServiceMocks {
   "getNextPage with previous selections" should {
     "redirect to first non-previously selected page in list" when {
       "all pages selected" in {
-        expectGetSessionItem[Set[String]](PREVIOUS_SELECTED_CHANGES, Set("businessName", "address"), 1)
-        expectGetSessionItem[Set[String]](CURRENT_SELECTED_CHANGES, Set("businessName", "address", "email", "telephone"), 1)
 
-        val response: Future[Result] = getNextPage(mockSessionCacheService)
+        val response: Result = getNextPage(mockJourneyContactComplete, "address")
 
-        redirectLocation(await(response)) shouldBe Some(desiDetails.routes.UpdateEmailAddressController.showChangeEmailAddress.url)
+        redirectLocation(response) shouldBe Some(desiDetails.routes.UpdateEmailAddressController.showChangeEmailAddress.url)
       }
     }
 
     "redirect to next non-previously selected page in list" when {
       "given a page part way through the list" in {
-        expectGetSessionItem[Set[String]](PREVIOUS_SELECTED_CHANGES, Set("businessName", "email"), 1)
-        expectGetSessionItem[Set[String]](CURRENT_SELECTED_CHANGES, Set("businessName", "address", "email", "telephone"), 1)
-
-        val response: Future[Result] = getNextPage(mockSessionCacheService, "address")
-
-        redirectLocation(await(response)) shouldBe Some(desiDetails.routes.UpdateTelephoneController.showPage.url)
+        val response: Result = getNextPage(mockJourneyAll, "address")
+        redirectLocation(response) shouldBe Some(desiDetails.routes.UpdateTelephoneController.showPage.url)
       }
 
       "given a page that was part of the previous journey" in {
-        expectGetSessionItem[Set[String]](PREVIOUS_SELECTED_CHANGES, Set("businessName", "email"), 1)
-        expectGetSessionItem[Set[String]](CURRENT_SELECTED_CHANGES, Set("businessName", "email", "telephone"), 1)
-
-        val response: Future[Result] = getNextPage(mockSessionCacheService, "email")
-
-        redirectLocation(await(response)) shouldBe Some(desiDetails.routes.UpdateTelephoneController.showPage.url)
+        val response: Result = getNextPage(mockJourney2, "email")
+        redirectLocation(response) shouldBe Some(desiDetails.routes.UpdateTelephoneController.showPage.url)
       }
 
       "given a page that shouldn't have been part of journey" in {
-        expectGetSessionItem[Set[String]](PREVIOUS_SELECTED_CHANGES, Set("businessName", "email"), 1)
-        expectGetSessionItem[Set[String]](CURRENT_SELECTED_CHANGES, Set("businessName", "email", "telephone"), 1)
-
-        val response: Future[Result] = getNextPage(mockSessionCacheService, "address")
-
-        redirectLocation(await(response)) shouldBe Some(desiDetails.routes.UpdateTelephoneController.showPage.url)
+        val response: Result = getNextPage(mockJourney2, "address")
+        redirectLocation(response) shouldBe Some(desiDetails.routes.UpdateTelephoneController.showPage.url)
       }
     }
 
     "redirect to Check Your Answers page" when {
       "given the last page in list" in {
-        expectGetSessionItem[Set[String]](PREVIOUS_SELECTED_CHANGES, Set("businessName", "email"), 1)
-        expectGetSessionItem[Set[String]](CURRENT_SELECTED_CHANGES, Set("businessName", "address", "email", "telephone"), 1)
-
-        val response: Future[Result] = getNextPage(mockSessionCacheService, "telephone")
-
-        redirectLocation(await(response)) shouldBe Some(desiDetails.routes.CheckYourAnswersController.showPage.url)
+        val response: Result = getNextPage(mockJourneyComplete, "telephone")
+        redirectLocation(response) shouldBe Some(desiDetails.routes.CheckYourAnswersController.showPage.url)
       }
     }
   }
 
-  "moveToCheckYourAnswersFlow" should {
-    "return the current selected items as previously selected items" when {
-      "given a set of currently selected items" in {
-
-        val currentlySelectedItems: Set[String] = Set("address", "email")
-
-        expectGetSessionItem[Set[String]](CURRENT_SELECTED_CHANGES, currentlySelectedItems, 1)
-
-        for {
-          previouslySelectedItems <- moveToCheckYourAnswersFlow(mockSessionCacheService).map{
-            case (string1, string2) => Set(string1, string2)
-          }
-        } yield  previouslySelectedItems shouldBe currentlySelectedItems
-      }
-    }
-  }
 }

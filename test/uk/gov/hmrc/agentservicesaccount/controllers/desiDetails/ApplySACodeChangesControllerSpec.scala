@@ -77,7 +77,7 @@ class ApplySACodeChangesControllerSpec extends PlaySpec
       mockDraftDetailsService,
       mockView,
       cc
-    )(mockAppConfig, ec, mockPendingChangeRequestRepository)
+    )(mockAppConfig, ec, mockPendingChangeRequestRepository, mockAgentClientAuthorisationConnector)
   }
 
   "showPage" should {

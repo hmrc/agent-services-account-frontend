@@ -24,15 +24,13 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
-import play.api.mvc.{Action, AnyContent, AnyContentAsFormUrlEncoded, Result}
+import play.api.mvc.{Action, AnyContent, AnyContentAsEmpty, AnyContentAsFormUrlEncoded, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
-import uk.gov.hmrc.agentservicesaccount.connectors.{AddressLookupConnector, AgentClientAuthorisationConnector, EmailVerificationConnector}
+import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.{CURRENT_SELECTED_CHANGES, DRAFT_NEW_CONTACT_DETAILS, DRAFT_SUBMITTED_BY, desiDetails}
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest
-import uk.gov.hmrc.agentservicesaccount.models.addresslookup.{ConfirmedResponseAddress, ConfirmedResponseAddressDetails, Country, JourneyConfigV2}
-import uk.gov.hmrc.agentservicesaccount.models.desiDetails.YourDetails
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.support.{TestConstants, UnitSpec}
@@ -52,23 +50,9 @@ class UpdateTelephoneControllerSpec extends UnitSpec
   with MockFactory
   with TestConstants {
 
+  implicit val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
+
   private val testArn = Arn("XXARN0123456789")
-
-  private val submittedByDetails = YourDetails(
-    fullName = "John Tester",
-    telephone = "01903 209919"
-  )
-
-  private val confirmedAddressResponse = ConfirmedResponseAddress(
-    auditRef = "foo",
-    id = Some("bar"),
-    address = ConfirmedResponseAddressDetails(
-      organisation = Some("My Agency"),
-      lines = Some(Seq("26 New Street", "Telford")),
-      postcode = Some("TF5 4AA"),
-      country = Some(Country("GB", ""))
-    )
-  )
 
   private val stubAuthConnector = new AuthConnector {
     private val authJson = Json.parse(s"""{
@@ -91,8 +75,6 @@ class UpdateTelephoneControllerSpec extends UnitSpec
   val overrides = new AbstractModule() {
     override def configure(): Unit = {
       bind(classOf[AgentClientAuthorisationConnector]).toInstance(stub[AgentClientAuthorisationConnector])
-      bind(classOf[AddressLookupConnector]).toInstance(stub[AddressLookupConnector])
-      bind(classOf[EmailVerificationConnector]).toInstance(stub[EmailVerificationConnector])
       bind(classOf[PendingChangeRequestRepository]).toInstance(stub[PendingChangeRequestRepository])
       bind(classOf[AuthConnector]).toInstance(stubAuthConnector)
     }
@@ -108,12 +90,6 @@ class UpdateTelephoneControllerSpec extends UnitSpec
     val acaConnector: AgentClientAuthorisationConnector = app.injector.instanceOf[AgentClientAuthorisationConnector]
     (acaConnector.getAgentRecord()(_: HeaderCarrier, _: ExecutionContext)).when(*, *).returns(Future.successful(agentRecord))
 
-    val alfConnector: AddressLookupConnector = app.injector.instanceOf[AddressLookupConnector]
-    (alfConnector.init(_: JourneyConfigV2)(_: HeaderCarrier)).when(*, *).returns(Future.successful("mock-address-lookup-url"))
-    (alfConnector.getAddress(_: String)(_: HeaderCarrier)).when(*, *).returns(Future.successful(confirmedAddressResponse))
-
-    val evConnector: EmailVerificationConnector = app.injector.instanceOf[EmailVerificationConnector]
-
     val controller: UpdateTelephoneController = app.injector.instanceOf[UpdateTelephoneController]
     val sessionCache: SessionCacheService = app.injector.instanceOf[SessionCacheService]
     val pcodRepository: PendingChangeRequestRepository = app.injector.instanceOf[PendingChangeRequestRepository]
@@ -128,7 +104,6 @@ class UpdateTelephoneControllerSpec extends UnitSpec
           Instant.now()
         ))))
     }
-
     (pcodRepository.insert(_: PendingChangeRequest)).when(*).returns(Future.successful(()))
 
     // make sure these values are cleared from the session
@@ -145,6 +120,7 @@ class UpdateTelephoneControllerSpec extends UnitSpec
 
   "GET /manage-account/contact-details/new-telephone" should {
     "display the enter telephone number page" in new TestSetup {
+      sessionCache.put(CURRENT_SELECTED_CHANGES, Set("telephone")).futureValue
       noPendingChangesInRepo()
       val result: Future[Result] = controller.showPage()(fakeRequest())
       status(result) shouldBe OK
@@ -156,6 +132,7 @@ class UpdateTelephoneControllerSpec extends UnitSpec
     "store the new telephone number in session and redirect to apply SA code page" in new TestSetup {
       noPendingChangesInRepo()
       implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = fakeRequest("POST").withFormUrlEncodedBody("telephoneNumber" -> "01234 567 890")
+      sessionCache.put(CURRENT_SELECTED_CHANGES, Set("telephone")).futureValue
       val result: Future[Result] = controller.onSubmit()(request)
       status(result) shouldBe SEE_OTHER
       header("Location", result) shouldBe Some(desiDetails.routes.ApplySACodeChangesController.showPage.url)
@@ -165,14 +142,13 @@ class UpdateTelephoneControllerSpec extends UnitSpec
     "display an error if the data submitted is invalid" in new TestSetup {
       noPendingChangesInRepo()
       implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = fakeRequest("POST").withFormUrlEncodedBody("telephoneNumber" -> "0800 FAKE NO")
+      sessionCache.put(CURRENT_SELECTED_CHANGES, Set("telephone"))
       val result: Future[Result] = controller.onSubmit()(request)
       status(result) shouldBe BAD_REQUEST
       contentAsString(result.futureValue) should include("There is a problem")
       sessionCache.get(DRAFT_NEW_CONTACT_DETAILS).futureValue.flatMap(_.agencyDetails.agencyTelephone) shouldBe None
     }
   }
-
-
 
   "existing pending changes" should {
     "cause the user to be redirected away from any 'update' endpoints" in new TestSetup {

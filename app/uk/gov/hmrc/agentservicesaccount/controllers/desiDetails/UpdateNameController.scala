@@ -21,6 +21,7 @@ import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.DesiDetailsJourneySupport
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.NextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms
@@ -40,12 +41,16 @@ class UpdateNameController @Inject()(actions: Actions,
                                      cc: MessagesControllerComponents
                                     )(implicit appConfig: AppConfig,
                                       ec: ExecutionContext,
+                                      acaConnector: AgentClientAuthorisationConnector,
                                       pcodRepository: PendingChangeRequestRepository
                                     ) extends FrontendController(cc) with DesiDetailsJourneySupport with I18nSupport with Logging {
 
   val showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     ifChangeContactFeatureEnabledAndNoPendingChanges {
-      Future.successful(Ok(update_name(UpdateDetailsForms.businessNameForm)))
+      isContactPageRequestValid("businessName").flatMap {
+        case true => Future.successful(Ok(update_name(UpdateDetailsForms.businessNameForm)))
+        case _ => Future.successful(Redirect(routes.SelectDetailsController.showPage))
+      }
     }
   }
 
@@ -61,7 +66,7 @@ class UpdateNameController @Inject()(actions: Actions,
                 desiDetails.copy(agencyDetails = desiDetails.agencyDetails.copy(agencyName = Some(newAgencyName)))
             ).flatMap {
               _ =>
-                getNextPage(sessionCache, "businessName")
+                isJourneyComplete().flatMap(journeyComplete => Future.successful(getNextPage(journeyComplete, "businessName")))
             }
           }
         )

@@ -20,10 +20,11 @@ import play.api.Logging
 import play.api.i18n.{I18nSupport, Lang}
 import play.api.libs.json._
 import play.api.mvc._
-import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthRequestWithAgentInfo}
+import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AddressLookupConnector, AgentClientAuthorisationConnector}
 import uk.gov.hmrc.agentservicesaccount.controllers._
+import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.DesiDetailsJourneySupport
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.NextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup._
@@ -37,31 +38,17 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class ContactDetailsController @Inject()(actions: Actions,
-                                         sessionCache: SessionCacheService,
+                                         val sessionCache: SessionCacheService,
                                          draftDetailsService: DraftDetailsService,
                                          alfConnector: AddressLookupConnector,
-                                         pcodRepository: PendingChangeRequestRepository,
-                                         agentClientAuthorisationConnector: AgentClientAuthorisationConnector,
                                          change_submitted: change_submitted,
                                          beforeYouStartPage: before_you_start_page
                                         )(implicit appConfig: AppConfig,
+                                          acaConnector: AgentClientAuthorisationConnector,
+                                          pcodRepository: PendingChangeRequestRepository,
                                           cc: MessagesControllerComponents,
-                                          ec: ExecutionContext) extends FrontendController(cc) with I18nSupport with Logging {
+                                          ec: ExecutionContext) extends FrontendController(cc) with DesiDetailsJourneySupport with I18nSupport with Logging {
 
-  private def ifFeatureEnabled(action: => Future[Result]): Future[Result] = {
-    if (appConfig.enableChangeContactDetails) action else Future.successful(NotFound)
-  }
-
-  private def ifFeatureEnabledAndNoPendingChanges(action: => Future[Result])(implicit request: AuthRequestWithAgentInfo[_]): Future[Result] = {
-    ifFeatureEnabled {
-      pcodRepository.find(request.agentInfo.arn).flatMap {
-        case None => // no change is pending, we can proceed
-          action
-        case Some(_) => // there is a pending change, further changes are locked. Redirect to the base page
-          Future.successful(Redirect(desiDetails.routes.ViewContactDetailsController.showPage))
-      }
-    }
-  }
 
   val startAddressLookup: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     val continueUrl: String = {
@@ -102,7 +89,7 @@ class ContactDetailsController @Inject()(actions: Actions,
       ))
     )
 
-    ifFeatureEnabledAndNoPendingChanges {
+    ifChangeContactFeatureEnabledAndNoPendingChanges {
       alfConnector.init(alfJourneyConfig).map { addressLookupJourneyStartUrl =>
         Redirect(addressLookupJourneyStartUrl)
       }
@@ -110,7 +97,7 @@ class ContactDetailsController @Inject()(actions: Actions,
   }
 
   def finishAddressLookup(id: Option[String]): Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    ifFeatureEnabledAndNoPendingChanges {
+    ifChangeContactFeatureEnabledAndNoPendingChanges {
       id match {
         case None => Future.successful(BadRequest)
         case Some(addressJourneyId) =>
@@ -128,16 +115,16 @@ class ContactDetailsController @Inject()(actions: Actions,
               desiDetails =>
                 desiDetails.copy(agencyDetails = desiDetails.agencyDetails.copy(agencyAddress = Some(newBusinessAddress)))
             )
-            nextPage <- getNextPage(sessionCache, "address")
+            journeyComplete <- isJourneyComplete()
           } yield {
-            nextPage
+            getNextPage(journeyComplete, "address")
           }
       }
     }
   }
 
   val showChangeSubmitted: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    ifFeatureEnabled {
+    ifChangeContactDetailsFeatureEnabled {
       Future.successful(Ok(change_submitted())) // don't show if there is nothing submitted
     }
   }
@@ -145,7 +132,7 @@ class ContactDetailsController @Inject()(actions: Actions,
   def showBeforeYouStartPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     actions.ifFeatureEnabled(appConfig.enableChangeContactDetails) {
       if (request.agentInfo.isAdmin) {
-        agentClientAuthorisationConnector.getAgentRecord().map(agentRecord =>
+        acaConnector.getAgentRecord().map(agentRecord =>
           Ok(beforeYouStartPage(agentRecord.agencyDetails)))
       } else {
         Future.successful(Forbidden)

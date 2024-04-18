@@ -19,8 +19,10 @@ package uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
 import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc._
-import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthRequestWithAgentInfo}
+import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
+import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.DesiDetailsJourneySupport
 import uk.gov.hmrc.agentservicesaccount.controllers.{DRAFT_SUBMITTED_BY, desiDetails}
 import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.YourDetails
@@ -34,40 +36,31 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class YourDetailsController @Inject()(actions: Actions,
-                                      sessionCache: SessionCacheService,
-                                      pcodRepository: PendingChangeRequestRepository,
+                                      val sessionCache: SessionCacheService,
                                       updateYourDetailsView: your_details
                                      )(implicit appConfig: AppConfig,
                                        cc: MessagesControllerComponents,
-                                       ec: ExecutionContext
-                                     ) extends FrontendController(cc) with I18nSupport with Logging {
+                                       ec: ExecutionContext,
+                                       pcodRepository: PendingChangeRequestRepository,
+                                       acaConnector: AgentClientAuthorisationConnector
+                                     ) extends FrontendController(cc) with I18nSupport with DesiDetailsJourneySupport with Logging {
 
-  def ifFeatureEnabled(action: => Future[Result]): Future[Result] = {
-    if (appConfig.enableChangeContactDetails) action else Future.successful(NotFound)
-  }
-
-  private def ifFeatureEnabledAndNoPendingChanges(action: => Future[Result])(implicit request: AuthRequestWithAgentInfo[_]): Future[Result] = {
-    ifFeatureEnabled {
-      pcodRepository.find(request.agentInfo.arn).flatMap {
-        case None => // no change is pending, we can proceed
-          action
-        case Some(_) => // there is a pending change, further changes are locked. Redirect to the base page
-          Future.successful(Redirect(desiDetails.routes.ViewContactDetailsController.showPage))
-      }
-    }
-  }
 
   def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    ifFeatureEnabledAndNoPendingChanges {
-      sessionCache.get[YourDetails](DRAFT_SUBMITTED_BY).map {
-        case Some(data) => Ok(updateYourDetailsView(UpdateDetailsForms.yourDetailsForm.fill(data)))
-        case _ => Ok(updateYourDetailsView(UpdateDetailsForms.yourDetailsForm))
+    ifChangeContactFeatureEnabledAndNoPendingChanges {
+      isOtherServicesPageRequestValid().flatMap {
+        case true => sessionCache.get[YourDetails](DRAFT_SUBMITTED_BY).map {
+          case Some(data) => Ok(updateYourDetailsView(UpdateDetailsForms.yourDetailsForm.fill(data)))
+          case _ => Ok(updateYourDetailsView(UpdateDetailsForms.yourDetailsForm))
+        }
+        case _ => Future.successful(Redirect(routes.ViewContactDetailsController.showPage))
       }
+
     }
   }
 
   def onSubmit: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    ifFeatureEnabledAndNoPendingChanges {
+    ifChangeContactFeatureEnabledAndNoPendingChanges {
       UpdateDetailsForms.yourDetailsForm
         .bindFromRequest()
         .fold(

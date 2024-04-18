@@ -21,7 +21,9 @@ import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.DesiDetailsJourneySupport
+import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.NextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.controllers.{EMAIL_PENDING_VERIFICATION, desiDetails}
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.{EmailHasNotChanged, EmailIsAlreadyVerified, EmailIsLocked, EmailNeedsVerifying}
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
@@ -35,11 +37,12 @@ import scala.concurrent.{ExecutionContext, Future}
 class EmailVerificationEndpointController @Inject()(actions: Actions,
                                                     val sessionCache: SessionCacheService,
                                                     draftDetailsService: DraftDetailsService,
-                                                    emailVerificationService: EmailVerificationService,
                                                     cc: MessagesControllerComponents
                                                    )(implicit appConfig: AppConfig,
                                                      ec: ExecutionContext,
-                                                     pcodRepository: PendingChangeRequestRepository
+                                                     pcodRepository: PendingChangeRequestRepository,
+                                                     acaConnector: AgentClientAuthorisationConnector,
+                                                     ev: EmailVerificationService
                                                    ) extends FrontendController(cc) with DesiDetailsJourneySupport with I18nSupport with Logging {
 
 
@@ -48,43 +51,57 @@ class EmailVerificationEndpointController @Inject()(actions: Actions,
     actions.authActionCheckSuspend.async {
       implicit request =>
         ifChangeContactFeatureEnabledAndNoPendingChanges {
-          sessionCache.get(EMAIL_PENDING_VERIFICATION).flatMap {
-            case Some(email) =>
-              val credId = request.agentInfo.credentials.map(_.providerId).getOrElse(throw new RuntimeException("no available cred id"))
-              emailVerificationService.getEmailVerificationStatus(email, credId).flatMap {
-                case EmailIsAlreadyVerified =>
-                  for {
-                    _ <- draftDetailsService.updateDraftDetails(
+          isContactPageRequestValid("email").flatMap {
+            case true => sessionCache.get(EMAIL_PENDING_VERIFICATION).flatMap {
+              case Some(email) =>
+                val credId = request.agentInfo.credentials.map(_.providerId).getOrElse(throw new RuntimeException("no available cred id"))
+                ev.getEmailVerificationStatus(email, credId).flatMap {
+                  case EmailIsAlreadyVerified =>
+                    for {
+                      _ <- draftDetailsService.updateDraftDetails(
+                        desiDetails =>
+                          desiDetails.copy(agencyDetails = desiDetails.agencyDetails.copy(agencyEmail = Some(email)))
+                      ).flatMap {
+                        _ => sessionCache.delete(EMAIL_PENDING_VERIFICATION)
+                      }
+                      journey <- isJourneyComplete()
+                    } yield
+                      if (journey.journeyComplete) Redirect(desiDetails.routes.CheckYourAnswersController.showPage)
+                      else getNextPage(journey, "email")
+                  case EmailIsLocked =>
+                    Future.successful(Redirect(desiDetails.routes.UpdateEmailAddressController.showEmailLocked))
+                  case EmailHasNotChanged =>
+                    draftDetailsService.updateDraftDetails(
                       desiDetails =>
                         desiDetails.copy(agencyDetails = desiDetails.agencyDetails.copy(agencyEmail = Some(email)))
-                    )
-                    _ <- sessionCache.delete(EMAIL_PENDING_VERIFICATION)
-                  } yield Redirect(desiDetails.routes.CheckYourAnswersController.showPage)
-                case EmailIsLocked =>
-                  Future.successful(Redirect(desiDetails.routes.UpdateEmailAddressController.showEmailLocked))
-                case EmailHasNotChanged =>
-                  draftDetailsService.updateDraftDetails(
-                    desiDetails =>
-                      desiDetails.copy(agencyDetails = desiDetails.agencyDetails.copy(agencyEmail = Some(email)))
-                  ).map {
-                    _ =>
-                      Redirect(desiDetails.routes.CheckYourAnswersController.showPage)
-                  }
-                case EmailNeedsVerifying =>
-                  for {
-                    _ <- sessionCache.put(EMAIL_PENDING_VERIFICATION, email)
-                    redirectUri <- emailVerificationService.initialiseEmailVerificationJourney(
-                      credId,
-                      email,
-                      messagesApi.preferred(request).lang
-                    )
-                  } yield Redirect(redirectUri)
-              }
-            case None => // this should not happen but if it does, return a graceful fallback response
-              Future.successful(Redirect(desiDetails.routes.CheckYourAnswersController.showPage))
+                    ).flatMap {
+                      _ =>
+                        isJourneyComplete().map { journey => {
+                          if (journey.journeyComplete) Redirect(desiDetails.routes.CheckYourAnswersController.showPage)
+                          else getNextPage(journey, "email")
+                        }
+                        }
+                    }
+                  case EmailNeedsVerifying =>
+                    for {
+                      _ <- sessionCache.put(EMAIL_PENDING_VERIFICATION, email)
+                      redirectUri <- ev.initialiseEmailVerificationJourney(
+                        credId,
+                        email,
+                        messagesApi.preferred(request).lang
+                      )
+                    } yield Redirect(redirectUri)
+                }
+              case None =>
+                isJourneyComplete().map { journey => {
+                  if (journey.journeyComplete) Redirect(desiDetails.routes.CheckYourAnswersController.showPage)
+                  else getNextPage(journey, "email")
+                }
+                }
+            }
+            case _ => Future.successful(Redirect(routes.ViewContactDetailsController.showPage))
           }
         }
     }
-
 
 }

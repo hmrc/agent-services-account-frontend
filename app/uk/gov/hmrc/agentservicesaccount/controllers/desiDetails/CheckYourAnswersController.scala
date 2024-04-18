@@ -22,7 +22,7 @@ import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector}
-import uk.gov.hmrc.agentservicesaccount.controllers._
+import uk.gov.hmrc.agentservicesaccount.controllers.{desiDetails, _}
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util._
 import uk.gov.hmrc.agentservicesaccount.models.{PendingChangeOfDetails, PendingChangeRequest}
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{DesignatoryDetails, YourDetails}
@@ -47,7 +47,6 @@ class CheckYourAnswersController @Inject()(actions: Actions,
                                             ec: ExecutionContext,
                                             pcodRepository: PendingChangeRequestRepository
                                           ) extends FrontendController(cc) with DesiDetailsJourneySupport with I18nSupport with Logging {
-
 
   def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     ifChangeContactFeatureEnabledAndNoPendingChanges {

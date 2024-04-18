@@ -72,9 +72,8 @@ class EmailVerificationEndpointControllerSpec extends PlaySpec
       mockActions,
       mockSessionCache,
       mockDraftDetailsService,
-      mockEmailVerificationService,
       cc
-    )(mockAppConfig, ec, mockPendingChangeRequestRepository)
+    )(mockAppConfig, ec, mockPendingChangeRequestRepository, mockAgentClientAuthorisationConnector, mockEmailVerificationService)
   }
 
 

@@ -20,6 +20,7 @@ import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.DesiDetailsJourneySupport
 import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.SaChanges
@@ -39,12 +40,16 @@ class ApplySACodeChangesController @Inject()(actions: Actions,
                                              cc: MessagesControllerComponents
                                             )(implicit appConfig: AppConfig,
                                               ec: ExecutionContext,
-                                              pcodRepository: PendingChangeRequestRepository
+                                              pcodRepository: PendingChangeRequestRepository,
+                                              acaConnector: AgentClientAuthorisationConnector
                                             ) extends FrontendController(cc) with DesiDetailsJourneySupport with I18nSupport {
 
   def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     ifChangeContactFeatureEnabledAndNoPendingChanges {
-      Future.successful(Ok(applySaCodeChangesView(UpdateDetailsForms.applySaCodeChangesForm)))
+      isOtherServicesPageRequestValid().flatMap {
+        case true => Future.successful(Ok(applySaCodeChangesView(UpdateDetailsForms.applySaCodeChangesForm)))
+        case _ => Future.successful(Redirect(routes.ViewContactDetailsController.showPage))
+      }
     }
   }
 
@@ -58,9 +63,12 @@ class ApplySACodeChangesController @Inject()(actions: Actions,
             applySaCodeChanges =>
               draftDetailsService.updateDraftDetails(
                 _.copy(otherServices = newDesiDetails.otherServices.copy(saChanges = SaChanges(applySaCodeChanges.apply, None)))
-              ).map { _ =>
-                if (applySaCodeChanges.apply) Redirect(routes.EnterSACodeController.showPage)
-                else Redirect(routes.ApplyCTCodeChangesController.showPage)
+              ).flatMap { _ =>
+                if(applySaCodeChanges.apply) Future.successful(Redirect(routes.EnterSACodeController.showPage))
+                else isJourneyComplete().map(journey =>
+                  if(journey.journeyComplete) Redirect(routes.CheckYourAnswersController.showPage)
+                  else Redirect(routes.ApplyCTCodeChangesController.showPage)
+                )
               }
           )
       }
