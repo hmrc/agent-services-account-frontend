@@ -51,7 +51,7 @@
                 s"""${
                     agencyDetails.agencyAddress.map(
                         ba => List(Some(ba.addressLine1), ba.addressLine2, ba.addressLine3, ba.addressLine4, ba.postalCode, Some(ba.countryCode)).flatten
-                    ).map(_.mkString("<br>")).getOrElse(msgs("contact-details.summary-list.none"))
+                    ).map(_.mkString("</br>")).getOrElse(msgs("contact-details.summary-list.none"))
                 }""")
         ),
         actions = if(forPdf) None else Some(Actions(
