@@ -16,10 +16,12 @@
 
 package uk.gov.hmrc.agentservicesaccount.repository
 
+import org.scalamock.scalatest.MockFactory
 import org.scalatest.concurrent.PatienceConfiguration.{Interval, Timeout}
 import org.scalatest.concurrent.{Eventually, IntegrationPatience, ScalaFutures}
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.time.{Seconds, Span}
+import play.api.Configuration
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest
 import uk.gov.hmrc.agentservicesaccount.support.UnitSpec
@@ -29,11 +31,17 @@ import java.time.Instant
 import java.time.temporal.ChronoUnit
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class PendingChangeRequestRepositorySpec extends UnitSpec with Matchers  with ScalaFutures with IntegrationPatience with Eventually with CleanMongoCollectionSupport {
+class PendingChangeRequestRepositorySpec extends UnitSpec
+  with Matchers
+  with ScalaFutures
+  with IntegrationPatience
+  with Eventually
+  with CleanMongoCollectionSupport with MockFactory {
 
   private val testArn = Arn("XXARN0123456789")
   private val anotherArn = Arn("XZARN1111111111")
 
+  val configuration: Configuration = Configuration.from(Map("mongodb.desi-details.lockout-period" -> 5))
 
   private def aPendingChangeOfDetails(timeSubmitted: Instant = Instant.now()) = PendingChangeRequest(
     arn = testArn,
@@ -42,14 +50,14 @@ class PendingChangeRequestRepositorySpec extends UnitSpec with Matchers  with Sc
 
   "PendingChangeRequestRepositoryImpl" should {
     "store a pending change of details" in {
-      val pcodRepository: PendingChangeRequestRepositoryImpl = new PendingChangeRequestRepositoryImpl(mongoComponent)
+      val pcodRepository: PendingChangeRequestRepositoryImpl = new PendingChangeRequestRepositoryImpl(mongoComponent, configuration)
       val pcod = aPendingChangeOfDetails()
       pcodRepository.insert(pcod).futureValue
       // verify document is stored
       pcodRepository.collection.find().toFuture().futureValue shouldBe Seq(pcod)
     }
     "retrieve a pending change of details with the correct arn" in {
-      val pcodRepository: PendingChangeRequestRepositoryImpl = new PendingChangeRequestRepositoryImpl(mongoComponent)
+      val pcodRepository: PendingChangeRequestRepositoryImpl = new PendingChangeRequestRepositoryImpl(mongoComponent,configuration)
       val pcod = aPendingChangeOfDetails()
       val anotherPcod = aPendingChangeOfDetails().copy(arn = anotherArn)
       pcodRepository.collection.insertMany(Seq(pcod, anotherPcod)).toFuture().futureValue
@@ -58,7 +66,7 @@ class PendingChangeRequestRepositorySpec extends UnitSpec with Matchers  with Sc
     }
     "expire documents with timestamps older than the expiry period (28 days)" in {
       // Note: Slow test but may be worth having due to how easy it is to end up with a silently-failing TTL index on mongo
-      val pcodRepository: PendingChangeRequestRepositoryImpl = new PendingChangeRequestRepositoryImpl(mongoComponent)
+      val pcodRepository: PendingChangeRequestRepositoryImpl = new PendingChangeRequestRepositoryImpl(mongoComponent, configuration)
       val oldPcod = aPendingChangeOfDetails().copy(timeSubmitted = Instant.now().minus(30, ChronoUnit.DAYS))
       pcodRepository.collection.insertOne(oldPcod).toFuture().futureValue
 
