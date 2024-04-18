@@ -23,7 +23,7 @@ import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.DesiDetailsJourneySupport
 import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.SaChanges
-import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
+import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
 import uk.gov.hmrc.agentservicesaccount.services.{DraftDetailsService, SessionCacheService}
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details.apply_sa_code_changes
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -39,7 +39,7 @@ class ApplySACodeChangesController @Inject()(actions: Actions,
                                              cc: MessagesControllerComponents
                                             )(implicit appConfig: AppConfig,
                                               ec: ExecutionContext,
-                                              pcodRepository: PendingChangeOfDetailsRepository
+                                              pcodRepository: PendingChangeRequestRepository
                                             ) extends FrontendController(cc) with DesiDetailsJourneySupport with I18nSupport {
 
   def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>

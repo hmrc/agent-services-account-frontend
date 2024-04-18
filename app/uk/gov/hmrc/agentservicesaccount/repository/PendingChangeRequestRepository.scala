@@ -21,7 +21,7 @@ import org.mongodb.scala.model.Filters.equal
 import org.mongodb.scala.model.{IndexModel, IndexOptions, Indexes, ReplaceOptions}
 import play.api.Logging
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
-import uk.gov.hmrc.agentservicesaccount.models.PendingChangeOfDetails
+import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest
 import uk.gov.hmrc.mongo.MongoComponent
 import uk.gov.hmrc.mongo.play.json.PlayMongoRepository
 
@@ -29,30 +29,30 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.duration.DAYS
 import scala.concurrent.{ExecutionContext, Future}
 
-@ImplementedBy(classOf[PendingChangeOfDetailsRepositoryImpl])
-trait PendingChangeOfDetailsRepository {
-  def find(arn: Arn): Future[Option[PendingChangeOfDetails]]
-  def insert(pcod: PendingChangeOfDetails): Future[Unit]
+@ImplementedBy(classOf[PendingChangeRequestRepositoryImpl])
+trait PendingChangeRequestRepository {
+  def find(arn: Arn): Future[Option[PendingChangeRequest]]
+  def insert(pcod: PendingChangeRequest): Future[Unit]
 }
 
 @Singleton
-class PendingChangeOfDetailsRepositoryImpl @Inject()(
+class PendingChangeRequestRepositoryImpl @Inject()(
     val mongoComponent: MongoComponent)(implicit ec: ExecutionContext)
-  extends PlayMongoRepository[PendingChangeOfDetails](
-        collectionName = "pending-change-of-details",
-        domainFormat = PendingChangeOfDetails.format,
+  extends PlayMongoRepository[PendingChangeRequest](
+        collectionName = "pending-change-request",
+        domainFormat = PendingChangeRequest.format,
         mongoComponent = mongoComponent,
         indexes = Seq(
           IndexModel(Indexes.ascending("arn"), new IndexOptions().unique(true)),
           IndexModel(Indexes.ascending("timeSubmitted"), new IndexOptions().expireAfter(28, DAYS))
         )
-  ) with PendingChangeOfDetailsRepository with Logging {
+  ) with PendingChangeRequestRepository with Logging {
 
-  def find(arn: Arn): Future[Option[PendingChangeOfDetails]] = collection
+  def find(arn: Arn): Future[Option[PendingChangeRequest]] = collection
     .find(equal("arn", arn.value))
     .headOption()
 
-  def insert(pcod: PendingChangeOfDetails): Future[Unit] = collection
+  def insert(pcod: PendingChangeRequest): Future[Unit] = collection
     .replaceOne(equal("arn", pcod.arn.value), pcod, new ReplaceOptions().upsert(true))
     .toFuture()
     .map(_ => ())

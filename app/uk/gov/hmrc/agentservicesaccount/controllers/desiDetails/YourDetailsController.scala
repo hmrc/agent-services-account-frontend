@@ -24,7 +24,7 @@ import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.{DRAFT_SUBMITTED_BY, desiDetails}
 import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.YourDetails
-import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
+import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details.your_details
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -35,7 +35,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class YourDetailsController @Inject()(actions: Actions,
                                       sessionCache: SessionCacheService,
-                                      pcodRepository: PendingChangeOfDetailsRepository,
+                                      pcodRepository: PendingChangeRequestRepository,
                                       updateYourDetailsView: your_details
                                      )(implicit appConfig: AppConfig,
                                        cc: MessagesControllerComponents,

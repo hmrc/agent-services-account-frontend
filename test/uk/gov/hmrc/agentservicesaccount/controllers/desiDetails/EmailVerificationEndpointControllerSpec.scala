@@ -29,7 +29,7 @@ import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, Age
 import uk.gov.hmrc.agentservicesaccount.controllers.EMAIL_PENDING_VERIFICATION
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.DesignatoryDetails
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.EmailIsAlreadyVerified
-import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
+import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
 import uk.gov.hmrc.agentservicesaccount.services.{DraftDetailsService, EmailVerificationService, SessionCacheService}
 import uk.gov.hmrc.agentservicesaccount.support.TestConstants
 import uk.gov.hmrc.agentservicesaccount.controllers
@@ -64,7 +64,7 @@ class EmailVerificationEndpointControllerSpec extends PlaySpec
     protected val mockActions =
       new Actions(mockAgentClientAuthorisationConnector, mockAgentAssuranceConnector, authActions, actionBuilder)
 
-    protected val mockPendingChangeOfDetailsRepository = mock[PendingChangeOfDetailsRepository]
+    protected val mockPendingChangeRequestRepository = mock[PendingChangeRequestRepository]
     protected val mockSessionCache: SessionCacheService = mock[SessionCacheService]
     protected val cc: MessagesControllerComponents = stubMessagesControllerComponents()
 
@@ -74,7 +74,7 @@ class EmailVerificationEndpointControllerSpec extends PlaySpec
       mockDraftDetailsService,
       mockEmailVerificationService,
       cc
-    )(mockAppConfig, ec, mockPendingChangeOfDetailsRepository)
+    )(mockAppConfig, ec, mockPendingChangeRequestRepository)
   }
 
 
@@ -88,7 +88,7 @@ class EmailVerificationEndpointControllerSpec extends PlaySpec
 
       mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
-      mockPendingChangeOfDetailsRepository.find(arn) returns Future.successful(None)
+      mockPendingChangeRequestRepository.find(arn) returns Future.successful(None)
 
       mockSessionCache.get[String](EMAIL_PENDING_VERIFICATION)(*[Reads[String]], *[Request[Any]]) returns Future.successful(Some("new@email.com"))
 

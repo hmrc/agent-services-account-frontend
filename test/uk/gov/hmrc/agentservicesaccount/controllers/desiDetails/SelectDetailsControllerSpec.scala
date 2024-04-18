@@ -30,9 +30,9 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.{CURRENT_SELECTED_CHANGES, DRAFT_NEW_CONTACT_DETAILS, EMAIL_PENDING_VERIFICATION, desiDetails}
-import uk.gov.hmrc.agentservicesaccount.models.PendingChangeOfDetails
+import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.YourDetails
-import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
+import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.support.{TestConstants, UnitSpec}
 import uk.gov.hmrc.auth.core.AuthConnector
@@ -79,7 +79,7 @@ class SelectDetailsControllerSpec extends UnitSpec
   val overrides: AbstractModule = new AbstractModule() {
     override def configure(): Unit = {
       bind(classOf[AgentClientAuthorisationConnector]).toInstance(stub[AgentClientAuthorisationConnector])
-      bind(classOf[PendingChangeOfDetailsRepository]).toInstance(stub[PendingChangeOfDetailsRepository])
+      bind(classOf[PendingChangeRequestRepository]).toInstance(stub[PendingChangeRequestRepository])
       bind(classOf[AuthConnector]).toInstance(stubAuthConnector)
     }
   }
@@ -96,24 +96,20 @@ class SelectDetailsControllerSpec extends UnitSpec
 
     val selectDetailsController: SelectDetailsController = app.injector.instanceOf[SelectDetailsController]
     val sessionCache: SessionCacheService = app.injector.instanceOf[SessionCacheService]
-    val pcodRepository: PendingChangeOfDetailsRepository = app.injector.instanceOf[PendingChangeOfDetailsRepository]
+    val pcodRepository: PendingChangeRequestRepository = app.injector.instanceOf[PendingChangeRequestRepository]
 
     def noPendingChangesInRepo(): Unit = {
       (pcodRepository.find(_: Arn)).when(*).returns(Future.successful(None))
     }
     def pendingChangesExistInRepo(): Unit = {
       (pcodRepository.find(_: Arn)).when(*).returns(Future.successful(Some(
-        PendingChangeOfDetails(
+        PendingChangeRequest(
           testArn,
-          agencyDetails,
-          agencyDetails,
-          emptyOtherServices,
-          Instant.now(),
-          submittedByDetails
+          Instant.now()
         ))))
     }
 
-    (pcodRepository.insert(_: PendingChangeOfDetails)).when(*).returns(Future.successful(()))
+    (pcodRepository.insert(_: PendingChangeRequest)).when(*).returns(Future.successful(()))
 
     // make sure these values are cleared from the session
     sessionCache.delete(DRAFT_NEW_CONTACT_DETAILS)(fakeRequest()).futureValue

@@ -26,7 +26,7 @@ import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.NextPageSel
 import uk.gov.hmrc.agentservicesaccount.controllers.{CURRENT_SELECTED_CHANGES, PREVIOUS_SELECTED_CHANGES, ToFuture}
 import uk.gov.hmrc.agentservicesaccount.forms.SelectChangesForm
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.SelectChanges
-import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeOfDetailsRepository
+import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details.select_changes
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -41,7 +41,7 @@ class SelectDetailsController @Inject()(actions: Actions,
                                        )(implicit appConfig: AppConfig,
                                          cc: MessagesControllerComponents,
                                          ec: ExecutionContext,
-                                         pcodRepository: PendingChangeOfDetailsRepository
+                                         pcodRepository: PendingChangeRequestRepository
                                        ) extends FrontendController(cc) with DesiDetailsJourneySupport with I18nSupport with Logging {
 
   def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
