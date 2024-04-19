@@ -76,10 +76,9 @@ class AmlsNewSupervisoryBodyController @Inject()(actions: Actions,
       y = journey.newAmlsBody.contains(answer)
     } yield x && y
 
-
   private def nextPage(cya: Boolean, updatedJourney: UpdateAmlsJourney, existingJourney: UpdateAmlsJourney): String = {
     if (cya) {
-      if(updatedJourney.isHmrc && updatedJourney.newAmlsBody != existingJourney.newAmlsBody)
+      if(updatedJourney.isHmrc && !existingJourney.newAmlsBody.exists(_.contains("HMRC")))
         routes.EnterRegistrationNumberController.showPage(cya).url
       else
       routes.CheckYourAnswersController.showPage.url

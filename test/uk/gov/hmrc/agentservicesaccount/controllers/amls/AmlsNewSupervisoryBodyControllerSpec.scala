@@ -71,7 +71,10 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
     newExpirationDate = Some(LocalDate.parse("2024-10-10"))
   )
 
-  private val amlsBodies = Map("ACCA" -> "Association of Certified Chartered Accountants")
+  private val amlsBodies = Map(
+    "ACCA" -> "Association of Certified Chartered Accountants",
+    "HMRC" -> "HM Revenue and Customs (HMRC)"
+  )
 
 
   trait Setup {
@@ -186,6 +189,67 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
 
       val result: Future[Result] = TestController.onSubmit(cya = true)(
         FakeRequest("POST", "/").withFormUrlEncodedBody("body" -> "ACCA"))
+
+      status(result) mustBe SEE_OTHER
+      Helpers.redirectLocation(result).get mustBe routes.CheckYourAnswersController.showPage.url
+    }
+
+    "return 303 SEE_OTHER to /enter-registration-number after CYA when body has changed to HMRC" in new Setup {
+
+      mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
+        *[HeaderCarrier],
+        *[ExecutionContext]) returns authResponse
+
+      mockAppConfig.enableNonHmrcSupervisoryBody returns true
+
+      mockAmlsLoader.load(*[String]) returns amlsBodies
+
+      mockAmlsJourneySessionRepository.getFromSession(dataKey)(*[Reads[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful(Some(ukAmlsJourney))
+
+      mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+
+      mockAmlsJourneySessionRepository.putSession(
+        dataKey, ukAmlsJourney.copy(
+          newAmlsBody = Some("HM Revenue and Customs (HMRC)"),
+          isAmlsBodyStillTheSame = Some(false))
+      )(*[Writes[UpdateAmlsJourney]], *[Request[Any]]
+      ) returns Future.successful((SessionKeys.sessionId -> "session-123"))
+
+      mockView.apply(*[Form[String]], *[Map[String, String]], isUk = true, *[Boolean])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+
+      val result: Future[Result] = TestController.onSubmit(cya = true)(
+        FakeRequest("POST", "/").withFormUrlEncodedBody("body" -> "HMRC"))
+
+      status(result) mustBe SEE_OTHER
+      Helpers.redirectLocation(result).get mustBe routes.EnterRegistrationNumberController.showPage(true).url
+    }
+
+    "return 303 SEE_OTHER to /check-your-answers after CYA when body is still HMRC" in new Setup {
+
+      mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
+        *[HeaderCarrier],
+        *[ExecutionContext]) returns authResponse
+
+      mockAppConfig.enableNonHmrcSupervisoryBody returns true
+
+      mockAmlsLoader.load(*[String]) returns amlsBodies
+
+      mockAmlsJourneySessionRepository.getFromSession(dataKey)(*[Reads[UpdateAmlsJourney]], *[Request[Any]]
+      ) returns Future.successful(Some(ukAmlsJourney.copy(newAmlsBody = Some("HMRC"))))
+
+      mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+
+      mockAmlsJourneySessionRepository.putSession(
+        dataKey, ukAmlsJourney.copy(
+          newAmlsBody = Some("HM Revenue and Customs (HMRC)"),
+          isAmlsBodyStillTheSame = Some(true))
+      )(*[Writes[UpdateAmlsJourney]], *[Request[Any]]
+      ) returns Future.successful((SessionKeys.sessionId -> "session-123"))
+
+      mockView.apply(*[Form[String]], *[Map[String, String]], isUk = true, *[Boolean])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+
+      val result: Future[Result] = TestController.onSubmit(cya = true)(
+        FakeRequest("POST", "/").withFormUrlEncodedBody("body" -> "HMRC"))
 
       status(result) mustBe SEE_OTHER
       Helpers.redirectLocation(result).get mustBe routes.CheckYourAnswersController.showPage.url
