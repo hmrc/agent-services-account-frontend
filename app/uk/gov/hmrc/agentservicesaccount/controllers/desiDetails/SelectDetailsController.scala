@@ -22,7 +22,7 @@ import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthRequestWithAgentInfo}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
-import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.{CurrentAgencyDetails, DesiDetailsJourneySupport}
+import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.DesiDetailsJourneySupport
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.NextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.controllers.{CURRENT_SELECTED_CHANGES, DRAFT_NEW_CONTACT_DETAILS, ToFuture}
 import uk.gov.hmrc.agentservicesaccount.forms.SelectChangesForm
@@ -84,12 +84,13 @@ class SelectDetailsController @Inject()(actions: Actions,
     }
   }
 
-  private def resetUncheckedAndNavigate(selectedChanges: SelectChanges)(
-    implicit request: AuthRequestWithAgentInfo[AnyContent], acaConnector: AgentClientAuthorisationConnector
-  ): Future[Future[Result]] = {
+  private def resetUncheckedAndNavigate(selectedChanges: SelectChanges)
+                                       (implicit request: AuthRequestWithAgentInfo[AnyContent]): Future[Future[Result]] = {
     for {
       desiDetailsData <- sessionCache.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS)
-      oldContactDetails <- CurrentAgencyDetails.get(acaConnector)
+      oldContactDetails <- acaConnector.getAgentRecord().map(_.agencyDetails.getOrElse {
+        throw new RuntimeException(s"Could not retrieve current agency details for ${request.agentInfo.arn} from the backend")
+      })
       journey <- isJourneyComplete()
     } yield desiDetailsData match {
       case Some(newData) =>

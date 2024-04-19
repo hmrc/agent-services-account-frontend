@@ -60,13 +60,16 @@ trait DesiDetailsJourneySupport {
       }
     }
 
-  def contactChangesNeeded()(
-    implicit request: AuthRequestWithAgentInfo[_], acaConnector: AgentClientAuthorisationConnector, hc: HeaderCarrier, ec: ExecutionContext
-  ): Future[Option[Set[String]]] = {
+  def contactChangesNeeded()(implicit request: AuthRequestWithAgentInfo[_],
+                             acaConnector: AgentClientAuthorisationConnector,
+                             hc: HeaderCarrier,
+                             ec: ExecutionContext): Future[Option[Set[String]]] = {
     for {
       selectChanges <- sessionCache.get[Set[String]](CURRENT_SELECTED_CHANGES)
       desiDetailsData <- sessionCache.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS)
-      oldContactDetails <- CurrentAgencyDetails.get(acaConnector)
+      oldContactDetails <- acaConnector.getAgentRecord().map(_.agencyDetails.getOrElse {
+        throw new RuntimeException(s"Could not retrieve current agency details for ${request.agentInfo.arn} from the backend")
+      })
     } yield desiDetailsData match {
       case Some(details) => {
         val detailsUpdated: Map[String, Boolean] = Map(

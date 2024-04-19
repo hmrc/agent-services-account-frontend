@@ -77,7 +77,9 @@ class CheckYourAnswersController @Inject()(actions: Actions,
           selectChanges <- sessionCache.get[Set[String]](CURRENT_SELECTED_CHANGES)
           optUtr <- acaConnector.getAgentRecord().map(_.uniqueTaxReference)
           submittedBy <- sessionCache.get[YourDetails](DRAFT_SUBMITTED_BY)
-          oldContactDetails <- CurrentAgencyDetails.get(acaConnector)
+          oldContactDetails <- acaConnector.getAgentRecord().map(_.agencyDetails.getOrElse {
+            throw new RuntimeException(s"Could not retrieve current agency details for ${request.agentInfo.arn} from the backend")
+          })
           pendingChange = PendingChangeOfDetails(
             arn = arn,
             oldDetails = oldContactDetails,

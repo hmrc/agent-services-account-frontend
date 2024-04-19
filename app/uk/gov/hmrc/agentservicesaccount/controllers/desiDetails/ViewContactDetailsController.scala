@@ -22,7 +22,6 @@ import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.DRAFT_NEW_CONTACT_DETAILS
-import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.CurrentAgencyDetails
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details.view_contact_details
@@ -50,7 +49,9 @@ class ViewContactDetailsController @Inject()(actions: Actions,
       for {
         _ <- sessionCache.delete(DRAFT_NEW_CONTACT_DETAILS)
         mPendingChange <- pcodRepository.find(request.agentInfo.arn)
-        agencyDetails <- CurrentAgencyDetails.get(acaConnector)
+        agencyDetails <- acaConnector.getAgentRecord().map(_.agencyDetails.getOrElse {
+          throw new RuntimeException(s"Could not retrieve current agency details for ${request.agentInfo.arn} from the backend")
+        })
       } yield Ok(view_contact_details(agencyDetails, mPendingChange, request.agentInfo.isAdmin))
     }
   }
