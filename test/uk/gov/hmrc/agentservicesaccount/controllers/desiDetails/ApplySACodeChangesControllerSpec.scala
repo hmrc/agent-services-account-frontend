@@ -145,6 +145,7 @@ class ApplySACodeChangesControllerSpec extends PlaySpec
       mockPendingChangeRequestRepository.find(arn) returns Future.successful(None)
 
       mockSessionCache.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[Request[Any]]) returns Future.successful(Some(desiDetailsWithEmptyOtherServices))
+      mockSessionCache.get[Set[String]](CURRENT_SELECTED_CHANGES)(*[Reads[Set[String]]], *[Request[Any]]) returns Future.successful(Some(Set("email")))
 
       mockSessionCache.put[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS, desiDetailsWithEmptyOtherServices.copy(otherServices = desiDetailsWithEmptyOtherServices.otherServices.copy(saChanges = SaChanges(true, None))))(*[Writes[DesignatoryDetails]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
 
