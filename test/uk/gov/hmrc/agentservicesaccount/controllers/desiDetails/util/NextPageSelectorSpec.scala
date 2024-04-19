@@ -35,7 +35,9 @@ class NextPageSelectorSpec extends BaseISpec with SessionServiceMocks {
 
   val mockJourney1: DesiDetailsJourney = DesiDetailsJourney(Some(Set("businessName")), journeyComplete = false)
   val mockJourney2: DesiDetailsJourney = DesiDetailsJourney(Some(Set("email", "telephone")), journeyComplete = false)
-  val mockJourney3: DesiDetailsJourney = DesiDetailsJourney(Some(Set("businessName", "email", "telephone")), journeyComplete = false)
+  val mockJourney3: DesiDetailsJourney = DesiDetailsJourney(Some(Set("address", "email", "telephone")), journeyComplete = false)
+  val mockJourney4: DesiDetailsJourney = DesiDetailsJourney(Some(Set("address", "telephone")), journeyComplete = false)
+  val mockJourney5: DesiDetailsJourney = DesiDetailsJourney(Some(Set("telephone")), journeyComplete = false)
   val mockJourneyAll: DesiDetailsJourney = DesiDetailsJourney(Some(Set("businessName", "address", "email", "telephone")), journeyComplete = false)
   val mockJourneyComplete: DesiDetailsJourney = DesiDetailsJourney(None, journeyComplete = true)
   val mockJourneyContactComplete: DesiDetailsJourney = DesiDetailsJourney(None, journeyComplete = false)
@@ -91,26 +93,24 @@ class NextPageSelectorSpec extends BaseISpec with SessionServiceMocks {
   "getNextPage with previous selections" should {
     "redirect to first non-previously selected page in list" when {
       "all pages selected" in {
-
-        val response: Result = getNextPage(mockJourneyContactComplete, "address")
-
+        val response: Result = getNextPage(mockJourney3, "address")
         redirectLocation(response) shouldBe Some(desiDetails.routes.UpdateEmailAddressController.showChangeEmailAddress.url)
       }
     }
 
     "redirect to next non-previously selected page in list" when {
       "given a page part way through the list" in {
-        val response: Result = getNextPage(mockJourneyAll, "address")
+        val response: Result = getNextPage(mockJourney4, "address")
         redirectLocation(response) shouldBe Some(desiDetails.routes.UpdateTelephoneController.showPage.url)
       }
 
       "given a page that was part of the previous journey" in {
-        val response: Result = getNextPage(mockJourney2, "email")
+        val response: Result = getNextPage(mockJourney5, "email")
         redirectLocation(response) shouldBe Some(desiDetails.routes.UpdateTelephoneController.showPage.url)
       }
 
       "given a page that shouldn't have been part of journey" in {
-        val response: Result = getNextPage(mockJourney2, "address")
+        val response: Result = getNextPage(mockJourney5, "address")
         redirectLocation(response) shouldBe Some(desiDetails.routes.UpdateTelephoneController.showPage.url)
       }
     }
