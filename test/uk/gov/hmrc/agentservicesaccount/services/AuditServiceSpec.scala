@@ -17,6 +17,7 @@
 package uk.gov.hmrc.agentservicesaccount.services
 
 import org.scalatestplus.play.PlaySpec
+import play.api.{ConfigLoader, Configuration}
 import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, Utr}
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, OtherServices, SaChanges, YourDetails}
 import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress, PendingChangeOfDetails}
@@ -26,11 +27,15 @@ import uk.gov.hmrc.http.HeaderCarrier
 import java.time.Instant
 import scala.concurrent.ExecutionContext
 
-class AuditServiceSpec extends PlaySpec with MockAuditConnector {
+class AuditServiceSpec extends PlaySpec
+  with MockAuditConnector {
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
   implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
-  val service  = new AuditService(mockAuditConnector)
+
+  val mockConfig = mock[Configuration]
+
+  val service  = new AuditService(mockAuditConnector, mockConfig)
 
   val testArn = Arn("XXARN0123456789")
   val testUtr = Utr("XXUTR12345667")
@@ -84,6 +89,8 @@ class AuditServiceSpec extends PlaySpec with MockAuditConnector {
   "UpdateContactDetailsRequest" should {
     "end a successful update contact details event to the audit connector and get an audit result back" in {
       mockSendExtendedEvent()
+
+      (mockConfig.getOptional[String](_: String)(_: ConfigLoader[String])).expects("microservice.services.dms-submission.contact-details-submission.classificationType", *).returning(Some("some"))
 
       val result =service.auditUpdateContactDetailsRequest(Some(testUtr), pendingChangeOfDetails1)
       result mustBe ()

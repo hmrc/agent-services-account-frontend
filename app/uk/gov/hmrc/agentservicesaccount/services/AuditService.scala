@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.agentservicesaccount.services
 
+import play.api.Configuration
 import play.api.libs.json.{Json, Writes}
 import uk.gov.hmrc.agentmtdidentifiers.model._
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeOfDetails
@@ -30,7 +31,10 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class AuditService @Inject()(val auditConnector: AuditConnector)(implicit ec: ExecutionContext) {
+class AuditService @Inject()(
+                              val auditConnector: AuditConnector,
+                              config: Configuration
+                            )(implicit ec: ExecutionContext) {
 
   private def audit[A <: AuditDetail: Writes](a: A)(implicit hc: HeaderCarrier): Unit = {
     val _ = auditConnector.sendExtendedEvent(
@@ -64,7 +68,8 @@ class AuditService @Inject()(val auditConnector: AuditConnector)(implicit ec: Ex
       selfAssessmentAgentCode = pendingChangeOfDetails.otherServices.saChanges.saAgentReference,
       changedInCorporationTax = pendingChangeOfDetails.otherServices.ctChanges.applyChanges,
       corporationTaxAgentCode = pendingChangeOfDetails.otherServices.ctChanges.ctAgentReference,
-      userDetails = UserDetails(firstName, lastName = lastName, telephone = pendingChangeOfDetails.submittedBy.telephone)
+      userDetails = UserDetails(firstName, lastName = lastName, telephone = pendingChangeOfDetails.submittedBy.telephone),
+      queueDetails = config.getOptional[String]("microservice.services.dms-submission.contact-details-submission.classificationType").getOrElse(throw new RuntimeException(s"Config not found: microservice.services.dms-submission.contact-details-submission.classificationType")) //appConfig.dmsSubmissionClassificationType
     )
   }
 

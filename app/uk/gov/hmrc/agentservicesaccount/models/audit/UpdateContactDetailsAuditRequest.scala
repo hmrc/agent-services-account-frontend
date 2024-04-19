@@ -31,7 +31,7 @@ final case class UpdateContactDetailsAuditRequest(
                                                    changedInCorporationTax : Boolean,
                                                    corporationTaxAgentCode : Option[CtUtr],
                                                    userDetails : UserDetails,
-                                                   queueDetails : String = "ISBC-ACT-Queue 1"
+                                                   queueDetails : String
 
 ) extends AuditDetail {
   val auditType: String = "UpdateContactDetailsRequest"

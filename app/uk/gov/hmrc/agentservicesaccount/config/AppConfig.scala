@@ -178,4 +178,10 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
   // Assistant users are read only
   val agentPermissionsFrontendAssistantViewGroupClientsUrl = s"$agentPermissionsFrontendExternalUrl/agent-permissions/your-account/group-clients"
   val agentPermissionsFrontendAssistantViewUnassignedClientsUrl = s"$agentPermissionsFrontendExternalUrl/agent-permissions/your-account/other-clients"
+
+  //DMS queue name
+  val dmsSubmissionClassificationType: String                =
+    servicesConfig.getString("microservice.services.dms-submission.contact-details-submission.classificationType")
+
+
 }
