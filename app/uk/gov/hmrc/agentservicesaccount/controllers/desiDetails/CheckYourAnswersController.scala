@@ -27,7 +27,7 @@ import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util._
 import uk.gov.hmrc.agentservicesaccount.models.{PendingChangeOfDetails, PendingChangeRequest}
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{DesignatoryDetails, YourDetails}
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
-import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
+import uk.gov.hmrc.agentservicesaccount.services.{AuditService, SessionCacheService}
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
@@ -41,6 +41,7 @@ class CheckYourAnswersController @Inject()(actions: Actions,
                                            acaConnector: AgentClientAuthorisationConnector,
                                            agentAssuranceConnector: AgentAssuranceConnector,
                                            checkUpdatedDetailsView: check_updated_details,
+                                           auditService:   AuditService,
                                            summary_pdf: summaryPdf
                                           )(implicit appConfig: AppConfig,
                                             cc: MessagesControllerComponents,
@@ -92,6 +93,7 @@ class CheckYourAnswersController @Inject()(actions: Actions,
             pendingChange,
             selectChanges.getOrElse(throw new RuntimeException("Cannot submit without select changes details"))
           ).toString()
+          _ = auditService.auditUpdateContactDetailsRequest(optUtr, pendingChange)
           result <- agentAssuranceConnector.postDesignatoryDetails(arn, java.util.Base64.getEncoder.encodeToString(htmlForPdf.getBytes()))
           _ <- pcodRepository.insert(PendingChangeRequest(arn, pendingChange.timeSubmitted))
           _ <- sessionCache.delete(DRAFT_NEW_CONTACT_DETAILS)
