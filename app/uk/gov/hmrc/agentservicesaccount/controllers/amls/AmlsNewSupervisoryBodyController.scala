@@ -59,11 +59,11 @@ class AmlsNewSupervisoryBodyController @Inject()(actions: Actions,
           .fold(
             formWithErrors => BadRequest(newSupervisoryBody(formWithErrors, amlsBodies, journey.isUkAgent, cya)).toFuture,
             data => {
-              saveAmlsJourney(journey.copy(
+              val updatedJourney = journey.copy(
                 newAmlsBody = if (journey.isUkAgent) Some(amlsBodies(data)) else Some(data),
                 isAmlsBodyStillTheSame = maybeChangePreviousAnswer(data, journey))
-              ).map(_ =>
-                Redirect(nextPage(cya, journey)))
+                  saveAmlsJourney(updatedJourney).map(_ =>
+                Redirect(nextPage(cya, updatedJourney, journey)))
             }
           )
       }
@@ -76,11 +76,15 @@ class AmlsNewSupervisoryBodyController @Inject()(actions: Actions,
       y = journey.newAmlsBody.contains(answer)
     } yield x && y
 
-
-  private def nextPage(cya: Boolean, journey: UpdateAmlsJourney): String = {
-    if (cya) routes.CheckYourAnswersController.showPage.url
+  private def nextPage(cya: Boolean, updatedJourney: UpdateAmlsJourney, existingJourney: UpdateAmlsJourney): String = {
+    if (cya) {
+      if(updatedJourney.isHmrc && !existingJourney.newAmlsBody.exists(_.contains("HMRC")))
+        routes.EnterRegistrationNumberController.showPage(cya).url
+      else
+      routes.CheckYourAnswersController.showPage.url
+    }
     else if (
-      journey.isUkAgent & journey.isAmlsBodyStillTheSame.contains(true)) routes.ConfirmRegistrationNumberController.showPage.url
+      updatedJourney.isUkAgent & updatedJourney.isAmlsBodyStillTheSame.contains(true)) routes.ConfirmRegistrationNumberController.showPage.url
     else routes.EnterRegistrationNumberController.showPage().url
   }
 }
