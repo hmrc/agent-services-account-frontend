@@ -22,7 +22,7 @@ import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector}
-import uk.gov.hmrc.agentservicesaccount.controllers._
+import uk.gov.hmrc.agentservicesaccount.controllers.{desiDetails, _}
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util._
 import uk.gov.hmrc.agentservicesaccount.models.{PendingChangeOfDetails, PendingChangeRequest}
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{DesignatoryDetails, YourDetails}
@@ -48,7 +48,6 @@ class CheckYourAnswersController @Inject()(actions: Actions,
                                             ec: ExecutionContext,
                                             pcodRepository: PendingChangeRequestRepository
                                           ) extends FrontendController(cc) with DesiDetailsJourneySupport with I18nSupport with Logging {
-
 
   def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     ifChangeContactFeatureEnabledAndNoPendingChanges {
@@ -79,7 +78,9 @@ class CheckYourAnswersController @Inject()(actions: Actions,
           selectChanges <- sessionCache.get[Set[String]](CURRENT_SELECTED_CHANGES)
           optUtr <- acaConnector.getAgentRecord().map(_.uniqueTaxReference)
           submittedBy <- sessionCache.get[YourDetails](DRAFT_SUBMITTED_BY)
-          oldContactDetails <- CurrentAgencyDetails.get(acaConnector)
+          oldContactDetails <- acaConnector.getAgentRecord().map(_.agencyDetails.getOrElse {
+            throw new RuntimeException(s"Could not retrieve current agency details for ${request.agentInfo.arn} from the backend")
+          })
           pendingChange = PendingChangeOfDetails(
             arn = arn,
             oldDetails = oldContactDetails,

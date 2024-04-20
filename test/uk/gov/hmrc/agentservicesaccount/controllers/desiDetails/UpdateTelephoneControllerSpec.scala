@@ -16,175 +16,193 @@
 
 package uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
 
-import com.google.inject.AbstractModule
-import org.scalamock.scalatest.MockFactory
-import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
-import org.scalatest.matchers.should.Matchers
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.Application
-import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.libs.json.Json
-import play.api.mvc.{Action, AnyContent, AnyContentAsFormUrlEncoded, Result}
-import play.api.test.FakeRequest
+import org.mockito.{ArgumentMatchersSugar, IdiomaticMockito}
+import org.scalatestplus.play.PlaySpec
+import play.api.Environment
+import play.api.data.Form
+import play.api.i18n.Messages
+import play.api.libs.json.Reads
+import play.api.mvc._
 import play.api.test.Helpers._
+import play.api.test.{DefaultAwaitTimeout, FakeRequest, Helpers}
+import play.twirl.api.Html
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
-import uk.gov.hmrc.agentservicesaccount.connectors.{AddressLookupConnector, AgentClientAuthorisationConnector, EmailVerificationConnector}
+import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
+import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector}
 import uk.gov.hmrc.agentservicesaccount.controllers.{CURRENT_SELECTED_CHANGES, DRAFT_NEW_CONTACT_DETAILS, DRAFT_SUBMITTED_BY, desiDetails}
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest
-import uk.gov.hmrc.agentservicesaccount.models.addresslookup.{ConfirmedResponseAddress, ConfirmedResponseAddressDetails, Country, JourneyConfigV2}
-import uk.gov.hmrc.agentservicesaccount.models.desiDetails.YourDetails
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{DesignatoryDetails, YourDetails}
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
-import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
-import uk.gov.hmrc.agentservicesaccount.support.{TestConstants, UnitSpec}
+import uk.gov.hmrc.agentservicesaccount.services.{DraftDetailsService, SessionCacheService}
+import uk.gov.hmrc.agentservicesaccount.support.TestConstants
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details.update_phone
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve.Retrieval
-import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
+import uk.gov.hmrc.http.HeaderCarrier
 
 import java.time.Instant
 import scala.concurrent.{ExecutionContext, Future}
 
-class UpdateTelephoneControllerSpec extends UnitSpec
-  with Matchers
-  with GuiceOneAppPerSuite
-  with ScalaFutures
-  with IntegrationPatience
-  with MockFactory
+class UpdateTelephoneControllerSpec extends PlaySpec
+  with DefaultAwaitTimeout
+  with IdiomaticMockito
+  with ArgumentMatchersSugar
   with TestConstants {
+
+  implicit val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
+  implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
 
   private val testArn = Arn("XXARN0123456789")
 
-  private val submittedByDetails = YourDetails(
-    fullName = "John Tester",
-    telephone = "01903 209919"
-  )
 
-  private val confirmedAddressResponse = ConfirmedResponseAddress(
-    auditRef = "foo",
-    id = Some("bar"),
-    address = ConfirmedResponseAddressDetails(
-      organisation = Some("My Agency"),
-      lines = Some(Seq("26 New Street", "Telford")),
-      postcode = Some("TF5 4AA"),
-      country = Some(Country("GB", ""))
-    )
-  )
+  trait Setup {
+    protected val mockAppConfig: AppConfig = mock[AppConfig]
+    protected val mockAuthConnector: AuthConnector = mock[AuthConnector]
+    protected val mockEnvironment: Environment = mock[Environment]
+    protected val authActions = new AuthActions(mockAppConfig, mockAuthConnector, mockEnvironment)
 
-  private val stubAuthConnector = new AuthConnector {
-    private val authJson = Json.parse(s"""{
-                      |  "internalId": "some-id",
-                      |  "affinityGroup": "Agent",
-                      |  "credentialRole": "User",
-                      |  "allEnrolments": [{
-                      |    "key": "HMRC-AS-AGENT",
-                      |    "identifiers": [{ "key": "AgentReferenceNumber", "value": "${testArn.value}" }]
-                      |  }],
-                      |  "optionalCredentials": {
-                      |    "providerId": "foo",
-                      |    "providerType": "bar"
-                      |  }
-                      |}""".stripMargin)
-    def authorise[A](predicate: Predicate, retrieval: Retrieval[A])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[A] =
-      Future.successful(retrieval.reads.reads(authJson).get)
+    protected val mockAgentClientAuthorisationConnector: AgentClientAuthorisationConnector = mock[AgentClientAuthorisationConnector]
+    protected val mockDraftDetailsService: DraftDetailsService = mock[DraftDetailsService]
+    protected val actionBuilder = new DefaultActionBuilderImpl(Helpers.stubBodyParser())
+    protected val mockAgentAssuranceConnector: AgentAssuranceConnector = mock[AgentAssuranceConnector]
+    protected val mockActions =
+      new Actions(mockAgentClientAuthorisationConnector, mockAgentAssuranceConnector, authActions, actionBuilder)
+
+    protected val mockPendingChangeRequestRepository = mock[PendingChangeRequestRepository]
+    protected val mockUpdatePhoneView: update_phone = mock[update_phone]
+    protected val mockSessionCache: SessionCacheService = mock[SessionCacheService]
+    protected val cc: MessagesControllerComponents = stubMessagesControllerComponents()
+
+    object TestController extends UpdateTelephoneController(
+      mockActions,
+      mockSessionCache,
+      mockDraftDetailsService,
+      mockUpdatePhoneView
+    )(mockAppConfig, cc, ec, mockPendingChangeRequestRepository, mockAgentClientAuthorisationConnector)
   }
-
-  val overrides = new AbstractModule() {
-    override def configure(): Unit = {
-      bind(classOf[AgentClientAuthorisationConnector]).toInstance(stub[AgentClientAuthorisationConnector])
-      bind(classOf[AddressLookupConnector]).toInstance(stub[AddressLookupConnector])
-      bind(classOf[EmailVerificationConnector]).toInstance(stub[EmailVerificationConnector])
-      bind(classOf[PendingChangeRequestRepository]).toInstance(stub[PendingChangeRequestRepository])
-      bind(classOf[AuthConnector]).toInstance(stubAuthConnector)
-    }
-  }
-
-  override implicit lazy val app: Application = new GuiceApplicationBuilder().configure(
-    "auditing.enabled" -> false,
-    "metrics.enabled" -> false,
-    "suspendedContactDetails.sendEmail" -> false
-  ).overrides(overrides).build()
-
-  trait TestSetup {
-    val acaConnector: AgentClientAuthorisationConnector = app.injector.instanceOf[AgentClientAuthorisationConnector]
-    (acaConnector.getAgentRecord()(_: HeaderCarrier, _: ExecutionContext)).when(*, *).returns(Future.successful(agentRecord))
-
-    val alfConnector: AddressLookupConnector = app.injector.instanceOf[AddressLookupConnector]
-    (alfConnector.init(_: JourneyConfigV2)(_: HeaderCarrier)).when(*, *).returns(Future.successful("mock-address-lookup-url"))
-    (alfConnector.getAddress(_: String)(_: HeaderCarrier)).when(*, *).returns(Future.successful(confirmedAddressResponse))
-
-    val evConnector: EmailVerificationConnector = app.injector.instanceOf[EmailVerificationConnector]
-
-    val controller: UpdateTelephoneController = app.injector.instanceOf[UpdateTelephoneController]
-    val sessionCache: SessionCacheService = app.injector.instanceOf[SessionCacheService]
-    val pcodRepository: PendingChangeRequestRepository = app.injector.instanceOf[PendingChangeRequestRepository]
-
-    def noPendingChangesInRepo(): Unit = {
-      (pcodRepository.find(_: Arn)).when(*).returns(Future.successful(None))
-    }
-    def pendingChangesExistInRepo(): Unit = {
-      (pcodRepository.find(_: Arn)).when(*).returns(Future.successful(Some(
-        PendingChangeRequest(
-          testArn,
-          Instant.now()
-        ))))
-    }
-
-    (pcodRepository.insert(_: PendingChangeRequest)).when(*).returns(Future.successful(()))
-
-    // make sure these values are cleared from the session
-    sessionCache.delete(DRAFT_NEW_CONTACT_DETAILS)(fakeRequest()).futureValue
-    sessionCache.delete(DRAFT_SUBMITTED_BY)(fakeRequest()).futureValue
-    sessionCache.delete(CURRENT_SELECTED_CHANGES)(fakeRequest()).futureValue
-  }
-
-  private def fakeRequest(method: String = "GET", uri: String = "/") =
-    FakeRequest(method, uri).withSession(
-      SessionKeys.authToken -> "Bearer XYZ",
-      SessionKeys.sessionId -> "session-x"
-    )
 
   "GET /manage-account/contact-details/new-telephone" should {
-    "display the enter telephone number page" in new TestSetup {
-      noPendingChangesInRepo()
-      val result: Future[Result] = controller.showPage()(fakeRequest())
-      status(result) shouldBe OK
-      contentAsString(result.futureValue) should include("What’s the new telephone number?")
+    "display the enter telephone number page" in new Setup {
+      mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
+        *[HeaderCarrier],
+        *[ExecutionContext]) returns authResponse
+
+      mockAppConfig.enableChangeContactDetails returns true
+
+      mockSessionCache.get(CURRENT_SELECTED_CHANGES)(*[Reads[Set[String]]], *[Request[_]]) returns Future.successful(Some(Set("telephone")))
+
+      mockSessionCache.get(DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[Request[_]]) returns Future.successful(None)
+
+      mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+
+      mockPendingChangeRequestRepository.find(arn) returns Future.successful(None)
+
+      mockUpdatePhoneView.apply(*[Form[String]])(*[Messages], *[Request[_]], *[AppConfig]) returns Html("")
+
+      val result: Future[Result] = TestController.showPage()(request)
+
+      status(result) mustBe OK
+    }
+
+    "existing pending changes" should {
+      "cause the user to be redirected away from any 'update' endpoints" in new Setup {
+        mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
+          *[HeaderCarrier],
+          *[ExecutionContext]) returns authResponse
+
+        mockAppConfig.enableChangeContactDetails returns true
+
+        mockSessionCache.get(CURRENT_SELECTED_CHANGES)(*[Reads[Set[String]]], *[Request[_]]) returns Future.successful(Some(Set("telephone")))
+
+        mockSessionCache.get(DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[Request[_]]) returns Future.successful(Some(desiDetailsSaChangesOtherServices))
+
+        mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+
+        mockPendingChangeRequestRepository.find(arn) returns Future.successful(Some(PendingChangeRequest(arn, Instant.now)))
+
+        val result: Future[Result] = TestController.showPage()(request)
+
+        status(result) mustBe SEE_OTHER
+        header("Location", result) mustBe Some(desiDetails.routes.ViewContactDetailsController.showPage.url)
+      }
     }
   }
 
   "POST /manage-account/contact-details/new-telephone" should {
-    "store the new telephone number in session and redirect to apply SA code page" in new TestSetup {
-      noPendingChangesInRepo()
-      implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = fakeRequest("POST").withFormUrlEncodedBody("telephoneNumber" -> "01234 567 890")
-      val result: Future[Result] = controller.onSubmit()(request)
-      status(result) shouldBe SEE_OTHER
-      header("Location", result) shouldBe Some(desiDetails.routes.ApplySACodeChangesController.showPage.url)
-      sessionCache.get(DRAFT_NEW_CONTACT_DETAILS).futureValue.flatMap(_.agencyDetails.agencyTelephone) shouldBe Some("01234 567 890")
+    "store the new telephone number in session and redirect to apply SA code page" in new Setup {
+      mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
+        *[HeaderCarrier],
+        *[ExecutionContext]) returns authResponse
+
+      mockAppConfig.enableChangeContactDetails returns true
+
+      mockSessionCache.get(CURRENT_SELECTED_CHANGES)(*[Reads[Set[String]]], *[Request[_]]) returns Future.successful(Some(Set("telephone")))
+
+      mockSessionCache.get(DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[Request[_]]) returns Future.successful(Some(desiDetailsSaChangesOtherServices))
+
+      mockSessionCache.get(DRAFT_SUBMITTED_BY)(*[Reads[YourDetails]], *[Request[_]]) returns Future.successful(None)
+
+      mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+
+      mockPendingChangeRequestRepository.find(arn) returns Future.successful(None)
+
+      mockDraftDetailsService.updateDraftDetails(*[DesignatoryDetails => DesignatoryDetails])(*[Request[_]], *[HeaderCarrier]) returns Future.successful(())
+
+      val result: Future[Result] = TestController.onSubmit()(FakeRequest(POST, "/").withFormUrlEncodedBody("telephoneNumber" -> "01234 567 890"))
+
+      status(result) mustBe SEE_OTHER
+      header("Location", result) mustBe Some(desiDetails.routes.ApplySACodeChangesController.showPage.url)
     }
 
-    "display an error if the data submitted is invalid" in new TestSetup {
-      noPendingChangesInRepo()
-      implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = fakeRequest("POST").withFormUrlEncodedBody("telephoneNumber" -> "0800 FAKE NO")
-      val result: Future[Result] = controller.onSubmit()(request)
-      status(result) shouldBe BAD_REQUEST
-      contentAsString(result.futureValue) should include("There is a problem")
-      sessionCache.get(DRAFT_NEW_CONTACT_DETAILS).futureValue.flatMap(_.agencyDetails.agencyTelephone) shouldBe None
+    "display an error if the data submitted is invalid" in new Setup {
+      mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
+        *[HeaderCarrier],
+        *[ExecutionContext]) returns authResponse
+
+      mockAppConfig.enableChangeContactDetails returns true
+
+      mockSessionCache.get(CURRENT_SELECTED_CHANGES)(*[Reads[Set[String]]], *[Request[_]]) returns Future.successful(Some(Set("telephone")))
+
+      mockSessionCache.get(DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[Request[_]]) returns Future.successful(Some(desiDetailsSaChangesOtherServices))
+
+      mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+
+      mockPendingChangeRequestRepository.find(arn) returns Future.successful(None)
+
+      mockDraftDetailsService.updateDraftDetails(*[DesignatoryDetails => DesignatoryDetails])(*[Request[_]], *[HeaderCarrier]) returns Future.successful(())
+
+      mockUpdatePhoneView.apply(*[Form[String]])(*[Messages], *[Request[_]], *[AppConfig]) returns Html("")
+
+      val result: Future[Result] = TestController.onSubmit()(FakeRequest(POST, "/").withFormUrlEncodedBody("telephoneNumber" -> "0800 FAKE NO"))
+
+      status(result) mustBe BAD_REQUEST
     }
-  }
 
+    "existing pending changes" should {
+      "cause the user to be redirected away from any 'update' endpoints" in new Setup {
+        mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
+          *[HeaderCarrier],
+          *[ExecutionContext]) returns authResponse
 
+        mockAppConfig.enableChangeContactDetails returns true
 
-  "existing pending changes" should {
-    "cause the user to be redirected away from any 'update' endpoints" in new TestSetup {
-      def shouldRedirect(endpoint: Action[AnyContent]): Unit = {
-        val result = endpoint(fakeRequest())
-        status(result) shouldBe SEE_OTHER
-        header("Location", result) shouldBe Some(desiDetails.routes.ViewContactDetailsController.showPage.url)
+        mockSessionCache.get(CURRENT_SELECTED_CHANGES)(*[Reads[Set[String]]], *[Request[_]]) returns Future.successful(Some(Set("telephone")))
+
+        mockSessionCache.get(DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[Request[_]]) returns Future.successful(Some(desiDetailsSaChangesOtherServices))
+
+        mockSessionCache.get(DRAFT_SUBMITTED_BY)(*[Reads[YourDetails]], *[Request[_]]) returns Future.successful(None)
+
+        mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+
+        mockPendingChangeRequestRepository.find(arn) returns Future.successful(Some(PendingChangeRequest(arn, Instant.now)))
+
+        val result: Future[Result] = TestController.onSubmit()(FakeRequest(POST, "/").withFormUrlEncodedBody("telephoneNumber" -> "01234 567 890"))
+
+        status(result) mustBe SEE_OTHER
+        header("Location", result) mustBe Some(desiDetails.routes.ViewContactDetailsController.showPage.url)
       }
-
-      pendingChangesExistInRepo()
-      shouldRedirect(controller.showPage())
-      shouldRedirect(controller.onSubmit())
     }
   }
 }

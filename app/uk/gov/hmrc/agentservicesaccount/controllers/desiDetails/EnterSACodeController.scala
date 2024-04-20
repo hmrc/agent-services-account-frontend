@@ -20,6 +20,7 @@ import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.DesiDetailsJourneySupport
 import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.SaChanges
@@ -40,12 +41,16 @@ class EnterSACodeController @Inject()(actions: Actions,
                                       cc: MessagesControllerComponents
                                      )(implicit appConfig: AppConfig,
                                        ec: ExecutionContext,
-                                       pcodRepository: PendingChangeRequestRepository
+                                       pcodRepository: PendingChangeRequestRepository,
+                                       acaConnector: AgentClientAuthorisationConnector
                                      ) extends FrontendController(cc) with DesiDetailsJourneySupport with I18nSupport {
 
   def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     ifChangeContactFeatureEnabledAndNoPendingChanges {
-      Future.successful(Ok(enterSaCodeView(UpdateDetailsForms.saCodeForm)))
+      isOtherServicesPageRequestValid().flatMap {
+        case true => Future.successful(Ok(enterSaCodeView(UpdateDetailsForms.saCodeForm)))
+        case _ => Future.successful(Redirect(routes.ViewContactDetailsController.showPage))
+      }
     }
   }
 
@@ -59,9 +64,12 @@ class EnterSACodeController @Inject()(actions: Actions,
             saCode => {
               draftDetailsService.updateDraftDetails(
                 _.copy(otherServices = desiDetails.otherServices.copy(saChanges = SaChanges(true, Some(SaUtr(saCode)))))
-              ).map {
+              ).flatMap {
                 _ =>
-                  Redirect(uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.routes.ApplyCTCodeChangesController.showPage)
+                  isJourneyComplete().map(journey =>
+                    if(journey.journeyComplete) Redirect(routes.CheckYourAnswersController.showPage)
+                    else Redirect(routes.ApplyCTCodeChangesController.showPage)
+                  )
               }
             }
           )

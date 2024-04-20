@@ -59,6 +59,15 @@
     <script @{CSPNonce.attr} src="@controllers.routes.Assets.at("javascripts/jquery-3.6.3.min.js")"></script>
     <script @{CSPNonce.attr} src="@controllers.routes.Assets.at("javascripts/ga-events.js")"></script>
 }
+@backLink = @{
+    if(backLinkHref.isDefined) {
+        Some(BackLink.withDefaultText(
+            href = backLinkHref.get
+        ))
+    } else if(mimicBrowserBackLink) {
+        Some(BackLink.mimicsBrowserBackButtonViaJavaScript(msgs))
+    } else None
+}
 @beforeContent = {
     @defining("https://www.googletagmanager.com/ns.html?id=GTM-P39VTVL"){ gtmUrl =>
         @if(!appConfig.isTest){
@@ -70,17 +79,7 @@
         @secondary_nav(isAdmin = isAdmin)
     }
     @hmrcLanguageSelectHelper()
-
-    @if(backLinkHref.isDefined) {
-        @govukBackLink(BackLink.withDefaultText(
-            href = backLinkHref.get
-        ))
-    } else {
-        @if(mimicBrowserBackLink) {
-            @govukBackLink(BackLink.mimicsBrowserBackButtonViaJavaScript(msgs))
-        }
-    }
-
+    @backLink.map(link => govukBackLink(link))
 }
 
 @bespokeContentBlock = {
@@ -106,6 +105,7 @@
         beforeContentBlock = Some(beforeContent),
         mainContentLayout = if(fullWidth) Some(fullWidthMainContent(_)) else Some(twoThirdsLayout(_))
     ),
+    isWelshTranslationAvailable = true,
     serviceName = Some(msgs("service.name")),
     pageTitle = Some(msgs("generic.title", pageTitle, msgs("service.name")))
 ))(bespokeContentBlock)

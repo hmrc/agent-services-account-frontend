@@ -29,9 +29,9 @@ import play.twirl.api.Html
 import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector}
-import uk.gov.hmrc.agentservicesaccount.controllers.DRAFT_NEW_CONTACT_DETAILS
+import uk.gov.hmrc.agentservicesaccount.controllers.{CURRENT_SELECTED_CHANGES, DRAFT_NEW_CONTACT_DETAILS}
 import uk.gov.hmrc.agentservicesaccount.models.ApplySaCodeChanges
-import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{DesignatoryDetails, SaChanges}
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, DesignatoryDetails, OtherServices, SaChanges}
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
 import uk.gov.hmrc.agentservicesaccount.services.{DraftDetailsService, SessionCacheService}
 import uk.gov.hmrc.agentservicesaccount.support.TestConstants
@@ -77,7 +77,7 @@ class ApplySACodeChangesControllerSpec extends PlaySpec
       mockDraftDetailsService,
       mockView,
       cc
-    )(mockAppConfig, ec, mockPendingChangeRequestRepository)
+    )(mockAppConfig, ec, mockPendingChangeRequestRepository, mockAgentClientAuthorisationConnector)
   }
 
   "showPage" should {
@@ -85,6 +85,14 @@ class ApplySACodeChangesControllerSpec extends PlaySpec
       mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
         *[HeaderCarrier],
         *[ExecutionContext]) returns authResponse
+
+      mockSessionCache.get(CURRENT_SELECTED_CHANGES)(*[Reads[Set[String]]], *[Request[_]]) returns Future.successful(Some(Set("email")))
+
+      mockSessionCache.get(DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[Request[_]]) returns Future.successful(Some(DesignatoryDetails(
+        agencyDetails = agentRecord.agencyDetails.get.copy(agencyEmail = Some("new@test.com")),
+        otherServices = OtherServices(saChanges = SaChanges(applyChanges = false, None), ctChanges = CtChanges(applyChanges = false, None))
+      )))
+      //TODO update to return correct details
 
       mockAppConfig.enableChangeContactDetails returns true
 
@@ -137,6 +145,7 @@ class ApplySACodeChangesControllerSpec extends PlaySpec
       mockPendingChangeRequestRepository.find(arn) returns Future.successful(None)
 
       mockSessionCache.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[Request[Any]]) returns Future.successful(Some(desiDetailsWithEmptyOtherServices))
+      mockSessionCache.get[Set[String]](CURRENT_SELECTED_CHANGES)(*[Reads[Set[String]]], *[Request[Any]]) returns Future.successful(Some(Set("email")))
 
       mockSessionCache.put[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS, desiDetailsWithEmptyOtherServices.copy(otherServices = desiDetailsWithEmptyOtherServices.otherServices.copy(saChanges = SaChanges(true, None))))(*[Writes[DesignatoryDetails]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
 

@@ -19,20 +19,21 @@ package uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
 import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc._
-import uk.gov.hmrc.agentservicesaccount.actions.Actions
+import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthRequestWithAgentInfo}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.DesiDetailsJourneySupport
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.NextPageSelector.getNextPage
-import uk.gov.hmrc.agentservicesaccount.controllers.{CURRENT_SELECTED_CHANGES, PREVIOUS_SELECTED_CHANGES, ToFuture}
+import uk.gov.hmrc.agentservicesaccount.controllers.{CURRENT_SELECTED_CHANGES, DRAFT_NEW_CONTACT_DETAILS, ToFuture}
 import uk.gov.hmrc.agentservicesaccount.forms.SelectChangesForm
-import uk.gov.hmrc.agentservicesaccount.models.desiDetails.SelectChanges
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{DesignatoryDetails, SelectChanges}
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details.select_changes
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class SelectDetailsController @Inject()(actions: Actions,
@@ -41,7 +42,8 @@ class SelectDetailsController @Inject()(actions: Actions,
                                        )(implicit appConfig: AppConfig,
                                          cc: MessagesControllerComponents,
                                          ec: ExecutionContext,
-                                         pcodRepository: PendingChangeRequestRepository
+                                         pcodRepository: PendingChangeRequestRepository,
+                                         acaConnector: AgentClientAuthorisationConnector
                                        ) extends FrontendController(cc) with DesiDetailsJourneySupport with I18nSupport with Logging {
 
   def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
@@ -71,10 +73,10 @@ class SelectDetailsController @Inject()(actions: Actions,
             BadRequest(select_changes_view(formWithErrors)).toFuture
           },
           (selectedChanges: SelectChanges) => {
+
             sessionCache.put(CURRENT_SELECTED_CHANGES, selectedChanges.pagesSelected).flatMap {
               _ => {
-                removeUnchecked(selectedChanges)
-                getNextPage(sessionCache)
+                resetUncheckedAndNavigate(selectedChanges).flatten
               }
             }
           }
@@ -82,11 +84,23 @@ class SelectDetailsController @Inject()(actions: Actions,
     }
   }
 
-  def removeUnchecked(selectedChanges: SelectChanges)(implicit request: Request[_]): Unit = {
-    //ToDo: Remove session data for unchecked
+  private def resetUncheckedAndNavigate(selectedChanges: SelectChanges)
+                                       (implicit request: AuthRequestWithAgentInfo[AnyContent]): Future[Future[Result]] = {
     for {
-      previousPages <- sessionCache.get(PREVIOUS_SELECTED_CHANGES)
-      checkedPreviousPages = selectedChanges.pagesSelected.intersect(previousPages.getOrElse(Set()))
-    } yield sessionCache.put(PREVIOUS_SELECTED_CHANGES, checkedPreviousPages)
+      desiDetailsData <- sessionCache.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS)
+      oldContactDetails <- acaConnector.getAgentRecord().map(_.agencyDetails.getOrElse {
+        throw new RuntimeException(s"Could not retrieve current agency details for ${request.agentInfo.arn} from the backend")
+      })
+      journey <- isJourneyComplete()
+    } yield desiDetailsData match {
+      case Some(newData) =>
+        sessionCache.put(DRAFT_NEW_CONTACT_DETAILS, newData.copy(agencyDetails = oldContactDetails.copy(
+          agencyName = if(selectedChanges.businessName.isDefined) newData.agencyDetails.agencyName else oldContactDetails.agencyName,
+          agencyAddress = if(selectedChanges.address.isDefined) newData.agencyDetails.agencyAddress else oldContactDetails.agencyAddress,
+          agencyEmail = if(selectedChanges.email.isDefined) newData.agencyDetails.agencyEmail else oldContactDetails.agencyEmail,
+          agencyTelephone = if(selectedChanges.telephone.isDefined) newData.agencyDetails.agencyTelephone else oldContactDetails.agencyTelephone
+        ))).flatMap(_ => Future.successful(getNextPage(journey, "selectChanges")))
+      case _ => Future.successful(getNextPage(journey, "selectChanges"))
+    }
   }
 }

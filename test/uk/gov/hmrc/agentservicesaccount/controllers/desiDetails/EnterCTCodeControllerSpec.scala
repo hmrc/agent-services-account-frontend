@@ -29,8 +29,8 @@ import play.twirl.api.Html
 import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector}
-import uk.gov.hmrc.agentservicesaccount.controllers.DRAFT_NEW_CONTACT_DETAILS
-import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, DesignatoryDetails}
+import uk.gov.hmrc.agentservicesaccount.controllers.{CURRENT_SELECTED_CHANGES, DRAFT_NEW_CONTACT_DETAILS, DRAFT_SUBMITTED_BY}
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, DesignatoryDetails, OtherServices, SaChanges, YourDetails}
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
 import uk.gov.hmrc.agentservicesaccount.services.{DraftDetailsService, SessionCacheService}
 import uk.gov.hmrc.agentservicesaccount.support.TestConstants
@@ -77,7 +77,7 @@ class EnterCTCodeControllerSpec extends PlaySpec
       mockDraftDetailsService,
       mockView,
       cc
-    )(mockAppConfig, ec, mockPendingChangeRequestRepository)
+    )(mockAppConfig, ec, mockPendingChangeRequestRepository, mockAgentClientAuthorisationConnector)
   }
 
   "showPage" should {
@@ -87,6 +87,14 @@ class EnterCTCodeControllerSpec extends PlaySpec
         *[ExecutionContext]) returns authResponse
 
       mockAppConfig.enableChangeContactDetails returns true
+
+      mockSessionCache.get(CURRENT_SELECTED_CHANGES)(*[Reads[Set[String]]], *[Request[_]]) returns Future.successful(Some(Set("email")))
+
+      mockSessionCache.get(DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[Request[_]]) returns Future.successful(Some(DesignatoryDetails(
+        agencyDetails = agentRecord.agencyDetails.get.copy(agencyEmail = Some("new@test.com")),
+        otherServices = OtherServices(saChanges = SaChanges(applyChanges = false, None), ctChanges = CtChanges(applyChanges = false, None))
+      )))
+      // TODO - update to return correct data
 
       mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
@@ -128,6 +136,10 @@ class EnterCTCodeControllerSpec extends PlaySpec
 
       mockAppConfig.enableChangeContactDetails returns true
 
+      mockSessionCache.get(CURRENT_SELECTED_CHANGES)(*[Reads[Set[String]]], *[Request[_]]) returns Future.successful(None)
+
+      mockSessionCache.get(DRAFT_SUBMITTED_BY)(*[Reads[YourDetails]], *[Request[_]]) returns Future.successful(None)
+
       mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
       mockDraftDetailsService.updateDraftDetails(*[DesignatoryDetails => DesignatoryDetails])(*[Request[_]], *[HeaderCarrier]) returns Future.successful(())
@@ -153,6 +165,10 @@ class EnterCTCodeControllerSpec extends PlaySpec
         *[ExecutionContext]) returns authResponse
 
       mockAppConfig.enableChangeContactDetails returns true
+
+      mockSessionCache.get(CURRENT_SELECTED_CHANGES)(*[Reads[Set[String]]], *[Request[_]]) returns Future.successful(None)
+
+      mockSessionCache.get(DRAFT_SUBMITTED_BY)(*[Reads[YourDetails]], *[Request[_]]) returns Future.successful(None)
 
       mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 

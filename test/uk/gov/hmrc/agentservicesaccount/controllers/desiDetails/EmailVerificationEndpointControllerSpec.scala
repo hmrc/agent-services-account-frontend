@@ -26,8 +26,8 @@ import play.api.test.{DefaultAwaitTimeout, FakeRequest, Helpers}
 import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector}
-import uk.gov.hmrc.agentservicesaccount.controllers.EMAIL_PENDING_VERIFICATION
-import uk.gov.hmrc.agentservicesaccount.models.desiDetails.DesignatoryDetails
+import uk.gov.hmrc.agentservicesaccount.controllers.{CURRENT_SELECTED_CHANGES, DRAFT_NEW_CONTACT_DETAILS, DRAFT_SUBMITTED_BY, EMAIL_PENDING_VERIFICATION}
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, DesignatoryDetails, OtherServices, SaChanges, YourDetails}
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.EmailIsAlreadyVerified
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
 import uk.gov.hmrc.agentservicesaccount.services.{DraftDetailsService, EmailVerificationService, SessionCacheService}
@@ -72,9 +72,8 @@ class EmailVerificationEndpointControllerSpec extends PlaySpec
       mockActions,
       mockSessionCache,
       mockDraftDetailsService,
-      mockEmailVerificationService,
       cc
-    )(mockAppConfig, ec, mockPendingChangeRequestRepository)
+    )(mockAppConfig, ec, mockPendingChangeRequestRepository, mockAgentClientAuthorisationConnector, mockEmailVerificationService)
   }
 
 
@@ -85,6 +84,19 @@ class EmailVerificationEndpointControllerSpec extends PlaySpec
         *[ExecutionContext]) returns authResponse
 
       mockAppConfig.enableChangeContactDetails returns true
+
+      mockSessionCache.get(CURRENT_SELECTED_CHANGES)(*[Reads[Set[String]]], *[Request[_]]) returns Future.successful(Some(Set("email")))
+      mockSessionCache.get(DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[Request[_]]) returns Future.successful(Some(DesignatoryDetails(
+        agencyDetails = agentRecord.agencyDetails.get.copy(
+          agencyEmail = Some("new@email.com")
+        ),
+        otherServices = OtherServices(saChanges = SaChanges(applyChanges = false, None), ctChanges = CtChanges(applyChanges = false, None))
+      )))
+
+      mockSessionCache.get(DRAFT_SUBMITTED_BY)(*[Reads[YourDetails]], *[Request[_]]) returns Future.successful(Some(
+        YourDetails(fullName = "John Tester", telephone = "078187777831")
+      ))
+      // TODO check this returns the correct data
 
       mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 

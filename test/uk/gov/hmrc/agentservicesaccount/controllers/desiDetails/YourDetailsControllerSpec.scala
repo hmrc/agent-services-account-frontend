@@ -24,14 +24,14 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
-import play.api.mvc.{Action, AnyContent, AnyContentAsFormUrlEncoded, Result}
+import play.api.mvc.{Action, AnyContent, AnyContentAsEmpty, AnyContentAsFormUrlEncoded, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
-import uk.gov.hmrc.agentservicesaccount.controllers.DRAFT_SUBMITTED_BY
+import uk.gov.hmrc.agentservicesaccount.controllers.{CURRENT_SELECTED_CHANGES, DRAFT_NEW_CONTACT_DETAILS, DRAFT_SUBMITTED_BY}
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest
-import uk.gov.hmrc.agentservicesaccount.models.desiDetails.YourDetails
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, DesignatoryDetails, OtherServices, SaChanges, YourDetails}
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.support.{TestConstants, UnitSpec}
@@ -50,6 +50,10 @@ class YourDetailsControllerSpec extends UnitSpec
   with IntegrationPatience
   with MockFactory
   with TestConstants {
+
+  implicit val hc: HeaderCarrier = HeaderCarrier()
+  implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
+  implicit val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequest()
 
   private val testArn = Arn("XXARN0123456789")
 
@@ -124,6 +128,13 @@ class YourDetailsControllerSpec extends UnitSpec
   "GET /manage-account/contact-details/your-details" should {
     "display the Your details page normally if there is no change pending" in new TestSetup {
       noPendingChangesInRepo()
+      sessionCache.put(CURRENT_SELECTED_CHANGES, Set("email")).futureValue
+      sessionCache.put(DRAFT_NEW_CONTACT_DETAILS, DesignatoryDetails(
+        agencyDetails = agentRecord.agencyDetails.get.copy(
+          agencyEmail = Some("new@test.com")
+        ),
+        otherServices = OtherServices(saChanges = SaChanges(applyChanges = false, None), ctChanges = CtChanges(applyChanges = false, None))
+      ))
       val result: Result = controller.showPage()(fakeRequest()).futureValue
       status(result) shouldBe OK
       contentAsString(result) should include("Your details")

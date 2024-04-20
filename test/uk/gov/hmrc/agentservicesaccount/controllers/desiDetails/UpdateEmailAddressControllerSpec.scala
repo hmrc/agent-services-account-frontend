@@ -21,7 +21,7 @@ import org.scalatestplus.play.PlaySpec
 import play.api.Environment
 import play.api.data.Form
 import play.api.i18n.Messages
-import play.api.libs.json.Writes
+import play.api.libs.json.{Reads, Writes}
 import play.api.mvc.{AnyContentAsFormUrlEncoded, DefaultActionBuilderImpl, MessagesControllerComponents, Request}
 import play.api.test.Helpers._
 import play.api.test.{DefaultAwaitTimeout, FakeRequest, Helpers}
@@ -30,7 +30,7 @@ import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector}
 import uk.gov.hmrc.agentservicesaccount.controllers
-import uk.gov.hmrc.agentservicesaccount.controllers.EMAIL_PENDING_VERIFICATION
+import uk.gov.hmrc.agentservicesaccount.controllers.{CURRENT_SELECTED_CHANGES, EMAIL_PENDING_VERIFICATION}
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.DesignatoryDetails
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.{EmailIsAlreadyVerified, EmailIsLocked, EmailNeedsVerifying}
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
@@ -91,6 +91,8 @@ class UpdateEmailAddressControllerSpec extends PlaySpec
       mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
         *[HeaderCarrier],
         *[ExecutionContext]) returns authResponse
+
+      mockSessionCache.get(CURRENT_SELECTED_CHANGES)(*[Reads[Set[String]]], *[Request[_]]) returns Future.successful(Some(Set("email")))
 
       mockAppConfig.enableChangeContactDetails returns true
 

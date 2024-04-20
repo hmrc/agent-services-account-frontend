@@ -24,15 +24,15 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
-import play.api.mvc.{Action, AnyContent}
+import play.api.mvc.{Action, AnyContent, AnyContentAsEmpty}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.connectors.{AddressLookupConnector, AgentClientAuthorisationConnector, EmailVerificationConnector}
 import uk.gov.hmrc.agentservicesaccount.controllers.{CURRENT_SELECTED_CHANGES, DRAFT_NEW_CONTACT_DETAILS, DRAFT_SUBMITTED_BY, desiDetails}
+import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup.{ConfirmedResponseAddress, ConfirmedResponseAddressDetails, Country, JourneyConfigV2}
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails._
-import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.support.{TestConstants, UnitSpec}
@@ -52,6 +52,9 @@ class UpdateNameControllerSpec extends UnitSpec
   with MockFactory
   with TestConstants {
 
+  implicit val hc: HeaderCarrier = HeaderCarrier()
+  implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
+  implicit val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequest()
 
   private val submittedByDetails = YourDetails(
     fullName = "John Tester",
@@ -145,6 +148,7 @@ class UpdateNameControllerSpec extends UnitSpec
   "GET /manage-account/contact-details/new-name" should {
     "display the enter business name page" in new TestSetup {
       noPendingChangesInRepo()
+      sessionCache.put(CURRENT_SELECTED_CHANGES, Set("businessName")).futureValue
       val result = controller.showPage()(fakeRequest())
       status(result) shouldBe OK
       contentAsString(result.futureValue) should include("What’s the new name")
@@ -155,6 +159,7 @@ class UpdateNameControllerSpec extends UnitSpec
     "store the new name in session and redirect to apply SA code page" in new TestSetup {
       noPendingChangesInRepo()
       implicit val request = fakeRequest("POST").withFormUrlEncodedBody("name" -> "New and Improved Agency")
+      sessionCache.put(CURRENT_SELECTED_CHANGES, Set("businessName")).futureValue
       val result = controller.onSubmit()(request)
       status(result) shouldBe SEE_OTHER
       header("Location", result) shouldBe Some(desiDetails.routes.ApplySACodeChangesController.showPage.url)
@@ -164,6 +169,7 @@ class UpdateNameControllerSpec extends UnitSpec
     "display an error if the data submitted is invalid" in new TestSetup {
       noPendingChangesInRepo()
       implicit val request = fakeRequest("POST").withFormUrlEncodedBody("name" -> "&^%£$)(")
+      sessionCache.put(CURRENT_SELECTED_CHANGES, Set("businessName")).futureValue
       val result = controller.onSubmit()(request)
       status(result) shouldBe BAD_REQUEST
       contentAsString(result.futureValue) should include("There is a problem")

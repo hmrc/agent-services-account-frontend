@@ -21,6 +21,7 @@ import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.DRAFT_NEW_CONTACT_DETAILS
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.DesiDetailsJourneySupport
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.NextPageSelector.getNextPage
@@ -42,16 +43,21 @@ class UpdateTelephoneController @Inject()(actions: Actions,
                                          )(implicit appConfig: AppConfig,
                                            cc: MessagesControllerComponents,
                                            ec: ExecutionContext,
-                                           pcodRepository: PendingChangeRequestRepository
+                                           pcodRepository: PendingChangeRequestRepository,
+                                           acaConnector: AgentClientAuthorisationConnector
                                          ) extends FrontendController(cc) with DesiDetailsJourneySupport with I18nSupport with Logging {
 
   val showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     ifChangeContactFeatureEnabledAndNoPendingChanges {
-      sessionCache.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS).map {
-        case Some(desiDetails) if desiDetails.agencyDetails.agencyTelephone.isDefined =>
-          Ok(update_phone(UpdateDetailsForms.telephoneNumberForm.fill(desiDetails.agencyDetails.agencyTelephone.get)))
-        case _ => Ok(update_phone(UpdateDetailsForms.telephoneNumberForm))
+      isContactPageRequestValid("telephone").flatMap {
+        case true => sessionCache.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS).map {
+          case Some(desiDetails) if desiDetails.agencyDetails.agencyTelephone.isDefined =>
+            Ok(update_phone(UpdateDetailsForms.telephoneNumberForm.fill(desiDetails.agencyDetails.agencyTelephone.get)))
+          case _ => Ok(update_phone(UpdateDetailsForms.telephoneNumberForm))
+        }
+        case _ => Future.successful(Redirect(routes.SelectDetailsController.showPage))
       }
+
     }
   }
 
@@ -65,7 +71,7 @@ class UpdateTelephoneController @Inject()(actions: Actions,
             draftDetailsService.updateDraftDetails(desiDetails =>
               desiDetails.copy(agencyDetails = desiDetails.agencyDetails.copy(agencyTelephone = Some(newPhoneNumber)))
             ).flatMap(_ =>
-              getNextPage(sessionCache, "telephone")
+              isJourneyComplete().flatMap(journey => Future.successful(getNextPage(journey, "telephone")))
             )
           }
         )

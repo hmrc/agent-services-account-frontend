@@ -51,7 +51,10 @@ class UpdateEmailAddressController @Inject()(actions: Actions,
     actions.authActionCheckSuspend.async {
       implicit request =>
         ifChangeContactFeatureEnabledAndNoPendingChanges {
-          Future.successful(Ok(update_email(UpdateDetailsForms.emailAddressForm)))
+          isContactPageRequestValid("email").flatMap {
+            case true => Future.successful(Ok(update_email(UpdateDetailsForms.emailAddressForm)))
+            case _ => Future.successful(Redirect(routes.SelectDetailsController.showPage))
+          }
         }
     }
 
