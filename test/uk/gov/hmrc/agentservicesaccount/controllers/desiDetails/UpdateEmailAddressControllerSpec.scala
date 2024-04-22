@@ -30,8 +30,8 @@ import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector}
 import uk.gov.hmrc.agentservicesaccount.controllers
-import uk.gov.hmrc.agentservicesaccount.controllers.{CURRENT_SELECTED_CHANGES, EMAIL_PENDING_VERIFICATION}
-import uk.gov.hmrc.agentservicesaccount.models.desiDetails.DesignatoryDetails
+import uk.gov.hmrc.agentservicesaccount.controllers.{CURRENT_SELECTED_CHANGES, DRAFT_NEW_CONTACT_DETAILS, DRAFT_SUBMITTED_BY, EMAIL_PENDING_VERIFICATION}
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, DesignatoryDetails, OtherServices, SaChanges, YourDetails}
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.{EmailIsAlreadyVerified, EmailIsLocked, EmailNeedsVerifying}
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
 import uk.gov.hmrc.agentservicesaccount.services.{DraftDetailsService, EmailVerificationService, SessionCacheService}
@@ -74,6 +74,11 @@ class UpdateEmailAddressControllerSpec extends PlaySpec
     protected val mockSessionCache: SessionCacheService = mock[SessionCacheService]
     protected val cc: MessagesControllerComponents = stubMessagesControllerComponents()
 
+    mockSessionCache.delete[String](EMAIL_PENDING_VERIFICATION)(*[Request[_]]) returns Future.successful(())
+    mockSessionCache.delete[Set[String]](CURRENT_SELECTED_CHANGES)(*[Request[_]]) returns Future.successful(())
+    mockSessionCache.delete[YourDetails](DRAFT_SUBMITTED_BY)(*[Request[_]]) returns Future.successful(())
+    mockSessionCache.delete[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS)(*[Request[_]]) returns Future.successful(())
+
     object TestController extends UpdateEmailAddressController(
       mockActions,
       mockSessionCache,
@@ -82,7 +87,7 @@ class UpdateEmailAddressControllerSpec extends PlaySpec
       mockUpdateEmailView,
       mockEmailLockedView,
       cc
-    )(mockAppConfig, ec, mockPendingChangeRequestRepository)
+    )(mockAppConfig, ec, mockPendingChangeRequestRepository, mockAgentClientAuthorisationConnector)
   }
 
 
@@ -127,7 +132,13 @@ class UpdateEmailAddressControllerSpec extends PlaySpec
       mockDraftDetailsService.updateDraftDetails(*[DesignatoryDetails => DesignatoryDetails])(*[Request[_]], *[HeaderCarrier]) returns Future.successful(())
 
       mockSessionCache.delete[String](EMAIL_PENDING_VERIFICATION)(*[Request[_]]) returns Future.successful(())
-
+      mockSessionCache.get(CURRENT_SELECTED_CHANGES)(*[Reads[Set[String]]], *[Request[_]]) returns Future.successful(Some(Set("email")))
+      mockSessionCache.get(DRAFT_SUBMITTED_BY)(*[Reads[YourDetails]], *[Request[_]]) returns
+        Future.successful(Some(YourDetails(fullName = "John Tester", telephone = "08982383777")))
+      mockSessionCache.get(DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[Request[_]]) returns Future.successful(Some(DesignatoryDetails(
+        agencyDetails = agentRecord.agencyDetails.get.copy(agencyEmail = Some("new@email.com")),
+        otherServices = OtherServices(saChanges = SaChanges(applyChanges = false, None), ctChanges = CtChanges(applyChanges = false, None))
+      )))
 
       val result = TestController.submitChangeEmailAddress()(request)
 
@@ -148,7 +159,12 @@ class UpdateEmailAddressControllerSpec extends PlaySpec
       mockPendingChangeRequestRepository.find(arn) returns Future.successful(None)
 
       mockEmailVerificationService.getEmailVerificationStatus("new@email.com", ggCredentials.providerId)(*[HeaderCarrier]) returns Future.successful(EmailIsLocked)
+      mockSessionCache.get(CURRENT_SELECTED_CHANGES)(*[Reads[Set[String]]], *[Request[_]]) returns Future.successful(Some(Set("email")))
 
+      mockSessionCache.get(DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[Request[_]]) returns Future.successful(Some(DesignatoryDetails(
+        agencyDetails = agentRecord.agencyDetails.get,
+        otherServices = OtherServices(saChanges = SaChanges(applyChanges = false, None), ctChanges = CtChanges(applyChanges = false, None))
+      )))
 
       val result = TestController.submitChangeEmailAddress()(request)
 
@@ -172,7 +188,12 @@ class UpdateEmailAddressControllerSpec extends PlaySpec
       mockSessionCache.put[String](EMAIL_PENDING_VERIFICATION, "new@email.com")(*[Writes[String]], *[Request[_]]) returns Future.successful(SessionKeys.sessionId -> "session-123")
 
       mockEmailVerificationService.initialiseEmailVerificationJourney(ggCredentials.providerId, "new@email.com", cc.langs.availables.head)(*[HeaderCarrier], *[Request[_]]) returns Future.successful("/fake-verify-email-journey")
+      mockSessionCache.get(CURRENT_SELECTED_CHANGES)(*[Reads[Set[String]]], *[Request[_]]) returns Future.successful(Some(Set("email")))
 
+      mockSessionCache.get(DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[Request[_]]) returns Future.successful(Some(DesignatoryDetails(
+        agencyDetails = agentRecord.agencyDetails.get,
+        otherServices = OtherServices(saChanges = SaChanges(applyChanges = false, None), ctChanges = CtChanges(applyChanges = false, None))
+      )))
 
       val result = TestController.submitChangeEmailAddress()(request)
 
@@ -192,7 +213,12 @@ class UpdateEmailAddressControllerSpec extends PlaySpec
       mockPendingChangeRequestRepository.find(arn) returns Future.successful(None)
 
       mockUpdateEmailView.apply(*[Form[String]])(*[Messages], *[Request[_]], *[AppConfig]) returns Html("")
+      mockSessionCache.get(CURRENT_SELECTED_CHANGES)(*[Reads[Set[String]]], *[Request[_]]) returns Future.successful(Some(Set("email")))
 
+      mockSessionCache.get(DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[Request[_]]) returns Future.successful(Some(DesignatoryDetails(
+        agencyDetails = agentRecord.agencyDetails.get,
+        otherServices = OtherServices(saChanges = SaChanges(applyChanges = false, None), ctChanges = CtChanges(applyChanges = false, None))
+      )))
 
       val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST", "/").withFormUrlEncodedBody("emailAddress" -> "invalid at email dot com")
 

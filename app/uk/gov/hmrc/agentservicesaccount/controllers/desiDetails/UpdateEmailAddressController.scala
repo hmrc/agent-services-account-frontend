@@ -21,7 +21,9 @@ import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.DesiDetailsJourneySupport
+import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.NextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.controllers.{EMAIL_PENDING_VERIFICATION, desiDetails}
 import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.{EmailHasNotChanged, EmailIsAlreadyVerified, EmailIsLocked, EmailNeedsVerifying}
@@ -43,7 +45,8 @@ class UpdateEmailAddressController @Inject()(actions: Actions,
                                              cc: MessagesControllerComponents
                                             )(implicit appConfig: AppConfig,
                                               ec: ExecutionContext,
-                                              pcodRepository: PendingChangeRequestRepository
+                                              pcodRepository: PendingChangeRequestRepository,
+                                              acaConnector: AgentClientAuthorisationConnector
                                             ) extends FrontendController(cc) with DesiDetailsJourneySupport with I18nSupport with Logging {
 
 
@@ -75,15 +78,16 @@ class UpdateEmailAddressController @Inject()(actions: Actions,
                         desiDetails => desiDetails.copy(agencyDetails = desiDetails.agencyDetails.copy(agencyEmail = Some(newEmail)))
                       )
                       _ <- sessionCache.delete(EMAIL_PENDING_VERIFICATION)
-                    } yield Redirect(desiDetails.routes.CheckYourAnswersController.showPage)
+                      journey <- isJourneyComplete()
+                    } yield getNextPage(journey, "email")
                   case EmailIsLocked =>
                     Future.successful(Redirect(desiDetails.routes.UpdateEmailAddressController.showEmailLocked))
                   case EmailHasNotChanged =>
                     draftDetailsService.updateDraftDetails(
                       desiDetails => desiDetails.copy(agencyDetails = desiDetails.agencyDetails.copy(agencyEmail = Some(newEmail)))
-                    ).map {
+                    ).flatMap {
                       _ =>
-                        Redirect(desiDetails.routes.CheckYourAnswersController.showPage)
+                        isJourneyComplete().flatMap(journeyComplete => Future.successful(getNextPage(journeyComplete, "email")))
                     }
                   case EmailNeedsVerifying =>
                     for {
