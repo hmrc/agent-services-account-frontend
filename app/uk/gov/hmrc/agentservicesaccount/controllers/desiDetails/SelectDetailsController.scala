@@ -95,10 +95,10 @@ class SelectDetailsController @Inject()(actions: Actions,
     } yield desiDetailsData match {
       case Some(newData) =>
         sessionCache.put(DRAFT_NEW_CONTACT_DETAILS, newData.copy(agencyDetails = oldContactDetails.copy(
-          agencyName = if(selectedChanges.businessName.isDefined) newData.agencyDetails.agencyName else oldContactDetails.agencyName,
-          agencyAddress = if(selectedChanges.address.isDefined) newData.agencyDetails.agencyAddress else oldContactDetails.agencyAddress,
-          agencyEmail = if(selectedChanges.email.isDefined) newData.agencyDetails.agencyEmail else oldContactDetails.agencyEmail,
-          agencyTelephone = if(selectedChanges.telephone.isDefined) newData.agencyDetails.agencyTelephone else oldContactDetails.agencyTelephone
+          agencyName = if(selectedChanges.businessName.isDefined) newData.agencyDetails.agencyName else None,
+          agencyAddress = if(selectedChanges.address.isDefined) newData.agencyDetails.agencyAddress else None,
+          agencyEmail = if(selectedChanges.email.isDefined) newData.agencyDetails.agencyEmail else None,
+          agencyTelephone = if(selectedChanges.telephone.isDefined) newData.agencyDetails.agencyTelephone else None
         ))).flatMap(_ => Future.successful(getNextPage(journey, "selectChanges")))
       case _ => Future.successful(getNextPage(journey, "selectChanges"))
     }

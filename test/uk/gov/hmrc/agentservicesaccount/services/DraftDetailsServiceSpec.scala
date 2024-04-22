@@ -22,11 +22,10 @@ import play.api.libs.json.{Reads, Writes}
 import play.api.mvc.{AnyContentAsEmpty, Request}
 import play.api.test.Helpers.await
 import play.api.test.{DefaultAwaitTimeout, FakeRequest}
-import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.DRAFT_NEW_CONTACT_DETAILS
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, DesignatoryDetails}
 import uk.gov.hmrc.agentservicesaccount.support.TestConstants
-import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys, UpstreamErrorResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -41,10 +40,9 @@ class DraftDetailsServiceSpec extends PlaySpec
   implicit val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
   trait Setup {
-    protected val mockAgentClientAuthorisationConnector: AgentClientAuthorisationConnector = mock[AgentClientAuthorisationConnector]
     protected val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
 
-    object TestService extends DraftDetailsService(mockAgentClientAuthorisationConnector, mockSessionCacheService)
+    object TestService extends DraftDetailsService(mockSessionCacheService)
 
   }
 
@@ -53,11 +51,9 @@ class DraftDetailsServiceSpec extends PlaySpec
       "there are no details already in session" in new Setup {
         mockSessionCacheService.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[Request[Any]]) returns Future.successful(None)
 
-        mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
-
         mockSessionCacheService.put[DesignatoryDetails](
           dataKey = DRAFT_NEW_CONTACT_DETAILS,
-          value = desiDetailsWithEmptyOtherServices.copy(otherServices = desiDetailsWithEmptyOtherServices.otherServices.copy(ctChanges = CtChanges(true, None)))
+          value = desiDetailsWithEmptyOtherServices.copy(agencyDetails = emptyAgencyDetails, otherServices = desiDetailsWithEmptyOtherServices.otherServices.copy(ctChanges = CtChanges(true, None)))
         )(*[Writes[DesignatoryDetails]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
 
         val result = TestService.updateDraftDetails(
@@ -71,8 +67,6 @@ class DraftDetailsServiceSpec extends PlaySpec
 
       "there are details already in session" in new Setup {
         mockSessionCacheService.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[Request[Any]]) returns Future.successful(Some(desiDetailsWithEmptyOtherServices))
-
-        mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
         mockSessionCacheService.put[DesignatoryDetails](
           dataKey = DRAFT_NEW_CONTACT_DETAILS,
@@ -103,27 +97,12 @@ class DraftDetailsServiceSpec extends PlaySpec
       "session storage fails" in new Setup {
         mockSessionCacheService.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[Request[Any]]) returns Future.successful(Some(desiDetailsWithEmptyOtherServices))
 
-        mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
-
         mockSessionCacheService.put[DesignatoryDetails](
           dataKey = DRAFT_NEW_CONTACT_DETAILS,
           value = desiDetailsWithEmptyOtherServices.copy(otherServices = desiDetailsWithEmptyOtherServices.otherServices.copy(ctChanges = CtChanges(true, None)))
         )(*[Writes[DesignatoryDetails]], *[Request[Any]]) returns Future.failed(new Exception("Something went wrong"))
 
         intercept[Exception]{
-          await(TestService.updateDraftDetails(
-            desiDetailsWithEmptyOtherServices =>
-              desiDetailsWithEmptyOtherServices.copy(otherServices = desiDetailsWithEmptyOtherServices.otherServices.copy(ctChanges = CtChanges(true, None)))
-          ))
-        }
-      }
-
-      "call to retrieve details from backend fails" in new Setup {
-        mockSessionCacheService.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[Request[Any]]) returns Future.successful(None)
-
-        mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.failed(UpstreamErrorResponse("Something went wrong", 500))
-
-        intercept[UpstreamErrorResponse]{
           await(TestService.updateDraftDetails(
             desiDetailsWithEmptyOtherServices =>
               desiDetailsWithEmptyOtherServices.copy(otherServices = desiDetailsWithEmptyOtherServices.otherServices.copy(ctChanges = CtChanges(true, None)))

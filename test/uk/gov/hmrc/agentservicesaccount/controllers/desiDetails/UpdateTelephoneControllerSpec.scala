@@ -148,7 +148,7 @@ class UpdateTelephoneControllerSpec extends PlaySpec
 
       mockPendingChangeRequestRepository.find(arn) returns Future.successful(None)
 
-      mockDraftDetailsService.updateDraftDetails(*[DesignatoryDetails => DesignatoryDetails])(*[Request[_]], *[HeaderCarrier]) returns Future.successful(())
+      mockDraftDetailsService.updateDraftDetails(*[DesignatoryDetails => DesignatoryDetails])(*[Request[_]]) returns Future.successful(())
 
       val result: Future[Result] = TestController.onSubmit()(FakeRequest(POST, "/").withFormUrlEncodedBody("telephoneNumber" -> "01234 567 890"))
 
@@ -171,7 +171,7 @@ class UpdateTelephoneControllerSpec extends PlaySpec
 
       mockPendingChangeRequestRepository.find(arn) returns Future.successful(None)
 
-      mockDraftDetailsService.updateDraftDetails(*[DesignatoryDetails => DesignatoryDetails])(*[Request[_]], *[HeaderCarrier]) returns Future.successful(())
+      mockDraftDetailsService.updateDraftDetails(*[DesignatoryDetails => DesignatoryDetails])(*[Request[_]]) returns Future.successful(())
 
       mockUpdatePhoneView.apply(*[Form[String]])(*[Messages], *[Request[_]], *[AppConfig]) returns Html("")
 
