@@ -58,6 +58,8 @@ trait TestConstants {
       "GB"))
   )
 
+  val emptyAgencyDetails: AgencyDetails = AgencyDetails(None, None, None, None)
+
   val emptyOtherServices: OtherServices = OtherServices(
     saChanges = SaChanges(
       applyChanges = false,

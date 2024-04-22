@@ -73,10 +73,10 @@ trait DesiDetailsJourneySupport {
     } yield desiDetailsData match {
       case Some(details) => {
         val detailsUpdated: Map[String, Boolean] = Map(
-          "businessName" -> details.agencyDetails.agencyName.equals(oldContactDetails.agencyName),
-          "address" -> details.agencyDetails.agencyAddress.equals(oldContactDetails.agencyAddress),
-          "email" -> details.agencyDetails.agencyEmail.equals(oldContactDetails.agencyEmail),
-          "telephone" -> details.agencyDetails.agencyTelephone.equals(oldContactDetails.agencyTelephone)
+          "businessName" -> details.agencyDetails.agencyName.isEmpty,
+          "address" -> details.agencyDetails.agencyAddress.isEmpty,
+          "email" -> details.agencyDetails.agencyEmail.isEmpty,
+          "telephone" -> details.agencyDetails.agencyTelephone.isEmpty
         )
 
         selectChanges.map(changes => changes.filter(change => detailsUpdated(change)))

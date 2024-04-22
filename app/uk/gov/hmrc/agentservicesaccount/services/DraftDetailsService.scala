@@ -17,31 +17,26 @@
 package uk.gov.hmrc.agentservicesaccount.services
 
 import play.api.mvc.Request
-import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.DRAFT_NEW_CONTACT_DETAILS
+import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, DesignatoryDetails, OtherServices, SaChanges}
-import uk.gov.hmrc.http.HeaderCarrier
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 
 @Singleton
-class DraftDetailsService @Inject()(agentClientAuthorisationConnector: AgentClientAuthorisationConnector,
-                                    sessionCacheService: SessionCacheService
-                                   )(implicit ec: ExecutionContext) {
+class DraftDetailsService @Inject()(sessionCacheService: SessionCacheService)(implicit ec: ExecutionContext) {
   def updateDraftDetails(f: DesignatoryDetails => DesignatoryDetails)
-                        (implicit request: Request[_], hc: HeaderCarrier): Future[Unit] =
+                        (implicit request: Request[_]): Future[Unit] =
     for {
       optDraftDetailsInSession <- sessionCacheService.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS)
       draftDetails <- optDraftDetailsInSession match {
         case Some(details) => Future.successful(details)
-        // if there is no 'draft' new set of details in session, get a fresh copy of the current stored details
         case None =>
-          agentClientAuthorisationConnector.getAgentRecord()
-            .map(agencyDetailsResponse =>
+          Future.successful(
               DesignatoryDetails(
-                agencyDetails = agencyDetailsResponse.agencyDetails.getOrElse(throw new RuntimeException("No agency details on agent record")),
+                agencyDetails = AgencyDetails(None, None, None, None),
                 otherServices = OtherServices(
                   saChanges = SaChanges(
                     applyChanges = false,
