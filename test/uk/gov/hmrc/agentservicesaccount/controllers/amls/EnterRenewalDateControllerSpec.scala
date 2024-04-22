@@ -29,7 +29,7 @@ import play.twirl.api.Html
 import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector}
-import uk.gov.hmrc.agentservicesaccount.models.{AmlsStatuses, UpdateAmlsJourney}
+import uk.gov.hmrc.agentservicesaccount.models.{AmlsStatus, UpdateAmlsJourney}
 import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
 import uk.gov.hmrc.agentservicesaccount.support.TestConstants
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.enter_renewal_date
@@ -54,11 +54,11 @@ class EnterRenewalDateControllerSpec extends PlaySpec
   private val fakeRequest = FakeRequest()
 
   private val ukUpdateAmlsJourney = UpdateAmlsJourney(
-    status = AmlsStatuses.ValidAmlsDetailsUK
+    status = AmlsStatus.ValidAmlsDetailsUK
   )
 
   private val overseasUpdateAmlsJourney = UpdateAmlsJourney(
-    status = AmlsStatuses.ValidAmlsNonUK
+    status = AmlsStatus.ValidAmlsNonUK
   )
 
   private val newExpirationDate = LocalDate.now.plusMonths(11)

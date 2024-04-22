@@ -53,9 +53,9 @@ class ViewDetailsControllerSpec extends PlaySpec
   private val fakeRequest = FakeRequest()
 
   private val amlsDetails = AmlsDetails(supervisoryBody = "HMRC")
-  private val amlsDetailsResponsse = AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK,  Some(amlsDetails))
-  private val amlsNoDetailsResponsse = AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None)
-  private val amlsUpdateJourney = UpdateAmlsJourney(status = AmlsStatuses.ValidAmlsDetailsUK)
+  private val amlsDetailsResponsse = AmlsDetailsResponse(AmlsStatus.ValidAmlsDetailsUK,  Some(amlsDetails))
+  private val amlsNoDetailsResponsse = AmlsDetailsResponse(AmlsStatus.ValidAmlsDetailsUK, None)
+  private val amlsUpdateJourney = UpdateAmlsJourney(status = AmlsStatus.ValidAmlsDetailsUK)
 
   trait Setup {
     protected val mockAppConfig: AppConfig = mock[AppConfig]
@@ -72,7 +72,7 @@ class ViewDetailsControllerSpec extends PlaySpec
     protected val mockUpdateAmlsJourneyRepository: UpdateAmlsJourneyRepository = mock[UpdateAmlsJourneyRepository]
     protected val mockView: view_details = mock[view_details]
     protected val cc: MessagesControllerComponents = stubMessagesControllerComponents()
-    protected val dataKey = DataKey[UpdateAmlsJourney]("amlsJourney")
+    protected val dataKey: DataKey[UpdateAmlsJourney] = DataKey[UpdateAmlsJourney]("amlsJourney")
 
     object TestController extends ViewDetailsController(mockActions, mockUpdateAmlsJourneyRepository, mockAgentAssuranceConnector, mockView, cc)(mockAppConfig, ec)
   }

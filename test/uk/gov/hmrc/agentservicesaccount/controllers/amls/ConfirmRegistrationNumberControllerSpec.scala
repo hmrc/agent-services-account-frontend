@@ -29,7 +29,7 @@ import play.twirl.api.Html
 import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector}
-import uk.gov.hmrc.agentservicesaccount.models.{AmlsDetails, AmlsStatuses, UpdateAmlsJourney}
+import uk.gov.hmrc.agentservicesaccount.models.{AmlsDetails, AmlsStatus, UpdateAmlsJourney}
 import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
 import uk.gov.hmrc.agentservicesaccount.support.TestConstants
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.confirm_registration_number
@@ -56,7 +56,7 @@ class ConfirmRegistrationNumberControllerSpec extends PlaySpec
   private val amlsDetailsResponse = Future.successful(amlsDetails)
 
   private val ukAmlsJourney = UpdateAmlsJourney(
-    status = AmlsStatuses.ValidAmlsDetailsUK
+    status = AmlsStatus.ValidAmlsDetailsUK
   )
 
   trait Setup {

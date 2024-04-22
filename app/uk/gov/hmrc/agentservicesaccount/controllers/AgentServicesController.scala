@@ -26,7 +26,7 @@ import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector, AgentPermissionsConnector, AgentUserClientDetailsConnector}
 import uk.gov.hmrc.agentservicesaccount.models.AmlsStatus
-import uk.gov.hmrc.agentservicesaccount.models.AmlsStatuses._
+import uk.gov.hmrc.agentservicesaccount.models.AmlsStatus._
 import uk.gov.hmrc.agentservicesaccount.views.html.pages._
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.assistant.{administrators, your_account}
 import uk.gov.hmrc.http.HeaderCarrier

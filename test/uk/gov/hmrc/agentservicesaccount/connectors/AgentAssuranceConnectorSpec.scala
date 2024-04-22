@@ -17,7 +17,7 @@
 package uk.gov.hmrc.agentservicesaccount.connectors
 
 import play.api.test.Helpers._
-import uk.gov.hmrc.agentservicesaccount.models.{AmlsDetails, AmlsDetailsResponse, AmlsStatuses, UpdateAmlsJourney}
+import uk.gov.hmrc.agentservicesaccount.models.{AmlsDetails, AmlsDetailsResponse, AmlsStatus, UpdateAmlsJourney}
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentAssuranceStubs._
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
@@ -39,10 +39,10 @@ class AgentAssuranceConnectorSpec extends BaseISpec {
     Some(LocalDate.of(2022, 12, 25)),
     Some(LocalDate.of(2023, 12, 25))
   )
-  private val ukAMLSDetailsResponse = AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK,Some(ukAMLSDetails))
+  private val ukAMLSDetailsResponse = AmlsDetailsResponse(AmlsStatus.ValidAmlsDetailsUK,Some(ukAMLSDetails))
 
   private val amlsJourney = UpdateAmlsJourney(
-    status = AmlsStatuses.ValidAmlsDetailsUK,
+    status = AmlsStatus.ValidAmlsDetailsUK,
     newAmlsBody = Some("UK AMLS"),
     newRegistrationNumber = Some("AMLS123"),
     newExpirationDate = Some(LocalDate.parse("2024-10-10"))
@@ -50,7 +50,7 @@ class AgentAssuranceConnectorSpec extends BaseISpec {
 
 
   private val overseasAMLSDetails = AmlsDetails("notHMRC")
-  private val overseasAMLSDetailsResponse = AmlsDetailsResponse(AmlsStatuses.ValidAmlsNonUK,Some(overseasAMLSDetails))
+  private val overseasAMLSDetailsResponse = AmlsDetailsResponse(AmlsStatus.ValidAmlsNonUK,Some(overseasAMLSDetails))
 
   "getAMLSDetails" should {
     "return UK AMLS details" in {
@@ -93,18 +93,18 @@ class AgentAssuranceConnectorSpec extends BaseISpec {
 
   "getAmlsStatus" should {
     "return UK AMLS Status" in {
-      givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), arn)
+      givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatus.ValidAmlsDetailsUK, None), arn)
 
       val result = connector.getAmlsStatus(arn)
 
-      await(result) shouldBe AmlsStatuses.ValidAmlsDetailsUK
+      await(result) shouldBe AmlsStatus.ValidAmlsDetailsUK
     }
     "return Overseas AMLS details" in {
-      givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsNonUK, None), arn)
+      givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatus.ValidAmlsNonUK, None), arn)
 
       val result = connector.getAmlsStatus(arn)
 
-      await(result) shouldBe AmlsStatuses.ValidAmlsNonUK
+      await(result) shouldBe AmlsStatus.ValidAmlsNonUK
     }
     "handle 400 Bad Request" in {
       givenAmlsStatusBadRequestForArn(arn)

@@ -16,31 +16,22 @@
 
 package uk.gov.hmrc.agentservicesaccount.models
 
-import enumeratum.{Enum, EnumEntry}
-import play.api.libs.json.Format
+import enumeratum.{Enum, EnumEntry, PlayJsonEnum}
 import play.api.mvc.QueryStringBindable
-import uk.gov.hmrc.agentservicesaccount.utils.{EnumFormat, ValueClassBinder}
-
-import scala.collection.immutable
+import uk.gov.hmrc.agentservicesaccount.utils.ValueClassBinder
 
 sealed trait AmlsStatus extends EnumEntry
 
-object AmlsStatus {
-  implicit val format: Format[AmlsStatus] = EnumFormat(AmlsStatuses)
+object AmlsStatus extends Enum[AmlsStatus] with PlayJsonEnum[AmlsStatus] {
   implicit val queryBindable: QueryStringBindable[AmlsStatus] = ValueClassBinder.queryStringValueBinder[AmlsStatus](_.entryName)
-}
 
-object AmlsStatuses  extends Enum[AmlsStatus] {
+  val values: IndexedSeq[AmlsStatus] = findValues
+
   final case object NoAmlsDetailsNonUK extends AmlsStatus
   final case object ValidAmlsNonUK extends AmlsStatus
-
   final case object NoAmlsDetailsUK extends AmlsStatus
   final case object ValidAmlsDetailsUK extends AmlsStatus
   final case object ExpiredAmlsDetailsUK extends AmlsStatus
-
-  final case object PendingAmlsDetails  extends AmlsStatus
-  final case object PendingAmlsDetailsRejected  extends AmlsStatus
-
-  override def values: immutable.IndexedSeq[AmlsStatus] = findValues
-
+  final case object PendingAmlsDetails extends AmlsStatus
+  final case object PendingAmlsDetailsRejected extends AmlsStatus
 }

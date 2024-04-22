@@ -29,7 +29,7 @@ import play.twirl.api.Html
 import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector}
-import uk.gov.hmrc.agentservicesaccount.models.{AmlsStatuses, UpdateAmlsJourney}
+import uk.gov.hmrc.agentservicesaccount.models.{AmlsStatus, UpdateAmlsJourney}
 import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
 import uk.gov.hmrc.agentservicesaccount.support.TestConstants
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.enter_registration_number
@@ -54,13 +54,13 @@ class EnterRegistrationNumberControllerSpec extends PlaySpec
   private val fakeRequest = FakeRequest()
 
   private val ukAmlsJourney = UpdateAmlsJourney(
-    status = AmlsStatuses.ValidAmlsDetailsUK,
+    status = AmlsStatus.ValidAmlsDetailsUK,
     newAmlsBody = Some("ACCA"),
     newRegistrationNumber = Some("XAML00000123456")
   )
 
   private val overseasAmlsJourney = UpdateAmlsJourney(
-    status = AmlsStatuses.ValidAmlsNonUK,
+    status = AmlsStatus.ValidAmlsNonUK,
     newAmlsBody = Some("OS AMLS"),
     newRegistrationNumber = Some("AMLS123"),
     newExpirationDate = Some(LocalDate.parse("2024-10-10")),
