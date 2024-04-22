@@ -82,7 +82,7 @@ class EnterSACodeController @Inject()(actions: Actions,
       withUpdateDesiDetailsJourney { desiDetails =>
         draftDetailsService
           .updateDraftDetails(
-            _.copy(otherServices = desiDetails.otherServices.copy(saChanges = SaChanges(false, None)))
+            _.copy(otherServices = desiDetails.otherServices.copy(saChanges = SaChanges(true, None)))
           ).map {
             _ =>
               Redirect(uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.routes.ApplyCTCodeChangesController.showPage)

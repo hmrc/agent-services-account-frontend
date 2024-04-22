@@ -81,7 +81,7 @@ class EnterCTCodeController @Inject()(actions: Actions,
     ifChangeContactFeatureEnabledAndNoPendingChanges {
       withUpdateDesiDetailsJourney { desiDetails =>
         draftDetailsService.updateDraftDetails(
-          _.copy(otherServices = desiDetails.otherServices.copy(ctChanges = CtChanges(false, None)))
+          _.copy(otherServices = desiDetails.otherServices.copy(ctChanges = CtChanges(true, None)))
         ).flatMap {
             _ =>
               isJourneyComplete().map(journey =>
