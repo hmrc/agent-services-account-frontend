@@ -38,7 +38,6 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class CheckYourAnswersController @Inject()(actions: Actions,
                                            val sessionCache: SessionCacheService,
-                                           acaConnector: AgentClientAuthorisationConnector,
                                            agentAssuranceConnector: AgentAssuranceConnector,
                                            checkUpdatedDetailsView: check_updated_details,
                                            auditService:   AuditService,
@@ -46,24 +45,31 @@ class CheckYourAnswersController @Inject()(actions: Actions,
                                           )(implicit appConfig: AppConfig,
                                             cc: MessagesControllerComponents,
                                             ec: ExecutionContext,
-                                            pcodRepository: PendingChangeRequestRepository
+                                            pcodRepository: PendingChangeRequestRepository,
+                                            acaConnector: AgentClientAuthorisationConnector
                                           ) extends FrontendController(cc) with DesiDetailsJourneySupport with I18nSupport with Logging {
 
   def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     ifChangeContactFeatureEnabledAndNoPendingChanges {
-      for {
-        submittedBy <- sessionCache.get[YourDetails](DRAFT_SUBMITTED_BY)
-        selectChanges <- sessionCache.get[Set[String]](CURRENT_SELECTED_CHANGES)
-        desiDetailsData <- sessionCache.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS)
-      } yield desiDetailsData match {
-        case Some(desiDetails) => Ok(checkUpdatedDetailsView(
-          desiDetails.agencyDetails,
-          request.agentInfo.isAdmin,
-          desiDetails.otherServices,
-          submittedBy.get,
-          selectChanges.get
-        ))
-        case None => Redirect(desiDetails.routes.ViewContactDetailsController.showPage)
+      isJourneyComplete().flatMap { journey =>
+        if (journey.journeyComplete) {
+          for {
+            submittedBy <- sessionCache.get[YourDetails](DRAFT_SUBMITTED_BY)
+            selectChanges <- sessionCache.get[Set[String]](CURRENT_SELECTED_CHANGES)
+            desiDetailsData <- sessionCache.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS)
+          } yield desiDetailsData match {
+            case Some(desiDetails) => Ok(checkUpdatedDetailsView(
+              desiDetails.agencyDetails,
+              request.agentInfo.isAdmin,
+              desiDetails.otherServices,
+              submittedBy.get,
+              selectChanges.get
+            ))
+            case _ => Redirect(desiDetails.routes.ViewContactDetailsController.showPage)
+          }
+        } else {
+          Future.successful(Redirect(desiDetails.routes.ViewContactDetailsController.showPage))
+        }
       }
     }
   }
