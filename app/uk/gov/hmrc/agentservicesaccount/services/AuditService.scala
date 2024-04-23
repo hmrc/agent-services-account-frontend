@@ -19,8 +19,8 @@ package uk.gov.hmrc.agentservicesaccount.services
 import play.api.Configuration
 import play.api.libs.json.{Json, Writes}
 import uk.gov.hmrc.agentmtdidentifiers.model._
-import uk.gov.hmrc.agentservicesaccount.models.PendingChangeOfDetails
-import uk.gov.hmrc.agentservicesaccount.models.audit.{AuditDetail, UpdateContactDetailsAuditRequest, UserDetails}
+import uk.gov.hmrc.agentservicesaccount.models.{AmlsDetails, AmlsRequest, PendingChangeOfDetails}
+import uk.gov.hmrc.agentservicesaccount.models.audit.{AmlsAuditDetails, AuditDetail, UpdateAmlsAuditDetails, UpdateContactDetailsAuditRequest, UserDetails}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.AuditExtensions._
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
@@ -54,6 +54,14 @@ class AuditService @Inject()(
                                       )(implicit hc: HeaderCarrier): Unit =
     audit(toUpdateContactDetailsRequestAudit(optUtr, pendingChangeOfDetails))
 
+  def auditUpdateAmlSupervisionDetails(
+                                        amlsRequest: AmlsRequest,
+                                        almsDetailsOpt: Option[AmlsDetails],
+                                        arn: Arn,
+                                        optUtr:Option[Utr],
+                                      )(implicit hc: HeaderCarrier): Unit =
+    audit(toUpdateAmlSupervisionDetailsAudit(arn: Arn, optUtr:Option[Utr],amlsRequest, almsDetailsOpt))
+
   private def toUpdateContactDetailsRequestAudit( optUtr: Option[Utr], pendingChangeOfDetails: PendingChangeOfDetails): UpdateContactDetailsAuditRequest = {
 
     val firstName = pendingChangeOfDetails.submittedBy.fullName.split(" ").headOption.getOrElse("")
@@ -70,6 +78,16 @@ class AuditService @Inject()(
       corporationTaxAgentCode = pendingChangeOfDetails.otherServices.ctChanges.ctAgentReference,
       userDetails = UserDetails(firstName, lastName = lastName, telephone = pendingChangeOfDetails.submittedBy.telephone),
       queueDetails = config.getOptional[String]("microservice.services.dms-submission.contact-details-submission.classificationType").getOrElse(throw new RuntimeException(s"Config not found: microservice.services.dms-submission.contact-details-submission.classificationType")) //appConfig.dmsSubmissionClassificationType
+    )
+  }
+
+
+  private def toUpdateAmlSupervisionDetailsAudit( arn: Arn, optUtr:Option[Utr], amlsRequest: AmlsRequest, almsDetailsOpt: Option[AmlsDetails]): UpdateAmlsAuditDetails = {
+    UpdateAmlsAuditDetails(
+      agentReferenceNumber = arn,
+      utr =  optUtr,
+      existingAmlsDetails = almsDetailsOpt.map(x=> AmlsAuditDetails(x.membershipExpiresOn, x.membershipNumber, x.supervisoryBody)),
+      newAmlsDetails = AmlsAuditDetails(amlsRequest.membershipExpiresOn, Some(amlsRequest.membershipNumber), amlsRequest.supervisoryBody)
     )
   }
 
