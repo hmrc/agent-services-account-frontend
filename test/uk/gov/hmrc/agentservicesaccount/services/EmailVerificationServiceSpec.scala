@@ -67,7 +67,7 @@ class EmailVerificationServiceSpec extends PlaySpec
             accessibilityStatementUrl = "",
             email = Some(Email("new@email.com", controllers.desiDetails.routes.UpdateEmailAddressController.showChangeEmailAddress.absoluteURL())),
             lang = Some(Lang("en").code),
-            backUrl = Some(controllers.desiDetails.routes.CheckYourAnswersController.showPage.absoluteURL()),
+            backUrl = Some(controllers.desiDetails.routes.UpdateEmailAddressController.showChangeEmailAddress.absoluteURL()),
             pageTitle = None
           )
         )(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(Some(VerifyEmailResponse("/emailVerificationUrl")))
@@ -91,7 +91,7 @@ class EmailVerificationServiceSpec extends PlaySpec
             accessibilityStatementUrl = "",
             email = Some(Email("new@email.com", controllers.desiDetails.routes.UpdateEmailAddressController.showChangeEmailAddress.url)),
             lang = Some(Lang("en").code),
-            backUrl = Some(controllers.desiDetails.routes.CheckYourAnswersController.showPage.url),
+            backUrl = Some(controllers.desiDetails.routes.UpdateEmailAddressController.showChangeEmailAddress.url),
             pageTitle = None
           )
         )(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(Some(VerifyEmailResponse("/emailVerificationUrl")))
@@ -115,7 +115,7 @@ class EmailVerificationServiceSpec extends PlaySpec
             accessibilityStatementUrl = "",
             email = Some(Email("new@email.com", controllers.desiDetails.routes.UpdateEmailAddressController.showChangeEmailAddress.url)),
             lang = Some(Lang("en").code),
-            backUrl = Some(controllers.desiDetails.routes.CheckYourAnswersController.showPage.url),
+            backUrl = Some(controllers.desiDetails.routes.UpdateEmailAddressController.showChangeEmailAddress.url),
             pageTitle = None
           )
         )(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(None)
