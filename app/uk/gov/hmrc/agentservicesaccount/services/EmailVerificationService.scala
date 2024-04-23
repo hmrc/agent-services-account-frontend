@@ -62,7 +62,7 @@ class EmailVerificationService @Inject()(agentClientAuthorisationConnector: Agen
       accessibilityStatementUrl = "", // TODO (already here prior to restructuring on 16/04/24)
       email = Some(Email(newEmail, makeUrl(controllers.desiDetails.routes.UpdateEmailAddressController.showChangeEmailAddress))),
       lang = Some(lang.code),
-      backUrl = Some(makeUrl(controllers.desiDetails.routes.CheckYourAnswersController.showPage)),
+      backUrl = Some(makeUrl(controllers.desiDetails.routes.UpdateEmailAddressController.showChangeEmailAddress)),
       pageTitle = None
     )
 
