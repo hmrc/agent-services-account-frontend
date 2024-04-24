@@ -137,7 +137,6 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
     object TestController extends CheckYourAnswersController(
       mockActions, mockAgentAssuranceConnector, mockUpdateAmlsJourneyRepository, mockView, cc, mockAuditService, mockAcaConnector )(mockAppConfig, ec)
 
-//    def givenAgentRecord = mockAcaConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
   }
 
   "ShowPage" should {

@@ -85,9 +85,6 @@ class CheckYourAnswersController @Inject()(actions: Actions,
               _ <- agentAssuranceConnector.postAmlsDetails(request.agentInfo.arn, amlsRequest)
               oldAmlsDetails <- Try{agentAssuranceConnector.getAMLSDetails(request.agentInfo.arn.value).map(Option(_))}.getOrElse(Future.successful(None))
               optUtr <- Try{acaConnector.getAgentRecord().map(_.uniqueTaxReference)}.getOrElse(Future.successful(None))
-//              oldAmlsDetails <- agentAssuranceConnector.getAMLSDetails(request.agentInfo.arn.value)
-//              optUtr <- acaConnector.getAgentRecord().map(_.uniqueTaxReference)
-
               _ = auditService.auditUpdateAmlSupervisionDetails(amlsRequest, oldAmlsDetails, request.agentInfo.arn, optUtr )
             } yield Redirect(amls.routes.AmlsConfirmationController.showUpdatedAmlsConfirmationPage(journeyData.hasExistingAmls))
           case (optNewAmlsBody, optNewRegistrationNumber) =>
