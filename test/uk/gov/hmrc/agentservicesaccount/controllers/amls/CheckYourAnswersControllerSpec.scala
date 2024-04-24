@@ -29,8 +29,9 @@ import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, SuspensionDetails, Utr}
 import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector}
-import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, AgentDetailsDesResponse, AmlsRequest, AmlsStatus, BusinessAddress, UpdateAmlsJourney}
+import uk.gov.hmrc.agentservicesaccount.models._
 import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
+import uk.gov.hmrc.agentservicesaccount.services.AuditService
 import uk.gov.hmrc.agentservicesaccount.utils.AMLSLoader
 import uk.gov.hmrc.agentservicesaccount.views.components.models.SummaryListData
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.check_your_answers
@@ -102,6 +103,8 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
       "GB"))
   )
 
+  val amlsDetails = AmlsDetails("supervisoryBody", Some("membershipNumber"), None, None, None, Some(LocalDate.now()))
+
   val suspensionDetails = SuspensionDetails(suspensionStatus = false, None)
 
   val agentRecord = AgentDetailsDesResponse(
@@ -128,9 +131,12 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
     protected val mockView: check_your_answers = mock[check_your_answers]
     protected val cc: MessagesControllerComponents = stubMessagesControllerComponents()
     protected val dataKey: DataKey[UpdateAmlsJourney] = DataKey[UpdateAmlsJourney]("amlsJourney")
+    protected val mockAuditService = mock[AuditService]
+    protected val mockAcaConnector = mock[AgentClientAuthorisationConnector]
 
     object TestController extends CheckYourAnswersController(
-      mockActions, mockAgentAssuranceConnector, mockUpdateAmlsJourneyRepository, mockView, cc)(mockAppConfig, ec)
+      mockActions, mockAgentAssuranceConnector, mockUpdateAmlsJourneyRepository, mockView, cc, mockAuditService, mockAcaConnector )(mockAppConfig, ec)
+
   }
 
   "ShowPage" should {
@@ -284,10 +290,33 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
             .getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]],*[Request[_]])returns Future.successful(Some(ukAmlsJourney))
           mockAgentAssuranceConnector.postAmlsDetails(arn, amlsRequest)(*[ExecutionContext], *[HeaderCarrier]) returns Future.successful(())
 
+          mockAgentAssuranceConnector.getAMLSDetails(arn.value)(*[ExecutionContext], *[HeaderCarrier]) returns Future.successful(amlsDetails)
+          mockAcaConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+
           val result: Future[Result] = TestController.onSubmit()(fakeRequest)
           status(result) mustBe SEE_OTHER
 
         }
+
+        "agent has successfully entered all the data for CYA page with Audit data gathering exceptions " in new Setup {
+
+          mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
+            *[HeaderCarrier],
+            *[ExecutionContext]) returns authResponse
+          mockAppConfig.enableNonHmrcSupervisoryBody returns true
+          mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+          mockUpdateAmlsJourneyRepository
+            .getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]],*[Request[_]])returns Future.successful(Some(ukAmlsJourney))
+          mockAgentAssuranceConnector.postAmlsDetails(arn, amlsRequest)(*[ExecutionContext], *[HeaderCarrier]) returns Future.successful(())
+
+          mockAgentAssuranceConnector.getAMLSDetails(arn.value)(*[ExecutionContext], *[HeaderCarrier]).throws(new RuntimeException("Something went wrong"))
+          mockAcaConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]).throws(new RuntimeException("Something went wrong"))
+
+          val result: Future[Result] = TestController.onSubmit()(fakeRequest)
+          status(result) mustBe SEE_OTHER
+
+        }
+
         "agent has unsuccessfully entered data for CYA page" in new Setup {
 
           mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
