@@ -426,6 +426,7 @@ class AgentServicesControllerSpec extends BaseISpec {
 
       givenAuthorisedAsAgentWith(arn.value)
       givenAgentRecordFound(agentRecord)
+      givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatus.NoAmlsDetailsUK, None), arn)
       val response = controllerWithGranPermsDisabled.manageAccount().apply(fakeRequest("GET", "/manage-account"))
 
       status(response) shouldBe OK
@@ -436,6 +437,8 @@ class AgentServicesControllerSpec extends BaseISpec {
       content should include(messagesApi("manage.account.add-user"))
       content should include(messagesApi("manage.account.manage-user-access"))
       content should include(messagesApi("manage.account.view-or-update-contact-details"))
+      content should include(messagesApi("manage.account.view-or-update-contact-details"))
+      content should include(messagesApi("manage.account.amls.add"))
     }
 
     "return Status: OK and body containing existing manage account content when gran perms FF is on but there was an error getting optin-status" in {

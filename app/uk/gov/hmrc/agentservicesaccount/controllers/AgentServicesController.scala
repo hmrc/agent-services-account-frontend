@@ -83,43 +83,41 @@ class AgentServicesController @Inject()(authActions: AuthActions,
   val manageAccount: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     val agentInfo = request.agentInfo
     if (agentInfo.isAdmin) {
-      if (appConfig.granPermsEnabled) {
-        agentPermissionsConnector.isArnAllowed flatMap {
+
+      for {
+        amlsStatus <- agentAssuranceConnector.getAmlsStatus(agentInfo.arn)
+        amlsLink = getAmlsStatusLink(amlsStatus)
+        accessGroups <- if (appConfig.granPermsEnabled) agentPermissionsConnector.isArnAllowed flatMap {
           case true =>
             for {
               maybeOptinStatus <- agentPermissionsConnector.getOptinStatus(agentInfo.arn)
               mGroups <- agentPermissionsConnector.getGroupsSummaries(agentInfo.arn)
               hasAnyGroups = mGroups.exists(_.groups.nonEmpty)
-              amlsStatus <- agentAssuranceConnector.getAmlsStatus(agentInfo.arn)
-              (amlsKey, amlsLinkHref) = getAmlsStatusLink(amlsStatus)
             } yield {
               maybeOptinStatus.foreach(syncEacdIfOptedIn(agentInfo.arn, _))
-              Ok(manage_account(Some(amlsKey), Some(amlsLinkHref), maybeOptinStatus, hasAnyGroups))
+              (maybeOptinStatus, hasAnyGroups)
             }
-          case false =>
-            Future successful Ok(manage_account())
-        }
-      } else {
-        Future.successful(Ok(manage_account()))
-      }
+          case false => Future successful(None, false)
+        } else Future successful(None, false)
+
+      } yield Ok(manage_account(Some(amlsLink.msg), Some(amlsLink.href), accessGroups._1, accessGroups._2))
     } else {
       if (appConfig.granPermsEnabled) {
         Future.successful(Redirect(routes.AgentServicesController.yourAccount))
-      } else {
-        Future.successful(Forbidden)
-      }
-
+      } else Future.successful(Forbidden)
     }
   }
 
-  private def getAmlsStatusLink(amlsStatus: AmlsStatus): (String, String) = {
+
+  private case class AmlsLink(msg: String, href: String)
+  private def getAmlsStatusLink(amlsStatus: AmlsStatus): AmlsLink = {
     amlsStatus match {
       case NoAmlsDetailsNonUK | ValidAmlsNonUK | ValidAmlsDetailsUK | PendingAmlsDetails =>
-        ("manage.account.amls.view",amlsRoutes.ViewDetailsController.showPage.url)
+        AmlsLink("manage.account.amls.view",amlsRoutes.ViewDetailsController.showPage.url)
       case NoAmlsDetailsUK | PendingAmlsDetailsRejected=>
-        ("manage.account.amls.add",amlsRoutes.ViewDetailsController.showPage.url)
+        AmlsLink("manage.account.amls.add",amlsRoutes.ViewDetailsController.showPage.url)
       case ExpiredAmlsDetailsUK =>
-        ("manage.account.amls.update",amlsRoutes.ViewDetailsController.showPage.url)
+        AmlsLink("manage.account.amls.update",amlsRoutes.ViewDetailsController.showPage.url)
     }
   }
 

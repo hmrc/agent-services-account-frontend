@@ -32,7 +32,8 @@
     team_members: team_members,
     info: info,
     contact_details_link: contact_details_link,
-    amls_details_link:amls_details_link
+    amls_details_link:amls_details_link,
+        administrators_link: administrators_link
 )
 
 @(
@@ -60,7 +61,9 @@
             items = Seq(
                 a("manage.account.add-user", href = appConfig.addUserUrl),
                 a("manage.account.manage-user-access", href = appConfig.manageUsersUrl, openInNewWindow = true),
-                contact_details_link()
+                contact_details_link(),
+                amls_details_link(amlsKey,  amlsLinkHref),
+                p(html = Some(administrators_link()))
             )
         )
 
