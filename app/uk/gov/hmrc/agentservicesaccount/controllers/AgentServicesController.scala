@@ -108,33 +108,6 @@ class AgentServicesController @Inject()(authActions: AuthActions,
     }
   }
 
-//      if (appConfig.granPermsEnabled) {
-//        agentPermissionsConnector.isArnAllowed flatMap {
-//          case true =>
-//            for {
-//              maybeOptinStatus <- agentPermissionsConnector.getOptinStatus(agentInfo.arn)
-//              mGroups <- agentPermissionsConnector.getGroupsSummaries(agentInfo.arn)
-//              hasAnyGroups = mGroups.exists(_.groups.nonEmpty)
-//
-//            } yield {
-//              maybeOptinStatus.foreach(syncEacdIfOptedIn(agentInfo.arn, _))
-//              Ok(manage_account(Some(amlsKey), Some(amlsLinkHref), maybeOptinStatus, hasAnyGroups))
-//            }
-//          case false =>
-//            Future successful Ok(manage_account(Some(amlsKey), Some(amlsLinkHref)))
-//        }
-//      } else {
-//        Future.successful(Ok(manage_account()))
-//      }
-//    } else {
-//      if (appConfig.granPermsEnabled) {
-//        Future.successful(Redirect(routes.AgentServicesController.yourAccount))
-//      } else {
-//        Future.successful(Forbidden)
-//      }
-//
-//    }
-
 
   private case class AmlsLink(msg: String, href: String)
   private def getAmlsStatusLink(amlsStatus: AmlsStatus): AmlsLink = {
