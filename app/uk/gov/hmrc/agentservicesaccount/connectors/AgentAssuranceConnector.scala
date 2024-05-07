@@ -23,7 +23,7 @@ import play.api.libs.json.Json
 import uk.gov.hmrc.agent.kenshoo.monitoring.HttpAPIMonitor
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.models.{AmlsDetails, AmlsDetailsResponse, AmlsRequest, AmlsStatus}
+import uk.gov.hmrc.agentservicesaccount.models.{AgentDetailsDesResponse, AmlsDetails, AmlsDetailsResponse, AmlsRequest, AmlsStatus}
 import uk.gov.hmrc.http._
 import uk.gov.hmrc.http.client.HttpClientV2
 
@@ -87,5 +87,13 @@ class AgentAssuranceConnector @Inject()(httpV2: HttpClientV2)(implicit val metri
           }
       }
   }
+
+  def getAgentRecord(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AgentDetailsDesResponse] =
+    httpV2
+      .get(new URL(s"$baseUrl/agent-assurance/agent-record-with-checks"))
+      .execute[HttpResponse].map( response => response.status match {
+        case OK => Json.parse(response.body).as[AgentDetailsDesResponse]
+        case _ => throw UpstreamErrorResponse("no agent record found", 500)
+      })
 
 }

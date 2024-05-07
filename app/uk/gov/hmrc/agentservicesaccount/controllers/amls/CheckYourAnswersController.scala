@@ -36,7 +36,7 @@ import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector}
+import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.controllers._
 import uk.gov.hmrc.agentservicesaccount.models.{AmlsRequest, UpdateAmlsJourney}
 import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
@@ -58,8 +58,7 @@ class CheckYourAnswersController @Inject()(actions: Actions,
                                            val updateAmlsJourneyRepository: UpdateAmlsJourneyRepository,
                                            checkYourAnswers: check_your_answers,
                                            cc: MessagesControllerComponents,
-                                           auditService:   AuditService,
-                                           acaConnector: AgentClientAuthorisationConnector
+                                           auditService:   AuditService
                                           )(implicit appConfig: AppConfig, ec: ExecutionContext)
   extends FrontendController(cc) with AmlsJourneySupport with I18nSupport {
 
@@ -84,7 +83,7 @@ class CheckYourAnswersController @Inject()(actions: Actions,
             for {
               _ <- agentAssuranceConnector.postAmlsDetails(request.agentInfo.arn, amlsRequest)
               oldAmlsDetails <- Try{agentAssuranceConnector.getAMLSDetails(request.agentInfo.arn.value).map(Option(_))}.getOrElse(Future.successful(None))
-              optUtr <- Try{acaConnector.getAgentRecord().map(_.uniqueTaxReference)}.getOrElse(Future.successful(None))
+              optUtr <- Try{agentAssuranceConnector.getAgentRecord.map(_.uniqueTaxReference)}.getOrElse(Future.successful(None))
               _ = auditService.auditUpdateAmlSupervisionDetails(amlsRequest, oldAmlsDetails, request.agentInfo.arn, optUtr )
             } yield Redirect(amls.routes.AmlsConfirmationController.showUpdatedAmlsConfirmationPage(journeyData.hasExistingAmls))
           case (optNewAmlsBody, optNewRegistrationNumber) =>

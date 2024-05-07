@@ -21,8 +21,7 @@ import play.api.Application
 import play.api.libs.ws.{WSClient, WSRequest}
 import play.api.test.Helpers._
 import uk.gov.hmrc.agentservicesaccount.models.{AmlsDetails, AmlsDetailsResponse, AmlsStatus}
-import uk.gov.hmrc.agentservicesaccount.stubs.AgentAssuranceStubs.{givenAMLSDetailsForArn, givenAMLSDetailsServerErrorForArn}
-import uk.gov.hmrc.agentservicesaccount.stubs.AgentClientAuthorisationStubs.givenAgentRecordFound
+import uk.gov.hmrc.agentservicesaccount.stubs.AgentAssuranceStubs.{givenAMLSDetailsForArn, givenAMLSDetailsServerErrorForArn, givenAgentRecordFound}
 import uk.gov.hmrc.agentservicesaccount.stubs.CookieHelper
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 

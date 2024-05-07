@@ -28,7 +28,7 @@ import play.api.mvc.{Action, AnyContent, AnyContentAsEmpty, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
-import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector}
+import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.{CURRENT_SELECTED_CHANGES, DRAFT_NEW_CONTACT_DETAILS, DRAFT_SUBMITTED_BY, EMAIL_PENDING_VERIFICATION, desiDetails}
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails._
 import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, PendingChangeRequest}
@@ -80,7 +80,6 @@ class CheckYourAnswersControllerSpec extends UnitSpec
 
   val overrides: AbstractModule = new AbstractModule() {
     override def configure(): Unit = {
-      bind(classOf[AgentClientAuthorisationConnector]).toInstance(stub[AgentClientAuthorisationConnector])
       bind(classOf[AgentAssuranceConnector]).toInstance(stub[AgentAssuranceConnector])
       bind(classOf[PendingChangeRequestRepository]).toInstance(stub[PendingChangeRequestRepository])
       bind(classOf[AuthConnector]).toInstance(stubAuthConnector)
@@ -94,10 +93,10 @@ class CheckYourAnswersControllerSpec extends UnitSpec
   ).overrides(overrides).build()
 
   trait TestSetup {
-    val acaConnector: AgentClientAuthorisationConnector = app.injector.instanceOf[AgentClientAuthorisationConnector]
-    (acaConnector.getAgentRecord()(_: HeaderCarrier, _: ExecutionContext)).when(*, *).returns(Future.successful(agentRecord))
 
     val agentAssuranceConnector: AgentAssuranceConnector = app.injector.instanceOf[AgentAssuranceConnector]
+
+    (agentAssuranceConnector.getAgentRecord(_: HeaderCarrier, _: ExecutionContext)).when(*, *).returns(Future.successful(agentRecord))
     (agentAssuranceConnector.postDesignatoryDetails(_: Arn, _: String)(_: ExecutionContext, _: HeaderCarrier)).when(*, *, *, *).returns(Future.successful(()))
 
     val checkYourAnswersController: CheckYourAnswersController = app.injector.instanceOf[CheckYourAnswersController]

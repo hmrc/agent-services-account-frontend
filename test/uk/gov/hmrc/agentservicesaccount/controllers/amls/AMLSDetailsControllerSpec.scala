@@ -27,7 +27,7 @@ import play.api.test.{DefaultAwaitTimeout, FakeRequest, Helpers}
 import play.twirl.api.Html
 import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector}
+import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.models.AmlsDetails
 import uk.gov.hmrc.agentservicesaccount.support.TestConstants
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.supervision_details
@@ -59,11 +59,10 @@ class AMLSDetailsControllerSpec extends PlaySpec
     protected val mockEnvironment: Environment = mock[Environment]
     protected val authActions = new AuthActions(mockAppConfig, mockAuthConnector, mockEnvironment)
 
-    protected val mockAgentClientAuthorisationConnector: AgentClientAuthorisationConnector = mock[AgentClientAuthorisationConnector]
     protected val actionBuilder = new DefaultActionBuilderImpl(Helpers.stubBodyParser())
     protected val mockAgentAssuranceConnector: AgentAssuranceConnector = mock[AgentAssuranceConnector]
     protected val mockActions =
-      new Actions(mockAgentClientAuthorisationConnector, mockAgentAssuranceConnector, authActions, actionBuilder)
+      new Actions(mockAgentAssuranceConnector, authActions, actionBuilder)
 
     protected val mockView: supervision_details = mock[supervision_details]
     protected val cc: MessagesControllerComponents = stubMessagesControllerComponents()
@@ -79,7 +78,7 @@ class AMLSDetailsControllerSpec extends PlaySpec
 
       mockAppConfig.enableNonHmrcSupervisoryBody returns true
 
-      mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+      mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
       mockAgentAssuranceConnector.getAMLSDetails(arn.value)(*[ExecutionContext], *[HeaderCarrier]) returns amlsDetailsResponse
 

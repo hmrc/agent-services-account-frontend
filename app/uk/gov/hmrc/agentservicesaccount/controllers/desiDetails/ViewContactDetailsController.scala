@@ -20,7 +20,7 @@ import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
+import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.DRAFT_NEW_CONTACT_DETAILS
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
@@ -33,7 +33,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class ViewContactDetailsController @Inject()(actions: Actions,
                                              sessionCache: SessionCacheService,
-                                             acaConnector: AgentClientAuthorisationConnector,
+                                             agentAssuranceConnector: AgentAssuranceConnector,
                                              pcodRepository: PendingChangeRequestRepository,
                                              view_contact_details: view_contact_details
                                             )(implicit appConfig: AppConfig,
@@ -49,7 +49,7 @@ class ViewContactDetailsController @Inject()(actions: Actions,
       for {
         _ <- sessionCache.delete(DRAFT_NEW_CONTACT_DETAILS)
         mPendingChange <- pcodRepository.find(request.agentInfo.arn)
-        agencyDetails <- acaConnector.getAgentRecord().map(_.agencyDetails.getOrElse {
+        agencyDetails <- agentAssuranceConnector.getAgentRecord.map(_.agencyDetails.getOrElse {
           throw new RuntimeException(s"Could not retrieve current agency details for ${request.agentInfo.arn} from the backend")
         })
       } yield Ok(view_contact_details(agencyDetails, mPendingChange, request.agentInfo.isAdmin))

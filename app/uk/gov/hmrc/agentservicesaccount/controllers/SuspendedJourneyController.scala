@@ -21,7 +21,7 @@ import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
+import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.forms.{ContactDetailsSuspendForm, SuspendDescriptionForm}
 import uk.gov.hmrc.agentservicesaccount.models.{AccountRecoverySummary, SuspendContactDetails}
 import uk.gov.hmrc.agentservicesaccount.services.{EmailService, SessionCacheService}
@@ -33,7 +33,7 @@ import scala.concurrent.ExecutionContext
 
 class SuspendedJourneyController @Inject()(actions: Actions,
                                             emailService: EmailService,
-                                            agentClientAuthorisationConnector: AgentClientAuthorisationConnector,
+                                            agentAssuranceConnector: AgentAssuranceConnector,
                                             suspensionWarningView: suspension_warning,
                                             contactDetailsView: contact_details,
                                             recoveryDescriptionView: recovery_description,

@@ -24,7 +24,7 @@ import uk.gov.hmrc.agents.accessgroups.optin.{OptedInReady, OptinStatus}
 import uk.gov.hmrc.agentservicesaccount.actions.CallOps._
 import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector, AgentPermissionsConnector, AgentUserClientDetailsConnector}
+import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentPermissionsConnector, AgentUserClientDetailsConnector}
 import uk.gov.hmrc.agentservicesaccount.models.AmlsStatus
 import uk.gov.hmrc.agentservicesaccount.models.AmlsStatus._
 import uk.gov.hmrc.agentservicesaccount.views.html.pages._
@@ -39,7 +39,6 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class AgentServicesController @Inject()(authActions: AuthActions,
                                         actions: Actions,
-                                        agentClientAuthorisationConnector: AgentClientAuthorisationConnector,
                                         agentPermissionsConnector: AgentPermissionsConnector,
                                         agentUserClientDetailsConnector: AgentUserClientDetailsConnector,
                                         agentAssuranceConnector: AgentAssuranceConnector,

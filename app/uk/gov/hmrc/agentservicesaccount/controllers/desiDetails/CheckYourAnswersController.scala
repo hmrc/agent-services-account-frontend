@@ -21,8 +21,8 @@ import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector}
-import uk.gov.hmrc.agentservicesaccount.controllers.{desiDetails, _}
+import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
+import uk.gov.hmrc.agentservicesaccount.controllers._
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util._
 import uk.gov.hmrc.agentservicesaccount.models.{PendingChangeOfDetails, PendingChangeRequest}
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{DesignatoryDetails, YourDetails}
@@ -38,7 +38,6 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class CheckYourAnswersController @Inject()(actions: Actions,
                                            val sessionCache: SessionCacheService,
-                                           acaConnector: AgentClientAuthorisationConnector,
                                            agentAssuranceConnector: AgentAssuranceConnector,
                                            checkUpdatedDetailsView: check_updated_details,
                                            auditService:   AuditService,
@@ -76,9 +75,9 @@ class CheckYourAnswersController @Inject()(actions: Actions,
           Future.successful(Redirect(desiDetails.routes.ViewContactDetailsController.showPage))
         case Some(details) => for {
           selectChanges <- sessionCache.get[Set[String]](CURRENT_SELECTED_CHANGES)
-          optUtr <- acaConnector.getAgentRecord().map(_.uniqueTaxReference)
+          optUtr <- agentAssuranceConnector.getAgentRecord.map(_.uniqueTaxReference)
           submittedBy <- sessionCache.get[YourDetails](DRAFT_SUBMITTED_BY)
-          oldContactDetails <- acaConnector.getAgentRecord().map(_.agencyDetails.getOrElse {
+          oldContactDetails <- agentAssuranceConnector.getAgentRecord.map(_.agencyDetails.getOrElse {
             throw new RuntimeException(s"Could not retrieve current agency details for ${request.agentInfo.arn} from the backend")
           })
           pendingChange = PendingChangeOfDetails(

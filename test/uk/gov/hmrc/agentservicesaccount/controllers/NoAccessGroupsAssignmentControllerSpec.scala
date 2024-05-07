@@ -28,12 +28,12 @@ import play.api.test.{DefaultAwaitTimeout, FakeRequest, Helpers}
 import play.twirl.api.Html
 import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector}
+import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.support.TestConstants
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.admin_access_for_access_groups
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve._
-import uk.gov.hmrc.auth.core.{AuthConnector, Nino => _, _}
+import uk.gov.hmrc.auth.core.{Nino => _, _}
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -49,7 +49,7 @@ class NoAccessGroupsAssignmentControllerSpec extends PlaySpec
   private val fakeRequest = FakeRequest()
 
   //TODO move auth/suspend actions to common file for all unit tests
-  val mockAcaConnector: AgentClientAuthorisationConnector = mock[AgentClientAuthorisationConnector]
+  val mockAgentAssuranceConnector: AgentAssuranceConnector = mock[AgentAssuranceConnector]
 
   private def authResponseAgent(credentialRole: CredentialRole): Future[Enrolments ~ Some[Credentials] ~ Some[Email] ~ Some[Name] ~ Some[CredentialRole]] =
     Future.successful(new~(new~(new~(new~(
@@ -58,10 +58,9 @@ class NoAccessGroupsAssignmentControllerSpec extends PlaySpec
       Some(Name(Some("Troy"), Some("Barnes")))),
       Some(credentialRole)))
 
-  def givenAgentRecord = mockAcaConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+  def givenAgentRecord = mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
   val mockAuthConnector: AuthConnector = mock[AuthConnector]
-  val mockAgentAssuranceConnector: AgentAssuranceConnector = mock[AgentAssuranceConnector]
   def givenAuthorisedAgent(credentialRole: CredentialRole): ScalaOngoingStubbing[Future[Any]] = {
     mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
       *[HeaderCarrier],
@@ -74,7 +73,7 @@ class NoAccessGroupsAssignmentControllerSpec extends PlaySpec
     protected val actionBuilder = new DefaultActionBuilderImpl(Helpers.stubBodyParser())
 
     protected val mockActions =
-      new Actions(mockAcaConnector, mockAgentAssuranceConnector, authActions, actionBuilder)
+      new Actions(mockAgentAssuranceConnector, authActions, actionBuilder)
 
     protected val mockView: admin_access_for_access_groups = mock[admin_access_for_access_groups]
     protected val cc: MessagesControllerComponents = stubMessagesControllerComponents()

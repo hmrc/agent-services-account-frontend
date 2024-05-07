@@ -24,7 +24,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agents.accessgroups.optin.{OptedInReady, OptedOutSingleUser}
 import uk.gov.hmrc.agentservicesaccount.models.AccessGroupSummaries
-import uk.gov.hmrc.agentservicesaccount.stubs.AgentClientAuthorisationStubs._
+import uk.gov.hmrc.agentservicesaccount.stubs.AgentAssuranceStubs.givenAgentRecordFound
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentPermissionsStubs.{givenAccessGroupsForArn, givenArnAllowedOk, givenOptinStatusSuccessReturnsForArn, givenSyncEacdSuccess}
 import uk.gov.hmrc.agentservicesaccount.support.Css.{H1, paragraphs}
 import uk.gov.hmrc.agentservicesaccount.support.{BaseISpec, Css}

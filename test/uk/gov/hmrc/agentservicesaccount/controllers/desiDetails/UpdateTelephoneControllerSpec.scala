@@ -29,7 +29,7 @@ import play.twirl.api.Html
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector}
+import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.{CURRENT_SELECTED_CHANGES, DRAFT_NEW_CONTACT_DETAILS, DRAFT_SUBMITTED_BY, desiDetails}
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{DesignatoryDetails, YourDetails}
@@ -63,12 +63,11 @@ class UpdateTelephoneControllerSpec extends PlaySpec
     protected val mockEnvironment: Environment = mock[Environment]
     protected val authActions = new AuthActions(mockAppConfig, mockAuthConnector, mockEnvironment)
 
-    protected val mockAgentClientAuthorisationConnector: AgentClientAuthorisationConnector = mock[AgentClientAuthorisationConnector]
     protected val mockDraftDetailsService: DraftDetailsService = mock[DraftDetailsService]
     protected val actionBuilder = new DefaultActionBuilderImpl(Helpers.stubBodyParser())
     protected val mockAgentAssuranceConnector: AgentAssuranceConnector = mock[AgentAssuranceConnector]
     protected val mockActions =
-      new Actions(mockAgentClientAuthorisationConnector, mockAgentAssuranceConnector, authActions, actionBuilder)
+      new Actions(mockAgentAssuranceConnector, authActions, actionBuilder)
 
     protected val mockPendingChangeRequestRepository = mock[PendingChangeRequestRepository]
     protected val mockUpdatePhoneView: update_phone = mock[update_phone]
@@ -80,7 +79,7 @@ class UpdateTelephoneControllerSpec extends PlaySpec
       mockSessionCache,
       mockDraftDetailsService,
       mockUpdatePhoneView
-    )(mockAppConfig, cc, ec, mockPendingChangeRequestRepository, mockAgentClientAuthorisationConnector)
+    )(mockAppConfig, cc, ec, mockPendingChangeRequestRepository, mockAgentAssuranceConnector)
   }
 
   "GET /manage-account/contact-details/new-telephone" should {
@@ -95,7 +94,7 @@ class UpdateTelephoneControllerSpec extends PlaySpec
 
       mockSessionCache.get(DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[Request[_]]) returns Future.successful(None)
 
-      mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+      mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
       mockPendingChangeRequestRepository.find(arn) returns Future.successful(None)
 
@@ -118,7 +117,7 @@ class UpdateTelephoneControllerSpec extends PlaySpec
 
         mockSessionCache.get(DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[Request[_]]) returns Future.successful(Some(desiDetailsSaChangesOtherServices))
 
-        mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+        mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
         mockPendingChangeRequestRepository.find(arn) returns Future.successful(Some(PendingChangeRequest(arn, Instant.now)))
 
@@ -144,7 +143,7 @@ class UpdateTelephoneControllerSpec extends PlaySpec
 
       mockSessionCache.get(DRAFT_SUBMITTED_BY)(*[Reads[YourDetails]], *[Request[_]]) returns Future.successful(None)
 
-      mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+      mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
       mockPendingChangeRequestRepository.find(arn) returns Future.successful(None)
 
@@ -167,7 +166,7 @@ class UpdateTelephoneControllerSpec extends PlaySpec
 
       mockSessionCache.get(DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[Request[_]]) returns Future.successful(Some(desiDetailsSaChangesOtherServices))
 
-      mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+      mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
       mockPendingChangeRequestRepository.find(arn) returns Future.successful(None)
 
@@ -194,7 +193,7 @@ class UpdateTelephoneControllerSpec extends PlaySpec
 
         mockSessionCache.get(DRAFT_SUBMITTED_BY)(*[Reads[YourDetails]], *[Request[_]]) returns Future.successful(None)
 
-        mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+        mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
         mockPendingChangeRequestRepository.find(arn) returns Future.successful(Some(PendingChangeRequest(arn, Instant.now)))
 

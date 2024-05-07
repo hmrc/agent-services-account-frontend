@@ -28,7 +28,7 @@ import play.api.mvc.{Action, AnyContent}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
-import uk.gov.hmrc.agentservicesaccount.connectors.{AddressLookupConnector, AgentClientAuthorisationConnector, EmailVerificationConnector}
+import uk.gov.hmrc.agentservicesaccount.connectors.{AddressLookupConnector, AgentAssuranceConnector, EmailVerificationConnector}
 import uk.gov.hmrc.agentservicesaccount.controllers.{CURRENT_SELECTED_CHANGES, DRAFT_NEW_CONTACT_DETAILS, DRAFT_SUBMITTED_BY, EMAIL_PENDING_VERIFICATION, desiDetails}
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup.{ConfirmedResponseAddress, ConfirmedResponseAddressDetails, Country, JourneyConfigV2}
@@ -91,7 +91,7 @@ class ContactDetailsControllerSpec extends UnitSpec
 
   val overrides = new AbstractModule() {
     override def configure(): Unit = {
-      bind(classOf[AgentClientAuthorisationConnector]).toInstance(stub[AgentClientAuthorisationConnector])
+      bind(classOf[AgentAssuranceConnector]).toInstance(stub[AgentAssuranceConnector])
       bind(classOf[AddressLookupConnector]).toInstance(stub[AddressLookupConnector])
       bind(classOf[EmailVerificationConnector]).toInstance(stub[EmailVerificationConnector])
       bind(classOf[PendingChangeRequestRepository]).toInstance(stub[PendingChangeRequestRepository])
@@ -106,8 +106,8 @@ class ContactDetailsControllerSpec extends UnitSpec
   ).overrides(overrides).build()
 
   trait TestSetup {
-    val acaConnector: AgentClientAuthorisationConnector = app.injector.instanceOf[AgentClientAuthorisationConnector]
-    (acaConnector.getAgentRecord()(_: HeaderCarrier, _: ExecutionContext)).when(*, *).returns(Future.successful(agentRecord))
+    val agentAssuranceConnector: AgentAssuranceConnector = app.injector.instanceOf[AgentAssuranceConnector]
+    (agentAssuranceConnector.getAgentRecord(_: HeaderCarrier, _: ExecutionContext)).when(*, *).returns(Future.successful(agentRecord))
 
     val alfConnector: AddressLookupConnector = app.injector.instanceOf[AddressLookupConnector]
     (alfConnector.init(_: JourneyConfigV2)(_: HeaderCarrier)).when(*, *).returns(Future.successful("mock-address-lookup-url"))

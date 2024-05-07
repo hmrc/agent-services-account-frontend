@@ -20,7 +20,7 @@ import play.api.mvc.Results.{NotFound, Redirect}
 import play.api.mvc.{Request, Result}
 import uk.gov.hmrc.agentservicesaccount.actions.AuthRequestWithAgentInfo
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
+import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.{CURRENT_SELECTED_CHANGES, DRAFT_NEW_CONTACT_DETAILS, DRAFT_SUBMITTED_BY, desiDetails, routes}
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{DesiDetailsJourney, DesignatoryDetails, OtherServices, YourDetails}
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
@@ -61,13 +61,13 @@ trait DesiDetailsJourneySupport {
     }
 
   def contactChangesNeeded()(implicit request: AuthRequestWithAgentInfo[_],
-                             acaConnector: AgentClientAuthorisationConnector,
+                             agentAssuranceConnector: AgentAssuranceConnector,
                              hc: HeaderCarrier,
                              ec: ExecutionContext): Future[Option[Set[String]]] = {
     for {
       selectChanges <- sessionCache.get[Set[String]](CURRENT_SELECTED_CHANGES)
       desiDetailsData <- sessionCache.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS)
-      oldContactDetails <- acaConnector.getAgentRecord().map(_.agencyDetails.getOrElse {
+      oldContactDetails <- agentAssuranceConnector.getAgentRecord.map(_.agencyDetails.getOrElse {
         throw new RuntimeException(s"Could not retrieve current agency details for ${request.agentInfo.arn} from the backend")
       })
     } yield desiDetailsData match {
@@ -99,7 +99,7 @@ trait DesiDetailsJourneySupport {
     implicit
     request: AuthRequestWithAgentInfo[_],
     ec: ExecutionContext,
-    acaConnector: AgentClientAuthorisationConnector,
+    agentAssuranceConnector: AgentAssuranceConnector,
     hc: HeaderCarrier
   ): Future[Boolean] = {
     for {
@@ -109,7 +109,7 @@ trait DesiDetailsJourneySupport {
   }
 
   def isJourneyComplete()(
-    implicit request: AuthRequestWithAgentInfo[_], acaConnector: AgentClientAuthorisationConnector, hc: HeaderCarrier, ec: ExecutionContext
+    implicit request: AuthRequestWithAgentInfo[_], agentAssuranceConnector: AgentAssuranceConnector, hc: HeaderCarrier, ec: ExecutionContext
   ): Future[DesiDetailsJourney] = {
     for {
       submittedBy <- sessionCache.get[YourDetails](DRAFT_SUBMITTED_BY)

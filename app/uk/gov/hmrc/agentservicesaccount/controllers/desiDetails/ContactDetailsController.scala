@@ -22,7 +22,7 @@ import play.api.libs.json._
 import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.connectors.{AddressLookupConnector, AgentClientAuthorisationConnector}
+import uk.gov.hmrc.agentservicesaccount.connectors.{AddressLookupConnector, AgentAssuranceConnector}
 import uk.gov.hmrc.agentservicesaccount.controllers._
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.DesiDetailsJourneySupport
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.NextPageSelector.getNextPage
@@ -44,7 +44,7 @@ class ContactDetailsController @Inject()(actions: Actions,
                                          change_submitted: change_submitted,
                                          beforeYouStartPage: before_you_start_page
                                         )(implicit appConfig: AppConfig,
-                                          acaConnector: AgentClientAuthorisationConnector,
+                                          agentAssuranceConnector: AgentAssuranceConnector,
                                           pcodRepository: PendingChangeRequestRepository,
                                           cc: MessagesControllerComponents,
                                           ec: ExecutionContext) extends FrontendController(cc) with DesiDetailsJourneySupport with I18nSupport with Logging {
@@ -132,7 +132,7 @@ class ContactDetailsController @Inject()(actions: Actions,
   def showBeforeYouStartPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     actions.ifFeatureEnabled(appConfig.enableChangeContactDetails) {
       if (request.agentInfo.isAdmin) {
-        acaConnector.getAgentRecord().map(agentRecord =>
+        agentAssuranceConnector.getAgentRecord.map(agentRecord =>
           Ok(beforeYouStartPage(agentRecord.agencyDetails)))
       } else {
         Future.successful(Forbidden)

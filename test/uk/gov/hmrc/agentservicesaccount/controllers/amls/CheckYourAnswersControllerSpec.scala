@@ -28,7 +28,7 @@ import play.twirl.api.Html
 import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, SuspensionDetails, Utr}
 import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector}
+import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.models._
 import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
 import uk.gov.hmrc.agentservicesaccount.services.AuditService
@@ -38,7 +38,7 @@ import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.check_your_answers
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve._
-import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
 import uk.gov.hmrc.mongo.cache.DataKey
 
 import java.time.LocalDate
@@ -121,21 +121,20 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
     protected val authActions = new AuthActions(mockAppConfig, mockAuthConnector, mockEnvironment)
 
     protected val mockAmlsLoader: AMLSLoader = mock[AMLSLoader]
-    protected val mockAgentClientAuthorisationConnector: AgentClientAuthorisationConnector = mock[AgentClientAuthorisationConnector]
     protected val mockAgentAssuranceConnector: AgentAssuranceConnector = mock[AgentAssuranceConnector]
     protected val actionBuilder = new DefaultActionBuilderImpl(stubBodyParser())
     protected val mockActions =
-      new Actions(mockAgentClientAuthorisationConnector, mockAgentAssuranceConnector, authActions, actionBuilder)
+      new Actions(mockAgentAssuranceConnector, authActions, actionBuilder)
 
     protected val mockUpdateAmlsJourneyRepository: UpdateAmlsJourneyRepository = mock[UpdateAmlsJourneyRepository]
     protected val mockView: check_your_answers = mock[check_your_answers]
     protected val cc: MessagesControllerComponents = stubMessagesControllerComponents()
     protected val dataKey: DataKey[UpdateAmlsJourney] = DataKey[UpdateAmlsJourney]("amlsJourney")
     protected val mockAuditService = mock[AuditService]
-    protected val mockAcaConnector = mock[AgentClientAuthorisationConnector]
+    protected val mockAaConnector = mock[AgentAssuranceConnector]
 
     object TestController extends CheckYourAnswersController(
-      mockActions, mockAgentAssuranceConnector, mockUpdateAmlsJourneyRepository, mockView, cc, mockAuditService, mockAcaConnector )(mockAppConfig, ec)
+      mockActions, mockAgentAssuranceConnector, mockUpdateAmlsJourneyRepository, mockView, cc, mockAuditService)(mockAppConfig, ec)
 
   }
 
@@ -147,7 +146,7 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
           *[HeaderCarrier],
           *[ExecutionContext]) returns authResponse
         mockAppConfig.enableNonHmrcSupervisoryBody returns true
-        mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+        mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
         mockUpdateAmlsJourneyRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[Request[_]]) returns
           Future.successful(Some(ukAmlsJourney))
 
@@ -166,7 +165,7 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
           *[ExecutionContext]) returns authResponse
         mockAppConfig.enableNonHmrcSupervisoryBody returns true
 
-        mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+        mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
         mockUpdateAmlsJourneyRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[Request[_]]) returns
           Future.successful(None)
 
@@ -185,7 +184,7 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
           *[HeaderCarrier],
           *[ExecutionContext]) returns authResponse
         mockAppConfig.enableNonHmrcSupervisoryBody returns false
-        mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+        mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
         val result: Future[Result] = TestController.showPage(fakeRequest)
         status(result) mustBe FORBIDDEN
@@ -195,7 +194,7 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
         mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
           *[HeaderCarrier],
           *[ExecutionContext]) returns invalidAuthResponse
-        mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+        mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
         val result: Future[Result] = TestController.showPage(fakeRequest)
         status(result) mustBe FORBIDDEN
@@ -204,7 +203,7 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
         mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
           *[HeaderCarrier],
           *[ExecutionContext]) returns invalidCredentialAuthResponse
-        mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+        mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
         val result: Future[Result] = TestController.showPage(fakeRequest)
         status(result) mustBe FORBIDDEN
@@ -285,13 +284,13 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
             *[HeaderCarrier],
             *[ExecutionContext]) returns authResponse
           mockAppConfig.enableNonHmrcSupervisoryBody returns true
-          mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+          mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
           mockUpdateAmlsJourneyRepository
             .getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]],*[Request[_]])returns Future.successful(Some(ukAmlsJourney))
           mockAgentAssuranceConnector.postAmlsDetails(arn, amlsRequest)(*[ExecutionContext], *[HeaderCarrier]) returns Future.successful(())
 
           mockAgentAssuranceConnector.getAMLSDetails(arn.value)(*[ExecutionContext], *[HeaderCarrier]) returns Future.successful(amlsDetails)
-          mockAcaConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+          mockAaConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
           val result: Future[Result] = TestController.onSubmit()(fakeRequest)
           status(result) mustBe SEE_OTHER
@@ -304,13 +303,13 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
             *[HeaderCarrier],
             *[ExecutionContext]) returns authResponse
           mockAppConfig.enableNonHmrcSupervisoryBody returns true
-          mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+          mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
           mockUpdateAmlsJourneyRepository
             .getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]],*[Request[_]])returns Future.successful(Some(ukAmlsJourney))
           mockAgentAssuranceConnector.postAmlsDetails(arn, amlsRequest)(*[ExecutionContext], *[HeaderCarrier]) returns Future.successful(())
 
-          mockAgentAssuranceConnector.getAMLSDetails(arn.value)(*[ExecutionContext], *[HeaderCarrier]).throws(new RuntimeException("Something went wrong"))
-          mockAcaConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]).throws(new RuntimeException("Something went wrong"))
+          mockAgentAssuranceConnector.getAMLSDetails(arn.value)(*[ExecutionContext], *[HeaderCarrier]).throws(UpstreamErrorResponse("Something went wrong", 500))
+          //mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]).throws(UpstreamErrorResponse("Something went wrong",500))
 
           val result: Future[Result] = TestController.onSubmit()(fakeRequest)
           status(result) mustBe SEE_OTHER
@@ -323,11 +322,11 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
             *[HeaderCarrier],
             *[ExecutionContext]) returns authResponse
           mockAppConfig.enableNonHmrcSupervisoryBody returns true
-          mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+          mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
           mockUpdateAmlsJourneyRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[Request[_]]) returns
             Future.successful(Some(UpdateAmlsJourney(AmlsStatus.ValidAmlsDetailsUK, None, None, None, None)))
 
-          mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+          mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
           val result: Future[Result] = TestController.onSubmit()(fakeRequest)
           status(result) mustBe BAD_REQUEST
