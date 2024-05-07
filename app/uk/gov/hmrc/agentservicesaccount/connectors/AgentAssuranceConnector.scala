@@ -93,7 +93,7 @@ class AgentAssuranceConnector @Inject()(httpV2: HttpClientV2)(implicit val metri
       .get(new URL(s"$baseUrl/agent-assurance/agent-record-with-checks"))
       .execute[HttpResponse].map( response => response.status match {
         case OK => Json.parse(response.body).as[AgentDetailsDesResponse]
-        case _ => throw UpstreamErrorResponse("no agent record found", 500)
+        case other => throw UpstreamErrorResponse(s"agent record unavailable: des response code: $other", 500)
       })
 
 }
