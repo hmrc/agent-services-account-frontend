@@ -21,7 +21,7 @@ import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
+import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.DRAFT_NEW_CONTACT_DETAILS
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.DesiDetailsJourneySupport
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.NextPageSelector.getNextPage
@@ -44,7 +44,7 @@ class UpdateTelephoneController @Inject()(actions: Actions,
                                            cc: MessagesControllerComponents,
                                            ec: ExecutionContext,
                                            pcodRepository: PendingChangeRequestRepository,
-                                           acaConnector: AgentClientAuthorisationConnector
+                                           agentAssuranceConnector: AgentAssuranceConnector
                                          ) extends FrontendController(cc) with DesiDetailsJourneySupport with I18nSupport with Logging {
 
   val showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>

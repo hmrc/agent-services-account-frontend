@@ -26,7 +26,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
-import uk.gov.hmrc.agentservicesaccount.stubs.AgentClientAuthorisationStubs._
+import uk.gov.hmrc.agentservicesaccount.stubs.AgentAssuranceStubs.givenAgentRecordFound
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentPermissionsStubs.givenHideBetaInviteResponse
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import uk.gov.hmrc.http.SessionKeys

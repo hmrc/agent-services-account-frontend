@@ -20,7 +20,7 @@ import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
+import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.DesiDetailsJourneySupport
 import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.SaChanges
@@ -41,7 +41,7 @@ class ApplySACodeChangesController @Inject()(actions: Actions,
                                             )(implicit appConfig: AppConfig,
                                               ec: ExecutionContext,
                                               pcodRepository: PendingChangeRequestRepository,
-                                              acaConnector: AgentClientAuthorisationConnector
+                                              agentAssuranceConnector: AgentAssuranceConnector,
                                             ) extends FrontendController(cc) with DesiDetailsJourneySupport with I18nSupport {
 
   def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>

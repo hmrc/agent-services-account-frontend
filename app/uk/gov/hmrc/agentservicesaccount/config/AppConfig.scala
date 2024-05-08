@@ -51,8 +51,6 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
 
   val continueUrl: String = getString("login.continue")
 
-  val acaBaseUrl: String = baseUrl("agent-client-authorisation")
-
   val emailBaseUrl: String = baseUrl("email")
 
   val addressLookupBaseUrl: String = baseUrl("address-lookup-frontend")

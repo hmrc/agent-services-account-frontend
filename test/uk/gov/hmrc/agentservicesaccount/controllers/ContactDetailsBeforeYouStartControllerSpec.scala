@@ -27,7 +27,8 @@ import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, SuspensionDetails, Utr}
-import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
+import uk.gov.hmrc.agentservicesaccount.connectors
+import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.ContactDetailsController
 import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, AgentDetailsDesResponse, BusinessAddress}
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
@@ -102,7 +103,7 @@ class ContactDetailsBeforeYouStartControllerSpec extends UnitSpec
 
     val overrides = new AbstractModule() {
       override def configure(): Unit = {
-        bind(classOf[AgentClientAuthorisationConnector]).toInstance(stub[AgentClientAuthorisationConnector])
+        bind(classOf[connectors.AgentAssuranceConnector]).toInstance(stub[AgentAssuranceConnector])
         bind(classOf[AuthConnector]).toInstance(stubAuthConnector)
       }
     }
@@ -113,9 +114,9 @@ class ContactDetailsBeforeYouStartControllerSpec extends UnitSpec
       "suspendedContactDetails.sendEmail" -> false
     ).overrides(overrides).build()
 
-    val acaConnector: AgentClientAuthorisationConnector = app.injector.instanceOf[AgentClientAuthorisationConnector]
+    val agentAssuranceConnector: AgentAssuranceConnector = app.injector.instanceOf[AgentAssuranceConnector]
 
-    (acaConnector.getAgentRecord()(_: HeaderCarrier, _: ExecutionContext)).when(*, *).returns(Future.successful(agentRecord))
+    (agentAssuranceConnector.getAgentRecord(_: HeaderCarrier, _: ExecutionContext)).when(*, *).returns(Future.successful(agentRecord))
 
     val controller: ContactDetailsController = app.injector.instanceOf[ContactDetailsController]
     val sessionCache: SessionCacheService = app.injector.instanceOf[SessionCacheService]

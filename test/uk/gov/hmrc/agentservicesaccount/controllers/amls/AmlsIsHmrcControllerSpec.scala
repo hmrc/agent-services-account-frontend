@@ -29,7 +29,7 @@ import play.api.test.{FakeRequest, Helpers}
 import play.twirl.api.Html
 import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector}
+import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.support.TestConstants
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.is_amls_hmrc
 import uk.gov.hmrc.auth.core._
@@ -48,7 +48,6 @@ class AmlsIsHmrcControllerSpec extends PlaySpec
   implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
 
   //TODO move auth/suspend actions to common file for all unit tests
-  val mockAcaConnector: AgentClientAuthorisationConnector = mock[AgentClientAuthorisationConnector]
   val mockAgentAssuranceConnector: AgentAssuranceConnector = mock[AgentAssuranceConnector]
 
 
@@ -66,7 +65,7 @@ class AmlsIsHmrcControllerSpec extends PlaySpec
       *[ExecutionContext]) returns authResponseAgent(credentialRole)
   }
 
-  def givenAgentRecord = mockAcaConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+  def givenAgentRecord = mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
 
   trait Setup {
@@ -75,7 +74,7 @@ class AmlsIsHmrcControllerSpec extends PlaySpec
     protected val authActions = new AuthActions(mockAppConfig, mockAuthConnector, mockEnvironment)
     protected val actionBuilder = new DefaultActionBuilderImpl(Helpers.stubBodyParser())
     protected val mockActions =
-      new Actions(mockAcaConnector, mockAgentAssuranceConnector, authActions, actionBuilder)
+      new Actions(mockAgentAssuranceConnector, authActions, actionBuilder)
 
     protected val cc: MessagesControllerComponents = stubMessagesControllerComponents()
     protected val view: is_amls_hmrc = mock[is_amls_hmrc]

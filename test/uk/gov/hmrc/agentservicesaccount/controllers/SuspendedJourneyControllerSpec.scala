@@ -28,7 +28,7 @@ import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.agentmtdidentifiers.model.SuspensionDetails
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
-import uk.gov.hmrc.agentservicesaccount.stubs.AgentClientAuthorisationStubs.givenAgentRecordFound
+import uk.gov.hmrc.agentservicesaccount.stubs.AgentAssuranceStubs.givenAgentRecordFound
 import uk.gov.hmrc.agentservicesaccount.stubs.SessionServiceMocks
 import uk.gov.hmrc.agentservicesaccount.support.{BaseISpec, Css}
 import uk.gov.hmrc.http.SessionKeys

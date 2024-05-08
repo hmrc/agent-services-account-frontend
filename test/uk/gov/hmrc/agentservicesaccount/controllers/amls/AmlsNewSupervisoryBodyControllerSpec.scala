@@ -28,7 +28,7 @@ import play.api.test.{DefaultAwaitTimeout, FakeRequest, Helpers}
 import play.twirl.api.Html
 import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector}
+import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.models.{AmlsDetails, AmlsStatus, UpdateAmlsJourney}
 import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
 import uk.gov.hmrc.agentservicesaccount.support.TestConstants
@@ -83,11 +83,10 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
     protected val mockEnvironment: Environment = mock[Environment]
     protected val authActions = new AuthActions(mockAppConfig, mockAuthConnector, mockEnvironment)
 
-    protected val mockAgentClientAuthorisationConnector: AgentClientAuthorisationConnector = mock[AgentClientAuthorisationConnector]
     protected val mockAgentAssuranceConnector: AgentAssuranceConnector = mock[AgentAssuranceConnector]
     protected val actionBuilder = new DefaultActionBuilderImpl(Helpers.stubBodyParser())
     protected val mockActions =
-      new Actions(mockAgentClientAuthorisationConnector, mockAgentAssuranceConnector, authActions, actionBuilder)
+      new Actions(mockAgentAssuranceConnector, authActions, actionBuilder)
 
     protected val mockAmlsJourneySessionRepository: UpdateAmlsJourneyRepository = mock[UpdateAmlsJourneyRepository]
     protected val mockAmlsLoader: AMLSLoader = mock[AMLSLoader]
@@ -104,7 +103,7 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
         *[HeaderCarrier],
         *[ExecutionContext]) returns authResponse
 
-      mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+      mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
       mockAppConfig.enableNonHmrcSupervisoryBody returns true
 
@@ -131,7 +130,7 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
 
       mockAppConfig.enableNonHmrcSupervisoryBody returns false
 
-      mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+      mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
       val result: Future[Result] = TestController.showPage(false)(fakeRequest)
 
@@ -152,7 +151,7 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
 
       mockAmlsLoader.load(*[String]) returns amlsBodies
 
-      mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+      mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
       mockAmlsJourneySessionRepository.getFromSession(dataKey)(*[Reads[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful(Some(ukAmlsJourney))
 
@@ -180,7 +179,7 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
 
       mockAmlsJourneySessionRepository.getFromSession(dataKey)(*[Reads[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful(Some(ukAmlsJourney))
 
-      mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+      mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
       mockAmlsJourneySessionRepository.putSession(
         dataKey, ukAmlsJourney.copy(newAmlsBody = Some("Association of Certified Chartered Accountants"), isAmlsBodyStillTheSame = Some(true)))(*[Writes[UpdateAmlsJourney]], *[Request[Any]])returns Future.successful((SessionKeys.sessionId -> "session-123"))
@@ -206,7 +205,7 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
 
       mockAmlsJourneySessionRepository.getFromSession(dataKey)(*[Reads[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful(Some(ukAmlsJourney))
 
-      mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+      mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
       mockAmlsJourneySessionRepository.putSession(
         dataKey, ukAmlsJourney.copy(
@@ -237,7 +236,7 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
       mockAmlsJourneySessionRepository.getFromSession(dataKey)(*[Reads[UpdateAmlsJourney]], *[Request[Any]]
       ) returns Future.successful(Some(ukAmlsJourney.copy(newAmlsBody = Some("HMRC"))))
 
-      mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+      mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
       mockAmlsJourneySessionRepository.putSession(
         dataKey, ukAmlsJourney.copy(
@@ -265,7 +264,7 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
 
       mockAmlsLoader.load(*[String]) returns amlsBodies
 
-      mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+      mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
       mockAmlsJourneySessionRepository.getFromSession(dataKey)(*[Reads[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful(Some(overseasAmlsJourney))
 
@@ -289,7 +288,7 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
 
       mockAppConfig.enableNonHmrcSupervisoryBody returns true
 
-      mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+      mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
       mockAmlsLoader.load(*[String]) returns amlsBodies
 

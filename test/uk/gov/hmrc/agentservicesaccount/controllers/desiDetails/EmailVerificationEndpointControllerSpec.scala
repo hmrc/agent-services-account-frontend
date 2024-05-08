@@ -25,7 +25,7 @@ import play.api.test.Helpers._
 import play.api.test.{DefaultAwaitTimeout, FakeRequest, Helpers}
 import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector}
+import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.{CURRENT_SELECTED_CHANGES, DRAFT_NEW_CONTACT_DETAILS, DRAFT_SUBMITTED_BY, EMAIL_PENDING_VERIFICATION}
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, DesignatoryDetails, OtherServices, SaChanges, YourDetails}
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.EmailIsAlreadyVerified
@@ -56,13 +56,12 @@ class EmailVerificationEndpointControllerSpec extends PlaySpec
     protected val mockEnvironment: Environment = mock[Environment]
     protected val authActions = new AuthActions(mockAppConfig, mockAuthConnector, mockEnvironment)
 
-    protected val mockAgentClientAuthorisationConnector: AgentClientAuthorisationConnector = mock[AgentClientAuthorisationConnector]
     protected val mockDraftDetailsService: DraftDetailsService = mock[DraftDetailsService]
     protected val mockEmailVerificationService: EmailVerificationService = mock[EmailVerificationService]
     protected val actionBuilder = new DefaultActionBuilderImpl(Helpers.stubBodyParser())
     protected val mockAgentAssuranceConnector: AgentAssuranceConnector = mock[AgentAssuranceConnector]
     protected val mockActions =
-      new Actions(mockAgentClientAuthorisationConnector, mockAgentAssuranceConnector, authActions, actionBuilder)
+      new Actions(mockAgentAssuranceConnector, authActions, actionBuilder)
 
     protected val mockPendingChangeRequestRepository = mock[PendingChangeRequestRepository]
     protected val mockSessionCache: SessionCacheService = mock[SessionCacheService]
@@ -73,7 +72,7 @@ class EmailVerificationEndpointControllerSpec extends PlaySpec
       mockSessionCache,
       mockDraftDetailsService,
       cc
-    )(mockAppConfig, ec, mockPendingChangeRequestRepository, mockAgentClientAuthorisationConnector, mockEmailVerificationService)
+    )(mockAppConfig, ec, mockPendingChangeRequestRepository,  mockAgentAssuranceConnector,mockEmailVerificationService)
   }
 
 
@@ -98,7 +97,7 @@ class EmailVerificationEndpointControllerSpec extends PlaySpec
       ))
       // TODO check this returns the correct data
 
-      mockAgentClientAuthorisationConnector.getAgentRecord()(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+      mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
       mockPendingChangeRequestRepository.find(arn) returns Future.successful(None)
 

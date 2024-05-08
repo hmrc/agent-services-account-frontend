@@ -26,15 +26,18 @@ import play.api.mvc.Result
 import play.api.test.Helpers.defaultAwaitTimeout
 import play.api.test.{FakeRequest, Helpers}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.stubs.AgentClientAuthorisationStubs.givenAgentRecordFound
 import uk.gov.hmrc.agentservicesaccount.stubs.AuthStubs
 import uk.gov.hmrc.agentservicesaccount.support.{TestConstants, UnitSpec, WireMockSupport}
 import uk.gov.hmrc.http.SessionKeys
+import uk.gov.hmrc.agentservicesaccount.stubs.AgentAssuranceStubs._
 
 import scala.concurrent.Future
 
 
-class AmlsConfirmationControllerSpec extends UnitSpec with AuthStubs with GuiceOneAppPerSuite with WireMockSupport
+class AmlsConfirmationControllerSpec extends UnitSpec
+  with AuthStubs
+  with GuiceOneAppPerSuite
+  with WireMockSupport
   with TestConstants {
 
   class Setup(isEnabled: Boolean) {
@@ -42,7 +45,7 @@ class AmlsConfirmationControllerSpec extends UnitSpec with AuthStubs with GuiceO
       "features.enable-non-hmrc-supervisory-body" -> isEnabled,
       "auditing.enabled" -> false,
       "microservice.services.auth.port" -> wireMockPort,
-      "microservice.services.agent-client-authorisation.port" -> wireMockPort,
+      "microservice.services.agent-assurance.port" -> wireMockPort,
       "microservice.services.agent-permissions.port" -> wireMockPort,
       "microservice.services.agent-user-client-details.port" -> wireMockPort,
       "microservice.services.agent-permissions-frontend.external-url" -> wireMockBaseUrlAsString,

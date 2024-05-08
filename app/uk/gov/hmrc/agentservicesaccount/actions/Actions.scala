@@ -19,7 +19,7 @@ package uk.gov.hmrc.agentservicesaccount.actions
 import play.api.mvc.Results.{Forbidden, Redirect}
 import play.api.mvc._
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
-import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentClientAuthorisationConnector}
+import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.routes
 import uk.gov.hmrc.agentservicesaccount.models.{AgentDetailsDesResponse, AmlsDetails}
 import uk.gov.hmrc.http.HeaderCarrier
@@ -29,7 +29,7 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class Actions @Inject()(agentClientAuthorisationConnector: AgentClientAuthorisationConnector,
+class Actions @Inject()(
                         agentAssuranceConnector: AgentAssuranceConnector,
                         authActions: AuthActions,
                         actionBuilder: DefaultActionBuilder
@@ -42,7 +42,7 @@ class Actions @Inject()(agentClientAuthorisationConnector: AgentClientAuthorisat
       implicit val req: Request[A] = request.request
       implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(req, req.session)
 
-      agentClientAuthorisationConnector.getAgentRecord().map { agentRecord => {
+      agentAssuranceConnector.getAgentRecord.map { agentRecord => {
         (onlyForSuspended, agentRecord.suspensionDetails.exists(_.suspensionStatus)) match {
           case (true, true) | (false, false) => None
           case (true, false) => Some(Redirect(routes.AgentServicesController.showAgentServicesAccount()))
@@ -80,7 +80,7 @@ class Actions @Inject()(agentClientAuthorisationConnector: AgentClientAuthorisat
         implicit val req: Request[_] = request.request
         implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(req, req.session)
 
-        agentClientAuthorisationConnector.getAgentRecord().map( agentRecord => {
+        agentAssuranceConnector.getAgentRecord.map( agentRecord => {
           (onlyForSuspended, agentRecord.suspensionDetails.exists(_.suspensionStatus)) match {
             case (true, true) | (false, false) => Right(AuthRequestWithAgentProfile(request, agentRecord))
             case (true, false) => Left(Redirect(routes.AgentServicesController.showAgentServicesAccount()))

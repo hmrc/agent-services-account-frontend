@@ -19,7 +19,7 @@ package uk.gov.hmrc.agentservicesaccount.services
 import play.api.i18n.Lang
 import play.api.mvc.{Call, Request}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.connectors.{AgentClientAuthorisationConnector, EmailVerificationConnector}
+import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, EmailVerificationConnector}
 import uk.gov.hmrc.agentservicesaccount.models.emailverification._
 import uk.gov.hmrc.http.{HeaderCarrier, InternalServerException}
 import uk.gov.hmrc.agentservicesaccount.controllers
@@ -28,14 +28,14 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class EmailVerificationService @Inject()(agentClientAuthorisationConnector: AgentClientAuthorisationConnector,
+class EmailVerificationService @Inject()(agentAssuranceConnector: AgentAssuranceConnector,
                                          emailVerificationConnector: EmailVerificationConnector
                                         )(implicit ec: ExecutionContext, appConfig: AppConfig) {
 
   def getEmailVerificationStatus(newEmail: String, credId: String)
                                 (implicit hc: HeaderCarrier): Future[EmailVerificationStatus] =
     for {
-      optCurrentEmail <- agentClientAuthorisationConnector.getAgentRecord().map(_.agencyDetails.flatMap(_.agencyEmail))
+      optCurrentEmail <- agentAssuranceConnector.getAgentRecord.map(_.agencyDetails.flatMap(_.agencyEmail))
       isUnchanged = optCurrentEmail.exists(_.trim.equalsIgnoreCase(newEmail.trim))
       checkVerifications <- emailVerificationConnector.checkEmail(credId)
       previouslyCompletedEmailVerification = checkVerifications.flatMap(_.emails.find(completedEmail => completedEmail.equalsTrimmed(newEmail)))

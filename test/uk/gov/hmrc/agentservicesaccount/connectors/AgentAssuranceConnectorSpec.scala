@@ -121,4 +121,20 @@ class AgentAssuranceConnectorSpec extends BaseISpec {
       }.getMessage shouldBe "Error 500 unable to get amls details"
     }
   }
+
+  "getAgentRecord" should {
+    "return the agent record for a given agent" in {
+
+      givenAgentRecordFound(agentRecord)
+
+      await(connector.getAgentRecord) shouldBe agentRecord
+    }
+
+    "throw exception when 204 response" in {
+      givenAgentDetailsErrorResponse(204)
+      intercept[UpstreamErrorResponse]{
+        await(connector.getAgentRecord)
+      }
+    }
+  }
 }

@@ -21,7 +21,7 @@ import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthRequestWithAgentInfo}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.connectors.AgentClientAuthorisationConnector
+import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.DesiDetailsJourneySupport
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.NextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.controllers.{CURRENT_SELECTED_CHANGES, DRAFT_NEW_CONTACT_DETAILS, ToFuture}
@@ -43,7 +43,7 @@ class SelectDetailsController @Inject()(actions: Actions,
                                          cc: MessagesControllerComponents,
                                          ec: ExecutionContext,
                                          pcodRepository: PendingChangeRequestRepository,
-                                         acaConnector: AgentClientAuthorisationConnector
+                                         agentAssuranceConnector: AgentAssuranceConnector
                                        ) extends FrontendController(cc) with DesiDetailsJourneySupport with I18nSupport with Logging {
 
   def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
@@ -88,7 +88,7 @@ class SelectDetailsController @Inject()(actions: Actions,
                                        (implicit request: AuthRequestWithAgentInfo[AnyContent]): Future[Future[Result]] = {
     for {
       desiDetailsData <- sessionCache.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS)
-      oldContactDetails <- acaConnector.getAgentRecord().map(_.agencyDetails.getOrElse {
+      oldContactDetails <- agentAssuranceConnector.getAgentRecord.map(_.agencyDetails.getOrElse {
         throw new RuntimeException(s"Could not retrieve current agency details for ${request.agentInfo.arn} from the backend")
       })
       journey <- isJourneyComplete()
