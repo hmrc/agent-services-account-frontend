@@ -53,9 +53,9 @@ class ViewDetailsControllerSpec extends PlaySpec
   private val fakeRequest = FakeRequest()
 
   private val amlsDetails = AmlsDetails(supervisoryBody = "HMRC")
-  private val amlsDetailsResponsse = AmlsDetailsResponse(AmlsStatus.ValidAmlsDetailsUK,  Some(amlsDetails))
-  private val amlsNoDetailsResponsse = AmlsDetailsResponse(AmlsStatus.ValidAmlsDetailsUK, None)
-  private val amlsUpdateJourney = UpdateAmlsJourney(status = AmlsStatus.ValidAmlsDetailsUK)
+  private val amlsDetailsResponsse = AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK,  Some(amlsDetails))
+  private val amlsNoDetailsResponsse = AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None)
+  private val amlsUpdateJourney = UpdateAmlsJourney(status = AmlsStatuses.ValidAmlsDetailsUK)
 
   trait Setup {
     protected val mockAppConfig: AppConfig = mock[AppConfig]

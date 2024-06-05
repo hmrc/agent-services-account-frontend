@@ -16,14 +16,19 @@
 
 package uk.gov.hmrc.agentservicesaccount.models
 
-import enumeratum.{Enum, EnumEntry, PlayJsonEnum}
+import enumeratum.{Enum, EnumEntry}
+import play.api.libs.json.Format
 import play.api.mvc.QueryStringBindable
-import uk.gov.hmrc.agentservicesaccount.utils.ValueClassBinder
+import uk.gov.hmrc.agentservicesaccount.utils.{EnumFormat, ValueClassBinder}
 
-sealed trait AmlsStatus extends EnumEntry
+sealed trait AmlsStatus extends Product with Serializable with EnumEntry
 
-object AmlsStatus extends Enum[AmlsStatus] with PlayJsonEnum[AmlsStatus] {
+object AmlsStatus {
+  implicit val format: Format[AmlsStatus] = EnumFormat(AmlsStatuses)
   implicit val queryBindable: QueryStringBindable[AmlsStatus] = ValueClassBinder.queryStringValueBinder[AmlsStatus](_.entryName)
+}
+
+object AmlsStatuses extends Enum[AmlsStatus] {
 
   val values: IndexedSeq[AmlsStatus] = findValues
 

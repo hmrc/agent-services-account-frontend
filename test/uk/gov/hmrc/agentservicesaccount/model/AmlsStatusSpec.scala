@@ -17,8 +17,10 @@
 package uk.gov.hmrc.agentservicesaccount.model
 
 import play.api.libs.json.{JsObject, JsString, Json}
-import uk.gov.hmrc.agentservicesaccount.models.AmlsStatus
+import uk.gov.hmrc.agentservicesaccount.models.{AmlsStatus, AmlsStatuses}
 import uk.gov.hmrc.agentservicesaccount.support.UnitSpec
+
+
 
 class AmlsStatusSpec extends UnitSpec {
 
@@ -26,16 +28,16 @@ class AmlsStatusSpec extends UnitSpec {
     "bind from a QueryString parameter" in {
       val status = AmlsStatus.queryBindable.bind("status", Map("status" -> Seq("NoAmlsDetailsUK")))
 
-      status shouldBe Some(Right(AmlsStatus.NoAmlsDetailsUK))
+      status shouldBe Some(Right(AmlsStatuses.NoAmlsDetailsUK))
     }
 
     "serialise to a string in JSON" in {
-      Json.toJson(AmlsStatus.ExpiredAmlsDetailsUK) shouldBe JsString("ExpiredAmlsDetailsUK")
+      Json.toJson[AmlsStatus](AmlsStatuses.ExpiredAmlsDetailsUK) shouldBe JsString("ExpiredAmlsDetailsUK")
     }
 
     "parse a value from JSON" in {
       val json: JsObject = Json.parse(""" { "status": "PendingAmlsDetailsRejected" } """).as[JsObject]
-      json.value("status").as[AmlsStatus] shouldBe AmlsStatus.PendingAmlsDetailsRejected
+      json.value("status").as[AmlsStatus] shouldBe AmlsStatuses.PendingAmlsDetailsRejected
     }
   }
 }

@@ -20,7 +20,7 @@ import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.Application
 import play.api.libs.ws.{WSClient, WSRequest}
 import play.api.test.Helpers._
-import uk.gov.hmrc.agentservicesaccount.models.{AmlsDetails, AmlsDetailsResponse, AmlsStatus}
+import uk.gov.hmrc.agentservicesaccount.models.{AmlsDetails, AmlsDetailsResponse, AmlsStatuses}
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentAssuranceStubs.{givenAMLSDetailsForArn, givenAMLSDetailsServerErrorForArn, givenAgentRecordFound}
 import uk.gov.hmrc.agentservicesaccount.stubs.CookieHelper
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
@@ -52,7 +52,7 @@ class AMLSDetailsEndpoint extends BaseISpec with GuiceOneServerPerSuite with Coo
     Some(LocalDate.of(2022, 1, 25)),
     Some(LocalDate.of(2023, 12, 7))
   )
-  private val ukAMLSDetailsResponse = AmlsDetailsResponse(AmlsStatus.ValidAmlsDetailsUK,Some(ukAMLSDetails))
+  private val ukAMLSDetailsResponse = AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK,Some(ukAMLSDetails))
 
   "View AMLS Supervision Details endpoint" should {
     "return successfully when everything works" in {

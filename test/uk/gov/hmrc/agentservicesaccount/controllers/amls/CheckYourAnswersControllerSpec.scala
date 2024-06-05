@@ -84,7 +84,7 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
       Some(credentialRole)))
 
   private val ukAmlsJourney = UpdateAmlsJourney(
-    status = AmlsStatus.ValidAmlsDetailsUK,
+    status = AmlsStatuses.ValidAmlsDetailsUK,
     newAmlsBody = Some("ABC"),
     newRegistrationNumber = Some("1234567890"),
     newExpirationDate = Some(LocalDate.now())
@@ -223,7 +223,7 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
 
     "expected journey data is missing" should {
       val journey = UpdateAmlsJourney(
-        status = AmlsStatus.ValidAmlsNonUK,
+        status = AmlsStatuses.ValidAmlsNonUK,
         newAmlsBody = None,
         newRegistrationNumber = Some(registrationNumber),
         newExpirationDate = None
@@ -239,7 +239,7 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
 
     "journey data is for an overseas agent" should {
       val journey = UpdateAmlsJourney(
-        status = AmlsStatus.ValidAmlsNonUK,
+        status = AmlsStatuses.ValidAmlsNonUK,
         newAmlsBody = Some(supervisoryBody),
         newRegistrationNumber = Some(registrationNumber),
         newExpirationDate = None
@@ -324,7 +324,7 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
           mockAppConfig.enableNonHmrcSupervisoryBody returns true
           mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
           mockUpdateAmlsJourneyRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[Request[_]]) returns
-            Future.successful(Some(UpdateAmlsJourney(AmlsStatus.ValidAmlsDetailsUK, None, None, None, None)))
+            Future.successful(Some(UpdateAmlsJourney(AmlsStatuses.ValidAmlsDetailsUK, None, None, None, None)))
 
           mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
@@ -339,7 +339,7 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
       val renewalDateMessageKey = "amls.check-your-answers.renewal-date"
       val renewalDate = LocalDate.of(2001, 1, 1)
       val journey = UpdateAmlsJourney(
-        status = AmlsStatus.ValidAmlsDetailsUK,
+        status = AmlsStatuses.ValidAmlsDetailsUK,
         newAmlsBody = Some(supervisoryBodyDescription),
         newRegistrationNumber = Some(registrationNumber),
         newExpirationDate = Some(renewalDate)

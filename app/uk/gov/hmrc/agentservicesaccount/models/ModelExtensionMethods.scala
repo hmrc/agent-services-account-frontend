@@ -20,53 +20,53 @@ object ModelExtensionMethods {
   implicit class AmlsStatusExt(amlsStatus: => AmlsStatus) {
 
     def isUkAgent(): Boolean = amlsStatus match {
-      case AmlsStatus.NoAmlsDetailsUK => true
-      case AmlsStatus.ValidAmlsDetailsUK => true
-      case AmlsStatus.ExpiredAmlsDetailsUK => true
-      case AmlsStatus.PendingAmlsDetails => true
-      case AmlsStatus.PendingAmlsDetailsRejected => true
-      case AmlsStatus.NoAmlsDetailsNonUK => false
-      case AmlsStatus.ValidAmlsNonUK => false
+      case AmlsStatuses.NoAmlsDetailsUK => true
+      case AmlsStatuses.ValidAmlsDetailsUK => true
+      case AmlsStatuses.ExpiredAmlsDetailsUK => true
+      case AmlsStatuses.PendingAmlsDetails => true
+      case AmlsStatuses.PendingAmlsDetailsRejected => true
+      case AmlsStatuses.NoAmlsDetailsNonUK => false
+      case AmlsStatuses.ValidAmlsNonUK => false
     }
 
     def isValid():Boolean = amlsStatus match {
-      case AmlsStatus.ValidAmlsNonUK => true
-      case AmlsStatus.ValidAmlsDetailsUK => true
-      case AmlsStatus.NoAmlsDetailsNonUK => false
-      case AmlsStatus.NoAmlsDetailsUK => false
-      case AmlsStatus.ExpiredAmlsDetailsUK => false
-      case AmlsStatus.PendingAmlsDetails => false
-      case AmlsStatus.PendingAmlsDetailsRejected => false
+      case AmlsStatuses.ValidAmlsNonUK => true
+      case AmlsStatuses.ValidAmlsDetailsUK => true
+      case AmlsStatuses.NoAmlsDetailsNonUK => false
+      case AmlsStatuses.NoAmlsDetailsUK => false
+      case AmlsStatuses.ExpiredAmlsDetailsUK => false
+      case AmlsStatuses.PendingAmlsDetails => false
+      case AmlsStatuses.PendingAmlsDetailsRejected => false
     }
 
     def isExpired():Boolean = amlsStatus match {
-      case AmlsStatus.ExpiredAmlsDetailsUK => true
-      case AmlsStatus.ValidAmlsNonUK => false
-      case AmlsStatus.ValidAmlsDetailsUK => false
-      case AmlsStatus.NoAmlsDetailsNonUK => false
-      case AmlsStatus.NoAmlsDetailsUK => false
-      case AmlsStatus.PendingAmlsDetails => false
-      case AmlsStatus.PendingAmlsDetailsRejected => false
+      case AmlsStatuses.ExpiredAmlsDetailsUK => true
+      case AmlsStatuses.ValidAmlsNonUK => false
+      case AmlsStatuses.ValidAmlsDetailsUK => false
+      case AmlsStatuses.NoAmlsDetailsNonUK => false
+      case AmlsStatuses.NoAmlsDetailsUK => false
+      case AmlsStatuses.PendingAmlsDetails => false
+      case AmlsStatuses.PendingAmlsDetailsRejected => false
     }
 
     def isNoDetails():Boolean = amlsStatus match {
-      case AmlsStatus.NoAmlsDetailsNonUK => true
-      case AmlsStatus.NoAmlsDetailsUK => true
-      case AmlsStatus.ValidAmlsNonUK => false
-      case AmlsStatus.ValidAmlsDetailsUK => false
-      case AmlsStatus.ExpiredAmlsDetailsUK => false
-      case AmlsStatus.PendingAmlsDetails => false
-      case AmlsStatus.PendingAmlsDetailsRejected => false
+      case AmlsStatuses.NoAmlsDetailsNonUK => true
+      case AmlsStatuses.NoAmlsDetailsUK => true
+      case AmlsStatuses.ValidAmlsNonUK => false
+      case AmlsStatuses.ValidAmlsDetailsUK => false
+      case AmlsStatuses.ExpiredAmlsDetailsUK => false
+      case AmlsStatuses.PendingAmlsDetails => false
+      case AmlsStatuses.PendingAmlsDetailsRejected => false
     }
 
     def hasExistingAmls(): Boolean = amlsStatus match {
-      case AmlsStatus.NoAmlsDetailsNonUK => false
-      case AmlsStatus.ValidAmlsNonUK => true
-      case AmlsStatus.NoAmlsDetailsUK => false
-      case AmlsStatus.ValidAmlsDetailsUK => true
-      case AmlsStatus.ExpiredAmlsDetailsUK => true
-      case AmlsStatus.PendingAmlsDetails => true
-      case AmlsStatus.PendingAmlsDetailsRejected => true
+      case AmlsStatuses.NoAmlsDetailsNonUK => false
+      case AmlsStatuses.ValidAmlsNonUK => true
+      case AmlsStatuses.NoAmlsDetailsUK => false
+      case AmlsStatuses.ValidAmlsDetailsUK => true
+      case AmlsStatuses.ExpiredAmlsDetailsUK => true
+      case AmlsStatuses.PendingAmlsDetails => true
+      case AmlsStatuses.PendingAmlsDetailsRejected => true
     }
 
   }
