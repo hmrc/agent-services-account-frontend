@@ -16,10 +16,10 @@
 
 package uk.gov.hmrc.agentservicesaccount.forms
 
-import play.api.data.{Form, FormError}
 import play.api.data.Forms.{mapping, of, text}
 import play.api.data.format.Formatter
 import play.api.data.validation.{Valid, ValidationResult}
+import play.api.data.{Form, FormError}
 import uk.gov.hmrc.agentservicesaccount.models.UpdateMoneyLaunderingSupervisionDetails
 
 import java.time.LocalDate

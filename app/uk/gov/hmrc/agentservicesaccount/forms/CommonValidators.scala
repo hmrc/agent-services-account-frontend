@@ -17,6 +17,7 @@
 package uk.gov.hmrc.agentservicesaccount.forms
 
 import play.api.data.validation._
+
 import scala.annotation.tailrec
 
 object CommonValidators {

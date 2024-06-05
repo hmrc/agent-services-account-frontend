@@ -18,10 +18,10 @@ package uk.gov.hmrc.agentservicesaccount.controllers.amls
 
 import play.api.mvc.Results.Redirect
 import play.api.mvc.{Request, Result}
+import uk.gov.hmrc.agentservicesaccount.controllers.routes
 import uk.gov.hmrc.agentservicesaccount.models.UpdateAmlsJourney
 import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
 import uk.gov.hmrc.mongo.cache.DataKey
-import uk.gov.hmrc.agentservicesaccount.controllers.routes
 
 import scala.concurrent.{ExecutionContext, Future}
 

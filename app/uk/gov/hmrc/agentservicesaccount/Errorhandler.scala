@@ -16,29 +16,31 @@
 
 package uk.gov.hmrc.agentservicesaccount
 
-import javax.inject.{Inject, Singleton}
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.mvc.Results._
 import play.api.mvc.{Request, RequestHeader, Result}
 import play.api.{Configuration, Environment, Logger, Logging}
+import uk.gov.hmrc.agentservicesaccount.actions.AuthRedirects
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.views.html.error_template
 import uk.gov.hmrc.auth.core.{InsufficientEnrolments, NoActiveSession}
 import uk.gov.hmrc.http.{JsValidationException, NotFoundException}
-import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import uk.gov.hmrc.play.audit.http.connector.{AuditConnector, AuditResult}
-import uk.gov.hmrc.play.bootstrap.config.{AuthRedirects, HttpAuditEvent}
+import uk.gov.hmrc.play.bootstrap.config.HttpAuditEvent
 import uk.gov.hmrc.play.bootstrap.frontend.http.FrontendErrorHandler
+import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ErrorHandler @Inject() (
-                               val env: Environment,
-                               val messagesApi: MessagesApi,
-  errorTemplateView: error_template,
-                               val auditConnector: AuditConnector)(implicit val config: Configuration, ec: ExecutionContext, appConfig: AppConfig)
-  extends FrontendErrorHandler with AuthRedirects with ErrorAuditing with Logging {
+class ErrorHandler @Inject()(val env: Environment,
+                             val messagesApi: MessagesApi,
+                             errorTemplateView: error_template,
+                             val auditConnector: AuditConnector
+                            )(implicit val config: Configuration,
+                              ec: ExecutionContext,
+                              appConfig: AppConfig) extends FrontendErrorHandler with AuthRedirects with ErrorAuditing with Logging {
 
   override def appName: String = appConfig.appName
 
@@ -47,11 +49,11 @@ class ErrorHandler @Inject() (
   override def onClientError(request: RequestHeader, statusCode: Int, message: String): Future[Result] = {
     auditClientError(request, statusCode, message)
     logger.error(s"onClientError $message")
-    super.onClientError(request,statusCode,message)
+    super.onClientError(request, statusCode, message)
   }
 
   override def resolveError(request: RequestHeader, exception: Throwable): Result = {
-    auditServerError(request,exception)
+    auditServerError(request, exception)
     logger.error(s"resolveError $exception")
     exception match {
       case _: NoActiveSession => toGGLogin(if (appConfig.isDevEnv) s"http://${request.host}${request.uri}" else s"${request.uri}")
@@ -116,14 +118,16 @@ trait ErrorAuditing extends HttpAuditEvent {
           notFoundError,
           request,
           Map(TransactionFailureReason -> message)
-        )(HeaderCarrierConverter.fromRequestAndSession(request, request.session))); ()
+        )(HeaderCarrierConverter.fromRequestAndSession(request, request.session)));
+        ()
       case BAD_REQUEST => auditConnector.sendEvent(
         dataEvent(
           ServerValidationError,
           badRequestError,
           request,
           Map(TransactionFailureReason -> message)
-        )(HeaderCarrierConverter.fromRequestAndSession(request, request.session))); ()
+        )(HeaderCarrierConverter.fromRequestAndSession(request, request.session)));
+        ()
       case _ =>
     }
   }

@@ -18,18 +18,17 @@ package uk.gov.hmrc.agentservicesaccount.controllers
 
 import play.api.i18n.MessagesApi
 import play.api.mvc.RequestHeader
-import play.api.test.FakeRequest
+import play.api.test.{FakeRequest, Helpers}
 import play.api.test.Helpers._
-import play.api.test.Helpers
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 
 class SignOutControllerSpec extends BaseISpec {
 
-  implicit val appConfig = app.injector.instanceOf[AppConfig]
-  implicit val requestHeader = RequestHeader
+  implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
+  implicit val requestHeader: RequestHeader.type = RequestHeader
   implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
-  val controller = app.injector.instanceOf[SignOutController]
+  val controller: SignOutController = app.injector.instanceOf[SignOutController]
 
   "SignOutController" should {
     "remove session and redirect to /home/survey" in {

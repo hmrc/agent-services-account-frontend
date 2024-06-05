@@ -19,8 +19,8 @@ package uk.gov.hmrc.agentservicesaccount.services
 import play.api.Configuration
 import play.api.libs.json.{Json, Writes}
 import uk.gov.hmrc.agentmtdidentifiers.model._
+import uk.gov.hmrc.agentservicesaccount.models.audit._
 import uk.gov.hmrc.agentservicesaccount.models.{AmlsDetails, AmlsRequest, PendingChangeOfDetails}
-import uk.gov.hmrc.agentservicesaccount.models.audit.{AmlsAuditDetails, AuditDetail, UpdateAmlsAuditDetails, UpdateContactDetailsAuditRequest, UserDetails}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.AuditExtensions._
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector

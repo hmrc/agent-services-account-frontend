@@ -17,7 +17,7 @@
 package uk.gov.hmrc.agentservicesaccount.stubs
 
 
-import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, get, patch, post, serverError, stubFor, urlEqualTo}
+import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.Status.{CONFLICT, CREATED, NOT_FOUND, NO_CONTENT}
 import play.api.libs.json.Json

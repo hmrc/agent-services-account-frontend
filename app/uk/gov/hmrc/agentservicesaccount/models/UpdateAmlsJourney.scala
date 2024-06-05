@@ -55,5 +55,5 @@ case class UpdateAmlsJourney(status: AmlsStatus,
 }
 
 object UpdateAmlsJourney{
-  implicit val format: OFormat[UpdateAmlsJourney] = Json.format[UpdateAmlsJourney]
+  implicit lazy val format: OFormat[UpdateAmlsJourney] = Json.format[UpdateAmlsJourney]
 }

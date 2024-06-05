@@ -16,20 +16,19 @@
 
 package uk.gov.hmrc.agentservicesaccount.connectors
 
-import akka.Done
-import com.codahale.metrics.MetricRegistry
-import com.kenshoo.play.metrics.Metrics
+import org.apache.pekko.Done
 import play.api.Logging
 import play.api.http.Status._
 import play.api.libs.json.{Json, OFormat}
-import uk.gov.hmrc.agent.kenshoo.monitoring.HttpAPIMonitor
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agents.accessgroups.GroupSummary
 import uk.gov.hmrc.agents.accessgroups.optin.OptinStatus
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models.AccessGroupSummaries
+import uk.gov.hmrc.agentservicesaccount.utils.HttpAPIMonitor
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse, UpstreamErrorResponse}
+import uk.gov.hmrc.play.bootstrap.metrics.Metrics
 
 import java.net.URL
 import javax.inject.{Inject, Singleton}
@@ -40,9 +39,10 @@ import scala.util.{Failure, Success, Try}
 
 @Singleton
 class AgentPermissionsConnector @Inject()(http: HttpClient, httpV2: HttpClientV2)
-                                         (implicit val metrics: Metrics, appConfig: AppConfig) extends HttpAPIMonitor with Logging {
-
-  override val kenshooRegistry: MetricRegistry = metrics.defaultRegistry
+                                         (implicit val metrics: Metrics,
+                                          appConfig: AppConfig,
+                                          val ec: ExecutionContext
+                                         ) extends HttpAPIMonitor with Logging {
 
   private val baseUrl = appConfig.agentPermissionsBaseUrl
 
@@ -83,8 +83,8 @@ class AgentPermissionsConnector @Inject()(http: HttpClient, httpV2: HttpClientV2
     }
 
     val url = s"$baseUrl/agent-permissions/arn/${arn.value}/groups"
-    monitor("ConsumedAPI-GetGroupsSummaries-GET"){
-      http.GET[HttpResponse](url, headers = buildHeaders).map{ response =>
+    monitor("ConsumedAPI-GetGroupsSummaries-GET") {
+      http.GET[HttpResponse](url, headers = buildHeaders).map { response =>
         response.status match {
           case OK => response.json.asOpt[AccessGroupSummaries]
           case e => logger.warn(s"GetGroupsSummaries returned status $e ${response.body}"); None
@@ -94,7 +94,7 @@ class AgentPermissionsConnector @Inject()(http: HttpClient, httpV2: HttpClientV2
   }
 
   def getGroupsForTeamMember(arn: Arn, userId: String)(implicit hc: HeaderCarrier,
-                                                             ec: ExecutionContext): Future[Option[Seq[GroupSummary]]] = {
+                                                       ec: ExecutionContext): Future[Option[Seq[GroupSummary]]] = {
     val url = s"$baseUrl/agent-permissions/arn/${arn.value}/team-member/$userId/groups"
     monitor("ConsumedAPI-groupSummariesForTeamMember-GET") {
       http.GET[HttpResponse](url).map { response: HttpResponse =>
@@ -128,7 +128,7 @@ class AgentPermissionsConnector @Inject()(http: HttpClient, httpV2: HttpClientV2
   def syncEacd(arn: Arn, fullSync: Boolean)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Unit] = {
     val url = s"$baseUrl/agent-permissions/arn/${arn.value}/sync?fullSync=" + fullSync
 
-    http.POST[SyncEacd, HttpResponse](url, SyncEacd("sync")).map{ response =>
+    http.POST[SyncEacd, HttpResponse](url, SyncEacd("sync")).map { response =>
       response.status match {
         case OK =>
           logger.debug(s"EACD sync called for $arn")
@@ -173,7 +173,7 @@ class AgentPermissionsConnector @Inject()(http: HttpClient, httpV2: HttpClientV2
   }
 
   def declinePrivateBetaInvite()(implicit hc: HeaderCarrier,
-                                            ec: ExecutionContext): Future[Done] = {
+                                 ec: ExecutionContext): Future[Done] = {
     val url = s"$baseUrl/agent-permissions/private-beta-invite/decline"
     monitor("ConsumedAPI-declinePrivateBetaInvite-POST") {
       http.POSTEmpty[HttpResponse](url).map { response =>

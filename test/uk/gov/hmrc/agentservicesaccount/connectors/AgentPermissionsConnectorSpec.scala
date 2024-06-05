@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.agentservicesaccount.connectors
 
-import akka.Done
+import org.apache.pekko.Done
 import play.api.test.Helpers._
 import play.api.test.Injecting
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentPermissionsStubs._

@@ -16,7 +16,6 @@
 
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.controllers.routes
-@import uk.gov.hmrc.agentservicesaccount.controllers.routes.{AgentServicesController => controller}
 
 @this(a:a,h1: h1, p: p, span: span)
 
@@ -28,21 +27,21 @@
         @span("nav.home", classes = Some("hmrc-account-icon hmrc-account-icon--home"))
     </a>
     @if(isAdmin) {
-        <a href="@controller.manageAccount.url" class="hmrc-account-menu__link">
+        <a href="@routes.AgentServicesController.manageAccount.url" class="hmrc-account-menu__link">
             <span>@msgs("nav.manage.account")</span>
             <strong class="govuk-tag" style="margin-left: 10px; font-size: 12px; padding: 3px 5px ;">New</strong>
         </a>
     } else{
         @a(
             key = "nav.your.account",
-            href = controller.yourAccount.url,
+            href = routes.AgentServicesController.yourAccount.url,
             classes = Some("hmrc-account-menu__link"),
             addStandardClasses = false
         )
     }
     @a(
         key = "nav.help",
-        href = controller.showHelp.url,
+        href = routes.AgentServicesController.showHelp.url,
         classes = Some("hmrc-account-menu__link"),
         addStandardClasses = false
     )

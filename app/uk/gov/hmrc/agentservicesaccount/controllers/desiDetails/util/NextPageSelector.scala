@@ -16,8 +16,8 @@
 
 package uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util
 
-import play.api.mvc.Results.Redirect
 import play.api.mvc.Result
+import play.api.mvc.Results.Redirect
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.DesiDetailsJourney
 object NextPageSelector {

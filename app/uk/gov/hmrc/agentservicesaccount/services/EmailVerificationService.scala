@@ -20,9 +20,9 @@ import play.api.i18n.Lang
 import play.api.mvc.{Call, Request}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, EmailVerificationConnector}
+import uk.gov.hmrc.agentservicesaccount.controllers
 import uk.gov.hmrc.agentservicesaccount.models.emailverification._
 import uk.gov.hmrc.http.{HeaderCarrier, InternalServerException}
-import uk.gov.hmrc.agentservicesaccount.controllers
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}

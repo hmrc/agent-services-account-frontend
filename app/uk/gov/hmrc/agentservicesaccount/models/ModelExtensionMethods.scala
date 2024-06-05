@@ -17,7 +17,7 @@
 package uk.gov.hmrc.agentservicesaccount.models
 
 object ModelExtensionMethods {
-  implicit class AmlsStatusExt(val amlsStatus: AmlsStatus) {
+  implicit class AmlsStatusExt(amlsStatus: => AmlsStatus) {
 
     def isUkAgent(): Boolean = amlsStatus match {
       case AmlsStatus.NoAmlsDetailsUK => true

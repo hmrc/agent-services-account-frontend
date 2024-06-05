@@ -16,26 +16,23 @@
 
 package uk.gov.hmrc.agentservicesaccount.connectors
 
-import com.codahale.metrics.MetricRegistry
-import com.kenshoo.play.metrics.Metrics
 import play.api.http.Status.{BAD_REQUEST, CREATED, NO_CONTENT, OK}
 import play.api.libs.json.Json
-import uk.gov.hmrc.agent.kenshoo.monitoring.HttpAPIMonitor
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.models.{AgentDetailsDesResponse, AmlsDetails, AmlsDetailsResponse, AmlsRequest, AmlsStatus}
+import uk.gov.hmrc.agentservicesaccount.models._
+import uk.gov.hmrc.agentservicesaccount.utils.HttpAPIMonitor
 import uk.gov.hmrc.http._
 import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.play.bootstrap.metrics.Metrics
 
 import java.net.URL
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AgentAssuranceConnector @Inject()(httpV2: HttpClientV2)(implicit val metrics: Metrics, appConfig: AppConfig)
+class AgentAssuranceConnector @Inject()(httpV2: HttpClientV2)(implicit val metrics: Metrics, appConfig: AppConfig, val ec: ExecutionContext)
   extends HttpAPIMonitor {
-
-  override lazy val kenshooRegistry: MetricRegistry = metrics.defaultRegistry
 
   private lazy val baseUrl = appConfig.agentAssuranceBaseUrl
 

@@ -17,10 +17,10 @@
 package uk.gov.hmrc.agentservicesaccount.support
 
 import com.codahale.metrics.MetricRegistry
-import com.kenshoo.play.metrics.Metrics
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.{Assertion, Suite}
 import play.api.Application
+import uk.gov.hmrc.play.bootstrap.metrics.Metrics
 
 import scala.jdk.CollectionConverters._
 

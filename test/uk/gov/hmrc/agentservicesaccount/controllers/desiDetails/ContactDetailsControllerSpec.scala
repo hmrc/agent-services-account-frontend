@@ -23,8 +23,8 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.libs.json.Json
-import play.api.mvc.{Action, AnyContent}
+import play.api.libs.json.{JsValue, Json}
+import play.api.mvc.{Action, AnyContent, AnyContentAsEmpty, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
@@ -32,7 +32,6 @@ import uk.gov.hmrc.agentservicesaccount.connectors.{AddressLookupConnector, Agen
 import uk.gov.hmrc.agentservicesaccount.controllers.{CURRENT_SELECTED_CHANGES, DRAFT_NEW_CONTACT_DETAILS, DRAFT_SUBMITTED_BY, EMAIL_PENDING_VERIFICATION, desiDetails}
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup.{ConfirmedResponseAddress, ConfirmedResponseAddressDetails, Country, JourneyConfigV2}
-import uk.gov.hmrc.agentservicesaccount.models.desiDetails._
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.support.{TestConstants, UnitSpec}
@@ -52,13 +51,8 @@ class ContactDetailsControllerSpec extends UnitSpec
   with MockFactory
   with TestConstants {
 
-  private val testArn = Arn("XXARN0123456789")
+  private val testArn: Arn = Arn("XXARN0123456789")
 
-
-  private val submittedByDetails = YourDetails(
-    fullName = "John Tester",
-    telephone = "01903 209919"
-  )
 
   private val confirmedAddressResponse = ConfirmedResponseAddress(
     auditRef = "foo",
@@ -71,8 +65,8 @@ class ContactDetailsControllerSpec extends UnitSpec
     )
   )
 
-  private val stubAuthConnector = new AuthConnector {
-    private val authJson = Json.parse(s"""{
+  private val stubAuthConnector: AuthConnector = new AuthConnector {
+    private val authJson: JsValue = Json.parse(s"""{
                       |  "internalId": "some-id",
                       |  "affinityGroup": "Agent",
                       |  "credentialRole": "User",
@@ -89,7 +83,7 @@ class ContactDetailsControllerSpec extends UnitSpec
       Future.successful(retrieval.reads.reads(authJson).get)
   }
 
-  val overrides = new AbstractModule() {
+  val overrides: AbstractModule = new AbstractModule() {
     override def configure(): Unit = {
       bind(classOf[AgentAssuranceConnector]).toInstance(stub[AgentAssuranceConnector])
       bind(classOf[AddressLookupConnector]).toInstance(stub[AddressLookupConnector])
@@ -140,7 +134,7 @@ class ContactDetailsControllerSpec extends UnitSpec
     sessionCache.delete(CURRENT_SELECTED_CHANGES)(fakeRequest()).futureValue
   }
 
-  private def fakeRequest(method: String = "GET", uri: String = "/") =
+  private def fakeRequest(method: String = "GET", uri: String = "/"): FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(method, uri).withSession(
       SessionKeys.authToken -> "Bearer XYZ",
       SessionKeys.sessionId -> "session-x"
@@ -149,7 +143,7 @@ class ContactDetailsControllerSpec extends UnitSpec
     "GET /manage-account/contact-details/new-address" should {
     "redirect to the external service to look up an address" in new TestSetup {
       noPendingChangesInRepo()
-      val result = contactDetailsController.startAddressLookup()(fakeRequest())
+      val result: Future[Result] = contactDetailsController.startAddressLookup()(fakeRequest())
       status(result) shouldBe SEE_OTHER
       header("Location", result).get should include("mock-address-lookup-url")
     }
@@ -158,8 +152,8 @@ class ContactDetailsControllerSpec extends UnitSpec
   "GET /contact-details/address-lookup-finish" should {
     "store the new address in session and redirect to review new details page" in new TestSetup {
       noPendingChangesInRepo()
-      implicit val request = fakeRequest()
-      val result = contactDetailsController.finishAddressLookup(Some("foo"))(request)
+      implicit val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequest()
+      val result: Future[Result] = contactDetailsController.finishAddressLookup(Some("foo"))(request)
       status(result) shouldBe SEE_OTHER
       header("Location", result) shouldBe Some(desiDetails.routes.ApplySACodeChangesController.showPage.url)
       sessionCache.get(DRAFT_NEW_CONTACT_DETAILS).futureValue.flatMap(_.agencyDetails.agencyAddress).map(_.addressLine1) shouldBe Some("26 New Street") // the new address
@@ -169,7 +163,7 @@ class ContactDetailsControllerSpec extends UnitSpec
   "GET /manage-account/contact-details/confirmation" should {
     "display the confirmation page" in new TestSetup {
       pendingChangesExistInRepo()
-      val result = contactDetailsController.showChangeSubmitted()(fakeRequest())
+      val result: Future[Result] = contactDetailsController.showChangeSubmitted()(fakeRequest())
       status(result) shouldBe OK
       contentAsString(result.futureValue) should include("You have submitted new contact details")
     }
@@ -178,7 +172,7 @@ class ContactDetailsControllerSpec extends UnitSpec
   "existing pending changes" should {
     "cause the user to be redirected away from any 'update' endpoints" in new TestSetup {
       def shouldRedirect(endpoint: Action[AnyContent]): Unit = {
-        val result = endpoint(fakeRequest())
+        val result: Future[Result] = endpoint(fakeRequest())
         status(result) shouldBe SEE_OTHER
         header("Location", result) shouldBe Some(desiDetails.routes.ViewContactDetailsController.showPage.url)
       }

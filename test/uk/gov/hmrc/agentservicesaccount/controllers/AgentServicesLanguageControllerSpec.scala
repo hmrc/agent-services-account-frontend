@@ -18,9 +18,9 @@ package uk.gov.hmrc.agentservicesaccount.controllers
 
 import play.api.http.Status
 import play.api.i18n.MessagesApi
-import play.api.test.FakeRequest
+import play.api.mvc.AnyContentAsEmpty
+import play.api.test.{FakeRequest, Helpers}
 import play.api.test.Helpers._
-import play.api.test.Helpers
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 
@@ -29,12 +29,12 @@ import scala.concurrent.duration._
 class AgentServicesLanguageControllerSpec extends BaseISpec {
 
   implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
-  implicit val appConfig = app.injector.instanceOf[AppConfig]
-  val controller = app.injector.instanceOf[AgentServicesLanguageController]
+  implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
+  val controller: AgentServicesLanguageController = app.injector.instanceOf[AgentServicesLanguageController]
 
-  val timeout = 3.seconds
+  val timeout: FiniteDuration = 3.seconds
 
-  implicit val request = FakeRequest()
+  implicit val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
   "Calling the .switchToLanguage function" when {
 

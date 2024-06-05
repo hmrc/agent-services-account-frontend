@@ -22,10 +22,10 @@ import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.ToFuture
 import uk.gov.hmrc.agentservicesaccount.forms.RenewalDateForm
+import uk.gov.hmrc.agentservicesaccount.models.ModelExtensionMethods._
 import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.enter_renewal_date
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import uk.gov.hmrc.agentservicesaccount.models.ModelExtensionMethods._
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
