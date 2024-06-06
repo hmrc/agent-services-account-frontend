@@ -17,8 +17,8 @@
 package uk.gov.hmrc.agentservicesaccount.models
 
 import play.api.i18n.Messages
+import uk.gov.hmrc.agents.accessgroups.optin._
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agents.accessgroups.optin.{OptedInNotReady, OptedInReady, OptedInSingleUser, OptedOutEligible, OptedOutSingleUser, OptedOutWrongClientCount, OptinStatus}
 
 @Deprecated
 case class ManageAccessPermissionsConfig

@@ -24,14 +24,13 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
-import play.api.mvc.{Action, AnyContent, Result}
+import play.api.mvc._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.{CURRENT_SELECTED_CHANGES, DRAFT_NEW_CONTACT_DETAILS, EMAIL_PENDING_VERIFICATION, desiDetails}
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest
-import uk.gov.hmrc.agentservicesaccount.models.desiDetails.YourDetails
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.support.{TestConstants, UnitSpec}
@@ -51,12 +50,7 @@ class SelectDetailsControllerSpec extends UnitSpec
   with MockFactory
   with TestConstants {
 
-  private val testArn = Arn("XXARN0123456789")
-
-  private val submittedByDetails = YourDetails(
-    fullName = "John Tester",
-    telephone = "01903 209919"
-  )
+  private val testArn: Arn = Arn("XXARN0123456789")
 
   private val stubAuthConnector = new AuthConnector {
     private val authJson = Json.parse(s"""{
@@ -117,7 +111,7 @@ class SelectDetailsControllerSpec extends UnitSpec
     sessionCache.delete(CURRENT_SELECTED_CHANGES)(fakeRequest()).futureValue
   }
 
-  private def fakeRequest(method: String = "GET", uri: String = "/") =
+  private def fakeRequest(method: String = "GET", uri: String = "/"): FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(method, uri).withSession(
       SessionKeys.authToken -> "Bearer XYZ",
       SessionKeys.sessionId -> "session-x"
@@ -135,7 +129,7 @@ class SelectDetailsControllerSpec extends UnitSpec
   "POST /manage-account/contact-changes/select-changes" should {
     "store the selected changes in session and redirect to first selected page" in new TestSetup {
       noPendingChangesInRepo()
-      implicit val request = fakeRequest("POST").withFormUrlEncodedBody("email" -> "email")
+      implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = fakeRequest("POST").withFormUrlEncodedBody("email" -> "email")
       val result: Future[Result] = selectDetailsController.onSubmit()(request)
       status(result) shouldBe SEE_OTHER
       header("Location", result) shouldBe Some(desiDetails.routes.UpdateEmailAddressController.showChangeEmailAddress.url)
@@ -144,7 +138,7 @@ class SelectDetailsControllerSpec extends UnitSpec
 
     "display an error if the data submitted is invalid" in new TestSetup {
       noPendingChangesInRepo()
-      implicit val request = fakeRequest("POST").withFormUrlEncodedBody("businessName" -> "sdfhgdf")
+      implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = fakeRequest("POST").withFormUrlEncodedBody("businessName" -> "sdfhgdf")
       val result: Future[Result] = selectDetailsController.onSubmit()(request)
       status(result) shouldBe BAD_REQUEST
       contentAsString(result.futureValue) should include("There is a problem")
@@ -153,7 +147,7 @@ class SelectDetailsControllerSpec extends UnitSpec
 
     "display an error if the data submitted is empty" in new TestSetup {
       noPendingChangesInRepo()
-      implicit val request = fakeRequest("POST").withFormUrlEncodedBody()
+      implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = fakeRequest("POST").withFormUrlEncodedBody()
       val result: Future[Result] = selectDetailsController.onSubmit()(request)
       status(result) shouldBe BAD_REQUEST
       contentAsString(result.futureValue) should include("There is a problem")

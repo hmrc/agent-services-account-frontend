@@ -29,7 +29,7 @@ import play.twirl.api.Html
 import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
-import uk.gov.hmrc.agentservicesaccount.models.{AmlsDetails, AmlsStatus, UpdateAmlsJourney}
+import uk.gov.hmrc.agentservicesaccount.models.{AmlsDetails, AmlsStatuses, UpdateAmlsJourney}
 import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
 import uk.gov.hmrc.agentservicesaccount.support.TestConstants
 import uk.gov.hmrc.agentservicesaccount.utils.AMLSLoader
@@ -59,13 +59,13 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
   private val amlsDetailsResponse = Future.successful(amlsDetails)
 
   private val ukAmlsJourney = UpdateAmlsJourney(
-    status = AmlsStatus.ValidAmlsDetailsUK,
+    status = AmlsStatuses.ValidAmlsDetailsUK,
     isAmlsBodyStillTheSame = Some(true),
     newAmlsBody = Some("ACCA")
   )
 
   private val overseasAmlsJourney = UpdateAmlsJourney(
-    status = AmlsStatus.ValidAmlsNonUK,
+    status = AmlsStatuses.ValidAmlsNonUK,
     newAmlsBody = Some("OS AMLS"),
     newRegistrationNumber = Some("AMLS123"),
     newExpirationDate = Some(LocalDate.parse("2024-10-10"))

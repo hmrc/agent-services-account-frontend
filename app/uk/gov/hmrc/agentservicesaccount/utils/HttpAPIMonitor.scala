@@ -14,16 +14,18 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.agentservicesaccount.models
+package uk.gov.hmrc.agentservicesaccount.utils
 
-import play.api.libs.json.{Format, Json}
+import uk.gov.hmrc.play.bootstrap.metrics.Metrics
 
+import scala.concurrent.{ExecutionContext, Future}
 
-case class AmlsDetailsResponse(status: AmlsStatus, details: Option[AmlsDetails])
+trait HttpAPIMonitor {
 
-object AmlsDetailsResponse {
-
-  implicit lazy val format: Format[AmlsDetailsResponse] = Json.format[AmlsDetailsResponse]
-
-
+  val metrics: Metrics
+  implicit val ec: ExecutionContext
+  def monitor[A](str: String)(f: => Future[A]): Future[A] = {
+    val timerContext = metrics.defaultRegistry.timer(s"Timer-$str").time()
+    f.andThen { case _ => timerContext.stop() }
+  }
 }

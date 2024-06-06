@@ -17,6 +17,7 @@
 package uk.gov.hmrc.agentservicesaccount.stubs
 
 import org.scalamock.scalatest.MockFactory
+import org.scalatest.TestSuite
 import play.api.libs.json.{Reads, Writes}
 import play.api.mvc.Request
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
@@ -25,6 +26,7 @@ import uk.gov.hmrc.mongo.cache.DataKey
 import scala.concurrent.{ExecutionContext, Future}
 
 trait SessionServiceMocks extends MockFactory {
+  self: TestSuite =>
 
   def expectGetSessionItem[T](key: DataKey[T], mockedResponse: T, times: Int = 1)
                              (implicit service: SessionCacheService): Unit =

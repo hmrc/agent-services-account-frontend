@@ -26,10 +26,10 @@ import play.api.mvc.Result
 import play.api.test.Helpers.defaultAwaitTimeout
 import play.api.test.{FakeRequest, Helpers}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+import uk.gov.hmrc.agentservicesaccount.stubs.AgentAssuranceStubs._
 import uk.gov.hmrc.agentservicesaccount.stubs.AuthStubs
 import uk.gov.hmrc.agentservicesaccount.support.{TestConstants, UnitSpec, WireMockSupport}
 import uk.gov.hmrc.http.SessionKeys
-import uk.gov.hmrc.agentservicesaccount.stubs.AgentAssuranceStubs._
 
 import scala.concurrent.Future
 

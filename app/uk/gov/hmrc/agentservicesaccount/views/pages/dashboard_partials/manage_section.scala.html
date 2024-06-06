@@ -16,7 +16,7 @@
 
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
-@import uk.gov.hmrc.agentservicesaccount.controllers.routes.AgentServicesController
+@import uk.gov.hmrc.agentservicesaccount.controllers.routes
 
 @this(p: p, h2: h2, a: a, ul_html: ul_html, formWithCSRF: FormWithCSRF)
 
@@ -24,4 +24,4 @@
 
 @h2("asa.account.home.manage.section.h2", classes = Some("govuk-!-margin-top-7"))
  @p("asa.account.home.manage.section.p")
- @a("asa.account.home.manage.section.a", href = AgentServicesController.manageAccount.url)
+ @a("asa.account.home.manage.section.a", href = routes.AgentServicesController.manageAccount.url)

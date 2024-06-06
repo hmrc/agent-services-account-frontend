@@ -16,17 +16,16 @@
 
 package uk.gov.hmrc.agentservicesaccount.connectors
 
-import com.codahale.metrics.MetricRegistry
 import com.google.inject.ImplementedBy
-import com.kenshoo.play.metrics.Metrics
 import play.api.Logging
 import play.api.http.Status.{ACCEPTED, OK}
-import uk.gov.hmrc.agent.kenshoo.monitoring.HttpAPIMonitor
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agents.accessgroups.UserDetails
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+import uk.gov.hmrc.agentservicesaccount.utils.HttpAPIMonitor
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
+import uk.gov.hmrc.play.bootstrap.metrics.Metrics
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -43,13 +42,12 @@ trait AgentUserClientDetailsConnector extends HttpAPIMonitor with Logging {
 
 @Singleton
 class AgentUserClientDetailsConnectorImpl @Inject()(val http: HttpClient)(
-    implicit metrics: Metrics,
-    appConfig: AppConfig)
+    implicit val metrics: Metrics,
+    appConfig: AppConfig,
+    val ec: ExecutionContext)
     extends AgentUserClientDetailsConnector
     with HttpAPIMonitor
     with Logging {
-
-  override val kenshooRegistry: MetricRegistry = metrics.defaultRegistry
 
   private lazy val baseUrl = appConfig.agentUserClientDetailsBaseUrl
 

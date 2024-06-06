@@ -16,18 +16,16 @@
 
 package uk.gov.hmrc.agentservicesaccount.connectors
 
-import com.codahale.metrics.MetricRegistry
 import com.google.inject.ImplementedBy
-import com.kenshoo.play.metrics.Metrics
-
-import javax.inject.Inject
 import play.api.Logging
-import uk.gov.hmrc.agent.kenshoo.monitoring.HttpAPIMonitor
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models.SendEmailData
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpErrorFunctions, HttpResponse}
+import uk.gov.hmrc.agentservicesaccount.utils.HttpAPIMonitor
 import uk.gov.hmrc.http.HttpReads.Implicits._
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpErrorFunctions, HttpResponse}
+import uk.gov.hmrc.play.bootstrap.metrics.Metrics
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 @ImplementedBy(classOf[EmailConnectorImpl])
@@ -35,10 +33,8 @@ trait EmailConnector {
   def sendEmail(emailData: SendEmailData)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Unit]
 }
 
-class EmailConnectorImpl @Inject()(appConfig: AppConfig, http: HttpClient, metrics: Metrics)
+class EmailConnectorImpl @Inject()(appConfig: AppConfig, http: HttpClient, val metrics: Metrics, val ec: ExecutionContext)
     extends HttpAPIMonitor with EmailConnector with HttpErrorFunctions with Logging {
-
-  override val kenshooRegistry: MetricRegistry = metrics.defaultRegistry
 
   private val baseUrl: String = appConfig.emailBaseUrl
 

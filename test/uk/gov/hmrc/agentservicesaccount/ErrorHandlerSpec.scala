@@ -16,16 +16,15 @@
 
 package uk.gov.hmrc.agentservicesaccount
 
-import akka.stream.Materializer
+import org.apache.pekko.stream.Materializer
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.i18n.{Lang, MessagesApi}
 import play.api.mvc.Result
-import play.api.test.FakeRequest
+import play.api.test.{FakeRequest, Helpers}
 import play.api.test.Helpers._
-import play.api.test.Helpers
-import uk.gov.hmrc.http.BadGatewayException
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.agentservicesaccount.support.{LogCapturing, UnitSpec}
+import uk.gov.hmrc.http.BadGatewayException
 
 import scala.concurrent.Future
 

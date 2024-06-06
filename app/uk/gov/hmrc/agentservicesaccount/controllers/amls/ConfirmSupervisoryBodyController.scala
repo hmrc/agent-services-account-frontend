@@ -24,8 +24,8 @@ import uk.gov.hmrc.agentservicesaccount.controllers.ToFuture
 import uk.gov.hmrc.agentservicesaccount.forms.YesNoForm
 import uk.gov.hmrc.agentservicesaccount.models.UpdateAmlsJourney
 import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.confirm_supervisory_body
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -36,7 +36,8 @@ class ConfirmSupervisoryBodyController @Inject()(actions: Actions,
                                                  val updateAmlsJourneyRepository: UpdateAmlsJourneyRepository,
                                                  confirmSupervisoryBody: confirm_supervisory_body,
                                                  cc: MessagesControllerComponents
-                                                )(implicit appConfig: AppConfig, ec: ExecutionContext) extends FrontendController(cc) with AmlsJourneySupport with I18nSupport {
+                                                )(implicit appConfig: AppConfig,
+                                                  ec: ExecutionContext) extends FrontendController(cc) with AmlsJourneySupport with I18nSupport {
 
 
   def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>

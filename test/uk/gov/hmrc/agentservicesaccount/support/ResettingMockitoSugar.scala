@@ -17,10 +17,8 @@
 package uk.gov.hmrc.agentservicesaccount.support
 
 import org.mockito.Mockito
-import org.scalatestplus.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfterEach, Suite}
-
-import scala.reflect.Manifest
+import org.scalatestplus.mockito.MockitoSugar
 
 trait ResettingMockitoSugar extends MockitoSugar with BeforeAndAfterEach {
   this: Suite =>

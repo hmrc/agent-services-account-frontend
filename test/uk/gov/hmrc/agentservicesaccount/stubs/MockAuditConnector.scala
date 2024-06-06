@@ -18,17 +18,18 @@ package uk.gov.hmrc.agentservicesaccount.stubs
 
 import org.scalamock.handlers.CallHandler3
 import org.scalamock.scalatest.MockFactory
+import org.scalatest.TestSuite
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.audit.http.connector.AuditResult
+import uk.gov.hmrc.play.audit.http.connector.{AuditConnector, AuditResult}
 import uk.gov.hmrc.play.audit.model.ExtendedDataEvent
 
 import scala.concurrent.{ExecutionContext, Future}
-import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
 
 trait MockAuditConnector extends MockFactory {
+  self: TestSuite =>
 
-  val mockAuditConnector = mock[AuditConnector]
+  val mockAuditConnector: AuditConnector = mock[AuditConnector]
 
   def mockSendExtendedEvent(): CallHandler3[ExtendedDataEvent, HeaderCarrier, ExecutionContext, Future[AuditResult]] = {
     (mockAuditConnector.sendExtendedEvent(_: ExtendedDataEvent)(_: HeaderCarrier, _: ExecutionContext))

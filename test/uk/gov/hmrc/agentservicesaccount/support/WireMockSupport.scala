@@ -16,15 +16,20 @@
 
 package uk.gov.hmrc.agentservicesaccount.support
 
-import java.net.{ServerSocket, URL}
-import com.github.tomakehurst.wiremock.WireMockServer
+import java.net.ServerSocket
+import java.net.URL
+
+import scala.annotation.tailrec
+import scala.util.Random
+
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration._
-import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach, Suite}
-import play.api.Logging
-
-import scala.annotation.tailrec
+import com.github.tomakehurst.wiremock.WireMockServer
+import org.scalatest.BeforeAndAfterAll
+import org.scalatest.BeforeAndAfterEach
+import org.scalatest.Suite
+import play.Logger
 
 case class WireMockBaseUrl(value: URL)
 
@@ -32,44 +37,49 @@ object WireMockSupport {
   // We have to make the wireMockPort constant per-JVM instead of constant
   // per-WireMockSupport-instance because config values containing it are
   // cached in the GGConfig object
-  private lazy val wireMockPort = Port.randomAvailable
+  private lazy val wireMockPort: Int = Port.randomAvailable
 }
 
 trait WireMockSupport extends BeforeAndAfterAll with BeforeAndAfterEach {
   me: Suite =>
 
-  val wireMockPort: Int = WireMockSupport.wireMockPort
-  val wireMockHost = "localhost"
-  val wireMockBaseUrlAsString = s"http://$wireMockHost:$wireMockPort"
-  val wireMockBaseUrl = new URL(wireMockBaseUrlAsString)
-  protected implicit val implicitWireMockBaseUrl = WireMockBaseUrl(wireMockBaseUrl)
+  val wireMockPort: Int                                           = WireMockSupport.wireMockPort
+  val wireMockHost: String                                        = "localhost"
+  val wireMockBaseUrlAsString: String                             = s"http://$wireMockHost:$wireMockPort"
+  val wireMockBaseUrl: URL                                        = new URL(wireMockBaseUrlAsString)
+  protected implicit val implicitWireMockBaseUrl: WireMockBaseUrl = WireMockBaseUrl(wireMockBaseUrl)
 
   protected def basicWireMockConfig(): WireMockConfiguration = wireMockConfig()
 
-  private val wireMockServer = new WireMockServer(basicWireMockConfig().port(wireMockPort))
+  private val wireMockServer: WireMockServer = new WireMockServer(basicWireMockConfig().port(wireMockPort))
 
-  override protected def beforeAll(): Unit = {
+  protected override def beforeAll(): Unit = {
     super.beforeAll()
     WireMock.configureFor(wireMockHost, wireMockPort)
     wireMockServer.start()
   }
 
-  override protected def afterAll(): Unit = {
+  protected override def afterAll(): Unit = {
     wireMockServer.stop()
     super.afterAll()
   }
 
-  override protected def beforeEach(): Unit = {
+  protected override def beforeEach(): Unit = {
     super.beforeEach()
+    Thread.sleep(100)
     WireMock.reset()
   }
+
+  protected def stopWireMockServer(): Unit = wireMockServer.stop()
+
+  protected def startWireMockServer(): Unit = wireMockServer.start()
 }
 
 // This class was copy-pasted from the hmrctest project, which is now deprecated.
-object Port extends Logging {
-  val rnd = new scala.util.Random
-  val range = 8000 to 39999
-  val usedPorts = List[Int]()
+object Port {
+  val rnd: Random         = new scala.util.Random
+  val range: Seq[Int]     = 8000 to 39999
+  val usedPorts: Seq[Int] = List[Int]()
 
   @tailrec
   def randomAvailable: Int =
@@ -79,11 +89,11 @@ object Port extends Logging {
       case p: Int => {
         available(p) match {
           case false => {
-            logger.debug(s"Port $p is in use, trying another")
+            Logger.of("WireMockSupport").debug(s"Port $p is in use, trying another")
             randomAvailable
           }
           case true => {
-            logger.debug("Taking port : " + p)
+            Logger.of("WireMockSupport").debug("Taking port : " + p)
             usedPorts :+ p
             p
           }

@@ -41,7 +41,7 @@ class ApplyCTCodeChangesController @Inject()(actions: Actions,
                                             )(implicit appConfig: AppConfig,
                                               ec: ExecutionContext,
                                               pcodRepository: PendingChangeRequestRepository,
-                                              agentAssuranceConnector: AgentAssuranceConnector,
+                                              agentAssuranceConnector: AgentAssuranceConnector
                                             ) extends FrontendController(cc) with DesiDetailsJourneySupport with I18nSupport {
 
   def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
