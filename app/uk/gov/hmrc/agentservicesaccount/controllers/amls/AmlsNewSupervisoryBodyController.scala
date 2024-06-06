@@ -38,7 +38,9 @@ class AmlsNewSupervisoryBodyController @Inject()(actions: Actions,
                                                  val updateAmlsJourneyRepository: UpdateAmlsJourneyRepository,
                                                  newSupervisoryBody: new_supervisory_body,
                                                  cc: MessagesControllerComponents
-                                                )(implicit appConfig: AppConfig, ec: ExecutionContext) extends FrontendController(cc) with AmlsJourneySupport with I18nSupport {
+                                                )(implicit appConfig: AppConfig,
+                                                  ec: ExecutionContext
+) extends FrontendController(cc) with AmlsJourneySupport with I18nSupport {
 
   def showPage(cya: Boolean): Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {

@@ -72,7 +72,10 @@ class EmailVerificationService @Inject()(agentAssuranceConnector: AgentAssurance
       case Some(emailVerificationResponse) =>
         emailVerificationResponse.redirectUri
       case None =>
-        throw new InternalServerException("[EmailVerificationService][initialiseEmailVerificationJourney] No response was returned from the email verification service")
+        throw new InternalServerException(
+          "[EmailVerificationService][initialiseEmailVerificationJourney] " +
+            "No response was returned from the email verification service"
+        )
     }
   }
 

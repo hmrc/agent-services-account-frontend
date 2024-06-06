@@ -31,45 +31,44 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class AuditService @Inject()(
-                              val auditConnector: AuditConnector,
-                              config: Configuration
+class AuditService @Inject()(val auditConnector: AuditConnector,
+                             config: Configuration
                             )(implicit ec: ExecutionContext) {
 
-  private def audit[A <: AuditDetail: Writes](a: A)(implicit hc: HeaderCarrier): Unit = {
+  private def audit[A <: AuditDetail : Writes](a: A)(implicit hc: HeaderCarrier): Unit = {
     val _ = auditConnector.sendExtendedEvent(
       ExtendedDataEvent(
         auditSource = auditSource,
-        auditType   = a.auditType,
-        eventId     = UUID.randomUUID().toString,
-        detail      = Json.toJson(a),
-        tags        = hc.toAuditTags()
+        auditType = a.auditType,
+        eventId = UUID.randomUUID().toString,
+        detail = Json.toJson(a),
+        tags = hc.toAuditTags()
       )
     )
   }
 
-  def auditUpdateContactDetailsRequest(
-                                        optUtr: Option[Utr],
-                                        pendingChangeOfDetails: PendingChangeOfDetails
+  def auditUpdateContactDetailsRequest(optUtr: Option[Utr],
+                                       pendingChangeOfDetails: PendingChangeOfDetails
                                       )(implicit hc: HeaderCarrier): Unit =
     audit(toUpdateContactDetailsRequestAudit(optUtr, pendingChangeOfDetails))
 
-  def auditUpdateAmlSupervisionDetails(
-                                        amlsRequest: AmlsRequest,
-                                        almsDetailsOpt: Option[AmlsDetails],
-                                        arn: Arn,
-                                        optUtr:Option[Utr],
+  def auditUpdateAmlSupervisionDetails(amlsRequest: AmlsRequest,
+                                       almsDetailsOpt: Option[AmlsDetails],
+                                       arn: Arn,
+                                       optUtr: Option[Utr]
                                       )(implicit hc: HeaderCarrier): Unit =
-    audit(toUpdateAmlSupervisionDetailsAudit(arn: Arn, optUtr:Option[Utr],amlsRequest, almsDetailsOpt))
+    audit(toUpdateAmlSupervisionDetailsAudit(arn: Arn, optUtr: Option[Utr], amlsRequest, almsDetailsOpt))
 
-  private def toUpdateContactDetailsRequestAudit( optUtr: Option[Utr], pendingChangeOfDetails: PendingChangeOfDetails): UpdateContactDetailsAuditRequest = {
+  private def toUpdateContactDetailsRequestAudit(optUtr: Option[Utr],
+                                                 pendingChangeOfDetails: PendingChangeOfDetails
+                                                ): UpdateContactDetailsAuditRequest = {
 
     val firstName = pendingChangeOfDetails.submittedBy.fullName.split(" ").headOption.getOrElse("")
     val lastName = pendingChangeOfDetails.submittedBy.fullName.split(" ").lastOption.getOrElse("")
 
     UpdateContactDetailsAuditRequest(
       agentReferenceNumber = pendingChangeOfDetails.arn,
-      utr =  optUtr,
+      utr = optUtr,
       existingContactDetails = pendingChangeOfDetails.oldDetails,
       newContactDetails = pendingChangeOfDetails.newDetails,
       changedInSelfAssessment = pendingChangeOfDetails.otherServices.saChanges.applyChanges,
@@ -82,11 +81,15 @@ class AuditService @Inject()(
   }
 
 
-  private def toUpdateAmlSupervisionDetailsAudit( arn: Arn, optUtr:Option[Utr], amlsRequest: AmlsRequest, almsDetailsOpt: Option[AmlsDetails]): UpdateAmlsAuditDetails = {
+  private def toUpdateAmlSupervisionDetailsAudit(arn: Arn,
+                                                 optUtr: Option[Utr],
+                                                 amlsRequest: AmlsRequest,
+                                                 almsDetailsOpt: Option[AmlsDetails]
+                                                ): UpdateAmlsAuditDetails = {
     UpdateAmlsAuditDetails(
       agentReferenceNumber = arn,
-      utr =  optUtr,
-      existingAmlsDetails = almsDetailsOpt.map(x=> AmlsAuditDetails(x.membershipExpiresOn, x.membershipNumber, x.supervisoryBody)),
+      utr = optUtr,
+      existingAmlsDetails = almsDetailsOpt.map(x => AmlsAuditDetails(x.membershipExpiresOn, x.membershipNumber, x.supervisoryBody)),
       newAmlsDetails = AmlsAuditDetails(amlsRequest.membershipExpiresOn, Some(amlsRequest.membershipNumber), amlsRequest.supervisoryBody)
     )
   }

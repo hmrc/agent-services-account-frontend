@@ -36,7 +36,8 @@ class EnterRegistrationNumberController @Inject()(actions: Actions,
                                                   val updateAmlsJourneyRepository: UpdateAmlsJourneyRepository,
                                                   enterRegistrationNumber: enter_registration_number,
                                                   cc: MessagesControllerComponents
-                                                 )(implicit appConfig: AppConfig, ec: ExecutionContext) extends FrontendController(cc) with AmlsJourneySupport with I18nSupport {
+                                                 )(implicit appConfig: AppConfig,
+                                                   ec: ExecutionContext) extends FrontendController(cc) with AmlsJourneySupport with I18nSupport {
 
   def showPage(cya: Boolean): Action[AnyContent] = actions.authActionCheckSuspend.async {
     implicit request =>

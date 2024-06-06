@@ -33,38 +33,40 @@ import scala.concurrent.ExecutionContext
 
 @Singleton
 class EnterRenewalDateController @Inject()(actions: Actions,
-                                                 val updateAmlsJourneyRepository: UpdateAmlsJourneyRepository,
+                                           val updateAmlsJourneyRepository: UpdateAmlsJourneyRepository,
                                            enterRenewalDate: enter_renewal_date,
-                                                 cc: MessagesControllerComponents
-                                                )(implicit appConfig: AppConfig, ec: ExecutionContext) extends FrontendController(cc) with AmlsJourneySupport with I18nSupport {
+                                           cc: MessagesControllerComponents
+                                          )(implicit appConfig: AppConfig,
+                                            ec: ExecutionContext) extends FrontendController(cc) with AmlsJourneySupport with I18nSupport {
 
   private val renewalDateForm = RenewalDateForm.form
 
   def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
-        withUpdateAmlsJourney { amlsJourney =>
-          if(amlsJourney.status.isUkAgent()) {
+      withUpdateAmlsJourney { amlsJourney =>
+        if (amlsJourney.status.isUkAgent()) {
           val form = amlsJourney.newExpirationDate.fold(renewalDateForm)(renewalDateForm.fill)
           Ok(enterRenewalDate(form)).toFuture
         } else {
-            Forbidden.toFuture
-          }}
+          Forbidden.toFuture
+        }
+      }
     }
   }
 
 
   def onSubmit: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
-        withUpdateAmlsJourney { amlsJourney =>
-            renewalDateForm
-            .bindFromRequest()
-            .fold(
-              formWithError => BadRequest(enterRenewalDate(formWithError)).toFuture,
-              data =>
-                saveAmlsJourney(amlsJourney.copy(newExpirationDate = Option(data))).map(_ =>
-                    Redirect(routes.CheckYourAnswersController.showPage)
-                )
-            )
+      withUpdateAmlsJourney { amlsJourney =>
+        renewalDateForm
+          .bindFromRequest()
+          .fold(
+            formWithError => BadRequest(enterRenewalDate(formWithError)).toFuture,
+            data =>
+              saveAmlsJourney(amlsJourney.copy(newExpirationDate = Option(data))).map(_ =>
+                Redirect(routes.CheckYourAnswersController.showPage)
+              )
+          )
       }
     }
   }

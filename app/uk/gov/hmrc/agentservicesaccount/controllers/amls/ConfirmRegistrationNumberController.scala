@@ -35,7 +35,9 @@ class ConfirmRegistrationNumberController @Inject()(actions: Actions,
                                                     val updateAmlsJourneyRepository: UpdateAmlsJourneyRepository,
                                                     confirmRegistrationNumber: confirm_registration_number,
                                                     cc: MessagesControllerComponents
-                                                   )(implicit appConfig: AppConfig, ec: ExecutionContext) extends FrontendController(cc) with AmlsJourneySupport with I18nSupport with Logging {
+                                                   )(implicit appConfig: AppConfig,
+                                                     ec: ExecutionContext
+) extends FrontendController(cc) with AmlsJourneySupport with I18nSupport with Logging {
 
   def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
@@ -84,7 +86,7 @@ class ConfirmRegistrationNumberController @Inject()(actions: Actions,
 
 
   private def nextPage(confirm: Boolean): String =
-    if(confirm) routes.EnterRenewalDateController.showPage.url
+    if (confirm) routes.EnterRenewalDateController.showPage.url
     else routes.EnterRegistrationNumberController.showPage().url
 
 }
