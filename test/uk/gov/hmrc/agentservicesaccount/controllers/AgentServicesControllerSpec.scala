@@ -318,14 +318,14 @@ class AgentServicesControllerSpec extends BaseISpec {
         val eightPs = eight.select("p")
         eightPs.get(0).text shouldBe "Your client must first register to Report Pillar 2 top-up taxes."
         eightPs.get(0).select("a").get(0).text shouldBe "register to Report Pillar 2 top-up taxes."
-        eightPs.get(0).select("a").get(0).attr("href") shouldBe "https://www.gov.uk/guidance/register-for-pillar2-tax"
+        eightPs.get(0).select("a").get(0).attr("href") shouldBe "https://www.gov.uk/guidance/report-pillar-2-top-up-taxes"
 
         eightPs.get(1).text shouldBe "You must first get authorisation from your client. You can do this by requesting an authorisation."
         eightPs.get(1).select("a").get(0).text shouldBe "requesting an authorisation."
         eightPs.get(1).select("a").get(0).attr("href") shouldBe "http://localhost:9448/invitations/agents"
         eightPs.get(2).text shouldBe "Report your client’s Pillar 2 top-up taxes and view payments, returns and penalties"
         eightPs.get(2).select("a").get(0).text shouldBe "Report your client’s Pillar 2 top-up taxes and view payments, returns and penalties"
-        eightPs.get(2).select("a").get(0).attr("href") shouldBe "https://www.tax.service.gov.uk/pillar2-tax/account"
+        eightPs.get(2).select("a").get(0).attr("href") shouldBe "http://localhost:10053/report-pillar2-top-up-taxes/asa/input-pillar-2-id"
       }
 
       "agent with showFeatureInvite being false" in {

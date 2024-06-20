@@ -181,5 +181,9 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
   val dmsSubmissionClassificationType: String                =
     servicesConfig.getString("microservice.services.dms-submission.contact-details-submission.classificationType")
 
+  private val pillar2SubmissionFrontendExternalUrl: String = getString("pillar2-submission-frontend.external-url")
+
+  val pillar2StartUrl = s"$pillar2SubmissionFrontendExternalUrl/report-pillar2-top-up-taxes/asa/input-pillar-2-id"
+  val pillar2GuidanceUrl = "https://www.gov.uk/guidance/report-pillar-2-top-up-taxes"
 
 }

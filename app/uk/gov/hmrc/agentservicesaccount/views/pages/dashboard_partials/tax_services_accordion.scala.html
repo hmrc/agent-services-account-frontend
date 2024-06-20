@@ -145,7 +145,7 @@
         Html(
             span("asa.pillar2.col1.text1") + "" +
                     span(msgs("asa.pillar2.col1.link1",
-                        msgs("asa.pillar2.col1.link1.href")))
+                        appConfig.pillar2GuidanceUrl))
         )
     ))
 
@@ -156,7 +156,7 @@
     ))
 
     @h4("asa.pillar2.col2.h3")
-    @p(msgs("asa.pillar2.col2.link1", msgs("asa.pillar2.col2.link1.href")))
+    @p(msgs("asa.pillar2.col2.link1", appConfig.pillar2StartUrl))
 }
 
 @otherTaxesItem = {
