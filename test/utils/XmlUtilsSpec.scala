@@ -120,7 +120,7 @@ class XmlUtilsSpec extends PlaySpec {
   )
 
   "XmlUtils.escapeXmlFor" should {
-    "escape all XML characters in agency name and address lines" in {
+    "escape all XML characters in all address lines" in {
       XmlUtils.escapeXmlFor(input).toString mustBe expectedOutput.toString
     }
   }
