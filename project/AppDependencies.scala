@@ -12,7 +12,8 @@ object AppDependencies {
     "uk.gov.hmrc.mongo" %% "hmrc-mongo-play-30" % mongoVersion,
     "uk.gov.hmrc" %% "play-frontend-hmrc-play-30" % "8.5.0",
     "com.beachape" %% "enumeratum-play" % enumeratumVersion,
-    "org.julienrf" %% "play-json-derived-codecs" % "11.0.0"
+    "org.julienrf" %% "play-json-derived-codecs" % "11.0.0",
+    "org.apache.commons" % "commons-text" % "1.12.0",
   )
 
   val test: Seq[ModuleID] = Seq(
