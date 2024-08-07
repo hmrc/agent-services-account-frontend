@@ -46,14 +46,23 @@
         key = Key(
             content = Text(msgs("contact-details.summary-list.address"))
         ),
-        value = Value(
-            content = HtmlContent(
-                s"""${
-                    agencyDetails.agencyAddress.map(
-                        ba => List(Some(ba.addressLine1), ba.addressLine2, ba.addressLine3, ba.addressLine4, ba.postalCode, Some(ba.countryCode)).flatten
-                    ).map(_.mkString("<br />")).getOrElse(msgs("contact-details.summary-list.none"))
-                }""")
-        ),
+        value = if(forPdf) // escape '&' char if = forPDF
+            Value(
+                content = HtmlContent(
+                    s"""${
+                        agencyDetails.agencyAddress.map(
+                            ba => List(Some(ba.addressLine1), ba.addressLine2, ba.addressLine3, ba.addressLine4, ba.postalCode, Some(ba.countryCode)).flatten
+                        ).map(_.mkString("<br />").replace("&", "&amp;")).getOrElse(msgs("contact-details.summary-list.none"))
+                    }"""))
+        else
+            Value(
+                content = HtmlContent(
+                    s"""${
+                        agencyDetails.agencyAddress.map(
+                            ba => List(Some(ba.addressLine1), ba.addressLine2, ba.addressLine3, ba.addressLine4, ba.postalCode, Some(ba.countryCode)).flatten
+                        ).map(_.mkString("<br />")).getOrElse(msgs("contact-details.summary-list.none"))
+                    }""")
+            ),
         actions = if(forPdf) None else Some(Actions(
             items = Seq(ActionItem(
                 href = desiDetails.routes.ContactDetailsController.startAddressLookup.url,
@@ -100,12 +109,14 @@
     )
 }
 
-@labelMap = @{Map(
-    "businessName" -> "contact-details.summary-list.name",
-    "address" -> "contact-details.summary-list.address",
-    "email" -> "contact-details.summary-list.email",
-    "telephone" -> "contact-details.summary-list.phone"
-)}
+@labelMap = @{
+    Map(
+        "businessName" -> "contact-details.summary-list.name",
+        "address" -> "contact-details.summary-list.address",
+        "email" -> "contact-details.summary-list.email",
+        "telephone" -> "contact-details.summary-list.phone"
+    )
+}
 
 @selectChangesRow = @{
     SummaryListRow(
@@ -123,12 +134,14 @@
     )
 }
 
-@contactDetailsRows = @{Map(
-    "businessName" -> businessNameRow,
-    "address" -> addressRow,
-    "email" -> emailRow,
-    "telephone" -> telephoneRow
-)}
+@contactDetailsRows = @{
+    Map(
+        "businessName" -> businessNameRow,
+        "address" -> addressRow,
+        "email" -> emailRow,
+        "telephone" -> telephoneRow
+    )
+}
 
 @rows = @{
     if(forPdf) selectChanges.map(row => contactDetailsRows(row)).toSeq
