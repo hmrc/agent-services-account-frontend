@@ -43,28 +43,22 @@ class ContactDetailsCyaSpec extends BaseISpec {
         agencyAddress = Some(BusinessAddress("Test & Street", Some("Test Town"), None, None, Some("TE5 7ED"), "GB"))
     )
 
-  private val selectChanges:Set[String] = Set("address")
+  private val selectChanges:Set[String] = Set("businessName", "address", "email", "telephone")
 
   object MessageLookup {
 
     object English {
-      private val govUkSuffix: String = " - Agent services account - GOV.UK"
-      val heading: String = "Check your answers"
-      val title: String = heading + govUkSuffix
-
-      val insetText: String = {
-        "It takes 4 weeks for HMRC to apply these changes to your agent services account. " +
-          "During that time, you cannot amend the contact details again."
-      }
-
-      val selectChangesKey: String = "What you want to change"
       val addressKey: String = "Address for agent services account"
       val emailKey: String = "Email address"
       val telephoneKey: String = "Telephone number"
       val businessNameKey: String = "Business name shown to clients"
 
       val rawFirstLineAddressValue: String = "Test &amp; Street<br>"
-      val parsedAddressValue: String = "Test & Street Test Town TE5 7ED GB"
+      val addressValue: String = "Test & Street Test Town TE5 7ED GB"
+
+      val emailValue: String = "test@email.com"
+      val telephoneValue: String = "01234 567890"
+      val businessNameValue: String = "Test Name"
 
       val labelMap: Map[String, String] = Map(
         "businessName" -> businessNameKey,
@@ -78,13 +72,17 @@ class ContactDetailsCyaSpec extends BaseISpec {
     "contact details partial" should {
       "render correctly with forPdf flag set to true" when {
         val doc: Document = Jsoup.parse(view.apply(testAgencyDetailsFull, selectChanges, forPdf = true)(messages, FakeRequest()).body)
-            "The agency details contain special characters" in {
+            "The agency address contains special characters" in {
               val summaryListKeys = doc.select(".govuk-summary-list__key").asScala.toList.map(_.text)
               val summaryListValuesRaw = doc.select(".govuk-summary-list__value")
               val summaryListValues = summaryListValuesRaw.asScala.toList.map(_.text)
 
-              summaryListKeys.head mustBe MessageLookup.English.addressKey
-              summaryListValues.head mustBe MessageLookup.English.parsedAddressValue
+              summaryListKeys.head mustBe MessageLookup.English.businessNameKey
+              summaryListValues.head mustBe MessageLookup.English.businessNameValue
+              summaryListKeys(1) mustBe MessageLookup.English.addressKey
+              summaryListValues(1) mustBe MessageLookup.English.addressValue
+
+              //check ampersand is escaped before parsing
               summaryListValuesRaw.toString should include(MessageLookup.English.rawFirstLineAddressValue)
             }
         }
