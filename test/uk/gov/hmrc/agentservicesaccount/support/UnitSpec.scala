@@ -24,6 +24,7 @@ import play.api.libs.json.JsValue
 import play.api.mvc.Result
 import play.api.test.Helpers
 import play.api.test.Helpers.defaultAwaitTimeout
+import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.Future
 
@@ -38,6 +39,8 @@ trait UnitSpec extends AnyWordSpecLike with Matchers with OptionValues with Scal
   def contentAsJson(result: Result): JsValue = Helpers.contentAsJson(Future.successful(result))
   def contentType(result: Result): Option[String] =
     result.body.contentType.map(_.split(";").take(1).mkString.trim)
+
+  implicit val hc: HeaderCarrier = HeaderCarrier()
 
   def charset(result: Result): Option[String] =
     result.body.contentType match {

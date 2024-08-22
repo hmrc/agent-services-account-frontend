@@ -99,7 +99,7 @@ class EmailVerificationEndpointControllerSpec extends PlaySpec
 
       mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
-      mockPendingChangeRequestRepository.find(arn) returns Future.successful(None)
+      mockPendingChangeRequestRepository.find(arn)(*[HeaderCarrier]) returns Future.successful(None)
 
       mockSessionCache.get[String](EMAIL_PENDING_VERIFICATION)(*[Reads[String]], *[Request[Any]]) returns Future.successful(Some("new@email.com"))
 

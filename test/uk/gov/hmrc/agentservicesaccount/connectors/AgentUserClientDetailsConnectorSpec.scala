@@ -20,7 +20,6 @@ import play.api.test.Helpers.{await, defaultAwaitTimeout}
 import uk.gov.hmrc.agents.accessgroups.UserDetails
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentUserClientDetailsStubs.stubGetTeamMembersForArn
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
-import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.ExecutionContext
 
@@ -28,7 +27,6 @@ class AgentUserClientDetailsConnectorSpec extends BaseISpec {
 
   private lazy val connector = app.injector.instanceOf[AgentUserClientDetailsConnector]
   implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
-  private implicit val hc: HeaderCarrier = HeaderCarrier()
 
   "getTeamMembers" should {
     "return the team members" in {

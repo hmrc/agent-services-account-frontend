@@ -99,7 +99,7 @@ class ApplySACodeChangesControllerSpec extends PlaySpec
 
       mockDraftDetailsService.updateDraftDetails(*[DesignatoryDetails => DesignatoryDetails])(*[Request[_]]) returns Future.successful(())
 
-      mockPendingChangeRequestRepository.find(arn) returns Future.successful(None)
+      mockPendingChangeRequestRepository.find(arn)(*[HeaderCarrier]) returns Future.successful(None)
 
       mockView.apply(*[Form[ApplySaCodeChanges]])(*[Messages], *[Request[_]], *[AppConfig]) returns Html("")
 
@@ -141,7 +141,7 @@ class ApplySACodeChangesControllerSpec extends PlaySpec
 
       mockDraftDetailsService.updateDraftDetails(*[DesignatoryDetails => DesignatoryDetails])(*[Request[_]]) returns Future.successful(())
 
-      mockPendingChangeRequestRepository.find(arn) returns Future.successful(None)
+      mockPendingChangeRequestRepository.find(arn)(*[HeaderCarrier]) returns Future.successful(None)
 
       mockSessionCache.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[Request[Any]]) returns Future.successful(Some(desiDetailsWithEmptyOtherServices))
       mockSessionCache.get[Set[String]](CURRENT_SELECTED_CHANGES)(*[Reads[Set[String]]], *[Request[Any]]) returns Future.successful(Some(Set("email")))
@@ -169,7 +169,7 @@ class ApplySACodeChangesControllerSpec extends PlaySpec
 
       mockDraftDetailsService.updateDraftDetails(*[DesignatoryDetails => DesignatoryDetails])(*[Request[_]]) returns Future.successful(())
 
-      mockPendingChangeRequestRepository.find(arn) returns Future.successful(None)
+      mockPendingChangeRequestRepository.find(arn)(*[HeaderCarrier]) returns Future.successful(None)
 
       mockSessionCache.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[Request[Any]]) returns Future.successful(Some(desiDetailsWithEmptyOtherServices))
 

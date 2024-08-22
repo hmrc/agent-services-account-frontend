@@ -17,7 +17,6 @@
 package uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
 
 import org.mockito.{ArgumentMatchersSugar, IdiomaticMockito}
-import org.scalatestplus.play.PlaySpec
 import play.api.Environment
 import play.api.data.Form
 import play.api.i18n.Messages
@@ -35,7 +34,7 @@ import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{DesignatoryDetails, YourDetails}
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
 import uk.gov.hmrc.agentservicesaccount.services.{DraftDetailsService, SessionCacheService}
-import uk.gov.hmrc.agentservicesaccount.support.TestConstants
+import uk.gov.hmrc.agentservicesaccount.support.{TestConstants, UnitSpec}
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details.update_phone
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.authorise.Predicate
@@ -45,7 +44,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import java.time.Instant
 import scala.concurrent.{ExecutionContext, Future}
 
-class UpdateTelephoneControllerSpec extends PlaySpec
+class UpdateTelephoneControllerSpec extends UnitSpec
   with DefaultAwaitTimeout
   with IdiomaticMockito
   with ArgumentMatchersSugar
@@ -96,13 +95,13 @@ class UpdateTelephoneControllerSpec extends PlaySpec
 
       mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
-      mockPendingChangeRequestRepository.find(arn) returns Future.successful(None)
+      mockPendingChangeRequestRepository.find(arn)(*[HeaderCarrier]) returns Future.successful(None)
 
       mockUpdatePhoneView.apply(*[Form[String]])(*[Messages], *[Request[_]], *[AppConfig]) returns Html("")
 
       val result: Future[Result] = TestController.showPage()(request)
 
-      status(result) mustBe OK
+      status(result) shouldBe OK
     }
 
     "existing pending changes" should {
@@ -119,12 +118,12 @@ class UpdateTelephoneControllerSpec extends PlaySpec
 
         mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
-        mockPendingChangeRequestRepository.find(arn) returns Future.successful(Some(PendingChangeRequest(arn, Instant.now)))
+        mockPendingChangeRequestRepository.find(arn)(*[HeaderCarrier]) returns Future.successful(Some(PendingChangeRequest(arn, Instant.now)))
 
         val result: Future[Result] = TestController.showPage()(request)
 
-        status(result) mustBe SEE_OTHER
-        header("Location", result) mustBe Some(desiDetails.routes.ViewContactDetailsController.showPage.url)
+        status(result) shouldBe SEE_OTHER
+        header("Location", result) shouldBe Some(desiDetails.routes.ViewContactDetailsController.showPage.url)
       }
     }
   }
@@ -145,14 +144,14 @@ class UpdateTelephoneControllerSpec extends PlaySpec
 
       mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
-      mockPendingChangeRequestRepository.find(arn) returns Future.successful(None)
+      mockPendingChangeRequestRepository.find(arn)(*[HeaderCarrier]) returns Future.successful(None)
 
       mockDraftDetailsService.updateDraftDetails(*[DesignatoryDetails => DesignatoryDetails])(*[Request[_]]) returns Future.successful(())
 
       val result: Future[Result] = TestController.onSubmit()(FakeRequest(POST, "/").withFormUrlEncodedBody("telephoneNumber" -> "01234 567 890"))
 
-      status(result) mustBe SEE_OTHER
-      header("Location", result) mustBe Some(desiDetails.routes.ApplySACodeChangesController.showPage.url)
+      status(result) shouldBe SEE_OTHER
+      header("Location", result) shouldBe Some(desiDetails.routes.ApplySACodeChangesController.showPage.url)
     }
 
     "display an error if the data submitted is invalid" in new Setup {
@@ -168,7 +167,7 @@ class UpdateTelephoneControllerSpec extends PlaySpec
 
       mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
-      mockPendingChangeRequestRepository.find(arn) returns Future.successful(None)
+      mockPendingChangeRequestRepository.find(arn)(*[HeaderCarrier]) returns Future.successful(None)
 
       mockDraftDetailsService.updateDraftDetails(*[DesignatoryDetails => DesignatoryDetails])(*[Request[_]]) returns Future.successful(())
 
@@ -176,7 +175,7 @@ class UpdateTelephoneControllerSpec extends PlaySpec
 
       val result: Future[Result] = TestController.onSubmit()(FakeRequest(POST, "/").withFormUrlEncodedBody("telephoneNumber" -> "0800 FAKE NO"))
 
-      status(result) mustBe BAD_REQUEST
+      status(result) shouldBe BAD_REQUEST
     }
 
     "existing pending changes" should {
@@ -195,12 +194,12 @@ class UpdateTelephoneControllerSpec extends PlaySpec
 
         mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
-        mockPendingChangeRequestRepository.find(arn) returns Future.successful(Some(PendingChangeRequest(arn, Instant.now)))
+        mockPendingChangeRequestRepository.find(arn)(*[HeaderCarrier]) returns Future.successful(Some(PendingChangeRequest(arn, Instant.now)))
 
         val result: Future[Result] = TestController.onSubmit()(FakeRequest(POST, "/").withFormUrlEncodedBody("telephoneNumber" -> "01234 567 890"))
 
-        status(result) mustBe SEE_OTHER
-        header("Location", result) mustBe Some(desiDetails.routes.ViewContactDetailsController.showPage.url)
+        status(result) shouldBe SEE_OTHER
+        header("Location", result) shouldBe Some(desiDetails.routes.ViewContactDetailsController.showPage.url)
       }
     }
   }

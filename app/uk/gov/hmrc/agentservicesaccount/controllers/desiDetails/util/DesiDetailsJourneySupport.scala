@@ -50,7 +50,8 @@ trait DesiDetailsJourneySupport {
                                                       (implicit request: AuthRequestWithAgentInfo[_],
                                                        appConfig: AppConfig,
                                                        pcodRepository: PendingChangeRequestRepository,
-                                                       ec: ExecutionContext): Future[Result] =
+                                                       ec: ExecutionContext,
+                                                       hc: HeaderCarrier): Future[Result] =
     ifChangeContactDetailsFeatureEnabled {
       pcodRepository.find(request.agentInfo.arn).flatMap {
         case None => // no change is pending, we can proceed

@@ -115,17 +115,17 @@ class ContactDetailsControllerSpec extends UnitSpec
     val pcodRepository: PendingChangeRequestRepository = app.injector.instanceOf[PendingChangeRequestRepository]
 
     def noPendingChangesInRepo(): Unit = {
-      (pcodRepository.find(_: Arn)).when(*).returns(Future.successful(None))
+      (pcodRepository.find(_: Arn)(_: HeaderCarrier)).when(*, *).returns(Future.successful(None))
     }
     def pendingChangesExistInRepo(): Unit = {
-      (pcodRepository.find(_: Arn)).when(*).returns(Future.successful(Some(
+      (pcodRepository.find(_: Arn)(_: HeaderCarrier)).when(*, *).returns(Future.successful(Some(
         PendingChangeRequest(
           testArn,
           Instant.now()
         ))))
     }
 
-    (pcodRepository.insert(_: PendingChangeRequest)).when(*).returns(Future.successful(()))
+    (pcodRepository.insert(_: PendingChangeRequest)(_: HeaderCarrier)).when(*, *).returns(Future.successful(()))
 
     // make sure these values are cleared from the session
     sessionCache.delete(DRAFT_NEW_CONTACT_DETAILS)(fakeRequest()).futureValue

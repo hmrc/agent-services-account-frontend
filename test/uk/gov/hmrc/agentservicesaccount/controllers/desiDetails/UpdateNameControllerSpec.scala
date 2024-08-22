@@ -18,8 +18,7 @@ package uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
 
 import com.google.inject.AbstractModule
 import org.scalamock.scalatest.MockFactory
-import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
-import org.scalatest.matchers.should.Matchers
+import org.scalatest.concurrent.IntegrationPatience
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
@@ -44,14 +43,11 @@ import java.time.Instant
 import scala.concurrent.{ExecutionContext, Future}
 
 class UpdateNameControllerSpec extends UnitSpec
-  with Matchers
   with GuiceOneAppPerSuite
-  with ScalaFutures
   with IntegrationPatience
   with MockFactory
   with TestConstants {
 
-  implicit val hc: HeaderCarrier = HeaderCarrier()
   implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
   implicit val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequest()
 
@@ -115,17 +111,17 @@ class UpdateNameControllerSpec extends UnitSpec
     val pcodRepository: PendingChangeRequestRepository = app.injector.instanceOf[PendingChangeRequestRepository]
 
     def noPendingChangesInRepo(): Unit = {
-      (pcodRepository.find(_: Arn)).when(*).returns(Future.successful(None))
+      (pcodRepository.find(_: Arn)(_: HeaderCarrier)).when(*, *).returns(Future.successful(None))
     }
     def pendingChangesExistInRepo(): Unit = {
-      (pcodRepository.find(_: Arn)).when(*).returns(Future.successful(Some(
+      (pcodRepository.find(_: Arn)(_: HeaderCarrier)).when(*, *).returns(Future.successful(Some(
         PendingChangeRequest(
           arn,
           Instant.now()
         ))))
     }
 
-    (pcodRepository.insert(_: PendingChangeRequest)).when(*).returns(Future.successful(()))
+    (pcodRepository.insert(_: PendingChangeRequest)(_: HeaderCarrier)).when(*, *).returns(Future.successful(()))
 
     // make sure these values are cleared from the session
     sessionCache.delete(DRAFT_NEW_CONTACT_DETAILS)(fakeRequest()).futureValue

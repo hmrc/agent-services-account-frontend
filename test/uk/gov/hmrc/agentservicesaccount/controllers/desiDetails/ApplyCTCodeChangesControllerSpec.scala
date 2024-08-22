@@ -100,7 +100,7 @@ class ApplyCTCodeChangesControllerSpec extends PlaySpec
 
       mockDraftDetailsService.updateDraftDetails(*[DesignatoryDetails => DesignatoryDetails])(*[Request[_]]) returns Future.successful(())
 
-      mockPendingChangeRequestRepository.find(arn) returns Future.successful(None)
+      mockPendingChangeRequestRepository.find(arn)(*[HeaderCarrier]) returns Future.successful(None)
 
       mockView.apply(*[Form[ApplyCtCodeChanges]])(*[Messages], *[Request[_]], *[AppConfig]) returns Html("")
 
@@ -142,7 +142,7 @@ class ApplyCTCodeChangesControllerSpec extends PlaySpec
 
       mockDraftDetailsService.updateDraftDetails(*[DesignatoryDetails => DesignatoryDetails])(*[Request[_]]) returns Future.successful(())
 
-      mockPendingChangeRequestRepository.find(arn) returns Future.successful(None)
+      mockPendingChangeRequestRepository.find(arn)(*[HeaderCarrier]) returns Future.successful(None)
 
       mockSessionCache.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[Request[Any]]) returns Future.successful(Some(desiDetailsWithEmptyOtherServices))
 
@@ -169,7 +169,7 @@ class ApplyCTCodeChangesControllerSpec extends PlaySpec
 
       mockDraftDetailsService.updateDraftDetails(*[DesignatoryDetails => DesignatoryDetails])(*[Request[_]]) returns Future.successful(())
 
-      mockPendingChangeRequestRepository.find(arn) returns Future.successful(None)
+      mockPendingChangeRequestRepository.find(arn)(*[HeaderCarrier]) returns Future.successful(None)
 
       mockSessionCache.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[Request[Any]]) returns Future.successful(Some(desiDetailsWithEmptyOtherServices))
 
