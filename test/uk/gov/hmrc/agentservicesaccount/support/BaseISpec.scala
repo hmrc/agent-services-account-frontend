@@ -17,27 +17,21 @@
 package uk.gov.hmrc.agentservicesaccount.support
 
 import com.google.inject.AbstractModule
-import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.matchers.should.Matchers
-import org.scalatest.{BeforeAndAfterEach, OptionValues}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import uk.gov.hmrc.agentservicesaccount.stubs.AuthStubs
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 
-//TODO do we really need all these?
+import scala.concurrent.duration.{DAYS, Duration}
+
 abstract class BaseISpec
   extends UnitSpec
-    with Matchers
-    with OptionValues
     with GuiceOneAppPerSuite
-    with BeforeAndAfterEach
     with WireMockSupport
     with PekkoMaterializerSpec
     with AuthStubs
     with MetricsTestSupport
-    with ScalaFutures
     with ViewBaseSpec
     with TestConstants {
 
@@ -59,11 +53,14 @@ abstract class BaseISpec
         "microservice.services.agent-permissions.host" -> wireMockHost,
         "microservice.services.agent-user-client-details.port" -> wireMockPort,
         "microservice.services.agent-user-client-details.host" -> wireMockHost,
+        "microservice.services.agent-services-account.port" -> wireMockPort,
+        "microservice.services.agent-services-account.host" -> wireMockHost,
         "microservice.services.agent-permissions-frontend.external-url" -> wireMockBaseUrlAsString,
         "auditing.enabled" -> false,
         "metrics.enabled" -> false,
         "suspendedContactDetails.sendEmail" -> false,
-        "features.enable-non-hmrc-supervisory-body" -> true
+        "features.enable-non-hmrc-supervisory-body" -> true,
+        "mongodb.desi-details.lockout-period" -> Duration(28, DAYS).toMinutes
       )
       .configure(additionalConfiguration)
       .overrides(moduleWithOverrides)

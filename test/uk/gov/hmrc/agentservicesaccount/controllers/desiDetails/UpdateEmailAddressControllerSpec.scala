@@ -102,7 +102,7 @@ class UpdateEmailAddressControllerSpec extends PlaySpec
 
       mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
-      mockPendingChangeRequestRepository.find(arn) returns Future.successful(None)
+      mockPendingChangeRequestRepository.find(arn)(*[HeaderCarrier]) returns Future.successful(None)
 
       mockUpdateEmailView.apply(*[Form[String]])(*[Messages], *[Request[_]], *[AppConfig]) returns Html("")
 
@@ -124,7 +124,7 @@ class UpdateEmailAddressControllerSpec extends PlaySpec
 
       mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
-      mockPendingChangeRequestRepository.find(arn) returns Future.successful(None)
+      mockPendingChangeRequestRepository.find(arn)(*[HeaderCarrier]) returns Future.successful(None)
 
       mockEmailVerificationService.getEmailVerificationStatus("new@email.com", ggCredentials.providerId)(*[HeaderCarrier]) returns Future.successful(EmailIsAlreadyVerified)
 
@@ -155,7 +155,7 @@ class UpdateEmailAddressControllerSpec extends PlaySpec
 
       mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
-      mockPendingChangeRequestRepository.find(arn) returns Future.successful(None)
+      mockPendingChangeRequestRepository.find(arn)(*[HeaderCarrier]) returns Future.successful(None)
 
       mockEmailVerificationService.getEmailVerificationStatus("new@email.com", ggCredentials.providerId)(*[HeaderCarrier]) returns Future.successful(EmailIsLocked)
       mockSessionCache.get(CURRENT_SELECTED_CHANGES)(*[Reads[Set[String]]], *[Request[_]]) returns Future.successful(Some(Set("email")))
@@ -180,7 +180,7 @@ class UpdateEmailAddressControllerSpec extends PlaySpec
 
       mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
-      mockPendingChangeRequestRepository.find(arn) returns Future.successful(None)
+      mockPendingChangeRequestRepository.find(arn)(*[HeaderCarrier]) returns Future.successful(None)
 
       mockEmailVerificationService.getEmailVerificationStatus("new@email.com", ggCredentials.providerId)(*[HeaderCarrier]) returns Future.successful(EmailNeedsVerifying)
 
@@ -209,7 +209,7 @@ class UpdateEmailAddressControllerSpec extends PlaySpec
 
       mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
 
-      mockPendingChangeRequestRepository.find(arn) returns Future.successful(None)
+      mockPendingChangeRequestRepository.find(arn)(*[HeaderCarrier]) returns Future.successful(None)
 
       mockUpdateEmailView.apply(*[Form[String]])(*[Messages], *[Request[_]], *[AppConfig]) returns Html("")
       mockSessionCache.get(CURRENT_SELECTED_CHANGES)(*[Reads[Set[String]]], *[Request[_]]) returns Future.successful(Some(Set("email")))

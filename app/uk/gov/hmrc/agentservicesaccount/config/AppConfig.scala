@@ -45,6 +45,8 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
 
   private def baseUrl(key: String) = servicesConfig.baseUrl(key)
 
+  val agentServicesAccountBaseUrl: String = baseUrl("agent-services-account")
+
   val agentAssuranceBaseUrl: String = baseUrl("agent-assurance")
 
   val signInUrl: String = getString("bas-gateway.url")
@@ -136,6 +138,7 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
   val govUkGuidanceChangeDetails: String = getString("govUkGuidanceChangeDetails")
 
   lazy val sessionCacheExpiryDuration: Duration = servicesConfig.getDuration("mongodb.cache.expiry")
+  val pendingChangeTTL: Long = getInt("mongodb.desi-details.lockout-period").toLong
 
   // feature flags
   val feedbackSurveyServiceSelect: Boolean = getBoolean("features.enable-feedback-survey-service-select")
@@ -144,6 +147,7 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
   val enableCbc: Boolean = getBoolean("features.enable-cbc")
   val enablePillar2: Boolean = getBoolean("features.enable-pillar2")
   val enableNonHmrcSupervisoryBody: Boolean = getBoolean("features.enable-non-hmrc-supervisory-body")
+  val enableBackendPCRDatabase: Boolean = getBoolean("features.enable-backend-pcr-database")
 
   //Gran Perms
   val agentPermissionsBaseUrl: String = baseUrl("agent-permissions")

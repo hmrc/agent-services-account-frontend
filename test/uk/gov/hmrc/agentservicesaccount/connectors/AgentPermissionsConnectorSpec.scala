@@ -21,14 +21,12 @@ import play.api.test.Helpers._
 import play.api.test.Injecting
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentPermissionsStubs._
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
-import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.ExecutionContext
 
 class AgentPermissionsConnectorSpec extends BaseISpec with Injecting {
 
   val connector: AgentPermissionsConnector = inject[AgentPermissionsConnector]
-  private implicit val hc: HeaderCarrier = HeaderCarrier()
   implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
 
   "isShownPrivateBetaInvite check" should {

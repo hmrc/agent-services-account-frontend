@@ -104,17 +104,17 @@ class CheckYourAnswersControllerSpec extends UnitSpec
     val pcodRepository: PendingChangeRequestRepository = app.injector.instanceOf[PendingChangeRequestRepository]
 
     def noPendingChangesInRepo(): Unit = {
-      (pcodRepository.find(_: Arn)).when(*).returns(Future.successful(None))
+      (pcodRepository.find(_: Arn)(_: HeaderCarrier)).when(*, *).returns(Future.successful(None))
     }
     def pendingChangesExistInRepo(): Unit = {
-      (pcodRepository.find(_: Arn)).when(*).returns(Future.successful(Some(
+      (pcodRepository.find(_: Arn)(_: HeaderCarrier)).when(*, *).returns(Future.successful(Some(
         PendingChangeRequest(
           testArn,
           Instant.now()
         ))))
     }
 
-    (pcodRepository.insert(_: PendingChangeRequest)).when(*).returns(Future.successful(()))
+    (pcodRepository.insert(_: PendingChangeRequest)(_: HeaderCarrier)).when(*, *).returns(Future.successful(()))
 
     // make sure these values are cleared from the session
     sessionCache.delete(DRAFT_NEW_CONTACT_DETAILS)(fakeRequest()).futureValue
@@ -173,10 +173,10 @@ class CheckYourAnswersControllerSpec extends UnitSpec
       header("Location", result) shouldBe Some(desiDetails.routes.ContactDetailsController.showChangeSubmitted.url)
       sessionCache.get(DRAFT_NEW_CONTACT_DETAILS).futureValue.flatMap(_.agencyDetails.agencyTelephone) shouldBe None // the 'draft' details should be cleared from cache
       // should have stored the pending change in the repo
-      (pcodRepository.insert(_: PendingChangeRequest)).verify(argAssert { pcod: PendingChangeRequest =>
+      (pcodRepository.insert(_: PendingChangeRequest)(_: HeaderCarrier)).verify(argAssert { pcod: PendingChangeRequest =>
         pcod.arn shouldBe testArn
         Math.abs(Instant.now().toEpochMilli - pcod.timeSubmitted.toEpochMilli) should be < 5000L // approximate time comparison
-      })
+      }, *)
     }
   }
 

@@ -19,9 +19,12 @@ package uk.gov.hmrc.agentservicesaccount.repository
 import com.google.inject.ImplementedBy
 import org.mongodb.scala.model.Filters.equal
 import org.mongodb.scala.model.{IndexModel, IndexOptions, Indexes, ReplaceOptions}
-import play.api.{Configuration, Logging}
+import play.api.Logging
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
+import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.mongo.MongoComponent
 import uk.gov.hmrc.mongo.play.json.PlayMongoRepository
 
@@ -31,33 +34,69 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @ImplementedBy(classOf[PendingChangeRequestRepositoryImpl])
 trait PendingChangeRequestRepository {
-  def find(arn: Arn): Future[Option[PendingChangeRequest]]
-  def insert(pcod: PendingChangeRequest): Future[Unit]
+  def find(arn: Arn)(implicit hc: HeaderCarrier): Future[Option[PendingChangeRequest]]
+  def insert(pcod: PendingChangeRequest)(implicit hc: HeaderCarrier): Future[Unit]
+  def delete(arn: Arn)(implicit hc: HeaderCarrier): Future[Unit]
 }
 
 @Singleton
 class PendingChangeRequestRepositoryImpl @Inject()(
-    val mongoComponent: MongoComponent, configuration: Configuration)(implicit ec: ExecutionContext)
+  val mongoComponent: MongoComponent,
+  appConfig: AppConfig,
+  asaConnector: AgentServicesAccountConnector)(implicit ec: ExecutionContext)
   extends PlayMongoRepository[PendingChangeRequest](
-        collectionName = "pending-change-request",
-        domainFormat = PendingChangeRequest.format,
-        mongoComponent = mongoComponent,
-        indexes = Seq(
-          IndexModel(Indexes.ascending("arn"), new IndexOptions().unique(true)),
-          IndexModel(
-            Indexes.ascending("timeSubmitted"),
-            new IndexOptions()
-              .expireAfter(configuration.get[Long]("mongodb.desi-details.lockout-period"), TimeUnit.MINUTES)
-        )),
+    collectionName = "pending-change-request",
+    domainFormat = PendingChangeRequest.format,
+    mongoComponent = mongoComponent,
+    indexes = Seq(
+      IndexModel(Indexes.ascending("arn"), new IndexOptions().unique(true)),
+      IndexModel(
+        Indexes.ascending("timeSubmitted"),
+        new IndexOptions().expireAfter(appConfig.pendingChangeTTL, TimeUnit.MINUTES)
+    )),
     replaceIndexes = true
   ) with PendingChangeRequestRepository with Logging {
 
-  def find(arn: Arn): Future[Option[PendingChangeRequest]] = collection
-    .find(equal("arn", arn.value))
-    .headOption()
+  def find(arn: Arn)(implicit hc: HeaderCarrier): Future[Option[PendingChangeRequest]] = {
 
-  def insert(pcod: PendingChangeRequest): Future[Unit] = collection
-    .replaceOne(equal("arn", pcod.arn.value), pcod, new ReplaceOptions().upsert(true))
-    .toFuture()
-    .map(_ => ())
+    lazy val frontendDatabaseResult = collection
+      .find(equal("arn", arn.value))
+      .headOption()
+
+    if(appConfig.enableBackendPCRDatabase) {
+      asaConnector.find(arn).flatMap {
+        case Some(changeRequest) => Future.successful(Some(changeRequest))
+        case _ => frontendDatabaseResult
+      }
+    } else {
+      frontendDatabaseResult
+    }
+  }
+
+  def insert(pcod: PendingChangeRequest)(implicit hc: HeaderCarrier): Future[Unit] =
+    if(appConfig.enableBackendPCRDatabase) {
+      asaConnector.insert(pcod)
+    } else {
+      collection
+        .replaceOne(equal("arn", pcod.arn.value), pcod, new ReplaceOptions().upsert(true))
+        .toFuture()
+        .map(_ => ())
+    }
+
+  def delete(arn: Arn)(implicit hc: HeaderCarrier): Future[Unit] = {
+
+    lazy val frontendDatabaseResult = collection
+      .deleteOne(equal("arn", arn.value))
+      .toFuture()
+      .map(_ => ())
+
+    if(appConfig.enableBackendPCRDatabase) {
+      asaConnector.delete(arn).flatMap {
+        case true => Future.successful(())
+        case false => frontendDatabaseResult
+      }
+    } else {
+      frontendDatabaseResult
+    }
+  }
 }

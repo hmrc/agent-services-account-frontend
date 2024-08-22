@@ -20,7 +20,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.agentservicesaccount.models.{AmlsDetails, AmlsDetailsResponse, AmlsStatuses, UpdateAmlsJourney}
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentAssuranceStubs._
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
-import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
+import uk.gov.hmrc.http.UpstreamErrorResponse
 
 import java.time.LocalDate
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -28,8 +28,6 @@ import scala.concurrent.ExecutionContext.Implicits.global
 class AgentAssuranceConnectorSpec extends BaseISpec {
 
   private lazy val connector = app.injector.instanceOf[AgentAssuranceConnector]
-
-  private implicit val hc: HeaderCarrier = HeaderCarrier()
 
   private val ukAMLSDetails = AmlsDetails(
     "HMRC",

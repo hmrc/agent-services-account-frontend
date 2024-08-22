@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.agentservicesaccount.models
 
+import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
@@ -32,4 +33,14 @@ case class PendingChangeRequest(
 object PendingChangeRequest {
   implicit val instantFormat: Format[Instant] = MongoJavatimeFormats.instantFormat // important to allow Mongo TTL index to work
   implicit val format: Format[PendingChangeRequest] = Json.format[PendingChangeRequest]
+
+  val connectorReads: Reads[PendingChangeRequest] = (
+    (JsPath \ "arn").read[Arn] and
+    (JsPath \ "timeSubmitted").read[String].map(Instant.parse)
+  )(PendingChangeRequest.apply _)
+
+  val connectorWrites: Writes[PendingChangeRequest] = (
+    (JsPath \ "arn").write[Arn] and
+    (JsPath \ "timeSubmitted").write[String]
+  )(model => (model.arn, model.timeSubmitted.toString))
 }
