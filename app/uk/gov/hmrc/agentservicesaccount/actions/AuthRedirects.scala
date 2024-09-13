@@ -38,10 +38,10 @@ trait AuthRedirects {
         .getOrElse("Dev")
 
   private val hostDefaults: Map[String, String] = Map(
-    "Dev.external-url.bas-gateway-frontend.host"           -> "http://localhost:9553",
-    "Dev.external-url.citizen-auth-frontend.host"          -> "http://localhost:9029",
-    "Dev.external-url.identity-verification-frontend.host" -> "http://localhost:9938",
-    "Dev.external-url.stride-auth-frontend.host"           -> "http://localhost:9041"
+    "Dev.external-url.bas-gateway-frontend.host"           -> "http://localhost:9099",
+    "Dev.external-url.citizen-auth-frontend.host"          -> "http://localhost:9099",
+    "Dev.external-url.identity-verification-frontend.host" -> "http://localhost:9099",
+    "Dev.external-url.stride-auth-frontend.host"           -> "http://localhost:9099"
   )
 
   private def host(service: String): String = {
