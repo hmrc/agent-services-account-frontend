@@ -16,14 +16,22 @@
 
 package uk.gov.hmrc.agentservicesaccount.models.desiDetails
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.functional.syntax.{toFunctionalBuilderOps, unlift}
+import play.api.libs.json.{Format, Json, OFormat, __}
 import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
+import uk.gov.hmrc.crypto.{Decrypter, Encrypter}
 
 case class DesignatoryDetails(
-                    agencyDetails: AgencyDetails,
-                    otherServices: OtherServices
-                  )
+                               agencyDetails: AgencyDetails,
+                               otherServices: OtherServices
+                             )
 
 object DesignatoryDetails {
   implicit val desiDetailsFormat: OFormat[DesignatoryDetails] = Json.format[DesignatoryDetails]
+
+  def databaseFormat(implicit crypto: Encrypter with Decrypter): Format[DesignatoryDetails] =
+    (
+      (__ \ "agencyDetails").format[AgencyDetails](AgencyDetails.databaseFormat) and
+        (__ \ "otherServices").format[OtherServices](OtherServices.databaseFormat)
+      )(DesignatoryDetails.apply, unlift(DesignatoryDetails.unapply))
 }

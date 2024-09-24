@@ -18,15 +18,19 @@ package uk.gov.hmrc.agentservicesaccount.services
 
 import play.api.libs.json.{Reads, Writes}
 import play.api.mvc.{Request, Result}
-import uk.gov.hmrc.agentservicesaccount.controllers.sessionKeys
+import uk.gov.hmrc.agentservicesaccount.controllers.{ARN, DESCRIPTION, DRAFT_NEW_CONTACT_DETAILS, DRAFT_SUBMITTED_BY, EMAIL, EMAIL_PENDING_VERIFICATION, NAME, PHONE, sessionKeys}
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{DesignatoryDetails, YourDetails}
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
+import uk.gov.hmrc.agentservicesaccount.utils.EncryptedStringUtil
+import uk.gov.hmrc.crypto.{Decrypter, Encrypter}
 import uk.gov.hmrc.mongo.cache.DataKey
 
-import javax.inject.{Inject, Singleton}
+import javax.inject.{Inject, Named, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class SessionCacheService @Inject()(sessionCacheRepository: SessionCacheRepository) {
+class SessionCacheService @Inject()(sessionCacheRepository: SessionCacheRepository)
+                                   (implicit @Named("aes") crypto: Encrypter with Decrypter) {
 
 
   def withSessionItem[T](dataKey: DataKey[T])
@@ -37,16 +41,34 @@ class SessionCacheService @Inject()(sessionCacheRepository: SessionCacheReposito
 
   def get[T](dataKey: DataKey[T])
             (implicit reads: Reads[T], request: Request[_]): Future[Option[T]] = {
-    sessionCacheRepository.getFromSession[T](dataKey)
+    dataKey match {
+      case key: DataKey[String @unchecked] if Seq(NAME, EMAIL, PHONE, ARN, DESCRIPTION, EMAIL_PENDING_VERIFICATION).contains(key) =>
+        sessionCacheRepository.getFromSession(key)(EncryptedStringUtil.fallbackStringFormat, request)
+      case key: DataKey[DesignatoryDetails @unchecked] if key == DRAFT_NEW_CONTACT_DETAILS =>
+        sessionCacheRepository.getFromSession(key)(DesignatoryDetails.databaseFormat, request)
+      case key: DataKey[YourDetails @unchecked] if key == DRAFT_SUBMITTED_BY =>
+        sessionCacheRepository.getFromSession(key)(YourDetails.databaseFormat, request)
+      case _ =>
+        sessionCacheRepository.getFromSession[T](dataKey)
+    }
   }
 
   def put[T](dataKey: DataKey[T], value: T)
             (implicit writes: Writes[T], request: Request[_]): Future[(String, String)] = {
-    sessionCacheRepository.putSession(dataKey, value)
+    dataKey match {
+      case key: DataKey[String @unchecked] if Seq(NAME, EMAIL, PHONE, ARN, DESCRIPTION, EMAIL_PENDING_VERIFICATION).contains(key) =>
+        sessionCacheRepository.putSession(key, value)(EncryptedStringUtil.fallbackStringFormat, request)
+      case key: DataKey[DesignatoryDetails @unchecked] if key == DRAFT_NEW_CONTACT_DETAILS =>
+        sessionCacheRepository.putSession(key, value)(DesignatoryDetails.databaseFormat, request)
+      case key: DataKey[YourDetails @unchecked] if key == DRAFT_SUBMITTED_BY =>
+        sessionCacheRepository.putSession(key, value)(YourDetails.databaseFormat, request)
+      case _ =>
+        sessionCacheRepository.putSession(dataKey, value)
+    }
   }
 
   def delete[T](dataKey: DataKey[T])
-            (implicit request: Request[_]): Future[Unit] = {
+               (implicit request: Request[_]): Future[Unit] = {
     sessionCacheRepository.deleteFromSession(dataKey)
   }
 
