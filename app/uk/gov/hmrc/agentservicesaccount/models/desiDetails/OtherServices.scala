@@ -18,7 +18,7 @@ package uk.gov.hmrc.agentservicesaccount.models.desiDetails
 
 import play.api.libs.functional.syntax.{toFunctionalBuilderOps, unlift}
 import play.api.libs.json.{Format, Json, OFormat, __}
-import uk.gov.hmrc.agentservicesaccount.utils.EncryptedStringUtil.fallbackStringFormat
+import uk.gov.hmrc.crypto.json.JsonEncryption.stringEncrypterDecrypter
 import uk.gov.hmrc.crypto.{Decrypter, Encrypter}
 import uk.gov.hmrc.domain.{CtUtr, SaUtr}
 
@@ -33,7 +33,7 @@ object CtChanges {
   def databaseFormat(implicit crypto: Encrypter with Decrypter): Format[CtChanges] =
     (
       (__ \ "applyChanges").format[Boolean] and
-        (__ \ "ctAgentReference").formatNullable[String](fallbackStringFormat)
+        (__ \ "ctAgentReference").formatNullable[String](stringEncrypterDecrypter)
           .bimap[Option[CtUtr]](
             _.map(CtUtr(_)),
             _.map(_.utr)
@@ -53,7 +53,7 @@ object SaChanges {
   def databaseFormat(implicit crypto: Encrypter with Decrypter): Format[SaChanges] =
     (
       (__ \ "applyChanges").format[Boolean] and
-        (__ \ "saAgentReference").formatNullable[String](fallbackStringFormat)
+        (__ \ "saAgentReference").formatNullable[String](stringEncrypterDecrypter)
           .bimap[Option[SaUtr]](
             _.map(SaUtr(_)),
             _.map(_.utr)

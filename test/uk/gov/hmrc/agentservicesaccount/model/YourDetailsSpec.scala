@@ -47,11 +47,8 @@ class YourDetailsSpec extends UnitSpec {
       }
     }
     "using crypto format" should {
-      "serialise to Json correctly" in {
+      "serialise to encrypted Json correctly" in {
         Json.toJson(testYourDetails)(YourDetails.databaseFormat) shouldBe testEncryptedJson
-      }
-      "deserialise from unencrypted Json correctly" in {
-        testJson.as[YourDetails](YourDetails.databaseFormat) shouldBe testYourDetails
       }
       "deserialise from encrypted Json correctly" in {
         testEncryptedJson.as[YourDetails](YourDetails.databaseFormat) shouldBe testYourDetails

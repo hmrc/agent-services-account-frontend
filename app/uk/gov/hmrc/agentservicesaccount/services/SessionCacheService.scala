@@ -21,7 +21,7 @@ import play.api.mvc.{Request, Result}
 import uk.gov.hmrc.agentservicesaccount.controllers.{ARN, DESCRIPTION, DRAFT_NEW_CONTACT_DETAILS, DRAFT_SUBMITTED_BY, EMAIL, EMAIL_PENDING_VERIFICATION, NAME, PHONE, sessionKeys}
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{DesignatoryDetails, YourDetails}
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
-import uk.gov.hmrc.agentservicesaccount.utils.EncryptedStringUtil
+import uk.gov.hmrc.crypto.json.JsonEncryption.stringEncrypterDecrypter
 import uk.gov.hmrc.crypto.{Decrypter, Encrypter}
 import uk.gov.hmrc.mongo.cache.DataKey
 
@@ -43,7 +43,7 @@ class SessionCacheService @Inject()(sessionCacheRepository: SessionCacheReposito
             (implicit reads: Reads[T], request: Request[_]): Future[Option[T]] = {
     dataKey match {
       case key: DataKey[String @unchecked] if Seq(NAME, EMAIL, PHONE, ARN, DESCRIPTION, EMAIL_PENDING_VERIFICATION).contains(key) =>
-        sessionCacheRepository.getFromSession(key)(EncryptedStringUtil.fallbackStringFormat, request)
+        sessionCacheRepository.getFromSession(key)(stringEncrypterDecrypter, request)
       case key: DataKey[DesignatoryDetails @unchecked] if key == DRAFT_NEW_CONTACT_DETAILS =>
         sessionCacheRepository.getFromSession(key)(DesignatoryDetails.databaseFormat, request)
       case key: DataKey[YourDetails @unchecked] if key == DRAFT_SUBMITTED_BY =>
@@ -57,7 +57,7 @@ class SessionCacheService @Inject()(sessionCacheRepository: SessionCacheReposito
             (implicit writes: Writes[T], request: Request[_]): Future[(String, String)] = {
     dataKey match {
       case key: DataKey[String @unchecked] if Seq(NAME, EMAIL, PHONE, ARN, DESCRIPTION, EMAIL_PENDING_VERIFICATION).contains(key) =>
-        sessionCacheRepository.putSession(key, value)(EncryptedStringUtil.fallbackStringFormat, request)
+        sessionCacheRepository.putSession(key, value)(stringEncrypterDecrypter, request)
       case key: DataKey[DesignatoryDetails @unchecked] if key == DRAFT_NEW_CONTACT_DETAILS =>
         sessionCacheRepository.putSession(key, value)(DesignatoryDetails.databaseFormat, request)
       case key: DataKey[YourDetails @unchecked] if key == DRAFT_SUBMITTED_BY =>
