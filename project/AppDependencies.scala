@@ -14,6 +14,7 @@ object AppDependencies {
     "com.beachape" %% "enumeratum-play" % enumeratumVersion,
     "org.julienrf" %% "play-json-derived-codecs" % "11.0.0",
     "org.apache.commons" % "commons-text" % "1.12.0",
+    "uk.gov.hmrc" %% "crypto-json-play-30" % "8.0.0"
   )
 
   val test: Seq[ModuleID] = Seq(

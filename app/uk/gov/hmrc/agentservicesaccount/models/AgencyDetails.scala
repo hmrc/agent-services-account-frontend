@@ -16,18 +16,31 @@
 
 package uk.gov.hmrc.agentservicesaccount.models
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.functional.syntax.{toFunctionalBuilderOps, unlift}
+import play.api.libs.json.{Format, Json, OFormat, __}
+import uk.gov.hmrc.agentservicesaccount.utils.EncryptedStringUtil.fallbackStringFormat
+import uk.gov.hmrc.crypto.{Decrypter, Encrypter}
 
 case class BusinessAddress(
                             addressLine1: String,
                             addressLine2: Option[String],
                             addressLine3: Option[String] = None,
-                            addressLine4: Option[String]= None,
+                            addressLine4: Option[String] = None,
                             postalCode: Option[String],
                             countryCode: String)
 
 object BusinessAddress {
   implicit val format: OFormat[BusinessAddress] = Json.format
+
+  def databaseFormat(implicit crypto: Encrypter with Decrypter): Format[BusinessAddress] =
+    (
+      (__ \ "addressLine1").format[String](fallbackStringFormat) and
+        (__ \ "addressLine2").formatNullable[String](fallbackStringFormat) and
+        (__ \ "addressLine3").formatNullable[String](fallbackStringFormat) and
+        (__ \ "addressLine4").formatNullable[String](fallbackStringFormat) and
+        (__ \ "postalCode").formatNullable[String](fallbackStringFormat) and
+        (__ \ "countryCode").format[String](fallbackStringFormat)
+      )(BusinessAddress.apply, unlift(BusinessAddress.unapply))
 }
 
 case class AgencyDetails(
@@ -39,5 +52,13 @@ case class AgencyDetails(
 
 object AgencyDetails {
   implicit val format: OFormat[AgencyDetails] = Json.format
+
+  def databaseFormat(implicit crypto: Encrypter with Decrypter): Format[AgencyDetails] =
+    (
+      (__ \ "agencyName").formatNullable[String](fallbackStringFormat) and
+        (__ \ "agencyEmail").formatNullable[String](fallbackStringFormat) and
+        (__ \ "agencyTelephone").formatNullable[String](fallbackStringFormat) and
+        (__ \ "agencyAddress").formatNullable[BusinessAddress](BusinessAddress.databaseFormat)
+      )(AgencyDetails.apply, unlift(AgencyDetails.unapply))
 }
 
