@@ -18,7 +18,7 @@ package uk.gov.hmrc.agentservicesaccount.models.desiDetails
 
 import play.api.libs.functional.syntax.{toFunctionalBuilderOps, unlift}
 import play.api.libs.json.{Format, Json, __}
-import uk.gov.hmrc.agentservicesaccount.utils.EncryptedStringUtil.fallbackStringFormat
+import uk.gov.hmrc.crypto.json.JsonEncryption.stringEncrypterDecrypter
 import uk.gov.hmrc.crypto.{Decrypter, Encrypter}
 
 case class YourDetails(fullName: String,
@@ -29,7 +29,7 @@ object YourDetails {
 
   def databaseFormat(implicit crypto: Encrypter with Decrypter): Format[YourDetails] =
     (
-      (__ \ "fullName").format[String](fallbackStringFormat) and
-        (__ \ "telephone").format[String](fallbackStringFormat)
+      (__ \ "fullName").format[String](stringEncrypterDecrypter) and
+        (__ \ "telephone").format[String](stringEncrypterDecrypter)
       )(YourDetails.apply, unlift(YourDetails.unapply))
 }

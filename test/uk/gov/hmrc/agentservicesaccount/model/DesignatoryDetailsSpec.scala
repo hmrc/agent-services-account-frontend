@@ -112,11 +112,8 @@ class DesignatoryDetailsSpec extends UnitSpec {
       }
     }
     "using crypto format" should {
-      "serialise to Json correctly" in {
+      "serialise to encrypted Json correctly" in {
         Json.toJson(testDesignatoryDetails)(DesignatoryDetails.databaseFormat) shouldBe testEncryptedJson
-      }
-      "deserialise from unencrypted Json correctly" in {
-        testJson.as[DesignatoryDetails](DesignatoryDetails.databaseFormat) shouldBe testDesignatoryDetails
       }
       "deserialise from encrypted Json correctly" in {
         testEncryptedJson.as[DesignatoryDetails](DesignatoryDetails.databaseFormat) shouldBe testDesignatoryDetails
