@@ -42,21 +42,9 @@ class EnterRenewalDateController @Inject()(actions: Actions,
 
   def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
-      withUpdateAmlsJourney { amlsJourneyWithExpiryDate =>
-        if (amlsJourneyWithExpiryDate.status.isUkAgent()) {
-
-          val amlsJourneyWithRenewalDate = amlsJourneyWithExpiryDate.newExpirationDate
-            .fold(amlsJourneyWithExpiryDate)(expiryDate => amlsJourneyWithExpiryDate.copy(
-              newExpirationDate = Some(expiryDate.plusDays(1))
-            ))
-
-          val form = amlsJourneyWithRenewalDate.newExpirationDate.fold(renewalDateForm)(renewalDateForm.fill)
-          println("@@@@@@@@@@@@@")
-          println(form)
-          println("*************")
-          println(amlsJourneyWithExpiryDate)
-          println(amlsJourneyWithRenewalDate)
-          println("@@@@@@@@@@@@@")
+      withUpdateAmlsJourney { amlsJourney =>
+        if (amlsJourney.status.isUkAgent()) {
+          val form = amlsJourney.newRenewalDate.fold(renewalDateForm)(renewalDateForm.fill)
           Ok(enterRenewalDate(form)).toFuture
         } else {
           Forbidden.toFuture
@@ -74,7 +62,7 @@ class EnterRenewalDateController @Inject()(actions: Actions,
           .fold(
             formWithError => BadRequest(enterRenewalDate(formWithError)).toFuture,
             data =>
-              saveAmlsJourney(amlsJourney.copy(newExpirationDate = Option(data.minusDays(1)))).map(_ =>
+              saveAmlsJourney(amlsJourney.copy(newExpirationDate = Option(data.minusDays(1)), newRenewalDate = Option(data))).map(_ =>
                 Redirect(routes.CheckYourAnswersController.showPage)
               )
           )

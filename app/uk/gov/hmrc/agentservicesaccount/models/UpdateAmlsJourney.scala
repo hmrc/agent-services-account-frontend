@@ -26,7 +26,8 @@ case class UpdateAmlsJourney(status: AmlsStatus,
                              newAmlsBody: Option[String] = None,
                              isRegistrationNumberStillTheSame: Option[Boolean] = None,
                              newRegistrationNumber: Option[String] = None,
-                             newExpirationDate: Option[LocalDate] = None
+                             newExpirationDate: Option[LocalDate] = None,
+                             newRenewalDate: Option[LocalDate] = None
                             ){
 
   val isUkAgent: Boolean = status match {
