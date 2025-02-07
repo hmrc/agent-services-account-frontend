@@ -62,6 +62,7 @@ class EnterRenewalDateControllerSpec extends PlaySpec
   )
 
   private val newExpirationDate = LocalDate.now.plusMonths(11)
+  private val newRenewalDate = newExpirationDate.plusDays(1)
 
   trait Setup {
     protected val mockAppConfig: AppConfig = mock[AppConfig]
@@ -155,15 +156,15 @@ class EnterRenewalDateControllerSpec extends PlaySpec
         mockUpdateAmlsJourneyRepository.getFromSession(dataKey)(*[Reads[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful(Some(ukUpdateAmlsJourney))
 
         mockUpdateAmlsJourneyRepository.putSession(
-          dataKey, ukUpdateAmlsJourney.copy(newExpirationDate = Some(newExpirationDate)))(*[Writes[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
+          dataKey, ukUpdateAmlsJourney.copy(newExpirationDate = Some(newExpirationDate), newRenewalDate = Some(newRenewalDate)))(*[Writes[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
 
         mockView.apply(*[Form[LocalDate]])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 
         val result: Future[Result] = TestController.onSubmit(
           FakeRequest("POST", "/").withFormUrlEncodedBody(
-            "endDate.day"   -> newExpirationDate.getDayOfMonth.toString,
-            "endDate.month" -> newExpirationDate.getMonthValue.toString,
-            "endDate.year"  -> newExpirationDate.getYear.toString)
+            "endDate.day"   -> newRenewalDate.getDayOfMonth.toString,
+            "endDate.month" -> newRenewalDate.getMonthValue.toString,
+            "endDate.year"  -> newRenewalDate.getYear.toString)
         )
 
         status(result) mustBe SEE_OTHER
