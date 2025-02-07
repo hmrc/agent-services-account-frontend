@@ -57,6 +57,9 @@ class AgentAssuranceConnector @Inject()(httpV2: HttpClientV2)(implicit val metri
 
 
   def postAmlsDetails(arn: Arn, amlsRequest: AmlsRequest)(implicit ec: ExecutionContext, hc: HeaderCarrier): Future[Unit] = {
+    println("********* ***********")
+    println(amlsRequest)
+    println("********* ***********")
     httpV2
       .post(new URL(s"$baseUrl/agent-assurance/amls/arn/${
         arn.value

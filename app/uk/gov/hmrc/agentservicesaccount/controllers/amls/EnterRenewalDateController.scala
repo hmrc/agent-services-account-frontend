@@ -26,7 +26,6 @@ import uk.gov.hmrc.agentservicesaccount.models.ModelExtensionMethods._
 import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.enter_renewal_date
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
@@ -43,9 +42,21 @@ class EnterRenewalDateController @Inject()(actions: Actions,
 
   def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
-      withUpdateAmlsJourney { amlsJourney =>
-        if (amlsJourney.status.isUkAgent()) {
-          val form = amlsJourney.newExpirationDate.fold(renewalDateForm)(renewalDateForm.fill)
+      withUpdateAmlsJourney { amlsJourneyWithExpiryDate =>
+        if (amlsJourneyWithExpiryDate.status.isUkAgent()) {
+
+          val amlsJourneyWithRenewalDate = amlsJourneyWithExpiryDate.newExpirationDate
+            .fold(amlsJourneyWithExpiryDate)(expiryDate => amlsJourneyWithExpiryDate.copy(
+              newExpirationDate = Some(expiryDate.plusDays(1))
+            ))
+
+          val form = amlsJourneyWithRenewalDate.newExpirationDate.fold(renewalDateForm)(renewalDateForm.fill)
+          println("@@@@@@@@@@@@@")
+          println(form)
+          println("*************")
+          println(amlsJourneyWithExpiryDate)
+          println(amlsJourneyWithRenewalDate)
+          println("@@@@@@@@@@@@@")
           Ok(enterRenewalDate(form)).toFuture
         } else {
           Forbidden.toFuture
@@ -63,7 +74,7 @@ class EnterRenewalDateController @Inject()(actions: Actions,
           .fold(
             formWithError => BadRequest(enterRenewalDate(formWithError)).toFuture,
             data =>
-              saveAmlsJourney(amlsJourney.copy(newExpirationDate = Option(data))).map(_ =>
+              saveAmlsJourney(amlsJourney.copy(newExpirationDate = Option(data.minusDays(1)))).map(_ =>
                 Redirect(routes.CheckYourAnswersController.showPage)
               )
           )
