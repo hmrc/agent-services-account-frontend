@@ -44,7 +44,7 @@ class EnterRenewalDateController @Inject()(actions: Actions,
     actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
       withUpdateAmlsJourney { amlsJourney =>
         if (amlsJourney.status.isUkAgent()) {
-          val form = amlsJourney.newRenewalDate.fold(renewalDateForm)(renewalDateForm.fill)
+          val form = amlsJourney.newExpirationDate.fold(renewalDateForm)(expDate => renewalDateForm.fill(expDate.plusDays(1)))
           Ok(enterRenewalDate(form)).toFuture
         } else {
           Forbidden.toFuture
@@ -61,8 +61,8 @@ class EnterRenewalDateController @Inject()(actions: Actions,
           .bindFromRequest()
           .fold(
             formWithError => BadRequest(enterRenewalDate(formWithError)).toFuture,
-            data =>
-              saveAmlsJourney(amlsJourney.copy(newExpirationDate = Option(data.minusDays(1)), newRenewalDate = Option(data))).map(_ =>
+            renewalDate =>
+              saveAmlsJourney(amlsJourney.copy(newExpirationDate = Option(renewalDate.minusDays(1)))).map(_ =>
                 Redirect(routes.CheckYourAnswersController.showPage)
               )
           )

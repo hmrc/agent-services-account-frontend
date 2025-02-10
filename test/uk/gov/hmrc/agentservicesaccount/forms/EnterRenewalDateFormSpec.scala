@@ -23,25 +23,25 @@ import java.time.LocalDate
 
 class RenewalDateFormSpec extends AnyWordSpec with Matchers {
 
-  val endDateDay = "endDate.day"
-  val endDateMonth = "endDate.month"
-  val endDateYear = "endDate.year"
-  val endDateField = "endDate"
+  val renewalDateDay = "renewalDate.day"
+  val renewalDateMonth = "renewalDate.month"
+  val renewalDateYear = "renewalDate.year"
+  val renewalDateField = "renewalDate"
 
   val local_valid_date_stub: LocalDate = LocalDate.now.plusMonths(6)
   val local_future_date_stub: LocalDate = LocalDate.now.plusYears(2)
   val local_past_date_stub: LocalDate = LocalDate.now()
 
   val validFormSubmission: Map[String, String] = Map(
-    endDateDay -> local_valid_date_stub.getDayOfMonth.toString,
-    endDateMonth -> local_valid_date_stub.getMonthValue.toString,
-    endDateYear -> local_valid_date_stub.getYear.toString,
+    renewalDateDay -> local_valid_date_stub.getDayOfMonth.toString,
+    renewalDateMonth -> local_valid_date_stub.getMonthValue.toString,
+    renewalDateYear -> local_valid_date_stub.getYear.toString,
   )
 
   val formSubmissionWithNoRegDate: Map[String, String] = Map(
-    endDateDay -> "",
-    endDateMonth -> "",
-    endDateYear -> ""
+    renewalDateDay -> "",
+    renewalDateMonth -> "",
+    renewalDateYear -> ""
   )
 
   private def invalidateFormSubmission(badData: (String, String)): Map[String, String] =
@@ -66,123 +66,123 @@ class RenewalDateFormSpec extends AnyWordSpec with Matchers {
 
     s"error when no data is submitted" in {
       val params = Map(
-        endDateDay -> "",
-        endDateMonth -> "",
-        endDateYear -> ""
+        renewalDateDay -> "",
+        renewalDateMonth -> "",
+        renewalDateYear -> ""
       )
       val validatedForm = RenewalDateForm.form.bind(params)
       validatedForm.errors.length shouldBe 1
-      validatedForm.error(endDateDay).get.message shouldBe "update-money-laundering-supervisory.error.date"
+      validatedForm.error(renewalDateDay).get.message shouldBe "update-money-laundering-supervisory.error.date"
     }
 
     "error when date is not supplied" in {
       val params = formSubmissionWithNoRegDate
       val validatedForm = RenewalDateForm.form.bind(params)
       validatedForm.errors.size shouldBe 1
-      validatedForm.error(endDateDay).get.message shouldBe "update-money-laundering-supervisory.error.date"
+      validatedForm.error(renewalDateDay).get.message shouldBe "update-money-laundering-supervisory.error.date"
     }
 
     "error when day is not supplied" in {
-      val params = invalidateFormSubmission(endDateDay -> "")
+      val params = invalidateFormSubmission(renewalDateDay -> "")
       val validatedForm = RenewalDateForm.form.bind(params)
       validatedForm.errors.size shouldBe 1
-      validatedForm.error(endDateDay).get.message shouldBe "update-money-laundering-supervisory.error.day"
+      validatedForm.error(renewalDateDay).get.message shouldBe "update-money-laundering-supervisory.error.day"
     }
 
     "error when month is not supplied" in {
-      val params = invalidateFormSubmission(endDateMonth -> "")
+      val params = invalidateFormSubmission(renewalDateMonth -> "")
       val validatedForm = RenewalDateForm.form.bind(params)
       validatedForm.errors.size shouldBe 1
-      validatedForm.error(endDateMonth).get.message shouldBe "update-money-laundering-supervisory.error.month"
+      validatedForm.error(renewalDateMonth).get.message shouldBe "update-money-laundering-supervisory.error.month"
     }
 
     "error when year is not supplied" in {
-      val params = invalidateFormSubmission(endDateYear -> "")
+      val params = invalidateFormSubmission(renewalDateYear -> "")
       val validatedForm = RenewalDateForm.form.bind(params)
       validatedForm.errors.size shouldBe 1
-      validatedForm.error(endDateYear).get.message shouldBe "update-money-laundering-supervisory.error.year"
+      validatedForm.error(renewalDateYear).get.message shouldBe "update-money-laundering-supervisory.error.year"
     }
 
     "error when day and month is not supplied" in {
-      val params = partialDateFormSubmission(endDateYear -> local_valid_date_stub.getYear.toString)
+      val params = partialDateFormSubmission(renewalDateYear -> local_valid_date_stub.getYear.toString)
       val validatedForm = RenewalDateForm.form.bind(params)
       validatedForm.errors.size shouldBe 1
-      validatedForm.error(endDateDay).get.message shouldBe "update-money-laundering-supervisory.error.day-and-month"
+      validatedForm.error(renewalDateDay).get.message shouldBe "update-money-laundering-supervisory.error.day-and-month"
     }
 
     "error when day and year is not supplied" in {
-      val params = partialDateFormSubmission(endDateMonth -> local_valid_date_stub.getMonthValue.toString)
+      val params = partialDateFormSubmission(renewalDateMonth -> local_valid_date_stub.getMonthValue.toString)
       val validatedForm = RenewalDateForm.form.bind(params)
       validatedForm.errors.size shouldBe 1
-      validatedForm.error(endDateDay).get.message shouldBe "update-money-laundering-supervisory.error.day-and-year"
+      validatedForm.error(renewalDateDay).get.message shouldBe "update-money-laundering-supervisory.error.day-and-year"
     }
 
     "error when month and year is not supplied" in {
-      val params = partialDateFormSubmission(endDateDay -> local_valid_date_stub.getDayOfMonth.toString)
+      val params = partialDateFormSubmission(renewalDateDay -> local_valid_date_stub.getDayOfMonth.toString)
       val validatedForm = RenewalDateForm.form.bind(params)
       validatedForm.errors.size shouldBe 1
-      validatedForm.error(endDateMonth).get.message shouldBe "update-money-laundering-supervisory.error.month-and-year"
+      validatedForm.error(renewalDateMonth).get.message shouldBe "update-money-laundering-supervisory.error.month-and-year"
     }
 
     s"error when the day is invalid" in {
-      val params = invalidateFormSubmission(endDateDay -> "222")
+      val params = invalidateFormSubmission(renewalDateDay -> "222")
       val validatedForm = RenewalDateForm.form.bind(params)
       validatedForm.errors.size shouldBe 1
-      validatedForm.error(endDateDay).get.message shouldBe "update-money-laundering-supervisory.error.date.invalid"
+      validatedForm.error(renewalDateDay).get.message shouldBe "update-money-laundering-supervisory.error.date.invalid"
     }
 
     s"error when the month is invalid" in {
-      val params = invalidateFormSubmission(endDateMonth -> "333")
+      val params = invalidateFormSubmission(renewalDateMonth -> "333")
       val validatedForm = RenewalDateForm.form.bind(params)
       validatedForm.errors.size shouldBe 1
-      validatedForm.error(endDateDay).get.message shouldBe "update-money-laundering-supervisory.error.date.invalid"
+      validatedForm.error(renewalDateDay).get.message shouldBe "update-money-laundering-supervisory.error.date.invalid"
     }
 
     s"error when the year is invalid" in {
-      val params = invalidateFormSubmission(endDateYear -> "###")
+      val params = invalidateFormSubmission(renewalDateYear -> "###")
       val validatedForm = RenewalDateForm.form.bind(params)
       validatedForm.errors.size shouldBe 1
-      validatedForm.error(endDateDay).get.message shouldBe "update-money-laundering-supervisory.error.date.invalid"
+      validatedForm.error(renewalDateDay).get.message shouldBe "update-money-laundering-supervisory.error.date.invalid"
     }
 
     s"error when the registration date is not a real date" in {
       val params = Map(
-        endDateDay -> "31",
-        endDateMonth -> "02",
-        endDateYear -> local_valid_date_stub.getYear.toString
+        renewalDateDay -> "31",
+        renewalDateMonth -> "02",
+        renewalDateYear -> local_valid_date_stub.getYear.toString
       )
       val validatedForm = RenewalDateForm.form.bind(params)
       validatedForm.errors.size shouldBe 1
-      validatedForm.error(endDateDay).get.message shouldBe "update-money-laundering-supervisory.error.date.invalid"
+      validatedForm.error(renewalDateDay).get.message shouldBe "update-money-laundering-supervisory.error.date.invalid"
     }
 
     s"error when the registration date is an invalid date (edge case)" in {
-      val params = invalidateFormSubmission(endDateMonth -> "-1")
+      val params = invalidateFormSubmission(renewalDateMonth -> "-1")
       val validatedForm = RenewalDateForm.form.bind(params)
       validatedForm.errors.size shouldBe 1
-      validatedForm.error(endDateDay).get.message shouldBe "update-money-laundering-supervisory.error.date.invalid"
+      validatedForm.error(renewalDateDay).get.message shouldBe "update-money-laundering-supervisory.error.date.invalid"
     }
 
     s"error when the registration date is more than 13 Months in the future" in {
       val params = Map(
-        endDateDay -> local_future_date_stub.getDayOfMonth.toString,
-        endDateMonth -> local_future_date_stub.getMonthValue.toString,
-        endDateYear -> local_future_date_stub.getYear.toString
+        renewalDateDay -> local_future_date_stub.getDayOfMonth.toString,
+        renewalDateMonth -> local_future_date_stub.getMonthValue.toString,
+        renewalDateYear -> local_future_date_stub.getYear.toString
       )
       val validatedForm = RenewalDateForm.form.bind(params)
       validatedForm.errors.size shouldBe 1
-      validatedForm.error(endDateDay).get.message shouldBe "update-money-laundering-supervisory.error.date.before"
+      validatedForm.error(renewalDateDay).get.message shouldBe "update-money-laundering-supervisory.error.date.before"
     }
 
     s"error when the registration date is before today's date" in {
       val params = Map(
-        endDateDay -> local_past_date_stub.getDayOfMonth.toString,
-        endDateMonth -> local_past_date_stub.getMonthValue.toString,
-        endDateYear -> local_past_date_stub.getYear.toString,
+        renewalDateDay -> local_past_date_stub.getDayOfMonth.toString,
+        renewalDateMonth -> local_past_date_stub.getMonthValue.toString,
+        renewalDateYear -> local_past_date_stub.getYear.toString,
       )
       val validatedForm = RenewalDateForm.form.bind(params)
       validatedForm.errors.size shouldBe 1
-      validatedForm.error(endDateDay).get.message shouldBe "update-money-laundering-supervisory.error.date.past"
+      validatedForm.error(renewalDateDay).get.message shouldBe "update-money-laundering-supervisory.error.date.past"
     }
   }
 }

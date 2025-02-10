@@ -125,7 +125,7 @@ object RenewalDateForm {
 
   val form: Form[LocalDate] = Form(
     single(
-      "endDate" -> of[LocalDate]
+      "renewalDate" -> of[LocalDate]
     )
   )
 

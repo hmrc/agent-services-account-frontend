@@ -87,8 +87,7 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
     status = AmlsStatuses.ValidAmlsDetailsUK,
     newAmlsBody = Some("ABC"),
     newRegistrationNumber = Some("1234567890"),
-    newExpirationDate = Some(LocalDate.now()),
-    newRenewalDate = Some(LocalDate.now().plusDays(1))
+    newExpirationDate = Some(LocalDate.now())
   )
 
   val agentDetails = AgencyDetails(
@@ -343,8 +342,7 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
         status = AmlsStatuses.ValidAmlsDetailsUK,
         newAmlsBody = Some(supervisoryBodyDescription),
         newRegistrationNumber = Some(registrationNumber),
-        newExpirationDate = Some(renewalDate.minusDays(1)),
-        newRenewalDate = Some(renewalDate)
+        newExpirationDate = Some(renewalDate.minusDays(1))
       )
 
       "build a summary list with three items" in new Setup {

@@ -113,13 +113,13 @@ class CheckYourAnswersController @Inject()(actions: Actions,
         )
       )
 
-      (isUkAgent, journey.newRenewalDate) match {
+      (isUkAgent, journey.newExpirationDate) match {
         case (false, _) => items
-        case (true, Some(renewalDate)) =>
+        case (true, Some(expDate)) =>
           val formatter = DateTimeFormatter.ofPattern("d MMMM yyyy", lang)
           items ++ Seq(SummaryListData(
             key = "amls.check-your-answers.renewal-date",
-            value = renewalDate.format(formatter),
+            value = expDate.plusDays(1).format(formatter),
             link = Some(amls.routes.EnterRenewalDateController.showPage)
           ))
       }

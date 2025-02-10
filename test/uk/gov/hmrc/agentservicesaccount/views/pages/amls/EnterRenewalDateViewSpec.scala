@@ -39,7 +39,7 @@ class EnterRenewalDateViewSpec extends BaseISpec {
   implicit val messages: Messages = MessagesImpl(lang, messagesApi)
 
   val form: Form[LocalDate] = RenewalDateForm.form
-  val formWithErrors: Form[LocalDate] = form.withError(key ="endDate", message = Messages("update-money-laundering-supervisory.error.date"))
+  val formWithErrors: Form[LocalDate] = form.withError(key ="renewalDate", message = Messages("update-money-laundering-supervisory.error.date"))
 
 
   "enter_renewal_date" when {
@@ -101,7 +101,7 @@ class EnterRenewalDateViewSpec extends BaseISpec {
       "display correct error summary link" in {
         val errorLink: Element = doc.select(".govuk-error-summary__list a").first()
         errorLink.text() mustBe "Enter your next registration renewal date"
-        errorLink.attr("href") mustBe "#endDate"
+        errorLink.attr("href") mustBe "#renewalDate"
       }
 
       "display error styling on form" in {

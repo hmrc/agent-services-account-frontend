@@ -62,7 +62,6 @@ class EnterRenewalDateControllerSpec extends PlaySpec
   )
 
   private val newExpirationDate = LocalDate.now.plusMonths(11)
-  private val newRenewalDate = newExpirationDate.plusDays(1)
 
   trait Setup {
     protected val mockAppConfig: AppConfig = mock[AppConfig]
@@ -156,15 +155,17 @@ class EnterRenewalDateControllerSpec extends PlaySpec
         mockUpdateAmlsJourneyRepository.getFromSession(dataKey)(*[Reads[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful(Some(ukUpdateAmlsJourney))
 
         mockUpdateAmlsJourneyRepository.putSession(
-          dataKey, ukUpdateAmlsJourney.copy(newExpirationDate = Some(newExpirationDate), newRenewalDate = Some(newRenewalDate)))(*[Writes[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
+          dataKey, ukUpdateAmlsJourney.copy(newExpirationDate = Some(newExpirationDate)))(*[Writes[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
 
         mockView.apply(*[Form[LocalDate]])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 
+        val newRenewalDate: LocalDate = newExpirationDate.plusDays(1)
+
         val result: Future[Result] = TestController.onSubmit(
           FakeRequest("POST", "/").withFormUrlEncodedBody(
-            "endDate.day"   -> newRenewalDate.getDayOfMonth.toString,
-            "endDate.month" -> newRenewalDate.getMonthValue.toString,
-            "endDate.year"  -> newRenewalDate.getYear.toString)
+            "renewalDate.day"   -> newRenewalDate.getDayOfMonth.toString,
+            "renewalDate.month" -> newRenewalDate.getMonthValue.toString,
+            "renewalDate.year"  -> newRenewalDate.getYear.toString)
         )
 
         status(result) mustBe SEE_OTHER
@@ -189,9 +190,9 @@ class EnterRenewalDateControllerSpec extends PlaySpec
 
         val result: Future[Result] = TestController.onSubmit(
           FakeRequest("POST", "/").withFormUrlEncodedBody(
-            "endDate.day"   -> "",
-            "endDate.month" -> "",
-            "endDate.year"  -> "")
+            "renewalDate.day"   -> "",
+            "renewalDate.month" -> "",
+            "renewalDate.year"  -> "")
         )
 
         status(result) mustBe BAD_REQUEST
