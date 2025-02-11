@@ -37,9 +37,9 @@
 }
 
 @mRenewalDate = @{
-    amlsDetails.membershipExpiresOn.map(date => SummaryListRow(
+    amlsDetails.membershipExpiresOn.map(expiryDate => SummaryListRow(
         key = Key(content = Text(msgs("amls.view-details.renewal-date"))),
-        value = Value(content = Text(date.format(dtf(msgs.lang.toLocale))))))
+        value = Value(content = Text(expiryDate.plusDays(1).format(dtf(msgs.lang.toLocale))))))
 }
 
 @mPendingRejected = @{

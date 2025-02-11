@@ -55,7 +55,7 @@ class AmlsDetailsSummaryListViewSpec extends BaseISpec {
       summaryListValues.get(1).text() shouldBe "1234"
 
       summaryListKeys.get(2).text() shouldBe "Next renewal date"
-      summaryListValues.get(2).text() shouldBe "7 December 2024"
+      summaryListValues.get(2).text() shouldBe "8 December 2024"
     }
 
     "display amls details without a renewal date" in {
@@ -152,7 +152,7 @@ class AmlsDetailsSummaryListViewSpec extends BaseISpec {
       summaryListValues.size() shouldBe 3
 
       summaryListKeys.get(2).text() shouldBe "Dyddiad nesaf ar gyfer adnewyddu"
-      summaryListValues.get(2).text() shouldBe "7 Rhagfyr 2024"
+      summaryListValues.get(2).text() shouldBe "8 Rhagfyr 2024"
 
     }
   }

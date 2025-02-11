@@ -27,6 +27,7 @@ import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.view_details
 
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 class ViewDetailsViewSpec extends BaseISpec {
 
@@ -38,6 +39,9 @@ class ViewDetailsViewSpec extends BaseISpec {
   implicit val messages: Messages = MessagesImpl(lang, messagesApi)
 
   "view_details" when {
+
+    val expiryDate = LocalDate.parse("2024-02-10")
+    val formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy")
 
     def testServiceStaticContent(doc: Document): Unit = {
 
@@ -122,7 +126,7 @@ class ViewDetailsViewSpec extends BaseISpec {
 
     s"AmlsStatuses is ${AmlsStatuses.ExpiredAmlsDetailsUK}" should {
 
-      val amlsDetails = AmlsDetails(supervisoryBody = "HMRC", membershipNumber = Some("123"), membershipExpiresOn = Some(LocalDate.parse("2024-02-10")))
+      val amlsDetails = AmlsDetails(supervisoryBody = "HMRC", membershipNumber = Some("123"), membershipExpiresOn = Some(expiryDate))
       val doc: Document = Jsoup.parse(view.apply(AmlsStatuses.ExpiredAmlsDetailsUK, Some(amlsDetails))(FakeRequest(), messages, appConfig).body)
 
       testServiceStaticContent(doc)
@@ -138,7 +142,7 @@ class ViewDetailsViewSpec extends BaseISpec {
         doc.select(".govuk-summary-list__key").get(1).text() shouldBe "Registration number"
         doc.select(".govuk-summary-list__value").get(1).text() shouldBe "123"
         doc.select(".govuk-summary-list__key").get(2).text() shouldBe "Next renewal date"
-        doc.select(".govuk-summary-list__value").get(2).text() shouldBe "10 February 2024"
+        doc.select(".govuk-summary-list__value").get(2).text() shouldBe expiryDate.plusDays(1).format(formatter)
       }
       "display a link styled as button" in {
         doc.select(".govuk-button").first().text() shouldBe "Update details"
@@ -148,7 +152,7 @@ class ViewDetailsViewSpec extends BaseISpec {
 
     s"AmlsStatuses is ${AmlsStatuses.ValidAmlsDetailsUK} when HMRC registered" should {
 
-      val amlsDetails = AmlsDetails(supervisoryBody = "HMRC", membershipNumber = Some("123"), membershipExpiresOn = Some(LocalDate.parse("2025-02-10")))
+      val amlsDetails = AmlsDetails(supervisoryBody = "HMRC", membershipNumber = Some("123"), membershipExpiresOn = Some(expiryDate))
       val doc: Document = Jsoup.parse(view.apply(AmlsStatuses.ValidAmlsDetailsUK, Some(amlsDetails))(FakeRequest(), messages, appConfig).body)
 
       testServiceStaticContent(doc)
@@ -161,7 +165,7 @@ class ViewDetailsViewSpec extends BaseISpec {
         doc.select(".govuk-summary-list__key").get(1).text() shouldBe "Registration number"
         doc.select(".govuk-summary-list__value").get(1).text() shouldBe "123"
         doc.select(".govuk-summary-list__key").get(2).text() shouldBe "Next renewal date"
-        doc.select(".govuk-summary-list__value").get(2).text() shouldBe "10 February 2025"
+        doc.select(".govuk-summary-list__value").get(2).text() shouldBe expiryDate.plusDays(1).format(formatter)
       }
       "display h2" in {
         doc.select("h2").first().text() shouldBe "Keep your details up to date"
@@ -178,7 +182,7 @@ class ViewDetailsViewSpec extends BaseISpec {
 
     s"AmlsStatuses is ${AmlsStatuses.ValidAmlsDetailsUK} when not HMRC registered" should {
 
-      val amlsDetails = AmlsDetails(supervisoryBody = "ICAEW", membershipNumber = Some("123"), membershipExpiresOn = Some(LocalDate.parse("2025-02-10")))
+      val amlsDetails = AmlsDetails(supervisoryBody = "ICAEW", membershipNumber = Some("123"), membershipExpiresOn = Some(expiryDate))
       val doc: Document = Jsoup.parse(view.apply(AmlsStatuses.ValidAmlsDetailsUK, Some(amlsDetails))(FakeRequest(), messages, appConfig).body)
 
       testServiceStaticContent(doc)
@@ -191,7 +195,7 @@ class ViewDetailsViewSpec extends BaseISpec {
         doc.select(".govuk-summary-list__key").get(1).text() shouldBe "Registration number"
         doc.select(".govuk-summary-list__value").get(1).text() shouldBe "123"
         doc.select(".govuk-summary-list__key").get(2).text() shouldBe "Next renewal date"
-        doc.select(".govuk-summary-list__value").get(2).text() shouldBe "10 February 2025"
+        doc.select(".govuk-summary-list__value").get(2).text() shouldBe expiryDate.plusDays(1).format(formatter)
       }
       "display h2" in {
         doc.select("h2").first().text() shouldBe "Keep your details up to date"
