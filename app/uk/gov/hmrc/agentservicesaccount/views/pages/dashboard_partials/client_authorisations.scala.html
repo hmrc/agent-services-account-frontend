@@ -19,17 +19,17 @@
 
 @this(p: p, h2: h2, a: a, ul_html: ul_html, formWithCSRF: FormWithCSRF)
 
-@()(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
+@(authUrls: Map[String, String])(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
 
 <section id="client-authorisation-section">
     @h2("asa.section4.h2")
     @p("asa.client-authorisations.p")
     @ul_html(
         items = Seq[Html](
-            a(href = appConfig.agentInvitationsFrontendUrl, key = "asa.section4.col1.link"),
-            a(href = appConfig.agentInvitationsTrackUrl, key = "asa.section4.col2.link1"),
+            a(href = authUrls("invitationsUrl"), key = "asa.section4.col1.link"),
+            a(href = authUrls("trackUrl"), key = "asa.section4.col2.link1"),
             a(href = appConfig.agentMappingUrl, key = "asa.section4.col2.link2"),
-            a(href = appConfig.agentInvitationsCancelAuthUrl, key = "asa.section4.col2.link3")
+            a(href = authUrls("deauthUrl"), key = "asa.section4.col2.link3")
         ),
         id = Some("client-auth-links")
     )
