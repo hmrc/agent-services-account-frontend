@@ -81,7 +81,7 @@ asa.ppt.col1.h2=Plastic Packaging Tax
 asa.ppt.col1.h3=Before you start
 asa.ppt.col1.link1.href=https://www.gov.uk/guidance/register-for-plastic-packaging-tax
 asa.ppt.col1.link1=<a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">register for Plastic Packaging Tax (opens in a new tab)</a>
-asa.ppt.col1.link2=<a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">authorise you to act on their behalf</a>
+asa.ppt.col1.link2=<a class="govuk-link" href="{0}">authorise you to act on their behalf</a>
 asa.ppt.col1.text1=Your client must first
 asa.ppt.col1.text2=They must then
 asa.ppt.col2.h3=Manage your client’s Plastic Packaging Tax
@@ -98,7 +98,7 @@ asa.cbc-section.col1.link2.p=Manage your clients'' country-by-country reports an
 asa.pillar2.col1.h2=Report Pillar 2 top-up taxes
 asa.pillar2.col1.h3=Before you start
 asa.pillar2.col1.link1=<a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">register to Report Pillar 2 top-up taxes.</a>
-asa.pillar2.col1.link2=<a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">requesting an authorisation.</a>
+asa.pillar2.col1.link2=<a class="govuk-link" href="{0}">requesting an authorisation.</a>
 asa.pillar2.col1.text1=Your client must first
 asa.pillar2.col1.text2=You must first get authorisation from your client. You can do this by
 asa.pillar2.col2.h3=Manage your client’s Pillar 2 top-up taxes

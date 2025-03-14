@@ -35,6 +35,27 @@
         isAdmin: Boolean = false
 )(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
 
+@invitationsUrl = @{
+    if(appConfig.enableAgentClientRelationshipsFrontend) appConfig.agentClientRelationshipsFrontendInvitationsUrl
+    else appConfig.agentInvitationsFrontendUrl
+}
+
+@trackUrl = @{
+    if(appConfig.enableAgentClientRelationshipsFrontend) appConfig.agentClientRelationshipsFrontendTrackUrl
+    else appConfig.agentInvitationsTrackUrl
+}
+
+@deauthUrl = @{
+    if(appConfig.enableAgentClientRelationshipsFrontend) appConfig.agentClientRelationshipsFrontendDeauthUrl
+    else appConfig.agentInvitationsCancelAuthUrl
+}
+
+@authUrls = @{Map(
+    "invitationsUrl" -> invitationsUrl,
+    "trackUrl" -> trackUrl,
+    "deauthUrl" -> deauthUrl
+)}
+
 @main(
     pageTitle = msgs("asa.heading"),
     isAdmin = isAdmin,
@@ -44,7 +65,7 @@
     @h1("asa.heading")
     @p(msgs("agent.accountNumber", arn))
 
-    @client_authorisations()
+    @client_authorisations(authUrls)
 
     @if(isAdmin) {
         @manage_section()
@@ -53,7 +74,7 @@
     <hr class="govuk-section-break hr-thick govuk-!-margin-bottom-6 govuk-!-margin-top-8">
 
     @h2("asa.tax-services", id = Some("tax-services-h2"))
-    @tax_services_accordion()
+    @tax_services_accordion(authUrls)
 
     <hr class="govuk-section-break hr-thick govuk-!-margin-bottom-6">
 

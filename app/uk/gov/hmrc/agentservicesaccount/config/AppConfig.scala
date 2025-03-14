@@ -83,6 +83,14 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
 
   val agentInvitationsFrontendExternalUrl: String = getConfString("agent-invitations-frontend.external-url")
 
+  val agentClientRelationshipsFrontendExternalUrl: String = getConfString("agent-client-relationships-frontend.external-url")
+  private val agentClientRelationshipsFrontendTrackPath: String = getConfString("agent-client-relationships-frontend.track.path")
+  private val agentClientRelationshipsFrontendInvitationsPath: String = getConfString("agent-client-relationships-frontend.invitations.path")
+  private val agentClientRelationshipsFrontendDeauthPath: String = getConfString("agent-client-relationships-frontend.deauth.path")
+  val agentClientRelationshipsFrontendTrackUrl: String = s"$agentClientRelationshipsFrontendExternalUrl$agentClientRelationshipsFrontendTrackPath"
+  val agentClientRelationshipsFrontendInvitationsUrl: String = s"$agentClientRelationshipsFrontendExternalUrl$agentClientRelationshipsFrontendInvitationsPath"
+  val agentClientRelationshipsFrontendDeauthUrl: String = s"$agentClientRelationshipsFrontendExternalUrl$agentClientRelationshipsFrontendDeauthPath"
+
   val agentInvitationsFrontendUrl: String = s"$agentInvitationsFrontendExternalUrl/invitations/agents"
 
   val agentInvitationsFrontendClientTypeUrl: String = s"$agentInvitationsFrontendExternalUrl/invitations/agents/client-type"
@@ -148,7 +156,8 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
   val enablePillar2: Boolean = getBoolean("features.enable-pillar2")
   val enableNonHmrcSupervisoryBody: Boolean = getBoolean("features.enable-non-hmrc-supervisory-body")
   val enableBackendPCRDatabase: Boolean = getBoolean("features.enable-backend-pcr-database")
-
+  val enableAgentClientRelationshipsFrontend: Boolean = getBoolean("features.enable-agent-client-relationships-frontend")
+  
   //Gran Perms
   val agentPermissionsBaseUrl: String = baseUrl("agent-permissions")
   val agentUserClientDetailsBaseUrl: String = baseUrl("agent-user-client-details")
