@@ -139,17 +139,28 @@ asa.section4.col2.link2=Rheoli’ch ceisiadau am awdurdodiad o’r 30 diwrnod di
 asa.section4.col2.link3=Canslo awdurdodiad cleient
 asa.section4.h2=Awdurdodiadau cleientiaid
 
-# ITSA
-asa.sectionITSA.col1.h3=Cyn i chi ddechrau
-asa.sectionITSA.col1.p1=Gwnewch yn siŵr eich bod yn <a class="govuk-link" href="{0}">ychwanegwch awdurdodiadau presennol ar gyfer Hunanasesiad at eich cyfrif gwasanaethau asiant</a>.
-asa.sectionITSA.col1.p2=<a class="govuk-link" href="{0}">Dylech gael awdurdodiadau newydd</a> ar gyfer cleientiaid, os oes angen.
-asa.sectionITSA.col2.h3=Cofrestru’ch cleientiaid
-asa.sectionITSA.col2.p1=Cael gwybod a yw’ch cleientiaid yn gymwys i gofrestru (yn agor tab newydd).
-asa.sectionITSA.col2.p2=Darllenwch yr arweiniad ynghylch <a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">yr hyn y mae angen i chi ei wneud ar ôl cofrestru’ch cleientiaid (yn agor tab newydd).</a>
-asa.sectionITSA.col2.p3=Wedyn, <a class="govuk-link" href="{0}">nodwch fanylion eich cleient er mwyn ei gofrestru.</a>
-asa.sectionITSA.col3.h3=Rheoli manylion Treth Incwm eich cleient
-asa.sectionITSA.col3.p=Bwrw golwg dros Dreth Incwm eich cleient.
+# ITSA (Legacy content prior to EMA)
+asa.sectionITSA.legacy.col1.p1=Gwnewch yn siŵr eich bod yn <a class="govuk-link" href="{0}">ychwanegwch awdurdodiadau presennol ar gyfer Hunanasesiad at eich cyfrif gwasanaethau asiant</a>.
+asa.sectionITSA.legacy.col1.p2=<a class="govuk-link" href="{0}">Dylech gael awdurdodiadau newydd</a> ar gyfer cleientiaid, os oes angen.
+asa.sectionITSA.legacy.col2.h4=Cofrestru’ch cleientiaid
+asa.sectionITSA.legacy.col2.p1=Cael gwybod a yw’ch cleientiaid yn gymwys i gofrestru (yn agor tab newydd).
+asa.sectionITSA.legacy.col2.p2=Darllenwch yr arweiniad ynghylch <a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">yr hyn y mae angen i chi ei wneud ar ôl cofrestru’ch cleientiaid (yn agor tab newydd).</a>
+asa.sectionITSA.legacy.col2.p3=Wedyn, <a class="govuk-link" href="{0}">nodwch fanylion eich cleient er mwyn ei gofrestru.</a>
+asa.sectionITSA.legacy.col3.h4=Rheoli manylion Treth Incwm eich cleient
+asa.sectionITSA.legacy.col3.p=Bwrw golwg dros Dreth Incwm eich cleient.
+
+# ITSA (New ITSA section content for EMA)
 asa.sectionITSA.h2=Troi Treth yn Ddigidol ar gyfer Treth Incwm
+asa.sectionITSA.col1.h4=Cyn i chi ddechrau
+asa.sectionITSA.col1.p1=Cyfeiriwch at <a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">y cynllun Troi Treth yn Ddigidol ar gyfer Treth Incwm fel asiant: cam wrth gam (yn agor tab newydd)</a>.
+asa.sectionITSA.col2.h4=Cael awdurdodiad gan y cleient
+asa.sectionITSA.col2.p1=Ychwanegwch awdurdodiadau Hunanasesiad presennol i’ch cyfrif gwasanaethau asiant
+asa.sectionITSA.col2.p2=Gofynnwch i’ch cleient i’ch awdurdodi ar gyfer y cynllun Troi Treth yn Ddigidol
+asa.sectionITSA.col3.h4=Cofrestru’ch cleientiaid
+asa.sectionITSA.col3.p1=<a class="govuk-link" href="{0}">Cofrestrwch eich cleientiaid ar gyfer y cynllun Troi Treth yn Ddigidol ar gyfer Treth Incwm</a>
+asa.sectionITSA.col4.h4=Rheoli manylion eich cleient
+asa.sectionITSA.col4.p1=<a class="govuk-link" href="{0}">Rheolwch fanylion Hunanasesiad ar gyfer cleientiaid sydd eisoes wedi cofrestru</a>
+
 asa.tax-services=Gwasanaethau treth y gallwch gael mynediad iddynt drwy’r cyfrif hwn
 
 # Trusts

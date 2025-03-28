@@ -144,6 +144,8 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
   def routeToSwitchLanguage: String => Call = (lang: String) => routes.AgentServicesLanguageController.switchToLanguage(lang)
 
   val govUkGuidanceChangeDetails: String = getString("govUkGuidanceChangeDetails")
+  val govUkItsaAsAnAgent: String = getString("govUkItsaAsAnAgent")
+  val govUkItsaSignUpClient: String = getString("govUkItsaSignUpClient")
 
   lazy val sessionCacheExpiryDuration: Duration = servicesConfig.getDuration("mongodb.cache.expiry")
   val pendingChangeTTL: Long = getInt("mongodb.desi-details.lockout-period").toLong
@@ -157,7 +159,8 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
   val enableNonHmrcSupervisoryBody: Boolean = getBoolean("features.enable-non-hmrc-supervisory-body")
   val enableBackendPCRDatabase: Boolean = getBoolean("features.enable-backend-pcr-database")
   val enableAgentClientRelationshipsFrontend: Boolean = getBoolean("features.enable-agent-client-relationships-frontend")
-  
+  val enableEmaContent: Boolean = getBoolean("features.enable-ema-content")
+
   //Gran Perms
   val agentPermissionsBaseUrl: String = baseUrl("agent-permissions")
   val agentUserClientDetailsBaseUrl: String = baseUrl("agent-user-client-details")

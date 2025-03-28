@@ -204,27 +204,28 @@ class AgentServicesControllerSpec extends BaseISpec {
         accordion.select("#tax-services-accordion-heading-7").text() shouldBe  "Plastic Packaging Tax"
         accordion.select("#tax-services-accordion-heading-8").text() shouldBe  "Report Pillar 2 top-up taxes"
         accordion.select("#tax-services-accordion-heading-9").text() shouldBe  "Other tax services"
-//        tax-services-accordion-content-1
+
+        //Income Tax
         val one = accordion.select("#tax-services-accordion-content-1")
         one.select("h4").get(0).text() shouldBe "Before you start"
-        one.select("p").get(0).text() shouldBe "Make sure you add existing Self Assessment authorisations to your agent services account."
-        one.select("a").get(0).attr("href") shouldBe "http://localhost:9438/agent-mapping/start"
+        one.select("p").get(0).text() shouldBe "Refer to Making Tax Digital for Income Tax as an agent: step by step (opens in a new tab)."
+        one.select("a").get(0).attr("href") shouldBe "https://www.gov.uk/government/collections/making-tax-digital-for-income-tax-as-an-agent-step-by-step"
 
-        one.select("p").get(1).text() shouldBe "Get new authorisations for clients if you need them."
-        one.select("a").get(1).attr("href") shouldBe "http://localhost:9448/invitations/agents"
+        one.select("h4").get(1).text() shouldBe "Get client authorisation"
+        one.select("li").get(0).text() shouldBe "Add existing Self Assessment authorisations to your agent services account"
+        one.select("a").get(1).attr("href") shouldBe "http://localhost:9438/agent-mapping/start"
+        one.select("li").get(1).text() shouldBe "Ask a client to authorise you for Making Tax Digital for Income Tax"
+        one.select("a").get(2).attr("href") shouldBe "http://localhost:9435/agent-client-relationships/authorisation-request"
 
-        one.select("h4").get(1).text() shouldBe "Sign up your clients"
-        one.select("a").get(2).text shouldBe "Find out if your clients are eligible to sign up (opens in a new tab)."
-        one.select("a").get(2).attr("href") shouldBe "https://www.gov.uk/guidance/sign-up-your-client-for-making-tax-digital-for-income-tax"
-        one.select("p").get(3).text() shouldBe "Read the guidance about what you need to do after signing up (opens in a new tab)."
-        one.select("a").get(3).attr("href") shouldBe "https://www.gov.uk/guidance/using-making-tax-digital-for-income-tax"
-        one.select("p").get(4).text() shouldBe "Then enter a client’s details to sign them up."
-        one.select("a").get(4).attr("href") shouldBe "http://localhost:9081/report-quarterly/income-and-expenses/sign-up/client/"
+        one.select("h4").get(2).text() shouldBe "Sign up your clients"
+        one.select("a").get(3).text shouldBe "Sign up your clients for Making Tax Digital for Income Tax"
+        one.select("a").get(3).attr("href") shouldBe "https://www.gov.uk/guidance/sign-up-your-client-for-making-tax-digital-for-income-tax"
 
-        one.select("h4").get(2).text() shouldBe "Manage your client’s Income Tax details"
-        one.select("p").get(5).text() shouldBe "View your client’s Income Tax."
-        one.select("a").get(5).attr("href") shouldBe "http://localhost:9081/report-quarterly/income-and-expenses/view/agents"
+        one.select("h4").get(3).text() shouldBe "Manage your client’s details"
+        one.select("a").get(4).text() shouldBe "Manage Self Assessment details for clients that are already signed up"
+        one.select("a").get(4).attr("href") shouldBe "http://localhost:9081/report-quarterly/income-and-expenses/view/agents"
 
+        //VAT
         val two = accordion.select("#tax-services-accordion-content-2")
         two.select("h4").get(0).text() shouldBe "Before you start"
         two.select("h4").get(1).text() shouldBe "Manage your client’s VAT"
@@ -237,12 +238,14 @@ class AgentServicesControllerSpec extends BaseISpec {
         two.select("a").get(2).text shouldBe "Manage, submit and view your client’s VAT details (opens in a new tab)"
         two.select("a").get(2).attr("href") shouldBe "http://localhost:9149/vat-through-software/representative/client-vat-number"
 
+        //Income Record Viewer
         val three = accordion.select("#tax-services-accordion-content-3")
         three.select("p").get(0).text shouldBe "Access a client’s Income record to help you complete their Self Assessment tax return."
         three.select("p").get(1).text shouldBe "View a client’s Income record"
         three.select("p").get(1).select("a").text() shouldBe "View a client’s Income record"
         three.select("p").get(1).select("a").attr("href") shouldBe "http://localhost:9996/tax-history/select-client"
 
+        //Trusts
         val four = accordion.select("#tax-services-accordion-content-4")
         four.select("h4").get(0).text() shouldBe "Before you start"
         four.select("h4").get(1).text() shouldBe "Manage your client’s trust"
@@ -263,7 +266,7 @@ class AgentServicesControllerSpec extends BaseISpec {
         fourPs.get(2).select("a").get(0).text shouldBe "Use this service to update the details of your client’s trust or declare no changes on the trust register"
         fourPs.get(2).select("a").get(0).attr("href") shouldBe "https://www.gov.uk/guidance/manage-your-trusts-registration-service"
 
-//      Capital Gains Tax on UK property
+        //Capital Gains Tax on UK property
         val five = accordion.select("#tax-services-accordion-content-5")
         five.select("h4").get(0).text() shouldBe "Before you start"
         five.select("h4").get(1).text() shouldBe "Manage a client’s Capital Gains Tax on UK property"
@@ -293,7 +296,7 @@ class AgentServicesControllerSpec extends BaseISpec {
         sixPs.get(1).text shouldBe "Manage your clients' country-by-country reports and your country-by-country agent contact details"
         sixPs.get(1).select("a").get(0).attr("href") shouldBe "https://www.tax.service.gov.uk/send-a-country-by-country-report"
 
-//      Plastic Packaging Tax
+        //Plastic Packaging Tax
         val seven = accordion.select("#tax-services-accordion-content-7")
         seven.select("h4").get(0).text() shouldBe "Before you start"
         seven.select("h4").get(1).text() shouldBe "Manage your client’s Plastic Packaging Tax"
@@ -310,7 +313,7 @@ class AgentServicesControllerSpec extends BaseISpec {
         sevenPs.get(2).select("a").get(0).text shouldBe "Report your client’s Plastic Packaging Tax and view payments, returns and penalties"
         sevenPs.get(2).select("a").get(0).attr("href") shouldBe "https://www.tax.service.gov.uk/plastic-packaging-tax/account"
 
-//      Pillar2 Tax
+        //Pillar2 Tax
         val eight = accordion.select("#tax-services-accordion-content-8")
         eight.select("h4").get(0).text() shouldBe "Before you start"
         eight.select("h4").get(1).text() shouldBe "Manage your client’s Pillar 2 top-up taxes"
@@ -349,10 +352,48 @@ class AgentServicesControllerSpec extends BaseISpec {
         html.text().contains("/private-beta") shouldBe false
 
       }
+
+      "agent with enable-ema-content feature being false" in {
+        givenAuthorisedAsAgentWith(arn.value)
+        givenAgentRecordFound(agentRecord)
+        givenHidePrivateBetaInviteNotFound()
+
+        val controller = appBuilder()
+          .configure("features.enable-ema-content" -> false)
+          .build().injector.instanceOf[AgentServicesController]
+
+        val response = await(controller.showAgentServicesAccount()(fakeRequest("GET", "/home")))
+        val html = Jsoup.parse(contentAsString(response))
+
+        expectedTitle(html, "Welcome to your agent services account - Agent services account - GOV.UK")
+
+        expectedHomeBannerContent(html)
+        expectedUrBannerContent(html)
+        expectedClientAuthContent(html)
+
+        val accordion = html.select("#tax-services-accordion")
+        val itsaSection = accordion.select("#tax-services-accordion-content-1")
+        itsaSection.select("h4").get(0).text() shouldBe "Before you start"
+        itsaSection.select("p").get(0).text() shouldBe "Make sure you add existing Self Assessment authorisations to your agent services account."
+        itsaSection.select("a").get(0).attr("href") shouldBe "http://localhost:9438/agent-mapping/start"
+
+        itsaSection.select("p").get(1).text() shouldBe "Get new authorisations for clients if you need them."
+        itsaSection.select("a").get(1).attr("href") shouldBe "http://localhost:9448/invitations/agents"
+
+        itsaSection.select("h4").get(1).text() shouldBe "Sign up your clients"
+        itsaSection.select("a").get(2).text shouldBe "Find out if your clients are eligible to sign up (opens in a new tab)."
+        itsaSection.select("a").get(2).attr("href") shouldBe "https://www.gov.uk/guidance/sign-up-your-client-for-making-tax-digital-for-income-tax"
+        itsaSection.select("p").get(3).text() shouldBe "Read the guidance about what you need to do after signing up (opens in a new tab)."
+        itsaSection.select("a").get(3).attr("href") shouldBe "https://www.gov.uk/guidance/using-making-tax-digital-for-income-tax"
+        itsaSection.select("p").get(4).text() shouldBe "Then enter a client’s details to sign them up."
+        itsaSection.select("a").get(4).attr("href") shouldBe "http://localhost:9081/report-quarterly/income-and-expenses/sign-up/client/"
+
+        itsaSection.select("h4").get(2).text() shouldBe "Manage your client’s Income Tax details"
+        itsaSection.select("p").get(5).text() shouldBe "View your client’s Income Tax."
+        itsaSection.select("a").get(5).attr("href") shouldBe "http://localhost:9081/report-quarterly/income-and-expenses/view/agents"
+      }
     }
-
   }
-
 
   def verifyYourOrganisationSection(html: Document): Assertion = {
     val contactDetailsSection = html.select("#your-organisation")
