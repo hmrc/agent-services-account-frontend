@@ -8,7 +8,6 @@ object CodeCoverageSettings {
     //".*.template",
     ".*CallOps.*",
     ".*EmailService.*",
-    ".*ManageAccessPermissionsConfig.*",
     ".*AuthActions.*",
     ".*ClientAction.*",
     ".*AgentPermissionsConnector.*",
