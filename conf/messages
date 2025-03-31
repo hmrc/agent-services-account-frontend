@@ -141,7 +141,7 @@ asa.section4.h2=Client authorisations
 
 # ITSA
 asa.sectionITSA.col1.h3=Before you start
-asa.sectionITSA.col1.p1=Make sure you <a class="govuk-link" href="{0}">copy across existing authorisations.</a>
+asa.sectionITSA.col1.p1=Make sure you <a class="govuk-link" href="{0}">add existing Self Assessment authorisations to your agent services account</a>.
 asa.sectionITSA.col1.p2=<a class="govuk-link" href="{0}">Get new authorisations</a> for clients if you need them.
 asa.sectionITSA.col2.h3=Sign up your clients
 asa.sectionITSA.col2.p1=Find out if your clients are eligible to sign up (opens in a new tab).
