@@ -133,9 +133,9 @@ asa.section3.col2.link1=<a class="govuk-link" href="{0}" rel="noreferrer noopene
 
 # Main choices
 asa.section4.col1.h3=Ask a client to authorise you
-asa.section4.col1.link=Ask a client to authorise you
-asa.section4.col2.link1=Manage your authorisation requests from the last 30 days
-asa.section4.col2.link2=Copy across more Self Assessment client authorisations
+asa.section4.col1.link0=Ask a client to authorise you
+asa.section4.col2.link1=Add existing Self Assessment authorisations to your agent services account
+asa.section4.col2.link2=Manage your authorisation requests from the last 30 days
 asa.section4.col2.link3=Cancel a client’s authorisation
 asa.section4.h2=Client authorisations
 
