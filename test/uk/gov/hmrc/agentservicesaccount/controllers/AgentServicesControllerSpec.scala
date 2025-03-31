@@ -207,7 +207,7 @@ class AgentServicesControllerSpec extends BaseISpec {
 //        tax-services-accordion-content-1
         val one = accordion.select("#tax-services-accordion-content-1")
         one.select("h4").get(0).text() shouldBe "Before you start"
-        one.select("p").get(0).text() shouldBe "Make sure you copy across existing authorisations."
+        one.select("p").get(0).text() shouldBe "Make sure you add existing Self Assessment authorisations to your agent services account."
         one.select("a").get(0).attr("href") shouldBe "http://localhost:9438/agent-mapping/start"
 
         one.select("p").get(1).text() shouldBe "Get new authorisations for clients if you need them."
