@@ -169,10 +169,10 @@ class AgentServicesControllerSpec extends BaseISpec {
         val links = clientAuthSection.select("ul li a")
         links.get(0).text() shouldBe "Ask a client to authorise you"
         links.get(0).attr("href") shouldBe "http://localhost:9448/invitations/agents"
-        links.get(1).text() shouldBe "Manage your authorisation requests from the last 30 days"
-        links.get(1).attr("href") shouldBe "http://localhost:9448/invitations/track"
-        links.get(2).text() shouldBe "Copy across more Self Assessment client authorisations"
-        links.get(2).attr("href") shouldBe "http://localhost:9438/agent-mapping/start"
+        links.get(1).text() shouldBe "Add existing Self Assessment authorisations to your agent services account"
+        links.get(1).attr("href") shouldBe "http://localhost:9438/agent-mapping/start"
+        links.get(2).text() shouldBe "Manage your authorisation requests from the last 30 days"
+        links.get(2).attr("href") shouldBe "http://localhost:9448/invitations/track"
         links.get(3).text() shouldBe "Cancel a client’s authorisation"
         links.get(3).attr("href") shouldBe "http://localhost:9448/invitations/agents/cancel-authorisation/client-type"
       }
@@ -207,7 +207,7 @@ class AgentServicesControllerSpec extends BaseISpec {
 //        tax-services-accordion-content-1
         val one = accordion.select("#tax-services-accordion-content-1")
         one.select("h4").get(0).text() shouldBe "Before you start"
-        one.select("p").get(0).text() shouldBe "Make sure you copy across existing authorisations."
+        one.select("p").get(0).text() shouldBe "Make sure you add existing Self Assessment authorisations to your agent services account."
         one.select("a").get(0).attr("href") shouldBe "http://localhost:9438/agent-mapping/start"
 
         one.select("p").get(1).text() shouldBe "Get new authorisations for clients if you need them."

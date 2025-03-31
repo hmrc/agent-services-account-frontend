@@ -133,15 +133,15 @@ asa.section3.col2.link1=<a class="govuk-link" href="{0}">Rhoi gwybod am Dreth En
 
 # Main choices
 asa.section4.col1.h3=Gofyn i gleient eich awdurdodi
-asa.section4.col1.link=Gofyn i gleient eich awdurdodi
-asa.section4.col2.link1=Rheoli’ch ceisiadau am awdurdodiad o’r 30 diwrnod diwethaf
-asa.section4.col2.link2=Copïwch ragor o awdurdodiadau cleientiaid Hunanasesiad drosodd
+asa.section4.col1.link0=Gofyn i gleient eich awdurdodi
+asa.section4.col2.link1=Ychwanegwch awdurdodiadau presennol ar gyfer Hunanasesiad at eich cyfrif gwasanaethau asiant
+asa.section4.col2.link2=Rheoli’ch ceisiadau am awdurdodiad o’r 30 diwrnod diwethaf
 asa.section4.col2.link3=Canslo awdurdodiad cleient
 asa.section4.h2=Awdurdodiadau cleientiaid
 
 # ITSA
 asa.sectionITSA.col1.h3=Cyn i chi ddechrau
-asa.sectionITSA.col1.p1=Gwnewch yn siŵr eich bod yn <a class="govuk-link" href="{0}">copïo’r awdurdodiadau presennol ar draws</a>.
+asa.sectionITSA.col1.p1=Gwnewch yn siŵr eich bod yn <a class="govuk-link" href="{0}">ychwanegwch awdurdodiadau presennol ar gyfer Hunanasesiad at eich cyfrif gwasanaethau asiant</a>.
 asa.sectionITSA.col1.p2=<a class="govuk-link" href="{0}">Dylech gael awdurdodiadau newydd</a> ar gyfer cleientiaid, os oes angen.
 asa.sectionITSA.col2.h3=Cofrestru’ch cleientiaid
 asa.sectionITSA.col2.p1=Cael gwybod a yw’ch cleientiaid yn gymwys i gofrestru (yn agor tab newydd).
