@@ -139,17 +139,28 @@ asa.section4.col2.link2=Manage your authorisation requests from the last 30 days
 asa.section4.col2.link3=Cancel a client’s authorisation
 asa.section4.h2=Client authorisations
 
-# ITSA
-asa.sectionITSA.col1.h3=Before you start
-asa.sectionITSA.col1.p1=Make sure you <a class="govuk-link" href="{0}">add existing Self Assessment authorisations to your agent services account</a>.
-asa.sectionITSA.col1.p2=<a class="govuk-link" href="{0}">Get new authorisations</a> for clients if you need them.
-asa.sectionITSA.col2.h3=Sign up your clients
-asa.sectionITSA.col2.p1=Find out if your clients are eligible to sign up (opens in a new tab).
-asa.sectionITSA.col2.p2=Read the guidance about <a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">what you need to do after signing up (opens in a new tab).</a>
-asa.sectionITSA.col2.p3=Then <a class="govuk-link" href="{0}">enter a client’s details to sign them up.</a>
-asa.sectionITSA.col3.h3=Manage your client’s Income Tax details
-asa.sectionITSA.col3.p=View your client’s Income Tax.
+# ITSA (Legacy content prior to EMA)
+asa.sectionITSA.legacy.col1.p1=Make sure you <a class="govuk-link" href="{0}">add existing Self Assessment authorisations to your agent services account</a>.
+asa.sectionITSA.legacy.col1.p2=<a class="govuk-link" href="{0}">Get new authorisations</a> for clients if you need them.
+asa.sectionITSA.legacy.col2.h4=Sign up your clients
+asa.sectionITSA.legacy.col2.p1=Find out if your clients are eligible to sign up (opens in a new tab).
+asa.sectionITSA.legacy.col2.p2=Read the guidance about <a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">what you need to do after signing up (opens in a new tab).</a>
+asa.sectionITSA.legacy.col2.p3=Then <a class="govuk-link" href="{0}">enter a client’s details to sign them up.</a>
+asa.sectionITSA.legacy.col3.h4=Manage your client’s Income Tax details
+asa.sectionITSA.legacy.col3.p=View your client’s Income Tax.
+
+# ITSA (New ITSA section content for EMA)
 asa.sectionITSA.h2=Making Tax Digital for Income Tax
+asa.sectionITSA.col1.h4=Before you start
+asa.sectionITSA.col1.p1=Refer to <a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">Making Tax Digital for Income Tax as an agent: step by step (opens in a new tab)</a>.
+asa.sectionITSA.col2.h4=Get client authorisation
+asa.sectionITSA.col2.p1=Add existing Self Assessment authorisations to your agent services account
+asa.sectionITSA.col2.p2=Ask a client to authorise you for Making Tax Digital for Income Tax
+asa.sectionITSA.col3.h4=Sign up your clients
+asa.sectionITSA.col3.p1=<a class="govuk-link" href="{0}">Sign up your clients for Making Tax Digital for Income Tax</a>
+asa.sectionITSA.col4.h4=Manage your client’s details
+asa.sectionITSA.col4.p1=<a class="govuk-link" href="{0}">Manage Self Assessment details for clients that are already signed up</a>
+
 asa.tax-services=Tax services you can access through this account
 
 # Trusts

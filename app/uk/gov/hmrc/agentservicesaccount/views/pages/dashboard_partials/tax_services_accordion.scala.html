@@ -29,26 +29,42 @@
 
 @(authUrls: Map[String, String])(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
 
+@itsaAccordionItemLegacy = {
+    @h4("asa.sectionITSA.col1.h4")
+    @p(html = Some(Html(msgs("asa.sectionITSA.legacy.col1.p1", appConfig.agentMappingUrl))))
+    @p(html = Some(Html(msgs("asa.sectionITSA.legacy.col1.p2", authUrls("invitationsUrl")))))
+    @h4("asa.sectionITSA.legacy.col2.h4")
+    @p(html = Some(
+        a(href= "https://www.gov.uk/guidance/sign-up-your-client-for-making-tax-digital-for-income-tax",
+          key =  "asa.sectionITSA.legacy.col2.p1",
+          openInNewWindow = true
+        )
+    ))
+    @p(html = Some(Html(msgs(
+        "asa.sectionITSA.legacy.col2.p2", "https://www.gov.uk/guidance/using-making-tax-digital-for-income-tax"
+    ))))
+    @p(html = Some(Html(msgs("asa.sectionITSA.legacy.col2.p3", appConfig.incomeTaxSubscriptionSignupClientUrl))))
+    @h4("asa.sectionITSA.legacy.col3.h4")
+    @p(html = Some(
+        a(href= appConfig.incomeTaxSubscriptionAgentFrontendUrl,
+          key =  "asa.sectionITSA.legacy.col3.p",
+          openInNewWindow = false
+        )
+    ))
+}
+
 @itsaAccordionItem = {
-@h4("asa.sectionITSA.col1.h3")
-@p(html = Some(Html(msgs("asa.sectionITSA.col1.p1",
-    appConfig.agentMappingUrl))))
-@p(html = Some(Html(msgs("asa.sectionITSA.col1.p2",
-    authUrls("invitationsUrl")))))
-@h4("asa.sectionITSA.col2.h3")
-@p(html = Some(
-    a(href= "https://www.gov.uk/guidance/sign-up-your-client-for-making-tax-digital-for-income-tax",
-      key =  "asa.sectionITSA.col2.p1",
-        openInNewWindow = true)))
-@p(html = Some(Html(msgs("asa.sectionITSA.col2.p2",
-    "https://www.gov.uk/guidance/using-making-tax-digital-for-income-tax"))))
-@p(html = Some(Html(msgs("asa.sectionITSA.col2.p3",
-    appConfig.incomeTaxSubscriptionSignupClientUrl))))
-@h4("asa.sectionITSA.col3.h3")
-@p(html = Some(
-    a(href= appConfig.incomeTaxSubscriptionAgentFrontendUrl,
-        key =  "asa.sectionITSA.col3.p",
-        openInNewWindow = false)))
+    @h4("asa.sectionITSA.col1.h4")
+    @p(html = Some(Html(msgs("asa.sectionITSA.col1.p1", appConfig.govUkItsaAsAnAgent))))
+    @h4("asa.sectionITSA.col2.h4")
+    @ul_html(Seq(
+        a(href = appConfig.agentMappingUrl, key = "asa.sectionITSA.col2.p1"),
+        a(href = appConfig.agentClientRelationshipsFrontendInvitationsUrl, key = "asa.sectionITSA.col2.p2")
+    ))
+    @h4("asa.sectionITSA.col3.h4")
+    @p(html = Some(Html(msgs("asa.sectionITSA.col3.p1", appConfig.govUkItsaSignUpClient))))
+    @h4("asa.sectionITSA.col4.h4")
+    @p(html = Some(Html(msgs("asa.sectionITSA.col4.p1", appConfig.incomeTaxSubscriptionAgentFrontendUrl))))
 }
 
 @mtdForVatAccordionItem = {
@@ -168,7 +184,7 @@
     items.append(
         Section(
             headingContent = Text(msgs("asa.sectionITSA.h2")),
-            content = HtmlContent(itsaAccordionItem)
+            content = HtmlContent(if(appConfig.enableEmaContent) itsaAccordionItem else itsaAccordionItemLegacy)
         )
     )
     items.append(
