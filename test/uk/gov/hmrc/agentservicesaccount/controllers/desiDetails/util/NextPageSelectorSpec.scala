@@ -20,34 +20,67 @@ import play.api.mvc.Result
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.NextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails._
-import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress}
+import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
+import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.stubs.SessionServiceMocks
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 
 import scala.concurrent.ExecutionContextExecutor
 
-class NextPageSelectorSpec extends BaseISpec with SessionServiceMocks {
+class NextPageSelectorSpec
+extends BaseISpec
+with SessionServiceMocks {
+
   implicit val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
   implicit val ec: ExecutionContextExecutor = scala.concurrent.ExecutionContext.global
 
   val mockJourney1: DesiDetailsJourney = DesiDetailsJourney(Some(Set("businessName")), journeyComplete = false)
   val mockJourney2: DesiDetailsJourney = DesiDetailsJourney(Some(Set("email", "telephone")), journeyComplete = false)
-  val mockJourney3: DesiDetailsJourney = DesiDetailsJourney(Some(Set("address", "email", "telephone")), journeyComplete = false)
+  val mockJourney3: DesiDetailsJourney = DesiDetailsJourney(
+    Some(Set(
+      "address",
+      "email",
+      "telephone"
+    )),
+    journeyComplete = false
+  )
   val mockJourney4: DesiDetailsJourney = DesiDetailsJourney(Some(Set("address", "telephone")), journeyComplete = false)
   val mockJourney5: DesiDetailsJourney = DesiDetailsJourney(Some(Set("telephone")), journeyComplete = false)
-  val mockJourneyAll: DesiDetailsJourney = DesiDetailsJourney(Some(Set("businessName", "address", "email", "telephone")), journeyComplete = false)
+  val mockJourneyAll: DesiDetailsJourney = DesiDetailsJourney(
+    Some(Set(
+      "businessName",
+      "address",
+      "email",
+      "telephone"
+    )),
+    journeyComplete = false
+  )
   val mockJourneyComplete: DesiDetailsJourney = DesiDetailsJourney(None, journeyComplete = true)
   val mockJourneyContactComplete: DesiDetailsJourney = DesiDetailsJourney(None, journeyComplete = false)
   val oldAgencyDetails: AgencyDetails = AgencyDetails(
     agencyName = Some("Old Name"),
-    agencyAddress = Some(BusinessAddress("Old Address", None, None, None, Some("ZZ9Z 9TT"), "GB")),
+    agencyAddress = Some(BusinessAddress(
+      "Old Address",
+      None,
+      None,
+      None,
+      Some("ZZ9Z 9TT"),
+      "GB"
+    )),
     agencyEmail = Some("old@test.com"),
     agencyTelephone = Some("01234 55678")
   )
   val completeNewAgencyDetails: AgencyDetails = AgencyDetails(
     agencyName = Some("New Name"),
-    agencyAddress = Some(BusinessAddress("New Address", None, None, None, Some("ZZ9Z 9TT"), "GB")),
+    agencyAddress = Some(BusinessAddress(
+      "New Address",
+      None,
+      None,
+      None,
+      Some("ZZ9Z 9TT"),
+      "GB"
+    )),
     agencyEmail = Some("new@test.com"),
     agencyTelephone = Some("07999 999999")
   )

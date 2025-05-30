@@ -17,26 +17,31 @@
 package uk.gov.hmrc.agentservicesaccount.views.pages.amls
 
 import org.jsoup.Jsoup
-import org.jsoup.nodes.{Document, Element}
+import org.jsoup.nodes.Document
+import org.jsoup.nodes.Element
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.data.Form
-import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
+import play.api.i18n.Lang
+import play.api.i18n.Messages
+import play.api.i18n.MessagesApi
+import play.api.i18n.MessagesImpl
 import play.api.test.FakeRequest
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.forms.YesNoForm
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.is_amls_hmrc
 
-class AmlsIsHmrcViewSpec extends BaseISpec {
+class AmlsIsHmrcViewSpec
+extends BaseISpec {
 
-    implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
-    implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
-    implicit val lang: Lang = Lang("en")
-    val view: is_amls_hmrc = app.injector.instanceOf[is_amls_hmrc]
-    val messages: Messages = MessagesImpl(lang, messagesApi)
+  implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+  implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
+  implicit val lang: Lang = Lang("en")
+  val view: is_amls_hmrc = app.injector.instanceOf[is_amls_hmrc]
+  val messages: Messages = MessagesImpl(lang, messagesApi)
 
-    val form: Form[Boolean] = YesNoForm.form("amls.is-hmrc.error") // ideally should be static so if code changes test breaks
-    val formWithErrors: Form[Boolean] = YesNoForm.form("amls.is-hmrc.error").withError(key ="accept",message = "amls.is-hmrc.error")
+  val form: Form[Boolean] = YesNoForm.form("amls.is-hmrc.error") // ideally should be static so if code changes test breaks
+  val formWithErrors: Form[Boolean] = YesNoForm.form("amls.is-hmrc.error").withError(key = "accept", message = "amls.is-hmrc.error")
 
   "is_amls_hmrc view" when {
 
@@ -74,7 +79,11 @@ class AmlsIsHmrcViewSpec extends BaseISpec {
     }
 
     "first viewing page" should {
-      val doc: Document = Jsoup.parse(view.apply(form)(FakeRequest(), messages, appConfig).body)
+      val doc: Document = Jsoup.parse(view.apply(form)(
+        FakeRequest(),
+        messages,
+        appConfig
+      ).body)
 
       testServiceStaticContent(doc)
 
@@ -87,7 +96,11 @@ class AmlsIsHmrcViewSpec extends BaseISpec {
     }
 
     "form is submitted with errors should" should {
-      val doc: Document = Jsoup.parse(view.apply(formWithErrors)(FakeRequest(), messages, appConfig).body)
+      val doc: Document = Jsoup.parse(view.apply(formWithErrors)(
+        FakeRequest(),
+        messages,
+        appConfig
+      ).body)
 
       testServiceStaticContent(doc)
 
@@ -114,6 +127,5 @@ class AmlsIsHmrcViewSpec extends BaseISpec {
     }
 
   }
-
 
 }

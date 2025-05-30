@@ -42,6 +42,8 @@ lazy val root = (project in file("."))
   .settings(
     Test / parallelExecution := false,
     Test / logBuffered := false,
+    Compile / scalafmtOnCompile := true,
+    Test / scalafmtOnCompile := true,
   )
 
 

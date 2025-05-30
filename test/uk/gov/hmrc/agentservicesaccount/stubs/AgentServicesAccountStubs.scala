@@ -26,29 +26,34 @@ import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest.connectorWri
 
 object AgentServicesAccountStubs {
 
-  def stubASAGetResponse(model: PendingChangeRequest): StubMapping =
-    stubFor(get(urlEqualTo(s"/agent-services-account/change-of-details-request/${model.arn.value}"))
+  def stubASAGetResponse(model: PendingChangeRequest): StubMapping = stubFor(
+    get(urlEqualTo(s"/agent-services-account/change-of-details-request/${model.arn.value}"))
       .willReturn(
         aResponse()
           .withStatus(OK)
           .withBody(Json.toJson(model)(connectorWrites).toString())
-      ))
+      )
+  )
 
-  def stubASAGetResponseError(arn: Arn, status: Int): StubMapping =
-    stubFor(get(urlEqualTo(s"/agent-services-account/change-of-details-request/${arn.value}"))
-      .willReturn(
-        aResponse().withStatus(status)
-      ))
+  def stubASAGetResponseError(
+    arn: Arn,
+    status: Int
+  ): StubMapping = stubFor(get(urlEqualTo(s"/agent-services-account/change-of-details-request/${arn.value}"))
+    .willReturn(
+      aResponse().withStatus(status)
+    ))
 
-  def stubASAPostResponse(status: Int): StubMapping =
-    stubFor(post(urlEqualTo(s"/agent-services-account/change-of-details-request"))
-      .willReturn(
-        aResponse().withStatus(status)
-      ))
+  def stubASAPostResponse(status: Int): StubMapping = stubFor(post(urlEqualTo(s"/agent-services-account/change-of-details-request"))
+    .willReturn(
+      aResponse().withStatus(status)
+    ))
 
-  def stubASADeleteResponse(arn: Arn, status: Int): StubMapping =
-    stubFor(delete(urlEqualTo(s"/agent-services-account/change-of-details-request/${arn.value}"))
-      .willReturn(
-        aResponse().withStatus(status)
-      ))
+  def stubASADeleteResponse(
+    arn: Arn,
+    status: Int
+  ): StubMapping = stubFor(delete(urlEqualTo(s"/agent-services-account/change-of-details-request/${arn.value}"))
+    .willReturn(
+      aResponse().withStatus(status)
+    ))
+
 }

@@ -18,11 +18,13 @@ package uk.gov.hmrc.agentservicesaccount.controllers
 
 import play.api.i18n.MessagesApi
 import play.api.test.Helpers._
-import play.api.test.{FakeRequest, Helpers}
+import play.api.test.FakeRequest
+import play.api.test.Helpers
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 
-class SignOutControllerSpec extends BaseISpec {
+class SignOutControllerSpec
+extends BaseISpec {
 
   implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
   implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
@@ -32,7 +34,7 @@ class SignOutControllerSpec extends BaseISpec {
     "remove session and redirect to /home/survey" in {
       val signOutUrl = "/agent-services-account/home/survey"
 
-      val response = controller.signOut(FakeRequest("GET","/"))
+      val response = controller.signOut(FakeRequest("GET", "/"))
 
       status(response) shouldBe 303
       redirectLocation(await(response)) shouldBe Some(signOutUrl)
@@ -74,7 +76,7 @@ class SignOutControllerSpec extends BaseISpec {
     }
 
     "/signed-out redirect to GG sign in with continue url back to /agent-services-account" in {
-      val request = controller.signedOut(FakeRequest("GET","/"))
+      val request = controller.signedOut(FakeRequest("GET", "/"))
 
       status(request) shouldBe 303
       Helpers.redirectLocation(request) shouldBe Some(appConfig.continueFromGGSignIn)
@@ -83,7 +85,7 @@ class SignOutControllerSpec extends BaseISpec {
     "remove session and redirect to HMRC Online sign-in page" in {
       val onlineSignInUrl = "https://www.access.service.gov.uk/login/signin/creds"
 
-      val response = controller.onlineSignIn(FakeRequest("GET","/"))
+      val response = controller.onlineSignIn(FakeRequest("GET", "/"))
 
       status(response) shouldBe 303
       Helpers.redirectLocation(response) shouldBe Some(onlineSignInUrl)

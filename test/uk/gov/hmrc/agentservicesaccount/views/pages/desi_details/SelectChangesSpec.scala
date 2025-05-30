@@ -20,7 +20,10 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.data.Form
-import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
+import play.api.i18n.Lang
+import play.api.i18n.Messages
+import play.api.i18n.MessagesApi
+import play.api.i18n.MessagesImpl
 import play.api.test.FakeRequest
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.forms.SelectChangesForm
@@ -30,17 +33,20 @@ import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details._
 
 import scala.jdk.CollectionConverters.CollectionHasAsScala
 
-class SelectChangesSpec extends BaseISpec {
+class SelectChangesSpec
+extends BaseISpec {
 
-  implicit private val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
-  implicit private val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
-  implicit private val langs: Seq[Lang] = Seq(Lang("en"), Lang("cy"))
+  private implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+  private implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
+  private implicit val langs: Seq[Lang] = Seq(Lang("en"), Lang("cy"))
 
   private val view: select_changes = app.injector.instanceOf[select_changes]
   private val form: Form[SelectChanges] = SelectChangesForm.form
 
   object MessageLookup {
+
     object English {
+
       private val govUkSuffix: String = " - Agent services account - GOV.UK"
       val heading: String = "Which contact details do you want to change?"
       val title: String = heading + govUkSuffix
@@ -52,9 +58,11 @@ class SelectChangesSpec extends BaseISpec {
       val checkboxLabel4: String = "Telephone number"
 
       val button: String = "Continue"
+
     }
 
     object Welsh {
+
       private val govUkSuffix: String = " - Cyfrif gwasanaethau asiant - GOV.UK"
       val heading: String = "Pa fanylion cyswllt yr hoffech eu newid?"
       val title: String = heading + govUkSuffix
@@ -66,14 +74,20 @@ class SelectChangesSpec extends BaseISpec {
       val checkboxLabel4: String = "Rhif ffôn"
 
       val button: String = "Yn eich blaen"
+
     }
+
   }
 
   "select_changes" should {
     "render correctly" when {
       "the selected lang is english" in {
         val messages: Messages = MessagesImpl(langs.head, messagesApi)
-        val doc: Document = Jsoup.parse(view.apply(form)(FakeRequest(), messages, appConfig).body)
+        val doc: Document = Jsoup.parse(view.apply(form)(
+          FakeRequest(),
+          messages,
+          appConfig
+        ).body)
 
         doc.title() mustBe MessageLookup.English.title
         doc.select("h1").asScala.head.text mustBe MessageLookup.English.heading
@@ -90,7 +104,11 @@ class SelectChangesSpec extends BaseISpec {
 
       "the selected lang is Welsh" in {
         val messages: Messages = MessagesImpl(langs.last, messagesApi)
-        val doc: Document = Jsoup.parse(view.apply(form)(FakeRequest(), messages, appConfig).body)
+        val doc: Document = Jsoup.parse(view.apply(form)(
+          FakeRequest(),
+          messages,
+          appConfig
+        ).body)
 
         doc.title() mustBe MessageLookup.Welsh.title
         doc.select("h1").asScala.head.text mustBe MessageLookup.Welsh.heading
@@ -106,4 +124,5 @@ class SelectChangesSpec extends BaseISpec {
       }
     }
   }
+
 }

@@ -17,26 +17,32 @@
 package uk.gov.hmrc.agentservicesaccount.utils
 
 import play.api.libs.json._
-import play.api.mvc.{PathBindable, QueryStringBindable}
+import play.api.mvc.PathBindable
+import play.api.mvc.QueryStringBindable
 
-import scala.reflect.runtime.universe.{TypeTag, typeOf}
+import scala.reflect.runtime.universe.TypeTag
+import scala.reflect.runtime.universe.typeOf
 
 object ValueClassBinder {
 
   def valueClassBinder[A: Reads](fromAtoString: A => String)(implicit stringBinder: PathBindable[String]): PathBindable[A] = {
 
-      def parseString(str: String) =
-        JsString(str).validate[A] match {
-          case JsSuccess(a, _) => Right(a)
-          case JsError(error)  => Left(s"No valid value in path: $str. Error: ${error.toString()}")
-        }
+    def parseString(str: String) =
+      JsString(str).validate[A] match {
+        case JsSuccess(a, _) => Right(a)
+        case JsError(error) => Left(s"No valid value in path: $str. Error: ${error.toString()}")
+      }
 
     new PathBindable[A] {
-      override def bind(key: String, value: String): Either[String, A] =
-        stringBinder.bind(key, value).flatMap(parseString)
+      override def bind(
+        key: String,
+        value: String
+      ): Either[String, A] = stringBinder.bind(key, value).flatMap(parseString)
 
-      override def unbind(key: String, a: A): String =
-        stringBinder.unbind(key, fromAtoString(a))
+      override def unbind(
+        key: String,
+        a: A
+      ): String = stringBinder.unbind(key, fromAtoString(a))
     }
   }
 
@@ -48,8 +54,7 @@ object ValueClassBinder {
         case (key: String, e: JsResultException) =>
           s"Cannot parse param $key as ${typeOf[A].typeSymbol.name.toString}. " +
             s"${e.errors.headOption.flatMap(_._2.headOption.map(_.message)).getOrElse("")}"
-        case (key: String, e)                    =>
-          s"Cannot parse param $key as ${typeOf[A].typeSymbol.name.toString}. ${e.toString}"
+        case (key: String, e) => s"Cannot parse param $key as ${typeOf[A].typeSymbol.name.toString}. ${e.toString}"
       }
     )
   }

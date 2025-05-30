@@ -29,7 +29,7 @@ object CommonValidators {
         case Nil => Valid
         case head :: tail =>
           head(fieldValue) match {
-            case i@Invalid(_) => i
+            case i @ Invalid(_) => i
             case Valid => loop(tail)
           }
       }

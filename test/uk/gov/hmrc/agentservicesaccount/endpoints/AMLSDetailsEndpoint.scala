@@ -18,22 +18,27 @@ package uk.gov.hmrc.agentservicesaccount.endpoints
 
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.Application
-import play.api.libs.ws.{WSClient, WSRequest}
+import play.api.libs.ws.WSClient
+import play.api.libs.ws.WSRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.agentservicesaccount.models.{AmlsDetails, AmlsDetailsResponse, AmlsStatuses}
-import uk.gov.hmrc.agentservicesaccount.stubs.AgentAssuranceStubs.{givenAMLSDetailsForArn, givenAMLSDetailsServerErrorForArn, givenAgentRecordFound}
+import uk.gov.hmrc.agentservicesaccount.models.AmlsDetails
+import uk.gov.hmrc.agentservicesaccount.models.AmlsDetailsResponse
+import uk.gov.hmrc.agentservicesaccount.models.AmlsStatuses
+import uk.gov.hmrc.agentservicesaccount.stubs.AgentAssuranceStubs.givenAMLSDetailsForArn
+import uk.gov.hmrc.agentservicesaccount.stubs.AgentAssuranceStubs.givenAMLSDetailsServerErrorForArn
+import uk.gov.hmrc.agentservicesaccount.stubs.AgentAssuranceStubs.givenAgentRecordFound
 import uk.gov.hmrc.agentservicesaccount.stubs.CookieHelper
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 
 import java.time.LocalDate
 
-class AMLSDetailsEndpoint extends BaseISpec with GuiceOneServerPerSuite with CookieHelper {
+class AMLSDetailsEndpoint
+extends BaseISpec
+with GuiceOneServerPerSuite
+with CookieHelper {
 
-  /**
-   * These could move to a component interface base spec, but we don't need the server
-   * for other integration tests.
-   * CookieHelper can move there as well
-   */
+  /** These could move to a component interface base spec, but we don't need the server for other integration tests. CookieHelper can move there as well
+    */
   lazy val ws: WSClient = app.injector.instanceOf[WSClient]
   def makeRequest(path: String): WSRequest = {
     ws.url(s"http://localhost:$port/agent-services-account$path")
@@ -43,7 +48,6 @@ class AMLSDetailsEndpoint extends BaseISpec with GuiceOneServerPerSuite with Coo
 
   override implicit lazy val app: Application = appBuilder().build()
 
-
   private val ukAMLSDetails = AmlsDetails(
     "HMRC",
     Some("123456789"),
@@ -52,7 +56,7 @@ class AMLSDetailsEndpoint extends BaseISpec with GuiceOneServerPerSuite with Coo
     Some(LocalDate.of(2022, 1, 25)),
     Some(LocalDate.of(2023, 12, 7))
   )
-  private val ukAMLSDetailsResponse = AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK,Some(ukAMLSDetails))
+  private val ukAMLSDetailsResponse = AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, Some(ukAMLSDetails))
 
   "View AMLS Supervision Details endpoint" should {
     "return successfully when everything works" in {

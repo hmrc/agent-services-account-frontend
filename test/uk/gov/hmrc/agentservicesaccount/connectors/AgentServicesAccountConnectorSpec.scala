@@ -16,18 +16,25 @@
 
 package uk.gov.hmrc.agentservicesaccount.connectors
 
-import play.api.http.Status.{FORBIDDEN, NOT_FOUND, NO_CONTENT}
-import play.api.test.Helpers.{await, defaultAwaitTimeout}
+import play.api.http.Status.FORBIDDEN
+import play.api.http.Status.NOT_FOUND
+import play.api.http.Status.NO_CONTENT
+import play.api.test.Helpers.await
+import play.api.test.Helpers.defaultAwaitTimeout
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest
-import uk.gov.hmrc.agentservicesaccount.stubs.AgentServicesAccountStubs.{stubASADeleteResponse, stubASAGetResponse, stubASAGetResponseError, stubASAPostResponse}
+import uk.gov.hmrc.agentservicesaccount.stubs.AgentServicesAccountStubs.stubASADeleteResponse
+import uk.gov.hmrc.agentservicesaccount.stubs.AgentServicesAccountStubs.stubASAGetResponse
+import uk.gov.hmrc.agentservicesaccount.stubs.AgentServicesAccountStubs.stubASAGetResponseError
+import uk.gov.hmrc.agentservicesaccount.stubs.AgentServicesAccountStubs.stubASAPostResponse
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import uk.gov.hmrc.http.UpstreamErrorResponse
 
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 
-class AgentServicesAccountConnectorSpec extends BaseISpec {
+class AgentServicesAccountConnectorSpec
+extends BaseISpec {
 
   val exampleArn: Arn = Arn("XARN1234567")
   val exampleModel: PendingChangeRequest = PendingChangeRequest(exampleArn, Instant.now().truncatedTo(ChronoUnit.SECONDS))
@@ -96,4 +103,5 @@ class AgentServicesAccountConnectorSpec extends BaseISpec {
       await(result) shouldBe false
     }
   }
+
 }

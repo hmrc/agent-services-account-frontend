@@ -16,36 +16,46 @@
 
 package uk.gov.hmrc.agentservicesaccount.controllers.amls
 
-import org.mockito.{ArgumentMatchersSugar, IdiomaticMockito}
+import org.mockito.ArgumentMatchersSugar
+import org.mockito.IdiomaticMockito
 import org.scalatestplus.play.PlaySpec
 import play.api.Environment
 import play.api.data.Form
 import play.api.i18n.Messages
-import play.api.libs.json.{Reads, Writes}
+import play.api.libs.json.Reads
+import play.api.libs.json.Writes
 import play.api.mvc._
 import play.api.test.Helpers._
-import play.api.test.{DefaultAwaitTimeout, FakeRequest, Helpers}
+import play.api.test.DefaultAwaitTimeout
+import play.api.test.FakeRequest
+import play.api.test.Helpers
 import play.twirl.api.Html
-import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
+import uk.gov.hmrc.agentservicesaccount.actions.Actions
+import uk.gov.hmrc.agentservicesaccount.actions.AuthActions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
-import uk.gov.hmrc.agentservicesaccount.models.{AmlsDetails, AmlsStatuses, UpdateAmlsJourney}
+import uk.gov.hmrc.agentservicesaccount.models.AmlsDetails
+import uk.gov.hmrc.agentservicesaccount.models.AmlsStatuses
+import uk.gov.hmrc.agentservicesaccount.models.UpdateAmlsJourney
 import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
 import uk.gov.hmrc.agentservicesaccount.support.TestConstants
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.confirm_registration_number
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve._
-import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.mongo.cache.DataKey
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
+import scala.concurrent.Future
 
-class ConfirmRegistrationNumberControllerSpec extends PlaySpec
-  with DefaultAwaitTimeout
-  with IdiomaticMockito
-  with ArgumentMatchersSugar
-  with TestConstants {
+class ConfirmRegistrationNumberControllerSpec
+extends PlaySpec
+with DefaultAwaitTimeout
+with IdiomaticMockito
+with ArgumentMatchersSugar
+with TestConstants {
 
   implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
   private val fakeRequest = FakeRequest()
@@ -58,29 +68,47 @@ class ConfirmRegistrationNumberControllerSpec extends PlaySpec
   )
 
   trait Setup {
+
     protected val mockAppConfig: AppConfig = mock[AppConfig]
     protected val mockAuthConnector: AuthConnector = mock[AuthConnector]
     protected val mockEnvironment: Environment = mock[Environment]
-    protected val authActions = new AuthActions(mockAppConfig, mockAuthConnector, mockEnvironment)
+    protected val authActions =
+      new AuthActions(
+        mockAppConfig,
+        mockAuthConnector,
+        mockEnvironment
+      )
 
     protected val mockAgentAssuranceConnector: AgentAssuranceConnector = mock[AgentAssuranceConnector]
     protected val actionBuilder = new DefaultActionBuilderImpl(Helpers.stubBodyParser())
     protected val mockActions =
-      new Actions(mockAgentAssuranceConnector, authActions, actionBuilder)
+      new Actions(
+        mockAgentAssuranceConnector,
+        authActions,
+        actionBuilder
+      )
 
     protected val mockUpdateAmlsJourneyRepository: UpdateAmlsJourneyRepository = mock[UpdateAmlsJourneyRepository]
     protected val mockView: confirm_registration_number = mock[confirm_registration_number]
     protected val cc: MessagesControllerComponents = stubMessagesControllerComponents()
     protected val dataKey = DataKey[UpdateAmlsJourney]("amlsJourney")
 
-    object TestController extends ConfirmRegistrationNumberController(mockActions, mockUpdateAmlsJourneyRepository, mockView, cc)(mockAppConfig, ec)
+    object TestController
+    extends ConfirmRegistrationNumberController(
+      mockActions,
+      mockUpdateAmlsJourneyRepository,
+      mockView,
+      cc
+    )(mockAppConfig, ec)
+
   }
 
   "showPage" should {
     "display the page if the user has an AMLS reg number" in new Setup {
       mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
         *[HeaderCarrier],
-        *[ExecutionContext]) returns authResponse
+        *[ExecutionContext]
+      ) returns authResponse
 
       mockAppConfig.enableNonHmrcSupervisoryBody returns true
 
@@ -91,7 +119,11 @@ class ConfirmRegistrationNumberControllerSpec extends PlaySpec
       mockUpdateAmlsJourneyRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[RequestHeader]) returns
         Future.successful(Some(ukAmlsJourney))
 
-      mockView.apply(*[Form[Boolean]],*[String])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+      mockView.apply(*[Form[Boolean]], *[String])(
+        *[Request[Any]],
+        *[Messages],
+        *[AppConfig]
+      ) returns Html("")
 
       val result: Future[Result] = TestController.showPage(fakeRequest)
 
@@ -101,7 +133,8 @@ class ConfirmRegistrationNumberControllerSpec extends PlaySpec
     "display the page if the user has an AMLS reg number and previously answered the question" in new Setup {
       mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
         *[HeaderCarrier],
-        *[ExecutionContext]) returns authResponse
+        *[ExecutionContext]
+      ) returns authResponse
 
       mockAppConfig.enableNonHmrcSupervisoryBody returns true
 
@@ -112,7 +145,11 @@ class ConfirmRegistrationNumberControllerSpec extends PlaySpec
       mockUpdateAmlsJourneyRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[RequestHeader]) returns
         Future.successful(Some(ukAmlsJourney.copy(isRegistrationNumberStillTheSame = Some(true))))
 
-      mockView.apply(*[Form[Boolean]], *[String])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+      mockView.apply(*[Form[Boolean]], *[String])(
+        *[Request[Any]],
+        *[Messages],
+        *[AppConfig]
+      ) returns Html("")
 
       val result: Future[Result] = TestController.showPage(fakeRequest)
 
@@ -122,7 +159,8 @@ class ConfirmRegistrationNumberControllerSpec extends PlaySpec
     "redirect the user to /new-registration-number if they do not have an AMLS reg number" in new Setup {
       mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
         *[HeaderCarrier],
-        *[ExecutionContext]) returns authResponse
+        *[ExecutionContext]
+      ) returns authResponse
 
       mockAppConfig.enableNonHmrcSupervisoryBody returns true
 
@@ -142,7 +180,8 @@ class ConfirmRegistrationNumberControllerSpec extends PlaySpec
     "redirect the user to /new-registration-number if they do not have an AMLS reg number" in new Setup {
       mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
         *[HeaderCarrier],
-        *[ExecutionContext]) returns authResponse
+        *[ExecutionContext]
+      ) returns authResponse
 
       mockAppConfig.enableNonHmrcSupervisoryBody returns true
 
@@ -161,7 +200,8 @@ class ConfirmRegistrationNumberControllerSpec extends PlaySpec
 
       mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
         *[HeaderCarrier],
-        *[ExecutionContext]) returns authResponse
+        *[ExecutionContext]
+      ) returns authResponse
 
       mockAppConfig.enableNonHmrcSupervisoryBody returns true
 
@@ -172,12 +212,19 @@ class ConfirmRegistrationNumberControllerSpec extends PlaySpec
       mockUpdateAmlsJourneyRepository.getFromSession(dataKey)(*[Reads[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful(Some(ukAmlsJourney))
 
       mockUpdateAmlsJourneyRepository.putSession(
-        dataKey, ukAmlsJourney.copy(isRegistrationNumberStillTheSame = Some(true), newRegistrationNumber = Some("7")))(*[Writes[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
+        dataKey,
+        ukAmlsJourney.copy(isRegistrationNumberStillTheSame = Some(true), newRegistrationNumber = Some("7"))
+      )(*[Writes[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
 
-      mockView.apply(*[Form[Boolean]], "7")(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+      mockView.apply(*[Form[Boolean]], "7")(
+        *[Request[Any]],
+        *[Messages],
+        *[AppConfig]
+      ) returns Html("")
 
       val result: Future[Result] = TestController.onSubmit(
-        FakeRequest("POST", "/").withFormUrlEncodedBody("accept" -> "true"))
+        FakeRequest("POST", "/").withFormUrlEncodedBody("accept" -> "true")
+      )
 
       status(result) mustBe SEE_OTHER
       Helpers.redirectLocation(result).get mustBe "/agent-services-account/manage-account/money-laundering-supervision/renewal-date"
@@ -187,7 +234,8 @@ class ConfirmRegistrationNumberControllerSpec extends PlaySpec
 
       mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
         *[HeaderCarrier],
-        *[ExecutionContext]) returns authResponse
+        *[ExecutionContext]
+      ) returns authResponse
 
       mockAppConfig.enableNonHmrcSupervisoryBody returns true
 
@@ -198,12 +246,19 @@ class ConfirmRegistrationNumberControllerSpec extends PlaySpec
       mockUpdateAmlsJourneyRepository.getFromSession(dataKey)(*[Reads[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful(Some(ukAmlsJourney))
 
       mockUpdateAmlsJourneyRepository.putSession(
-        dataKey, ukAmlsJourney.copy(isRegistrationNumberStillTheSame = Some(false)))(*[Writes[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
+        dataKey,
+        ukAmlsJourney.copy(isRegistrationNumberStillTheSame = Some(false))
+      )(*[Writes[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
 
-      mockView.apply(*[Form[Boolean]], "7")(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+      mockView.apply(*[Form[Boolean]], "7")(
+        *[Request[Any]],
+        *[Messages],
+        *[AppConfig]
+      ) returns Html("")
 
       val result: Future[Result] = TestController.onSubmit(
-        FakeRequest("POST", "/").withFormUrlEncodedBody("accept" -> "false"))
+        FakeRequest("POST", "/").withFormUrlEncodedBody("accept" -> "false")
+      )
 
       status(result) mustBe SEE_OTHER
       Helpers.redirectLocation(result).get mustBe "/agent-services-account/manage-account/money-laundering-supervision/new-registration-number"
@@ -213,7 +268,8 @@ class ConfirmRegistrationNumberControllerSpec extends PlaySpec
 
       mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
         *[HeaderCarrier],
-        *[ExecutionContext]) returns authResponse
+        *[ExecutionContext]
+      ) returns authResponse
 
       mockAppConfig.enableNonHmrcSupervisoryBody returns true
 
@@ -224,7 +280,11 @@ class ConfirmRegistrationNumberControllerSpec extends PlaySpec
       mockUpdateAmlsJourneyRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[Request[Any]]) returns
         Future.successful(Some(ukAmlsJourney))
 
-      mockView.apply(*[Form[Boolean]], "7")(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+      mockView.apply(*[Form[Boolean]], "7")(
+        *[Request[Any]],
+        *[Messages],
+        *[AppConfig]
+      ) returns Html("")
 
       val result: Future[Result] = TestController.onSubmit(FakeRequest("POST", "/"))
 

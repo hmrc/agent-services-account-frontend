@@ -21,7 +21,9 @@ import org.scalatest.wordspec.AnyWordSpec
 
 import java.time.LocalDate
 
-class RenewalDateFormSpec extends AnyWordSpec with Matchers {
+class RenewalDateFormSpec
+extends AnyWordSpec
+with Matchers {
 
   val endDateDay = "endDate.day"
   val endDateMonth = "endDate.month"
@@ -35,7 +37,7 @@ class RenewalDateFormSpec extends AnyWordSpec with Matchers {
   val validFormSubmission: Map[String, String] = Map(
     endDateDay -> local_valid_date_stub.getDayOfMonth.toString,
     endDateMonth -> local_valid_date_stub.getMonthValue.toString,
-    endDateYear -> local_valid_date_stub.getYear.toString,
+    endDateYear -> local_valid_date_stub.getYear.toString
   )
 
   val formSubmissionWithNoRegDate: Map[String, String] = Map(
@@ -44,11 +46,9 @@ class RenewalDateFormSpec extends AnyWordSpec with Matchers {
     endDateYear -> ""
   )
 
-  private def invalidateFormSubmission(badData: (String, String)): Map[String, String] =
-    (validFormSubmission - badData._1) ++ List(badData)
+  private def invalidateFormSubmission(badData: (String, String)): Map[String, String] = (validFormSubmission - badData._1) ++ List(badData)
 
-  private def partialDateFormSubmission(datePart: (String, String)): Map[String, String] =
-    (formSubmissionWithNoRegDate - datePart._1) ++ List(datePart)
+  private def partialDateFormSubmission(datePart: (String, String)): Map[String, String] = (formSubmissionWithNoRegDate - datePart._1) ++ List(datePart)
 
   "RenewalDateForm binding" should {
     "be successful valid data is submitted" in {
@@ -178,11 +178,12 @@ class RenewalDateFormSpec extends AnyWordSpec with Matchers {
       val params = Map(
         endDateDay -> local_past_date_stub.getDayOfMonth.toString,
         endDateMonth -> local_past_date_stub.getMonthValue.toString,
-        endDateYear -> local_past_date_stub.getYear.toString,
+        endDateYear -> local_past_date_stub.getYear.toString
       )
       val validatedForm = RenewalDateForm.form.bind(params)
       validatedForm.errors.size shouldBe 1
       validatedForm.error(endDateDay).get.message shouldBe "update-money-laundering-supervisory.error.date.past"
     }
   }
+
 }

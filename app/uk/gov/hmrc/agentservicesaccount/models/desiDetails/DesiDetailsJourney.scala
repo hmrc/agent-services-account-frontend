@@ -16,12 +16,13 @@
 
 package uk.gov.hmrc.agentservicesaccount.models.desiDetails
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.Json
+import play.api.libs.json.OFormat
 
 case class DesiDetailsJourney(
-                    contactChangesNeeded: Option[Set[String]],
-                    journeyComplete: Boolean
-                  )
+  contactChangesNeeded: Option[Set[String]],
+  journeyComplete: Boolean
+)
 
 object DesiDetailsJourney {
   implicit val format: OFormat[DesiDetailsJourney] = Json.format[DesiDetailsJourney]

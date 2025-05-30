@@ -19,9 +19,11 @@ package uk.gov.hmrc.agentservicesaccount.forms
 import play.api.data.Form
 import play.api.data.Forms._
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.YourDetails
-import uk.gov.hmrc.agentservicesaccount.models.{ApplyCtCodeChanges, ApplySaCodeChanges}
+import uk.gov.hmrc.agentservicesaccount.models.ApplyCtCodeChanges
+import uk.gov.hmrc.agentservicesaccount.models.ApplySaCodeChanges
 
 object UpdateDetailsForms {
+
   private val BusinessNameRegex = """^[A-Za-z0-9\,\.\'\-\/\ ]{2,200}$""".r
   private val TelephoneNumberRegex = """^(\+44|0)\d{9,12}$""".r // remove all spaces from input before matching to ensure correct digit count
   private val EmailAddressRegex = """^.{1,252}@.{1,256}\..{1,256}$""".r
@@ -35,20 +37,17 @@ object UpdateDetailsForms {
   val businessNameForm: Form[String] = Form(
     single("name" -> trimmedText
       .verifying("update-contact-details.name.error.empty", _.nonEmpty)
-      .verifying("update-contact-details.name.error.invalid", x => x.isEmpty || BusinessNameRegex.matches(x))
-    )
+      .verifying("update-contact-details.name.error.invalid", x => x.isEmpty || BusinessNameRegex.matches(x)))
   )
   val telephoneNumberForm: Form[String] = Form(
     single("telephoneNumber" -> trimmedText
       .verifying("update-contact-details.phone.error.empty", _.nonEmpty)
-      .verifying("update-contact-details.phone.error.invalid", x => x.isEmpty || InternationalTelephoneRegex.matches(x.replace(" ","")))
-    )
+      .verifying("update-contact-details.phone.error.invalid", x => x.isEmpty || InternationalTelephoneRegex.matches(x.replace(" ", ""))))
   )
   val emailAddressForm: Form[String] = Form(
     single("emailAddress" -> trimmedText
       .verifying("update-contact-details.email.error.empty", _.nonEmpty)
-      .verifying("update-contact-details.email.error.invalid", x => x.isEmpty || EmailAddressRegex.matches(x))
-    )
+      .verifying("update-contact-details.email.error.invalid", x => x.isEmpty || EmailAddressRegex.matches(x)))
   )
 
   val applySaCodeChangesForm: Form[ApplySaCodeChanges] = Form(
@@ -62,19 +61,18 @@ object UpdateDetailsForms {
   val saCodeForm: Form[String] = Form(
     single("saCode" -> trimmedText
       .verifying("update-contact-details.sa-code.error.empty", _.nonEmpty)
-      .verifying("update-contact-details.sa-code.error.invalid", x => x.isEmpty || SaCodeRegex.matches(x.replace(" ","")))
-    )
+      .verifying("update-contact-details.sa-code.error.invalid", x => x.isEmpty || SaCodeRegex.matches(x.replace(" ", ""))))
   )
 
   val yourDetailsForm: Form[YourDetails] = Form(
     mapping(
       "fullName" -> trimmedText
         .verifying("update-contact-details.name.error.empty", _.nonEmpty)
-        .verifying("update-contact-details.name.error.invalid", x => x.isEmpty || NameRegex.matches(x.replace(" ","")))
+        .verifying("update-contact-details.name.error.invalid", x => x.isEmpty || NameRegex.matches(x.replace(" ", "")))
         .verifying("update-contact-details.name.error.length", x => x.isEmpty || x.length < 41),
       "telephone" -> trimmedText
         .verifying("update-contact-details.your-details.telephone.error.empty", _.nonEmpty)
-        .verifying("update-contact-details.your-details.telephone.error.invalid", x => x.isEmpty || InternationalTelephoneRegex.matches(x.replace(" ","")))
+        .verifying("update-contact-details.your-details.telephone.error.invalid", x => x.isEmpty || InternationalTelephoneRegex.matches(x.replace(" ", "")))
     )(YourDetails.apply)(YourDetails.unapply)
   )
 
@@ -89,7 +87,7 @@ object UpdateDetailsForms {
   val ctCodeForm: Form[String] = Form(
     single("ctCode" -> trimmedText
       .verifying("update-contact-details.ct-code.error.empty", _.nonEmpty)
-      .verifying("update-contact-details.ct-code.error.invalid", x => x.isEmpty || CtCodeRegex.matches(x.replace(" ","")))
-    )
+      .verifying("update-contact-details.ct-code.error.invalid", x => x.isEmpty || CtCodeRegex.matches(x.replace(" ", ""))))
   )
+
 }

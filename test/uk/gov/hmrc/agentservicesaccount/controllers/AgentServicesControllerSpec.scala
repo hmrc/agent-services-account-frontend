@@ -16,17 +16,19 @@
 
 package uk.gov.hmrc.agentservicesaccount.controllers
 
-
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.scalatest.Assertion
-import play.api.i18n.{Lang, Messages, MessagesApi}
+import play.api.i18n.Lang
+import play.api.i18n.Messages
+import play.api.i18n.MessagesApi
 import play.api.test.Helpers
 import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.agentmtdidentifiers.model.SuspensionDetails
 import uk.gov.hmrc.agents.accessgroups.optin._
-import uk.gov.hmrc.agents.accessgroups.{GroupSummary, UserDetails}
+import uk.gov.hmrc.agents.accessgroups.GroupSummary
+import uk.gov.hmrc.agents.accessgroups.UserDetails
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.{routes => desiDetailsRoutes}
 import uk.gov.hmrc.agentservicesaccount.models._
@@ -34,14 +36,15 @@ import uk.gov.hmrc.agentservicesaccount.stubs.AgentAssuranceStubs._
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentPermissionsStubs._
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentUserClientDetailsStubs._
 import uk.gov.hmrc.agentservicesaccount.support.Css._
-import uk.gov.hmrc.agentservicesaccount.support.{BaseISpec, Css}
+import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
+import uk.gov.hmrc.agentservicesaccount.support.Css
 import uk.gov.hmrc.http.UpstreamErrorResponse
 
 import java.util.UUID
 import scala.util.Random
 
-
-class AgentServicesControllerSpec extends BaseISpec {
+class AgentServicesControllerSpec
+extends BaseISpec {
 
   implicit val lang: Lang = Lang("en")
   implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
@@ -50,13 +53,23 @@ class AgentServicesControllerSpec extends BaseISpec {
 
   val groupId1: UUID = UUID.randomUUID()
 
-  val customSummary: GroupSummary = GroupSummary(groupId1, "Potatoes", Some(1), 1)
-  val taxSummary: GroupSummary = GroupSummary(UUID.randomUUID(), "TRust me", None, 1, Some("HMRC-TERS"))
+  val customSummary: GroupSummary = GroupSummary(
+    groupId1,
+    "Potatoes",
+    Some(1),
+    1
+  )
+  val taxSummary: GroupSummary = GroupSummary(
+    UUID.randomUUID(),
+    "TRust me",
+    None,
+    1,
+    Some("HMRC-TERS")
+  )
 
   private implicit val messages: Messages = messagesApi.preferred(Seq.empty[Lang])
 
   protected def htmlEscapedMessage(key: String): String = HtmlFormat.escape(Messages(key)).toString
-
 
   "root" should {
 
@@ -73,7 +86,8 @@ class AgentServicesControllerSpec extends BaseISpec {
     "redirect to suspended warning when user is suspended" in {
       givenAuthorisedAsAgentWith(arn.value)
       givenAgentRecordFound(
-        agentRecord.copy(suspensionDetails = Some(SuspensionDetails(suspensionStatus = true, regimes = Some(Set("ALL"))))))
+        agentRecord.copy(suspensionDetails = Some(SuspensionDetails(suspensionStatus = true, regimes = Some(Set("ALL")))))
+      )
 
       val response = controller.root()(fakeRequest())
 
@@ -84,8 +98,8 @@ class AgentServicesControllerSpec extends BaseISpec {
     "redirect to suspended warning when user is suspended for AGSV" in {
       givenAuthorisedAsAgentWith(arn.value)
       givenAgentRecordFound(
-        agentRecord.copy(suspensionDetails = Some(SuspensionDetails(suspensionStatus = true, regimes = Some(Set("AGSV"))))))
-
+        agentRecord.copy(suspensionDetails = Some(SuspensionDetails(suspensionStatus = true, regimes = Some(Set("AGSV")))))
+      )
 
       val response = controller.root()(fakeRequest())
 
@@ -96,8 +110,8 @@ class AgentServicesControllerSpec extends BaseISpec {
     "redirect to suspended warning when user is suspended for ALL" in {
       givenAuthorisedAsAgentWith(arn.value)
       givenAgentRecordFound(
-        agentRecord.copy(suspensionDetails = Some(SuspensionDetails(suspensionStatus = true, regimes = Some(Set("ALL"))))))
-
+        agentRecord.copy(suspensionDetails = Some(SuspensionDetails(suspensionStatus = true, regimes = Some(Set("ALL")))))
+      )
 
       val response = controller.root()(fakeRequest())
 
@@ -108,7 +122,6 @@ class AgentServicesControllerSpec extends BaseISpec {
     "throw an exception when get agent record returns NOT_FOUND for user" in {
       givenAuthorisedAsAgentWith(arn.value)
       givenAgentDetailsErrorResponse(404)
-
 
       intercept[UpstreamErrorResponse] {
         await(controller.root()(fakeRequest()))
@@ -122,7 +135,8 @@ class AgentServicesControllerSpec extends BaseISpec {
 
       "No suspension details on the agent record" in {
         givenAgentRecordFound(
-          agentRecord.copy(suspensionDetails = None))
+          agentRecord.copy(suspensionDetails = None)
+        )
 
         givenAuthorisedAsAgentWith(arn.value)
         givenHidePrivateBetaInviteNotFound()
@@ -133,7 +147,8 @@ class AgentServicesControllerSpec extends BaseISpec {
 
       "Agent is suspended should be redirected" in {
         givenAgentRecordFound(
-          agentRecord.copy(suspensionDetails = Some(SuspensionDetails(suspensionStatus = true, regimes = Some(Set("ALL"))))))
+          agentRecord.copy(suspensionDetails = Some(SuspensionDetails(suspensionStatus = true, regimes = Some(Set("ALL")))))
+        )
 
         givenAuthorisedAsAgentWith(arn.value)
         givenHidePrivateBetaInviteNotFound()
@@ -161,7 +176,10 @@ class AgentServicesControllerSpec extends BaseISpec {
         banner.select("button").get(0).text shouldBe "No thanks I do not want to take part in research"
       }
 
-      def expectedClientAuthContent(html: Document, betaInviteContent: Boolean = true): Assertion = {
+      def expectedClientAuthContent(
+        html: Document,
+        betaInviteContent: Boolean = true
+      ): Assertion = {
         val clientAuthSection = html.select("#client-authorisation-section")
         expectedH2(html, "Client authorisations")
         clientAuthSection.select("p").text shouldBe "You must ask your client to authorise you through your agent services account before you can access any services. Copy across an old authorisation or create a new one."
@@ -194,17 +212,17 @@ class AgentServicesControllerSpec extends BaseISpec {
         // accordion includes Income Record Viewer section
         html.select("#tax-services-h2").text() shouldBe "Tax services you can access through this account"
         val accordion = html.select("#tax-services-accordion")
-        accordion.select("#tax-services-accordion-heading-1").text() shouldBe  "Making Tax Digital for Income Tax"
-        accordion.select("#tax-services-accordion-heading-2").text() shouldBe  "VAT"
-        accordion.select("#tax-services-accordion-heading-3").text() shouldBe  "View a client’s Income record"
-        accordion.select("#tax-services-accordion-heading-4").text() shouldBe  "Trusts and estates"
-        accordion.select("#tax-services-accordion-heading-5").text() shouldBe  "Capital Gains Tax on UK property"
-        accordion.select("#tax-services-accordion-heading-6").text() shouldBe  "Country-by-country reports"
-        accordion.select("#tax-services-accordion-heading-7").text() shouldBe  "Plastic Packaging Tax"
-        accordion.select("#tax-services-accordion-heading-8").text() shouldBe  "Report Pillar 2 top-up taxes"
-        accordion.select("#tax-services-accordion-heading-9").text() shouldBe  "Other tax services"
+        accordion.select("#tax-services-accordion-heading-1").text() shouldBe "Making Tax Digital for Income Tax"
+        accordion.select("#tax-services-accordion-heading-2").text() shouldBe "VAT"
+        accordion.select("#tax-services-accordion-heading-3").text() shouldBe "View a client’s Income record"
+        accordion.select("#tax-services-accordion-heading-4").text() shouldBe "Trusts and estates"
+        accordion.select("#tax-services-accordion-heading-5").text() shouldBe "Capital Gains Tax on UK property"
+        accordion.select("#tax-services-accordion-heading-6").text() shouldBe "Country-by-country reports"
+        accordion.select("#tax-services-accordion-heading-7").text() shouldBe "Plastic Packaging Tax"
+        accordion.select("#tax-services-accordion-heading-8").text() shouldBe "Report Pillar 2 top-up taxes"
+        accordion.select("#tax-services-accordion-heading-9").text() shouldBe "Other tax services"
 
-        //Income Tax
+        // Income Tax
         val one = accordion.select("#tax-services-accordion-content-1")
         one.select("h4").get(0).text() shouldBe "Before you start"
         one.select("p").get(0).text() shouldBe "Refer to Making Tax Digital for Income Tax as an agent: step by step (opens in a new tab)."
@@ -224,7 +242,7 @@ class AgentServicesControllerSpec extends BaseISpec {
         one.select("a").get(4).text() shouldBe "Manage Self Assessment details for clients that are already signed up"
         one.select("a").get(4).attr("href") shouldBe "http://localhost:9081/report-quarterly/income-and-expenses/view/agents"
 
-        //VAT
+        // VAT
         val two = accordion.select("#tax-services-accordion-content-2")
         two.select("h4").get(0).text() shouldBe "Before you start"
         two.select("h4").get(1).text() shouldBe "Manage your client’s VAT"
@@ -237,14 +255,14 @@ class AgentServicesControllerSpec extends BaseISpec {
         two.select("a").get(2).text shouldBe "Manage, submit and view your client’s VAT details (opens in a new tab)"
         two.select("a").get(2).attr("href") shouldBe "http://localhost:9149/vat-through-software/representative/client-vat-number"
 
-        //Income Record Viewer
+        // Income Record Viewer
         val three = accordion.select("#tax-services-accordion-content-3")
         three.select("p").get(0).text shouldBe "Access a client’s Income record to help you complete their Self Assessment tax return."
         three.select("p").get(1).text shouldBe "View a client’s Income record"
         three.select("p").get(1).select("a").text() shouldBe "View a client’s Income record"
         three.select("p").get(1).select("a").attr("href") shouldBe "http://localhost:9996/tax-history/select-client"
 
-        //Trusts
+        // Trusts
         val four = accordion.select("#tax-services-accordion-content-4")
         four.select("h4").get(0).text() shouldBe "Before you start"
         four.select("h4").get(1).text() shouldBe "Manage your client’s trust"
@@ -262,10 +280,12 @@ class AgentServicesControllerSpec extends BaseISpec {
         fourPs.get(1).select("a").attr("href") shouldBe "https://www.gov.uk/guidance/manage-your-trusts-registration-service#how-to-use-the-online-service"
 
         fourPs.get(2).text shouldBe "Use this service to update the details of your client’s trust or declare no changes on the trust register ."
-        fourPs.get(2).select("a").get(0).text shouldBe "Use this service to update the details of your client’s trust or declare no changes on the trust register"
+        fourPs.get(
+          2
+        ).select("a").get(0).text shouldBe "Use this service to update the details of your client’s trust or declare no changes on the trust register"
         fourPs.get(2).select("a").get(0).attr("href") shouldBe "https://www.gov.uk/guidance/manage-your-trusts-registration-service"
 
-        //Capital Gains Tax on UK property
+        // Capital Gains Tax on UK property
         val five = accordion.select("#tax-services-accordion-content-5")
         five.select("h4").get(0).text() shouldBe "Before you start"
         five.select("h4").get(1).text() shouldBe "Manage a client’s Capital Gains Tax on UK property"
@@ -276,13 +296,15 @@ class AgentServicesControllerSpec extends BaseISpec {
           .shouldBe("https://www.gov.uk/guidance/managing-your-clients-capital-gains-tax-on-uk-property-account#before-you-start")
         fivePs.get(1).text shouldBe "They must then authorise you to act on their behalf (opens in a new tab)"
         fivePs.get(1).select("a").get(0).text shouldBe "authorise you to act on their behalf (opens in a new tab)"
-        fivePs.get(1).select("a").get(0).attr("href") shouldBe "https://www.gov.uk/guidance/managing-your-clients-capital-gains-tax-on-uk-property-account#get-authorisation"
+        fivePs.get(1).select(
+          "a"
+        ).get(0).attr("href") shouldBe "https://www.gov.uk/guidance/managing-your-clients-capital-gains-tax-on-uk-property-account#get-authorisation"
 
         fivePs.get(2).text shouldBe "Report your client’s Capital Gains Tax on UK property and view payments and penalties"
         fivePs.get(2).select("a").get(0).text shouldBe "Report your client’s Capital Gains Tax on UK property and view payments and penalties"
         fivePs.get(2).select("a").get(0).attr("href") shouldBe "https://www.tax.service.gov.uk/capital-gains-tax-uk-property/start"
 
-        //Country by country
+        // Country by country
         val six = accordion.select("#tax-services-accordion-content-6")
         six.select("h4").get(0).text() shouldBe "Before you start"
         six.select("h4").get(1).text() shouldBe "Manage country-by-country reports"
@@ -295,7 +317,7 @@ class AgentServicesControllerSpec extends BaseISpec {
         sixPs.get(1).text shouldBe "Manage your clients' country-by-country reports and your country-by-country agent contact details"
         sixPs.get(1).select("a").get(0).attr("href") shouldBe "https://www.tax.service.gov.uk/send-a-country-by-country-report"
 
-        //Plastic Packaging Tax
+        // Plastic Packaging Tax
         val seven = accordion.select("#tax-services-accordion-content-7")
         seven.select("h4").get(0).text() shouldBe "Before you start"
         seven.select("h4").get(1).text() shouldBe "Manage your client’s Plastic Packaging Tax"
@@ -312,7 +334,7 @@ class AgentServicesControllerSpec extends BaseISpec {
         sevenPs.get(2).select("a").get(0).text shouldBe "Report your client’s Plastic Packaging Tax and view payments, returns and penalties"
         sevenPs.get(2).select("a").get(0).attr("href") shouldBe "https://www.tax.service.gov.uk/plastic-packaging-tax/account"
 
-        //Pillar2 Tax
+        // Pillar2 Tax
         val eight = accordion.select("#tax-services-accordion-content-8")
         eight.select("h4").get(0).text() shouldBe "Before you start"
         eight.select("h4").get(1).text() shouldBe "Manage your client’s Pillar 2 top-up taxes"
@@ -444,7 +466,10 @@ class AgentServicesControllerSpec extends BaseISpec {
 
   }
 
-  def verifyInfoSection(html: Document, status: String = "on"): Assertion = {
+  def verifyInfoSection(
+    html: Document,
+    status: String = "on"
+  ): Assertion = {
     val section = html.select("#info-section")
     section.select("h2").text shouldBe "Access groups"
     section.select("p").get(0).text.shouldBe("Access groups allow you to restrict which team members can manage a client’s tax.")
@@ -459,10 +484,9 @@ class AgentServicesControllerSpec extends BaseISpec {
 
     "return Status: OK and body containing correct content when gran perms FF disabled" in {
 
-      val controllerWithGranPermsDisabled =
-        appBuilder(Map("features.enable-gran-perms" -> false))
-          .build()
-          .injector.instanceOf[AgentServicesController]
+      val controllerWithGranPermsDisabled = appBuilder(Map("features.enable-gran-perms" -> false))
+        .build()
+        .injector.instanceOf[AgentServicesController]
 
       givenAuthorisedAsAgentWith(arn.value)
       givenAgentRecordFound(agentRecord)
@@ -617,7 +641,9 @@ class AgentServicesControllerSpec extends BaseISpec {
       html.title() shouldBe manageAccountTitle
       html.select(H1).get(0).text shouldBe "Manage account"
       html.select(Css.insetText).get(0).text
-        .shouldBe("You have turned on access groups but need to wait until your client details are ready to use with access groups. You will receive a confirmation email after which you can start using access groups.")
+        .shouldBe(
+          "You have turned on access groups but need to wait until your client details are ready to use with access groups. You will receive a confirmation email after which you can start using access groups."
+        )
 
       verifyInfoSection(html, "on")
       verifyManageTeamMembersSection(html)
@@ -646,7 +672,9 @@ class AgentServicesControllerSpec extends BaseISpec {
       html.select(H1).get(0).text shouldBe "Manage account"
 
       html.select(Css.insetText).get(0).text
-        .shouldBe("To use access groups you need to add more team members to your agent services account under ‘Manage team members on your agent services account’.")
+        .shouldBe(
+          "To use access groups you need to add more team members to your agent services account under ‘Manage team members on your agent services account’."
+        )
 
       verifyInfoSection(html, "on")
       verifyManageTeamMembersSection(html)
@@ -701,7 +729,9 @@ class AgentServicesControllerSpec extends BaseISpec {
       html.select(H1).get(0).text shouldBe "Manage account"
 
       html.select(Css.insetText).get(0).text
-        .shouldBe("To use access groups you need to add more team members to your agent services account under ‘Manage team members on your agent services account’.")
+        .shouldBe(
+          "To use access groups you need to add more team members to your agent services account under ‘Manage team members on your agent services account’."
+        )
 
       verifyInfoSection(html, "off")
       verifyHowToManageSection(html)
@@ -790,7 +820,6 @@ class AgentServicesControllerSpec extends BaseISpec {
       links.get(0).attr("href") shouldBe "/agent-services-account/manage-account/money-laundering-supervision/view-details"
     }
 
-
     "return view AMLS link for PendingAmlsDetails" in {
       givenAuthorisedAsAgentWith(arn.value)
       givenArnAllowedOk()
@@ -810,7 +839,6 @@ class AgentServicesControllerSpec extends BaseISpec {
       links.get(0).text shouldBe "View or update anti-money laundering supervision details"
       links.get(0).attr("href") shouldBe "/agent-services-account/manage-account/money-laundering-supervision/view-details"
     }
-
 
     "return add AMLS link for NoAmlsDetailsUK " in {
       givenAuthorisedAsAgentWith(arn.value)
@@ -851,7 +879,6 @@ class AgentServicesControllerSpec extends BaseISpec {
       links.get(0).text shouldBe "Action: Add anti-money laundering supervision details"
       links.get(0).attr("href") shouldBe "/agent-services-account/manage-account/money-laundering-supervision/view-details"
     }
-
 
     "return update AMLS link for ExpiredAmlsDetailsUK" in {
       givenAuthorisedAsAgentWith(arn.value)
@@ -898,12 +925,21 @@ class AgentServicesControllerSpec extends BaseISpec {
     "display correct content" when {
       "agent is admin and details found" in {
         givenAuthorisedAsAgentWith(arn.value)
-        givenAgentRecordFound(agentRecord.copy(agencyDetails = Some(AgencyDetails(
-          Some("My Agency"),
-          Some("abc@abc.com"),
-          Some("07345678901"),
-          Some(BusinessAddress("25 Any Street", Some("Any Town"), None, None, Some("TF3 4TR"), "GB"))
-        ))))
+        givenAgentRecordFound(agentRecord.copy(agencyDetails =
+          Some(AgencyDetails(
+            Some("My Agency"),
+            Some("abc@abc.com"),
+            Some("07345678901"),
+            Some(BusinessAddress(
+              "25 Any Street",
+              Some("Any Town"),
+              None,
+              None,
+              Some("TF3 4TR"),
+              "GB"
+            ))
+          ))
+        ))
 
         val response = await(controller.accountDetails().apply(fakeRequest("GET", "/account-details")))
         val html = Jsoup.parse(contentAsString(response))
@@ -919,7 +955,9 @@ class AgentServicesControllerSpec extends BaseISpec {
         html.select(H2).get(0).text shouldBe "Agent services account details"
 
         html.select(insetText).text() shouldBe "To change these details you will need to write to us. Find out more by reading the guidance (opens in a new tab). You can only change your details if you are a director, company secretary, sole trader, proprietor or partner."
-        html.select(link).get(0).attr("href").shouldBe("https://www.gov.uk/guidance/change-or-remove-your-authorisations-as-a-tax-agent#changes-you-can-make-in-writing")
+        html.select(
+          link
+        ).get(0).attr("href").shouldBe("https://www.gov.uk/guidance/change-or-remove-your-authorisations-as-a-tax-agent#changes-you-can-make-in-writing")
 
         html.select(summaryListKeys).get(0).text shouldBe "Email"
         html.select(summaryListValues).get(0).text shouldBe "abc@abc.com"
@@ -933,12 +971,19 @@ class AgentServicesControllerSpec extends BaseISpec {
 
       "the agent is not Admin" in {
         givenAuthorisedAsAgentWith(arn.value, isAdmin = false)
-        givenAgentRecordFound(agentRecord.copy( agencyDetails =
+        givenAgentRecordFound(agentRecord.copy(agencyDetails =
           Some(AgencyDetails(
-              Some("My Agency"),
-              Some("abc@abc.com"),
-              Some("07345678901"),
-              Some(BusinessAddress("25 Any Street", Some("Any Town"), None, None, Some("TF3 4TR"), "GB"))
+            Some("My Agency"),
+            Some("abc@abc.com"),
+            Some("07345678901"),
+            Some(BusinessAddress(
+              "25 Any Street",
+              Some("Any Town"),
+              None,
+              None,
+              Some("TF3 4TR"),
+              "GB"
+            ))
           ))
         ))
 
@@ -979,7 +1024,11 @@ class AgentServicesControllerSpec extends BaseISpec {
       givenFullAuthorisedAsAgentWith(arn.value, providerId)
       givenAgentRecordFound(agentRecord)
       givenOptinRecordExistsForArn(arn, exists = true)
-      givenAccessGroupsForTeamMember(arn, providerId, Seq.empty)
+      givenAccessGroupsForTeamMember(
+        arn,
+        providerId,
+        Seq.empty
+      )
       val response = await(controller.yourAccount()(fakeRequest("GET", yourAccountUrl)))
 
       status(response) shouldBe 200
@@ -1007,7 +1056,7 @@ class AgentServicesControllerSpec extends BaseISpec {
       userGroupsPanel.select("a").get(0).text shouldBe "View other clients"
       userGroupsPanel.select("a").get(0).attr("href") shouldBe s"$wireMockBaseUrlAsString/agent-permissions/your-account/other-clients"
 
-      //BOTTOM PANEL
+      // BOTTOM PANEL
       val bottomPanel = html.select("div#bottom-panel")
       bottomPanel.select("h2").get(0).text shouldBe "Your organisation"
       bottomPanel.select("a").get(0).text shouldBe "View the contact details we have for your business"
@@ -1022,7 +1071,11 @@ class AgentServicesControllerSpec extends BaseISpec {
       givenFullAuthorisedAsAgentWith(arn.value, providerId)
       givenAgentRecordFound(agentRecord)
       givenOptinRecordExistsForArn(arn, exists = false)
-      givenAccessGroupsForTeamMember(arn, providerId, Seq.empty)
+      givenAccessGroupsForTeamMember(
+        arn,
+        providerId,
+        Seq.empty
+      )
       val response = await(controller.yourAccount()(fakeRequest("GET", yourAccountUrl)))
 
       status(response) shouldBe 200
@@ -1067,7 +1120,11 @@ class AgentServicesControllerSpec extends BaseISpec {
       givenOptinRecordExistsForArn(arn, exists = true)
       givenAgentRecordFound(agentRecord)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(groupSummaries)) // there is already an access group
-      givenAccessGroupsForTeamMember(arn, providerId, groupSummaries)
+      givenAccessGroupsForTeamMember(
+        arn,
+        providerId,
+        groupSummaries
+      )
       val response = await(controller.yourAccount()(fakeRequest("GET", yourAccountUrl)))
 
       status(response) shouldBe 200
@@ -1096,14 +1153,13 @@ class AgentServicesControllerSpec extends BaseISpec {
       userGroupsPanel.select("a").get(3).text shouldBe "View other clients"
       userGroupsPanel.select("a").get(3).attr("href") shouldBe s"$wireMockBaseUrlAsString/agent-permissions/your-account/other-clients"
 
-      //BOTTOM PANEL
+      // BOTTOM PANEL
       val bottomPanel = html.select("div#bottom-panel")
       bottomPanel.select("h2").get(0).text shouldBe "Your organisation"
       bottomPanel.select("a").get(0).text shouldBe "View the contact details we have for your business"
       bottomPanel.select("a").get(0).attr("href") shouldBe desiDetailsRoutes.ViewContactDetailsController.showPage.url
       bottomPanel.select("a").get(1).text shouldBe "View administrators"
       bottomPanel.select("a").get(1).attr("href") shouldBe routes.AgentServicesController.administrators.url
-
 
     }
   }
@@ -1119,11 +1175,23 @@ class AgentServicesControllerSpec extends BaseISpec {
       givenSyncEacdSuccess(arn)
       givenOptinStatusSuccessReturnsForArn(arn, OptedInReady)
       val teamMembers = Seq(
-        UserDetails(credentialRole = Some("User"), name = Some("Robert Builder"), email = Some("bob@builder.com")),
-        UserDetails(credentialRole = Some("User"), name = Some("Steve Smith"), email = Some("steve@builder.com")),
-        UserDetails(credentialRole = Some("Admin"), name = Some("Albert Forger"), email = Some("a.forger@builder.com")),
-        //Assistant will be filtered out from the results we get back
-        UserDetails(credentialRole = Some("Assistant"), name = Some("irrelevant")),
+        UserDetails(
+          credentialRole = Some("User"),
+          name = Some("Robert Builder"),
+          email = Some("bob@builder.com")
+        ),
+        UserDetails(
+          credentialRole = Some("User"),
+          name = Some("Steve Smith"),
+          email = Some("steve@builder.com")
+        ),
+        UserDetails(
+          credentialRole = Some("Admin"),
+          name = Some("Albert Forger"),
+          email = Some("a.forger@builder.com")
+        ),
+        // Assistant will be filtered out from the results we get back
+        UserDetails(credentialRole = Some("Assistant"), name = Some("irrelevant"))
       )
       stubGetTeamMembersForArn(arn, teamMembers)
       val response = await(controller.administrators()(fakeRequest("GET", adminUrl)))
@@ -1158,11 +1226,23 @@ class AgentServicesControllerSpec extends BaseISpec {
       givenAgentRecordFound(agentRecord)
       givenSyncEacdSuccess(arn)
       val teamMembers = Seq(
-        UserDetails(credentialRole = Some("User"), name = Some("Robert Builder"), email = Some("bob@builder.com")),
-        UserDetails(credentialRole = Some("User"), name = Some("Steve Smith"), email = Some("steve@builder.com")),
-        UserDetails(credentialRole = Some("Admin"), name = Some("Albert Forger"), email = Some("a.forger@builder.com")),
-        //Assistant will be filtered out from the results we get back
-        UserDetails(credentialRole = Some("Assistant"), name = Some("irrelevant")),
+        UserDetails(
+          credentialRole = Some("User"),
+          name = Some("Robert Builder"),
+          email = Some("bob@builder.com")
+        ),
+        UserDetails(
+          credentialRole = Some("User"),
+          name = Some("Steve Smith"),
+          email = Some("steve@builder.com")
+        ),
+        UserDetails(
+          credentialRole = Some("Admin"),
+          name = Some("Albert Forger"),
+          email = Some("a.forger@builder.com")
+        ),
+        // Assistant will be filtered out from the results we get back
+        UserDetails(credentialRole = Some("Assistant"), name = Some("irrelevant"))
       )
       stubGetTeamMembersForArn(arn, teamMembers)
       givenOptinStatusSuccessReturnsForArn(arn, OptedInReady)
@@ -1240,7 +1320,9 @@ class AgentServicesControllerSpec extends BaseISpec {
       a.get(1).text shouldBe "Making Tax Digital for VAT as an agent: step by step"
       a.get(1).attr("href") shouldBe "https://www.gov.uk/guidance/making-tax-digital-for-vat-as-an-agent-step-by-step"
       a.get(2).text shouldBe "How to keep digital records and file returns for Making Tax Digital for VAT"
-      a.get(2).attr("href") shouldBe "https://www.gov.uk/government/publications/vat-notice-70022-making-tax-digital-for-vat/vat-notice-70022-making-tax-digital-for-vat"
+      a.get(2).attr(
+        "href"
+      ) shouldBe "https://www.gov.uk/government/publications/vat-notice-70022-making-tax-digital-for-vat/vat-notice-70022-making-tax-digital-for-vat"
       a.get(3).text shouldBe "How to sign clients up for Making Tax Digital for VAT"
       a.get(3).attr("href") shouldBe "https://www.gov.uk/guidance/sign-up-your-client-for-making-tax-digital-for-vat"
       a.get(4).text shouldBe "Help and support for Making Tax Digital (videos and webinars)"
@@ -1320,9 +1402,12 @@ class AgentServicesControllerSpec extends BaseISpec {
       h3.get(7).text shouldBe "Manage team members"
       p.get(23).text shouldBe "You cannot add team members to your account within this service. If you select ‘Add or remove team members’ then the required service will open in a new tab."
       h3.get(8).text shouldBe "Manage clients"
-      p.get(24).text shouldBe "You can manage the client’s reference within access groups. This will not affect their details in other Government Gateway services."
+      p.get(
+        24
+      ).text shouldBe "You can manage the client’s reference within access groups. This will not affect their details in other Government Gateway services."
 
     }
 
   }
+
 }

@@ -15,24 +15,30 @@
  */
 
 package uk.gov.hmrc.agentservicesaccount.forms
+
 import play.api.data.Forms._
 import play.api.data._
-import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
+import play.api.data.validation.Constraint
+import play.api.data.validation.Invalid
+import play.api.data.validation.Valid
+import play.api.data.validation.ValidationError
 
 object SuspendDescriptionForm {
 
-    private def suspendDescriptionConstraint: Constraint[String] = Constraint[String]{ input: String =>
-      if (input.trim.isEmpty) Invalid(ValidationError("error.suspended-description.empty"))
-      else if(input.trim.length > 250 ) Invalid(ValidationError("error.suspended-description.max-length"))
-      else Valid
-    }
-    private val suspendDescriptionMapping: Mapping[String] = text.verifying(suspendDescriptionConstraint)
-
-    val form: Form[String] =
-      Form(
-      single(
-        "description" -> suspendDescriptionMapping
-      )
-    )
+  private def suspendDescriptionConstraint: Constraint[String] = Constraint[String] { input: String =>
+    if (input.trim.isEmpty)
+      Invalid(ValidationError("error.suspended-description.empty"))
+    else if (input.trim.length > 250)
+      Invalid(ValidationError("error.suspended-description.max-length"))
+    else
+      Valid
   }
+  private val suspendDescriptionMapping: Mapping[String] = text.verifying(suspendDescriptionConstraint)
 
+  val form: Form[String] = Form(
+    single(
+      "description" -> suspendDescriptionMapping
+    )
+  )
+
+}

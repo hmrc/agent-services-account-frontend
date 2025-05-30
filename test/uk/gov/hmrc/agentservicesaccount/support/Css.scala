@@ -17,9 +17,10 @@
 package uk.gov.hmrc.agentservicesaccount.support
 
 object Css {
+
   val ERROR_SUMMARY_TITLE = "#error-summary-title"
   val ERROR_SUMMARY_LINK = ".govuk-list.govuk-error-summary__list li a"
-  val errorSummaryLinkWithHref: String => String = (href: String)  => s".govuk-list.govuk-error-summary__list li a[href=$href]"
+  val errorSummaryLinkWithHref: String => String = (href: String) => s".govuk-list.govuk-error-summary__list li a[href=$href]"
   val H1 = "main h1"
   val H2 = "main h2"
   val H3 = "main h3"
@@ -46,4 +47,5 @@ object Css {
   val backLink = "a.govuk-back-link"
   val secondaryNavLinks = "#secondary-nav a"
   val signoutLink = "a.govuk-link.govuk-body"
+
 }

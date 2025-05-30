@@ -18,14 +18,21 @@ package utils
 
 import org.scalatestplus.play.PlaySpec
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
-import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, OtherServices, SaChanges, YourDetails}
-import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress, PendingChangeOfDetails}
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.CtChanges
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.OtherServices
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.SaChanges
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.YourDetails
+import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
+import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
+import uk.gov.hmrc.agentservicesaccount.models.PendingChangeOfDetails
 import uk.gov.hmrc.agentservicesaccount.utils.XmlUtils
-import uk.gov.hmrc.domain.{CtUtr, SaUtr}
+import uk.gov.hmrc.domain.CtUtr
+import uk.gov.hmrc.domain.SaUtr
 
 import java.time.Instant
 
-class XmlUtilsSpec extends PlaySpec {
+class XmlUtilsSpec
+extends PlaySpec {
 
   val time: Instant = Instant.now()
 

@@ -22,34 +22,42 @@ import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
-import uk.gov.hmrc.agentservicesaccount.forms.{ContactDetailsSuspendForm, SuspendDescriptionForm}
-import uk.gov.hmrc.agentservicesaccount.models.{AccountRecoverySummary, SuspendContactDetails}
-import uk.gov.hmrc.agentservicesaccount.services.{EmailService, SessionCacheService}
+import uk.gov.hmrc.agentservicesaccount.forms.ContactDetailsSuspendForm
+import uk.gov.hmrc.agentservicesaccount.forms.SuspendDescriptionForm
+import uk.gov.hmrc.agentservicesaccount.models.AccountRecoverySummary
+import uk.gov.hmrc.agentservicesaccount.models.SuspendContactDetails
+import uk.gov.hmrc.agentservicesaccount.services.EmailService
+import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.suspend._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 
-class SuspendedJourneyController @Inject()(actions: Actions,
-                                            emailService: EmailService,
-                                            agentAssuranceConnector: AgentAssuranceConnector,
-                                            suspensionWarningView: suspension_warning,
-                                            contactDetailsView: contact_details,
-                                            recoveryDescriptionView: recovery_description,
-                                            checkRecoveryAnswersView: check_recovery_answers,
-                                            confirmationReceived: confirmation_received,
-                                            cacheService: SessionCacheService
-                                          )(implicit appConfig: AppConfig,
-                                            cc: MessagesControllerComponents,
-                                            ec: ExecutionContext) extends FrontendController(cc) with I18nSupport with Logging {
+class SuspendedJourneyController @Inject() (
+  actions: Actions,
+  emailService: EmailService,
+  agentAssuranceConnector: AgentAssuranceConnector,
+  suspensionWarningView: suspension_warning,
+  contactDetailsView: contact_details,
+  recoveryDescriptionView: recovery_description,
+  checkRecoveryAnswersView: check_recovery_answers,
+  confirmationReceived: confirmation_received,
+  cacheService: SessionCacheService
+)(implicit
+  appConfig: AppConfig,
+  cc: MessagesControllerComponents,
+  ec: ExecutionContext
+)
+extends FrontendController(cc)
+with I18nSupport
+with Logging {
 
   def showSuspendedWarning: Action[AnyContent] = actions.authActionOnlyForSuspended { implicit request =>
     Ok(suspensionWarningView())
   }
 
   def showContactDetails: Action[AnyContent] = actions.authActionOnlyForSuspended.async { implicit request =>
-
     cacheService.getSessionItems().flatMap(answers => {
       val contactForm = ContactDetailsSuspendForm.form.fill(
         SuspendContactDetails(
@@ -89,8 +97,9 @@ class SuspendedJourneyController @Inject()(actions: Actions,
     SuspendDescriptionForm.form
       .bindFromRequest()
       .fold(
-        formWithErrors => recoveryDescriptionView(formWithErrors).toFuture
-          .map(BadRequest(_)),
+        formWithErrors =>
+          recoveryDescriptionView(formWithErrors).toFuture
+            .map(BadRequest(_)),
         formData => {
           for {
             _ <- cacheService.put(DESCRIPTION, formData)
@@ -107,8 +116,7 @@ class SuspendedJourneyController @Inject()(actions: Actions,
       description <- cacheService.get(DESCRIPTION)
       arn <- cacheService.get(ARN)
     } yield (name, email, phone, description, arn) match {
-      case (Some(n), Some(e), Some(p), Some(d), Some(a)) =>
-        Option(AccountRecoverySummary(n, e, p, d, a))
+      case (Some(n), Some(e), Some(p), Some(d), Some(a)) => Option(AccountRecoverySummary(n, e, p, d, a))
       case _ => None
     }
   }
@@ -123,9 +131,9 @@ class SuspendedJourneyController @Inject()(actions: Actions,
   def submitSuspendedSummary: Action[AnyContent] = actions.authActionForSuspendedAgentWithAgentRecord.async { implicit request =>
     getSummaryDetails.flatMap {
       case Some(summaryDetails) =>
-          emailService.sendSuspendedSummaryEmail(summaryDetails, request.agentDetailsDesResponse.agencyDetails).flatMap(_ =>
-            Redirect(routes.SuspendedJourneyController.showSuspendedConfirmation()).toFuture
-          )
+        emailService.sendSuspendedSummaryEmail(summaryDetails, request.agentDetailsDesResponse.agencyDetails).flatMap(_ =>
+          Redirect(routes.SuspendedJourneyController.showSuspendedConfirmation()).toFuture
+        )
       case None => Redirect(routes.SuspendedJourneyController.showContactDetails()).toFuture
     }
   }

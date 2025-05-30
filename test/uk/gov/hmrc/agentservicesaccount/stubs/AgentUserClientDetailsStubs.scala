@@ -24,10 +24,12 @@ import uk.gov.hmrc.agents.accessgroups.UserDetails
 
 object AgentUserClientDetailsStubs {
 
-  def stubGetTeamMembersForArn(arn: Arn, teamMembers: Seq[UserDetails]): StubMapping =
-    stubFor(
-      get(urlEqualTo(s"/agent-user-client-details/arn/${arn.value}/team-members"))
-        .willReturn(aResponse()
+  def stubGetTeamMembersForArn(
+    arn: Arn,
+    teamMembers: Seq[UserDetails]
+  ): StubMapping = stubFor(
+    get(urlEqualTo(s"/agent-user-client-details/arn/${arn.value}/team-members"))
+      .willReturn(aResponse()
         .withStatus(200)
         .withBody(Json.toJson(teamMembers).toString))
   )

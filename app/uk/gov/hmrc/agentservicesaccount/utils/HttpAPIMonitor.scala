@@ -18,7 +18,8 @@ package uk.gov.hmrc.agentservicesaccount.utils
 
 import uk.gov.hmrc.play.bootstrap.metrics.Metrics
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
+import scala.concurrent.Future
 
 trait HttpAPIMonitor {
 
@@ -28,4 +29,5 @@ trait HttpAPIMonitor {
     val timerContext = metrics.defaultRegistry.timer(s"Timer-$str").time()
     f.andThen { case _ => timerContext.stop() }
   }
+
 }

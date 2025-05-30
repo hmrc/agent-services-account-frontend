@@ -16,7 +16,8 @@
 
 package uk.gov.hmrc.agentservicesaccount.controllers.amls
 
-import org.mockito.{ArgumentMatchersSugar, IdiomaticMockito}
+import org.mockito.ArgumentMatchersSugar
+import org.mockito.IdiomaticMockito
 import org.scalatestplus.play.PlaySpec
 import play.api.Environment
 import play.api.i18n.Messages
@@ -25,8 +26,11 @@ import play.api.mvc._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.twirl.api.Html
-import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, SuspensionDetails, Utr}
-import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
+import uk.gov.hmrc.agentmtdidentifiers.model.Arn
+import uk.gov.hmrc.agentmtdidentifiers.model.SuspensionDetails
+import uk.gov.hmrc.agentmtdidentifiers.model.Utr
+import uk.gov.hmrc.agentservicesaccount.actions.Actions
+import uk.gov.hmrc.agentservicesaccount.actions.AuthActions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.models._
@@ -38,50 +42,80 @@ import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.check_your_answers
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve._
-import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.UpstreamErrorResponse
 import uk.gov.hmrc.mongo.cache.DataKey
 
 import java.time.LocalDate
 import java.util.Locale
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
+import scala.concurrent.Future
 
-class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with ArgumentMatchersSugar {
+class CheckYourAnswersControllerSpec
+extends PlaySpec
+with IdiomaticMockito
+with ArgumentMatchersSugar {
+
   implicit val ec: ExecutionContext = ExecutionContext.global
   private val fakeRequest = FakeRequest().withCookies(Cookie("PLAY_LANG", "en_GB")).withTransientLang(Locale.UK)
 
   private val arn: Arn = Arn("arn")
-  private val amlsRequest: AmlsRequest = new AmlsRequest(
-    ukRecord = true,
-    supervisoryBody = "ABC",
-    membershipNumber = "1234567890",
-    membershipExpiresOn = Some(LocalDate.now())
-  )
+  private val amlsRequest: AmlsRequest =
+    new AmlsRequest(
+      ukRecord = true,
+      supervisoryBody = "ABC",
+      membershipNumber = "1234567890",
+      membershipExpiresOn = Some(LocalDate.now())
+    )
   private val credentialRole: User.type = User
   private val agentEnrolment: Set[Enrolment] = Set(
-    Enrolment("HMRC-AS-AGENT",
+    Enrolment(
+      "HMRC-AS-AGENT",
       Seq(EnrolmentIdentifier("AgentReferenceNumber", arn.value)),
       state = "Active",
-      delegatedAuthRule = None))
-  private val ggCredentials: Credentials =
-    Credentials("ggId", "GovernmentGateway")
-  private val authResponse: Future[Enrolments ~ Some[Credentials] ~ Some[Email] ~ Some[Name] ~ Some[User.type]] =
-    Future.successful(new~(new~(new~(new~(
-      Enrolments(agentEnrolment), Some(ggCredentials)),
-      Some(Email("test@email.com"))),
-      Some(Name(Some("Troy"), Some("Barnes")))),
-      Some(credentialRole)))
-  private val invalidAuthResponse: Future[Enrolments ~ Some[Credentials] ~ Some[Email] ~ Some[Name] ~ Some[Assistant.type]] =
-    Future.successful(new~(new~(new~(new~(
-      Enrolments(agentEnrolment), Some(ggCredentials)),
-      Some(Email("test@email.com"))),
-      Some(Name(Some("Troy"), Some("Barnes")))),
-      Some(Assistant)))
-  private val invalidCredentialAuthResponse: Future[Enrolments ~ None.type ~ Some[Email] ~ Some[Name] ~ Some[User.type]] =
-    Future.successful(new~(new~(new~(new~(
-      Enrolments(agentEnrolment), None),
-      Some(Email("test@email.com"))),
-      Some(Name(Some("Troy"), Some("Barnes")))),
-      Some(credentialRole)))
+      delegatedAuthRule = None
+    )
+  )
+  private val ggCredentials: Credentials = Credentials("ggId", "GovernmentGateway")
+  private val authResponse: Future[Enrolments ~ Some[Credentials] ~ Some[Email] ~ Some[Name] ~ Some[User.type]] = Future.successful(new ~(
+    new ~(
+      new ~(
+        new ~(
+          Enrolments(agentEnrolment),
+          Some(ggCredentials)
+        ),
+        Some(Email("test@email.com"))
+      ),
+      Some(Name(Some("Troy"), Some("Barnes")))
+    ),
+    Some(credentialRole)
+  ))
+  private val invalidAuthResponse: Future[Enrolments ~ Some[Credentials] ~ Some[Email] ~ Some[Name] ~ Some[Assistant.type]] = Future.successful(new ~(
+    new ~(
+      new ~(
+        new ~(
+          Enrolments(agentEnrolment),
+          Some(ggCredentials)
+        ),
+        Some(Email("test@email.com"))
+      ),
+      Some(Name(Some("Troy"), Some("Barnes")))
+    ),
+    Some(Assistant)
+  ))
+  private val invalidCredentialAuthResponse: Future[Enrolments ~ None.type ~ Some[Email] ~ Some[Name] ~ Some[User.type]] = Future.successful(new ~(
+    new ~(
+      new ~(
+        new ~(
+          Enrolments(agentEnrolment),
+          None
+        ),
+        Some(Email("test@email.com"))
+      ),
+      Some(Name(Some("Troy"), Some("Barnes")))
+    ),
+    Some(credentialRole)
+  ))
 
   private val ukAmlsJourney = UpdateAmlsJourney(
     status = AmlsStatuses.ValidAmlsDetailsUK,
@@ -100,10 +134,18 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
       Some("Telford"),
       None,
       Some("TF4 3TR"),
-      "GB"))
+      "GB"
+    ))
   )
 
-  val amlsDetails = AmlsDetails("supervisoryBody", Some("membershipNumber"), None, None, None, Some(LocalDate.now()))
+  val amlsDetails = AmlsDetails(
+    "supervisoryBody",
+    Some("membershipNumber"),
+    None,
+    None,
+    None,
+    Some(LocalDate.now())
+  )
 
   val suspensionDetails = SuspensionDetails(suspensionStatus = false, None)
 
@@ -113,18 +155,27 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
     suspensionDetails = Some(suspensionDetails)
   )
 
-
   trait Setup {
+
     protected val mockAppConfig: AppConfig = mock[AppConfig]
     protected val mockAuthConnector: AuthConnector = mock[AuthConnector]
     protected val mockEnvironment: Environment = mock[Environment]
-    protected val authActions = new AuthActions(mockAppConfig, mockAuthConnector, mockEnvironment)
+    protected val authActions =
+      new AuthActions(
+        mockAppConfig,
+        mockAuthConnector,
+        mockEnvironment
+      )
 
     protected val mockAmlsLoader: AMLSLoader = mock[AMLSLoader]
     protected val mockAgentAssuranceConnector: AgentAssuranceConnector = mock[AgentAssuranceConnector]
     protected val actionBuilder = new DefaultActionBuilderImpl(stubBodyParser())
     protected val mockActions =
-      new Actions(mockAgentAssuranceConnector, authActions, actionBuilder)
+      new Actions(
+        mockAgentAssuranceConnector,
+        authActions,
+        actionBuilder
+      )
 
     protected val mockUpdateAmlsJourneyRepository: UpdateAmlsJourneyRepository = mock[UpdateAmlsJourneyRepository]
     protected val mockView: check_your_answers = mock[check_your_answers]
@@ -133,8 +184,15 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
     protected val mockAuditService = mock[AuditService]
     protected val mockAaConnector = mock[AgentAssuranceConnector]
 
-    object TestController extends CheckYourAnswersController(
-      mockActions, mockAgentAssuranceConnector, mockUpdateAmlsJourneyRepository, mockView, cc, mockAuditService)(mockAppConfig, ec)
+    object TestController
+    extends CheckYourAnswersController(
+      mockActions,
+      mockAgentAssuranceConnector,
+      mockUpdateAmlsJourneyRepository,
+      mockView,
+      cc,
+      mockAuditService
+    )(mockAppConfig, ec)
 
   }
 
@@ -144,13 +202,18 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
 
         mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
           *[HeaderCarrier],
-          *[ExecutionContext]) returns authResponse
+          *[ExecutionContext]
+        ) returns authResponse
         mockAppConfig.enableNonHmrcSupervisoryBody returns true
         mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
         mockUpdateAmlsJourneyRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[RequestHeader]) returns
           Future.successful(Some(ukAmlsJourney))
 
-        mockView.apply(*[Seq[SummaryListData]])(*[Messages], *[RequestHeader], *[AppConfig]) returns Html("")
+        mockView.apply(*[Seq[SummaryListData]])(
+          *[Messages],
+          *[RequestHeader],
+          *[AppConfig]
+        ) returns Html("")
 
         val result: Future[Result] = TestController.showPage()(fakeRequest)
         status(result) mustBe OK
@@ -162,14 +225,19 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
 
         mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
           *[HeaderCarrier],
-          *[ExecutionContext]) returns authResponse
+          *[ExecutionContext]
+        ) returns authResponse
         mockAppConfig.enableNonHmrcSupervisoryBody returns true
 
         mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
         mockUpdateAmlsJourneyRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[RequestHeader]) returns
           Future.successful(None)
 
-        mockView.apply(*[Seq[SummaryListData]])(*[Messages], *[RequestHeader], *[AppConfig]) returns Html("")
+        mockView.apply(*[Seq[SummaryListData]])(
+          *[Messages],
+          *[RequestHeader],
+          *[AppConfig]
+        ) returns Html("")
 
         val result: Future[Result] = TestController.showPage(fakeRequest)
 
@@ -182,7 +250,8 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
       "feature flag is turned off" in new Setup {
         mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
           *[HeaderCarrier],
-          *[ExecutionContext]) returns authResponse
+          *[ExecutionContext]
+        ) returns authResponse
         mockAppConfig.enableNonHmrcSupervisoryBody returns false
         mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
@@ -193,7 +262,8 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
       "the user has the incorrect credential roles" in new Setup {
         mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
           *[HeaderCarrier],
-          *[ExecutionContext]) returns invalidAuthResponse
+          *[ExecutionContext]
+        ) returns invalidAuthResponse
         mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
         val result: Future[Result] = TestController.showPage(fakeRequest)
@@ -202,7 +272,8 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
       "the user has the incorrect provider type" in new Setup {
         mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
           *[HeaderCarrier],
-          *[ExecutionContext]) returns invalidCredentialAuthResponse
+          *[ExecutionContext]
+        ) returns invalidCredentialAuthResponse
         mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
         val result: Future[Result] = TestController.showPage(fakeRequest)
@@ -231,7 +302,11 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
 
       "throw an exception" in new Setup {
         val expectedException: Exception = intercept[Exception] {
-          TestController.buildSummaryListItems(isUkAgent = false, journey, Locale.UK)
+          TestController.buildSummaryListItems(
+            isUkAgent = false,
+            journey,
+            Locale.UK
+          )
         }
         expectedException.getMessage mustBe "Expected AMLS journey data missing"
       }
@@ -246,32 +321,60 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
       )
 
       "build a summary list with two items" in new Setup {
-        TestController.buildSummaryListItems(isUkAgent = false, journey, Locale.UK).length mustBe 2
+        TestController.buildSummaryListItems(
+          isUkAgent = false,
+          journey,
+          Locale.UK
+        ).length mustBe 2
       }
 
       "render the correct message key for supervisory body" in new Setup {
-        private val data = TestController.buildSummaryListItems(isUkAgent = false, journey, Locale.UK)
+        private val data = TestController.buildSummaryListItems(
+          isUkAgent = false,
+          journey,
+          Locale.UK
+        )
         data.head.key mustBe supervisoryBodyMessageKey
       }
       "render the correct URL to change the supervisory body" in new Setup {
-        private val data = TestController.buildSummaryListItems(isUkAgent = false, journey, Locale.UK)
+        private val data = TestController.buildSummaryListItems(
+          isUkAgent = false,
+          journey,
+          Locale.UK
+        )
         data.head.link mustBe Some(routes.AmlsNewSupervisoryBodyController.showPage(true))
       }
       "render the correct supervisory body entered by the user" in new Setup {
-        private val data = TestController.buildSummaryListItems(isUkAgent = false, journey, Locale.UK)
+        private val data = TestController.buildSummaryListItems(
+          isUkAgent = false,
+          journey,
+          Locale.UK
+        )
         data.head.value mustBe supervisoryBody
       }
 
       "render the correct message key for registration number" in new Setup {
-        private val data = TestController.buildSummaryListItems(isUkAgent = false, journey, Locale.UK)
+        private val data = TestController.buildSummaryListItems(
+          isUkAgent = false,
+          journey,
+          Locale.UK
+        )
         data(1).key mustBe registrationNumberMessageKey
       }
       "render the correct URL to change the registration number" in new Setup {
-        private val data = TestController.buildSummaryListItems(isUkAgent = false, journey, Locale.UK)
+        private val data = TestController.buildSummaryListItems(
+          isUkAgent = false,
+          journey,
+          Locale.UK
+        )
         data(1).link mustBe Some(routes.EnterRegistrationNumberController.showPage(true))
       }
       "render the correct renewal date entered by the user" in new Setup {
-        private val data = TestController.buildSummaryListItems(isUkAgent = false, journey, Locale.UK)
+        private val data = TestController.buildSummaryListItems(
+          isUkAgent = false,
+          journey,
+          Locale.UK
+        )
         data(1).value mustBe registrationNumber
       }
     }
@@ -282,11 +385,12 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
 
           mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
             *[HeaderCarrier],
-            *[ExecutionContext]) returns authResponse
+            *[ExecutionContext]
+          ) returns authResponse
           mockAppConfig.enableNonHmrcSupervisoryBody returns true
           mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
           mockUpdateAmlsJourneyRepository
-            .getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]],*[RequestHeader])returns Future.successful(Some(ukAmlsJourney))
+            .getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[RequestHeader]) returns Future.successful(Some(ukAmlsJourney))
           mockAgentAssuranceConnector.postAmlsDetails(arn, amlsRequest)(*[RequestHeader]) returns Future.successful(())
 
           mockAgentAssuranceConnector.getAMLSDetails(arn.value)(*[RequestHeader]) returns Future.successful(amlsDetails)
@@ -301,15 +405,16 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
 
           mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
             *[HeaderCarrier],
-            *[ExecutionContext]) returns authResponse
+            *[ExecutionContext]
+          ) returns authResponse
           mockAppConfig.enableNonHmrcSupervisoryBody returns true
           mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
           mockUpdateAmlsJourneyRepository
-            .getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]],*[RequestHeader])returns Future.successful(Some(ukAmlsJourney))
+            .getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[RequestHeader]) returns Future.successful(Some(ukAmlsJourney))
           mockAgentAssuranceConnector.postAmlsDetails(arn, amlsRequest)(*[RequestHeader]) returns Future.successful(())
 
           mockAgentAssuranceConnector.getAMLSDetails(arn.value)(*[RequestHeader]).throws(UpstreamErrorResponse("Something went wrong", 500))
-          //mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]).throws(UpstreamErrorResponse("Something went wrong",500))
+          // mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]).throws(UpstreamErrorResponse("Something went wrong",500))
 
           val result: Future[Result] = TestController.onSubmit()(fakeRequest)
           status(result) mustBe SEE_OTHER
@@ -320,11 +425,18 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
 
           mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
             *[HeaderCarrier],
-            *[ExecutionContext]) returns authResponse
+            *[ExecutionContext]
+          ) returns authResponse
           mockAppConfig.enableNonHmrcSupervisoryBody returns true
           mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
           mockUpdateAmlsJourneyRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[RequestHeader]) returns
-            Future.successful(Some(UpdateAmlsJourney(AmlsStatuses.ValidAmlsDetailsUK, None, None, None, None)))
+            Future.successful(Some(UpdateAmlsJourney(
+              AmlsStatuses.ValidAmlsDetailsUK,
+              None,
+              None,
+              None,
+              None
+            )))
 
           mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
@@ -346,51 +458,96 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
       )
 
       "build a summary list with three items" in new Setup {
-        TestController.buildSummaryListItems(isUkAgent = true, journey, Locale.UK).length mustBe 3
+        TestController.buildSummaryListItems(
+          isUkAgent = true,
+          journey,
+          Locale.UK
+        ).length mustBe 3
       }
 
       "render the correct message key for supervisory body" in new Setup {
-        private val data = TestController.buildSummaryListItems(isUkAgent = true, journey, Locale.UK)
+        private val data = TestController.buildSummaryListItems(
+          isUkAgent = true,
+          journey,
+          Locale.UK
+        )
         data.head.key mustBe supervisoryBodyMessageKey
       }
       "render the correct URL to change the supervisory body" in new Setup {
-        private val data = TestController.buildSummaryListItems(isUkAgent = true, journey, Locale.UK)
+        private val data = TestController.buildSummaryListItems(
+          isUkAgent = true,
+          journey,
+          Locale.UK
+        )
         data.head.link mustBe Some(routes.AmlsNewSupervisoryBodyController.showPage(true))
       }
       "render the supervisory body description entered by the user" in new Setup {
-        private val data = TestController.buildSummaryListItems(isUkAgent = true, journey, Locale.UK)
+        private val data = TestController.buildSummaryListItems(
+          isUkAgent = true,
+          journey,
+          Locale.UK
+        )
         data.head.value mustBe supervisoryBodyDescription
       }
 
       "render the correct message key for registration number" in new Setup {
-        private val data = TestController.buildSummaryListItems(isUkAgent = true, journey, Locale.UK)
+        private val data = TestController.buildSummaryListItems(
+          isUkAgent = true,
+          journey,
+          Locale.UK
+        )
         data(1).key mustBe registrationNumberMessageKey
       }
       "render the correct URL to change the registration number" in new Setup {
-        private val data = TestController.buildSummaryListItems(isUkAgent = true, journey, Locale.UK)
+        private val data = TestController.buildSummaryListItems(
+          isUkAgent = true,
+          journey,
+          Locale.UK
+        )
         data(1).link mustBe Some(routes.EnterRegistrationNumberController.showPage(true))
       }
       "render the registration number entered by the user" in new Setup {
-        private val data = TestController.buildSummaryListItems(isUkAgent = true, journey, Locale.UK)
+        private val data = TestController.buildSummaryListItems(
+          isUkAgent = true,
+          journey,
+          Locale.UK
+        )
         data(1).value mustBe registrationNumber
       }
 
       "render the correct message key for renewal date" in new Setup {
-        private val data = TestController.buildSummaryListItems(isUkAgent = true, journey, Locale.UK)
+        private val data = TestController.buildSummaryListItems(
+          isUkAgent = true,
+          journey,
+          Locale.UK
+        )
         data(2).key mustBe renewalDateMessageKey
       }
       "render the correct URL to change the renewal date" in new Setup {
-        private val data = TestController.buildSummaryListItems(isUkAgent = true, journey, Locale.UK)
+        private val data = TestController.buildSummaryListItems(
+          isUkAgent = true,
+          journey,
+          Locale.UK
+        )
         data(2).link mustBe Some(routes.EnterRenewalDateController.showPage)
       }
       "render the renewal date entered by the user in long [English] format" in new Setup {
-        private val data = TestController.buildSummaryListItems(isUkAgent = true, journey, Locale.UK)
+        private val data = TestController.buildSummaryListItems(
+          isUkAgent = true,
+          journey,
+          Locale.UK
+        )
         data(2).value mustBe "1 January 2001"
       }
       "render the renewal date entered by the user in long [Welsh] format" in new Setup {
-        private val data = TestController.buildSummaryListItems(isUkAgent = true, journey, new Locale("cy"))
+        private val data = TestController.buildSummaryListItems(
+          isUkAgent = true,
+          journey,
+          new Locale("cy")
+        )
         data(2).value mustBe "1 Ionawr 2001"
       }
     }
   }
+
 }

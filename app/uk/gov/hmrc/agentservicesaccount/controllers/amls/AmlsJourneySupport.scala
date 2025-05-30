@@ -17,13 +17,15 @@
 package uk.gov.hmrc.agentservicesaccount.controllers.amls
 
 import play.api.mvc.Results.Redirect
-import play.api.mvc.{RequestHeader, Result}
+import play.api.mvc.RequestHeader
+import play.api.mvc.Result
 import uk.gov.hmrc.agentservicesaccount.controllers.routes
 import uk.gov.hmrc.agentservicesaccount.models.UpdateAmlsJourney
 import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
 import uk.gov.hmrc.mongo.cache.DataKey
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
+import scala.concurrent.Future
 
 trait AmlsJourneySupport {
 
@@ -32,14 +34,18 @@ trait AmlsJourneySupport {
   val dataKey = DataKey[UpdateAmlsJourney]("amlsJourney")
 
   def withUpdateAmlsJourney(body: UpdateAmlsJourney => Future[Result])(
-    implicit request: RequestHeader, ec: ExecutionContext): Future[Result] = {
+    implicit
+    request: RequestHeader,
+    ec: ExecutionContext
+  ): Future[Result] = {
     updateAmlsJourneyRepository.getFromSession(dataKey).flatMap {
       case Some(amlsJourney) => body(amlsJourney)
-      case None =>
-        Future successful Redirect(routes.AgentServicesController.manageAccount)
+      case None => Future successful Redirect(routes.AgentServicesController.manageAccount)
     }
   }
-  def saveAmlsJourney(amlsJourney: UpdateAmlsJourney)(implicit request: RequestHeader, ec: ExecutionContext): Future[Unit] =
-    updateAmlsJourneyRepository.putSession(dataKey, amlsJourney).map(_ => ())
+  def saveAmlsJourney(amlsJourney: UpdateAmlsJourney)(implicit
+    request: RequestHeader,
+    ec: ExecutionContext
+  ): Future[Unit] = updateAmlsJourneyRepository.putSession(dataKey, amlsJourney).map(_ => ())
 
 }

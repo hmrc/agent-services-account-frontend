@@ -15,16 +15,21 @@
  */
 
 package uk.gov.hmrc.agentservicesaccount.models
+
 import play.api.libs.json._
 
-case class BetaInviteContactDetails(name: String,
-                                    email: String,
-                                    phone: Option[String])
+case class BetaInviteContactDetails(
+  name: String,
+  email: String,
+  phone: Option[String]
+)
 
-case class BetaInviteDetailsForEmail(numberOfClients: AgentSize,
-                                     name: String,
-                                     email: String,
-                                     phone: Option[String])
+case class BetaInviteDetailsForEmail(
+  numberOfClients: AgentSize,
+  name: String,
+  email: String,
+  phone: Option[String]
+)
 
 sealed trait AgentSize {
 
@@ -46,39 +51,49 @@ sealed trait AgentSize {
       case XLarge => "x"
       case _ => "Unknown"
     }
+
 }
 
-case object Small extends AgentSize
-case object Medium extends AgentSize
-case object Large extends AgentSize
-case object XLarge extends AgentSize
-case class Unknown(attempted: String) extends AgentSize
-
+case object Small
+extends AgentSize
+case object Medium
+extends AgentSize
+case object Large
+extends AgentSize
+case object XLarge
+extends AgentSize
+case class Unknown(attempted: String)
+extends AgentSize
 
 object AgentSize {
-  def unapply(status: AgentSize): Option[String] = status match {
-    case Small      => Some("small")
-    case Medium     => Some("medium")
-    case Large      => Some("large")
-    case XLarge     => Some("xlarge")
-    case _            => None
-  }
 
-  def apply(status: String): AgentSize = status.toLowerCase match {
-    case "small"      => Small
-    case "medium"     => Medium
-    case "large"      => Large
-    case "xlarge"     => XLarge
-    case _            => Unknown(status)
-  }
-
-  implicit val agentSizeFormat: Format[AgentSize] = new Format[AgentSize] {
-    override def reads(json: JsValue): JsResult[AgentSize] = apply(json.as[String]) match {
-      case Unknown(value) => JsError(s"Status of [$value] is not a valid AgentSize")
-      case value          => JsSuccess(value)
+  def unapply(status: AgentSize): Option[String] =
+    status match {
+      case Small => Some("small")
+      case Medium => Some("medium")
+      case Large => Some("large")
+      case XLarge => Some("xlarge")
+      case _ => None
     }
 
-    override def writes(o: AgentSize): JsValue =
-      unapply(o).map(JsString).getOrElse(throw new IllegalArgumentException)
-  }
+  def apply(status: String): AgentSize =
+    status.toLowerCase match {
+      case "small" => Small
+      case "medium" => Medium
+      case "large" => Large
+      case "xlarge" => XLarge
+      case _ => Unknown(status)
+    }
+
+  implicit val agentSizeFormat: Format[AgentSize] =
+    new Format[AgentSize] {
+      override def reads(json: JsValue): JsResult[AgentSize] =
+        apply(json.as[String]) match {
+          case Unknown(value) => JsError(s"Status of [$value] is not a valid AgentSize")
+          case value => JsSuccess(value)
+        }
+
+      override def writes(o: AgentSize): JsValue = unapply(o).map(JsString).getOrElse(throw new IllegalArgumentException)
+    }
+
 }

@@ -18,38 +18,51 @@ package uk.gov.hmrc.agentservicesaccount.actions
 
 import play.api.mvc.Results._
 import play.api.mvc._
-import play.api.{Environment, Logging}
+import play.api.Environment
+import play.api.Logging
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals._
-import uk.gov.hmrc.auth.core.retrieve.{Credentials, Name, ~}
+import uk.gov.hmrc.auth.core.retrieve.Credentials
+import uk.gov.hmrc.auth.core.retrieve.Name
+import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.agentservicesaccount.utils.RequestSupport._
 
-import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import javax.inject.Inject
+import javax.inject.Singleton
+import scala.concurrent.ExecutionContext
+import scala.concurrent.Future
 class AuthRequestWithAgentInfo[A](
-                                   val agentInfo: AgentInfo,
-                                   val request: Request[A]
-                                 ) extends WrappedRequest[A](request)
+  val agentInfo: AgentInfo,
+  val request: Request[A]
+)
+extends WrappedRequest[A](request)
 
-case class AgentInfo(arn: Arn,
-                     credentialRole: Option[CredentialRole],
-                     email: Option[String] = None,
-                     name: Option[Name]= None,
-                     credentials: Option[Credentials]= None)  {
-  val isAdmin: Boolean = credentialRole match {
-    case Some(Assistant) => false
-    case Some(_) => true
-    case _ => false
-  }
+case class AgentInfo(
+  arn: Arn,
+  credentialRole: Option[CredentialRole],
+  email: Option[String] = None,
+  name: Option[Name] = None,
+  credentials: Option[Credentials] = None
+) {
+  val isAdmin: Boolean =
+    credentialRole match {
+      case Some(Assistant) => false
+      case Some(_) => true
+      case _ => false
+    }
 }
 
 @Singleton
-class AuthActions @Inject()(appConfig: AppConfig,
-                            override val authConnector: AuthConnector,
-                            val env: Environment)(implicit ec:ExecutionContext) extends AuthorisedFunctions with Logging {
+class AuthActions @Inject() (
+  appConfig: AppConfig,
+  override val authConnector: AuthConnector,
+  val env: Environment
+)(implicit ec: ExecutionContext)
+extends AuthorisedFunctions
+with Logging {
 
   def authActionRefiner: ActionRefiner[Request, AuthRequestWithAgentInfo] =
     new ActionRefiner[Request, AuthRequestWithAgentInfo] {
@@ -63,8 +76,16 @@ class AuthActions @Inject()(appConfig: AppConfig,
               getArn(enrols) match {
                 case Some(arn) =>
 
-                  Future.successful(Right(new  AuthRequestWithAgentInfo(
-                    AgentInfo(arn = arn, credentialRole = credRole, email = email, name = name , credentials = creds),r)))
+                  Future.successful(Right(new AuthRequestWithAgentInfo(
+                    AgentInfo(
+                      arn = arn,
+                      credentialRole = credRole,
+                      email = email,
+                      name = name,
+                      credentials = creds
+                    ),
+                    r
+                  )))
                 case None =>
                   logger.warn("No HMRC-AS-AGENT enrolment found -- redirecting to /agent-subscription/start.")
                   Future successful Left(Redirect(appConfig.agentSubscriptionFrontendUrl))
@@ -76,8 +97,7 @@ class AuthActions @Inject()(appConfig: AppConfig,
       override protected def executionContext: ExecutionContext = ec
     }
   private def handleFailureRefiner[A](implicit request: RequestHeader): PartialFunction[Throwable, Either[Result, AuthRequestWithAgentInfo[A]]] = {
-    case _: NoActiveSession =>
-      Left(Redirect(s"${appConfig.signInUrl}?continue_url=${appConfig.continueUrl}${request.uri}&origin=${appConfig.appName}"))
+    case _: NoActiveSession => Left(Redirect(s"${appConfig.signInUrl}?continue_url=${appConfig.continueUrl}${request.uri}&origin=${appConfig.appName}"))
 
     case _: UnsupportedAuthProvider =>
       logger.warn(s"user logged in with unsupported auth provider")
@@ -96,6 +116,7 @@ class AuthActions @Inject()(appConfig: AppConfig,
       Arn(enrolId.value)
     }
   }
+
 }
 
 object AuthActions {

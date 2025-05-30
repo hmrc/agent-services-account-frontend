@@ -17,35 +17,45 @@
 package uk.gov.hmrc.agentservicesaccount.controllers
 
 import play.api.i18n.I18nSupport
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.Action
+import play.api.mvc.AnyContent
+import play.api.mvc.MessagesControllerComponents
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.admin_access_for_access_groups
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
-import javax.inject.{Inject, Singleton}
+import javax.inject.Inject
+import javax.inject.Singleton
 
 @Singleton
-class NoAccessGroupsAssignmentController @Inject()(actions: Actions,
-                                                   adminInfoView: admin_access_for_access_groups
-                                    )(implicit appConfig: AppConfig, cc: MessagesControllerComponents) extends FrontendController(cc) with I18nSupport {
+class NoAccessGroupsAssignmentController @Inject() (
+  actions: Actions,
+  adminInfoView: admin_access_for_access_groups
+)(implicit
+  appConfig: AppConfig,
+  cc: MessagesControllerComponents
+)
+extends FrontendController(cc)
+with I18nSupport {
 
   def redirectForNoAssignment: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    if(request.agentInfo.isAdmin) {
+    if (request.agentInfo.isAdmin) {
       Redirect(routes.NoAccessGroupsAssignmentController.showAdminAccessInformation()).toFuture
-    } else {
+    }
+    else {
       Redirect(routes.AgentServicesController.administrators).toFuture
     }
   }
 
-  //For access groups
+  // For access groups
   def showAdminAccessInformation(): Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    if(request.agentInfo.isAdmin) {
+    if (request.agentInfo.isAdmin) {
       Ok(adminInfoView()).toFuture
-    } else {
+    }
+    else {
       Forbidden.toFuture
     }
   }
-
 
 }

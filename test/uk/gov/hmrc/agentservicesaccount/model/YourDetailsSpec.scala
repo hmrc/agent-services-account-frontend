@@ -16,14 +16,19 @@
 
 package uk.gov.hmrc.agentservicesaccount.model
 
-import play.api.libs.json.{JsObject, Json}
+import play.api.libs.json.JsObject
+import play.api.libs.json.Json
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.YourDetails
 import uk.gov.hmrc.agentservicesaccount.support.UnitSpec
-import uk.gov.hmrc.crypto.{Decrypter, Encrypter, SymmetricCryptoFactory}
+import uk.gov.hmrc.crypto.Decrypter
+import uk.gov.hmrc.crypto.Encrypter
+import uk.gov.hmrc.crypto.SymmetricCryptoFactory
 
-class YourDetailsSpec extends UnitSpec {
+class YourDetailsSpec
+extends UnitSpec {
 
-  implicit val crypto: Encrypter with Decrypter = SymmetricCryptoFactory.aesCrypto("edkOOwt7uvzw1TXnFIN6aRVHkfWcgiOrbBvkEQvO65g=")
+  implicit val crypto: Encrypter
+    with Decrypter = SymmetricCryptoFactory.aesCrypto("edkOOwt7uvzw1TXnFIN6aRVHkfWcgiOrbBvkEQvO65g=")
 
   val testYourDetails: YourDetails = YourDetails(
     "testName",
@@ -55,4 +60,5 @@ class YourDetailsSpec extends UnitSpec {
       }
     }
   }
+
 }

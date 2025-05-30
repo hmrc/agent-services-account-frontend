@@ -16,27 +16,43 @@
 
 package uk.gov.hmrc.agentservicesaccount.models
 
-import enumeratum.{Enum, EnumEntry}
+import enumeratum.Enum
+import enumeratum.EnumEntry
 import play.api.libs.json.Format
 import play.api.mvc.QueryStringBindable
-import uk.gov.hmrc.agentservicesaccount.utils.{EnumFormat, ValueClassBinder}
+import uk.gov.hmrc.agentservicesaccount.utils.EnumFormat
+import uk.gov.hmrc.agentservicesaccount.utils.ValueClassBinder
 
-sealed trait AmlsStatus extends Product with Serializable with EnumEntry
+sealed trait AmlsStatus
+extends Product
+with Serializable
+with EnumEntry
 
 object AmlsStatus {
+
   implicit val format: Format[AmlsStatus] = EnumFormat(AmlsStatuses)
   implicit val queryBindable: QueryStringBindable[AmlsStatus] = ValueClassBinder.queryStringValueBinder[AmlsStatus](_.entryName)
+
 }
 
-object AmlsStatuses extends Enum[AmlsStatus] {
+object AmlsStatuses
+extends Enum[AmlsStatus] {
 
   val values: IndexedSeq[AmlsStatus] = findValues
 
-  final case object NoAmlsDetailsNonUK extends AmlsStatus
-  final case object ValidAmlsNonUK extends AmlsStatus
-  final case object NoAmlsDetailsUK extends AmlsStatus
-  final case object ValidAmlsDetailsUK extends AmlsStatus
-  final case object ExpiredAmlsDetailsUK extends AmlsStatus
-  final case object PendingAmlsDetails extends AmlsStatus
-  final case object PendingAmlsDetailsRejected extends AmlsStatus
+  final case object NoAmlsDetailsNonUK
+  extends AmlsStatus
+  final case object ValidAmlsNonUK
+  extends AmlsStatus
+  final case object NoAmlsDetailsUK
+  extends AmlsStatus
+  final case object ValidAmlsDetailsUK
+  extends AmlsStatus
+  final case object ExpiredAmlsDetailsUK
+  extends AmlsStatus
+  final case object PendingAmlsDetails
+  extends AmlsStatus
+  final case object PendingAmlsDetailsRejected
+  extends AmlsStatus
+
 }

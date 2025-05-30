@@ -16,14 +16,16 @@
 
 package uk.gov.hmrc.agentservicesaccount.models
 
-import play.api.libs.json.{Format, Json}
+import play.api.libs.json.Format
+import play.api.libs.json.Json
 
-
-case class AmlsDetailsResponse(status: AmlsStatus, details: Option[AmlsDetails])
+case class AmlsDetailsResponse(
+  status: AmlsStatus,
+  details: Option[AmlsDetails]
+)
 
 object AmlsDetailsResponse {
 
   implicit lazy val format: Format[AmlsDetailsResponse] = Json.format[AmlsDetailsResponse]
-
 
 }

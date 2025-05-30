@@ -16,11 +16,17 @@
 
 package uk.gov.hmrc.agentservicesaccount.config
 
-import com.google.inject.{Inject, Singleton}
+import com.google.inject.Inject
+import com.google.inject.Singleton
 import play.api.i18n.Lang
 import play.api.mvc.Call
-import play.api.{Configuration, Environment, Logging, Mode}
-import uk.gov.hmrc.agents.accessgroups.optin.{OptedInNotReady, OptedOutEligible, OptinStatus}
+import play.api.Configuration
+import play.api.Environment
+import play.api.Logging
+import play.api.Mode
+import uk.gov.hmrc.agents.accessgroups.optin.OptedInNotReady
+import uk.gov.hmrc.agents.accessgroups.optin.OptedOutEligible
+import uk.gov.hmrc.agents.accessgroups.optin.OptinStatus
 import uk.gov.hmrc.agentservicesaccount.controllers.routes
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import views.html.helper.urlEncode
@@ -28,14 +34,18 @@ import views.html.helper.urlEncode
 import scala.concurrent.duration.Duration
 
 @Singleton
-class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig, env:Environment) extends Logging {
+class AppConfig @Inject() (
+  config: Configuration,
+  servicesConfig: ServicesConfig,
+  env: Environment
+)
+extends Logging {
 
   val appName = "agent-services-account-frontend"
 
   def isTest: Boolean = env.mode == Mode.Test
 
-  private def getConfString(key: String) =
-    servicesConfig.getConfString(key, throw new RuntimeException(s"config $key not found"))
+  private def getConfString(key: String) = servicesConfig.getConfString(key, throw new RuntimeException(s"config $key not found"))
 
   private def getString(key: String) = servicesConfig.getString(key)
 
@@ -127,7 +137,11 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
   val timeoutDialogCountdown: Int = getInt("timeoutDialog.countdown")
 
   val runMode: Option[String] = config.getOptional[String]("run.mode")
-  val isDevEnv: Boolean = if (env.mode.equals(Mode.Test)) false else runMode.forall(Mode.Dev.toString.equals)
+  val isDevEnv: Boolean =
+    if (env.mode.equals(Mode.Test))
+      false
+    else
+      runMode.forall(Mode.Dev.toString.equals)
 
   val userResearchLink: String = getString("userResearchLink")
 
@@ -161,7 +175,7 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
   val enableAgentClientRelationshipsFrontend: Boolean = getBoolean("features.enable-agent-client-relationships-frontend")
   val enableEmaContent: Boolean = getBoolean("features.enable-ema-content")
 
-  //Gran Perms
+  // Gran Perms
   val agentPermissionsBaseUrl: String = baseUrl("agent-permissions")
   val agentUserClientDetailsBaseUrl: String = baseUrl("agent-user-client-details")
   val agentPermissionsFrontendExternalUrl: String = getConfString("agent-permissions-frontend.external-url")
@@ -193,9 +207,8 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
   val agentPermissionsFrontendAssistantViewGroupClientsUrl = s"$agentPermissionsFrontendExternalUrl/agent-permissions/your-account/group-clients"
   val agentPermissionsFrontendAssistantViewUnassignedClientsUrl = s"$agentPermissionsFrontendExternalUrl/agent-permissions/your-account/other-clients"
 
-  //DMS queue name
-  val dmsSubmissionClassificationType: String                =
-    servicesConfig.getString("microservice.services.dms-submission.contact-details-submission.classificationType")
+  // DMS queue name
+  val dmsSubmissionClassificationType: String = servicesConfig.getString("microservice.services.dms-submission.contact-details-submission.classificationType")
 
   private val pillar2SubmissionFrontendExternalUrl: String = getString("pillar2-submission-frontend.external-url")
 

@@ -18,15 +18,16 @@ package uk.gov.hmrc.agentservicesaccount.support
 
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.testkit.NoMaterializer
-import org.scalatest.{BeforeAndAfterAll, Suite}
+import org.scalatest.BeforeAndAfterAll
+import org.scalatest.Suite
 import play.api.test.Helpers._
 
-/**
-  * Provides an implicit Materializer for use in tests. Note that if your test
-  * is starting an app (e.g. via OneAppPerSuite or OneAppPerTest) then you
-  * should probably use the app's Materializer instead.
+/** Provides an implicit Materializer for use in tests. Note that if your test is starting an app (e.g. via OneAppPerSuite or OneAppPerTest) then you should
+  * probably use the app's Materializer instead.
   */
-trait PekkoMaterializerSpec extends UnitSpec with BeforeAndAfterAll { this: Suite =>
+trait PekkoMaterializerSpec
+extends UnitSpec
+with BeforeAndAfterAll { this: Suite =>
 
   implicit lazy val actorSystem: ActorSystem = ActorSystem()
   implicit lazy val materializer: NoMaterializer.type = NoMaterializer
@@ -36,4 +37,5 @@ trait PekkoMaterializerSpec extends UnitSpec with BeforeAndAfterAll { this: Suit
     await(actorSystem.terminate())
     ()
   }
+
 }

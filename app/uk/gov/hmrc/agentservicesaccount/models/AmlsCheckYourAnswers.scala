@@ -18,7 +18,8 @@ package uk.gov.hmrc.agentservicesaccount.models
 
 import java.time.LocalDate
 
-
-case class AmlsCheckYourAnswers(supervisoryBody: String,
-                                registrationNumber: String,
-                                renewalDate: Option[LocalDate])
+case class AmlsCheckYourAnswers(
+  supervisoryBody: String,
+  registrationNumber: String,
+  renewalDate: Option[LocalDate]
+)

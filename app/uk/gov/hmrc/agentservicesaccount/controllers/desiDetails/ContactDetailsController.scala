@@ -17,44 +17,57 @@
 package uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
 
 import play.api.Logging
-import play.api.i18n.{I18nSupport, Lang}
+import play.api.i18n.I18nSupport
+import play.api.i18n.Lang
 import play.api.libs.json._
 import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.connectors.{AddressLookupConnector, AgentAssuranceConnector}
+import uk.gov.hmrc.agentservicesaccount.connectors.AddressLookupConnector
+import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.controllers._
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.DesiDetailsJourneySupport
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.NextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup._
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
-import uk.gov.hmrc.agentservicesaccount.services.{DraftDetailsService, SessionCacheService}
+import uk.gov.hmrc.agentservicesaccount.services.DraftDetailsService
+import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject._
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
+import scala.concurrent.Future
 
 @Singleton
-class ContactDetailsController @Inject()(actions: Actions,
-                                         val sessionCache: SessionCacheService,
-                                         draftDetailsService: DraftDetailsService,
-                                         alfConnector: AddressLookupConnector,
-                                         change_submitted: change_submitted,
-                                         beforeYouStartPage: before_you_start_page
-                                        )(implicit appConfig: AppConfig,
-                                          agentAssuranceConnector: AgentAssuranceConnector,
-                                          pcodRepository: PendingChangeRequestRepository,
-                                          cc: MessagesControllerComponents,
-                                          val ec: ExecutionContext) extends FrontendController(cc) with DesiDetailsJourneySupport with I18nSupport with Logging {
-
+class ContactDetailsController @Inject() (
+  actions: Actions,
+  val sessionCache: SessionCacheService,
+  draftDetailsService: DraftDetailsService,
+  alfConnector: AddressLookupConnector,
+  change_submitted: change_submitted,
+  beforeYouStartPage: before_you_start_page
+)(implicit
+  appConfig: AppConfig,
+  agentAssuranceConnector: AgentAssuranceConnector,
+  pcodRepository: PendingChangeRequestRepository,
+  cc: MessagesControllerComponents,
+  val ec: ExecutionContext
+)
+extends FrontendController(cc)
+with DesiDetailsJourneySupport
+with I18nSupport
+with Logging {
 
   val startAddressLookup: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     val continueUrl: String = {
       val useAbsoluteUrls = appConfig.addressLookupBaseUrl.contains("localhost")
       val call = desiDetails.routes.ContactDetailsController.finishAddressLookup(None)
-      if (useAbsoluteUrls) call.absoluteURL() else call.url
+      if (useAbsoluteUrls)
+        call.absoluteURL()
+      else
+        call.url
     }
 
     def languageLabels(implicit lang: Lang): JsObject = Json.obj(
@@ -111,9 +124,8 @@ class ContactDetailsController @Inject()(actions: Actions,
               postalCode = confirmedAddressResponse.address.postcode,
               countryCode = confirmedAddressResponse.address.country.map(_.code).get
             )
-            _ <- draftDetailsService.updateDraftDetails(
-              desiDetails =>
-                desiDetails.copy(agencyDetails = desiDetails.agencyDetails.copy(agencyAddress = Some(newBusinessAddress)))
+            _ <- draftDetailsService.updateDraftDetails(desiDetails =>
+              desiDetails.copy(agencyDetails = desiDetails.agencyDetails.copy(agencyAddress = Some(newBusinessAddress)))
             )
             journeyComplete <- isJourneyComplete()
           } yield {
@@ -133,8 +145,10 @@ class ContactDetailsController @Inject()(actions: Actions,
     actions.ifFeatureEnabled(appConfig.enableChangeContactDetails) {
       if (request.agentInfo.isAdmin) {
         agentAssuranceConnector.getAgentRecord.map(agentRecord =>
-          Ok(beforeYouStartPage(agentRecord.agencyDetails)))
-      } else {
+          Ok(beforeYouStartPage(agentRecord.agencyDetails))
+        )
+      }
+      else {
         Future.successful(Forbidden)
       }
     }

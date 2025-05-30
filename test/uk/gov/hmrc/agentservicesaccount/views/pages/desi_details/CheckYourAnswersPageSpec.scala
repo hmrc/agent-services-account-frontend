@@ -19,36 +19,56 @@ package uk.gov.hmrc.agentservicesaccount.views.pages.desi_details
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
-import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
+import play.api.i18n.Lang
+import play.api.i18n.Messages
+import play.api.i18n.MessagesApi
+import play.api.i18n.MessagesImpl
 import play.api.test.FakeRequest
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, OtherServices, SaChanges, YourDetails}
-import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress}
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.CtChanges
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.OtherServices
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.SaChanges
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.YourDetails
+import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
+import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details.check_updated_details
-import uk.gov.hmrc.domain.{CtUtr, SaUtr}
+import uk.gov.hmrc.domain.CtUtr
+import uk.gov.hmrc.domain.SaUtr
 
 import scala.jdk.CollectionConverters.CollectionHasAsScala
 
-class CheckYourAnswersPageSpec extends BaseISpec {
+class CheckYourAnswersPageSpec
+extends BaseISpec {
 
-  implicit private val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
-  implicit private val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
-  implicit private val langs: Seq[Lang] = Seq(Lang("en"), Lang("cy"))
+  private implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+  private implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
+  private implicit val langs: Seq[Lang] = Seq(Lang("en"), Lang("cy"))
 
   private val view: check_updated_details = app.injector.instanceOf[check_updated_details]
 
   private val selectChanges1: Set[String] = Set("businessName")
   private val selectChanges2: Set[String] = Set("email", "telephone")
-  private val selectChangesAll: Set[String] = Set("businessName", "address", "email", "telephone")
+  private val selectChangesAll: Set[String] = Set(
+    "businessName",
+    "address",
+    "email",
+    "telephone"
+  )
 
   private val testAgencyDetailsFull = AgencyDetails(
     agencyName = Some("Test Name"),
     agencyEmail = Some("test@email.com"),
     agencyTelephone = Some("01234 567890"),
-    agencyAddress = Some(BusinessAddress("Test Street", Some("Test Town"), None, None, Some("TE5 7ED"), "GB"))
+    agencyAddress = Some(BusinessAddress(
+      "Test Street",
+      Some("Test Town"),
+      None,
+      None,
+      Some("TE5 7ED"),
+      "GB"
+    ))
   )
-
 
   private val fullOtherServices = OtherServices(
     saChanges = SaChanges(
@@ -69,6 +89,7 @@ class CheckYourAnswersPageSpec extends BaseISpec {
   object MessageLookup {
 
     object English {
+
       private val govUkSuffix: String = " - Agent services account - GOV.UK"
       val heading: String = "Check your answers"
       val title: String = heading + govUkSuffix
@@ -112,8 +133,9 @@ class CheckYourAnswersPageSpec extends BaseISpec {
       val yourDetailsTelephoneValue: String = "01903 209919"
 
       val declarationText1: String = "I am authorised to make changes to the business contact details."
-      val declarationText2: String = "I am a director, company secretary, sole trader, proprietor or partner in the " +
-        "business, or I have permission from someone in one of those roles."
+      val declarationText2: String =
+        "I am a director, company secretary, sole trader, proprietor or partner in the " +
+          "business, or I have permission from someone in one of those roles."
 
       val labelMap: Map[String, String] = Map(
         "businessName" -> businessNameKey,
@@ -121,6 +143,7 @@ class CheckYourAnswersPageSpec extends BaseISpec {
         "email" -> emailKey,
         "telephone" -> telephoneKey
       )
+
     }
 
   }
@@ -142,44 +165,48 @@ class CheckYourAnswersPageSpec extends BaseISpec {
   }
 
   "check_updated_details" should {
-      "render correctly with businessName as the only updated answer" when {
-        val messages: Messages = MessagesImpl(langs.head, messagesApi)
-        val doc: Document = Jsoup.parse(view.apply(
-          agencyDetails = testAgencyDetailsFull,
-          isAdmin = true,
-          otherServices = emptyOtherServices,
-          submittedBy = submittedByDetails,
-          selectChanges = selectChanges1
-        )(messages, FakeRequest(), appConfig).body)
+    "render correctly with businessName as the only updated answer" when {
+      val messages: Messages = MessagesImpl(langs.head, messagesApi)
+      val doc: Document = Jsoup.parse(view.apply(
+        agencyDetails = testAgencyDetailsFull,
+        isAdmin = true,
+        otherServices = emptyOtherServices,
+        submittedBy = submittedByDetails,
+        selectChanges = selectChanges1
+      )(
+        messages,
+        FakeRequest(),
+        appConfig
+      ).body)
 
-        testServiceStaticContent(doc)
+      testServiceStaticContent(doc)
 
-        "businessName is the only selected update" in {
+      "businessName is the only selected update" in {
 
-          doc.title() mustBe MessageLookup.English.title
-          doc.select("h1").asScala.head.text mustBe MessageLookup.English.heading
-          doc.select(".govuk-inset-text").text() mustBe MessageLookup.English.insetText
-          val summaryListKeys = doc.select(".govuk-summary-list__key").asScala.toList.map(_.text)
-          val summaryListValues = doc.select(".govuk-summary-list__value").asScala.toList.map(_.text)
-          val selectedChanges = doc.select(".govuk-summary-list__value > ul > li").asScala.toList.map(_.text).toSet
+        doc.title() mustBe MessageLookup.English.title
+        doc.select("h1").asScala.head.text mustBe MessageLookup.English.heading
+        doc.select(".govuk-inset-text").text() mustBe MessageLookup.English.insetText
+        val summaryListKeys = doc.select(".govuk-summary-list__key").asScala.toList.map(_.text)
+        val summaryListValues = doc.select(".govuk-summary-list__value").asScala.toList.map(_.text)
+        val selectedChanges = doc.select(".govuk-summary-list__value > ul > li").asScala.toList.map(_.text).toSet
 
-          summaryListKeys.head mustBe MessageLookup.English.selectChangesKey
-          selectedChanges mustBe selectChanges1.map(key => MessageLookup.English.labelMap(key))
-          summaryListKeys(1) mustBe MessageLookup.English.businessNameKey
-          summaryListValues(1) mustBe MessageLookup.English.businessNameValue
+        summaryListKeys.head mustBe MessageLookup.English.selectChangesKey
+        selectedChanges mustBe selectChanges1.map(key => MessageLookup.English.labelMap(key))
+        summaryListKeys(1) mustBe MessageLookup.English.businessNameKey
+        summaryListValues(1) mustBe MessageLookup.English.businessNameValue
 
-          summaryListKeys(2) mustBe MessageLookup.English.otherServicesApplySAKey
-          summaryListValues(2) mustBe MessageLookup.English.otherServicesApplySAValue
-          summaryListKeys(3) mustBe MessageLookup.English.otherServicesApplyCTKey
-          summaryListValues(3) mustBe MessageLookup.English.otherServicesApplyCTValue
+        summaryListKeys(2) mustBe MessageLookup.English.otherServicesApplySAKey
+        summaryListValues(2) mustBe MessageLookup.English.otherServicesApplySAValue
+        summaryListKeys(3) mustBe MessageLookup.English.otherServicesApplyCTKey
+        summaryListValues(3) mustBe MessageLookup.English.otherServicesApplyCTValue
 
-          summaryListKeys(4) mustBe MessageLookup.English.yourDetailsNameKey
-          summaryListValues(4) mustBe MessageLookup.English.yourDetailsNameValue
-          summaryListKeys(5) mustBe MessageLookup.English.yourDetailsTelephoneKey
-          summaryListValues(5) mustBe MessageLookup.English.yourDetailsTelephoneValue
+        summaryListKeys(4) mustBe MessageLookup.English.yourDetailsNameKey
+        summaryListValues(4) mustBe MessageLookup.English.yourDetailsNameValue
+        summaryListKeys(5) mustBe MessageLookup.English.yourDetailsTelephoneKey
+        summaryListValues(5) mustBe MessageLookup.English.yourDetailsTelephoneValue
 
-        }
       }
+    }
     "render correctly with email and telephone as the only updated answers" when {
       val messages: Messages = MessagesImpl(langs.head, messagesApi)
       val doc: Document = Jsoup.parse(view.apply(
@@ -188,7 +215,11 @@ class CheckYourAnswersPageSpec extends BaseISpec {
         otherServices = emptyOtherServices,
         submittedBy = submittedByDetails,
         selectChanges = selectChanges2
-      )(messages, FakeRequest(), appConfig).body)
+      )(
+        messages,
+        FakeRequest(),
+        appConfig
+      ).body)
 
       testServiceStaticContent(doc)
 
@@ -230,7 +261,11 @@ class CheckYourAnswersPageSpec extends BaseISpec {
       otherServices = fullOtherServices,
       submittedBy = submittedByDetails,
       selectChanges = selectChangesAll
-    )(messages, FakeRequest(), appConfig).body)
+    )(
+      messages,
+      FakeRequest(),
+      appConfig
+    ).body)
 
     testServiceStaticContent(doc)
 
@@ -253,7 +288,7 @@ class CheckYourAnswersPageSpec extends BaseISpec {
       summaryListValues(3) mustBe MessageLookup.English.emailValue
       summaryListKeys(4) mustBe MessageLookup.English.telephoneKey
       summaryListValues(4) mustBe MessageLookup.English.telephoneValue
-      
+
       summaryListKeys(5) mustBe MessageLookup.English.otherServicesApplySAKey
       summaryListValues(5) mustBe MessageLookup.English.fullOtherServicesApplySAValue
       summaryListKeys(6) mustBe MessageLookup.English.otherServicesSACodeKey

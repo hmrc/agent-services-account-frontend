@@ -17,7 +17,8 @@
 package uk.gov.hmrc.agentservicesaccount.views.pages.amls
 
 import org.jsoup.Jsoup
-import org.jsoup.nodes.{Document, Element}
+import org.jsoup.nodes.Document
+import org.jsoup.nodes.Element
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.data.Form
 import play.api.i18n._
@@ -27,18 +28,17 @@ import uk.gov.hmrc.agentservicesaccount.forms.NewRegistrationNumberForm
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.enter_registration_number
 
-class EnterRegistrationNumberViewSpec extends BaseISpec {
-
+class EnterRegistrationNumberViewSpec
+extends BaseISpec {
 
   implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
   implicit val lang: Lang = Lang("en")
-  val view: enter_registration_number  = app.injector.instanceOf[enter_registration_number]
+  val view: enter_registration_number = app.injector.instanceOf[enter_registration_number]
   implicit val messages: Messages = MessagesImpl(lang, messagesApi)
 
   val form: Form[String] = NewRegistrationNumberForm.form(true)
-  val formWithErrors: Form[String] = form.withError(key ="number", message = Messages("amls.enter-registration-number.error.empty"))
-
+  val formWithErrors: Form[String] = form.withError(key = "number", message = Messages("amls.enter-registration-number.error.empty"))
 
   "enter_registration_number" when {
 
@@ -72,7 +72,11 @@ class EnterRegistrationNumberViewSpec extends BaseISpec {
 
     "first viewing page" should {
 
-      val doc: Document = Jsoup.parse(view.apply(form, cya = false)(FakeRequest(), messages, appConfig).body)
+      val doc: Document = Jsoup.parse(view.apply(form, cya = false)(
+        FakeRequest(),
+        messages,
+        appConfig
+      ).body)
 
       testServiceStaticContent(doc)
 
@@ -83,10 +87,13 @@ class EnterRegistrationNumberViewSpec extends BaseISpec {
       }
     }
 
-
     "form is submitted with errors should" should {
 
-      val doc: Document = Jsoup.parse(view.apply(formWithErrors, cya = false)(FakeRequest(), messages, appConfig).body)
+      val doc: Document = Jsoup.parse(view.apply(formWithErrors, cya = false)(
+        FakeRequest(),
+        messages,
+        appConfig
+      ).body)
 
       testServiceStaticContent(doc)
 

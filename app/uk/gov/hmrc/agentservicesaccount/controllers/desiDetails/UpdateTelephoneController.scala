@@ -27,32 +27,41 @@ import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.NextPageSel
 import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.DesignatoryDetails
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
-import uk.gov.hmrc.agentservicesaccount.services.{DraftDetailsService, SessionCacheService}
+import uk.gov.hmrc.agentservicesaccount.services.DraftDetailsService
+import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject._
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
+import scala.concurrent.Future
 
 @Singleton
-class UpdateTelephoneController @Inject()(actions: Actions,
-                                          val sessionCache: SessionCacheService,
-                                          draftDetailsService: DraftDetailsService,
-                                          update_phone: update_phone
-                                         )(implicit appConfig: AppConfig,
-                                           cc: MessagesControllerComponents,
-                                           val ec: ExecutionContext,
-                                           pcodRepository: PendingChangeRequestRepository
-                                         ) extends FrontendController(cc) with DesiDetailsJourneySupport with I18nSupport with Logging {
+class UpdateTelephoneController @Inject() (
+  actions: Actions,
+  val sessionCache: SessionCacheService,
+  draftDetailsService: DraftDetailsService,
+  update_phone: update_phone
+)(implicit
+  appConfig: AppConfig,
+  cc: MessagesControllerComponents,
+  val ec: ExecutionContext,
+  pcodRepository: PendingChangeRequestRepository
+)
+extends FrontendController(cc)
+with DesiDetailsJourneySupport
+with I18nSupport
+with Logging {
 
   val showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     ifChangeContactFeatureEnabledAndNoPendingChanges {
       isContactPageRequestValid("telephone").flatMap {
-        case true => sessionCache.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS).map {
-          case Some(desiDetails) if desiDetails.agencyDetails.agencyTelephone.isDefined =>
-            Ok(update_phone(UpdateDetailsForms.telephoneNumberForm.fill(desiDetails.agencyDetails.agencyTelephone.get)))
-          case _ => Ok(update_phone(UpdateDetailsForms.telephoneNumberForm))
-        }
+        case true =>
+          sessionCache.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS).map {
+            case Some(desiDetails) if desiDetails.agencyDetails.agencyTelephone.isDefined =>
+              Ok(update_phone(UpdateDetailsForms.telephoneNumberForm.fill(desiDetails.agencyDetails.agencyTelephone.get)))
+            case _ => Ok(update_phone(UpdateDetailsForms.telephoneNumberForm))
+          }
         case _ => Future.successful(Redirect(routes.SelectDetailsController.showPage))
       }
 
@@ -75,4 +84,5 @@ class UpdateTelephoneController @Inject()(actions: Actions,
         )
     }
   }
+
 }

@@ -21,7 +21,9 @@ import org.scalatest.wordspec.AnyWordSpec
 import play.api.libs.json._
 import uk.gov.hmrc.agentservicesaccount.models._
 
-class AgentSizeSpec extends AnyWordSpec with Matchers {
+class AgentSizeSpec
+extends AnyWordSpec
+with Matchers {
 
   "AgentSize" should {
     "serialize and deserialize correctly" in {
@@ -42,6 +44,3 @@ class AgentSizeSpec extends AnyWordSpec with Matchers {
     }
   }
 }
-
-
-

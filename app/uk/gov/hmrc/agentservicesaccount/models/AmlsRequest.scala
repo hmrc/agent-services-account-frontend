@@ -16,15 +16,17 @@
 
 package uk.gov.hmrc.agentservicesaccount.models
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.Json
+import play.api.libs.json.OFormat
 
 import java.time.LocalDate
 
-case class AmlsRequest(ukRecord: Boolean,
-                       supervisoryBody: String,
-                       membershipNumber: String,
-                       membershipExpiresOn: Option[LocalDate]
-                      )
+case class AmlsRequest(
+  ukRecord: Boolean,
+  supervisoryBody: String,
+  membershipNumber: String,
+  membershipExpiresOn: Option[LocalDate]
+)
 
 object AmlsRequest {
   implicit val format: OFormat[AmlsRequest] = Json.format[AmlsRequest]

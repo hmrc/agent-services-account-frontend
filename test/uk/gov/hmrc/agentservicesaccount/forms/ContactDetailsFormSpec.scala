@@ -20,9 +20,13 @@ import org.apache.commons.lang3.RandomStringUtils
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import uk.gov.hmrc.agentservicesaccount.models.{BetaInviteContactDetails, SuspendContactDetails}
+import uk.gov.hmrc.agentservicesaccount.models.BetaInviteContactDetails
+import uk.gov.hmrc.agentservicesaccount.models.SuspendContactDetails
 
-class ContactDetailsFormSpec extends AnyWordSpec with Matchers with GuiceOneAppPerSuite {
+class ContactDetailsFormSpec
+extends AnyWordSpec
+with Matchers
+with GuiceOneAppPerSuite {
 
   val nameField = "name"
   val emailField = "email"
@@ -37,19 +41,27 @@ class ContactDetailsFormSpec extends AnyWordSpec with Matchers with GuiceOneAppP
       )
 
       BetaInviteContactDetailsForm.form.bind(params).value shouldBe
-        Some(BetaInviteContactDetails("Blah alkfh","asdlkj@eqkf.do",None))
+        Some(BetaInviteContactDetails(
+          "Blah alkfh",
+          "asdlkj@eqkf.do",
+          None
+        ))
 
     }
 
     "be successful when not empty (with phone)" in {
-        val params = Map(
-          nameField -> "Blah alkfh",
-          emailField -> "asdlkj@eqkf.do",
-          phoneField -> "32456 789896"
-        )
+      val params = Map(
+        nameField -> "Blah alkfh",
+        emailField -> "asdlkj@eqkf.do",
+        phoneField -> "32456 789896"
+      )
 
-        BetaInviteContactDetailsForm.form.bind(params).value shouldBe
-          Some(BetaInviteContactDetails("Blah alkfh","asdlkj@eqkf.do",Some("32456 789896")))
+      BetaInviteContactDetailsForm.form.bind(params).value shouldBe
+        Some(BetaInviteContactDetails(
+          "Blah alkfh",
+          "asdlkj@eqkf.do",
+          Some("32456 789896")
+        ))
     }
 
     s"error when $nameField and $emailField are empty" in {
@@ -149,7 +161,11 @@ class ContactDetailsFormSpec extends AnyWordSpec with Matchers with GuiceOneAppP
       )
 
       ContactDetailsSuspendForm.form.bind(params).value shouldBe
-        Some(SuspendContactDetails("Blah alkfh", "asdlkj@eqkf.do","01273 000 000"))
+        Some(SuspendContactDetails(
+          "Blah alkfh",
+          "asdlkj@eqkf.do",
+          "01273 000 000"
+        ))
     }
 
     s"error when $nameField, $emailField and $phoneField are empty" in {
@@ -246,4 +262,5 @@ class ContactDetailsFormSpec extends AnyWordSpec with Matchers with GuiceOneAppP
       validatedForm.errors.length shouldBe 1
     }
   }
+
 }

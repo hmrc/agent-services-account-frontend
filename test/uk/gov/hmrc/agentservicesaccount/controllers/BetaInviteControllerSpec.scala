@@ -20,7 +20,8 @@ import com.github.tomakehurst.wiremock.client.WireMock._
 import org.jsoup.Jsoup
 import play.api.Application
 import play.api.i18n.MessagesApi
-import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
+import play.api.mvc.AnyContentAsEmpty
+import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
@@ -31,8 +32,8 @@ import uk.gov.hmrc.agentservicesaccount.stubs.AgentPermissionsStubs.givenHideBet
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import uk.gov.hmrc.http.SessionKeys
 
-
-class BetaInviteControllerSpec extends BaseISpec {
+class BetaInviteControllerSpec
+extends BaseISpec {
 
   val controller: BetaInviteController = app.injector.instanceOf[BetaInviteController]
   implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
@@ -40,9 +41,8 @@ class BetaInviteControllerSpec extends BaseISpec {
   implicit val mockSessionCacheService: SessionCacheService = app.injector.instanceOf[SessionCacheService]
   implicit val mockSessionCacheRepo: SessionCacheRepository = app.injector.instanceOf[SessionCacheRepository]
 
-  override implicit lazy val app: Application =
-    appBuilder(Map("mongodb.uri" -> s"mongodb://localhost:27017/test-BetaInviteControllerSpec"))
-      .build()
+  override implicit lazy val app: Application = appBuilder(Map("mongodb.uri" -> s"mongodb://localhost:27017/test-BetaInviteControllerSpec"))
+    .build()
 
   def getRequest(path: String): FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", path)
     .withHeaders("Authorization" -> "Bearer XYZ")
@@ -54,18 +54,16 @@ class BetaInviteControllerSpec extends BaseISpec {
     .withSession(SessionKeys.authToken -> "Bearer XYZ")
     .withSession(SessionKeys.sessionId -> "session-x")
 
-
   "POST hide invite" should {
     "redirect to home and decline beta invite" in {
       givenAuthorisedAsAgentWith(arn.value)
       givenAgentRecordFound(agentRecord)
       givenHideBetaInviteResponse()
 
-      implicit val request: FakeRequest[AnyContentAsEmpty.type] =
-        postRequestNoBody("/private-beta-invite/decline")
+      implicit val request: FakeRequest[AnyContentAsEmpty.type] = postRequestNoBody("/private-beta-invite/decline")
 
       val result = await(controller.hideInvite(request))
-      //then
+      // then
       status(result) shouldBe SEE_OTHER
       redirectLocation(result) shouldBe
         Some("/agent-services-account/home")
@@ -77,7 +75,7 @@ class BetaInviteControllerSpec extends BaseISpec {
       givenAuthorisedAsAgentWith(arn.value)
       givenAgentRecordFound(agentRecord)
       val result = await(controller.showInvite.apply(getRequest("/private-beta-testing")))
-      //then
+      // then
       status(result) shouldBe OK
 
       val html = Jsoup.parse(contentAsString(result))
@@ -91,12 +89,11 @@ class BetaInviteControllerSpec extends BaseISpec {
       givenAuthorisedAsAgentWith(arn.value)
       givenHideBetaInviteResponse()
       givenAgentRecordFound(agentRecord)
-      implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] =
-        postRequestNoBody("/private-beta-testing")
-          .withFormUrlEncodedBody("accept" -> "false")
+      implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = postRequestNoBody("/private-beta-testing")
+        .withFormUrlEncodedBody("accept" -> "false")
 
       val result = await(controller.submitInvite()(request))
-      //then
+      // then
       status(result) shouldBe SEE_OTHER
       redirectLocation(result) shouldBe
         Some("/agent-services-account/home")
@@ -105,12 +102,11 @@ class BetaInviteControllerSpec extends BaseISpec {
     s"redirect to ${routes.BetaInviteController.showInviteDetails.url} if yes" in {
       givenAuthorisedAsAgentWith(arn.value)
       givenAgentRecordFound(agentRecord)
-      implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] =
-        postRequestNoBody("/private-beta-testing")
-          .withFormUrlEncodedBody("accept" -> "true")
+      implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = postRequestNoBody("/private-beta-testing")
+        .withFormUrlEncodedBody("accept" -> "true")
 
       val result = await(controller.submitInvite().apply(request))
-      //then
+      // then
       status(result) shouldBe SEE_OTHER
       redirectLocation(result) shouldBe
         Some("/agent-services-account/private-beta-testing-details")
@@ -119,12 +115,11 @@ class BetaInviteControllerSpec extends BaseISpec {
     s"render ${routes.BetaInviteController.showInvite.url} if errors" in {
       givenAuthorisedAsAgentWith(arn.value)
       givenAgentRecordFound(agentRecord)
-      implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] =
-        postRequestNoBody("/private-beta-testing")
-          .withFormUrlEncodedBody("bad" -> "req")
+      implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = postRequestNoBody("/private-beta-testing")
+        .withFormUrlEncodedBody("bad" -> "req")
 
       val result = await(controller.submitInvite().apply(request))
-      //then
+      // then
       status(result) shouldBe BAD_REQUEST
 
       val html = Jsoup.parse(contentAsString(result))
@@ -137,7 +132,7 @@ class BetaInviteControllerSpec extends BaseISpec {
       givenAuthorisedAsAgentWith(arn.value)
       givenAgentRecordFound(agentRecord)
       val result = await(controller.showInviteDetails.apply(getRequest("/private-beta-testing-details")))
-      //then
+      // then
       status(result) shouldBe OK
 
       val html = Jsoup.parse(contentAsString(result))
@@ -147,17 +142,18 @@ class BetaInviteControllerSpec extends BaseISpec {
 
   "GET authActionCheckSuspend" should {
     "redirect to subscription journey when there's no HMRC-AS-AGENT enrolments" in {
-        stubFor(post(urlEqualTo("/auth/authorise")) // Created stub without any enrolments.
-          .willReturn(
-            aResponse()
-              .withStatus(200).withBody(
+      stubFor(post(urlEqualTo("/auth/authorise")) // Created stub without any enrolments.
+        .willReturn(
+          aResponse()
+            .withStatus(200).withBody(
               s"""{
                  |  "internalId": "some-id",
                  |  "affinityGroup": "Agent",
                  |  "credentialRole": "Admin",
                  |  "allEnrolments": []
                  |}""".stripMargin
-            )))
+            )
+        ))
       givenAgentRecordFound(agentRecord)
       val result = await(controller.showInviteDetails.apply(getRequest("/your-account"))) // authActionCheckSuspend is used by the /your-account route
       status(result) shouldBe SEE_OTHER // 303
@@ -169,12 +165,11 @@ class BetaInviteControllerSpec extends BaseISpec {
     "redirect to show contact details" in {
       givenAuthorisedAsAgentWith(arn.value)
       givenAgentRecordFound(agentRecord)
-      implicit val req: FakeRequest[AnyContentAsFormUrlEncoded] =
-        postRequestNoBody("/private-beta-testing-details")
-          .withFormUrlEncodedBody("size" -> "small")
+      implicit val req: FakeRequest[AnyContentAsFormUrlEncoded] = postRequestNoBody("/private-beta-testing-details")
+        .withFormUrlEncodedBody("size" -> "small")
 
       val result = await(controller.submitInviteDetails().apply(req))
-      //then
+      // then
       status(result) shouldBe SEE_OTHER
       redirectLocation(result) shouldBe
         Some("/agent-services-account/private-beta-testing-contact-details")
@@ -183,11 +178,10 @@ class BetaInviteControllerSpec extends BaseISpec {
     "error if no option selected" in {
       givenAuthorisedAsAgentWith(arn.value)
       givenAgentRecordFound(agentRecord)
-      implicit val req: FakeRequest[AnyContentAsEmpty.type] =
-        postRequestNoBody("/private-beta-testing-details")
+      implicit val req: FakeRequest[AnyContentAsEmpty.type] = postRequestNoBody("/private-beta-testing-details")
 
       val result = await(controller.submitInviteDetails().apply(req))
-      //then
+      // then
       status(result) shouldBe BAD_REQUEST
       val html = Jsoup.parse(contentAsString(result))
       html.title() shouldBe "Error: How many clients do you manage using your agent services account? - Agent services account - GOV.UK"
@@ -199,7 +193,7 @@ class BetaInviteControllerSpec extends BaseISpec {
       givenAuthorisedAsAgentWith(arn.value)
       givenAgentRecordFound(agentRecord)
       val result = await(controller.showInviteContactDetails.apply(getRequest("/private-beta-testing-contact-details")))
-      //then
+      // then
       status(result) shouldBe OK
 
       val html = Jsoup.parse(contentAsString(result))
@@ -211,12 +205,11 @@ class BetaInviteControllerSpec extends BaseISpec {
     "redirect to check your answers" in {
       givenAuthorisedAsAgentWith(arn.value)
       givenAgentRecordFound(agentRecord)
-      implicit val req: FakeRequest[AnyContentAsFormUrlEncoded] =
-        postRequestNoBody("/private-beta-testing-contact-details")
-          .withFormUrlEncodedBody("name" -> "Fang", "email" -> "a@s.a")
+      implicit val req: FakeRequest[AnyContentAsFormUrlEncoded] = postRequestNoBody("/private-beta-testing-contact-details")
+        .withFormUrlEncodedBody("name" -> "Fang", "email" -> "a@s.a")
 
       val result = await(controller.submitInviteContactDetails().apply(req))
-      //then
+      // then
       status(result) shouldBe SEE_OTHER
       redirectLocation(result) shouldBe
         Some("/agent-services-account/private-beta-check-your-answers")
@@ -224,12 +217,11 @@ class BetaInviteControllerSpec extends BaseISpec {
     "render form with errors" in {
       givenAuthorisedAsAgentWith(arn.value)
       givenAgentRecordFound(agentRecord)
-      implicit val req: FakeRequest[AnyContentAsFormUrlEncoded] =
-        postRequestNoBody("/private-beta-testing-contact-details")
-          .withFormUrlEncodedBody("name" -> "Fang", "email" -> "bAD")
+      implicit val req: FakeRequest[AnyContentAsFormUrlEncoded] = postRequestNoBody("/private-beta-testing-contact-details")
+        .withFormUrlEncodedBody("name" -> "Fang", "email" -> "bAD")
 
       val result = await(controller.submitInviteContactDetails().apply(req))
-      //then
+      // then
       status(result) shouldBe BAD_REQUEST
 
       val html = Jsoup.parse(contentAsString(result))
@@ -242,11 +234,12 @@ class BetaInviteControllerSpec extends BaseISpec {
       givenAuthorisedAsAgentWith(arn.value)
       givenAgentRecordFound(agentRecord)
       val result = await(controller.showInviteCheckYourAnswers.apply(getRequest("/private-beta-check-your-answers")))
-      //then
+      // then
       status(result) shouldBe OK
 
       val html = Jsoup.parse(contentAsString(result))
       html.title() shouldBe "Check your answers - Agent services account - GOV.UK"
     }
   }
+
 }

@@ -19,59 +19,61 @@ package uk.gov.hmrc.agentservicesaccount.models
 object ModelExtensionMethods {
   implicit class AmlsStatusExt(amlsStatus: => AmlsStatus) {
 
-    def isUkAgent(): Boolean = amlsStatus match {
-      case AmlsStatuses.NoAmlsDetailsUK => true
-      case AmlsStatuses.ValidAmlsDetailsUK => true
-      case AmlsStatuses.ExpiredAmlsDetailsUK => true
-      case AmlsStatuses.PendingAmlsDetails => true
-      case AmlsStatuses.PendingAmlsDetailsRejected => true
-      case AmlsStatuses.NoAmlsDetailsNonUK => false
-      case AmlsStatuses.ValidAmlsNonUK => false
-    }
+    def isUkAgent(): Boolean =
+      amlsStatus match {
+        case AmlsStatuses.NoAmlsDetailsUK => true
+        case AmlsStatuses.ValidAmlsDetailsUK => true
+        case AmlsStatuses.ExpiredAmlsDetailsUK => true
+        case AmlsStatuses.PendingAmlsDetails => true
+        case AmlsStatuses.PendingAmlsDetailsRejected => true
+        case AmlsStatuses.NoAmlsDetailsNonUK => false
+        case AmlsStatuses.ValidAmlsNonUK => false
+      }
 
-    def isValid():Boolean = amlsStatus match {
-      case AmlsStatuses.ValidAmlsNonUK => true
-      case AmlsStatuses.ValidAmlsDetailsUK => true
-      case AmlsStatuses.NoAmlsDetailsNonUK => false
-      case AmlsStatuses.NoAmlsDetailsUK => false
-      case AmlsStatuses.ExpiredAmlsDetailsUK => false
-      case AmlsStatuses.PendingAmlsDetails => false
-      case AmlsStatuses.PendingAmlsDetailsRejected => false
-    }
+    def isValid(): Boolean =
+      amlsStatus match {
+        case AmlsStatuses.ValidAmlsNonUK => true
+        case AmlsStatuses.ValidAmlsDetailsUK => true
+        case AmlsStatuses.NoAmlsDetailsNonUK => false
+        case AmlsStatuses.NoAmlsDetailsUK => false
+        case AmlsStatuses.ExpiredAmlsDetailsUK => false
+        case AmlsStatuses.PendingAmlsDetails => false
+        case AmlsStatuses.PendingAmlsDetailsRejected => false
+      }
 
-    def isExpired():Boolean = amlsStatus match {
-      case AmlsStatuses.ExpiredAmlsDetailsUK => true
-      case AmlsStatuses.ValidAmlsNonUK => false
-      case AmlsStatuses.ValidAmlsDetailsUK => false
-      case AmlsStatuses.NoAmlsDetailsNonUK => false
-      case AmlsStatuses.NoAmlsDetailsUK => false
-      case AmlsStatuses.PendingAmlsDetails => false
-      case AmlsStatuses.PendingAmlsDetailsRejected => false
-    }
+    def isExpired(): Boolean =
+      amlsStatus match {
+        case AmlsStatuses.ExpiredAmlsDetailsUK => true
+        case AmlsStatuses.ValidAmlsNonUK => false
+        case AmlsStatuses.ValidAmlsDetailsUK => false
+        case AmlsStatuses.NoAmlsDetailsNonUK => false
+        case AmlsStatuses.NoAmlsDetailsUK => false
+        case AmlsStatuses.PendingAmlsDetails => false
+        case AmlsStatuses.PendingAmlsDetailsRejected => false
+      }
 
-    def isNoDetails():Boolean = amlsStatus match {
-      case AmlsStatuses.NoAmlsDetailsNonUK => true
-      case AmlsStatuses.NoAmlsDetailsUK => true
-      case AmlsStatuses.ValidAmlsNonUK => false
-      case AmlsStatuses.ValidAmlsDetailsUK => false
-      case AmlsStatuses.ExpiredAmlsDetailsUK => false
-      case AmlsStatuses.PendingAmlsDetails => false
-      case AmlsStatuses.PendingAmlsDetailsRejected => false
-    }
+    def isNoDetails(): Boolean =
+      amlsStatus match {
+        case AmlsStatuses.NoAmlsDetailsNonUK => true
+        case AmlsStatuses.NoAmlsDetailsUK => true
+        case AmlsStatuses.ValidAmlsNonUK => false
+        case AmlsStatuses.ValidAmlsDetailsUK => false
+        case AmlsStatuses.ExpiredAmlsDetailsUK => false
+        case AmlsStatuses.PendingAmlsDetails => false
+        case AmlsStatuses.PendingAmlsDetailsRejected => false
+      }
 
-    def hasExistingAmls(): Boolean = amlsStatus match {
-      case AmlsStatuses.NoAmlsDetailsNonUK => false
-      case AmlsStatuses.ValidAmlsNonUK => true
-      case AmlsStatuses.NoAmlsDetailsUK => false
-      case AmlsStatuses.ValidAmlsDetailsUK => true
-      case AmlsStatuses.ExpiredAmlsDetailsUK => true
-      case AmlsStatuses.PendingAmlsDetails => true
-      case AmlsStatuses.PendingAmlsDetailsRejected => true
-    }
+    def hasExistingAmls(): Boolean =
+      amlsStatus match {
+        case AmlsStatuses.NoAmlsDetailsNonUK => false
+        case AmlsStatuses.ValidAmlsNonUK => true
+        case AmlsStatuses.NoAmlsDetailsUK => false
+        case AmlsStatuses.ValidAmlsDetailsUK => true
+        case AmlsStatuses.ExpiredAmlsDetailsUK => true
+        case AmlsStatuses.PendingAmlsDetails => true
+        case AmlsStatuses.PendingAmlsDetailsRejected => true
+      }
 
   }
 
 }
-
-
-

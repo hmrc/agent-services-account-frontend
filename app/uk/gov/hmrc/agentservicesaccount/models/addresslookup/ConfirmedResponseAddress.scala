@@ -16,27 +16,35 @@
 
 package uk.gov.hmrc.agentservicesaccount.models.addresslookup
 
-import play.api.libs.json.{Format, Json}
+import play.api.libs.json.Format
+import play.api.libs.json.Json
 
-case class ConfirmedResponseAddress(auditRef: String,
-                                    id: Option[String] = None,
-                                    address: ConfirmedResponseAddressDetails =
-                                    ConfirmedResponseAddressDetails())
+case class ConfirmedResponseAddress(
+  auditRef: String,
+  id: Option[String] = None,
+  address: ConfirmedResponseAddressDetails = ConfirmedResponseAddressDetails()
+)
 
-case class ConfirmedResponseAddressDetails(organisation: Option[String] = None,
-                                            lines: Option[Seq[String]] = None,
-                                            postcode: Option[String] = None,
-                                            country: Option[Country] = None,
-                                            poBox: Option[String] = None)
+case class ConfirmedResponseAddressDetails(
+  organisation: Option[String] = None,
+  lines: Option[Seq[String]] = None,
+  postcode: Option[String] = None,
+  country: Option[Country] = None,
+  poBox: Option[String] = None
+)
 
 object ConfirmedResponseAddressDetails {
+
   implicit val countryFormat: Format[Country] = Json.format[Country]
-  implicit val confirmableAddressDetailsFormat: Format[ConfirmedResponseAddressDetails] =
-    Json.format[ConfirmedResponseAddressDetails]
+  implicit val confirmableAddressDetailsFormat: Format[ConfirmedResponseAddressDetails] = Json.format[ConfirmedResponseAddressDetails]
+
 }
 
 object ConfirmedResponseAddress {
   implicit val confirmableAddressFormat: Format[ConfirmedResponseAddress] = Json.format[ConfirmedResponseAddress]
 }
 
-case class Country(code: String, name: String)
+case class Country(
+  code: String,
+  name: String
+)

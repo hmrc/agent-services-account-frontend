@@ -23,7 +23,10 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms.yourDetailsForm
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.YourDetails
 
-class YourDetailsFormSpec extends AnyWordSpec with Matchers with GuiceOneAppPerSuite {
+class YourDetailsFormSpec
+extends AnyWordSpec
+with Matchers
+with GuiceOneAppPerSuite {
 
   val nameField = "fullName"
   val phoneField = "telephone"

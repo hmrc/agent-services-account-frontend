@@ -23,36 +23,43 @@ import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models.emailverification._
 import uk.gov.hmrc.agentservicesaccount.utils.HttpAPIMonitor
 import uk.gov.hmrc.http.HttpReads.Implicits._
-import uk.gov.hmrc.http.{HttpResponse, StringContextOps}
+import uk.gov.hmrc.http.HttpResponse
+import uk.gov.hmrc.http.StringContextOps
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.play.bootstrap.metrics.Metrics
 import uk.gov.hmrc.agentservicesaccount.utils.RequestSupport._
 
-import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import javax.inject.Inject
+import javax.inject.Singleton
+import scala.concurrent.ExecutionContext
+import scala.concurrent.Future
 
 @Singleton
-class EmailVerificationConnector @Inject()(http: HttpClientV2, val metrics: Metrics)
-                                          (implicit val appConfig: AppConfig, val ec: ExecutionContext) extends HttpAPIMonitor with Logging {
+class EmailVerificationConnector @Inject() (
+  http: HttpClientV2,
+  val metrics: Metrics
+)(implicit
+  val appConfig: AppConfig,
+  val ec: ExecutionContext
+)
+extends HttpAPIMonitor
+with Logging {
 
-
-  def verifyEmail(request: VerifyEmailRequest)
-                 (implicit rh: RequestHeader): Future[Option[VerifyEmailResponse]] = {
+  def verifyEmail(request: VerifyEmailRequest)(implicit rh: RequestHeader): Future[Option[VerifyEmailResponse]] = {
     monitor(s"ConsumedAPI-email-verify-POST") {
       http.post(url"${appConfig.emailVerificationBaseUrl}/email-verification/verify-email").withBody(Json.toJson(request)).execute[HttpResponse]
         .map { response =>
-        response.status match {
-          case 201 => Some(response.json.as[VerifyEmailResponse])
-          case status =>
-            logger.error(s"verifyEmail error for $request; HTTP status: $status, message: $response")
-            None
+          response.status match {
+            case 201 => Some(response.json.as[VerifyEmailResponse])
+            case status =>
+              logger.error(s"verifyEmail error for $request; HTTP status: $status, message: $response")
+              None
+          }
         }
-      }
     }
   }
 
-  def checkEmail(credId: String)
-                (implicit rh: RequestHeader): Future[Option[VerificationStatusResponse]] = {
+  def checkEmail(credId: String)(implicit rh: RequestHeader): Future[Option[VerificationStatusResponse]] = {
     monitor(s"ConsumedAPI-email-verification-status-GET") {
       http.get(url"${appConfig.emailVerificationBaseUrl}/email-verification/verification-status/$credId").execute[HttpResponse].map { response =>
         response.status match {
@@ -65,4 +72,5 @@ class EmailVerificationConnector @Inject()(http: HttpClientV2, val metrics: Metr
       }
     }
   }
+
 }

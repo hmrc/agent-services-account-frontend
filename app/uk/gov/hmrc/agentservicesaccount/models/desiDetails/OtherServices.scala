@@ -16,21 +16,31 @@
 
 package uk.gov.hmrc.agentservicesaccount.models.desiDetails
 
-import play.api.libs.functional.syntax.{toFunctionalBuilderOps, unlift}
-import play.api.libs.json.{Format, Json, OFormat, __}
+import play.api.libs.functional.syntax.toFunctionalBuilderOps
+import play.api.libs.functional.syntax.unlift
+import play.api.libs.json.Format
+import play.api.libs.json.Json
+import play.api.libs.json.OFormat
+import play.api.libs.json.__
 import uk.gov.hmrc.crypto.json.JsonEncryption.stringEncrypterDecrypter
-import uk.gov.hmrc.crypto.{Decrypter, Encrypter}
-import uk.gov.hmrc.domain.{CtUtr, SaUtr}
+import uk.gov.hmrc.crypto.Decrypter
+import uk.gov.hmrc.crypto.Encrypter
+import uk.gov.hmrc.domain.CtUtr
+import uk.gov.hmrc.domain.SaUtr
 
 case class CtChanges(
-                      applyChanges: Boolean,
-                      ctAgentReference: Option[CtUtr]
-                    )
+  applyChanges: Boolean,
+  ctAgentReference: Option[CtUtr]
+)
 
 object CtChanges {
+
   implicit val ctChangesFormat: OFormat[CtChanges] = Json.format[CtChanges]
 
-  def databaseFormat(implicit crypto: Encrypter with Decrypter): Format[CtChanges] =
+  def databaseFormat(implicit
+    crypto: Encrypter
+      with Decrypter
+  ): Format[CtChanges] =
     (
       (__ \ "applyChanges").format[Boolean] and
         (__ \ "ctAgentReference").formatNullable[String](stringEncrypterDecrypter)
@@ -38,19 +48,23 @@ object CtChanges {
             _.map(CtUtr(_)),
             _.map(_.utr)
           )
-      )(CtChanges.apply, unlift(CtChanges.unapply))
+    )(CtChanges.apply, unlift(CtChanges.unapply))
+
 }
 
-
 case class SaChanges(
-                      applyChanges: Boolean,
-                      saAgentReference: Option[SaUtr]
-                    )
+  applyChanges: Boolean,
+  saAgentReference: Option[SaUtr]
+)
 
 object SaChanges {
+
   implicit val saCodeChangesFormat: OFormat[SaChanges] = Json.format[SaChanges]
 
-  def databaseFormat(implicit crypto: Encrypter with Decrypter): Format[SaChanges] =
+  def databaseFormat(implicit
+    crypto: Encrypter
+      with Decrypter
+  ): Format[SaChanges] =
     (
       (__ \ "applyChanges").format[Boolean] and
         (__ \ "saAgentReference").formatNullable[String](stringEncrypterDecrypter)
@@ -58,21 +72,26 @@ object SaChanges {
             _.map(SaUtr(_)),
             _.map(_.utr)
           )
-      )(SaChanges.apply, unlift(SaChanges.unapply))
+    )(SaChanges.apply, unlift(SaChanges.unapply))
+
 }
 
-
 case class OtherServices(
-                          saChanges: SaChanges,
-                          ctChanges: CtChanges
-                        )
+  saChanges: SaChanges,
+  ctChanges: CtChanges
+)
 
 object OtherServices {
+
   implicit val otherServicesFormat: OFormat[OtherServices] = Json.format[OtherServices]
 
-  def databaseFormat(implicit crypto: Encrypter with Decrypter): Format[OtherServices] =
+  def databaseFormat(implicit
+    crypto: Encrypter
+      with Decrypter
+  ): Format[OtherServices] =
     (
       (__ \ "saChanges").format[SaChanges](SaChanges.databaseFormat) and
         (__ \ "ctChanges").format[CtChanges](CtChanges.databaseFormat)
-      )(OtherServices.apply, unlift(OtherServices.unapply))
+    )(OtherServices.apply, unlift(OtherServices.unapply))
+
 }

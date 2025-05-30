@@ -20,14 +20,18 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.data.Form
-import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
+import play.api.i18n.Lang
+import play.api.i18n.Messages
+import play.api.i18n.MessagesApi
+import play.api.i18n.MessagesImpl
 import play.api.test.FakeRequest
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.forms.YesNoForm
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.update_confirmation_received
 
-class AmlsConfirmationControllerViewSpec extends BaseISpec{
+class AmlsConfirmationControllerViewSpec
+extends BaseISpec {
 
   implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
@@ -40,32 +44,39 @@ class AmlsConfirmationControllerViewSpec extends BaseISpec{
 
   "update_confirmation_received view" when {
     "the user has changed existing amls details should render the page correctly" in {
-      val doc: Document = Jsoup.parse(view.apply(amlsDetailsAlreadyExisted = true)(FakeRequest(), messages, appConfig).body)
+      val doc: Document = Jsoup.parse(view.apply(amlsDetailsAlreadyExisted = true)(
+        FakeRequest(),
+        messages,
+        appConfig
+      ).body)
       doc.select(".govuk-header__service-name").first.text() mustBe "Agent services account"
       doc.select(".govuk-header__service-name").first.attr("href") mustBe "/agent-services-account"
 
-      doc.select(".govuk-panel__title").first().text() mustBe "You've changed your supervision details" //title
-      doc.select(".govuk-heading-m").first().text() mustBe "What happens next" //h2
-      doc.select(".govuk-body").first().text() mustBe "We'll update your anti-money laundering supervision details on your agent services accounts." //p
-
+      doc.select(".govuk-panel__title").first().text() mustBe "You've changed your supervision details" // title
+      doc.select(".govuk-heading-m").first().text() mustBe "What happens next" // h2
+      doc.select(".govuk-body").first().text() mustBe "We'll update your anti-money laundering supervision details on your agent services accounts." // p
 
       doc.select(".govuk-link").get(2).text() mustBe "Return to manage account"
       doc.select(".hmrc-sign-out-nav__link").first.text() mustBe "Sign out"
       doc.select(".hmrc-sign-out-nav__link").first.attr("href") mustBe "/agent-services-account/sign-out"
     }
     "the user has provided amls details for the first time should render the page correctly" in {
-      val doc: Document = Jsoup.parse(view.apply(amlsDetailsAlreadyExisted = false)(FakeRequest(), messages, appConfig).body)
+      val doc: Document = Jsoup.parse(view.apply(amlsDetailsAlreadyExisted = false)(
+        FakeRequest(),
+        messages,
+        appConfig
+      ).body)
       doc.select(".govuk-header__service-name").first.text() mustBe "Agent services account"
       doc.select(".govuk-header__service-name").first.attr("href") mustBe "/agent-services-account"
 
-      doc.select(".govuk-panel__title").first().text() mustBe "You've added your supervision details" //title
-      doc.select(".govuk-heading-m").first().text() mustBe "What happens next" //h2
-      doc.select(".govuk-body").first().text() mustBe "We'll update your anti-money laundering supervision details on your agent services accounts." //p
-
+      doc.select(".govuk-panel__title").first().text() mustBe "You've added your supervision details" // title
+      doc.select(".govuk-heading-m").first().text() mustBe "What happens next" // h2
+      doc.select(".govuk-body").first().text() mustBe "We'll update your anti-money laundering supervision details on your agent services accounts." // p
 
       doc.select(".govuk-link").get(2).text() mustBe "Return to manage account"
       doc.select(".hmrc-sign-out-nav__link").first.text() mustBe "Sign out"
       doc.select(".hmrc-sign-out-nav__link").first.attr("href") mustBe "/agent-services-account/sign-out"
     }
   }
+
 }

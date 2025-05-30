@@ -16,9 +16,10 @@
 
 package uk.gov.hmrc.agentservicesaccount.models
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.Json
+import play.api.libs.json.OFormat
 
-case class ApplySaCodeChanges(apply:Boolean)
+case class ApplySaCodeChanges(apply: Boolean)
 
 object ApplySaCodeChanges {
   implicit val applySaCodeChangesFormat: OFormat[ApplySaCodeChanges] = Json.format[ApplySaCodeChanges]

@@ -19,42 +19,61 @@ package uk.gov.hmrc.agentservicesaccount.views.pages.desi_details
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
-import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
+import play.api.i18n.Lang
+import play.api.i18n.Messages
+import play.api.i18n.MessagesApi
+import play.api.i18n.MessagesImpl
 import play.api.test.FakeRequest
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress}
+import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
+import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details._
 
 import scala.jdk.CollectionConverters.CollectionHasAsScala
 
-class BeforeYouStartPageSpec extends BaseISpec {
+class BeforeYouStartPageSpec
+extends BaseISpec {
 
-  implicit private val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
-  implicit private val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
-  implicit private val langs: Seq[Lang] = Seq(Lang("en"), Lang("cy"))
+  private implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+  private implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
+  private implicit val langs: Seq[Lang] = Seq(Lang("en"), Lang("cy"))
 
   private val view: before_you_start_page = app.injector.instanceOf[before_you_start_page]
   private val testAgencyDetailsFull = Some(AgencyDetails(
     agencyName = Some("Test Name"),
     agencyEmail = Some("test@email.com"),
     agencyTelephone = Some("01234 567890"),
-    agencyAddress = Some(BusinessAddress("Test Street", Some("Test Town"), None, None, Some("TE5 7ED"), "GB")))
-  )
+    agencyAddress = Some(BusinessAddress(
+      "Test Street",
+      Some("Test Town"),
+      None,
+      None,
+      Some("TE5 7ED"),
+      "GB"
+    ))
+  ))
   private val testAgencyDetailsNoName = Some(AgencyDetails(
     agencyName = Some(""),
     agencyEmail = Some("test@email.com"),
     agencyTelephone = Some("01234 567890"),
-    agencyAddress = Some(BusinessAddress("Test Street", Some("Test Town"), None, None, Some("TE5 7ED"), "GB")))
-  )
+    agencyAddress = Some(BusinessAddress(
+      "Test Street",
+      Some("Test Town"),
+      None,
+      None,
+      Some("TE5 7ED"),
+      "GB"
+    ))
+  ))
 
   object MessageLookup {
 
     object English {
+
       private val govUkSuffix: String = " - Agent services account - GOV.UK"
       val heading: String = "Contact details"
       val title: String = heading + govUkSuffix
-
 
       val header1: String = "Update contact details"
       val header2: String = "Before you start"
@@ -67,18 +86,21 @@ class BeforeYouStartPageSpec extends BaseISpec {
 
       val paragraph1: String = "To update contact details for {0}, you must be authorised by a:"
       val paragraph2: String = "If your role is on this list, you do not need additional authorisation."
-      val paragraph3: String = "We'll ask you to confirm that you have authorisation before you submit any changes. We'll also need your name and telephone number."
-      val paragraph4: String = "In some cirumstances we'll ask for your agent codes for Self Assessment and Corporation Tax. The codes were sent by letter when your organisation asked for agent access to those services."
+      val paragraph3: String =
+        "We'll ask you to confirm that you have authorisation before you submit any changes. We'll also need your name and telephone number."
+      val paragraph4: String =
+        "In some cirumstances we'll ask for your agent codes for Self Assessment and Corporation Tax. The codes were sent by letter when your organisation asked for agent access to those services."
       val paragraph5: String = "Once you submit changes, you cannot amend the contact details again for 4 weeks."
       val paragraph6: String = "To update contact details, you must be authorised by a:"
       val button: String = "Continue"
+
     }
 
     object Welsh {
+
       private val govUkSuffix: String = " - Cyfrif gwasanaethau asiant - GOV.UK"
       val heading: String = "Manylion cyswllt"
       val title: String = heading + govUkSuffix
-
 
       val header1: String = "Diweddaru manylion cyswllt"
       val header2: String = "Cyn i chi ddechrau"
@@ -91,21 +113,27 @@ class BeforeYouStartPageSpec extends BaseISpec {
 
       val paragraph1: String = "I ddiweddaru’r manylion cyswllt ar gyfer {}, mae’n rhaid eich bod wedi’ch awdurdodi gan y canlynol:"
       val paragraph2: String = "Os yw’ch swydd wedi’i nodi ar y rhestr hon, does dim angen awdurdod ychwanegol arnoch. "
-      val paragraph3: String = "'Byddwn yn gofyn i chi gadarnhau fod gennych awdurdod cyn i chi gyflwyno unrhyw newidiadau. Bydd angen eich enw a'ch rhif ffôn arnom hefyd."
-      val paragraph4: String = "tMewn rhai amgylchiadau, byddwn yn gofyn am eich codau asiant ar gyfer Hunanasesiad a Threth Gorfforaeth.Anfonwyd y codau mewn llythyr pan ofynnodd eich sefydliad am fynediad asiant i?r gwasanaethau hynny."
+      val paragraph3: String =
+        "'Byddwn yn gofyn i chi gadarnhau fod gennych awdurdod cyn i chi gyflwyno unrhyw newidiadau. Bydd angen eich enw a'ch rhif ffôn arnom hefyd."
+      val paragraph4: String =
+        "tMewn rhai amgylchiadau, byddwn yn gofyn am eich codau asiant ar gyfer Hunanasesiad a Threth Gorfforaeth.Anfonwyd y codau mewn llythyr pan ofynnodd eich sefydliad am fynediad asiant i?r gwasanaethau hynny."
       val paragraph5: String = "Ar ôl i chi gyflwyno newidiadau, ni fyddwch yn gallu diwygio?r manylion cyswllt eto am 4 wythnos."
       val paragraph6: String = "I ddiweddaru''r manylion cyswllt ar, mae''n rhaid eich bod wedi''ch awdurdodi gan y canlynol:"
 
       val button: String = "Yn eich blaen"
-    }
 
+    }
 
     "before_you_start_page" should {
       "render correctly" when {
         "the selected lang is english" when {
           val messages: Messages = MessagesImpl(langs.head, messagesApi)
           "there are contact details" in {
-            val doc: Document = Jsoup.parse(view.apply(testAgencyDetailsFull)(FakeRequest(), messages, appConfig).body)
+            val doc: Document = Jsoup.parse(view.apply(testAgencyDetailsFull)(
+              FakeRequest(),
+              messages,
+              appConfig
+            ).body)
 
             doc.title() mustBe MessageLookup.English.title
             doc.select("h1").asScala.head.text mustBe MessageLookup.English.header1
@@ -133,7 +161,11 @@ class BeforeYouStartPageSpec extends BaseISpec {
             button(1).attributes().get("href") mustBe "/"
           }
           "there are contact details however missing a agent name" in {
-            val doc: Document = Jsoup.parse(view.apply(testAgencyDetailsNoName)(FakeRequest(), messages, appConfig).body)
+            val doc: Document = Jsoup.parse(view.apply(testAgencyDetailsNoName)(
+              FakeRequest(),
+              messages,
+              appConfig
+            ).body)
 
             doc.title() mustBe MessageLookup.English.title
             doc.select("h1").asScala.head.text mustBe MessageLookup.English.header1
@@ -161,7 +193,11 @@ class BeforeYouStartPageSpec extends BaseISpec {
             button(1).attributes().get("href") mustBe "/"
           }
           "If you're a standard user you will be presented with a Forbidden error page" in {
-            val doc: Document = Jsoup.parse(view.apply(testAgencyDetailsFull)(FakeRequest(), messages, appConfig).body)
+            val doc: Document = Jsoup.parse(view.apply(testAgencyDetailsFull)(
+              FakeRequest(),
+              messages,
+              appConfig
+            ).body)
 
             doc.title() mustBe MessageLookup.English.title
             doc.select("h1").asScala.head.text mustBe MessageLookup.English.header1
@@ -172,7 +208,11 @@ class BeforeYouStartPageSpec extends BaseISpec {
         "the selected lang is welsh" when {
           val messages: Messages = MessagesImpl(langs.last, messagesApi)
           "there are contact details" in {
-            val doc: Document = Jsoup.parse(view.apply(testAgencyDetailsFull)(FakeRequest(), messages, appConfig).body)
+            val doc: Document = Jsoup.parse(view.apply(testAgencyDetailsFull)(
+              FakeRequest(),
+              messages,
+              appConfig
+            ).body)
 
             doc.title() mustBe MessageLookup.Welsh.title
             doc.select("h1").asScala.head.text mustBe MessageLookup.Welsh.header1
@@ -188,7 +228,6 @@ class BeforeYouStartPageSpec extends BaseISpec {
 
             val bulletPoint = doc.select(".govuk-list govuk-list--bullet").asScala.toList
 
-
             bulletPoint.head mustBe MessageLookup.Welsh.bulletPoint1
             bulletPoint(1) mustBe MessageLookup.Welsh.bulletPoint2
             bulletPoint(2) mustBe MessageLookup.Welsh.bulletPoint3
@@ -201,7 +240,11 @@ class BeforeYouStartPageSpec extends BaseISpec {
             button(1).attributes().get("href") mustBe "/"
           }
           "there are contact details however missing a agent name" in {
-            val doc: Document = Jsoup.parse(view.apply(testAgencyDetailsNoName)(FakeRequest(), messages, appConfig).body)
+            val doc: Document = Jsoup.parse(view.apply(testAgencyDetailsNoName)(
+              FakeRequest(),
+              messages,
+              appConfig
+            ).body)
 
             doc.title() mustBe MessageLookup.Welsh.title
             doc.select("h1").asScala.head.text mustBe MessageLookup.English.header1
@@ -229,7 +272,11 @@ class BeforeYouStartPageSpec extends BaseISpec {
             button(1).attributes().get("href") mustBe "/"
           }
           "If you're a standard user you will be presented with a Forbidden error page" in {
-            val doc: Document = Jsoup.parse(view.apply(testAgencyDetailsFull)(FakeRequest(), messages, appConfig).body)
+            val doc: Document = Jsoup.parse(view.apply(testAgencyDetailsFull)(
+              FakeRequest(),
+              messages,
+              appConfig
+            ).body)
 
             doc.title() mustBe MessageLookup.Welsh.title
             doc.select("h1").asScala.head.text mustBe MessageLookup.Welsh.header1
@@ -238,5 +285,7 @@ class BeforeYouStartPageSpec extends BaseISpec {
         }
       }
     }
+
   }
+
 }

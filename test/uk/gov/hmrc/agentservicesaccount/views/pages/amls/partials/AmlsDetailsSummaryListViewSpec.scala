@@ -24,14 +24,13 @@ import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.partials.amls_deta
 
 import java.time.LocalDate
 
-class AmlsDetailsSummaryListViewSpec extends BaseISpec {
-
+class AmlsDetailsSummaryListViewSpec
+extends BaseISpec {
 
   implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
-  implicit val  lang: Lang = Lang("en")
-  val view: amls_details_summary_list  = app.injector.instanceOf[amls_details_summary_list]
+  implicit val lang: Lang = Lang("en")
+  val view: amls_details_summary_list = app.injector.instanceOf[amls_details_summary_list]
   val messages: Messages = MessagesImpl(lang, messagesApi)
-
 
   "amls_details_summary_list" should {
 
@@ -39,7 +38,11 @@ class AmlsDetailsSummaryListViewSpec extends BaseISpec {
 
       val aDate = LocalDate.parse("2024-12-07")
 
-      val amlsDetails = AmlsDetails(supervisoryBody = "HMRC", membershipNumber = Some("1234"), membershipExpiresOn = Some(aDate))
+      val amlsDetails = AmlsDetails(
+        supervisoryBody = "HMRC",
+        membershipNumber = Some("1234"),
+        membershipExpiresOn = Some(aDate)
+      )
       val doc = Jsoup.parse(view.apply(amlsDetails)(messages).body)
 
       val summaryListKeys = doc.select(".govuk-summary-list__key")
@@ -60,7 +63,11 @@ class AmlsDetailsSummaryListViewSpec extends BaseISpec {
 
     "display amls details without a renewal date" in {
 
-      val amlsDetails = AmlsDetails(supervisoryBody = "HMRC", membershipNumber = Some("1234"), membershipExpiresOn = None)
+      val amlsDetails = AmlsDetails(
+        supervisoryBody = "HMRC",
+        membershipNumber = Some("1234"),
+        membershipExpiresOn = None
+      )
       val doc = Jsoup.parse(view.apply(amlsDetails)(messages).body)
 
       val summaryListKeys = doc.select(".govuk-summary-list__key")
@@ -79,7 +86,11 @@ class AmlsDetailsSummaryListViewSpec extends BaseISpec {
 
     "display amls details when supervisory body is the only available field" in {
 
-      val amlsDetails = AmlsDetails(supervisoryBody = "HMRC", membershipNumber = None, membershipExpiresOn = None)
+      val amlsDetails = AmlsDetails(
+        supervisoryBody = "HMRC",
+        membershipNumber = None,
+        membershipExpiresOn = None
+      )
       val doc = Jsoup.parse(view.apply(amlsDetails)(messages).body)
 
       val summaryListKeys = doc.select(".govuk-summary-list__key")
@@ -94,7 +105,11 @@ class AmlsDetailsSummaryListViewSpec extends BaseISpec {
 
     "display pending amls details" in {
 
-      val amlsDetails = AmlsDetails(supervisoryBody = "HMRC", membershipNumber = Some("1234"), membershipExpiresOn = None)
+      val amlsDetails = AmlsDetails(
+        supervisoryBody = "HMRC",
+        membershipNumber = Some("1234"),
+        membershipExpiresOn = None
+      )
       val doc = Jsoup.parse(view.apply(amlsDetails, Some("Pending"))(messages).body)
 
       val summaryListKeys = doc.select(".govuk-summary-list__key")
@@ -115,7 +130,11 @@ class AmlsDetailsSummaryListViewSpec extends BaseISpec {
 
     "display pending rejected amls details" in {
 
-      val amlsDetails = AmlsDetails(supervisoryBody = "HMRC", membershipNumber = Some("1234"), membershipExpiresOn = None)
+      val amlsDetails = AmlsDetails(
+        supervisoryBody = "HMRC",
+        membershipNumber = Some("1234"),
+        membershipExpiresOn = None
+      )
       val doc = Jsoup.parse(view.apply(amlsDetails, Some("Rejected"))(messages).body)
 
       val summaryListKeys = doc.select(".govuk-summary-list__key")
@@ -139,10 +158,14 @@ class AmlsDetailsSummaryListViewSpec extends BaseISpec {
       val aDate = LocalDate.parse("2024-12-07")
 
       val lang: Lang = Lang("cy")
-      val view: amls_details_summary_list  = app.injector.instanceOf[amls_details_summary_list]
+      val view: amls_details_summary_list = app.injector.instanceOf[amls_details_summary_list]
       val messages: Messages = MessagesImpl(lang, messagesApi)
 
-      val amlsDetails = AmlsDetails(supervisoryBody = "HMRC", membershipNumber = Some("1234"), membershipExpiresOn = Some(aDate))
+      val amlsDetails = AmlsDetails(
+        supervisoryBody = "HMRC",
+        membershipNumber = Some("1234"),
+        membershipExpiresOn = Some(aDate)
+      )
       val doc = Jsoup.parse(view.apply(amlsDetails)(messages).body)
 
       val summaryListKeys = doc.select(".govuk-summary-list__key")
@@ -158,5 +181,3 @@ class AmlsDetailsSummaryListViewSpec extends BaseISpec {
   }
 
 }
-
-

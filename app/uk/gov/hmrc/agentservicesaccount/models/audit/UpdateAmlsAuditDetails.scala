@@ -16,13 +16,18 @@
 
 package uk.gov.hmrc.agentservicesaccount.models.audit
 
-import play.api.libs.json.{Json, OWrites}
-import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, Utr}
+import play.api.libs.json.Json
+import play.api.libs.json.OWrites
+import uk.gov.hmrc.agentmtdidentifiers.model.Arn
+import uk.gov.hmrc.agentmtdidentifiers.model.Utr
 
-final case class UpdateAmlsAuditDetails(agentReferenceNumber: Arn,
-                                         utr: Option[Utr],
-                                         existingAmlsDetails: Option[AmlsAuditDetails],
-                                         newAmlsDetails: AmlsAuditDetails) extends AuditDetail {
+final case class UpdateAmlsAuditDetails(
+  agentReferenceNumber: Arn,
+  utr: Option[Utr],
+  existingAmlsDetails: Option[AmlsAuditDetails],
+  newAmlsDetails: AmlsAuditDetails
+)
+extends AuditDetail {
   val auditType: String = "updateAntiMoneyLaunderingSupervisionDetails"
 }
 

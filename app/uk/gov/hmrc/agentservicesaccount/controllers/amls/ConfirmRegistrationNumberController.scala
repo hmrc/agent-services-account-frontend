@@ -17,8 +17,11 @@
 package uk.gov.hmrc.agentservicesaccount.controllers.amls
 
 import play.api.Logging
-import play.api.i18n.{I18nSupport, Messages}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.i18n.I18nSupport
+import play.api.i18n.Messages
+import play.api.mvc.Action
+import play.api.mvc.AnyContent
+import play.api.mvc.MessagesControllerComponents
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.ToFuture
@@ -27,17 +30,25 @@ import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.confirm_registration_number
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
-import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import javax.inject.Inject
+import javax.inject.Singleton
+import scala.concurrent.ExecutionContext
+import scala.concurrent.Future
 
 @Singleton
-class ConfirmRegistrationNumberController @Inject()(actions: Actions,
-                                                    val updateAmlsJourneyRepository: UpdateAmlsJourneyRepository,
-                                                    confirmRegistrationNumber: confirm_registration_number,
-                                                    cc: MessagesControllerComponents
-                                                   )(implicit appConfig: AppConfig,
-                                                     ec: ExecutionContext
-) extends FrontendController(cc) with AmlsJourneySupport with I18nSupport with Logging {
+class ConfirmRegistrationNumberController @Inject() (
+  actions: Actions,
+  val updateAmlsJourneyRepository: UpdateAmlsJourneyRepository,
+  confirmRegistrationNumber: confirm_registration_number,
+  cc: MessagesControllerComponents
+)(implicit
+  appConfig: AppConfig,
+  ec: ExecutionContext
+)
+extends FrontendController(cc)
+with AmlsJourneySupport
+with I18nSupport
+with Logging {
 
   def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
@@ -56,7 +67,6 @@ class ConfirmRegistrationNumberController @Inject()(actions: Actions,
     }
   }
 
-
   def onSubmit: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
       actions.withCurrentAmlsDetails(request.agentInfo.arn) { amlsDetails =>
@@ -68,11 +78,15 @@ class ConfirmRegistrationNumberController @Inject()(actions: Actions,
                 .fold(
                   formWithError => Future successful BadRequest(confirmRegistrationNumber(formWithError, registrationNumber)),
                   data => {
-                    val maybeCopyRegistrationNumber = if (data) amlsDetails.membershipNumber else amlsJourney.newRegistrationNumber
+                    val maybeCopyRegistrationNumber =
+                      if (data)
+                        amlsDetails.membershipNumber
+                      else
+                        amlsJourney.newRegistrationNumber
                     saveAmlsJourney(amlsJourney.copy(
                       isRegistrationNumberStillTheSame = Option(data),
-                      newRegistrationNumber = maybeCopyRegistrationNumber)
-                    ).map(_ =>
+                      newRegistrationNumber = maybeCopyRegistrationNumber
+                    )).map(_ =>
                       Redirect(nextPage(data))
                     )
                   }
@@ -84,9 +98,10 @@ class ConfirmRegistrationNumberController @Inject()(actions: Actions,
     }
   }
 
-
   private def nextPage(confirm: Boolean): String =
-    if (confirm) routes.EnterRenewalDateController.showPage.url
-    else routes.EnterRegistrationNumberController.showPage().url
+    if (confirm)
+      routes.EnterRenewalDateController.showPage.url
+    else
+      routes.EnterRegistrationNumberController.showPage().url
 
 }

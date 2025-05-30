@@ -19,13 +19,15 @@ package uk.gov.hmrc.agentservicesaccount.controllers
 import play.api.http.Status
 import play.api.i18n.MessagesApi
 import play.api.test.Helpers._
-import play.api.test.{FakeRequest, Helpers}
+import play.api.test.FakeRequest
+import play.api.test.Helpers
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 
 import scala.concurrent.duration._
 
-class AgentServicesLanguageControllerSpec extends BaseISpec {
+class AgentServicesLanguageControllerSpec
+extends BaseISpec {
 
   implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
@@ -49,30 +51,31 @@ class AgentServicesLanguageControllerSpec extends BaseISpec {
     }
   }
 
-    "providing the parameter 'cymraeg'" should {
+  "providing the parameter 'cymraeg'" should {
 
-      val result = controller.switchToLanguage("cymraeg")(fakeRequest())
+    val result = controller.switchToLanguage("cymraeg")(fakeRequest())
 
-      "return a Redirect status (303)" in {
-        status(result) shouldBe Status.SEE_OTHER
-      }
-
-      "use the Welsh language" in {
-        cookies(result)(timeout).get("PLAY_LANG").get.value shouldBe "cy"
-      }
+    "return a Redirect status (303)" in {
+      status(result) shouldBe Status.SEE_OTHER
     }
 
-    "providing an unsupported language parameter" should {
-
-      controller.switchToLanguage("english")(FakeRequest())
-      lazy val result = controller.switchToLanguage("orcish")(fakeRequest())
-
-      "return a Redirect status (303)" in {
-        status(result) shouldBe Status.SEE_OTHER
-      }
-
-      "keep the current language" in {
-        cookies(result)(timeout).get("PLAY_LANG").get.value shouldBe "en"
-      }
+    "use the Welsh language" in {
+      cookies(result)(timeout).get("PLAY_LANG").get.value shouldBe "cy"
     }
+  }
+
+  "providing an unsupported language parameter" should {
+
+    controller.switchToLanguage("english")(FakeRequest())
+    lazy val result = controller.switchToLanguage("orcish")(fakeRequest())
+
+    "return a Redirect status (303)" in {
+      status(result) shouldBe Status.SEE_OTHER
+    }
+
+    "keep the current language" in {
+      cookies(result)(timeout).get("PLAY_LANG").get.value shouldBe "en"
+    }
+  }
+
 }

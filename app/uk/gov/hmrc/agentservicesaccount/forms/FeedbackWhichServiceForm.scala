@@ -25,18 +25,26 @@ object FeedbackWhichServiceForm {
 
   val upperCaseText: Mapping[String] = of[String].transform(_.trim.toUpperCase, identity)
 
-  val supportedSurveyKeys = Set("VAT", "IT", "TRUST", "IR", "CGT", "OTHER")
+  val supportedSurveyKeys = Set(
+    "VAT",
+    "IT",
+    "TRUST",
+    "IR",
+    "CGT",
+    "OTHER"
+  )
 
   val form: Form[String] = Form(
     single(
       "service" -> optional(upperCaseText)
-          .verifying("survey.empty", sk => supportedSurveyKeys.contains(sk.getOrElse("")))
-          .transform(_.getOrElse(""), (Some(_)): String => Option[String])
+        .verifying("survey.empty", sk => supportedSurveyKeys.contains(sk.getOrElse("")))
+        .transform(_.getOrElse(""), (Some(_)): String => Option[String])
     )
   )
 
-  def surveyKeys(implicit messages: Messages) = supportedSurveyKeys.map(key =>
-    key -> Messages(s"survey.form.service.${key.toLowerCase}")
-  ).toSeq
+  def surveyKeys(implicit messages: Messages) =
+    supportedSurveyKeys.map(key =>
+      key -> Messages(s"survey.form.service.${key.toLowerCase}")
+    ).toSeq
 
 }

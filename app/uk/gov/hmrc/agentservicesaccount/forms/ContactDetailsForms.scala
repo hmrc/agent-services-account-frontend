@@ -18,8 +18,12 @@ package uk.gov.hmrc.agentservicesaccount.forms
 
 import play.api.data.Forms._
 import play.api.data._
-import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
-import uk.gov.hmrc.agentservicesaccount.models.{BetaInviteContactDetails, SuspendContactDetails}
+import play.api.data.validation.Constraint
+import play.api.data.validation.Invalid
+import play.api.data.validation.Valid
+import play.api.data.validation.ValidationError
+import uk.gov.hmrc.agentservicesaccount.models.BetaInviteContactDetails
+import uk.gov.hmrc.agentservicesaccount.models.SuspendContactDetails
 
 object BetaInviteContactDetailsForm {
 
@@ -38,10 +42,10 @@ object BetaInviteContactDetailsForm {
         .verifying("error.invalid.email", x => x.trim.matches(emailRegex) || x.trim.isEmpty),
       "phone" -> optional(text
         .verifying("error.max-length.phone", x => x.trim.length < 21 || x.trim.isEmpty)
-        .verifying("error.invalid.phone", x => x.trim.matches(phoneRegex) || x.trim.isEmpty)
-      )
+        .verifying("error.invalid.phone", x => x.trim.matches(phoneRegex) || x.trim.isEmpty))
     )(BetaInviteContactDetails.apply)(BetaInviteContactDetails.unapply)
   )
+
 }
 
 object ContactDetailsSuspendForm {
@@ -51,31 +55,44 @@ object ContactDetailsSuspendForm {
   private val phoneRegex = """^[0-9 +()]{0,25}$"""
 
   private def suspendedDetailsNameConstraint: Constraint[String] = Constraint[String] { input: String =>
-    if (input.trim.isEmpty) Invalid(ValidationError("error.suspended-details.required.name"))
-    else if (input.trim.length > 80) Invalid(ValidationError("error.max-length.name"))
-    else if (input.contains('>') || input.contains('<')) Invalid(ValidationError("error.suspended-details.invalid-chars.name"))
-    else Valid
+    if (input.trim.isEmpty)
+      Invalid(ValidationError("error.suspended-details.required.name"))
+    else if (input.trim.length > 80)
+      Invalid(ValidationError("error.max-length.name"))
+    else if (input.contains('>') || input.contains('<'))
+      Invalid(ValidationError("error.suspended-details.invalid-chars.name"))
+    else
+      Valid
   }
 
   private def suspendedDetailsEmailConstraint: Constraint[String] = Constraint[String] { input: String =>
-    if (input.trim.isEmpty) Invalid(ValidationError("error.suspended-details.required.email"))
-    else if (input.trim.length > 254) Invalid(ValidationError("error.max-length.email"))
-    else if (!input.trim.matches(emailRegex)) Invalid(ValidationError("error.suspended-details.required.email"))
-    else Valid
+    if (input.trim.isEmpty)
+      Invalid(ValidationError("error.suspended-details.required.email"))
+    else if (input.trim.length > 254)
+      Invalid(ValidationError("error.max-length.email"))
+    else if (!input.trim.matches(emailRegex))
+      Invalid(ValidationError("error.suspended-details.required.email"))
+    else
+      Valid
   }
 
   private def suspendedDetailsTelephoneConstraint: Constraint[String] = Constraint[String] { input: String =>
-    if (input.trim.isEmpty) Invalid(ValidationError("error.suspended-details.required.telephone"))
-    else if (input.trim.length > 20) Invalid(ValidationError("error.suspended-details.max-length.telephone"))
-    else if (!input.trim.matches(phoneRegex)) Invalid(ValidationError("error.suspended-details.invalid.telephone"))
-    else Valid
+    if (input.trim.isEmpty)
+      Invalid(ValidationError("error.suspended-details.required.telephone"))
+    else if (input.trim.length > 20)
+      Invalid(ValidationError("error.suspended-details.max-length.telephone"))
+    else if (!input.trim.matches(phoneRegex))
+      Invalid(ValidationError("error.suspended-details.invalid.telephone"))
+    else
+      Valid
   }
 
   def form: Form[SuspendContactDetails] = Form(
     mapping(
-      "name"  -> text.verifying(suspendedDetailsNameConstraint),
+      "name" -> text.verifying(suspendedDetailsNameConstraint),
       "email" -> text.verifying(suspendedDetailsEmailConstraint),
       "phone" -> text.verifying(suspendedDetailsTelephoneConstraint)
     )(SuspendContactDetails.apply)(SuspendContactDetails.unapply)
   )
+
 }

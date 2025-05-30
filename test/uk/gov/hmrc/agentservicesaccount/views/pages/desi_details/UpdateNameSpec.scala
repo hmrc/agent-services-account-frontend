@@ -20,7 +20,10 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.data.Form
-import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
+import play.api.i18n.Lang
+import play.api.i18n.Messages
+import play.api.i18n.MessagesApi
+import play.api.i18n.MessagesImpl
 import play.api.test.FakeRequest
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms
@@ -29,17 +32,20 @@ import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details._
 
 import scala.jdk.CollectionConverters.CollectionHasAsScala
 
-class UpdateNameSpec extends BaseISpec {
+class UpdateNameSpec
+extends BaseISpec {
 
-  implicit private val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
-  implicit private val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
-  implicit private val langs: Seq[Lang] = Seq(Lang("en"), Lang("cy"))
+  private implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+  private implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
+  private implicit val langs: Seq[Lang] = Seq(Lang("en"), Lang("cy"))
 
   private val view: update_name = app.injector.instanceOf[update_name]
   private val form: Form[String] = UpdateDetailsForms.businessNameForm
 
   object MessageLookup {
+
     object English {
+
       private val govUkSuffix: String = " - Agent services account - GOV.UK"
       val heading: String = "What’s the new name you want to show to clients?"
       val title: String = heading + govUkSuffix
@@ -49,9 +55,11 @@ class UpdateNameSpec extends BaseISpec {
 
       val button: String = "Continue"
       val back: String = "Back"
+
     }
 
     object Welsh {
+
       private val govUkSuffix: String = " - Cyfrif gwasanaethau asiant - GOV.UK"
       val heading: String = "Beth yw’r enw newydd yr hoffech ei ddangos i gleientiaid?"
       val title: String = heading + govUkSuffix
@@ -61,14 +69,20 @@ class UpdateNameSpec extends BaseISpec {
 
       val button: String = "Yn eich blaen"
       val back: String = "Yn ôl"
+
     }
+
   }
 
   "update_name" should {
     "render correctly" when {
       "the selected lang is english" in {
         val messages: Messages = MessagesImpl(langs.head, messagesApi)
-        val doc: Document = Jsoup.parse(view.apply(form)(messages, FakeRequest(), appConfig).body)
+        val doc: Document = Jsoup.parse(view.apply(form)(
+          messages,
+          FakeRequest(),
+          appConfig
+        ).body)
 
         doc.title() mustBe MessageLookup.English.title
         doc.select("h1").asScala.head.text mustBe MessageLookup.English.header
@@ -82,7 +96,11 @@ class UpdateNameSpec extends BaseISpec {
 
       "the selected lang is welsh" in {
         val messages: Messages = MessagesImpl(langs.last, messagesApi)
-        val doc: Document = Jsoup.parse(view.apply(form)(messages, FakeRequest(), appConfig).body)
+        val doc: Document = Jsoup.parse(view.apply(form)(
+          messages,
+          FakeRequest(),
+          appConfig
+        ).body)
 
         doc.title() mustBe MessageLookup.Welsh.title
         doc.select("h1").asScala.head.text mustBe MessageLookup.Welsh.header
@@ -94,4 +112,5 @@ class UpdateNameSpec extends BaseISpec {
       }
     }
   }
+
 }

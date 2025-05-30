@@ -19,14 +19,19 @@ package uk.gov.hmrc.agentservicesaccount.controllers
 import play.api.i18n.Lang
 import play.api.mvc.MessagesControllerComponents
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.play.language.{LanguageController, LanguageUtils}
+import uk.gov.hmrc.play.language.LanguageController
+import uk.gov.hmrc.play.language.LanguageUtils
 
-import javax.inject.{Inject, Singleton}
+import javax.inject.Inject
+import javax.inject.Singleton
 
 @Singleton
-class AgentServicesLanguageController @Inject()(languageUtils: LanguageUtils,
-                                                cc: MessagesControllerComponents,
-                                                appConfig: AppConfig) extends LanguageController(languageUtils, cc) {
+class AgentServicesLanguageController @Inject() (
+  languageUtils: LanguageUtils,
+  cc: MessagesControllerComponents,
+  appConfig: AppConfig
+)
+extends LanguageController(languageUtils, cc) {
 
   override def languageMap: Map[String, Lang] = appConfig.languageMap
 

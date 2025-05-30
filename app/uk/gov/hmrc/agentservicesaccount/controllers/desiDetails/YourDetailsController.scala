@@ -22,7 +22,8 @@ import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.DesiDetailsJourneySupport
-import uk.gov.hmrc.agentservicesaccount.controllers.{DRAFT_SUBMITTED_BY, desiDetails}
+import uk.gov.hmrc.agentservicesaccount.controllers.DRAFT_SUBMITTED_BY
+import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
 import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.YourDetails
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
@@ -30,27 +31,35 @@ import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details.your_details
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
-import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import javax.inject.Inject
+import javax.inject.Singleton
+import scala.concurrent.ExecutionContext
+import scala.concurrent.Future
 
 @Singleton
-class YourDetailsController @Inject()(actions: Actions,
-                                      val sessionCache: SessionCacheService,
-                                      updateYourDetailsView: your_details
-                                     )(implicit appConfig: AppConfig,
-                                       cc: MessagesControllerComponents,
-                                       val ec: ExecutionContext,
-                                       pcodRepository: PendingChangeRequestRepository
-                                     ) extends FrontendController(cc) with I18nSupport with DesiDetailsJourneySupport with Logging {
-
+class YourDetailsController @Inject() (
+  actions: Actions,
+  val sessionCache: SessionCacheService,
+  updateYourDetailsView: your_details
+)(implicit
+  appConfig: AppConfig,
+  cc: MessagesControllerComponents,
+  val ec: ExecutionContext,
+  pcodRepository: PendingChangeRequestRepository
+)
+extends FrontendController(cc)
+with I18nSupport
+with DesiDetailsJourneySupport
+with Logging {
 
   def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     ifChangeContactFeatureEnabledAndNoPendingChanges {
       isOtherServicesPageRequestValid().flatMap {
-        case true => sessionCache.get[YourDetails](DRAFT_SUBMITTED_BY).map {
-          case Some(data) => Ok(updateYourDetailsView(UpdateDetailsForms.yourDetailsForm.fill(data)))
-          case _ => Ok(updateYourDetailsView(UpdateDetailsForms.yourDetailsForm))
-        }
+        case true =>
+          sessionCache.get[YourDetails](DRAFT_SUBMITTED_BY).map {
+            case Some(data) => Ok(updateYourDetailsView(UpdateDetailsForms.yourDetailsForm.fill(data)))
+            case _ => Ok(updateYourDetailsView(UpdateDetailsForms.yourDetailsForm))
+          }
         case _ => Future.successful(Redirect(routes.ViewContactDetailsController.showPage))
       }
 
@@ -72,7 +81,9 @@ class YourDetailsController @Inject()(actions: Actions,
     }
   }
 
-  private def updateSubmittedBy(f: YourDetails)(implicit request: RequestHeader): Future[Unit] = for {
-    _ <- sessionCache.put[YourDetails](DRAFT_SUBMITTED_BY, f)
-  } yield ()
+  private def updateSubmittedBy(f: YourDetails)(implicit request: RequestHeader): Future[Unit] =
+    for {
+      _ <- sessionCache.put[YourDetails](DRAFT_SUBMITTED_BY, f)
+    } yield ()
+
 }

@@ -17,27 +17,31 @@
 package uk.gov.hmrc.agentservicesaccount.views.pages.contactDetails
 
 import org.jsoup.Jsoup
-import org.jsoup.nodes.{Document, Element}
+import org.jsoup.nodes.Document
+import org.jsoup.nodes.Element
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.data.Form
-import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
+import play.api.i18n.Lang
+import play.api.i18n.Messages
+import play.api.i18n.MessagesApi
+import play.api.i18n.MessagesImpl
 import play.api.test.FakeRequest
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms.saCodeForm
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details._
 
-class EnterSaCodePageSpec extends BaseISpec {
+class EnterSaCodePageSpec
+extends BaseISpec {
 
   implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
   implicit val lang: Lang = Lang("en")
-  val view: enter_sa_code  = app.injector.instanceOf[enter_sa_code]
+  val view: enter_sa_code = app.injector.instanceOf[enter_sa_code]
   implicit val messages: Messages = MessagesImpl(lang, messagesApi)
 
   val form: Form[String] = saCodeForm
-  val formWithNameErrors: Form[String] = form.withError(key ="saCode", message = Messages("update-contact-details.sa-code.error.empty"))
-
+  val formWithNameErrors: Form[String] = form.withError(key = "saCode", message = Messages("update-contact-details.sa-code.error.empty"))
 
   "enter_sa_code" when {
 
@@ -79,7 +83,11 @@ class EnterSaCodePageSpec extends BaseISpec {
 
     "first viewing page" should {
 
-      val doc: Document = Jsoup.parse(view.apply(form)(messages, FakeRequest(), appConfig).body)
+      val doc: Document = Jsoup.parse(view.apply(form)(
+        messages,
+        FakeRequest(),
+        appConfig
+      ).body)
 
       testServiceStaticContent(doc)
 
@@ -90,10 +98,13 @@ class EnterSaCodePageSpec extends BaseISpec {
       }
     }
 
-
     "form is submitted with name errors should" should {
 
-      val doc: Document = Jsoup.parse(view.apply(formWithNameErrors)(messages, FakeRequest(), appConfig).body)
+      val doc: Document = Jsoup.parse(view.apply(formWithNameErrors)(
+        messages,
+        FakeRequest(),
+        appConfig
+      ).body)
 
       testServiceStaticContent(doc)
 

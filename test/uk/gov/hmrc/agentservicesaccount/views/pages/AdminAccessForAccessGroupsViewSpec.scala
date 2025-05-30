@@ -19,13 +19,17 @@ package uk.gov.hmrc.agentservicesaccount.views.pages
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
-import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
+import play.api.i18n.Lang
+import play.api.i18n.Messages
+import play.api.i18n.MessagesApi
+import play.api.i18n.MessagesImpl
 import play.api.test.FakeRequest
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.admin_access_for_access_groups
 
-class AdminAccessForAccessGroupsViewSpec extends BaseISpec {
+class AdminAccessForAccessGroupsViewSpec
+extends BaseISpec {
 
   implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
@@ -34,7 +38,11 @@ class AdminAccessForAccessGroupsViewSpec extends BaseISpec {
   val messages: Messages = MessagesImpl(lang, messagesApi)
 
   "admin_access_for_access_groups" should {
-    val doc: Document = Jsoup.parse(view.apply()(FakeRequest(), messages, appConfig).body)
+    val doc: Document = Jsoup.parse(view.apply()(
+      FakeRequest(),
+      messages,
+      appConfig
+    ).body)
 
     "have the correct service name link" in {
       doc.select(".govuk-header__service-name").first.text() mustBe "Agent services account"

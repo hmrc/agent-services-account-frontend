@@ -18,17 +18,22 @@ package uk.gov.hmrc.agentservicesaccount.models.emailverification
 
 import play.api.libs.json._
 
-case class VerifyEmailRequest(credId: String,
-                              continueUrl: String,
-                              origin: String,
-                              deskproServiceName: Option[String],
-                              accessibilityStatementUrl: String,
-                              email: Option[Email],
-                              lang: Option[String],
-                              backUrl: Option[String],
-                              pageTitle: Option[String])
+case class VerifyEmailRequest(
+  credId: String,
+  continueUrl: String,
+  origin: String,
+  deskproServiceName: Option[String],
+  accessibilityStatementUrl: String,
+  email: Option[Email],
+  lang: Option[String],
+  backUrl: Option[String],
+  pageTitle: Option[String]
+)
 
-case class Email(address: String, enterUrl: String)
+case class Email(
+  address: String,
+  enterUrl: String
+)
 
 object Email {
   implicit val format: Format[Email] = Json.format[Email]
@@ -44,9 +49,11 @@ object VerifyEmailResponse {
   implicit val formats: Format[VerifyEmailResponse] = Json.format[VerifyEmailResponse]
 }
 
-case class CompletedEmail(emailAddress: String,
-                          verified: Boolean,
-                          locked: Boolean) {
+case class CompletedEmail(
+  emailAddress: String,
+  verified: Boolean,
+  locked: Boolean
+) {
   def equalsTrimmed(email: String): Boolean = emailAddress.trim.equalsIgnoreCase(email.trim)
 }
 

@@ -16,16 +16,17 @@
 
 package uk.gov.hmrc.agentservicesaccount.models
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.Json
+import play.api.libs.json.OFormat
 
 import java.time.LocalDate
 
-case class UpdateMoneyLaunderingSupervisionDetails(body: String,
-                                                   number: String,
-                                                   endDate: LocalDate
-                                                  )
+case class UpdateMoneyLaunderingSupervisionDetails(
+  body: String,
+  number: String,
+  endDate: LocalDate
+)
 
-object UpdateMoneyLaunderingSupervisionDetails{
+object UpdateMoneyLaunderingSupervisionDetails {
   implicit val formats: OFormat[UpdateMoneyLaunderingSupervisionDetails] = Json.format[UpdateMoneyLaunderingSupervisionDetails]
 }
-

@@ -16,41 +16,49 @@
 
 package uk.gov.hmrc.agentservicesaccount.services
 
-import org.mockito.{ArgumentMatchersSugar, IdiomaticMockito}
+import org.mockito.ArgumentMatchersSugar
+import org.mockito.IdiomaticMockito
 import org.scalatestplus.play.PlaySpec
 import play.api.i18n.Lang
-import play.api.mvc.{AnyContentAsEmpty, RequestHeader}
+import play.api.mvc.AnyContentAsEmpty
+import play.api.mvc.RequestHeader
 import play.api.test.Helpers.await
-import play.api.test.{DefaultAwaitTimeout, FakeRequest}
+import play.api.test.DefaultAwaitTimeout
+import play.api.test.FakeRequest
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, EmailVerificationConnector}
+import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
+import uk.gov.hmrc.agentservicesaccount.connectors.EmailVerificationConnector
 import uk.gov.hmrc.agentservicesaccount.controllers
 import uk.gov.hmrc.agentservicesaccount.models.emailverification._
 import uk.gov.hmrc.agentservicesaccount.support.TestConstants
-import uk.gov.hmrc.http.{InternalServerException, UpstreamErrorResponse}
+import uk.gov.hmrc.http.InternalServerException
+import uk.gov.hmrc.http.UpstreamErrorResponse
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
+import scala.concurrent.Future
 
-class EmailVerificationServiceSpec extends PlaySpec
-  with DefaultAwaitTimeout
-  with IdiomaticMockito
-  with ArgumentMatchersSugar
-  with TestConstants {
+class EmailVerificationServiceSpec
+extends PlaySpec
+with DefaultAwaitTimeout
+with IdiomaticMockito
+with ArgumentMatchersSugar
+with TestConstants {
 
-  implicit val ec: ExecutionContext =  ExecutionContext.Implicits.global
+  implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
   implicit val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
   trait Setup {
+
     protected val mockEmailVerificationConnector: EmailVerificationConnector = mock[EmailVerificationConnector]
     protected val mockAgentAssuranceConnector: AgentAssuranceConnector = mock[AgentAssuranceConnector]
     protected val mockAppConfig: AppConfig = mock[AppConfig]
 
-    object TestService extends EmailVerificationService(
+    object TestService
+    extends EmailVerificationService(
       mockAgentAssuranceConnector,
       mockEmailVerificationConnector
     )(ec, mockAppConfig)
 
   }
-
 
   "initialiseEmailVerificationJourney" should {
     "return an absolute url for use locally" when {
@@ -71,7 +79,11 @@ class EmailVerificationServiceSpec extends PlaySpec
           )
         )(*[RequestHeader]) returns Future.successful(Some(VerifyEmailResponse("/emailVerificationUrl")))
 
-        val result = TestService.initialiseEmailVerificationJourney(ggCredentials.providerId, "new@email.com", Lang("en"))
+        val result = TestService.initialiseEmailVerificationJourney(
+          ggCredentials.providerId,
+          "new@email.com",
+          Lang("en")
+        )
 
         await(result) mustBe "localhost/emailVerificationUrl"
       }
@@ -95,7 +107,11 @@ class EmailVerificationServiceSpec extends PlaySpec
           )
         )(*[RequestHeader]) returns Future.successful(Some(VerifyEmailResponse("/emailVerificationUrl")))
 
-        val result = TestService.initialiseEmailVerificationJourney(ggCredentials.providerId, "new@email.com", Lang("en"))
+        val result = TestService.initialiseEmailVerificationJourney(
+          ggCredentials.providerId,
+          "new@email.com",
+          Lang("en")
+        )
 
         await(result) mustBe "/emailVerificationUrl"
       }
@@ -119,8 +135,12 @@ class EmailVerificationServiceSpec extends PlaySpec
           )
         )(*[RequestHeader]) returns Future.successful(None)
 
-        intercept[InternalServerException]{
-          await(TestService.initialiseEmailVerificationJourney(ggCredentials.providerId, "new@email.com", Lang("en")))
+        intercept[InternalServerException] {
+          await(TestService.initialiseEmailVerificationJourney(
+            ggCredentials.providerId,
+            "new@email.com",
+            Lang("en")
+          ))
         }
       }
     }
@@ -132,7 +152,11 @@ class EmailVerificationServiceSpec extends PlaySpec
         mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
         mockEmailVerificationConnector.checkEmail(ggCredentials.providerId)(*[RequestHeader]) returns Future.successful(
-          Some(VerificationStatusResponse(List(CompletedEmail("new@email.com", verified = true, locked = false))))
+          Some(VerificationStatusResponse(List(CompletedEmail(
+            "new@email.com",
+            verified = true,
+            locked = false
+          ))))
         )
 
         val result = TestService.getEmailVerificationStatus("new@email.com", ggCredentials.providerId)
@@ -146,7 +170,11 @@ class EmailVerificationServiceSpec extends PlaySpec
         mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
         mockEmailVerificationConnector.checkEmail(ggCredentials.providerId)(*[RequestHeader]) returns Future.successful(
-          Some(VerificationStatusResponse(List(CompletedEmail("new@email.com", verified = false, locked = true))))
+          Some(VerificationStatusResponse(List(CompletedEmail(
+            "new@email.com",
+            verified = false,
+            locked = true
+          ))))
         )
 
         val result = TestService.getEmailVerificationStatus("new@email.com", ggCredentials.providerId)
@@ -173,7 +201,11 @@ class EmailVerificationServiceSpec extends PlaySpec
         mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
         mockEmailVerificationConnector.checkEmail(ggCredentials.providerId)(*[RequestHeader]) returns Future.successful(
-          Some(VerificationStatusResponse(List(CompletedEmail("abc@abc.com", verified = false, locked = false))))
+          Some(VerificationStatusResponse(List(CompletedEmail(
+            "abc@abc.com",
+            verified = false,
+            locked = false
+          ))))
         )
 
         val result = TestService.getEmailVerificationStatus("abc@abc.com", ggCredentials.providerId)
@@ -182,12 +214,11 @@ class EmailVerificationServiceSpec extends PlaySpec
       }
     }
 
-
     "throw an exception" when {
       "the call to get agent record fails" in new Setup {
         mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.failed(UpstreamErrorResponse("no agent record found", 500))
 
-        intercept[UpstreamErrorResponse]{
+        intercept[UpstreamErrorResponse] {
           await(TestService.getEmailVerificationStatus("abc@abc.com", ggCredentials.providerId))
         }
 
@@ -197,7 +228,7 @@ class EmailVerificationServiceSpec extends PlaySpec
 
         mockEmailVerificationConnector.checkEmail(ggCredentials.providerId)(*[RequestHeader]) returns Future.failed(new Exception("Something went wrong"))
 
-        intercept[Exception]{
+        intercept[Exception] {
           await(TestService.getEmailVerificationStatus("abc@abc.com", ggCredentials.providerId))
         }
       }

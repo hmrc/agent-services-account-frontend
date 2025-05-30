@@ -18,7 +18,10 @@ package uk.gov.hmrc.agentservicesaccount.repository
 
 import com.google.inject.ImplementedBy
 import org.mongodb.scala.model.Filters.equal
-import org.mongodb.scala.model.{IndexModel, IndexOptions, Indexes, ReplaceOptions}
+import org.mongodb.scala.model.IndexModel
+import org.mongodb.scala.model.IndexOptions
+import org.mongodb.scala.model.Indexes
+import org.mongodb.scala.model.ReplaceOptions
 import play.api.Logging
 import play.api.mvc.RequestHeader
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
@@ -29,33 +32,41 @@ import uk.gov.hmrc.mongo.MongoComponent
 import uk.gov.hmrc.mongo.play.json.PlayMongoRepository
 
 import java.util.concurrent.TimeUnit
-import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import javax.inject.Inject
+import javax.inject.Singleton
+import scala.concurrent.ExecutionContext
+import scala.concurrent.Future
 
 @ImplementedBy(classOf[PendingChangeRequestRepositoryImpl])
 trait PendingChangeRequestRepository {
+
   def find(arn: Arn)(implicit rh: RequestHeader): Future[Option[PendingChangeRequest]]
   def insert(pcod: PendingChangeRequest)(implicit rh: RequestHeader): Future[Unit]
   def delete(arn: Arn)(implicit rh: RequestHeader): Future[Unit]
+
 }
 
 @Singleton
-class PendingChangeRequestRepositoryImpl @Inject()(
+class PendingChangeRequestRepositoryImpl @Inject() (
   val mongoComponent: MongoComponent,
   appConfig: AppConfig,
-  asaConnector: AgentServicesAccountConnector)(implicit ec: ExecutionContext)
-  extends PlayMongoRepository[PendingChangeRequest](
-    collectionName = "pending-change-request",
-    domainFormat = PendingChangeRequest.format,
-    mongoComponent = mongoComponent,
-    indexes = Seq(
-      IndexModel(Indexes.ascending("arn"), new IndexOptions().unique(true)),
-      IndexModel(
-        Indexes.ascending("timeSubmitted"),
-        new IndexOptions().expireAfter(appConfig.pendingChangeTTL, TimeUnit.MINUTES)
-    )),
-    replaceIndexes = true
-  ) with PendingChangeRequestRepository with Logging {
+  asaConnector: AgentServicesAccountConnector
+)(implicit ec: ExecutionContext)
+extends PlayMongoRepository[PendingChangeRequest](
+  collectionName = "pending-change-request",
+  domainFormat = PendingChangeRequest.format,
+  mongoComponent = mongoComponent,
+  indexes = Seq(
+    IndexModel(Indexes.ascending("arn"), new IndexOptions().unique(true)),
+    IndexModel(
+      Indexes.ascending("timeSubmitted"),
+      new IndexOptions().expireAfter(appConfig.pendingChangeTTL, TimeUnit.MINUTES)
+    )
+  ),
+  replaceIndexes = true
+)
+with PendingChangeRequestRepository
+with Logging {
 
   def find(arn: Arn)(implicit rh: RequestHeader): Future[Option[PendingChangeRequest]] = {
 
@@ -63,22 +74,28 @@ class PendingChangeRequestRepositoryImpl @Inject()(
       .find(equal("arn", arn.value))
       .headOption()
 
-    if(appConfig.enableBackendPCRDatabase) {
+    if (appConfig.enableBackendPCRDatabase) {
       asaConnector.find(arn).flatMap {
         case Some(changeRequest) => Future.successful(Some(changeRequest))
         case _ => frontendDatabaseResult
       }
-    } else {
+    }
+    else {
       frontendDatabaseResult
     }
   }
 
   def insert(pcod: PendingChangeRequest)(implicit rh: RequestHeader): Future[Unit] =
-    if(appConfig.enableBackendPCRDatabase) {
+    if (appConfig.enableBackendPCRDatabase) {
       asaConnector.insert(pcod)
-    } else {
+    }
+    else {
       collection
-        .replaceOne(equal("arn", pcod.arn.value), pcod, new ReplaceOptions().upsert(true))
+        .replaceOne(
+          equal("arn", pcod.arn.value),
+          pcod,
+          new ReplaceOptions().upsert(true)
+        )
         .toFuture()
         .map(_ => ())
     }
@@ -90,13 +107,15 @@ class PendingChangeRequestRepositoryImpl @Inject()(
       .toFuture()
       .map(_ => ())
 
-    if(appConfig.enableBackendPCRDatabase) {
+    if (appConfig.enableBackendPCRDatabase) {
       asaConnector.delete(arn).flatMap {
         case true => Future.successful(())
         case false => frontendDatabaseResult
       }
-    } else {
+    }
+    else {
       frontendDatabaseResult
     }
   }
+
 }

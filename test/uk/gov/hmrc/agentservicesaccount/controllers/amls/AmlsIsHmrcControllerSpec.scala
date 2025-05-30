@@ -17,17 +17,24 @@
 package uk.gov.hmrc.agentservicesaccount.controllers.amls
 
 import org.mockito.stubbing.ScalaOngoingStubbing
-import org.mockito.{ArgumentMatchersSugar, IdiomaticMockito}
+import org.mockito.ArgumentMatchersSugar
+import org.mockito.IdiomaticMockito
 import org.scalatestplus.play.PlaySpec
 import play.api.Environment
 import play.api.data.Form
 import play.api.http.MimeTypes.HTML
 import play.api.i18n.Messages
-import play.api.mvc.{DefaultActionBuilderImpl, MessagesControllerComponents, Request, RequestHeader, Result}
+import play.api.mvc.DefaultActionBuilderImpl
+import play.api.mvc.MessagesControllerComponents
+import play.api.mvc.Request
+import play.api.mvc.RequestHeader
+import play.api.mvc.Result
 import play.api.test.Helpers._
-import play.api.test.{FakeRequest, Helpers}
+import play.api.test.FakeRequest
+import play.api.test.Helpers
 import play.twirl.api.Html
-import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
+import uk.gov.hmrc.agentservicesaccount.actions.Actions
+import uk.gov.hmrc.agentservicesaccount.actions.AuthActions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.support.TestConstants
@@ -35,57 +42,83 @@ import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.is_amls_hmrc
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve._
-import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.SessionKeys
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
+import scala.concurrent.Future
 
-
-class AmlsIsHmrcControllerSpec extends PlaySpec
-    with IdiomaticMockito
-    with ArgumentMatchersSugar
-    with TestConstants {
+class AmlsIsHmrcControllerSpec
+extends PlaySpec
+with IdiomaticMockito
+with ArgumentMatchersSugar
+with TestConstants {
 
   implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
 
-  //TODO move auth/suspend actions to common file for all unit tests
+  // TODO move auth/suspend actions to common file for all unit tests
   val mockAgentAssuranceConnector: AgentAssuranceConnector = mock[AgentAssuranceConnector]
 
-
   private def authResponseAgent(credentialRole: CredentialRole): Future[Enrolments ~ Some[Credentials] ~ Some[Email] ~ Some[Name] ~ Some[CredentialRole]] =
-    Future.successful(new~(new~(new~(new~(
-      Enrolments(agentEnrolment), Some(ggCredentials)),
-      Some(Email("test@email.com"))),
-      Some(Name(Some("Troy"), Some("Barnes")))),
-      Some(credentialRole)))
+    Future.successful(new ~(
+      new ~(
+        new ~(
+          new ~(
+            Enrolments(agentEnrolment),
+            Some(ggCredentials)
+          ),
+          Some(Email("test@email.com"))
+        ),
+        Some(Name(Some("Troy"), Some("Barnes")))
+      ),
+      Some(credentialRole)
+    ))
 
   val mockAuthConnector: AuthConnector = mock[AuthConnector]
   def givenAuthorisedAgent(credentialRole: CredentialRole): ScalaOngoingStubbing[Future[Any]] = {
     mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
       *[HeaderCarrier],
-      *[ExecutionContext]) returns authResponseAgent(credentialRole)
+      *[ExecutionContext]
+    ) returns authResponseAgent(credentialRole)
   }
 
   def givenAgentRecord = mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
-
   trait Setup {
+
     protected val mockAppConfig: AppConfig = mock[AppConfig]
     protected val mockEnvironment: Environment = mock[Environment]
-    protected val authActions = new AuthActions(mockAppConfig, mockAuthConnector, mockEnvironment)
+    protected val authActions =
+      new AuthActions(
+        mockAppConfig,
+        mockAuthConnector,
+        mockEnvironment
+      )
     protected val actionBuilder = new DefaultActionBuilderImpl(Helpers.stubBodyParser())
     protected val mockActions =
-      new Actions(mockAgentAssuranceConnector, authActions, actionBuilder)
+      new Actions(
+        mockAgentAssuranceConnector,
+        authActions,
+        actionBuilder
+      )
 
     protected val cc: MessagesControllerComponents = stubMessagesControllerComponents()
     protected val view: is_amls_hmrc = mock[is_amls_hmrc]
-    object TestController extends AmlsIsHmrcController(mockActions, view, cc)(mockAppConfig)
+    object TestController
+    extends AmlsIsHmrcController(
+      mockActions,
+      view,
+      cc
+    )(mockAppConfig)
+
   }
 
-  private def fakeRequest(method: String = "GET", uri: String = "/") =
-    FakeRequest(method, uri)
-      .withSession(SessionKeys.authToken -> "Bearer XYZ")
-      .withSession(SessionKeys.sessionId -> "session-x")
-
+  private def fakeRequest(
+    method: String = "GET",
+    uri: String = "/"
+  ) = FakeRequest(method, uri)
+    .withSession(SessionKeys.authToken -> "Bearer XYZ")
+    .withSession(SessionKeys.sessionId -> "session-x")
 
   "showAmlsIsHMRC" should {
     "return Ok and show the 'is AMLS body HMRC?' page" in new Setup {
@@ -93,7 +126,11 @@ class AmlsIsHmrcControllerSpec extends PlaySpec
       givenAgentRecord
       mockAppConfig.enableNonHmrcSupervisoryBody returns true
 
-      view.apply(*[Form[Boolean]])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+      view.apply(*[Form[Boolean]])(
+        *[Request[Any]],
+        *[Messages],
+        *[AppConfig]
+      ) returns Html("")
 
       val response: Future[Result] = TestController.showAmlsIsHmrc(FakeRequest())
 
@@ -105,7 +142,11 @@ class AmlsIsHmrcControllerSpec extends PlaySpec
       givenAgentRecord
       mockAppConfig.enableNonHmrcSupervisoryBody returns false
 
-      view.apply(*[Form[Boolean]])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+      view.apply(*[Form[Boolean]])(
+        *[Request[Any]],
+        *[Messages],
+        *[AppConfig]
+      ) returns Html("")
 
       val response: Future[Result] = TestController.showAmlsIsHmrc(FakeRequest())
 
@@ -146,9 +187,13 @@ class AmlsIsHmrcControllerSpec extends PlaySpec
       givenAuthorisedAgent(User)
       givenAgentRecord
       mockAppConfig.enableNonHmrcSupervisoryBody returns true
-      view.apply(*[Form[Boolean]])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+      view.apply(*[Form[Boolean]])(
+        *[Request[Any]],
+        *[Messages],
+        *[AppConfig]
+      ) returns Html("")
 
-      val response: Future[Result] = TestController.submitAmlsIsHmrc(fakeRequest("POST").withFormUrlEncodedBody("accept" -> "") /* with empty form body */)
+      val response: Future[Result] = TestController.submitAmlsIsHmrc(fakeRequest("POST").withFormUrlEncodedBody("accept" -> "") /* with empty form body */ )
 
       Helpers.status(response) mustBe BAD_REQUEST
       Helpers.contentType(response).get mustBe HTML
@@ -158,9 +203,13 @@ class AmlsIsHmrcControllerSpec extends PlaySpec
       givenAuthorisedAgent(User)
       givenAgentRecord
       mockAppConfig.enableNonHmrcSupervisoryBody returns false
-      view.apply(*[Form[Boolean]])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+      view.apply(*[Form[Boolean]])(
+        *[Request[Any]],
+        *[Messages],
+        *[AppConfig]
+      ) returns Html("")
 
-      val response: Future[Result] = TestController.submitAmlsIsHmrc(fakeRequest("POST").withFormUrlEncodedBody("accept" -> "true") /* doesn't matter */)
+      val response: Future[Result] = TestController.submitAmlsIsHmrc(fakeRequest("POST").withFormUrlEncodedBody("accept" -> "true") /* doesn't matter */ )
 
       Helpers.status(response) mustBe FORBIDDEN
     }

@@ -19,8 +19,9 @@ package uk.gov.hmrc.agentservicesaccount.forms
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
-class NewRegistrationNumberFormSpec extends AnyWordSpec with Matchers {
-
+class NewRegistrationNumberFormSpec
+extends AnyWordSpec
+with Matchers {
 
   "NewRegistrationNumberForm binding" should {
     "for HMRC AMLS" when {

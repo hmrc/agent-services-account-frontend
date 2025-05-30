@@ -17,8 +17,9 @@
 package uk.gov.hmrc.agentservicesaccount.models
 
 case class AccountRecoverySummary(
-                                  name: String,
-                                  email: String,
-                                  phone: String,
-                                  description: String,
-                                  arn: String)
+  name: String,
+  email: String,
+  phone: String,
+  description: String,
+  arn: String
+)
