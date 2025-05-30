@@ -99,7 +99,7 @@ class SuspendedJourneyController @Inject()(actions: Actions,
       )
   }
 
-  private def getSummaryDetails(implicit request: Request[_]) = {
+  private def getSummaryDetails(implicit request: RequestHeader) = {
     for {
       name <- cacheService.get(NAME)
       email <- cacheService.get(EMAIL)

@@ -18,6 +18,7 @@ package uk.gov.hmrc.agentservicesaccount.connectors
 
 import play.api.http.Status.{BAD_REQUEST, CREATED, NO_CONTENT, OK}
 import play.api.libs.json.Json
+import play.api.mvc.RequestHeader
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models._
@@ -25,6 +26,7 @@ import uk.gov.hmrc.agentservicesaccount.utils.HttpAPIMonitor
 import uk.gov.hmrc.http._
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.play.bootstrap.metrics.Metrics
+import uk.gov.hmrc.agentservicesaccount.utils.RequestSupport._
 
 import java.net.URL
 import javax.inject.{Inject, Singleton}
@@ -38,7 +40,7 @@ class AgentAssuranceConnector @Inject()(httpV2: HttpClientV2)(implicit val metri
 
   import uk.gov.hmrc.http.HttpReads.Implicits._
 
-  def getAMLSDetailsResponse(arn: String)(implicit ec: ExecutionContext, hc: HeaderCarrier): Future[AmlsDetailsResponse] =
+  def getAMLSDetailsResponse(arn: String)(implicit rh: RequestHeader): Future[AmlsDetailsResponse] =
     httpV2.get(new URL(s"$baseUrl/agent-assurance/amls/arn/$arn")).execute[HttpResponse].map { response =>
       response.status match {
         case OK => Json.parse(response.body).as[AmlsDetailsResponse]
@@ -48,15 +50,15 @@ class AgentAssuranceConnector @Inject()(httpV2: HttpClientV2)(implicit val metri
       }
     }
 
-  def getAMLSDetails(arn: String)(implicit ec: ExecutionContext, hc: HeaderCarrier): Future[AmlsDetails] =
+  def getAMLSDetails(arn: String)(implicit rh: RequestHeader): Future[AmlsDetails] =
     getAMLSDetailsResponse(arn).map(_.details
       .getOrElse(throw UpstreamErrorResponse(s"Error $BAD_REQUEST invalid ARN when trying to get amls details", BAD_REQUEST)))
 
-  def getAmlsStatus(arn: Arn)(implicit ec: ExecutionContext, hc: HeaderCarrier): Future[AmlsStatus] =
+  def getAmlsStatus(arn: Arn)(implicit ec: ExecutionContext, rh: RequestHeader): Future[AmlsStatus] =
     getAMLSDetailsResponse(arn.value).map(_.status)
 
 
-  def postAmlsDetails(arn: Arn, amlsRequest: AmlsRequest)(implicit ec: ExecutionContext, hc: HeaderCarrier): Future[Unit] = {
+  def postAmlsDetails(arn: Arn, amlsRequest: AmlsRequest)(implicit rh: RequestHeader): Future[Unit] = {
     httpV2
       .post(new URL(s"$baseUrl/agent-assurance/amls/arn/${
         arn.value
@@ -71,7 +73,7 @@ class AgentAssuranceConnector @Inject()(httpV2: HttpClientV2)(implicit val metri
       }
   }
 
-  def postDesignatoryDetails(arn: Arn, base64HtmlForPdf: String)(implicit ec: ExecutionContext, hc: HeaderCarrier): Future[Unit] = {
+  def postDesignatoryDetails(arn: Arn, base64HtmlForPdf: String)(implicit rh: RequestHeader): Future[Unit] = {
     httpV2
       .post(new URL(s"$baseUrl/agent-assurance/agent/agency-details/arn/${
         arn.value
@@ -85,7 +87,7 @@ class AgentAssuranceConnector @Inject()(httpV2: HttpClientV2)(implicit val metri
       }
   }
 
-  def getAgentRecord(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AgentDetailsDesResponse] =
+  def getAgentRecord(implicit rh: RequestHeader): Future[AgentDetailsDesResponse] =
     httpV2
       .get(new URL(s"$baseUrl/agent-assurance/agent-record-with-checks"))
       .execute[HttpResponse].map( response => response.status match {

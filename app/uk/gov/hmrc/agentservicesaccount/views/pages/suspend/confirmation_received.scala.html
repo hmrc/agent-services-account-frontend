@@ -22,7 +22,7 @@
 
 @this(main: main, p: p, h1: h1, h2: h2, a: a, govukPanel: GovukPanel)
 
-@()(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
+@()(implicit request: RequestHeader, msgs: Messages, appConfig: AppConfig)
 
 @main(pageTitle = msgs("suspend.confirmation.h1"), showSecondaryNav = false) {
     @govukPanel(

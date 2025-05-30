@@ -25,7 +25,7 @@
         govukPanel: GovukPanel
 )
 
-@()(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
+@()(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
 
 @main(pageTitle = msgs("update-contact-details.submitted.title"), showSecondaryNav = false) {
 

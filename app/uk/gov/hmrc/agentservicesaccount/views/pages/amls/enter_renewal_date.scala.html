@@ -36,7 +36,7 @@
 )
 
 
-@(form: Form[LocalDate])(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
+@(form: Form[LocalDate])(implicit request: RequestHeader, msgs: Messages, appConfig: AppConfig)
 
 @fieldSetHtml = {
     @inputDate(

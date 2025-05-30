@@ -33,7 +33,7 @@
         arn: String,
         isShownRecruitmentBanner: Boolean = false,
         isAdmin: Boolean = false
-)(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
+)(implicit request: RequestHeader, msgs: Messages, appConfig: AppConfig)
 
 @invitationsUrl = @{
     if(appConfig.enableAgentClientRelationshipsFrontend) appConfig.agentClientRelationshipsFrontendInvitationsUrl

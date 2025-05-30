@@ -20,7 +20,7 @@ import org.mockito.{ArgumentMatchersSugar, IdiomaticMockito}
 import org.scalatestplus.play.PlaySpec
 import play.api.Environment
 import play.api.libs.json.Reads
-import play.api.mvc.{DefaultActionBuilderImpl, MessagesControllerComponents, Request}
+import play.api.mvc.{DefaultActionBuilderImpl, MessagesControllerComponents, Request, RequestHeader}
 import play.api.test.Helpers._
 import play.api.test.{DefaultAwaitTimeout, FakeRequest, Helpers}
 import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
@@ -46,7 +46,6 @@ class EmailVerificationEndpointControllerSpec extends PlaySpec
   with ArgumentMatchersSugar
   with TestConstants {
 
-  implicit val hc: HeaderCarrier = HeaderCarrier()
   implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
   private val fakeRequest = FakeRequest()
 
@@ -72,7 +71,7 @@ class EmailVerificationEndpointControllerSpec extends PlaySpec
       mockSessionCache,
       mockDraftDetailsService,
       cc
-    )(mockAppConfig, ec, mockPendingChangeRequestRepository,  mockAgentAssuranceConnector,mockEmailVerificationService)
+    )(mockAppConfig, ec, mockPendingChangeRequestRepository, mockEmailVerificationService)
   }
 
 
@@ -84,30 +83,30 @@ class EmailVerificationEndpointControllerSpec extends PlaySpec
 
       mockAppConfig.enableChangeContactDetails returns true
 
-      mockSessionCache.get(CURRENT_SELECTED_CHANGES)(*[Reads[Set[String]]], *[Request[_]]) returns Future.successful(Some(Set("email")))
-      mockSessionCache.get(DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[Request[_]]) returns Future.successful(Some(DesignatoryDetails(
+      mockSessionCache.get(CURRENT_SELECTED_CHANGES)(*[Reads[Set[String]]], *[RequestHeader]) returns Future.successful(Some(Set("email")))
+      mockSessionCache.get(DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[RequestHeader]) returns Future.successful(Some(DesignatoryDetails(
         agencyDetails = agentRecord.agencyDetails.get.copy(
           agencyEmail = Some("new@email.com")
         ),
         otherServices = OtherServices(saChanges = SaChanges(applyChanges = false, None), ctChanges = CtChanges(applyChanges = false, None))
       )))
 
-      mockSessionCache.get(DRAFT_SUBMITTED_BY)(*[Reads[YourDetails]], *[Request[_]]) returns Future.successful(Some(
+      mockSessionCache.get(DRAFT_SUBMITTED_BY)(*[Reads[YourDetails]], *[RequestHeader]) returns Future.successful(Some(
         YourDetails(fullName = "John Tester", telephone = "078187777831")
       ))
       // TODO check this returns the correct data
 
-      mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+      mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
-      mockPendingChangeRequestRepository.find(arn)(*[HeaderCarrier]) returns Future.successful(None)
+      mockPendingChangeRequestRepository.find(arn)(*[RequestHeader]) returns Future.successful(None)
 
       mockSessionCache.get[String](EMAIL_PENDING_VERIFICATION)(*[Reads[String]], *[Request[Any]]) returns Future.successful(Some("new@email.com"))
 
-      mockEmailVerificationService.getEmailVerificationStatus("new@email.com", ggCredentials.providerId)(*[HeaderCarrier]) returns Future.successful(EmailIsAlreadyVerified)
+      mockEmailVerificationService.getEmailVerificationStatus("new@email.com", ggCredentials.providerId)(*[RequestHeader]) returns Future.successful(EmailIsAlreadyVerified)
 
-      mockDraftDetailsService.updateDraftDetails(*[DesignatoryDetails => DesignatoryDetails])(*[Request[_]]) returns Future.successful(())
+      mockDraftDetailsService.updateDraftDetails(*[DesignatoryDetails => DesignatoryDetails])(*[RequestHeader]) returns Future.successful(())
 
-      mockSessionCache.delete[String](EMAIL_PENDING_VERIFICATION)(*[Request[_]]) returns Future.successful(())
+      mockSessionCache.delete[String](EMAIL_PENDING_VERIFICATION)(*[RequestHeader]) returns Future.successful(())
 
       val result = TestController.finishEmailVerification()(fakeRequest)
 

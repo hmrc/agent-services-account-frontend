@@ -24,7 +24,7 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
-import play.api.test.FakeRequest
+import play.api.mvc.RequestHeader
 import play.api.test.Helpers._
 import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, SuspensionDetails, Utr}
 import uk.gov.hmrc.agentservicesaccount.connectors
@@ -36,7 +36,7 @@ import uk.gov.hmrc.agentservicesaccount.support.UnitSpec
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve.Retrieval
-import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
+import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -116,7 +116,7 @@ class ContactDetailsBeforeYouStartControllerSpec extends UnitSpec
 
     val agentAssuranceConnector: AgentAssuranceConnector = app.injector.instanceOf[AgentAssuranceConnector]
 
-    (agentAssuranceConnector.getAgentRecord(_: HeaderCarrier, _: ExecutionContext)).when(*, *).returns(Future.successful(agentRecord))
+    (agentAssuranceConnector.getAgentRecord(_:RequestHeader)).when(*).returns(Future.successful(agentRecord))
 
     val controller: ContactDetailsController = app.injector.instanceOf[ContactDetailsController]
     val sessionCache: SessionCacheService = app.injector.instanceOf[SessionCacheService]
@@ -125,13 +125,6 @@ class ContactDetailsBeforeYouStartControllerSpec extends UnitSpec
     sessionCache.delete(DRAFT_NEW_CONTACT_DETAILS)(fakeRequest()).futureValue
     sessionCache.delete(EMAIL_PENDING_VERIFICATION)(fakeRequest()).futureValue
   }
-
-  private def fakeRequest(method: String = "GET", uri: String = "/") =
-    FakeRequest(method, uri).withSession(
-      SessionKeys.authToken -> "Bearer XYZ",
-      SessionKeys.sessionId -> "session-x"
-    )
-
 
   "GET /manage-account/contact-details/start-update" should {
     "display the current details page normally" in new TestSetup {

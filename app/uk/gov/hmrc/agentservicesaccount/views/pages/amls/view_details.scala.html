@@ -34,7 +34,7 @@
         return_to_manage_account_link: return_to_manage_account_link
 )
 
-@(amlsStatus: AmlsStatus, mAmlsDetails: Option[AmlsDetails])(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
+@(amlsStatus: AmlsStatus, mAmlsDetails: Option[AmlsDetails])(implicit request: RequestHeader, msgs: Messages, appConfig: AppConfig)
 
 @htmlPartial = @{
  mAmlsDetails.fold(

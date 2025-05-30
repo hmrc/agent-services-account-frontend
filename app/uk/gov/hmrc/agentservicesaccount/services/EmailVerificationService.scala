@@ -17,12 +17,12 @@
 package uk.gov.hmrc.agentservicesaccount.services
 
 import play.api.i18n.Lang
-import play.api.mvc.{Call, Request}
+import play.api.mvc.{Call, RequestHeader}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, EmailVerificationConnector}
 import uk.gov.hmrc.agentservicesaccount.controllers
 import uk.gov.hmrc.agentservicesaccount.models.emailverification._
-import uk.gov.hmrc.http.{HeaderCarrier, InternalServerException}
+import uk.gov.hmrc.http.InternalServerException
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -33,7 +33,7 @@ class EmailVerificationService @Inject()(agentAssuranceConnector: AgentAssurance
                                         )(implicit ec: ExecutionContext, appConfig: AppConfig) {
 
   def getEmailVerificationStatus(newEmail: String, credId: String)
-                                (implicit hc: HeaderCarrier): Future[EmailVerificationStatus] =
+                                (implicit rh: RequestHeader): Future[EmailVerificationStatus] =
     for {
       optCurrentEmail <- agentAssuranceConnector.getAgentRecord.map(_.agencyDetails.flatMap(_.agencyEmail))
       isUnchanged = optCurrentEmail.exists(_.trim.equalsIgnoreCase(newEmail.trim))
@@ -49,7 +49,7 @@ class EmailVerificationService @Inject()(agentAssuranceConnector: AgentAssurance
     }
 
   def initialiseEmailVerificationJourney(credId: String, newEmail: String, lang: Lang)
-                                        (implicit hc: HeaderCarrier, request: Request[_]): Future[String] = {
+                                        (implicit rh: RequestHeader): Future[String] = {
     val useAbsoluteUrls = appConfig.emailVerificationFrontendBaseUrl.contains("localhost")
 
     def makeUrl(call: Call): String = if (useAbsoluteUrls) call.absoluteURL() else call.url

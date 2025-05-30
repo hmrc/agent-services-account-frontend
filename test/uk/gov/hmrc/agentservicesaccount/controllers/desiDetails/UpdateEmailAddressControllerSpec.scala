@@ -22,7 +22,7 @@ import play.api.Environment
 import play.api.data.Form
 import play.api.i18n.Messages
 import play.api.libs.json.{Reads, Writes}
-import play.api.mvc.{AnyContentAsFormUrlEncoded, DefaultActionBuilderImpl, MessagesControllerComponents, Request}
+import play.api.mvc.{AnyContentAsFormUrlEncoded, DefaultActionBuilderImpl, MessagesControllerComponents, RequestHeader}
 import play.api.test.Helpers._
 import play.api.test.{DefaultAwaitTimeout, FakeRequest, Helpers}
 import play.twirl.api.Html
@@ -50,7 +50,6 @@ class UpdateEmailAddressControllerSpec extends PlaySpec
   with ArgumentMatchersSugar
   with TestConstants {
 
-  implicit val hc: HeaderCarrier = HeaderCarrier()
   implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
   private val fakeRequest = FakeRequest()
 
@@ -73,10 +72,10 @@ class UpdateEmailAddressControllerSpec extends PlaySpec
     protected val mockSessionCache: SessionCacheService = mock[SessionCacheService]
     protected val cc: MessagesControllerComponents = stubMessagesControllerComponents()
 
-    mockSessionCache.delete[String](EMAIL_PENDING_VERIFICATION)(*[Request[_]]) returns Future.successful(())
-    mockSessionCache.delete[Set[String]](CURRENT_SELECTED_CHANGES)(*[Request[_]]) returns Future.successful(())
-    mockSessionCache.delete[YourDetails](DRAFT_SUBMITTED_BY)(*[Request[_]]) returns Future.successful(())
-    mockSessionCache.delete[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS)(*[Request[_]]) returns Future.successful(())
+    mockSessionCache.delete[String](EMAIL_PENDING_VERIFICATION)(*[RequestHeader]) returns Future.successful(())
+    mockSessionCache.delete[Set[String]](CURRENT_SELECTED_CHANGES)(*[RequestHeader]) returns Future.successful(())
+    mockSessionCache.delete[YourDetails](DRAFT_SUBMITTED_BY)(*[RequestHeader]) returns Future.successful(())
+    mockSessionCache.delete[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS)(*[RequestHeader]) returns Future.successful(())
 
     object TestController extends UpdateEmailAddressController(
       mockActions,
@@ -86,7 +85,7 @@ class UpdateEmailAddressControllerSpec extends PlaySpec
       mockUpdateEmailView,
       mockEmailLockedView,
       cc
-    )(mockAppConfig, ec, mockPendingChangeRequestRepository, mockAgentAssuranceConnector)
+    )(mockAppConfig, ec, mockPendingChangeRequestRepository)
   }
 
 
@@ -96,15 +95,15 @@ class UpdateEmailAddressControllerSpec extends PlaySpec
         *[HeaderCarrier],
         *[ExecutionContext]) returns authResponse
 
-      mockSessionCache.get(CURRENT_SELECTED_CHANGES)(*[Reads[Set[String]]], *[Request[_]]) returns Future.successful(Some(Set("email")))
+      mockSessionCache.get(CURRENT_SELECTED_CHANGES)(*[Reads[Set[String]]], *[RequestHeader]) returns Future.successful(Some(Set("email")))
 
       mockAppConfig.enableChangeContactDetails returns true
 
-      mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+      mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
-      mockPendingChangeRequestRepository.find(arn)(*[HeaderCarrier]) returns Future.successful(None)
+      mockPendingChangeRequestRepository.find(arn)(*[RequestHeader]) returns Future.successful(None)
 
-      mockUpdateEmailView.apply(*[Form[String]])(*[Messages], *[Request[_]], *[AppConfig]) returns Html("")
+      mockUpdateEmailView.apply(*[Form[String]])(*[Messages], *[RequestHeader], *[AppConfig]) returns Html("")
 
       val result = TestController.showChangeEmailAddress()(fakeRequest)
 
@@ -122,19 +121,19 @@ class UpdateEmailAddressControllerSpec extends PlaySpec
 
       mockAppConfig.enableChangeContactDetails returns true
 
-      mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+      mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
-      mockPendingChangeRequestRepository.find(arn)(*[HeaderCarrier]) returns Future.successful(None)
+      mockPendingChangeRequestRepository.find(arn)(*[RequestHeader]) returns Future.successful(None)
 
-      mockEmailVerificationService.getEmailVerificationStatus("new@email.com", ggCredentials.providerId)(*[HeaderCarrier]) returns Future.successful(EmailIsAlreadyVerified)
+      mockEmailVerificationService.getEmailVerificationStatus("new@email.com", ggCredentials.providerId)(*[RequestHeader]) returns Future.successful(EmailIsAlreadyVerified)
 
-      mockDraftDetailsService.updateDraftDetails(*[DesignatoryDetails => DesignatoryDetails])(*[Request[_]]) returns Future.successful(())
+      mockDraftDetailsService.updateDraftDetails(*[DesignatoryDetails => DesignatoryDetails])(*[RequestHeader]) returns Future.successful(())
 
-      mockSessionCache.delete[String](EMAIL_PENDING_VERIFICATION)(*[Request[_]]) returns Future.successful(())
-      mockSessionCache.get(CURRENT_SELECTED_CHANGES)(*[Reads[Set[String]]], *[Request[_]]) returns Future.successful(Some(Set("email")))
-      mockSessionCache.get(DRAFT_SUBMITTED_BY)(*[Reads[YourDetails]], *[Request[_]]) returns
+      mockSessionCache.delete[String](EMAIL_PENDING_VERIFICATION)(*[RequestHeader]) returns Future.successful(())
+      mockSessionCache.get(CURRENT_SELECTED_CHANGES)(*[Reads[Set[String]]], *[RequestHeader]) returns Future.successful(Some(Set("email")))
+      mockSessionCache.get(DRAFT_SUBMITTED_BY)(*[Reads[YourDetails]], *[RequestHeader]) returns
         Future.successful(Some(YourDetails(fullName = "John Tester", telephone = "08982383777")))
-      mockSessionCache.get(DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[Request[_]]) returns Future.successful(Some(DesignatoryDetails(
+      mockSessionCache.get(DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[RequestHeader]) returns Future.successful(Some(DesignatoryDetails(
         agencyDetails = agentRecord.agencyDetails.get.copy(agencyEmail = Some("new@email.com")),
         otherServices = OtherServices(saChanges = SaChanges(applyChanges = false, None), ctChanges = CtChanges(applyChanges = false, None))
       )))
@@ -153,14 +152,14 @@ class UpdateEmailAddressControllerSpec extends PlaySpec
 
       mockAppConfig.enableChangeContactDetails returns true
 
-      mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+      mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
-      mockPendingChangeRequestRepository.find(arn)(*[HeaderCarrier]) returns Future.successful(None)
+      mockPendingChangeRequestRepository.find(arn)(*[RequestHeader]) returns Future.successful(None)
 
-      mockEmailVerificationService.getEmailVerificationStatus("new@email.com", ggCredentials.providerId)(*[HeaderCarrier]) returns Future.successful(EmailIsLocked)
-      mockSessionCache.get(CURRENT_SELECTED_CHANGES)(*[Reads[Set[String]]], *[Request[_]]) returns Future.successful(Some(Set("email")))
+      mockEmailVerificationService.getEmailVerificationStatus("new@email.com", ggCredentials.providerId)(*[RequestHeader]) returns Future.successful(EmailIsLocked)
+      mockSessionCache.get(CURRENT_SELECTED_CHANGES)(*[Reads[Set[String]]], *[RequestHeader]) returns Future.successful(Some(Set("email")))
 
-      mockSessionCache.get(DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[Request[_]]) returns Future.successful(Some(DesignatoryDetails(
+      mockSessionCache.get(DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[RequestHeader]) returns Future.successful(Some(DesignatoryDetails(
         agencyDetails = agentRecord.agencyDetails.get,
         otherServices = OtherServices(saChanges = SaChanges(applyChanges = false, None), ctChanges = CtChanges(applyChanges = false, None))
       )))
@@ -178,18 +177,18 @@ class UpdateEmailAddressControllerSpec extends PlaySpec
 
       mockAppConfig.enableChangeContactDetails returns true
 
-      mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+      mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
-      mockPendingChangeRequestRepository.find(arn)(*[HeaderCarrier]) returns Future.successful(None)
+      mockPendingChangeRequestRepository.find(arn)(*[RequestHeader]) returns Future.successful(None)
 
-      mockEmailVerificationService.getEmailVerificationStatus("new@email.com", ggCredentials.providerId)(*[HeaderCarrier]) returns Future.successful(EmailNeedsVerifying)
+      mockEmailVerificationService.getEmailVerificationStatus("new@email.com", ggCredentials.providerId)(*[RequestHeader]) returns Future.successful(EmailNeedsVerifying)
 
-      mockSessionCache.put[String](EMAIL_PENDING_VERIFICATION, "new@email.com")(*[Writes[String]], *[Request[_]]) returns Future.successful(SessionKeys.sessionId -> "session-123")
+      mockSessionCache.put[String](EMAIL_PENDING_VERIFICATION, "new@email.com")(*[Writes[String]], *[RequestHeader]) returns Future.successful(SessionKeys.sessionId -> "session-123")
 
-      mockEmailVerificationService.initialiseEmailVerificationJourney(ggCredentials.providerId, "new@email.com", cc.langs.availables.head)(*[HeaderCarrier], *[Request[_]]) returns Future.successful("/fake-verify-email-journey")
-      mockSessionCache.get(CURRENT_SELECTED_CHANGES)(*[Reads[Set[String]]], *[Request[_]]) returns Future.successful(Some(Set("email")))
+      mockEmailVerificationService.initialiseEmailVerificationJourney(ggCredentials.providerId, "new@email.com", cc.langs.availables.head)(*[RequestHeader]) returns Future.successful("/fake-verify-email-journey")
+      mockSessionCache.get(CURRENT_SELECTED_CHANGES)(*[Reads[Set[String]]], *[RequestHeader]) returns Future.successful(Some(Set("email")))
 
-      mockSessionCache.get(DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[Request[_]]) returns Future.successful(Some(DesignatoryDetails(
+      mockSessionCache.get(DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[RequestHeader]) returns Future.successful(Some(DesignatoryDetails(
         agencyDetails = agentRecord.agencyDetails.get,
         otherServices = OtherServices(saChanges = SaChanges(applyChanges = false, None), ctChanges = CtChanges(applyChanges = false, None))
       )))
@@ -207,14 +206,14 @@ class UpdateEmailAddressControllerSpec extends PlaySpec
 
       mockAppConfig.enableChangeContactDetails returns true
 
-      mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+      mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
-      mockPendingChangeRequestRepository.find(arn)(*[HeaderCarrier]) returns Future.successful(None)
+      mockPendingChangeRequestRepository.find(arn)(*[RequestHeader]) returns Future.successful(None)
 
-      mockUpdateEmailView.apply(*[Form[String]])(*[Messages], *[Request[_]], *[AppConfig]) returns Html("")
-      mockSessionCache.get(CURRENT_SELECTED_CHANGES)(*[Reads[Set[String]]], *[Request[_]]) returns Future.successful(Some(Set("email")))
+      mockUpdateEmailView.apply(*[Form[String]])(*[Messages], *[RequestHeader], *[AppConfig]) returns Html("")
+      mockSessionCache.get(CURRENT_SELECTED_CHANGES)(*[Reads[Set[String]]], *[RequestHeader]) returns Future.successful(Some(Set("email")))
 
-      mockSessionCache.get(DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[Request[_]]) returns Future.successful(Some(DesignatoryDetails(
+      mockSessionCache.get(DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[RequestHeader]) returns Future.successful(Some(DesignatoryDetails(
         agencyDetails = agentRecord.agencyDetails.get,
         otherServices = OtherServices(saChanges = SaChanges(applyChanges = false, None), ctChanges = CtChanges(applyChanges = false, None))
       )))

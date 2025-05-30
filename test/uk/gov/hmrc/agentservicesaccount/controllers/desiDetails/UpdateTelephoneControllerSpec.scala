@@ -50,7 +50,6 @@ class UpdateTelephoneControllerSpec extends UnitSpec
   with ArgumentMatchersSugar
   with TestConstants {
 
-  implicit val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
   implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
 
   private val testArn = Arn("XXARN0123456789")
@@ -78,7 +77,7 @@ class UpdateTelephoneControllerSpec extends UnitSpec
       mockSessionCache,
       mockDraftDetailsService,
       mockUpdatePhoneView
-    )(mockAppConfig, cc, ec, mockPendingChangeRequestRepository, mockAgentAssuranceConnector)
+    )(mockAppConfig, cc, ec, mockPendingChangeRequestRepository)
   }
 
   "GET /manage-account/contact-details/new-telephone" should {
@@ -89,17 +88,17 @@ class UpdateTelephoneControllerSpec extends UnitSpec
 
       mockAppConfig.enableChangeContactDetails returns true
 
-      mockSessionCache.get(CURRENT_SELECTED_CHANGES)(*[Reads[Set[String]]], *[Request[_]]) returns Future.successful(Some(Set("telephone")))
+      mockSessionCache.get(CURRENT_SELECTED_CHANGES)(*[Reads[Set[String]]], *[RequestHeader]) returns Future.successful(Some(Set("telephone")))
 
-      mockSessionCache.get(DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[Request[_]]) returns Future.successful(None)
+      mockSessionCache.get(DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[RequestHeader]) returns Future.successful(None)
 
-      mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+      mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
-      mockPendingChangeRequestRepository.find(arn)(*[HeaderCarrier]) returns Future.successful(None)
+      mockPendingChangeRequestRepository.find(arn)(*[RequestHeader]) returns Future.successful(None)
 
-      mockUpdatePhoneView.apply(*[Form[String]])(*[Messages], *[Request[_]], *[AppConfig]) returns Html("")
+      mockUpdatePhoneView.apply(*[Form[String]])(*[Messages], *[RequestHeader], *[AppConfig]) returns Html("")
 
-      val result: Future[Result] = TestController.showPage()(request)
+      val result: Future[Result] = TestController.showPage()(fakeRequest())
 
       status(result) shouldBe OK
     }
@@ -112,15 +111,15 @@ class UpdateTelephoneControllerSpec extends UnitSpec
 
         mockAppConfig.enableChangeContactDetails returns true
 
-        mockSessionCache.get(CURRENT_SELECTED_CHANGES)(*[Reads[Set[String]]], *[Request[_]]) returns Future.successful(Some(Set("telephone")))
+        mockSessionCache.get(CURRENT_SELECTED_CHANGES)(*[Reads[Set[String]]], *[RequestHeader]) returns Future.successful(Some(Set("telephone")))
 
-        mockSessionCache.get(DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[Request[_]]) returns Future.successful(Some(desiDetailsSaChangesOtherServices))
+        mockSessionCache.get(DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[RequestHeader]) returns Future.successful(Some(desiDetailsSaChangesOtherServices))
 
-        mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+        mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
-        mockPendingChangeRequestRepository.find(arn)(*[HeaderCarrier]) returns Future.successful(Some(PendingChangeRequest(arn, Instant.now)))
+        mockPendingChangeRequestRepository.find(arn)(*[RequestHeader]) returns Future.successful(Some(PendingChangeRequest(arn, Instant.now)))
 
-        val result: Future[Result] = TestController.showPage()(request)
+        val result: Future[Result] = TestController.showPage()(fakeRequest())
 
         status(result) shouldBe SEE_OTHER
         header("Location", result) shouldBe Some(desiDetails.routes.ViewContactDetailsController.showPage.url)
@@ -136,17 +135,17 @@ class UpdateTelephoneControllerSpec extends UnitSpec
 
       mockAppConfig.enableChangeContactDetails returns true
 
-      mockSessionCache.get(CURRENT_SELECTED_CHANGES)(*[Reads[Set[String]]], *[Request[_]]) returns Future.successful(Some(Set("telephone")))
+      mockSessionCache.get(CURRENT_SELECTED_CHANGES)(*[Reads[Set[String]]], *[RequestHeader]) returns Future.successful(Some(Set("telephone")))
 
-      mockSessionCache.get(DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[Request[_]]) returns Future.successful(Some(desiDetailsSaChangesOtherServices))
+      mockSessionCache.get(DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[RequestHeader]) returns Future.successful(Some(desiDetailsSaChangesOtherServices))
 
-      mockSessionCache.get(DRAFT_SUBMITTED_BY)(*[Reads[YourDetails]], *[Request[_]]) returns Future.successful(None)
+      mockSessionCache.get(DRAFT_SUBMITTED_BY)(*[Reads[YourDetails]], *[RequestHeader]) returns Future.successful(None)
 
-      mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+      mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
-      mockPendingChangeRequestRepository.find(arn)(*[HeaderCarrier]) returns Future.successful(None)
+      mockPendingChangeRequestRepository.find(arn)(*[RequestHeader]) returns Future.successful(None)
 
-      mockDraftDetailsService.updateDraftDetails(*[DesignatoryDetails => DesignatoryDetails])(*[Request[_]]) returns Future.successful(())
+      mockDraftDetailsService.updateDraftDetails(*[DesignatoryDetails => DesignatoryDetails])(*[RequestHeader]) returns Future.successful(())
 
       val result: Future[Result] = TestController.onSubmit()(FakeRequest(POST, "/").withFormUrlEncodedBody("telephoneNumber" -> "01234 567 890"))
 
@@ -161,17 +160,17 @@ class UpdateTelephoneControllerSpec extends UnitSpec
 
       mockAppConfig.enableChangeContactDetails returns true
 
-      mockSessionCache.get(CURRENT_SELECTED_CHANGES)(*[Reads[Set[String]]], *[Request[_]]) returns Future.successful(Some(Set("telephone")))
+      mockSessionCache.get(CURRENT_SELECTED_CHANGES)(*[Reads[Set[String]]], *[RequestHeader]) returns Future.successful(Some(Set("telephone")))
 
-      mockSessionCache.get(DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[Request[_]]) returns Future.successful(Some(desiDetailsSaChangesOtherServices))
+      mockSessionCache.get(DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[RequestHeader]) returns Future.successful(Some(desiDetailsSaChangesOtherServices))
 
-      mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+      mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
-      mockPendingChangeRequestRepository.find(arn)(*[HeaderCarrier]) returns Future.successful(None)
+      mockPendingChangeRequestRepository.find(arn)(*[RequestHeader]) returns Future.successful(None)
 
-      mockDraftDetailsService.updateDraftDetails(*[DesignatoryDetails => DesignatoryDetails])(*[Request[_]]) returns Future.successful(())
+      mockDraftDetailsService.updateDraftDetails(*[DesignatoryDetails => DesignatoryDetails])(*[RequestHeader]) returns Future.successful(())
 
-      mockUpdatePhoneView.apply(*[Form[String]])(*[Messages], *[Request[_]], *[AppConfig]) returns Html("")
+      mockUpdatePhoneView.apply(*[Form[String]])(*[Messages], *[RequestHeader], *[AppConfig]) returns Html("")
 
       val result: Future[Result] = TestController.onSubmit()(FakeRequest(POST, "/").withFormUrlEncodedBody("telephoneNumber" -> "0800 FAKE NO"))
 
@@ -186,15 +185,15 @@ class UpdateTelephoneControllerSpec extends UnitSpec
 
         mockAppConfig.enableChangeContactDetails returns true
 
-        mockSessionCache.get(CURRENT_SELECTED_CHANGES)(*[Reads[Set[String]]], *[Request[_]]) returns Future.successful(Some(Set("telephone")))
+        mockSessionCache.get(CURRENT_SELECTED_CHANGES)(*[Reads[Set[String]]], *[RequestHeader]) returns Future.successful(Some(Set("telephone")))
 
-        mockSessionCache.get(DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[Request[_]]) returns Future.successful(Some(desiDetailsSaChangesOtherServices))
+        mockSessionCache.get(DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[RequestHeader]) returns Future.successful(Some(desiDetailsSaChangesOtherServices))
 
-        mockSessionCache.get(DRAFT_SUBMITTED_BY)(*[Reads[YourDetails]], *[Request[_]]) returns Future.successful(None)
+        mockSessionCache.get(DRAFT_SUBMITTED_BY)(*[Reads[YourDetails]], *[RequestHeader]) returns Future.successful(None)
 
-        mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+        mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
-        mockPendingChangeRequestRepository.find(arn)(*[HeaderCarrier]) returns Future.successful(Some(PendingChangeRequest(arn, Instant.now)))
+        mockPendingChangeRequestRepository.find(arn)(*[RequestHeader]) returns Future.successful(Some(PendingChangeRequest(arn, Instant.now)))
 
         val result: Future[Result] = TestController.onSubmit()(FakeRequest(POST, "/").withFormUrlEncodedBody("telephoneNumber" -> "01234 567 890"))
 

@@ -38,7 +38,7 @@ import uk.gov.hmrc.agentservicesaccount.support.{TestConstants, UnitSpec}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve.Retrieval
-import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
+import uk.gov.hmrc.http.HeaderCarrier
 
 import java.time.Instant
 import scala.concurrent.{ExecutionContext, Future}
@@ -52,7 +52,6 @@ class YourDetailsControllerSpec extends UnitSpec
   with TestConstants {
 
   implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
-  implicit val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequest()
 
   private val testArn = Arn("XXARN0123456789")
 
@@ -93,36 +92,31 @@ class YourDetailsControllerSpec extends UnitSpec
     "suspendedContactDetails.sendEmail" -> false
   ).overrides(overrides).build()
 
+
   trait TestSetup {
     val agentAssuranceConnector: AgentAssuranceConnector = app.injector.instanceOf[AgentAssuranceConnector]
-    (agentAssuranceConnector.getAgentRecord(_: HeaderCarrier, _: ExecutionContext)).when(*, *).returns(Future.successful(agentRecord))
+    (agentAssuranceConnector.getAgentRecord(_: RequestHeader)).when(*).returns(Future.successful(agentRecord))
 
     val controller: YourDetailsController = app.injector.instanceOf[YourDetailsController]
     val sessionCache: SessionCacheService = app.injector.instanceOf[SessionCacheService]
     val pcodRepository: PendingChangeRequestRepository = app.injector.instanceOf[PendingChangeRequestRepository]
 
     def noPendingChangesInRepo(): Unit = {
-      (pcodRepository.find(_: Arn)(_: HeaderCarrier)).when(*, *).returns(Future.successful(None))
+      (pcodRepository.find(_: Arn)(_: RequestHeader)).when(*, *).returns(Future.successful(None))
     }
     def pendingChangesExistInRepo(): Unit = {
-      (pcodRepository.find(_: Arn)(_: HeaderCarrier)).when(*, *).returns(Future.successful(
+      (pcodRepository.find(_: Arn)(_: RequestHeader)).when(*, *).returns(Future.successful(
         Some(PendingChangeRequest(
           testArn,
           Instant.now()
         ))))
     }
 
-    (pcodRepository.insert(_: PendingChangeRequest)(_: HeaderCarrier)).when(*, *).returns(Future.successful(()))
+    (pcodRepository.insert(_: PendingChangeRequest)(_: RequestHeader)).when(*, *).returns(Future.successful(()))
 
     // make sure these values are cleared from the session
-    sessionCache.delete(DRAFT_SUBMITTED_BY)(fakeRequest()).futureValue
+    sessionCache.delete(DRAFT_SUBMITTED_BY).futureValue
   }
-
-  private def fakeRequest(method: String = "GET", uri: String = "/") =
-    FakeRequest(method, uri).withSession(
-      SessionKeys.authToken -> "Bearer XYZ",
-      SessionKeys.sessionId -> "session-x"
-    )
 
   "GET /manage-account/contact-details/your-details" should {
     "display the Your details page normally if there is no change pending" in new TestSetup {
@@ -133,7 +127,7 @@ class YourDetailsControllerSpec extends UnitSpec
           agencyEmail = Some("new@test.com")
         ),
         otherServices = OtherServices(saChanges = SaChanges(applyChanges = false, None), ctChanges = CtChanges(applyChanges = false, None))
-      ))
+      )).futureValue
       val result: Result = controller.showPage()(fakeRequest()).futureValue
       status(result) shouldBe OK
       contentAsString(result) should include("Your details")

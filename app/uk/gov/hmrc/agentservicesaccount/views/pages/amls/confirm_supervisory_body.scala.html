@@ -32,7 +32,7 @@
 )
 
 
-@(form: Form[Boolean], supervisoryBody: String)(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
+@(form: Form[Boolean], supervisoryBody: String)(implicit request: RequestHeader, msgs: Messages, appConfig: AppConfig)
 
 @main(
  pageTitle = withErrorPrefix(form.hasErrors, msgs("amls.confirm-supervisory-body.h1", supervisoryBody)),

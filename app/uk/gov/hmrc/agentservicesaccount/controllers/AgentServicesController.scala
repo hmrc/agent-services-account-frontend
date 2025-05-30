@@ -30,7 +30,6 @@ import uk.gov.hmrc.agentservicesaccount.models.AmlsStatus
 import uk.gov.hmrc.agentservicesaccount.models.AmlsStatuses._
 import uk.gov.hmrc.agentservicesaccount.views.html.pages._
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.assistant.{administrators, your_account}
-import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject._
@@ -120,7 +119,7 @@ class AgentServicesController @Inject()(authActions: AuthActions,
     }
   }
 
-  private def syncEacdIfOptedIn(arn: Arn, optinStatus: OptinStatus)(implicit hc: HeaderCarrier) = {
+  private def syncEacdIfOptedIn(arn: Arn, optinStatus: OptinStatus)(implicit rh: RequestHeader) = {
     if (optinStatus == OptedInReady) agentPermissionsConnector.syncEacd(arn, fullSync = true)
     else Future.successful(())
   }
@@ -176,7 +175,7 @@ class AgentServicesController @Inject()(authActions: AuthActions,
     s"${arnStr.take(4)} ${arnStr.slice(4, 7)} ${arnStr.drop(7)}"
   }
 
-  private def withShowFeatureInvite(arn: Arn)(f: Boolean => Future[Result])(implicit request: Request[_]): Future[Result] = {
+  private def withShowFeatureInvite(arn: Arn)(f: Boolean => Future[Result])(implicit request: RequestHeader): Future[Result] = {
     agentPermissionsConnector.isShownPrivateBetaInvite.flatMap(f)
   }
 

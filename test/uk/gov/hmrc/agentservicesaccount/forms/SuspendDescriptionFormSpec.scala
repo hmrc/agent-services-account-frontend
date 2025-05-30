@@ -43,7 +43,7 @@ package uk.gov.hmrc.agentservicesaccount.forms
       }
       s"error when $descriptionField is too long" in {
         val params = Map(
-          descriptionField -> RandomStringUtils.randomAlphanumeric(251),
+          descriptionField -> RandomStringUtils.insecure().nextAlphanumeric(251),
         )
         val validatedForm = SuspendDescriptionForm.form.bind(params)
         validatedForm.hasErrors shouldBe true

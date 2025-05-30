@@ -33,7 +33,7 @@
     govukButton: GovukButton
 )
 
-@(form: Form[Boolean])(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
+@(form: Form[Boolean])(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
 
 @main(
     pageTitle = withErrorPrefix(form.hasErrors, msgs("beta.invite.yes-no.heading")),

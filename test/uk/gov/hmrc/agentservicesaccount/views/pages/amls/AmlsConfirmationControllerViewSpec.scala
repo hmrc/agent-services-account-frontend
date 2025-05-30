@@ -41,8 +41,8 @@ class AmlsConfirmationControllerViewSpec extends BaseISpec{
   "update_confirmation_received view" when {
     "the user has changed existing amls details should render the page correctly" in {
       val doc: Document = Jsoup.parse(view.apply(amlsDetailsAlreadyExisted = true)(FakeRequest(), messages, appConfig).body)
-      doc.select(".hmrc-header__service-name").first.text() mustBe "Agent services account"
-      doc.select(".hmrc-header__service-name").first.attr("href") mustBe "/agent-services-account"
+      doc.select(".govuk-header__service-name").first.text() mustBe "Agent services account"
+      doc.select(".govuk-header__service-name").first.attr("href") mustBe "/agent-services-account"
 
       doc.select(".govuk-panel__title").first().text() mustBe "You've changed your supervision details" //title
       doc.select(".govuk-heading-m").first().text() mustBe "What happens next" //h2
@@ -55,8 +55,8 @@ class AmlsConfirmationControllerViewSpec extends BaseISpec{
     }
     "the user has provided amls details for the first time should render the page correctly" in {
       val doc: Document = Jsoup.parse(view.apply(amlsDetailsAlreadyExisted = false)(FakeRequest(), messages, appConfig).body)
-      doc.select(".hmrc-header__service-name").first.text() mustBe "Agent services account"
-      doc.select(".hmrc-header__service-name").first.attr("href") mustBe "/agent-services-account"
+      doc.select(".govuk-header__service-name").first.text() mustBe "Agent services account"
+      doc.select(".govuk-header__service-name").first.attr("href") mustBe "/agent-services-account"
 
       doc.select(".govuk-panel__title").first().text() mustBe "You've added your supervision details" //title
       doc.select(".govuk-heading-m").first().text() mustBe "What happens next" //h2

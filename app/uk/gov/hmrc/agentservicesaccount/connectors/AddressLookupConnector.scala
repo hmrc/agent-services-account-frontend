@@ -17,28 +17,32 @@
 package uk.gov.hmrc.agentservicesaccount.connectors
 
 import play.api.http.Status.ACCEPTED
+import play.api.libs.json.Json
+import play.api.mvc.RequestHeader
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup._
 import uk.gov.hmrc.http.HttpReads.Implicits._
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
+import uk.gov.hmrc.http.{HttpResponse, StringContextOps}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.agentservicesaccount.utils.RequestSupport._
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AddressLookupConnector @Inject()(http: HttpClient)(appConfig: AppConfig, implicit val ec: ExecutionContext) {
+class AddressLookupConnector @Inject()(http: HttpClientV2)(appConfig: AppConfig, implicit val ec: ExecutionContext) {
 
   lazy val base: String = appConfig.addressLookupBaseUrl
 
   // For the details of how address lookup works, read the documentation for the address-lookup-frontend microservice.
 
   // After the journey is complete, the final address can be retrieved from this endpoint
-  def getAddress(id: String)(implicit hc: HeaderCarrier): Future[ConfirmedResponseAddress] =
-    http.GET[ConfirmedResponseAddress](s"$base/api/confirmed?id=$id")
+  def getAddress(id: String)(implicit rh: RequestHeader): Future[ConfirmedResponseAddress] =
+    http.get(url"$base/api/confirmed?id=$id").execute[ConfirmedResponseAddress]
 
   // Initialise the address lookup journey and returns a Url to redirect the user to  to start the journey.
-  def init(alfJourneyConfig: JourneyConfigV2)(implicit hc: HeaderCarrier): Future[String] =
-    http.POST[JourneyConfigV2, HttpResponse](s"$base/api/init", alfJourneyConfig).map { response: HttpResponse =>
+  def init(alfJourneyConfig: JourneyConfigV2)(implicit rh: RequestHeader): Future[String] =
+    http.post(url"$base/api/init").withBody(Json.toJson(alfJourneyConfig)).execute[HttpResponse].map { response =>
       response.status match {
         case ACCEPTED if response.headers.contains("Location") => response.headers("Location").head
         case x => throw new RuntimeException(s"Address lookup journey initialisation returned status $x")

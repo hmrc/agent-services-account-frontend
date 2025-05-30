@@ -25,7 +25,7 @@ import play.api.test.{DefaultAwaitTimeout, FakeRequest}
 import uk.gov.hmrc.agentservicesaccount.controllers.DRAFT_NEW_CONTACT_DETAILS
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, DesignatoryDetails}
 import uk.gov.hmrc.agentservicesaccount.support.TestConstants
-import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
+import uk.gov.hmrc.http.SessionKeys
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -35,7 +35,6 @@ class DraftDetailsServiceSpec extends PlaySpec
   with ArgumentMatchersSugar
   with TestConstants {
 
-  implicit val hc: HeaderCarrier = HeaderCarrier()
   implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
   implicit val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 

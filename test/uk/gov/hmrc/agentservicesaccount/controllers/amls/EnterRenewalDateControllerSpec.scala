@@ -22,7 +22,7 @@ import play.api.Environment
 import play.api.data.Form
 import play.api.i18n.Messages
 import play.api.libs.json.{Reads, Writes}
-import play.api.mvc.{DefaultActionBuilderImpl, MessagesControllerComponents, Request, Result}
+import play.api.mvc._
 import play.api.test.Helpers._
 import play.api.test.{DefaultAwaitTimeout, FakeRequest, Helpers}
 import play.twirl.api.Html
@@ -49,7 +49,6 @@ class EnterRenewalDateControllerSpec extends PlaySpec
   with TestConstants {
 
 
-  implicit val hc: HeaderCarrier = HeaderCarrier()
   implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
   private val fakeRequest = FakeRequest()
 
@@ -90,9 +89,9 @@ class EnterRenewalDateControllerSpec extends PlaySpec
 
       mockAppConfig.enableNonHmrcSupervisoryBody returns true
 
-      mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+      mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
-      mockUpdateAmlsJourneyRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[Request[_]]) returns
+      mockUpdateAmlsJourneyRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[RequestHeader]) returns
         Future.successful(Some(ukUpdateAmlsJourney))
 
       mockView.apply(*[Form[LocalDate]])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
@@ -109,9 +108,9 @@ class EnterRenewalDateControllerSpec extends PlaySpec
 
       mockAppConfig.enableNonHmrcSupervisoryBody returns true
 
-      mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+      mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
-      mockUpdateAmlsJourneyRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[Request[_]]) returns
+      mockUpdateAmlsJourneyRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[RequestHeader]) returns
         Future.successful(Some(ukUpdateAmlsJourney.copy(newExpirationDate = Some(LocalDate.now().plusMonths(11)))))
 
       mockView.apply(*[Form[LocalDate]])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
@@ -128,9 +127,9 @@ class EnterRenewalDateControllerSpec extends PlaySpec
 
       mockAppConfig.enableNonHmrcSupervisoryBody returns true
 
-      mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+      mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
-      mockUpdateAmlsJourneyRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[Request[_]]) returns
+      mockUpdateAmlsJourneyRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[RequestHeader]) returns
         Future.successful(Some(overseasUpdateAmlsJourney))
 
       mockView.apply(*[Form[LocalDate]])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
@@ -150,7 +149,7 @@ class EnterRenewalDateControllerSpec extends PlaySpec
 
         mockAppConfig.enableNonHmrcSupervisoryBody returns true
 
-        mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+        mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
         mockUpdateAmlsJourneyRepository.getFromSession(dataKey)(*[Reads[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful(Some(ukUpdateAmlsJourney))
 
@@ -179,7 +178,7 @@ class EnterRenewalDateControllerSpec extends PlaySpec
 
         mockAppConfig.enableNonHmrcSupervisoryBody returns true
 
-        mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+        mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
         mockUpdateAmlsJourneyRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[Request[Any]]) returns
           Future.successful(Some(ukUpdateAmlsJourney))

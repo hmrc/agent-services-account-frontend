@@ -22,8 +22,8 @@ import play.api.http.MimeTypes.HTML
 import play.api.http.Status.{BAD_REQUEST, OK, SEE_OTHER}
 import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.mvc.Result
+import play.api.test.Helpers
 import play.api.test.Helpers.{await, defaultAwaitTimeout}
-import play.api.test.{FakeRequest, Helpers}
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.agentmtdidentifiers.model.SuspensionDetails
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
@@ -31,7 +31,6 @@ import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentAssuranceStubs.givenAgentRecordFound
 import uk.gov.hmrc.agentservicesaccount.stubs.SessionServiceMocks
 import uk.gov.hmrc.agentservicesaccount.support.{BaseISpec, Css}
-import uk.gov.hmrc.http.SessionKeys
 
 import scala.concurrent.Future
 
@@ -51,10 +50,6 @@ class SuspendedJourneyControllerSpec extends BaseISpec with SessionServiceMocks{
     }
   }
 
-  private def fakeRequest(method: String = "GET", uri: String = "/") =
-    FakeRequest(method, uri)
-      .withSession(SessionKeys.authToken -> "Bearer XYZ")
-      .withSession(SessionKeys.sessionId -> "session-x")
   protected def htmlEscapedMessage(key: String): String = HtmlFormat.escape(Messages(key)).toString
 
   "showSuspensionWarning" should {
@@ -78,7 +73,7 @@ class SuspendedJourneyControllerSpec extends BaseISpec with SessionServiceMocks{
       content should include(messagesApi("suspension-warning.list3"))
       content should include(htmlEscapedMessage("suspension-warning.p4"))
       val getHelpLink = Jsoup.parse(content).select(Css.getHelpWithThisPageLink)
-      getHelpLink.attr("href") shouldBe "http://localhost:9250/contact/report-technical-problem?newTab=true&service=AOSS&referrerUrl=%2F"
+      getHelpLink.attr("href") shouldBe "http://localhost:9250/contact/report-technical-problem?service=AOSS&referrerUrl=%2F"
       getHelpLink.text shouldBe "Is this page not working properly? (opens in new tab)"
       val continueLink = Jsoup.parse(content).select(Css.linkStyledAsButton)
       continueLink.attr("href") shouldBe "/agent-services-account/recovery-contact-details"
@@ -117,7 +112,7 @@ class SuspendedJourneyControllerSpec extends BaseISpec with SessionServiceMocks{
       content should include(messagesApi("suspend.contact-details.heading"))
 
       val getHelpLink = Jsoup.parse(content).select(Css.getHelpWithThisPageLink)
-      getHelpLink.attr("href") shouldBe "http://localhost:9250/contact/report-technical-problem?newTab=true&service=AOSS&referrerUrl=%2F"
+      getHelpLink.attr("href") shouldBe "http://localhost:9250/contact/report-technical-problem?service=AOSS&referrerUrl=%2F"
       getHelpLink.text shouldBe "Is this page not working properly? (opens in new tab)"
     }
   }

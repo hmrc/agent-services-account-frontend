@@ -44,7 +44,7 @@ class CheckYourAnswersController @Inject()(actions: Actions,
                                            summary_pdf: summaryPdf
                                           )(implicit appConfig: AppConfig,
                                             cc: MessagesControllerComponents,
-                                            ec: ExecutionContext,
+                                            val ec: ExecutionContext,
                                             pcodRepository: PendingChangeRequestRepository
                                           ) extends FrontendController(cc) with DesiDetailsJourneySupport with I18nSupport with Logging {
 

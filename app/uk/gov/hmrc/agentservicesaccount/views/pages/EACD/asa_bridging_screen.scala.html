@@ -22,7 +22,7 @@
 
 @this(main: main, govukButton: GovukButton,link_as_button: link_as_button)
 
-@(isAccessGroupEnabled: Boolean)(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
+@(isAccessGroupEnabled: Boolean)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
 
 @main(pageTitle = msgs("agent-service-bridging.title"), isAdmin = true) {
 

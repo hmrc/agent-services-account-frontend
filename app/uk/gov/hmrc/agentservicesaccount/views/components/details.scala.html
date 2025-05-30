@@ -20,7 +20,7 @@
 
 @this(govukDetails: GovukDetails)
 
-@(summary: String, content: Html, classes: String = "")(implicit request: Request[_], messages: Messages)
+@(summary: String, content: Html, classes: String = "")(implicit request: RequestHeader, messages: Messages)
 
 @govukDetails(
     Details(

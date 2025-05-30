@@ -17,28 +17,28 @@
 package uk.gov.hmrc.agentservicesaccount.services
 
 import play.api.Logging
+import play.api.mvc.RequestHeader
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.EmailConnector
 import uk.gov.hmrc.agentservicesaccount.models.{AccountRecoverySummary, AgencyDetails, BetaInviteDetailsForEmail, SendEmailData}
-import uk.gov.hmrc.http.HeaderCarrier
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
 @Singleton
 class EmailService @Inject()(emailConnector: EmailConnector, appConfig: AppConfig) extends Logging {
 
   def sendInviteAcceptedEmail(arn: Arn,
                               details: BetaInviteDetailsForEmail
-                             )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Unit] =
+                             )(implicit rh: RequestHeader): Future[Unit] =
     sendEmail(Seq("mtdgpvolunteers@hmrc.gov.uk"), arn, details, "agent_permissions_beta_participant_details")
 
   def sendEmail(sendTo: Seq[String],
                 arn: Arn,
                 details: BetaInviteDetailsForEmail,
                 templateId: String
-               )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Unit] =
+               )(implicit rh: RequestHeader): Future[Unit] =
     emailConnector.sendEmail(
       SendEmailData(
         sendTo,
@@ -54,7 +54,7 @@ class EmailService @Inject()(emailConnector: EmailConnector, appConfig: AppConfi
 
   def sendSuspendedSummaryEmail(details: AccountRecoverySummary,
                                 agencyDetails: Option[AgencyDetails]
-                               )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Unit] =
+                               )(implicit rh: RequestHeader): Future[Unit] =
     if (appConfig.suspendedContactDetailsSendEmail) {
       val agencyName = agencyDetails.get.agencyName.get
       val emailInfo: SendEmailData =

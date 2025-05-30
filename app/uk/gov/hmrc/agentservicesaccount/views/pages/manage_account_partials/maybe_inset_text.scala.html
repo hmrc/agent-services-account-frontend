@@ -19,7 +19,7 @@
 
 @this(inset_text:inset_text)
 
-@(optinStatus: OptinStatus)(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
+@(optinStatus: OptinStatus)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
 
 @{
     //show inset text if it is required

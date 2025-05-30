@@ -34,7 +34,7 @@
         info: Option[AgentInfo] = None,
         groups: Option[Seq[GroupSummary]] = None,
         optedIn: Boolean = true
-)(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
+)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
 
 @main(pageTitle = msgs("your.account.h1"), analyticsAdditionalJs = None, isAdmin = false) {
 

@@ -22,7 +22,7 @@ import play.api.Environment
 import play.api.data.Form
 import play.api.i18n.Messages
 import play.api.libs.json.{Reads, Writes}
-import play.api.mvc.{DefaultActionBuilderImpl, MessagesControllerComponents, Request, Result}
+import play.api.mvc._
 import play.api.test.Helpers._
 import play.api.test.{DefaultAwaitTimeout, FakeRequest, Helpers}
 import play.twirl.api.Html
@@ -48,8 +48,6 @@ class EnterRegistrationNumberControllerSpec extends PlaySpec
   with ArgumentMatchersSugar
   with TestConstants {
 
-
-  implicit val hc: HeaderCarrier = HeaderCarrier()
   implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
   private val fakeRequest = FakeRequest()
 
@@ -95,9 +93,9 @@ class EnterRegistrationNumberControllerSpec extends PlaySpec
 
       mockAppConfig.enableNonHmrcSupervisoryBody returns true
 
-      mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+      mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
-      mockAmlsJourneySessionRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]],*[Request[_]]) returns
+      mockAmlsJourneySessionRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]],*[RequestHeader]) returns
         Future.successful(Some(ukAmlsJourney))
 
       mockView.apply(*[Form[String]], *[Boolean])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
@@ -116,7 +114,7 @@ class EnterRegistrationNumberControllerSpec extends PlaySpec
 
       mockAppConfig.enableNonHmrcSupervisoryBody returns false
 
-      mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+      mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
       val result: Future[Result] = TestController.showPage(cya = false)(fakeRequest)
 
@@ -135,7 +133,7 @@ class EnterRegistrationNumberControllerSpec extends PlaySpec
 
       mockAppConfig.enableNonHmrcSupervisoryBody returns true
 
-      mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+      mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
       mockAmlsJourneySessionRepository.getFromSession(dataKey)(*[Reads[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful(Some(ukAmlsJourney))
 
@@ -159,7 +157,7 @@ class EnterRegistrationNumberControllerSpec extends PlaySpec
 
       mockAppConfig.enableNonHmrcSupervisoryBody returns true
 
-      mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+      mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
       mockAmlsJourneySessionRepository.getFromSession(dataKey)(*[Reads[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful(Some(overseasAmlsJourney))
 
@@ -183,7 +181,7 @@ class EnterRegistrationNumberControllerSpec extends PlaySpec
 
       mockAppConfig.enableNonHmrcSupervisoryBody returns true
 
-      mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+      mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
       mockAmlsJourneySessionRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[Request[Any]]) returns
         Future.successful(Some(ukAmlsJourney))

@@ -22,7 +22,7 @@ import play.api.Environment
 import play.api.data.Form
 import play.api.i18n.Messages
 import play.api.libs.json.{Reads, Writes}
-import play.api.mvc.{DefaultActionBuilderImpl, MessagesControllerComponents, Request, Result}
+import play.api.mvc.{DefaultActionBuilderImpl, MessagesControllerComponents, Request, RequestHeader, Result}
 import play.api.test.Helpers._
 import play.api.test.{DefaultAwaitTimeout, FakeRequest, Helpers}
 import play.twirl.api.Html
@@ -49,8 +49,6 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
   with ArgumentMatchersSugar
   with TestConstants {
 
-
-  implicit val hc: HeaderCarrier = HeaderCarrier()
   implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
   private val fakeRequest = FakeRequest()
 
@@ -103,15 +101,15 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
         *[HeaderCarrier],
         *[ExecutionContext]) returns authResponse
 
-      mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+      mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
       mockAppConfig.enableNonHmrcSupervisoryBody returns true
 
       mockAmlsLoader.load(*[String]) returns amlsBodies
 
-      mockAgentAssuranceConnector.getAMLSDetails(arn.value)( *[ExecutionContext], *[HeaderCarrier]) returns amlsDetailsResponse
+      mockAgentAssuranceConnector.getAMLSDetails(arn.value)(*[RequestHeader]) returns amlsDetailsResponse
 
-      mockAmlsJourneySessionRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]],*[Request[_]]) returns
+      mockAmlsJourneySessionRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]],*[RequestHeader]) returns
         Future.successful(Some(ukAmlsJourney))
 
       mockView.apply(*[Form[String]], *[Map[String, String]], isUk = true, *[Boolean])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
@@ -130,7 +128,7 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
 
       mockAppConfig.enableNonHmrcSupervisoryBody returns false
 
-      mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+      mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
       val result: Future[Result] = TestController.showPage(false)(fakeRequest)
 
@@ -151,7 +149,7 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
 
       mockAmlsLoader.load(*[String]) returns amlsBodies
 
-      mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+      mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
       mockAmlsJourneySessionRepository.getFromSession(dataKey)(*[Reads[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful(Some(ukAmlsJourney))
 
@@ -179,7 +177,7 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
 
       mockAmlsJourneySessionRepository.getFromSession(dataKey)(*[Reads[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful(Some(ukAmlsJourney))
 
-      mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+      mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
       mockAmlsJourneySessionRepository.putSession(
         dataKey, ukAmlsJourney.copy(newAmlsBody = Some("Association of Certified Chartered Accountants"), isAmlsBodyStillTheSame = Some(true)))(*[Writes[UpdateAmlsJourney]], *[Request[Any]])returns Future.successful((SessionKeys.sessionId -> "session-123"))
@@ -205,7 +203,7 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
 
       mockAmlsJourneySessionRepository.getFromSession(dataKey)(*[Reads[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful(Some(ukAmlsJourney))
 
-      mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+      mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
       mockAmlsJourneySessionRepository.putSession(
         dataKey, ukAmlsJourney.copy(
@@ -236,7 +234,7 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
       mockAmlsJourneySessionRepository.getFromSession(dataKey)(*[Reads[UpdateAmlsJourney]], *[Request[Any]]
       ) returns Future.successful(Some(ukAmlsJourney.copy(newAmlsBody = Some("HMRC"))))
 
-      mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+      mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
       mockAmlsJourneySessionRepository.putSession(
         dataKey, ukAmlsJourney.copy(
@@ -264,7 +262,7 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
 
       mockAmlsLoader.load(*[String]) returns amlsBodies
 
-      mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+      mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
       mockAmlsJourneySessionRepository.getFromSession(dataKey)(*[Reads[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful(Some(overseasAmlsJourney))
 
@@ -288,7 +286,7 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
 
       mockAppConfig.enableNonHmrcSupervisoryBody returns true
 
-      mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+      mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
       mockAmlsLoader.load(*[String]) returns amlsBodies
 

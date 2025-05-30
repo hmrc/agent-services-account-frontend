@@ -17,7 +17,7 @@
 package uk.gov.hmrc.agentservicesaccount.services
 
 import play.api.libs.json.{Reads, Writes}
-import play.api.mvc.{Request, Result}
+import play.api.mvc.{RequestHeader, Result}
 import uk.gov.hmrc.agentservicesaccount.controllers.{ARN, DESCRIPTION, DRAFT_NEW_CONTACT_DETAILS, DRAFT_SUBMITTED_BY, EMAIL, EMAIL_PENDING_VERIFICATION, NAME, PHONE, sessionKeys}
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{DesignatoryDetails, YourDetails}
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
@@ -35,12 +35,12 @@ class SessionCacheService @Inject()(sessionCacheRepository: SessionCacheReposito
 
   def withSessionItem[T](dataKey: DataKey[T])
                         (body: Option[T] => Future[Result])
-                        (implicit reads: Reads[T], request: Request[_], ec: ExecutionContext): Future[Result] = {
+                        (implicit reads: Reads[T], request: RequestHeader, ec: ExecutionContext): Future[Result] = {
     sessionCacheRepository.getFromSession[T](dataKey).flatMap(data => body(data))
   }
 
   def get[T](dataKey: DataKey[T])
-            (implicit reads: Reads[T], request: Request[_]): Future[Option[T]] = {
+            (implicit reads: Reads[T], request: RequestHeader): Future[Option[T]] = {
     dataKey match {
       case key: DataKey[String @unchecked] if Seq(NAME, EMAIL, PHONE, ARN, DESCRIPTION, EMAIL_PENDING_VERIFICATION).contains(key) =>
         sessionCacheRepository.getFromSession(key)(stringEncrypterDecrypter, request)
@@ -54,7 +54,7 @@ class SessionCacheService @Inject()(sessionCacheRepository: SessionCacheReposito
   }
 
   def put[T](dataKey: DataKey[T], value: T)
-            (implicit writes: Writes[T], request: Request[_]): Future[(String, String)] = {
+            (implicit writes: Writes[T], request: RequestHeader): Future[(String, String)] = {
     dataKey match {
       case key: DataKey[String @unchecked] if Seq(NAME, EMAIL, PHONE, ARN, DESCRIPTION, EMAIL_PENDING_VERIFICATION).contains(key) =>
         sessionCacheRepository.putSession(key, value)(stringEncrypterDecrypter, request)
@@ -68,15 +68,15 @@ class SessionCacheService @Inject()(sessionCacheRepository: SessionCacheReposito
   }
 
   def delete[T](dataKey: DataKey[T])
-               (implicit request: Request[_]): Future[Unit] = {
+               (implicit request: RequestHeader): Future[Unit] = {
     sessionCacheRepository.deleteFromSession(dataKey)
   }
 
-  def getSessionItems()(implicit request: Request[_], ec: ExecutionContext): Future[List[Option[String]]] = {
+  def getSessionItems()(implicit request: RequestHeader, ec: ExecutionContext): Future[List[Option[String]]] = {
     Future.sequence(sessionKeys.map(get(_)))
   }
 
-  def clearSession()(implicit request: Request[_], ec: ExecutionContext): Future[Unit] = {
+  def clearSession()(implicit request: RequestHeader, ec: ExecutionContext): Future[Unit] = {
     Future.sequence(sessionKeys.map(delete(_))).map(_ => ())
   }
 }

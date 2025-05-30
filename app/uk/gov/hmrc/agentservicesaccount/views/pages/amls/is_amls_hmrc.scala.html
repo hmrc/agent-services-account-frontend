@@ -29,7 +29,7 @@ govukButton: GovukButton,
 govukErrorSummary: GovukErrorSummary
 )
 
-@(form: Form[Boolean])(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
+@(form: Form[Boolean])(implicit request: RequestHeader, msgs: Messages, appConfig: AppConfig)
 
 @main(pageTitle = withErrorPrefix(form.hasErrors, msgs("amls.is-hmrc.h1")), mimicBrowserBackLink = true, showSecondaryNav = false) {
 

@@ -29,7 +29,7 @@ govukErrorSummary: GovukErrorSummary,
 govukButton: GovukButton
 )
 
-@(form: Form[SelectChanges])(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
+@(form: Form[SelectChanges])(implicit request: RequestHeader, msgs: Messages, appConfig: AppConfig)
 
 @main(pageTitle = withErrorPrefix(form.hasErrors, msgs("update-contact-details.select-changes.h1")), mimicBrowserBackLink = true, showSecondaryNav = false) {
 

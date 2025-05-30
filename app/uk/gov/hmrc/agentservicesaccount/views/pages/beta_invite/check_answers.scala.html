@@ -32,7 +32,7 @@
     govukButton: GovukButton
 )
 
-@(answers: BetaInviteDetailsForEmail)(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
+@(answers: BetaInviteDetailsForEmail)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
 
 @main(
     pageTitle = msgs("beta.invite.cya.heading"),

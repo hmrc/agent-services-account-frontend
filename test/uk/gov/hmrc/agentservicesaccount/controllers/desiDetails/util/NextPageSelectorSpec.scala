@@ -16,8 +16,7 @@
 
 package uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util
 
-import play.api.mvc.{AnyContentAsEmpty, Result}
-import play.api.test.FakeRequest
+import play.api.mvc.Result
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.NextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails._
@@ -31,7 +30,6 @@ import scala.concurrent.ExecutionContextExecutor
 class NextPageSelectorSpec extends BaseISpec with SessionServiceMocks {
   implicit val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
   implicit val ec: ExecutionContextExecutor = scala.concurrent.ExecutionContext.global
-  implicit val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
   val mockJourney1: DesiDetailsJourney = DesiDetailsJourney(Some(Set("businessName")), journeyComplete = false)
   val mockJourney2: DesiDetailsJourney = DesiDetailsJourney(Some(Set("email", "telephone")), journeyComplete = false)

@@ -45,8 +45,8 @@ class EnterRegistrationNumberViewSpec extends BaseISpec {
     def testServiceStaticContent(doc: Document): Unit = {
 
       "have the correct service name link" in {
-        doc.select(".hmrc-header__service-name").first.text() mustBe "Agent services account"
-        doc.select(".hmrc-header__service-name").first.attr("href") mustBe "/agent-services-account"
+        doc.select(".govuk-header__service-name").first.text() mustBe "Agent services account"
+        doc.select(".govuk-header__service-name").first.attr("href") mustBe "/agent-services-account"
       }
       "have the correct sign out link" in {
         doc.select(".hmrc-sign-out-nav__link").first.text() mustBe "Sign out"

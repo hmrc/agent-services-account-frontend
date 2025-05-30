@@ -23,7 +23,7 @@ import play.api.Environment
 import play.api.data.Form
 import play.api.http.MimeTypes.HTML
 import play.api.i18n.Messages
-import play.api.mvc.{DefaultActionBuilderImpl, MessagesControllerComponents, Request, Result}
+import play.api.mvc.{DefaultActionBuilderImpl, MessagesControllerComponents, Request, RequestHeader, Result}
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
 import play.twirl.api.Html
@@ -65,7 +65,7 @@ class AmlsIsHmrcControllerSpec extends PlaySpec
       *[ExecutionContext]) returns authResponseAgent(credentialRole)
   }
 
-  def givenAgentRecord = mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+  def givenAgentRecord = mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
 
   trait Setup {

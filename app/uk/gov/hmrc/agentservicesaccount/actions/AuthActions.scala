@@ -25,8 +25,7 @@ import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals._
 import uk.gov.hmrc.auth.core.retrieve.{Credentials, Name, ~}
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.http.HeaderCarrierConverter
+import uk.gov.hmrc.agentservicesaccount.utils.RequestSupport._
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -57,7 +56,6 @@ class AuthActions @Inject()(appConfig: AppConfig,
 
       override protected def refine[A](request: Request[A]): Future[Either[Result, AuthRequestWithAgentInfo[A]]] = {
         implicit val r: Request[A] = request
-        implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
         authorised(AuthProviders(GovernmentGateway) and AffinityGroup.Agent)
           .retrieve(allEnrolments and credentials and email and name and credentialRole) {
@@ -77,7 +75,7 @@ class AuthActions @Inject()(appConfig: AppConfig,
 
       override protected def executionContext: ExecutionContext = ec
     }
-  private def handleFailureRefiner[A](implicit request: Request[_]): PartialFunction[Throwable, Either[Result, AuthRequestWithAgentInfo[A]]] = {
+  private def handleFailureRefiner[A](implicit request: RequestHeader): PartialFunction[Throwable, Either[Result, AuthRequestWithAgentInfo[A]]] = {
     case _: NoActiveSession =>
       Left(Redirect(s"${appConfig.signInUrl}?continue_url=${appConfig.continueUrl}${request.uri}&origin=${appConfig.appName}"))
 

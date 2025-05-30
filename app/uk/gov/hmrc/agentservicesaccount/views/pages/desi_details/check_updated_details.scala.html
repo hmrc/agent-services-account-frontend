@@ -38,7 +38,7 @@
         otherServices: OtherServices,
         submittedBy: YourDetails,
         selectChanges: Set[String]
-)(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
+)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
 
 @main(
     pageTitle = msgs("update-contact-details.check-your-answers.title"),

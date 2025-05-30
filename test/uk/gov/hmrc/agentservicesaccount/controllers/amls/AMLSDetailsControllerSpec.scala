@@ -21,7 +21,7 @@ import org.scalatestplus.play.PlaySpec
 import play.api.Environment
 import play.api.http.Status.OK
 import play.api.i18n.Messages
-import play.api.mvc.{DefaultActionBuilderImpl, MessagesControllerComponents, Request, Result}
+import play.api.mvc.{DefaultActionBuilderImpl, MessagesControllerComponents, Request, RequestHeader, Result}
 import play.api.test.Helpers.{status, stubMessagesControllerComponents}
 import play.api.test.{DefaultAwaitTimeout, FakeRequest, Helpers}
 import play.twirl.api.Html
@@ -44,7 +44,6 @@ class AMLSDetailsControllerSpec extends PlaySpec
   with ArgumentMatchersSugar
   with TestConstants {
 
-  implicit val hc: HeaderCarrier = HeaderCarrier()
   implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
   private val fakeRequest = FakeRequest()
 
@@ -78,9 +77,9 @@ class AMLSDetailsControllerSpec extends PlaySpec
 
       mockAppConfig.enableNonHmrcSupervisoryBody returns true
 
-      mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+      mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
-      mockAgentAssuranceConnector.getAMLSDetails(arn.value)(*[ExecutionContext], *[HeaderCarrier]) returns amlsDetailsResponse
+      mockAgentAssuranceConnector.getAMLSDetails(arn.value)(*[RequestHeader]) returns amlsDetailsResponse
 
       mockView.apply(amlsDetails)(*[Messages], *[Request[Any]], *[AppConfig]) returns Html("")
 

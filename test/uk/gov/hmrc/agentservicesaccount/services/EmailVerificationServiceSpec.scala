@@ -19,7 +19,7 @@ package uk.gov.hmrc.agentservicesaccount.services
 import org.mockito.{ArgumentMatchersSugar, IdiomaticMockito}
 import org.scalatestplus.play.PlaySpec
 import play.api.i18n.Lang
-import play.api.mvc.AnyContentAsEmpty
+import play.api.mvc.{AnyContentAsEmpty, RequestHeader}
 import play.api.test.Helpers.await
 import play.api.test.{DefaultAwaitTimeout, FakeRequest}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
@@ -27,7 +27,7 @@ import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, Ema
 import uk.gov.hmrc.agentservicesaccount.controllers
 import uk.gov.hmrc.agentservicesaccount.models.emailverification._
 import uk.gov.hmrc.agentservicesaccount.support.TestConstants
-import uk.gov.hmrc.http.{HeaderCarrier, InternalServerException, UpstreamErrorResponse}
+import uk.gov.hmrc.http.{InternalServerException, UpstreamErrorResponse}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -37,7 +37,6 @@ class EmailVerificationServiceSpec extends PlaySpec
   with ArgumentMatchersSugar
   with TestConstants {
 
-  implicit val hc: HeaderCarrier = HeaderCarrier()
   implicit val ec: ExecutionContext =  ExecutionContext.Implicits.global
   implicit val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
   trait Setup {
@@ -70,7 +69,7 @@ class EmailVerificationServiceSpec extends PlaySpec
             backUrl = Some(controllers.desiDetails.routes.UpdateEmailAddressController.showChangeEmailAddress.absoluteURL()),
             pageTitle = None
           )
-        )(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(Some(VerifyEmailResponse("/emailVerificationUrl")))
+        )(*[RequestHeader]) returns Future.successful(Some(VerifyEmailResponse("/emailVerificationUrl")))
 
         val result = TestService.initialiseEmailVerificationJourney(ggCredentials.providerId, "new@email.com", Lang("en"))
 
@@ -94,7 +93,7 @@ class EmailVerificationServiceSpec extends PlaySpec
             backUrl = Some(controllers.desiDetails.routes.UpdateEmailAddressController.showChangeEmailAddress.url),
             pageTitle = None
           )
-        )(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(Some(VerifyEmailResponse("/emailVerificationUrl")))
+        )(*[RequestHeader]) returns Future.successful(Some(VerifyEmailResponse("/emailVerificationUrl")))
 
         val result = TestService.initialiseEmailVerificationJourney(ggCredentials.providerId, "new@email.com", Lang("en"))
 
@@ -118,7 +117,7 @@ class EmailVerificationServiceSpec extends PlaySpec
             backUrl = Some(controllers.desiDetails.routes.UpdateEmailAddressController.showChangeEmailAddress.url),
             pageTitle = None
           )
-        )(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(None)
+        )(*[RequestHeader]) returns Future.successful(None)
 
         intercept[InternalServerException]{
           await(TestService.initialiseEmailVerificationJourney(ggCredentials.providerId, "new@email.com", Lang("en")))
@@ -130,9 +129,9 @@ class EmailVerificationServiceSpec extends PlaySpec
   "getEmailVerificationStatus" should {
     "return EmailIsAlreadyVerified" when {
       "the user has already verified their email" in new Setup {
-        mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+        mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
-        mockEmailVerificationConnector.checkEmail(ggCredentials.providerId)(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(
+        mockEmailVerificationConnector.checkEmail(ggCredentials.providerId)(*[RequestHeader]) returns Future.successful(
           Some(VerificationStatusResponse(List(CompletedEmail("new@email.com", verified = true, locked = false))))
         )
 
@@ -144,9 +143,9 @@ class EmailVerificationServiceSpec extends PlaySpec
 
     "return EmailIsLocked" when {
       "the endpoint returns the email is locked" in new Setup {
-        mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+        mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
-        mockEmailVerificationConnector.checkEmail(ggCredentials.providerId)(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(
+        mockEmailVerificationConnector.checkEmail(ggCredentials.providerId)(*[RequestHeader]) returns Future.successful(
           Some(VerificationStatusResponse(List(CompletedEmail("new@email.com", verified = false, locked = true))))
         )
 
@@ -158,8 +157,8 @@ class EmailVerificationServiceSpec extends PlaySpec
 
     "return EmailNeedsVerifying" when {
       "there is no list of emails returned from email verification" in new Setup {
-        mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
-        mockEmailVerificationConnector.checkEmail(ggCredentials.providerId)(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(
+        mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
+        mockEmailVerificationConnector.checkEmail(ggCredentials.providerId)(*[RequestHeader]) returns Future.successful(
           Some(VerificationStatusResponse(List.empty))
         )
 
@@ -171,9 +170,9 @@ class EmailVerificationServiceSpec extends PlaySpec
 
     "return EmailHasNotChanged" when {
       "the user entered email is the same as the stored one" in new Setup {
-        mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+        mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
-        mockEmailVerificationConnector.checkEmail(ggCredentials.providerId)(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(
+        mockEmailVerificationConnector.checkEmail(ggCredentials.providerId)(*[RequestHeader]) returns Future.successful(
           Some(VerificationStatusResponse(List(CompletedEmail("abc@abc.com", verified = false, locked = false))))
         )
 
@@ -186,7 +185,7 @@ class EmailVerificationServiceSpec extends PlaySpec
 
     "throw an exception" when {
       "the call to get agent record fails" in new Setup {
-        mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.failed(UpstreamErrorResponse("no agent record found", 500))
+        mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.failed(UpstreamErrorResponse("no agent record found", 500))
 
         intercept[UpstreamErrorResponse]{
           await(TestService.getEmailVerificationStatus("abc@abc.com", ggCredentials.providerId))
@@ -194,9 +193,9 @@ class EmailVerificationServiceSpec extends PlaySpec
 
       }
       "the call to check email verification status fails" in new Setup {
-        mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+        mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
-        mockEmailVerificationConnector.checkEmail(ggCredentials.providerId)(*[HeaderCarrier], *[ExecutionContext]) returns Future.failed(new Exception("Something went wrong"))
+        mockEmailVerificationConnector.checkEmail(ggCredentials.providerId)(*[RequestHeader]) returns Future.failed(new Exception("Something went wrong"))
 
         intercept[Exception]{
           await(TestService.getEmailVerificationStatus("abc@abc.com", ggCredentials.providerId))

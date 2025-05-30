@@ -24,7 +24,7 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
-import play.api.mvc.{Action, AnyContent, AnyContentAsEmpty, Result}
+import play.api.mvc._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
@@ -38,7 +38,7 @@ import uk.gov.hmrc.agentservicesaccount.support.{TestConstants, UnitSpec}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve.Retrieval
-import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
+import uk.gov.hmrc.http.HeaderCarrier
 
 import java.time.Instant
 import scala.concurrent.{ExecutionContext, Future}
@@ -96,25 +96,25 @@ class CheckYourAnswersControllerSpec extends UnitSpec
 
     val agentAssuranceConnector: AgentAssuranceConnector = app.injector.instanceOf[AgentAssuranceConnector]
 
-    (agentAssuranceConnector.getAgentRecord(_: HeaderCarrier, _: ExecutionContext)).when(*, *).returns(Future.successful(agentRecord))
-    (agentAssuranceConnector.postDesignatoryDetails(_: Arn, _: String)(_: ExecutionContext, _: HeaderCarrier)).when(*, *, *, *).returns(Future.successful(()))
+    (agentAssuranceConnector.getAgentRecord(_:RequestHeader)).when(*).returns(Future.successful(agentRecord))
+    (agentAssuranceConnector.postDesignatoryDetails(_: Arn, _: String)(_: RequestHeader)).when(*, *, *).returns(Future.successful(()))
 
     val checkYourAnswersController: CheckYourAnswersController = app.injector.instanceOf[CheckYourAnswersController]
     val sessionCache: SessionCacheService = app.injector.instanceOf[SessionCacheService]
     val pcodRepository: PendingChangeRequestRepository = app.injector.instanceOf[PendingChangeRequestRepository]
 
     def noPendingChangesInRepo(): Unit = {
-      (pcodRepository.find(_: Arn)(_: HeaderCarrier)).when(*, *).returns(Future.successful(None))
+      (pcodRepository.find(_: Arn)(_: RequestHeader)).when(*, *).returns(Future.successful(None))
     }
     def pendingChangesExistInRepo(): Unit = {
-      (pcodRepository.find(_: Arn)(_: HeaderCarrier)).when(*, *).returns(Future.successful(Some(
+      (pcodRepository.find(_: Arn)(_: RequestHeader)).when(*, *).returns(Future.successful(Some(
         PendingChangeRequest(
           testArn,
           Instant.now()
         ))))
     }
 
-    (pcodRepository.insert(_: PendingChangeRequest)(_: HeaderCarrier)).when(*, *).returns(Future.successful(()))
+    (pcodRepository.insert(_: PendingChangeRequest)(_: RequestHeader)).when(*, *).returns(Future.successful(()))
 
     // make sure these values are cleared from the session
     sessionCache.delete(DRAFT_NEW_CONTACT_DETAILS)(fakeRequest()).futureValue
@@ -122,12 +122,6 @@ class CheckYourAnswersControllerSpec extends UnitSpec
     sessionCache.delete(EMAIL_PENDING_VERIFICATION)(fakeRequest()).futureValue
     sessionCache.delete(CURRENT_SELECTED_CHANGES)(fakeRequest()).futureValue
   }
-
-  private def fakeRequest(method: String = "GET", uri: String = "/") =
-    FakeRequest(method, uri).withSession(
-      SessionKeys.authToken -> "Bearer XYZ",
-      SessionKeys.sessionId -> "session-x"
-    )
 
   "GET /manage-account/contact-details/check-your-answers" should {
     "display the review details page if there are no pending new details in session" in new TestSetup {
@@ -173,7 +167,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec
       header("Location", result) shouldBe Some(desiDetails.routes.ContactDetailsController.showChangeSubmitted.url)
       sessionCache.get(DRAFT_NEW_CONTACT_DETAILS).futureValue.flatMap(_.agencyDetails.agencyTelephone) shouldBe None // the 'draft' details should be cleared from cache
       // should have stored the pending change in the repo
-      (pcodRepository.insert(_: PendingChangeRequest)(_: HeaderCarrier)).verify(argAssert { pcod: PendingChangeRequest =>
+      (pcodRepository.insert(_: PendingChangeRequest)(_: RequestHeader)).verify(argAssert { pcod: PendingChangeRequest =>
         pcod.arn shouldBe testArn
         Math.abs(Instant.now().toEpochMilli - pcod.timeSubmitted.toEpochMilli) should be < 5000L // approximate time comparison
       }, *)

@@ -18,9 +18,8 @@ package uk.gov.hmrc.agentservicesaccount.controllers
 
 import play.api.http.Status
 import play.api.i18n.MessagesApi
-import play.api.mvc.AnyContentAsEmpty
-import play.api.test.{FakeRequest, Helpers}
 import play.api.test.Helpers._
+import play.api.test.{FakeRequest, Helpers}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 
@@ -34,13 +33,11 @@ class AgentServicesLanguageControllerSpec extends BaseISpec {
 
   val timeout: FiniteDuration = 3.seconds
 
-  implicit val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
-
   "Calling the .switchToLanguage function" when {
 
     "providing the parameter 'english'" should {
 
-      val result = controller.switchToLanguage("english")(request)
+      val result = controller.switchToLanguage("english")(fakeRequest())
 
       "return a Redirect status (303)" in {
         status(result) shouldBe Status.SEE_OTHER
@@ -54,7 +51,7 @@ class AgentServicesLanguageControllerSpec extends BaseISpec {
 
     "providing the parameter 'cymraeg'" should {
 
-      val result = controller.switchToLanguage("cymraeg")(request)
+      val result = controller.switchToLanguage("cymraeg")(fakeRequest())
 
       "return a Redirect status (303)" in {
         status(result) shouldBe Status.SEE_OTHER
@@ -68,7 +65,7 @@ class AgentServicesLanguageControllerSpec extends BaseISpec {
     "providing an unsupported language parameter" should {
 
       controller.switchToLanguage("english")(FakeRequest())
-      lazy val result = controller.switchToLanguage("orcish")(request)
+      lazy val result = controller.switchToLanguage("orcish")(fakeRequest())
 
       "return a Redirect status (303)" in {
         status(result) shouldBe Status.SEE_OTHER
