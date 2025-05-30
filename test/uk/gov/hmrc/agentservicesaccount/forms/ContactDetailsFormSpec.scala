@@ -67,8 +67,8 @@ class ContactDetailsFormSpec extends AnyWordSpec with Matchers with GuiceOneAppP
 
     s"error when $nameField is too long" in {
       val params = Map(
-        nameField -> RandomStringUtils.randomAlphanumeric(81),
-        emailField -> RandomStringUtils.randomAlphanumeric(250).concat("@a.a"),
+        nameField -> RandomStringUtils.insecure().nextAlphanumeric(81),
+        emailField -> RandomStringUtils.insecure().nextAlphanumeric(250).concat("@a.a"),
         phoneField -> ""
       )
       val validatedForm = BetaInviteContactDetailsForm.form.bind(params)
@@ -79,9 +79,9 @@ class ContactDetailsFormSpec extends AnyWordSpec with Matchers with GuiceOneAppP
 
     s"error when $emailField is too long" in {
       val params = Map(
-        nameField -> RandomStringUtils.randomAlphanumeric(80),
+        nameField -> RandomStringUtils.insecure().nextAlphanumeric(80),
         // total 255 characters
-        emailField -> RandomStringUtils.randomAlphanumeric(251).concat("@a.a"),
+        emailField -> RandomStringUtils.insecure().nextAlphanumeric(251).concat("@a.a"),
         phoneField -> ""
       )
       val validatedForm = BetaInviteContactDetailsForm.form.bind(params)
@@ -104,8 +104,8 @@ class ContactDetailsFormSpec extends AnyWordSpec with Matchers with GuiceOneAppP
 
     s"error when $phoneField is too long" in {
       val params = Map(
-        nameField -> RandomStringUtils.randomAlphanumeric(79),
-        emailField -> RandomStringUtils.randomAlphanumeric(250).concat("@a.a"),
+        nameField -> RandomStringUtils.insecure().nextAlphanumeric(79),
+        emailField -> RandomStringUtils.insecure().nextAlphanumeric(250).concat("@a.a"),
         phoneField -> "+44 32456 78989 6345678"
       )
       val validatedForm = BetaInviteContactDetailsForm.form.bind(params)
@@ -116,9 +116,9 @@ class ContactDetailsFormSpec extends AnyWordSpec with Matchers with GuiceOneAppP
 
     s"error when $phoneField has non numeric characters" in {
       val params = Map(
-        nameField -> RandomStringUtils.randomAlphanumeric(79),
-        emailField -> RandomStringUtils.randomAlphanumeric(250).concat("@a.a"),
-        phoneField -> RandomStringUtils.randomAlphanumeric(11)
+        nameField -> RandomStringUtils.insecure().nextAlphanumeric(79),
+        emailField -> RandomStringUtils.insecure().nextAlphanumeric(250).concat("@a.a"),
+        phoneField -> RandomStringUtils.insecure().nextAlphanumeric(11)
       )
       val validatedForm = BetaInviteContactDetailsForm.form.bind(params)
       validatedForm.hasErrors shouldBe true
@@ -169,9 +169,9 @@ class ContactDetailsFormSpec extends AnyWordSpec with Matchers with GuiceOneAppP
 
     s"error when $nameField is too long" in {
       val params = Map(
-        nameField -> RandomStringUtils.randomAlphanumeric(81),
-        emailField -> RandomStringUtils.randomAlphanumeric(250).concat("@a.a"),
-        phoneField -> RandomStringUtils.randomNumeric(20)
+        nameField -> RandomStringUtils.insecure().nextAlphanumeric(81),
+        emailField -> RandomStringUtils.insecure().nextAlphanumeric(250).concat("@a.a"),
+        phoneField -> RandomStringUtils.insecure().nextNumeric(20)
       )
       val validatedForm = ContactDetailsSuspendForm.form.bind(params)
 
@@ -183,8 +183,8 @@ class ContactDetailsFormSpec extends AnyWordSpec with Matchers with GuiceOneAppP
     s"error when $nameField contains '<' or '>' " in {
       val params = Map(
         nameField -> "<somebody>",
-        emailField -> RandomStringUtils.randomAlphanumeric(25).concat("@a.a"),
-        phoneField -> RandomStringUtils.randomNumeric(20)
+        emailField -> RandomStringUtils.insecure().nextAlphanumeric(25).concat("@a.a"),
+        phoneField -> RandomStringUtils.insecure.nextNumeric(20)
       )
       val validatedForm = ContactDetailsSuspendForm.form.bind(params)
 
@@ -195,10 +195,10 @@ class ContactDetailsFormSpec extends AnyWordSpec with Matchers with GuiceOneAppP
 
     s"error when $emailField is too long" in {
       val params = Map(
-        nameField -> RandomStringUtils.randomAlphanumeric(80),
+        nameField -> RandomStringUtils.insecure().nextAlphanumeric(80),
         // total 255 characters
-        emailField -> RandomStringUtils.randomAlphanumeric(251).concat("@a.a"),
-        phoneField -> RandomStringUtils.randomNumeric(20)
+        emailField -> RandomStringUtils.insecure().nextAlphanumeric(251).concat("@a.a"),
+        phoneField -> RandomStringUtils.insecure().nextNumeric(20)
       )
       val validatedForm = ContactDetailsSuspendForm.form.bind(params)
 
@@ -222,8 +222,8 @@ class ContactDetailsFormSpec extends AnyWordSpec with Matchers with GuiceOneAppP
 
     s"error when $phoneField is too long" in {
       val params = Map(
-        nameField -> RandomStringUtils.randomAlphanumeric(79),
-        emailField -> RandomStringUtils.randomAlphanumeric(250).concat("@a.a"),
+        nameField -> RandomStringUtils.insecure().nextAlphanumeric(79),
+        emailField -> RandomStringUtils.insecure().nextAlphanumeric(250).concat("@a.a"),
         phoneField -> "+44 32456 78989 6345678"
       )
       val validatedForm = ContactDetailsSuspendForm.form.bind(params)
@@ -235,9 +235,9 @@ class ContactDetailsFormSpec extends AnyWordSpec with Matchers with GuiceOneAppP
 
     s"error when $phoneField has non numeric characters" in {
       val params = Map(
-        nameField -> RandomStringUtils.randomAlphanumeric(79),
-        emailField -> RandomStringUtils.randomAlphanumeric(250).concat("@a.a"),
-        phoneField -> RandomStringUtils.randomAlphanumeric(11)
+        nameField -> RandomStringUtils.insecure().nextAlphanumeric(79),
+        emailField -> RandomStringUtils.insecure().nextAlphanumeric(250).concat("@a.a"),
+        phoneField -> RandomStringUtils.insecure().nextAlphanumeric(11)
       )
       val validatedForm = ContactDetailsSuspendForm.form.bind(params)
 

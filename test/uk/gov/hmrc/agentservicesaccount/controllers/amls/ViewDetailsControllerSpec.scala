@@ -22,7 +22,7 @@ import play.api.Environment
 import play.api.http.Status.OK
 import play.api.i18n.Messages
 import play.api.libs.json.Writes
-import play.api.mvc.{DefaultActionBuilderImpl, MessagesControllerComponents, Request, Result}
+import play.api.mvc.{DefaultActionBuilderImpl, MessagesControllerComponents, Request, RequestHeader, Result}
 import play.api.test.Helpers.{status, stubMessagesControllerComponents}
 import play.api.test.{DefaultAwaitTimeout, FakeRequest, Helpers}
 import play.twirl.api.Html
@@ -47,8 +47,6 @@ class ViewDetailsControllerSpec extends PlaySpec
   with ArgumentMatchersSugar
   with TestConstants {
 
-
-  implicit val hc: HeaderCarrier = HeaderCarrier()
   implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
   private val fakeRequest = FakeRequest()
 
@@ -84,12 +82,12 @@ class ViewDetailsControllerSpec extends PlaySpec
 
       mockAppConfig.enableNonHmrcSupervisoryBody returns true
 
-      mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+      mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
-      mockUpdateAmlsJourneyRepository.putSession(*[DataKey[UpdateAmlsJourney]], amlsUpdateJourney)(*[Writes[UpdateAmlsJourney]], *[Request[_]]) returns
+      mockUpdateAmlsJourneyRepository.putSession(*[DataKey[UpdateAmlsJourney]], amlsUpdateJourney)(*[Writes[UpdateAmlsJourney]], *[RequestHeader]) returns
         Future.successful(("",""))
 
-      mockAgentAssuranceConnector.getAMLSDetailsResponse(*[String])(*[ExecutionContext], *[HeaderCarrier]) returns Future.successful(amlsDetailsResponsse)
+      mockAgentAssuranceConnector.getAMLSDetailsResponse(*[String])(*[RequestHeader]) returns Future.successful(amlsDetailsResponsse)
 
       mockView.apply(*[AmlsStatus], *[Option[AmlsDetails]])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 
@@ -105,12 +103,12 @@ class ViewDetailsControllerSpec extends PlaySpec
 
       mockAppConfig.enableNonHmrcSupervisoryBody returns true
 
-      mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+      mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
-      mockUpdateAmlsJourneyRepository.putSession(*[DataKey[UpdateAmlsJourney]], amlsUpdateJourney)(*[Writes[UpdateAmlsJourney]], *[Request[_]]) returns
+      mockUpdateAmlsJourneyRepository.putSession(*[DataKey[UpdateAmlsJourney]], amlsUpdateJourney)(*[Writes[UpdateAmlsJourney]], *[RequestHeader]) returns
         Future.successful(("",""))
 
-      mockAgentAssuranceConnector.getAMLSDetailsResponse(*[String])(*[ExecutionContext], *[HeaderCarrier]) returns Future.successful(amlsNoDetailsResponsse)
+      mockAgentAssuranceConnector.getAMLSDetailsResponse(*[String])(*[RequestHeader]) returns Future.successful(amlsNoDetailsResponsse)
 
       mockView.apply(*[AmlsStatus], *[Option[AmlsDetails]])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
 

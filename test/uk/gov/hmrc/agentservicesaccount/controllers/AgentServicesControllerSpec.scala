@@ -21,8 +21,8 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.scalatest.Assertion
 import play.api.i18n.{Lang, Messages, MessagesApi}
+import play.api.test.Helpers
 import play.api.test.Helpers._
-import play.api.test.{FakeRequest, Helpers}
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.agentmtdidentifiers.model.SuspensionDetails
 import uk.gov.hmrc.agents.accessgroups.optin._
@@ -35,7 +35,7 @@ import uk.gov.hmrc.agentservicesaccount.stubs.AgentPermissionsStubs._
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentUserClientDetailsStubs._
 import uk.gov.hmrc.agentservicesaccount.support.Css._
 import uk.gov.hmrc.agentservicesaccount.support.{BaseISpec, Css}
-import uk.gov.hmrc.http.{SessionKeys, UpstreamErrorResponse}
+import uk.gov.hmrc.http.UpstreamErrorResponse
 
 import java.util.UUID
 import scala.util.Random
@@ -57,7 +57,6 @@ class AgentServicesControllerSpec extends BaseISpec {
 
   protected def htmlEscapedMessage(key: String): String = HtmlFormat.escape(Messages(key)).toString
 
-  private def fakeRequest(method: String = "GET", uri: String = "/") = FakeRequest(method, uri).withSession(SessionKeys.authToken -> "Bearer XYZ")
 
   "root" should {
 
@@ -168,13 +167,13 @@ class AgentServicesControllerSpec extends BaseISpec {
         clientAuthSection.select("p").text shouldBe "You must ask your client to authorise you through your agent services account before you can access any services. Copy across an old authorisation or create a new one."
         val links = clientAuthSection.select("ul li a")
         links.get(0).text() shouldBe "Ask a client to authorise you"
-        links.get(0).attr("href") shouldBe "http://localhost:9448/invitations/agents"
+        links.get(0).attr("href") shouldBe "http://localhost:9435/agent-client-relationships/authorisation-request"
         links.get(1).text() shouldBe "Add existing Self Assessment authorisations to your agent services account"
         links.get(1).attr("href") shouldBe "http://localhost:9438/agent-mapping/start"
         links.get(2).text() shouldBe "Manage your authorisation requests from the last 30 days"
-        links.get(2).attr("href") shouldBe "http://localhost:9448/invitations/track"
+        links.get(2).attr("href") shouldBe "http://localhost:9435/agent-client-relationships/manage-authorisation-requests"
         links.get(3).text() shouldBe "Cancel a client’s authorisation"
-        links.get(3).attr("href") shouldBe "http://localhost:9448/invitations/agents/cancel-authorisation/client-type"
+        links.get(3).attr("href") shouldBe "http://localhost:9435/agent-client-relationships/agent-cancel-authorisation"
       }
 
       "an authorised agent with no suspension" in {
@@ -231,7 +230,7 @@ class AgentServicesControllerSpec extends BaseISpec {
         two.select("h4").get(1).text() shouldBe "Manage your client’s VAT"
         two.select("p").get(0).text shouldBe "You must first get an authorisation from your client."
         two.select("p").get(0).select("a").text shouldBe "You must first get an authorisation from your client."
-        two.select("p").get(0).select("a").attr("href") shouldBe "http://localhost:9448/invitations/agents"
+        two.select("p").get(0).select("a").attr("href") shouldBe "http://localhost:9435/agent-client-relationships/authorisation-request"
 
         two.select("a").get(1).text shouldBe "Register your client for VAT (opens in a new tab)"
         two.select("a").get(1).attr("href") shouldBe "https://www.tax.service.gov.uk/register-for-vat"
@@ -252,7 +251,7 @@ class AgentServicesControllerSpec extends BaseISpec {
 
         val fourPs = four.select("p")
         fourPs.get(0).text shouldBe "Before you ask your client to authorise you, you or your client must have registered the trust (opens in a new tab) or estate (opens in a new tab)."
-        fourPs.get(0).select("a").get(0).attr("href") shouldBe "http://localhost:9448/invitations/agents"
+        fourPs.get(0).select("a").get(0).attr("href") shouldBe "http://localhost:9435/agent-client-relationships/authorisation-request"
         fourPs.get(0).select("a").get(0).text shouldBe "ask your client to authorise you"
         fourPs.get(0).select("a").get(1).attr("href") shouldBe "https://www.gov.uk/guidance/register-your-clients-trust"
         fourPs.get(0).select("a").get(1).text shouldBe "registered the trust (opens in a new tab)"
@@ -291,7 +290,7 @@ class AgentServicesControllerSpec extends BaseISpec {
         val sixPs = six.select("p")
         sixPs.get(0).text shouldBe "You must first get an authorisation from your client. You can do this by requesting an authorisation"
         sixPs.get(0).select("a").get(0).text shouldBe "requesting an authorisation"
-        sixPs.get(0).select("a").get(0).attr("href") shouldBe "http://localhost:9448/invitations/agents"
+        sixPs.get(0).select("a").get(0).attr("href") shouldBe "http://localhost:9435/agent-client-relationships/authorisation-request"
 
         sixPs.get(1).text shouldBe "Manage your clients' country-by-country reports and your country-by-country agent contact details"
         sixPs.get(1).select("a").get(0).attr("href") shouldBe "https://www.tax.service.gov.uk/send-a-country-by-country-report"
@@ -308,7 +307,7 @@ class AgentServicesControllerSpec extends BaseISpec {
 
         sevenPs.get(1).text shouldBe "They must then authorise you to act on their behalf"
         sevenPs.get(1).select("a").get(0).text shouldBe "authorise you to act on their behalf"
-        sevenPs.get(1).select("a").get(0).attr("href") shouldBe "http://localhost:9448/invitations/agents"
+        sevenPs.get(1).select("a").get(0).attr("href") shouldBe "http://localhost:9435/agent-client-relationships/authorisation-request"
         sevenPs.get(2).text shouldBe "Report your client’s Plastic Packaging Tax and view payments, returns and penalties"
         sevenPs.get(2).select("a").get(0).text shouldBe "Report your client’s Plastic Packaging Tax and view payments, returns and penalties"
         sevenPs.get(2).select("a").get(0).attr("href") shouldBe "https://www.tax.service.gov.uk/plastic-packaging-tax/account"
@@ -325,7 +324,7 @@ class AgentServicesControllerSpec extends BaseISpec {
 
         eightPs.get(1).text shouldBe "You must first get authorisation from your client. You can do this by requesting an authorisation."
         eightPs.get(1).select("a").get(0).text shouldBe "requesting an authorisation."
-        eightPs.get(1).select("a").get(0).attr("href") shouldBe "http://localhost:9448/invitations/agents"
+        eightPs.get(1).select("a").get(0).attr("href") shouldBe "http://localhost:9435/agent-client-relationships/authorisation-request"
         eightPs.get(2).text shouldBe "Report your client’s Pillar 2 top-up taxes and view payments, returns and penalties"
         eightPs.get(2).select("a").get(0).text shouldBe "Report your client’s Pillar 2 top-up taxes and view payments, returns and penalties"
         eightPs.get(2).select("a").get(0).attr("href") shouldBe "http://localhost:10053/report-pillar2-top-up-taxes/asa/input-pillar-2-id"
@@ -378,7 +377,7 @@ class AgentServicesControllerSpec extends BaseISpec {
         itsaSection.select("a").get(0).attr("href") shouldBe "http://localhost:9438/agent-mapping/start"
 
         itsaSection.select("p").get(1).text() shouldBe "Get new authorisations for clients if you need them."
-        itsaSection.select("a").get(1).attr("href") shouldBe "http://localhost:9448/invitations/agents"
+        itsaSection.select("a").get(1).attr("href") shouldBe "http://localhost:9435/agent-client-relationships/authorisation-request"
 
         itsaSection.select("h4").get(1).text() shouldBe "Sign up your clients"
         itsaSection.select("a").get(2).text shouldBe "Find out if your clients are eligible to sign up (opens in a new tab)."

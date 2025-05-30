@@ -73,7 +73,7 @@ class AMLSDetailsEndpoint extends BaseISpec with GuiceOneServerPerSuite with Coo
       val result = await(makeRequest("/manage-account/money-laundering-supervision").get())
 
       result.status shouldBe 500
-      result.body should include("Sorry, we’re experiencing technical difficulties")
+      result.body should include("Sorry, there is a problem with the service")
     }
   }
 

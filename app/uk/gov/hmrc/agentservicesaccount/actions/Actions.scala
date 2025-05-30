@@ -22,8 +22,6 @@ import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.routes
 import uk.gov.hmrc.agentservicesaccount.models.{AgentDetailsDesResponse, AmlsDetails}
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -40,7 +38,6 @@ class Actions @Inject()(
 
     def filter[A](request: AuthRequestWithAgentInfo[A]): Future[Option[Result]] = {
       implicit val req: Request[A] = request.request
-      implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(req, req.session)
 
       agentAssuranceConnector.getAgentRecord.map { agentRecord => {
         (onlyForSuspended, agentRecord.suspensionDetails.exists(_.suspensionStatus)) match {
@@ -68,7 +65,7 @@ class Actions @Inject()(
                                              agentDetailsDesResponse: AgentDetailsDesResponse
                                            ) extends WrappedRequest(authRequestWithAgentInfo.request)
 
-  def withCurrentAmlsDetails(arn: Arn)(action: AmlsDetails => Future[Result])(implicit hc: HeaderCarrier): Future[Result] = {
+  def withCurrentAmlsDetails(arn: Arn)(action: AmlsDetails => Future[Result])(implicit rh: RequestHeader): Future[Result] = {
     agentAssuranceConnector.getAMLSDetails(arn.value)
       .flatMap(amlsDetails => action(amlsDetails))
   }
@@ -77,8 +74,7 @@ class Actions @Inject()(
     new ActionRefiner[AuthRequestWithAgentInfo, AuthRequestWithAgentProfile] {
 
       override protected def refine[A](request: AuthRequestWithAgentInfo[A]): Future[Either[Result, AuthRequestWithAgentProfile[A]]] = {
-        implicit val req: Request[_] = request.request
-        implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(req, req.session)
+        implicit val req: RequestHeader = request.request
 
         agentAssuranceConnector.getAgentRecord.map( agentRecord => {
           (onlyForSuspended, agentRecord.suspensionDetails.exists(_.suspensionStatus)) match {

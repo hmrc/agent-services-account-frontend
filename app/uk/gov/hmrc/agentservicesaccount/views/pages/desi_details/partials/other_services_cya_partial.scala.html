@@ -21,7 +21,7 @@
 
 @this(govukSummaryList: GovukSummaryList)
 
-@(otherServices: OtherServices, forPdf: Boolean = false)(implicit msgs: Messages, request: Request[_])
+@(otherServices: OtherServices, forPdf: Boolean = false)(implicit msgs: Messages, request: RequestHeader)
 
 @saRows = @{
     if(otherServices.saChanges.applyChanges) {

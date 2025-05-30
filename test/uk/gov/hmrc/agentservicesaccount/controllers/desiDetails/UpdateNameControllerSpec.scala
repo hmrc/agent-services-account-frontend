@@ -37,7 +37,7 @@ import uk.gov.hmrc.agentservicesaccount.support.{TestConstants, UnitSpec}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve.Retrieval
-import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
+import uk.gov.hmrc.http.HeaderCarrier
 
 import java.time.Instant
 import scala.concurrent.{ExecutionContext, Future}
@@ -49,7 +49,6 @@ class UpdateNameControllerSpec extends UnitSpec
   with TestConstants {
 
   implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
-  implicit val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequest()
 
   private val confirmedAddressResponse = ConfirmedResponseAddress(
     auditRef = "foo",
@@ -98,11 +97,11 @@ class UpdateNameControllerSpec extends UnitSpec
 
   trait TestSetup {
     val agentAssuranceConnector: AgentAssuranceConnector = app.injector.instanceOf[AgentAssuranceConnector]
-    (agentAssuranceConnector.getAgentRecord(_: HeaderCarrier, _: ExecutionContext)).when(*, *).returns(Future.successful(agentRecord))
+    (agentAssuranceConnector.getAgentRecord(_:RequestHeader)).when(*).returns(Future.successful(agentRecord))
 
     val alfConnector: AddressLookupConnector = app.injector.instanceOf[AddressLookupConnector]
-    (alfConnector.init(_: JourneyConfigV2)(_: HeaderCarrier)).when(*, *).returns(Future.successful("mock-address-lookup-url"))
-    (alfConnector.getAddress(_: String)(_: HeaderCarrier)).when(*, *).returns(Future.successful(confirmedAddressResponse))
+    (alfConnector.init(_: JourneyConfigV2)(_: RequestHeader)).when(*, *).returns(Future.successful("mock-address-lookup-url"))
+    (alfConnector.getAddress(_: String)(_: RequestHeader)).when(*, *).returns(Future.successful(confirmedAddressResponse))
 
     val evConnector: EmailVerificationConnector = app.injector.instanceOf[EmailVerificationConnector]
 
@@ -111,29 +110,23 @@ class UpdateNameControllerSpec extends UnitSpec
     val pcodRepository: PendingChangeRequestRepository = app.injector.instanceOf[PendingChangeRequestRepository]
 
     def noPendingChangesInRepo(): Unit = {
-      (pcodRepository.find(_: Arn)(_: HeaderCarrier)).when(*, *).returns(Future.successful(None))
+      (pcodRepository.find(_: Arn)(_: RequestHeader)).when(*, *).returns(Future.successful(None))
     }
     def pendingChangesExistInRepo(): Unit = {
-      (pcodRepository.find(_: Arn)(_: HeaderCarrier)).when(*, *).returns(Future.successful(Some(
+      (pcodRepository.find(_: Arn)(_: RequestHeader)).when(*, *).returns(Future.successful(Some(
         PendingChangeRequest(
           arn,
           Instant.now()
         ))))
     }
 
-    (pcodRepository.insert(_: PendingChangeRequest)(_: HeaderCarrier)).when(*, *).returns(Future.successful(()))
+    (pcodRepository.insert(_: PendingChangeRequest)(_: RequestHeader)).when(*, *).returns(Future.successful(()))
 
     // make sure these values are cleared from the session
     sessionCache.delete(DRAFT_NEW_CONTACT_DETAILS)(fakeRequest()).futureValue
     sessionCache.delete(DRAFT_SUBMITTED_BY)(fakeRequest()).futureValue
     sessionCache.delete(CURRENT_SELECTED_CHANGES)(fakeRequest()).futureValue
   }
-
-  private def fakeRequest(method: String = "GET", uri: String = "/") =
-    FakeRequest(method, uri).withSession(
-      SessionKeys.authToken -> "Bearer XYZ",
-      SessionKeys.sessionId -> "session-x"
-    )
 
   "GET /manage-account/contact-details/new-name" should {
     "display the enter business name page" in new TestSetup {

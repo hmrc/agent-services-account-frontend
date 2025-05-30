@@ -17,12 +17,13 @@
 package uk.gov.hmrc.agentservicesaccount.services
 
 import org.scalatestplus.play.PlaySpec
+import play.api.mvc.AnyContent
+import play.api.test.FakeRequest
 import play.api.{ConfigLoader, Configuration}
 import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, Utr}
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, OtherServices, SaChanges, YourDetails}
 import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress, PendingChangeOfDetails}
 import uk.gov.hmrc.agentservicesaccount.stubs.MockAuditConnector
-import uk.gov.hmrc.http.HeaderCarrier
 
 import java.time.Instant
 import scala.concurrent.ExecutionContext
@@ -30,8 +31,9 @@ import scala.concurrent.ExecutionContext
 class AuditServiceSpec extends PlaySpec
   with MockAuditConnector {
 
-  implicit val hc: HeaderCarrier = HeaderCarrier()
   implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
+
+  implicit val request: FakeRequest[AnyContent] = FakeRequest()
 
   val mockConfig = mock[Configuration]
 

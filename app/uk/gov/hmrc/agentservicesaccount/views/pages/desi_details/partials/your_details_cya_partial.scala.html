@@ -21,7 +21,7 @@
 
 @this(govukSummaryList: GovukSummaryList)
 
-@(submittedBy: YourDetails, forPdf: Boolean = false)(implicit msgs: Messages, request: Request[_])
+@(submittedBy: YourDetails, forPdf: Boolean = false)(implicit msgs: Messages, request: RequestHeader)
 
 @govukSummaryList(SummaryList(
     rows = Seq(

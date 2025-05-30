@@ -41,7 +41,7 @@ class SelectDetailsController @Inject()(actions: Actions,
                                         select_changes_view: select_changes
                                        )(implicit appConfig: AppConfig,
                                          cc: MessagesControllerComponents,
-                                         ec: ExecutionContext,
+                                         val ec: ExecutionContext,
                                          pcodRepository: PendingChangeRequestRepository,
                                          agentAssuranceConnector: AgentAssuranceConnector
                                        ) extends FrontendController(cc) with DesiDetailsJourneySupport with I18nSupport with Logging {

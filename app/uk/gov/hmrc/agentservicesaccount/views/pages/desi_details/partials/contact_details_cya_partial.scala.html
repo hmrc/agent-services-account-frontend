@@ -21,7 +21,7 @@
 
 @this(govukSummaryList: GovukSummaryList, p: p, ul: ul)
 
-@(agencyDetails: AgencyDetails, selectChanges: Set[String], forPdf: Boolean = false)(implicit msgs: Messages, request: Request[_])
+@(agencyDetails: AgencyDetails, selectChanges: Set[String], forPdf: Boolean = false)(implicit msgs: Messages, request: RequestHeader)
 
 @businessNameRow = @{
     SummaryListRow(

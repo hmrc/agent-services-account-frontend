@@ -20,11 +20,11 @@ import com.google.inject.ImplementedBy
 import org.mongodb.scala.model.Filters.equal
 import org.mongodb.scala.model.{IndexModel, IndexOptions, Indexes, ReplaceOptions}
 import play.api.Logging
+import play.api.mvc.RequestHeader
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest
-import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.mongo.MongoComponent
 import uk.gov.hmrc.mongo.play.json.PlayMongoRepository
 
@@ -34,9 +34,9 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @ImplementedBy(classOf[PendingChangeRequestRepositoryImpl])
 trait PendingChangeRequestRepository {
-  def find(arn: Arn)(implicit hc: HeaderCarrier): Future[Option[PendingChangeRequest]]
-  def insert(pcod: PendingChangeRequest)(implicit hc: HeaderCarrier): Future[Unit]
-  def delete(arn: Arn)(implicit hc: HeaderCarrier): Future[Unit]
+  def find(arn: Arn)(implicit rh: RequestHeader): Future[Option[PendingChangeRequest]]
+  def insert(pcod: PendingChangeRequest)(implicit rh: RequestHeader): Future[Unit]
+  def delete(arn: Arn)(implicit rh: RequestHeader): Future[Unit]
 }
 
 @Singleton
@@ -57,7 +57,7 @@ class PendingChangeRequestRepositoryImpl @Inject()(
     replaceIndexes = true
   ) with PendingChangeRequestRepository with Logging {
 
-  def find(arn: Arn)(implicit hc: HeaderCarrier): Future[Option[PendingChangeRequest]] = {
+  def find(arn: Arn)(implicit rh: RequestHeader): Future[Option[PendingChangeRequest]] = {
 
     lazy val frontendDatabaseResult = collection
       .find(equal("arn", arn.value))
@@ -73,7 +73,7 @@ class PendingChangeRequestRepositoryImpl @Inject()(
     }
   }
 
-  def insert(pcod: PendingChangeRequest)(implicit hc: HeaderCarrier): Future[Unit] =
+  def insert(pcod: PendingChangeRequest)(implicit rh: RequestHeader): Future[Unit] =
     if(appConfig.enableBackendPCRDatabase) {
       asaConnector.insert(pcod)
     } else {
@@ -83,7 +83,7 @@ class PendingChangeRequestRepositoryImpl @Inject()(
         .map(_ => ())
     }
 
-  def delete(arn: Arn)(implicit hc: HeaderCarrier): Future[Unit] = {
+  def delete(arn: Arn)(implicit rh: RequestHeader): Future[Unit] = {
 
     lazy val frontendDatabaseResult = collection
       .deleteOne(equal("arn", arn.value))

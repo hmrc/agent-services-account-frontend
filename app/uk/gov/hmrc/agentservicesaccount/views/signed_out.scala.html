@@ -19,7 +19,7 @@
 
 @this(main: main)
 
-@(redirectUrl: String)(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
+@(redirectUrl: String)(implicit request: RequestHeader, msgs: Messages, appConfig: AppConfig)
 
 @timeString=@{
     val timeout = appConfig.timeoutDialogTimeout

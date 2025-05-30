@@ -47,7 +47,7 @@ class ContactDetailsController @Inject()(actions: Actions,
                                           agentAssuranceConnector: AgentAssuranceConnector,
                                           pcodRepository: PendingChangeRequestRepository,
                                           cc: MessagesControllerComponents,
-                                          ec: ExecutionContext) extends FrontendController(cc) with DesiDetailsJourneySupport with I18nSupport with Logging {
+                                          val ec: ExecutionContext) extends FrontendController(cc) with DesiDetailsJourneySupport with I18nSupport with Logging {
 
 
   val startAddressLookup: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>

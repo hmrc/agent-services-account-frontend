@@ -21,7 +21,7 @@
 
 @this(govukSummaryList: GovukSummaryList)
 
-@(agencyDetails: AgencyDetails, showChangeAction: Boolean)(implicit msgs: Messages, request: Request[_])
+@(agencyDetails: AgencyDetails, showChangeAction: Boolean)(implicit msgs: Messages, request: RequestHeader)
 
 @maybeActions(actions: Actions) = @{
     if (showChangeAction) Some(actions) else None

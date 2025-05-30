@@ -33,7 +33,7 @@
 )
 
 
-@(form: Form[ApplyCtCodeChanges])(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
+@(form: Form[ApplyCtCodeChanges])(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
 
 @main(
     pageTitle = withErrorPrefix(form.hasErrors, msgs("update-contact-details.apply-ct-code-changes.heading")),

@@ -23,13 +23,12 @@ import play.api.http.Status.{FORBIDDEN, OK}
 import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.Result
+import play.api.test.Helpers
 import play.api.test.Helpers.defaultAwaitTimeout
-import play.api.test.{FakeRequest, Helpers}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentAssuranceStubs._
 import uk.gov.hmrc.agentservicesaccount.stubs.AuthStubs
 import uk.gov.hmrc.agentservicesaccount.support.{TestConstants, UnitSpec, WireMockSupport}
-import uk.gov.hmrc.http.SessionKeys
 
 import scala.concurrent.Future
 
@@ -59,12 +58,6 @@ class AmlsConfirmationControllerSpec extends UnitSpec
 
     private implicit val messages: Messages = messagesApi.preferred(Seq.empty[Lang])
   }
-
-  private def fakeRequest(method: String = "GET", uri: String = "/") =
-    FakeRequest(method, uri)
-      .withSession(SessionKeys.authToken -> "Bearer XYZ")
-      .withSession(SessionKeys.sessionId -> "session-x")
-
 
   "showAmlsDetailsUpdatedConfirmation" should {
     "return Ok and show the confirmation page for AMLS details updated" when {

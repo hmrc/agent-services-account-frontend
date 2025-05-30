@@ -68,7 +68,7 @@ class YourDetailsFormSpec extends AnyWordSpec with Matchers with GuiceOneAppPerS
 
     s"error when $nameField is too long" in {
       val params = Map(
-        nameField -> RandomStringUtils.randomAlphanumeric(41),
+        nameField -> RandomStringUtils.insecure().nextAlphanumeric(41),
         phoneField -> validPhone
       )
       val validatedForm = yourDetailsForm.bind(params)
@@ -102,7 +102,7 @@ class YourDetailsFormSpec extends AnyWordSpec with Matchers with GuiceOneAppPerS
     s"error when $phoneField has non numeric characters" in {
       val params = Map(
         nameField -> validName,
-        phoneField -> RandomStringUtils.randomAlphanumeric(11)
+        phoneField -> RandomStringUtils.insecure().nextAlphanumeric(11)
       )
       val validatedForm = yourDetailsForm.bind(params)
       validatedForm.hasErrors shouldBe true

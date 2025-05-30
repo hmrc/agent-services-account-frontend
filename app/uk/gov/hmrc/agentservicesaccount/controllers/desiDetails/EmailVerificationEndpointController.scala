@@ -21,7 +21,6 @@ import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.DesiDetailsJourneySupport
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.NextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.controllers.{EMAIL_PENDING_VERIFICATION, desiDetails}
@@ -39,9 +38,8 @@ class EmailVerificationEndpointController @Inject()(actions: Actions,
                                                     draftDetailsService: DraftDetailsService,
                                                     cc: MessagesControllerComponents
                                                    )(implicit appConfig: AppConfig,
-                                                     ec: ExecutionContext,
+                                                     val ec: ExecutionContext,
                                                      pcodRepository: PendingChangeRequestRepository,
-                                                     agentAssuranceConnector: AgentAssuranceConnector,
                                                      ev: EmailVerificationService
                                                    ) extends FrontendController(cc) with DesiDetailsJourneySupport with I18nSupport with Logging {
 

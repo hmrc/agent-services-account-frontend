@@ -49,7 +49,7 @@
     additionalBanner: Option[Html] = None,
     additionalCss: Option[Html] = None,
     additionalScripts: Option[Html] = None
-)(contentBlock: Html)(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
+)(contentBlock: Html)(implicit request: RequestHeader, msgs: Messages)
 
 @scripts = {
 @additionalScripts.getOrElse(Html(""))
@@ -66,12 +66,6 @@
     } else None
 }
 @beforeContent = {
-    @defining("https://www.googletagmanager.com/ns.html?id=GTM-P39VTVL"){ gtmUrl =>
-        @if(!appConfig.isTest){
-            <noscript><iframe src="@gtmUrl" height="0" width="0"
-                style="display:none;visibility:hidden"></iframe></noscript>
-        }
-    }
     @if(showSecondaryNav){
         @secondary_nav(isAdmin = isAdmin)
     }

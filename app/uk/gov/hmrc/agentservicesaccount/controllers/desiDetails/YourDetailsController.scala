@@ -21,7 +21,6 @@ import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.DesiDetailsJourneySupport
 import uk.gov.hmrc.agentservicesaccount.controllers.{DRAFT_SUBMITTED_BY, desiDetails}
 import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms
@@ -40,9 +39,8 @@ class YourDetailsController @Inject()(actions: Actions,
                                       updateYourDetailsView: your_details
                                      )(implicit appConfig: AppConfig,
                                        cc: MessagesControllerComponents,
-                                       ec: ExecutionContext,
-                                       pcodRepository: PendingChangeRequestRepository,
-                                       agentAssuranceConnector: AgentAssuranceConnector
+                                       val ec: ExecutionContext,
+                                       pcodRepository: PendingChangeRequestRepository
                                      ) extends FrontendController(cc) with I18nSupport with DesiDetailsJourneySupport with Logging {
 
 
@@ -74,7 +72,7 @@ class YourDetailsController @Inject()(actions: Actions,
     }
   }
 
-  private def updateSubmittedBy(f: YourDetails)(implicit request: Request[_]): Future[Unit] = for {
+  private def updateSubmittedBy(f: YourDetails)(implicit request: RequestHeader): Future[Unit] = for {
     _ <- sessionCache.put[YourDetails](DRAFT_SUBMITTED_BY, f)
   } yield ()
 }

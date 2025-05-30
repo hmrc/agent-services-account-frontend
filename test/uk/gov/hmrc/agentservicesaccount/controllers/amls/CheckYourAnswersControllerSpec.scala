@@ -146,11 +146,11 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
           *[HeaderCarrier],
           *[ExecutionContext]) returns authResponse
         mockAppConfig.enableNonHmrcSupervisoryBody returns true
-        mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
-        mockUpdateAmlsJourneyRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[Request[_]]) returns
+        mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
+        mockUpdateAmlsJourneyRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[RequestHeader]) returns
           Future.successful(Some(ukAmlsJourney))
 
-        mockView.apply(*[Seq[SummaryListData]])(*[Messages], *[Request[_]], *[AppConfig]) returns Html("")
+        mockView.apply(*[Seq[SummaryListData]])(*[Messages], *[RequestHeader], *[AppConfig]) returns Html("")
 
         val result: Future[Result] = TestController.showPage()(fakeRequest)
         status(result) mustBe OK
@@ -165,11 +165,11 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
           *[ExecutionContext]) returns authResponse
         mockAppConfig.enableNonHmrcSupervisoryBody returns true
 
-        mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
-        mockUpdateAmlsJourneyRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[Request[_]]) returns
+        mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
+        mockUpdateAmlsJourneyRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[RequestHeader]) returns
           Future.successful(None)
 
-        mockView.apply(*[Seq[SummaryListData]])(*[Messages], *[Request[_]], *[AppConfig]) returns Html("")
+        mockView.apply(*[Seq[SummaryListData]])(*[Messages], *[RequestHeader], *[AppConfig]) returns Html("")
 
         val result: Future[Result] = TestController.showPage(fakeRequest)
 
@@ -184,7 +184,7 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
           *[HeaderCarrier],
           *[ExecutionContext]) returns authResponse
         mockAppConfig.enableNonHmrcSupervisoryBody returns false
-        mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+        mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
         val result: Future[Result] = TestController.showPage(fakeRequest)
         status(result) mustBe FORBIDDEN
@@ -194,7 +194,7 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
         mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
           *[HeaderCarrier],
           *[ExecutionContext]) returns invalidAuthResponse
-        mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+        mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
         val result: Future[Result] = TestController.showPage(fakeRequest)
         status(result) mustBe FORBIDDEN
@@ -203,7 +203,7 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
         mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
           *[HeaderCarrier],
           *[ExecutionContext]) returns invalidCredentialAuthResponse
-        mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+        mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
         val result: Future[Result] = TestController.showPage(fakeRequest)
         status(result) mustBe FORBIDDEN
@@ -284,13 +284,13 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
             *[HeaderCarrier],
             *[ExecutionContext]) returns authResponse
           mockAppConfig.enableNonHmrcSupervisoryBody returns true
-          mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+          mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
           mockUpdateAmlsJourneyRepository
-            .getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]],*[Request[_]])returns Future.successful(Some(ukAmlsJourney))
-          mockAgentAssuranceConnector.postAmlsDetails(arn, amlsRequest)(*[ExecutionContext], *[HeaderCarrier]) returns Future.successful(())
+            .getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]],*[RequestHeader])returns Future.successful(Some(ukAmlsJourney))
+          mockAgentAssuranceConnector.postAmlsDetails(arn, amlsRequest)(*[RequestHeader]) returns Future.successful(())
 
-          mockAgentAssuranceConnector.getAMLSDetails(arn.value)(*[ExecutionContext], *[HeaderCarrier]) returns Future.successful(amlsDetails)
-          mockAaConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+          mockAgentAssuranceConnector.getAMLSDetails(arn.value)(*[RequestHeader]) returns Future.successful(amlsDetails)
+          mockAaConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
           val result: Future[Result] = TestController.onSubmit()(fakeRequest)
           status(result) mustBe SEE_OTHER
@@ -303,13 +303,13 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
             *[HeaderCarrier],
             *[ExecutionContext]) returns authResponse
           mockAppConfig.enableNonHmrcSupervisoryBody returns true
-          mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+          mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
           mockUpdateAmlsJourneyRepository
-            .getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]],*[Request[_]])returns Future.successful(Some(ukAmlsJourney))
-          mockAgentAssuranceConnector.postAmlsDetails(arn, amlsRequest)(*[ExecutionContext], *[HeaderCarrier]) returns Future.successful(())
+            .getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]],*[RequestHeader])returns Future.successful(Some(ukAmlsJourney))
+          mockAgentAssuranceConnector.postAmlsDetails(arn, amlsRequest)(*[RequestHeader]) returns Future.successful(())
 
-          mockAgentAssuranceConnector.getAMLSDetails(arn.value)(*[ExecutionContext], *[HeaderCarrier]).throws(UpstreamErrorResponse("Something went wrong", 500))
-          //mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]).throws(UpstreamErrorResponse("Something went wrong",500))
+          mockAgentAssuranceConnector.getAMLSDetails(arn.value)(*[RequestHeader]).throws(UpstreamErrorResponse("Something went wrong", 500))
+          //mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]).throws(UpstreamErrorResponse("Something went wrong",500))
 
           val result: Future[Result] = TestController.onSubmit()(fakeRequest)
           status(result) mustBe SEE_OTHER
@@ -322,11 +322,11 @@ class CheckYourAnswersControllerSpec extends PlaySpec with IdiomaticMockito with
             *[HeaderCarrier],
             *[ExecutionContext]) returns authResponse
           mockAppConfig.enableNonHmrcSupervisoryBody returns true
-          mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
-          mockUpdateAmlsJourneyRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[Request[_]]) returns
+          mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
+          mockUpdateAmlsJourneyRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[RequestHeader]) returns
             Future.successful(Some(UpdateAmlsJourney(AmlsStatuses.ValidAmlsDetailsUK, None, None, None, None)))
 
-          mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+          mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
           val result: Future[Result] = TestController.onSubmit()(fakeRequest)
           status(result) mustBe BAD_REQUEST

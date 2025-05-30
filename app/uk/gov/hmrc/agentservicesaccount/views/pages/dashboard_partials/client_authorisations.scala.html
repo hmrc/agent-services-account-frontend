@@ -19,7 +19,7 @@
 
 @this(p: p, h2: h2, a: a, ul_html: ul_html, formWithCSRF: FormWithCSRF)
 
-@(authUrls: Map[String, String])(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
+@(authUrls: Map[String, String])(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
 
 <section id="client-authorisation-section">
     @h2("asa.section4.h2")

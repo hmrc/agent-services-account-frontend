@@ -20,14 +20,16 @@ import org.apache.pekko.Done
 import play.api.Logging
 import play.api.http.Status._
 import play.api.libs.json.{Json, OFormat}
+import play.api.mvc.RequestHeader
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agents.accessgroups.GroupSummary
 import uk.gov.hmrc.agents.accessgroups.optin.OptinStatus
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models.AccessGroupSummaries
 import uk.gov.hmrc.agentservicesaccount.utils.HttpAPIMonitor
+import uk.gov.hmrc.agentservicesaccount.utils.RequestSupport._
 import uk.gov.hmrc.http.client.HttpClientV2
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse, UpstreamErrorResponse}
+import uk.gov.hmrc.http.{HttpResponse, StringContextOps, UpstreamErrorResponse}
 import uk.gov.hmrc.play.bootstrap.metrics.Metrics
 
 import java.net.URL
@@ -38,7 +40,7 @@ import scala.util.{Failure, Success, Try}
 
 
 @Singleton
-class AgentPermissionsConnector @Inject()(http: HttpClient, httpV2: HttpClientV2)
+class AgentPermissionsConnector @Inject()(http: HttpClientV2)
                                          (implicit val metrics: Metrics,
                                           appConfig: AppConfig,
                                           val ec: ExecutionContext
@@ -48,9 +50,9 @@ class AgentPermissionsConnector @Inject()(http: HttpClient, httpV2: HttpClientV2
 
   import uk.gov.hmrc.http.HttpReads.Implicits._
 
-  def getOptinStatus(arn: Arn)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[OptinStatus]] = {
+  def getOptinStatus(arn: Arn)(implicit rh: RequestHeader): Future[Option[OptinStatus]] = {
     monitor("ConsumedAPI-GetOptinStatus-GET") {
-      httpV2
+      http
         .get(new URL(s"$baseUrl/agent-permissions/arn/${arn.value}/optin-status"))
         .transform(ws => ws.withRequestTimeout(2.minutes))
         .execute[Option[OptinStatus]]
@@ -62,10 +64,10 @@ class AgentPermissionsConnector @Inject()(http: HttpClient, httpV2: HttpClientV2
     }
   }
 
-  def getGroupsSummaries(arn: Arn)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[AccessGroupSummaries]] = {
+  def getGroupsSummaries(arn: Arn)(implicit rh: RequestHeader): Future[Option[AccessGroupSummaries]] = {
 
     def buildHeaders: Seq[(String, String)] = {
-      hc.otherHeaders.toMap.get("Cookie").map(_.split(";")).map { cookieParts =>
+      rh.headers.get("Cookie").map(_.split(";")).map { cookieParts =>
         cookieParts.foldLeft(Seq.empty[(String, String)]) { (acc, cookiePart) =>
           if (cookiePart.trim.startsWith("PLAY_LANG")) {
             Try {
@@ -82,38 +84,27 @@ class AgentPermissionsConnector @Inject()(http: HttpClient, httpV2: HttpClientV2
       }.toSeq.flatten
     }
 
-    val url = s"$baseUrl/agent-permissions/arn/${arn.value}/groups"
+
     monitor("ConsumedAPI-GetGroupsSummaries-GET") {
-      http.GET[HttpResponse](url, headers = buildHeaders).map { response =>
-        response.status match {
-          case OK => response.json.asOpt[AccessGroupSummaries]
-          case e => logger.warn(s"GetGroupsSummaries returned status $e ${response.body}"); None
+      http.get(url"$baseUrl/agent-permissions/arn/${arn.value}/groups").setHeader(buildHeaders: _*)
+        .execute[HttpResponse].map { response =>
+          response.status match {
+            case OK => response.json.asOpt[AccessGroupSummaries]
+            case e => logger.warn(s"GetGroupsSummaries returned status $e ${response.body}"); None
+          }
         }
-      }
     }
   }
 
-  def getGroupsForTeamMember(arn: Arn, userId: String)(implicit hc: HeaderCarrier,
-                                                       ec: ExecutionContext): Future[Option[Seq[GroupSummary]]] = {
-    val url = s"$baseUrl/agent-permissions/arn/${arn.value}/team-member/$userId/groups"
+  def getGroupsForTeamMember(arn: Arn, userId: String)(implicit rh: RequestHeader): Future[Option[Seq[GroupSummary]]] = {
     monitor("ConsumedAPI-groupSummariesForTeamMember-GET") {
-      http.GET[HttpResponse](url).map { response: HttpResponse =>
-        response.status match {
-          case OK => response.json.asOpt[Seq[GroupSummary]]
-          case NOT_FOUND => None
-          case other =>
-            logger.warn(
-              s"error getting groups for '$userId'. Backend response status: $other")
-            None
-        }
+      http.get(url"$baseUrl/agent-permissions/arn/${arn.value}/team-member/$userId/groups").execute[Option[Seq[GroupSummary]]]
       }
-    }
   }
 
-  def isOptedIn(arn: Arn)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Boolean] = {
-    val url = s"$baseUrl/agent-permissions/arn/${arn.value}/optin-record-exists"
+  def isOptedIn(arn: Arn)(implicit rh: RequestHeader): Future[Boolean] = {
     monitor("ConsumedAPI-optInRecordExists-GET") {
-      http.GET[HttpResponse](url).map { response: HttpResponse =>
+      http.get(url"$baseUrl/agent-permissions/arn/${arn.value}/optin-record-exists").execute[HttpResponse].map { response: HttpResponse =>
         response.status match {
           case NO_CONTENT => true
           case NOT_FOUND => false
@@ -125,29 +116,15 @@ class AgentPermissionsConnector @Inject()(http: HttpClient, httpV2: HttpClientV2
     }
   }
 
-  def syncEacd(arn: Arn, fullSync: Boolean)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Unit] = {
-    val url = s"$baseUrl/agent-permissions/arn/${arn.value}/sync?fullSync=" + fullSync
-
-    http.POST[SyncEacd, HttpResponse](url, SyncEacd("sync")).map { response =>
-      response.status match {
-        case OK =>
-          logger.debug(s"EACD sync called for $arn")
-        case other =>
-          logger.warn(s"syncEacd returned status $other ${response.body}");
-      }
-    } transformWith {
-      case Success(_) =>
-        Future.successful(logger.debug("EACD sync called successfully"))
-      case Failure(ex) =>
-        Future.successful(logger.error(s"EACD sync call failed: ${ex.getMessage}"))
-    }
+  def syncEacd(arn: Arn, fullSync: Boolean)(implicit rh: RequestHeader): Future[Unit] = {
+    http.post(url"$baseUrl/agent-permissions/arn/${arn.value}/sync?fullSync=$fullSync")
+      .withBody(Json.toJson(SyncEacd("sync"))).execute[Unit]
   }
 
-  def isArnAllowed(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Boolean] = {
-    val url = s"$baseUrl/agent-permissions/arn-allowed"
-
+  def isArnAllowed(implicit rh: RequestHeader): Future[Boolean] = {
     monitor("ConsumedAPI-GranPermsArnAllowed-GET") {
-      http.GET[HttpResponse](url).map { response =>
+      http.get(url"$baseUrl/agent-permissions/arn-allowed").execute[HttpResponse]
+        .map { response =>
         response.status match {
           case OK => true
           case other =>
@@ -158,11 +135,10 @@ class AgentPermissionsConnector @Inject()(http: HttpClient, httpV2: HttpClientV2
     }
   }
 
-  def isShownPrivateBetaInvite(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Boolean] = {
-    val url = s"$baseUrl/agent-permissions/private-beta-invite"
-
+  def isShownPrivateBetaInvite(implicit rh: RequestHeader): Future[Boolean] = {
     monitor("ConsumedAPI-GranPermsPrivateBeta-GET") {
-      http.GET[HttpResponse](url).map { response =>
+      http.get(url"$baseUrl/agent-permissions/private-beta-invite").execute[HttpResponse]
+        .map { response =>
         response.status match {
           case OK => logger.info(s"in private beta or has dismissed private beta invite")
             false
@@ -172,11 +148,10 @@ class AgentPermissionsConnector @Inject()(http: HttpClient, httpV2: HttpClientV2
     }
   }
 
-  def declinePrivateBetaInvite()(implicit hc: HeaderCarrier,
-                                 ec: ExecutionContext): Future[Done] = {
-    val url = s"$baseUrl/agent-permissions/private-beta-invite/decline"
+  def declinePrivateBetaInvite()(implicit rh: RequestHeader): Future[Done] = {
     monitor("ConsumedAPI-declinePrivateBetaInvite-POST") {
-      http.POSTEmpty[HttpResponse](url).map { response =>
+      http.post(url"$baseUrl/agent-permissions/private-beta-invite/decline").execute[HttpResponse]
+        .map { response =>
         response.status match {
           case CREATED => Done
           case CONFLICT =>

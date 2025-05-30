@@ -22,7 +22,7 @@ import org.scalatestplus.play.PlaySpec
 import play.api.Environment
 import play.api.http.Status.{FORBIDDEN, OK, SEE_OTHER}
 import play.api.i18n.Messages
-import play.api.mvc.{DefaultActionBuilderImpl, MessagesControllerComponents, Request, Result}
+import play.api.mvc.{DefaultActionBuilderImpl, MessagesControllerComponents, Request, RequestHeader, Result}
 import play.api.test.Helpers.stubMessagesControllerComponents
 import play.api.test.{DefaultAwaitTimeout, FakeRequest, Helpers}
 import play.twirl.api.Html
@@ -44,7 +44,6 @@ class NoAccessGroupsAssignmentControllerSpec extends PlaySpec
   with ArgumentMatchersSugar
   with TestConstants {
 
-  implicit val hc: HeaderCarrier = HeaderCarrier()
   implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
   private val fakeRequest = FakeRequest()
 
@@ -58,7 +57,7 @@ class NoAccessGroupsAssignmentControllerSpec extends PlaySpec
       Some(Name(Some("Troy"), Some("Barnes")))),
       Some(credentialRole)))
 
-  def givenAgentRecord = mockAgentAssuranceConnector.getAgentRecord(*[HeaderCarrier], *[ExecutionContext]) returns Future.successful(agentRecord)
+  def givenAgentRecord = mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
   val mockAuthConnector: AuthConnector = mock[AuthConnector]
   def givenAuthorisedAgent(credentialRole: CredentialRole): ScalaOngoingStubbing[Future[Any]] = {

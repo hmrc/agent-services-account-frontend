@@ -31,7 +31,7 @@
         formWithCSRF: FormWithCSRF
 )
 
-@(model: Seq[SummaryListData])(implicit msgs: Messages, request: Request[_], appConfig: AppConfig)
+@(model: Seq[SummaryListData])(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
 
 @main(
   pageTitle = msgs("amls.check-your-answers.h1"),

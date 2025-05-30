@@ -37,8 +37,8 @@ class AdminAccessForAccessGroupsViewSpec extends BaseISpec {
     val doc: Document = Jsoup.parse(view.apply()(FakeRequest(), messages, appConfig).body)
 
     "have the correct service name link" in {
-      doc.select(".hmrc-header__service-name").first.text() mustBe "Agent services account"
-      doc.select(".hmrc-header__service-name").first.attr("href") mustBe "/agent-services-account"
+      doc.select(".govuk-header__service-name").first.text() mustBe "Agent services account"
+      doc.select(".govuk-header__service-name").first.attr("href") mustBe "/agent-services-account"
     }
 
     "have the correct sign out link" in {

@@ -20,7 +20,7 @@
 
 @this(main: main, p: p, h1: h1, ul: ul, link_as_button: link_as_button)
 
-@()(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
+@()(implicit request: RequestHeader, msgs: Messages, appConfig: AppConfig)
 
 @main(
     pageTitle = msgs("admin-access.h1"),

@@ -71,7 +71,7 @@ class UpdatePhoneFormSpec extends AnyWordSpec with Matchers with GuiceOneAppPerS
 
     s"error when $phoneField has non numeric characters" in {
       val params = Map(
-        phoneField -> RandomStringUtils.randomAlphanumeric(11)
+        phoneField -> RandomStringUtils.insecure().nextAlphanumeric(11)
       )
       val validatedForm = telephoneNumberForm.bind(params)
       validatedForm.hasErrors shouldBe true

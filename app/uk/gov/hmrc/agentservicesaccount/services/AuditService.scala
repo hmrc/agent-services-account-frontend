@@ -18,10 +18,11 @@ package uk.gov.hmrc.agentservicesaccount.services
 
 import play.api.Configuration
 import play.api.libs.json.{Json, Writes}
+import play.api.mvc.RequestHeader
 import uk.gov.hmrc.agentmtdidentifiers.model._
 import uk.gov.hmrc.agentservicesaccount.models.audit._
 import uk.gov.hmrc.agentservicesaccount.models.{AmlsDetails, AmlsRequest, PendingChangeOfDetails}
-import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.agentservicesaccount.utils.RequestSupport._
 import uk.gov.hmrc.play.audit.AuditExtensions._
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.ExtendedDataEvent
@@ -35,7 +36,7 @@ class AuditService @Inject()(val auditConnector: AuditConnector,
                              config: Configuration
                             )(implicit ec: ExecutionContext) {
 
-  private def audit[A <: AuditDetail : Writes](a: A)(implicit hc: HeaderCarrier): Unit = {
+  private def audit[A <: AuditDetail : Writes](a: A)(implicit rh: RequestHeader): Unit = {
     val _ = auditConnector.sendExtendedEvent(
       ExtendedDataEvent(
         auditSource = auditSource,
@@ -49,14 +50,14 @@ class AuditService @Inject()(val auditConnector: AuditConnector,
 
   def auditUpdateContactDetailsRequest(optUtr: Option[Utr],
                                        pendingChangeOfDetails: PendingChangeOfDetails
-                                      )(implicit hc: HeaderCarrier): Unit =
+                                      )(implicit rh: RequestHeader): Unit =
     audit(toUpdateContactDetailsRequestAudit(optUtr, pendingChangeOfDetails))
 
   def auditUpdateAmlSupervisionDetails(amlsRequest: AmlsRequest,
                                        almsDetailsOpt: Option[AmlsDetails],
                                        arn: Arn,
                                        optUtr: Option[Utr]
-                                      )(implicit hc: HeaderCarrier): Unit =
+                                      )(implicit rh: RequestHeader): Unit =
     audit(toUpdateAmlSupervisionDetailsAudit(arn: Arn, optUtr: Option[Utr], amlsRequest, almsDetailsOpt))
 
   private def toUpdateContactDetailsRequestAudit(optUtr: Option[Utr],

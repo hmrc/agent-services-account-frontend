@@ -19,7 +19,7 @@
 
 @this(a:a,h1: h1, p: p, span: span)
 
-@(isAdmin: Boolean)(implicit msgs: Messages, appConfig: AppConfig)
+@(isAdmin: Boolean)(implicit msgs: Messages)
 
 <nav id="secondary-nav" class="hmrc-account-menu" aria-label='@msgs("nav.aria.account-menu")'>
     <a href="@routes.AgentServicesController.root().url"
