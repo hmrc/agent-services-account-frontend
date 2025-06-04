@@ -39,7 +39,7 @@ agent.manageYourUsers.links.start=<a href="{0}" target="_blank" rel="noopener no
 app.name=Cyfrif gwasanaethau asiant
 asa.account.home.manage.section.a=Rheoli eich cyfrif
 asa.account.home.manage.section.h2=Rheoli’r cyfrif
-asa.account.home.manage.section.p=Gweld eich rhestr cleientiaid a diweddaru cyfeiriadau cleient. Rheoli mynediad aelodau eich tîm i’r cyfrif hwn a chleientiaid penodol.
+asa.account.home.manage.section.p=Rheoli mynediad aelodau eich tîm i’r cyfrif hwn a chleientiaid penodol.
 asa.additional.links.agent-afi.body2=<a href="{0}" id="{1}">Bwrw golwg dros gofnod incwm cleient</a>
 asa.additional.links.agent-afi.ga.link-view=cysylltiad – bwrw golwg
 asa.additional.links.agent-afi.ga.manage-clients=Rheoli eich cleientiaid

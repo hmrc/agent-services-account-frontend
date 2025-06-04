@@ -39,7 +39,7 @@ agent.manageYourUsers.links.start=<a href="{0}" target="_blank" rel="noopener no
 app.name=Agent services account
 asa.account.home.manage.section.a=Manage your account
 asa.account.home.manage.section.h2=Manage account
-asa.account.home.manage.section.p=View your client list and update client references. Manage your team members’ access to this account and specific clients
+asa.account.home.manage.section.p=Manage your team members’ access to this account and specific clients.
 asa.additional.links.agent-afi.body2=<a href="{0}" id="{1}">View a client’s Income record</a>
 asa.additional.links.agent-afi.ga.link-view=link - view
 asa.additional.links.agent-afi.ga.manage-clients=Manage your clients
