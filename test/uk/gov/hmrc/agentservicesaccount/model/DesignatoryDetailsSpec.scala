@@ -16,16 +16,26 @@
 
 package uk.gov.hmrc.agentservicesaccount.model
 
-import play.api.libs.json.{JsObject, Json}
-import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, DesignatoryDetails, OtherServices, SaChanges}
-import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress}
+import play.api.libs.json.JsObject
+import play.api.libs.json.Json
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.CtChanges
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.DesignatoryDetails
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.OtherServices
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.SaChanges
+import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
+import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.support.UnitSpec
-import uk.gov.hmrc.crypto.{Decrypter, Encrypter, SymmetricCryptoFactory}
-import uk.gov.hmrc.domain.{CtUtr, SaUtr}
+import uk.gov.hmrc.crypto.Decrypter
+import uk.gov.hmrc.crypto.Encrypter
+import uk.gov.hmrc.crypto.SymmetricCryptoFactory
+import uk.gov.hmrc.domain.CtUtr
+import uk.gov.hmrc.domain.SaUtr
 
-class DesignatoryDetailsSpec extends UnitSpec {
+class DesignatoryDetailsSpec
+extends UnitSpec {
 
-  implicit val crypto: Encrypter with Decrypter = SymmetricCryptoFactory.aesCrypto("edkOOwt7uvzw1TXnFIN6aRVHkfWcgiOrbBvkEQvO65g=")
+  implicit val crypto: Encrypter
+    with Decrypter = SymmetricCryptoFactory.aesCrypto("edkOOwt7uvzw1TXnFIN6aRVHkfWcgiOrbBvkEQvO65g=")
 
   val testDesignatoryDetails: DesignatoryDetails = DesignatoryDetails(
     AgencyDetails(
@@ -120,4 +130,5 @@ class DesignatoryDetailsSpec extends UnitSpec {
       }
     }
   }
+
 }

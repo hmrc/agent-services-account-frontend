@@ -16,13 +16,15 @@
 
 package uk.gov.hmrc.agentservicesaccount
 
-import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{DesignatoryDetails, YourDetails}
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.DesignatoryDetails
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.YourDetails
 import uk.gov.hmrc.mongo.cache.DataKey
 
 import java.time.LocalDate
 import scala.concurrent.Future
 
 package object controllers {
+
   implicit class ToFuture[T](t: T) {
     def toFuture: Future[T] = Future successful t
   }
@@ -48,14 +50,13 @@ package object controllers {
   // after an email verification request has been sent, this value is set to keep track of which address was being verified
   val EMAIL_PENDING_VERIFICATION: DataKey[String] = DataKey("emailPendingVerification")
 
-  val sessionKeys =
-    List(
-      AGENT_SIZE,
-      NAME,
-      EMAIL,
-      PHONE,
-      ARN,
-      DESCRIPTION
-    )
+  val sessionKeys = List(
+    AGENT_SIZE,
+    NAME,
+    EMAIL,
+    PHONE,
+    ARN,
+    DESCRIPTION
+  )
 
 }

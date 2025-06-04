@@ -16,11 +16,15 @@
 
 package uk.gov.hmrc.agentservicesaccount.utils
 
-import javax.inject.{Inject, Singleton}
-import scala.util.{Failure, Success, Try}
+import javax.inject.Inject
+import javax.inject.Singleton
+import scala.util.Failure
+import scala.util.Success
+import scala.util.Try
 
 @Singleton
-class AMLSLoader @Inject()(){
+class AMLSLoader @Inject() () {
+
   def load(path: String): Map[String, String] =
     Try {
       require(path.nonEmpty, "AMLS file path cannot be empty")
@@ -35,14 +39,16 @@ class AMLSLoader @Inject()(){
         .map { line =>
           line.split(",").map(_.trim) match {
             case Array(code, bodyName) => (code, bodyName)
-            case _                     => throw new AMLSLoaderException(s"Strange line in AMLS csv file")
+            case _ => throw new AMLSLoaderException(s"Strange line in AMLS csv file")
           }
         }
         .toMap
     } match {
       case Success(amlsCodesToNames) => amlsCodesToNames
-      case Failure(ex)               => throw new AMLSLoaderException(ex.getMessage)
+      case Failure(ex) => throw new AMLSLoaderException(ex.getMessage)
     }
 
-  final class AMLSLoaderException(message: String) extends Exception(s"Unexpected error while loading AMLS Bodies: $message")
+  final class AMLSLoaderException(message: String)
+  extends Exception(s"Unexpected error while loading AMLS Bodies: $message")
+
 }

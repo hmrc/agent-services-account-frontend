@@ -17,10 +17,14 @@
 package uk.gov.hmrc.agentservicesaccount.views.pages.desi_details
 
 import org.jsoup.Jsoup
-import org.jsoup.nodes.{Document, Element}
+import org.jsoup.nodes.Document
+import org.jsoup.nodes.Element
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.data.Form
-import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
+import play.api.i18n.Lang
+import play.api.i18n.Messages
+import play.api.i18n.MessagesApi
+import play.api.i18n.MessagesImpl
 import play.api.test.FakeRequest
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms.applyCtCodeChangesForm
@@ -28,17 +32,18 @@ import uk.gov.hmrc.agentservicesaccount.models.ApplyCtCodeChanges
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details._
 
-class ApplyCtCodePageSpec extends BaseISpec {
+class ApplyCtCodePageSpec
+extends BaseISpec {
 
   implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
   implicit val lang: Lang = Lang("en")
-  val view: apply_ct_code_changes  = app.injector.instanceOf[apply_ct_code_changes]
+  val view: apply_ct_code_changes = app.injector.instanceOf[apply_ct_code_changes]
   implicit val messages: Messages = MessagesImpl(lang, messagesApi)
 
   val form: Form[ApplyCtCodeChanges] = applyCtCodeChangesForm
   val formWithNameErrors: Form[ApplyCtCodeChanges] = form.withError(
-    key ="applyChanges",
+    key = "applyChanges",
     message = Messages("update-contact-details.apply-ct-code-changes.error.empty")
   )
 
@@ -79,7 +84,11 @@ class ApplyCtCodePageSpec extends BaseISpec {
 
     "first viewing page" should {
 
-      val doc: Document = Jsoup.parse(view.apply(form)(messages, FakeRequest(), appConfig).body)
+      val doc: Document = Jsoup.parse(view.apply(form)(
+        messages,
+        FakeRequest(),
+        appConfig
+      ).body)
 
       testServiceStaticContent(doc)
 
@@ -90,10 +99,13 @@ class ApplyCtCodePageSpec extends BaseISpec {
       }
     }
 
-
     "form is submitted with error should" should {
 
-      val doc: Document = Jsoup.parse(view.apply(formWithNameErrors)(messages, FakeRequest(), appConfig).body)
+      val doc: Document = Jsoup.parse(view.apply(formWithNameErrors)(
+        messages,
+        FakeRequest(),
+        appConfig
+      ).body)
 
       testServiceStaticContent(doc)
 

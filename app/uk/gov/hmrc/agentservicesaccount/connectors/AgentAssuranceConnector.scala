@@ -16,7 +16,10 @@
 
 package uk.gov.hmrc.agentservicesaccount.connectors
 
-import play.api.http.Status.{BAD_REQUEST, CREATED, NO_CONTENT, OK}
+import play.api.http.Status.BAD_REQUEST
+import play.api.http.Status.CREATED
+import play.api.http.Status.NO_CONTENT
+import play.api.http.Status.OK
 import play.api.libs.json.Json
 import play.api.mvc.RequestHeader
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
@@ -29,40 +32,49 @@ import uk.gov.hmrc.play.bootstrap.metrics.Metrics
 import uk.gov.hmrc.agentservicesaccount.utils.RequestSupport._
 
 import java.net.URL
-import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import javax.inject.Inject
+import javax.inject.Singleton
+import scala.concurrent.ExecutionContext
+import scala.concurrent.Future
 
 @Singleton
-class AgentAssuranceConnector @Inject()(httpV2: HttpClientV2)(implicit val metrics: Metrics, appConfig: AppConfig, val ec: ExecutionContext)
-  extends HttpAPIMonitor {
+class AgentAssuranceConnector @Inject() (httpV2: HttpClientV2)(implicit
+  val metrics: Metrics,
+  appConfig: AppConfig,
+  val ec: ExecutionContext
+)
+extends HttpAPIMonitor {
 
   private lazy val baseUrl = appConfig.agentAssuranceBaseUrl
 
   import uk.gov.hmrc.http.HttpReads.Implicits._
 
-  def getAMLSDetailsResponse(arn: String)(implicit rh: RequestHeader): Future[AmlsDetailsResponse] =
-    httpV2.get(new URL(s"$baseUrl/agent-assurance/amls/arn/$arn")).execute[HttpResponse].map { response =>
+  def getAMLSDetailsResponse(
+    arn: String
+  )(implicit rh: RequestHeader): Future[AmlsDetailsResponse] = httpV2.get(new URL(s"$baseUrl/agent-assurance/amls/arn/$arn")).execute[HttpResponse].map {
+    response =>
       response.status match {
         case OK => Json.parse(response.body).as[AmlsDetailsResponse]
-        case NO_CONTENT => throw new Exception(s"Error $NO_CONTENT no amls details found") //TODO update when designs are done
+        case NO_CONTENT => throw new Exception(s"Error $NO_CONTENT no amls details found") // TODO update when designs are done
         case BAD_REQUEST => throw UpstreamErrorResponse(s"Error $BAD_REQUEST invalid ARN when trying to get amls details", BAD_REQUEST)
         case e => throw UpstreamErrorResponse(s"Error $e unable to get amls details", e)
       }
-    }
+  }
 
-  def getAMLSDetails(arn: String)(implicit rh: RequestHeader): Future[AmlsDetails] =
-    getAMLSDetailsResponse(arn).map(_.details
-      .getOrElse(throw UpstreamErrorResponse(s"Error $BAD_REQUEST invalid ARN when trying to get amls details", BAD_REQUEST)))
+  def getAMLSDetails(arn: String)(implicit rh: RequestHeader): Future[AmlsDetails] = getAMLSDetailsResponse(arn).map(_.details
+    .getOrElse(throw UpstreamErrorResponse(s"Error $BAD_REQUEST invalid ARN when trying to get amls details", BAD_REQUEST)))
 
-  def getAmlsStatus(arn: Arn)(implicit ec: ExecutionContext, rh: RequestHeader): Future[AmlsStatus] =
-    getAMLSDetailsResponse(arn.value).map(_.status)
+  def getAmlsStatus(arn: Arn)(implicit
+    ec: ExecutionContext,
+    rh: RequestHeader
+  ): Future[AmlsStatus] = getAMLSDetailsResponse(arn.value).map(_.status)
 
-
-  def postAmlsDetails(arn: Arn, amlsRequest: AmlsRequest)(implicit rh: RequestHeader): Future[Unit] = {
+  def postAmlsDetails(
+    arn: Arn,
+    amlsRequest: AmlsRequest
+  )(implicit rh: RequestHeader): Future[Unit] = {
     httpV2
-      .post(new URL(s"$baseUrl/agent-assurance/amls/arn/${
-        arn.value
-      }")).withBody(Json.toJson(amlsRequest)).execute[HttpResponse]
+      .post(new URL(s"$baseUrl/agent-assurance/amls/arn/${arn.value}")).withBody(Json.toJson(amlsRequest)).execute[HttpResponse]
       .map {
         response =>
           response.status match {
@@ -73,11 +85,12 @@ class AgentAssuranceConnector @Inject()(httpV2: HttpClientV2)(implicit val metri
       }
   }
 
-  def postDesignatoryDetails(arn: Arn, base64HtmlForPdf: String)(implicit rh: RequestHeader): Future[Unit] = {
+  def postDesignatoryDetails(
+    arn: Arn,
+    base64HtmlForPdf: String
+  )(implicit rh: RequestHeader): Future[Unit] = {
     httpV2
-      .post(new URL(s"$baseUrl/agent-assurance/agent/agency-details/arn/${
-        arn.value
-      }")).withBody(base64HtmlForPdf).execute[HttpResponse]
+      .post(new URL(s"$baseUrl/agent-assurance/agent/agency-details/arn/${arn.value}")).withBody(base64HtmlForPdf).execute[HttpResponse]
       .map {
         response =>
           response.status match {
@@ -87,12 +100,13 @@ class AgentAssuranceConnector @Inject()(httpV2: HttpClientV2)(implicit val metri
       }
   }
 
-  def getAgentRecord(implicit rh: RequestHeader): Future[AgentDetailsDesResponse] =
-    httpV2
-      .get(new URL(s"$baseUrl/agent-assurance/agent-record-with-checks"))
-      .execute[HttpResponse].map( response => response.status match {
+  def getAgentRecord(implicit rh: RequestHeader): Future[AgentDetailsDesResponse] = httpV2
+    .get(new URL(s"$baseUrl/agent-assurance/agent-record-with-checks"))
+    .execute[HttpResponse].map(response =>
+      response.status match {
         case OK => Json.parse(response.body).as[AgentDetailsDesResponse]
         case other => throw UpstreamErrorResponse(s"agent record unavailable: des response code: $other", 500)
-      })
+      }
+    )
 
 }

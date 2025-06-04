@@ -16,12 +16,14 @@
 
 package uk.gov.hmrc.agentservicesaccount.models
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.Json
+import play.api.libs.json.OFormat
 
-
-case class SuspendContactDetails(name: String,
-                                 email: String,
-                                 phone: String)
+case class SuspendContactDetails(
+  name: String,
+  email: String,
+  phone: String
+)
 
 object SuspendContactDetails {
   implicit val formats: OFormat[SuspendContactDetails] = Json.format[SuspendContactDetails]

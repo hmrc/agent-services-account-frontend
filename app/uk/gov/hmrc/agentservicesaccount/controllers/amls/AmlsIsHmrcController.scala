@@ -17,7 +17,9 @@
 package uk.gov.hmrc.agentservicesaccount.controllers.amls
 
 import play.api.i18n.I18nSupport
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.Action
+import play.api.mvc.AnyContent
+import play.api.mvc.MessagesControllerComponents
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.ToFuture
@@ -25,13 +27,17 @@ import uk.gov.hmrc.agentservicesaccount.forms.YesNoForm
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.is_amls_hmrc
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
-import javax.inject.{Inject, Singleton}
+import javax.inject.Inject
+import javax.inject.Singleton
 
 @Singleton
-class AmlsIsHmrcController @Inject()(actions: Actions,
-                                     isAmlsHmrc: is_amls_hmrc,
-                                     cc: MessagesControllerComponents
-                                    )(implicit appConfig: AppConfig) extends FrontendController(cc) with I18nSupport {
+class AmlsIsHmrcController @Inject() (
+  actions: Actions,
+  isAmlsHmrc: is_amls_hmrc,
+  cc: MessagesControllerComponents
+)(implicit appConfig: AppConfig)
+extends FrontendController(cc)
+with I18nSupport {
 
   def showAmlsIsHmrc: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
@@ -45,15 +51,17 @@ class AmlsIsHmrcController @Inject()(actions: Actions,
         .bindFromRequest()
         .fold(
           formWithErrors => {
-          BadRequest(isAmlsHmrc(formWithErrors)).toFuture
+            BadRequest(isAmlsHmrc(formWithErrors)).toFuture
           },
           (isHmrcRegistered: Boolean) => {
             if (isHmrcRegistered) {
               Redirect("not-implemented-hmrc-page").toFuture
-            } else {
+            }
+            else {
               Redirect(routes.AmlsNewSupervisoryBodyController.showPage()).toFuture
             }
-          })
+          }
+        )
     }
   }
 

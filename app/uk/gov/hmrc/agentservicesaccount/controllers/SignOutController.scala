@@ -18,21 +18,29 @@ package uk.gov.hmrc.agentservicesaccount.controllers
 
 import play.api.data.Form
 import play.api.i18n.I18nSupport
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.Action
+import play.api.mvc.AnyContent
+import play.api.mvc.MessagesControllerComponents
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.forms.{FeedbackWhichServiceForm, SignOutForm}
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.{survey, survey_which_service}
+import uk.gov.hmrc.agentservicesaccount.forms.FeedbackWhichServiceForm
+import uk.gov.hmrc.agentservicesaccount.forms.SignOutForm
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.survey
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.survey_which_service
 import uk.gov.hmrc.agentservicesaccount.views.html.signed_out
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject.Inject
 import scala.concurrent.Future
 
-class SignOutController @Inject()(implicit appConfig: AppConfig,
-                                   cc: MessagesControllerComponents,
-                                   surveyView: survey,
-                                   whichServiceView: survey_which_service,
-                                   signedOutView: signed_out) extends FrontendController(cc) with I18nSupport {
+class SignOutController @Inject() (implicit
+  appConfig: AppConfig,
+  cc: MessagesControllerComponents,
+  surveyView: survey,
+  whichServiceView: survey_which_service,
+  signedOutView: signed_out
+)
+extends FrontendController(cc)
+with I18nSupport {
 
   def showSurvey: Action[AnyContent] = Action.async { implicit request =>
     Future successful Ok(surveyView(SignOutForm.form))
@@ -62,7 +70,8 @@ class SignOutController @Inject()(implicit appConfig: AppConfig,
   def showWhichService: Action[AnyContent] = Action.async { implicit request =>
     if (appConfig.feedbackSurveyServiceSelect)
       Future successful Ok(whichServiceView(FeedbackWhichServiceForm.form))
-    else Future.failed(new UnsupportedOperationException("Display of this page is disabled by configuration."))
+    else
+      Future.failed(new UnsupportedOperationException("Display of this page is disabled by configuration."))
   }
 
   def submitWhichService: Action[AnyContent] = Action.async { implicit request =>
@@ -91,11 +100,11 @@ class SignOutController @Inject()(implicit appConfig: AppConfig,
           errorFunction,
           successFunction
         )
-    } else {
+    }
+    else {
       Future.failed(new UnsupportedOperationException("Display of this page is disabled by configuration."))
     }
   }
-
 
   def signOut: Action[AnyContent] = Action.async {
     Future successful Redirect(routes.SignOutController.showSurvey()).withNewSession
@@ -116,4 +125,5 @@ class SignOutController @Inject()(implicit appConfig: AppConfig,
   def keepAlive: Action[AnyContent] = Action.async {
     Future successful Ok("OK")
   }
+
 }

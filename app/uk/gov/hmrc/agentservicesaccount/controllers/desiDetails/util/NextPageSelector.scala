@@ -22,10 +22,14 @@ import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.DesiDetailsJourney
 object NextPageSelector {
 
-  def getNextPage(journey: DesiDetailsJourney, currentPage: String): Result = {
-    if(journey.journeyComplete) {
+  def getNextPage(
+    journey: DesiDetailsJourney,
+    currentPage: String
+  ): Result = {
+    if (journey.journeyComplete) {
       Redirect(desiDetails.routes.CheckYourAnswersController.showPage)
-    } else {
+    }
+    else {
       val nextPage: Option[String] = journey.contactChangesNeeded.flatMap { pages =>
         if (pages.contains(currentPage)) {
           pages.toSeq.sliding(2).find {
@@ -35,7 +39,9 @@ object NextPageSelector {
             case Seq(_, next) => Some(next)
             case _ => None
           }
-        } else pages.headOption
+        }
+        else
+          pages.headOption
       }
       nextPage match {
         case Some("businessName") => Redirect(desiDetails.routes.UpdateNameController.showPage)

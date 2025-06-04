@@ -17,9 +17,9 @@
 package uk.gov.hmrc.agentservicesaccount.views.components.models
 
 case class RadioData(
-    name: String,
-    label: String,
-    hint: Option[String] = None,
-    isChecked: Option[Boolean] = None,
-    id: Option[String] = None
+  name: String,
+  label: String,
+  hint: Option[String] = None,
+  isChecked: Option[Boolean] = None,
+  id: Option[String] = None
 )

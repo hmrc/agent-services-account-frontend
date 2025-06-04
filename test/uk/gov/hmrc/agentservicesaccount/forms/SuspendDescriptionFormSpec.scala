@@ -16,39 +16,43 @@
 
 package uk.gov.hmrc.agentservicesaccount.forms
 
-  import org.apache.commons.lang3.RandomStringUtils
-  import org.scalatest.matchers.should.Matchers
-  import org.scalatest.wordspec.AnyWordSpec
-  import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import org.apache.commons.lang3.RandomStringUtils
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 
-  class SuspendDescriptionFormSpec extends AnyWordSpec with Matchers with GuiceOneAppPerSuite {
+class SuspendDescriptionFormSpec
+extends AnyWordSpec
+with Matchers
+with GuiceOneAppPerSuite {
 
-    val descriptionField = "description"
+  val descriptionField = "description"
 
-    "SuspendDescriptionForm binding" should {
-      "be successful when form is not empty" in {
-        val params = Map(
-          descriptionField -> "This is the description",
-        )
-        SuspendDescriptionForm.form.bind(params).value shouldBe Some("This is the description")
-      }
-      s"error when $descriptionField is empty" in {
-        val params = Map(
-          descriptionField -> ""
-        )
-        val validatedForm = SuspendDescriptionForm.form.bind(params)
-        validatedForm.hasErrors shouldBe true
-        validatedForm.error(descriptionField).get.message shouldBe "error.suspended-description.empty"
-        validatedForm.errors.length shouldBe 1
-      }
-      s"error when $descriptionField is too long" in {
-        val params = Map(
-          descriptionField -> RandomStringUtils.insecure().nextAlphanumeric(251),
-        )
-        val validatedForm = SuspendDescriptionForm.form.bind(params)
-        validatedForm.hasErrors shouldBe true
-        validatedForm.error(descriptionField).get.message shouldBe "error.suspended-description.max-length"
-        validatedForm.errors.length shouldBe 1
-      }
+  "SuspendDescriptionForm binding" should {
+    "be successful when form is not empty" in {
+      val params = Map(
+        descriptionField -> "This is the description"
+      )
+      SuspendDescriptionForm.form.bind(params).value shouldBe Some("This is the description")
+    }
+    s"error when $descriptionField is empty" in {
+      val params = Map(
+        descriptionField -> ""
+      )
+      val validatedForm = SuspendDescriptionForm.form.bind(params)
+      validatedForm.hasErrors shouldBe true
+      validatedForm.error(descriptionField).get.message shouldBe "error.suspended-description.empty"
+      validatedForm.errors.length shouldBe 1
+    }
+    s"error when $descriptionField is too long" in {
+      val params = Map(
+        descriptionField -> RandomStringUtils.insecure().nextAlphanumeric(251)
+      )
+      val validatedForm = SuspendDescriptionForm.form.bind(params)
+      validatedForm.hasErrors shouldBe true
+      validatedForm.error(descriptionField).get.message shouldBe "error.suspended-description.max-length"
+      validatedForm.errors.length shouldBe 1
     }
   }
+
+}

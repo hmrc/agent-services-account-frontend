@@ -16,20 +16,31 @@
 
 package uk.gov.hmrc.agentservicesaccount.controllers.amls
 
-import org.mockito.{ArgumentMatchersSugar, IdiomaticMockito}
+import org.mockito.ArgumentMatchersSugar
+import org.mockito.IdiomaticMockito
 import org.scalatestplus.play.PlaySpec
 import play.api.Environment
 import play.api.data.Form
 import play.api.i18n.Messages
-import play.api.libs.json.{Reads, Writes}
-import play.api.mvc.{DefaultActionBuilderImpl, MessagesControllerComponents, Request, RequestHeader, Result}
+import play.api.libs.json.Reads
+import play.api.libs.json.Writes
+import play.api.mvc.DefaultActionBuilderImpl
+import play.api.mvc.MessagesControllerComponents
+import play.api.mvc.Request
+import play.api.mvc.RequestHeader
+import play.api.mvc.Result
 import play.api.test.Helpers._
-import play.api.test.{DefaultAwaitTimeout, FakeRequest, Helpers}
+import play.api.test.DefaultAwaitTimeout
+import play.api.test.FakeRequest
+import play.api.test.Helpers
 import play.twirl.api.Html
-import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
+import uk.gov.hmrc.agentservicesaccount.actions.Actions
+import uk.gov.hmrc.agentservicesaccount.actions.AuthActions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
-import uk.gov.hmrc.agentservicesaccount.models.{AmlsDetails, AmlsStatuses, UpdateAmlsJourney}
+import uk.gov.hmrc.agentservicesaccount.models.AmlsDetails
+import uk.gov.hmrc.agentservicesaccount.models.AmlsStatuses
+import uk.gov.hmrc.agentservicesaccount.models.UpdateAmlsJourney
 import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
 import uk.gov.hmrc.agentservicesaccount.support.TestConstants
 import uk.gov.hmrc.agentservicesaccount.utils.AMLSLoader
@@ -37,21 +48,23 @@ import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.new_supervisory_bo
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve._
-import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.mongo.cache.DataKey
 
 import java.time.LocalDate
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
+import scala.concurrent.Future
 
-class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
-  with DefaultAwaitTimeout
-  with IdiomaticMockito
-  with ArgumentMatchersSugar
-  with TestConstants {
+class AmlsNewSupervisoryBodyControllerSpec
+extends PlaySpec
+with DefaultAwaitTimeout
+with IdiomaticMockito
+with ArgumentMatchersSugar
+with TestConstants {
 
   implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
   private val fakeRequest = FakeRequest()
-
 
   private val amlsDetails = AmlsDetails("HMRC")
   private val amlsDetailsResponse = Future.successful(amlsDetails)
@@ -74,17 +87,26 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
     "HMRC" -> "HM Revenue and Customs (HMRC)"
   )
 
-
   trait Setup {
+
     protected val mockAppConfig: AppConfig = mock[AppConfig]
     protected val mockAuthConnector: AuthConnector = mock[AuthConnector]
     protected val mockEnvironment: Environment = mock[Environment]
-    protected val authActions = new AuthActions(mockAppConfig, mockAuthConnector, mockEnvironment)
+    protected val authActions =
+      new AuthActions(
+        mockAppConfig,
+        mockAuthConnector,
+        mockEnvironment
+      )
 
     protected val mockAgentAssuranceConnector: AgentAssuranceConnector = mock[AgentAssuranceConnector]
     protected val actionBuilder = new DefaultActionBuilderImpl(Helpers.stubBodyParser())
     protected val mockActions =
-      new Actions(mockAgentAssuranceConnector, authActions, actionBuilder)
+      new Actions(
+        mockAgentAssuranceConnector,
+        authActions,
+        actionBuilder
+      )
 
     protected val mockAmlsJourneySessionRepository: UpdateAmlsJourneyRepository = mock[UpdateAmlsJourneyRepository]
     protected val mockAmlsLoader: AMLSLoader = mock[AMLSLoader]
@@ -92,14 +114,23 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
     protected val cc: MessagesControllerComponents = stubMessagesControllerComponents()
     protected val dataKey = DataKey[UpdateAmlsJourney]("amlsJourney")
 
-    object TestController extends AmlsNewSupervisoryBodyController(mockActions, mockAmlsLoader, mockAmlsJourneySessionRepository, mockView, cc)(mockAppConfig, ec)
+    object TestController
+    extends AmlsNewSupervisoryBodyController(
+      mockActions,
+      mockAmlsLoader,
+      mockAmlsJourneySessionRepository,
+      mockView,
+      cc
+    )(mockAppConfig, ec)
+
   }
 
   "showPage" should {
     "display the page for UK agent" in new Setup {
       mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
         *[HeaderCarrier],
-        *[ExecutionContext]) returns authResponse
+        *[ExecutionContext]
+      ) returns authResponse
 
       mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
@@ -109,10 +140,19 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
 
       mockAgentAssuranceConnector.getAMLSDetails(arn.value)(*[RequestHeader]) returns amlsDetailsResponse
 
-      mockAmlsJourneySessionRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]],*[RequestHeader]) returns
+      mockAmlsJourneySessionRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[RequestHeader]) returns
         Future.successful(Some(ukAmlsJourney))
 
-      mockView.apply(*[Form[String]], *[Map[String, String]], isUk = true, *[Boolean])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+      mockView.apply(
+        *[Form[String]],
+        *[Map[String, String]],
+        isUk = true,
+        *[Boolean]
+      )(
+        *[Request[Any]],
+        *[Messages],
+        *[AppConfig]
+      ) returns Html("")
 
       val result: Future[Result] = TestController.showPage(cya = false)(fakeRequest)
 
@@ -124,7 +164,8 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
 
       mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
         *[HeaderCarrier],
-        *[ExecutionContext]) returns authResponse
+        *[ExecutionContext]
+      ) returns authResponse
 
       mockAppConfig.enableNonHmrcSupervisoryBody returns false
 
@@ -143,7 +184,8 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
 
       mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
         *[HeaderCarrier],
-        *[ExecutionContext]) returns authResponse
+        *[ExecutionContext]
+      ) returns authResponse
 
       mockAppConfig.enableNonHmrcSupervisoryBody returns true
 
@@ -154,12 +196,25 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
       mockAmlsJourneySessionRepository.getFromSession(dataKey)(*[Reads[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful(Some(ukAmlsJourney))
 
       mockAmlsJourneySessionRepository.putSession(
-        dataKey, ukAmlsJourney.copy(newAmlsBody = Some("Association of Certified Chartered Accountants"), isAmlsBodyStillTheSame = Some(true)))(*[Writes[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
+        dataKey,
+        ukAmlsJourney.copy(newAmlsBody = Some("Association of Certified Chartered Accountants"), isAmlsBodyStillTheSame = Some(true))
+      )(*[Writes[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
 
-      mockView.apply(*[Form[String]], *[Map[String, String]], isUk = true, *[Boolean])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+      mockView.apply(
+        *[Form[String]],
+        *[Map[String, String]],
+        isUk = true,
+        *[Boolean]
+      )(
+        *[Request[Any]],
+        *[Messages],
+        *[AppConfig]
+      ) returns Html("")
 
-      val result: Future[Result] = TestController.onSubmit(cya = false)(
-        FakeRequest("POST", "/").withFormUrlEncodedBody("body" -> "ACCA"))
+      val result: Future[Result] =
+        TestController.onSubmit(cya = false)(
+          FakeRequest("POST", "/").withFormUrlEncodedBody("body" -> "ACCA")
+        )
 
       status(result) mustBe SEE_OTHER
       Helpers.redirectLocation(result).get mustBe "/agent-services-account/manage-account/money-laundering-supervision/confirm-registration-number"
@@ -169,7 +224,8 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
 
       mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
         *[HeaderCarrier],
-        *[ExecutionContext]) returns authResponse
+        *[ExecutionContext]
+      ) returns authResponse
 
       mockAppConfig.enableNonHmrcSupervisoryBody returns true
 
@@ -180,12 +236,25 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
       mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
       mockAmlsJourneySessionRepository.putSession(
-        dataKey, ukAmlsJourney.copy(newAmlsBody = Some("Association of Certified Chartered Accountants"), isAmlsBodyStillTheSame = Some(true)))(*[Writes[UpdateAmlsJourney]], *[Request[Any]])returns Future.successful((SessionKeys.sessionId -> "session-123"))
+        dataKey,
+        ukAmlsJourney.copy(newAmlsBody = Some("Association of Certified Chartered Accountants"), isAmlsBodyStillTheSame = Some(true))
+      )(*[Writes[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
 
-      mockView.apply(*[Form[String]], *[Map[String, String]], isUk = true, *[Boolean])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+      mockView.apply(
+        *[Form[String]],
+        *[Map[String, String]],
+        isUk = true,
+        *[Boolean]
+      )(
+        *[Request[Any]],
+        *[Messages],
+        *[AppConfig]
+      ) returns Html("")
 
-      val result: Future[Result] = TestController.onSubmit(cya = true)(
-        FakeRequest("POST", "/").withFormUrlEncodedBody("body" -> "ACCA"))
+      val result: Future[Result] =
+        TestController.onSubmit(cya = true)(
+          FakeRequest("POST", "/").withFormUrlEncodedBody("body" -> "ACCA")
+        )
 
       status(result) mustBe SEE_OTHER
       Helpers.redirectLocation(result).get mustBe routes.CheckYourAnswersController.showPage.url
@@ -195,7 +264,8 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
 
       mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
         *[HeaderCarrier],
-        *[ExecutionContext]) returns authResponse
+        *[ExecutionContext]
+      ) returns authResponse
 
       mockAppConfig.enableNonHmrcSupervisoryBody returns true
 
@@ -206,16 +276,28 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
       mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
       mockAmlsJourneySessionRepository.putSession(
-        dataKey, ukAmlsJourney.copy(
+        dataKey,
+        ukAmlsJourney.copy(
           newAmlsBody = Some("HM Revenue and Customs (HMRC)"),
-          isAmlsBodyStillTheSame = Some(false))
-      )(*[Writes[UpdateAmlsJourney]], *[Request[Any]]
-      ) returns Future.successful((SessionKeys.sessionId -> "session-123"))
+          isAmlsBodyStillTheSame = Some(false)
+        )
+      )(*[Writes[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
 
-      mockView.apply(*[Form[String]], *[Map[String, String]], isUk = true, *[Boolean])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+      mockView.apply(
+        *[Form[String]],
+        *[Map[String, String]],
+        isUk = true,
+        *[Boolean]
+      )(
+        *[Request[Any]],
+        *[Messages],
+        *[AppConfig]
+      ) returns Html("")
 
-      val result: Future[Result] = TestController.onSubmit(cya = true)(
-        FakeRequest("POST", "/").withFormUrlEncodedBody("body" -> "HMRC"))
+      val result: Future[Result] =
+        TestController.onSubmit(cya = true)(
+          FakeRequest("POST", "/").withFormUrlEncodedBody("body" -> "HMRC")
+        )
 
       status(result) mustBe SEE_OTHER
       Helpers.redirectLocation(result).get mustBe routes.EnterRegistrationNumberController.showPage(true).url
@@ -225,28 +307,43 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
 
       mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
         *[HeaderCarrier],
-        *[ExecutionContext]) returns authResponse
+        *[ExecutionContext]
+      ) returns authResponse
 
       mockAppConfig.enableNonHmrcSupervisoryBody returns true
 
       mockAmlsLoader.load(*[String]) returns amlsBodies
 
-      mockAmlsJourneySessionRepository.getFromSession(dataKey)(*[Reads[UpdateAmlsJourney]], *[Request[Any]]
+      mockAmlsJourneySessionRepository.getFromSession(dataKey)(
+        *[Reads[UpdateAmlsJourney]],
+        *[Request[Any]]
       ) returns Future.successful(Some(ukAmlsJourney.copy(newAmlsBody = Some("HMRC"))))
 
       mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
       mockAmlsJourneySessionRepository.putSession(
-        dataKey, ukAmlsJourney.copy(
+        dataKey,
+        ukAmlsJourney.copy(
           newAmlsBody = Some("HM Revenue and Customs (HMRC)"),
-          isAmlsBodyStillTheSame = Some(true))
-      )(*[Writes[UpdateAmlsJourney]], *[Request[Any]]
-      ) returns Future.successful((SessionKeys.sessionId -> "session-123"))
+          isAmlsBodyStillTheSame = Some(true)
+        )
+      )(*[Writes[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
 
-      mockView.apply(*[Form[String]], *[Map[String, String]], isUk = true, *[Boolean])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+      mockView.apply(
+        *[Form[String]],
+        *[Map[String, String]],
+        isUk = true,
+        *[Boolean]
+      )(
+        *[Request[Any]],
+        *[Messages],
+        *[AppConfig]
+      ) returns Html("")
 
-      val result: Future[Result] = TestController.onSubmit(cya = true)(
-        FakeRequest("POST", "/").withFormUrlEncodedBody("body" -> "HMRC"))
+      val result: Future[Result] =
+        TestController.onSubmit(cya = true)(
+          FakeRequest("POST", "/").withFormUrlEncodedBody("body" -> "HMRC")
+        )
 
       status(result) mustBe SEE_OTHER
       Helpers.redirectLocation(result).get mustBe routes.CheckYourAnswersController.showPage.url
@@ -256,7 +353,8 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
 
       mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
         *[HeaderCarrier],
-        *[ExecutionContext]) returns authResponse
+        *[ExecutionContext]
+      ) returns authResponse
 
       mockAppConfig.enableNonHmrcSupervisoryBody returns true
 
@@ -264,15 +362,31 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
 
       mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
-      mockAmlsJourneySessionRepository.getFromSession(dataKey)(*[Reads[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful(Some(overseasAmlsJourney))
+      mockAmlsJourneySessionRepository.getFromSession(dataKey)(
+        *[Reads[UpdateAmlsJourney]],
+        *[Request[Any]]
+      ) returns Future.successful(Some(overseasAmlsJourney))
 
       mockAmlsJourneySessionRepository.putSession(
-        dataKey, overseasAmlsJourney.copy(newAmlsBody = Some("OS AMLS")))(*[Writes[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
+        dataKey,
+        overseasAmlsJourney.copy(newAmlsBody = Some("OS AMLS"))
+      )(*[Writes[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
 
-      mockView.apply(*[Form[String]], *[Map[String, String]], isUk = true, *[Boolean])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+      mockView.apply(
+        *[Form[String]],
+        *[Map[String, String]],
+        isUk = true,
+        *[Boolean]
+      )(
+        *[Request[Any]],
+        *[Messages],
+        *[AppConfig]
+      ) returns Html("")
 
-      val result: Future[Result] = TestController.onSubmit(cya = false)(
-        FakeRequest("POST", "/").withFormUrlEncodedBody("body" -> "OS AMLS"))
+      val result: Future[Result] =
+        TestController.onSubmit(cya = false)(
+          FakeRequest("POST", "/").withFormUrlEncodedBody("body" -> "OS AMLS")
+        )
 
       status(result) mustBe SEE_OTHER
       Helpers.redirectLocation(result).get mustBe "/agent-services-account/manage-account/money-laundering-supervision/new-registration-number"
@@ -282,7 +396,8 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
 
       mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
         *[HeaderCarrier],
-        *[ExecutionContext]) returns authResponse
+        *[ExecutionContext]
+      ) returns authResponse
 
       mockAppConfig.enableNonHmrcSupervisoryBody returns true
 
@@ -293,10 +408,21 @@ class AmlsNewSupervisoryBodyControllerSpec extends PlaySpec
       mockAmlsJourneySessionRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[Request[Any]]) returns
         Future.successful(Some(ukAmlsJourney))
 
-      mockView.apply(*[Form[String]], *[Map[String, String]], isUk = true, *[Boolean])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+      mockView.apply(
+        *[Form[String]],
+        *[Map[String, String]],
+        isUk = true,
+        *[Boolean]
+      )(
+        *[Request[Any]],
+        *[Messages],
+        *[AppConfig]
+      ) returns Html("")
 
-      val result: Future[Result] = TestController.onSubmit(cya = false)(
-        FakeRequest("POST", "/").withFormUrlEncodedBody("body" -> ""))
+      val result: Future[Result] =
+        TestController.onSubmit(cya = false)(
+          FakeRequest("POST", "/").withFormUrlEncodedBody("body" -> "")
+        )
 
       status(result) mustBe BAD_REQUEST
     }

@@ -22,7 +22,10 @@ import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms.telephoneNumberForm
 
-class UpdatePhoneFormSpec extends AnyWordSpec with Matchers with GuiceOneAppPerSuite {
+class UpdatePhoneFormSpec
+extends AnyWordSpec
+with Matchers
+with GuiceOneAppPerSuite {
 
   val phoneField = "telephoneNumber"
   val validPhone = "01903 209919"

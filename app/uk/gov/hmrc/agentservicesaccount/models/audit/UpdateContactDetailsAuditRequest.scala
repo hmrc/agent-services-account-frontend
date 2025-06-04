@@ -16,29 +16,30 @@
 
 package uk.gov.hmrc.agentservicesaccount.models.audit
 
-import play.api.libs.json.{Json, OWrites}
-import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, Utr}
+import play.api.libs.json.Json
+import play.api.libs.json.OWrites
+import uk.gov.hmrc.agentmtdidentifiers.model.Arn
+import uk.gov.hmrc.agentmtdidentifiers.model.Utr
 import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
-import uk.gov.hmrc.domain.{CtUtr, SaUtr}
+import uk.gov.hmrc.domain.CtUtr
+import uk.gov.hmrc.domain.SaUtr
 
 final case class UpdateContactDetailsAuditRequest(
-                                                   agentReferenceNumber:  Arn,
-                                                   utr: Option[Utr],
-                                                   existingContactDetails: AgencyDetails,
-                                                   newContactDetails: AgencyDetails,
-                                                   changedInSelfAssessment : Boolean,
-                                                   selfAssessmentAgentCode : Option[SaUtr],
-                                                   changedInCorporationTax : Boolean,
-                                                   corporationTaxAgentCode : Option[CtUtr],
-                                                   userDetails : UserDetails,
-                                                   queueDetails : String
-
-) extends AuditDetail {
+  agentReferenceNumber: Arn,
+  utr: Option[Utr],
+  existingContactDetails: AgencyDetails,
+  newContactDetails: AgencyDetails,
+  changedInSelfAssessment: Boolean,
+  selfAssessmentAgentCode: Option[SaUtr],
+  changedInCorporationTax: Boolean,
+  corporationTaxAgentCode: Option[CtUtr],
+  userDetails: UserDetails,
+  queueDetails: String
+)
+extends AuditDetail {
   val auditType: String = "UpdateContactDetailsRequest"
 }
 
 object UpdateContactDetailsAuditRequest {
   implicit val writes: OWrites[UpdateContactDetailsAuditRequest] = Json.writes
 }
-
-

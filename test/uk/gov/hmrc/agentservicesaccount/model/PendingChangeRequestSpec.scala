@@ -16,27 +16,32 @@
 
 package uk.gov.hmrc.agentservicesaccount.model
 
-import play.api.libs.json.{JsObject, Json}
+import play.api.libs.json.JsObject
+import play.api.libs.json.Json
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest
-import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest.{connectorReads, connectorWrites}
+import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest.connectorReads
+import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest.connectorWrites
 import uk.gov.hmrc.agentservicesaccount.support.UnitSpec
 
 import java.time.Instant
 import scala.annotation.nowarn
 
-class PendingChangeRequestSpec extends UnitSpec {
+class PendingChangeRequestSpec
+extends UnitSpec {
 
   val arn = "XARN1234567"
   val date = "2024-01-01T01:02:03Z"
 
   val pendingChangeRequest: PendingChangeRequest = PendingChangeRequest(
-    arn = Arn(arn), timeSubmitted = Instant.parse(date)
+    arn = Arn(arn),
+    timeSubmitted = Instant.parse(date)
   )
 
   @nowarn("msg=possible missing interpolator")
   val pcrMongoJson: JsObject = Json.obj(
-    "arn" -> arn, "timeSubmitted" -> Json.obj("$date" -> Json.obj("$numberLong" -> "1704070923000"))
+    "arn" -> arn,
+    "timeSubmitted" -> Json.obj("$date" -> Json.obj("$numberLong" -> "1704070923000"))
   )
 
   val pcrConnectorJson: JsObject = Json.obj("arn" -> arn, "timeSubmitted" -> date)
@@ -59,4 +64,5 @@ class PendingChangeRequestSpec extends UnitSpec {
       Json.toJson(pendingChangeRequest)(connectorWrites) shouldBe pcrConnectorJson
     }
   }
+
 }

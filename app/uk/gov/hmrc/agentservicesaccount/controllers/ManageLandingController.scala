@@ -27,14 +27,21 @@ import uk.gov.hmrc.agentservicesaccount.views.html.pages.EACD._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject._
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
+import scala.concurrent.Future
 
-class ManageLandingController @Inject()(actions: Actions,
-                                        agentPermissionsConnector: AgentPermissionsConnector,
-                                        asa_bridging_screen: asa_bridging_screen
-                                       )(implicit appConfig: AppConfig,
-                                         cc: MessagesControllerComponents,
-                                         ec: ExecutionContext) extends FrontendController(cc) with I18nSupport with Logging {
+class ManageLandingController @Inject() (
+  actions: Actions,
+  agentPermissionsConnector: AgentPermissionsConnector,
+  asa_bridging_screen: asa_bridging_screen
+)(implicit
+  appConfig: AppConfig,
+  cc: MessagesControllerComponents,
+  ec: ExecutionContext
+)
+extends FrontendController(cc)
+with I18nSupport
+with Logging {
 
   val showAccessGroupSummaryForASA: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     // auth step will confirm user is authorised, with correct GG affinity type and HMRC-AS-AGENT enrolment
@@ -42,7 +49,7 @@ class ManageLandingController @Inject()(actions: Actions,
     if (agentInfo.isAdmin) { // only credentialRole = Admin or User can see this page
       if (appConfig.granPermsEnabled) { // checks GranPremsEnable feature flag
         for {
-          //maybeOptinStatus is the response from agentPermissions's getOptinStatus endpoint
+          // maybeOptinStatus is the response from agentPermissions's getOptinStatus endpoint
           maybeOptinStatus <- agentPermissionsConnector.getOptinStatus(agentInfo.arn)
         } yield {
           maybeOptinStatus match { // pattern match on mayOptinStatus :Option[OptinStatus]
@@ -50,10 +57,12 @@ class ManageLandingController @Inject()(actions: Actions,
             case _ => Ok(asa_bridging_screen(isAccessGroupEnabled = false))
           }
         }
-      } else {
+      }
+      else {
         Future.successful(Ok(asa_bridging_screen(isAccessGroupEnabled = false)))
       }
-    } else {
+    }
+    else {
       Future.successful(Forbidden)
     }
   }

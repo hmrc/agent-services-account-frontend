@@ -24,29 +24,39 @@ import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.controllers._
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util._
-import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{DesignatoryDetails, YourDetails}
-import uk.gov.hmrc.agentservicesaccount.models.{PendingChangeOfDetails, PendingChangeRequest}
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.DesignatoryDetails
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.YourDetails
+import uk.gov.hmrc.agentservicesaccount.models.PendingChangeOfDetails
+import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
-import uk.gov.hmrc.agentservicesaccount.services.{AuditService, SessionCacheService}
+import uk.gov.hmrc.agentservicesaccount.services.AuditService
+import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import java.time.Instant
 import javax.inject._
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
+import scala.concurrent.Future
 
 @Singleton
-class CheckYourAnswersController @Inject()(actions: Actions,
-                                           val sessionCache: SessionCacheService,
-                                           agentAssuranceConnector: AgentAssuranceConnector,
-                                           checkUpdatedDetailsView: check_updated_details,
-                                           auditService:   AuditService,
-                                           summary_pdf: summaryPdf
-                                          )(implicit appConfig: AppConfig,
-                                            cc: MessagesControllerComponents,
-                                            val ec: ExecutionContext,
-                                            pcodRepository: PendingChangeRequestRepository
-                                          ) extends FrontendController(cc) with DesiDetailsJourneySupport with I18nSupport with Logging {
+class CheckYourAnswersController @Inject() (
+  actions: Actions,
+  val sessionCache: SessionCacheService,
+  agentAssuranceConnector: AgentAssuranceConnector,
+  checkUpdatedDetailsView: check_updated_details,
+  auditService: AuditService,
+  summary_pdf: summaryPdf
+)(implicit
+  appConfig: AppConfig,
+  cc: MessagesControllerComponents,
+  val ec: ExecutionContext,
+  pcodRepository: PendingChangeRequestRepository
+)
+extends FrontendController(cc)
+with DesiDetailsJourneySupport
+with I18nSupport
+with Logging {
 
   def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     ifChangeContactFeatureEnabledAndNoPendingChanges {
@@ -55,13 +65,14 @@ class CheckYourAnswersController @Inject()(actions: Actions,
         selectChanges <- sessionCache.get[Set[String]](CURRENT_SELECTED_CHANGES)
         desiDetailsData <- sessionCache.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS)
       } yield desiDetailsData match {
-        case Some(desiDetails) => Ok(checkUpdatedDetailsView(
-          desiDetails.agencyDetails,
-          request.agentInfo.isAdmin,
-          desiDetails.otherServices,
-          submittedBy.get,
-          selectChanges.get
-        ))
+        case Some(desiDetails) =>
+          Ok(checkUpdatedDetailsView(
+            desiDetails.agencyDetails,
+            request.agentInfo.isAdmin,
+            desiDetails.otherServices,
+            submittedBy.get,
+            selectChanges.get
+          ))
         case None => Redirect(desiDetails.routes.ViewContactDetailsController.showPage)
       }
     }
@@ -73,35 +84,37 @@ class CheckYourAnswersController @Inject()(actions: Actions,
       sessionCache.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS).flatMap {
         case None => // graceful redirect in case of expired session data etc.
           Future.successful(Redirect(desiDetails.routes.ViewContactDetailsController.showPage))
-        case Some(details) => for {
-          selectChanges <- sessionCache.get[Set[String]](CURRENT_SELECTED_CHANGES)
-          optUtr <- agentAssuranceConnector.getAgentRecord.map(_.uniqueTaxReference)
-          submittedBy <- sessionCache.get[YourDetails](DRAFT_SUBMITTED_BY)
-          oldContactDetails <- agentAssuranceConnector.getAgentRecord.map(_.agencyDetails.getOrElse {
-            throw new RuntimeException(s"Could not retrieve current agency details for ${request.agentInfo.arn} from the backend")
-          })
-          pendingChange = PendingChangeOfDetails(
-            arn = arn,
-            oldDetails = oldContactDetails,
-            newDetails = details.agencyDetails,
-            otherServices = details.otherServices,
-            timeSubmitted = Instant.now(),
-            submittedBy = submittedBy.getOrElse(throw new RuntimeException("Cannot submit without submittedBy details"))
-          )
-          htmlForPdf: String = summary_pdf(
-            optUtr,
-            pendingChange,
-            selectChanges.getOrElse(throw new RuntimeException("Cannot submit without select changes details"))
-          ).toString()
-          _ = auditService.auditUpdateContactDetailsRequest(optUtr, pendingChange)
-          result <- agentAssuranceConnector.postDesignatoryDetails(arn, java.util.Base64.getEncoder.encodeToString(htmlForPdf.getBytes()))
-          _ <- pcodRepository.insert(PendingChangeRequest(arn, pendingChange.timeSubmitted))
-          _ <- sessionCache.delete(DRAFT_NEW_CONTACT_DETAILS)
-          _ <- sessionCache.delete(DRAFT_SUBMITTED_BY)
-        } yield {
-          Redirect(desiDetails.routes.ContactDetailsController.showChangeSubmitted)
-        }
+        case Some(details) =>
+          for {
+            selectChanges <- sessionCache.get[Set[String]](CURRENT_SELECTED_CHANGES)
+            optUtr <- agentAssuranceConnector.getAgentRecord.map(_.uniqueTaxReference)
+            submittedBy <- sessionCache.get[YourDetails](DRAFT_SUBMITTED_BY)
+            oldContactDetails <- agentAssuranceConnector.getAgentRecord.map(_.agencyDetails.getOrElse {
+              throw new RuntimeException(s"Could not retrieve current agency details for ${request.agentInfo.arn} from the backend")
+            })
+            pendingChange = PendingChangeOfDetails(
+              arn = arn,
+              oldDetails = oldContactDetails,
+              newDetails = details.agencyDetails,
+              otherServices = details.otherServices,
+              timeSubmitted = Instant.now(),
+              submittedBy = submittedBy.getOrElse(throw new RuntimeException("Cannot submit without submittedBy details"))
+            )
+            htmlForPdf: String = summary_pdf(
+              optUtr,
+              pendingChange,
+              selectChanges.getOrElse(throw new RuntimeException("Cannot submit without select changes details"))
+            ).toString()
+            _ = auditService.auditUpdateContactDetailsRequest(optUtr, pendingChange)
+            result <- agentAssuranceConnector.postDesignatoryDetails(arn, java.util.Base64.getEncoder.encodeToString(htmlForPdf.getBytes()))
+            _ <- pcodRepository.insert(PendingChangeRequest(arn, pendingChange.timeSubmitted))
+            _ <- sessionCache.delete(DRAFT_NEW_CONTACT_DETAILS)
+            _ <- sessionCache.delete(DRAFT_SUBMITTED_BY)
+          } yield {
+            Redirect(desiDetails.routes.ContactDetailsController.showChangeSubmitted)
+          }
       }
     }
   }
+
 }

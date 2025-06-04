@@ -16,14 +16,16 @@
 
 package uk.gov.hmrc.agentservicesaccount.connectors
 
-import play.api.test.Helpers.{await, defaultAwaitTimeout}
+import play.api.test.Helpers.await
+import play.api.test.Helpers.defaultAwaitTimeout
 import uk.gov.hmrc.agents.accessgroups.UserDetails
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentUserClientDetailsStubs.stubGetTeamMembersForArn
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 
 import scala.concurrent.ExecutionContext
 
-class AgentUserClientDetailsConnectorSpec extends BaseISpec {
+class AgentUserClientDetailsConnectorSpec
+extends BaseISpec {
 
   private lazy val connector = app.injector.instanceOf[AgentUserClientDetailsConnector]
   implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
@@ -31,14 +33,23 @@ class AgentUserClientDetailsConnectorSpec extends BaseISpec {
   "getTeamMembers" should {
     "return the team members" in {
       val teamMembers = List(
-        UserDetails(credentialRole = Some("User"), name = Some("Robert Builder"), email = Some("bob@builder.com")),
-        UserDetails(credentialRole = Some("User"), name = Some("Steve Smith"), email = Some("steve@builder.com")),
-        //Assistant will be filtered out from the results we get back
-        UserDetails(credentialRole = Some("Assistant"), name = Some("irrelevant")),
+        UserDetails(
+          credentialRole = Some("User"),
+          name = Some("Robert Builder"),
+          email = Some("bob@builder.com")
+        ),
+        UserDetails(
+          credentialRole = Some("User"),
+          name = Some("Steve Smith"),
+          email = Some("steve@builder.com")
+        ),
+        // Assistant will be filtered out from the results we get back
+        UserDetails(credentialRole = Some("Assistant"), name = Some("irrelevant"))
       )
       stubGetTeamMembersForArn(arn, teamMembers)
       await(connector.getTeamMembers(arn)) shouldBe Some(teamMembers)
     }
 
   }
+
 }

@@ -19,7 +19,8 @@ package uk.gov.hmrc.agentservicesaccount.connectors
 import org.apache.pekko.Done
 import play.api.Logging
 import play.api.http.Status._
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.Json
+import play.api.libs.json.OFormat
 import play.api.mvc.RequestHeader
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agents.accessgroups.GroupSummary
@@ -29,22 +30,29 @@ import uk.gov.hmrc.agentservicesaccount.models.AccessGroupSummaries
 import uk.gov.hmrc.agentservicesaccount.utils.HttpAPIMonitor
 import uk.gov.hmrc.agentservicesaccount.utils.RequestSupport._
 import uk.gov.hmrc.http.client.HttpClientV2
-import uk.gov.hmrc.http.{HttpResponse, StringContextOps, UpstreamErrorResponse}
+import uk.gov.hmrc.http.HttpResponse
+import uk.gov.hmrc.http.StringContextOps
+import uk.gov.hmrc.http.UpstreamErrorResponse
 import uk.gov.hmrc.play.bootstrap.metrics.Metrics
 
 import java.net.URL
-import javax.inject.{Inject, Singleton}
+import javax.inject.Inject
+import javax.inject.Singleton
 import scala.concurrent.duration.DurationInt
-import scala.concurrent.{ExecutionContext, Future}
-import scala.util.{Failure, Success, Try}
-
+import scala.concurrent.ExecutionContext
+import scala.concurrent.Future
+import scala.util.Failure
+import scala.util.Success
+import scala.util.Try
 
 @Singleton
-class AgentPermissionsConnector @Inject()(http: HttpClientV2)
-                                         (implicit val metrics: Metrics,
-                                          appConfig: AppConfig,
-                                          val ec: ExecutionContext
-                                         ) extends HttpAPIMonitor with Logging {
+class AgentPermissionsConnector @Inject() (http: HttpClientV2)(implicit
+  val metrics: Metrics,
+  appConfig: AppConfig,
+  val ec: ExecutionContext
+)
+extends HttpAPIMonitor
+with Logging {
 
   private val baseUrl = appConfig.agentPermissionsBaseUrl
 
@@ -68,22 +76,27 @@ class AgentPermissionsConnector @Inject()(http: HttpClientV2)
 
     def buildHeaders: Seq[(String, String)] = {
       rh.headers.get("Cookie").map(_.split(";")).map { cookieParts =>
-        cookieParts.foldLeft(Seq.empty[(String, String)]) { (acc, cookiePart) =>
-          if (cookiePart.trim.startsWith("PLAY_LANG")) {
-            Try {
-              val pairKeyValue = cookiePart.split("=")
-              pairKeyValue(0).trim -> pairKeyValue(1).trim
-            } match {
-              case Success(pair) => acc :+ pair
-              case Failure(ex) =>
-                logger.error(s"Unable to obtain lang header: ${ex.getMessage} from $cookiePart")
-                acc
+        cookieParts.foldLeft(Seq.empty[(String, String)]) {
+          (
+            acc,
+            cookiePart
+          ) =>
+            if (cookiePart.trim.startsWith("PLAY_LANG")) {
+              Try {
+                val pairKeyValue = cookiePart.split("=")
+                pairKeyValue(0).trim -> pairKeyValue(1).trim
+              } match {
+                case Success(pair) => acc :+ pair
+                case Failure(ex) =>
+                  logger.error(s"Unable to obtain lang header: ${ex.getMessage} from $cookiePart")
+                  acc
+              }
             }
-          } else acc
+            else
+              acc
         }
       }.toSeq.flatten
     }
-
 
     monitor("ConsumedAPI-GetGroupsSummaries-GET") {
       http.get(url"$baseUrl/agent-permissions/arn/${arn.value}/groups").setHeader(buildHeaders: _*)
@@ -96,10 +109,13 @@ class AgentPermissionsConnector @Inject()(http: HttpClientV2)
     }
   }
 
-  def getGroupsForTeamMember(arn: Arn, userId: String)(implicit rh: RequestHeader): Future[Option[Seq[GroupSummary]]] = {
+  def getGroupsForTeamMember(
+    arn: Arn,
+    userId: String
+  )(implicit rh: RequestHeader): Future[Option[Seq[GroupSummary]]] = {
     monitor("ConsumedAPI-groupSummariesForTeamMember-GET") {
       http.get(url"$baseUrl/agent-permissions/arn/${arn.value}/team-member/$userId/groups").execute[Option[Seq[GroupSummary]]]
-      }
+    }
   }
 
   def isOptedIn(arn: Arn)(implicit rh: RequestHeader): Future[Boolean] = {
@@ -116,7 +132,10 @@ class AgentPermissionsConnector @Inject()(http: HttpClientV2)
     }
   }
 
-  def syncEacd(arn: Arn, fullSync: Boolean)(implicit rh: RequestHeader): Future[Unit] = {
+  def syncEacd(
+    arn: Arn,
+    fullSync: Boolean
+  )(implicit rh: RequestHeader): Future[Unit] = {
     http.post(url"$baseUrl/agent-permissions/arn/${arn.value}/sync?fullSync=$fullSync")
       .withBody(Json.toJson(SyncEacd("sync"))).execute[Unit]
   }
@@ -125,13 +144,13 @@ class AgentPermissionsConnector @Inject()(http: HttpClientV2)
     monitor("ConsumedAPI-GranPermsArnAllowed-GET") {
       http.get(url"$baseUrl/agent-permissions/arn-allowed").execute[HttpResponse]
         .map { response =>
-        response.status match {
-          case OK => true
-          case other =>
-            logger.warn(s"ArnAllowed call returned status $other")
-            false
+          response.status match {
+            case OK => true
+            case other =>
+              logger.warn(s"ArnAllowed call returned status $other")
+              false
+          }
         }
-      }
     }
   }
 
@@ -139,12 +158,13 @@ class AgentPermissionsConnector @Inject()(http: HttpClientV2)
     monitor("ConsumedAPI-GranPermsPrivateBeta-GET") {
       http.get(url"$baseUrl/agent-permissions/private-beta-invite").execute[HttpResponse]
         .map { response =>
-        response.status match {
-          case OK => logger.info(s"in private beta or has dismissed private beta invite")
-            false
-          case _ => true
+          response.status match {
+            case OK =>
+              logger.info(s"in private beta or has dismissed private beta invite")
+              false
+            case _ => true
+          }
         }
-      }
     }
   }
 
@@ -152,17 +172,18 @@ class AgentPermissionsConnector @Inject()(http: HttpClientV2)
     monitor("ConsumedAPI-declinePrivateBetaInvite-POST") {
       http.post(url"$baseUrl/agent-permissions/private-beta-invite/decline").execute[HttpResponse]
         .map { response =>
-        response.status match {
-          case CREATED => Done
-          case CONFLICT =>
-            logger.info(s"Tried to decline when already dismissed")
-            Done
-          case e =>
-            throw UpstreamErrorResponse(
-              s"error sending dismiss request for private beta invite",
-              e)
+          response.status match {
+            case CREATED => Done
+            case CONFLICT =>
+              logger.info(s"Tried to decline when already dismissed")
+              Done
+            case e =>
+              throw UpstreamErrorResponse(
+                s"error sending dismiss request for private beta invite",
+                e
+              )
+          }
         }
-      }
     }
   }
 
@@ -171,4 +192,5 @@ class AgentPermissionsConnector @Inject()(http: HttpClientV2)
   object SyncEacd {
     implicit val format: OFormat[SyncEacd] = Json.format[SyncEacd]
   }
+
 }

@@ -17,16 +17,24 @@
 package uk.gov.hmrc.agentservicesaccount.repository
 
 import org.scalatest.concurrent.Eventually.eventually
-import org.scalatest.concurrent.PatienceConfiguration.{Interval, Timeout}
-import org.scalatest.time.{Seconds, Span}
+import org.scalatest.concurrent.PatienceConfiguration.Interval
+import org.scalatest.concurrent.PatienceConfiguration.Timeout
+import org.scalatest.time.Seconds
+import org.scalatest.time.Span
 import play.api.Application
-import play.api.http.Status.{FORBIDDEN, NOT_FOUND, NO_CONTENT}
-import play.api.test.Helpers.{await, defaultAwaitTimeout}
+import play.api.http.Status.FORBIDDEN
+import play.api.http.Status.NOT_FOUND
+import play.api.http.Status.NO_CONTENT
+import play.api.test.Helpers.await
+import play.api.test.Helpers.defaultAwaitTimeout
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest
-import uk.gov.hmrc.agentservicesaccount.stubs.AgentServicesAccountStubs.{stubASADeleteResponse, stubASAGetResponse, stubASAGetResponseError, stubASAPostResponse}
+import uk.gov.hmrc.agentservicesaccount.stubs.AgentServicesAccountStubs.stubASADeleteResponse
+import uk.gov.hmrc.agentservicesaccount.stubs.AgentServicesAccountStubs.stubASAGetResponse
+import uk.gov.hmrc.agentservicesaccount.stubs.AgentServicesAccountStubs.stubASAGetResponseError
+import uk.gov.hmrc.agentservicesaccount.stubs.AgentServicesAccountStubs.stubASAPostResponse
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import uk.gov.hmrc.http.UpstreamErrorResponse
 import uk.gov.hmrc.mongo.test.MongoSupport
@@ -35,7 +43,9 @@ import java.time.Instant
 import java.time.temporal.ChronoUnit
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class PendingChangeRequestRepositorySpec extends BaseISpec with MongoSupport {
+class PendingChangeRequestRepositorySpec
+extends BaseISpec
+with MongoSupport {
 
   override def beforeEach(): Unit = {
     super.beforeEach()
@@ -49,13 +59,16 @@ class PendingChangeRequestRepositorySpec extends BaseISpec with MongoSupport {
     timeSubmitted = Instant.now().truncatedTo(ChronoUnit.SECONDS) // truncating allows us to compare timestamps more easily as mongo round-trip loses time precision
   )
 
-  def appWithFeature(featureFlag: Boolean): Application =
-    appBuilder(Map("features.enable-backend-pcr-database" -> featureFlag)).build()
+  def appWithFeature(featureFlag: Boolean): Application = appBuilder(Map("features.enable-backend-pcr-database" -> featureFlag)).build()
 
   def createPCRRepository(appWithFeature: Application): PendingChangeRequestRepositoryImpl = {
     val appConfig: AppConfig = appWithFeature.injector.instanceOf[AppConfig]
     val asaConnector: AgentServicesAccountConnector = appWithFeature.injector.instanceOf[AgentServicesAccountConnector]
-    new PendingChangeRequestRepositoryImpl(mongoComponent, appConfig, asaConnector)
+    new PendingChangeRequestRepositoryImpl(
+      mongoComponent,
+      appConfig,
+      asaConnector
+    )
   }
 
   ".find" when {
@@ -151,7 +164,7 @@ class PendingChangeRequestRepositorySpec extends BaseISpec with MongoSupport {
       "delete a pending change from the database" in {
         await(pcrRepository.collection.insertOne(pendingChangeRequest).toFuture())
         await(pcrRepository.collection.countDocuments().toFuture()) shouldBe 1
-        await(pcrRepository.delete(testArn)) shouldBe()
+        await(pcrRepository.delete(testArn)) shouldBe ()
         await(pcrRepository.collection.countDocuments().toFuture()) shouldBe 0
       }
     }
@@ -169,5 +182,5 @@ class PendingChangeRequestRepositorySpec extends BaseISpec with MongoSupport {
       await(pcrRepository.find(testArn)) shouldBe None
     }
   }
-}
 
+}

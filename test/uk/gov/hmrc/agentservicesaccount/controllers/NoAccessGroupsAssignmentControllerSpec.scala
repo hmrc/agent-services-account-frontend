@@ -17,16 +17,26 @@
 package uk.gov.hmrc.agentservicesaccount.controllers
 
 import org.mockito.stubbing.ScalaOngoingStubbing
-import org.mockito.{ArgumentMatchersSugar, IdiomaticMockito}
+import org.mockito.ArgumentMatchersSugar
+import org.mockito.IdiomaticMockito
 import org.scalatestplus.play.PlaySpec
 import play.api.Environment
-import play.api.http.Status.{FORBIDDEN, OK, SEE_OTHER}
+import play.api.http.Status.FORBIDDEN
+import play.api.http.Status.OK
+import play.api.http.Status.SEE_OTHER
 import play.api.i18n.Messages
-import play.api.mvc.{DefaultActionBuilderImpl, MessagesControllerComponents, Request, RequestHeader, Result}
+import play.api.mvc.DefaultActionBuilderImpl
+import play.api.mvc.MessagesControllerComponents
+import play.api.mvc.Request
+import play.api.mvc.RequestHeader
+import play.api.mvc.Result
 import play.api.test.Helpers.stubMessagesControllerComponents
-import play.api.test.{DefaultAwaitTimeout, FakeRequest, Helpers}
+import play.api.test.DefaultAwaitTimeout
+import play.api.test.FakeRequest
+import play.api.test.Helpers
 import play.twirl.api.Html
-import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
+import uk.gov.hmrc.agentservicesaccount.actions.Actions
+import uk.gov.hmrc.agentservicesaccount.actions.AuthActions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.support.TestConstants
@@ -36,26 +46,36 @@ import uk.gov.hmrc.auth.core.retrieve._
 import uk.gov.hmrc.auth.core.{Nino => _, _}
 import uk.gov.hmrc.http.HeaderCarrier
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
+import scala.concurrent.Future
 
-class NoAccessGroupsAssignmentControllerSpec extends PlaySpec
-  with DefaultAwaitTimeout
-  with IdiomaticMockito
-  with ArgumentMatchersSugar
-  with TestConstants {
+class NoAccessGroupsAssignmentControllerSpec
+extends PlaySpec
+with DefaultAwaitTimeout
+with IdiomaticMockito
+with ArgumentMatchersSugar
+with TestConstants {
 
   implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
   private val fakeRequest = FakeRequest()
 
-  //TODO move auth/suspend actions to common file for all unit tests
+  // TODO move auth/suspend actions to common file for all unit tests
   val mockAgentAssuranceConnector: AgentAssuranceConnector = mock[AgentAssuranceConnector]
 
   private def authResponseAgent(credentialRole: CredentialRole): Future[Enrolments ~ Some[Credentials] ~ Some[Email] ~ Some[Name] ~ Some[CredentialRole]] =
-    Future.successful(new~(new~(new~(new~(
-      Enrolments(agentEnrolment), Some(ggCredentials)),
-      Some(Email("test@email.com"))),
-      Some(Name(Some("Troy"), Some("Barnes")))),
-      Some(credentialRole)))
+    Future.successful(new ~(
+      new ~(
+        new ~(
+          new ~(
+            Enrolments(agentEnrolment),
+            Some(ggCredentials)
+          ),
+          Some(Email("test@email.com"))
+        ),
+        Some(Name(Some("Troy"), Some("Barnes")))
+      ),
+      Some(credentialRole)
+    ))
 
   def givenAgentRecord = mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
@@ -63,21 +83,34 @@ class NoAccessGroupsAssignmentControllerSpec extends PlaySpec
   def givenAuthorisedAgent(credentialRole: CredentialRole): ScalaOngoingStubbing[Future[Any]] = {
     mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
       *[HeaderCarrier],
-      *[ExecutionContext]) returns authResponseAgent(credentialRole)
+      *[ExecutionContext]
+    ) returns authResponseAgent(credentialRole)
   }
   trait Setup {
+
     protected val mockAppConfig: AppConfig = mock[AppConfig]
     protected val mockEnvironment: Environment = mock[Environment]
-    protected val authActions = new AuthActions(mockAppConfig, mockAuthConnector, mockEnvironment)
+    protected val authActions =
+      new AuthActions(
+        mockAppConfig,
+        mockAuthConnector,
+        mockEnvironment
+      )
     protected val actionBuilder = new DefaultActionBuilderImpl(Helpers.stubBodyParser())
 
     protected val mockActions =
-      new Actions(mockAgentAssuranceConnector, authActions, actionBuilder)
+      new Actions(
+        mockAgentAssuranceConnector,
+        authActions,
+        actionBuilder
+      )
 
     protected val mockView: admin_access_for_access_groups = mock[admin_access_for_access_groups]
     protected val cc: MessagesControllerComponents = stubMessagesControllerComponents()
 
-    object TestController extends NoAccessGroupsAssignmentController(mockActions, mockView)(mockAppConfig, cc)
+    object TestController
+    extends NoAccessGroupsAssignmentController(mockActions, mockView)(mockAppConfig, cc)
+
   }
 
   "redirect for no assignment" should {
@@ -106,7 +139,11 @@ class NoAccessGroupsAssignmentControllerSpec extends PlaySpec
       givenAuthorisedAgent(User)
       givenAgentRecord
 
-      mockView.apply()(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+      mockView.apply()(
+        *[Request[Any]],
+        *[Messages],
+        *[AppConfig]
+      ) returns Html("")
 
       val result: Future[Result] = TestController.showAdminAccessInformation()(fakeRequest)
 
@@ -116,7 +153,11 @@ class NoAccessGroupsAssignmentControllerSpec extends PlaySpec
       givenAuthorisedAgent(Assistant)
       givenAgentRecord
 
-      mockView.apply()(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+      mockView.apply()(
+        *[Request[Any]],
+        *[Messages],
+        *[AppConfig]
+      ) returns Html("")
 
       val result: Future[Result] = TestController.showAdminAccessInformation()(fakeRequest)
 

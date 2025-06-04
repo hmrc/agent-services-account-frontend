@@ -22,7 +22,9 @@ import uk.gov.hmrc.agentservicesaccount.models.UpdateMoneyLaunderingSupervisionD
 
 import java.time.LocalDate
 
-class UpdateMoneyLaunderingSupervisionFormSpec extends AnyWordSpec with Matchers {
+class UpdateMoneyLaunderingSupervisionFormSpec
+extends AnyWordSpec
+with Matchers {
 
   val bodyField = "body"
   val numberField = "number"
@@ -44,7 +46,7 @@ class UpdateMoneyLaunderingSupervisionFormSpec extends AnyWordSpec with Matchers
     numberField -> "1122334455",
     endDateDay -> local_valid_date_stub.getDayOfMonth.toString,
     endDateMonth -> local_valid_date_stub.getMonthValue.toString,
-    endDateYear -> local_valid_date_stub.getYear.toString,
+    endDateYear -> local_valid_date_stub.getYear.toString
   )
 
   val formSubmissionWithNoRegDate: Map[String, String] = Map(
@@ -55,21 +57,27 @@ class UpdateMoneyLaunderingSupervisionFormSpec extends AnyWordSpec with Matchers
     endDateYear -> ""
   )
 
-  private def invalidateFormSubmission(badData: (String, String)): Map[String, String] =
-    (validFormSubmission - badData._1) ++ List(badData)
+  private def invalidateFormSubmission(badData: (String, String)): Map[String, String] = (validFormSubmission - badData._1) ++ List(badData)
 
-  private def partialDateFormSubmission(datePart: (String, String)): Map[String, String] =
-    (formSubmissionWithNoRegDate - datePart._1) ++ List(datePart)
+  private def partialDateFormSubmission(datePart: (String, String)): Map[String, String] = (formSubmissionWithNoRegDate - datePart._1) ++ List(datePart)
 
   "UpdateMoneyLaunderingSupervisionForm binding" should {
     "be successful valid data is submitted" in {
       val params = validFormSubmission
       val validatedForm = UpdateMoneyLaunderingSupervisionForm.form(knownSupervisoryBodies).bind(params)
       validatedForm.value shouldBe
-        Some(UpdateMoneyLaunderingSupervisionDetails(KNOWN_BODY_CODE, "1122334455", local_valid_date_stub))
+        Some(UpdateMoneyLaunderingSupervisionDetails(
+          KNOWN_BODY_CODE,
+          "1122334455",
+          local_valid_date_stub
+        ))
     }
     "get form data from a completed 'UpdateMoneyLaunderingSupervisionDetails' model" in {
-      val model = UpdateMoneyLaunderingSupervisionDetails(KNOWN_BODY_CODE, "1122334455", local_valid_date_stub)
+      val model = UpdateMoneyLaunderingSupervisionDetails(
+        KNOWN_BODY_CODE,
+        "1122334455",
+        local_valid_date_stub
+      )
       val form = UpdateMoneyLaunderingSupervisionForm.form(knownSupervisoryBodies).fill(model)
       val params = validFormSubmission
       form.data shouldBe params
@@ -212,11 +220,12 @@ class UpdateMoneyLaunderingSupervisionFormSpec extends AnyWordSpec with Matchers
         numberField -> "1122334455",
         endDateDay -> local_past_date_stub.getDayOfMonth.toString,
         endDateMonth -> local_past_date_stub.getMonthValue.toString,
-        endDateYear -> local_past_date_stub.getYear.toString,
+        endDateYear -> local_past_date_stub.getYear.toString
       )
       val validatedForm = UpdateMoneyLaunderingSupervisionForm.form(knownSupervisoryBodies).bind(params)
       validatedForm.errors.size shouldBe 1
       validatedForm.error(endDateDay).get.message shouldBe "update-money-laundering-supervisory.error.date.past"
     }
   }
+
 }

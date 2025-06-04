@@ -40,31 +40,33 @@ object WireMockSupport {
   private lazy val wireMockPort: Int = Port.randomAvailable
 }
 
-trait WireMockSupport extends BeforeAndAfterAll with BeforeAndAfterEach {
+trait WireMockSupport
+extends BeforeAndAfterAll
+with BeforeAndAfterEach {
   me: Suite =>
 
-  val wireMockPort: Int                                           = WireMockSupport.wireMockPort
-  val wireMockHost: String                                        = "localhost"
-  val wireMockBaseUrlAsString: String                             = s"http://$wireMockHost:$wireMockPort"
-  val wireMockBaseUrl: URL                                        = new URL(wireMockBaseUrlAsString)
+  val wireMockPort: Int = WireMockSupport.wireMockPort
+  val wireMockHost: String = "localhost"
+  val wireMockBaseUrlAsString: String = s"http://$wireMockHost:$wireMockPort"
+  val wireMockBaseUrl: URL = new URL(wireMockBaseUrlAsString)
   protected implicit val implicitWireMockBaseUrl: WireMockBaseUrl = WireMockBaseUrl(wireMockBaseUrl)
 
   protected def basicWireMockConfig(): WireMockConfiguration = wireMockConfig()
 
   private val wireMockServer: WireMockServer = new WireMockServer(basicWireMockConfig().port(wireMockPort))
 
-  protected override def beforeAll(): Unit = {
+  override protected def beforeAll(): Unit = {
     super.beforeAll()
     WireMock.configureFor(wireMockHost, wireMockPort)
     wireMockServer.start()
   }
 
-  protected override def afterAll(): Unit = {
+  override protected def afterAll(): Unit = {
     wireMockServer.stop()
     super.afterAll()
   }
 
-  protected override def beforeEach(): Unit = {
+  override protected def beforeEach(): Unit = {
     super.beforeEach()
     Thread.sleep(100)
     WireMock.reset()
@@ -73,12 +75,14 @@ trait WireMockSupport extends BeforeAndAfterAll with BeforeAndAfterEach {
   protected def stopWireMockServer(): Unit = wireMockServer.stop()
 
   protected def startWireMockServer(): Unit = wireMockServer.start()
+
 }
 
 // This class was copy-pasted from the hmrctest project, which is now deprecated.
 object Port {
-  val rnd: Random         = new scala.util.Random
-  val range: Seq[Int]     = 8000 to 39999
+
+  val rnd: Random = new scala.util.Random
+  val range: Seq[Int] = 8000 to 39999
   val usedPorts: Seq[Int] = List[Int]()
 
   @tailrec
@@ -108,13 +112,18 @@ object Port {
         socket = new ServerSocket(p)
         socket.setReuseAddress(true)
         true
-      } else {
+      }
+      else {
         false
       }
-    } catch {
+    }
+    catch {
       case t: Throwable => false
-    } finally {
-      if (socket != null) socket.close()
+    }
+    finally {
+      if (socket != null)
+        socket.close()
     }
   }
+
 }

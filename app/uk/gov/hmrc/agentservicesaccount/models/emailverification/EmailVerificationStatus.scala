@@ -18,7 +18,11 @@ package uk.gov.hmrc.agentservicesaccount.models.emailverification
 
 sealed trait EmailVerificationStatus
 
-case object EmailHasNotChanged extends EmailVerificationStatus
-case object EmailIsLocked extends EmailVerificationStatus
-case object EmailIsAlreadyVerified extends EmailVerificationStatus
-case object EmailNeedsVerifying extends EmailVerificationStatus
+case object EmailHasNotChanged
+extends EmailVerificationStatus
+case object EmailIsLocked
+extends EmailVerificationStatus
+case object EmailIsAlreadyVerified
+extends EmailVerificationStatus
+case object EmailNeedsVerifying
+extends EmailVerificationStatus

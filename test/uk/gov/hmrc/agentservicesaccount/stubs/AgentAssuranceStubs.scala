@@ -20,73 +20,72 @@ import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.libs.json.Json
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
-import uk.gov.hmrc.agentservicesaccount.models.{AgentDetailsDesResponse, AmlsDetailsResponse}
+import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
+import uk.gov.hmrc.agentservicesaccount.models.AmlsDetailsResponse
 
 object AgentAssuranceStubs {
 
-  def givenAMLSDetailsForArn(amlsDetailsResponse: AmlsDetailsResponse, arn: String): StubMapping =
-    stubFor(get(urlEqualTo(s"/agent-assurance/amls/arn/$arn"))
-      .willReturn(
-        aResponse()
-          .withStatus(200)
-          .withBody(Json.toJson(amlsDetailsResponse).toString())
-      ))
+  def givenAMLSDetailsForArn(
+    amlsDetailsResponse: AmlsDetailsResponse,
+    arn: String
+  ): StubMapping = stubFor(get(urlEqualTo(s"/agent-assurance/amls/arn/$arn"))
+    .willReturn(
+      aResponse()
+        .withStatus(200)
+        .withBody(Json.toJson(amlsDetailsResponse).toString())
+    ))
 
-  def givenAMLSDetailsNotFoundForArn(arn: String): StubMapping =
-    stubFor(get(urlEqualTo(s"/agent-assurance/amls/arn/$arn"))
-      .willReturn(
-        aResponse()
-          .withStatus(204)
-      ))
+  def givenAMLSDetailsNotFoundForArn(arn: String): StubMapping = stubFor(get(urlEqualTo(s"/agent-assurance/amls/arn/$arn"))
+    .willReturn(
+      aResponse()
+        .withStatus(204)
+    ))
 
-  def givenAMLSDetailsBadRequestForArn(arn: String): StubMapping =
-    stubFor(get(urlEqualTo(s"/agent-assurance/amls/arn/$arn"))
-      .willReturn(
-        aResponse()
-          .withStatus(400)
-      ))
+  def givenAMLSDetailsBadRequestForArn(arn: String): StubMapping = stubFor(get(urlEqualTo(s"/agent-assurance/amls/arn/$arn"))
+    .willReturn(
+      aResponse()
+        .withStatus(400)
+    ))
 
-  def givenAMLSDetailsServerErrorForArn(arn: String): StubMapping =
-    stubFor(get(urlEqualTo(s"/agent-assurance/amls/arn/$arn"))
-      .willReturn(
-        aResponse()
-          .withStatus(500)
-      ))
+  def givenAMLSDetailsServerErrorForArn(arn: String): StubMapping = stubFor(get(urlEqualTo(s"/agent-assurance/amls/arn/$arn"))
+    .willReturn(
+      aResponse()
+        .withStatus(500)
+    ))
 
-  def givenAmlsStatusForArn(amlsDetailsResponse: AmlsDetailsResponse, arn: Arn): StubMapping =
-    stubFor(get(urlEqualTo(s"/agent-assurance/amls/arn/${arn.value}"))
-      .willReturn(
-        aResponse()
-          .withStatus(200)
-          .withBody(Json.toJson(amlsDetailsResponse).toString())
-      ))
+  def givenAmlsStatusForArn(
+    amlsDetailsResponse: AmlsDetailsResponse,
+    arn: Arn
+  ): StubMapping = stubFor(get(urlEqualTo(s"/agent-assurance/amls/arn/${arn.value}"))
+    .willReturn(
+      aResponse()
+        .withStatus(200)
+        .withBody(Json.toJson(amlsDetailsResponse).toString())
+    ))
 
-  def givenAmlsStatusBadRequestForArn(arn: Arn): StubMapping =
-    stubFor(get(urlEqualTo(s"/agent-assurance/amls/arn/${arn.value}"))
-      .willReturn(
-        aResponse()
-          .withStatus(400)
-      ))
+  def givenAmlsStatusBadRequestForArn(arn: Arn): StubMapping = stubFor(get(urlEqualTo(s"/agent-assurance/amls/arn/${arn.value}"))
+    .willReturn(
+      aResponse()
+        .withStatus(400)
+    ))
 
-  def givenAmlsStatusServerErrorForArn(arn: Arn): StubMapping =
-    stubFor(get(urlEqualTo(s"/agent-assurance/amls/arn/${arn.value}"))
-      .willReturn(
-        aResponse()
-          .withStatus(500)
-      ))
+  def givenAmlsStatusServerErrorForArn(arn: Arn): StubMapping = stubFor(get(urlEqualTo(s"/agent-assurance/amls/arn/${arn.value}"))
+    .willReturn(
+      aResponse()
+        .withStatus(500)
+    ))
 
-  def givenAgentRecordFound(agentRecord: AgentDetailsDesResponse): StubMapping =
-    stubFor(get(urlEqualTo("/agent-assurance/agent-record-with-checks"))
-      .willReturn(
-        aResponse()
-          .withStatus(200)
-          .withBody(Json.toJson(agentRecord).toString)
-      ))
+  def givenAgentRecordFound(agentRecord: AgentDetailsDesResponse): StubMapping = stubFor(get(urlEqualTo("/agent-assurance/agent-record-with-checks"))
+    .willReturn(
+      aResponse()
+        .withStatus(200)
+        .withBody(Json.toJson(agentRecord).toString)
+    ))
 
-  def givenAgentDetailsErrorResponse(status: Int): StubMapping =
-    stubFor(get(urlEqualTo("/agent-assurance/agent-record-with-checks"))
-      .willReturn(
-        aResponse()
-          .withStatus(status)
-      ))
+  def givenAgentDetailsErrorResponse(status: Int): StubMapping = stubFor(get(urlEqualTo("/agent-assurance/agent-record-with-checks"))
+    .willReturn(
+      aResponse()
+        .withStatus(status)
+    ))
+
 }

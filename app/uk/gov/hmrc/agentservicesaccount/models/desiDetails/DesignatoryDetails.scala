@@ -16,22 +16,32 @@
 
 package uk.gov.hmrc.agentservicesaccount.models.desiDetails
 
-import play.api.libs.functional.syntax.{toFunctionalBuilderOps, unlift}
-import play.api.libs.json.{Format, Json, OFormat, __}
+import play.api.libs.functional.syntax.toFunctionalBuilderOps
+import play.api.libs.functional.syntax.unlift
+import play.api.libs.json.Format
+import play.api.libs.json.Json
+import play.api.libs.json.OFormat
+import play.api.libs.json.__
 import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
-import uk.gov.hmrc.crypto.{Decrypter, Encrypter}
+import uk.gov.hmrc.crypto.Decrypter
+import uk.gov.hmrc.crypto.Encrypter
 
 case class DesignatoryDetails(
-                               agencyDetails: AgencyDetails,
-                               otherServices: OtherServices
-                             )
+  agencyDetails: AgencyDetails,
+  otherServices: OtherServices
+)
 
 object DesignatoryDetails {
+
   implicit val desiDetailsFormat: OFormat[DesignatoryDetails] = Json.format[DesignatoryDetails]
 
-  def databaseFormat(implicit crypto: Encrypter with Decrypter): Format[DesignatoryDetails] =
+  def databaseFormat(implicit
+    crypto: Encrypter
+      with Decrypter
+  ): Format[DesignatoryDetails] =
     (
       (__ \ "agencyDetails").format[AgencyDetails](AgencyDetails.databaseFormat) and
         (__ \ "otherServices").format[OtherServices](OtherServices.databaseFormat)
-      )(DesignatoryDetails.apply, unlift(DesignatoryDetails.unapply))
+    )(DesignatoryDetails.apply, unlift(DesignatoryDetails.unapply))
+
 }

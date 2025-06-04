@@ -17,31 +17,41 @@
 package uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
 
 import play.api.i18n.I18nSupport
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.Action
+import play.api.mvc.AnyContent
+import play.api.mvc.MessagesControllerComponents
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.DesiDetailsJourneySupport
 import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.SaChanges
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
-import uk.gov.hmrc.agentservicesaccount.services.{DraftDetailsService, SessionCacheService}
+import uk.gov.hmrc.agentservicesaccount.services.DraftDetailsService
+import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details._
 import uk.gov.hmrc.domain.SaUtr
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
-import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import javax.inject.Inject
+import javax.inject.Singleton
+import scala.concurrent.ExecutionContext
+import scala.concurrent.Future
 
 @Singleton
-class EnterSACodeController @Inject()(actions: Actions,
-                                      val sessionCache: SessionCacheService,
-                                      draftDetailsService: DraftDetailsService,
-                                      enterSaCodeView: enter_sa_code,
-                                      cc: MessagesControllerComponents
-                                     )(implicit appConfig: AppConfig,
-                                       val ec: ExecutionContext,
-                                       pcodRepository: PendingChangeRequestRepository
-                                     ) extends FrontendController(cc) with DesiDetailsJourneySupport with I18nSupport {
+class EnterSACodeController @Inject() (
+  actions: Actions,
+  val sessionCache: SessionCacheService,
+  draftDetailsService: DraftDetailsService,
+  enterSaCodeView: enter_sa_code,
+  cc: MessagesControllerComponents
+)(implicit
+  appConfig: AppConfig,
+  val ec: ExecutionContext,
+  pcodRepository: PendingChangeRequestRepository
+)
+extends FrontendController(cc)
+with DesiDetailsJourneySupport
+with I18nSupport {
 
   def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     ifChangeContactFeatureEnabledAndNoPendingChanges {
@@ -65,8 +75,10 @@ class EnterSACodeController @Inject()(actions: Actions,
               ).flatMap {
                 _ =>
                   isJourneyComplete().map(journey =>
-                    if(journey.journeyComplete) Redirect(routes.CheckYourAnswersController.showPage)
-                    else Redirect(routes.ApplyCTCodeChangesController.showPage)
+                    if (journey.journeyComplete)
+                      Redirect(routes.CheckYourAnswersController.showPage)
+                    else
+                      Redirect(routes.ApplyCTCodeChangesController.showPage)
                   )
               }
             }
@@ -90,4 +102,3 @@ class EnterSACodeController @Inject()(actions: Actions,
   }
 
 }
-

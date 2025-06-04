@@ -17,15 +17,23 @@
 package uk.gov.hmrc.agentservicesaccount.utils
 
 import play.api.i18n.Messages
-import uk.gov.hmrc.agents.accessgroups.optin.{OptedInNotReady, OptedInReady, OptedInSingleUser, OptinStatus}
+import uk.gov.hmrc.agents.accessgroups.optin.OptedInNotReady
+import uk.gov.hmrc.agents.accessgroups.optin.OptedInReady
+import uk.gov.hmrc.agents.accessgroups.optin.OptedInSingleUser
+import uk.gov.hmrc.agents.accessgroups.optin.OptinStatus
 
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 object ViewUtils {
 
-  def withErrorPrefix(hasFormErrors: Boolean, str: String)(implicit mgs: Messages): String = {
-    val errorPrefix = if(hasFormErrors) { mgs("error-prefix") + " "} else {""}
+  def withErrorPrefix(
+    hasFormErrors: Boolean,
+    str: String
+  )(implicit mgs: Messages): String = {
+    val errorPrefix =
+      if (hasFormErrors) { mgs("error-prefix") + " " }
+      else { "" }
     errorPrefix.concat(mgs(str))
   }
 
@@ -36,8 +44,7 @@ object ViewUtils {
     }
   }
 
-  //converts 2024-1-25 to 25/01/2024
-  def convertLocalDateToDisplayDate(localDate: LocalDate): String =
-    DateTimeFormatter.ofPattern("dd/MM/yyyy").format(localDate)
+  // converts 2024-1-25 to 25/01/2024
+  def convertLocalDateToDisplayDate(localDate: LocalDate): String = DateTimeFormatter.ofPattern("dd/MM/yyyy").format(localDate)
 
 }

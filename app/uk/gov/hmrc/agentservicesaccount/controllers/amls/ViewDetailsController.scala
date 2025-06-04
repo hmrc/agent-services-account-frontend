@@ -17,7 +17,9 @@
 package uk.gov.hmrc.agentservicesaccount.controllers.amls
 
 import play.api.i18n.I18nSupport
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.Action
+import play.api.mvc.AnyContent
+import play.api.mvc.MessagesControllerComponents
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
@@ -27,28 +29,34 @@ import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls._
 import uk.gov.hmrc.mongo.cache.DataKey
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
-import javax.inject.{Inject, Singleton}
+import javax.inject.Inject
+import javax.inject.Singleton
 import scala.concurrent.ExecutionContext
 
-
 @Singleton
-class ViewDetailsController @Inject()(actions: Actions,
-                                                  val updateAmlsJourneyRepository: UpdateAmlsJourneyRepository,
-                                      agentAssuranceConnector: AgentAssuranceConnector,
-                                                  viewDetails: view_details,
-                                      cc: MessagesControllerComponents
-                                                 )(implicit appConfig: AppConfig,
-                                                   ec: ExecutionContext) extends FrontendController(cc) with
-  AmlsJourneySupport with I18nSupport {
+class ViewDetailsController @Inject() (
+  actions: Actions,
+  val updateAmlsJourneyRepository: UpdateAmlsJourneyRepository,
+  agentAssuranceConnector: AgentAssuranceConnector,
+  viewDetails: view_details,
+  cc: MessagesControllerComponents
+)(implicit
+  appConfig: AppConfig,
+  ec: ExecutionContext
+)
+extends FrontendController(cc)
+with AmlsJourneySupport
+with I18nSupport {
 
   def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
-      agentAssuranceConnector.getAMLSDetailsResponse(request.agentInfo.arn.value).flatMap {amlsDetailsResponce =>
-
-        updateAmlsJourneyRepository.putSession(DataKey[UpdateAmlsJourney]("amlsJourney"),
-          UpdateAmlsJourney(status = amlsDetailsResponce.status)).map { _ =>
+      agentAssuranceConnector.getAMLSDetailsResponse(request.agentInfo.arn.value).flatMap { amlsDetailsResponce =>
+        updateAmlsJourneyRepository.putSession(
+          DataKey[UpdateAmlsJourney]("amlsJourney"),
+          UpdateAmlsJourney(status = amlsDetailsResponce.status)
+        ).map { _ =>
           amlsDetailsResponce.details match {
-            case details@Some(_) =>  Ok(viewDetails(amlsDetailsResponce.status, details))
+            case details @ Some(_) => Ok(viewDetails(amlsDetailsResponce.status, details))
             case None => Ok(viewDetails(amlsDetailsResponce.status, None))
           }
         }

@@ -27,26 +27,37 @@ import play.api.mvc._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
-import uk.gov.hmrc.agentservicesaccount.connectors.{AddressLookupConnector, AgentAssuranceConnector, EmailVerificationConnector}
-import uk.gov.hmrc.agentservicesaccount.controllers.{CURRENT_SELECTED_CHANGES, DRAFT_NEW_CONTACT_DETAILS, DRAFT_SUBMITTED_BY, desiDetails}
+import uk.gov.hmrc.agentservicesaccount.connectors.AddressLookupConnector
+import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
+import uk.gov.hmrc.agentservicesaccount.connectors.EmailVerificationConnector
+import uk.gov.hmrc.agentservicesaccount.controllers.CURRENT_SELECTED_CHANGES
+import uk.gov.hmrc.agentservicesaccount.controllers.DRAFT_NEW_CONTACT_DETAILS
+import uk.gov.hmrc.agentservicesaccount.controllers.DRAFT_SUBMITTED_BY
+import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest
-import uk.gov.hmrc.agentservicesaccount.models.addresslookup.{ConfirmedResponseAddress, ConfirmedResponseAddressDetails, Country, JourneyConfigV2}
+import uk.gov.hmrc.agentservicesaccount.models.addresslookup.ConfirmedResponseAddress
+import uk.gov.hmrc.agentservicesaccount.models.addresslookup.ConfirmedResponseAddressDetails
+import uk.gov.hmrc.agentservicesaccount.models.addresslookup.Country
+import uk.gov.hmrc.agentservicesaccount.models.addresslookup.JourneyConfigV2
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
-import uk.gov.hmrc.agentservicesaccount.support.{TestConstants, UnitSpec}
+import uk.gov.hmrc.agentservicesaccount.support.TestConstants
+import uk.gov.hmrc.agentservicesaccount.support.UnitSpec
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve.Retrieval
 import uk.gov.hmrc.http.HeaderCarrier
 
 import java.time.Instant
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
+import scala.concurrent.Future
 
-class UpdateNameControllerSpec extends UnitSpec
-  with GuiceOneAppPerSuite
-  with IntegrationPatience
-  with MockFactory
-  with TestConstants {
+class UpdateNameControllerSpec
+extends UnitSpec
+with GuiceOneAppPerSuite
+with IntegrationPatience
+with MockFactory
+with TestConstants {
 
   implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
 
@@ -61,33 +72,40 @@ class UpdateNameControllerSpec extends UnitSpec
     )
   )
 
-  private val stubAuthConnector = new AuthConnector {
-    private val authJson = Json.parse(s"""{
-                      |  "internalId": "some-id",
-                      |  "affinityGroup": "Agent",
-                      |  "credentialRole": "User",
-                      |  "allEnrolments": [{
-                      |    "key": "HMRC-AS-AGENT",
-                      |    "identifiers": [{ "key": "AgentReferenceNumber", "value": "${arn.value}" }]
-                      |  }],
-                      |  "optionalCredentials": {
-                      |    "providerId": "foo",
-                      |    "providerType": "bar"
-                      |  }
-                      |}""".stripMargin)
-    def authorise[A](predicate: Predicate, retrieval: Retrieval[A])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[A] =
-      Future.successful(retrieval.reads.reads(authJson).get)
-  }
-
-  val overrides: AbstractModule = new AbstractModule() {
-    override def configure(): Unit = {
-      bind(classOf[AgentAssuranceConnector]).toInstance(stub[AgentAssuranceConnector])
-      bind(classOf[AddressLookupConnector]).toInstance(stub[AddressLookupConnector])
-      bind(classOf[EmailVerificationConnector]).toInstance(stub[EmailVerificationConnector])
-      bind(classOf[PendingChangeRequestRepository]).toInstance(stub[PendingChangeRequestRepository])
-      bind(classOf[AuthConnector]).toInstance(stubAuthConnector)
+  private val stubAuthConnector =
+    new AuthConnector {
+      private val authJson = Json.parse(s"""{
+                                           |  "internalId": "some-id",
+                                           |  "affinityGroup": "Agent",
+                                           |  "credentialRole": "User",
+                                           |  "allEnrolments": [{
+                                           |    "key": "HMRC-AS-AGENT",
+                                           |    "identifiers": [{ "key": "AgentReferenceNumber", "value": "${arn.value}" }]
+                                           |  }],
+                                           |  "optionalCredentials": {
+                                           |    "providerId": "foo",
+                                           |    "providerType": "bar"
+                                           |  }
+                                           |}""".stripMargin)
+      def authorise[A](
+        predicate: Predicate,
+        retrieval: Retrieval[A]
+      )(implicit
+        hc: HeaderCarrier,
+        ec: ExecutionContext
+      ): Future[A] = Future.successful(retrieval.reads.reads(authJson).get)
     }
-  }
+
+  val overrides: AbstractModule =
+    new AbstractModule() {
+      override def configure(): Unit = {
+        bind(classOf[AgentAssuranceConnector]).toInstance(stub[AgentAssuranceConnector])
+        bind(classOf[AddressLookupConnector]).toInstance(stub[AddressLookupConnector])
+        bind(classOf[EmailVerificationConnector]).toInstance(stub[EmailVerificationConnector])
+        bind(classOf[PendingChangeRequestRepository]).toInstance(stub[PendingChangeRequestRepository])
+        bind(classOf[AuthConnector]).toInstance(stubAuthConnector)
+      }
+    }
 
   override implicit lazy val app: Application = new GuiceApplicationBuilder().configure(
     "auditing.enabled" -> false,
@@ -96,8 +114,9 @@ class UpdateNameControllerSpec extends UnitSpec
   ).overrides(overrides).build()
 
   trait TestSetup {
+
     val agentAssuranceConnector: AgentAssuranceConnector = app.injector.instanceOf[AgentAssuranceConnector]
-    (agentAssuranceConnector.getAgentRecord(_:RequestHeader)).when(*).returns(Future.successful(agentRecord))
+    (agentAssuranceConnector.getAgentRecord(_: RequestHeader)).when(*).returns(Future.successful(agentRecord))
 
     val alfConnector: AddressLookupConnector = app.injector.instanceOf[AddressLookupConnector]
     (alfConnector.init(_: JourneyConfigV2)(_: RequestHeader)).when(*, *).returns(Future.successful("mock-address-lookup-url"))
@@ -117,7 +136,8 @@ class UpdateNameControllerSpec extends UnitSpec
         PendingChangeRequest(
           arn,
           Instant.now()
-        ))))
+        )
+      )))
     }
 
     (pcodRepository.insert(_: PendingChangeRequest)(_: RequestHeader)).when(*, *).returns(Future.successful(()))
@@ -126,6 +146,7 @@ class UpdateNameControllerSpec extends UnitSpec
     sessionCache.delete(DRAFT_NEW_CONTACT_DETAILS)(fakeRequest()).futureValue
     sessionCache.delete(DRAFT_SUBMITTED_BY)(fakeRequest()).futureValue
     sessionCache.delete(CURRENT_SELECTED_CHANGES)(fakeRequest()).futureValue
+
   }
 
   "GET /manage-account/contact-details/new-name" should {
@@ -173,4 +194,5 @@ class UpdateNameControllerSpec extends UnitSpec
       shouldRedirect(controller.onSubmit())
     }
   }
+
 }

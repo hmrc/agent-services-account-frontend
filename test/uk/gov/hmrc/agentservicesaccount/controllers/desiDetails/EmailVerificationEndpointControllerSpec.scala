@@ -16,70 +16,101 @@
 
 package uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
 
-import org.mockito.{ArgumentMatchersSugar, IdiomaticMockito}
+import org.mockito.ArgumentMatchersSugar
+import org.mockito.IdiomaticMockito
 import org.scalatestplus.play.PlaySpec
 import play.api.Environment
 import play.api.libs.json.Reads
-import play.api.mvc.{DefaultActionBuilderImpl, MessagesControllerComponents, Request, RequestHeader}
+import play.api.mvc.DefaultActionBuilderImpl
+import play.api.mvc.MessagesControllerComponents
+import play.api.mvc.Request
+import play.api.mvc.RequestHeader
 import play.api.test.Helpers._
-import play.api.test.{DefaultAwaitTimeout, FakeRequest, Helpers}
-import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
+import play.api.test.DefaultAwaitTimeout
+import play.api.test.FakeRequest
+import play.api.test.Helpers
+import uk.gov.hmrc.agentservicesaccount.actions.Actions
+import uk.gov.hmrc.agentservicesaccount.actions.AuthActions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.controllers
-import uk.gov.hmrc.agentservicesaccount.controllers.{CURRENT_SELECTED_CHANGES, DRAFT_NEW_CONTACT_DETAILS, DRAFT_SUBMITTED_BY, EMAIL_PENDING_VERIFICATION}
+import uk.gov.hmrc.agentservicesaccount.controllers.CURRENT_SELECTED_CHANGES
+import uk.gov.hmrc.agentservicesaccount.controllers.DRAFT_NEW_CONTACT_DETAILS
+import uk.gov.hmrc.agentservicesaccount.controllers.DRAFT_SUBMITTED_BY
+import uk.gov.hmrc.agentservicesaccount.controllers.EMAIL_PENDING_VERIFICATION
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails._
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.EmailIsAlreadyVerified
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
-import uk.gov.hmrc.agentservicesaccount.services.{DraftDetailsService, EmailVerificationService, SessionCacheService}
+import uk.gov.hmrc.agentservicesaccount.services.DraftDetailsService
+import uk.gov.hmrc.agentservicesaccount.services.EmailVerificationService
+import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.support.TestConstants
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve.Retrieval
 import uk.gov.hmrc.http.HeaderCarrier
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
+import scala.concurrent.Future
 
-class EmailVerificationEndpointControllerSpec extends PlaySpec
-  with DefaultAwaitTimeout
-  with IdiomaticMockito
-  with ArgumentMatchersSugar
-  with TestConstants {
+class EmailVerificationEndpointControllerSpec
+extends PlaySpec
+with DefaultAwaitTimeout
+with IdiomaticMockito
+with ArgumentMatchersSugar
+with TestConstants {
 
   implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
   private val fakeRequest = FakeRequest()
 
   trait Setup {
+
     protected val mockAppConfig: AppConfig = mock[AppConfig]
     protected val mockAuthConnector: AuthConnector = mock[AuthConnector]
     protected val mockEnvironment: Environment = mock[Environment]
-    protected val authActions = new AuthActions(mockAppConfig, mockAuthConnector, mockEnvironment)
+    protected val authActions =
+      new AuthActions(
+        mockAppConfig,
+        mockAuthConnector,
+        mockEnvironment
+      )
 
     protected val mockDraftDetailsService: DraftDetailsService = mock[DraftDetailsService]
     protected val mockEmailVerificationService: EmailVerificationService = mock[EmailVerificationService]
     protected val actionBuilder = new DefaultActionBuilderImpl(Helpers.stubBodyParser())
     protected val mockAgentAssuranceConnector: AgentAssuranceConnector = mock[AgentAssuranceConnector]
     protected val mockActions =
-      new Actions(mockAgentAssuranceConnector, authActions, actionBuilder)
+      new Actions(
+        mockAgentAssuranceConnector,
+        authActions,
+        actionBuilder
+      )
 
     protected val mockPendingChangeRequestRepository = mock[PendingChangeRequestRepository]
     protected val mockSessionCache: SessionCacheService = mock[SessionCacheService]
     protected val cc: MessagesControllerComponents = stubMessagesControllerComponents()
 
-    object TestController extends EmailVerificationEndpointController(
+    object TestController
+    extends EmailVerificationEndpointController(
       mockActions,
       mockSessionCache,
       mockDraftDetailsService,
       cc
-    )(mockAppConfig, ec, mockPendingChangeRequestRepository, mockEmailVerificationService)
-  }
+    )(
+      mockAppConfig,
+      ec,
+      mockPendingChangeRequestRepository,
+      mockEmailVerificationService
+    )
 
+  }
 
   "POST manage-account/contact-details/email-verification-finish (successful verification journey has finished)" should {
     "store the new email address in session and redirect to review new details page (also clear email verification cache value)" in new Setup {
       mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
         *[HeaderCarrier],
-        *[ExecutionContext]) returns authResponse
+        *[ExecutionContext]
+      ) returns authResponse
 
       mockAppConfig.enableChangeContactDetails returns true
 
@@ -102,7 +133,10 @@ class EmailVerificationEndpointControllerSpec extends PlaySpec
 
       mockSessionCache.get[String](EMAIL_PENDING_VERIFICATION)(*[Reads[String]], *[Request[Any]]) returns Future.successful(Some("new@email.com"))
 
-      mockEmailVerificationService.getEmailVerificationStatus("new@email.com", ggCredentials.providerId)(*[RequestHeader]) returns Future.successful(EmailIsAlreadyVerified)
+      mockEmailVerificationService.getEmailVerificationStatus(
+        "new@email.com",
+        ggCredentials.providerId
+      )(*[RequestHeader]) returns Future.successful(EmailIsAlreadyVerified)
 
       mockDraftDetailsService.updateDraftDetails(*[DesignatoryDetails => DesignatoryDetails])(*[RequestHeader]) returns Future.successful(())
 

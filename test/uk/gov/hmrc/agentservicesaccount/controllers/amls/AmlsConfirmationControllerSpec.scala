@@ -19,8 +19,11 @@ package uk.gov.hmrc.agentservicesaccount.controllers.amls
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.http.MimeTypes.HTML
-import play.api.http.Status.{FORBIDDEN, OK}
-import play.api.i18n.{Lang, Messages, MessagesApi}
+import play.api.http.Status.FORBIDDEN
+import play.api.http.Status.OK
+import play.api.i18n.Lang
+import play.api.i18n.Messages
+import play.api.i18n.MessagesApi
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.Result
 import play.api.test.Helpers
@@ -28,18 +31,21 @@ import play.api.test.Helpers.defaultAwaitTimeout
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentAssuranceStubs._
 import uk.gov.hmrc.agentservicesaccount.stubs.AuthStubs
-import uk.gov.hmrc.agentservicesaccount.support.{TestConstants, UnitSpec, WireMockSupport}
+import uk.gov.hmrc.agentservicesaccount.support.TestConstants
+import uk.gov.hmrc.agentservicesaccount.support.UnitSpec
+import uk.gov.hmrc.agentservicesaccount.support.WireMockSupport
 
 import scala.concurrent.Future
 
-
-class AmlsConfirmationControllerSpec extends UnitSpec
-  with AuthStubs
-  with GuiceOneAppPerSuite
-  with WireMockSupport
-  with TestConstants {
+class AmlsConfirmationControllerSpec
+extends UnitSpec
+with AuthStubs
+with GuiceOneAppPerSuite
+with WireMockSupport
+with TestConstants {
 
   class Setup(isEnabled: Boolean) {
+
     def application(isEnabled: Boolean): Application = new GuiceApplicationBuilder().configure(
       "features.enable-non-hmrc-supervisory-body" -> isEnabled,
       "auditing.enabled" -> false,
@@ -57,6 +63,7 @@ class AmlsConfirmationControllerSpec extends UnitSpec
     val arn = "TARN0000001"
 
     private implicit val messages: Messages = messagesApi.preferred(Seq.empty[Lang])
+
   }
 
   "showAmlsDetailsUpdatedConfirmation" should {
@@ -80,4 +87,5 @@ class AmlsConfirmationControllerSpec extends UnitSpec
       }
     }
   }
+
 }

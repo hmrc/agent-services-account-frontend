@@ -17,9 +17,11 @@
 package uk.gov.hmrc.agentservicesaccount.actions
 
 import play.api.mvc.Call
-import play.api.{Environment, Mode}
+import play.api.Environment
+import play.api.Mode
 
-import java.net.{URI, URLEncoder}
+import java.net.URI
+import java.net.URLEncoder
 
 object CallOps {
 
@@ -27,33 +29,47 @@ object CallOps {
     def toURLWithParams(params: (String, Option[String])*): String = addParamsToUrl(call.url, params: _*)
   }
 
-  def addParamsToUrl(url: String, params: (String, Option[String])*): String = {
+  def addParamsToUrl(
+    url: String,
+    params: (String, Option[String])*
+  ): String = {
     val query = params collect { case (k, Some(v)) => s"$k=${URLEncoder.encode(v, "UTF-8")}" } mkString "&"
     if (query.isEmpty) {
       url
-    } else if (url.endsWith("?") || url.endsWith("&")) {
+    }
+    else if (url.endsWith("?") || url.endsWith("&")) {
       url + query
-    } else {
-      val join = if (url.contains("?")) "&" else "?"
+    }
+    else {
+      val join =
+        if (url.contains("?"))
+          "&"
+        else
+          "?"
       url + join + query
     }
   }
 
-  /**
-   * Creates a URL string with localhost and port if running locally, for relative URLs
-   * Absolute URLs are unaffected
-   * Just passes through the URL as normal if running in a non-local environment
-   * */
-  def localFriendlyUrl(env: Environment)(url: String, hostAndPort: String) = {
+  /** Creates a URL string with localhost and port if running locally, for relative URLs Absolute URLs are unaffected Just passes through the URL as normal if
+    * running in a non-local environment
+    */
+  def localFriendlyUrl(env: Environment)(
+    url: String,
+    hostAndPort: String
+  ) = {
     val isLocalEnv = {
-      if (env.mode.equals(Mode.Test)) false else env.mode.equals(Mode.Dev)
+      if (env.mode.equals(Mode.Test))
+        false
+      else
+        env.mode.equals(Mode.Dev)
     }
 
     val uri = new URI(url)
 
-    if (!uri.isAbsolute && isLocalEnv) s"http://$hostAndPort$url"
-    else url
+    if (!uri.isAbsolute && isLocalEnv)
+      s"http://$hostAndPort$url"
+    else
+      url
   }
-
 
 }

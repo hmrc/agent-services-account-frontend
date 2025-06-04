@@ -29,10 +29,16 @@ import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.play.bootstrap.metrics.Metrics
 
 import javax.inject.Inject
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
+import scala.concurrent.Future
 
-class EmailConnector @Inject()(appConfig: AppConfig, http: HttpClientV2, val metrics: Metrics)(implicit val ec: ExecutionContext)
-    extends HttpAPIMonitor with Logging {
+class EmailConnector @Inject() (
+  appConfig: AppConfig,
+  http: HttpClientV2,
+  val metrics: Metrics
+)(implicit val ec: ExecutionContext)
+extends HttpAPIMonitor
+with Logging {
 
   private val baseUrl: String = appConfig.emailBaseUrl
 
@@ -40,4 +46,5 @@ class EmailConnector @Inject()(appConfig: AppConfig, http: HttpClientV2, val met
     monitor(s"Send-Email-${emailData.templateId}") {
       http.post(url"$baseUrl/hmrc/email").withBody(Json.toJson(emailData)).execute[Unit]
     }
+
 }

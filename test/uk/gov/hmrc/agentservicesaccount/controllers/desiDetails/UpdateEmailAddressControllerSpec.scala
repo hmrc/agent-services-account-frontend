@@ -16,55 +16,84 @@
 
 package uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
 
-import org.mockito.{ArgumentMatchersSugar, IdiomaticMockito}
+import org.mockito.ArgumentMatchersSugar
+import org.mockito.IdiomaticMockito
 import org.scalatestplus.play.PlaySpec
 import play.api.Environment
 import play.api.data.Form
 import play.api.i18n.Messages
-import play.api.libs.json.{Reads, Writes}
-import play.api.mvc.{AnyContentAsFormUrlEncoded, DefaultActionBuilderImpl, MessagesControllerComponents, RequestHeader}
+import play.api.libs.json.Reads
+import play.api.libs.json.Writes
+import play.api.mvc.AnyContentAsFormUrlEncoded
+import play.api.mvc.DefaultActionBuilderImpl
+import play.api.mvc.MessagesControllerComponents
+import play.api.mvc.RequestHeader
 import play.api.test.Helpers._
-import play.api.test.{DefaultAwaitTimeout, FakeRequest, Helpers}
+import play.api.test.DefaultAwaitTimeout
+import play.api.test.FakeRequest
+import play.api.test.Helpers
 import play.twirl.api.Html
-import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
+import uk.gov.hmrc.agentservicesaccount.actions.Actions
+import uk.gov.hmrc.agentservicesaccount.actions.AuthActions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.controllers
-import uk.gov.hmrc.agentservicesaccount.controllers.{CURRENT_SELECTED_CHANGES, DRAFT_NEW_CONTACT_DETAILS, DRAFT_SUBMITTED_BY, EMAIL_PENDING_VERIFICATION}
+import uk.gov.hmrc.agentservicesaccount.controllers.CURRENT_SELECTED_CHANGES
+import uk.gov.hmrc.agentservicesaccount.controllers.DRAFT_NEW_CONTACT_DETAILS
+import uk.gov.hmrc.agentservicesaccount.controllers.DRAFT_SUBMITTED_BY
+import uk.gov.hmrc.agentservicesaccount.controllers.EMAIL_PENDING_VERIFICATION
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails._
-import uk.gov.hmrc.agentservicesaccount.models.emailverification.{EmailIsAlreadyVerified, EmailIsLocked, EmailNeedsVerifying}
+import uk.gov.hmrc.agentservicesaccount.models.emailverification.EmailIsAlreadyVerified
+import uk.gov.hmrc.agentservicesaccount.models.emailverification.EmailIsLocked
+import uk.gov.hmrc.agentservicesaccount.models.emailverification.EmailNeedsVerifying
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
-import uk.gov.hmrc.agentservicesaccount.services.{DraftDetailsService, EmailVerificationService, SessionCacheService}
+import uk.gov.hmrc.agentservicesaccount.services.DraftDetailsService
+import uk.gov.hmrc.agentservicesaccount.services.EmailVerificationService
+import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.support.TestConstants
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details.{email_locked, update_email}
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details.email_locked
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details.update_email
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve.Retrieval
-import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.SessionKeys
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
+import scala.concurrent.Future
 
-class UpdateEmailAddressControllerSpec extends PlaySpec
-  with DefaultAwaitTimeout
-  with IdiomaticMockito
-  with ArgumentMatchersSugar
-  with TestConstants {
+class UpdateEmailAddressControllerSpec
+extends PlaySpec
+with DefaultAwaitTimeout
+with IdiomaticMockito
+with ArgumentMatchersSugar
+with TestConstants {
 
   implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
   private val fakeRequest = FakeRequest()
 
   trait Setup {
+
     protected val mockAppConfig: AppConfig = mock[AppConfig]
     protected val mockAuthConnector: AuthConnector = mock[AuthConnector]
     protected val mockEnvironment: Environment = mock[Environment]
-    protected val authActions = new AuthActions(mockAppConfig, mockAuthConnector, mockEnvironment)
+    protected val authActions =
+      new AuthActions(
+        mockAppConfig,
+        mockAuthConnector,
+        mockEnvironment
+      )
 
     protected val mockDraftDetailsService: DraftDetailsService = mock[DraftDetailsService]
     protected val mockEmailVerificationService: EmailVerificationService = mock[EmailVerificationService]
     protected val actionBuilder = new DefaultActionBuilderImpl(Helpers.stubBodyParser())
     protected val mockAgentAssuranceConnector: AgentAssuranceConnector = mock[AgentAssuranceConnector]
     protected val mockActions =
-      new Actions(mockAgentAssuranceConnector, authActions, actionBuilder)
+      new Actions(
+        mockAgentAssuranceConnector,
+        authActions,
+        actionBuilder
+      )
 
     protected val mockPendingChangeRequestRepository = mock[PendingChangeRequestRepository]
     protected val mockUpdateEmailView: update_email = mock[update_email]
@@ -77,7 +106,8 @@ class UpdateEmailAddressControllerSpec extends PlaySpec
     mockSessionCache.delete[YourDetails](DRAFT_SUBMITTED_BY)(*[RequestHeader]) returns Future.successful(())
     mockSessionCache.delete[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS)(*[RequestHeader]) returns Future.successful(())
 
-    object TestController extends UpdateEmailAddressController(
+    object TestController
+    extends UpdateEmailAddressController(
       mockActions,
       mockSessionCache,
       mockDraftDetailsService,
@@ -85,15 +115,20 @@ class UpdateEmailAddressControllerSpec extends PlaySpec
       mockUpdateEmailView,
       mockEmailLockedView,
       cc
-    )(mockAppConfig, ec, mockPendingChangeRequestRepository)
-  }
+    )(
+      mockAppConfig,
+      ec,
+      mockPendingChangeRequestRepository
+    )
 
+  }
 
   "GET /manage-account/contact-details/new-email" should {
     "display the enter email address page" in new Setup {
       mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
         *[HeaderCarrier],
-        *[ExecutionContext]) returns authResponse
+        *[ExecutionContext]
+      ) returns authResponse
 
       mockSessionCache.get(CURRENT_SELECTED_CHANGES)(*[Reads[Set[String]]], *[RequestHeader]) returns Future.successful(Some(Set("email")))
 
@@ -103,7 +138,11 @@ class UpdateEmailAddressControllerSpec extends PlaySpec
 
       mockPendingChangeRequestRepository.find(arn)(*[RequestHeader]) returns Future.successful(None)
 
-      mockUpdateEmailView.apply(*[Form[String]])(*[Messages], *[RequestHeader], *[AppConfig]) returns Html("")
+      mockUpdateEmailView.apply(*[Form[String]])(
+        *[Messages],
+        *[RequestHeader],
+        *[AppConfig]
+      ) returns Html("")
 
       val result = TestController.showChangeEmailAddress()(fakeRequest)
 
@@ -117,7 +156,8 @@ class UpdateEmailAddressControllerSpec extends PlaySpec
     "(if the email is already verified) store the new email address in session and redirect to review new details page" in new Setup {
       mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
         *[HeaderCarrier],
-        *[ExecutionContext]) returns authResponse
+        *[ExecutionContext]
+      ) returns authResponse
 
       mockAppConfig.enableChangeContactDetails returns true
 
@@ -125,7 +165,10 @@ class UpdateEmailAddressControllerSpec extends PlaySpec
 
       mockPendingChangeRequestRepository.find(arn)(*[RequestHeader]) returns Future.successful(None)
 
-      mockEmailVerificationService.getEmailVerificationStatus("new@email.com", ggCredentials.providerId)(*[RequestHeader]) returns Future.successful(EmailIsAlreadyVerified)
+      mockEmailVerificationService.getEmailVerificationStatus(
+        "new@email.com",
+        ggCredentials.providerId
+      )(*[RequestHeader]) returns Future.successful(EmailIsAlreadyVerified)
 
       mockDraftDetailsService.updateDraftDetails(*[DesignatoryDetails => DesignatoryDetails])(*[RequestHeader]) returns Future.successful(())
 
@@ -144,11 +187,11 @@ class UpdateEmailAddressControllerSpec extends PlaySpec
       header("Location", result) mustBe Some(controllers.desiDetails.routes.CheckYourAnswersController.showPage.url)
     }
 
-
     "(if the email is locked) redirect to the email-locked page" in new Setup {
       mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
         *[HeaderCarrier],
-        *[ExecutionContext]) returns authResponse
+        *[ExecutionContext]
+      ) returns authResponse
 
       mockAppConfig.enableChangeContactDetails returns true
 
@@ -156,7 +199,10 @@ class UpdateEmailAddressControllerSpec extends PlaySpec
 
       mockPendingChangeRequestRepository.find(arn)(*[RequestHeader]) returns Future.successful(None)
 
-      mockEmailVerificationService.getEmailVerificationStatus("new@email.com", ggCredentials.providerId)(*[RequestHeader]) returns Future.successful(EmailIsLocked)
+      mockEmailVerificationService.getEmailVerificationStatus(
+        "new@email.com",
+        ggCredentials.providerId
+      )(*[RequestHeader]) returns Future.successful(EmailIsLocked)
       mockSessionCache.get(CURRENT_SELECTED_CHANGES)(*[Reads[Set[String]]], *[RequestHeader]) returns Future.successful(Some(Set("email")))
 
       mockSessionCache.get(DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[RequestHeader]) returns Future.successful(Some(DesignatoryDetails(
@@ -173,7 +219,8 @@ class UpdateEmailAddressControllerSpec extends PlaySpec
     "(if the email is unverified) redirect to the verify-email external journey" in new Setup {
       mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
         *[HeaderCarrier],
-        *[ExecutionContext]) returns authResponse
+        *[ExecutionContext]
+      ) returns authResponse
 
       mockAppConfig.enableChangeContactDetails returns true
 
@@ -181,11 +228,21 @@ class UpdateEmailAddressControllerSpec extends PlaySpec
 
       mockPendingChangeRequestRepository.find(arn)(*[RequestHeader]) returns Future.successful(None)
 
-      mockEmailVerificationService.getEmailVerificationStatus("new@email.com", ggCredentials.providerId)(*[RequestHeader]) returns Future.successful(EmailNeedsVerifying)
+      mockEmailVerificationService.getEmailVerificationStatus(
+        "new@email.com",
+        ggCredentials.providerId
+      )(*[RequestHeader]) returns Future.successful(EmailNeedsVerifying)
 
-      mockSessionCache.put[String](EMAIL_PENDING_VERIFICATION, "new@email.com")(*[Writes[String]], *[RequestHeader]) returns Future.successful(SessionKeys.sessionId -> "session-123")
+      mockSessionCache.put[String](EMAIL_PENDING_VERIFICATION, "new@email.com")(
+        *[Writes[String]],
+        *[RequestHeader]
+      ) returns Future.successful(SessionKeys.sessionId -> "session-123")
 
-      mockEmailVerificationService.initialiseEmailVerificationJourney(ggCredentials.providerId, "new@email.com", cc.langs.availables.head)(*[RequestHeader]) returns Future.successful("/fake-verify-email-journey")
+      mockEmailVerificationService.initialiseEmailVerificationJourney(
+        ggCredentials.providerId,
+        "new@email.com",
+        cc.langs.availables.head
+      )(*[RequestHeader]) returns Future.successful("/fake-verify-email-journey")
       mockSessionCache.get(CURRENT_SELECTED_CHANGES)(*[Reads[Set[String]]], *[RequestHeader]) returns Future.successful(Some(Set("email")))
 
       mockSessionCache.get(DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[RequestHeader]) returns Future.successful(Some(DesignatoryDetails(
@@ -202,7 +259,8 @@ class UpdateEmailAddressControllerSpec extends PlaySpec
     "display an error if the data submitted is invalid" in new Setup {
       mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
         *[HeaderCarrier],
-        *[ExecutionContext]) returns authResponse
+        *[ExecutionContext]
+      ) returns authResponse
 
       mockAppConfig.enableChangeContactDetails returns true
 
@@ -210,7 +268,11 @@ class UpdateEmailAddressControllerSpec extends PlaySpec
 
       mockPendingChangeRequestRepository.find(arn)(*[RequestHeader]) returns Future.successful(None)
 
-      mockUpdateEmailView.apply(*[Form[String]])(*[Messages], *[RequestHeader], *[AppConfig]) returns Html("")
+      mockUpdateEmailView.apply(*[Form[String]])(
+        *[Messages],
+        *[RequestHeader],
+        *[AppConfig]
+      ) returns Html("")
       mockSessionCache.get(CURRENT_SELECTED_CHANGES)(*[Reads[Set[String]]], *[RequestHeader]) returns Future.successful(Some(Set("email")))
 
       mockSessionCache.get(DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[RequestHeader]) returns Future.successful(Some(DesignatoryDetails(

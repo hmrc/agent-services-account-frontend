@@ -17,7 +17,8 @@
 package uk.gov.hmrc.agentservicesaccount.views.pages.desi_details
 
 import org.jsoup.Jsoup
-import org.jsoup.nodes.{Document, Element}
+import org.jsoup.nodes.Document
+import org.jsoup.nodes.Element
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.data.Form
 import play.api.i18n._
@@ -28,19 +29,21 @@ import uk.gov.hmrc.agentservicesaccount.models.desiDetails.YourDetails
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details.your_details
 
-class YourDetailsSpec extends BaseISpec {
-
+class YourDetailsSpec
+extends BaseISpec {
 
   implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
   implicit val lang: Lang = Lang("en")
-  val view: your_details  = app.injector.instanceOf[your_details]
+  val view: your_details = app.injector.instanceOf[your_details]
   implicit val messages: Messages = MessagesImpl(lang, messagesApi)
 
   val form: Form[YourDetails] = yourDetailsForm
-  val formWithNameErrors: Form[YourDetails] = form.withError(key ="fullName", message = Messages("update-contact-details.name.error.empty"))
-  val formWithTelephoneErrors: Form[YourDetails] = form.withError(key ="telephone", message = Messages("update-contact-details.your-details.telephone.error.empty"))
-
+  val formWithNameErrors: Form[YourDetails] = form.withError(key = "fullName", message = Messages("update-contact-details.name.error.empty"))
+  val formWithTelephoneErrors: Form[YourDetails] = form.withError(
+    key = "telephone",
+    message = Messages("update-contact-details.your-details.telephone.error.empty")
+  )
 
   "update_your_details" when {
 
@@ -77,7 +80,11 @@ class YourDetailsSpec extends BaseISpec {
 
     "first viewing page" should {
 
-      val doc: Document = Jsoup.parse(view.apply(form)(messages, FakeRequest(), appConfig).body)
+      val doc: Document = Jsoup.parse(view.apply(form)(
+        messages,
+        FakeRequest(),
+        appConfig
+      ).body)
 
       testServiceStaticContent(doc)
 
@@ -88,10 +95,13 @@ class YourDetailsSpec extends BaseISpec {
       }
     }
 
-
     "form is submitted with name errors should" should {
 
-      val doc: Document = Jsoup.parse(view.apply(formWithNameErrors)(messages, FakeRequest(), appConfig).body)
+      val doc: Document = Jsoup.parse(view.apply(formWithNameErrors)(
+        messages,
+        FakeRequest(),
+        appConfig
+      ).body)
 
       testServiceStaticContent(doc)
 
@@ -118,7 +128,11 @@ class YourDetailsSpec extends BaseISpec {
 
     "form is submitted with telephone errors should" should {
 
-      val doc: Document = Jsoup.parse(view.apply(formWithTelephoneErrors)(messages, FakeRequest(), appConfig).body)
+      val doc: Document = Jsoup.parse(view.apply(formWithTelephoneErrors)(
+        messages,
+        FakeRequest(),
+        appConfig
+      ).body)
 
       testServiceStaticContent(doc)
 

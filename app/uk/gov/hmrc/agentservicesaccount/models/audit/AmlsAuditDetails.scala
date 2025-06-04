@@ -16,20 +16,17 @@
 
 package uk.gov.hmrc.agentservicesaccount.models.audit
 
-import play.api.libs.json.{Json, OWrites}
+import play.api.libs.json.Json
+import play.api.libs.json.OWrites
 
 import java.time.LocalDate
 
 case class AmlsAuditDetails(
-                             membershipExpiresOn: Option[LocalDate] = None,
-                             membershipNumber: Option[String] = None,
-                             supervisoryBody: String
-                            )
+  membershipExpiresOn: Option[LocalDate] = None,
+  membershipNumber: Option[String] = None,
+  supervisoryBody: String
+)
 
 object AmlsAuditDetails {
   implicit val writes: OWrites[AmlsAuditDetails] = Json.writes
 }
-
-
-
-

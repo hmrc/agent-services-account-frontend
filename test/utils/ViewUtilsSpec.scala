@@ -21,7 +21,8 @@ import uk.gov.hmrc.agentservicesaccount.utils.ViewUtils
 
 import java.time.LocalDate
 
-class ViewUtilsSpec extends PlaySpec {
+class ViewUtilsSpec
+extends PlaySpec {
 
   "ViewUtils.convertLocalDateToDisplayDate" should {
     "convert '2023-12-25' to '25/12/2023'" in {

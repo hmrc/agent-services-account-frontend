@@ -19,7 +19,8 @@ package utils
 import org.scalatestplus.play.PlaySpec
 import uk.gov.hmrc.agentservicesaccount.utils.AMLSLoader
 
-class AMLSLoaderSpec extends PlaySpec {
+class AMLSLoaderSpec
+extends PlaySpec {
 
   val amlsLoader = new AMLSLoader
 
@@ -31,13 +32,13 @@ class AMLSLoaderSpec extends PlaySpec {
     }
 
     "throw AMLSLoaderException when no path specified" in {
-      intercept[amlsLoader.AMLSLoaderException]{
+      intercept[amlsLoader.AMLSLoaderException] {
         amlsLoader.load("")
       }.getMessage mustBe "Unexpected error while loading AMLS Bodies: requirement failed: AMLS file path cannot be empty"
     }
 
     "throw AMLSLoaderException when not a .csv file type specified" in {
-      intercept[amlsLoader.AMLSLoaderException]{
+      intercept[amlsLoader.AMLSLoaderException] {
         amlsLoader.load("/amls.xls")
       }.getMessage mustBe "Unexpected error while loading AMLS Bodies: requirement failed: AMLS file should be a csv file"
     }

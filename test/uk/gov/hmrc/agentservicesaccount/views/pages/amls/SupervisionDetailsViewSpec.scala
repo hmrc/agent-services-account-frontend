@@ -20,7 +20,8 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.i18n.{Lang, Messages}
+import play.api.i18n.Lang
+import play.api.i18n.Messages
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.twirl.api.Html
@@ -30,7 +31,9 @@ import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.supervision_detail
 
 import java.time.LocalDate
 
-class SupervisionDetailsViewSpec extends PlaySpec with GuiceOneAppPerSuite {
+class SupervisionDetailsViewSpec
+extends PlaySpec
+with GuiceOneAppPerSuite {
 
   private val ukAMLSDetails = AmlsDetails(
     "HMRC",
@@ -84,7 +87,12 @@ class SupervisionDetailsViewSpec extends PlaySpec with GuiceOneAppPerSuite {
     }
 
     "rendering content for UK AMLS details" should {
-      val html: Html = suspensionDetailsView(ukAMLSDetails)(messagesApi, fakeRequest, appConfig)
+      val html: Html =
+        suspensionDetailsView(ukAMLSDetails)(
+          messagesApi,
+          fakeRequest,
+          appConfig
+        )
       val doc = Jsoup.parse(html.body)
 
       testStaticContent(doc)
@@ -106,7 +114,12 @@ class SupervisionDetailsViewSpec extends PlaySpec with GuiceOneAppPerSuite {
     }
 
     "rendering content for Overseas AMLS details" should {
-      val html: Html = suspensionDetailsView(overseasAMLSDetails)(messagesApi, fakeRequest, appConfig)
+      val html: Html =
+        suspensionDetailsView(overseasAMLSDetails)(
+          messagesApi,
+          fakeRequest,
+          appConfig
+        )
       val doc = Jsoup.parse(html.body)
 
       testStaticContent(doc)

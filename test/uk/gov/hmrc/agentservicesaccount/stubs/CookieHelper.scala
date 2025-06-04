@@ -18,19 +18,21 @@ package uk.gov.hmrc.agentservicesaccount.stubs
 
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.libs.ws.WSCookie
-import play.api.mvc.{Cookie, Session, SessionCookieBaker}
+import play.api.mvc.Cookie
+import play.api.mvc.Session
+import play.api.mvc.SessionCookieBaker
 import play.api.test.Injecting
 import uk.gov.hmrc.crypto.PlainText
 import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.play.bootstrap.frontend.filters.crypto.SessionCookieCrypto
 
-
-trait CookieHelper extends Injecting {
+trait CookieHelper
+extends Injecting {
   self: GuiceOneServerPerSuite =>
 
   def mockSessionCookie = {
 
-    def makeSessionCookie(session:Session): Cookie = {
+    def makeSessionCookie(session: Session): Cookie = {
       val cookieCrypto = inject[SessionCookieCrypto]
       val cookieBaker = inject[SessionCookieBaker]
       val sessionCookie = cookieBaker.encodeAsCookie(session)

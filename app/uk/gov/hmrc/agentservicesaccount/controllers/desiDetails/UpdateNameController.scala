@@ -25,23 +25,31 @@ import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.DesiDetails
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.NextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
-import uk.gov.hmrc.agentservicesaccount.services.{DraftDetailsService, SessionCacheService}
+import uk.gov.hmrc.agentservicesaccount.services.DraftDetailsService
+import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject._
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
+import scala.concurrent.Future
 
 @Singleton
-class UpdateNameController @Inject()(actions: Actions,
-                                     val sessionCache: SessionCacheService,
-                                     draftDetailsService: DraftDetailsService,
-                                     update_name: update_name,
-                                     cc: MessagesControllerComponents
-                                    )(implicit appConfig: AppConfig,
-                                      val ec: ExecutionContext,
-                                      pcodRepository: PendingChangeRequestRepository
-                                    ) extends FrontendController(cc) with DesiDetailsJourneySupport with I18nSupport with Logging {
+class UpdateNameController @Inject() (
+  actions: Actions,
+  val sessionCache: SessionCacheService,
+  draftDetailsService: DraftDetailsService,
+  update_name: update_name,
+  cc: MessagesControllerComponents
+)(implicit
+  appConfig: AppConfig,
+  val ec: ExecutionContext,
+  pcodRepository: PendingChangeRequestRepository
+)
+extends FrontendController(cc)
+with DesiDetailsJourneySupport
+with I18nSupport
+with Logging {
 
   val showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     ifChangeContactFeatureEnabledAndNoPendingChanges {
@@ -59,9 +67,8 @@ class UpdateNameController @Inject()(actions: Actions,
         .fold(
           formWithErrors => Future.successful(BadRequest(update_name(formWithErrors))),
           newAgencyName => {
-            draftDetailsService.updateDraftDetails(
-              desiDetails =>
-                desiDetails.copy(agencyDetails = desiDetails.agencyDetails.copy(agencyName = Some(newAgencyName)))
+            draftDetailsService.updateDraftDetails(desiDetails =>
+              desiDetails.copy(agencyDetails = desiDetails.agencyDetails.copy(agencyName = Some(newAgencyName)))
             ).flatMap {
               _ =>
                 isJourneyComplete().flatMap(journeyComplete => Future.successful(getNextPage(journeyComplete, "businessName")))
@@ -70,4 +77,5 @@ class UpdateNameController @Inject()(actions: Actions,
         )
     }
   }
+
 }

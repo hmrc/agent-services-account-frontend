@@ -27,12 +27,17 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import javax.inject._
 import scala.concurrent.ExecutionContext
 
-class AMLSDetailsController @Inject()(agentAssuranceConnector: AgentAssuranceConnector,
-                                      actions: Actions,
-                                      supervision_details: supervision_details)(implicit val appConfig: AppConfig,
-                                                                              ec: ExecutionContext,
-                                                                              val cc: MessagesControllerComponents)
-  extends FrontendController(cc) with I18nSupport {
+class AMLSDetailsController @Inject() (
+  agentAssuranceConnector: AgentAssuranceConnector,
+  actions: Actions,
+  supervision_details: supervision_details
+)(implicit
+  val appConfig: AppConfig,
+  ec: ExecutionContext,
+  val cc: MessagesControllerComponents
+)
+extends FrontendController(cc)
+with I18nSupport {
 
   val showSupervisionDetails: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {

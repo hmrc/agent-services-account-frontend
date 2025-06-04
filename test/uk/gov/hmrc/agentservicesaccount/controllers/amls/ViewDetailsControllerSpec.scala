@@ -16,17 +16,26 @@
 
 package uk.gov.hmrc.agentservicesaccount.controllers.amls
 
-import org.mockito.{ArgumentMatchersSugar, IdiomaticMockito}
+import org.mockito.ArgumentMatchersSugar
+import org.mockito.IdiomaticMockito
 import org.scalatestplus.play.PlaySpec
 import play.api.Environment
 import play.api.http.Status.OK
 import play.api.i18n.Messages
 import play.api.libs.json.Writes
-import play.api.mvc.{DefaultActionBuilderImpl, MessagesControllerComponents, Request, RequestHeader, Result}
-import play.api.test.Helpers.{status, stubMessagesControllerComponents}
-import play.api.test.{DefaultAwaitTimeout, FakeRequest, Helpers}
+import play.api.mvc.DefaultActionBuilderImpl
+import play.api.mvc.MessagesControllerComponents
+import play.api.mvc.Request
+import play.api.mvc.RequestHeader
+import play.api.mvc.Result
+import play.api.test.Helpers.status
+import play.api.test.Helpers.stubMessagesControllerComponents
+import play.api.test.DefaultAwaitTimeout
+import play.api.test.FakeRequest
+import play.api.test.Helpers
 import play.twirl.api.Html
-import uk.gov.hmrc.agentservicesaccount.actions.{Actions, AuthActions}
+import uk.gov.hmrc.agentservicesaccount.actions.Actions
+import uk.gov.hmrc.agentservicesaccount.actions.AuthActions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.models._
@@ -39,57 +48,82 @@ import uk.gov.hmrc.auth.core.retrieve._
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.mongo.cache.DataKey
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
+import scala.concurrent.Future
 
-class ViewDetailsControllerSpec extends PlaySpec
-  with DefaultAwaitTimeout
-  with IdiomaticMockito
-  with ArgumentMatchersSugar
-  with TestConstants {
+class ViewDetailsControllerSpec
+extends PlaySpec
+with DefaultAwaitTimeout
+with IdiomaticMockito
+with ArgumentMatchersSugar
+with TestConstants {
 
   implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
   private val fakeRequest = FakeRequest()
 
   private val amlsDetails = AmlsDetails(supervisoryBody = "HMRC")
-  private val amlsDetailsResponsse = AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK,  Some(amlsDetails))
+  private val amlsDetailsResponsse = AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, Some(amlsDetails))
   private val amlsNoDetailsResponsse = AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None)
   private val amlsUpdateJourney = UpdateAmlsJourney(status = AmlsStatuses.ValidAmlsDetailsUK)
 
   trait Setup {
+
     protected val mockAppConfig: AppConfig = mock[AppConfig]
     protected val mockAuthConnector: AuthConnector = mock[AuthConnector]
     protected val mockEnvironment: Environment = mock[Environment]
-    protected val authActions = new AuthActions(mockAppConfig, mockAuthConnector, mockEnvironment)
+    protected val authActions =
+      new AuthActions(
+        mockAppConfig,
+        mockAuthConnector,
+        mockEnvironment
+      )
 
     protected val mockAgentAssuranceConnector: AgentAssuranceConnector = mock[AgentAssuranceConnector]
     protected val actionBuilder = new DefaultActionBuilderImpl(Helpers.stubBodyParser())
     protected val mockActions =
-      new Actions(mockAgentAssuranceConnector, authActions, actionBuilder)
+      new Actions(
+        mockAgentAssuranceConnector,
+        authActions,
+        actionBuilder
+      )
 
     protected val mockUpdateAmlsJourneyRepository: UpdateAmlsJourneyRepository = mock[UpdateAmlsJourneyRepository]
     protected val mockView: view_details = mock[view_details]
     protected val cc: MessagesControllerComponents = stubMessagesControllerComponents()
     protected val dataKey: DataKey[UpdateAmlsJourney] = DataKey[UpdateAmlsJourney]("amlsJourney")
 
-    object TestController extends ViewDetailsController(mockActions, mockUpdateAmlsJourneyRepository, mockAgentAssuranceConnector, mockView, cc)(mockAppConfig, ec)
+    object TestController
+    extends ViewDetailsController(
+      mockActions,
+      mockUpdateAmlsJourneyRepository,
+      mockAgentAssuranceConnector,
+      mockView,
+      cc
+    )(mockAppConfig, ec)
+
   }
 
   "showPage" should {
     "display the page for the first time when AMLS details exist" in new Setup {
       mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
         *[HeaderCarrier],
-        *[ExecutionContext]) returns authResponse
+        *[ExecutionContext]
+      ) returns authResponse
 
       mockAppConfig.enableNonHmrcSupervisoryBody returns true
 
       mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
       mockUpdateAmlsJourneyRepository.putSession(*[DataKey[UpdateAmlsJourney]], amlsUpdateJourney)(*[Writes[UpdateAmlsJourney]], *[RequestHeader]) returns
-        Future.successful(("",""))
+        Future.successful(("", ""))
 
       mockAgentAssuranceConnector.getAMLSDetailsResponse(*[String])(*[RequestHeader]) returns Future.successful(amlsDetailsResponsse)
 
-      mockView.apply(*[AmlsStatus], *[Option[AmlsDetails]])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+      mockView.apply(*[AmlsStatus], *[Option[AmlsDetails]])(
+        *[Request[Any]],
+        *[Messages],
+        *[AppConfig]
+      ) returns Html("")
 
       val result: Future[Result] = TestController.showPage(fakeRequest)
 
@@ -99,22 +133,28 @@ class ViewDetailsControllerSpec extends PlaySpec
     "display the page for the first time when AMLS details do not exist" in new Setup {
       mockAuthConnector.authorise(*[Predicate], *[Retrieval[Any]])(
         *[HeaderCarrier],
-        *[ExecutionContext]) returns authResponse
+        *[ExecutionContext]
+      ) returns authResponse
 
       mockAppConfig.enableNonHmrcSupervisoryBody returns true
 
       mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
       mockUpdateAmlsJourneyRepository.putSession(*[DataKey[UpdateAmlsJourney]], amlsUpdateJourney)(*[Writes[UpdateAmlsJourney]], *[RequestHeader]) returns
-        Future.successful(("",""))
+        Future.successful(("", ""))
 
       mockAgentAssuranceConnector.getAMLSDetailsResponse(*[String])(*[RequestHeader]) returns Future.successful(amlsNoDetailsResponsse)
 
-      mockView.apply(*[AmlsStatus], *[Option[AmlsDetails]])(*[Request[Any]], *[Messages], *[AppConfig]) returns Html("")
+      mockView.apply(*[AmlsStatus], *[Option[AmlsDetails]])(
+        *[Request[Any]],
+        *[Messages],
+        *[AppConfig]
+      ) returns Html("")
 
       val result: Future[Result] = TestController.showPage(fakeRequest)
 
       status(result) mustBe OK
     }
   }
+
 }

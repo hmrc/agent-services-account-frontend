@@ -16,23 +16,33 @@
 
 package uk.gov.hmrc.agentservicesaccount.models
 
-import play.api.libs.functional.syntax.{toFunctionalBuilderOps, unlift}
-import play.api.libs.json.{Format, Json, OFormat, __}
+import play.api.libs.functional.syntax.toFunctionalBuilderOps
+import play.api.libs.functional.syntax.unlift
+import play.api.libs.json.Format
+import play.api.libs.json.Json
+import play.api.libs.json.OFormat
+import play.api.libs.json.__
 import uk.gov.hmrc.crypto.json.JsonEncryption.stringEncrypterDecrypter
-import uk.gov.hmrc.crypto.{Decrypter, Encrypter}
+import uk.gov.hmrc.crypto.Decrypter
+import uk.gov.hmrc.crypto.Encrypter
 
 case class BusinessAddress(
-                            addressLine1: String,
-                            addressLine2: Option[String],
-                            addressLine3: Option[String] = None,
-                            addressLine4: Option[String] = None,
-                            postalCode: Option[String],
-                            countryCode: String)
+  addressLine1: String,
+  addressLine2: Option[String],
+  addressLine3: Option[String] = None,
+  addressLine4: Option[String] = None,
+  postalCode: Option[String],
+  countryCode: String
+)
 
 object BusinessAddress {
+
   implicit val format: OFormat[BusinessAddress] = Json.format
 
-  def databaseFormat(implicit crypto: Encrypter with Decrypter): Format[BusinessAddress] =
+  def databaseFormat(implicit
+    crypto: Encrypter
+      with Decrypter
+  ): Format[BusinessAddress] =
     (
       (__ \ "addressLine1").format[String](stringEncrypterDecrypter) and
         (__ \ "addressLine2").formatNullable[String](stringEncrypterDecrypter) and
@@ -40,25 +50,30 @@ object BusinessAddress {
         (__ \ "addressLine4").formatNullable[String](stringEncrypterDecrypter) and
         (__ \ "postalCode").formatNullable[String](stringEncrypterDecrypter) and
         (__ \ "countryCode").format[String](stringEncrypterDecrypter)
-      )(BusinessAddress.apply, unlift(BusinessAddress.unapply))
+    )(BusinessAddress.apply, unlift(BusinessAddress.unapply))
+
 }
 
 case class AgencyDetails(
-                          agencyName: Option[String],
-                          agencyEmail: Option[String],
-                          agencyTelephone: Option[String],
-                          agencyAddress: Option[BusinessAddress]
-                        )
+  agencyName: Option[String],
+  agencyEmail: Option[String],
+  agencyTelephone: Option[String],
+  agencyAddress: Option[BusinessAddress]
+)
 
 object AgencyDetails {
+
   implicit val format: OFormat[AgencyDetails] = Json.format
 
-  def databaseFormat(implicit crypto: Encrypter with Decrypter): Format[AgencyDetails] =
+  def databaseFormat(implicit
+    crypto: Encrypter
+      with Decrypter
+  ): Format[AgencyDetails] =
     (
       (__ \ "agencyName").formatNullable[String](stringEncrypterDecrypter) and
         (__ \ "agencyEmail").formatNullable[String](stringEncrypterDecrypter) and
         (__ \ "agencyTelephone").formatNullable[String](stringEncrypterDecrypter) and
         (__ \ "agencyAddress").formatNullable[BusinessAddress](BusinessAddress.databaseFormat)
-      )(AgencyDetails.apply, unlift(AgencyDetails.unapply))
-}
+    )(AgencyDetails.apply, unlift(AgencyDetails.unapply))
 
+}

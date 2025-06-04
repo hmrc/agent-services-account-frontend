@@ -16,16 +16,26 @@
 
 package uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util
 
-import play.api.mvc.Results.{NotFound, Redirect}
-import play.api.mvc.{RequestHeader, Result}
+import play.api.mvc.Results.NotFound
+import play.api.mvc.Results.Redirect
+import play.api.mvc.RequestHeader
+import play.api.mvc.Result
 import uk.gov.hmrc.agentservicesaccount.actions.AuthRequestWithAgentInfo
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.controllers.{CURRENT_SELECTED_CHANGES, DRAFT_NEW_CONTACT_DETAILS, DRAFT_SUBMITTED_BY, desiDetails, routes}
-import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{DesiDetailsJourney, DesignatoryDetails, OtherServices, YourDetails}
+import uk.gov.hmrc.agentservicesaccount.controllers.CURRENT_SELECTED_CHANGES
+import uk.gov.hmrc.agentservicesaccount.controllers.DRAFT_NEW_CONTACT_DETAILS
+import uk.gov.hmrc.agentservicesaccount.controllers.DRAFT_SUBMITTED_BY
+import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
+import uk.gov.hmrc.agentservicesaccount.controllers.routes
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.DesiDetailsJourney
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.DesignatoryDetails
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.OtherServices
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.YourDetails
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
+import scala.concurrent.Future
 
 trait DesiDetailsJourneySupport {
 
@@ -34,30 +44,35 @@ trait DesiDetailsJourneySupport {
   def sessionCache: SessionCacheService
 
   def withUpdateDesiDetailsJourney(body: DesignatoryDetails => Future[Result])(
-    implicit request: RequestHeader, ec: ExecutionContext): Future[Result] = {
+    implicit
+    request: RequestHeader,
+    ec: ExecutionContext
+  ): Future[Result] = {
     sessionCache.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS).flatMap {
       case Some(desiDetails: DesignatoryDetails) => body(desiDetails)
-      case None =>
-        Future successful Redirect(routes.AgentServicesController.manageAccount)
+      case None => Future successful Redirect(routes.AgentServicesController.manageAccount)
     }
   }
 
   def ifChangeContactDetailsFeatureEnabled(action: => Future[Result])(implicit appConfig: AppConfig): Future[Result] = {
-    if (appConfig.enableChangeContactDetails) action else Future.successful(NotFound)
+    if (appConfig.enableChangeContactDetails)
+      action
+    else
+      Future.successful(NotFound)
   }
 
-  def ifChangeContactFeatureEnabledAndNoPendingChanges(action: => Future[Result])
-                                                      (implicit request: AuthRequestWithAgentInfo[_],
-                                                       appConfig: AppConfig,
-                                                       pcodRepository: PendingChangeRequestRepository): Future[Result] =
-    ifChangeContactDetailsFeatureEnabled {
-      pcodRepository.find(request.agentInfo.arn).flatMap {
-        case None => // no change is pending, we can proceed
-          action
-        case Some(_) => // there is a pending change, further changes are locked. Redirect to the base page
-          Future.successful(Redirect(desiDetails.routes.ViewContactDetailsController.showPage))
-      }
+  def ifChangeContactFeatureEnabledAndNoPendingChanges(action: => Future[Result])(implicit
+    request: AuthRequestWithAgentInfo[_],
+    appConfig: AppConfig,
+    pcodRepository: PendingChangeRequestRepository
+  ): Future[Result] = ifChangeContactDetailsFeatureEnabled {
+    pcodRepository.find(request.agentInfo.arn).flatMap {
+      case None => // no change is pending, we can proceed
+        action
+      case Some(_) => // there is a pending change, further changes are locked. Redirect to the base page
+        Future.successful(Redirect(desiDetails.routes.ViewContactDetailsController.showPage))
     }
+  }
 
   def contactChangesNeeded()(implicit request: AuthRequestWithAgentInfo[_]): Future[Option[Set[String]]] = {
     for {
@@ -89,8 +104,7 @@ trait DesiDetailsJourneySupport {
   }
 
   def isOtherServicesPageRequestValid()(
-    implicit
-    request: AuthRequestWithAgentInfo[_]
+    implicit request: AuthRequestWithAgentInfo[_]
   ): Future[Boolean] = {
     for {
       selectChanges <- sessionCache.get[Set[String]](CURRENT_SELECTED_CHANGES)
@@ -108,12 +122,9 @@ trait DesiDetailsJourneySupport {
     } yield desiDetailsData match {
       case Some(details) => {
         (unchangedDetails, submittedBy, details.otherServices) match {
-          case (Some(changes: Set[String]), Some(_: YourDetails), _: OtherServices) if changes.isEmpty =>
-            DesiDetailsJourney(None, journeyComplete = true)
-          case (None, Some(_: YourDetails), _: OtherServices) =>
-            DesiDetailsJourney(None, journeyComplete = true)
-          case _ =>
-            DesiDetailsJourney(unchangedDetails, journeyComplete = false)
+          case (Some(changes: Set[String]), Some(_: YourDetails), _: OtherServices) if changes.isEmpty => DesiDetailsJourney(None, journeyComplete = true)
+          case (None, Some(_: YourDetails), _: OtherServices) => DesiDetailsJourney(None, journeyComplete = true)
+          case _ => DesiDetailsJourney(unchangedDetails, journeyComplete = false)
         }
       }
       case _ => DesiDetailsJourney(unchangedDetails, journeyComplete = false)

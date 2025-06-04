@@ -16,4 +16,7 @@
 
 package uk.gov.hmrc.agentservicesaccount.views.components.models
 
-case class SummaryRowData(key: String, value: String)
+case class SummaryRowData(
+  key: String,
+  value: String
+)

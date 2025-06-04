@@ -22,7 +22,10 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.data.Form
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.SelectChanges
 
-class SelectChangesFormSpec extends AnyWordSpec with Matchers with GuiceOneAppPerSuite {
+class SelectChangesFormSpec
+extends AnyWordSpec
+with Matchers
+with GuiceOneAppPerSuite {
 
   private val form: Form[SelectChanges] = SelectChangesForm.form
 
@@ -31,14 +34,24 @@ class SelectChangesFormSpec extends AnyWordSpec with Matchers with GuiceOneAppPe
       "field names are valid" in {
         val params = Map("businessName" -> "businessName", "telephone" -> "telephone")
         form.bind(params).hasErrors shouldBe false
-        form.bind(params).value shouldBe Some(SelectChanges(Some("businessName"), None, None, Some("telephone")))
+        form.bind(params).value shouldBe Some(SelectChanges(
+          Some("businessName"),
+          None,
+          None,
+          Some("telephone")
+        ))
       }
     }
 
     "return Some SelectChanges without that field" when {
       "field name is not valid" in {
         val params = Map("businessName" -> "businessName", "notAThing" -> "notAThing")
-        form.bind(params).value shouldBe Some(SelectChanges(Some("businessName"), None, None, None))
+        form.bind(params).value shouldBe Some(SelectChanges(
+          Some("businessName"),
+          None,
+          None,
+          None
+        ))
       }
     }
 
@@ -51,8 +64,14 @@ class SelectChangesFormSpec extends AnyWordSpec with Matchers with GuiceOneAppPe
     }
 
     "unbind" in {
-      form.mapping.unbind(SelectChanges.apply(Some("businessName"), None, Some("email"), None)) shouldBe
+      form.mapping.unbind(SelectChanges.apply(
+        Some("businessName"),
+        None,
+        Some("email"),
+        None
+      )) shouldBe
         Map("businessName" -> "businessName", "email" -> "email")
     }
   }
+
 }

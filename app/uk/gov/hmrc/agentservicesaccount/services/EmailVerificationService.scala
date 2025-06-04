@@ -17,23 +17,33 @@
 package uk.gov.hmrc.agentservicesaccount.services
 
 import play.api.i18n.Lang
-import play.api.mvc.{Call, RequestHeader}
+import play.api.mvc.Call
+import play.api.mvc.RequestHeader
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, EmailVerificationConnector}
+import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
+import uk.gov.hmrc.agentservicesaccount.connectors.EmailVerificationConnector
 import uk.gov.hmrc.agentservicesaccount.controllers
 import uk.gov.hmrc.agentservicesaccount.models.emailverification._
 import uk.gov.hmrc.http.InternalServerException
 
-import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import javax.inject.Inject
+import javax.inject.Singleton
+import scala.concurrent.ExecutionContext
+import scala.concurrent.Future
 
 @Singleton
-class EmailVerificationService @Inject()(agentAssuranceConnector: AgentAssuranceConnector,
-                                         emailVerificationConnector: EmailVerificationConnector
-                                        )(implicit ec: ExecutionContext, appConfig: AppConfig) {
+class EmailVerificationService @Inject() (
+  agentAssuranceConnector: AgentAssuranceConnector,
+  emailVerificationConnector: EmailVerificationConnector
+)(implicit
+  ec: ExecutionContext,
+  appConfig: AppConfig
+) {
 
-  def getEmailVerificationStatus(newEmail: String, credId: String)
-                                (implicit rh: RequestHeader): Future[EmailVerificationStatus] =
+  def getEmailVerificationStatus(
+    newEmail: String,
+    credId: String
+  )(implicit rh: RequestHeader): Future[EmailVerificationStatus] =
     for {
       optCurrentEmail <- agentAssuranceConnector.getAgentRecord.map(_.agencyDetails.flatMap(_.agencyEmail))
       isUnchanged = optCurrentEmail.exists(_.trim.equalsIgnoreCase(newEmail.trim))
@@ -48,16 +58,27 @@ class EmailVerificationService @Inject()(agentAssuranceConnector: AgentAssurance
       }
     }
 
-  def initialiseEmailVerificationJourney(credId: String, newEmail: String, lang: Lang)
-                                        (implicit rh: RequestHeader): Future[String] = {
+  def initialiseEmailVerificationJourney(
+    credId: String,
+    newEmail: String,
+    lang: Lang
+  )(implicit rh: RequestHeader): Future[String] = {
     val useAbsoluteUrls = appConfig.emailVerificationFrontendBaseUrl.contains("localhost")
 
-    def makeUrl(call: Call): String = if (useAbsoluteUrls) call.absoluteURL() else call.url
+    def makeUrl(call: Call): String =
+      if (useAbsoluteUrls)
+        call.absoluteURL()
+      else
+        call.url
 
     val emailRequest = VerifyEmailRequest(
       credId = credId,
       continueUrl = makeUrl(controllers.desiDetails.routes.EmailVerificationEndpointController.finishEmailVerification),
-      origin = if (lang.code == "cy") "Gwasanaethau Asiant CThEM" else "HMRC Agent Services",
+      origin =
+        if (lang.code == "cy")
+          "Gwasanaethau Asiant CThEM"
+        else
+          "HMRC Agent Services",
       deskproServiceName = None, // TODO - this should probably have a name?
       accessibilityStatementUrl = "", // TODO (already here prior to restructuring on 16/04/24)
       email = Some(Email(newEmail, makeUrl(controllers.desiDetails.routes.UpdateEmailAddressController.showChangeEmailAddress))),
@@ -67,10 +88,8 @@ class EmailVerificationService @Inject()(agentAssuranceConnector: AgentAssurance
     )
 
     emailVerificationConnector.verifyEmail(emailRequest).map {
-      case Some(emailVerificationResponse) if useAbsoluteUrls =>
-        appConfig.emailVerificationFrontendBaseUrl + emailVerificationResponse.redirectUri
-      case Some(emailVerificationResponse) =>
-        emailVerificationResponse.redirectUri
+      case Some(emailVerificationResponse) if useAbsoluteUrls => appConfig.emailVerificationFrontendBaseUrl + emailVerificationResponse.redirectUri
+      case Some(emailVerificationResponse) => emailVerificationResponse.redirectUri
       case None =>
         throw new InternalServerException(
           "[EmailVerificationService][initialiseEmailVerificationJourney] " +
@@ -80,4 +99,3 @@ class EmailVerificationService @Inject()(agentAssuranceConnector: AgentAssurance
   }
 
 }
-

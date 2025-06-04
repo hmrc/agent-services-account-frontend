@@ -17,7 +17,8 @@
 package uk.gov.hmrc.agentservicesaccount.views.pages.amls
 
 import org.jsoup.Jsoup
-import org.jsoup.nodes.{Document, Element}
+import org.jsoup.nodes.Document
+import org.jsoup.nodes.Element
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.data.Form
 import play.api.i18n._
@@ -29,18 +30,17 @@ import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.enter_renewal_date
 
 import java.time.LocalDate
 
-class EnterRenewalDateViewSpec extends BaseISpec {
-
+class EnterRenewalDateViewSpec
+extends BaseISpec {
 
   implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
   implicit val lang: Lang = Lang("en")
-  val view: enter_renewal_date  = app.injector.instanceOf[enter_renewal_date]
+  val view: enter_renewal_date = app.injector.instanceOf[enter_renewal_date]
   implicit val messages: Messages = MessagesImpl(lang, messagesApi)
 
   val form: Form[LocalDate] = RenewalDateForm.form
-  val formWithErrors: Form[LocalDate] = form.withError(key ="endDate", message = Messages("update-money-laundering-supervisory.error.date"))
-
+  val formWithErrors: Form[LocalDate] = form.withError(key = "endDate", message = Messages("update-money-laundering-supervisory.error.date"))
 
   "enter_renewal_date" when {
 
@@ -74,7 +74,11 @@ class EnterRenewalDateViewSpec extends BaseISpec {
 
     "first viewing page" should {
 
-      val doc: Document = Jsoup.parse(view.apply(form)(FakeRequest(), messages, appConfig).body)
+      val doc: Document = Jsoup.parse(view.apply(form)(
+        FakeRequest(),
+        messages,
+        appConfig
+      ).body)
 
       testServiceStaticContent(doc)
 
@@ -85,10 +89,13 @@ class EnterRenewalDateViewSpec extends BaseISpec {
       }
     }
 
-
     "form is submitted with errors should" should {
 
-      val doc: Document = Jsoup.parse(view.apply(formWithErrors)(FakeRequest(), messages, appConfig).body)
+      val doc: Document = Jsoup.parse(view.apply(formWithErrors)(
+        FakeRequest(),
+        messages,
+        appConfig
+      ).body)
 
       testServiceStaticContent(doc)
 
@@ -115,4 +122,3 @@ class EnterRenewalDateViewSpec extends BaseISpec {
   }
 
 }
-

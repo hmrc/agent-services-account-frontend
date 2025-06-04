@@ -16,9 +16,11 @@
 
 package uk.gov.hmrc.agentservicesaccount.forms
 
-import play.api.data.Forms.{single, text}
+import play.api.data.Forms.single
+import play.api.data.Forms.text
 import play.api.data.validation._
-import play.api.data.{Form, Mapping}
+import play.api.data.Form
+import play.api.data.Mapping
 
 object NewAmlsSupervisoryBodyForm {
 
@@ -34,21 +36,27 @@ object NewAmlsSupervisoryBodyForm {
     }
   }
 
-
   val amlsSupervisoryBodyOSConstraint: Constraint[String] = Constraint[String] { fieldValue: String =>
     Constraints.nonEmpty.apply(fieldValue) match {
-      case _: Invalid                                 => Invalid(ValidationError("amls.new-supervisory-body.error"))
-      case _ if !fieldValue.matches(amlsBodyRegex)    => Invalid(ValidationError("amls.new-supervisory-body.error.os.regex"))
+      case _: Invalid => Invalid(ValidationError("amls.new-supervisory-body.error"))
+      case _ if !fieldValue.matches(amlsBodyRegex) => Invalid(ValidationError("amls.new-supervisory-body.error.os.regex"))
       case _ if fieldValue.length > amlsBodyMaxLength => Invalid(ValidationError("amls.new-supervisory-body.error.os.max-length"))
-      case _                                          => Valid
+      case _ => Valid
     }
   }
-  private def amlsSupervisoryBodyMapping(bodies: Set[String], isUkAgent: Boolean): Mapping[String] =
-    trimmedText verifying(if(isUkAgent) amlsSupervisoryBodyUKConstraint(bodies) else amlsSupervisoryBodyOSConstraint)
+  private def amlsSupervisoryBodyMapping(
+    bodies: Set[String],
+    isUkAgent: Boolean
+  ): Mapping[String] =
+    trimmedText verifying (if (isUkAgent)
+                             amlsSupervisoryBodyUKConstraint(bodies)
+                           else
+                             amlsSupervisoryBodyOSConstraint)
 
   def form(amlsBodies: Map[String, String])(isUk: Boolean): Form[String] = Form(
     single(
       "body" -> amlsSupervisoryBodyMapping(amlsBodies.keySet, isUk)
     )
   )
+
 }

@@ -17,7 +17,8 @@
 package uk.gov.hmrc.agentservicesaccount.views.pages.amls
 
 import org.jsoup.Jsoup
-import org.jsoup.nodes.{Document, Element}
+import org.jsoup.nodes.Document
+import org.jsoup.nodes.Element
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.data.Form
 import play.api.i18n._
@@ -27,18 +28,17 @@ import uk.gov.hmrc.agentservicesaccount.forms.YesNoForm
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.confirm_supervisory_body
 
-class ConfirmSupervisoryBodyViewSpec extends BaseISpec {
-
+class ConfirmSupervisoryBodyViewSpec
+extends BaseISpec {
 
   implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
   implicit val lang: Lang = Lang("en")
-  val view: confirm_supervisory_body  = app.injector.instanceOf[confirm_supervisory_body]
+  val view: confirm_supervisory_body = app.injector.instanceOf[confirm_supervisory_body]
   implicit val messages: Messages = MessagesImpl(lang, messagesApi)
 
   def form: Form[Boolean] = YesNoForm.form("")
-  def formWithErrors: Form[Boolean] = form.withError(key ="accept", message = Messages("amls.confirm-supervisory-body.error", "HMRC"))
-
+  def formWithErrors: Form[Boolean] = form.withError(key = "accept", message = Messages("amls.confirm-supervisory-body.error", "HMRC"))
 
   "confirm_supervisory_body" when {
 
@@ -72,7 +72,11 @@ class ConfirmSupervisoryBodyViewSpec extends BaseISpec {
 
     "first viewing page" should {
 
-      val doc: Document = Jsoup.parse(view.apply(form, "HMRC")(FakeRequest(), messages, appConfig).body)
+      val doc: Document = Jsoup.parse(view.apply(form, "HMRC")(
+        FakeRequest(),
+        messages,
+        appConfig
+      ).body)
 
       testServiceStaticContent(doc)
 
@@ -83,10 +87,13 @@ class ConfirmSupervisoryBodyViewSpec extends BaseISpec {
       }
     }
 
-
     "form is submitted with errors should" should {
 
-      val doc: Document = Jsoup.parse(view.apply(formWithErrors, "HMRC")(FakeRequest(), messages, appConfig).body)
+      val doc: Document = Jsoup.parse(view.apply(formWithErrors, "HMRC")(
+        FakeRequest(),
+        messages,
+        appConfig
+      ).body)
 
       testServiceStaticContent(doc)
 

@@ -18,23 +18,28 @@ package uk.gov.hmrc.agentservicesaccount.models
 
 import play.api.libs.json._
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
-import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{OtherServices, YourDetails}
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.OtherServices
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.YourDetails
 import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
 
-import java.time.{Instant, LocalDate, ZoneId}
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
 
 case class PendingChangeOfDetails(
-                                 arn: Arn,
-                                 oldDetails: AgencyDetails,
-                                 newDetails: AgencyDetails,
-                                 otherServices: OtherServices,
-                                 timeSubmitted: Instant,
-                                 submittedBy: YourDetails
-                                 ) {
+  arn: Arn,
+  oldDetails: AgencyDetails,
+  newDetails: AgencyDetails,
+  otherServices: OtherServices,
+  timeSubmitted: Instant,
+  submittedBy: YourDetails
+) {
   def localDateSubmitted: LocalDate = timeSubmitted.atZone(ZoneId.of("Europe/London")).toLocalDate
 }
 
 object PendingChangeOfDetails {
+
   implicit val instantFormat: Format[Instant] = MongoJavatimeFormats.instantFormat // important to allow Mongo TTL index to work
   implicit val format: Format[PendingChangeOfDetails] = Json.format[PendingChangeOfDetails]
+
 }

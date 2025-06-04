@@ -16,36 +16,45 @@
 
 package uk.gov.hmrc.agentservicesaccount.controllers
 
-
 import org.jsoup.Jsoup
-import play.api.i18n.{Lang, MessagesApi}
+import play.api.i18n.Lang
+import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
-import uk.gov.hmrc.agents.accessgroups.optin.{OptedInReady, OptedOutSingleUser}
+import uk.gov.hmrc.agents.accessgroups.optin.OptedInReady
+import uk.gov.hmrc.agents.accessgroups.optin.OptedOutSingleUser
 import uk.gov.hmrc.agentservicesaccount.models.AccessGroupSummaries
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentAssuranceStubs.givenAgentRecordFound
-import uk.gov.hmrc.agentservicesaccount.stubs.AgentPermissionsStubs.{givenAccessGroupsForArn, givenArnAllowedOk, givenOptinStatusSuccessReturnsForArn, givenSyncEacdSuccess}
-import uk.gov.hmrc.agentservicesaccount.support.Css.{H1, paragraphs}
-import uk.gov.hmrc.agentservicesaccount.support.{BaseISpec, Css}
+import uk.gov.hmrc.agentservicesaccount.stubs.AgentPermissionsStubs.givenAccessGroupsForArn
+import uk.gov.hmrc.agentservicesaccount.stubs.AgentPermissionsStubs.givenArnAllowedOk
+import uk.gov.hmrc.agentservicesaccount.stubs.AgentPermissionsStubs.givenOptinStatusSuccessReturnsForArn
+import uk.gov.hmrc.agentservicesaccount.stubs.AgentPermissionsStubs.givenSyncEacdSuccess
+import uk.gov.hmrc.agentservicesaccount.support.Css.H1
+import uk.gov.hmrc.agentservicesaccount.support.Css.paragraphs
+import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
+import uk.gov.hmrc.agentservicesaccount.support.Css
 import uk.gov.hmrc.http.SessionKeys
 
-class ManageLandingControllerSpec extends BaseISpec {
+class ManageLandingControllerSpec
+extends BaseISpec {
 
   implicit val lang: Lang = Lang("en")
   implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
 
   val controller: ManageLandingController = app.injector.instanceOf[ManageLandingController]
 
-  "showAccessGroupSummaryForASA" should  {
+  "showAccessGroupSummaryForASA" should {
 
     val ASAAccountTitle = "Manage access in the agent services account - Agent services account - GOV.UK"
-
 
     "return Status: Forbidden" in {
       givenAuthorisedAsAgentWith(arn.value, isAdmin = false)
       givenAgentRecordFound(agentRecord)
-      val response = await(controller.showAccessGroupSummaryForASA(FakeRequest("GET", "/agent-services-access").withSession(SessionKeys.authToken -> "Bearer XYZ"))) //URL response created to mock webpage
+      val response = await(controller.showAccessGroupSummaryForASA(FakeRequest(
+        "GET",
+        "/agent-services-access"
+      ).withSession(SessionKeys.authToken -> "Bearer XYZ"))) // URL response created to mock webpage
 
       status(response) shouldBe 403
     }
@@ -56,7 +65,10 @@ class ManageLandingControllerSpec extends BaseISpec {
       givenOptinStatusSuccessReturnsForArn(Arn(arn.value), OptedOutSingleUser)
       givenAgentRecordFound(agentRecord)
       // When:
-      val response = await(controller.showAccessGroupSummaryForASA()(FakeRequest("GET", "/agent-services-access").withSession(SessionKeys.authToken -> "Bearer XYZ")))
+      val response = await(controller.showAccessGroupSummaryForASA()(FakeRequest(
+        "GET",
+        "/agent-services-access"
+      ).withSession(SessionKeys.authToken -> "Bearer XYZ")))
       status(response) shouldBe 200
       // Then: page shown is for when access groups are turned off
       val html = Jsoup.parse(contentAsString(response))
@@ -64,7 +76,9 @@ class ManageLandingControllerSpec extends BaseISpec {
 
       p.get(0).text shouldBe "For this tax service, use access groups to control which team members can manage this client. This is done in your agent services account."
       p.get(1).text shouldBe "This tax service is managed through your agent services account. Access permissions for the agent services account work differently from other HMRC online services."
-      p.get(2).text shouldBe "By default, all your team members have access to all your clients. You can restrict access to a client’s taxes using access groups."
+      p.get(
+        2
+      ).text shouldBe "By default, all your team members have access to all your clients. You can restrict access to a client’s taxes using access groups."
       p.get(3).text shouldBe "To find out more, select ‘Turn on access groups’ on the ‘Manage account’ page. You’ll be shown more information. You can then choose to turn access groups on or leave them off."
 
     }
@@ -77,7 +91,10 @@ class ManageLandingControllerSpec extends BaseISpec {
       givenOptinStatusSuccessReturnsForArn(Arn(arn.value), OptedInReady) // access groups turned on
       givenAccessGroupsForArn(Arn(arn.value), AccessGroupSummaries(Seq.empty)) // no access groups yet
 
-      val response = await(controller.showAccessGroupSummaryForASA()(FakeRequest("GET", "/agent-services-access").withSession(SessionKeys.authToken -> "Bearer XYZ")))
+      val response = await(controller.showAccessGroupSummaryForASA()(FakeRequest(
+        "GET",
+        "/agent-services-access"
+      ).withSession(SessionKeys.authToken -> "Bearer XYZ")))
 
       status(response) shouldBe 200
       // Then: page shown is for when access groups are turned on
@@ -90,9 +107,13 @@ class ManageLandingControllerSpec extends BaseISpec {
       p.get(0).text
         .shouldBe("For this tax service, use access groups to control which team members can manage this client. This is done in your agent services account.")
       p.get(1).text
-        .shouldBe("This tax service is managed through your agent services account. Access permissions for the agent services account work differently from other HMRC online services.")
+        .shouldBe(
+          "This tax service is managed through your agent services account. Access permissions for the agent services account work differently from other HMRC online services."
+        )
       p.get(2).text
-        .shouldBe("Your organisation can restrict access to a client’s taxes using access groups. If a client is not in any access groups, any team member can manage their tax. If a client is in access groups, only team members in the same groups can manage their tax.")
+        .shouldBe(
+          "Your organisation can restrict access to a client’s taxes using access groups. If a client is not in any access groups, any team member can manage their tax. If a client is in access groups, only team members in the same groups can manage their tax."
+        )
       p.get(3).text
         .shouldBe("Your organisation has turned access groups on. You can create new access groups or view existing groups from the ‘Manage account’ screen.")
     }

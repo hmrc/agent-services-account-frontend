@@ -20,7 +20,10 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 
-class YesNoFormSpec extends AnyWordSpec with Matchers with GuiceOneAppPerSuite {
+class YesNoFormSpec
+extends AnyWordSpec
+with Matchers
+with GuiceOneAppPerSuite {
 
   val fieldName = "accept"
 
@@ -49,7 +52,9 @@ class YesNoFormSpec extends AnyWordSpec with Matchers with GuiceOneAppPerSuite {
 
     "unbind" in {
       YesNoForm.form("my.error.key").mapping.unbind(true) shouldBe Map(
-        fieldName -> "true")
+        fieldName -> "true"
+      )
     }
   }
+
 }

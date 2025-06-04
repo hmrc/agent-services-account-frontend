@@ -18,40 +18,48 @@ package uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
 
 import com.google.inject.AbstractModule
 import org.scalamock.scalatest.MockFactory
-import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
+import org.scalatest.concurrent.IntegrationPatience
+import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.matchers.should.Matchers
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
-import play.api.mvc.{AnyContent, Request, RequestHeader, Result}
+import play.api.mvc.AnyContent
+import play.api.mvc.Request
+import play.api.mvc.RequestHeader
+import play.api.mvc.Result
 import play.api.test.Helpers._
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
-import uk.gov.hmrc.agentservicesaccount.controllers.{DRAFT_NEW_CONTACT_DETAILS, DRAFT_SUBMITTED_BY}
+import uk.gov.hmrc.agentservicesaccount.controllers.DRAFT_NEW_CONTACT_DETAILS
+import uk.gov.hmrc.agentservicesaccount.controllers.DRAFT_SUBMITTED_BY
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest
-import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{DesignatoryDetails, YourDetails}
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.DesignatoryDetails
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.YourDetails
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
-import uk.gov.hmrc.agentservicesaccount.support.{TestConstants, UnitSpec}
+import uk.gov.hmrc.agentservicesaccount.support.TestConstants
+import uk.gov.hmrc.agentservicesaccount.support.UnitSpec
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve.Retrieval
 import uk.gov.hmrc.http.HeaderCarrier
 
 import java.time.Instant
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
+import scala.concurrent.Future
 
-class ViewContactDetailsControllerSpec extends UnitSpec
-  with Matchers
-  with GuiceOneAppPerSuite
-  with ScalaFutures
-  with IntegrationPatience
-  with MockFactory
-  with TestConstants{
+class ViewContactDetailsControllerSpec
+extends UnitSpec
+with Matchers
+with GuiceOneAppPerSuite
+with ScalaFutures
+with IntegrationPatience
+with MockFactory
+with TestConstants {
 
   private val testArn = Arn("XXARN0123456789")
-
 
   private val submittedByDetails = YourDetails(
     fullName = "John Tester",
@@ -60,31 +68,38 @@ class ViewContactDetailsControllerSpec extends UnitSpec
 
   private val details = DesignatoryDetails(agencyDetails, emptyOtherServices)
 
-  private val stubAuthConnector = new AuthConnector {
-    private val authJson = Json.parse(s"""{
-                      |  "internalId": "some-id",
-                      |  "affinityGroup": "Agent",
-                      |  "credentialRole": "User",
-                      |  "allEnrolments": [{
-                      |    "key": "HMRC-AS-AGENT",
-                      |    "identifiers": [{ "key": "AgentReferenceNumber", "value": "${testArn.value}" }]
-                      |  }],
-                      |  "optionalCredentials": {
-                      |    "providerId": "foo",
-                      |    "providerType": "bar"
-                      |  }
-                      |}""".stripMargin)
-    def authorise[A](predicate: Predicate, retrieval: Retrieval[A])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[A] =
-      Future.successful(retrieval.reads.reads(authJson).get)
-  }
-
-  val overrides = new AbstractModule() {
-    override def configure(): Unit = {
-      bind(classOf[AgentAssuranceConnector]).toInstance(stub[AgentAssuranceConnector])
-      bind(classOf[PendingChangeRequestRepository]).toInstance(stub[PendingChangeRequestRepository])
-      bind(classOf[AuthConnector]).toInstance(stubAuthConnector)
+  private val stubAuthConnector =
+    new AuthConnector {
+      private val authJson = Json.parse(s"""{
+                                           |  "internalId": "some-id",
+                                           |  "affinityGroup": "Agent",
+                                           |  "credentialRole": "User",
+                                           |  "allEnrolments": [{
+                                           |    "key": "HMRC-AS-AGENT",
+                                           |    "identifiers": [{ "key": "AgentReferenceNumber", "value": "${testArn.value}" }]
+                                           |  }],
+                                           |  "optionalCredentials": {
+                                           |    "providerId": "foo",
+                                           |    "providerType": "bar"
+                                           |  }
+                                           |}""".stripMargin)
+      def authorise[A](
+        predicate: Predicate,
+        retrieval: Retrieval[A]
+      )(implicit
+        hc: HeaderCarrier,
+        ec: ExecutionContext
+      ): Future[A] = Future.successful(retrieval.reads.reads(authJson).get)
     }
-  }
+
+  val overrides =
+    new AbstractModule() {
+      override def configure(): Unit = {
+        bind(classOf[AgentAssuranceConnector]).toInstance(stub[AgentAssuranceConnector])
+        bind(classOf[PendingChangeRequestRepository]).toInstance(stub[PendingChangeRequestRepository])
+        bind(classOf[AuthConnector]).toInstance(stubAuthConnector)
+      }
+    }
 
   override implicit lazy val app: Application = new GuiceApplicationBuilder().configure(
     "auditing.enabled" -> false,
@@ -93,8 +108,9 @@ class ViewContactDetailsControllerSpec extends UnitSpec
   ).overrides(overrides).build()
 
   trait TestSetup {
+
     val agentAssuranceConnector: AgentAssuranceConnector = app.injector.instanceOf[AgentAssuranceConnector]
-    (agentAssuranceConnector.getAgentRecord(_:RequestHeader)).when(*).returns(Future.successful(agentRecord))
+    (agentAssuranceConnector.getAgentRecord(_: RequestHeader)).when(*).returns(Future.successful(agentRecord))
 
     val controller: ViewContactDetailsController = app.injector.instanceOf[ViewContactDetailsController]
     val sessionCache: SessionCacheService = app.injector.instanceOf[SessionCacheService]
@@ -107,13 +123,15 @@ class ViewContactDetailsControllerSpec extends UnitSpec
         Some(PendingChangeRequest(
           testArn,
           Instant.now()
-        ))))
+        ))
+      ))
     }
 
     (pcodRepository.insert(_: PendingChangeRequest)(_: RequestHeader)).when(*, *).returns(Future.successful(()))
 
     // make sure these values are cleared from the session
     sessionCache.delete(DRAFT_SUBMITTED_BY)(fakeRequest()).futureValue
+
   }
 
   "GET /manage-account/contact-details/view" should {
@@ -135,9 +153,12 @@ class ViewContactDetailsControllerSpec extends UnitSpec
     "clear any previous draft new contacts" in new TestSetup {
       noPendingChangesInRepo()
       implicit val request: Request[AnyContent] = fakeRequest()
-      sessionCache.put(DRAFT_NEW_CONTACT_DETAILS, details.copy(
-        agencyDetails = details.agencyDetails.copy(agencyName = Some("New and Improved Agency"))
-      )).futureValue
+      sessionCache.put(
+        DRAFT_NEW_CONTACT_DETAILS,
+        details.copy(
+          agencyDetails = details.agencyDetails.copy(agencyName = Some("New and Improved Agency"))
+        )
+      ).futureValue
 
       val result: Future[Result] = controller.showPage(fakeRequest())
       status(result) shouldBe OK
@@ -148,6 +169,4 @@ class ViewContactDetailsControllerSpec extends UnitSpec
     }
   }
 
-
 }
-

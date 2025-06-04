@@ -17,7 +17,8 @@
 package uk.gov.hmrc.agentservicesaccount.views.pages.desi_details
 
 import org.jsoup.Jsoup
-import org.jsoup.nodes.{Document, Element}
+import org.jsoup.nodes.Document
+import org.jsoup.nodes.Element
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.data.Form
 import play.api.i18n._
@@ -27,18 +28,17 @@ import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms.telephoneNumber
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details.update_phone
 
-class UpdatePhoneSpec extends BaseISpec {
-
+class UpdatePhoneSpec
+extends BaseISpec {
 
   implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
   implicit val lang: Lang = Lang("en")
-  val view: update_phone  = app.injector.instanceOf[update_phone]
+  val view: update_phone = app.injector.instanceOf[update_phone]
   implicit val messages: Messages = MessagesImpl(lang, messagesApi)
 
   val form: Form[String] = telephoneNumberForm
-  val formWithErrors: Form[String] = form.withError(key ="telephoneNumber", message = Messages("update-contact-details.phone.error.empty"))
-
+  val formWithErrors: Form[String] = form.withError(key = "telephoneNumber", message = Messages("update-contact-details.phone.error.empty"))
 
   "update_phone" when {
 
@@ -77,7 +77,11 @@ class UpdatePhoneSpec extends BaseISpec {
 
     "first viewing page" should {
 
-      val doc: Document = Jsoup.parse(view.apply(form)(messages, FakeRequest(), appConfig).body)
+      val doc: Document = Jsoup.parse(view.apply(form)(
+        messages,
+        FakeRequest(),
+        appConfig
+      ).body)
 
       testServiceStaticContent(doc)
 
@@ -88,10 +92,13 @@ class UpdatePhoneSpec extends BaseISpec {
       }
     }
 
-
     "form is submitted with errors should" should {
 
-      val doc: Document = Jsoup.parse(view.apply(formWithErrors)(messages, FakeRequest(), appConfig).body)
+      val doc: Document = Jsoup.parse(view.apply(formWithErrors)(
+        messages,
+        FakeRequest(),
+        appConfig
+      ).body)
 
       testServiceStaticContent(doc)
 

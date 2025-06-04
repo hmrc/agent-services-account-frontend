@@ -24,7 +24,9 @@ import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 
 import scala.concurrent.ExecutionContext
 
-class AgentPermissionsConnectorSpec extends BaseISpec with Injecting {
+class AgentPermissionsConnectorSpec
+extends BaseISpec
+with Injecting {
 
   val connector: AgentPermissionsConnector = inject[AgentPermissionsConnector]
   implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
@@ -57,4 +59,5 @@ class AgentPermissionsConnectorSpec extends BaseISpec with Injecting {
       await(connector.declinePrivateBetaInvite()) shouldBe Done
     }
   }
+
 }

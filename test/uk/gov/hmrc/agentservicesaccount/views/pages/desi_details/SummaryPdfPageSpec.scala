@@ -19,23 +19,34 @@ package uk.gov.hmrc.agentservicesaccount.views.pages.desi_details
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
-import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
+import play.api.i18n.Lang
+import play.api.i18n.Messages
+import play.api.i18n.MessagesApi
+import play.api.i18n.MessagesImpl
 import play.api.test.FakeRequest
-import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, Utr}
+import uk.gov.hmrc.agentmtdidentifiers.model.Arn
+import uk.gov.hmrc.agentmtdidentifiers.model.Utr
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, OtherServices, SaChanges, YourDetails}
-import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress, PendingChangeOfDetails}
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.CtChanges
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.OtherServices
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.SaChanges
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.YourDetails
+import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
+import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
+import uk.gov.hmrc.agentservicesaccount.models.PendingChangeOfDetails
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details.summaryPdf
-import uk.gov.hmrc.domain.{CtUtr, SaUtr}
+import uk.gov.hmrc.domain.CtUtr
+import uk.gov.hmrc.domain.SaUtr
 
 import java.time.Instant
 import scala.jdk.CollectionConverters.CollectionHasAsScala
 
-class SummaryPdfPageSpec extends BaseISpec {
+class SummaryPdfPageSpec
+extends BaseISpec {
 
-  implicit private val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
-  implicit private val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
+  private implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+  private implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
   implicit val lang: Lang = Lang("en")
   implicit val messages: Messages = MessagesImpl(lang, messagesApi)
 
@@ -45,7 +56,14 @@ class SummaryPdfPageSpec extends BaseISpec {
     agencyName = Some("Test Name"),
     agencyEmail = Some("test@email.com"),
     agencyTelephone = Some("01234 567890"),
-    agencyAddress = Some(BusinessAddress("Test Street", Some("Test Town"), None, None, Some("TE5 7ED"), "GB"))
+    agencyAddress = Some(BusinessAddress(
+      "Test Street",
+      Some("Test Town"),
+      None,
+      None,
+      Some("TE5 7ED"),
+      "GB"
+    ))
   )
 
   private val testArn = Arn("XXARN0123456789")
@@ -53,7 +71,12 @@ class SummaryPdfPageSpec extends BaseISpec {
 
   private val selectChanges1: Set[String] = Set("businessName")
   private val selectChanges2: Set[String] = Set("email", "telephone")
-  private val selectChangesAll: Set[String] = Set("businessName", "address", "email", "telephone")
+  private val selectChangesAll: Set[String] = Set(
+    "businessName",
+    "address",
+    "email",
+    "telephone"
+  )
 
   private val fullOtherServices = OtherServices(
     saChanges = SaChanges(
@@ -99,6 +122,7 @@ class SummaryPdfPageSpec extends BaseISpec {
   object MessageLookup {
 
     object English {
+
       val heading: String = "Request to amend contact details"
       val title: String = "Request to amend contact details"
 
@@ -131,6 +155,7 @@ class SummaryPdfPageSpec extends BaseISpec {
 
       val yourDetailsNameValue: String = "John Tester"
       val yourDetailsTelephoneValue: String = "01903 209919"
+
     }
 
   }
@@ -141,8 +166,12 @@ class SummaryPdfPageSpec extends BaseISpec {
       val doc: Document = Jsoup.parse(view.apply(
         Some(testUtr),
         pendingChangeOfDetails1,
-        selectChanges = selectChanges1,
-      )(messages, FakeRequest(), appConfig).body)
+        selectChanges = selectChanges1
+      )(
+        messages,
+        FakeRequest(),
+        appConfig
+      ).body)
 
       "display the correct page title" in {
         doc.title() mustBe "Request to amend contact details"
@@ -174,7 +203,11 @@ class SummaryPdfPageSpec extends BaseISpec {
         Some(testUtr),
         pendingChangeOfDetails1,
         selectChanges = selectChanges1
-      )(messages, FakeRequest(), appConfig).body)
+      )(
+        messages,
+        FakeRequest(),
+        appConfig
+      ).body)
 
       "businessName is the only selected update" in {
 
@@ -207,8 +240,11 @@ class SummaryPdfPageSpec extends BaseISpec {
         Some(testUtr),
         pendingChangeOfDetails2,
         selectChanges = selectChanges2
-      )(messages, FakeRequest(), appConfig).body)
-
+      )(
+        messages,
+        FakeRequest(),
+        appConfig
+      ).body)
 
       "email and telephone are the only selected changes" in {
 
@@ -246,8 +282,12 @@ class SummaryPdfPageSpec extends BaseISpec {
     val doc: Document = Jsoup.parse(view.apply(
       Some(testUtr),
       pendingChangeOfDetailsAll,
-      selectChanges = selectChangesAll,
-    )(messages, FakeRequest(), appConfig).body)
+      selectChanges = selectChangesAll
+    )(
+      messages,
+      FakeRequest(),
+      appConfig
+    ).body)
 
     "all contact details and agent codes have been selected" in {
 
@@ -290,4 +330,5 @@ class SummaryPdfPageSpec extends BaseISpec {
 
     }
   }
+
 }

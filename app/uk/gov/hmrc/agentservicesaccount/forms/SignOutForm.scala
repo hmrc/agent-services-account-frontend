@@ -25,18 +25,24 @@ object SignOutForm {
 
   val upperCaseText: Mapping[String] = of[String].transform(_.trim.toUpperCase, identity)
 
-  val supportedSurveyKeys = Set("AGENTSUB", "AGENTHOME", "INVITAGENT", "ACCESSINGSERVICE")
+  val supportedSurveyKeys = Set(
+    "AGENTSUB",
+    "AGENTHOME",
+    "INVITAGENT",
+    "ACCESSINGSERVICE"
+  )
 
   val form: Form[String] = Form(
     single(
       "surveyKey" -> optional(upperCaseText)
-          .verifying("survey.empty", sk => supportedSurveyKeys.contains(sk.getOrElse("")))
-          .transform(_.getOrElse(""), (Some(_)): String => Option[String])
+        .verifying("survey.empty", sk => supportedSurveyKeys.contains(sk.getOrElse("")))
+        .transform(_.getOrElse(""), (Some(_)): String => Option[String])
     )
   )
 
-  def surveyKeys(implicit messages: Messages) = supportedSurveyKeys.map(key =>
-    key -> Messages(s"survey.form.label.${key.toLowerCase}")
-  ).toSeq
+  def surveyKeys(implicit messages: Messages) =
+    supportedSurveyKeys.map(key =>
+      key -> Messages(s"survey.form.label.${key.toLowerCase}")
+    ).toSeq
 
 }

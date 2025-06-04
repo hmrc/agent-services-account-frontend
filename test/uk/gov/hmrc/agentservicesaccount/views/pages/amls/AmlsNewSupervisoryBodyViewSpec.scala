@@ -17,31 +17,34 @@
 package uk.gov.hmrc.agentservicesaccount.views.pages.amls
 
 import org.jsoup.Jsoup
-import org.jsoup.nodes.{Document, Element}
+import org.jsoup.nodes.Document
+import org.jsoup.nodes.Element
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.data.Form
-import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
+import play.api.i18n.Lang
+import play.api.i18n.Messages
+import play.api.i18n.MessagesApi
+import play.api.i18n.MessagesImpl
 import play.api.test.FakeRequest
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.forms.NewAmlsSupervisoryBodyForm
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.new_supervisory_body
 
-class AmlsNewSupervisoryBodyViewSpec extends BaseISpec {
-
+class AmlsNewSupervisoryBodyViewSpec
+extends BaseISpec {
 
   implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
   implicit val lang: Lang = Lang("en")
-  val view: new_supervisory_body  = app.injector.instanceOf[new_supervisory_body]
+  val view: new_supervisory_body = app.injector.instanceOf[new_supervisory_body]
   val messages: Messages = MessagesImpl(lang, messagesApi)
   val amlsBodies = Map("ACCA" -> "Association of Certified Chartered Accountant")
   val selectedBody = "Association of Certified Chartered Accountant"
 
   def form(isUk: Boolean): Form[String] = NewAmlsSupervisoryBodyForm.form(amlsBodies)(isUk)
   def prePopulateForm(isUk: Boolean): Form[String] = NewAmlsSupervisoryBodyForm.form(amlsBodies)(isUk).fill(selectedBody)
-  def formWithErrors(isUk: Boolean): Form[String] = form(isUk).withError(key ="body", message = "amls.new-supervisory-body.error")
-
+  def formWithErrors(isUk: Boolean): Form[String] = form(isUk).withError(key = "body", message = "amls.new-supervisory-body.error")
 
   "new_supervisory_body" when {
 
@@ -82,7 +85,16 @@ class AmlsNewSupervisoryBodyViewSpec extends BaseISpec {
     "first viewing page for UK agent" should {
       val isUk = true
 
-      val doc: Document = Jsoup.parse(view.apply(form(isUk), amlsBodies, isUk, cya = false)(FakeRequest(), messages, appConfig).body)
+      val doc: Document = Jsoup.parse(view.apply(
+        form(isUk),
+        amlsBodies,
+        isUk,
+        cya = false
+      )(
+        FakeRequest(),
+        messages,
+        appConfig
+      ).body)
 
       testServiceStaticContent(doc)
 
@@ -96,7 +108,16 @@ class AmlsNewSupervisoryBodyViewSpec extends BaseISpec {
     "viewing page with form data for UK agent" should {
       val isUk = true
 
-      val doc: Document = Jsoup.parse(view.apply(prePopulateForm(isUk), amlsBodies, isUk, cya = false)(FakeRequest(), messages, appConfig).body)
+      val doc: Document = Jsoup.parse(view.apply(
+        prePopulateForm(isUk),
+        amlsBodies,
+        isUk,
+        cya = false
+      )(
+        FakeRequest(),
+        messages,
+        appConfig
+      ).body)
 
       testServiceStaticContent(doc)
 
@@ -114,7 +135,16 @@ class AmlsNewSupervisoryBodyViewSpec extends BaseISpec {
     "first viewing page for overseas agent" should {
       val isUk = false
 
-      val doc: Document = Jsoup.parse(view.apply(form(isUk), amlsBodies, isUk, cya = false)(FakeRequest(), messages, appConfig).body)
+      val doc: Document = Jsoup.parse(view.apply(
+        form(isUk),
+        amlsBodies,
+        isUk,
+        cya = false
+      )(
+        FakeRequest(),
+        messages,
+        appConfig
+      ).body)
 
       testServiceStaticContent(doc)
 
@@ -128,7 +158,16 @@ class AmlsNewSupervisoryBodyViewSpec extends BaseISpec {
     "form is submitted with errors should" should {
       val isUk = true
 
-      val doc: Document = Jsoup.parse(view.apply(formWithErrors(isUk), amlsBodies, isUk, cya = false)(FakeRequest(), messages, appConfig).body)
+      val doc: Document = Jsoup.parse(view.apply(
+        formWithErrors(isUk),
+        amlsBodies,
+        isUk,
+        cya = false
+      )(
+        FakeRequest(),
+        messages,
+        appConfig
+      ).body)
 
       testServiceStaticContent(doc)
 

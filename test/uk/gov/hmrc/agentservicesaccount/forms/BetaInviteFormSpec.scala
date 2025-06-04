@@ -20,13 +20,16 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 
-class BetaInviteFormSpec extends AnyWordSpec with Matchers with GuiceOneAppPerSuite {
+class BetaInviteFormSpec
+extends AnyWordSpec
+with Matchers
+with GuiceOneAppPerSuite {
 
   val fieldName = "size"
 
   "BetaInviteForm bound value for 'size' field name" should {
 
-    //update string to trait?
+    // update string to trait?
     "be small when field value is 'small' " in {
       val params = Map(fieldName -> "small")
       BetaInviteForm.form.bind(params).value shouldBe Some("small")
@@ -52,7 +55,9 @@ class BetaInviteFormSpec extends AnyWordSpec with Matchers with GuiceOneAppPerSu
 
     "unbind" in {
       BetaInviteForm.form.mapping.unbind("small") shouldBe Map(
-        "size" -> "small")
+        "size" -> "small"
+      )
     }
   }
+
 }

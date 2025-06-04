@@ -17,10 +17,13 @@
 package uk.gov.hmrc.agentservicesaccount.support
 
 import org.mockito.Mockito
-import org.scalatest.{BeforeAndAfterEach, Suite}
+import org.scalatest.BeforeAndAfterEach
+import org.scalatest.Suite
 import org.scalatestplus.mockito.MockitoSugar
 
-trait ResettingMockitoSugar extends MockitoSugar with BeforeAndAfterEach {
+trait ResettingMockitoSugar
+extends MockitoSugar
+with BeforeAndAfterEach {
   this: Suite =>
 
   var mocksToReset = Seq.empty[Any]
@@ -35,4 +38,5 @@ trait ResettingMockitoSugar extends MockitoSugar with BeforeAndAfterEach {
     super.beforeEach()
     Mockito.reset(mocksToReset: _*)
   }
+
 }

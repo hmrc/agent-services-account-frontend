@@ -17,31 +17,41 @@
 package uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
 
 import play.api.i18n.I18nSupport
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.Action
+import play.api.mvc.AnyContent
+import play.api.mvc.MessagesControllerComponents
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.DesiDetailsJourneySupport
 import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.CtChanges
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
-import uk.gov.hmrc.agentservicesaccount.services.{DraftDetailsService, SessionCacheService}
+import uk.gov.hmrc.agentservicesaccount.services.DraftDetailsService
+import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details.enter_ct_code
 import uk.gov.hmrc.domain.CtUtr
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
-import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import javax.inject.Inject
+import javax.inject.Singleton
+import scala.concurrent.ExecutionContext
+import scala.concurrent.Future
 
 @Singleton
-class EnterCTCodeController @Inject()(actions: Actions,
-                                      val sessionCache: SessionCacheService,
-                                      draftDetailsService: DraftDetailsService,
-                                      enterCtCodeView: enter_ct_code,
-                                      cc: MessagesControllerComponents
-                                     )(implicit appConfig: AppConfig,
-                                       val ec: ExecutionContext,
-                                       pcodRepository: PendingChangeRequestRepository
-                                     ) extends FrontendController(cc) with DesiDetailsJourneySupport with I18nSupport {
+class EnterCTCodeController @Inject() (
+  actions: Actions,
+  val sessionCache: SessionCacheService,
+  draftDetailsService: DraftDetailsService,
+  enterCtCodeView: enter_ct_code,
+  cc: MessagesControllerComponents
+)(implicit
+  appConfig: AppConfig,
+  val ec: ExecutionContext,
+  pcodRepository: PendingChangeRequestRepository
+)
+extends FrontendController(cc)
+with DesiDetailsJourneySupport
+with I18nSupport {
 
   def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     ifChangeContactFeatureEnabledAndNoPendingChanges {
@@ -63,12 +73,14 @@ class EnterCTCodeController @Inject()(actions: Actions,
               draftDetailsService.updateDraftDetails(
                 _.copy(otherServices = desiDetails.otherServices.copy(ctChanges = CtChanges(true, Some(CtUtr(saCode)))))
               ).flatMap {
-                  _ =>
-                    isJourneyComplete().map(journey =>
-                      if(journey.journeyComplete) Redirect(routes.CheckYourAnswersController.showPage)
-                      else Redirect(routes.YourDetailsController.showPage)
-                    )
-                }
+                _ =>
+                  isJourneyComplete().map(journey =>
+                    if (journey.journeyComplete)
+                      Redirect(routes.CheckYourAnswersController.showPage)
+                    else
+                      Redirect(routes.YourDetailsController.showPage)
+                  )
+              }
             }
           )
       }
@@ -81,14 +93,16 @@ class EnterCTCodeController @Inject()(actions: Actions,
         draftDetailsService.updateDraftDetails(
           _.copy(otherServices = desiDetails.otherServices.copy(ctChanges = CtChanges(true, None)))
         ).flatMap {
-            _ =>
-              isJourneyComplete().map(journey =>
-                if(journey.journeyComplete) Redirect(routes.CheckYourAnswersController.showPage)
-                else Redirect(routes.YourDetailsController.showPage)
-              )
-          }
+          _ =>
+            isJourneyComplete().map(journey =>
+              if (journey.journeyComplete)
+                Redirect(routes.CheckYourAnswersController.showPage)
+              else
+                Redirect(routes.YourDetailsController.showPage)
+            )
+        }
       }
     }
   }
-}
 
+}

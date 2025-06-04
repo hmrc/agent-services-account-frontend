@@ -18,10 +18,11 @@ package uk.gov.hmrc.agentservicesaccount.views.components.models
 
 import play.api.mvc.Call
 
-case class SummaryListData(key: String,
-                           value: String,
-                           link: Option[Call] = None,
-                           hiddenText: Option[String] = None,
-                           linkMsgKey: String = "common.change",
-                           linkClasses: Option[String] = None
-                          )
+case class SummaryListData(
+  key: String,
+  value: String,
+  link: Option[Call] = None,
+  hiddenText: Option[String] = None,
+  linkMsgKey: String = "common.change",
+  linkClasses: Option[String] = None
+)

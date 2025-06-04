@@ -16,14 +16,15 @@
 
 package uk.gov.hmrc.agentservicesaccount.models.audit
 
-import play.api.libs.json.{Json, OWrites}
+import play.api.libs.json.Json
+import play.api.libs.json.OWrites
 
-case class UserDetails(firstName: String,
-                       lastName: String,
-                       telephone: String)
+case class UserDetails(
+  firstName: String,
+  lastName: String,
+  telephone: String
+)
 
 object UserDetails {
   implicit val writes: OWrites[UserDetails] = Json.writes
 }
-
-

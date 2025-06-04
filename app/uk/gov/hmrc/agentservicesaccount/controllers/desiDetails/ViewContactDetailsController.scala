@@ -17,7 +17,10 @@
 package uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
 
 import play.api.i18n.I18nSupport
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
+import play.api.mvc.Action
+import play.api.mvc.AnyContent
+import play.api.mvc.MessagesControllerComponents
+import play.api.mvc.Result
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
@@ -27,21 +30,31 @@ import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details.view_contact_details
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
-import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import javax.inject.Inject
+import javax.inject.Singleton
+import scala.concurrent.ExecutionContext
+import scala.concurrent.Future
 
 @Singleton
-class ViewContactDetailsController @Inject()(actions: Actions,
-                                             sessionCache: SessionCacheService,
-                                             agentAssuranceConnector: AgentAssuranceConnector,
-                                             pcodRepository: PendingChangeRequestRepository,
-                                             view_contact_details: view_contact_details
-                                            )(implicit appConfig: AppConfig,
-                                              cc: MessagesControllerComponents,
-                                              ec: ExecutionContext) extends FrontendController(cc) with I18nSupport {
+class ViewContactDetailsController @Inject() (
+  actions: Actions,
+  sessionCache: SessionCacheService,
+  agentAssuranceConnector: AgentAssuranceConnector,
+  pcodRepository: PendingChangeRequestRepository,
+  view_contact_details: view_contact_details
+)(implicit
+  appConfig: AppConfig,
+  cc: MessagesControllerComponents,
+  ec: ExecutionContext
+)
+extends FrontendController(cc)
+with I18nSupport {
 
   private def ifFeatureEnabled(action: => Future[Result]): Future[Result] = {
-    if (appConfig.enableChangeContactDetails) action else Future.successful(NotFound)
+    if (appConfig.enableChangeContactDetails)
+      action
+    else
+      Future.successful(NotFound)
   }
 
   def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
@@ -52,8 +65,12 @@ class ViewContactDetailsController @Inject()(actions: Actions,
         agencyDetails <- agentAssuranceConnector.getAgentRecord.map(_.agencyDetails.getOrElse {
           throw new RuntimeException(s"Could not retrieve current agency details for ${request.agentInfo.arn} from the backend")
         })
-      } yield Ok(view_contact_details(agencyDetails, mPendingChange, request.agentInfo.isAdmin))
+      } yield Ok(view_contact_details(
+        agencyDetails,
+        mPendingChange,
+        request.agentInfo.isAdmin
+      ))
     }
   }
-}
 
+}

@@ -21,58 +21,73 @@ import play.api.mvc.RequestHeader
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.EmailConnector
-import uk.gov.hmrc.agentservicesaccount.models.{AccountRecoverySummary, AgencyDetails, BetaInviteDetailsForEmail, SendEmailData}
+import uk.gov.hmrc.agentservicesaccount.models.AccountRecoverySummary
+import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
+import uk.gov.hmrc.agentservicesaccount.models.BetaInviteDetailsForEmail
+import uk.gov.hmrc.agentservicesaccount.models.SendEmailData
 
-import javax.inject.{Inject, Singleton}
+import javax.inject.Inject
+import javax.inject.Singleton
 import scala.concurrent.Future
 
 @Singleton
-class EmailService @Inject()(emailConnector: EmailConnector, appConfig: AppConfig) extends Logging {
+class EmailService @Inject() (
+  emailConnector: EmailConnector,
+  appConfig: AppConfig
+)
+extends Logging {
 
-  def sendInviteAcceptedEmail(arn: Arn,
-                              details: BetaInviteDetailsForEmail
-                             )(implicit rh: RequestHeader): Future[Unit] =
-    sendEmail(Seq("mtdgpvolunteers@hmrc.gov.uk"), arn, details, "agent_permissions_beta_participant_details")
+  def sendInviteAcceptedEmail(
+    arn: Arn,
+    details: BetaInviteDetailsForEmail
+  )(implicit rh: RequestHeader): Future[Unit] = sendEmail(
+    Seq("mtdgpvolunteers@hmrc.gov.uk"),
+    arn,
+    details,
+    "agent_permissions_beta_participant_details"
+  )
 
-  def sendEmail(sendTo: Seq[String],
-                arn: Arn,
-                details: BetaInviteDetailsForEmail,
-                templateId: String
-               )(implicit rh: RequestHeader): Future[Unit] =
-    emailConnector.sendEmail(
-      SendEmailData(
-        sendTo,
-        templateId,
-        Map(
-          "arn" -> arn.value,
-          "numClients" -> details.numberOfClients.toDescription,
-          "contactName" -> details.name,
-          "emailAddress" -> details.email,
-          "telephoneNumber" -> details.phone.getOrElse("Not provided")
-        )
-      ))
+  def sendEmail(
+    sendTo: Seq[String],
+    arn: Arn,
+    details: BetaInviteDetailsForEmail,
+    templateId: String
+  )(implicit rh: RequestHeader): Future[Unit] = emailConnector.sendEmail(
+    SendEmailData(
+      sendTo,
+      templateId,
+      Map(
+        "arn" -> arn.value,
+        "numClients" -> details.numberOfClients.toDescription,
+        "contactName" -> details.name,
+        "emailAddress" -> details.email,
+        "telephoneNumber" -> details.phone.getOrElse("Not provided")
+      )
+    )
+  )
 
-  def sendSuspendedSummaryEmail(details: AccountRecoverySummary,
-                                agencyDetails: Option[AgencyDetails]
-                               )(implicit rh: RequestHeader): Future[Unit] =
+  def sendSuspendedSummaryEmail(
+    details: AccountRecoverySummary,
+    agencyDetails: Option[AgencyDetails]
+  )(implicit rh: RequestHeader): Future[Unit] =
     if (appConfig.suspendedContactDetailsSendEmail) {
       val agencyName = agencyDetails.get.agencyName.get
-      val emailInfo: SendEmailData =
-        SendEmailData(
-          to = Seq(appConfig.suspendedContactDetailsSendToAddress),
-          templateId = "suspended_contact_details",
-          parameters = Map(
-            "agencyName" -> agencyName,
-            "arn" -> details.arn,
-            "contactName" -> details.name,
-            "emailAddress" -> details.email,
-            "telephoneNumber" -> details.phone,
-            "description" -> details.description
-          )
+      val emailInfo: SendEmailData = SendEmailData(
+        to = Seq(appConfig.suspendedContactDetailsSendToAddress),
+        templateId = "suspended_contact_details",
+        parameters = Map(
+          "agencyName" -> agencyName,
+          "arn" -> details.arn,
+          "contactName" -> details.name,
+          "emailAddress" -> details.email,
+          "telephoneNumber" -> details.phone,
+          "description" -> details.description
         )
+      )
 
       emailConnector.sendEmail(emailInfo)
     }
-    else Future.successful(logger.warn("email is disabled for send suspension email contact details"))
+    else
+      Future.successful(logger.warn("email is disabled for send suspension email contact details"))
 
 }

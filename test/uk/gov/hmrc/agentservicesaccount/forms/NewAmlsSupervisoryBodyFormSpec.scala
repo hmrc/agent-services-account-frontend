@@ -19,7 +19,9 @@ package uk.gov.hmrc.agentservicesaccount.forms
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
-class NewAmlsSupervisoryBodyFormSpec extends AnyWordSpec with Matchers {
+class NewAmlsSupervisoryBodyFormSpec
+extends AnyWordSpec
+with Matchers {
 
   val amlsBodies = Map("ACCA" -> "Association of Certified Chartered Accountants")
 
@@ -102,4 +104,5 @@ class NewAmlsSupervisoryBodyFormSpec extends AnyWordSpec with Matchers {
       result.errors.head.message shouldBe "amls.new-supervisory-body.error.os.max-length"
     }
   }
+
 }

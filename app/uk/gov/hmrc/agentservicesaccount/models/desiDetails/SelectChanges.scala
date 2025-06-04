@@ -16,10 +16,20 @@
 
 package uk.gov.hmrc.agentservicesaccount.models.desiDetails
 
-case class SelectChanges(businessName: Option[String], address: Option[String], email: Option[String], telephone: Option[String]) {
+case class SelectChanges(
+  businessName: Option[String],
+  address: Option[String],
+  email: Option[String],
+  telephone: Option[String]
+) {
 
   def atLeastOneSelected: Boolean = businessName.nonEmpty || address.nonEmpty || email.nonEmpty || telephone.nonEmpty
 
-  def pagesSelected: Set[String] = Set(businessName, address, email, telephone).filter(_.nonEmpty).map(_.get)
+  def pagesSelected: Set[String] = Set(
+    businessName,
+    address,
+    email,
+    telephone
+  ).filter(_.nonEmpty).map(_.get)
 
 }

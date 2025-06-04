@@ -17,7 +17,10 @@
 package uk.gov.hmrc.agentservicesaccount.connectors
 
 import play.api.test.Helpers._
-import uk.gov.hmrc.agentservicesaccount.models.{AmlsDetails, AmlsDetailsResponse, AmlsStatuses, UpdateAmlsJourney}
+import uk.gov.hmrc.agentservicesaccount.models.AmlsDetails
+import uk.gov.hmrc.agentservicesaccount.models.AmlsDetailsResponse
+import uk.gov.hmrc.agentservicesaccount.models.AmlsStatuses
+import uk.gov.hmrc.agentservicesaccount.models.UpdateAmlsJourney
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentAssuranceStubs._
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import uk.gov.hmrc.http.UpstreamErrorResponse
@@ -25,7 +28,8 @@ import uk.gov.hmrc.http.UpstreamErrorResponse
 import java.time.LocalDate
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class AgentAssuranceConnectorSpec extends BaseISpec {
+class AgentAssuranceConnectorSpec
+extends BaseISpec {
 
   private lazy val connector = app.injector.instanceOf[AgentAssuranceConnector]
 
@@ -37,7 +41,7 @@ class AgentAssuranceConnectorSpec extends BaseISpec {
     Some(LocalDate.of(2022, 12, 25)),
     Some(LocalDate.of(2023, 12, 25))
   )
-  private val ukAMLSDetailsResponse = AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK,Some(ukAMLSDetails))
+  private val ukAMLSDetailsResponse = AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, Some(ukAMLSDetails))
 
   private val amlsJourney = UpdateAmlsJourney(
     status = AmlsStatuses.ValidAmlsDetailsUK,
@@ -46,9 +50,8 @@ class AgentAssuranceConnectorSpec extends BaseISpec {
     newExpirationDate = Some(LocalDate.parse("2024-10-10"))
   )
 
-
   private val overseasAMLSDetails = AmlsDetails("notHMRC")
-  private val overseasAMLSDetailsResponse = AmlsDetailsResponse(AmlsStatuses.ValidAmlsNonUK,Some(overseasAMLSDetails))
+  private val overseasAMLSDetailsResponse = AmlsDetailsResponse(AmlsStatuses.ValidAmlsNonUK, Some(overseasAMLSDetails))
 
   "getAMLSDetails" should {
     "return UK AMLS details" in {
@@ -87,7 +90,6 @@ class AgentAssuranceConnectorSpec extends BaseISpec {
       }.getMessage shouldBe "Error 500 unable to get amls details"
     }
   }
-
 
   "getAmlsStatus" should {
     "return UK AMLS Status" in {
@@ -130,9 +132,10 @@ class AgentAssuranceConnectorSpec extends BaseISpec {
 
     "throw exception when 204 response" in {
       givenAgentDetailsErrorResponse(204)
-      intercept[UpstreamErrorResponse]{
+      intercept[UpstreamErrorResponse] {
         await(connector.getAgentRecord)
       }
     }
   }
+
 }

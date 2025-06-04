@@ -20,51 +20,68 @@ import com.github.tomakehurst.wiremock.client.WireMock._
 
 trait AuthStubs {
 
-  def givenAuthorisedAsAgentWith(arn: String, isAdmin: Boolean = true) = {
-    val credRole = if(isAdmin) "Admin" else "Assistant"
+  def givenAuthorisedAsAgentWith(
+    arn: String,
+    isAdmin: Boolean = true
+  ) = {
+    val credRole =
+      if (isAdmin)
+        "Admin"
+      else
+        "Assistant"
     stubFor(post(urlEqualTo("/auth/authorise"))
       .willReturn(
         aResponse()
           .withStatus(200).withBody(
-          s"""{
-            |  "internalId": "some-id",
-            |  "affinityGroup": "Agent",
-            |  "credentialRole": "$credRole",
-            |  "allEnrolments": [{
-            |    "key": "HMRC-AS-AGENT",
-            |    "identifiers": [{ "key": "AgentReferenceNumber", "value": "$arn" }]
-            |  }]
-            |
-            |}""".stripMargin
-        )))
+            s"""{
+               |  "internalId": "some-id",
+               |  "affinityGroup": "Agent",
+               |  "credentialRole": "$credRole",
+               |  "allEnrolments": [{
+               |    "key": "HMRC-AS-AGENT",
+               |    "identifiers": [{ "key": "AgentReferenceNumber", "value": "$arn" }]
+               |  }]
+               |
+               |}""".stripMargin
+          )
+      ))
   }
 
-  def givenFullAuthorisedAsAgentWith(arn: String, providerId: String, isAdmin: Boolean = false) = {
-    val credRole = if(isAdmin) "Admin" else "Assistant"
+  def givenFullAuthorisedAsAgentWith(
+    arn: String,
+    providerId: String,
+    isAdmin: Boolean = false
+  ) = {
+    val credRole =
+      if (isAdmin)
+        "Admin"
+      else
+        "Assistant"
     stubFor(post(urlEqualTo("/auth/authorise"))
       .willReturn(
         aResponse()
           .withStatus(200).withBody(
-          s"""{
-             |  "internalId": "some-id",
-             |  "affinityGroup": "Agent",
-             |  "credentialRole": "$credRole",
-             |  "email": "bob@builder.com",
-             |  "optionalCredentials": {
-             |    "providerId": "$providerId",
-             |    "providerType": "whatever"
-             |  },
-             |  "optionalName": {
-             |    "name": "Bob",
-             |    "lastName": "The Builder"
-             |  },
-             |  "allEnrolments": [{
-             |    "key": "HMRC-AS-AGENT",
-             |    "identifiers": [{ "key": "AgentReferenceNumber", "value": "$arn" }]
-             |  }]
-             |
-             |}""".stripMargin
-        )))
+            s"""{
+               |  "internalId": "some-id",
+               |  "affinityGroup": "Agent",
+               |  "credentialRole": "$credRole",
+               |  "email": "bob@builder.com",
+               |  "optionalCredentials": {
+               |    "providerId": "$providerId",
+               |    "providerType": "whatever"
+               |  },
+               |  "optionalName": {
+               |    "name": "Bob",
+               |    "lastName": "The Builder"
+               |  },
+               |  "allEnrolments": [{
+               |    "key": "HMRC-AS-AGENT",
+               |    "identifiers": [{ "key": "AgentReferenceNumber", "value": "$arn" }]
+               |  }]
+               |
+               |}""".stripMargin
+          )
+      ))
   }
 
   def GivenIsNotLoggedIn() = {
@@ -74,4 +91,5 @@ trait AuthStubs {
         .withStatus(401)))
     this
   }
+
 }

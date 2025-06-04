@@ -17,7 +17,9 @@
 package uk.gov.hmrc.agentservicesaccount.utils
 
 import org.apache.commons.text.StringEscapeUtils
-import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress, PendingChangeOfDetails}
+import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
+import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
+import uk.gov.hmrc.agentservicesaccount.models.PendingChangeOfDetails
 
 object XmlUtils {
 
@@ -37,8 +39,9 @@ object XmlUtils {
   }
 
   // the agency name is already being escaped
-  private def escapeAgencyDetails(agencyDetails: AgencyDetails): AgencyDetails =
-    agencyDetails.copy( agencyAddress = escapeBusinessAddress(agencyDetails.agencyAddress) )
+  private def escapeAgencyDetails(agencyDetails: AgencyDetails): AgencyDetails = agencyDetails.copy(agencyAddress =
+    escapeBusinessAddress(agencyDetails.agencyAddress)
+  )
 
   // XML characters need to be escaped for PDF generation and this needs to be done before it is turned into HTML
   def escapeXmlFor(pendingChangeOfDetails: PendingChangeOfDetails): PendingChangeOfDetails = {

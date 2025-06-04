@@ -19,24 +19,31 @@ package uk.gov.hmrc.agentservicesaccount.views.pages.desi_details
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
-import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
+import play.api.i18n.Lang
+import play.api.i18n.Messages
+import play.api.i18n.MessagesApi
+import play.api.i18n.MessagesImpl
 import play.api.test.FakeRequest
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.routes
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.YourDetails
-import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress, PendingChangeRequest}
+import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
+import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
+import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details.view_contact_details
 
 import java.time.format.DateTimeFormatter
-import java.time.{Instant, LocalDate}
+import java.time.Instant
+import java.time.LocalDate
 import scala.jdk.CollectionConverters.CollectionHasAsScala
 
-class ViewContactDetailsViewSpec extends BaseISpec {
+class ViewContactDetailsViewSpec
+extends BaseISpec {
 
-  implicit private val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
-  implicit private val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
-  implicit private val langs: Seq[Lang] = Seq(Lang("en"), Lang("cy"))
+  private implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+  private implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
+  private implicit val langs: Seq[Lang] = Seq(Lang("en"), Lang("cy"))
 
   private val view: view_contact_details = app.injector.instanceOf[view_contact_details]
 
@@ -44,11 +51,22 @@ class ViewContactDetailsViewSpec extends BaseISpec {
     agencyName = Some("Test Name"),
     agencyEmail = Some("test@email.com"),
     agencyTelephone = Some("01234 567890"),
-    agencyAddress = Some(BusinessAddress("Test Street", Some("Test Town"), None, None, Some("TE5 7ED"), "GB"))
+    agencyAddress = Some(BusinessAddress(
+      "Test Street",
+      Some("Test Town"),
+      None,
+      None,
+      Some("TE5 7ED"),
+      "GB"
+    ))
   )
 
-  private val testAgencyDetailsEmpty = AgencyDetails(None, None, None, None)
-
+  private val testAgencyDetailsEmpty = AgencyDetails(
+    None,
+    None,
+    None,
+    None
+  )
 
   private val submittedByDetails = YourDetails(
     fullName = "John Tester",
@@ -63,6 +81,7 @@ class ViewContactDetailsViewSpec extends BaseISpec {
   object MessageLookup {
 
     object English {
+
       private val govUkSuffix: String = " - Agent services account - GOV.UK"
       val heading: String = "Contact details"
       val title: String = heading + govUkSuffix
@@ -86,9 +105,11 @@ class ViewContactDetailsViewSpec extends BaseISpec {
 
       val link1 = "Update contact details"
       val link2 = "Return to Manage account"
+
     }
 
     object Welsh {
+
       private val govUkSuffix: String = " - Cyfrif gwasanaethau asiant - GOV.UK"
       val heading: String = "Manylion cyswllt"
       val title: String = heading + govUkSuffix
@@ -112,18 +133,27 @@ class ViewContactDetailsViewSpec extends BaseISpec {
 
       val link1 = "Diweddaru manylion cyswllt"
       val link2 = "Dychwelyd i ‘Rheoli’r cyfrif’"
+
     }
+
   }
 
-  //TODO create test constants file for reuse of the test variable
-
+  // TODO create test constants file for reuse of the test variable
 
   "view_contact_details" should {
     "render correctly" when {
       "the selected lang is english" when {
         val messages: Messages = MessagesImpl(langs.head, messagesApi)
         "there are contact details" in {
-          val doc: Document = Jsoup.parse(view.apply(testAgencyDetailsFull, None, isAdmin = true)(messages, FakeRequest(), appConfig).body)
+          val doc: Document = Jsoup.parse(view.apply(
+            testAgencyDetailsFull,
+            None,
+            isAdmin = true
+          )(
+            messages,
+            FakeRequest(),
+            appConfig
+          ).body)
 
           doc.title() mustBe MessageLookup.English.title
           doc.select("h1").asScala.head.text mustBe MessageLookup.English.heading
@@ -149,7 +179,15 @@ class ViewContactDetailsViewSpec extends BaseISpec {
           links(3).attributes().get("href") mustBe routes.AgentServicesController.manageAccount.url
         }
         "'update contact details' link hidden for standard user" in {
-          val doc: Document = Jsoup.parse(view.apply(testAgencyDetailsFull, None, isAdmin = false)(messages, FakeRequest(), appConfig).body)
+          val doc: Document = Jsoup.parse(view.apply(
+            testAgencyDetailsFull,
+            None,
+            isAdmin = false
+          )(
+            messages,
+            FakeRequest(),
+            appConfig
+          ).body)
 
           doc.title() mustBe MessageLookup.English.title
           doc.select("h1").asScala.head.text mustBe MessageLookup.English.heading
@@ -173,7 +211,15 @@ class ViewContactDetailsViewSpec extends BaseISpec {
         }
 
         "there are pending changes to the contract details" in {
-          val doc: Document = Jsoup.parse(view.apply(testAgencyDetailsFull, Some(pendingChangeOfDetails), isAdmin = true)(messages, FakeRequest(), appConfig).body)
+          val doc: Document = Jsoup.parse(view.apply(
+            testAgencyDetailsFull,
+            Some(pendingChangeOfDetails),
+            isAdmin = true
+          )(
+            messages,
+            FakeRequest(),
+            appConfig
+          ).body)
 
           doc.title() mustBe MessageLookup.English.title
           doc.select("h1").asScala.head.text mustBe MessageLookup.English.heading
@@ -200,7 +246,15 @@ class ViewContactDetailsViewSpec extends BaseISpec {
         }
 
         "there are no contact details" in {
-          val doc: Document = Jsoup.parse(view.apply(testAgencyDetailsEmpty, None, isAdmin = true)(messages, FakeRequest(), appConfig).body)
+          val doc: Document = Jsoup.parse(view.apply(
+            testAgencyDetailsEmpty,
+            None,
+            isAdmin = true
+          )(
+            messages,
+            FakeRequest(),
+            appConfig
+          ).body)
 
           doc.title() mustBe MessageLookup.English.title
           doc.select("h1").asScala.head.text mustBe MessageLookup.English.heading
@@ -230,7 +284,15 @@ class ViewContactDetailsViewSpec extends BaseISpec {
       "the selected lang is welsh" when {
         val messages: Messages = MessagesImpl(langs.last, messagesApi)
         "there are contact details" in {
-          val doc: Document = Jsoup.parse(view.apply(testAgencyDetailsFull, None, isAdmin = true)(messages, FakeRequest(), appConfig).body)
+          val doc: Document = Jsoup.parse(view.apply(
+            testAgencyDetailsFull,
+            None,
+            isAdmin = true
+          )(
+            messages,
+            FakeRequest(),
+            appConfig
+          ).body)
 
           doc.title() mustBe MessageLookup.Welsh.title
           doc.select("h1").asScala.head.text mustBe MessageLookup.Welsh.heading
@@ -256,7 +318,15 @@ class ViewContactDetailsViewSpec extends BaseISpec {
           links(3).attributes().get("href") mustBe routes.AgentServicesController.manageAccount.url
         }
         "'update contact details' link hidden for standard user" in {
-          val doc: Document = Jsoup.parse(view.apply(testAgencyDetailsFull, None, isAdmin = false)(messages, FakeRequest(), appConfig).body)
+          val doc: Document = Jsoup.parse(view.apply(
+            testAgencyDetailsFull,
+            None,
+            isAdmin = false
+          )(
+            messages,
+            FakeRequest(),
+            appConfig
+          ).body)
 
           doc.title() mustBe MessageLookup.Welsh.title
           doc.select("h1").asScala.head.text mustBe MessageLookup.Welsh.heading
@@ -280,7 +350,15 @@ class ViewContactDetailsViewSpec extends BaseISpec {
         }
 
         "there are pending changes to the contract details" in {
-          val doc: Document = Jsoup.parse(view.apply(testAgencyDetailsFull, Some(pendingChangeOfDetails), isAdmin = true)(messages, FakeRequest(), appConfig).body)
+          val doc: Document = Jsoup.parse(view.apply(
+            testAgencyDetailsFull,
+            Some(pendingChangeOfDetails),
+            isAdmin = true
+          )(
+            messages,
+            FakeRequest(),
+            appConfig
+          ).body)
 
           doc.title() mustBe MessageLookup.Welsh.title
           doc.select("h1").asScala.head.text mustBe MessageLookup.Welsh.heading
@@ -307,7 +385,15 @@ class ViewContactDetailsViewSpec extends BaseISpec {
         }
 
         "there are no contact details" in {
-          val doc: Document = Jsoup.parse(view.apply(testAgencyDetailsEmpty, None, isAdmin = true)(messages, FakeRequest(), appConfig).body)
+          val doc: Document = Jsoup.parse(view.apply(
+            testAgencyDetailsEmpty,
+            None,
+            isAdmin = true
+          )(
+            messages,
+            FakeRequest(),
+            appConfig
+          ).body)
 
           doc.title() mustBe MessageLookup.Welsh.title
           doc.select("h1").asScala.head.text mustBe MessageLookup.Welsh.heading

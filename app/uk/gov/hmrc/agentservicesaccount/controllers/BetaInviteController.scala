@@ -22,9 +22,14 @@ import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentPermissionsConnector
-import uk.gov.hmrc.agentservicesaccount.forms.{BetaInviteContactDetailsForm, BetaInviteForm, YesNoForm}
-import uk.gov.hmrc.agentservicesaccount.models.{AgentSize, BetaInviteContactDetails, BetaInviteDetailsForEmail}
-import uk.gov.hmrc.agentservicesaccount.services.{EmailService, SessionCacheService}
+import uk.gov.hmrc.agentservicesaccount.forms.BetaInviteContactDetailsForm
+import uk.gov.hmrc.agentservicesaccount.forms.BetaInviteForm
+import uk.gov.hmrc.agentservicesaccount.forms.YesNoForm
+import uk.gov.hmrc.agentservicesaccount.models.AgentSize
+import uk.gov.hmrc.agentservicesaccount.models.BetaInviteContactDetails
+import uk.gov.hmrc.agentservicesaccount.models.BetaInviteDetailsForEmail
+import uk.gov.hmrc.agentservicesaccount.services.EmailService
+import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.beta_invite._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
@@ -32,19 +37,24 @@ import javax.inject._
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class BetaInviteController @Inject()(actions: Actions,
-                                     agentPermissionsConnector: AgentPermissionsConnector,
-                                     emailService: EmailService,
-                                     cacheService: SessionCacheService,
-                                     participate: participate,
-                                     number_of_clients: number_of_clients,
-                                     your_details: your_details,
-                                     check_answers: check_answers,
-                                     confirmation: confirmation
-                                    )(implicit appConfig: AppConfig,
-                                      cc: MessagesControllerComponents,
-                                      ec: ExecutionContext) extends FrontendController(cc) with I18nSupport with Logging {
-
+class BetaInviteController @Inject() (
+  actions: Actions,
+  agentPermissionsConnector: AgentPermissionsConnector,
+  emailService: EmailService,
+  cacheService: SessionCacheService,
+  participate: participate,
+  number_of_clients: number_of_clients,
+  your_details: your_details,
+  check_answers: check_answers,
+  confirmation: confirmation
+)(implicit
+  appConfig: AppConfig,
+  cc: MessagesControllerComponents,
+  ec: ExecutionContext
+)
+extends FrontendController(cc)
+with I18nSupport
+with Logging {
 
   private val controller: ReverseBetaInviteController = routes.BetaInviteController
 
@@ -55,14 +65,12 @@ class BetaInviteController @Inject()(actions: Actions,
   }
 
   val showInvite: Action[AnyContent] = actions.authActionCheckSuspend { implicit request =>
-
     Ok(participate(
       YesNoForm.form("beta.invite.yes-no.required.error")
     ))
   }
 
   def submitInvite(): Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-
     YesNoForm
       .form("beta.invite.yes-no.required.error")
       .bindFromRequest()
@@ -73,7 +81,8 @@ class BetaInviteController @Inject()(actions: Actions,
         (acceptInvite: Boolean) => {
           if (acceptInvite) {
             Redirect(controller.showInviteDetails).toFuture
-          } else {
+          }
+          else {
             agentPermissionsConnector.declinePrivateBetaInvite().map(_ =>
               Redirect(routes.AgentServicesController.showAgentServicesAccount())
             )
@@ -84,7 +93,6 @@ class BetaInviteController @Inject()(actions: Actions,
   }
 
   val showInviteDetails: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-
     cacheService.get(AGENT_SIZE).map(maybeAnswer => {
       val sizeForm = BetaInviteForm.form.fill(maybeAnswer.getOrElse(""))
       Ok(number_of_clients(sizeForm))
@@ -93,7 +101,6 @@ class BetaInviteController @Inject()(actions: Actions,
   }
 
   def submitInviteDetails(): Action[AnyContent] = actions.authActionCheckSuspend { implicit request =>
-
     BetaInviteForm
       .form
       .bindFromRequest()
@@ -109,9 +116,7 @@ class BetaInviteController @Inject()(actions: Actions,
 
   }
 
-
   val showInviteContactDetails: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-
     cacheService.getSessionItems().map(answers => {
       val contactForm = BetaInviteContactDetailsForm.form.fill(
         BetaInviteContactDetails(
@@ -124,9 +129,7 @@ class BetaInviteController @Inject()(actions: Actions,
     })
   }
 
-
   def submitInviteContactDetails(): Action[AnyContent] = actions.authActionCheckSuspend { implicit request =>
-
     BetaInviteContactDetailsForm
       .form
       .bindFromRequest()
@@ -146,19 +149,20 @@ class BetaInviteController @Inject()(actions: Actions,
   }
 
   val showInviteCheckYourAnswers: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    cacheService.getSessionItems().flatMap(answers => {
-      val detailsForEmail: BetaInviteDetailsForEmail = BetaInviteDetailsForEmail(
-        AgentSize(answers.head.getOrElse("")),
-        answers(1).getOrElse(""),
-        answers(2).getOrElse(""),
-        answers(3)
-      )
-      Ok(check_answers(detailsForEmail))
-    }.toFuture)
+    cacheService.getSessionItems().flatMap(answers =>
+      {
+        val detailsForEmail: BetaInviteDetailsForEmail = BetaInviteDetailsForEmail(
+          AgentSize(answers.head.getOrElse("")),
+          answers(1).getOrElse(""),
+          answers(2).getOrElse(""),
+          answers(3)
+        )
+        Ok(check_answers(detailsForEmail))
+      }.toFuture
+    )
   }
 
   def submitDetailsToEmail(): Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-
     cacheService.getSessionItems().flatMap(answers => {
       val detailsForEmail: BetaInviteDetailsForEmail = BetaInviteDetailsForEmail(
         AgentSize(answers.head.getOrElse("")),

@@ -23,9 +23,9 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendHeaderCarrierProvi
 import javax.inject.Inject
 
 /** I'm repeating a pattern which was brought originally by play-framework and putting some more data which can be derived from a request
- *
- * Use it to provide HeaderCarrier, Lang, or Messages
- */
+  *
+  * Use it to provide HeaderCarrier, Lang, or Messages
+  */
 class RequestSupport @Inject() () {
   implicit def hc(implicit request: RequestHeader): HeaderCarrier = RequestSupport.hc
 }
@@ -35,10 +35,11 @@ object RequestSupport {
   implicit def hc(implicit request: RequestHeader): HeaderCarrier = HcProvider.headerCarrier
 
   /** This is because we want to give responsibility of creation of HeaderCarrier to the platform code. If they refactor how hc is created our code will pick it
-   * up automatically.
-   */
+    * up automatically.
+    */
   private object HcProvider
-    extends FrontendHeaderCarrierProvider {
+  extends FrontendHeaderCarrierProvider {
     def headerCarrier(implicit request: RequestHeader): HeaderCarrier = hc(request)
   }
+
 }

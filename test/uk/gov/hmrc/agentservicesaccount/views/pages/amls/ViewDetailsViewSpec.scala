@@ -22,19 +22,20 @@ import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.i18n._
 import play.api.test.FakeRequest
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.models.{AmlsDetails, AmlsStatuses}
+import uk.gov.hmrc.agentservicesaccount.models.AmlsDetails
+import uk.gov.hmrc.agentservicesaccount.models.AmlsStatuses
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.view_details
 
 import java.time.LocalDate
 
-class ViewDetailsViewSpec extends BaseISpec {
-
+class ViewDetailsViewSpec
+extends BaseISpec {
 
   implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
   implicit val lang: Lang = Lang("en")
-  val view: view_details  = app.injector.instanceOf[view_details]
+  val view: view_details = app.injector.instanceOf[view_details]
   implicit val messages: Messages = MessagesImpl(lang, messagesApi)
 
   "view_details" when {
@@ -71,37 +72,45 @@ class ViewDetailsViewSpec extends BaseISpec {
       }
     }
 
-   s"AmlsStatuses is ${AmlsStatuses.NoAmlsDetailsUK}" should {
+    s"AmlsStatuses is ${AmlsStatuses.NoAmlsDetailsUK}" should {
 
-     val doc: Document = Jsoup.parse(view.apply(AmlsStatuses.NoAmlsDetailsUK, None)(FakeRequest(), messages, appConfig).body)
+      val doc: Document = Jsoup.parse(view.apply(AmlsStatuses.NoAmlsDetailsUK, None)(
+        FakeRequest(),
+        messages,
+        appConfig
+      ).body)
 
-     testServiceStaticContent(doc)
+      testServiceStaticContent(doc)
 
-     testPageStaticContent(doc)
+      testPageStaticContent(doc)
 
-     "display paragraph content" in {
-       doc.select(".govuk-body").get(0).text() shouldBe "Agents need to register with an anti-money laundering supervisor."
-       doc.select(".govuk-body").get(1).text() shouldBe "Tell us your supervision details, including:"
-     }
-     "display unordered list content" in {
-       doc.select(".govuk-list--item").get(0).text() shouldBe "the name of your supervisory body"
-       doc.select(".govuk-list--item").get(1).text() shouldBe "your registration number"
-       doc.select(".govuk-list--item").get(2).text() shouldBe "the renewal date of your registration"
-     }
-     "display a link styled as button" in {
-       doc.select(".govuk-button").first().text() shouldBe "Add supervision details"
-       doc.select(".govuk-button").first().attr("href") shouldBe "/agent-services-account/manage-account/money-laundering-supervision/new-supervisory-body"
-     }
-     "display link to more information" in {
-       doc.select("#registration-info").get(0).text() shouldBe "Read more about registration (opens in a new tab)"
-       doc.select("#registration-info").get(0).attr("target") shouldBe "_blank"
-       doc.select("#registration-info").get(0).attr("rel") shouldBe "noreferrer noopener"
-     }
-   }
+      "display paragraph content" in {
+        doc.select(".govuk-body").get(0).text() shouldBe "Agents need to register with an anti-money laundering supervisor."
+        doc.select(".govuk-body").get(1).text() shouldBe "Tell us your supervision details, including:"
+      }
+      "display unordered list content" in {
+        doc.select(".govuk-list--item").get(0).text() shouldBe "the name of your supervisory body"
+        doc.select(".govuk-list--item").get(1).text() shouldBe "your registration number"
+        doc.select(".govuk-list--item").get(2).text() shouldBe "the renewal date of your registration"
+      }
+      "display a link styled as button" in {
+        doc.select(".govuk-button").first().text() shouldBe "Add supervision details"
+        doc.select(".govuk-button").first().attr("href") shouldBe "/agent-services-account/manage-account/money-laundering-supervision/new-supervisory-body"
+      }
+      "display link to more information" in {
+        doc.select("#registration-info").get(0).text() shouldBe "Read more about registration (opens in a new tab)"
+        doc.select("#registration-info").get(0).attr("target") shouldBe "_blank"
+        doc.select("#registration-info").get(0).attr("rel") shouldBe "noreferrer noopener"
+      }
+    }
 
     s"AmlsStatuses is ${AmlsStatuses.NoAmlsDetailsNonUK}" should {
 
-      val doc: Document = Jsoup.parse(view.apply(AmlsStatuses.NoAmlsDetailsNonUK, None)(FakeRequest(), messages, appConfig).body)
+      val doc: Document = Jsoup.parse(view.apply(AmlsStatuses.NoAmlsDetailsNonUK, None)(
+        FakeRequest(),
+        messages,
+        appConfig
+      ).body)
 
       testServiceStaticContent(doc)
 
@@ -122,8 +131,16 @@ class ViewDetailsViewSpec extends BaseISpec {
 
     s"AmlsStatuses is ${AmlsStatuses.ExpiredAmlsDetailsUK}" should {
 
-      val amlsDetails = AmlsDetails(supervisoryBody = "HMRC", membershipNumber = Some("123"), membershipExpiresOn = Some(LocalDate.parse("2024-02-10")))
-      val doc: Document = Jsoup.parse(view.apply(AmlsStatuses.ExpiredAmlsDetailsUK, Some(amlsDetails))(FakeRequest(), messages, appConfig).body)
+      val amlsDetails = AmlsDetails(
+        supervisoryBody = "HMRC",
+        membershipNumber = Some("123"),
+        membershipExpiresOn = Some(LocalDate.parse("2024-02-10"))
+      )
+      val doc: Document = Jsoup.parse(view.apply(AmlsStatuses.ExpiredAmlsDetailsUK, Some(amlsDetails))(
+        FakeRequest(),
+        messages,
+        appConfig
+      ).body)
 
       testServiceStaticContent(doc)
 
@@ -148,8 +165,16 @@ class ViewDetailsViewSpec extends BaseISpec {
 
     s"AmlsStatuses is ${AmlsStatuses.ValidAmlsDetailsUK} when HMRC registered" should {
 
-      val amlsDetails = AmlsDetails(supervisoryBody = "HMRC", membershipNumber = Some("123"), membershipExpiresOn = Some(LocalDate.parse("2025-02-10")))
-      val doc: Document = Jsoup.parse(view.apply(AmlsStatuses.ValidAmlsDetailsUK, Some(amlsDetails))(FakeRequest(), messages, appConfig).body)
+      val amlsDetails = AmlsDetails(
+        supervisoryBody = "HMRC",
+        membershipNumber = Some("123"),
+        membershipExpiresOn = Some(LocalDate.parse("2025-02-10"))
+      )
+      val doc: Document = Jsoup.parse(view.apply(AmlsStatuses.ValidAmlsDetailsUK, Some(amlsDetails))(
+        FakeRequest(),
+        messages,
+        appConfig
+      ).body)
 
       testServiceStaticContent(doc)
 
@@ -167,19 +192,31 @@ class ViewDetailsViewSpec extends BaseISpec {
         doc.select("h2").first().text() shouldBe "Keep your details up to date"
       }
       "display paragraph content" in {
-        doc.select(".govuk-body").first().text() shouldBe "You need to confirm your anti-money laundering supervisions details with us whenever you change to a new provider."
+        doc.select(
+          ".govuk-body"
+        ).first().text() shouldBe "You need to confirm your anti-money laundering supervisions details with us whenever you change to a new provider."
       }
 
       "display a link to update supervisory details" in {
         doc.select("#start-journey").first().text() shouldBe "Update anti-money laundering supervision details"
-        doc.select("#start-journey").first().attr("href") shouldBe "/agent-services-account/manage-account/money-laundering-supervision/confirm-supervisory-body"
+        doc.select(
+          "#start-journey"
+        ).first().attr("href") shouldBe "/agent-services-account/manage-account/money-laundering-supervision/confirm-supervisory-body"
       }
     }
 
     s"AmlsStatuses is ${AmlsStatuses.ValidAmlsDetailsUK} when not HMRC registered" should {
 
-      val amlsDetails = AmlsDetails(supervisoryBody = "ICAEW", membershipNumber = Some("123"), membershipExpiresOn = Some(LocalDate.parse("2025-02-10")))
-      val doc: Document = Jsoup.parse(view.apply(AmlsStatuses.ValidAmlsDetailsUK, Some(amlsDetails))(FakeRequest(), messages, appConfig).body)
+      val amlsDetails = AmlsDetails(
+        supervisoryBody = "ICAEW",
+        membershipNumber = Some("123"),
+        membershipExpiresOn = Some(LocalDate.parse("2025-02-10"))
+      )
+      val doc: Document = Jsoup.parse(view.apply(AmlsStatuses.ValidAmlsDetailsUK, Some(amlsDetails))(
+        FakeRequest(),
+        messages,
+        appConfig
+      ).body)
 
       testServiceStaticContent(doc)
 
@@ -206,14 +243,24 @@ class ViewDetailsViewSpec extends BaseISpec {
 
       "display a link to update supervisory details" in {
         doc.select("#start-journey").first().text() shouldBe "Update anti-money laundering supervision details"
-        doc.select("#start-journey").first().attr("href") shouldBe "/agent-services-account/manage-account/money-laundering-supervision/confirm-supervisory-body"
+        doc.select(
+          "#start-journey"
+        ).first().attr("href") shouldBe "/agent-services-account/manage-account/money-laundering-supervision/confirm-supervisory-body"
       }
     }
 
     s"AmlsStatuses is ${AmlsStatuses.ValidAmlsNonUK}" should {
 
-      val amlsDetails = AmlsDetails(supervisoryBody = "ICA", membershipNumber = Some("123"), membershipExpiresOn = None)
-      val doc: Document = Jsoup.parse(view.apply(AmlsStatuses.ValidAmlsNonUK, Some(amlsDetails))(FakeRequest(), messages, appConfig).body)
+      val amlsDetails = AmlsDetails(
+        supervisoryBody = "ICA",
+        membershipNumber = Some("123"),
+        membershipExpiresOn = None
+      )
+      val doc: Document = Jsoup.parse(view.apply(AmlsStatuses.ValidAmlsNonUK, Some(amlsDetails))(
+        FakeRequest(),
+        messages,
+        appConfig
+      ).body)
 
       testServiceStaticContent(doc)
 
@@ -229,18 +276,30 @@ class ViewDetailsViewSpec extends BaseISpec {
         doc.select("h2").first().text() shouldBe "Keep your details up to date"
       }
       "display paragraph content" in {
-        doc.select(".govuk-body").first().text() shouldBe "You need to confirm your anti-money laundering supervisions details with us whenever you change them."
+        doc.select(
+          ".govuk-body"
+        ).first().text() shouldBe "You need to confirm your anti-money laundering supervisions details with us whenever you change them."
       }
       "display a link to update supervisory details" in {
         doc.select("#start-journey").first().text() shouldBe "Update anti-money laundering supervision details"
-        doc.select("#start-journey").first().attr("href") shouldBe "/agent-services-account/manage-account/money-laundering-supervision/confirm-supervisory-body"
+        doc.select(
+          "#start-journey"
+        ).first().attr("href") shouldBe "/agent-services-account/manage-account/money-laundering-supervision/confirm-supervisory-body"
       }
     }
 
     s"AmlsStatuses is ${AmlsStatuses.PendingAmlsDetails}" should {
 
-      val amlsDetails = AmlsDetails(supervisoryBody = "HMRC", membershipNumber = Some("123"), appliedOn = Some(LocalDate.parse("2024-10-10")))
-      val doc: Document = Jsoup.parse(view.apply(AmlsStatuses.PendingAmlsDetails, Some(amlsDetails))(FakeRequest(), messages, appConfig).body)
+      val amlsDetails = AmlsDetails(
+        supervisoryBody = "HMRC",
+        membershipNumber = Some("123"),
+        appliedOn = Some(LocalDate.parse("2024-10-10"))
+      )
+      val doc: Document = Jsoup.parse(view.apply(AmlsStatuses.PendingAmlsDetails, Some(amlsDetails))(
+        FakeRequest(),
+        messages,
+        appConfig
+      ).body)
 
       testServiceStaticContent(doc)
 
@@ -260,14 +319,24 @@ class ViewDetailsViewSpec extends BaseISpec {
       "display details element content" in {
         doc.select(".govuk-details__summary-text").first().text() shouldBe "What to do if HMRC cannot act as your supervisory body"
         doc.select(".govuk-details__text p").get(0).text() shouldBe "If HMRC rejects your application, you’ll still need to find a supervisory."
-        doc.select(".govuk-details__text p").get(1).text() shouldBe "When you’ve found an organisation to act as your supervisor, you’ll need to provide the details to HMRC."
+        doc.select(
+          ".govuk-details__text p"
+        ).get(1).text() shouldBe "When you’ve found an organisation to act as your supervisor, you’ll need to provide the details to HMRC."
       }
     }
 
     s"AmlsStatuses is ${AmlsStatuses.PendingAmlsDetailsRejected}" should {
 
-      val amlsDetails = AmlsDetails(supervisoryBody = "HMRC", membershipNumber = Some("123"), appliedOn = Some(LocalDate.parse("2024-10-10")))
-      val doc: Document = Jsoup.parse(view.apply(AmlsStatuses.PendingAmlsDetailsRejected, Some(amlsDetails))(FakeRequest(), messages, appConfig).body)
+      val amlsDetails = AmlsDetails(
+        supervisoryBody = "HMRC",
+        membershipNumber = Some("123"),
+        appliedOn = Some(LocalDate.parse("2024-10-10"))
+      )
+      val doc: Document = Jsoup.parse(view.apply(AmlsStatuses.PendingAmlsDetailsRejected, Some(amlsDetails))(
+        FakeRequest(),
+        messages,
+        appConfig
+      ).body)
 
       testServiceStaticContent(doc)
 
@@ -275,7 +344,9 @@ class ViewDetailsViewSpec extends BaseISpec {
 
       "display inset text content" in {
         doc.select(".govuk-inset-text p").get(0).text() shouldBe "You need to find a supervisor."
-        doc.select(".govuk-inset-text p").get(1).text() shouldBe "When you’ve found an organisation to act as your supervisor, you’ll need to tell us the details."
+        doc.select(
+          ".govuk-inset-text p"
+        ).get(1).text() shouldBe "When you’ve found an organisation to act as your supervisor, you’ll need to tell us the details."
       }
       "display amls details summary list" in {
         doc.select(".govuk-summary-list__key").get(0).text() shouldBe "Supervisory body"
@@ -293,18 +364,31 @@ class ViewDetailsViewSpec extends BaseISpec {
 
     "AmlsStatuses expects amlsDetails but none provided" should {
       "throw exception" in {
-        an[RuntimeException] mustBe thrownBy{
-          Jsoup.parse(view.apply(AmlsStatuses.PendingAmlsDetailsRejected, None)(FakeRequest(), messages, appConfig).body)
+        an[RuntimeException] mustBe thrownBy {
+          Jsoup.parse(view.apply(AmlsStatuses.PendingAmlsDetailsRejected, None)(
+            FakeRequest(),
+            messages,
+            appConfig
+          ).body)
         }
       }
     }
     "AmlsStatuses does not expect amlsDetails but some are provided" should {
       "throw exception" in {
-        val amlsDetails = AmlsDetails(supervisoryBody = "HMRC", membershipNumber = Some("123"), appliedOn = Some(LocalDate.parse("2024-10-10")))
-        an[RuntimeException] mustBe thrownBy{
-          Jsoup.parse(view.apply(AmlsStatuses.NoAmlsDetailsUK, Some(amlsDetails))(FakeRequest(), messages, appConfig).body)
+        val amlsDetails = AmlsDetails(
+          supervisoryBody = "HMRC",
+          membershipNumber = Some("123"),
+          appliedOn = Some(LocalDate.parse("2024-10-10"))
+        )
+        an[RuntimeException] mustBe thrownBy {
+          Jsoup.parse(view.apply(AmlsStatuses.NoAmlsDetailsUK, Some(amlsDetails))(
+            FakeRequest(),
+            messages,
+            appConfig
+          ).body)
         }
       }
     }
   }
-  }
+
+}

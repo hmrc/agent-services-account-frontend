@@ -17,7 +17,9 @@
 package uk.gov.hmrc.agentservicesaccount.controllers.amls
 
 import play.api.i18n.I18nSupport
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.Action
+import play.api.mvc.AnyContent
+import play.api.mvc.MessagesControllerComponents
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.ToFuture
@@ -27,26 +29,33 @@ import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.enter_registration_number
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
-import javax.inject.{Inject, Singleton}
+import javax.inject.Inject
+import javax.inject.Singleton
 import scala.concurrent.ExecutionContext
 
-
 @Singleton
-class EnterRegistrationNumberController @Inject()(actions: Actions,
-                                                  val updateAmlsJourneyRepository: UpdateAmlsJourneyRepository,
-                                                  enterRegistrationNumber: enter_registration_number,
-                                                  cc: MessagesControllerComponents
-                                                 )(implicit appConfig: AppConfig,
-                                                   ec: ExecutionContext) extends FrontendController(cc) with AmlsJourneySupport with I18nSupport {
+class EnterRegistrationNumberController @Inject() (
+  actions: Actions,
+  val updateAmlsJourneyRepository: UpdateAmlsJourneyRepository,
+  enterRegistrationNumber: enter_registration_number,
+  cc: MessagesControllerComponents
+)(implicit
+  appConfig: AppConfig,
+  ec: ExecutionContext
+)
+extends FrontendController(cc)
+with AmlsJourneySupport
+with I18nSupport {
 
   def showPage(cya: Boolean): Action[AnyContent] = actions.authActionCheckSuspend.async {
     implicit request =>
       actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
         withUpdateAmlsJourney { amlsJourney =>
-          val form = amlsJourney.newRegistrationNumber match {
-            case Some(number) => registrationNumberForm(amlsJourney.isHmrc).fill(number)
-            case _ => registrationNumberForm(amlsJourney.isHmrc)
-          }
+          val form =
+            amlsJourney.newRegistrationNumber match {
+              case Some(number) => registrationNumberForm(amlsJourney.isHmrc).fill(number)
+              case _ => registrationNumberForm(amlsJourney.isHmrc)
+            }
           Ok(enterRegistrationNumber(form, cya)).toFuture
         }
       }
@@ -63,10 +72,11 @@ class EnterRegistrationNumberController @Inject()(actions: Actions,
               data =>
                 saveAmlsJourney(amlsJourney.copy(
                   newRegistrationNumber = Option(data),
-                  isRegistrationNumberStillTheSame = for {
-                    hasSameRegNum <- amlsJourney.isRegistrationNumberStillTheSame
-                    inputEqualsRegNum = amlsJourney.newRegistrationNumber.contains(data)
-                  } yield hasSameRegNum && inputEqualsRegNum
+                  isRegistrationNumberStillTheSame =
+                    for {
+                      hasSameRegNum <- amlsJourney.isRegistrationNumberStillTheSame
+                      inputEqualsRegNum = amlsJourney.newRegistrationNumber.contains(data)
+                    } yield hasSameRegNum && inputEqualsRegNum
                 )).map(_ =>
                   Redirect(nextPage(cya, amlsJourney))
                 )
@@ -75,9 +85,14 @@ class EnterRegistrationNumberController @Inject()(actions: Actions,
       }
   }
 
-  private def nextPage(cya: Boolean, journey: UpdateAmlsJourney): String = {
-    if (cya | !journey.isUkAgent) routes.CheckYourAnswersController.showPage.url
-    else routes.EnterRenewalDateController.showPage.url
+  private def nextPage(
+    cya: Boolean,
+    journey: UpdateAmlsJourney
+  ): String = {
+    if (cya | !journey.isUkAgent)
+      routes.CheckYourAnswersController.showPage.url
+    else
+      routes.EnterRenewalDateController.showPage.url
   }
-}
 
+}

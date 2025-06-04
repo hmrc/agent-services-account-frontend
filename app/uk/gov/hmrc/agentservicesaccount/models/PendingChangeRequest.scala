@@ -21,26 +21,32 @@ import play.api.libs.json._
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
 
-import java.time.{Instant, LocalDate, ZoneId}
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
 
 case class PendingChangeRequest(
-                                 arn: Arn,
-                                 timeSubmitted: Instant
-                                 ) {
+  arn: Arn,
+  timeSubmitted: Instant
+) {
   def localDateSubmitted: LocalDate = timeSubmitted.atZone(ZoneId.of("Europe/London")).toLocalDate
 }
 
 object PendingChangeRequest {
+
   implicit val instantFormat: Format[Instant] = MongoJavatimeFormats.instantFormat // important to allow Mongo TTL index to work
   implicit val format: Format[PendingChangeRequest] = Json.format[PendingChangeRequest]
 
-  val connectorReads: Reads[PendingChangeRequest] = (
-    (JsPath \ "arn").read[Arn] and
-    (JsPath \ "timeSubmitted").read[String].map(Instant.parse)
-  )(PendingChangeRequest.apply _)
+  val connectorReads: Reads[PendingChangeRequest] =
+    (
+      (JsPath \ "arn").read[Arn] and
+        (JsPath \ "timeSubmitted").read[String].map(Instant.parse)
+    )(PendingChangeRequest.apply _)
 
-  val connectorWrites: Writes[PendingChangeRequest] = (
-    (JsPath \ "arn").write[Arn] and
-    (JsPath \ "timeSubmitted").write[String]
-  )(model => (model.arn, model.timeSubmitted.toString))
+  val connectorWrites: Writes[PendingChangeRequest] =
+    (
+      (JsPath \ "arn").write[Arn] and
+        (JsPath \ "timeSubmitted").write[String]
+    )(model => (model.arn, model.timeSubmitted.toString))
+
 }

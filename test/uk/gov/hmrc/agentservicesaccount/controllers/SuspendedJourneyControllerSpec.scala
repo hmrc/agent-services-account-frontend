@@ -19,36 +19,45 @@ package uk.gov.hmrc.agentservicesaccount.controllers
 import com.google.inject.AbstractModule
 import org.jsoup.Jsoup
 import play.api.http.MimeTypes.HTML
-import play.api.http.Status.{BAD_REQUEST, OK, SEE_OTHER}
-import play.api.i18n.{Lang, Messages, MessagesApi}
+import play.api.http.Status.BAD_REQUEST
+import play.api.http.Status.OK
+import play.api.http.Status.SEE_OTHER
+import play.api.i18n.Lang
+import play.api.i18n.Messages
+import play.api.i18n.MessagesApi
 import play.api.mvc.Result
 import play.api.test.Helpers
-import play.api.test.Helpers.{await, defaultAwaitTimeout}
+import play.api.test.Helpers.await
+import play.api.test.Helpers.defaultAwaitTimeout
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.agentmtdidentifiers.model.SuspensionDetails
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentAssuranceStubs.givenAgentRecordFound
 import uk.gov.hmrc.agentservicesaccount.stubs.SessionServiceMocks
-import uk.gov.hmrc.agentservicesaccount.support.{BaseISpec, Css}
+import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
+import uk.gov.hmrc.agentservicesaccount.support.Css
 
 import scala.concurrent.Future
 
-class SuspendedJourneyControllerSpec extends BaseISpec with SessionServiceMocks{
+class SuspendedJourneyControllerSpec
+extends BaseISpec
+with SessionServiceMocks {
+
   implicit val lang: Lang = Lang("en")
   implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   val controller: SuspendedJourneyController = app.injector.instanceOf[SuspendedJourneyController]
   implicit lazy val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
   implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
 
-
   private implicit val messages: Messages = messagesApi.preferred(Seq.empty[Lang])
 
-  override def moduleWithOverrides: AbstractModule = new AbstractModule() {
-    override def configure(): Unit = {
-      bind(classOf[SessionCacheService]).toInstance(mockSessionCacheService)
+  override def moduleWithOverrides: AbstractModule =
+    new AbstractModule() {
+      override def configure(): Unit = {
+        bind(classOf[SessionCacheService]).toInstance(mockSessionCacheService)
+      }
     }
-  }
 
   protected def htmlEscapedMessage(key: String): String = HtmlFormat.escape(Messages(key)).toString
 
@@ -63,7 +72,11 @@ class SuspendedJourneyControllerSpec extends BaseISpec with SessionServiceMocks{
       Helpers.contentType(response).get shouldBe HTML
       val content = Helpers.contentAsString(response)
 
-      content should include(messagesApi("generic.title",  messagesApi("suspension-warning.header1"), messagesApi("service.name")))
+      content should include(messagesApi(
+        "generic.title",
+        messagesApi("suspension-warning.header1"),
+        messagesApi("service.name")
+      ))
       content should include(messagesApi("suspension-warning.header1"))
       content should include(messagesApi("suspension-warning.p1"))
       content should include(messagesApi("suspension-warning.p2"))
@@ -98,13 +111,22 @@ class SuspendedJourneyControllerSpec extends BaseISpec with SessionServiceMocks{
       givenAuthorisedAsAgentWith(arn.value)
       givenAgentRecordFound(agentRecord.copy(suspensionDetails = Some(SuspensionDetails(suspensionStatus = true, Some(Set("AGSV"))))))
 
-      getAllSessionItems(List(Some(""),Some(""),Some(""), Some("")))
+      getAllSessionItems(List(
+        Some(""),
+        Some(""),
+        Some(""),
+        Some("")
+      ))
 
       val response = controller.showContactDetails()(fakeRequest())
       status(response) shouldBe OK
       Helpers.contentType(response).get shouldBe HTML
       val content = Helpers.contentAsString(response)
-      content should include(messagesApi("generic.title", messagesApi("suspend.contact-details.heading"), messagesApi("service.name")))
+      content should include(messagesApi(
+        "generic.title",
+        messagesApi("suspend.contact-details.heading"),
+        messagesApi("service.name")
+      ))
       content should include(messagesApi("suspend.contact-details.label1"))
       content should include(messagesApi("suspend.contact-details.label2"))
       content should include(messagesApi("suspend.contact-details.label3"))
@@ -120,13 +142,13 @@ class SuspendedJourneyControllerSpec extends BaseISpec with SessionServiceMocks{
     "return Bad request and show error messages if the data is wrong" in {
       givenAuthorisedAsAgentWith(arn.value)
       givenAgentRecordFound(agentRecord.copy(suspensionDetails = Some(SuspensionDetails(suspensionStatus = true, Some(Set("AGSV"))))))
-      val response: Future[Result] = controller.submitContactDetails()(fakeRequest("POST", "/recovery-contact-details")
-
-        .withFormUrlEncodedBody(
-          "name" -> "",
-          "email" -> " ",
-          "phone" -> " ")
-      )
+      val response: Future[Result] =
+        controller.submitContactDetails()(fakeRequest("POST", "/recovery-contact-details")
+          .withFormUrlEncodedBody(
+            "name" -> "",
+            "email" -> " ",
+            "phone" -> " "
+          ))
 
       status(response) shouldBe BAD_REQUEST
       Helpers.contentType(response).get shouldBe HTML
@@ -145,11 +167,11 @@ class SuspendedJourneyControllerSpec extends BaseISpec with SessionServiceMocks{
       expectPutSessionItem[String](ARN, "TARN0000001")
 
       val request = fakeRequest("POST", "/recovery-contact-details")
-
         .withFormUrlEncodedBody(
           "name" -> "Romel",
           "email" -> "romel@romel.com",
-          "phone" -> "01711111111")
+          "phone" -> "01711111111"
+        )
       val response = controller.submitContactDetails()(request)
 
       status(response) shouldBe SEE_OTHER
@@ -170,7 +192,11 @@ class SuspendedJourneyControllerSpec extends BaseISpec with SessionServiceMocks{
       Helpers.contentType(response).get shouldBe HTML
 
       val content = Helpers.contentAsString(response)
-      content should include(messagesApi("generic.title", messagesApi("suspend.description.h1"), messagesApi("service.name")))
+      content should include(messagesApi(
+        "generic.title",
+        messagesApi("suspend.description.h1"),
+        messagesApi("service.name")
+      ))
       content should include(messagesApi("suspend.description.hint1"))
       content should include(messagesApi("suspend.description.h1"))
       content should include(messagesApi("suspend.description.label"))
@@ -184,10 +210,11 @@ class SuspendedJourneyControllerSpec extends BaseISpec with SessionServiceMocks{
       givenAuthorisedAsAgentWith(arn.value)
       givenAgentRecordFound(agentRecord.copy(suspensionDetails = Some(SuspensionDetails(suspensionStatus = true, Some(Set("AGSV"))))))
 
-
-      val response: Future[Result] = controller.submitSuspendedDescription()(fakeRequest("POST","/recovery-description")
+      val response: Future[Result] =
+        controller.submitSuspendedDescription()(fakeRequest("POST", "/recovery-description")
           .withFormUrlEncodedBody(
-          "description" -> ""))
+            "description" -> ""
+          ))
 
       status(response) shouldBe 400
     }
@@ -197,10 +224,11 @@ class SuspendedJourneyControllerSpec extends BaseISpec with SessionServiceMocks{
 
       expectPutSessionItem[String](DESCRIPTION, "description added")
 
-      val response: Future[Result] = controller.submitSuspendedDescription()(fakeRequest("POST", "/recovery-description")
-        .withFormUrlEncodedBody(
-          "description" -> "description added")
-      )
+      val response: Future[Result] =
+        controller.submitSuspendedDescription()(fakeRequest("POST", "/recovery-description")
+          .withFormUrlEncodedBody(
+            "description" -> "description added"
+          ))
       status(response) shouldBe 303
       redirectLocation(await(response)) shouldBe Some(routes.SuspendedJourneyController.showSuspendedSummary().url)
     }
@@ -225,11 +253,31 @@ class SuspendedJourneyControllerSpec extends BaseISpec with SessionServiceMocks{
       givenAuthorisedAsAgentWith(arn.value)
       givenAgentRecordFound(agentRecord.copy(suspensionDetails = Some(SuspensionDetails(suspensionStatus = true, Some(Set("AGSV"))))))
 
-      expectGetSessionItem[String](NAME, "Romel", 1)
-      expectGetSessionItem[String](EMAIL, "Romel@romel.com", 1)
-      expectGetSessionItem[String](PHONE, "017111111111", 1)
-      expectGetSessionItem[String](DESCRIPTION, "Some description", 1)
-      expectGetSessionItem[String](ARN, "XARN000001122", 1)
+      expectGetSessionItem[String](
+        NAME,
+        "Romel",
+        1
+      )
+      expectGetSessionItem[String](
+        EMAIL,
+        "Romel@romel.com",
+        1
+      )
+      expectGetSessionItem[String](
+        PHONE,
+        "017111111111",
+        1
+      )
+      expectGetSessionItem[String](
+        DESCRIPTION,
+        "Some description",
+        1
+      )
+      expectGetSessionItem[String](
+        ARN,
+        "XARN000001122",
+        1
+      )
 
       val response: Future[Result] = controller.showSuspendedSummary()(fakeRequest())
       status(response) shouldBe OK
@@ -255,12 +303,31 @@ class SuspendedJourneyControllerSpec extends BaseISpec with SessionServiceMocks{
       givenAuthorisedAsAgentWith(arn.value)
       givenAgentRecordFound(agentRecord.copy(suspensionDetails = Some(SuspensionDetails(suspensionStatus = true, Some(Set("AGSV"))))))
 
-      expectGetSessionItem[String](NAME, "Romel", 1)
-      expectGetSessionItem[String](EMAIL, "Romel@romel.com", 1)
-      expectGetSessionItem[String](PHONE, "017111111111", 1)
-      expectGetSessionItem[String](DESCRIPTION, "Some description", 1)
-      expectGetSessionItem[String](ARN, "XARN000001122", 1)
-
+      expectGetSessionItem[String](
+        NAME,
+        "Romel",
+        1
+      )
+      expectGetSessionItem[String](
+        EMAIL,
+        "Romel@romel.com",
+        1
+      )
+      expectGetSessionItem[String](
+        PHONE,
+        "017111111111",
+        1
+      )
+      expectGetSessionItem[String](
+        DESCRIPTION,
+        "Some description",
+        1
+      )
+      expectGetSessionItem[String](
+        ARN,
+        "XARN000001122",
+        1
+      )
 
       val response: Future[Result] = controller.submitSuspendedSummary()(fakeRequest())
       status(response) shouldBe 303
@@ -278,11 +345,16 @@ class SuspendedJourneyControllerSpec extends BaseISpec with SessionServiceMocks{
       status(response) shouldBe OK
       Helpers.contentType(response).get shouldBe HTML
       val content = Helpers.contentAsString(response)
-      content should include(messagesApi("generic.title", messagesApi("suspend.confirmation.h1"), messagesApi("service.name")))
+      content should include(messagesApi(
+        "generic.title",
+        messagesApi("suspend.confirmation.h1"),
+        messagesApi("service.name")
+      ))
       content should include(messagesApi("suspend.confirmation.h1"))
       content should include(messagesApi("common.what.happens.next"))
       content should include(messagesApi("suspend.confirmation.p1"))
       content should include(messagesApi("common.continue.gov"))
     }
   }
+
 }
