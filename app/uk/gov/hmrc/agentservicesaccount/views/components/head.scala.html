@@ -28,8 +28,7 @@
 
 @if(hasTimeout) {
     @hmrcTimeoutDialogHelper(
-            signOutUrl = routes.SignOutController.signOut.url,
-            timeoutUrl = Some(routes.SignOutController.timedOut.url)
-        )
+        signOutUrl = routes.SignOutController.signOut.url,
+        timeoutUrl = Some(routes.SignOutController.timedOut.url)
     )
 }
