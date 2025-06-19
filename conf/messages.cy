@@ -102,7 +102,7 @@ asa.pillar2.col1.link2=<a class="govuk-link" href="{0}" target="_blank" rel="nor
 asa.pillar2.col1.text1=Yn gyntaf, mae’n rhaid i’ch cleient
 asa.pillar2.col1.text2=Rhaid i chi gael awdurdodiad gan eich cleient yn gyntaf. Gallwch wneud hyn
 asa.pillar2.col2.h3=Rheoli trethi atodol Colofn 2 eich cleient
-asa.pillar2.col2.link1=<a class="govuk-link" href="{0}" rel="noreferrer noopener">Rhoi gwybod am drethi atodol Colofn 2 eich cleient a bwrw golwg dros daliadau, ffurflenni a chosbau</a>
+asa.pillar2.col2.link1=<a class="govuk-link" href="{0}" rel="noreferrer noopener">Rhoi gwybod am a rheoli trethi atodol Colofn 2 eich cleient</a>
 
 # VAT
 asa.section1.col1.h3=Cyn i chi ddechrau
