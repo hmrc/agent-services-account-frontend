@@ -102,7 +102,7 @@ asa.pillar2.col1.link2=<a class="govuk-link" href="{0}">requesting an authorisat
 asa.pillar2.col1.text1=Your client must first
 asa.pillar2.col1.text2=You must first get authorisation from your client. You can do this by
 asa.pillar2.col2.h3=Manage your client’s Pillar 2 top-up taxes
-asa.pillar2.col2.link1=<a class="govuk-link" href="{0}" rel="noreferrer noopener">Report your client’s Pillar 2 top-up taxes and view payments, returns and penalties</a>
+asa.pillar2.col2.link1=<a class="govuk-link" href="{0}" rel="noreferrer noopener">Report and manage your client’s Pillar 2 top-up taxes</a>
 
 # VAT
 asa.section1.col1.h3=Before you start

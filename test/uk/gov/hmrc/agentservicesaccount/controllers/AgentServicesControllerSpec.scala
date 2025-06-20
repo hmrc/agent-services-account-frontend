@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -347,8 +347,8 @@ extends BaseISpec {
         eightPs.get(1).text shouldBe "You must first get authorisation from your client. You can do this by requesting an authorisation."
         eightPs.get(1).select("a").get(0).text shouldBe "requesting an authorisation."
         eightPs.get(1).select("a").get(0).attr("href") shouldBe "http://localhost:9435/agent-client-relationships/authorisation-request"
-        eightPs.get(2).text shouldBe "Report your client’s Pillar 2 top-up taxes and view payments, returns and penalties"
-        eightPs.get(2).select("a").get(0).text shouldBe "Report your client’s Pillar 2 top-up taxes and view payments, returns and penalties"
+        eightPs.get(2).text shouldBe "Report and manage your client’s Pillar 2 top-up taxes"
+        eightPs.get(2).select("a").get(0).text shouldBe "Report and manage your client’s Pillar 2 top-up taxes"
         eightPs.get(2).select("a").get(0).attr("href") shouldBe "http://localhost:10053/report-pillar2-top-up-taxes/asa/input-pillar-2-id"
       }
 
