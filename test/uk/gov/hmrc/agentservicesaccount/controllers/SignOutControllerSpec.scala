@@ -29,7 +29,6 @@ extends BaseISpec {
 
   implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
   implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
-  implicit val request: FakeRequest[?] = fakeRequest("GET", "/")
   val controller: SignOutController = app.injector.instanceOf[SignOutController]
 
   "SignOutController" should {
@@ -37,7 +36,7 @@ extends BaseISpec {
       val continueUrl = urlEncode("http://localhost:9401/agent-services-account/home/survey")
       val signOutUrl = "http://localhost:9099/bas-gateway/sign-out-without-state?continue=" + continueUrl
 
-      val response = controller.signOut(FakeRequest("GET", "/")).futureValue
+      val response = controller.signOut(fakeRequest("GET", "/")).futureValue
 
       status(response) shouldBe 303
       redirectLocation(response) shouldBe Some(signOutUrl)
