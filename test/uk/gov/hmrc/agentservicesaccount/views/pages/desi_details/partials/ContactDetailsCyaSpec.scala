@@ -38,6 +38,7 @@ extends BaseISpec {
   implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
   private implicit val lang: Lang = Lang("en")
+
   val view: contact_details_cya_partial = app.injector.instanceOf[contact_details_cya_partial]
   implicit val messages: Messages = MessagesImpl(lang, messagesApi)
 

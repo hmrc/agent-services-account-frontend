@@ -28,6 +28,7 @@ import play.twirl.api.Html
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models.AmlsDetails
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.supervision_details
+import uk.gov.hmrc.http.SessionKeys
 
 import java.time.LocalDate
 
@@ -50,7 +51,7 @@ with GuiceOneAppPerSuite {
   private val messagesApi: Messages = messagesControllerComponentsForView.messagesApi.preferred(Seq(Lang("en")))
   private val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
   private val suspensionDetailsView: supervision_details = app.injector.instanceOf[supervision_details]
-  private val fakeRequest = FakeRequest()
+  private val fakeRequest = FakeRequest().withSession(SessionKeys.authToken -> "Bearer XYZ")
 
   "supervision_details view" when {
 

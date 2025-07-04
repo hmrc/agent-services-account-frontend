@@ -22,7 +22,6 @@ import org.jsoup.nodes.Element
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.data.Form
 import play.api.i18n._
-import play.api.test.FakeRequest
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms.telephoneNumberForm
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
@@ -79,7 +78,7 @@ extends BaseISpec {
 
       val doc: Document = Jsoup.parse(view.apply(form)(
         messages,
-        FakeRequest(),
+        fakeRequest(),
         appConfig
       ).body)
 
@@ -96,7 +95,7 @@ extends BaseISpec {
 
       val doc: Document = Jsoup.parse(view.apply(formWithErrors)(
         messages,
-        FakeRequest(),
+        fakeRequest(),
         appConfig
       ).body)
 

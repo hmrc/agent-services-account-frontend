@@ -18,16 +18,13 @@ package uk.gov.hmrc.agentservicesaccount.controllers
 
 import play.api.data.Form
 import play.api.i18n.I18nSupport
-import play.api.mvc.Action
-import play.api.mvc.AnyContent
-import play.api.mvc.MessagesControllerComponents
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.forms.FeedbackWhichServiceForm
-import uk.gov.hmrc.agentservicesaccount.forms.SignOutForm
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.survey
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.survey_which_service
+import uk.gov.hmrc.agentservicesaccount.forms.{FeedbackWhichServiceForm, SignOutForm}
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.{survey, survey_which_service}
 import uk.gov.hmrc.agentservicesaccount.views.html.signed_out
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
+import views.html.helper.urlEncode
 
 import javax.inject.Inject
 import scala.concurrent.Future
@@ -107,11 +104,11 @@ with I18nSupport {
   }
 
   def signOut: Action[AnyContent] = Action.async {
-    Future successful Redirect(routes.SignOutController.showSurvey()).withNewSession
+    Future successful Redirect(appConfig.signOut + "?continue=" + urlEncode(appConfig.asaFrontendExternalUrl + routes.SignOutController.showSurvey().url))
   }
 
   def signedOut = Action.async {
-    Future successful Redirect(appConfig.continueFromGGSignIn).withNewSession
+    Future successful Redirect(appConfig.continueFromGGSignIn)
   }
 
   def onlineSignIn: Action[AnyContent] = Action.async {

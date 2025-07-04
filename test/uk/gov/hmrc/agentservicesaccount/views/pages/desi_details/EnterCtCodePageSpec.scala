@@ -30,6 +30,7 @@ import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms.ctCodeForm
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details._
+import uk.gov.hmrc.http.SessionKeys
 
 class EnterCtCodePageSpec
 extends BaseISpec {
@@ -85,7 +86,7 @@ extends BaseISpec {
 
       val doc: Document = Jsoup.parse(view.apply(form)(
         messages,
-        FakeRequest(),
+        fakeRequest(),
         appConfig
       ).body)
 
@@ -102,7 +103,7 @@ extends BaseISpec {
 
       val doc: Document = Jsoup.parse(view.apply(formWithNameErrors)(
         messages,
-        FakeRequest(),
+        fakeRequest(),
         appConfig
       ).body)
 

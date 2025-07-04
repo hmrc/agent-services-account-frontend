@@ -59,8 +59,6 @@ extends Logging {
 
   val agentAssuranceBaseUrl: String = baseUrl("agent-assurance")
 
-  val signInUrl: String = getString("bas-gateway.url")
-
   val continueUrl: String = getString("login.continue")
 
   val emailBaseUrl: String = baseUrl("email")
@@ -75,13 +73,16 @@ extends Logging {
 
   val asaFrontendExternalUrl: String = getConfString("agent-services-account-frontend.external-url")
 
-  val companyAuthFrontendExternalUrl: String = getConfString("company-auth-frontend.external-url")
-  val signOutPath: String = getConfString("company-auth-frontend.sign-out.path")
-  val signInPath: String = getConfString("company-auth-frontend.sign-in.path")
-  val signOutContinueUrl: String = getConfString("company-auth-frontend.sign-out.continue-url")
-  lazy val signOut: String = s"$companyAuthFrontendExternalUrl$signOutPath"
+  private val basGatewayFrontendExternalUrl: String = getConfString("bas-gateway-frontend.external-url")
+  private val signOutPath: String = getConfString("bas-gateway-frontend.sign-out.path")
+  private val signInPath: String = getConfString("bas-gateway-frontend.sign-in.path")
+  private val signOutContinueUrl: String = getConfString("bas-gateway-frontend.sign-out.continue-url")
+  lazy val signOut: String = s"$basGatewayFrontendExternalUrl$signOutPath"
+  lazy val signInUrl: String = s"$basGatewayFrontendExternalUrl$signInPath"
 
-  lazy val continueFromGGSignIn = s"$companyAuthFrontendExternalUrl$signInPath?continue=${urlEncode(s"$asaFrontendExternalUrl/agent-services-account")}"
+  lazy val continueFromGGSignIn = s"$signInUrl?continue=${urlEncode(s"$asaFrontendExternalUrl/agent-services-account")}"
+
+  def signOutUrlWithSurvey(surveyKey: String): String = s"$basGatewayFrontendExternalUrl$signOutPath?continue=${urlEncode(signOutContinueUrl + surveyKey)}"
 
   val agentMappingFrontendExternalUrl: String = getConfString("agent-mapping-frontend.external-url")
 
@@ -147,8 +148,6 @@ extends Logging {
 
   val hmrcOnlineGuidanceLink: String = getString("hmrcOnlineGuidanceLink")
   val hmrcOnlineSignInLink: String = getString("hmrcOnlineSignInLink")
-
-  def signOutUrlWithSurvey(surveyKey: String): String = s"$companyAuthFrontendExternalUrl$signOutPath?continue=${urlEncode(signOutContinueUrl + surveyKey)}"
 
   def languageMap: Map[String, Lang] = Map(
     "english" -> Lang("en"),

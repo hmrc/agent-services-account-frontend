@@ -27,7 +27,6 @@
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.input.Input
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.select.{Select, SelectItem}
 @import uk.gov.hmrc.hmrcfrontend.views.Implicits.RichErrorSummary
-@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.{HmrcAccessibleAutocompleteCss, HmrcAccessibleAutocompleteJavascript}
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.accessibleautocomplete.AccessibleAutocomplete
 @import views.html.helper.CSPNonce
 
@@ -39,19 +38,11 @@
         govukInput: GovukInput,
         govukButton: GovukButton,
         govukFieldset: GovukFieldset,
-        govukErrorSummary: GovukErrorSummary,
-        autocompleteJavascript: HmrcAccessibleAutocompleteJavascript,
-        autocompleteCss: HmrcAccessibleAutocompleteCss
+        govukErrorSummary: GovukErrorSummary
 )
 
 
 @(form: Form[String], amlsCodes: Map[String, String], isUk: Boolean, cya: Boolean)(implicit request: RequestHeader, msgs: Messages, appConfig: AppConfig)
-
-
-@scripts = {
-@autocompleteJavascript()
-    <script @{CSPNonce.attr} src="@controllers.routes.Assets.at("javascripts/accessible-autocomplete-polyfill.js")"></script>
-}
 
 @fieldsetHtml = {
     @if(isUk) {
@@ -95,9 +86,8 @@
 @main(
     pageTitle = withErrorPrefix(form.hasErrors, msgs("amls.new-supervisory-body.title")),
     mimicBrowserBackLink = true,
-    showSecondaryNav = false,
-    additionalCss = Some(autocompleteCss()),
-    additionalScripts = Some(scripts)) {
+    showSecondaryNav = false
+) {
 
     @if(form.hasErrors) {
         @govukErrorSummary(ErrorSummary().withFormErrorsAsText(form))

@@ -23,7 +23,6 @@ import play.api.i18n.Lang
 import play.api.i18n.Messages
 import play.api.i18n.MessagesApi
 import play.api.i18n.MessagesImpl
-import play.api.test.FakeRequest
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
@@ -130,7 +129,7 @@ extends BaseISpec {
           val messages: Messages = MessagesImpl(langs.head, messagesApi)
           "there are contact details" in {
             val doc: Document = Jsoup.parse(view.apply(testAgencyDetailsFull)(
-              FakeRequest(),
+              fakeRequest(),
               messages,
               appConfig
             ).body)
@@ -162,7 +161,7 @@ extends BaseISpec {
           }
           "there are contact details however missing a agent name" in {
             val doc: Document = Jsoup.parse(view.apply(testAgencyDetailsNoName)(
-              FakeRequest(),
+              fakeRequest(),
               messages,
               appConfig
             ).body)
@@ -194,7 +193,7 @@ extends BaseISpec {
           }
           "If you're a standard user you will be presented with a Forbidden error page" in {
             val doc: Document = Jsoup.parse(view.apply(testAgencyDetailsFull)(
-              FakeRequest(),
+              fakeRequest(),
               messages,
               appConfig
             ).body)
@@ -209,7 +208,7 @@ extends BaseISpec {
           val messages: Messages = MessagesImpl(langs.last, messagesApi)
           "there are contact details" in {
             val doc: Document = Jsoup.parse(view.apply(testAgencyDetailsFull)(
-              FakeRequest(),
+              fakeRequest(),
               messages,
               appConfig
             ).body)
@@ -241,7 +240,7 @@ extends BaseISpec {
           }
           "there are contact details however missing a agent name" in {
             val doc: Document = Jsoup.parse(view.apply(testAgencyDetailsNoName)(
-              FakeRequest(),
+              fakeRequest(),
               messages,
               appConfig
             ).body)
@@ -273,7 +272,7 @@ extends BaseISpec {
           }
           "If you're a standard user you will be presented with a Forbidden error page" in {
             val doc: Document = Jsoup.parse(view.apply(testAgencyDetailsFull)(
-              FakeRequest(),
+              fakeRequest(),
               messages,
               appConfig
             ).body)
