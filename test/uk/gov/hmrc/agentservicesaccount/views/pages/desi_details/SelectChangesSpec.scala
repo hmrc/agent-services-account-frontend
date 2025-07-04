@@ -24,7 +24,6 @@ import play.api.i18n.Lang
 import play.api.i18n.Messages
 import play.api.i18n.MessagesApi
 import play.api.i18n.MessagesImpl
-import play.api.test.FakeRequest
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.forms.SelectChangesForm
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.SelectChanges
@@ -84,7 +83,7 @@ extends BaseISpec {
       "the selected lang is english" in {
         val messages: Messages = MessagesImpl(langs.head, messagesApi)
         val doc: Document = Jsoup.parse(view.apply(form)(
-          FakeRequest(),
+          fakeRequest(),
           messages,
           appConfig
         ).body)
@@ -105,7 +104,7 @@ extends BaseISpec {
       "the selected lang is Welsh" in {
         val messages: Messages = MessagesImpl(langs.last, messagesApi)
         val doc: Document = Jsoup.parse(view.apply(form)(
-          FakeRequest(),
+          fakeRequest(),
           messages,
           appConfig
         ).body)

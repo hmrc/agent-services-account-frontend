@@ -22,22 +22,25 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
+import views.html.helper.urlEncode
 
 class SignOutControllerSpec
 extends BaseISpec {
 
   implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
   implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+  implicit val request: FakeRequest[?] = fakeRequest("GET", "/")
   val controller: SignOutController = app.injector.instanceOf[SignOutController]
 
   "SignOutController" should {
     "remove session and redirect to /home/survey" in {
-      val signOutUrl = "/agent-services-account/home/survey"
+      val continueUrl = urlEncode("http://localhost:9401/agent-services-account/home/survey")
+      val signOutUrl = "http://localhost:9099/bas-gateway/sign-out-without-state?continue=" + continueUrl
 
-      val response = controller.signOut(FakeRequest("GET", "/"))
+      val response = controller.signOut(FakeRequest("GET", "/")).futureValue
 
       status(response) shouldBe 303
-      redirectLocation(await(response)) shouldBe Some(signOutUrl)
+      redirectLocation(response) shouldBe Some(signOutUrl)
     }
 
     "show the sign out form" in {

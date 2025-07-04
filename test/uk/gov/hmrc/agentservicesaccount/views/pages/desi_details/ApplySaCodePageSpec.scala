@@ -25,7 +25,6 @@ import play.api.i18n.Lang
 import play.api.i18n.Messages
 import play.api.i18n.MessagesApi
 import play.api.i18n.MessagesImpl
-import play.api.test.FakeRequest
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms.applySaCodeChangesForm
 import uk.gov.hmrc.agentservicesaccount.models.ApplySaCodeChanges
@@ -86,7 +85,7 @@ extends BaseISpec {
 
       val doc: Document = Jsoup.parse(view.apply(form)(
         messages,
-        FakeRequest(),
+        fakeRequest(),
         appConfig
       ).body)
 
@@ -103,7 +102,7 @@ extends BaseISpec {
 
       val doc: Document = Jsoup.parse(view.apply(formWithNameErrors)(
         messages,
-        FakeRequest(),
+        fakeRequest(),
         appConfig
       ).body)
 

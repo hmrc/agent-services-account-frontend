@@ -25,7 +25,6 @@ import play.api.i18n.Lang
 import play.api.i18n.Messages
 import play.api.i18n.MessagesApi
 import play.api.i18n.MessagesImpl
-import play.api.test.FakeRequest
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.forms.YesNoForm
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
@@ -37,6 +36,7 @@ extends BaseISpec {
   implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
   implicit val lang: Lang = Lang("en")
+
   val view: is_amls_hmrc = app.injector.instanceOf[is_amls_hmrc]
   val messages: Messages = MessagesImpl(lang, messagesApi)
 
@@ -80,7 +80,7 @@ extends BaseISpec {
 
     "first viewing page" should {
       val doc: Document = Jsoup.parse(view.apply(form)(
-        FakeRequest(),
+        fakeRequest(),
         messages,
         appConfig
       ).body)
@@ -97,7 +97,7 @@ extends BaseISpec {
 
     "form is submitted with errors should" should {
       val doc: Document = Jsoup.parse(view.apply(formWithErrors)(
-        FakeRequest(),
+        fakeRequest(),
         messages,
         appConfig
       ).body)

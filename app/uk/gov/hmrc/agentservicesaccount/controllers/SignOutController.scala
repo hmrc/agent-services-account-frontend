@@ -27,7 +27,9 @@ import uk.gov.hmrc.agentservicesaccount.forms.SignOutForm
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.survey
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.survey_which_service
 import uk.gov.hmrc.agentservicesaccount.views.html.signed_out
+import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
+import views.html.helper.urlEncode
 
 import javax.inject.Inject
 import scala.concurrent.Future
@@ -107,11 +109,11 @@ with I18nSupport {
   }
 
   def signOut: Action[AnyContent] = Action.async {
-    Future successful Redirect(routes.SignOutController.showSurvey()).withNewSession
+    Future successful Redirect(appConfig.signOut + "?continue=" + urlEncode(appConfig.asaFrontendExternalUrl + routes.SignOutController.showSurvey().url))
   }
 
   def signedOut = Action.async {
-    Future successful Redirect(appConfig.continueFromGGSignIn).withNewSession
+    Future successful Redirect(appConfig.continueFromGGSignIn)
   }
 
   def onlineSignIn: Action[AnyContent] = Action.async {

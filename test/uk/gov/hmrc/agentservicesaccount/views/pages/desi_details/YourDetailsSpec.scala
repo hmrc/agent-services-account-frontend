@@ -22,7 +22,6 @@ import org.jsoup.nodes.Element
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.data.Form
 import play.api.i18n._
-import play.api.test.FakeRequest
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms.yourDetailsForm
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.YourDetails
@@ -35,9 +34,9 @@ extends BaseISpec {
   implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
   implicit val lang: Lang = Lang("en")
-  val view: your_details = app.injector.instanceOf[your_details]
   implicit val messages: Messages = MessagesImpl(lang, messagesApi)
 
+  val view: your_details = app.injector.instanceOf[your_details]
   val form: Form[YourDetails] = yourDetailsForm
   val formWithNameErrors: Form[YourDetails] = form.withError(key = "fullName", message = Messages("update-contact-details.name.error.empty"))
   val formWithTelephoneErrors: Form[YourDetails] = form.withError(
@@ -82,7 +81,7 @@ extends BaseISpec {
 
       val doc: Document = Jsoup.parse(view.apply(form)(
         messages,
-        FakeRequest(),
+        fakeRequest(),
         appConfig
       ).body)
 
@@ -99,7 +98,7 @@ extends BaseISpec {
 
       val doc: Document = Jsoup.parse(view.apply(formWithNameErrors)(
         messages,
-        FakeRequest(),
+        fakeRequest(),
         appConfig
       ).body)
 
@@ -130,7 +129,7 @@ extends BaseISpec {
 
       val doc: Document = Jsoup.parse(view.apply(formWithTelephoneErrors)(
         messages,
-        FakeRequest(),
+        fakeRequest(),
         appConfig
       ).body)
 

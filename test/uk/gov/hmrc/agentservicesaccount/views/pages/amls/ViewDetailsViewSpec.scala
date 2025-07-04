@@ -20,7 +20,6 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.i18n._
-import play.api.test.FakeRequest
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models.AmlsDetails
 import uk.gov.hmrc.agentservicesaccount.models.AmlsStatuses
@@ -35,6 +34,7 @@ extends BaseISpec {
   implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
   implicit val lang: Lang = Lang("en")
+
   val view: view_details = app.injector.instanceOf[view_details]
   implicit val messages: Messages = MessagesImpl(lang, messagesApi)
 
@@ -75,7 +75,7 @@ extends BaseISpec {
     s"AmlsStatuses is ${AmlsStatuses.NoAmlsDetailsUK}" should {
 
       val doc: Document = Jsoup.parse(view.apply(AmlsStatuses.NoAmlsDetailsUK, None)(
-        FakeRequest(),
+        fakeRequest(),
         messages,
         appConfig
       ).body)
@@ -107,7 +107,7 @@ extends BaseISpec {
     s"AmlsStatuses is ${AmlsStatuses.NoAmlsDetailsNonUK}" should {
 
       val doc: Document = Jsoup.parse(view.apply(AmlsStatuses.NoAmlsDetailsNonUK, None)(
-        FakeRequest(),
+        fakeRequest(),
         messages,
         appConfig
       ).body)
@@ -137,7 +137,7 @@ extends BaseISpec {
         membershipExpiresOn = Some(LocalDate.parse("2024-02-10"))
       )
       val doc: Document = Jsoup.parse(view.apply(AmlsStatuses.ExpiredAmlsDetailsUK, Some(amlsDetails))(
-        FakeRequest(),
+        fakeRequest(),
         messages,
         appConfig
       ).body)
@@ -171,7 +171,7 @@ extends BaseISpec {
         membershipExpiresOn = Some(LocalDate.parse("2025-02-10"))
       )
       val doc: Document = Jsoup.parse(view.apply(AmlsStatuses.ValidAmlsDetailsUK, Some(amlsDetails))(
-        FakeRequest(),
+        fakeRequest(),
         messages,
         appConfig
       ).body)
@@ -213,7 +213,7 @@ extends BaseISpec {
         membershipExpiresOn = Some(LocalDate.parse("2025-02-10"))
       )
       val doc: Document = Jsoup.parse(view.apply(AmlsStatuses.ValidAmlsDetailsUK, Some(amlsDetails))(
-        FakeRequest(),
+        fakeRequest(),
         messages,
         appConfig
       ).body)
@@ -257,7 +257,7 @@ extends BaseISpec {
         membershipExpiresOn = None
       )
       val doc: Document = Jsoup.parse(view.apply(AmlsStatuses.ValidAmlsNonUK, Some(amlsDetails))(
-        FakeRequest(),
+        fakeRequest(),
         messages,
         appConfig
       ).body)
@@ -296,7 +296,7 @@ extends BaseISpec {
         appliedOn = Some(LocalDate.parse("2024-10-10"))
       )
       val doc: Document = Jsoup.parse(view.apply(AmlsStatuses.PendingAmlsDetails, Some(amlsDetails))(
-        FakeRequest(),
+        fakeRequest(),
         messages,
         appConfig
       ).body)
@@ -333,7 +333,7 @@ extends BaseISpec {
         appliedOn = Some(LocalDate.parse("2024-10-10"))
       )
       val doc: Document = Jsoup.parse(view.apply(AmlsStatuses.PendingAmlsDetailsRejected, Some(amlsDetails))(
-        FakeRequest(),
+        fakeRequest(),
         messages,
         appConfig
       ).body)
@@ -366,7 +366,7 @@ extends BaseISpec {
       "throw exception" in {
         an[RuntimeException] mustBe thrownBy {
           Jsoup.parse(view.apply(AmlsStatuses.PendingAmlsDetailsRejected, None)(
-            FakeRequest(),
+            fakeRequest(),
             messages,
             appConfig
           ).body)
@@ -382,7 +382,7 @@ extends BaseISpec {
         )
         an[RuntimeException] mustBe thrownBy {
           Jsoup.parse(view.apply(AmlsStatuses.NoAmlsDetailsUK, Some(amlsDetails))(
-            FakeRequest(),
+            fakeRequest(),
             messages,
             appConfig
           ).body)
