@@ -14,34 +14,32 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.controllers.routes
-@import uk.gov.hmrc.agentservicesaccount.views.html.components.head
-@import uk.gov.hmrc.agentservicesaccount.views.html.fullWidthMainContentLayout
 @import uk.gov.hmrc.govukfrontend.views.html.components.{TwoThirdsMainContent, _}
 @import uk.gov.hmrc.hmrcfrontend.views.config.StandardBetaBanner
-@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.{HmrcLanguageSelectHelper, HmrcReportTechnicalIssueHelper, HmrcStandardPage}
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers._
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.hmrcstandardpage._
 @import views.html.helper.CSPNonce
 
 
 @this(
-    hmrcStandardPage: HmrcStandardPage,
-    head: head,
-    secondary_nav: agents_secondary_nav,
-    standardBetaBanner: StandardBetaBanner,
-    govukBackLink : GovukBackLink,
-    hmrcLanguageSelectHelper: HmrcLanguageSelectHelper,
-    hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper,
-    twoThirdsLayout: TwoThirdsMainContent,
-    fullWidthMainContent: fullWidthMainContentLayout
+        hmrcStandardPage: HmrcStandardPage,
+        secondary_nav: agents_secondary_nav,
+        standardBetaBanner: StandardBetaBanner,
+        govukBackLink : GovukBackLink,
+        autocompleteCss: HmrcAccessibleAutocompleteCss,
+        autocompleteJavascript: HmrcAccessibleAutocompleteJavascript,
+        hmrcLanguageSelectHelper: HmrcLanguageSelectHelper,
+        hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper,
+        hmrcTimeoutDialogHelper: HmrcTimeoutDialogHelper,
+        twoThirdsLayout: TwoThirdsMainContent,
+        fullWidthMainContent: fullWidthMainContentLayout
 )
 
 @(
     pageTitle: String,
     isAdmin: Boolean = false,
     analyticsAdditionalJs: Option[Html] = None,
-    hasTimeout: Boolean = true,
     fullWidth: Boolean = false,
     backLinkHref: Option[String] = None,
     mimicBrowserBackLink: Boolean = false, // mimic browser back button instead of specific href
@@ -51,10 +49,12 @@
     additionalScripts: Option[Html] = None
 )(contentBlock: Html)(implicit request: RequestHeader, msgs: Messages)
 
-@scripts = {
-@additionalScripts.getOrElse(Html(""))
-    <script @{CSPNonce.attr} src="@controllers.routes.Assets.at("javascripts/jquery-3.6.3.min.js")"></script>
-    <script @{CSPNonce.attr} src="@controllers.routes.Assets.at("javascripts/ga-events.js")"></script>
+@isSignedIn = @{
+    try {
+        request.session.get("authToken").isDefined
+    } catch {
+        case _: Throwable => false // There are special error cases that can bypass the boostrap session filter, this avoids errors caused by that
+    }
 }
 
 @backLink = @{
@@ -67,7 +67,7 @@
     } else None
 }
 @beforeContent = {
-    @if(showSecondaryNav){
+    @if(showSecondaryNav && isSignedIn){
         @secondary_nav(isAdmin = isAdmin)
     }
     @hmrcLanguageSelectHelper()
@@ -81,19 +81,29 @@
         @hmrcReportTechnicalIssueHelper()
     </div>
 }
+@head = {
+    <link rel="stylesheet" href="@controllers.routes.Assets.at("stylesheets/asa.css")" >
+    @autocompleteCss()
 
+    @if(isSignedIn) {
+        @hmrcTimeoutDialogHelper(
+            signOutUrl = routes.SignOutController.signOut.url,
+            timeoutUrl = Some(routes.SignOutController.timedOut.url)
+        )
+    }
+}
 @hmrcStandardPage(HmrcStandardPageParams(
     serviceURLs = ServiceURLs(
         serviceUrl = Some(routes.AgentServicesController.root().url),
-        signOutUrl = if(request.session.get("authToken").isDefined) Some(routes.SignOutController.signOut.url) else None
+        signOutUrl = if(isSignedIn) Some(routes.SignOutController.signOut.url) else None
     ),
     banners = Banners(
         additionalBannersBlock = additionalBanner
     ),
     templateOverrides = TemplateOverrides(
-        additionalHeadBlock = Some(head(hasTimeout,additionalCss)),
-        additionalScriptsBlock = Some(scripts),
+        additionalHeadBlock = Some(head),
         beforeContentBlock = Some(beforeContent),
+        additionalScriptsBlock = Some(autocompleteJavascript()),
         mainContentLayout = if(fullWidth) Some(fullWidthMainContent(_)) else Some(twoThirdsLayout(_))
     ),
     isWelshTranslationAvailable = true,
