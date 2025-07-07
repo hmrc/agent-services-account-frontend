@@ -24,7 +24,6 @@ import play.api.i18n.Lang
 import play.api.i18n.Messages
 import play.api.i18n.MessagesApi
 import play.api.i18n.MessagesImpl
-import play.api.test.FakeRequest
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.forms.YesNoForm
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
@@ -36,6 +35,7 @@ extends BaseISpec {
   implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
   implicit val lang: Lang = Lang("en")
+
   val view: update_confirmation_received = app.injector.instanceOf[update_confirmation_received]
   val messages: Messages = MessagesImpl(lang, messagesApi)
 
@@ -45,7 +45,7 @@ extends BaseISpec {
   "update_confirmation_received view" when {
     "the user has changed existing amls details should render the page correctly" in {
       val doc: Document = Jsoup.parse(view.apply(amlsDetailsAlreadyExisted = true)(
-        FakeRequest(),
+        fakeRequest(),
         messages,
         appConfig
       ).body)
@@ -62,7 +62,7 @@ extends BaseISpec {
     }
     "the user has provided amls details for the first time should render the page correctly" in {
       val doc: Document = Jsoup.parse(view.apply(amlsDetailsAlreadyExisted = false)(
-        FakeRequest(),
+        fakeRequest(),
         messages,
         appConfig
       ).body)

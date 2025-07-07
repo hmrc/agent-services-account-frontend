@@ -23,19 +23,18 @@ import play.api.i18n.Lang
 import play.api.i18n.Messages
 import play.api.i18n.MessagesApi
 import play.api.i18n.MessagesImpl
-import play.api.test.FakeRequest
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.routes
-import uk.gov.hmrc.agentservicesaccount.models.desiDetails.YourDetails
 import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.YourDetails
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details.view_contact_details
 
-import java.time.format.DateTimeFormatter
 import java.time.Instant
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import scala.jdk.CollectionConverters.CollectionHasAsScala
 
 class ViewContactDetailsViewSpec
@@ -151,7 +150,7 @@ extends BaseISpec {
             isAdmin = true
           )(
             messages,
-            FakeRequest(),
+            fakeRequest(),
             appConfig
           ).body)
 
@@ -185,7 +184,7 @@ extends BaseISpec {
             isAdmin = false
           )(
             messages,
-            FakeRequest(),
+            fakeRequest(),
             appConfig
           ).body)
 
@@ -217,7 +216,7 @@ extends BaseISpec {
             isAdmin = true
           )(
             messages,
-            FakeRequest(),
+            fakeRequest(),
             appConfig
           ).body)
 
@@ -252,7 +251,7 @@ extends BaseISpec {
             isAdmin = true
           )(
             messages,
-            FakeRequest(),
+            fakeRequest(),
             appConfig
           ).body)
 
@@ -290,7 +289,7 @@ extends BaseISpec {
             isAdmin = true
           )(
             messages,
-            FakeRequest(),
+            fakeRequest(),
             appConfig
           ).body)
 
@@ -324,7 +323,7 @@ extends BaseISpec {
             isAdmin = false
           )(
             messages,
-            FakeRequest(),
+            fakeRequest(),
             appConfig
           ).body)
 
@@ -356,7 +355,7 @@ extends BaseISpec {
             isAdmin = true
           )(
             messages,
-            FakeRequest(),
+            fakeRequest(),
             appConfig
           ).body)
 
@@ -391,7 +390,7 @@ extends BaseISpec {
             isAdmin = true
           )(
             messages,
-            FakeRequest(),
+            fakeRequest(),
             appConfig
           ).body)
 

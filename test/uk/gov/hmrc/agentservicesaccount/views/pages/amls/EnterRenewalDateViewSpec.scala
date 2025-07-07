@@ -22,7 +22,6 @@ import org.jsoup.nodes.Element
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.data.Form
 import play.api.i18n._
-import play.api.test.FakeRequest
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.forms.RenewalDateForm
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
@@ -75,7 +74,7 @@ extends BaseISpec {
     "first viewing page" should {
 
       val doc: Document = Jsoup.parse(view.apply(form)(
-        FakeRequest(),
+        fakeRequest(),
         messages,
         appConfig
       ).body)
@@ -92,7 +91,7 @@ extends BaseISpec {
     "form is submitted with errors should" should {
 
       val doc: Document = Jsoup.parse(view.apply(formWithErrors)(
-        FakeRequest(),
+        fakeRequest(),
         messages,
         appConfig
       ).body)

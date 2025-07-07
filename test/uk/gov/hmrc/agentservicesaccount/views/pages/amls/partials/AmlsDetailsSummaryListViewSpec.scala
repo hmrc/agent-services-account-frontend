@@ -29,6 +29,7 @@ extends BaseISpec {
 
   implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   implicit val lang: Lang = Lang("en")
+
   val view: amls_details_summary_list = app.injector.instanceOf[amls_details_summary_list]
   val messages: Messages = MessagesImpl(lang, messagesApi)
 
