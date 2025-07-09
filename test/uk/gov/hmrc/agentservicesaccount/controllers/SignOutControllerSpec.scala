@@ -17,12 +17,12 @@
 package uk.gov.hmrc.agentservicesaccount.controllers
 
 import play.api.i18n.MessagesApi
-import play.api.test.Helpers._
 import play.api.test.FakeRequest
 import play.api.test.Helpers
+import play.api.test.Helpers._
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
-import views.html.helper.urlEncode
+import uk.gov.hmrc.http.StringContextOps
 
 class SignOutControllerSpec
 extends BaseISpec {
@@ -31,79 +31,51 @@ extends BaseISpec {
   implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   val controller: SignOutController = app.injector.instanceOf[SignOutController]
 
-  "SignOutController" should {
+  def signOutUrlWithContinue(continue: String): String = {
+    val signOutBaseUrl = "http://localhost:9099"
+    val signOutPath = "/bas-gateway/sign-out-without-state"
+    url"""${signOutBaseUrl + signOutPath}?${Map("continue" -> continue)}""".toString
+  }
+
+  "GET /sign-out" should {
     "remove session and redirect to /home/survey" in {
-      val continueUrl = urlEncode("http://localhost:9401/agent-services-account/home/survey")
-      val signOutUrl = "http://localhost:9099/bas-gateway/sign-out-without-state?continue=" + continueUrl
-
+      val continueUrl = url"${appConfig.asaFrontendExternalUrl + "/agent-services-account/home/survey"}"
       val response = controller.signOut(fakeRequest("GET", "/")).futureValue
-
       status(response) shouldBe 303
-      redirectLocation(response) shouldBe Some(signOutUrl)
+      redirectLocation(response) shouldBe Some(signOutUrlWithContinue(continueUrl.toString))
     }
+  }
 
-    "show the sign out form" in {
-
-      val result = controller.showSurvey(FakeRequest("GET", "/"))
-
-      status(result) shouldBe 200
-      Helpers.contentAsString(result).contains("Feedback") shouldBe true
-    }
-
-    "redirect to survey" in {
-      val result = controller.submitSurvey(FakeRequest("POST", "/").withFormUrlEncodedBody("surveyKey" -> "AGENTSUB"))
-
-      status(result) shouldBe 303
-      Helpers.redirectLocation(result).get shouldBe appConfig.signOutUrlWithSurvey("AGENTSUB")
-    }
-
-    "redirect to service select survey if choosing 'accessing a service'" in {
-      val result = controller.submitSurvey(FakeRequest("POST", "/").withFormUrlEncodedBody("surveyKey" -> "ACCESSINGSERVICE"))
-
-      status(result) shouldBe 303
-      Helpers.redirectLocation(result).get shouldBe routes.SignOutController.showWhichService().url
-    }
-
-    "from 'which service' page, redirect to survey" in {
-      val result = controller.submitWhichService(FakeRequest("POST", "/").withFormUrlEncodedBody("service" -> "VAT"))
-
-      status(result) shouldBe 303
-      Helpers.redirectLocation(result).get shouldBe appConfig.signOutUrlWithSurvey("VATCA")
-    }
-
-    "return bad request if missing survey body" in {
-      val result = controller.submitSurvey(FakeRequest("POST", "/"))
-
-      status(result) shouldBe 400
-    }
-
-    "/signed-out redirect to GG sign in with continue url back to /agent-services-account" in {
+  "GET /signed-out" should {
+    "redirect to sign in with continue url back to /agent-services-account" in {
       val request = controller.signedOut(FakeRequest("GET", "/"))
-
       status(request) shouldBe 303
-      Helpers.redirectLocation(request) shouldBe Some(appConfig.continueFromGGSignIn)
+      Helpers.redirectLocation(request) shouldBe Some(signOutUrlWithContinue(appConfig.continueFromGGSignIn))
     }
+  }
 
+  "GET /online/sign-in" should {
     "remove session and redirect to HMRC Online sign-in page" in {
       val onlineSignInUrl = "https://www.access.service.gov.uk/login/signin/creds"
-
-      val response = controller.onlineSignIn(FakeRequest("GET", "/"))
-
+      val response = controller.onlineSignIn(fakeRequest("GET", "/"))
       status(response) shouldBe 303
-      Helpers.redirectLocation(response) shouldBe Some(onlineSignInUrl)
+      Helpers.redirectLocation(response) shouldBe Some(signOutUrlWithContinue(onlineSignInUrl))
     }
+  }
 
-    "timedOut should return forbidden with new session" in {
+  "GET /time-out" should {
+    "redirect to bas-gateway-frontend/sign-out-without-state with timed out page as continue" in {
+      val continue = url"${appConfig.asaFrontendExternalUrl + routes.SignOutController.timedOut().url}"
+      val response = controller.timeOut()(fakeRequest())
+      status(response) shouldBe 303
+      Helpers.redirectLocation(response) shouldBe Some(signOutUrlWithContinue(continue.toString))
+    }
+  }
+
+  "GET /timed-out" should {
+    "should show the timed out page" in {
       val request = controller.timedOut(FakeRequest("GET", "/"))
-
       status(request) shouldBe 403
-    }
-
-    "keepAlive should return OK" in {
-      val response = controller.keepAlive(FakeRequest("GET", "/"))
-
-      status(response) shouldBe 200
-      Helpers.contentAsString(response).contains("OK") shouldBe true
     }
   }
 
