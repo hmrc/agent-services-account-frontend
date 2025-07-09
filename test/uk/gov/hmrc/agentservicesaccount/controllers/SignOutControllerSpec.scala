@@ -22,7 +22,7 @@ import play.api.test.Helpers
 import play.api.test.Helpers._
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
-import uk.gov.hmrc.http.StringContextOps
+import sttp.model.Uri.UriContext
 
 class SignOutControllerSpec
 extends BaseISpec {
@@ -34,12 +34,12 @@ extends BaseISpec {
   def signOutUrlWithContinue(continue: String): String = {
     val signOutBaseUrl = "http://localhost:9099"
     val signOutPath = "/bas-gateway/sign-out-without-state"
-    url"""${signOutBaseUrl + signOutPath}?${Map("continue" -> continue)}""".toString
+    uri"""${signOutBaseUrl + signOutPath}?${Map("continue" -> continue)}""".toString
   }
 
   "GET /sign-out" should {
     "remove session and redirect to /home/survey" in {
-      val continueUrl = url"${appConfig.asaFrontendExternalUrl + "/agent-services-account/home/survey"}"
+      val continueUrl = uri"${appConfig.asaFrontendExternalUrl + "/agent-services-account/home/survey"}"
       val response = controller.signOut(fakeRequest("GET", "/")).futureValue
       status(response) shouldBe 303
       redirectLocation(response) shouldBe Some(signOutUrlWithContinue(continueUrl.toString))
@@ -65,7 +65,7 @@ extends BaseISpec {
 
   "GET /time-out" should {
     "redirect to bas-gateway-frontend/sign-out-without-state with timed out page as continue" in {
-      val continue = url"${appConfig.asaFrontendExternalUrl + routes.SignOutController.timedOut().url}"
+      val continue = uri"${appConfig.asaFrontendExternalUrl + routes.SignOutController.timedOut().url}"
       val response = controller.timeOut()(fakeRequest())
       status(response) shouldBe 303
       Helpers.redirectLocation(response) shouldBe Some(signOutUrlWithContinue(continue.toString))

@@ -20,9 +20,9 @@ import play.api.i18n.I18nSupport
 import play.api.mvc.Action
 import play.api.mvc.AnyContent
 import play.api.mvc.MessagesControllerComponents
+import sttp.model.Uri.UriContext
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.views.html.signed_out
-import uk.gov.hmrc.http.StringContextOps
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject.Inject
@@ -37,12 +37,12 @@ extends FrontendController(cc)
 with I18nSupport {
 
   private def signOutWithContinue(continue: String) = {
-    val signOutAndRedirectUrl: String = url"${appConfig.signOut}?${Map("continue" -> continue)}".toString
+    val signOutAndRedirectUrl: String = uri"${appConfig.signOut}?${Map("continue" -> continue)}".toString
     Redirect(signOutAndRedirectUrl)
   }
 
   def signOut: Action[AnyContent] = Action.async {
-    val continue = url"${appConfig.asaFrontendExternalUrl + routes.SurveyController.showSurvey().url}"
+    val continue = uri"${appConfig.asaFrontendExternalUrl + routes.SurveyController.showSurvey().url}"
     Future successful signOutWithContinue(continue.toString)
   }
 
@@ -55,7 +55,7 @@ with I18nSupport {
   }
 
   def timeOut: Action[AnyContent] = Action.async { implicit request =>
-    val continue = url"${appConfig.asaFrontendExternalUrl + routes.SignOutController.timedOut().url}"
+    val continue = uri"${appConfig.asaFrontendExternalUrl + routes.SignOutController.timedOut().url}"
     Future.successful(signOutWithContinue(continue.toString))
   }
 
