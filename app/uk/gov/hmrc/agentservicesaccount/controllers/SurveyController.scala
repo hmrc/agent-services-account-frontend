@@ -26,8 +26,6 @@ import uk.gov.hmrc.agentservicesaccount.forms.FeedbackWhichServiceForm
 import uk.gov.hmrc.agentservicesaccount.forms.SignOutForm
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.survey
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.survey_which_service
-import uk.gov.hmrc.agentservicesaccount.views.html.signed_out
-import uk.gov.hmrc.http.StringContextOps
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject.Inject
