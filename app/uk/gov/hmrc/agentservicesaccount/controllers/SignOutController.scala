@@ -16,19 +16,14 @@
 
 package uk.gov.hmrc.agentservicesaccount.controllers
 
-import play.api.data.Form
 import play.api.i18n.I18nSupport
 import play.api.mvc.Action
 import play.api.mvc.AnyContent
 import play.api.mvc.MessagesControllerComponents
+import sttp.model.Uri.UriContext
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.forms.FeedbackWhichServiceForm
-import uk.gov.hmrc.agentservicesaccount.forms.SignOutForm
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.survey
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.survey_which_service
 import uk.gov.hmrc.agentservicesaccount.views.html.signed_out
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import views.html.helper.urlEncode
 
 import javax.inject.Inject
 import scala.concurrent.Future
@@ -36,95 +31,36 @@ import scala.concurrent.Future
 class SignOutController @Inject() (implicit
   appConfig: AppConfig,
   cc: MessagesControllerComponents,
-  surveyView: survey,
-  whichServiceView: survey_which_service,
   signedOutView: signed_out
 )
 extends FrontendController(cc)
 with I18nSupport {
 
-  def showSurvey: Action[AnyContent] = Action.async { implicit request =>
-    Future successful Ok(surveyView(SignOutForm.form))
-  }
-
-  def submitSurvey: Action[AnyContent] = Action.async { implicit request =>
-    val errorFunction = { formWithErrors: Form[String] =>
-      Future successful BadRequest(surveyView(formWithErrors))
-    }
-
-    val successFunction = { key: String =>
-      key match {
-        case "ACCESSINGSERVICE" if appConfig.feedbackSurveyServiceSelect => Future successful Redirect(routes.SignOutController.showWhichService())
-        case k => Future successful Redirect(appConfig.signOutUrlWithSurvey(key))
-
-      }
-    }
-
-    SignOutForm.form
-      .bindFromRequest()
-      .fold(
-        errorFunction,
-        successFunction
-      )
-  }
-
-  def showWhichService: Action[AnyContent] = Action.async { implicit request =>
-    if (appConfig.feedbackSurveyServiceSelect)
-      Future successful Ok(whichServiceView(FeedbackWhichServiceForm.form))
-    else
-      Future.failed(new UnsupportedOperationException("Display of this page is disabled by configuration."))
-  }
-
-  def submitWhichService: Action[AnyContent] = Action.async { implicit request =>
-    val errorFunction = { formWithErrors: Form[String] =>
-      Future successful BadRequest(whichServiceView(formWithErrors))
-    }
-
-    // APB-5437
-    val feedbackKeyMapping = Map(
-      "VAT" -> "VATCA",
-      "IT" -> "ITVC",
-      "TRUST" -> "trusts",
-      "IR" -> "AGENTINDIV",
-      "CGT" -> "AGENTHOME",
-      "OTHER" -> "AGENTHOME"
-    )
-
-    val successFunction = { key: String =>
-      Future successful Redirect(appConfig.signOutUrlWithSurvey(feedbackKeyMapping.apply(key)))
-    }
-
-    if (appConfig.feedbackSurveyServiceSelect) {
-      FeedbackWhichServiceForm.form
-        .bindFromRequest()
-        .fold(
-          errorFunction,
-          successFunction
-        )
-    }
-    else {
-      Future.failed(new UnsupportedOperationException("Display of this page is disabled by configuration."))
-    }
+  private def signOutWithContinue(continue: String) = {
+    val signOutAndRedirectUrl: String = uri"${appConfig.signOut}?${Map("continue" -> continue)}".toString
+    Redirect(signOutAndRedirectUrl)
   }
 
   def signOut: Action[AnyContent] = Action.async {
-    Future successful Redirect(appConfig.signOut + "?continue=" + urlEncode(appConfig.asaFrontendExternalUrl + routes.SignOutController.showSurvey().url))
+    val continue = uri"${appConfig.asaFrontendExternalUrl + routes.SurveyController.showSurvey().url}"
+    Future successful signOutWithContinue(continue.toString)
   }
 
-  def signedOut = Action.async {
-    Future successful Redirect(appConfig.continueFromGGSignIn)
+  def signedOut: Action[AnyContent] = Action.async {
+    Future successful signOutWithContinue(appConfig.continueFromGGSignIn)
   }
 
   def onlineSignIn: Action[AnyContent] = Action.async {
-    Future successful Redirect(appConfig.hmrcOnlineSignInLink).withNewSession
+    Future successful signOutWithContinue(appConfig.hmrcOnlineSignInLink)
   }
 
-  def timedOut = Action.async { implicit request =>
-    Future successful Forbidden(signedOutView(appConfig.continueFromGGSignIn)).withNewSession
+  def timeOut: Action[AnyContent] = Action.async { implicit request =>
+    val continue = uri"${appConfig.asaFrontendExternalUrl + routes.SignOutController.timedOut().url}"
+    Future.successful(signOutWithContinue(continue.toString))
   }
 
-  def keepAlive: Action[AnyContent] = Action.async {
-    Future successful Ok("OK")
+  def timedOut: Action[AnyContent] = Action.async { implicit request =>
+    Future successful Forbidden(signedOutView(appConfig.continueFromGGSignIn))
   }
 
 }
