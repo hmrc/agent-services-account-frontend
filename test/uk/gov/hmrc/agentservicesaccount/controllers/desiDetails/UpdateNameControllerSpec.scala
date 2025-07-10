@@ -30,9 +30,9 @@ import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.connectors.AddressLookupConnector
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.connectors.EmailVerificationConnector
-import uk.gov.hmrc.agentservicesaccount.controllers.CURRENT_SELECTED_CHANGES
-import uk.gov.hmrc.agentservicesaccount.controllers.DRAFT_NEW_CONTACT_DETAILS
-import uk.gov.hmrc.agentservicesaccount.controllers.DRAFT_SUBMITTED_BY
+import uk.gov.hmrc.agentservicesaccount.controllers.currentSelectedChangesKey
+import uk.gov.hmrc.agentservicesaccount.controllers.draftNewContactDetailsKey
+import uk.gov.hmrc.agentservicesaccount.controllers.draftSubmittedByKey
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup.ConfirmedResponseAddress
@@ -143,16 +143,16 @@ with TestConstants {
     (pcodRepository.insert(_: PendingChangeRequest)(_: RequestHeader)).when(*, *).returns(Future.successful(()))
 
     // make sure these values are cleared from the session
-    sessionCache.delete(DRAFT_NEW_CONTACT_DETAILS)(fakeRequest()).futureValue
-    sessionCache.delete(DRAFT_SUBMITTED_BY)(fakeRequest()).futureValue
-    sessionCache.delete(CURRENT_SELECTED_CHANGES)(fakeRequest()).futureValue
+    sessionCache.delete(draftNewContactDetailsKey)(fakeRequest()).futureValue
+    sessionCache.delete(draftSubmittedByKey)(fakeRequest()).futureValue
+    sessionCache.delete(currentSelectedChangesKey)(fakeRequest()).futureValue
 
   }
 
   "GET /manage-account/contact-details/new-name" should {
     "display the enter business name page" in new TestSetup {
       noPendingChangesInRepo()
-      sessionCache.put(CURRENT_SELECTED_CHANGES, Set("businessName")).futureValue
+      sessionCache.put(currentSelectedChangesKey, Set("businessName")).futureValue
       val result: Future[Result] = controller.showPage()(fakeRequest())
       status(result) shouldBe OK
       contentAsString(result.futureValue) should include("What’s the new name")
@@ -163,21 +163,21 @@ with TestConstants {
     "store the new name in session and redirect to apply SA code page" in new TestSetup {
       noPendingChangesInRepo()
       implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = fakeRequest("POST").withFormUrlEncodedBody("name" -> "New and Improved Agency")
-      sessionCache.put(CURRENT_SELECTED_CHANGES, Set("businessName")).futureValue
+      sessionCache.put(currentSelectedChangesKey, Set("businessName")).futureValue
       val result: Future[Result] = controller.onSubmit()(request)
       status(result) shouldBe SEE_OTHER
       header("Location", result) shouldBe Some(desiDetails.routes.ApplySACodeChangesController.showPage.url)
-      sessionCache.get(DRAFT_NEW_CONTACT_DETAILS).futureValue.flatMap(_.agencyDetails.agencyName) shouldBe Some("New and Improved Agency")
+      sessionCache.get(draftNewContactDetailsKey).futureValue.flatMap(_.agencyDetails.agencyName) shouldBe Some("New and Improved Agency")
     }
 
     "display an error if the data submitted is invalid" in new TestSetup {
       noPendingChangesInRepo()
       implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = fakeRequest("POST").withFormUrlEncodedBody("name" -> "&^%£$)(")
-      sessionCache.put(CURRENT_SELECTED_CHANGES, Set("businessName")).futureValue
+      sessionCache.put(currentSelectedChangesKey, Set("businessName")).futureValue
       val result: Future[Result] = controller.onSubmit()(request)
       status(result) shouldBe BAD_REQUEST
       contentAsString(result.futureValue) should include("There is a problem")
-      sessionCache.get(DRAFT_NEW_CONTACT_DETAILS).futureValue.flatMap(_.agencyDetails.agencyName) shouldBe None // new name not added to session
+      sessionCache.get(draftNewContactDetailsKey).futureValue.flatMap(_.agencyDetails.agencyName) shouldBe None // new name not added to session
     }
   }
 

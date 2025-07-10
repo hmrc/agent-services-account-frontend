@@ -42,7 +42,7 @@ import scala.concurrent.Future
 @Singleton
 class CheckYourAnswersController @Inject() (
   actions: Actions,
-  val sessionCache: SessionCacheService,
+  val sessionCacheService: SessionCacheService,
   agentAssuranceConnector: AgentAssuranceConnector,
   checkUpdatedDetailsView: check_updated_details,
   auditService: AuditService,
@@ -61,9 +61,9 @@ with Logging {
   def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     ifChangeContactFeatureEnabledAndNoPendingChanges {
       for {
-        submittedBy <- sessionCache.get[YourDetails](DRAFT_SUBMITTED_BY)
-        selectChanges <- sessionCache.get[Set[String]](CURRENT_SELECTED_CHANGES)
-        desiDetailsData <- sessionCache.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS)
+        submittedBy <- sessionCacheService.get[YourDetails](draftSubmittedByKey)
+        selectChanges <- sessionCacheService.get[Set[String]](currentSelectedChangesKey)
+        desiDetailsData <- sessionCacheService.get[DesignatoryDetails](draftNewContactDetailsKey)
       } yield desiDetailsData match {
         case Some(desiDetails) =>
           Ok(checkUpdatedDetailsView(
@@ -81,14 +81,14 @@ with Logging {
   val onSubmit: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     ifChangeContactFeatureEnabledAndNoPendingChanges {
       val arn = request.agentInfo.arn
-      sessionCache.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS).flatMap {
+      sessionCacheService.get[DesignatoryDetails](draftNewContactDetailsKey).flatMap {
         case None => // graceful redirect in case of expired session data etc.
           Future.successful(Redirect(desiDetails.routes.ViewContactDetailsController.showPage))
         case Some(details) =>
           for {
-            selectChanges <- sessionCache.get[Set[String]](CURRENT_SELECTED_CHANGES)
+            selectChanges <- sessionCacheService.get[Set[String]](currentSelectedChangesKey)
             optUtr <- agentAssuranceConnector.getAgentRecord.map(_.uniqueTaxReference)
-            submittedBy <- sessionCache.get[YourDetails](DRAFT_SUBMITTED_BY)
+            submittedBy <- sessionCacheService.get[YourDetails](draftSubmittedByKey)
             oldContactDetails <- agentAssuranceConnector.getAgentRecord.map(_.agencyDetails.getOrElse {
               throw new RuntimeException(s"Could not retrieve current agency details for ${request.agentInfo.arn} from the backend")
             })
@@ -108,8 +108,8 @@ with Logging {
             _ = auditService.auditUpdateContactDetailsRequest(optUtr, pendingChange)
             result <- agentAssuranceConnector.postDesignatoryDetails(arn, java.util.Base64.getEncoder.encodeToString(htmlForPdf.getBytes()))
             _ <- pcodRepository.insert(PendingChangeRequest(arn, pendingChange.timeSubmitted))
-            _ <- sessionCache.delete(DRAFT_NEW_CONTACT_DETAILS)
-            _ <- sessionCache.delete(DRAFT_SUBMITTED_BY)
+            _ <- sessionCacheService.delete(draftNewContactDetailsKey)
+            _ <- sessionCacheService.delete(draftSubmittedByKey)
           } yield {
             Redirect(desiDetails.routes.ContactDetailsController.showChangeSubmitted)
           }

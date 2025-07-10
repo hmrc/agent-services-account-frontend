@@ -25,7 +25,7 @@ import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.DesiDetailsJourneySupport
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.NextPageSelector.getNextPage
-import uk.gov.hmrc.agentservicesaccount.controllers.EMAIL_PENDING_VERIFICATION
+import uk.gov.hmrc.agentservicesaccount.controllers.emailPendingVerificationKey
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.EmailHasNotChanged
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.EmailIsAlreadyVerified
@@ -45,7 +45,7 @@ import scala.concurrent.Future
 @Singleton
 class EmailVerificationEndpointController @Inject() (
   actions: Actions,
-  val sessionCache: SessionCacheService,
+  val sessionCacheService: SessionCacheService,
   draftDetailsService: DraftDetailsService,
   cc: MessagesControllerComponents
 )(implicit
@@ -65,7 +65,7 @@ with Logging {
       ifChangeContactFeatureEnabledAndNoPendingChanges {
         isContactPageRequestValid("email").flatMap {
           case true =>
-            sessionCache.get(EMAIL_PENDING_VERIFICATION).flatMap {
+            sessionCacheService.get(emailPendingVerificationKey).flatMap {
               case Some(email) =>
                 val credId = request.agentInfo.credentials.map(_.providerId).getOrElse(throw new RuntimeException("no available cred id"))
                 ev.getEmailVerificationStatus(email, credId).flatMap {
@@ -74,7 +74,7 @@ with Logging {
                       _ <- draftDetailsService.updateDraftDetails(desiDetails =>
                         desiDetails.copy(agencyDetails = desiDetails.agencyDetails.copy(agencyEmail = Some(email)))
                       ).flatMap {
-                        _ => sessionCache.delete(EMAIL_PENDING_VERIFICATION)
+                        _ => sessionCacheService.delete(emailPendingVerificationKey)
                       }
                       journey <- isJourneyComplete()
                     } yield
@@ -99,7 +99,7 @@ with Logging {
                     }
                   case EmailNeedsVerifying =>
                     for {
-                      _ <- sessionCache.put(EMAIL_PENDING_VERIFICATION, email)
+                      _ <- sessionCacheService.put(emailPendingVerificationKey, email)
                       redirectUri <- ev.initialiseEmailVerificationJourney(
                         credId,
                         email,

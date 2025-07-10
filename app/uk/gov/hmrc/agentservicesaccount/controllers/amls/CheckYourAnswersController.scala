@@ -40,8 +40,8 @@ import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.controllers._
 import uk.gov.hmrc.agentservicesaccount.models.AmlsRequest
 import uk.gov.hmrc.agentservicesaccount.models.UpdateAmlsJourney
-import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
 import uk.gov.hmrc.agentservicesaccount.services.AuditService
+import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.components.models.SummaryListData
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.check_your_answers
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -58,13 +58,13 @@ import scala.util.Try
 class CheckYourAnswersController @Inject() (
   actions: Actions,
   agentAssuranceConnector: AgentAssuranceConnector,
-  val updateAmlsJourneyRepository: UpdateAmlsJourneyRepository,
+  val sessionCacheService: SessionCacheService,
   checkYourAnswers: check_your_answers,
   cc: MessagesControllerComponents,
   auditService: AuditService
 )(implicit
   appConfig: AppConfig,
-  ec: ExecutionContext
+  val ec: ExecutionContext
 )
 extends FrontendController(cc)
 with AmlsJourneySupport
@@ -98,8 +98,12 @@ with I18nSupport {
 
             for {
               _ <- agentAssuranceConnector.postAmlsDetails(request.agentInfo.arn, amlsRequest)
-              oldAmlsDetails <- Try { agentAssuranceConnector.getAMLSDetails(request.agentInfo.arn.value).map(Option(_)) }.getOrElse(Future.successful(None))
-              optUtr <- Try { agentAssuranceConnector.getAgentRecord.map(_.uniqueTaxReference) }.getOrElse(Future.successful(None))
+              oldAmlsDetails <- Try {
+                agentAssuranceConnector.getAMLSDetails(request.agentInfo.arn.value).map(Option(_))
+              }.getOrElse(Future.successful(None))
+              optUtr <- Try {
+                agentAssuranceConnector.getAgentRecord.map(_.uniqueTaxReference)
+              }.getOrElse(Future.successful(None))
               _ = auditService.auditUpdateAmlSupervisionDetails(
                 amlsRequest,
                 oldAmlsDetails,

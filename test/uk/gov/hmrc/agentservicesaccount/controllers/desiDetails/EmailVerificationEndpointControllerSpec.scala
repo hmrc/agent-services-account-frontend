@@ -34,10 +34,10 @@ import uk.gov.hmrc.agentservicesaccount.actions.AuthActions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.controllers
-import uk.gov.hmrc.agentservicesaccount.controllers.CURRENT_SELECTED_CHANGES
-import uk.gov.hmrc.agentservicesaccount.controllers.DRAFT_NEW_CONTACT_DETAILS
-import uk.gov.hmrc.agentservicesaccount.controllers.DRAFT_SUBMITTED_BY
-import uk.gov.hmrc.agentservicesaccount.controllers.EMAIL_PENDING_VERIFICATION
+import uk.gov.hmrc.agentservicesaccount.controllers.currentSelectedChangesKey
+import uk.gov.hmrc.agentservicesaccount.controllers.draftNewContactDetailsKey
+import uk.gov.hmrc.agentservicesaccount.controllers.draftSubmittedByKey
+import uk.gov.hmrc.agentservicesaccount.controllers.emailPendingVerificationKey
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails._
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.EmailIsAlreadyVerified
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
@@ -114,15 +114,15 @@ with TestConstants {
 
       mockAppConfig.enableChangeContactDetails returns true
 
-      mockSessionCache.get(CURRENT_SELECTED_CHANGES)(*[Reads[Set[String]]], *[RequestHeader]) returns Future.successful(Some(Set("email")))
-      mockSessionCache.get(DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[RequestHeader]) returns Future.successful(Some(DesignatoryDetails(
+      mockSessionCache.get(currentSelectedChangesKey)(*[Reads[Set[String]]], *[RequestHeader]) returns Future.successful(Some(Set("email")))
+      mockSessionCache.get(draftNewContactDetailsKey)(*[Reads[DesignatoryDetails]], *[RequestHeader]) returns Future.successful(Some(DesignatoryDetails(
         agencyDetails = agentRecord.agencyDetails.get.copy(
           agencyEmail = Some("new@email.com")
         ),
         otherServices = OtherServices(saChanges = SaChanges(applyChanges = false, None), ctChanges = CtChanges(applyChanges = false, None))
       )))
 
-      mockSessionCache.get(DRAFT_SUBMITTED_BY)(*[Reads[YourDetails]], *[RequestHeader]) returns Future.successful(Some(
+      mockSessionCache.get(draftSubmittedByKey)(*[Reads[YourDetails]], *[RequestHeader]) returns Future.successful(Some(
         YourDetails(fullName = "John Tester", telephone = "078187777831")
       ))
       // TODO check this returns the correct data
@@ -131,7 +131,7 @@ with TestConstants {
 
       mockPendingChangeRequestRepository.find(arn)(*[RequestHeader]) returns Future.successful(None)
 
-      mockSessionCache.get[String](EMAIL_PENDING_VERIFICATION)(*[Reads[String]], *[Request[Any]]) returns Future.successful(Some("new@email.com"))
+      mockSessionCache.get[String](emailPendingVerificationKey)(*[Reads[String]], *[Request[Any]]) returns Future.successful(Some("new@email.com"))
 
       mockEmailVerificationService.getEmailVerificationStatus(
         "new@email.com",
@@ -140,7 +140,7 @@ with TestConstants {
 
       mockDraftDetailsService.updateDraftDetails(*[DesignatoryDetails => DesignatoryDetails])(*[RequestHeader]) returns Future.successful(())
 
-      mockSessionCache.delete[String](EMAIL_PENDING_VERIFICATION)(*[RequestHeader]) returns Future.successful(())
+      mockSessionCache.delete[String](emailPendingVerificationKey)(*[RequestHeader]) returns Future.successful(())
 
       val result = TestController.finishEmailVerification()(fakeRequest)
 

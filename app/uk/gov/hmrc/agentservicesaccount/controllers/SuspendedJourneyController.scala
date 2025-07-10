@@ -58,7 +58,7 @@ with Logging {
   }
 
   def showContactDetails: Action[AnyContent] = actions.authActionOnlyForSuspended.async { implicit request =>
-    cacheService.getSessionItems().flatMap(answers => {
+    cacheService.getBetaInviteSessionItems().flatMap(answers => {
       val contactForm = ContactDetailsSuspendForm.form.fill(
         SuspendContactDetails(
           answers(1).getOrElse(""),
@@ -77,17 +77,17 @@ with Logging {
       },
       formData => {
         for {
-          _ <- cacheService.put(NAME, formData.name)
-          _ <- cacheService.put(EMAIL, formData.email)
-          _ <- cacheService.put(PHONE, formData.phone)
-          _ <- cacheService.put(ARN, request.agentInfo.arn.value)
+          _ <- cacheService.put(nameKey, formData.name)
+          _ <- cacheService.put(emailKey, formData.email)
+          _ <- cacheService.put(phoneKey, formData.phone)
+          _ <- cacheService.put(arnKey, request.agentInfo.arn.value)
         } yield Redirect(routes.SuspendedJourneyController.showSuspendedDescription())
       }
     )
   }
 
   def showSuspendedDescription: Action[AnyContent] = actions.authActionOnlyForSuspended.async { implicit request =>
-    cacheService.get(DESCRIPTION).flatMap {
+    cacheService.get(descriptionKey).flatMap {
       case Some(description) => Ok(recoveryDescriptionView(SuspendDescriptionForm.form.fill(description))).toFuture
       case _ => Ok(recoveryDescriptionView(SuspendDescriptionForm.form)).toFuture
     }
@@ -102,7 +102,7 @@ with Logging {
             .map(BadRequest(_)),
         formData => {
           for {
-            _ <- cacheService.put(DESCRIPTION, formData)
+            _ <- cacheService.put(descriptionKey, formData)
           } yield Redirect(routes.SuspendedJourneyController.showSuspendedSummary())
         }
       )
@@ -110,11 +110,11 @@ with Logging {
 
   private def getSummaryDetails(implicit request: RequestHeader) = {
     for {
-      name <- cacheService.get(NAME)
-      email <- cacheService.get(EMAIL)
-      phone <- cacheService.get(PHONE)
-      description <- cacheService.get(DESCRIPTION)
-      arn <- cacheService.get(ARN)
+      name <- cacheService.get(nameKey)
+      email <- cacheService.get(emailKey)
+      phone <- cacheService.get(phoneKey)
+      description <- cacheService.get(descriptionKey)
+      arn <- cacheService.get(arnKey)
     } yield (name, email, phone, description, arn) match {
       case (Some(n), Some(e), Some(p), Some(d), Some(a)) => Option(AccountRecoverySummary(n, e, p, d, a))
       case _ => None

@@ -40,7 +40,7 @@ import scala.concurrent.Future
 @Singleton
 class EnterSACodeController @Inject() (
   actions: Actions,
-  val sessionCache: SessionCacheService,
+  val sessionCacheService: SessionCacheService,
   draftDetailsService: DraftDetailsService,
   enterSaCodeView: enter_sa_code,
   cc: MessagesControllerComponents

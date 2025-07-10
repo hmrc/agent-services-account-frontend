@@ -138,8 +138,8 @@ with MockFactory {
     val sessionCache: SessionCacheService = app.injector.instanceOf[SessionCacheService]
 
     // make sure these values are cleared from the session
-    sessionCache.delete(DRAFT_NEW_CONTACT_DETAILS)(fakeRequest()).futureValue
-    sessionCache.delete(EMAIL_PENDING_VERIFICATION)(fakeRequest()).futureValue
+    sessionCache.delete(draftNewContactDetailsKey)(fakeRequest()).futureValue
+    sessionCache.delete(emailPendingVerificationKey)(fakeRequest()).futureValue
 
   }
 

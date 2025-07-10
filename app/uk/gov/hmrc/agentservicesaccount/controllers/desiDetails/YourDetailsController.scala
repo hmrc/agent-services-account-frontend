@@ -22,7 +22,7 @@ import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.DesiDetailsJourneySupport
-import uk.gov.hmrc.agentservicesaccount.controllers.DRAFT_SUBMITTED_BY
+import uk.gov.hmrc.agentservicesaccount.controllers.draftSubmittedByKey
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
 import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.YourDetails
@@ -39,7 +39,7 @@ import scala.concurrent.Future
 @Singleton
 class YourDetailsController @Inject() (
   actions: Actions,
-  val sessionCache: SessionCacheService,
+  val sessionCacheService: SessionCacheService,
   updateYourDetailsView: your_details
 )(implicit
   appConfig: AppConfig,
@@ -56,7 +56,7 @@ with Logging {
     ifChangeContactFeatureEnabledAndNoPendingChanges {
       isOtherServicesPageRequestValid().flatMap {
         case true =>
-          sessionCache.get[YourDetails](DRAFT_SUBMITTED_BY).map {
+          sessionCacheService.get[YourDetails](draftSubmittedByKey).map {
             case Some(data) => Ok(updateYourDetailsView(UpdateDetailsForms.yourDetailsForm.fill(data)))
             case _ => Ok(updateYourDetailsView(UpdateDetailsForms.yourDetailsForm))
           }
@@ -83,7 +83,7 @@ with Logging {
 
   private def updateSubmittedBy(f: YourDetails)(implicit request: RequestHeader): Future[Unit] =
     for {
-      _ <- sessionCache.put[YourDetails](DRAFT_SUBMITTED_BY, f)
+      _ <- sessionCacheService.put[YourDetails](draftSubmittedByKey, f)
     } yield ()
 
 }

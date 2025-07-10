@@ -38,10 +38,10 @@ import uk.gov.hmrc.agentservicesaccount.actions.AuthActions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.controllers
-import uk.gov.hmrc.agentservicesaccount.controllers.CURRENT_SELECTED_CHANGES
-import uk.gov.hmrc.agentservicesaccount.controllers.DRAFT_NEW_CONTACT_DETAILS
-import uk.gov.hmrc.agentservicesaccount.controllers.DRAFT_SUBMITTED_BY
-import uk.gov.hmrc.agentservicesaccount.controllers.EMAIL_PENDING_VERIFICATION
+import uk.gov.hmrc.agentservicesaccount.controllers.currentSelectedChangesKey
+import uk.gov.hmrc.agentservicesaccount.controllers.draftNewContactDetailsKey
+import uk.gov.hmrc.agentservicesaccount.controllers.draftSubmittedByKey
+import uk.gov.hmrc.agentservicesaccount.controllers.emailPendingVerificationKey
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails._
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.EmailIsAlreadyVerified
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.EmailIsLocked
@@ -101,10 +101,10 @@ with TestConstants {
     protected val mockSessionCache: SessionCacheService = mock[SessionCacheService]
     protected val cc: MessagesControllerComponents = stubMessagesControllerComponents()
 
-    mockSessionCache.delete[String](EMAIL_PENDING_VERIFICATION)(*[RequestHeader]) returns Future.successful(())
-    mockSessionCache.delete[Set[String]](CURRENT_SELECTED_CHANGES)(*[RequestHeader]) returns Future.successful(())
-    mockSessionCache.delete[YourDetails](DRAFT_SUBMITTED_BY)(*[RequestHeader]) returns Future.successful(())
-    mockSessionCache.delete[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS)(*[RequestHeader]) returns Future.successful(())
+    mockSessionCache.delete[String](emailPendingVerificationKey)(*[RequestHeader]) returns Future.successful(())
+    mockSessionCache.delete[Set[String]](currentSelectedChangesKey)(*[RequestHeader]) returns Future.successful(())
+    mockSessionCache.delete[YourDetails](draftSubmittedByKey)(*[RequestHeader]) returns Future.successful(())
+    mockSessionCache.delete[DesignatoryDetails](draftNewContactDetailsKey)(*[RequestHeader]) returns Future.successful(())
 
     object TestController
     extends UpdateEmailAddressController(
@@ -130,7 +130,7 @@ with TestConstants {
         *[ExecutionContext]
       ) returns authResponse
 
-      mockSessionCache.get(CURRENT_SELECTED_CHANGES)(*[Reads[Set[String]]], *[RequestHeader]) returns Future.successful(Some(Set("email")))
+      mockSessionCache.get(currentSelectedChangesKey)(*[Reads[Set[String]]], *[RequestHeader]) returns Future.successful(Some(Set("email")))
 
       mockAppConfig.enableChangeContactDetails returns true
 
@@ -172,11 +172,11 @@ with TestConstants {
 
       mockDraftDetailsService.updateDraftDetails(*[DesignatoryDetails => DesignatoryDetails])(*[RequestHeader]) returns Future.successful(())
 
-      mockSessionCache.delete[String](EMAIL_PENDING_VERIFICATION)(*[RequestHeader]) returns Future.successful(())
-      mockSessionCache.get(CURRENT_SELECTED_CHANGES)(*[Reads[Set[String]]], *[RequestHeader]) returns Future.successful(Some(Set("email")))
-      mockSessionCache.get(DRAFT_SUBMITTED_BY)(*[Reads[YourDetails]], *[RequestHeader]) returns
+      mockSessionCache.delete[String](emailPendingVerificationKey)(*[RequestHeader]) returns Future.successful(())
+      mockSessionCache.get(currentSelectedChangesKey)(*[Reads[Set[String]]], *[RequestHeader]) returns Future.successful(Some(Set("email")))
+      mockSessionCache.get(draftSubmittedByKey)(*[Reads[YourDetails]], *[RequestHeader]) returns
         Future.successful(Some(YourDetails(fullName = "John Tester", telephone = "08982383777")))
-      mockSessionCache.get(DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[RequestHeader]) returns Future.successful(Some(DesignatoryDetails(
+      mockSessionCache.get(draftNewContactDetailsKey)(*[Reads[DesignatoryDetails]], *[RequestHeader]) returns Future.successful(Some(DesignatoryDetails(
         agencyDetails = agentRecord.agencyDetails.get.copy(agencyEmail = Some("new@email.com")),
         otherServices = OtherServices(saChanges = SaChanges(applyChanges = false, None), ctChanges = CtChanges(applyChanges = false, None))
       )))
@@ -203,9 +203,9 @@ with TestConstants {
         "new@email.com",
         ggCredentials.providerId
       )(*[RequestHeader]) returns Future.successful(EmailIsLocked)
-      mockSessionCache.get(CURRENT_SELECTED_CHANGES)(*[Reads[Set[String]]], *[RequestHeader]) returns Future.successful(Some(Set("email")))
+      mockSessionCache.get(currentSelectedChangesKey)(*[Reads[Set[String]]], *[RequestHeader]) returns Future.successful(Some(Set("email")))
 
-      mockSessionCache.get(DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[RequestHeader]) returns Future.successful(Some(DesignatoryDetails(
+      mockSessionCache.get(draftNewContactDetailsKey)(*[Reads[DesignatoryDetails]], *[RequestHeader]) returns Future.successful(Some(DesignatoryDetails(
         agencyDetails = agentRecord.agencyDetails.get,
         otherServices = OtherServices(saChanges = SaChanges(applyChanges = false, None), ctChanges = CtChanges(applyChanges = false, None))
       )))
@@ -233,7 +233,7 @@ with TestConstants {
         ggCredentials.providerId
       )(*[RequestHeader]) returns Future.successful(EmailNeedsVerifying)
 
-      mockSessionCache.put[String](EMAIL_PENDING_VERIFICATION, "new@email.com")(
+      mockSessionCache.put[String](emailPendingVerificationKey, "new@email.com")(
         *[Writes[String]],
         *[RequestHeader]
       ) returns Future.successful(SessionKeys.sessionId -> "session-123")
@@ -243,9 +243,9 @@ with TestConstants {
         "new@email.com",
         cc.langs.availables.head
       )(*[RequestHeader]) returns Future.successful("/fake-verify-email-journey")
-      mockSessionCache.get(CURRENT_SELECTED_CHANGES)(*[Reads[Set[String]]], *[RequestHeader]) returns Future.successful(Some(Set("email")))
+      mockSessionCache.get(currentSelectedChangesKey)(*[Reads[Set[String]]], *[RequestHeader]) returns Future.successful(Some(Set("email")))
 
-      mockSessionCache.get(DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[RequestHeader]) returns Future.successful(Some(DesignatoryDetails(
+      mockSessionCache.get(draftNewContactDetailsKey)(*[Reads[DesignatoryDetails]], *[RequestHeader]) returns Future.successful(Some(DesignatoryDetails(
         agencyDetails = agentRecord.agencyDetails.get,
         otherServices = OtherServices(saChanges = SaChanges(applyChanges = false, None), ctChanges = CtChanges(applyChanges = false, None))
       )))
@@ -273,9 +273,9 @@ with TestConstants {
         *[RequestHeader],
         *[AppConfig]
       ) returns Html("")
-      mockSessionCache.get(CURRENT_SELECTED_CHANGES)(*[Reads[Set[String]]], *[RequestHeader]) returns Future.successful(Some(Set("email")))
+      mockSessionCache.get(currentSelectedChangesKey)(*[Reads[Set[String]]], *[RequestHeader]) returns Future.successful(Some(Set("email")))
 
-      mockSessionCache.get(DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[RequestHeader]) returns Future.successful(Some(DesignatoryDetails(
+      mockSessionCache.get(draftNewContactDetailsKey)(*[Reads[DesignatoryDetails]], *[RequestHeader]) returns Future.successful(Some(DesignatoryDetails(
         agencyDetails = agentRecord.agencyDetails.get,
         otherServices = OtherServices(saChanges = SaChanges(applyChanges = false, None), ctChanges = CtChanges(applyChanges = false, None))
       )))

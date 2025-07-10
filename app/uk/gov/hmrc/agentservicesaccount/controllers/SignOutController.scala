@@ -54,7 +54,7 @@ with I18nSupport {
     Future successful signOutWithContinue(appConfig.hmrcOnlineSignInLink)
   }
 
-  def timeOut: Action[AnyContent] = Action.async { implicit request =>
+  def timeOut: Action[AnyContent] = Action.async {
     val continue = uri"${appConfig.asaFrontendExternalUrl + routes.SignOutController.timedOut().url}"
     Future.successful(signOutWithContinue(continue.toString))
   }

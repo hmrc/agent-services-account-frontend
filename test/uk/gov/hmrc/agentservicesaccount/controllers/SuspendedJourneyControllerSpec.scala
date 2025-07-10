@@ -161,10 +161,10 @@ with SessionServiceMocks {
       givenAuthorisedAsAgentWith(arn.value)
       givenAgentRecordFound(agentRecord.copy(suspensionDetails = Some(SuspensionDetails(suspensionStatus = true, Some(Set("AGSV"))))))
 
-      expectPutSessionItem[String](NAME, "Romel")
-      expectPutSessionItem[String](EMAIL, "romel@romel.com")
-      expectPutSessionItem[String](PHONE, "01711111111")
-      expectPutSessionItem[String](ARN, "TARN0000001")
+      expectPutSessionItem[String](nameKey, "Romel")
+      expectPutSessionItem[String](emailKey, "romel@romel.com")
+      expectPutSessionItem[String](phoneKey, "01711111111")
+      expectPutSessionItem[String](arnKey, "TARN0000001")
 
       val request = fakeRequest("POST", "/recovery-contact-details")
         .withFormUrlEncodedBody(
@@ -185,7 +185,7 @@ with SessionServiceMocks {
       givenAuthorisedAsAgentWith(arn.value)
       givenAgentRecordFound(agentRecord.copy(suspensionDetails = Some(SuspensionDetails(suspensionStatus = true, Some(Set("AGSV"))))))
 
-      expectGetSessionItemNone[String](DESCRIPTION)
+      expectGetSessionItemNone[String](descriptionKey)
 
       val response: Future[Result] = controller.showSuspendedDescription()(fakeRequest())
       status(response) shouldBe OK
@@ -222,7 +222,7 @@ with SessionServiceMocks {
       givenAuthorisedAsAgentWith(arn.value)
       givenAgentRecordFound(agentRecord.copy(suspensionDetails = Some(SuspensionDetails(suspensionStatus = true, Some(Set("AGSV"))))))
 
-      expectPutSessionItem[String](DESCRIPTION, "description added")
+      expectPutSessionItem[String](descriptionKey, "description added")
 
       val response: Future[Result] =
         controller.submitSuspendedDescription()(fakeRequest("POST", "/recovery-description")
@@ -239,11 +239,11 @@ with SessionServiceMocks {
       givenAuthorisedAsAgentWith(arn.value)
       givenAgentRecordFound(agentRecord.copy(suspensionDetails = Some(SuspensionDetails(suspensionStatus = true, Some(Set("AGSV"))))))
 
-      expectGetSessionItemNone[String](NAME)
-      expectGetSessionItemNone[String](EMAIL)
-      expectGetSessionItemNone[String](PHONE)
-      expectGetSessionItemNone[String](DESCRIPTION)
-      expectGetSessionItemNone[String](ARN)
+      expectGetSessionItemNone[String](nameKey)
+      expectGetSessionItemNone[String](emailKey)
+      expectGetSessionItemNone[String](phoneKey)
+      expectGetSessionItemNone[String](descriptionKey)
+      expectGetSessionItemNone[String](arnKey)
 
       val response: Future[Result] = controller.showSuspendedSummary()(fakeRequest())
       status(response) shouldBe 303
@@ -254,27 +254,27 @@ with SessionServiceMocks {
       givenAgentRecordFound(agentRecord.copy(suspensionDetails = Some(SuspensionDetails(suspensionStatus = true, Some(Set("AGSV"))))))
 
       expectGetSessionItem[String](
-        NAME,
+        nameKey,
         "Romel",
         1
       )
       expectGetSessionItem[String](
-        EMAIL,
+        emailKey,
         "Romel@romel.com",
         1
       )
       expectGetSessionItem[String](
-        PHONE,
+        phoneKey,
         "017111111111",
         1
       )
       expectGetSessionItem[String](
-        DESCRIPTION,
+        descriptionKey,
         "Some description",
         1
       )
       expectGetSessionItem[String](
-        ARN,
+        arnKey,
         "XARN000001122",
         1
       )
@@ -289,11 +289,11 @@ with SessionServiceMocks {
       givenAuthorisedAsAgentWith(arn.value)
       givenAgentRecordFound(agentRecord.copy(suspensionDetails = Some(SuspensionDetails(suspensionStatus = true, Some(Set("AGSV"))))))
 
-      expectGetSessionItemNone[String](NAME)
-      expectGetSessionItemNone[String](EMAIL)
-      expectGetSessionItemNone[String](PHONE)
-      expectGetSessionItemNone[String](DESCRIPTION)
-      expectGetSessionItemNone[String](ARN)
+      expectGetSessionItemNone[String](nameKey)
+      expectGetSessionItemNone[String](emailKey)
+      expectGetSessionItemNone[String](phoneKey)
+      expectGetSessionItemNone[String](descriptionKey)
+      expectGetSessionItemNone[String](arnKey)
 
       val response: Future[Result] = controller.submitSuspendedSummary()(fakeRequest())
       status(response) shouldBe 303
@@ -304,27 +304,27 @@ with SessionServiceMocks {
       givenAgentRecordFound(agentRecord.copy(suspensionDetails = Some(SuspensionDetails(suspensionStatus = true, Some(Set("AGSV"))))))
 
       expectGetSessionItem[String](
-        NAME,
+        nameKey,
         "Romel",
         1
       )
       expectGetSessionItem[String](
-        EMAIL,
+        emailKey,
         "Romel@romel.com",
         1
       )
       expectGetSessionItem[String](
-        PHONE,
+        phoneKey,
         "017111111111",
         1
       )
       expectGetSessionItem[String](
-        DESCRIPTION,
+        descriptionKey,
         "Some description",
         1
       )
       expectGetSessionItem[String](
-        ARN,
+        arnKey,
         "XARN000001122",
         1
       )

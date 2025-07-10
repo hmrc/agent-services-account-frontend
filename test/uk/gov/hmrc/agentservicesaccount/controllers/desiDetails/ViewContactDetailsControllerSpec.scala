@@ -32,8 +32,8 @@ import play.api.mvc.Result
 import play.api.test.Helpers._
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
-import uk.gov.hmrc.agentservicesaccount.controllers.DRAFT_NEW_CONTACT_DETAILS
-import uk.gov.hmrc.agentservicesaccount.controllers.DRAFT_SUBMITTED_BY
+import uk.gov.hmrc.agentservicesaccount.controllers.draftNewContactDetailsKey
+import uk.gov.hmrc.agentservicesaccount.controllers.draftSubmittedByKey
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.DesignatoryDetails
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.YourDetails
@@ -130,7 +130,7 @@ with TestConstants {
     (pcodRepository.insert(_: PendingChangeRequest)(_: RequestHeader)).when(*, *).returns(Future.successful(()))
 
     // make sure these values are cleared from the session
-    sessionCache.delete(DRAFT_SUBMITTED_BY)(fakeRequest()).futureValue
+    sessionCache.delete(draftSubmittedByKey)(fakeRequest()).futureValue
 
   }
 
@@ -154,7 +154,7 @@ with TestConstants {
       noPendingChangesInRepo()
       implicit val request: Request[AnyContent] = fakeRequest()
       sessionCache.put(
-        DRAFT_NEW_CONTACT_DETAILS,
+        draftNewContactDetailsKey,
         details.copy(
           agencyDetails = details.agencyDetails.copy(agencyName = Some("New and Improved Agency"))
         )
@@ -165,7 +165,7 @@ with TestConstants {
       contentAsString(result.futureValue) should include("Contact details")
       contentAsString(result.futureValue) should include("My Agency")
 
-      sessionCache.get(DRAFT_NEW_CONTACT_DETAILS).futureValue shouldBe None
+      sessionCache.get(draftNewContactDetailsKey).futureValue shouldBe None
     }
   }
 

@@ -93,7 +93,7 @@ with Logging {
   }
 
   val showInviteDetails: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    cacheService.get(AGENT_SIZE).map(maybeAnswer => {
+    cacheService.get(agentSizeKey).map(maybeAnswer => {
       val sizeForm = BetaInviteForm.form.fill(maybeAnswer.getOrElse(""))
       Ok(number_of_clients(sizeForm))
     })
@@ -109,7 +109,7 @@ with Logging {
           BadRequest(number_of_clients(formWithErrors))
         },
         formData => {
-          cacheService.put(AGENT_SIZE, formData)
+          cacheService.put(agentSizeKey, formData)
           Redirect(controller.showInviteContactDetails)
         }
       )
@@ -117,7 +117,7 @@ with Logging {
   }
 
   val showInviteContactDetails: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    cacheService.getSessionItems().map(answers => {
+    cacheService.getBetaInviteSessionItems().map(answers => {
       val contactForm = BetaInviteContactDetailsForm.form.fill(
         BetaInviteContactDetails(
           answers(1).getOrElse(""),
@@ -138,9 +138,9 @@ with Logging {
           BadRequest(your_details(formWithErrors))
         },
         formData => {
-          cacheService.put(NAME, formData.name)
-          cacheService.put(EMAIL, formData.email)
-          cacheService.put(PHONE, formData.phone.getOrElse(""))
+          cacheService.put(nameKey, formData.name)
+          cacheService.put(emailKey, formData.email)
+          cacheService.put(phoneKey, formData.phone.getOrElse(""))
           logger.info(s"data to be saved: $formData")
           Redirect(controller.showInviteCheckYourAnswers)
         }
@@ -149,7 +149,7 @@ with Logging {
   }
 
   val showInviteCheckYourAnswers: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    cacheService.getSessionItems().flatMap(answers =>
+    cacheService.getBetaInviteSessionItems().flatMap(answers =>
       {
         val detailsForEmail: BetaInviteDetailsForEmail = BetaInviteDetailsForEmail(
           AgentSize(answers.head.getOrElse("")),
@@ -163,7 +163,7 @@ with Logging {
   }
 
   def submitDetailsToEmail(): Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    cacheService.getSessionItems().flatMap(answers => {
+    cacheService.getBetaInviteSessionItems().flatMap(answers => {
       val detailsForEmail: BetaInviteDetailsForEmail = BetaInviteDetailsForEmail(
         AgentSize(answers.head.getOrElse("")),
         answers(1).getOrElse(""),
