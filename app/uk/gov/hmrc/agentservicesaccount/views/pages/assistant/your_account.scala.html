@@ -44,7 +44,7 @@
         <div id="user-details">
         @summary_list(
             rows = Seq[SummaryListData](
-                SummaryListData(key = "your.account.name", value = info.get.name.map(n => n.name.getOrElse("") + " " + n.lastName.getOrElse("")).getOrElse("")),
+                SummaryListData(key = "your.account.name", value = info.get.userDetails.map(n => n.name + " " + n.lastName.getOrElse("")).getOrElse("")),
                 SummaryListData(key = "your.account.email", value = info.get.email.getOrElse("")),
                 SummaryListData(key = "your.account.role", value = Html(
                     p("your.account.role.h3", classes = Some("govuk-!-margin-bottom-0")).toString + p("your.account.role.p", classes = Some("govuk-hint")).toString

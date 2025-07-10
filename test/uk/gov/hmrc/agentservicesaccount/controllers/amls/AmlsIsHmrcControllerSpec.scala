@@ -59,8 +59,8 @@ with TestConstants {
   // TODO move auth/suspend actions to common file for all unit tests
   val mockAgentAssuranceConnector: AgentAssuranceConnector = mock[AgentAssuranceConnector]
 
-  private def authResponseAgent(credentialRole: CredentialRole): Future[Enrolments ~ Some[Credentials] ~ Some[Email] ~ Some[Name] ~ Some[CredentialRole]] =
-    Future.successful(new ~(
+  private def authResponseAgent(credentialRole: CredentialRole): Future[Enrolments ~ Some[Credentials] ~ Some[Email] ~ Some[CredentialRole]] =
+    Future.successful(
       new ~(
         new ~(
           new ~(
@@ -69,10 +69,9 @@ with TestConstants {
           ),
           Some(Email("test@email.com"))
         ),
-        Some(Name(Some("Troy"), Some("Barnes")))
-      ),
-      Some(credentialRole)
-    ))
+        Some(credentialRole)
+      )
+    )
 
   val mockAuthConnector: AuthConnector = mock[AuthConnector]
   def givenAuthorisedAgent(credentialRole: CredentialRole): ScalaOngoingStubbing[Future[Any]] = {

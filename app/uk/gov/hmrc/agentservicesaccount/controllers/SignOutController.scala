@@ -18,10 +18,14 @@ package uk.gov.hmrc.agentservicesaccount.controllers
 
 import play.api.data.Form
 import play.api.i18n.I18nSupport
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.Action
+import play.api.mvc.AnyContent
+import play.api.mvc.MessagesControllerComponents
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.forms.{FeedbackWhichServiceForm, SignOutForm}
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.{survey, survey_which_service}
+import uk.gov.hmrc.agentservicesaccount.forms.FeedbackWhichServiceForm
+import uk.gov.hmrc.agentservicesaccount.forms.SignOutForm
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.survey
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.survey_which_service
 import uk.gov.hmrc.agentservicesaccount.views.html.signed_out
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.helper.urlEncode
