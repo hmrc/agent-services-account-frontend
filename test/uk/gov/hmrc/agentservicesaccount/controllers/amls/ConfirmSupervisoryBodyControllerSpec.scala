@@ -25,18 +25,20 @@ import play.api.i18n.Messages
 import play.api.libs.json.Reads
 import play.api.libs.json.Writes
 import play.api.mvc._
-import play.api.test.Helpers._
 import play.api.test.DefaultAwaitTimeout
 import play.api.test.FakeRequest
 import play.api.test.Helpers
+import play.api.test.Helpers._
 import play.twirl.api.Html
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.actions.AuthActions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
+import uk.gov.hmrc.agentservicesaccount.controllers.amlsJourneyKey
 import uk.gov.hmrc.agentservicesaccount.models.AmlsDetails
 import uk.gov.hmrc.agentservicesaccount.models.AmlsStatuses
 import uk.gov.hmrc.agentservicesaccount.models.UpdateAmlsJourney
+import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.support.TestConstants
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.confirm_supervisory_body
 import uk.gov.hmrc.auth.core._
@@ -44,7 +46,6 @@ import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve._
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.SessionKeys
-import uk.gov.hmrc.mongo.cache.DataKey
 
 import java.time.LocalDate
 import scala.concurrent.ExecutionContext
@@ -95,15 +96,14 @@ with TestConstants {
         actionBuilder
       )
 
-    protected val mockUpdateAmlsJourneyRepository: UpdateAmlsJourneyRepository = mock[UpdateAmlsJourneyRepository]
+    implicit val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
     protected val mockView: confirm_supervisory_body = mock[confirm_supervisory_body]
     protected val cc: MessagesControllerComponents = stubMessagesControllerComponents()
-    protected val dataKey = DataKey[UpdateAmlsJourney]("amlsJourney")
 
     object TestController
     extends ConfirmSupervisoryBodyController(
       mockActions,
-      mockUpdateAmlsJourneyRepository,
+      mockSessionCacheService,
       mockView,
       cc
     )(mockAppConfig, ec)
@@ -123,7 +123,7 @@ with TestConstants {
 
       mockAgentAssuranceConnector.getAMLSDetails(*[String])(*[RequestHeader]) returns amlsDetailsResponse
 
-      mockUpdateAmlsJourneyRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[RequestHeader]) returns
+      mockSessionCacheService.get(amlsJourneyKey)(*[Reads[UpdateAmlsJourney]], *[RequestHeader]) returns
         Future.successful(Some(ukAmlsJourney))
 
       mockView.apply(*[Form[Boolean]], *[String])(
@@ -149,7 +149,7 @@ with TestConstants {
 
       mockAgentAssuranceConnector.getAMLSDetails(*[String])(*[RequestHeader]) returns amlsDetailsResponse
 
-      mockUpdateAmlsJourneyRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[RequestHeader]) returns
+      mockSessionCacheService.get(amlsJourneyKey)(*[Reads[UpdateAmlsJourney]], *[RequestHeader]) returns
         Future.successful(Some(ukAmlsJourney.copy(isAmlsBodyStillTheSame = Some(false))))
 
       mockView.apply(*[Form[Boolean]], *[String])(
@@ -178,10 +178,10 @@ with TestConstants {
 
         mockAgentAssuranceConnector.getAMLSDetails(*[String])(*[RequestHeader]) returns amlsDetailsResponse
 
-        mockUpdateAmlsJourneyRepository.getFromSession(dataKey)(*[Reads[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful(Some(ukAmlsJourney))
+        mockSessionCacheService.get(amlsJourneyKey)(*[Reads[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful(Some(ukAmlsJourney))
 
-        mockUpdateAmlsJourneyRepository.putSession(
-          dataKey,
+        mockSessionCacheService.put(
+          amlsJourneyKey,
           ukAmlsJourney.copy(isAmlsBodyStillTheSame = Some(true), newAmlsBody = Some("HMRC"))
         )(*[Writes[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
 
@@ -212,13 +212,13 @@ with TestConstants {
 
         mockAgentAssuranceConnector.getAMLSDetails(*[String])(*[RequestHeader]) returns amlsDetailsResponse
 
-        mockUpdateAmlsJourneyRepository.getFromSession(dataKey)(
+        mockSessionCacheService.get(amlsJourneyKey)(
           *[Reads[UpdateAmlsJourney]],
           *[Request[Any]]
         ) returns Future.successful(Some(overseasAmlsJourney))
 
-        mockUpdateAmlsJourneyRepository.putSession(
-          dataKey,
+        mockSessionCacheService.put(
+          amlsJourneyKey,
           overseasAmlsJourney.copy(isAmlsBodyStillTheSame = Some(true), newAmlsBody = Some("HMRC"))
         )(*[Writes[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
 
@@ -249,10 +249,10 @@ with TestConstants {
 
         mockAgentAssuranceConnector.getAMLSDetails(*[String])(*[RequestHeader]) returns amlsDetailsResponse
 
-        mockUpdateAmlsJourneyRepository.getFromSession(dataKey)(*[Reads[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful(Some(ukAmlsJourney))
+        mockSessionCacheService.get(amlsJourneyKey)(*[Reads[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful(Some(ukAmlsJourney))
 
-        mockUpdateAmlsJourneyRepository.putSession(
-          dataKey,
+        mockSessionCacheService.put(
+          amlsJourneyKey,
           ukAmlsJourney.copy(isAmlsBodyStillTheSame = Some(false))
         )(*[Writes[UpdateAmlsJourney]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
 
@@ -283,7 +283,7 @@ with TestConstants {
 
         mockAgentAssuranceConnector.getAMLSDetails(*[String])(*[RequestHeader]) returns amlsDetailsResponse
 
-        mockUpdateAmlsJourneyRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[Request[Any]]) returns
+        mockSessionCacheService.get(amlsJourneyKey)(*[Reads[UpdateAmlsJourney]], *[Request[Any]]) returns
           Future.successful(Some(ukAmlsJourney))
 
         mockView.apply(*[Form[Boolean]], "HMRC")(

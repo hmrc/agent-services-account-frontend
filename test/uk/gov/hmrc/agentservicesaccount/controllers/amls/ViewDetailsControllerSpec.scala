@@ -23,22 +23,20 @@ import play.api.Environment
 import play.api.http.Status.OK
 import play.api.i18n.Messages
 import play.api.libs.json.Writes
-import play.api.mvc.DefaultActionBuilderImpl
-import play.api.mvc.MessagesControllerComponents
-import play.api.mvc.Request
-import play.api.mvc.RequestHeader
-import play.api.mvc.Result
-import play.api.test.Helpers.status
-import play.api.test.Helpers.stubMessagesControllerComponents
+import play.api.mvc._
 import play.api.test.DefaultAwaitTimeout
 import play.api.test.FakeRequest
 import play.api.test.Helpers
+import play.api.test.Helpers.status
+import play.api.test.Helpers.stubMessagesControllerComponents
 import play.twirl.api.Html
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.actions.AuthActions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
+import uk.gov.hmrc.agentservicesaccount.controllers.amlsJourneyKey
 import uk.gov.hmrc.agentservicesaccount.models._
+import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.support.TestConstants
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.view_details
 import uk.gov.hmrc.auth.core._
@@ -86,15 +84,14 @@ with TestConstants {
         actionBuilder
       )
 
-    protected val mockUpdateAmlsJourneyRepository: UpdateAmlsJourneyRepository = mock[UpdateAmlsJourneyRepository]
+    implicit val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
     protected val mockView: view_details = mock[view_details]
     protected val cc: MessagesControllerComponents = stubMessagesControllerComponents()
-    protected val dataKey: DataKey[UpdateAmlsJourney] = DataKey[UpdateAmlsJourney]("amlsJourney")
 
     object TestController
     extends ViewDetailsController(
       mockActions,
-      mockUpdateAmlsJourneyRepository,
+      mockSessionCacheService,
       mockAgentAssuranceConnector,
       mockView,
       cc
@@ -113,7 +110,7 @@ with TestConstants {
 
       mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
-      mockUpdateAmlsJourneyRepository.putSession(*[DataKey[UpdateAmlsJourney]], amlsUpdateJourney)(*[Writes[UpdateAmlsJourney]], *[RequestHeader]) returns
+      mockSessionCacheService.put(amlsJourneyKey, amlsUpdateJourney)(*[Writes[UpdateAmlsJourney]], *[RequestHeader]) returns
         Future.successful(("", ""))
 
       mockAgentAssuranceConnector.getAMLSDetailsResponse(*[String])(*[RequestHeader]) returns Future.successful(amlsDetailsResponsse)
@@ -139,7 +136,7 @@ with TestConstants {
 
       mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
-      mockUpdateAmlsJourneyRepository.putSession(*[DataKey[UpdateAmlsJourney]], amlsUpdateJourney)(*[Writes[UpdateAmlsJourney]], *[RequestHeader]) returns
+      mockSessionCacheService.put(*[DataKey[UpdateAmlsJourney]], amlsUpdateJourney)(*[Writes[UpdateAmlsJourney]], *[RequestHeader]) returns
         Future.successful(("", ""))
 
       mockAgentAssuranceConnector.getAMLSDetailsResponse(*[String])(*[RequestHeader]) returns Future.successful(amlsNoDetailsResponsse)
