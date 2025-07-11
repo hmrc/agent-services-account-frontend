@@ -38,7 +38,7 @@
 
 
  @uiFormHelper(
-  action = routes.SignOutController.submitSurvey()) {
+  action = routes.SurveyController.submitSurvey()) {
 
   @if(surveyForm.errors.nonEmpty){
    @govukErrorSummary(ErrorSummary(errorList = surveyForm.errors.asTextErrorLinks, title = Text(msgs("survey.error.summary"))))
