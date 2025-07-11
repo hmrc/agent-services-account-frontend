@@ -237,7 +237,7 @@ extends BaseISpec {
 
         one.select("h4").get(2).text() shouldBe "Sign up your clients"
         one.select("a").get(3).text shouldBe "Sign up your clients for Making Tax Digital for Income Tax"
-        one.select("a").get(3).attr("href") shouldBe "https://www.gov.uk/guidance/sign-up-your-client-for-making-tax-digital-for-income-tax"
+        one.select("a").get(3).attr("href") shouldBe "http://localhost:9081/report-quarterly/income-and-expenses/sign-up/client/"
 
         one.select("h4").get(3).text() shouldBe "Manage your client’s details"
         one.select("a").get(4).text() shouldBe "Manage Self Assessment details for clients that are already signed up"
