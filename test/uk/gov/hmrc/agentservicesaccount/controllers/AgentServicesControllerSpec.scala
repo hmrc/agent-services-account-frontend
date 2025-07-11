@@ -35,6 +35,7 @@ import uk.gov.hmrc.agentservicesaccount.models._
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentAssuranceStubs._
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentPermissionsStubs._
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentUserClientDetailsStubs._
+import uk.gov.hmrc.agentservicesaccount.stubs.UserDetailsStubs._
 import uk.gov.hmrc.agentservicesaccount.support.Css._
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import uk.gov.hmrc.agentservicesaccount.support.Css
@@ -1027,6 +1028,7 @@ extends BaseISpec {
         providerId,
         Seq.empty
       )
+      givenUserDetailsForCredId(userDetails, providerId)
       val response = await(controller.yourAccount()(fakeRequest("GET", yourAccountUrl)))
 
       status(response) shouldBe 200
@@ -1039,7 +1041,7 @@ extends BaseISpec {
 
       val userDetailsPanel = html.select("div#user-details")
       userDetailsPanel.select(summaryListKeys).get(0).text() shouldBe "Name"
-      userDetailsPanel.select(summaryListValues).get(0).text() shouldBe "Bob The Builder"
+      userDetailsPanel.select(summaryListValues).get(0).text() shouldBe "Troy Barnes"
       userDetailsPanel.select(summaryListKeys).get(1).text() shouldBe "Email"
       userDetailsPanel.select(summaryListValues).get(1).text() shouldBe "bob@builder.com"
       userDetailsPanel.select(summaryListKeys).get(2).text() shouldBe "Role"
@@ -1074,6 +1076,7 @@ extends BaseISpec {
         providerId,
         Seq.empty
       )
+      givenUserDetailsForCredId(userDetails, providerId)
       val response = await(controller.yourAccount()(fakeRequest("GET", yourAccountUrl)))
 
       status(response) shouldBe 200
@@ -1086,7 +1089,7 @@ extends BaseISpec {
 
       val userDetailsPanel = html.select("div#user-details")
       userDetailsPanel.select(summaryListKeys).get(0).text() shouldBe "Name"
-      userDetailsPanel.select(summaryListValues).get(0).text() shouldBe "Bob The Builder"
+      userDetailsPanel.select(summaryListValues).get(0).text() shouldBe "Troy Barnes"
       userDetailsPanel.select(summaryListKeys).get(1).text() shouldBe "Email"
       userDetailsPanel.select(summaryListValues).get(1).text() shouldBe "bob@builder.com"
       userDetailsPanel.select(summaryListKeys).get(2).text() shouldBe "Role"
@@ -1123,6 +1126,7 @@ extends BaseISpec {
         providerId,
         groupSummaries
       )
+      givenUserDetailsForCredId(userDetails, providerId)
       val response = await(controller.yourAccount()(fakeRequest("GET", yourAccountUrl)))
 
       status(response) shouldBe 200
@@ -1133,7 +1137,7 @@ extends BaseISpec {
 
       val userDetailsPanel = html.select("div#user-details")
       userDetailsPanel.select(summaryListKeys).get(0).text() shouldBe "Name"
-      userDetailsPanel.select(summaryListValues).get(0).text() shouldBe "Bob The Builder"
+      userDetailsPanel.select(summaryListValues).get(0).text() shouldBe "Troy Barnes"
       userDetailsPanel.select(summaryListKeys).get(1).text() shouldBe "Email"
       userDetailsPanel.select(summaryListValues).get(1).text() shouldBe "bob@builder.com"
       userDetailsPanel.select(summaryListKeys).get(2).text() shouldBe "Role"
@@ -1150,6 +1154,150 @@ extends BaseISpec {
       grps.get(2).attr("href") shouldBe s"$wireMockBaseUrlAsString/agent-permissions/your-account/group-clients/tax/${taxSummary.groupId.toString}"
       userGroupsPanel.select("a").get(3).text shouldBe "View other clients"
       userGroupsPanel.select("a").get(3).attr("href") shouldBe s"$wireMockBaseUrlAsString/agent-permissions/your-account/other-clients"
+
+      // BOTTOM PANEL
+      val bottomPanel = html.select("div#bottom-panel")
+      bottomPanel.select("h2").get(0).text shouldBe "Your organisation"
+      bottomPanel.select("a").get(0).text shouldBe "View the contact details we have for your business"
+      bottomPanel.select("a").get(0).attr("href") shouldBe desiDetailsRoutes.ViewContactDetailsController.showPage.url
+      bottomPanel.select("a").get(1).text shouldBe "View administrators"
+      bottomPanel.select("a").get(1).attr("href") shouldBe routes.AgentServicesController.administrators.url
+
+    }
+
+    "render correctly and display blank name if 404 returned from user-details" in {
+      val providerId = Random.nextLong().toString
+      givenFullAuthorisedAsAgentWith(arn.value, providerId)
+      givenAgentRecordFound(agentRecord)
+      givenOptinRecordExistsForArn(arn, exists = true)
+      givenAccessGroupsForTeamMember(
+        arn,
+        providerId,
+        Seq.empty
+      )
+      givenUserDetailsNotFoundForCredId(providerId)
+      val response = await(controller.yourAccount()(fakeRequest("GET", yourAccountUrl)))
+
+      status(response) shouldBe 200
+
+      val html = Jsoup.parse(contentAsString(response))
+
+      html.title() shouldBe "Your account - Agent services account - GOV.UK"
+      html.select(H1).get(0).text shouldBe "Your account"
+      html.select(secondaryNavLinks).get(1).text shouldBe "Your account"
+
+      val userDetailsPanel = html.select("div#user-details")
+      userDetailsPanel.select(summaryListKeys).get(0).text() shouldBe "Name"
+      userDetailsPanel.select(summaryListValues).get(0).text() shouldBe ""
+      userDetailsPanel.select(summaryListKeys).get(1).text() shouldBe "Email"
+      userDetailsPanel.select(summaryListValues).get(1).text() shouldBe "bob@builder.com"
+      userDetailsPanel.select(summaryListKeys).get(2).text() shouldBe "Role"
+      userDetailsPanel.select(summaryListValues).get(2)
+        .text() shouldBe "Standard user You can view your assigned access groups and clients. You can also view clients who are not in any access groups."
+
+      val userGroupsPanel = html.select("div#user-groups")
+      val grps = userGroupsPanel.select("ul li a")
+      grps.isEmpty shouldBe true
+      userGroupsPanel.select("p").get(0).text shouldBe "You are not currently assigned to any access groups."
+
+      userGroupsPanel.select("a").get(0).text shouldBe "View other clients"
+      userGroupsPanel.select("a").get(0).attr("href") shouldBe s"$wireMockBaseUrlAsString/agent-permissions/your-account/other-clients"
+
+      // BOTTOM PANEL
+      val bottomPanel = html.select("div#bottom-panel")
+      bottomPanel.select("h2").get(0).text shouldBe "Your organisation"
+      bottomPanel.select("a").get(0).text shouldBe "View the contact details we have for your business"
+      bottomPanel.select("a").get(0).attr("href") shouldBe desiDetailsRoutes.ViewContactDetailsController.showPage.url
+      bottomPanel.select("a").get(1).text shouldBe "View administrators"
+      bottomPanel.select("a").get(1).attr("href") shouldBe routes.AgentServicesController.administrators.url
+
+    }
+
+    "render correctly and display blank name if 400 returned from user-details" in {
+      val providerId = Random.nextLong().toString
+      givenFullAuthorisedAsAgentWith(arn.value, providerId)
+      givenAgentRecordFound(agentRecord)
+      givenOptinRecordExistsForArn(arn, exists = true)
+      givenAccessGroupsForTeamMember(
+        arn,
+        providerId,
+        Seq.empty
+      )
+      givenUserDetailsBadRequestForCredId(providerId)
+      val response = await(controller.yourAccount()(fakeRequest("GET", yourAccountUrl)))
+
+      status(response) shouldBe 200
+
+      val html = Jsoup.parse(contentAsString(response))
+
+      html.title() shouldBe "Your account - Agent services account - GOV.UK"
+      html.select(H1).get(0).text shouldBe "Your account"
+      html.select(secondaryNavLinks).get(1).text shouldBe "Your account"
+
+      val userDetailsPanel = html.select("div#user-details")
+      userDetailsPanel.select(summaryListKeys).get(0).text() shouldBe "Name"
+      userDetailsPanel.select(summaryListValues).get(0).text() shouldBe ""
+      userDetailsPanel.select(summaryListKeys).get(1).text() shouldBe "Email"
+      userDetailsPanel.select(summaryListValues).get(1).text() shouldBe "bob@builder.com"
+      userDetailsPanel.select(summaryListKeys).get(2).text() shouldBe "Role"
+      userDetailsPanel.select(summaryListValues).get(2)
+        .text() shouldBe "Standard user You can view your assigned access groups and clients. You can also view clients who are not in any access groups."
+
+      val userGroupsPanel = html.select("div#user-groups")
+      val grps = userGroupsPanel.select("ul li a")
+      grps.isEmpty shouldBe true
+      userGroupsPanel.select("p").get(0).text shouldBe "You are not currently assigned to any access groups."
+
+      userGroupsPanel.select("a").get(0).text shouldBe "View other clients"
+      userGroupsPanel.select("a").get(0).attr("href") shouldBe s"$wireMockBaseUrlAsString/agent-permissions/your-account/other-clients"
+
+      // BOTTOM PANEL
+      val bottomPanel = html.select("div#bottom-panel")
+      bottomPanel.select("h2").get(0).text shouldBe "Your organisation"
+      bottomPanel.select("a").get(0).text shouldBe "View the contact details we have for your business"
+      bottomPanel.select("a").get(0).attr("href") shouldBe desiDetailsRoutes.ViewContactDetailsController.showPage.url
+      bottomPanel.select("a").get(1).text shouldBe "View administrators"
+      bottomPanel.select("a").get(1).attr("href") shouldBe routes.AgentServicesController.administrators.url
+
+    }
+
+    "render correctly and display blank name if 500 returned from user-details" in {
+      val providerId = Random.nextLong().toString
+      givenFullAuthorisedAsAgentWith(arn.value, providerId)
+      givenAgentRecordFound(agentRecord)
+      givenOptinRecordExistsForArn(arn, exists = true)
+      givenAccessGroupsForTeamMember(
+        arn,
+        providerId,
+        Seq.empty
+      )
+      givenUserDetailsServerErrorForCredId(providerId)
+      val response = await(controller.yourAccount()(fakeRequest("GET", yourAccountUrl)))
+
+      status(response) shouldBe 200
+
+      val html = Jsoup.parse(contentAsString(response))
+
+      html.title() shouldBe "Your account - Agent services account - GOV.UK"
+      html.select(H1).get(0).text shouldBe "Your account"
+      html.select(secondaryNavLinks).get(1).text shouldBe "Your account"
+
+      val userDetailsPanel = html.select("div#user-details")
+      userDetailsPanel.select(summaryListKeys).get(0).text() shouldBe "Name"
+      userDetailsPanel.select(summaryListValues).get(0).text() shouldBe ""
+      userDetailsPanel.select(summaryListKeys).get(1).text() shouldBe "Email"
+      userDetailsPanel.select(summaryListValues).get(1).text() shouldBe "bob@builder.com"
+      userDetailsPanel.select(summaryListKeys).get(2).text() shouldBe "Role"
+      userDetailsPanel.select(summaryListValues).get(2)
+        .text() shouldBe "Standard user You can view your assigned access groups and clients. You can also view clients who are not in any access groups."
+
+      val userGroupsPanel = html.select("div#user-groups")
+      val grps = userGroupsPanel.select("ul li a")
+      grps.isEmpty shouldBe true
+      userGroupsPanel.select("p").get(0).text shouldBe "You are not currently assigned to any access groups."
+
+      userGroupsPanel.select("a").get(0).text shouldBe "View other clients"
+      userGroupsPanel.select("a").get(0).attr("href") shouldBe s"$wireMockBaseUrlAsString/agent-permissions/your-account/other-clients"
 
       // BOTTOM PANEL
       val bottomPanel = html.select("div#bottom-panel")

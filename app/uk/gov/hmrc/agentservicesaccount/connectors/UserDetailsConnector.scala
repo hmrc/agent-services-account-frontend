@@ -17,10 +17,9 @@
 package uk.gov.hmrc.agentservicesaccount.connectors
 
 import play.api.Logging
-import play.api.libs.json.Json
 import play.api.mvc.RequestHeader
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.models.SendEmailData
+import uk.gov.hmrc.agentservicesaccount.models.userDetails.UserDetails
 import uk.gov.hmrc.agentservicesaccount.utils.RequestSupport._
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.StringContextOps
@@ -28,20 +27,26 @@ import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.play.bootstrap.metrics.Metrics
 
 import javax.inject.Inject
+import javax.inject.Singleton
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
-class EmailConnector @Inject() (
-  appConfig: AppConfig,
+@Singleton
+class UserDetailsConnector @Inject() (
   http: HttpClientV2,
   val metrics: Metrics
-)(implicit val ec: ExecutionContext)
+)(implicit
+  val appConfig: AppConfig,
+  val ec: ExecutionContext
+)
 extends Logging {
 
-  private val baseUrl: String = appConfig.emailBaseUrl
-
-  def sendEmail(
-    emailData: SendEmailData
-  )(implicit rh: RequestHeader): Future[Unit] = http.post(url"$baseUrl/hmrc/email").withBody(Json.toJson(emailData)).execute[Unit]
+  def getUserDetails(credId: String)(implicit rh: RequestHeader): Future[Option[UserDetails]] = {
+    http.get(url"${appConfig.userDetailsBaseUrl}/user-details/id/$credId").execute[Option[UserDetails]].recover {
+      case e =>
+        logger.warn(s"user details status error for $credId; message: ${e.getMessage}")
+        None
+    }
+  }
 
 }

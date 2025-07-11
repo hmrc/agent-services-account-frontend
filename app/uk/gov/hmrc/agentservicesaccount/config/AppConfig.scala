@@ -73,6 +73,8 @@ extends Logging {
 
   val asaFrontendExternalUrl: String = getConfString("agent-services-account-frontend.external-url")
 
+  val userDetailsBaseUrl: String = baseUrl("user-details")
+
   private val basGatewayFrontendExternalUrl: String = getConfString("bas-gateway-frontend.external-url")
   private val signOutPath: String = getConfString("bas-gateway-frontend.sign-out.path")
   private val signInPath: String = getConfString("bas-gateway-frontend.sign-in.path")

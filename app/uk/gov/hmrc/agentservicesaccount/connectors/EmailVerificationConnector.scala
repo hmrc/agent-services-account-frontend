@@ -21,7 +21,6 @@ import play.api.libs.json.Json
 import play.api.mvc.RequestHeader
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models.emailverification._
-import uk.gov.hmrc.agentservicesaccount.utils.HttpAPIMonitor
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.http.StringContextOps
@@ -42,33 +41,28 @@ class EmailVerificationConnector @Inject() (
   val appConfig: AppConfig,
   val ec: ExecutionContext
 )
-extends HttpAPIMonitor
-with Logging {
+extends Logging {
 
   def verifyEmail(request: VerifyEmailRequest)(implicit rh: RequestHeader): Future[Option[VerifyEmailResponse]] = {
-    monitor(s"ConsumedAPI-email-verify-POST") {
-      http.post(url"${appConfig.emailVerificationBaseUrl}/email-verification/verify-email").withBody(Json.toJson(request)).execute[HttpResponse]
-        .map { response =>
-          response.status match {
-            case 201 => Some(response.json.as[VerifyEmailResponse])
-            case status =>
-              logger.error(s"verifyEmail error for $request; HTTP status: $status, message: $response")
-              None
-          }
+    http.post(url"${appConfig.emailVerificationBaseUrl}/email-verification/verify-email").withBody(Json.toJson(request)).execute[HttpResponse]
+      .map { response =>
+        response.status match {
+          case 201 => Some(response.json.as[VerifyEmailResponse])
+          case status =>
+            logger.error(s"verifyEmail error for $request; HTTP status: $status, message: $response")
+            None
         }
-    }
+      }
   }
 
   def checkEmail(credId: String)(implicit rh: RequestHeader): Future[Option[VerificationStatusResponse]] = {
-    monitor(s"ConsumedAPI-email-verification-status-GET") {
-      http.get(url"${appConfig.emailVerificationBaseUrl}/email-verification/verification-status/$credId").execute[HttpResponse].map { response =>
-        response.status match {
-          case 200 => Some(response.json.as[VerificationStatusResponse])
-          case 404 => Some(VerificationStatusResponse(List.empty))
-          case status =>
-            logger.error(s"email verification status error for $credId; HTTP status: $status, message: $response")
-            None
-        }
+    http.get(url"${appConfig.emailVerificationBaseUrl}/email-verification/verification-status/$credId").execute[HttpResponse].map { response =>
+      response.status match {
+        case 200 => Some(response.json.as[VerificationStatusResponse])
+        case 404 => Some(VerificationStatusResponse(List.empty))
+        case status =>
+          logger.error(s"email verification status error for $credId; HTTP status: $status, message: $response")
+          None
       }
     }
   }

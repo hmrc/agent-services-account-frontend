@@ -25,7 +25,6 @@ import play.api.mvc.RequestHeader
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models._
-import uk.gov.hmrc.agentservicesaccount.utils.HttpAPIMonitor
 import uk.gov.hmrc.http._
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.play.bootstrap.metrics.Metrics
@@ -42,8 +41,7 @@ class AgentAssuranceConnector @Inject() (httpV2: HttpClientV2)(implicit
   val metrics: Metrics,
   appConfig: AppConfig,
   val ec: ExecutionContext
-)
-extends HttpAPIMonitor {
+) {
 
   private lazy val baseUrl = appConfig.agentAssuranceBaseUrl
 

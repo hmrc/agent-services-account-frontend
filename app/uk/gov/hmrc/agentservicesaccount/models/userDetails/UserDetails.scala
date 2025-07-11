@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +14,16 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.agentservicesaccount.utils
+package uk.gov.hmrc.agentservicesaccount.models.userDetails
 
-import uk.gov.hmrc.play.bootstrap.metrics.Metrics
+import play.api.libs.json.Json
+import play.api.libs.json.OFormat
 
-import scala.concurrent.ExecutionContext
-import scala.concurrent.Future
+case class UserDetails(
+  name: String,
+  lastName: Option[String]
+)
 
-trait HttpAPIMonitor {
-
-  val metrics: Metrics
-  implicit val ec: ExecutionContext
-  def monitor[A](str: String)(f: => Future[A]): Future[A] = {
-    val timerContext = metrics.defaultRegistry.timer(s"Timer-$str").time()
-    f.andThen { case _ => timerContext.stop() }
-  }
-
+object UserDetails {
+  implicit val format: OFormat[UserDetails] = Json.format[UserDetails]
 }
