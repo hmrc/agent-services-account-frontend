@@ -20,7 +20,6 @@ import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
-import uk.gov.hmrc.agents.accessgroups.GroupSummary
 import uk.gov.hmrc.agents.accessgroups.optin.OptedInReady
 import uk.gov.hmrc.agents.accessgroups.optin.OptinStatus
 import uk.gov.hmrc.agentservicesaccount.actions.CallOps._
@@ -34,7 +33,6 @@ import uk.gov.hmrc.agentservicesaccount.connectors.UserDetailsConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.amls.{routes => amlsRoutes}
 import uk.gov.hmrc.agentservicesaccount.models.AmlsStatus
 import uk.gov.hmrc.agentservicesaccount.models.AmlsStatuses._
-import uk.gov.hmrc.agentservicesaccount.models.userDetails.UserDetails
 import uk.gov.hmrc.agentservicesaccount.views.html.pages._
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.assistant.administrators
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.assistant.your_account

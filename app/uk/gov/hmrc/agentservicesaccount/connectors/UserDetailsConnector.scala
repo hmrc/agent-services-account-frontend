@@ -20,10 +20,8 @@ import play.api.Logging
 import play.api.mvc.RequestHeader
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models.userDetails.UserDetails
-import uk.gov.hmrc.agentservicesaccount.utils.HttpAPIMonitor
 import uk.gov.hmrc.agentservicesaccount.utils.RequestSupport._
 import uk.gov.hmrc.http.HttpReads.Implicits._
-import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.http.StringContextOps
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.play.bootstrap.metrics.Metrics
@@ -41,20 +39,13 @@ class UserDetailsConnector @Inject() (
   val appConfig: AppConfig,
   val ec: ExecutionContext
 )
-extends HttpAPIMonitor
-with Logging {
+extends Logging {
 
   def getUserDetails(credId: String)(implicit rh: RequestHeader): Future[Option[UserDetails]] = {
-    monitor(s"ConsumedAPI-user-details-GET") {
-      http.get(url"${appConfig.userDetailsBaseUrl}/user-details/id/$credId").execute[HttpResponse].map { response =>
-        response.status match {
-          case 200 => Some(response.json.as[UserDetails])
-          case 404 => None
-          case status =>
-            logger.error(s"user details status error for $credId; HTTP status: $status, message: $response")
-            None
-        }
-      }
+    http.get(url"${appConfig.userDetailsBaseUrl}/user-details/id/$credId").execute[Option[UserDetails]].recover {
+      case e =>
+        logger.warn(s"user details status error for $credId; message: ${e.getMessage}")
+        None
     }
   }
 

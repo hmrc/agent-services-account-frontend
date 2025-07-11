@@ -3,7 +3,7 @@ import uk.gov.hmrc.DefaultBuildSettings
 
 
 val scalaCOptions = Seq(
-  //"-Werror", TODO (APB-9550) find a replacement for the deprecated 'name' retrieval
+  "-Werror",
   "-Wdead-code",
   "-feature",
   "-language:implicitConversions",
