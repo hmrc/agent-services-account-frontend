@@ -21,7 +21,7 @@ import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.controllers.DRAFT_NEW_CONTACT_DETAILS
+import uk.gov.hmrc.agentservicesaccount.controllers.draftNewContactDetailsKey
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.DesiDetailsJourneySupport
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.NextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms
@@ -39,7 +39,7 @@ import scala.concurrent.Future
 @Singleton
 class UpdateTelephoneController @Inject() (
   actions: Actions,
-  val sessionCache: SessionCacheService,
+  val sessionCacheService: SessionCacheService,
   draftDetailsService: DraftDetailsService,
   update_phone: update_phone
 )(implicit
@@ -57,7 +57,7 @@ with Logging {
     ifChangeContactFeatureEnabledAndNoPendingChanges {
       isContactPageRequestValid("telephone").flatMap {
         case true =>
-          sessionCache.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS).map {
+          sessionCacheService.get[DesignatoryDetails](draftNewContactDetailsKey).map {
             case Some(desiDetails) if desiDetails.agencyDetails.agencyTelephone.isDefined =>
               Ok(update_phone(UpdateDetailsForms.telephoneNumberForm.fill(desiDetails.agencyDetails.agencyTelephone.get)))
             case _ => Ok(update_phone(UpdateDetailsForms.telephoneNumberForm))

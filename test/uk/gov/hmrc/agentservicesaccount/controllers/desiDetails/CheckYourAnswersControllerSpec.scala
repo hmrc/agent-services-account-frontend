@@ -30,10 +30,10 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
-import uk.gov.hmrc.agentservicesaccount.controllers.CURRENT_SELECTED_CHANGES
-import uk.gov.hmrc.agentservicesaccount.controllers.DRAFT_NEW_CONTACT_DETAILS
-import uk.gov.hmrc.agentservicesaccount.controllers.DRAFT_SUBMITTED_BY
-import uk.gov.hmrc.agentservicesaccount.controllers.EMAIL_PENDING_VERIFICATION
+import uk.gov.hmrc.agentservicesaccount.controllers.currentSelectedChangesKey
+import uk.gov.hmrc.agentservicesaccount.controllers.draftNewContactDetailsKey
+import uk.gov.hmrc.agentservicesaccount.controllers.draftSubmittedByKey
+import uk.gov.hmrc.agentservicesaccount.controllers.emailPendingVerificationKey
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails._
 import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
@@ -134,10 +134,10 @@ with TestConstants {
     (pcodRepository.insert(_: PendingChangeRequest)(_: RequestHeader)).when(*, *).returns(Future.successful(()))
 
     // make sure these values are cleared from the session
-    sessionCache.delete(DRAFT_NEW_CONTACT_DETAILS)(fakeRequest()).futureValue
-    sessionCache.delete(DRAFT_SUBMITTED_BY)(fakeRequest()).futureValue
-    sessionCache.delete(EMAIL_PENDING_VERIFICATION)(fakeRequest()).futureValue
-    sessionCache.delete(CURRENT_SELECTED_CHANGES)(fakeRequest()).futureValue
+    sessionCache.delete(draftNewContactDetailsKey)(fakeRequest()).futureValue
+    sessionCache.delete(draftSubmittedByKey)(fakeRequest()).futureValue
+    sessionCache.delete(emailPendingVerificationKey)(fakeRequest()).futureValue
+    sessionCache.delete(currentSelectedChangesKey)(fakeRequest()).futureValue
 
   }
 
@@ -146,13 +146,13 @@ with TestConstants {
       noPendingChangesInRepo()
       implicit val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequest()
       sessionCache.put(
-        DRAFT_NEW_CONTACT_DETAILS,
+        draftNewContactDetailsKey,
         details.copy(
           agencyDetails = details.agencyDetails.copy(agencyName = Some("New and Improved Agency"))
         )
       ).futureValue
-      sessionCache.put(DRAFT_SUBMITTED_BY, submittedByDetails).futureValue
-      sessionCache.put(CURRENT_SELECTED_CHANGES, Set("businessName"))
+      sessionCache.put(draftSubmittedByKey, submittedByDetails).futureValue
+      sessionCache.put(currentSelectedChangesKey, Set("businessName"))
       val result: Future[Result] = checkYourAnswersController.showPage()(fakeRequest())
       status(result) shouldBe OK
       val resultAsString: String = contentAsString(result.futureValue)
@@ -166,9 +166,9 @@ with TestConstants {
     "redirect to 'view current details' if there are no new details in session" in new TestSetup {
       noPendingChangesInRepo()
       implicit val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequest()
-      sessionCache.delete(DRAFT_NEW_CONTACT_DETAILS).futureValue
-      sessionCache.delete(DRAFT_SUBMITTED_BY).futureValue
-      sessionCache.delete(CURRENT_SELECTED_CHANGES).futureValue
+      sessionCache.delete(draftNewContactDetailsKey).futureValue
+      sessionCache.delete(draftSubmittedByKey).futureValue
+      sessionCache.delete(currentSelectedChangesKey).futureValue
       val result: Future[Result] = checkYourAnswersController.showPage()(fakeRequest())
       status(result) shouldBe SEE_OTHER
       header("Location", result) shouldBe Some(desiDetails.routes.ViewContactDetailsController.showPage.url)
@@ -180,13 +180,13 @@ with TestConstants {
       noPendingChangesInRepo()
       implicit val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequest("POST")
       val newDetails: AgencyDetails = agencyDetails.copy(agencyName = Some("New and Improved Agency"))
-      sessionCache.put(CURRENT_SELECTED_CHANGES, Set("businessName"))
-      sessionCache.put(DRAFT_NEW_CONTACT_DETAILS, DesignatoryDetails(newDetails, emptyOtherServices)).futureValue
-      sessionCache.put(DRAFT_SUBMITTED_BY, submittedByDetails).futureValue
+      sessionCache.put(currentSelectedChangesKey, Set("businessName"))
+      sessionCache.put(draftNewContactDetailsKey, DesignatoryDetails(newDetails, emptyOtherServices)).futureValue
+      sessionCache.put(draftSubmittedByKey, submittedByDetails).futureValue
       val result: Future[Result] = checkYourAnswersController.onSubmit()(request)
       status(result) shouldBe SEE_OTHER
       header("Location", result) shouldBe Some(desiDetails.routes.ContactDetailsController.showChangeSubmitted.url)
-      sessionCache.get(DRAFT_NEW_CONTACT_DETAILS).futureValue.flatMap(_.agencyDetails.agencyTelephone) shouldBe None // the 'draft' details should be cleared from cache
+      sessionCache.get(draftNewContactDetailsKey).futureValue.flatMap(_.agencyDetails.agencyTelephone) shouldBe None // the 'draft' details should be cleared from cache
       // should have stored the pending change in the repo
       (pcodRepository.insert(_: PendingChangeRequest)(_: RequestHeader)).verify(
         argAssert { pcod: PendingChangeRequest =>

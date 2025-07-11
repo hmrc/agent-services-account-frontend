@@ -39,7 +39,7 @@ import scala.concurrent.Future
 @Singleton
 class ApplySACodeChangesController @Inject() (
   actions: Actions,
-  val sessionCache: SessionCacheService,
+  val sessionCacheService: SessionCacheService,
   draftDetailsService: DraftDetailsService,
   applySaCodeChangesView: apply_sa_code_changes,
   cc: MessagesControllerComponents

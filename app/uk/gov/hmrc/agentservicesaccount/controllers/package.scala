@@ -16,11 +16,11 @@
 
 package uk.gov.hmrc.agentservicesaccount
 
+import uk.gov.hmrc.agentservicesaccount.models.UpdateAmlsJourney
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.DesignatoryDetails
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.YourDetails
 import uk.gov.hmrc.mongo.cache.DataKey
 
-import java.time.LocalDate
 import scala.concurrent.Future
 
 package object controllers {
@@ -29,34 +29,32 @@ package object controllers {
     def toFuture: Future[T] = Future successful t
   }
 
-  val AGENT_SIZE: DataKey[String] = DataKey("numberOfClients")
-  val NAME: DataKey[String] = DataKey("name")
-  val EMAIL: DataKey[String] = DataKey("email")
-  val PHONE: DataKey[String] = DataKey("phone")
-  val ARN: DataKey[String] = DataKey("arn")
-  val DESCRIPTION: DataKey[String] = DataKey("description")
-  val BODY: DataKey[String] = DataKey("body")
-  val REG_NUMBER: DataKey[String] = DataKey("number")
-  val END_DATE: DataKey[LocalDate] = DataKey("endDate")
+  val agentSizeKey: DataKey[String] = DataKey("numberOfClients")
+  val nameKey: DataKey[String] = DataKey("name")
+  val emailKey: DataKey[String] = DataKey("email")
+  val phoneKey: DataKey[String] = DataKey("phone")
+  val arnKey: DataKey[String] = DataKey("arn")
+  val descriptionKey: DataKey[String] = DataKey("description")
 
   // when the user changes their own details, this is a 'draft' of the set of updated details before the user sends the update request
-  val DRAFT_NEW_CONTACT_DETAILS: DataKey[DesignatoryDetails] = DataKey("updatedContactDetails")
-  val DRAFT_SUBMITTED_BY: DataKey[YourDetails] = DataKey("submittedBy")
+  val draftNewContactDetailsKey: DataKey[DesignatoryDetails] = DataKey("updatedContactDetails")
+  val draftSubmittedByKey: DataKey[YourDetails] = DataKey("submittedBy")
 
   // when the user chooses which details to change, this is set of each detail they have selected
-  val CURRENT_SELECTED_CHANGES: DataKey[Set[String]] = DataKey("currentSelectedChanges")
-  val PREVIOUS_SELECTED_CHANGES: DataKey[Set[String]] = DataKey("previousSelectedChanges")
+  val currentSelectedChangesKey: DataKey[Set[String]] = DataKey("currentSelectedChanges")
 
   // after an email verification request has been sent, this value is set to keep track of which address was being verified
-  val EMAIL_PENDING_VERIFICATION: DataKey[String] = DataKey("emailPendingVerification")
+  val emailPendingVerificationKey: DataKey[String] = DataKey("emailPendingVerification")
 
-  val sessionKeys = List(
-    AGENT_SIZE,
-    NAME,
-    EMAIL,
-    PHONE,
-    ARN,
-    DESCRIPTION
+  val amlsJourneyKey: DataKey[UpdateAmlsJourney] = DataKey[UpdateAmlsJourney]("amlsJourney")
+
+  val sessionKeys: List[DataKey[String]] = List(
+    agentSizeKey,
+    nameKey,
+    emailKey,
+    phoneKey,
+    arnKey,
+    descriptionKey
   )
 
 }

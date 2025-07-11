@@ -30,9 +30,9 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
-import uk.gov.hmrc.agentservicesaccount.controllers.CURRENT_SELECTED_CHANGES
-import uk.gov.hmrc.agentservicesaccount.controllers.DRAFT_NEW_CONTACT_DETAILS
-import uk.gov.hmrc.agentservicesaccount.controllers.EMAIL_PENDING_VERIFICATION
+import uk.gov.hmrc.agentservicesaccount.controllers.currentSelectedChangesKey
+import uk.gov.hmrc.agentservicesaccount.controllers.draftNewContactDetailsKey
+import uk.gov.hmrc.agentservicesaccount.controllers.emailPendingVerificationKey
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
@@ -122,9 +122,9 @@ with TestConstants {
     (pcodRepository.insert(_: PendingChangeRequest)(_: RequestHeader)).when(*, *).returns(Future.successful(()))
 
     // make sure these values are cleared from the session
-    sessionCache.delete(DRAFT_NEW_CONTACT_DETAILS)(fakeRequest()).futureValue
-    sessionCache.delete(EMAIL_PENDING_VERIFICATION)(fakeRequest()).futureValue
-    sessionCache.delete(CURRENT_SELECTED_CHANGES)(fakeRequest()).futureValue
+    sessionCache.delete(draftNewContactDetailsKey)(fakeRequest()).futureValue
+    sessionCache.delete(emailPendingVerificationKey)(fakeRequest()).futureValue
+    sessionCache.delete(currentSelectedChangesKey)(fakeRequest()).futureValue
 
   }
 
@@ -144,7 +144,7 @@ with TestConstants {
       val result: Future[Result] = selectDetailsController.onSubmit()(request)
       status(result) shouldBe SEE_OTHER
       header("Location", result) shouldBe Some(desiDetails.routes.UpdateEmailAddressController.showChangeEmailAddress.url)
-      sessionCache.get(CURRENT_SELECTED_CHANGES).futureValue.get shouldBe Set("email")
+      sessionCache.get(currentSelectedChangesKey).futureValue.get shouldBe Set("email")
     }
 
     "display an error if the data submitted is invalid" in new TestSetup {
@@ -153,7 +153,7 @@ with TestConstants {
       val result: Future[Result] = selectDetailsController.onSubmit()(request)
       status(result) shouldBe BAD_REQUEST
       contentAsString(result.futureValue) should include("There is a problem")
-      sessionCache.get(CURRENT_SELECTED_CHANGES).futureValue shouldBe None
+      sessionCache.get(currentSelectedChangesKey).futureValue shouldBe None
     }
 
     "display an error if the data submitted is empty" in new TestSetup {
@@ -163,7 +163,7 @@ with TestConstants {
       status(result) shouldBe BAD_REQUEST
       contentAsString(result.futureValue) should include("There is a problem")
       contentAsString(result.futureValue) should include("Tell us which contact details you want to change.")
-      sessionCache.get(CURRENT_SELECTED_CHANGES).futureValue shouldBe None
+      sessionCache.get(currentSelectedChangesKey).futureValue shouldBe None
     }
   }
 

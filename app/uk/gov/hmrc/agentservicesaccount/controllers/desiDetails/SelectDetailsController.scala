@@ -25,8 +25,8 @@ import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.DesiDetailsJourneySupport
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.NextPageSelector.getNextPage
-import uk.gov.hmrc.agentservicesaccount.controllers.CURRENT_SELECTED_CHANGES
-import uk.gov.hmrc.agentservicesaccount.controllers.DRAFT_NEW_CONTACT_DETAILS
+import uk.gov.hmrc.agentservicesaccount.controllers.currentSelectedChangesKey
+import uk.gov.hmrc.agentservicesaccount.controllers.draftNewContactDetailsKey
 import uk.gov.hmrc.agentservicesaccount.controllers.ToFuture
 import uk.gov.hmrc.agentservicesaccount.forms.SelectChangesForm
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.DesignatoryDetails
@@ -44,7 +44,7 @@ import scala.concurrent.Future
 @Singleton
 class SelectDetailsController @Inject() (
   actions: Actions,
-  val sessionCache: SessionCacheService,
+  val sessionCacheService: SessionCacheService,
   select_changes_view: select_changes
 )(implicit
   appConfig: AppConfig,
@@ -60,7 +60,7 @@ with Logging {
 
   def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     ifChangeContactFeatureEnabledAndNoPendingChanges {
-      sessionCache.get[Set[String]](CURRENT_SELECTED_CHANGES).map {
+      sessionCacheService.get[Set[String]](currentSelectedChangesKey).map {
         case Some(data) => {
           val savedAnswers: SelectChanges = SelectChanges(
             businessName = Some("businessName").filter(data.contains),
@@ -85,7 +85,7 @@ with Logging {
           },
           (selectedChanges: SelectChanges) => {
 
-            sessionCache.put(CURRENT_SELECTED_CHANGES, selectedChanges.pagesSelected).flatMap {
+            sessionCacheService.put(currentSelectedChangesKey, selectedChanges.pagesSelected).flatMap {
               _ =>
                 {
                   resetUncheckedAndNavigate(selectedChanges).flatten
@@ -98,15 +98,15 @@ with Logging {
 
   private def resetUncheckedAndNavigate(selectedChanges: SelectChanges)(implicit request: AuthRequestWithAgentInfo[AnyContent]): Future[Future[Result]] = {
     for {
-      desiDetailsData <- sessionCache.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS)
+      desiDetailsData <- sessionCacheService.get[DesignatoryDetails](draftNewContactDetailsKey)
       oldContactDetails <- agentAssuranceConnector.getAgentRecord.map(_.agencyDetails.getOrElse {
         throw new RuntimeException(s"Could not retrieve current agency details for ${request.agentInfo.arn} from the backend")
       })
       journey <- isJourneyComplete()
     } yield desiDetailsData match {
       case Some(newData) =>
-        sessionCache.put(
-          DRAFT_NEW_CONTACT_DETAILS,
+        sessionCacheService.put(
+          draftNewContactDetailsKey,
           newData.copy(agencyDetails =
             oldContactDetails.copy(
               agencyName =

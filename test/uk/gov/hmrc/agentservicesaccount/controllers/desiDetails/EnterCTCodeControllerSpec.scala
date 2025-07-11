@@ -34,9 +34,9 @@ import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.actions.AuthActions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
-import uk.gov.hmrc.agentservicesaccount.controllers.CURRENT_SELECTED_CHANGES
-import uk.gov.hmrc.agentservicesaccount.controllers.DRAFT_NEW_CONTACT_DETAILS
-import uk.gov.hmrc.agentservicesaccount.controllers.DRAFT_SUBMITTED_BY
+import uk.gov.hmrc.agentservicesaccount.controllers.currentSelectedChangesKey
+import uk.gov.hmrc.agentservicesaccount.controllers.draftNewContactDetailsKey
+import uk.gov.hmrc.agentservicesaccount.controllers.draftSubmittedByKey
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails._
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
 import uk.gov.hmrc.agentservicesaccount.services.DraftDetailsService
@@ -114,9 +114,9 @@ with TestConstants {
 
       mockAppConfig.enableChangeContactDetails returns true
 
-      mockSessionCache.get(CURRENT_SELECTED_CHANGES)(*[Reads[Set[String]]], *[RequestHeader]) returns Future.successful(Some(Set("email")))
+      mockSessionCache.get(currentSelectedChangesKey)(*[Reads[Set[String]]], *[RequestHeader]) returns Future.successful(Some(Set("email")))
 
-      mockSessionCache.get(DRAFT_NEW_CONTACT_DETAILS)(*[Reads[DesignatoryDetails]], *[RequestHeader]) returns Future.successful(Some(DesignatoryDetails(
+      mockSessionCache.get(draftNewContactDetailsKey)(*[Reads[DesignatoryDetails]], *[RequestHeader]) returns Future.successful(Some(DesignatoryDetails(
         agencyDetails = agentRecord.agencyDetails.get.copy(agencyEmail = Some("new@test.com")),
         otherServices = OtherServices(saChanges = SaChanges(applyChanges = false, None), ctChanges = CtChanges(applyChanges = false, None))
       )))
@@ -168,9 +168,9 @@ with TestConstants {
 
       mockAppConfig.enableChangeContactDetails returns true
 
-      mockSessionCache.get(CURRENT_SELECTED_CHANGES)(*[Reads[Set[String]]], *[RequestHeader]) returns Future.successful(None)
+      mockSessionCache.get(currentSelectedChangesKey)(*[Reads[Set[String]]], *[RequestHeader]) returns Future.successful(None)
 
-      mockSessionCache.get(DRAFT_SUBMITTED_BY)(*[Reads[YourDetails]], *[RequestHeader]) returns Future.successful(None)
+      mockSessionCache.get(draftSubmittedByKey)(*[Reads[YourDetails]], *[RequestHeader]) returns Future.successful(None)
 
       mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
@@ -178,13 +178,13 @@ with TestConstants {
 
       mockPendingChangeRequestRepository.find(arn)(*[RequestHeader]) returns Future.successful(None)
 
-      mockSessionCache.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS)(
+      mockSessionCache.get[DesignatoryDetails](draftNewContactDetailsKey)(
         *[Reads[DesignatoryDetails]],
         *[Request[Any]]
       ) returns Future.successful(Some(desiDetailsWithEmptyOtherServices))
 
       mockSessionCache.put[DesignatoryDetails](
-        DRAFT_NEW_CONTACT_DETAILS,
+        draftNewContactDetailsKey,
         desiDetailsWithEmptyOtherServices.copy(otherServices =
           desiDetailsWithEmptyOtherServices.otherServices.copy(ctChanges = CtChanges(true, Some(CtUtr("123456"))))
         )
@@ -212,9 +212,9 @@ with TestConstants {
 
       mockAppConfig.enableChangeContactDetails returns true
 
-      mockSessionCache.get(CURRENT_SELECTED_CHANGES)(*[Reads[Set[String]]], *[RequestHeader]) returns Future.successful(None)
+      mockSessionCache.get(currentSelectedChangesKey)(*[Reads[Set[String]]], *[RequestHeader]) returns Future.successful(None)
 
-      mockSessionCache.get(DRAFT_SUBMITTED_BY)(*[Reads[YourDetails]], *[RequestHeader]) returns Future.successful(None)
+      mockSessionCache.get(draftSubmittedByKey)(*[Reads[YourDetails]], *[RequestHeader]) returns Future.successful(None)
 
       mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
@@ -222,12 +222,12 @@ with TestConstants {
 
       mockPendingChangeRequestRepository.find(arn)(*[RequestHeader]) returns Future.successful(None)
 
-      mockSessionCache.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS)(
+      mockSessionCache.get[DesignatoryDetails](draftNewContactDetailsKey)(
         *[Reads[DesignatoryDetails]],
         *[Request[Any]]
       ) returns Future.successful(Some(desiDetailsCtChangesOtherServices))
 
-      mockSessionCache.put[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS, desiDetailsWithEmptyOtherServices)(
+      mockSessionCache.put[DesignatoryDetails](draftNewContactDetailsKey, desiDetailsWithEmptyOtherServices)(
         *[Writes[DesignatoryDetails]],
         *[Request[Any]]
       ) returns Future.successful((SessionKeys.sessionId -> "session-123"))
@@ -261,13 +261,13 @@ with TestConstants {
 
       mockPendingChangeRequestRepository.find(arn)(*[RequestHeader]) returns Future.successful(None)
 
-      mockSessionCache.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS)(
+      mockSessionCache.get[DesignatoryDetails](draftNewContactDetailsKey)(
         *[Reads[DesignatoryDetails]],
         *[Request[Any]]
       ) returns Future.successful(Some(desiDetailsWithEmptyOtherServices))
 
       mockSessionCache.put[DesignatoryDetails](
-        DRAFT_NEW_CONTACT_DETAILS,
+        draftNewContactDetailsKey,
         desiDetailsWithEmptyOtherServices.copy(otherServices = desiDetailsWithEmptyOtherServices.otherServices.copy(ctChanges = CtChanges(true, None)))
       )(*[Writes[DesignatoryDetails]], *[Request[Any]]) returns Future.successful((SessionKeys.sessionId -> "session-123"))
 

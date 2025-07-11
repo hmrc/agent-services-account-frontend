@@ -24,9 +24,8 @@ import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.models.UpdateAmlsJourney
-import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
+import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls._
-import uk.gov.hmrc.mongo.cache.DataKey
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject.Inject
@@ -36,13 +35,13 @@ import scala.concurrent.ExecutionContext
 @Singleton
 class ViewDetailsController @Inject() (
   actions: Actions,
-  val updateAmlsJourneyRepository: UpdateAmlsJourneyRepository,
+  val sessionCacheService: SessionCacheService,
   agentAssuranceConnector: AgentAssuranceConnector,
   viewDetails: view_details,
   cc: MessagesControllerComponents
 )(implicit
   appConfig: AppConfig,
-  ec: ExecutionContext
+  val ec: ExecutionContext
 )
 extends FrontendController(cc)
 with AmlsJourneySupport
@@ -51,10 +50,7 @@ with I18nSupport {
   def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
       agentAssuranceConnector.getAMLSDetailsResponse(request.agentInfo.arn.value).flatMap { amlsDetailsResponce =>
-        updateAmlsJourneyRepository.putSession(
-          DataKey[UpdateAmlsJourney]("amlsJourney"),
-          UpdateAmlsJourney(status = amlsDetailsResponce.status)
-        ).map { _ =>
+        saveAmlsJourney(UpdateAmlsJourney(status = amlsDetailsResponce.status)).map { _ =>
           amlsDetailsResponce.details match {
             case details @ Some(_) => Ok(viewDetails(amlsDetailsResponce.status, details))
             case None => Ok(viewDetails(amlsDetailsResponce.status, None))

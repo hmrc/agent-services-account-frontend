@@ -37,7 +37,7 @@ import scala.concurrent.Future
 @Singleton
 class UpdateNameController @Inject() (
   actions: Actions,
-  val sessionCache: SessionCacheService,
+  val sessionCacheService: SessionCacheService,
   draftDetailsService: DraftDetailsService,
   update_name: update_name,
   cc: MessagesControllerComponents

@@ -25,7 +25,7 @@ import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.ToFuture
 import uk.gov.hmrc.agentservicesaccount.forms.NewAmlsSupervisoryBodyForm
 import uk.gov.hmrc.agentservicesaccount.models.UpdateAmlsJourney
-import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
+import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.utils.AMLSLoader
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.new_supervisory_body
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -38,12 +38,12 @@ import scala.concurrent.ExecutionContext
 class AmlsNewSupervisoryBodyController @Inject() (
   actions: Actions,
   amlsLoader: AMLSLoader,
-  val updateAmlsJourneyRepository: UpdateAmlsJourneyRepository,
+  val sessionCacheService: SessionCacheService,
   newSupervisoryBody: new_supervisory_body,
   cc: MessagesControllerComponents
 )(implicit
   appConfig: AppConfig,
-  ec: ExecutionContext
+  val ec: ExecutionContext
 )
 extends FrontendController(cc)
 with AmlsJourneySupport

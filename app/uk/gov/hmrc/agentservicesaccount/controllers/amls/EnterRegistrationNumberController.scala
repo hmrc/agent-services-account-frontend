@@ -25,7 +25,7 @@ import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.ToFuture
 import uk.gov.hmrc.agentservicesaccount.forms.NewRegistrationNumberForm.{form => registrationNumberForm}
 import uk.gov.hmrc.agentservicesaccount.models.UpdateAmlsJourney
-import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
+import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.enter_registration_number
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
@@ -36,12 +36,12 @@ import scala.concurrent.ExecutionContext
 @Singleton
 class EnterRegistrationNumberController @Inject() (
   actions: Actions,
-  val updateAmlsJourneyRepository: UpdateAmlsJourneyRepository,
+  val sessionCacheService: SessionCacheService,
   enterRegistrationNumber: enter_registration_number,
   cc: MessagesControllerComponents
 )(implicit
   appConfig: AppConfig,
-  ec: ExecutionContext
+  val ec: ExecutionContext
 )
 extends FrontendController(cc)
 with AmlsJourneySupport

@@ -30,9 +30,9 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
-import uk.gov.hmrc.agentservicesaccount.controllers.CURRENT_SELECTED_CHANGES
-import uk.gov.hmrc.agentservicesaccount.controllers.DRAFT_NEW_CONTACT_DETAILS
-import uk.gov.hmrc.agentservicesaccount.controllers.DRAFT_SUBMITTED_BY
+import uk.gov.hmrc.agentservicesaccount.controllers.currentSelectedChangesKey
+import uk.gov.hmrc.agentservicesaccount.controllers.draftNewContactDetailsKey
+import uk.gov.hmrc.agentservicesaccount.controllers.draftSubmittedByKey
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails._
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
@@ -129,16 +129,16 @@ with TestConstants {
     (pcodRepository.insert(_: PendingChangeRequest)(_: RequestHeader)).when(*, *).returns(Future.successful(()))
 
     // make sure these values are cleared from the session
-    sessionCache.delete(DRAFT_SUBMITTED_BY).futureValue
+    sessionCache.delete(draftSubmittedByKey).futureValue
 
   }
 
   "GET /manage-account/contact-details/your-details" should {
     "display the Your details page normally if there is no change pending" in new TestSetup {
       noPendingChangesInRepo()
-      sessionCache.put(CURRENT_SELECTED_CHANGES, Set("email")).futureValue
+      sessionCache.put(currentSelectedChangesKey, Set("email")).futureValue
       sessionCache.put(
-        DRAFT_NEW_CONTACT_DETAILS,
+        draftNewContactDetailsKey,
         DesignatoryDetails(
           agencyDetails = agentRecord.agencyDetails.get.copy(
             agencyEmail = Some("new@test.com")
@@ -168,7 +168,7 @@ with TestConstants {
       val result: Future[Result] = controller.onSubmit()(request)
       status(result) shouldBe SEE_OTHER
       header("Location", result) shouldBe Some(routes.CheckYourAnswersController.showPage.url)
-      sessionCache.get(DRAFT_SUBMITTED_BY).futureValue.get shouldBe YourDetails(fullName = "New Name", telephone = "01903 209919")
+      sessionCache.get(draftSubmittedByKey).futureValue.get shouldBe YourDetails(fullName = "New Name", telephone = "01903 209919")
     }
 
     "display an error if the data submitted is invalid" in new TestSetup {
@@ -177,7 +177,7 @@ with TestConstants {
       val result: Future[Result] = controller.onSubmit()(request)
       status(result) shouldBe BAD_REQUEST
       contentAsString(result.futureValue) should include("There is a problem")
-      sessionCache.get(DRAFT_SUBMITTED_BY).futureValue shouldBe None
+      sessionCache.get(draftSubmittedByKey).futureValue shouldBe None
     }
   }
 

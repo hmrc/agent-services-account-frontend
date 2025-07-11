@@ -33,9 +33,10 @@ import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.actions.AuthActions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
+import uk.gov.hmrc.agentservicesaccount.controllers.amlsJourneyKey
 import uk.gov.hmrc.agentservicesaccount.models._
-import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
 import uk.gov.hmrc.agentservicesaccount.services.AuditService
+import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.utils.AMLSLoader
 import uk.gov.hmrc.agentservicesaccount.views.components.models.SummaryListData
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.check_your_answers
@@ -44,7 +45,6 @@ import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve._
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.UpstreamErrorResponse
-import uk.gov.hmrc.mongo.cache.DataKey
 
 import java.time.LocalDate
 import java.util.Locale
@@ -174,10 +174,9 @@ with ArgumentMatchersSugar {
         actionBuilder
       )
 
-    protected val mockUpdateAmlsJourneyRepository: UpdateAmlsJourneyRepository = mock[UpdateAmlsJourneyRepository]
+    implicit val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
     protected val mockView: check_your_answers = mock[check_your_answers]
     protected val cc: MessagesControllerComponents = stubMessagesControllerComponents()
-    protected val dataKey: DataKey[UpdateAmlsJourney] = DataKey[UpdateAmlsJourney]("amlsJourney")
     protected val mockAuditService = mock[AuditService]
     protected val mockAaConnector = mock[AgentAssuranceConnector]
 
@@ -185,7 +184,7 @@ with ArgumentMatchersSugar {
     extends CheckYourAnswersController(
       mockActions,
       mockAgentAssuranceConnector,
-      mockUpdateAmlsJourneyRepository,
+      mockSessionCacheService,
       mockView,
       cc,
       mockAuditService
@@ -203,7 +202,7 @@ with ArgumentMatchersSugar {
         ) returns authResponse
         mockAppConfig.enableNonHmrcSupervisoryBody returns true
         mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
-        mockUpdateAmlsJourneyRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[RequestHeader]) returns
+        mockSessionCacheService.get(amlsJourneyKey)(*[Reads[UpdateAmlsJourney]], *[RequestHeader]) returns
           Future.successful(Some(ukAmlsJourney))
 
         mockView.apply(*[Seq[SummaryListData]])(
@@ -227,7 +226,7 @@ with ArgumentMatchersSugar {
         mockAppConfig.enableNonHmrcSupervisoryBody returns true
 
         mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
-        mockUpdateAmlsJourneyRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[RequestHeader]) returns
+        mockSessionCacheService.get(amlsJourneyKey)(*[Reads[UpdateAmlsJourney]], *[RequestHeader]) returns
           Future.successful(None)
 
         mockView.apply(*[Seq[SummaryListData]])(
@@ -386,8 +385,8 @@ with ArgumentMatchersSugar {
           ) returns authResponse
           mockAppConfig.enableNonHmrcSupervisoryBody returns true
           mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
-          mockUpdateAmlsJourneyRepository
-            .getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[RequestHeader]) returns Future.successful(Some(ukAmlsJourney))
+          mockSessionCacheService
+            .get(amlsJourneyKey)(*[Reads[UpdateAmlsJourney]], *[RequestHeader]) returns Future.successful(Some(ukAmlsJourney))
           mockAgentAssuranceConnector.postAmlsDetails(arn, amlsRequest)(*[RequestHeader]) returns Future.successful(())
 
           mockAgentAssuranceConnector.getAMLSDetails(arn.value)(*[RequestHeader]) returns Future.successful(amlsDetails)
@@ -406,8 +405,8 @@ with ArgumentMatchersSugar {
           ) returns authResponse
           mockAppConfig.enableNonHmrcSupervisoryBody returns true
           mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
-          mockUpdateAmlsJourneyRepository
-            .getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[RequestHeader]) returns Future.successful(Some(ukAmlsJourney))
+          mockSessionCacheService
+            .get(amlsJourneyKey)(*[Reads[UpdateAmlsJourney]], *[RequestHeader]) returns Future.successful(Some(ukAmlsJourney))
           mockAgentAssuranceConnector.postAmlsDetails(arn, amlsRequest)(*[RequestHeader]) returns Future.successful(())
 
           mockAgentAssuranceConnector.getAMLSDetails(arn.value)(*[RequestHeader]).throws(UpstreamErrorResponse("Something went wrong", 500))
@@ -426,7 +425,7 @@ with ArgumentMatchersSugar {
           ) returns authResponse
           mockAppConfig.enableNonHmrcSupervisoryBody returns true
           mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
-          mockUpdateAmlsJourneyRepository.getFromSession(*[DataKey[UpdateAmlsJourney]])(*[Reads[UpdateAmlsJourney]], *[RequestHeader]) returns
+          mockSessionCacheService.get(amlsJourneyKey)(*[Reads[UpdateAmlsJourney]], *[RequestHeader]) returns
             Future.successful(Some(UpdateAmlsJourney(
               AmlsStatuses.ValidAmlsDetailsUK,
               None,

@@ -25,7 +25,7 @@ import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.ToFuture
 import uk.gov.hmrc.agentservicesaccount.forms.RenewalDateForm
 import uk.gov.hmrc.agentservicesaccount.models.ModelExtensionMethods._
-import uk.gov.hmrc.agentservicesaccount.repository.UpdateAmlsJourneyRepository
+import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.enter_renewal_date
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
@@ -36,12 +36,12 @@ import scala.concurrent.ExecutionContext
 @Singleton
 class EnterRenewalDateController @Inject() (
   actions: Actions,
-  val updateAmlsJourneyRepository: UpdateAmlsJourneyRepository,
+  val sessionCacheService: SessionCacheService,
   enterRenewalDate: enter_renewal_date,
   cc: MessagesControllerComponents
 )(implicit
   appConfig: AppConfig,
-  ec: ExecutionContext
+  val ec: ExecutionContext
 )
 extends FrontendController(cc)
 with AmlsJourneySupport

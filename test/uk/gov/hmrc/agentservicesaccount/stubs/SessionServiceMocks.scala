@@ -62,7 +62,7 @@ extends MockFactory {
   def getAllSessionItems[T](
     mockedResponse: List[Option[String]],
     times: Int = 1
-  )(implicit service: SessionCacheService): Unit = (service.getSessionItems()(_: RequestHeader, _: ExecutionContext))
+  )(implicit service: SessionCacheService): Unit = (service.getBetaInviteSessionItems()(_: RequestHeader, _: ExecutionContext))
     .expects(*, *)
     .returning(Future.successful(mockedResponse)).repeat(times)
 

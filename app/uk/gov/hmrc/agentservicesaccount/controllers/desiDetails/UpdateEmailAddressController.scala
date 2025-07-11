@@ -23,7 +23,7 @@ import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.DesiDetailsJourneySupport
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.NextPageSelector.getNextPage
-import uk.gov.hmrc.agentservicesaccount.controllers.EMAIL_PENDING_VERIFICATION
+import uk.gov.hmrc.agentservicesaccount.controllers.emailPendingVerificationKey
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
 import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.EmailHasNotChanged
@@ -46,7 +46,7 @@ import scala.concurrent.Future
 @Singleton
 class UpdateEmailAddressController @Inject() (
   actions: Actions,
-  val sessionCache: SessionCacheService,
+  val sessionCacheService: SessionCacheService,
   draftDetailsService: DraftDetailsService,
   emailVerificationService: EmailVerificationService,
   update_email: update_email,
@@ -87,7 +87,7 @@ with Logging {
                     _ <- draftDetailsService.updateDraftDetails(desiDetails =>
                       desiDetails.copy(agencyDetails = desiDetails.agencyDetails.copy(agencyEmail = Some(newEmail)))
                     )
-                    _ <- sessionCache.delete(EMAIL_PENDING_VERIFICATION)
+                    _ <- sessionCacheService.delete(emailPendingVerificationKey)
                     journey <- isJourneyComplete()
                   } yield getNextPage(journey, "email")
                 case EmailIsLocked => Future.successful(Redirect(desiDetails.routes.UpdateEmailAddressController.showEmailLocked))
@@ -100,7 +100,7 @@ with Logging {
                   }
                 case EmailNeedsVerifying =>
                   for {
-                    _ <- sessionCache.put(EMAIL_PENDING_VERIFICATION, newEmail)
+                    _ <- sessionCacheService.put(emailPendingVerificationKey, newEmail)
                     redirectUri <- emailVerificationService.initialiseEmailVerificationJourney(
                       credId,
                       newEmail,

@@ -17,7 +17,7 @@
 package uk.gov.hmrc.agentservicesaccount.services
 
 import play.api.mvc.RequestHeader
-import uk.gov.hmrc.agentservicesaccount.controllers.DRAFT_NEW_CONTACT_DETAILS
+import uk.gov.hmrc.agentservicesaccount.controllers.draftNewContactDetailsKey
 import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.CtChanges
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.DesignatoryDetails
@@ -33,7 +33,7 @@ import scala.concurrent.Future
 class DraftDetailsService @Inject() (sessionCacheService: SessionCacheService)(implicit ec: ExecutionContext) {
   def updateDraftDetails(f: DesignatoryDetails => DesignatoryDetails)(implicit request: RequestHeader): Future[Unit] =
     for {
-      optDraftDetailsInSession <- sessionCacheService.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS)
+      optDraftDetailsInSession <- sessionCacheService.get[DesignatoryDetails](draftNewContactDetailsKey)
       draftDetails <-
         optDraftDetailsInSession match {
           case Some(details) => Future.successful(details)
@@ -60,7 +60,7 @@ class DraftDetailsService @Inject() (sessionCacheService: SessionCacheService)(i
             )
         }
       updatedDraftDetails = f(draftDetails)
-      _ <- sessionCacheService.put[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS, updatedDraftDetails)
+      _ <- sessionCacheService.put[DesignatoryDetails](draftNewContactDetailsKey, updatedDraftDetails)
     } yield ()
 
 }

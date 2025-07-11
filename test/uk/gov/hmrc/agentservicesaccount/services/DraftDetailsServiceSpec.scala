@@ -26,7 +26,7 @@ import play.api.mvc.Request
 import play.api.test.Helpers.await
 import play.api.test.DefaultAwaitTimeout
 import play.api.test.FakeRequest
-import uk.gov.hmrc.agentservicesaccount.controllers.DRAFT_NEW_CONTACT_DETAILS
+import uk.gov.hmrc.agentservicesaccount.controllers.draftNewContactDetailsKey
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.CtChanges
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.DesignatoryDetails
 import uk.gov.hmrc.agentservicesaccount.support.TestConstants
@@ -57,13 +57,13 @@ with TestConstants {
   "updateDraftDetails" should {
     "store updated draft details in session" when {
       "there are no details already in session" in new Setup {
-        mockSessionCacheService.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS)(
+        mockSessionCacheService.get[DesignatoryDetails](draftNewContactDetailsKey)(
           *[Reads[DesignatoryDetails]],
           *[Request[Any]]
         ) returns Future.successful(None)
 
         mockSessionCacheService.put[DesignatoryDetails](
-          dataKey = DRAFT_NEW_CONTACT_DETAILS,
+          dataKey = draftNewContactDetailsKey,
           value = desiDetailsWithEmptyOtherServices.copy(
             agencyDetails = emptyAgencyDetails,
             otherServices = desiDetailsWithEmptyOtherServices.otherServices.copy(ctChanges = CtChanges(true, None))
@@ -79,13 +79,13 @@ with TestConstants {
       }
 
       "there are details already in session" in new Setup {
-        mockSessionCacheService.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS)(
+        mockSessionCacheService.get[DesignatoryDetails](draftNewContactDetailsKey)(
           *[Reads[DesignatoryDetails]],
           *[Request[Any]]
         ) returns Future.successful(Some(desiDetailsWithEmptyOtherServices))
 
         mockSessionCacheService.put[DesignatoryDetails](
-          dataKey = DRAFT_NEW_CONTACT_DETAILS,
+          dataKey = draftNewContactDetailsKey,
           value = desiDetailsWithEmptyOtherServices.copy(otherServices =
             desiDetailsWithEmptyOtherServices.otherServices.copy(ctChanges = CtChanges(true, None))
           )
@@ -101,7 +101,7 @@ with TestConstants {
     }
     "throw an exception" when {
       "session retrieval fails" in new Setup {
-        mockSessionCacheService.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS)(
+        mockSessionCacheService.get[DesignatoryDetails](draftNewContactDetailsKey)(
           *[Reads[DesignatoryDetails]],
           *[Request[Any]]
         ) returns Future.failed(new Exception("Something went wrong"))
@@ -114,13 +114,13 @@ with TestConstants {
       }
 
       "session storage fails" in new Setup {
-        mockSessionCacheService.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS)(
+        mockSessionCacheService.get[DesignatoryDetails](draftNewContactDetailsKey)(
           *[Reads[DesignatoryDetails]],
           *[Request[Any]]
         ) returns Future.successful(Some(desiDetailsWithEmptyOtherServices))
 
         mockSessionCacheService.put[DesignatoryDetails](
-          dataKey = DRAFT_NEW_CONTACT_DETAILS,
+          dataKey = draftNewContactDetailsKey,
           value = desiDetailsWithEmptyOtherServices.copy(otherServices =
             desiDetailsWithEmptyOtherServices.otherServices.copy(ctChanges = CtChanges(true, None))
           )

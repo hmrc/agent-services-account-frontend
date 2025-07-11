@@ -22,9 +22,9 @@ import play.api.mvc.RequestHeader
 import play.api.mvc.Result
 import uk.gov.hmrc.agentservicesaccount.actions.AuthRequestWithAgentInfo
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.controllers.CURRENT_SELECTED_CHANGES
-import uk.gov.hmrc.agentservicesaccount.controllers.DRAFT_NEW_CONTACT_DETAILS
-import uk.gov.hmrc.agentservicesaccount.controllers.DRAFT_SUBMITTED_BY
+import uk.gov.hmrc.agentservicesaccount.controllers.currentSelectedChangesKey
+import uk.gov.hmrc.agentservicesaccount.controllers.draftNewContactDetailsKey
+import uk.gov.hmrc.agentservicesaccount.controllers.draftSubmittedByKey
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
 import uk.gov.hmrc.agentservicesaccount.controllers.routes
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.DesiDetailsJourney
@@ -41,14 +41,12 @@ trait DesiDetailsJourneySupport {
 
   implicit val ec: ExecutionContext
 
-  def sessionCache: SessionCacheService
+  val sessionCacheService: SessionCacheService
 
   def withUpdateDesiDetailsJourney(body: DesignatoryDetails => Future[Result])(
-    implicit
-    request: RequestHeader,
-    ec: ExecutionContext
+    implicit request: RequestHeader
   ): Future[Result] = {
-    sessionCache.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS).flatMap {
+    sessionCacheService.get[DesignatoryDetails](draftNewContactDetailsKey).flatMap {
       case Some(desiDetails: DesignatoryDetails) => body(desiDetails)
       case None => Future successful Redirect(routes.AgentServicesController.manageAccount)
     }
@@ -76,8 +74,8 @@ trait DesiDetailsJourneySupport {
 
   def contactChangesNeeded()(implicit request: AuthRequestWithAgentInfo[_]): Future[Option[Set[String]]] = {
     for {
-      selectChanges <- sessionCache.get[Set[String]](CURRENT_SELECTED_CHANGES)
-      desiDetailsData <- sessionCache.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS)
+      selectChanges <- sessionCacheService.get[Set[String]](currentSelectedChangesKey)
+      desiDetailsData <- sessionCacheService.get[DesignatoryDetails](draftNewContactDetailsKey)
     } yield desiDetailsData match {
       case Some(details) => {
         val detailsUpdated: Map[String, Boolean] = Map(
@@ -98,7 +96,7 @@ trait DesiDetailsJourneySupport {
   def isContactPageRequestValid(currentPage: String)(
     implicit request: AuthRequestWithAgentInfo[_]
   ): Future[Boolean] = {
-    sessionCache.get[Set[String]](CURRENT_SELECTED_CHANGES).map { selectChanges =>
+    sessionCacheService.get[Set[String]](currentSelectedChangesKey).map { selectChanges =>
       selectChanges.fold(false)(changes => changes.contains(currentPage))
     }
   }
@@ -107,7 +105,7 @@ trait DesiDetailsJourneySupport {
     implicit request: AuthRequestWithAgentInfo[_]
   ): Future[Boolean] = {
     for {
-      selectChanges <- sessionCache.get[Set[String]](CURRENT_SELECTED_CHANGES)
+      selectChanges <- sessionCacheService.get[Set[String]](currentSelectedChangesKey)
       changesStillNeeded <- contactChangesNeeded()
     } yield selectChanges.isDefined && changesStillNeeded.isEmpty || changesStillNeeded.contains(Set.empty)
   }
@@ -116,8 +114,8 @@ trait DesiDetailsJourneySupport {
     implicit request: AuthRequestWithAgentInfo[_]
   ): Future[DesiDetailsJourney] = {
     for {
-      submittedBy <- sessionCache.get[YourDetails](DRAFT_SUBMITTED_BY)
-      desiDetailsData <- sessionCache.get[DesignatoryDetails](DRAFT_NEW_CONTACT_DETAILS)
+      submittedBy <- sessionCacheService.get[YourDetails](draftSubmittedByKey)
+      desiDetailsData <- sessionCacheService.get[DesignatoryDetails](draftNewContactDetailsKey)
       unchangedDetails <- contactChangesNeeded()
     } yield desiDetailsData match {
       case Some(details) => {
