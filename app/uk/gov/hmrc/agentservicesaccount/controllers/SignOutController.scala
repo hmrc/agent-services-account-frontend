@@ -47,7 +47,8 @@ with I18nSupport {
   }
 
   def signedOut: Action[AnyContent] = Action.async {
-    Future successful signOutWithContinue(appConfig.continueFromGGSignIn)
+    val continue = uri"${appConfig.asaFrontendExternalUrl + routes.AgentServicesController.showAgentServicesAccount().url}"
+    Future successful signOutWithContinue(continue.toString)
   }
 
   def onlineSignIn: Action[AnyContent] = Action.async {
@@ -60,7 +61,7 @@ with I18nSupport {
   }
 
   def timedOut: Action[AnyContent] = Action.async { implicit request =>
-    Future successful Forbidden(signedOutView(appConfig.continueFromGGSignIn))
+    Future successful Ok(signedOutView(routes.AgentServicesController.showAgentServicesAccount().url))
   }
 
 }

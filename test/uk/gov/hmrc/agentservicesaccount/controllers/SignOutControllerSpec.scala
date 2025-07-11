@@ -48,9 +48,10 @@ extends BaseISpec {
 
   "GET /signed-out" should {
     "redirect to sign in with continue url back to /agent-services-account" in {
+      val continueUrl = uri"${appConfig.asaFrontendExternalUrl + "/agent-services-account/home"}"
       val request = controller.signedOut(FakeRequest("GET", "/"))
       status(request) shouldBe 303
-      Helpers.redirectLocation(request) shouldBe Some(signOutUrlWithContinue(appConfig.continueFromGGSignIn))
+      Helpers.redirectLocation(request) shouldBe Some(signOutUrlWithContinue(continueUrl.toString))
     }
   }
 
@@ -74,8 +75,11 @@ extends BaseISpec {
 
   "GET /timed-out" should {
     "should show the timed out page" in {
-      val request = controller.timedOut(FakeRequest("GET", "/"))
-      status(request) shouldBe 403
+      val response = controller.timedOut(FakeRequest("GET", "/"))
+      status(response) shouldBe 200
+      Helpers
+        .contentAsString(response)
+        .contains("You have been signed out") shouldBe true
     }
   }
 
