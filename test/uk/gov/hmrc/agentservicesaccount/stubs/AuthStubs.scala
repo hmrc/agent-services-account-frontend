@@ -70,6 +70,10 @@ trait AuthStubs {
                |    "providerId": "$providerId",
                |    "providerType": "whatever"
                |  },
+               |  "optionalName": {
+               |    "name": "Bob",
+               |    "lastName": "The Builder"
+               |  },
                |  "allEnrolments": [{
                |    "key": "HMRC-AS-AGENT",
                |    "identifiers": [{ "key": "AgentReferenceNumber", "value": "$arn" }]

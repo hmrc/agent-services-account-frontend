@@ -77,38 +77,47 @@ with ArgumentMatchersSugar {
     )
   )
   private val ggCredentials: Credentials = Credentials("ggId", "GovernmentGateway")
-  private val authResponse: Future[Enrolments ~ Some[Credentials] ~ Some[Email] ~ Some[User.type]] = Future.successful(
+  private val authResponse: Future[Enrolments ~ Some[Credentials] ~ Some[Email] ~ Some[Name] ~ Some[CredentialRole]] = Future.successful(
     new ~(
       new ~(
         new ~(
-          Enrolments(agentEnrolment),
-          Some(ggCredentials)
+          new ~(
+            Enrolments(agentEnrolment),
+            Some(ggCredentials)
+          ),
+          Some(Email("test@email.com"))
         ),
-        Some(Email("test@email.com"))
+        Some(Name(Some("Troy"), Some("Barnes")))
       ),
       Some(credentialRole)
     )
   )
-  private val invalidAuthResponse: Future[Enrolments ~ Some[Credentials] ~ Some[Email] ~ Some[Assistant.type]] = Future.successful(
+  private val invalidAuthResponse: Future[Enrolments ~ Some[Credentials] ~ Some[Email] ~ Some[Name] ~ Some[CredentialRole]] = Future.successful(
     new ~(
       new ~(
         new ~(
-          Enrolments(agentEnrolment),
-          Some(ggCredentials)
+          new ~(
+            Enrolments(agentEnrolment),
+            Some(ggCredentials)
+          ),
+          Some(Email("test@email.com"))
         ),
-        Some(Email("test@email.com"))
+        Some(Name(Some("Troy"), Some("Barnes")))
       ),
       Some(Assistant)
     )
   )
-  private val invalidCredentialAuthResponse: Future[Enrolments ~ None.type ~ Some[Email] ~ Some[User.type]] = Future.successful(
+  private val invalidCredentialAuthResponse: Future[Enrolments ~ None.type ~ Some[Email] ~ Some[Name] ~ Some[CredentialRole]] = Future.successful(
     new ~(
       new ~(
         new ~(
-          Enrolments(agentEnrolment),
-          None
+          new ~(
+            Enrolments(agentEnrolment),
+            None
+          ),
+          Some(Email("test@email.com"))
         ),
-        Some(Email("test@email.com"))
+        Some(Name(Some("Troy"), Some("Barnes")))
       ),
       Some(credentialRole)
     )
