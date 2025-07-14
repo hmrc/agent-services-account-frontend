@@ -25,8 +25,7 @@
         ul_html: ul_html, a: a, span: span,
         agents_ur_banner: agents_ur_banner,
         tax_services_accordion: tax_services_accordion,
-        manage_section: manage_section,
-        client_authorisations: client_authorisations,
+        manage_section: manage_section
 )
 
 @(
@@ -34,27 +33,6 @@
         isShownRecruitmentBanner: Boolean = false,
         isAdmin: Boolean = false
 )(implicit request: RequestHeader, msgs: Messages, appConfig: AppConfig)
-
-@invitationsUrl = @{
-    if(appConfig.enableAgentClientRelationshipsFrontend) appConfig.agentClientRelationshipsFrontendInvitationsUrl
-    else appConfig.agentInvitationsFrontendUrl
-}
-
-@trackUrl = @{
-    if(appConfig.enableAgentClientRelationshipsFrontend) appConfig.agentClientRelationshipsFrontendTrackUrl
-    else appConfig.agentInvitationsTrackUrl
-}
-
-@deauthUrl = @{
-    if(appConfig.enableAgentClientRelationshipsFrontend) appConfig.agentClientRelationshipsFrontendDeauthUrl
-    else appConfig.agentInvitationsCancelAuthUrl
-}
-
-@authUrls = @{Map(
-    "invitationsUrl" -> invitationsUrl,
-    "trackUrl" -> trackUrl,
-    "deauthUrl" -> deauthUrl
-)}
 
 @main(
     pageTitle = msgs("asa.heading"),
@@ -65,7 +43,19 @@
     @h1("asa.heading")
     @p(msgs("agent.accountNumber", arn))
 
-    @client_authorisations(authUrls)
+    <section id="client-authorisation-section">
+        @h2("asa.section4.h2")
+        @p("asa.client-authorisations.p")
+        @ul_html(
+            items = Seq[Html](
+                a(href = appConfig.agentClientRelationshipsFrontendInvitationsUrl, key = "asa.section4.col1.link0"),
+                a(href = appConfig.agentMappingUrl, key = "asa.section4.col2.link1"),
+                a(href = appConfig.agentClientRelationshipsFrontendTrackUrl, key = "asa.section4.col2.link2"),
+                a(href = appConfig.agentClientRelationshipsFrontendDeauthUrl, key = "asa.section4.col2.link3")
+            ),
+            id = Some("client-auth-links")
+        )
+    </section>
 
     @if(isAdmin) {
         @manage_section()
@@ -74,7 +64,7 @@
     <hr class="govuk-section-break hr-thick govuk-!-margin-bottom-6 govuk-!-margin-top-8">
 
     @h2("asa.tax-services", id = Some("tax-services-h2"))
-    @tax_services_accordion(authUrls)
+    @tax_services_accordion()
 
     <hr class="govuk-section-break hr-thick govuk-!-margin-bottom-6">
 

@@ -27,12 +27,12 @@
         govukAccordion: GovukAccordion,
 )
 
-@(authUrls: Map[String, String])(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
+@()(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
 
 @itsaAccordionItemLegacy = {
     @h4("asa.sectionITSA.col1.h4")
     @p(html = Some(Html(msgs("asa.sectionITSA.legacy.col1.p1", appConfig.agentMappingUrl))))
-    @p(html = Some(Html(msgs("asa.sectionITSA.legacy.col1.p2", authUrls("invitationsUrl")))))
+    @p(html = Some(Html(msgs("asa.sectionITSA.legacy.col1.p2", appConfig.agentClientRelationshipsFrontendInvitationsUrl))))
     @h4("asa.sectionITSA.legacy.col2.h4")
     @p(html = Some(
         a(href= "https://www.gov.uk/guidance/sign-up-your-client-for-making-tax-digital-for-income-tax",
@@ -70,7 +70,7 @@
 @mtdForVatAccordionItem = {
     @h4("asa.section1.col1.h3")
     <p>
-    @a("asa.section1.col1.p", href = authUrls("invitationsUrl"))
+    @a("asa.section1.col1.p", href =  appConfig.agentClientRelationshipsFrontendInvitationsUrl)
     </p>
 
     @h4("asa.section1.col2.h3")
@@ -96,7 +96,7 @@
 
 @trustsAccordionItem = {
 @h4("asa.trusts-section.col1.h3")
-@p(msgs("asa.trusts-section.col1.register-trust.p",authUrls("invitationsUrl")))
+@p(msgs("asa.trusts-section.col1.register-trust.p", appConfig.agentClientRelationshipsFrontendInvitationsUrl))
 @p("asa.trusts-section.col1.register-estate.p")
 @h4("asa.trusts-section.col2.h3")
 @p(html = Some(Html(a(href = "https://www.gov.uk/guidance/manage-your-trusts-registration-service",
@@ -137,7 +137,7 @@
 @p(html = Some(
     Html(
         span("asa.ppt.col1.text2") + " " +
-                span(key = msgs("asa.ppt.col1.link2", authUrls("invitationsUrl"))))
+                span(key = msgs("asa.ppt.col1.link2", appConfig.agentClientRelationshipsFrontendInvitationsUrl)))
 ))
 
 @h4("asa.ppt.col2.h3")
@@ -148,7 +148,7 @@
     @CounrtyByCountryAccordionItem = {
 
             @h4("asa.section3.col1.h3")
-            @p(msgs("asa.cbc-section.col1.link1.p", authUrls("invitationsUrl")))
+            @p(msgs("asa.cbc-section.col1.link1.p", appConfig.agentClientRelationshipsFrontendInvitationsUrl))
 
             @h4("asa.cbc.col1.h2")
             @p(html = Some(a(href = "https://www.tax.service.gov.uk/send-a-country-by-country-report",
@@ -168,7 +168,7 @@
     @p(html = Some(
         Html(
             span("asa.pillar2.col1.text2") + " " +
-                    span(key = msgs("asa.pillar2.col1.link2", authUrls("invitationsUrl"))))
+                    span(key = msgs("asa.pillar2.col1.link2", appConfig.agentClientRelationshipsFrontendInvitationsUrl)))
     ))
 
     @h4("asa.pillar2.col2.h3")
@@ -184,7 +184,7 @@
     items.append(
         Section(
             headingContent = Text(msgs("asa.sectionITSA.h2")),
-            content = HtmlContent(if(appConfig.enableEmaContent) itsaAccordionItem else itsaAccordionItemLegacy)
+            content = HtmlContent(itsaAccordionItem)
         )
     )
     items.append(
