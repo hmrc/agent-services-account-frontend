@@ -77,7 +77,7 @@ with ArgumentMatchersSugar {
     )
   )
   private val ggCredentials: Credentials = Credentials("ggId", "GovernmentGateway")
-  private val authResponse: Future[Enrolments ~ Some[Credentials] ~ Some[Email] ~ Some[User.type]] = Future.successful(
+  private val authResponse: Future[Enrolments ~ Some[Credentials] ~ Some[Email] ~ Some[Name] ~ Some[User.type]] = Future.successful(new ~(
     new ~(
       new ~(
         new ~(
@@ -86,10 +86,11 @@ with ArgumentMatchersSugar {
         ),
         Some(Email("test@email.com"))
       ),
-      Some(credentialRole)
-    )
-  )
-  private val invalidAuthResponse: Future[Enrolments ~ Some[Credentials] ~ Some[Email] ~ Some[Assistant.type]] = Future.successful(
+      Some(Name(Some("Troy"), Some("Barnes")))
+    ),
+    Some(credentialRole)
+  ))
+  private val invalidAuthResponse: Future[Enrolments ~ Some[Credentials] ~ Some[Email] ~ Some[Name] ~ Some[Assistant.type]] = Future.successful(new ~(
     new ~(
       new ~(
         new ~(
@@ -98,10 +99,11 @@ with ArgumentMatchersSugar {
         ),
         Some(Email("test@email.com"))
       ),
-      Some(Assistant)
-    )
-  )
-  private val invalidCredentialAuthResponse: Future[Enrolments ~ None.type ~ Some[Email] ~ Some[User.type]] = Future.successful(
+      Some(Name(Some("Troy"), Some("Barnes")))
+    ),
+    Some(Assistant)
+  ))
+  private val invalidCredentialAuthResponse: Future[Enrolments ~ None.type ~ Some[Email] ~ Some[Name] ~ Some[User.type]] = Future.successful(new ~(
     new ~(
       new ~(
         new ~(
@@ -110,9 +112,10 @@ with ArgumentMatchersSugar {
         ),
         Some(Email("test@email.com"))
       ),
-      Some(credentialRole)
-    )
-  )
+      Some(Name(Some("Troy"), Some("Barnes")))
+    ),
+    Some(credentialRole)
+  ))
 
   private val ukAmlsJourney = UpdateAmlsJourney(
     status = AmlsStatuses.ValidAmlsDetailsUK,

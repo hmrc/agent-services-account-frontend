@@ -27,6 +27,7 @@ import uk.gov.hmrc.agents.accessgroups.GroupSummary
 import uk.gov.hmrc.agents.accessgroups.optin.OptinStatus
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models.AccessGroupSummaries
+import uk.gov.hmrc.agentservicesaccount.utils.HttpAPIMonitor
 import uk.gov.hmrc.agentservicesaccount.utils.RequestSupport._
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.HttpResponse
@@ -50,21 +51,25 @@ class AgentPermissionsConnector @Inject() (http: HttpClientV2)(implicit
   appConfig: AppConfig,
   val ec: ExecutionContext
 )
-extends Logging {
+extends HttpAPIMonitor
+with Logging {
 
   private val baseUrl = appConfig.agentPermissionsBaseUrl
 
   import uk.gov.hmrc.http.HttpReads.Implicits._
 
   def getOptinStatus(arn: Arn)(implicit rh: RequestHeader): Future[Option[OptinStatus]] = {
-    http
-      .get(new URL(s"$baseUrl/agent-permissions/arn/${arn.value}/optin-status"))
-      .transform(ws => ws.withRequestTimeout(2.minutes))
-      .execute[Option[OptinStatus]]
-      .recover { case e =>
-        logger.warn(s"getOptinStatus error: ${e.getMessage}")
-        Option.empty[OptinStatus]
-      }
+    monitor("ConsumedAPI-GetOptinStatus-GET") {
+      http
+        .get(new URL(s"$baseUrl/agent-permissions/arn/${arn.value}/optin-status"))
+        .transform(ws => ws.withRequestTimeout(2.minutes))
+        .execute[Option[OptinStatus]]
+        .recover { case e =>
+          logger.warn(s"getOptinStatus error: ${e.getMessage}")
+          Option.empty[OptinStatus]
+        }
+
+    }
   }
 
   def getGroupsSummaries(arn: Arn)(implicit rh: RequestHeader): Future[Option[AccessGroupSummaries]] = {
@@ -93,34 +98,38 @@ extends Logging {
       }.toSeq.flatten
     }
 
-    http.get(url"$baseUrl/agent-permissions/arn/${arn.value}/groups").setHeader(buildHeaders: _*)
-      .execute[HttpResponse].map { response =>
-        response.status match {
-          case OK => response.json.asOpt[AccessGroupSummaries]
-          case e => logger.warn(s"GetGroupsSummaries returned status $e ${response.body}"); None
+    monitor("ConsumedAPI-GetGroupsSummaries-GET") {
+      http.get(url"$baseUrl/agent-permissions/arn/${arn.value}/groups").setHeader(buildHeaders: _*)
+        .execute[HttpResponse].map { response =>
+          response.status match {
+            case OK => response.json.asOpt[AccessGroupSummaries]
+            case e => logger.warn(s"GetGroupsSummaries returned status $e ${response.body}"); None
+          }
         }
-      }
+    }
   }
 
   def getGroupsForTeamMember(
     arn: Arn,
     userId: String
   )(implicit rh: RequestHeader): Future[Option[Seq[GroupSummary]]] = {
-    http.get(url"$baseUrl/agent-permissions/arn/${arn.value}/team-member/$userId/groups").execute[Option[Seq[GroupSummary]]]
-
+    monitor("ConsumedAPI-groupSummariesForTeamMember-GET") {
+      http.get(url"$baseUrl/agent-permissions/arn/${arn.value}/team-member/$userId/groups").execute[Option[Seq[GroupSummary]]]
+    }
   }
 
-  def isOptedIn(
-    arn: Arn
-  )(implicit rh: RequestHeader): Future[Boolean] = http.get(url"$baseUrl/agent-permissions/arn/${arn.value}/optin-record-exists").execute[HttpResponse].map {
-    response: HttpResponse =>
-      response.status match {
-        case NO_CONTENT => true
-        case NOT_FOUND => false
-        case other =>
-          logger.warn(s"error getting opt in record for '$arn'. Backend response status: $other")
-          false
+  def isOptedIn(arn: Arn)(implicit rh: RequestHeader): Future[Boolean] = {
+    monitor("ConsumedAPI-optInRecordExists-GET") {
+      http.get(url"$baseUrl/agent-permissions/arn/${arn.value}/optin-record-exists").execute[HttpResponse].map { response: HttpResponse =>
+        response.status match {
+          case NO_CONTENT => true
+          case NOT_FOUND => false
+          case other =>
+            logger.warn(s"error getting opt in record for '$arn'. Backend response status: $other")
+            false
+        }
       }
+    }
   }
 
   def syncEacd(
@@ -132,47 +141,50 @@ extends Logging {
   }
 
   def isArnAllowed(implicit rh: RequestHeader): Future[Boolean] = {
-    http.get(url"$baseUrl/agent-permissions/arn-allowed").execute[HttpResponse]
-      .map { response =>
-        response.status match {
-          case OK => true
-          case other =>
-            logger.warn(s"ArnAllowed call returned status $other")
-            false
+    monitor("ConsumedAPI-GranPermsArnAllowed-GET") {
+      http.get(url"$baseUrl/agent-permissions/arn-allowed").execute[HttpResponse]
+        .map { response =>
+          response.status match {
+            case OK => true
+            case other =>
+              logger.warn(s"ArnAllowed call returned status $other")
+              false
+          }
         }
-      }
-
+    }
   }
 
   def isShownPrivateBetaInvite(implicit rh: RequestHeader): Future[Boolean] = {
-    http.get(url"$baseUrl/agent-permissions/private-beta-invite").execute[HttpResponse]
-      .map { response =>
-        response.status match {
-          case OK =>
-            logger.info(s"in private beta or has dismissed private beta invite")
-            false
-          case _ => true
+    monitor("ConsumedAPI-GranPermsPrivateBeta-GET") {
+      http.get(url"$baseUrl/agent-permissions/private-beta-invite").execute[HttpResponse]
+        .map { response =>
+          response.status match {
+            case OK =>
+              logger.info(s"in private beta or has dismissed private beta invite")
+              false
+            case _ => true
+          }
         }
-      }
-
+    }
   }
 
   def declinePrivateBetaInvite()(implicit rh: RequestHeader): Future[Done] = {
-    http.post(url"$baseUrl/agent-permissions/private-beta-invite/decline").execute[HttpResponse]
-      .map { response =>
-        response.status match {
-          case CREATED => Done
-          case CONFLICT =>
-            logger.info(s"Tried to decline when already dismissed")
-            Done
-          case e =>
-            throw UpstreamErrorResponse(
-              s"error sending dismiss request for private beta invite",
-              e
-            )
+    monitor("ConsumedAPI-declinePrivateBetaInvite-POST") {
+      http.post(url"$baseUrl/agent-permissions/private-beta-invite/decline").execute[HttpResponse]
+        .map { response =>
+          response.status match {
+            case CREATED => Done
+            case CONFLICT =>
+              logger.info(s"Tried to decline when already dismissed")
+              Done
+            case e =>
+              throw UpstreamErrorResponse(
+                s"error sending dismiss request for private beta invite",
+                e
+              )
+          }
         }
-      }
-
+    }
   }
 
   case class SyncEacd(msg: String)

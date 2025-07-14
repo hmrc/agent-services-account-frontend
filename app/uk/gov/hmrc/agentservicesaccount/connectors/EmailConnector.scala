@@ -21,6 +21,7 @@ import play.api.libs.json.Json
 import play.api.mvc.RequestHeader
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models.SendEmailData
+import uk.gov.hmrc.agentservicesaccount.utils.HttpAPIMonitor
 import uk.gov.hmrc.agentservicesaccount.utils.RequestSupport._
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.StringContextOps
@@ -36,12 +37,14 @@ class EmailConnector @Inject() (
   http: HttpClientV2,
   val metrics: Metrics
 )(implicit val ec: ExecutionContext)
-extends Logging {
+extends HttpAPIMonitor
+with Logging {
 
   private val baseUrl: String = appConfig.emailBaseUrl
 
-  def sendEmail(
-    emailData: SendEmailData
-  )(implicit rh: RequestHeader): Future[Unit] = http.post(url"$baseUrl/hmrc/email").withBody(Json.toJson(emailData)).execute[Unit]
+  def sendEmail(emailData: SendEmailData)(implicit rh: RequestHeader): Future[Unit] =
+    monitor(s"Send-Email-${emailData.templateId}") {
+      http.post(url"$baseUrl/hmrc/email").withBody(Json.toJson(emailData)).execute[Unit]
+    }
 
 }

@@ -57,8 +57,6 @@ with TestConstants {
       "microservice.services.agent-services-account.port" -> wireMockPort,
       "microservice.services.agent-services-account.host" -> wireMockHost,
       "microservice.services.agent-permissions-frontend.external-url" -> wireMockBaseUrlAsString,
-      "microservice.services.user-details.port" -> wireMockPort,
-      "microservice.services.user-details.host" -> wireMockHost,
       "auditing.enabled" -> false,
       "metrics.enabled" -> false,
       "suspendedContactDetails.sendEmail" -> false,

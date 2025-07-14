@@ -26,9 +26,9 @@ import uk.gov.hmrc.agentservicesaccount.models.desiDetails.SaChanges
 import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
 import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
-import uk.gov.hmrc.agentservicesaccount.models.userDetails.UserDetails
 import uk.gov.hmrc.auth.core.retrieve.Credentials
 import uk.gov.hmrc.auth.core.retrieve.Email
+import uk.gov.hmrc.auth.core.retrieve.Name
 import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.auth.core.Enrolment
 import uk.gov.hmrc.auth.core.EnrolmentIdentifier
@@ -50,9 +50,8 @@ trait TestConstants {
     )
   )
   val ggCredentials: Credentials = Credentials("ggId", "GovernmentGateway")
-  val userDetails: UserDetails = UserDetails("Troy", Some("Barnes"))
 
-  val authResponse: Future[Enrolments ~ Some[Credentials] ~ Some[Email] ~ Some[User.type]] = Future.successful(
+  val authResponse: Future[Enrolments ~ Some[Credentials] ~ Some[Email] ~ Some[Name] ~ Some[User.type]] = Future.successful(new ~(
     new ~(
       new ~(
         new ~(
@@ -61,9 +60,10 @@ trait TestConstants {
         ),
         Some(Email("test@email.com"))
       ),
-      Some(credentialRole)
-    )
-  )
+      Some(Name(Some("Troy"), Some("Barnes")))
+    ),
+    Some(credentialRole)
+  ))
 
   val suspensionDetailsResponse: Future[SuspensionDetails] = Future.successful(SuspensionDetails(suspensionStatus = false, None))
 

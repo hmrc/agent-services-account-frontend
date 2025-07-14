@@ -23,6 +23,7 @@ import play.api.mvc.RequestHeader
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agents.accessgroups.UserDetails
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+import uk.gov.hmrc.agentservicesaccount.utils.HttpAPIMonitor
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.http.StringContextOps
@@ -42,25 +43,28 @@ class AgentUserClientDetailsConnector @Inject() (http: HttpClientV2)(
   appConfig: AppConfig,
   val ec: ExecutionContext
 )
-extends Logging {
+extends HttpAPIMonitor
+with Logging {
 
   private lazy val baseUrl = appConfig.agentUserClientDetailsBaseUrl
 
   def getTeamMembers(arn: Arn)(
     implicit rh: RequestHeader
   ): Future[Option[Seq[UserDetails]]] = {
-    http.get(url"$baseUrl/agent-user-client-details/arn/${arn.value}/team-members").execute[HttpResponse]
-      .map { response =>
-        response.status match {
-          case ACCEPTED => None
-          case OK => response.json.asOpt[Seq[UserDetails]]
-          case other =>
-            logger.warn(
-              s"error getting TeamMemberList for ${arn.value}. Backend response status: $other"
-            )
-            None
+    monitor("ConsumedAPI-team-members-GET") {
+      http.get(url"$baseUrl/agent-user-client-details/arn/${arn.value}/team-members").execute[HttpResponse]
+        .map { response =>
+          response.status match {
+            case ACCEPTED => None
+            case OK => response.json.asOpt[Seq[UserDetails]]
+            case other =>
+              logger.warn(
+                s"error getting TeamMemberList for ${arn.value}. Backend response status: $other"
+              )
+              None
+          }
         }
-      }
+    }
   }
 
 }

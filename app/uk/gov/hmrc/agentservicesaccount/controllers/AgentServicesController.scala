@@ -29,7 +29,6 @@ import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentPermissionsConnector
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentUserClientDetailsConnector
-import uk.gov.hmrc.agentservicesaccount.connectors.UserDetailsConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.amls.{routes => amlsRoutes}
 import uk.gov.hmrc.agentservicesaccount.models.AmlsStatus
 import uk.gov.hmrc.agentservicesaccount.models.AmlsStatuses._
@@ -49,7 +48,6 @@ class AgentServicesController @Inject() (
   agentPermissionsConnector: AgentPermissionsConnector,
   agentUserClientDetailsConnector: AgentUserClientDetailsConnector,
   agentAssuranceConnector: AgentAssuranceConnector,
-  userDetailsConnector: UserDetailsConnector,
   manage_account: manage_account,
   administrators_html: administrators,
   your_account: your_account,
@@ -159,21 +157,19 @@ with Logging {
     if (!request.agentInfo.isAdmin) {
       if (appConfig.granPermsEnabled) {
         request.agentInfo.credentials.fold(Ok(your_account(None)).toFuture) { credentials =>
-          for {
-            isOptedIn <- agentPermissionsConnector.isOptedIn(request.agentInfo.arn)
-            userDetails <- userDetailsConnector.getUserDetails(credentials.providerId)
-            maybeSummaries <- agentPermissionsConnector.getGroupsForTeamMember(request.agentInfo.arn, credentials.providerId)
-          } yield {
-            val agentInfo = request.agentInfo.copy(userDetails = userDetails)
-            if (isOptedIn)
-              Ok(your_account(Some(agentInfo), maybeSummaries))
-            else
-              Ok(your_account(
-                Some(agentInfo),
-                None,
-                optedIn = false
-              ))
-          }
+          agentPermissionsConnector
+            .isOptedIn(request.agentInfo.arn)
+            .flatMap(isOptedIn =>
+              if (isOptedIn)
+                agentPermissionsConnector.getGroupsForTeamMember(request.agentInfo.arn, credentials.providerId)
+                  .map(maybeSummaries => Ok(your_account(Some(request.agentInfo), maybeSummaries)))
+              else
+                Ok(your_account(
+                  Some(request.agentInfo),
+                  None,
+                  optedIn = false
+                )).toFuture
+            )
         }
       }
       else {

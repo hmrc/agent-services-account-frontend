@@ -25,10 +25,12 @@ import play.api.i18n.Lang
 import play.api.i18n.Messages
 import play.api.i18n.MessagesApi
 import play.api.i18n.MessagesImpl
+import play.api.test.FakeRequest
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms.ctCodeForm
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details._
+import uk.gov.hmrc.http.SessionKeys
 
 class EnterCtCodePageSpec
 extends BaseISpec {
