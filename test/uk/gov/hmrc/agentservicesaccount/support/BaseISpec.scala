@@ -63,8 +63,6 @@ with TestConstants {
       "metrics.enabled" -> false,
       "suspendedContactDetails.sendEmail" -> false,
       "features.enable-non-hmrc-supervisory-body" -> true,
-      "features.enable-agent-client-relationships-frontend" -> true,
-      "features.enable-ema-content" -> true,
       "mongodb.desi-details.lockout-period" -> Duration(28, DAYS).toMinutes
     )
     .configure(additionalConfiguration)
