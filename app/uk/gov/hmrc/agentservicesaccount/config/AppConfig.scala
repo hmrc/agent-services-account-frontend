@@ -92,8 +92,6 @@ extends Logging {
 
   val agentSubscriptionFrontendUrl: String = s"$agentSubscriptionFrontendExternalUrl/agent-subscription/start"
 
-  val agentInvitationsFrontendExternalUrl: String = getConfString("agent-invitations-frontend.external-url")
-
   val agentClientRelationshipsFrontendExternalUrl: String = getConfString("agent-client-relationships-frontend.external-url")
   private val agentClientRelationshipsFrontendTrackPath: String = getConfString("agent-client-relationships-frontend.track.path")
   private val agentClientRelationshipsFrontendInvitationsPath: String = getConfString("agent-client-relationships-frontend.invitations.path")
@@ -102,19 +100,11 @@ extends Logging {
   val agentClientRelationshipsFrontendInvitationsUrl: String = s"$agentClientRelationshipsFrontendExternalUrl$agentClientRelationshipsFrontendInvitationsPath"
   val agentClientRelationshipsFrontendDeauthUrl: String = s"$agentClientRelationshipsFrontendExternalUrl$agentClientRelationshipsFrontendDeauthPath"
 
-  val agentInvitationsFrontendUrl: String = s"$agentInvitationsFrontendExternalUrl/invitations/agents"
-
-  val agentInvitationsFrontendClientTypeUrl: String = s"$agentInvitationsFrontendExternalUrl/invitations/agents/client-type"
-
   val incomeTaxSubscriptionAgentFrontendExternalUrl: String = getConfString("income-tax-subscription-frontend.external-url")
 
   val incomeTaxSubscriptionAgentFrontendUrl: String = s"$incomeTaxSubscriptionAgentFrontendExternalUrl/report-quarterly/income-and-expenses/view/agents"
 
   val incomeTaxSubscriptionSignupClientUrl: String = s"$incomeTaxSubscriptionAgentFrontendExternalUrl/report-quarterly/income-and-expenses/sign-up/client/"
-
-  val agentInvitationsTrackUrl: String = s"$agentInvitationsFrontendExternalUrl/invitations/track"
-
-  val agentInvitationsCancelAuthUrl: String = s"$agentInvitationsFrontendExternalUrl/invitations/agents/cancel-authorisation/client-type"
 
   val taxHistoryFrontendExternalUrl: String = getConfString("tax-history-frontend.external-url")
 
@@ -171,8 +161,6 @@ extends Logging {
   val enablePillar2: Boolean = getBoolean("features.enable-pillar2")
   val enableNonHmrcSupervisoryBody: Boolean = getBoolean("features.enable-non-hmrc-supervisory-body")
   val enableBackendPCRDatabase: Boolean = getBoolean("features.enable-backend-pcr-database")
-  val enableAgentClientRelationshipsFrontend: Boolean = getBoolean("features.enable-agent-client-relationships-frontend")
-  val enableEmaContent: Boolean = getBoolean("features.enable-ema-content")
 
   // Gran Perms
   val agentPermissionsBaseUrl: String = baseUrl("agent-permissions")

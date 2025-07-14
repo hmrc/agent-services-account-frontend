@@ -374,45 +374,6 @@ extends BaseISpec {
 
       }
 
-      "agent with enable-ema-content feature being false" in {
-        givenAuthorisedAsAgentWith(arn.value)
-        givenAgentRecordFound(agentRecord)
-        givenHidePrivateBetaInviteNotFound()
-
-        val controller = appBuilder()
-          .configure("features.enable-ema-content" -> false)
-          .build().injector.instanceOf[AgentServicesController]
-
-        val response = await(controller.showAgentServicesAccount()(fakeRequest("GET", "/home")))
-        val html = Jsoup.parse(contentAsString(response))
-
-        expectedTitle(html, "Welcome to your agent services account - Agent services account - GOV.UK")
-
-        expectedHomeBannerContent(html)
-        expectedUrBannerContent(html)
-        expectedClientAuthContent(html)
-
-        val accordion = html.select("#tax-services-accordion")
-        val itsaSection = accordion.select("#tax-services-accordion-content-1")
-        itsaSection.select("h4").get(0).text() shouldBe "Before you start"
-        itsaSection.select("p").get(0).text() shouldBe "Make sure you add existing Self Assessment authorisations to your agent services account."
-        itsaSection.select("a").get(0).attr("href") shouldBe "http://localhost:9438/agent-mapping/start"
-
-        itsaSection.select("p").get(1).text() shouldBe "Get new authorisations for clients if you need them."
-        itsaSection.select("a").get(1).attr("href") shouldBe "http://localhost:9435/agent-client-relationships/authorisation-request"
-
-        itsaSection.select("h4").get(1).text() shouldBe "Sign up your clients"
-        itsaSection.select("a").get(2).text shouldBe "Find out if your clients are eligible to sign up (opens in a new tab)."
-        itsaSection.select("a").get(2).attr("href") shouldBe "https://www.gov.uk/guidance/sign-up-your-client-for-making-tax-digital-for-income-tax"
-        itsaSection.select("p").get(3).text() shouldBe "Read the guidance about what you need to do after signing up (opens in a new tab)."
-        itsaSection.select("a").get(3).attr("href") shouldBe "https://www.gov.uk/guidance/using-making-tax-digital-for-income-tax"
-        itsaSection.select("p").get(4).text() shouldBe "Then enter a client’s details to sign them up."
-        itsaSection.select("a").get(4).attr("href") shouldBe "http://localhost:9081/report-quarterly/income-and-expenses/sign-up/client/"
-
-        itsaSection.select("h4").get(2).text() shouldBe "Manage your client’s Income Tax details"
-        itsaSection.select("p").get(5).text() shouldBe "View your client’s Income Tax."
-        itsaSection.select("a").get(5).attr("href") shouldBe "http://localhost:9081/report-quarterly/income-and-expenses/view/agents"
-      }
     }
   }
 
