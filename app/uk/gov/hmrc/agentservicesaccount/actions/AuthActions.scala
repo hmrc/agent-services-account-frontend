@@ -22,11 +22,11 @@ import play.api.Environment
 import play.api.Logging
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.models.userDetails.UserDetails
 import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals._
 import uk.gov.hmrc.auth.core.retrieve.Credentials
+import uk.gov.hmrc.auth.core.retrieve.Name
 import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.agentservicesaccount.utils.RequestSupport._
 
@@ -44,7 +44,7 @@ case class AgentInfo(
   arn: Arn,
   credentialRole: Option[CredentialRole],
   email: Option[String] = None,
-  userDetails: Option[UserDetails] = None,
+  name: Option[Name] = None,
   credentials: Option[Credentials] = None
 ) {
   val isAdmin: Boolean =
@@ -71,8 +71,8 @@ with Logging {
         implicit val r: Request[A] = request
 
         authorised(AuthProviders(GovernmentGateway) and AffinityGroup.Agent)
-          .retrieve(allEnrolments and credentials and email and credentialRole) {
-            case enrols ~ creds ~ email ~ credRole =>
+          .retrieve(allEnrolments and credentials and email and name and credentialRole) {
+            case enrols ~ creds ~ email ~ name ~ credRole =>
               getArn(enrols) match {
                 case Some(arn) =>
                   Future.successful(Right(new AuthRequestWithAgentInfo(
@@ -80,6 +80,7 @@ with Logging {
                       arn = arn,
                       credentialRole = credRole,
                       email = email,
+                      name = name,
                       credentials = creds
                     ),
                     r
