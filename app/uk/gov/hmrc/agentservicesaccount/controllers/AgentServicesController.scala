@@ -156,17 +156,22 @@ with Logging {
   val yourAccount: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     if (!request.agentInfo.isAdmin) {
       if (appConfig.granPermsEnabled) {
-        request.agentInfo.credentials.fold(Ok(your_account(None)).toFuture) { credentials =>
+        request.agentInfo.credentials.fold(Ok(your_account()).toFuture) { credentials =>
           agentPermissionsConnector
             .isOptedIn(request.agentInfo.arn)
             .flatMap(isOptedIn =>
               if (isOptedIn)
                 agentPermissionsConnector.getGroupsForTeamMember(request.agentInfo.arn, credentials.providerId)
-                  .map(maybeSummaries => Ok(your_account(Some(request.agentInfo), maybeSummaries)))
+                  .map(maybeSummaries =>
+                    Ok(your_account(
+                      info = Some(request.agentInfo),
+                      groups = maybeSummaries
+                    ))
+                  )
               else
                 Ok(your_account(
-                  Some(request.agentInfo),
-                  None,
+                  info = Some(request.agentInfo),
+                  groups = None,
                   optedIn = false
                 )).toFuture
             )
