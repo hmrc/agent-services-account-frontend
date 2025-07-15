@@ -80,8 +80,6 @@ extends Logging {
   lazy val signOut: String = s"$basGatewayFrontendExternalUrl$signOutPath"
   lazy val signInUrl: String = s"$basGatewayFrontendExternalUrl$signInPath"
 
-  lazy val continueFromGGSignIn = s"$signInUrl?continue=${urlEncode(s"$asaFrontendExternalUrl/agent-services-account")}"
-
   def signOutUrlWithSurvey(surveyKey: String): String = s"$basGatewayFrontendExternalUrl$signOutPath?continue=${urlEncode(signOutContinueUrl + surveyKey)}"
 
   val agentMappingFrontendExternalUrl: String = getConfString("agent-mapping-frontend.external-url")
