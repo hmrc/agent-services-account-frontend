@@ -49,11 +49,11 @@ with I18nSupport {
 
   def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
-      agentAssuranceConnector.getAMLSDetailsResponse(request.agentInfo.arn.value).flatMap { amlsDetailsResponce =>
-        saveAmlsJourney(UpdateAmlsJourney(status = amlsDetailsResponce.status)).map { _ =>
-          amlsDetailsResponce.details match {
-            case details @ Some(_) => Ok(viewDetails(amlsDetailsResponce.status, details))
-            case None => Ok(viewDetails(amlsDetailsResponce.status, None))
+      agentAssuranceConnector.getAMLSDetailsResponse(request.agentInfo.arn.value).flatMap { amlsDetailsResponse =>
+        saveAmlsJourney(UpdateAmlsJourney(status = amlsDetailsResponse.status)).map { _ =>
+          amlsDetailsResponse.details match {
+            case details @ Some(_) => Ok(viewDetails(amlsDetailsResponse.status, details))
+            case None => Ok(viewDetails(amlsDetailsResponse.status, None))
           }
         }
       }

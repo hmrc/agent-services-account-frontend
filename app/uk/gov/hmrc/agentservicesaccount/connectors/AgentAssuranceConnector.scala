@@ -18,17 +18,16 @@ package uk.gov.hmrc.agentservicesaccount.connectors
 
 import play.api.http.Status.BAD_REQUEST
 import play.api.http.Status.CREATED
-import play.api.http.Status.NO_CONTENT
 import play.api.http.Status.OK
 import play.api.libs.json.Json
 import play.api.mvc.RequestHeader
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models._
+import uk.gov.hmrc.agentservicesaccount.utils.RequestSupport._
 import uk.gov.hmrc.http._
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.play.bootstrap.metrics.Metrics
-import uk.gov.hmrc.agentservicesaccount.utils.RequestSupport._
 
 import java.net.URL
 import javax.inject.Inject
@@ -53,7 +52,6 @@ class AgentAssuranceConnector @Inject() (httpV2: HttpClientV2)(implicit
     response =>
       response.status match {
         case OK => Json.parse(response.body).as[AmlsDetailsResponse]
-        case NO_CONTENT => throw new Exception(s"Error $NO_CONTENT no amls details found") // TODO update when designs are done
         case BAD_REQUEST => throw UpstreamErrorResponse(s"Error $BAD_REQUEST invalid ARN when trying to get amls details", BAD_REQUEST)
         case e => throw UpstreamErrorResponse(s"Error $e unable to get amls details", e)
       }

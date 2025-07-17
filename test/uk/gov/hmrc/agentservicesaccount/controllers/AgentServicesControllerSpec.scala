@@ -451,7 +451,7 @@ extends BaseISpec {
 
       givenAuthorisedAsAgentWith(arn.value)
       givenAgentRecordFound(agentRecord)
-      givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatuses.NoAmlsDetailsUK, None), arn)
+      givenAMLSDetailsForArn(AmlsDetailsResponse(AmlsStatuses.NoAmlsDetailsUK, None), arn.value)
       val response = controllerWithGranPermsDisabled.manageAccount().apply(fakeRequest("GET", "/manage-account"))
 
       status(response) shouldBe OK
@@ -473,7 +473,7 @@ extends BaseISpec {
       givenSyncEacdFailure(arn)
       givenOptinStatusFailedForArn(arn)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq.empty))
-      givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), arn)
+      givenAMLSDetailsForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), arn.value)
       val response = controller.manageAccount().apply(fakeRequest("GET", "/manage-account"))
 
       status(response) shouldBe OK
@@ -494,7 +494,7 @@ extends BaseISpec {
       givenSyncEacdSuccess(arn)
       givenOptinStatusSuccessReturnsForArn(arn, OptedInReady)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq.empty))
-      givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), arn)
+      givenAMLSDetailsForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), arn.value)
       val response = controller.manageAccount().apply(fakeRequest("GET", "/manage-account"))
 
       status(response) shouldBe OK
@@ -515,7 +515,7 @@ extends BaseISpec {
       givenSyncEacdSuccess(arn)
       givenOptinStatusSuccessReturnsForArn(arn, OptedInReady)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq.empty)) // no access groups yet
-      givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), arn)
+      givenAMLSDetailsForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), arn.value)
       val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
@@ -556,7 +556,7 @@ extends BaseISpec {
       givenSyncEacdSuccess(arn)
       givenOptinStatusSuccessReturnsForArn(arn, OptedInReady)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq(customSummary))) // there is already an access group
-      givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), arn)
+      givenAMLSDetailsForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), arn.value)
       val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
@@ -593,7 +593,7 @@ extends BaseISpec {
       givenSyncEacdSuccess(arn)
       givenOptinStatusSuccessReturnsForArn(arn, OptedInNotReady)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq.empty))
-      givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), arn)
+      givenAMLSDetailsForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), arn.value)
       val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
@@ -622,7 +622,7 @@ extends BaseISpec {
       givenSyncEacdSuccess(arn)
       givenOptinStatusSuccessReturnsForArn(arn, OptedInSingleUser)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq.empty))
-      givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), arn)
+      givenAMLSDetailsForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), arn.value)
       val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
@@ -652,7 +652,7 @@ extends BaseISpec {
       givenSyncEacdSuccess(arn)
       givenOptinStatusSuccessReturnsForArn(arn, OptedOutWrongClientCount)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq.empty))
-      givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), arn)
+      givenAMLSDetailsForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), arn.value)
       val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
@@ -680,7 +680,7 @@ extends BaseISpec {
       givenSyncEacdSuccess(arn)
       givenOptinStatusSuccessReturnsForArn(arn, OptedOutSingleUser)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq.empty))
-      givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), arn)
+      givenAMLSDetailsForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), arn.value)
       val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
@@ -709,7 +709,7 @@ extends BaseISpec {
       givenSyncEacdSuccess(arn)
       givenOptinStatusSuccessReturnsForArn(arn, OptedOutEligible)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq.empty))
-      givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), arn)
+      givenAMLSDetailsForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), arn.value)
       val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
@@ -728,7 +728,7 @@ extends BaseISpec {
       givenSyncEacdSuccess(arn)
       givenOptinStatusSuccessReturnsForArn(arn, OptedInNotReady)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq.empty))
-      givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), arn)
+      givenAMLSDetailsForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), arn.value)
       val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
@@ -748,7 +748,7 @@ extends BaseISpec {
       givenSyncEacdSuccess(arn)
       givenOptinStatusSuccessReturnsForArn(arn, OptedInNotReady)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq.empty))
-      givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatuses.NoAmlsDetailsNonUK, None), arn)
+      givenAMLSDetailsForArn(AmlsDetailsResponse(AmlsStatuses.NoAmlsDetailsNonUK, None), arn.value)
       val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
@@ -768,7 +768,7 @@ extends BaseISpec {
       givenSyncEacdSuccess(arn)
       givenOptinStatusSuccessReturnsForArn(arn, OptedInNotReady)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq.empty))
-      givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsNonUK, None), arn)
+      givenAMLSDetailsForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsNonUK, None), arn.value)
       val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
@@ -788,7 +788,7 @@ extends BaseISpec {
       givenSyncEacdSuccess(arn)
       givenOptinStatusSuccessReturnsForArn(arn, OptedInNotReady)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq.empty))
-      givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatuses.PendingAmlsDetails, None), arn)
+      givenAMLSDetailsForArn(AmlsDetailsResponse(AmlsStatuses.PendingAmlsDetails, None), arn.value)
       val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
@@ -808,7 +808,7 @@ extends BaseISpec {
       givenSyncEacdSuccess(arn)
       givenOptinStatusSuccessReturnsForArn(arn, OptedInNotReady)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq.empty))
-      givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatuses.NoAmlsDetailsUK, None), arn)
+      givenAMLSDetailsForArn(AmlsDetailsResponse(AmlsStatuses.NoAmlsDetailsUK, None), arn.value)
       val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
@@ -828,7 +828,7 @@ extends BaseISpec {
       givenSyncEacdSuccess(arn)
       givenOptinStatusSuccessReturnsForArn(arn, OptedInNotReady)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq.empty))
-      givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatuses.PendingAmlsDetailsRejected, None), arn)
+      givenAMLSDetailsForArn(AmlsDetailsResponse(AmlsStatuses.PendingAmlsDetailsRejected, None), arn.value)
       val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
@@ -848,7 +848,7 @@ extends BaseISpec {
       givenSyncEacdSuccess(arn)
       givenOptinStatusSuccessReturnsForArn(arn, OptedInNotReady)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq.empty))
-      givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatuses.ExpiredAmlsDetailsUK, None), arn)
+      givenAMLSDetailsForArn(AmlsDetailsResponse(AmlsStatuses.ExpiredAmlsDetailsUK, None), arn.value)
       val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200

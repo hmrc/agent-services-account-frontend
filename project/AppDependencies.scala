@@ -2,7 +2,7 @@ import sbt.*
 
 object AppDependencies {
   private val mongoVersion: String = "2.6.0"
-  private val bootstrapVersion: String = "9.14.0"
+  private val bootstrapVersion: String = "9.16.0"
   private val enumeratumVersion = "1.9.0"
 
   val compile: Seq[ModuleID] = Seq(
@@ -20,7 +20,7 @@ object AppDependencies {
   val test: Seq[ModuleID] = Seq(
     "uk.gov.hmrc.mongo" %% "hmrc-mongo-test-play-30"    % mongoVersion      % Test,
     "uk.gov.hmrc"       %% "bootstrap-test-play-30"     % bootstrapVersion  % Test,
-    "org.mockito"       %% "mockito-scala-scalatest"    % "2.0.0"         % Test,
+    "org.mockito"       %% "mockito-scala-scalatest"    % "2.0.0"           % Test,
     "org.scalamock"     %% "scalamock"                  % "7.4.0"           % Test
   )
 
