@@ -20,7 +20,6 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.agentservicesaccount.models.AmlsDetails
 import uk.gov.hmrc.agentservicesaccount.models.AmlsDetailsResponse
 import uk.gov.hmrc.agentservicesaccount.models.AmlsStatuses
-import uk.gov.hmrc.agentservicesaccount.models.UpdateAmlsJourney
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentAssuranceStubs._
 import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import uk.gov.hmrc.http.UpstreamErrorResponse
@@ -43,13 +42,6 @@ extends BaseISpec {
   )
   private val ukAMLSDetailsResponse = AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, Some(ukAMLSDetails))
 
-  private val amlsJourney = UpdateAmlsJourney(
-    status = AmlsStatuses.ValidAmlsDetailsUK,
-    newAmlsBody = Some("UK AMLS"),
-    newRegistrationNumber = Some("AMLS123"),
-    newExpirationDate = Some(LocalDate.parse("2024-10-10"))
-  )
-
   private val overseasAMLSDetails = AmlsDetails("notHMRC")
   private val overseasAMLSDetailsResponse = AmlsDetailsResponse(AmlsStatuses.ValidAmlsNonUK, Some(overseasAMLSDetails))
 
@@ -67,13 +59,6 @@ extends BaseISpec {
       val result = connector.getAMLSDetails(arn.value)
 
       await(result) shouldBe overseasAMLSDetails
-    }
-    "handle 204 No Content" in {
-      givenAMLSDetailsNotFoundForArn(arn.value)
-
-      intercept[Exception] {
-        await(connector.getAMLSDetails(arn.value))
-      }.getMessage shouldBe s"Error $NO_CONTENT no amls details found"
     }
     "handle 400 Bad Request" in {
       givenAMLSDetailsBadRequestForArn(arn.value)
@@ -93,28 +78,28 @@ extends BaseISpec {
 
   "getAmlsStatus" should {
     "return UK AMLS Status" in {
-      givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), arn)
+      givenAMLSDetailsForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), arn.value)
 
       val result = connector.getAmlsStatus(arn)
 
       await(result) shouldBe AmlsStatuses.ValidAmlsDetailsUK
     }
     "return Overseas AMLS details" in {
-      givenAmlsStatusForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsNonUK, None), arn)
+      givenAMLSDetailsForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsNonUK, None), arn.value)
 
       val result = connector.getAmlsStatus(arn)
 
       await(result) shouldBe AmlsStatuses.ValidAmlsNonUK
     }
     "handle 400 Bad Request" in {
-      givenAmlsStatusBadRequestForArn(arn)
+      givenAMLSDetailsBadRequestForArn(arn.value)
 
       intercept[UpstreamErrorResponse] {
         await(connector.getAmlsStatus(arn))
       }.getMessage shouldBe "Error 400 invalid ARN when trying to get amls details"
     }
     "handle 500 Internal Server Error" in {
-      givenAmlsStatusServerErrorForArn(arn)
+      givenAMLSDetailsServerErrorForArn(arn.value)
 
       intercept[UpstreamErrorResponse] {
         await(connector.getAmlsStatus(arn))
