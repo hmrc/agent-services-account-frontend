@@ -29,6 +29,12 @@ The link to add users to the agency is in `application.conf` under `user-managem
 
     sbt clean coverageOn test coverageReport
 
+### Automated testing
+This service is tested by the following automated test repositories:
+- [agent-services-account-ui-tests](https://github.com/hmrc/agent-services-account-ui-tests)
+- [agent-gran-perms-acceptance-tests](https://github.com/hmrc/agent-gran-perms-acceptance-tests/)
+- [agent-services-performance-tests](https://github.com/hmrc/agent-services-account-performance-tests)
+
 ### Running the app locally
 
 
