@@ -1,8 +1,8 @@
 import sbt.*
 
 object AppDependencies {
-  private val mongoVersion: String = "2.6.0"
-  private val bootstrapVersion: String = "9.16.0"
+  private val mongoVersion: String = "2.7.0"
+  private val bootstrapVersion: String = "10.1.0"
   private val enumeratumVersion = "1.9.0"
 
   val compile: Seq[ModuleID] = Seq(
@@ -10,11 +10,11 @@ object AppDependencies {
     "uk.gov.hmrc"       %% "play-partials-play-30"      % "10.1.0",
     "uk.gov.hmrc"       %% "agent-mtd-identifiers"      % "2.2.0",
     "uk.gov.hmrc.mongo" %% "hmrc-mongo-play-30"         % mongoVersion,
-    "uk.gov.hmrc"       %% "play-frontend-hmrc-play-30" % "12.7.0",
+    "uk.gov.hmrc"       %% "play-frontend-hmrc-play-30" % "12.8.0",
     "com.beachape"      %% "enumeratum-play"            % enumeratumVersion,
     "org.julienrf"      %% "play-json-derived-codecs"   % "11.0.0",
     "org.apache.commons" % "commons-text"               % "1.13.1",
-    "uk.gov.hmrc"       %% "crypto-json-play-30"        % "8.2.0"
+    "uk.gov.hmrc"       %% "crypto-json-play-30"        % "8.3.0"
   )
 
   val test: Seq[ModuleID] = Seq(

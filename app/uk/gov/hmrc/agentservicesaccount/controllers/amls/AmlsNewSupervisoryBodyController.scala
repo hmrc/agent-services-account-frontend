@@ -64,7 +64,7 @@ with I18nSupport {
     }
   }
 
-  def onSubmit(cya: Boolean): Action[AnyContent] = Action.async { implicit request =>
+  def onSubmit(cya: Boolean): Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
       withUpdateAmlsJourney { journey =>
         val amlsBodies = amlsLoader.load("/amls.csv")
