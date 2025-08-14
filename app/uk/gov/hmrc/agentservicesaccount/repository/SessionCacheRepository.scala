@@ -30,7 +30,7 @@ import uk.gov.hmrc.mongo.TimestampSupport
 import uk.gov.hmrc.mongo.cache.DataKey
 import uk.gov.hmrc.mongo.cache.{SessionCacheRepository => CacheRepository}
 import SensitiveWrapper._
-import uk.gov.hmrc.play.http.logging.Mdc
+import uk.gov.hmrc.mdc.Mdc
 
 import javax.inject.Inject
 import javax.inject.Named
