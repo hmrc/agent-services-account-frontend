@@ -22,11 +22,11 @@ import play.api.http.Status._
 import play.api.libs.json.Json
 import play.api.libs.json.OFormat
 import play.api.mvc.RequestHeader
-import uk.gov.hmrc.agentmtdidentifiers.model.Arn
-import uk.gov.hmrc.agents.accessgroups.GroupSummary
-import uk.gov.hmrc.agents.accessgroups.optin.OptinStatus
+import uk.gov.hmrc.agentservicesaccount.models.Arn
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models.AccessGroupSummaries
+import uk.gov.hmrc.agentservicesaccount.models.accessgroups.GroupSummary
+import uk.gov.hmrc.agentservicesaccount.models.accessgroups.OptinStatus
 import uk.gov.hmrc.agentservicesaccount.utils.RequestSupport._
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.HttpResponse

@@ -23,8 +23,8 @@ import play.api.i18n.Lang
 import play.api.i18n.Messages
 import play.api.i18n.MessagesApi
 import play.api.i18n.MessagesImpl
-import uk.gov.hmrc.agentmtdidentifiers.model.Arn
-import uk.gov.hmrc.agentmtdidentifiers.model.Utr
+import uk.gov.hmrc.agentservicesaccount.models.Arn
+import uk.gov.hmrc.agentservicesaccount.models.Utr
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress

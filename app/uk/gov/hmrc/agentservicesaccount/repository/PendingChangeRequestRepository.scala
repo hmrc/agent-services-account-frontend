@@ -24,7 +24,7 @@ import org.mongodb.scala.model.Indexes
 import org.mongodb.scala.model.ReplaceOptions
 import play.api.Logging
 import play.api.mvc.RequestHeader
-import uk.gov.hmrc.agentmtdidentifiers.model.Arn
+import uk.gov.hmrc.agentservicesaccount.models.Arn
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest

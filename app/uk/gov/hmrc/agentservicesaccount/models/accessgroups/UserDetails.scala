@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,20 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.agentservicesaccount.models
+package uk.gov.hmrc.agentservicesaccount.models.accessgroups
 
-import play.api.libs.json._
-import uk.gov.hmrc.agentservicesaccount.models.accessgroups.GroupSummary
+import play.api.libs.json.Format
+import play.api.libs.json.Json
 
-case class AccessGroupSummaries(groups: Seq[GroupSummary])
+/** Cut down version of UserDetails from users-groups-search. Contains only the fields we are interested in.
+  */
+case class UserDetails(
+  userId: Option[String] = None,
+  credentialRole: Option[String] = None,
+  name: Option[String] = None,
+  email: Option[String] = None
+)
 
-object AccessGroupSummaries {
-  implicit val format: OFormat[AccessGroupSummaries] = Json.format[AccessGroupSummaries]
+object UserDetails {
+  implicit val format: Format[UserDetails] = Json.format
 }

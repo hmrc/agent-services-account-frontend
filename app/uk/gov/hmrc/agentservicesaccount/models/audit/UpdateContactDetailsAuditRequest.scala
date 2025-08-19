@@ -18,8 +18,8 @@ package uk.gov.hmrc.agentservicesaccount.models.audit
 
 import play.api.libs.json.Json
 import play.api.libs.json.OWrites
-import uk.gov.hmrc.agentmtdidentifiers.model.Arn
-import uk.gov.hmrc.agentmtdidentifiers.model.Utr
+import uk.gov.hmrc.agentservicesaccount.models.Arn
+import uk.gov.hmrc.agentservicesaccount.models.Utr
 import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
 import uk.gov.hmrc.domain.CtUtr
 import uk.gov.hmrc.domain.SaUtr

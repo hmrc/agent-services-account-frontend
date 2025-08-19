@@ -21,7 +21,7 @@ import play.api.http.Status.NOT_FOUND
 import play.api.http.Status.NO_CONTENT
 import play.api.test.Helpers.await
 import play.api.test.Helpers.defaultAwaitTimeout
-import uk.gov.hmrc.agentmtdidentifiers.model.Arn
+import uk.gov.hmrc.agentservicesaccount.models.Arn
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentServicesAccountStubs.stubASADeleteResponse
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentServicesAccountStubs.stubASAGetResponse

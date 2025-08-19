@@ -18,7 +18,7 @@ package uk.gov.hmrc.agentservicesaccount.model
 
 import play.api.libs.json.JsObject
 import play.api.libs.json.Json
-import uk.gov.hmrc.agentmtdidentifiers.model.Arn
+import uk.gov.hmrc.agentservicesaccount.models.Arn
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest.connectorReads
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest.connectorWrites

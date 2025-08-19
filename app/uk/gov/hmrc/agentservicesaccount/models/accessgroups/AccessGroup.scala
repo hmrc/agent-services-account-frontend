@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,21 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.agentservicesaccount.models
+package uk.gov.hmrc.agentservicesaccount.models.accessgroups
 
-import play.api.libs.json._
-import uk.gov.hmrc.agentservicesaccount.models.accessgroups.GroupSummary
+import uk.gov.hmrc.agentservicesaccount.models.Arn
 
-case class AccessGroupSummaries(groups: Seq[GroupSummary])
+import java.time.LocalDateTime
+import java.util.UUID
 
-object AccessGroupSummaries {
-  implicit val format: OFormat[AccessGroupSummaries] = Json.format[AccessGroupSummaries]
+trait AccessGroup {
+
+  def id: UUID
+  def arn: Arn
+  def groupName: String
+  def created: LocalDateTime
+  def lastUpdated: LocalDateTime
+  def createdBy: AgentUser
+  def lastUpdatedBy: AgentUser
+
 }

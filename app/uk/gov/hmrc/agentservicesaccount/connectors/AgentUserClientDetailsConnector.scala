@@ -20,9 +20,9 @@ import play.api.Logging
 import play.api.http.Status.ACCEPTED
 import play.api.http.Status.OK
 import play.api.mvc.RequestHeader
-import uk.gov.hmrc.agentmtdidentifiers.model.Arn
-import uk.gov.hmrc.agents.accessgroups.UserDetails
+import uk.gov.hmrc.agentservicesaccount.models.Arn
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+import uk.gov.hmrc.agentservicesaccount.models.accessgroups.UserDetails
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.http.StringContextOps

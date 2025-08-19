@@ -23,10 +23,10 @@ import play.api.http.Status.CREATED
 import play.api.http.Status.NOT_FOUND
 import play.api.http.Status.NO_CONTENT
 import play.api.libs.json.Json
-import uk.gov.hmrc.agentmtdidentifiers.model.Arn
-import uk.gov.hmrc.agents.accessgroups.GroupSummary
-import uk.gov.hmrc.agents.accessgroups.optin.OptinStatus
+import uk.gov.hmrc.agentservicesaccount.models.Arn
+import uk.gov.hmrc.agentservicesaccount.models.accessgroups.OptinStatus
 import uk.gov.hmrc.agentservicesaccount.models.AccessGroupSummaries
+import uk.gov.hmrc.agentservicesaccount.models.accessgroups.GroupSummary
 
 object AgentPermissionsStubs {
 

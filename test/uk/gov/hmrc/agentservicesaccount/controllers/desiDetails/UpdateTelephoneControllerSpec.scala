@@ -28,7 +28,7 @@ import play.api.test.DefaultAwaitTimeout
 import play.api.test.FakeRequest
 import play.api.test.Helpers
 import play.twirl.api.Html
-import uk.gov.hmrc.agentmtdidentifiers.model.Arn
+import uk.gov.hmrc.agentservicesaccount.models.Arn
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.actions.AuthActions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig

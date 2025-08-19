@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,16 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.agentservicesaccount.models
+package uk.gov.hmrc.agentservicesaccount.models.accessgroups
 
-import play.api.libs.json._
-import uk.gov.hmrc.agentservicesaccount.models.accessgroups.GroupSummary
+import play.api.libs.json.Format
+import play.api.libs.json.Json
 
-case class AccessGroupSummaries(groups: Seq[GroupSummary])
+case class Client(
+  enrolmentKey: String,
+  friendlyName: String
+)
 
-object AccessGroupSummaries {
-  implicit val format: OFormat[AccessGroupSummaries] = Json.format[AccessGroupSummaries]
+object Client {
+  implicit val format: Format[Client] = Json.format[Client]
 }

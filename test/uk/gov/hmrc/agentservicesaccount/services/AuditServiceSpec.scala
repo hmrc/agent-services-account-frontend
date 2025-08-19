@@ -21,8 +21,8 @@ import play.api.mvc.AnyContent
 import play.api.test.FakeRequest
 import play.api.ConfigLoader
 import play.api.Configuration
-import uk.gov.hmrc.agentmtdidentifiers.model.Arn
-import uk.gov.hmrc.agentmtdidentifiers.model.Utr
+import uk.gov.hmrc.agentservicesaccount.models.Arn
+import uk.gov.hmrc.agentservicesaccount.models.Utr
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.CtChanges
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.OtherServices
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.SaChanges

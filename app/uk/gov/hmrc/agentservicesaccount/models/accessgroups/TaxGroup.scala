@@ -14,23 +14,29 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.agentservicesaccount.models.audit
+package uk.gov.hmrc.agentservicesaccount.models.accessgroups
 
-import play.api.libs.json.Json
-import play.api.libs.json.OWrites
+import play.api.libs.json._
 import uk.gov.hmrc.agentservicesaccount.models.Arn
-import uk.gov.hmrc.agentservicesaccount.models.Utr
 
-final case class UpdateAmlsAuditDetails(
-  agentReferenceNumber: Arn,
-  utr: Option[Utr],
-  existingAmlsDetails: Option[AmlsAuditDetails],
-  newAmlsDetails: AmlsAuditDetails
+import java.time.LocalDateTime
+import java.util.UUID
+
+case class TaxGroup(
+  id: UUID,
+  arn: Arn,
+  groupName: String,
+  created: LocalDateTime,
+  lastUpdated: LocalDateTime,
+  createdBy: AgentUser,
+  lastUpdatedBy: AgentUser,
+  teamMembers: Set[AgentUser],
+  service: String, // Nice to use Service but want flexibility for Trusts
+  automaticUpdates: Boolean,
+  excludedClients: Set[Client]
 )
-extends AuditDetail {
-  val auditType: String = "updateAntiMoneyLaunderingSupervisionDetails"
-}
+extends AccessGroup
 
-object UpdateAmlsAuditDetails {
-  implicit val writes: OWrites[UpdateAmlsAuditDetails] = Json.writes
+object TaxGroup {
+  implicit val format: OFormat[TaxGroup] = Json.format[TaxGroup]
 }
