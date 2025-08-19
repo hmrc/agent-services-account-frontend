@@ -26,7 +26,6 @@
         h1: h1, p: p,
         formWithCSRF: FormWithCSRF,
         govukInput: GovukInput,
-        govukFieldset: GovukFieldset,
         govukSummaryList: GovukSummaryList,
         govukInsetText : GovukInsetText,
         govukButton: GovukButton,
@@ -36,39 +35,7 @@
 @(form: Form[SuspendContactDetails])(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
 
 @fieldsetHtml = {
-@govukInput(Input(
-    label = Label(
-        content = HtmlContent(msgs("suspend.contact-details.label1")),
-        classes = "govuk-body govuk-!-font-size-20 govuk-!-font-weight-bold",
-        isPageHeading = false
-    ),
-    classes = "",
-    spellcheck = Some(false),
-    autocomplete = Some("name")
-).withFormField(form("name")))
 
-@govukInput(Input(
-    label = Label(
-        content = HtmlContent(msgs("suspend.contact-details.label2")),
-        classes = "govuk-body govuk-!-font-size-20 govuk-!-font-weight-bold",
-        isPageHeading = false
-    ),
-    classes = "",
-    spellcheck = Some(false),
-    autocomplete = Some("email")
-).withFormField(form("email")))
-
-@govukInput(Input(
-    label = Label(
-        content = HtmlContent(msgs("suspend.contact-details.label3")),
-        classes = "govuk-body govuk-!-font-size-20 govuk-!-font-weight-bold ",
-        isPageHeading = false
-    ),
-    classes = "",
-    hint = Some(Hint(content = HtmlContent(
-        msgs("suspend.contact-details.hint")))),
-    autocomplete = Some("tel")
-).withFormField(form("phone")))
 }
 @main(
     pageTitle = withErrorPrefix(form.hasErrors, msgs("suspend.contact-details.heading")),
@@ -78,13 +45,39 @@
     @if(form.hasErrors){
         @govukErrorSummary(ErrorSummary(errorList = form.errors.asTextErrorLinks, title = Text(msgs("survey.error.summary"))))
     }
-    <span class="govuk-caption-xl govuk-!-margin-top-5">@msgs("suspend.contact-details.hint1")</span>
-    <h1 class="govuk-fieldset__legend--xl govuk-!-margin-top-0">@msgs("suspend.contact-details.heading")</h1>
-    <p class="govuk-inset-text govuk-!-margin-bottom-6">@msgs("suspend.contact-details.inset")</p>
+    <h2 class="govuk-caption-xl">@msgs("suspend.contact-details.hint1")</h2>
+    <h1 class="govuk-heading-xl">@msgs("suspend.contact-details.heading")</h1>
+    <p class="govuk-inset-text">@msgs("suspend.contact-details.inset")</p>
     @formWithCSRF(action = routes.SuspendedJourneyController.submitContactDetails()) {
-        @govukFieldset(Fieldset(
-            html = fieldsetHtml
-        ))
-        @govukButton(Button(content = Text(msgs("common.continue-save")), classes = "govuk-!-margin-top-5"))
+
+        @govukInput(Input(
+            label = Label(
+                content = HtmlContent(msgs("suspend.contact-details.label1")),
+                classes = "govuk-label govuk-label--s"
+            ),
+            spellcheck = Some(false),
+            autocomplete = Some("name")
+        ).withFormField(form("name")))
+
+        @govukInput(Input(
+            label = Label(
+                content = HtmlContent(msgs("suspend.contact-details.label2")),
+                classes = "govuk-label govuk-label--s"
+            ),
+            spellcheck = Some(false),
+            autocomplete = Some("email")
+        ).withFormField(form("email")))
+
+        @govukInput(Input(
+            label = Label(
+                content = HtmlContent(msgs("suspend.contact-details.label3")),
+                classes = "govuk-label govuk-label--s"
+            ),
+            hint = Some(Hint(content = HtmlContent(
+                msgs("suspend.contact-details.hint")))),
+            autocomplete = Some("tel")
+        ).withFormField(form("phone")))
+
+        @govukButton(Button(content = Text(msgs("common.continue-save"))))
     }
 }
