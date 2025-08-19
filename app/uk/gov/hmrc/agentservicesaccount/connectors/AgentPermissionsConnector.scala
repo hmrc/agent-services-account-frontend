@@ -32,7 +32,6 @@ import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.http.StringContextOps
 import uk.gov.hmrc.http.UpstreamErrorResponse
-import uk.gov.hmrc.play.bootstrap.metrics.Metrics
 
 import java.net.URL
 import javax.inject.Inject
@@ -46,7 +45,6 @@ import scala.util.Try
 
 @Singleton
 class AgentPermissionsConnector @Inject() (http: HttpClientV2)(implicit
-  val metrics: Metrics,
   appConfig: AppConfig,
   val ec: ExecutionContext
 )

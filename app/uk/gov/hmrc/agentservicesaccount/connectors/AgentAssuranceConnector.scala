@@ -27,7 +27,6 @@ import uk.gov.hmrc.agentservicesaccount.models._
 import uk.gov.hmrc.agentservicesaccount.utils.RequestSupport._
 import uk.gov.hmrc.http._
 import uk.gov.hmrc.http.client.HttpClientV2
-import uk.gov.hmrc.play.bootstrap.metrics.Metrics
 
 import java.net.URL
 import javax.inject.Inject
@@ -37,7 +36,6 @@ import scala.concurrent.Future
 
 @Singleton
 class AgentAssuranceConnector @Inject() (httpV2: HttpClientV2)(implicit
-  val metrics: Metrics,
   appConfig: AppConfig,
   val ec: ExecutionContext
 ) {

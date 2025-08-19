@@ -25,7 +25,6 @@ import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.http.StringContextOps
 import uk.gov.hmrc.http.client.HttpClientV2
-import uk.gov.hmrc.play.bootstrap.metrics.Metrics
 import uk.gov.hmrc.agentservicesaccount.utils.RequestSupport._
 
 import javax.inject.Inject
@@ -35,8 +34,7 @@ import scala.concurrent.Future
 
 @Singleton
 class EmailVerificationConnector @Inject() (
-  http: HttpClientV2,
-  val metrics: Metrics
+  http: HttpClientV2
 )(implicit
   val appConfig: AppConfig,
   val ec: ExecutionContext

@@ -26,7 +26,6 @@ import play.api.test.Helpers
 import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.agentservicesaccount.models.SuspensionDetails
-import uk.gov.hmrc.agentservicesaccount.models.accessgroups._
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.{routes => desiDetailsRoutes}
 import uk.gov.hmrc.agentservicesaccount.models._
