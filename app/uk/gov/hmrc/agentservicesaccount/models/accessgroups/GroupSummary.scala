@@ -28,10 +28,8 @@ case class GroupSummary(
   taxService: Option[String] = None // Will only be populated for tax service groups
 ) {
 
-  def isTaxGroup: Boolean = taxService.isDefined
-  def isCustomGroup: Boolean = taxService.isEmpty
   def groupType: String =
-    if (isTaxGroup)
+    if (taxService.isDefined)
       "tax"
     else
       "custom" // used for url context paths
@@ -39,27 +37,5 @@ case class GroupSummary(
 }
 
 object GroupSummary {
-
-  def of(accessGroup: AccessGroup): GroupSummary =
-    accessGroup match {
-      case taxGroup: TaxGroup =>
-        GroupSummary(
-          groupId = taxGroup.id,
-          groupName = taxGroup.groupName,
-          clientCount = None, // info not retained in group - group could be empty
-          teamMemberCount = taxGroup.teamMembers.size,
-          taxService = Some(taxGroup.service)
-        )
-      case customGroup: CustomGroup =>
-        GroupSummary(
-          groupId = customGroup.id,
-          groupName = customGroup.groupName,
-          clientCount = Some(customGroup.clients.size),
-          teamMemberCount = customGroup.teamMembers.size,
-          taxService = None
-        )
-    }
-
   implicit val format: OFormat[GroupSummary] = Json.format[GroupSummary]
-
 }
