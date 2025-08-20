@@ -42,7 +42,7 @@ with Matchers {
   val user2: AgentUser = AgentUser("user2", "User 2")
   val client1: Client = Client("HMRC-MTD-VAT~VRN~101747641", "John Innes")
 
-  val id: UUID = UUID.randomUUID()
+  val id: UUID = UUID.fromString("21102172-ec32-4410-966a-d63d9087033c")
   val dateTimeString: String = "2025-08-20T10:35:43.32378"
   val dateTime: LocalDateTime = LocalDateTime.parse(dateTimeString)
   def makeTaxGroup(
@@ -75,30 +75,30 @@ with Matchers {
     // language=JSON
     s"""
          {
-           "id": "$id",
-           "arn": "${arn.value}",
-           "groupName": "$groupName",
-           "created": "$dateTimeString",
-           "lastUpdated": "$dateTimeString",
+           "id": "21102172-ec32-4410-966a-d63d9087033c",
+           "arn": "KARN1234567",
+           "groupName": "some group",
+           "created": "2025-08-20T10:35:43.32378",
+           "lastUpdated": "2025-08-20T10:35:43.32378",
            "createdBy": {
-             "id": "${agent.id}",
-             "name": "${agent.name}"
+             "id": "userId",
+             "name": "userName"
            },
            "lastUpdatedBy": {
-             "id": "${agent.id}",
-             "name": "${agent.name}"
+             "id": "userId",
+             "name": "userName"
            },
            "teamMembers": [
              {
-                "id": "${agent.id}",
-                "name": "${agent.name}"},
+                "id": "userId",
+                "name": "userName"
              {
-                "id": "${user1.id}",
-                "name": "${user1.name}"
+                "id": "user1",
+                "name": "User 1"
              },
              {
-                "id": "${user2.id}",
-                "name": "${user2.name}"
+                "id": "user2",
+                "name": "User 2"
              }
            ],
            "service": "$service",

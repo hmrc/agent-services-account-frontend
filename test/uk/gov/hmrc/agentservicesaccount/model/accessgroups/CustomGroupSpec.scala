@@ -86,44 +86,44 @@ with Matchers {
     s"""
        {
          "id": "21102172-ec32-4410-966a-d63d9087033c",
-         "arn": "${testCustomGroup.arn.value}",
-         "groupName": "${testCustomGroup.groupName}",
+         "arn": "KARN1234567",
+         "groupName": "some group",
          "created": "2025-08-20T11:31:08.029702283",
          "lastUpdated": "2025-08-20T11:31:08.029702283",
          "createdBy": {
-           "id": "${testCustomGroup.createdBy.id}",
-           "name": "${testCustomGroup.createdBy.name}"
+           "id": "userId",
+           "name": "userName"
          },
          "lastUpdatedBy": {
-           "id": "${testCustomGroup.lastUpdatedBy.id}",
-           "name": "${testCustomGroup.lastUpdatedBy.name}"
+           "id": "userId",
+           "name": "userName"
          },
          "teamMembers": [
             {
-              "id": "${agent.id}",
-              "name": "${agent.name}"
+              "id": "userId",
+              "name": "userName"
             },
             {
-              "id": "${user1.id}",
-              "name": "${user1.name}"
+              "id": "user1",
+              "name": "User 1"
             },
             {
-              "id": "${user2.id}",
-              "name": "${user2.name}"
+              "id": "user2",
+              "name": "User 2"
             }
          ],
          "clients": [
            {
-             "enrolmentKey": "${client1.enrolmentKey}",
-             "friendlyName": "${client1.friendlyName}"
+             "enrolmentKey": "HMRC-MTD-VAT~VRN~101747641",
+             "friendlyName": "John Innes"
            },
            {
-              "enrolmentKey": "${client2.enrolmentKey}",
-              "friendlyName": "${client2.friendlyName}"
+              "enrolmentKey": "HMRC-PPT-ORG~EtmpRegistrationNumber~XAPPT0000012345",
+              "friendlyName": "Frank Wright"
            },
            {
-              "enrolmentKey": "${client3.enrolmentKey}",
-              "friendlyName": "${client3.friendlyName}"
+              "enrolmentKey": "HMRC-CGT-PD~CgtRef~XMCGTP123456789"
+              "friendlyName": "George Candy"
            }
          ]
        }
