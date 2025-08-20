@@ -18,7 +18,7 @@ package uk.gov.hmrc.agentservicesaccount.model.accessgroups
 
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
-import play.api.libs.json.JsSuccess
+import play.api.libs.json.JsValue
 import play.api.libs.json.Json
 import uk.gov.hmrc.agentservicesaccount.models.Arn
 import uk.gov.hmrc.agentservicesaccount.models.accessgroups.AccessGroup
@@ -36,70 +36,117 @@ with Matchers {
 
   val arn: Arn = Arn("KARN1234567")
   val groupName = "some group"
-  val agent: AgentUser = AgentUser("userId", "userName")
-  val user1: AgentUser = AgentUser("user1", "User 1")
-  val user2: AgentUser = AgentUser("user2", "User 2")
-
-  val client1: Client = Client("HMRC-MTD-VAT~VRN~101747641", "John Innes")
-  val client2: Client = Client("HMRC-PPT-ORG~EtmpRegistrationNumber~XAPPT0000012345", "Frank Wright")
-  val client3: Client = Client("HMRC-CGT-PD~CgtRef~XMCGTP123456789", "George Candy")
-
+  val agent: AgentUser = AgentUser(
+    id = "userId",
+    name = "userName"
+  )
+  val user1: AgentUser = AgentUser(
+    id = "user1",
+    name = "User 1"
+  )
+  val user2: AgentUser = AgentUser(
+    id = "user2",
+    name = "User 2"
+  )
+  val client1: Client = Client(
+    enrolmentKey = "HMRC-MTD-VAT~VRN~101747641",
+    friendlyName = "John Innes"
+  )
+  val client2: Client = Client(
+    enrolmentKey = "HMRC-PPT-ORG~EtmpRegistrationNumber~XAPPT0000012345",
+    friendlyName = "Frank Wright"
+  )
+  val client3: Client = Client(
+    enrolmentKey = "HMRC-CGT-PD~CgtRef~XMCGTP123456789",
+    friendlyName = "George Candy"
+  )
   val now: LocalDateTime = LocalDateTime.now()
-  val id = UUID.randomUUID()
+  val id: UUID = UUID.randomUUID()
+  val testCustomGroup: CustomGroup = CustomGroup(
+    id = id,
+    arn = arn,
+    groupName = groupName,
+    created = now,
+    lastUpdated = now,
+    createdBy = agent,
+    lastUpdatedBy = agent,
+    teamMembers = Set(
+      agent,
+      user1,
+      user2
+    ),
+    clients = Set(
+      client1,
+      client2,
+      client3
+    )
+  )
+  val testCustomGroupJson: JsValue = Json.parse(
+    // language=JSON
+    s"""
+       {
+         "id": "${testCustomGroup.id}",
+         "arn": "${testCustomGroup.arn.value}",
+         "groupName": "${testCustomGroup.groupName}",
+         "created": "${testCustomGroup.created}",
+         "lastUpdated": "${testCustomGroup.lastUpdated}",
+         "createdBy": {
+           "id": "${testCustomGroup.createdBy.id}",
+           "name": "${testCustomGroup.createdBy.name}"
+         },
+         "lastUpdatedBy": {
+           "id": "${testCustomGroup.lastUpdatedBy.id}",
+           "name": "${testCustomGroup.lastUpdatedBy.name}"
+         },
+         "teamMembers": [
+            {
+              "id": "${agent.id}",
+              "name": "${agent.name}"
+            },
+            {
+              "id": "${user1.id}",
+              "name": "${user1.name}"
+            },
+            {
+              "id": "${user2.id}",
+              "name": "${user2.name}"
+            }
+         ],
+         "clients": [
+           {
+             "enrolmentKey": "${client1.enrolmentKey}",
+             "friendlyName": "${client1.friendlyName}"
+           },
+           {
+              "enrolmentKey": "${client2.enrolmentKey}",
+              "friendlyName": "${client2.friendlyName}"
+           },
+           {
+              "enrolmentKey": "${client3.enrolmentKey}",
+              "friendlyName": "${client3.friendlyName}"
+           }
+         ]
+       }
+     """
+  )
 
   "AccessGroup" should "serialise to JSON and deserialize from string" in {
-
-    val customGroup: CustomGroup = CustomGroup(
-      id,
-      arn,
-      groupName,
-      now,
-      now,
-      agent,
-      agent,
-      Set(
-        agent,
-        user1,
-        user2
-      ),
-      Set(
-        client1,
-        client2,
-        client3
-      )
-    )
-
-    customGroup.isInstanceOf[AccessGroup] shouldBe true
-
-    val serialised = Json.toJson(customGroup).toString
-    Json.fromJson[CustomGroup](Json.parse(serialised)) shouldBe JsSuccess(customGroup)
+    testCustomGroup.isInstanceOf[AccessGroup] shouldBe true
+    Json.toJson(testCustomGroup) shouldBe testCustomGroupJson
+    testCustomGroupJson.as[CustomGroup] shouldBe testCustomGroup
   }
 
   "Creating a group summary from a custom group" should "work properly" in {
-
-    val customGroup: CustomGroup = CustomGroup(
-      id,
-      arn,
-      groupName,
-      now,
-      now,
-      agent,
-      agent,
-      Set(agent, user1),
-      Set(
-        client1,
-        client2,
-        client3
-      )
+    val expectedGroupSummary = GroupSummary(
+      groupId = id,
+      groupName = testCustomGroup.groupName,
+      clientCount = Some(testCustomGroup.clients.size),
+      teamMemberCount = testCustomGroup.teamMembers.size,
+      taxService = None
     )
-
-    val groupSummary = GroupSummary.of(customGroup)
-    groupSummary.taxService shouldBe None
-    groupSummary.groupId shouldBe id
+    val groupSummary = GroupSummary.of(testCustomGroup)
+    groupSummary shouldBe expectedGroupSummary
     groupSummary.isTaxGroup shouldBe false
-    groupSummary.clientCount.get shouldBe 3
-    groupSummary.groupName shouldBe groupName
-    groupSummary.teamMemberCount shouldBe 2
     groupSummary.groupType shouldBe "custom"
 
   }

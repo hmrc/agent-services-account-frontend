@@ -19,6 +19,7 @@ package uk.gov.hmrc.agentservicesaccount.model.accessgroups
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import play.api.libs.json.JsSuccess
+import play.api.libs.json.JsValue
 import play.api.libs.json.Json
 import uk.gov.hmrc.agentservicesaccount.models.Arn
 import uk.gov.hmrc.agentservicesaccount.models.accessgroups.AccessGroup
@@ -41,89 +42,117 @@ with Matchers {
   val user2: AgentUser = AgentUser("user2", "User 2")
   val client1: Client = Client("HMRC-MTD-VAT~VRN~101747641", "John Innes")
 
-  val id = UUID.randomUUID()
-  val now: LocalDateTime = LocalDateTime.now()
+  val id: UUID = UUID.randomUUID()
+  val dateTimeString: String = "2025-08-20T10:35:43.32378"
+  val dateTime: LocalDateTime = LocalDateTime.parse(dateTimeString)
+  def makeTaxGroup(
+    service: String,
+    excludedClients: Set[Client] = Set.empty,
+    automaticUpdates: Boolean = false
+  ): TaxGroup = TaxGroup(
+    id = id,
+    arn = arn,
+    groupName = groupName,
+    created = dateTime,
+    lastUpdated = dateTime,
+    createdBy = agent,
+    lastUpdatedBy = agent,
+    teamMembers = Set(
+      agent,
+      user1,
+      user2
+    ),
+    service = service,
+    automaticUpdates = automaticUpdates,
+    excludedClients = excludedClients
+  )
+
+  def makeTaxGroupJson(
+    service: String,
+    excludedClients: Set[Client] = Set.empty,
+    automaticUpdates: Boolean = false
+  ): JsValue = Json.parse(
+    // language=JSON
+    s"""
+         {
+           "id": "$id",
+           "arn": "${arn.value}",
+           "groupName": "$groupName",
+           "created": "$dateTimeString",
+           "lastUpdated": "$dateTimeString",
+           "createdBy": {
+             "id": "${agent.id}",
+             "name": "${agent.name}"
+           },
+           "lastUpdatedBy": {
+             "id": "${agent.id}",
+             "name": "${agent.name}"
+           },
+           "teamMembers": [
+             {
+                "id": "${agent.id}",
+                "name": "${agent.name}"},
+             {
+                "id": "${user1.id}",
+                "name": "${user1.name}"
+             },
+             {
+                "id": "${user2.id}",
+                "name": "${user2.name}"
+             }
+           ],
+           "service": "$service",
+           "automaticUpdates": $automaticUpdates,
+           "excludedClients": ${Json.toJson(excludedClients)}
+         }
+       """
+  )
 
   "TaxServiceAccessGroup" should "serialise to JSON and deserialize from string" in {
-    val service: String = "HMRC-MTD-VAT"
-    val now = LocalDateTime.now()
-
-    val accessGroup: TaxGroup = TaxGroup(
-      id,
-      arn,
-      groupName,
-      now,
-      now,
-      agent,
-      agent,
-      Set(
-        agent,
-        user1,
-        user2
-      ),
-      service,
-      automaticUpdates = false,
-      Set(client1)
+    val testTaxGroup: TaxGroup = makeTaxGroup(
+      service = "HMRC-MTD-VAT",
+      excludedClients = Set(client1)
+    )
+    val testTaxGroupJson: JsValue = makeTaxGroupJson(
+      service = "HMRC-MTD-VAT",
+      excludedClients = Set(client1)
     )
 
-    val serialised = Json.toJson(accessGroup).toString
-    Json.fromJson[TaxGroup](Json.parse(serialised)) shouldBe JsSuccess(accessGroup)
+    Json.toJson(testTaxGroup) shouldBe testTaxGroupJson
+    testTaxGroupJson.as[TaxGroup] shouldBe testTaxGroup
   }
 
   "TaxServiceAccessGroup for trusts" should "serialise to JSON and deserialize from string" in {
-    val service: String = "TRUST"
-
-    val taxGroup: TaxGroup = TaxGroup(
-      id,
-      arn,
-      groupName,
-      now,
-      now,
-      agent,
-      agent,
-      Set(
-        agent,
-        user1,
-        user2
-      ),
-      service,
-      automaticUpdates = true,
-      Set.empty
+    val testTaxGroup: TaxGroup = makeTaxGroup(
+      service = "TRUST",
+      automaticUpdates = true
+    )
+    val testTaxGroupJson: JsValue = makeTaxGroupJson(
+      service = "TRUST",
+      automaticUpdates = true
     )
 
-    val jsonString = Json.toJson(taxGroup).toString
-    Json.fromJson[TaxGroup](Json.parse(jsonString)) shouldBe JsSuccess(taxGroup)
-    taxGroup.isInstanceOf[AccessGroup] shouldBe true
+    Json.toJson(testTaxGroup) shouldBe testTaxGroupJson
+    testTaxGroupJson.as[TaxGroup] shouldBe testTaxGroup
+    testTaxGroup.isInstanceOf[AccessGroup] shouldBe true
   }
 
   "Creating a group summary from a tax group" should "work properly" in {
-    val service: String = "TRUST"
-
-    val taxGroup: TaxGroup = TaxGroup(
-      id,
-      arn,
-      groupName,
-      now,
-      now,
-      agent,
-      agent,
-      Set(
-        agent,
-        user1,
-        user2
-      ),
-      service = service,
-      automaticUpdates = false,
-      Set.empty
+    val service = "TRUST"
+    val taxGroup: TaxGroup = makeTaxGroup(
+      service = service
     )
-
+    val expectedGroupSummary = GroupSummary(
+      groupId = id,
+      groupName = taxGroup.groupName,
+      clientCount = None,
+      teamMemberCount = taxGroup.teamMembers.size,
+      taxService = Some(service)
+    )
     val groupSummary = GroupSummary.of(taxGroup)
-    groupSummary.taxService shouldBe Some(service)
-    groupSummary.groupId shouldBe id
-    groupSummary.isTaxGroup shouldBe true
-    groupSummary.clientCount shouldBe None
-    groupSummary.groupName shouldBe groupName
-    groupSummary.teamMemberCount shouldBe 3
+
+    groupSummary shouldBe expectedGroupSummary
+    groupSummary.isTaxGroup shouldBe expectedGroupSummary.isTaxGroup
     groupSummary.groupType shouldBe "tax"
 
   }

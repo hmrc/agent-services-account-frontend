@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.agentservicesaccount.model.accessgroups
 
+import org.scalatest.AppendedClues.convertToClueful
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import play.api.libs.json.JsValue
@@ -30,14 +31,9 @@ with Matchers {
     enrolmentKey = "HMRC-MTD-IT~MTDITID~XX12345",
     friendlyName = "Test Client"
   )
-  val json: JsValue = Json.toJson(testClient)
+  val testClientJson: JsValue = Json.parse("""{"enrolmentKey":"HMRC-MTD-IT~MTDITID~XX12345","friendlyName":"Test Client"}""")
 
-  "Client" should "serialise to JSON" in {
-    json.toString shouldBe """{"enrolmentKey":"HMRC-MTD-IT~MTDITID~XX12345","friendlyName":"Test Client"}"""
-  }
-
-  "Client" should "deserialise from JSON" in {
-    json.as[Client] shouldBe testClient
-  }
+  Json.toJson(testClient) shouldBe testClientJson withClue "serialise to json"
+  testClientJson.as[Client] shouldBe testClient withClue "deserialise from json"
 
 }

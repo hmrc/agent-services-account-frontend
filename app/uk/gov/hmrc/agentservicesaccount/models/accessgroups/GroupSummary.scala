@@ -44,19 +44,19 @@ object GroupSummary {
     accessGroup match {
       case taxGroup: TaxGroup =>
         GroupSummary(
-          taxGroup.id,
-          taxGroup.groupName,
-          None, // info not retained in group - group could be empty
-          taxGroup.teamMembers.size,
-          Some(taxGroup.service)
+          groupId = taxGroup.id,
+          groupName = taxGroup.groupName,
+          clientCount = None, // info not retained in group - group could be empty
+          teamMemberCount = taxGroup.teamMembers.size,
+          taxService = Some(taxGroup.service)
         )
       case customGroup: CustomGroup =>
         GroupSummary(
-          customGroup.id,
-          customGroup.groupName,
-          Some(customGroup.clients.size),
-          customGroup.teamMembers.size,
-          None
+          groupId = customGroup.id,
+          groupName = customGroup.groupName,
+          clientCount = Some(customGroup.clients.size),
+          teamMemberCount = customGroup.teamMembers.size,
+          taxService = None
         )
     }
 

@@ -20,6 +20,7 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpecLike
 import play.api.libs.json.JsResultException
 import play.api.libs.json.JsString
+import play.api.libs.json.JsValue
 import play.api.libs.json.Json
 import uk.gov.hmrc.agentservicesaccount.models.accessgroups.OptinEvent
 import uk.gov.hmrc.agentservicesaccount.models.accessgroups.OptinEventType
@@ -43,15 +44,20 @@ extends AnyWordSpecLike
 with Matchers {
 
   val arn: Arn = Arn("KARN1234567")
-  val user: AgentUser = AgentUser("userId", "userName")
+  val user: AgentUser = AgentUser(
+    id = "userId",
+    name = "userName"
+  )
+  val dateTimeString: String = "2025-08-20T10:35:43.32378"
+  val dateTime: LocalDateTime = LocalDateTime.parse(dateTimeString)
 
-  def withOptinRecord(mapStatusToEpoch: List[(OptinEventType, LocalDateTime)]): OptinRecord = OptinRecord(
-    arn,
-    mapStatusToEpoch.map { case (optedStatus, epoch) =>
+  def makeOptinRecord(eventTypeToEpoch: List[(OptinEventType, LocalDateTime)]): OptinRecord = OptinRecord(
+    arn = arn,
+    history = eventTypeToEpoch.map { case (optinEventType, epoch) =>
       OptinEvent(
-        optedStatus,
-        user,
-        epoch
+        optinEventType = optinEventType,
+        user = user,
+        eventDateTime = epoch
       )
     }
   )
@@ -61,7 +67,7 @@ with Matchers {
     "no events exist" should {
 
       s"be $OptedOut" in {
-        withOptinRecord(List.empty).status shouldBe OptedOut
+        makeOptinRecord(List.empty).status shouldBe OptedOut
       }
     }
 
@@ -69,13 +75,13 @@ with Matchers {
 
       s"has status $OptedIn" should {
         s"be $OptedIn" in {
-          withOptinRecord(List(OptedIn -> LocalDateTime.now())).status shouldBe OptedIn
+          makeOptinRecord(List(OptedIn -> LocalDateTime.now())).status shouldBe OptedIn
         }
       }
 
       s"has status $OptedOut" should {
         s"be $OptedOut" in {
-          withOptinRecord(List(OptedOut -> LocalDateTime.now())).status shouldBe OptedOut
+          makeOptinRecord(List(OptedOut -> LocalDateTime.now())).status shouldBe OptedOut
         }
       }
     }
@@ -86,7 +92,7 @@ with Matchers {
         s"be $OptedIn" in {
           val now = LocalDateTime.now()
 
-          withOptinRecord(
+          makeOptinRecord(
             List(
               OptedIn -> now.minusDays(1),
               OptedOut -> now.minusSeconds(1),
@@ -100,7 +106,7 @@ with Matchers {
         s"be $OptedOut" in {
           val now = LocalDateTime.now()
 
-          withOptinRecord(
+          makeOptinRecord(
             List(
               OptedOut -> now.minusDays(1),
               OptedIn -> now.minusNanos(1000),
@@ -121,18 +127,24 @@ with Matchers {
     }
 
     "return the correct history" in {
-      val user1 = AgentUser("user1", "User One")
-      val user2 = AgentUser("user2", "User Two")
+      val user1 = AgentUser(
+        id = "user1",
+        name = "User One"
+      )
+      val user2 = AgentUser(
+        id = "user2",
+        name = "User Two"
+      )
       val history = List(
         OptinEvent(
-          OptedIn,
-          user1,
-          LocalDateTime.now()
+          optinEventType = OptedIn,
+          user = user1,
+          eventDateTime = LocalDateTime.now()
         ),
         OptinEvent(
-          OptedOut,
-          user2,
-          LocalDateTime.now()
+          optinEventType = OptedOut,
+          user = user2,
+          eventDateTime = LocalDateTime.now()
         )
       )
       val optinRecord = OptinRecord(Arn("KARN1234567"), history)
@@ -143,10 +155,28 @@ with Matchers {
       optinRecord.history shouldBe empty
     }
     "serialise and deserialise correctly" in {
-      val optinRecord: OptinRecord = withOptinRecord(List(OptedIn -> LocalDateTime.now()))
-      val json = Json.toJson(optinRecord)
-      val deserialised = Json.fromJson[OptinRecord](json).get
-      deserialised shouldBe optinRecord
+      val optinRecord: OptinRecord = makeOptinRecord(List(OptedIn -> dateTime))
+      val optinRecordJson: JsValue = Json.parse(
+        // language=JSON
+        s"""
+           {
+             "arn": "KARN1234567",
+             "status": "OptedIn",
+             "history": [
+               {
+                 "optinEventType": "OptedIn",
+                 "user": {
+                   "id": "userId",
+                   "name": "userName"
+                 },
+                 "eventDateTime": "$dateTimeString"
+               }
+             ]
+           }
+         """
+      )
+      Json.toJson(optinRecord) shouldBe optinRecordJson
+      optinRecordJson.as[OptinRecord] shouldBe optinRecord
     }
   }
   "OptinStatus" should {
