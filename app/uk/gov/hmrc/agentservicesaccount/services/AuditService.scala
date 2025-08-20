@@ -20,7 +20,7 @@ import play.api.Configuration
 import play.api.libs.json.Json
 import play.api.libs.json.Writes
 import play.api.mvc.RequestHeader
-import uk.gov.hmrc.agentmtdidentifiers.model._
+import uk.gov.hmrc.agentservicesaccount.models._
 import uk.gov.hmrc.agentservicesaccount.models.audit._
 import uk.gov.hmrc.agentservicesaccount.models.AmlsDetails
 import uk.gov.hmrc.agentservicesaccount.models.AmlsRequest

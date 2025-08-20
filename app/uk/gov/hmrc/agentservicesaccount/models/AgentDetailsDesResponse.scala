@@ -18,8 +18,8 @@ package uk.gov.hmrc.agentservicesaccount.models
 
 import play.api.libs.json.Format
 import play.api.libs.json.Json
-import uk.gov.hmrc.agentmtdidentifiers.model.SuspensionDetails
-import uk.gov.hmrc.agentmtdidentifiers.model.Utr
+import uk.gov.hmrc.agentservicesaccount.models.SuspensionDetails
+import uk.gov.hmrc.agentservicesaccount.models.Utr
 
 case class AgentDetailsDesResponse(
   uniqueTaxReference: Option[Utr],

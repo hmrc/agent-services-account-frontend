@@ -25,7 +25,6 @@ import uk.gov.hmrc.agentservicesaccount.utils.RequestSupport._
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.StringContextOps
 import uk.gov.hmrc.http.client.HttpClientV2
-import uk.gov.hmrc.play.bootstrap.metrics.Metrics
 
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
@@ -33,8 +32,7 @@ import scala.concurrent.Future
 
 class EmailConnector @Inject() (
   appConfig: AppConfig,
-  http: HttpClientV2,
-  val metrics: Metrics
+  http: HttpClientV2
 )(implicit val ec: ExecutionContext)
 extends Logging {
 

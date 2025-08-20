@@ -32,7 +32,6 @@ with GuiceOneAppPerSuite
 with WireMockSupport
 with PekkoMaterializerSpec
 with AuthStubs
-with MetricsTestSupport
 with ViewBaseSpec
 with TestConstants {
 
@@ -67,10 +66,5 @@ with TestConstants {
     )
     .configure(additionalConfiguration)
     .overrides(moduleWithOverrides)
-
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    givenCleanMetricRegistry()
-  }
 
 }

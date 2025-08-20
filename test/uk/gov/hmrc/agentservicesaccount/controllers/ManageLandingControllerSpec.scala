@@ -21,9 +21,9 @@ import play.api.i18n.Lang
 import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.agentmtdidentifiers.model.Arn
-import uk.gov.hmrc.agents.accessgroups.optin.OptedInReady
-import uk.gov.hmrc.agents.accessgroups.optin.OptedOutSingleUser
+import uk.gov.hmrc.agentservicesaccount.models.Arn
+import uk.gov.hmrc.agentservicesaccount.models.accessgroups.OptedInReady
+import uk.gov.hmrc.agentservicesaccount.models.accessgroups.OptedOutSingleUser
 import uk.gov.hmrc.agentservicesaccount.models.AccessGroupSummaries
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentAssuranceStubs.givenAgentRecordFound
 import uk.gov.hmrc.agentservicesaccount.stubs.AgentPermissionsStubs.givenAccessGroupsForArn

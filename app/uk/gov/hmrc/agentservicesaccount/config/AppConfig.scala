@@ -24,10 +24,10 @@ import play.api.Configuration
 import play.api.Environment
 import play.api.Logging
 import play.api.Mode
-import uk.gov.hmrc.agents.accessgroups.optin.OptedInNotReady
-import uk.gov.hmrc.agents.accessgroups.optin.OptedOutEligible
-import uk.gov.hmrc.agents.accessgroups.optin.OptinStatus
 import uk.gov.hmrc.agentservicesaccount.controllers.routes
+import uk.gov.hmrc.agentservicesaccount.models.accessgroups.OptedInNotReady
+import uk.gov.hmrc.agentservicesaccount.models.accessgroups.OptedOutEligible
+import uk.gov.hmrc.agentservicesaccount.models.accessgroups.OptinStatus
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import views.html.helper.urlEncode
 

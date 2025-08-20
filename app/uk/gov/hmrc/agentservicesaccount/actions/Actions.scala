@@ -19,7 +19,7 @@ package uk.gov.hmrc.agentservicesaccount.actions
 import play.api.mvc.Results.Forbidden
 import play.api.mvc.Results.Redirect
 import play.api.mvc._
-import uk.gov.hmrc.agentmtdidentifiers.model.Arn
+import uk.gov.hmrc.agentservicesaccount.models.Arn
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.routes
 import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse

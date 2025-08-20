@@ -20,14 +20,13 @@ import play.api.Logging
 import play.api.http.Status.ACCEPTED
 import play.api.http.Status.OK
 import play.api.mvc.RequestHeader
-import uk.gov.hmrc.agentmtdidentifiers.model.Arn
-import uk.gov.hmrc.agents.accessgroups.UserDetails
+import uk.gov.hmrc.agentservicesaccount.models.Arn
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+import uk.gov.hmrc.agentservicesaccount.models.accessgroups.UserDetails
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.http.StringContextOps
 import uk.gov.hmrc.http.client.HttpClientV2
-import uk.gov.hmrc.play.bootstrap.metrics.Metrics
 import uk.gov.hmrc.agentservicesaccount.utils.RequestSupport._
 
 import javax.inject.Inject
@@ -38,7 +37,6 @@ import scala.concurrent.Future
 @Singleton
 class AgentUserClientDetailsConnector @Inject() (http: HttpClientV2)(
   implicit
-  val metrics: Metrics,
   appConfig: AppConfig,
   val ec: ExecutionContext
 )

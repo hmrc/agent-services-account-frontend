@@ -17,10 +17,10 @@
 package uk.gov.hmrc.agentservicesaccount.utils
 
 import play.api.i18n.Messages
-import uk.gov.hmrc.agents.accessgroups.optin.OptedInNotReady
-import uk.gov.hmrc.agents.accessgroups.optin.OptedInReady
-import uk.gov.hmrc.agents.accessgroups.optin.OptedInSingleUser
-import uk.gov.hmrc.agents.accessgroups.optin.OptinStatus
+import uk.gov.hmrc.agentservicesaccount.models.accessgroups.OptedInNotReady
+import uk.gov.hmrc.agentservicesaccount.models.accessgroups.OptedInReady
+import uk.gov.hmrc.agentservicesaccount.models.accessgroups.OptedInSingleUser
+import uk.gov.hmrc.agentservicesaccount.models.accessgroups.OptinStatus
 
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter

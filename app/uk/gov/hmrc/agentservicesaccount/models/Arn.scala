@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,24 @@
 
 package uk.gov.hmrc.agentservicesaccount.models
 
-import play.api.libs.json._
-import uk.gov.hmrc.agentservicesaccount.models.accessgroups.GroupSummary
+import uk.gov.hmrc.domain.SimpleObjectReads
+import uk.gov.hmrc.domain.SimpleObjectWrites
+import uk.gov.hmrc.domain.TaxIdentifier
 
-case class AccessGroupSummaries(groups: Seq[GroupSummary])
+case class Arn(value: String)
+extends TaxIdentifier
 
-object AccessGroupSummaries {
-  implicit val format: OFormat[AccessGroupSummaries] = Json.format[AccessGroupSummaries]
+object Arn {
+
+  private val arnPattern = "^[A-Z]ARN[0-9]{7}$".r
+
+  def isValid(arn: String): Boolean =
+    arn match {
+      case arnPattern(_*) => ArnCheck.isValid(arn)
+      case _ => false
+    }
+
+  implicit val arnReads: SimpleObjectReads[Arn] = new SimpleObjectReads[Arn]("value", Arn.apply)
+  implicit val arnWrites: SimpleObjectWrites[Arn] = new SimpleObjectWrites[Arn](_.value)
+
 }

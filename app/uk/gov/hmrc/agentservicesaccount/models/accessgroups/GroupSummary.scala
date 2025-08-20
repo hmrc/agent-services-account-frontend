@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,28 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.agentservicesaccount.models
+package uk.gov.hmrc.agentservicesaccount.models.accessgroups
 
 import play.api.libs.json._
-import uk.gov.hmrc.agentservicesaccount.models.accessgroups.GroupSummary
 
-case class AccessGroupSummaries(groups: Seq[GroupSummary])
+import java.util.UUID
 
-object AccessGroupSummaries {
-  implicit val format: OFormat[AccessGroupSummaries] = Json.format[AccessGroupSummaries]
+case class GroupSummary(
+  groupId: UUID,
+  groupName: String,
+  clientCount: Option[Int], // Will not be populated for tax service groups
+  teamMemberCount: Int,
+  taxService: Option[String] = None // Will only be populated for tax service groups
+) {
+
+  def groupType: String =
+    if (taxService.isDefined)
+      "tax"
+    else
+      "custom" // used for url context paths
+
+}
+
+object GroupSummary {
+  implicit val format: OFormat[GroupSummary] = Json.format[GroupSummary]
 }

@@ -18,8 +18,8 @@ package uk.gov.hmrc.agentservicesaccount.models.audit
 
 import play.api.libs.json.Json
 import play.api.libs.json.OWrites
-import uk.gov.hmrc.agentmtdidentifiers.model.Arn
-import uk.gov.hmrc.agentmtdidentifiers.model.Utr
+import uk.gov.hmrc.agentservicesaccount.models.Arn
+import uk.gov.hmrc.agentservicesaccount.models.Utr
 
 final case class UpdateAmlsAuditDetails(
   agentReferenceNumber: Arn,

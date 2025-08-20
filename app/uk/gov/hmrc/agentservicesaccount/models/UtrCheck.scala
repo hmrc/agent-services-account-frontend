@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,13 @@
 
 package uk.gov.hmrc.agentservicesaccount.models
 
-import play.api.libs.json._
-import uk.gov.hmrc.agentservicesaccount.models.accessgroups.GroupSummary
+import uk.gov.hmrc.domain.Modulus11Check
 
-case class AccessGroupSummaries(groups: Seq[GroupSummary])
+object UtrCheck
+extends Modulus11Check {
 
-object AccessGroupSummaries {
-  implicit val format: OFormat[AccessGroupSummaries] = Json.format[AccessGroupSummaries]
+  def isValid(utr: String): Boolean = {
+    val suffix: String = utr.substring(1)
+    calculateCheckCharacter(suffix) == utr.charAt(0)
+  }
 }

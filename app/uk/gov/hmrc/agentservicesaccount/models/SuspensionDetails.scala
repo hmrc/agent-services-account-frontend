@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,14 @@
 
 package uk.gov.hmrc.agentservicesaccount.models
 
-import play.api.libs.json._
-import uk.gov.hmrc.agentservicesaccount.models.accessgroups.GroupSummary
+import play.api.libs.json.Json
+import play.api.libs.json.OFormat
 
-case class AccessGroupSummaries(groups: Seq[GroupSummary])
+case class SuspensionDetails(
+  suspensionStatus: Boolean,
+  regimes: Option[Set[String]]
+)
 
-object AccessGroupSummaries {
-  implicit val format: OFormat[AccessGroupSummaries] = Json.format[AccessGroupSummaries]
+object SuspensionDetails {
+  implicit val formats: OFormat[SuspensionDetails] = Json.format
 }
