@@ -60,8 +60,8 @@ with Matchers {
     enrolmentKey = "HMRC-CGT-PD~CgtRef~XMCGTP123456789",
     friendlyName = "George Candy"
   )
-  val now: LocalDateTime = LocalDateTime.now()
-  val id: UUID = UUID.randomUUID()
+  val now: LocalDateTime = LocalDateTime.parse("2025-08-20T11:31:08.029702283")
+  val id: UUID = UUID.fromString("21102172-ec32-4410-966a-d63d9087033c")
   val testCustomGroup: CustomGroup = CustomGroup(
     id = id,
     arn = arn,
@@ -85,11 +85,11 @@ with Matchers {
     // language=JSON
     s"""
        {
-         "id": "${testCustomGroup.id}",
+         "id": "21102172-ec32-4410-966a-d63d9087033c",
          "arn": "${testCustomGroup.arn.value}",
          "groupName": "${testCustomGroup.groupName}",
-         "created": "${testCustomGroup.created}",
-         "lastUpdated": "${testCustomGroup.lastUpdated}",
+         "created": "2025-08-20T11:31:08.029702283",
+         "lastUpdated": "2025-08-20T11:31:08.029702283",
          "createdBy": {
            "id": "${testCustomGroup.createdBy.id}",
            "name": "${testCustomGroup.createdBy.name}"
