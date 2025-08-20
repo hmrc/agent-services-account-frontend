@@ -17,14 +17,14 @@
 package uk.gov.hmrc.agentservicesaccount.model.accessgroups
 
 import org.scalatest.AppendedClues.convertToClueful
-import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpecLike
 import play.api.libs.json.JsValue
 import play.api.libs.json.Json
 import uk.gov.hmrc.agentservicesaccount.models.accessgroups.AgentUser
 
 class AgentUserSpec
-extends AnyFlatSpec
+extends AnyWordSpecLike
 with Matchers {
 
   val testAgentUser: AgentUser = AgentUser(
@@ -33,7 +33,9 @@ with Matchers {
   )
   val testAgentUserJson: JsValue = Json.parse("""{"id":"foo","name":"Test Agent User"}""")
 
-  Json.toJson(testAgentUser) shouldBe testAgentUserJson withClue "serialise to json"
-  testAgentUserJson.as[AgentUser] shouldBe testAgentUser withClue "deserialise from json"
+  "AgentUser should serialise and deserialise" in {
+    Json.toJson(testAgentUser) shouldBe testAgentUserJson withClue "serialise to json"
+    testAgentUserJson.as[AgentUser] shouldBe testAgentUser withClue "deserialise from json"
+  }
 
 }
