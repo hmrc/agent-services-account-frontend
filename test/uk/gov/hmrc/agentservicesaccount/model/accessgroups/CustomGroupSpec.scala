@@ -122,7 +122,7 @@ with Matchers {
               "friendlyName": "Frank Wright"
            },
            {
-              "enrolmentKey": "HMRC-CGT-PD~CgtRef~XMCGTP123456789"
+              "enrolmentKey": "HMRC-CGT-PD~CgtRef~XMCGTP123456789",
               "friendlyName": "George Candy"
            }
          ]

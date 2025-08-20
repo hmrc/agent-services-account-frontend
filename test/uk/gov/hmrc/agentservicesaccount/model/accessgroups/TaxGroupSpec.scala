@@ -69,7 +69,7 @@ with Matchers {
 
   def makeTaxGroupJson(
     service: String,
-    excludedClients: Set[Client] = Set.empty,
+    excludedClients: JsValue = Json.parse("[]"),
     automaticUpdates: Boolean = false
   ): JsValue = Json.parse(
     // language=JSON
@@ -92,6 +92,7 @@ with Matchers {
              {
                 "id": "userId",
                 "name": "userName"
+             },
              {
                 "id": "user1",
                 "name": "User 1"
@@ -103,7 +104,7 @@ with Matchers {
            ],
            "service": "$service",
            "automaticUpdates": $automaticUpdates,
-           "excludedClients": ${Json.toJson(excludedClients)}
+           "excludedClients": $excludedClients
          }
        """
   )
@@ -115,7 +116,17 @@ with Matchers {
     )
     val testTaxGroupJson: JsValue = makeTaxGroupJson(
       service = "HMRC-MTD-VAT",
-      excludedClients = Set(client1)
+      excludedClients = Json.parse(
+        // language=JSON
+        """
+          [
+            {
+              "enrolmentKey": "HMRC-MTD-VAT~VRN~101747641",
+              "friendlyName": "John Innes"
+            }
+          ]
+        """
+      )
     )
 
     Json.toJson(testTaxGroup) shouldBe testTaxGroupJson
