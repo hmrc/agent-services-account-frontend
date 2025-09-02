@@ -58,7 +58,6 @@ with I18nSupport {
         case true => Future.successful(Ok(applyCtCodeChangesView(UpdateDetailsForms.applyCtCodeChangesForm)))
         case _ => Future.successful(Redirect(routes.ViewContactDetailsController.showPage))
       }
-
     }
   }
 

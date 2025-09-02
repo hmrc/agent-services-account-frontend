@@ -93,13 +93,6 @@ POST       /manage-account/contact-details/check-your-answers             @uk.go
 GET        /manage-account/contact-details/confirmation                   @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.ContactDetailsController.showChangeSubmitted
 
 # AMLS
-GET        /manage-account/money-laundering-supervision/confirmation-new-supervision                   @uk.gov.hmrc.agentservicesaccount.controllers.amls.AmlsConfirmationController.showUpdatedAmlsConfirmationPage(updated: Boolean ?= true)
-
-GET        /manage-account/money-laundering-supervision                   @uk.gov.hmrc.agentservicesaccount.controllers.amls.AMLSDetailsController.showSupervisionDetails
-
-GET        /manage-account/money-laundering-supervisory-body              @uk.gov.hmrc.agentservicesaccount.controllers.amls.AmlsIsHmrcController.showAmlsIsHmrc
-POST       /manage-account/money-laundering-supervisory-body              @uk.gov.hmrc.agentservicesaccount.controllers.amls.AmlsIsHmrcController.submitAmlsIsHmrc
-
 GET        /manage-account/money-laundering-supervision/view-details      @uk.gov.hmrc.agentservicesaccount.controllers.amls.ViewDetailsController.showPage
 
 GET        /manage-account/money-laundering-supervision/new-supervisory-body @uk.gov.hmrc.agentservicesaccount.controllers.amls.AmlsNewSupervisoryBodyController.showPage(cya: Boolean ?= false)
@@ -119,3 +112,5 @@ POST       /manage-account/money-laundering-supervision/new-registration-number 
 
 GET        /manage-account/money-laundering-supervision/check-your-answers           @uk.gov.hmrc.agentservicesaccount.controllers.amls.CheckYourAnswersController.showPage
 POST       /manage-account/money-laundering-supervision/check-your-answers           @uk.gov.hmrc.agentservicesaccount.controllers.amls.CheckYourAnswersController.onSubmit
+
+GET        /manage-account/money-laundering-supervision/confirmation-new-supervision                   @uk.gov.hmrc.agentservicesaccount.controllers.amls.AmlsConfirmationController.showUpdatedAmlsConfirmationPage(updated: Boolean ?= true)

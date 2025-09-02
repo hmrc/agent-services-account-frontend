@@ -19,21 +19,15 @@ package uk.gov.hmrc.agentservicesaccount.views.pages.desi_details
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
-import play.api.i18n.Lang
 import play.api.i18n.Messages
-import play.api.i18n.MessagesApi
 import play.api.i18n.MessagesImpl
-import uk.gov.hmrc.agentservicesaccount.models.Arn
-import uk.gov.hmrc.agentservicesaccount.models.Utr
-import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
-import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
-import uk.gov.hmrc.agentservicesaccount.models.PendingChangeOfDetails
+import support.TestConstants
+import uk.gov.hmrc.agentservicesaccount.models._
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.CtChanges
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.OtherServices
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.SaChanges
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.YourDetails
-import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
+import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details.summaryPdf
 import uk.gov.hmrc.domain.CtUtr
 import uk.gov.hmrc.domain.SaUtr
@@ -42,14 +36,10 @@ import java.time.Instant
 import scala.jdk.CollectionConverters.CollectionHasAsScala
 
 class SummaryPdfPageSpec
-extends BaseISpec {
+extends ViewBaseSpec
+with TestConstants {
 
-  private implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
-  private implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
-  implicit val lang: Lang = Lang("en")
-  implicit val messages: Messages = MessagesImpl(lang, messagesApi)
-
-  private val view: summaryPdf = app.injector.instanceOf[summaryPdf]
+  private val view: summaryPdf = inject[summaryPdf]
 
   private val testAgencyDetailsFull = AgencyDetails(
     agencyName = Some("Test Name"),
@@ -168,7 +158,7 @@ extends BaseISpec {
         selectChanges = selectChanges1
       )(
         messages,
-        fakeRequest(),
+        fakeRequest,
         appConfig
       ).body)
 
@@ -204,7 +194,7 @@ extends BaseISpec {
         selectChanges = selectChanges1
       )(
         messages,
-        fakeRequest(),
+        fakeRequest,
         appConfig
       ).body)
 
@@ -241,7 +231,7 @@ extends BaseISpec {
         selectChanges = selectChanges2
       )(
         messages,
-        fakeRequest(),
+        fakeRequest,
         appConfig
       ).body)
 
@@ -284,7 +274,7 @@ extends BaseISpec {
       selectChanges = selectChangesAll
     )(
       messages,
-      fakeRequest(),
+      fakeRequest,
       appConfig
     ).body)
 

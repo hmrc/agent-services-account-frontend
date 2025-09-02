@@ -22,6 +22,6 @@
 
 @(amlsKeyO: Option[String], amlsLinkHrefO:Option[String])(implicit msgs: Messages, appConfig: AppConfig)
 
-@if(appConfig.enableNonHmrcSupervisoryBody && amlsKeyO.isDefined && amlsLinkHrefO.isDefined) {
+@if(amlsKeyO.isDefined && amlsLinkHrefO.isDefined) {
   @a(amlsKeyO.get, href = amlsLinkHrefO.get)
 }

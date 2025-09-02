@@ -18,12 +18,10 @@ package uk.gov.hmrc.agentservicesaccount.forms
 
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 
 class BetaInviteFormSpec
 extends AnyWordSpec
-with Matchers
-with GuiceOneAppPerSuite {
+with Matchers {
 
   val fieldName = "size"
 

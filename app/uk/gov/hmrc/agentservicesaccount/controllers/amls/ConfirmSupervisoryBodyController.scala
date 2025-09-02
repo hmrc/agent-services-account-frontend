@@ -50,39 +50,35 @@ with AmlsJourneySupport
 with I18nSupport {
 
   def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
-      actions.withCurrentAmlsDetails(request.agentInfo.arn) { amlsDetails =>
-        withUpdateAmlsJourney { amlsJourney =>
-          val form = amlsJourney.isAmlsBodyStillTheSame.fold(YesNoForm.form(""))(YesNoForm.form().fill)
-          Ok(confirmSupervisoryBody(form, amlsDetails.supervisoryBody)).toFuture
-        }
+    actions.withCurrentAmlsDetails(request.agentInfo.arn) { amlsDetails =>
+      withUpdateAmlsJourney { amlsJourney =>
+        val form = amlsJourney.isAmlsBodyStillTheSame.fold(YesNoForm.form(""))(YesNoForm.form().fill)
+        Ok(confirmSupervisoryBody(form, amlsDetails.supervisoryBody)).toFuture
       }
     }
   }
 
   def onSubmit: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
-      actions.withCurrentAmlsDetails(request.agentInfo.arn) { amlsDetails =>
-        withUpdateAmlsJourney { amlsJourney =>
-          YesNoForm.form(Messages("amls.confirm-supervisory-body.error", amlsDetails.supervisoryBody))
-            .bindFromRequest()
-            .fold(
-              formWithError => Future successful BadRequest(confirmSupervisoryBody(formWithError, amlsDetails.supervisoryBody)),
-              data => {
-                val maybeCopySupervisoryBody =
-                  if (data)
-                    Option(amlsDetails.supervisoryBody)
-                  else
-                    amlsJourney.newAmlsBody
-                saveAmlsJourney(amlsJourney.copy(
-                  isAmlsBodyStillTheSame = Option(data),
-                  newAmlsBody = maybeCopySupervisoryBody
-                )).map(_ =>
-                  Redirect(nextPage(data)(amlsJourney))
-                )
-              }
-            )
-        }
+    actions.withCurrentAmlsDetails(request.agentInfo.arn) { amlsDetails =>
+      withUpdateAmlsJourney { amlsJourney =>
+        YesNoForm.form(Messages("amls.confirm-supervisory-body.error", amlsDetails.supervisoryBody))
+          .bindFromRequest()
+          .fold(
+            formWithError => Future successful BadRequest(confirmSupervisoryBody(formWithError, amlsDetails.supervisoryBody)),
+            data => {
+              val maybeCopySupervisoryBody =
+                if (data)
+                  Option(amlsDetails.supervisoryBody)
+                else
+                  amlsJourney.newAmlsBody
+              saveAmlsJourney(amlsJourney.copy(
+                isAmlsBodyStillTheSame = Option(data),
+                newAmlsBody = maybeCopySupervisoryBody
+              )).map(_ =>
+                Redirect(nextPage(data)(amlsJourney))
+              )
+            }
+          )
       }
     }
   }

@@ -19,13 +19,11 @@ package uk.gov.hmrc.agentservicesaccount.forms
 import org.apache.commons.lang3.RandomStringUtils
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms.telephoneNumberForm
 
 class UpdatePhoneFormSpec
 extends AnyWordSpec
-with Matchers
-with GuiceOneAppPerSuite {
+with Matchers {
 
   val phoneField = "telephoneNumber"
   val validPhone = "01903 209919"

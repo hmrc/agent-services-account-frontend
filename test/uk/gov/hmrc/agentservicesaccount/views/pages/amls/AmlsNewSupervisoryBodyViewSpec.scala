@@ -21,24 +21,15 @@ import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.data.Form
-import play.api.i18n.Lang
-import play.api.i18n.Messages
-import play.api.i18n.MessagesApi
-import play.api.i18n.MessagesImpl
-import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.forms.NewAmlsSupervisoryBodyForm
-import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
+import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.new_supervisory_body
 
 class AmlsNewSupervisoryBodyViewSpec
-extends BaseISpec {
+extends ViewBaseSpec {
 
-  implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
-  implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
-  implicit val lang: Lang = Lang("en")
+  val view: new_supervisory_body = inject[new_supervisory_body]
 
-  val view: new_supervisory_body = app.injector.instanceOf[new_supervisory_body]
-  val messages: Messages = MessagesImpl(lang, messagesApi)
   val amlsBodies = Map("ACCA" -> "Association of Certified Chartered Accountant")
   val selectedBody = "Association of Certified Chartered Accountant"
 
@@ -91,7 +82,7 @@ extends BaseISpec {
         isUk,
         cya = false
       )(
-        fakeRequest(),
+        fakeRequest,
         messages,
         appConfig
       ).body)
@@ -114,7 +105,7 @@ extends BaseISpec {
         isUk,
         cya = false
       )(
-        fakeRequest(),
+        fakeRequest,
         messages,
         appConfig
       ).body)
@@ -141,7 +132,7 @@ extends BaseISpec {
         isUk,
         cya = false
       )(
-        fakeRequest(),
+        fakeRequest,
         messages,
         appConfig
       ).body)
@@ -164,7 +155,7 @@ extends BaseISpec {
         isUk,
         cya = false
       )(
-        fakeRequest(),
+        fakeRequest,
         messages,
         appConfig
       ).body)

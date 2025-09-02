@@ -19,28 +19,18 @@ package uk.gov.hmrc.agentservicesaccount.views.pages.desi_details.partials
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
-import play.api.i18n.Lang
-import play.api.i18n.Messages
-import play.api.i18n.MessagesApi
-import play.api.i18n.MessagesImpl
 import play.api.test.FakeRequest
-import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
-import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
+import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details.partials.contact_details_cya_partial
 
 import scala.jdk.CollectionConverters.CollectionHasAsScala
 
 class ContactDetailsCyaSpec
-extends BaseISpec {
+extends ViewBaseSpec {
 
-  implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
-  implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
-  private implicit val lang: Lang = Lang("en")
-
-  val view: contact_details_cya_partial = app.injector.instanceOf[contact_details_cya_partial]
-  implicit val messages: Messages = MessagesImpl(lang, messagesApi)
+  val view: contact_details_cya_partial = inject[contact_details_cya_partial]
 
   private val testAgencyDetailsFull = AgencyDetails(
     agencyName = Some("Test Name"),

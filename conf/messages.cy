@@ -63,14 +63,6 @@ asa.p.agent-services=Mynediad at wasanaethau ar gyfer cleientiaid sydd eisoes we
 asa.p.client-authorisations=Dechrau cais am awdurdodiad newydd neu gysylltu’ch cleientiaid cyfredol â’ch cyfrif.
 asa.p.manage=Caniatáu i ddefnyddwyr eraill yn eich sefydliad gael mynediad at y cyfrif gwasanaethau asiant hwn, neu gyfyngu ar eu mynediad.
 
-asa.h1.money-laundering-supervision-details=Money laundering supervision details TBC
-asa.td.label.name-of-amls-body=Name of money laundering supervisory body TBC
-asa.td.label.amls-reg-number=Your registration number TBC
-asa.td.label.amls-reg-renewal-date=Your next registration renewal date TBC
-asa.h2.update-amls-details=Keep your details up to date TBC
-asa.p.update-amls-details=Tell us when you renew your money laundering supervision registration each year. You can do this once your new registration is approved. TBC
-asa.button.label.update-amls-details=Update money laundering supervision details TBC
-
 # PAYE
 asa.paye-section.h2=Bwrw golwg dros gofnod incwm cleient
 asa.paye-section.link=Bwrw golwg dros gofnod incwm cleient
@@ -599,8 +591,6 @@ admin-access.button=Ewch i reoli’r cyfrif
 
 #AMLS
 amls.add-details.h1=Manylion ynghylch goruchwyliaeth gwrth-wyngalchu arian
-amls.is-hmrc.h1=Is HMRC your money laundering supervisory body? TBC
-amls.is-hmrc.error=Select yes if HMRC is your money laundering supervisory body TBC
 add.amls.confirmation.h1=Rydych wedi ychwanegu eich manylion o ran goruchwyliaeth
 amls.confirmation.h1=Rydych wedi newid eich manylion o ran goruchwyliaeth
 amls.confirmation.p1=Byddwn yn diweddaru eich manylion ynghylch goruchwyliaeth gwrth-wyngalchu arian ar eich cyfrif gwasanaethau asiant.

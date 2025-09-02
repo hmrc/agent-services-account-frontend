@@ -18,8 +18,8 @@ package uk.gov.hmrc.agentservicesaccount.model
 
 import play.api.libs.json.JsObject
 import play.api.libs.json.Json
+import support.UnitSpec
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.YourDetails
-import uk.gov.hmrc.agentservicesaccount.support.UnitSpec
 import uk.gov.hmrc.crypto.Decrypter
 import uk.gov.hmrc.crypto.Encrypter
 import uk.gov.hmrc.crypto.SymmetricCryptoFactory

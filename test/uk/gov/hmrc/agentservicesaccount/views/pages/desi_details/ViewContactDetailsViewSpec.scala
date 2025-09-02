@@ -21,15 +21,14 @@ import org.jsoup.nodes.Document
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.i18n.Lang
 import play.api.i18n.Messages
-import play.api.i18n.MessagesApi
 import play.api.i18n.MessagesImpl
-import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+import support.TestConstants
 import uk.gov.hmrc.agentservicesaccount.controllers.routes
 import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.YourDetails
-import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
+import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details.view_contact_details
 
 import java.time.Instant
@@ -38,13 +37,12 @@ import java.time.format.DateTimeFormatter
 import scala.jdk.CollectionConverters.CollectionHasAsScala
 
 class ViewContactDetailsViewSpec
-extends BaseISpec {
+extends ViewBaseSpec
+with TestConstants {
 
-  private implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
-  private implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
   private implicit val langs: Seq[Lang] = Seq(Lang("en"), Lang("cy"))
 
-  private val view: view_contact_details = app.injector.instanceOf[view_contact_details]
+  private val view: view_contact_details = inject[view_contact_details]
 
   private val testAgencyDetailsFull = AgencyDetails(
     agencyName = Some("Test Name"),
@@ -150,7 +148,7 @@ extends BaseISpec {
             isAdmin = true
           )(
             messages,
-            fakeRequest(),
+            fakeRequest,
             appConfig
           ).body)
 
@@ -184,7 +182,7 @@ extends BaseISpec {
             isAdmin = false
           )(
             messages,
-            fakeRequest(),
+            fakeRequest,
             appConfig
           ).body)
 
@@ -216,7 +214,7 @@ extends BaseISpec {
             isAdmin = true
           )(
             messages,
-            fakeRequest(),
+            fakeRequest,
             appConfig
           ).body)
 
@@ -251,7 +249,7 @@ extends BaseISpec {
             isAdmin = true
           )(
             messages,
-            fakeRequest(),
+            fakeRequest,
             appConfig
           ).body)
 
@@ -289,7 +287,7 @@ extends BaseISpec {
             isAdmin = true
           )(
             messages,
-            fakeRequest(),
+            fakeRequest,
             appConfig
           ).body)
 
@@ -323,7 +321,7 @@ extends BaseISpec {
             isAdmin = false
           )(
             messages,
-            fakeRequest(),
+            fakeRequest,
             appConfig
           ).body)
 
@@ -355,7 +353,7 @@ extends BaseISpec {
             isAdmin = true
           )(
             messages,
-            fakeRequest(),
+            fakeRequest,
             appConfig
           ).body)
 
@@ -390,7 +388,7 @@ extends BaseISpec {
             isAdmin = true
           )(
             messages,
-            fakeRequest(),
+            fakeRequest,
             appConfig
           ).body)
 

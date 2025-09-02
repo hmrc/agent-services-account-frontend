@@ -50,32 +50,28 @@ with I18nSupport {
   private val renewalDateForm = RenewalDateForm.form
 
   def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
-      withUpdateAmlsJourney { amlsJourney =>
-        if (amlsJourney.status.isUkAgent()) {
-          val form = amlsJourney.newExpirationDate.fold(renewalDateForm)(renewalDateForm.fill)
-          Ok(enterRenewalDate(form)).toFuture
-        }
-        else {
-          Forbidden.toFuture
-        }
+    withUpdateAmlsJourney { amlsJourney =>
+      if (amlsJourney.status.isUkAgent()) {
+        val form = amlsJourney.newExpirationDate.fold(renewalDateForm)(renewalDateForm.fill)
+        Ok(enterRenewalDate(form)).toFuture
+      }
+      else {
+        Forbidden.toFuture
       }
     }
   }
 
   def onSubmit: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
-      withUpdateAmlsJourney { amlsJourney =>
-        renewalDateForm
-          .bindFromRequest()
-          .fold(
-            formWithError => BadRequest(enterRenewalDate(formWithError)).toFuture,
-            data =>
-              saveAmlsJourney(amlsJourney.copy(newExpirationDate = Option(data))).map(_ =>
-                Redirect(routes.CheckYourAnswersController.showPage)
-              )
-          )
-      }
+    withUpdateAmlsJourney { amlsJourney =>
+      renewalDateForm
+        .bindFromRequest()
+        .fold(
+          formWithError => BadRequest(enterRenewalDate(formWithError)).toFuture,
+          data =>
+            saveAmlsJourney(amlsJourney.copy(newExpirationDate = Option(data))).map(_ =>
+              Redirect(routes.CheckYourAnswersController.showPage)
+            )
+        )
     }
   }
 
