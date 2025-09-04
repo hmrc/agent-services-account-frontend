@@ -22,20 +22,16 @@ import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.data.Form
 import play.api.i18n.Lang
 import play.api.i18n.Messages
-import play.api.i18n.MessagesApi
 import play.api.i18n.MessagesImpl
-import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms
-import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
+import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details._
 
 import scala.jdk.CollectionConverters.CollectionHasAsScala
 
 class UpdateNameSpec
-extends BaseISpec {
+extends ViewBaseSpec {
 
-  private implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
-  private implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
   private implicit val langs: Seq[Lang] = Seq(Lang("en"), Lang("cy"))
 
   private val view: update_name = app.injector.instanceOf[update_name]
@@ -79,7 +75,7 @@ extends BaseISpec {
         val messages: Messages = MessagesImpl(langs.head, messagesApi)
         val doc: Document = Jsoup.parse(view.apply(form)(
           messages,
-          fakeRequest(),
+          fakeRequest,
           appConfig
         ).body)
 
@@ -97,7 +93,7 @@ extends BaseISpec {
         val messages: Messages = MessagesImpl(langs.last, messagesApi)
         val doc: Document = Jsoup.parse(view.apply(form)(
           messages,
-          fakeRequest(),
+          fakeRequest,
           appConfig
         ).body)
 

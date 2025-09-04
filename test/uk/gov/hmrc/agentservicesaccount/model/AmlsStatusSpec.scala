@@ -19,9 +19,9 @@ package uk.gov.hmrc.agentservicesaccount.model
 import play.api.libs.json.JsObject
 import play.api.libs.json.JsString
 import play.api.libs.json.Json
+import support.UnitSpec
 import uk.gov.hmrc.agentservicesaccount.models.AmlsStatus
 import uk.gov.hmrc.agentservicesaccount.models.AmlsStatuses
-import uk.gov.hmrc.agentservicesaccount.support.UnitSpec
 
 class AmlsStatusSpec
 extends UnitSpec {

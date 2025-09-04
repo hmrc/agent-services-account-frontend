@@ -19,33 +19,18 @@ package uk.gov.hmrc.agentservicesaccount.views.pages.amls
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
-import play.api.data.Form
-import play.api.i18n.Lang
-import play.api.i18n.Messages
-import play.api.i18n.MessagesApi
-import play.api.i18n.MessagesImpl
-import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.forms.YesNoForm
-import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
+import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.update_confirmation_received
 
 class AmlsConfirmationControllerViewSpec
-extends BaseISpec {
+extends ViewBaseSpec {
 
-  implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
-  implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
-  implicit val lang: Lang = Lang("en")
-
-  val view: update_confirmation_received = app.injector.instanceOf[update_confirmation_received]
-  val messages: Messages = MessagesImpl(lang, messagesApi)
-
-  val form: Form[Boolean] = YesNoForm.form("amls.is-hmrc.error") // ideally should be static so if code changes test breaks
-  val formWithErrors: Form[Boolean] = YesNoForm.form("amls.is-hmrc.error").withError(key = "accept", message = "amls.is-hmrc.error")
+  val view: update_confirmation_received = inject[update_confirmation_received]
 
   "update_confirmation_received view" when {
     "the user has changed existing amls details should render the page correctly" in {
       val doc: Document = Jsoup.parse(view.apply(amlsDetailsAlreadyExisted = true)(
-        fakeRequest(),
+        fakeRequest,
         messages,
         appConfig
       ).body)
@@ -62,7 +47,7 @@ extends BaseISpec {
     }
     "the user has provided amls details for the first time should render the page correctly" in {
       val doc: Document = Jsoup.parse(view.apply(amlsDetailsAlreadyExisted = false)(
-        fakeRequest(),
+        fakeRequest,
         messages,
         appConfig
       ).body)

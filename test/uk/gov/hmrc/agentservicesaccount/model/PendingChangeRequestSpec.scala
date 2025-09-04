@@ -18,11 +18,11 @@ package uk.gov.hmrc.agentservicesaccount.model
 
 import play.api.libs.json.JsObject
 import play.api.libs.json.Json
+import support.UnitSpec
 import uk.gov.hmrc.agentservicesaccount.models.Arn
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest.connectorReads
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest.connectorWrites
-import uk.gov.hmrc.agentservicesaccount.support.UnitSpec
 
 import java.time.Instant
 import scala.annotation.nowarn

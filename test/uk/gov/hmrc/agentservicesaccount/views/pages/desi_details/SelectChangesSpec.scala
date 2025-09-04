@@ -22,24 +22,20 @@ import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.data.Form
 import play.api.i18n.Lang
 import play.api.i18n.Messages
-import play.api.i18n.MessagesApi
 import play.api.i18n.MessagesImpl
-import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.forms.SelectChangesForm
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.SelectChanges
-import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
+import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details._
 
 import scala.jdk.CollectionConverters.CollectionHasAsScala
 
 class SelectChangesSpec
-extends BaseISpec {
+extends ViewBaseSpec {
 
-  private implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
-  private implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
   private implicit val langs: Seq[Lang] = Seq(Lang("en"), Lang("cy"))
 
-  private val view: select_changes = app.injector.instanceOf[select_changes]
+  private val view: select_changes = inject[select_changes]
   private val form: Form[SelectChanges] = SelectChangesForm.form
 
   object MessageLookup {
@@ -83,7 +79,7 @@ extends BaseISpec {
       "the selected lang is english" in {
         val messages: Messages = MessagesImpl(langs.head, messagesApi)
         val doc: Document = Jsoup.parse(view.apply(form)(
-          fakeRequest(),
+          fakeRequest,
           messages,
           appConfig
         ).body)
@@ -104,7 +100,7 @@ extends BaseISpec {
       "the selected lang is Welsh" in {
         val messages: Messages = MessagesImpl(langs.last, messagesApi)
         val doc: Document = Jsoup.parse(view.apply(form)(
-          fakeRequest(),
+          fakeRequest,
           messages,
           appConfig
         ).body)

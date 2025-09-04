@@ -26,10 +26,10 @@ import play.api.mvc.Request
 import play.api.test.Helpers.await
 import play.api.test.DefaultAwaitTimeout
 import play.api.test.FakeRequest
+import support.TestConstants
 import uk.gov.hmrc.agentservicesaccount.controllers.draftNewContactDetailsKey
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.CtChanges
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.DesignatoryDetails
-import uk.gov.hmrc.agentservicesaccount.support.TestConstants
 import uk.gov.hmrc.http.SessionKeys
 
 import scala.concurrent.ExecutionContext

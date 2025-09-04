@@ -39,8 +39,6 @@ class AmlsConfirmationController @Inject() (implicit
 extends FrontendController(cc)
 with I18nSupport {
   def showUpdatedAmlsConfirmationPage(updated: Boolean): Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
-      Ok(updateConfirmationReceived(updated)).toFuture
-    }
+    Ok(updateConfirmationReceived(updated)).toFuture
   }
 }

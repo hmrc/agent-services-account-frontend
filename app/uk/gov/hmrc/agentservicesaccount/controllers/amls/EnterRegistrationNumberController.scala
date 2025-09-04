@@ -49,39 +49,35 @@ with I18nSupport {
 
   def showPage(cya: Boolean): Action[AnyContent] = actions.authActionCheckSuspend.async {
     implicit request =>
-      actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
-        withUpdateAmlsJourney { amlsJourney =>
-          val form =
-            amlsJourney.newRegistrationNumber match {
-              case Some(number) => registrationNumberForm(amlsJourney.isHmrc).fill(number)
-              case _ => registrationNumberForm(amlsJourney.isHmrc)
-            }
-          Ok(enterRegistrationNumber(form, cya)).toFuture
-        }
+      withUpdateAmlsJourney { amlsJourney =>
+        val form =
+          amlsJourney.newRegistrationNumber match {
+            case Some(number) => registrationNumberForm(amlsJourney.isHmrc).fill(number)
+            case _ => registrationNumberForm(amlsJourney.isHmrc)
+          }
+        Ok(enterRegistrationNumber(form, cya)).toFuture
       }
   }
 
   def onSubmit(cya: Boolean): Action[AnyContent] = actions.authActionCheckSuspend.async {
     implicit request =>
-      actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
-        withUpdateAmlsJourney { amlsJourney =>
-          registrationNumberForm(amlsJourney.isHmrc)
-            .bindFromRequest()
-            .fold(
-              formWithError => BadRequest(enterRegistrationNumber(formWithError, cya)).toFuture,
-              data =>
-                saveAmlsJourney(amlsJourney.copy(
-                  newRegistrationNumber = Option(data),
-                  isRegistrationNumberStillTheSame =
-                    for {
-                      hasSameRegNum <- amlsJourney.isRegistrationNumberStillTheSame
-                      inputEqualsRegNum = amlsJourney.newRegistrationNumber.contains(data)
-                    } yield hasSameRegNum && inputEqualsRegNum
-                )).map(_ =>
-                  Redirect(nextPage(cya, amlsJourney))
-                )
-            )
-        }
+      withUpdateAmlsJourney { amlsJourney =>
+        registrationNumberForm(amlsJourney.isHmrc)
+          .bindFromRequest()
+          .fold(
+            formWithError => BadRequest(enterRegistrationNumber(formWithError, cya)).toFuture,
+            data =>
+              saveAmlsJourney(amlsJourney.copy(
+                newRegistrationNumber = Option(data),
+                isRegistrationNumberStillTheSame =
+                  for {
+                    hasSameRegNum <- amlsJourney.isRegistrationNumberStillTheSame
+                    inputEqualsRegNum = amlsJourney.newRegistrationNumber.contains(data)
+                  } yield hasSameRegNum && inputEqualsRegNum
+              )).map(_ =>
+                Redirect(nextPage(cya, amlsJourney))
+              )
+          )
       }
   }
 

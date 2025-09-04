@@ -50,53 +50,49 @@ with AmlsJourneySupport
 with I18nSupport {
 
   def showPage(cya: Boolean): Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
-      withUpdateAmlsJourney { amlsJourney =>
-        val amlsBodies = amlsLoader.load("/amls.csv")
-        val form = NewAmlsSupervisoryBodyForm.form(amlsBodies)(amlsJourney.isUkAgent).fill(amlsJourney.newAmlsBody.getOrElse(""))
-        Ok(newSupervisoryBody(
-          form,
-          amlsBodies,
-          amlsJourney.isUkAgent,
-          cya
-        )).toFuture
-      }
+    withUpdateAmlsJourney { amlsJourney =>
+      val amlsBodies = amlsLoader.load("/amls.csv")
+      val form = NewAmlsSupervisoryBodyForm.form(amlsBodies)(amlsJourney.isUkAgent).fill(amlsJourney.newAmlsBody.getOrElse(""))
+      Ok(newSupervisoryBody(
+        form,
+        amlsBodies,
+        amlsJourney.isUkAgent,
+        cya
+      )).toFuture
     }
   }
 
   def onSubmit(cya: Boolean): Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
-      withUpdateAmlsJourney { journey =>
-        val amlsBodies = amlsLoader.load("/amls.csv")
-        NewAmlsSupervisoryBodyForm.form(amlsBodies)(journey.isUkAgent)
-          .bindFromRequest()
-          .fold(
-            formWithErrors =>
-              BadRequest(newSupervisoryBody(
-                formWithErrors,
-                amlsBodies,
-                journey.isUkAgent,
-                cya
-              )).toFuture,
-            data => {
-              val updatedJourney = journey.copy(
-                newAmlsBody =
-                  if (journey.isUkAgent)
-                    Some(amlsBodies(data))
-                  else
-                    Some(data),
-                isAmlsBodyStillTheSame = maybeChangePreviousAnswer(data, journey)
-              )
-              saveAmlsJourney(updatedJourney).map(_ =>
-                Redirect(nextPage(
-                  cya,
-                  updatedJourney,
-                  journey
-                ))
-              )
-            }
-          )
-      }
+    withUpdateAmlsJourney { journey =>
+      val amlsBodies = amlsLoader.load("/amls.csv")
+      NewAmlsSupervisoryBodyForm.form(amlsBodies)(journey.isUkAgent)
+        .bindFromRequest()
+        .fold(
+          formWithErrors =>
+            BadRequest(newSupervisoryBody(
+              formWithErrors,
+              amlsBodies,
+              journey.isUkAgent,
+              cya
+            )).toFuture,
+          data => {
+            val updatedJourney = journey.copy(
+              newAmlsBody =
+                if (journey.isUkAgent)
+                  Some(amlsBodies(data))
+                else
+                  Some(data),
+              isAmlsBodyStillTheSame = maybeChangePreviousAnswer(data, journey)
+            )
+            saveAmlsJourney(updatedJourney).map(_ =>
+              Redirect(nextPage(
+                cya,
+                updatedJourney,
+                journey
+              ))
+            )
+          }
+        )
     }
   }
 

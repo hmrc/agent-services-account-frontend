@@ -51,49 +51,45 @@ with I18nSupport
 with Logging {
 
   def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
-      actions.withCurrentAmlsDetails(request.agentInfo.arn) { amlsDetails =>
-        amlsDetails.membershipNumber match {
-          case Some(registrationNumber) =>
-            withUpdateAmlsJourney { amlsJourney =>
-              val form = amlsJourney.isRegistrationNumberStillTheSame.fold(YesNoForm.form(""))(x => YesNoForm.form().fill(x))
-              Ok(confirmRegistrationNumber(form, registrationNumber)).toFuture
-            }
-          case None =>
-            logger.info("No AMLS registration number found, redirecting to 'Enter Registration Number'")
-            Redirect(routes.EnterRegistrationNumberController.showPage()).toFuture
-        }
+    actions.withCurrentAmlsDetails(request.agentInfo.arn) { amlsDetails =>
+      amlsDetails.membershipNumber match {
+        case Some(registrationNumber) =>
+          withUpdateAmlsJourney { amlsJourney =>
+            val form = amlsJourney.isRegistrationNumberStillTheSame.fold(YesNoForm.form(""))(x => YesNoForm.form().fill(x))
+            Ok(confirmRegistrationNumber(form, registrationNumber)).toFuture
+          }
+        case None =>
+          logger.info("No AMLS registration number found, redirecting to 'Enter Registration Number'")
+          Redirect(routes.EnterRegistrationNumberController.showPage()).toFuture
       }
     }
   }
 
   def onSubmit: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
-      actions.withCurrentAmlsDetails(request.agentInfo.arn) { amlsDetails =>
-        amlsDetails.membershipNumber match {
-          case Some(registrationNumber) =>
-            withUpdateAmlsJourney { amlsJourney =>
-              YesNoForm.form(Messages("amls.confirm-registration-number.error", registrationNumber))
-                .bindFromRequest()
-                .fold(
-                  formWithError => Future successful BadRequest(confirmRegistrationNumber(formWithError, registrationNumber)),
-                  data => {
-                    val maybeCopyRegistrationNumber =
-                      if (data)
-                        amlsDetails.membershipNumber
-                      else
-                        amlsJourney.newRegistrationNumber
-                    saveAmlsJourney(amlsJourney.copy(
-                      isRegistrationNumberStillTheSame = Option(data),
-                      newRegistrationNumber = maybeCopyRegistrationNumber
-                    )).map(_ =>
-                      Redirect(nextPage(data))
-                    )
-                  }
-                )
-            }
-          case None => Redirect(routes.EnterRegistrationNumberController.showPage()).toFuture
-        }
+    actions.withCurrentAmlsDetails(request.agentInfo.arn) { amlsDetails =>
+      amlsDetails.membershipNumber match {
+        case Some(registrationNumber) =>
+          withUpdateAmlsJourney { amlsJourney =>
+            YesNoForm.form(Messages("amls.confirm-registration-number.error", registrationNumber))
+              .bindFromRequest()
+              .fold(
+                formWithError => Future successful BadRequest(confirmRegistrationNumber(formWithError, registrationNumber)),
+                data => {
+                  val maybeCopyRegistrationNumber =
+                    if (data)
+                      amlsDetails.membershipNumber
+                    else
+                      amlsJourney.newRegistrationNumber
+                  saveAmlsJourney(amlsJourney.copy(
+                    isRegistrationNumberStillTheSame = Option(data),
+                    newRegistrationNumber = maybeCopyRegistrationNumber
+                  )).map(_ =>
+                    Redirect(nextPage(data))
+                  )
+                }
+              )
+          }
+        case None => Redirect(routes.EnterRegistrationNumberController.showPage()).toFuture
       }
     }
   }

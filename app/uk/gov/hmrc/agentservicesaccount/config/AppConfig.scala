@@ -156,8 +156,6 @@ extends Logging {
   val enableChangeContactDetails: Boolean = getBoolean("features.enable-change-contact-details")
   val granPermsEnabled: Boolean = getBoolean("features.enable-gran-perms")
   val enableCbc: Boolean = getBoolean("features.enable-cbc")
-  val enablePillar2: Boolean = getBoolean("features.enable-pillar2")
-  val enableNonHmrcSupervisoryBody: Boolean = getBoolean("features.enable-non-hmrc-supervisory-body")
   val enableBackendPCRDatabase: Boolean = getBoolean("features.enable-backend-pcr-database")
 
   // Gran Perms

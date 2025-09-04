@@ -55,50 +55,45 @@ with AmlsJourneySupport
 with I18nSupport {
 
   def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
-      withUpdateAmlsJourney { journeyData =>
-        val model = buildSummaryListItems(
-          journeyData.isUkAgent,
-          journeyData,
-          request.messages.lang.locale
-        )
-        Ok(checkYourAnswers(model)).toFuture
-      }
+    withUpdateAmlsJourney { journeyData =>
+      val model = buildSummaryListItems(
+        journeyData.isUkAgent,
+        journeyData,
+        request.messages.lang.locale
+      )
+      Ok(checkYourAnswers(model)).toFuture
     }
   }
 
   def onSubmit: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    actions.ifFeatureEnabled(appConfig.enableNonHmrcSupervisoryBody) {
+    withUpdateAmlsJourney { journeyData =>
+      (journeyData.newAmlsBody, journeyData.newRegistrationNumber) match {
+        case (Some(newAmlsBody), Some(newRegistrationNumber)) =>
+          val amlsRequest = AmlsRequest(
+            journeyData.isUkAgent,
+            newAmlsBody,
+            newRegistrationNumber,
+            journeyData.newExpirationDate
+          )
 
-      withUpdateAmlsJourney { journeyData =>
-        (journeyData.newAmlsBody, journeyData.newRegistrationNumber) match {
-          case (Some(newAmlsBody), Some(newRegistrationNumber)) =>
-            val amlsRequest = AmlsRequest(
-              journeyData.isUkAgent,
-              newAmlsBody,
-              newRegistrationNumber,
-              journeyData.newExpirationDate
+          for {
+            _ <- agentAssuranceConnector.postAmlsDetails(request.agentInfo.arn, amlsRequest)
+            oldAmlsDetails <- Try {
+              agentAssuranceConnector.getAMLSDetails(request.agentInfo.arn.value).map(Option(_))
+            }.getOrElse(Future.successful(None))
+            optUtr <- Try {
+              agentAssuranceConnector.getAgentRecord.map(_.uniqueTaxReference)
+            }.getOrElse(Future.successful(None))
+            _ = auditService.auditUpdateAmlSupervisionDetails(
+              amlsRequest,
+              oldAmlsDetails,
+              request.agentInfo.arn,
+              optUtr
             )
-
-            for {
-              _ <- agentAssuranceConnector.postAmlsDetails(request.agentInfo.arn, amlsRequest)
-              oldAmlsDetails <- Try {
-                agentAssuranceConnector.getAMLSDetails(request.agentInfo.arn.value).map(Option(_))
-              }.getOrElse(Future.successful(None))
-              optUtr <- Try {
-                agentAssuranceConnector.getAgentRecord.map(_.uniqueTaxReference)
-              }.getOrElse(Future.successful(None))
-              _ = auditService.auditUpdateAmlSupervisionDetails(
-                amlsRequest,
-                oldAmlsDetails,
-                request.agentInfo.arn,
-                optUtr
-              )
-            } yield Redirect(amls.routes.AmlsConfirmationController.showUpdatedAmlsConfirmationPage(journeyData.hasExistingAmls))
-          case (optNewAmlsBody, optNewRegistrationNumber) =>
-            Future.successful(BadRequest(s"[checkYourAnswersController][onSubmit] missing mandatory field(s): newAmlsBody.isEmpty = " +
-              s"${optNewAmlsBody.isEmpty}, newRegistrationNumber.isEmpty = ${optNewRegistrationNumber.isEmpty}"))
-        }
+          } yield Redirect(amls.routes.AmlsConfirmationController.showUpdatedAmlsConfirmationPage(journeyData.hasExistingAmls))
+        case (optNewAmlsBody, optNewRegistrationNumber) =>
+          Future.successful(BadRequest(s"[checkYourAnswersController][onSubmit] missing mandatory field(s): newAmlsBody.isEmpty = " +
+            s"${optNewAmlsBody.isEmpty}, newRegistrationNumber.isEmpty = ${optNewRegistrationNumber.isEmpty}"))
       }
     }
   }

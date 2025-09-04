@@ -58,11 +58,11 @@ case class CompletedEmail(
 }
 
 object CompletedEmail {
-  implicit val reads: Reads[CompletedEmail] = Json.reads[CompletedEmail]
+  implicit val format: Format[CompletedEmail] = Json.format[CompletedEmail]
 }
 
 case class VerificationStatusResponse(emails: List[CompletedEmail])
 
 object VerificationStatusResponse {
-  implicit val reads: Reads[VerificationStatusResponse] = Json.reads[VerificationStatusResponse]
+  implicit val format: Format[VerificationStatusResponse] = Json.format[VerificationStatusResponse]
 }

@@ -22,21 +22,16 @@ import org.jsoup.nodes.Element
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.data.Form
 import play.api.i18n._
-import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.forms.RenewalDateForm
-import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
+import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.enter_renewal_date
 
 import java.time.LocalDate
 
 class EnterRenewalDateViewSpec
-extends BaseISpec {
+extends ViewBaseSpec {
 
-  implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
-  implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
-  implicit val lang: Lang = Lang("en")
-  val view: enter_renewal_date = app.injector.instanceOf[enter_renewal_date]
-  implicit val messages: Messages = MessagesImpl(lang, messagesApi)
+  val view: enter_renewal_date = inject[enter_renewal_date]
 
   val form: Form[LocalDate] = RenewalDateForm.form
   val formWithErrors: Form[LocalDate] = form.withError(key = "endDate", message = Messages("update-money-laundering-supervisory.error.date"))
@@ -74,7 +69,7 @@ extends BaseISpec {
     "first viewing page" should {
 
       val doc: Document = Jsoup.parse(view.apply(form)(
-        fakeRequest(),
+        fakeRequest,
         messages,
         appConfig
       ).body)
@@ -91,7 +86,7 @@ extends BaseISpec {
     "form is submitted with errors should" should {
 
       val doc: Document = Jsoup.parse(view.apply(formWithErrors)(
-        fakeRequest(),
+        fakeRequest,
         messages,
         appConfig
       ).body)

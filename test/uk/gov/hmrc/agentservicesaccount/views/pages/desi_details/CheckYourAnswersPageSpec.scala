@@ -21,16 +21,14 @@ import org.jsoup.nodes.Document
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.i18n.Lang
 import play.api.i18n.Messages
-import play.api.i18n.MessagesApi
 import play.api.i18n.MessagesImpl
-import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.CtChanges
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.OtherServices
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.SaChanges
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.YourDetails
-import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
+import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details.check_updated_details
 import uk.gov.hmrc.domain.CtUtr
 import uk.gov.hmrc.domain.SaUtr
@@ -38,10 +36,8 @@ import uk.gov.hmrc.domain.SaUtr
 import scala.jdk.CollectionConverters.CollectionHasAsScala
 
 class CheckYourAnswersPageSpec
-extends BaseISpec {
+extends ViewBaseSpec {
 
-  private implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
-  private implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
   private implicit val langs: Seq[Lang] = Seq(Lang("en"), Lang("cy"))
 
   private val view: check_updated_details = app.injector.instanceOf[check_updated_details]
@@ -83,6 +79,17 @@ extends BaseISpec {
   private val submittedByDetails = YourDetails(
     fullName = "John Tester",
     telephone = "01903 209919"
+  )
+
+  val emptyOtherServices: OtherServices = OtherServices(
+    saChanges = SaChanges(
+      applyChanges = false,
+      saAgentReference = None
+    ),
+    ctChanges = CtChanges(
+      applyChanges = false,
+      ctAgentReference = None
+    )
   )
 
   object MessageLookup {
@@ -174,7 +181,7 @@ extends BaseISpec {
         selectChanges = selectChanges1
       )(
         messages,
-        fakeRequest(),
+        fakeRequest,
         appConfig
       ).body)
 
@@ -216,7 +223,7 @@ extends BaseISpec {
         selectChanges = selectChanges2
       )(
         messages,
-        fakeRequest(),
+        fakeRequest,
         appConfig
       ).body)
 
@@ -262,7 +269,7 @@ extends BaseISpec {
       selectChanges = selectChangesAll
     )(
       messages,
-      fakeRequest(),
+      fakeRequest,
       appConfig
     ).body)
 

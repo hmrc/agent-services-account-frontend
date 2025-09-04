@@ -19,24 +19,17 @@ package uk.gov.hmrc.agentservicesaccount.views.pages.amls
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
-import play.api.i18n._
-import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models.AmlsDetails
 import uk.gov.hmrc.agentservicesaccount.models.AmlsStatuses
-import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
+import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.view_details
 
 import java.time.LocalDate
 
 class ViewDetailsViewSpec
-extends BaseISpec {
+extends ViewBaseSpec {
 
-  implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
-  implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
-  implicit val lang: Lang = Lang("en")
-
-  val view: view_details = app.injector.instanceOf[view_details]
-  implicit val messages: Messages = MessagesImpl(lang, messagesApi)
+  val view: view_details = inject[view_details]
 
   "view_details" when {
 
@@ -75,7 +68,7 @@ extends BaseISpec {
     s"AmlsStatuses is ${AmlsStatuses.NoAmlsDetailsUK}" should {
 
       val doc: Document = Jsoup.parse(view.apply(AmlsStatuses.NoAmlsDetailsUK, None)(
-        fakeRequest(),
+        fakeRequest,
         messages,
         appConfig
       ).body)
@@ -107,7 +100,7 @@ extends BaseISpec {
     s"AmlsStatuses is ${AmlsStatuses.NoAmlsDetailsNonUK}" should {
 
       val doc: Document = Jsoup.parse(view.apply(AmlsStatuses.NoAmlsDetailsNonUK, None)(
-        fakeRequest(),
+        fakeRequest,
         messages,
         appConfig
       ).body)
@@ -137,7 +130,7 @@ extends BaseISpec {
         membershipExpiresOn = Some(LocalDate.parse("2024-02-10"))
       )
       val doc: Document = Jsoup.parse(view.apply(AmlsStatuses.ExpiredAmlsDetailsUK, Some(amlsDetails))(
-        fakeRequest(),
+        fakeRequest,
         messages,
         appConfig
       ).body)
@@ -171,7 +164,7 @@ extends BaseISpec {
         membershipExpiresOn = Some(LocalDate.parse("2025-02-10"))
       )
       val doc: Document = Jsoup.parse(view.apply(AmlsStatuses.ValidAmlsDetailsUK, Some(amlsDetails))(
-        fakeRequest(),
+        fakeRequest,
         messages,
         appConfig
       ).body)
@@ -213,7 +206,7 @@ extends BaseISpec {
         membershipExpiresOn = Some(LocalDate.parse("2025-02-10"))
       )
       val doc: Document = Jsoup.parse(view.apply(AmlsStatuses.ValidAmlsDetailsUK, Some(amlsDetails))(
-        fakeRequest(),
+        fakeRequest,
         messages,
         appConfig
       ).body)
@@ -257,7 +250,7 @@ extends BaseISpec {
         membershipExpiresOn = None
       )
       val doc: Document = Jsoup.parse(view.apply(AmlsStatuses.ValidAmlsNonUK, Some(amlsDetails))(
-        fakeRequest(),
+        fakeRequest,
         messages,
         appConfig
       ).body)
@@ -296,7 +289,7 @@ extends BaseISpec {
         appliedOn = Some(LocalDate.parse("2024-10-10"))
       )
       val doc: Document = Jsoup.parse(view.apply(AmlsStatuses.PendingAmlsDetails, Some(amlsDetails))(
-        fakeRequest(),
+        fakeRequest,
         messages,
         appConfig
       ).body)
@@ -333,7 +326,7 @@ extends BaseISpec {
         appliedOn = Some(LocalDate.parse("2024-10-10"))
       )
       val doc: Document = Jsoup.parse(view.apply(AmlsStatuses.PendingAmlsDetailsRejected, Some(amlsDetails))(
-        fakeRequest(),
+        fakeRequest,
         messages,
         appConfig
       ).body)
@@ -366,7 +359,7 @@ extends BaseISpec {
       "throw exception" in {
         an[RuntimeException] mustBe thrownBy {
           Jsoup.parse(view.apply(AmlsStatuses.PendingAmlsDetailsRejected, None)(
-            fakeRequest(),
+            fakeRequest,
             messages,
             appConfig
           ).body)
@@ -382,7 +375,7 @@ extends BaseISpec {
         )
         an[RuntimeException] mustBe thrownBy {
           Jsoup.parse(view.apply(AmlsStatuses.NoAmlsDetailsUK, Some(amlsDetails))(
-            fakeRequest(),
+            fakeRequest,
             messages,
             appConfig
           ).body)

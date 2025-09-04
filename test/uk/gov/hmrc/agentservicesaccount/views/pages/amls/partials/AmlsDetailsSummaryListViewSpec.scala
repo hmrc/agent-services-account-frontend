@@ -18,8 +18,8 @@ package uk.gov.hmrc.agentservicesaccount.views.pages.amls.partials
 
 import org.jsoup.Jsoup
 import play.api.i18n._
+import support.BaseISpec
 import uk.gov.hmrc.agentservicesaccount.models.AmlsDetails
-import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.partials.amls_details_summary_list
 
 import java.time.LocalDate
@@ -27,11 +27,7 @@ import java.time.LocalDate
 class AmlsDetailsSummaryListViewSpec
 extends BaseISpec {
 
-  implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
-  implicit val lang: Lang = Lang("en")
-
-  val view: amls_details_summary_list = app.injector.instanceOf[amls_details_summary_list]
-  val messages: Messages = MessagesImpl(lang, messagesApi)
+  val view: amls_details_summary_list = inject[amls_details_summary_list]
 
   "amls_details_summary_list" should {
 
@@ -159,7 +155,7 @@ extends BaseISpec {
       val aDate = LocalDate.parse("2024-12-07")
 
       val lang: Lang = Lang("cy")
-      val view: amls_details_summary_list = app.injector.instanceOf[amls_details_summary_list]
+      val view: amls_details_summary_list = inject[amls_details_summary_list]
       val messages: Messages = MessagesImpl(lang, messagesApi)
 
       val amlsDetails = AmlsDetails(

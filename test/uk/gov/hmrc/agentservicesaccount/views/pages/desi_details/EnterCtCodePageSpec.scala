@@ -21,23 +21,15 @@ import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.data.Form
-import play.api.i18n.Lang
 import play.api.i18n.Messages
-import play.api.i18n.MessagesApi
-import play.api.i18n.MessagesImpl
-import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms.ctCodeForm
-import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
+import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details._
 
 class EnterCtCodePageSpec
-extends BaseISpec {
+extends ViewBaseSpec {
 
-  implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
-  implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
-  implicit val lang: Lang = Lang("en")
-  val view: enter_ct_code = app.injector.instanceOf[enter_ct_code]
-  implicit val messages: Messages = MessagesImpl(lang, messagesApi)
+  val view: enter_ct_code = inject[enter_ct_code]
 
   val form: Form[String] = ctCodeForm
   val formWithNameErrors: Form[String] = form.withError(key = "ctCode", message = Messages("update-contact-details.ct-code.error.empty"))
@@ -84,7 +76,7 @@ extends BaseISpec {
 
       val doc: Document = Jsoup.parse(view.apply(form)(
         messages,
-        fakeRequest(),
+        fakeRequest,
         appConfig
       ).body)
 
@@ -101,7 +93,7 @@ extends BaseISpec {
 
       val doc: Document = Jsoup.parse(view.apply(formWithNameErrors)(
         messages,
-        fakeRequest(),
+        fakeRequest,
         appConfig
       ).body)
 

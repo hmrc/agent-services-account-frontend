@@ -22,19 +22,14 @@ import org.jsoup.nodes.Element
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.data.Form
 import play.api.i18n._
-import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.forms.YesNoForm
-import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
+import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.confirm_supervisory_body
 
 class ConfirmSupervisoryBodyViewSpec
-extends BaseISpec {
+extends ViewBaseSpec {
 
-  implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
-  implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
-  implicit val lang: Lang = Lang("en")
-  val view: confirm_supervisory_body = app.injector.instanceOf[confirm_supervisory_body]
-  implicit val messages: Messages = MessagesImpl(lang, messagesApi)
+  val view: confirm_supervisory_body = inject[confirm_supervisory_body]
 
   def form: Form[Boolean] = YesNoForm.form("")
   def formWithErrors: Form[Boolean] = form.withError(key = "accept", message = Messages("amls.confirm-supervisory-body.error", "HMRC"))
@@ -72,7 +67,7 @@ extends BaseISpec {
     "first viewing page" should {
 
       val doc: Document = Jsoup.parse(view.apply(form, "HMRC")(
-        fakeRequest(),
+        fakeRequest,
         messages,
         appConfig
       ).body)
@@ -89,7 +84,7 @@ extends BaseISpec {
     "form is submitted with errors should" should {
 
       val doc: Document = Jsoup.parse(view.apply(formWithErrors, "HMRC")(
-        fakeRequest(),
+        fakeRequest,
         messages,
         appConfig
       ).body)

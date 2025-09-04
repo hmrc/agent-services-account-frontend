@@ -25,17 +25,34 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpecLike
 import org.scalatest.Assertion
 import org.scalatest.OptionValues
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.i18n.Lang
+import play.api.i18n.Messages
+import play.api.i18n.MessagesApi
+import play.api.i18n.MessagesImpl
+import play.api.test.FakeRequest
+import play.api.test.Injecting
 import play.twirl.api.Html
-import uk.gov.hmrc.agentservicesaccount.support.Css.H1
-import uk.gov.hmrc.agentservicesaccount.support.Css.H2
-import uk.gov.hmrc.agentservicesaccount.support.Css.H3
-import uk.gov.hmrc.agentservicesaccount.support.Css.H4
+import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+import support.Css.H1
+import support.Css.H2
+import support.Css.H3
+import support.Css.H4
 
 trait ViewBaseSpec
 extends AnyWordSpecLike
 with Matchers
 with OptionValues
-with ScalaFutures {
+with ScalaFutures
+with GuiceOneAppPerSuite
+with Injecting {
+
+  implicit val messagesApi: MessagesApi = inject[MessagesApi]
+  implicit val appConfig: AppConfig = inject[AppConfig]
+  implicit val lang: Lang = Lang("en")
+
+  implicit val messages: Messages = MessagesImpl(lang, messagesApi)
+  implicit val fakeRequest: FakeRequest[_] = FakeRequest().withSession("authToken" -> "session-123")
 
   def asDocument(html: Html): Document = Jsoup.parse(html.toString())
 

@@ -22,19 +22,14 @@ import org.jsoup.nodes.Element
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.data.Form
 import play.api.i18n._
-import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.forms.YesNoForm
-import uk.gov.hmrc.agentservicesaccount.support.BaseISpec
+import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.confirm_registration_number
 
 class ConfirmRegistrationNumberViewSpec
-extends BaseISpec {
+extends ViewBaseSpec {
 
-  implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
-  implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
-  implicit val lang: Lang = Lang("en")
-  val view: confirm_registration_number = app.injector.instanceOf[confirm_registration_number]
-  implicit val messages: Messages = MessagesImpl(lang, messagesApi)
+  val view: confirm_registration_number = inject[confirm_registration_number]
 
   def form: Form[Boolean] = YesNoForm.form("")
   def formWithErrors: Form[Boolean] = form.withError(key = "accept", message = Messages("amls.confirm-registration-number.error", "7"))
@@ -68,7 +63,7 @@ extends BaseISpec {
     "first viewing page" should {
 
       val doc: Document = Jsoup.parse(view.apply(form, "7")(
-        fakeRequest(),
+        fakeRequest,
         messages,
         appConfig
       ).body)
@@ -85,7 +80,7 @@ extends BaseISpec {
     "form is submitted with errors should" should {
 
       val doc: Document = Jsoup.parse(view.apply(formWithErrors, "7")(
-        fakeRequest(),
+        fakeRequest,
         messages,
         appConfig
       ).body)

@@ -63,14 +63,6 @@ asa.p.agent-services=Access services for clients that have already authorised yo
 asa.p.client-authorisations=Start a new authorisation request or link your current clients to your account.
 asa.p.manage=Allow other users in your organisation to access this agent services account, or restrict their access.
 
-asa.h1.money-laundering-supervision-details=Money laundering supervision details
-asa.td.label.name-of-amls-body=Name of money laundering supervisory body
-asa.td.label.amls-reg-number=Your registration number
-asa.td.label.amls-reg-renewal-date=Your next registration renewal date
-asa.h2.update-amls-details=Keep your details up to date
-asa.p.update-amls-details=Tell us when you renew your money laundering supervision registration each year. You can do this once your new registration is approved.
-asa.button.label.update-amls-details=Update money laundering supervision details
-
 # PAYE
 asa.paye-section.h2=View a client’s Income record
 asa.paye-section.link=View a client’s Income record
@@ -599,8 +591,6 @@ admin-access.button=Go to manage account
 
 #AMLS
 amls.add-details.h1=Anti-money laundering supervision details
-amls.is-hmrc.error=Select yes if HMRC is your money laundering supervisory body
-amls.is-hmrc.h1=Is HMRC your money laundering supervisory body?
 add.amls.confirmation.h1=You''ve added your supervision details
 amls.confirmation.h1=You''ve changed your supervision details
 amls.confirmation.p1=We''ll update your anti-money laundering supervision details on your agent services accounts.

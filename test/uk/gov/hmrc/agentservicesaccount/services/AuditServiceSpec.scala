@@ -21,6 +21,7 @@ import play.api.mvc.AnyContent
 import play.api.test.FakeRequest
 import play.api.ConfigLoader
 import play.api.Configuration
+import stubs.MockAuditConnector
 import uk.gov.hmrc.agentservicesaccount.models.Arn
 import uk.gov.hmrc.agentservicesaccount.models.Utr
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.CtChanges
@@ -30,7 +31,6 @@ import uk.gov.hmrc.agentservicesaccount.models.desiDetails.YourDetails
 import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeOfDetails
-import uk.gov.hmrc.agentservicesaccount.stubs.MockAuditConnector
 
 import java.time.Instant
 import scala.concurrent.ExecutionContext
