@@ -27,7 +27,7 @@ import stubs.AgentAssuranceStubs.givenAgentRecordFound
 
 import java.time.LocalDate
 
-class ConfirmRegistrationNumberControllerSpec
+class ConfirmRegistrationNumberControllerISpec
 extends ComponentBaseISpec {
 
   private def amlsDetailsResponse(membershipNumber: Option[String]) = AmlsDetailsResponse(
@@ -38,10 +38,6 @@ extends ComponentBaseISpec {
   private val repo = inject[SessionCacheRepository]
 
   private val confirmRegistrationNumberPath = s"$amlsStartPath/confirm-registration-number"
-
-  private val ukAmlsJourney = UpdateAmlsJourney(
-    status = AmlsStatuses.ValidAmlsDetailsUK
-  )
 
   private def amlsJourney(status: AmlsStatus) = UpdateAmlsJourney(
     status = status,
@@ -62,6 +58,7 @@ extends ComponentBaseISpec {
       val result = get(confirmRegistrationNumberPath)
 
       result.status shouldBe OK
+      assertPageHasTitle("Is your registration number still 123?")(result)
     }
 
     "display the page if the user has an AMLS reg number and previously answered the question" in {
@@ -159,6 +156,7 @@ extends ComponentBaseISpec {
       val result = post(confirmRegistrationNumberPath)(body = Map("invalid" -> List("???")))
 
       result.status shouldBe BAD_REQUEST
+      assertPageHasTitle("Error: Is your registration number still ref123?")(result)
     }
   }
 

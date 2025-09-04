@@ -55,6 +55,7 @@ extends ComponentBaseISpec {
       val result = get(updateNamePath)
 
       result.status shouldBe OK
+      assertPageHasTitle("What’s the new name you want to show to clients?")(result)
     }
 
     "redirect to manage-account/contact-changes/select-changes when contact details page request is invalid" in {
@@ -99,6 +100,7 @@ extends ComponentBaseISpec {
       val result = post(updateNamePath)(body = Map("invalid" -> List("???")))
 
       result.status shouldBe BAD_REQUEST
+      assertPageHasTitle("Error: What’s the new name you want to show to clients?")(result)
     }
   }
 

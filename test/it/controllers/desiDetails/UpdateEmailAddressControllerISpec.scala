@@ -61,6 +61,7 @@ extends ComponentBaseISpec {
       val result = get(updateEmailAddressPath)
 
       result.status shouldBe OK
+      assertPageHasTitle("What’s the new email address?")(result)
     }
 
     "redirect to /select-changes if contact page request is invalid " in {
@@ -211,6 +212,7 @@ extends ComponentBaseISpec {
       val result = post(updateEmailAddressPath)(body = Map("emailAddress" -> List("invalid")))
 
       result.status shouldBe BAD_REQUEST
+      assertPageHasTitle("Error: What’s the new email address?")(result)
     }
 
     "return Internal server error if the credential is missing an authProvider id" in {
@@ -235,6 +237,7 @@ extends ComponentBaseISpec {
       val result = get(emailLockedPath)
 
       result.status shouldBe OK
+      assertPageHasTitle("We could not confirm your identity")(result)
     }
   }
 

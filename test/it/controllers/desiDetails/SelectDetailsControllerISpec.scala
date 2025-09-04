@@ -43,6 +43,7 @@ extends ComponentBaseISpec {
       val result = get(selectDetailsPath)
 
       result.status shouldBe OK
+      assertPageHasTitle("Which contact details do you want to change?")(result)
     }
 
     "fill with previously entered answers" in {
@@ -96,6 +97,7 @@ extends ComponentBaseISpec {
       val result = post(selectDetailsPath)(body = Map("" -> List("")))
 
       result.status shouldBe BAD_REQUEST
+      assertPageHasTitle("Error: Which contact details do you want to change?")(result)
     }
   }
 

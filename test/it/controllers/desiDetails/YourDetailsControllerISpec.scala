@@ -56,6 +56,7 @@ extends ComponentBaseISpec {
       val result = get(yourDetailsPath)
 
       result.status shouldBe OK
+      assertPageHasTitle("Your details")(result)
     }
 
     "render page with previously entered answers" in {
@@ -112,6 +113,7 @@ extends ComponentBaseISpec {
       val result = post(yourDetailsPath)(body = Map("fullName" -> List("?!@£"), "telephone" -> List("?!@£")))
 
       result.status shouldBe BAD_REQUEST
+      assertPageHasTitle("Error: Your details")(result)
     }
   }
 

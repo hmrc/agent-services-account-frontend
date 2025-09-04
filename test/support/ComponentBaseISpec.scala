@@ -16,7 +16,9 @@
 
 package support
 
+import org.jsoup.Jsoup
 import org.mongodb.scala.MongoDatabase
+import org.scalatest.Assertion
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.IntegrationPatience
@@ -129,7 +131,11 @@ with IntegrationPatience {
     super.beforeEach()
   }
 
-  def get[T](uri: String): WSResponse = await(buildClient(uri).get())
+  def get(uri: String): WSResponse = await(buildClient(uri).get())
+
+  def assertPageHasTitle(pageTitle: String)(result: WSResponse): Assertion = {
+    Jsoup.parse(result.body).select("title").first().text() shouldBe s"$pageTitle - Agent services account - GOV.UK"
+  }
 
   def postQ(uri: String)(body: Map[String, Seq[String]])(queryParam: Seq[(String, String)]): WSResponse = await(
     buildClient(uri)

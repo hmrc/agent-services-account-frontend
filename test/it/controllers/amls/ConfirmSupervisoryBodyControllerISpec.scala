@@ -62,6 +62,7 @@ extends ComponentBaseISpec {
       val result = get(confirmSupervisoryBodyPath)
 
       result.status shouldBe OK
+      assertPageHasTitle("Are you still registered with ABC?")(result)
     }
 
     "display the page with a filled out form if user is revisiting" in {
@@ -154,6 +155,7 @@ extends ComponentBaseISpec {
         val result = post(confirmSupervisoryBodyPath)(body = Map("invalid" -> List("???")))
 
         result.status shouldBe BAD_REQUEST
+        assertPageHasTitle("Error: Are you still registered with ABC?")(result)
       }
     }
   }

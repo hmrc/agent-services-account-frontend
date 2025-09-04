@@ -36,6 +36,7 @@ extends ComponentBaseISpec {
       val result = get(viewContactDetailsPath)
 
       result.status shouldBe OK
+      assertPageHasTitle("Contact details")(result)
     }
 
     "return Internal Server Error if agencyDetails not available" in {

@@ -84,6 +84,7 @@ extends ComponentBaseISpec {
         val result = get(checkYourAnswersPath)
 
         result.status shouldBe OK
+        assertPageHasTitle("Check your answers")(result)
       }
 
       "overseas agent has successfully entered all the data for CYA page" in {

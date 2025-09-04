@@ -41,7 +41,7 @@ extends ComponentBaseISpec {
       val result = get(viewDetailsPath)
 
       result.status shouldBe OK
-
+      assertPageHasTitle("Anti-money laundering supervision details")(result)
     }
 
     "display the page for the first time when AMLS details do not exist" in {

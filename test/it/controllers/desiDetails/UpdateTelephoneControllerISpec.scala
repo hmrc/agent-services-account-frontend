@@ -55,6 +55,7 @@ extends ComponentBaseISpec {
       val result = get(updateTelephonePath)
 
       result.status shouldBe OK
+      assertPageHasTitle("What’s the new telephone number?")(result)
     }
 
     "render page with previous answers" in {
@@ -111,6 +112,7 @@ extends ComponentBaseISpec {
       val result = post(updateTelephonePath)(body = Map("telephoneNumber" -> List("ABC")))
 
       result.status shouldBe BAD_REQUEST
+      assertPageHasTitle("Error: What’s the new telephone number?")(result)
     }
   }
 

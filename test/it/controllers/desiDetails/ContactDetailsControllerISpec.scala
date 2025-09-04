@@ -132,6 +132,7 @@ extends ComponentBaseISpec {
       val result = get(contactDetailsConfirmationPath)
 
       result.status shouldBe OK
+      assertPageHasTitle("You have submitted new contact details")(result)
     }
   }
 
@@ -145,6 +146,7 @@ extends ComponentBaseISpec {
       val result = get(contactDetailsShowBeforeYouStartPath)
 
       result.status shouldBe OK
+      assertPageHasTitle("Contact details")(result)
     }
   }
 

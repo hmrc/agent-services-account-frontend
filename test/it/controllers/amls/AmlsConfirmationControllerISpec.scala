@@ -16,9 +16,8 @@
 
 package it.controllers.amls
 
-import play.api.http.Status.OK
-import support.ComponentBaseISpec
 import stubs.AgentAssuranceStubs._
+import support.ComponentBaseISpec
 
 class AmlsConfirmationControllerISpec
 extends ComponentBaseISpec {
@@ -32,8 +31,7 @@ extends ComponentBaseISpec {
       givenAgentRecordFound(agentRecord)
 
       val result = get(confirmationNewSupervisionPath)
-
-      result.status shouldBe OK
+      assertPageHasTitle("You've changed your supervision details")(result)
     }
   }
 

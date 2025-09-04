@@ -55,6 +55,7 @@ extends ComponentBaseISpec {
       val result = get(enterSaCodePath)
 
       result.status shouldBe OK
+      assertPageHasTitle("What's the agent code you use for Self Assessment?")(result)
     }
 
     "redirect to /view-details if other services request is invalid" in {
@@ -115,6 +116,7 @@ extends ComponentBaseISpec {
       val result = post(enterSaCodePath)(body = Map("saCode" -> List("?!@£")))
 
       result.status shouldBe BAD_REQUEST
+      assertPageHasTitle("Error: What's the agent code you use for Self Assessment?")(result)
     }
   }
 

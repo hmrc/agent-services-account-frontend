@@ -54,7 +54,7 @@ extends ComponentBaseISpec {
       val result = get(newRegistrationNumberPath)
 
       result.status shouldBe OK
-
+      assertPageHasTitle("What’s your registration number?")(result)
       result.body should include("ABCD")
     }
 
@@ -68,6 +68,7 @@ extends ComponentBaseISpec {
       val result = get(newRegistrationNumberPath)
 
       result.status shouldBe OK
+      assertPageHasTitle("What’s your registration number?")(result)
     }
   }
 
@@ -122,6 +123,7 @@ extends ComponentBaseISpec {
       val result = post(newRegistrationNumberPath)(body = Map("invalid" -> List("???")))
 
       result.status shouldBe BAD_REQUEST
+      assertPageHasTitle("Error: What’s your registration number?")(result)
     }
   }
 

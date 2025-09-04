@@ -34,9 +34,6 @@ extends ComponentBaseISpec {
 
   private val repo = inject[SessionCacheRepository]
 
-  private val amlsDetails = AmlsDetails("HMRC")
-  private val amlsDetailsResponse = Future.successful(amlsDetails)
-
   private val newSupervisoryBodyPath = s"$amlsStartPath/new-supervisory-body"
   private val checkYourAnswersPath = s"$amlsStartPath/check-your-answers"
   private val newRegistrationNumberPath = s"$amlsStartPath/new-registration-number"
@@ -55,11 +52,6 @@ extends ComponentBaseISpec {
     newExpirationDate = Some(LocalDate.parse("2024-10-10"))
   )
 
-  private val amlsBodies = Map(
-    "ACCA" -> "Association of Certified Chartered Accountants",
-    "HMRC" -> "HM Revenue and Customs (HMRC)"
-  )
-
   s"GET $newSupervisoryBodyPath" should {
     "display the page for UK agent" in {
 
@@ -71,9 +63,7 @@ extends ComponentBaseISpec {
       val result = get(newSupervisoryBodyPath)
 
       result.status shouldBe OK
-
-      result.body should include("What’s the name of your supervisory body?")
-
+      assertPageHasTitle("What’s the name of your supervisory body?")(result)
     }
 
     "display the page for overseas agent" in {
@@ -159,6 +149,7 @@ extends ComponentBaseISpec {
       val result: WSResponse = post(newSupervisoryBodyPath)(Map("something" -> List("invalid")))
 
       result.status shouldBe BAD_REQUEST
+      assertPageHasTitle("Error: What’s the name of your supervisory body?")(result)
 
     }
   }

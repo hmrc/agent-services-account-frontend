@@ -63,6 +63,7 @@ extends ComponentBaseISpec {
       val result = get(applySaCodeChangesPath)
 
       result.status shouldBe OK
+      assertPageHasTitle("Do you want to apply these changes to your Self Assessment agent code?")(result)
     }
 
     "redirect to /manage-account/contact-details/view when there are no changes selected" in {
@@ -149,6 +150,7 @@ extends ComponentBaseISpec {
       val result = post(applySaCodeChangesPath)(body = Map("invalid" -> List("???")))
 
       result.status shouldBe BAD_REQUEST
+      assertPageHasTitle("Error: Do you want to apply these changes to your Self Assessment agent code?")(result)
     }
   }
 

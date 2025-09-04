@@ -56,6 +56,7 @@ extends ComponentBaseISpec {
       val result = get(enterRenewalDatePath)
 
       result.status shouldBe OK
+      assertPageHasTitle("When do you need to renew your registration?")(result)
     }
 
     "display the page when answer already provided" in {
@@ -124,6 +125,7 @@ extends ComponentBaseISpec {
         val result = post(enterRenewalDatePath)(body = Map("invalid" -> List("???")))
 
         result.status shouldBe BAD_REQUEST
+        assertPageHasTitle("Error: When do you need to renew your registration?")(result)
       }
     }
   }

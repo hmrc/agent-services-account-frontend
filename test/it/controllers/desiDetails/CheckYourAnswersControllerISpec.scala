@@ -69,6 +69,7 @@ extends ComponentBaseISpec {
       val result = get(checkYourAnswersPath)
 
       result.status shouldBe OK
+      assertPageHasTitle("Check your answers")(result)
     }
 
     "redirect to /manage-account/contact-details/view if there are no new details in session" in {
