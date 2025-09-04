@@ -57,6 +57,7 @@ extends ComponentBaseISpec {
       val result = get(selectDetailsPath)
 
       result.status shouldBe OK
+      assertPageHasTitle("Which contact details do you want to change?")(result)
 
       result.body should include("businessName")
     }
@@ -86,6 +87,7 @@ extends ComponentBaseISpec {
       val result = post(selectDetailsPath)(body = Map("businessName" -> List("?!@£")))
 
       result.status shouldBe BAD_REQUEST
+      assertPageHasTitle("Error: Which contact details do you want to change?")(result)
     }
 
     "return Bad Request if the data submitted is empty" in {

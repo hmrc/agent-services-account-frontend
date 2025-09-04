@@ -53,6 +53,7 @@ extends ComponentBaseISpec {
       val result = get(viewDetailsPath)
 
       result.status shouldBe OK
+      assertPageHasTitle("Anti-money laundering supervision details")(result)
 
     }
   }
