@@ -52,6 +52,7 @@ extends ComponentBaseISpec {
       val result = get(accountLimitedPath)
 
       result.status shouldBe OK
+      assertPageHasTitle("We have suspended your access to your agent services account")(result)
     }
   }
 
@@ -116,6 +117,7 @@ extends ComponentBaseISpec {
         )
 
       result.status shouldBe BAD_REQUEST
+      assertPageHasTitle("Error: Contact Details")(result)
     }
   }
 
@@ -159,6 +161,8 @@ extends ComponentBaseISpec {
         )
 
       result.status shouldBe BAD_REQUEST
+      assertPageHasTitle("Error: Contact Details")(result)
+
     }
     s"redirect to ${routes.SuspendedJourneyController.showSuspendedSummary().url} when form is submitted with correct information" in {
 
@@ -241,7 +245,7 @@ extends ComponentBaseISpec {
     }
   }
 
-  "showSuspendedConfirmation" should {
+  s"GET $recoveryRequestConfirmationPath" should {
     "return Ok and show the confirmation page" in {
 
       givenAuthorisedAsAgentWith(arn.value)
@@ -250,6 +254,7 @@ extends ComponentBaseISpec {
       val result = get(recoveryRequestConfirmationPath)
 
       result.status shouldBe OK
+      assertPageHasTitle("We have received your details")(result)
     }
   }
 
