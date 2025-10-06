@@ -57,8 +57,8 @@
                 content = Text(msgs("amls.enter-registration-number.h1")),
                 isPageHeading = true
             ),
-            spellcheck = Some(false)).withFormField(form("number")
-        ))
+            spellcheck = Some(false)
+        ).withFormField(form("number"))
 
         @govukButton(Button(content = Text(msgs("common.continue")), classes = "govuk-!-margin-top-5"))
 
