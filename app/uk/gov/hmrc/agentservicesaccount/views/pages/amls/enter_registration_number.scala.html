@@ -24,6 +24,7 @@
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.errorsummary.ErrorSummary
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.fieldset.{Fieldset, Legend}
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.input.Input
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.label.Label
 @import uk.gov.hmrc.hmrcfrontend.views.Implicits.RichErrorSummary
 
 
@@ -40,15 +41,6 @@
 
 @(form: Form[String], cya: Boolean)(implicit request: RequestHeader, msgs: Messages, appConfig: AppConfig)
 
-
-@fieldsetHtml = {
-
- @govukInput(Input(
-        spellcheck = Some(false)).withFormField(form("number")))
-
-}
-
-
 @main(
     pageTitle = withErrorPrefix(form.hasErrors, msgs("amls.enter-registration-number.h1")),
     mimicBrowserBackLink = true,
@@ -59,14 +51,13 @@
     }
 
     @formWithCSRF(action = routes.EnterRegistrationNumberController.onSubmit(cya)) {
-        @govukFieldset(Fieldset(
-            html = fieldsetHtml,
-            legend = Some(Legend(
+        @govukInput(Input(
+            label = Label(
+                classes = "govuk-label--l",
                 content = Text(msgs("amls.enter-registration-number.h1")),
-                classes = "govuk-fieldset__legend--l",
-
                 isPageHeading = true
-            ))
+            ),
+            spellcheck = Some(false)).withFormField(form("number")
         ))
 
         @govukButton(Button(content = Text(msgs("common.continue")), classes = "govuk-!-margin-top-5"))
