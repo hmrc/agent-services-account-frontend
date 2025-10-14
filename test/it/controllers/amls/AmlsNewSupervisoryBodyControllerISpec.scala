@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,14 +20,12 @@ import play.api.libs.ws.WSResponse
 import play.api.test.Helpers._
 import support.ComponentBaseISpec
 import uk.gov.hmrc.agentservicesaccount.controllers.amlsJourneyKey
-import uk.gov.hmrc.agentservicesaccount.models.AmlsDetails
 import uk.gov.hmrc.agentservicesaccount.models.AmlsStatuses
 import uk.gov.hmrc.agentservicesaccount.models.UpdateAmlsJourney
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
 import stubs.AgentAssuranceStubs.givenAgentRecordFound
 
 import java.time.LocalDate
-import scala.concurrent.Future
 
 class AmlsNewSupervisoryBodyControllerISpec
 extends ComponentBaseISpec {

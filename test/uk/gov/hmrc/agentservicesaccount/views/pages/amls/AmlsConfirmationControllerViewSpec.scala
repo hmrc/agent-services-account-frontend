@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,9 +37,9 @@ extends ViewBaseSpec {
       doc.select(".govuk-header__service-name").first.text() mustBe "Agent services account"
       doc.select(".govuk-header__service-name").first.attr("href") mustBe "/agent-services-account"
 
-      doc.select(".govuk-panel__title").first().text() mustBe "You've changed your supervision details" // title
+      doc.select(".govuk-panel__title").first().text() mustBe "You’ve changed your supervision details" // title
       doc.select(".govuk-heading-m").first().text() mustBe "What happens next" // h2
-      doc.select(".govuk-body").first().text() mustBe "We'll update your anti-money laundering supervision details on your agent services accounts." // p
+      doc.select(".govuk-body").first().text() mustBe "We’ll update your anti-money laundering supervision details on your agent services accounts." // p
 
       doc.select(".govuk-link").get(2).text() mustBe "Return to manage account"
       doc.select(".hmrc-sign-out-nav__link").first.text() mustBe "Sign out"
@@ -54,9 +54,9 @@ extends ViewBaseSpec {
       doc.select(".govuk-header__service-name").first.text() mustBe "Agent services account"
       doc.select(".govuk-header__service-name").first.attr("href") mustBe "/agent-services-account"
 
-      doc.select(".govuk-panel__title").first().text() mustBe "You've added your supervision details" // title
+      doc.select(".govuk-panel__title").first().text() mustBe "You’ve added your supervision details" // title
       doc.select(".govuk-heading-m").first().text() mustBe "What happens next" // h2
-      doc.select(".govuk-body").first().text() mustBe "We'll update your anti-money laundering supervision details on your agent services accounts." // p
+      doc.select(".govuk-body").first().text() mustBe "We’ll update your anti-money laundering supervision details on your agent services accounts." // p
 
       doc.select(".govuk-link").get(2).text() mustBe "Return to manage account"
       doc.select(".hmrc-sign-out-nav__link").first.text() mustBe "Sign out"

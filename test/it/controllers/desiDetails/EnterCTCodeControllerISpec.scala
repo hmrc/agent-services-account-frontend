@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,7 +55,7 @@ extends ComponentBaseISpec {
       val result = get(enterCtCodePath)
 
       result.status shouldBe OK
-      assertPageHasTitle("What's the agent code you use for Corporation Tax?")(result)
+      assertPageHasTitle("What’s the agent code you use for Corporation Tax?")(result)
     }
 
     "redirect to /view-details if other services request is invalid" in {
@@ -116,7 +116,7 @@ extends ComponentBaseISpec {
       val result = post(enterCtCodePath)(body = Map("ctCode" -> List("?!@£")))
 
       result.status shouldBe BAD_REQUEST
-      assertPageHasTitle("Error: What's the agent code you use for Corporation Tax?")(result)
+      assertPageHasTitle("Error: What’s the agent code you use for Corporation Tax?")(result)
     }
   }
 

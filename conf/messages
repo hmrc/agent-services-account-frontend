@@ -84,7 +84,7 @@ asa.ppt.col2.link1=<a class="govuk-link" href="{0}" rel="noreferrer noopener">Re
 asa.cbc.col1.h2=Manage country-by-country reports
 asa.cbc.col1.h3=Country-by-country reports
 asa.cbc-section.col1.link1.p=You must first get an authorisation from your client. You can do this by <a class="govuk-link" href="{0}"> requesting an authorisation</a>
-asa.cbc-section.col1.link2.p=Manage your clients'' country-by-country reports and your country-by-country agent contact details
+asa.cbc-section.col1.link2.p=Manage your clients’ country-by-country reports and your country-by-country agent contact details
 
 # Pillar2
 asa.pillar2.col1.h2=Report Pillar 2 top-up taxes
@@ -347,7 +347,7 @@ manage.account.manage-access-permissions.access-groups.OptedInNotReady=Turn off 
 manage.account.manage-access-permissions.access-groups.OptedInReady=Turn off access groups
 manage.account.manage-access-permissions.access-groups.OptedOutEligible=Turn on access groups
 manage.account.manage-access-permissions.access-groups.create-new.a=Create new access group
-manage.account.manage-access-permissions.access-groups.hint=Access groups allow you to restrict which team members can manage a client’s tax. 
+manage.account.manage-access-permissions.access-groups.hint=Access groups allow you to restrict which team members can manage a client’s tax.
 manage.account.manage-access-permissions.access-groups.manage.a=Manage access groups
 manage.account.manage-access-permissions.heading=Access groups
 manage.account.manage-access-permissions.inset-text.OptedInNotReady=You have turned on access groups but need to wait until your client details are ready to use with access groups. You will receive a confirmation email  after which you can start using access groups.
@@ -559,15 +559,15 @@ update-contact-details.apply-ct-code-changes.error.empty=Select yes if you want 
 update-contact-details.apply-sa-code-changes.heading=Do you want to apply these changes to your Self Assessment agent code?
 update-contact-details.apply-sa-code-changes.error.empty=Select yes if you want to apply these changes to your Self Assessment agent code.
 
-update-contact-details.sa-code.heading=What''s the agent code you use for Self Assessment?
+update-contact-details.sa-code.heading=What’s the agent code you use for Self Assessment?
 update-contact-details.sa-code.hint=This is a 6-character code made up of numbers and letters. For example, A1234B or 5678CD.
-update-contact-details.sa-code.p1=If you cannot find the code, select 'Continue without code'.
+update-contact-details.sa-code.p1=If you cannot find the code, select ‘Continue without code’.
 update-contact-details.sa-code.error.empty=Enter the agent code you use for Self Assessment.
 update-contact-details.sa-code.error.invalid=Enter an agent code that is 6 characters long.
 
-update-contact-details.ct-code.heading=What''s the agent code you use for Corporation Tax?
+update-contact-details.ct-code.heading=What’s the agent code you use for Corporation Tax?
 update-contact-details.ct-code.hint=This is a 6-character code made up of numbers and letters. For example, A1234B or 5678CD.
-update-contact-details.ct-code.p1=If you cannot find the code, select 'Continue without code'.
+update-contact-details.ct-code.p1=If you cannot find the code, select ‘Continue without code’.
 update-contact-details.ct-code.error.empty=Enter the agent code you use for Corporation Tax.
 update-contact-details.ct-code.error.invalid=Enter an agent code that is 6 characters long.
 
@@ -591,9 +591,9 @@ admin-access.button=Go to manage account
 
 #AMLS
 amls.add-details.h1=Anti-money laundering supervision details
-add.amls.confirmation.h1=You''ve added your supervision details
-amls.confirmation.h1=You''ve changed your supervision details
-amls.confirmation.p1=We''ll update your anti-money laundering supervision details on your agent services accounts.
+add.amls.confirmation.h1=You’ve added your supervision details
+amls.confirmation.h1=You’ve changed your supervision details
+amls.confirmation.p1=We’ll update your anti-money laundering supervision details on your agent services accounts.
 amls.confirmation.link=Return to manage account
 amls.enter-renewal-update.title=What are your money laundering supervision registration details?
 amls.enter-renewal.h1=What are your money laundering supervision registration details?
