@@ -1,7 +1,7 @@
 import sbt.*
 
 object AppDependencies {
-  private val mongoVersion: String = "2.9.0"
+  private val mongoVersion: String = "2.10.0"
   private val bootstrapVersion: String = "10.2.0"
   private val enumeratumVersion = "1.9.0"
 
