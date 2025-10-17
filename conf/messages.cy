@@ -594,7 +594,7 @@ amls.add-details.h1=Manylion ynghylch goruchwyliaeth gwrth-wyngalchu arian
 add.amls.confirmation.h1=Rydych wedi ychwanegu eich manylion o ran goruchwyliaeth
 amls.confirmation.h1=Rydych wedi newid eich manylion o ran goruchwyliaeth
 amls.confirmation.p1=Byddwn yn diweddaru eich manylion ynghylch goruchwyliaeth gwrth-wyngalchu arian ar eich cyfrif gwasanaethau asiant.
-amls.confirmation.link=''Dychwelyd i ''Rheoli''r cyfrif''
+amls.confirmation.link=Dychwelyd i ‘Rheoli’r cyfrif’
 amls.enter-renewal-update.title=What are your money laundering supervision registration details? TBC
 amls.enter-renewal.h1=What are your money laundering supervision registration details? TBC
 amls.enter-renewal-body.hint=Start typing and select your supervisory body from the list. TBC
@@ -661,7 +661,7 @@ amls.enter-registration-number.error.hmrc.invalid=Nodwch eich rhif cofrestru yn 
 amls.check-your-answers.h1=Gwirio’ch atebion
 amls.check-your-answers.p=Manylion ynghylch goruchwyliaeth gwrth-wyngalchu arian
 amls.check-your-answers.supervisory-body=Corff goruchwylio
-amls.check-your-answers.registration-number='Rhif cofrestru
+amls.check-your-answers.registration-number=Rhif cofrestru
 amls.check-your-answers.renewal-date=Dyddiad nesaf ar gyfer adnewyddu
 amls.check-your-answers.submit-button=Cyflwyno’ch manylion
 

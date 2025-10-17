@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,7 +55,7 @@ extends ViewBaseSpec {
     def testPageStaticContent(doc: Document): Unit = {
 
       "have the correct h1 heading and introduction" in {
-        doc.select("h1").first.text() mustBe "What's the agent code you use for Corporation Tax?"
+        doc.select("h1").first.text() mustBe "What’s the agent code you use for Corporation Tax?"
       }
 
       "have the correct hint" in {
@@ -85,7 +85,7 @@ extends ViewBaseSpec {
       testPageStaticContent(doc)
 
       "display the correct page title" in {
-        doc.title() mustBe "What's the agent code you use for Corporation Tax? - Agent services account - GOV.UK"
+        doc.title() mustBe "What’s the agent code you use for Corporation Tax? - Agent services account - GOV.UK"
       }
     }
 
@@ -102,7 +102,7 @@ extends ViewBaseSpec {
       testPageStaticContent(doc)
 
       "display error prefix on page title" in {
-        doc.title() mustBe "Error: What's the agent code you use for Corporation Tax? - Agent services account - GOV.UK"
+        doc.title() mustBe "Error: What’s the agent code you use for Corporation Tax? - Agent services account - GOV.UK"
       }
 
       "display correct error summary link" in {

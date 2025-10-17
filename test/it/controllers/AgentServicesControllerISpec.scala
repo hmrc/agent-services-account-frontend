@@ -307,7 +307,7 @@ extends BaseISpec {
         sixPs.get(0).select("a").get(0).text shouldBe "requesting an authorisation"
         sixPs.get(0).select("a").get(0).attr("href") shouldBe "http://localhost:9435/agent-client-relationships/authorisation-request"
 
-        sixPs.get(1).text shouldBe "Manage your clients' country-by-country reports and your country-by-country agent contact details"
+        sixPs.get(1).text shouldBe "Manage your clients’ country-by-country reports and your country-by-country agent contact details"
         sixPs.get(1).select("a").get(0).attr("href") shouldBe "https://www.tax.service.gov.uk/send-a-country-by-country-report"
 
         // Plastic Packaging Tax
