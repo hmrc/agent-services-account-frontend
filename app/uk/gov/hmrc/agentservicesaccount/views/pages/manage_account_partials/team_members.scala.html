@@ -26,21 +26,21 @@
 
     @h2("manage.account.manage-team-members.heading")
 
-    @details("manage.account.team-members.details.title",
-        Html(
-            p("manage.account.team-members.details.p1") +
-            p("manage.account.team-members.details.p2").toString()
-        )
-    )
-
-    @p(key = "manage.account.team-members.p")
     @ol_html(
         id = Some("manage-team-members"),
         items = Seq(
-            a(key = "manage.account.team-members.external-manage-link", href = appConfig.addUserUrl, openInNewWindow = true),
-            a(key = "manage.account.manage-user-access", href = appConfig.manageUsersUrl, openInNewWindow = true)
+            a(key = "manage.account.team-members.external-manage-link", href = appConfig.addUserUrl),
+            a(key = "manage.account.manage-user-access", href = appConfig.manageUsersUrl)
         ),
         liClasses = Some("govuk-!-margin-bottom-2")
+    )
+
+    @details("manage.account.team-members.details.title",
+        Html(
+            p("manage.account.team-members.details.p1") +
+            p("manage.account.team-members.details.p2").toString() +
+            p("manage.account.team-members.details.p3").toString()
+        )
     )
 
 
