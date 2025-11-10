@@ -408,13 +408,13 @@ extends BaseISpec {
   def verifyHowToManageSection(html: Document): Assertion = {
     val section = html.select("#how-to-manage-team-members-section")
     section.select("h2").text shouldBe "Manage team members on your agent services account"
-    section.select(detailsSummary).text() shouldBe "How to add or remove team members"
-    section.select(detailsText).text() shouldBe "Use the link in this section to create a new Government Gateway user ID for your team members. These IDs will be linked to the agent services account. Once your team members have verified their new IDs, you can give them access to the account. You can also remove a team member’s access using the same link."
+    section.select(detailsSummary).text() shouldBe "How team members access the agent services account"
+    section.select(detailsText).text() shouldBe "When you add a team member, you get a temporary password to give to them. We also email them with a new Government Gateway user ID. The new user ID allows the team member to access this agent services account. An administrator can decide what level of access the team member gets to client details, taxes and schemes."
 
     val list = section.select("ol.govuk-list--number li")
-    list.get(0).select("a").text shouldBe "Create Government Gateway user IDs for team members (opens in a new tab)"
+    list.get(0).select("a").text shouldBe "Add, remove and manage team members"
     list.get(0).select("a").attr("href") shouldBe s"http://localhost:1111/user-profile-redirect-frontend/group-profile-management"
-    list.get(1).select("a").text shouldBe "Manage team member access to your agent services account (opens in a new tab)"
+    list.get(1).select("a").text shouldBe "Choose which taxes and schemes the team members can access"
     list.get(1).select("a").attr("href") shouldBe s"http://localhost:1111/tax-and-scheme-management/users?origin=Agent"
     section.select("hr").isEmpty shouldBe false
 
