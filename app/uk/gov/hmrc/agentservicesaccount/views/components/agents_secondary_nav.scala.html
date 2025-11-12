@@ -19,29 +19,48 @@
 
 @this(a:a,h1: h1, p: p, span: span)
 
-@(isAdmin: Boolean)(implicit msgs: Messages)
+@(currentPath: String, isAdmin: Boolean)(implicit msgs: Messages)
+
+@pathSelectedClass(currentPath: String, href:String) = @{
+    if (currentPath == href) "hmrc-account-menu__link--active" else ""
+}
+
+@rootUrlClass = @{
+    Seq(
+        "hmrc-account-menu__link",
+        "hmrc-account-menu__link--home",
+        pathSelectedClass(currentPath, routes.AgentServicesController.root().url + "/home")
+    ).mkString(" ")
+}
+
+@manageAccountUrlClass = @{
+    Seq(
+        "hmrc-account-menu__link",
+        pathSelectedClass(currentPath, routes.AgentServicesController.manageAccount.url)
+    ).mkString(" ")
+}
 
 <nav id="secondary-nav" class="hmrc-account-menu" aria-label='@msgs("nav.aria.account-menu")'>
     <a href="@routes.AgentServicesController.root().url"
-        class="hmrc-account-menu__link hmrc-account-menu__link--home">
+        class="@rootUrlClass">
         @span("nav.home", classes = Some("hmrc-account-icon hmrc-account-icon--home"))
     </a>
     @if(isAdmin) {
-        <a href="@routes.AgentServicesController.manageAccount.url" class="hmrc-account-menu__link">
+        <a href="@routes.AgentServicesController.manageAccount.url" class="@manageAccountUrlClass">
             <span>@msgs("nav.manage.account")</span>
         </a>
     } else{
         @a(
             key = "nav.your.account",
             href = routes.AgentServicesController.yourAccount.url,
-            classes = Some("hmrc-account-menu__link"),
+            classes = Some("hmrc-account-menu__link " + pathSelectedClass(currentPath, routes.AgentServicesController.yourAccount.url)),
             addStandardClasses = false
         )
     }
     @a(
         key = "nav.help",
         href = routes.AgentServicesController.showHelp.url,
-        classes = Some("hmrc-account-menu__link"),
+        classes = Some("hmrc-account-menu__link " + pathSelectedClass(currentPath, routes.AgentServicesController.showHelp.url)),
         addStandardClasses = false
     )
 </nav>

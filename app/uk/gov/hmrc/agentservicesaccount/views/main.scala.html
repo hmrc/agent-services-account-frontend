@@ -68,7 +68,7 @@
 }
 @beforeContent = {
     @if(showSecondaryNav && isSignedIn){
-        @secondary_nav(isAdmin = isAdmin)
+        @secondary_nav(currentPath = request.path, isAdmin = isAdmin)
     }
     @hmrcLanguageSelectHelper()
     @backLink.map(link => govukBackLink(link))
