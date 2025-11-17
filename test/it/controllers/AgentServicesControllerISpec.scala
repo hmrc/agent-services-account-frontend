@@ -18,6 +18,7 @@ package it.controllers
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import org.jsoup.select.Elements
 import org.scalatest.Assertion
 import play.api.i18n.Messages
 import play.api.test.Helpers
@@ -175,7 +176,8 @@ extends BaseISpec {
       ): Assertion = {
         val clientAuthSection = html.select("#client-authorisation-section")
         expectedH2(html, "Client authorisations")
-        clientAuthSection.select("p").text shouldBe "You must ask your client to authorise you through your agent services account before you can access any services. Copy across an old authorisation or create a new one."
+        // Only check the lead paragraph text, not nested banner paragraphs
+        clientAuthSection.select("> p").text shouldBe "You must ask your client to authorise you through your agent services account before you can access any services. Copy across an old authorisation or create a new one."
         val links = clientAuthSection.select("ul li a")
         links.get(0).text() shouldBe "Ask a client to authorise you"
         links.get(0).attr("href") shouldBe "http://localhost:9435/agent-client-relationships/authorisation-request"
@@ -185,6 +187,12 @@ extends BaseISpec {
         links.get(2).attr("href") shouldBe "http://localhost:9435/agent-client-relationships/manage-authorisation-requests"
         links.get(3).text() shouldBe "Cancel a client’s authorisation"
         links.get(3).attr("href") shouldBe "http://localhost:9435/agent-client-relationships/agent-cancel-authorisation"
+
+        // Verify ITSA notification banner content appears within the section
+        val clientAuthText = clientAuthSection.text()
+        clientAuthText should include("Get ready for making Tax Digital for Income Tax")
+        clientAuthText should include("You can use Self Assessment client authorisations to manage Making Tax Digital for Income Tax.")
+        clientAuthText should include("To do this, make sure all your Self Assessment client authorisations have been added to this account")
       }
 
       "an authorised agent with no suspension" in {
