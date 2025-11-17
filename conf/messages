@@ -129,6 +129,9 @@ asa.section4.col1.link0=Ask a client to authorise you
 asa.section4.col2.link1=Add existing Self Assessment authorisations to your agent services account
 asa.section4.col2.link2=Manage your authorisation requests from the last 30 days
 asa.section4.col2.link3=Cancel a client’s authorisation
+asa.section4.itsa.notification.h3=Get ready for making Tax Digital for Income Tax
+asa.section4.itsa.notification.p.1=You can use Self Assessment client authorisations to manage Making Tax Digital for Income Tax.
+asa.section4.itsa.notification.p.2=To do this, make sure all your Self Assessment client authorisations have been added to this account
 asa.section4.h2=Client authorisations
 
 # ITSA (Legacy content prior to EMA)
