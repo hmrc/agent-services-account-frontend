@@ -129,6 +129,9 @@ asa.section4.col1.link0=Gofyn i gleient eich awdurdodi
 asa.section4.col2.link1=Ychwanegwch awdurdodiadau presennol ar gyfer Hunanasesiad at eich cyfrif gwasanaethau asiant
 asa.section4.col2.link2=Rheoli’ch ceisiadau am awdurdodiad o’r 30 diwrnod diwethaf
 asa.section4.col2.link3=Canslo awdurdodiad cleient
+asa.section4.itsa.notification.h3=???
+asa.section4.itsa.notification.p.1=???
+asa.section4.itsa.notification.p.2=???
 asa.section4.h2=Awdurdodiadau cleientiaid
 
 # ITSA (Legacy content prior to EMA)
