@@ -56,21 +56,20 @@
 ) {
     @h1("asa.heading")
     @p(msgs("agent.accountNumber", arn))
-
+    @banner(
+        Seq(
+            h3(msgs("asa.section4.itsa.notification.h3")),
+            p(msgs("asa.section4.itsa.notification.p.1")),
+            p(msgs("asa.section4.itsa.notification.p.2")),
+            a(href = appConfig.agentMappingUrl, key = "asa.section4.col2.link1")
+        )
+    )
     <section id="client-authorisation-section">
         @h2("asa.section4.h2")
         @p("asa.client-authorisations.p")
         @ul_html(
             items = Seq[Html](
                 a(href = appConfig.agentClientRelationshipsFrontendInvitationsUrl, key = "asa.section4.col1.link0"),
-                banner(
-                    Seq(
-                        h3(msgs("asa.section4.itsa.notification.h3")),
-                        p(msgs("asa.section4.itsa.notification.p.1")),
-                        p(msgs("asa.section4.itsa.notification.p.2")),
-                        a(href = appConfig.agentMappingUrl, key = "asa.section4.col2.link1")
-                    )
-                ),
                 a(href = appConfig.agentClientRelationshipsFrontendTrackUrl, key = "asa.section4.col2.link2"),
                 a(href = appConfig.agentClientRelationshipsFrontendDeauthUrl, key = "asa.section4.col2.link3")
             ),
