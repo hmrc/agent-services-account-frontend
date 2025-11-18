@@ -58,10 +58,10 @@
     @p(msgs("agent.accountNumber", arn))
     @banner(
         Seq(
-            h3(msgs("asa.section4.itsa.notification.h3")),
-            p(msgs("asa.section4.itsa.notification.p.1")),
-            p(msgs("asa.section4.itsa.notification.p.2")),
-            a(href = appConfig.agentMappingUrl, key = "asa.section4.col2.link1")
+            h3("asa.section4.itsa.notification.h3"),
+            p("asa.section4.itsa.notification.p.1", classes = Some("govuk-body-s"), addStandardClasses=false),
+            p("asa.section4.itsa.notification.p.2", classes = Some("govuk-body-s"), addStandardClasses=false),
+            a(href = appConfig.agentMappingUrl, key = "asa.section4.col2.link1", classes = Some("govuk-link govuk-body-s"), addStandardClasses=false)
         )
     )
     <section id="client-authorisation-section">
