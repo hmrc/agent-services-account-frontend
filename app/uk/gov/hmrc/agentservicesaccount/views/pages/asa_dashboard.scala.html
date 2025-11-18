@@ -37,16 +37,21 @@
         isAdmin: Boolean = false
 )(implicit request: RequestHeader, msgs: Messages, appConfig: AppConfig)
 
-@banner(content:Seq[Html]) = {
+@banner(content:Html) = {
     @govukNotificationBanner(
         NotificationBanner(
             content = HtmlContent(
-                ul_html(
-                    content
-                )
+                content
             )
         )
     )
+}
+
+@add_existingSA = {
+    @h3("asa.section4.itsa.notification.h3")
+    @p("asa.section4.itsa.notification.p.1", classes = Some("govuk-body-s"), addStandardClasses=false)
+    @p("asa.section4.itsa.notification.p.2", classes = Some("govuk-body-s"), addStandardClasses=false)
+    @a(href = appConfig.agentMappingUrl, key = "asa.section4.col2.link1", classes = Some("govuk-link govuk-body-s"), addStandardClasses=false)
 }
 
 @main(
@@ -56,14 +61,8 @@
 ) {
     @h1("asa.heading")
     @p(msgs("agent.accountNumber", arn))
-    @banner(
-        Seq(
-            h3("asa.section4.itsa.notification.h3"),
-            p("asa.section4.itsa.notification.p.1", classes = Some("govuk-body-s"), addStandardClasses=false),
-            p("asa.section4.itsa.notification.p.2", classes = Some("govuk-body-s"), addStandardClasses=false),
-            a(href = appConfig.agentMappingUrl, key = "asa.section4.col2.link1", classes = Some("govuk-link govuk-body-s"), addStandardClasses=false)
-        )
-    )
+    @banner(add_existingSA)
+
     <section id="client-authorisation-section">
         @h2("asa.section4.h2")
         @p("asa.client-authorisations.p")
