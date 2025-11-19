@@ -48,10 +48,13 @@
 }
 
 @add_existingSA = {
-    @h3("asa.section4.itsa.notification.h3")
-    @p("asa.section4.itsa.notification.p.1", classes = Some("govuk-body-s"), addStandardClasses=false)
-    @p("asa.section4.itsa.notification.p.2", classes = Some("govuk-body-s"), addStandardClasses=false)
-    @a(href = appConfig.agentMappingUrl, key = "asa.section4.col2.link1", classes = Some("govuk-link govuk-body-s"), addStandardClasses=false)
+    @h2("asa.section4.itsa.notification.h3")
+    @p("asa.section4.itsa.notification.p.1")
+    @p("asa.section4.itsa.notification.p.2")
+    @a(
+        href = appConfig.agentMappingUrl,
+        key = "asa.section4.col2.link1"
+    )
 }
 
 @main(
