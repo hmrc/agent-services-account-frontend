@@ -186,7 +186,7 @@ extends BaseISpec {
 
         val notification = html.select(".govuk-notification-banner")
         notification.isEmpty() shouldBe false
-        notification.select("h2").text() shouldBe "Important"
+        notification.select(".govuk-notification-banner__title").text() shouldBe "Important"
         val notificationText = notification.text()
         notificationText should include("Get ready for making Tax Digital for Income Tax")
         notificationText should include("You can use Self Assessment client authorisations to manage Making Tax Digital for Income Tax.")
