@@ -19,13 +19,16 @@
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 @import uk.gov.hmrc.agentservicesaccount.views.html.pages.dashboard_partials._
 
+@import uk.gov.hmrc.govukfrontend.views.html.components._
+
 @this(
         main: main,
-        p: p, h1: h1, h2: h2, h3: h3, h4: h4,
+        p: p, h1: h1, h2: h2, h4: h4,
         ul_html: ul_html, a: a, span: span,
         agents_ur_banner: agents_ur_banner,
         tax_services_accordion: tax_services_accordion,
-        manage_section: manage_section
+        manage_section: manage_section,
+        govukNotificationBanner : GovukNotificationBanner
 )
 
 @(
@@ -34,14 +37,34 @@
         isAdmin: Boolean = false
 )(implicit request: RequestHeader, msgs: Messages, appConfig: AppConfig)
 
+@banner(content:Html) = {
+    @govukNotificationBanner(
+        NotificationBanner(
+            content = HtmlContent(
+                content
+            )
+        )
+    )
+}
+
+@add_existingSA = {
+    @h2("asa.section4.itsa.notification.h2")
+    @p("asa.section4.itsa.notification.p.1")
+    @p("asa.section4.itsa.notification.p.2")
+    @a(
+        href = appConfig.agentMappingUrl,
+        key = "asa.section4.col2.link1"
+    )
+}
+
 @main(
     pageTitle = msgs("asa.heading"),
     isAdmin = isAdmin,
     additionalBanner = Some(agents_ur_banner(isShownRecruitmentBanner))
 ) {
-
     @h1("asa.heading")
     @p(msgs("agent.accountNumber", arn))
+    @banner(add_existingSA)
 
     <section id="client-authorisation-section">
         @h2("asa.section4.h2")
@@ -49,7 +72,6 @@
         @ul_html(
             items = Seq[Html](
                 a(href = appConfig.agentClientRelationshipsFrontendInvitationsUrl, key = "asa.section4.col1.link0"),
-                a(href = appConfig.agentMappingUrl, key = "asa.section4.col2.link1"),
                 a(href = appConfig.agentClientRelationshipsFrontendTrackUrl, key = "asa.section4.col2.link2"),
                 a(href = appConfig.agentClientRelationshipsFrontendDeauthUrl, key = "asa.section4.col2.link3")
             ),

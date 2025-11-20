@@ -174,17 +174,26 @@ extends BaseISpec {
         betaInviteContent: Boolean = true
       ): Assertion = {
         val clientAuthSection = html.select("#client-authorisation-section")
-        expectedH2(html, "Client authorisations")
-        clientAuthSection.select("p").text shouldBe "You must ask your client to authorise you through your agent services account before you can access any services. Copy across an old authorisation or create a new one."
+        clientAuthSection.select("h2").text() shouldBe "Client authorisations"
+        clientAuthSection.select("> p").text shouldBe "You must ask your client to authorise you through your agent services account before you can access any services. Copy across an old authorisation or create a new one."
         val links = clientAuthSection.select("ul li a")
         links.get(0).text() shouldBe "Ask a client to authorise you"
         links.get(0).attr("href") shouldBe "http://localhost:9435/agent-client-relationships/authorisation-request"
-        links.get(1).text() shouldBe "Add existing Self Assessment authorisations to your agent services account"
-        links.get(1).attr("href") shouldBe "http://localhost:9438/agent-mapping/start"
-        links.get(2).text() shouldBe "Manage your authorisation requests from the last 30 days"
-        links.get(2).attr("href") shouldBe "http://localhost:9435/agent-client-relationships/manage-authorisation-requests"
-        links.get(3).text() shouldBe "Cancel a client’s authorisation"
-        links.get(3).attr("href") shouldBe "http://localhost:9435/agent-client-relationships/agent-cancel-authorisation"
+        links.get(1).text() shouldBe "Manage your authorisation requests from the last 30 days"
+        links.get(1).attr("href") shouldBe "http://localhost:9435/agent-client-relationships/manage-authorisation-requests"
+        links.get(2).text() shouldBe "Cancel a client’s authorisation"
+        links.get(2).attr("href") shouldBe "http://localhost:9435/agent-client-relationships/agent-cancel-authorisation"
+
+        val notification = html.select(".govuk-notification-banner")
+        notification.isEmpty() shouldBe false
+        notification.select(".govuk-notification-banner__title").text() shouldBe "Important"
+        val notificationText = notification.text()
+        notificationText should include("Get ready for making Tax Digital for Income Tax")
+        notificationText should include("You can use Self Assessment client authorisations to manage Making Tax Digital for Income Tax.")
+        notificationText should include("To do this, make sure all your Self Assessment client authorisations have been added to this account")
+        val mappingLink = notification.select("a[href=http://localhost:9438/agent-mapping/start]")
+        mappingLink.size() should be > 0
+        mappingLink.first().text() shouldBe "Add existing Self Assessment authorisations to your agent services account"
       }
 
       "an authorised agent with no suspension" in {
