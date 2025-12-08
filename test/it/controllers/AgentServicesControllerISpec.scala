@@ -379,11 +379,12 @@ extends BaseISpec {
     }
   }
 
-  def verifyYourOrganisationSection(html: Document): Assertion = {
+  def verifyYourOrganisationSection(html: Document, amlsAdded: Boolean = true): Assertion = {
     val contactDetailsSection = html.select("#your-organisation")
     contactDetailsSection.select("h2").text shouldBe "Your organisation"
     val links = contactDetailsSection.select("p a")
-    links.get(0).text shouldBe "View or update anti-money laundering supervision details"
+    val amlsAction = if (amlsAdded) "View or update" else "Action: Add"
+    links.get(0).text shouldBe s"$amlsAction anti-money laundering supervision details"
     links.get(0).attr("href") shouldBe "/agent-services-account/manage-account/money-laundering-supervision/view-details"
     links.get(1).text shouldBe "View or update contact details we have for your business"
     links.get(1).attr("href") shouldBe "/agent-services-account/manage-account/contact-details/view"
@@ -454,18 +455,16 @@ extends BaseISpec {
       givenAuthorisedAsAgentWith(arn.value)
       givenAgentRecordFound(agentRecord)
       givenAMLSDetailsForArn(AmlsDetailsResponse(AmlsStatuses.NoAmlsDetailsUK, None), arn.value)
-      val response = controllerWithGranPermsDisabled.manageAccount().apply(fakeRequest("GET", "/manage-account"))
+      val response = await(controllerWithGranPermsDisabled.manageAccount().apply(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe OK
-      Helpers.contentType(response).get shouldBe HTML
-      val content = Helpers.contentAsString(response)
-      content should include(messagesApi("manage.account.h1"))
-      content should include(messagesApi("manage.account.p"))
-      content should include(messagesApi("manage.account.add-user"))
-      content should include(messagesApi("manage.account.manage-user-access"))
-      content should include(messagesApi("manage.account.view-or-update-contact-details"))
-      content should include(messagesApi("manage.account.view-or-update-contact-details"))
-      content should include(messagesApi("manage.account.amls.add"))
+
+      val html = Jsoup.parse(contentAsString(response))
+
+      html.title() shouldBe manageAccountTitle
+      html.select(H1).get(0).text shouldBe "Manage account"
+      verifyHowToManageSection(html)
+      verifyYourOrganisationSection(html, amlsAdded = false)
     }
 
     "return Status: OK and body containing existing manage account content when gran perms FF is on but there was an error getting optin-status" in {
@@ -476,16 +475,16 @@ extends BaseISpec {
       givenOptinStatusFailedForArn(arn)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq.empty))
       givenAMLSDetailsForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), arn.value)
-      val response = controller.manageAccount().apply(fakeRequest("GET", "/manage-account"))
+      val response = await(controller.manageAccount().apply(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe OK
-      Helpers.contentType(response).get shouldBe HTML
-      val content = Helpers.contentAsString(response)
-      content should include(messagesApi("manage.account.h1"))
-      content should include(messagesApi("manage.account.p"))
-      content should include(messagesApi("manage.account.add-user"))
-      content should include(messagesApi("manage.account.manage-user-access"))
-      content should include(messagesApi("manage.account.view-or-update-contact-details"))
+
+      val html = Jsoup.parse(contentAsString(response))
+
+      html.title() shouldBe manageAccountTitle
+      html.select(H1).get(0).text shouldBe "Manage account"
+      verifyHowToManageSection(html)
+      verifyYourOrganisationSection(html)
     }
 
     "return Status: OK and body containing existing manage account content when gran perms FF is on but ARN is not on allowed list" in {
@@ -497,16 +496,16 @@ extends BaseISpec {
       givenOptinStatusSuccessReturnsForArn(arn, accessgroups.OptedInReady)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq.empty))
       givenAMLSDetailsForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), arn.value)
-      val response = controller.manageAccount().apply(fakeRequest("GET", "/manage-account"))
+      val response = await(controller.manageAccount().apply(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe OK
-      Helpers.contentType(response).get shouldBe HTML
-      val content = Helpers.contentAsString(response)
-      content should include(messagesApi("manage.account.h1"))
-      content should include(messagesApi("manage.account.p"))
-      content should include(messagesApi("manage.account.add-user"))
-      content should include(messagesApi("manage.account.manage-user-access"))
-      content should include(messagesApi("manage.account.view-or-update-contact-details"))
+
+      val html = Jsoup.parse(contentAsString(response))
+
+      html.title() shouldBe manageAccountTitle
+      html.select(H1).get(0).text shouldBe "Manage account"
+      verifyHowToManageSection(html)
+      verifyYourOrganisationSection(html)
     }
 
     "return status: OK and body containing content for status Opted-In_READY (no access groups created yet)" in {

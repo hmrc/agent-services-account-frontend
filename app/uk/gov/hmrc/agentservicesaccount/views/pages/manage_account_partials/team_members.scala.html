@@ -15,12 +15,11 @@
  *@
 
 @import uk.gov.hmrc.agentservicesaccount.models._
-@import uk.gov.hmrc.agentservicesaccount.models.accessgroups.OptinStatus
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 
 @this(p: p, h2: h2, a: a, span: span, ol_html: ol_html, details: details)
 
-@(optinStatus: OptinStatus)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
+@()(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
 
 <section id="how-to-manage-team-members-section">
 
@@ -42,7 +41,6 @@
             p("manage.account.team-members.details.p3").toString()
         )
     )
-
 
     <hr class="govuk-!-margin-top-7 govuk-section-break govuk-section-break--m govuk-section-break--visible">
 

@@ -24,16 +24,13 @@
     main: main, h1: h1,
     p: p, a: a,
     ul_html: ul_html,
+    info: info,
     maybe_inset_text: maybe_inset_text,
     access_groups_section: access_groups_section,
     clients: clients,
-        your_organisation: your_organisation,
     manage_team_members_groups: manage_team_members_groups,
     team_members: team_members,
-    info: info,
-    contact_details_link: contact_details_link,
-    amls_details_link:amls_details_link,
-        administrators_link: administrators_link
+    your_organisation: your_organisation
 )
 
 @(
@@ -53,20 +50,8 @@
         @access_groups_section(maybeOptinStatus.get, hasAnyGroups)
         @clients(maybeOptinStatus.get)
         @manage_team_members_groups(maybeOptinStatus.get)
-        @team_members(maybeOptinStatus.get)
-        @your_organisation(amlsKey, amlsLinkHref)
-    } else {
-        @p("manage.account.p")
-        @ul_html(
-            items = Seq(
-                a("manage.account.add-user", href = appConfig.addUserUrl),
-                a("manage.account.manage-user-access", href = appConfig.manageUsersUrl, openInNewWindow = true),
-                contact_details_link(),
-                amls_details_link(amlsKey,  amlsLinkHref),
-                p(html = Some(administrators_link()))
-            )
-        )
-
     }
+    @team_members()
+    @your_organisation(amlsKey, amlsLinkHref)
 
 }
