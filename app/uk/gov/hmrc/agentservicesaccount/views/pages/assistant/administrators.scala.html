@@ -29,7 +29,7 @@ summary_list: summary_list)
 
 @main(
     pageTitle = msgs("administrators.h1"),
-    isAdmin = false,
+    isAdmin = userIsAdmin,
     backLinkHref = Some(
         s"${if(userIsAdmin) routes.AgentServicesController.manageAccount
             else routes.AgentServicesController.yourAccount}"
