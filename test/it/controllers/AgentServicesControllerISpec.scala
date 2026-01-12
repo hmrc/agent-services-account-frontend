@@ -425,7 +425,7 @@ extends BaseISpec {
     list.get(0).select("a").text shouldBe "Add, remove and manage team members"
     list.get(0).select("a").attr("href") shouldBe s"http://localhost:1111/user-profile-redirect-frontend/group-profile-management"
     list.get(1).select("a").text shouldBe "Choose which taxes and schemes the team members can access"
-    list.get(1).select("a").attr("href") shouldBe s"http://localhost:1111/tax-and-scheme-management/users?origin=Agent"
+    list.get(1).select("a").attr("href") shouldBe s"http://localhost:1111/tax-and-scheme-management/users?origin=ASA"
     section.select("hr").isEmpty shouldBe false
 
   }
