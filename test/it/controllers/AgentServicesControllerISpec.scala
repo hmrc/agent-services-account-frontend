@@ -379,11 +379,18 @@ extends BaseISpec {
     }
   }
 
-  def verifyYourOrganisationSection(html: Document, amlsAdded: Boolean = true): Assertion = {
+  def verifyYourOrganisationSection(
+    html: Document,
+    amlsAdded: Boolean = true
+  ): Assertion = {
     val contactDetailsSection = html.select("#your-organisation")
     contactDetailsSection.select("h2").text shouldBe "Your organisation"
     val links = contactDetailsSection.select("p a")
-    val amlsAction = if (amlsAdded) "View or update" else "Action: Add"
+    val amlsAction =
+      if (amlsAdded)
+        "View or update"
+      else
+        "Action: Add"
     links.get(0).text shouldBe s"$amlsAction anti-money laundering supervision details"
     links.get(0).attr("href") shouldBe "/agent-services-account/manage-account/money-laundering-supervision/view-details"
     links.get(1).text shouldBe "View or update contact details we have for your business"
@@ -425,7 +432,7 @@ extends BaseISpec {
     list.get(0).select("a").text shouldBe "Add, remove and manage team members"
     list.get(0).select("a").attr("href") shouldBe s"http://localhost:1111/user-profile-redirect-frontend/group-profile-management"
     list.get(1).select("a").text shouldBe "Choose which taxes and schemes the team members can access"
-    list.get(1).select("a").attr("href") shouldBe s"http://localhost:1111/tax-and-scheme-management/users?origin=Agent"
+    list.get(1).select("a").attr("href") shouldBe s"http://localhost:1111/tax-and-scheme-management/users?origin=ASA"
     section.select("hr").isEmpty shouldBe false
 
   }
