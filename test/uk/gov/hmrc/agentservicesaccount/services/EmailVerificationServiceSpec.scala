@@ -51,6 +51,8 @@ with TestConstants {
     protected val mockEmailVerificationConnector: EmailVerificationConnector = mock[EmailVerificationConnector]
     protected val mockAgentAssuranceConnector: AgentAssuranceConnector = mock[AgentAssuranceConnector]
     protected val mockAppConfig: AppConfig = mock[AppConfig]
+    mockAppConfig.deskproServiceName returns "AOSS"
+    mockAppConfig.accessibilityStatementUrl returns "/agent-services-account"
 
     object TestService
     extends EmailVerificationService(
@@ -70,8 +72,8 @@ with TestConstants {
             credId = ggCredentials.providerId,
             continueUrl = controllers.desiDetails.routes.EmailVerificationEndpointController.finishEmailVerification.absoluteURL(),
             origin = "HMRC Agent Services",
-            deskproServiceName = None,
-            accessibilityStatementUrl = "",
+            deskproServiceName = "AOSS",
+            accessibilityStatementUrl = "/accessibility-statement/agent-services-account",
             email = Some(Email("new@email.com", controllers.desiDetails.routes.UpdateEmailAddressController.showChangeEmailAddress.absoluteURL())),
             lang = Some(Lang("en").code),
             backUrl = Some(controllers.desiDetails.routes.UpdateEmailAddressController.showChangeEmailAddress.absoluteURL()),
@@ -98,8 +100,8 @@ with TestConstants {
             credId = ggCredentials.providerId,
             continueUrl = controllers.desiDetails.routes.EmailVerificationEndpointController.finishEmailVerification.url,
             origin = "HMRC Agent Services",
-            deskproServiceName = None,
-            accessibilityStatementUrl = "",
+            deskproServiceName = "AOSS",
+            accessibilityStatementUrl = "/accessibility-statement/agent-services-account",
             email = Some(Email("new@email.com", controllers.desiDetails.routes.UpdateEmailAddressController.showChangeEmailAddress.url)),
             lang = Some(Lang("en").code),
             backUrl = Some(controllers.desiDetails.routes.UpdateEmailAddressController.showChangeEmailAddress.url),
@@ -126,8 +128,8 @@ with TestConstants {
             credId = ggCredentials.providerId,
             continueUrl = controllers.desiDetails.routes.EmailVerificationEndpointController.finishEmailVerification.url,
             origin = "HMRC Agent Services",
-            deskproServiceName = None,
-            accessibilityStatementUrl = "",
+            deskproServiceName = "AOSS",
+            accessibilityStatementUrl = "/accessibility-statement/agent-services-account",
             email = Some(Email("new@email.com", controllers.desiDetails.routes.UpdateEmailAddressController.showChangeEmailAddress.url)),
             lang = Some(Lang("en").code),
             backUrl = Some(controllers.desiDetails.routes.UpdateEmailAddressController.showChangeEmailAddress.url),

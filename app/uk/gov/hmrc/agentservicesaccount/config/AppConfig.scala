@@ -68,6 +68,9 @@ extends Logging {
   val emailVerificationBaseUrl: String = baseUrl("email-verification")
   val emailVerificationFrontendBaseUrl: String = getString("microservice.services.email-verification-frontend.external-url")
 
+  val deskproServiceName: String = getString("contact-frontend.serviceId")
+  val accessibilityStatementUrl: String = getString("accessibility-statement.service-path")
+
   val suspendedContactDetailsSendToAddress: String = getString("suspendedContactDetails.sendToAddress")
   val suspendedContactDetailsSendEmail: Boolean = getBoolean("suspendedContactDetails.sendEmail")
 
