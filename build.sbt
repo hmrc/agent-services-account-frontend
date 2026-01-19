@@ -16,7 +16,7 @@ val scalaCOptions = Seq(
 )
 
 ThisBuild / majorVersion := 2
-ThisBuild / scalaVersion := "2.13.18"
+ThisBuild / scalaVersion := "2.13.16"
 
 TwirlKeys.templateImports ++= Seq(
   "uk.gov.hmrc.agentservicesaccount.views.html.components._",

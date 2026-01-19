@@ -11,16 +11,16 @@ object AppDependencies {
     "uk.gov.hmrc"       %% "play-frontend-hmrc-play-30" % "12.26.0",
     "uk.gov.hmrc"       %% "crypto-json-play-30"        % "8.4.0",
     "uk.gov.hmrc"       %% "domain-play-30"             % "11.0.0",
-    "com.beachape"      %% "enumeratum-play"            % "1.9.2",
+    "com.beachape"      %% "enumeratum-play"            % "1.9.0",
     "org.julienrf"      %% "play-json-derived-codecs"   % "11.0.0",
-    "org.apache.commons" % "commons-text"               % "1.15.0"
+    "org.apache.commons" % "commons-text"               % "1.14.0"
   )
 
   val test: Seq[ModuleID] = Seq(
     "uk.gov.hmrc.mongo" %% "hmrc-mongo-test-play-30"    % mongoVersion,
     "uk.gov.hmrc"       %% "bootstrap-test-play-30"     % bootstrapVersion,
     "org.mockito"       %% "mockito-scala-scalatest"    % "2.0.0",
-    "org.scalamock"     %% "scalamock"                  % "7.5.3"
+    "org.scalamock"     %% "scalamock"                  % "7.5.0"
   ).map(_ % Test)
 
 }
