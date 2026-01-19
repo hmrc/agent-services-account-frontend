@@ -22,7 +22,7 @@ case class VerifyEmailRequest(
   credId: String,
   continueUrl: String,
   origin: String,
-  deskproServiceName: Option[String],
+  deskproServiceName: String,
   accessibilityStatementUrl: String,
   email: Option[Email],
   lang: Option[String],

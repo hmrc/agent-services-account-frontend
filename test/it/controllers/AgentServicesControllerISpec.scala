@@ -379,11 +379,18 @@ extends BaseISpec {
     }
   }
 
-  def verifyYourOrganisationSection(html: Document, amlsAdded: Boolean = true): Assertion = {
+  def verifyYourOrganisationSection(
+    html: Document,
+    amlsAdded: Boolean = true
+  ): Assertion = {
     val contactDetailsSection = html.select("#your-organisation")
     contactDetailsSection.select("h2").text shouldBe "Your organisation"
     val links = contactDetailsSection.select("p a")
-    val amlsAction = if (amlsAdded) "View or update" else "Action: Add"
+    val amlsAction =
+      if (amlsAdded)
+        "View or update"
+      else
+        "Action: Add"
     links.get(0).text shouldBe s"$amlsAction anti-money laundering supervision details"
     links.get(0).attr("href") shouldBe "/agent-services-account/manage-account/money-laundering-supervision/view-details"
     links.get(1).text shouldBe "View or update contact details we have for your business"

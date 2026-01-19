@@ -79,8 +79,8 @@ class EmailVerificationService @Inject() (
           "Gwasanaethau Asiant CThEM"
         else
           "HMRC Agent Services",
-      deskproServiceName = None, // TODO - this should probably have a name?
-      accessibilityStatementUrl = "", // TODO (already here prior to restructuring on 16/04/24)
+      deskproServiceName = appConfig.deskproServiceName,
+      accessibilityStatementUrl = s"/accessibility-statement${appConfig.accessibilityStatementUrl}",
       email = Some(Email(newEmail, makeUrl(controllers.desiDetails.routes.UpdateEmailAddressController.showChangeEmailAddress))),
       lang = Some(lang.code),
       backUrl = Some(makeUrl(controllers.desiDetails.routes.UpdateEmailAddressController.showChangeEmailAddress)),
