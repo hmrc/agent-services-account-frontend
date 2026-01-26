@@ -188,7 +188,7 @@ extends BaseISpec {
         notification.isEmpty() shouldBe false
         notification.select(".govuk-notification-banner__title").text() shouldBe "Important"
         val notificationText = notification.text()
-        notificationText should include("Get ready for making Tax Digital for Income Tax")
+        notificationText should include("Get ready for Making Tax Digital for Income Tax")
         notificationText should include("You can use Self Assessment client authorisations to manage Making Tax Digital for Income Tax.")
         notificationText should include("To do this, make sure all your Self Assessment client authorisations have been added to this account")
         val mappingLink = notification.select("a[href=http://localhost:9438/agent-mapping/start]")
