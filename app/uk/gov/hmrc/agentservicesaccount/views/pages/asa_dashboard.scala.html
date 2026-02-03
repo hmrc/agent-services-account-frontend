@@ -34,7 +34,8 @@
 @(
         arn: String,
         isShownRecruitmentBanner: Boolean = false,
-        isAdmin: Boolean = false
+        isAdmin: Boolean = false,
+        isShownPayeSubscriptionLink: Boolean = false
 )(implicit request: RequestHeader, msgs: Messages, appConfig: AppConfig)
 
 @banner(content:Html) = {
@@ -78,6 +79,12 @@
             id = Some("client-auth-links")
         )
     </section>
+
+    @if(isShownPayeSubscriptionLink) {
+        <section id="paye-subscription-section">
+            PAYE SUBSCRIPTION LINK
+        </section>
+    }
 
     @if(isAdmin) {
         @manage_section()

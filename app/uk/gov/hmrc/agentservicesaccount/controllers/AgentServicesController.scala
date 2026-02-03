@@ -22,6 +22,7 @@ import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.models.Arn
 import uk.gov.hmrc.agentservicesaccount.actions.CallOps._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
+import uk.gov.hmrc.agentservicesaccount.actions.AgentInfo
 import uk.gov.hmrc.agentservicesaccount.actions.AuthActions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
@@ -79,10 +80,16 @@ with Logging {
         asaDashboard(
           formatArn(agentInfo.arn),
           showFeatureInvite && agentInfo.isAdmin,
-          agentInfo.isAdmin
+          agentInfo.isAdmin,
+          showPayeSubscriptionLink(agentInfo)
         )
       ).addingToSession(toReturnFromMapping())
     }
+  }
+
+  private def showPayeSubscriptionLink(info: AgentInfo): Boolean = {
+    val showPayeSubscriptionLink = appConfig.enablePayeSubscriptionLink
+    showPayeSubscriptionLink
   }
 
   private def toReturnFromMapping()(implicit request: Request[AnyContent]) = {
