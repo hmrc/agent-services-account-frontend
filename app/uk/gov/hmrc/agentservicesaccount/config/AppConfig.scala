@@ -160,7 +160,7 @@ extends Logging {
   val granPermsEnabled: Boolean = getBoolean("features.enable-gran-perms")
   val enableCbc: Boolean = getBoolean("features.enable-cbc")
   val enableBackendPCRDatabase: Boolean = getBoolean("features.enable-backend-pcr-database")
-  val enablePayeSubscriptionLink: Boolean = getBoolean("features.enable-paye-subscription-link")
+  val enableLegacySubscriptionLink: Boolean = getBoolean("features.enable-legacy-subscription-link")
 
   // Gran Perms
   val agentPermissionsBaseUrl: String = baseUrl("agent-permissions")

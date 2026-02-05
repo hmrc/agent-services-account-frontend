@@ -81,15 +81,16 @@ with Logging {
           formatArn(agentInfo.arn),
           showFeatureInvite && agentInfo.isAdmin,
           agentInfo.isAdmin,
-          showPayeSubscriptionLink(agentInfo)
+          showLegacySubscription(agentInfo)
         )
       ).addingToSession(toReturnFromMapping())
     }
   }
 
-  private def showPayeSubscriptionLink(info: AgentInfo): Boolean = {
-    val showPayeSubscriptionLink = appConfig.enablePayeSubscriptionLink
-    showPayeSubscriptionLink
+  private def showLegacySubscription(info: AgentInfo): Boolean = {
+//    TODO: Need to add check relating to agentEnrol <- enrolments.getEnrolment("IR-PAYE-AGENT")
+    val showLegacySubscription = appConfig.enableLegacySubscriptionLink
+    showLegacySubscription
   }
 
   private def toReturnFromMapping()(implicit request: Request[AnyContent]) = {

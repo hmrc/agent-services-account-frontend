@@ -35,7 +35,7 @@
         arn: String,
         isShownRecruitmentBanner: Boolean = false,
         isAdmin: Boolean = false,
-        isShownPayeSubscriptionLink: Boolean = false
+        isShownLegacySubscription: Boolean = false
 )(implicit request: RequestHeader, msgs: Messages, appConfig: AppConfig)
 
 @banner(content:Html) = {
@@ -80,9 +80,9 @@
         )
     </section>
 
-    @if(isShownPayeSubscriptionLink) {
-        <section id="paye-subscription-section">
-            PAYE SUBSCRIPTION LINK
+    @if(isShownLegacySubscription) {
+        <section id="legacy-subscription-section">
+            TODO: EXPAND THIS INTO SIMPLE SECTION LIKE ABOVE CLIENT AUTHORISATION SECTION USING MESSAGES FILES
         </section>
     }
 
