@@ -88,8 +88,7 @@ with Logging {
   }
 
   private def showLegacySubscription(info: AgentInfo): Boolean = {
-//    TODO: Need to add check relating to agentEnrol <- enrolments.getEnrolment("IR-PAYE-AGENT")
-    val showLegacySubscription = appConfig.enableLegacySubscriptionLink
+    val showLegacySubscription = appConfig.enableLegacySubscriptionLink && info.hasPayeSubscription
     showLegacySubscription
   }
 

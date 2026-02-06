@@ -42,6 +42,7 @@ extends WrappedRequest[A](request)
 
 case class AgentInfo(
   arn: Arn,
+  hasPayeSubscription: Boolean,
   credentialRole: Option[CredentialRole],
   email: Option[String] = None,
   name: Option[Name] = None,
@@ -78,6 +79,7 @@ with Logging {
                   Future.successful(Right(new AuthRequestWithAgentInfo(
                     AgentInfo(
                       arn = arn,
+                      hasPayeSubscription = hasPayeSubscription(enrols),
                       credentialRole = credRole,
                       email = email,
                       name = name,
@@ -95,6 +97,7 @@ with Logging {
 
       override protected def executionContext: ExecutionContext = ec
     }
+
   private def handleFailureRefiner[A](implicit request: RequestHeader): PartialFunction[Throwable, Either[Result, AuthRequestWithAgentInfo[A]]] = {
     case _: NoActiveSession => Left(Redirect(s"${appConfig.signInUrl}?continue_url=${appConfig.continueUrl}${request.uri}&origin=${appConfig.appName}"))
 
@@ -115,6 +118,8 @@ with Logging {
       Arn(enrolId.value)
     }
   }
+
+  private def hasPayeSubscription(enrolments: Enrolments): Boolean = enrolments.getEnrolment("IR-PAYE-AGENT").isDefined
 
 }
 
