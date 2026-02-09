@@ -48,6 +48,7 @@ case class AgentInfo(
   name: Option[Name] = None,
   credentials: Option[Credentials] = None
 ) {
+
   val isAdmin: Boolean =
     credentialRole match {
       case Some(Assistant) => false
@@ -55,7 +56,8 @@ case class AgentInfo(
       case _ => false
     }
 
-  def hasPayeSubscription(enrolments: Enrolments): Boolean = enrolments.getEnrolment("IR-PAYE-AGENT").isDefined
+  val hasPayeSubscription: Boolean = enrolments.getEnrolment("IR-PAYE-AGENT").isDefined
+
 }
 
 @Singleton
