@@ -42,17 +42,22 @@ extends WrappedRequest[A](request)
 
 case class AgentInfo(
   arn: Arn,
+  enrolments: Enrolments,
   credentialRole: Option[CredentialRole],
   email: Option[String] = None,
   name: Option[Name] = None,
   credentials: Option[Credentials] = None
 ) {
+
   val isAdmin: Boolean =
     credentialRole match {
       case Some(Assistant) => false
       case Some(_) => true
       case _ => false
     }
+
+  val hasPayeSubscription: Boolean = enrolments.getEnrolment("IR-PAYE-AGENT").isDefined
+
 }
 
 @Singleton
@@ -78,6 +83,7 @@ with Logging {
                   Future.successful(Right(new AuthRequestWithAgentInfo(
                     AgentInfo(
                       arn = arn,
+                      enrolments = enrols,
                       credentialRole = credRole,
                       email = email,
                       name = name,
@@ -95,6 +101,7 @@ with Logging {
 
       override protected def executionContext: ExecutionContext = ec
     }
+
   private def handleFailureRefiner[A](implicit request: RequestHeader): PartialFunction[Throwable, Either[Result, AuthRequestWithAgentInfo[A]]] = {
     case _: NoActiveSession => Left(Redirect(s"${appConfig.signInUrl}?continue_url=${appConfig.continueUrl}${request.uri}&origin=${appConfig.appName}"))
 

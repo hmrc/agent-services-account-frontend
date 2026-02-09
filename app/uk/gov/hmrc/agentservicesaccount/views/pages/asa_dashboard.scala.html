@@ -34,7 +34,8 @@
 @(
         arn: String,
         isShownRecruitmentBanner: Boolean = false,
-        isAdmin: Boolean = false
+        isAdmin: Boolean = false,
+        isShownLegacySubscription: Boolean = false
 )(implicit request: RequestHeader, msgs: Messages, appConfig: AppConfig)
 
 @banner(content:Html) = {
@@ -86,7 +87,7 @@
     <hr class="govuk-section-break hr-thick govuk-!-margin-bottom-6 govuk-!-margin-top-8">
 
     @h2("asa.tax-services", id = Some("tax-services-h2"))
-    @tax_services_accordion()
+    @tax_services_accordion(isShownLegacySubscription)
 
     <hr class="govuk-section-break hr-thick govuk-!-margin-bottom-6">
 
