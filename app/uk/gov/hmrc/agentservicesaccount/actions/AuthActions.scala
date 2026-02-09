@@ -42,7 +42,7 @@ extends WrappedRequest[A](request)
 
 case class AgentInfo(
   arn: Arn,
-  hasPayeSubscription: Boolean,
+  enrolments: Enrolments,
   credentialRole: Option[CredentialRole],
   email: Option[String] = None,
   name: Option[Name] = None,
@@ -54,6 +54,8 @@ case class AgentInfo(
       case Some(_) => true
       case _ => false
     }
+
+  def hasPayeSubscription(enrolments: Enrolments): Boolean = enrolments.getEnrolment("IR-PAYE-AGENT").isDefined
 }
 
 @Singleton
@@ -79,7 +81,7 @@ with Logging {
                   Future.successful(Right(new AuthRequestWithAgentInfo(
                     AgentInfo(
                       arn = arn,
-                      hasPayeSubscription = hasPayeSubscription(enrols),
+                      enrolments = enrols,
                       credentialRole = credRole,
                       email = email,
                       name = name,
@@ -118,8 +120,6 @@ with Logging {
       Arn(enrolId.value)
     }
   }
-
-  private def hasPayeSubscription(enrolments: Enrolments): Boolean = enrolments.getEnrolment("IR-PAYE-AGENT").isDefined
 
 }
 
