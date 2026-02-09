@@ -161,9 +161,9 @@
     @govukWarningText(WarningText(content = HtmlContent(span("asa.other.p1"))))
 }
 
-@legacySubscriptionItem = {
-    @h4("asa.legacySubscription.col1.h3")
-    HAVE ADDED AS MAIN SECTION ABOVE ON DASHBOARD ASWELL - NOT SURE WHICH
+@payeItem = {
+    @h4("asa.payeSection.col1.h3")
+    @p("asa.payeSection.col1.text1")
 }
 
 @accordionItems = @{
@@ -227,8 +227,8 @@
     if(isShownLegacySubscription) {
         items.append(
             Section(
-                headingContent = Text(msgs("asa.legacySubscription.col1.h2")),
-                content = HtmlContent(legacySubscriptionItem)
+                headingContent = Text(msgs("asa.payeItem.col1.h2")),
+                content = HtmlContent(payeItem)
             )
         )
     }

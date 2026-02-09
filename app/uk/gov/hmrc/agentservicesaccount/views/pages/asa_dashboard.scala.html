@@ -15,8 +15,6 @@
  *@
 
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-@* REMOVE BELOW IMPORT IF NOT NEEDED, AS USED FOR TBD HREF *@
-@import uk.gov.hmrc.agentservicesaccount.controllers.routes
 @import uk.gov.hmrc.agentservicesaccount.views.html.components._
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 @import uk.gov.hmrc.agentservicesaccount.views.html.pages.dashboard_partials._
@@ -81,20 +79,6 @@
             id = Some("client-auth-links")
         )
     </section>
-
-    @if(isShownLegacySubscription) {
-        <section id="legacy-subscription-section">
-            @h2("asa.legacySection.h2")
-            @p("asa.legacySection.p")
-            HAVE ADDED AS DROPDOWN SECTION BELOW ON DASHBOARD ASWELL - NOT SURE WHICH
-            @ul_html(
-                items = Seq[Html](
-                    a(href = routes.AgentServicesController.root().url + "/home", key = "asa.legacySection.link0"),
-                ),
-                id = Some("legacy-section-links")
-            )
-        </section>
-    }
 
     @if(isAdmin) {
         @manage_section()
