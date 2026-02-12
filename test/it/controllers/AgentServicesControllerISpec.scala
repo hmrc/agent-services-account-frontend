@@ -1024,7 +1024,7 @@ extends BaseISpec {
       userGroupsPanel.select("a").get(0).attr("href") shouldBe s"$wireMockBaseUrlAsString/agent-permissions/your-account/other-clients"
 
       // BOTTOM PANEL
-      val bottomPanel = html.select("div#bottom-panel")
+      val bottomPanel = html.select("div#yourorg-panel")
       bottomPanel.select("h2").get(0).text shouldBe "Your organisation"
       bottomPanel.select("a").get(0).text shouldBe "View the contact details we have for your business"
       bottomPanel.select("a").get(0).attr("href") shouldBe desiDetailsRoutes.ViewContactDetailsController.showPage.url
@@ -1065,7 +1065,7 @@ extends BaseISpec {
       val userGroupsPanel = html.select("div#user-groups")
       userGroupsPanel.isEmpty shouldBe true
 
-      val bottomPanel = html.select("div#bottom-panel")
+      val bottomPanel = html.select("div#yourorg-panel")
       bottomPanel.select("h2").get(0).text shouldBe "Your organisation"
       bottomPanel.select("a").get(0).text shouldBe "View the contact details we have for your business"
       bottomPanel.select("a").get(0).attr("href") shouldBe desiDetailsRoutes.ViewContactDetailsController.showPage.url
@@ -1121,7 +1121,7 @@ extends BaseISpec {
       userGroupsPanel.select("a").get(3).attr("href") shouldBe s"$wireMockBaseUrlAsString/agent-permissions/your-account/other-clients"
 
       // BOTTOM PANEL
-      val bottomPanel = html.select("div#bottom-panel")
+      val bottomPanel = html.select("div#yourorg-panel")
       bottomPanel.select("h2").get(0).text shouldBe "Your organisation"
       bottomPanel.select("a").get(0).text shouldBe "View the contact details we have for your business"
       bottomPanel.select("a").get(0).attr("href") shouldBe desiDetailsRoutes.ViewContactDetailsController.showPage.url
