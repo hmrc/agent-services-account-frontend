@@ -40,17 +40,15 @@
 
     @h1("your.account.h1")
 
-    @* TODO: Move hr out of section divs *@
+    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
 
     <div id="yourorg-panel">
-        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
         @your_organisation(None, None, "your.account.your.contact.details.a")
     </div>
 
-
     @if(info.isDefined) {
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
         <div id="user-details">
-            <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
             @h2("your.account.your.info.h2")
             @summary_list(
                 rows = Seq[SummaryListData](
