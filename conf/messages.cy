@@ -452,9 +452,10 @@ common.continue.gov=Yn ôl i dudalen mewngofnodi Porth y Llywodraeth
 timeout-dialog.p1=Am resymau diogelwch, cewch eich allgofnodi o’ch cyfrif gwasanaethau asiant ymhen
 
 # Your account
-your.account.email=E-bost
 your.account.h1=Eich cyfrif
+your.account.your.info.h2=TODO
 your.account.name=Enw
+your.account.email=E-bost
 your.account.role.h3=Swydd
 your.account.role.p=Safonol - Fel defnyddiwr gyda chaniatâd safonol, gallwch fwrw golwg dros y grwpiau mynediad a’r cleientiaid sydd wedi’u neilltuo i chi. Cysylltwch â’ch gweinyddwr am ragor o wybodaeth.
 your.account.role=Swydd

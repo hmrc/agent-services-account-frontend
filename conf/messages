@@ -452,9 +452,10 @@ common.continue.gov=Return to Government Gateway sign in
 timeout-dialog.p1=For security reasons, you will be signed out of your Agent services account in
 
 # Your account
-your.account.email=Email
 your.account.h1=Your account
+your.account.info.your.h2=TODO
 your.account.name=Name
+your.account.email=Email
 your.account.role.h3=Standard user
 your.account.role.p=You can view your assigned access groups and clients. You can also view clients who are not in any access groups.
 your.account.role=Role
