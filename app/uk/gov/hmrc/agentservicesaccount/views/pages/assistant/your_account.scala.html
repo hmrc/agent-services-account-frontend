@@ -51,6 +51,7 @@
         <div id="user-details">
             @h2("your.account.your.info.h2")
             @summary_list(
+                classes = "govuk-summary-list--no-border",
                 rows = Seq[SummaryListData](
                     SummaryListData(key = "your.account.name", value = info.get.name.map(n => n.name.getOrElse("") + " " + n.lastName.getOrElse("")).getOrElse("")),
                     SummaryListData(key = "your.account.email", value = info.get.email.getOrElse("")),
