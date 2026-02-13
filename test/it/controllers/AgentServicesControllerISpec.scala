@@ -39,7 +39,7 @@ import uk.gov.hmrc.http.UpstreamErrorResponse
 import java.util.UUID
 import scala.util.Random
 
-//TODO: Add tests to reflect changes in your_account
+//TODO: Add tests to reflect changes in your_account, lines 986 to 1136
 class AgentServicesControllerISpec
 extends BaseISpec {
 
@@ -983,6 +983,7 @@ extends BaseISpec {
 
   }
 
+//  TODO: MODIFY TESTS BELOW
   val yourAccountUrl: String = routes.AgentServicesController.yourAccount.url
 
   s"GET on Your Account at url: $yourAccountUrl" should {
@@ -1132,6 +1133,7 @@ extends BaseISpec {
     }
 
   }
+//  TODO: MODIFY TESTS ABOVE
 
   val adminUrl: String = routes.AgentServicesController.administrators.url
 
