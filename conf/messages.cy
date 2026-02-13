@@ -166,6 +166,21 @@ asa.trusts-section.col2.h3=Rheoli ymddiriedolaeth eich cleient
 asa.trusts-section.col2.register-trust-link.text=Defnyddiwch y gwasanaeth hwn i ddiweddaru manylion ymddiriedolaeth neu ystâd eich cleient neu i ddatgan dim newidiadau ar y gofrestr ymddiriedolaethau
 asa.trusts-section.h2=Ymddiriedolaethau ac ystadau
 
+# PAYE/CIS
+asa.legacy.paye.h2=PAYE/CIS
+asa.legacy.paye.col1.h3=Test Content
+asa.legacy.paye.col1.p1=Status: {0}
+
+# CT
+asa.legacy.ct.h2=CT
+asa.legacy.ct.col1.h3=Test Content
+asa.legacy.ct.col1.p1=Status: {0}
+
+# SA
+asa.legacy.sa.h2=SA
+asa.legacy.sa.col1.h3=Test Content
+asa.legacy.sa.col1.p1=Status: {0}
+
 # Custom UR banner
 banner.heading=Helpwch i wella CThEF
 banner.link1=Rhowch gynnig ar y nodwedd grwpiau mynediad

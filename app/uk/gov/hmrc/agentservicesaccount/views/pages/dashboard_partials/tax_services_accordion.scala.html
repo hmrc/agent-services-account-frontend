@@ -20,6 +20,9 @@
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.accordion.Section
 
 @import scala.collection.mutable.ListBuffer
+@import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionInfo
+@import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+@import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionStatus
 
 @this(
         p: p, h2: h2, h4: h4, a: a, span: span, ul_html: ul_html,
@@ -27,7 +30,7 @@
         govukAccordion: GovukAccordion,
 )
 
-@(isShownLegacySubscription: Boolean = false)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
+@(subscriptionInfo: Seq[SubscriptionInfo])(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
 
 @itsaAccordionItemLegacy = {
     @h4("asa.sectionITSA.col1.h4")
@@ -131,12 +134,12 @@
             span(msgs("asa.ppt.col1.link1",
                 msgs("asa.ppt.col1.link1.href")))
     )))
-    
+
     @p(html = Some(Html(
         span("asa.ppt.col1.text2") + " " +
             span(key = msgs("asa.ppt.col1.link2", appConfig.agentClientRelationshipsFrontendInvitationsUrl))
     )))
-    
+
     @h4("asa.ppt.col2.h3")
     @p(msgs("asa.ppt.col2.link1", msgs("asa.ppt.col2.link1.href")))
 }
@@ -161,9 +164,19 @@
     @govukWarningText(WarningText(content = HtmlContent(span("asa.other.p1"))))
 }
 
-@payeItem = {
-    @h4("asa.payeSection.col1.h3")
-    @p("asa.payeSection.col1.text1")
+@payeItem(status: SubscriptionStatus) = {
+    @h4("asa.legacy.paye.h3")
+    @p(msgs("asa.legacy.paye.p1", status))
+}
+
+@ctItem(status: SubscriptionStatus) = {
+    @h4("asa.legacy.ct.h3")
+    @p(msgs("asa.legacy.ct.p1", status))
+}
+
+@saItem(status: SubscriptionStatus) = {
+    @h4("asa.legacy.sa.h3")
+    @p(msgs("asa.legacy.sa.p1", status))
 }
 
 @accordionItems = @{
@@ -224,13 +237,31 @@
             content = HtmlContent(otherTaxesItem)
         )
     )
-    if(isShownLegacySubscription) {
-        items.append(
-            Section(
-                headingContent = Text(msgs("asa.payeItem.col1.h2")),
-                content = HtmlContent(payeItem)
+    if(appConfig.enableLegacySubscriptionLink) {
+        subscriptionInfo.find(_.regime == LegacyRegime.PAYE).map { info =>
+            items.append(
+                Section(
+                    headingContent = Text(msgs("asa.legacy.paye.h2")),
+                    content = HtmlContent(payeItem(info.subscriptionStatus))
+                )
             )
-        )
+        }
+        subscriptionInfo.find(_.regime == LegacyRegime.CT).map { info =>
+            items.append(
+                Section(
+                    headingContent = Text(msgs("asa.legacy.ct.h2")),
+                    content = HtmlContent(ctItem(info.subscriptionStatus))
+                )
+            )
+        }
+        subscriptionInfo.find(_.regime == LegacyRegime.SA).map { info =>
+            items.append(
+                Section(
+                    headingContent = Text(msgs("asa.legacy.sa.h2")),
+                    content = HtmlContent(saItem(info.subscriptionStatus))
+                )
+            )
+        }
     }
     items
 }

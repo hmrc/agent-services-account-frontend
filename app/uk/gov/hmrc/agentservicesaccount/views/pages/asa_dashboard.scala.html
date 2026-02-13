@@ -18,6 +18,7 @@
 @import uk.gov.hmrc.agentservicesaccount.views.html.components._
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 @import uk.gov.hmrc.agentservicesaccount.views.html.pages.dashboard_partials._
+@import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionInfo
 
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 
@@ -35,7 +36,7 @@
         arn: String,
         isShownRecruitmentBanner: Boolean = false,
         isAdmin: Boolean = false,
-        isShownLegacySubscription: Boolean = false
+        subscriptionInfo : Seq[SubscriptionInfo]
 )(implicit request: RequestHeader, msgs: Messages, appConfig: AppConfig)
 
 @banner(content:Html) = {
@@ -87,7 +88,7 @@
     <hr class="govuk-section-break hr-thick govuk-!-margin-bottom-6 govuk-!-margin-top-8">
 
     @h2("asa.tax-services", id = Some("tax-services-h2"))
-    @tax_services_accordion(isShownLegacySubscription)
+    @tax_services_accordion(subscriptionInfo)
 
     <hr class="govuk-section-break hr-thick govuk-!-margin-bottom-6">
 
