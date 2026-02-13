@@ -1007,14 +1007,14 @@ extends BaseISpec {
       html.select(secondaryNavLinks).get(1).text shouldBe "Your account"
 
       val yourOrgPanel = html.select("div#yourorg-panel")
-      yourOrgPanel.select(H2).get(0).text shouldBe "Your organisation"
+      yourOrgPanel.select("h2").get(0).text shouldBe "Your organisation"
       yourOrgPanel.select("a").get(0).text shouldBe "View the contact details we have for your business"
       yourOrgPanel.select("a").get(0).attr("href") shouldBe desiDetailsRoutes.ViewContactDetailsController.showPage.url
       yourOrgPanel.select("a").get(1).text shouldBe "View administrators"
       yourOrgPanel.select("a").get(1).attr("href") shouldBe routes.AgentServicesController.administrators.url
 
       val userDetailsPanel = html.select("div#user-details")
-      userDetailsPanel.select(H2).get(0).text shouldBe "Your agent services account sign in details"
+      userDetailsPanel.select("h2").get(0).text shouldBe "Your agent services account sign in details"
       userDetailsPanel.select(summaryListKeys).get(0).text() shouldBe "Name"
       userDetailsPanel.select(summaryListValues).get(0).text() shouldBe "Bob The Builder"
       userDetailsPanel.select(summaryListKeys).get(1).text() shouldBe "Email"
@@ -1054,14 +1054,14 @@ extends BaseISpec {
       html.select(secondaryNavLinks).get(1).text shouldBe "Your account"
 
       val yourOrgPanel = html.select("div#yourorg-panel")
-      yourOrgPanel.select(H2).get(0).text shouldBe "Your organisation"
+      yourOrgPanel.select("h2").get(0).text shouldBe "Your organisation"
       yourOrgPanel.select("a").get(0).text shouldBe "View the contact details we have for your business"
       yourOrgPanel.select("a").get(0).attr("href") shouldBe desiDetailsRoutes.ViewContactDetailsController.showPage.url
       yourOrgPanel.select("a").get(1).text shouldBe "View administrators"
       yourOrgPanel.select("a").get(1).attr("href") shouldBe routes.AgentServicesController.administrators.url
 
       val userDetailsPanel = html.select("div#user-details")
-      userDetailsPanel.select(H2).get(0).text shouldBe "Your agent services account sign in details"
+      userDetailsPanel.select("h2").get(0).text shouldBe "Your agent services account sign in details"
       userDetailsPanel.select(summaryListKeys).get(0).text() shouldBe "Name"
       userDetailsPanel.select(summaryListValues).get(0).text() shouldBe "Bob The Builder"
       userDetailsPanel.select(summaryListKeys).get(1).text() shouldBe "Email"
@@ -1103,14 +1103,14 @@ extends BaseISpec {
       html.select(H1).get(0).text shouldBe "Your account"
 
       val yourOrgPanel = html.select("div#yourorg-panel")
-      yourOrgPanel.select(H2).get(0).text shouldBe "Your organisation"
+      yourOrgPanel.select("h2").get(0).text shouldBe "Your organisation"
       yourOrgPanel.select("a").get(0).text shouldBe "View the contact details we have for your business"
       yourOrgPanel.select("a").get(0).attr("href") shouldBe desiDetailsRoutes.ViewContactDetailsController.showPage.url
       yourOrgPanel.select("a").get(1).text shouldBe "View administrators"
       yourOrgPanel.select("a").get(1).attr("href") shouldBe routes.AgentServicesController.administrators.url
 
       val userDetailsPanel = html.select("div#user-details")
-      userDetailsPanel.select(H2).get(0).text shouldBe "Your agent services account sign in details"
+      userDetailsPanel.select("h2").get(0).text shouldBe "Your agent services account sign in details"
       userDetailsPanel.select(summaryListKeys).get(0).text() shouldBe "Name"
       userDetailsPanel.select(summaryListValues).get(0).text() shouldBe "Bob The Builder"
       userDetailsPanel.select(summaryListKeys).get(1).text() shouldBe "Email"
