@@ -39,7 +39,6 @@ import uk.gov.hmrc.http.UpstreamErrorResponse
 import java.util.UUID
 import scala.util.Random
 
-//TODO: Add tests to reflect changes in your_account, lines 986 to 1136
 class AgentServicesControllerISpec
 extends BaseISpec {
 
@@ -983,7 +982,6 @@ extends BaseISpec {
 
   }
 
-//  TODO: MODIFY TESTS BELOW
   val yourAccountUrl: String = routes.AgentServicesController.yourAccount.url
 
   s"GET on Your Account at url: $yourAccountUrl" should {
@@ -1008,7 +1006,15 @@ extends BaseISpec {
       html.select(H1).get(0).text shouldBe "Your account"
       html.select(secondaryNavLinks).get(1).text shouldBe "Your account"
 
+      val yourOrgPanel = html.select("div#yourorg-panel")
+      yourOrgPanel.select(H2).get(0).text shouldBe "Your organisation"
+      yourOrgPanel.select("a").get(0).text shouldBe "View the contact details we have for your business"
+      yourOrgPanel.select("a").get(0).attr("href") shouldBe desiDetailsRoutes.ViewContactDetailsController.showPage.url
+      yourOrgPanel.select("a").get(1).text shouldBe "View administrators"
+      yourOrgPanel.select("a").get(1).attr("href") shouldBe routes.AgentServicesController.administrators.url
+
       val userDetailsPanel = html.select("div#user-details")
+      userDetailsPanel.select(H2).get(0).text shouldBe "Your agent services account sign in details"
       userDetailsPanel.select(summaryListKeys).get(0).text() shouldBe "Name"
       userDetailsPanel.select(summaryListValues).get(0).text() shouldBe "Bob The Builder"
       userDetailsPanel.select(summaryListKeys).get(1).text() shouldBe "Email"
@@ -1016,23 +1022,15 @@ extends BaseISpec {
       userDetailsPanel.select(summaryListKeys).get(2).text() shouldBe "Role"
       userDetailsPanel.select(summaryListValues).get(2)
         .text() shouldBe "Standard user You can view your assigned access groups and clients. You can also view clients who are not in any access groups."
+      userDetailsPanel.select("a").get(0).text shouldBe "Change sign in or security details"
+      userDetailsPanel.select("a").get(0).attr("href") shouldBe "http://www.access.service.gov.uk/account-activity"
 
       val userGroupsPanel = html.select("div#user-groups")
       val grps = userGroupsPanel.select("ul li a")
       grps.isEmpty shouldBe true
       userGroupsPanel.select("p").get(0).text shouldBe "You are not currently assigned to any access groups."
-
       userGroupsPanel.select("a").get(0).text shouldBe "View other clients"
       userGroupsPanel.select("a").get(0).attr("href") shouldBe s"$wireMockBaseUrlAsString/agent-permissions/your-account/other-clients"
-
-      // BOTTOM PANEL
-      val bottomPanel = html.select("div#yourorg-panel")
-      bottomPanel.select("h2").get(0).text shouldBe "Your organisation"
-      bottomPanel.select("a").get(0).text shouldBe "View the contact details we have for your business"
-      bottomPanel.select("a").get(0).attr("href") shouldBe desiDetailsRoutes.ViewContactDetailsController.showPage.url
-      bottomPanel.select("a").get(1).text shouldBe "View administrators"
-      bottomPanel.select("a").get(1).attr("href") shouldBe routes.AgentServicesController.administrators.url
-
     }
 
     "render correctly for Standard User who’s NOT Opted-In_READY without Access Groups" in {
@@ -1055,7 +1053,15 @@ extends BaseISpec {
       html.select(H1).get(0).text shouldBe "Your account"
       html.select(secondaryNavLinks).get(1).text shouldBe "Your account"
 
+      val yourOrgPanel = html.select("div#yourorg-panel")
+      yourOrgPanel.select(H2).get(0).text shouldBe "Your organisation"
+      yourOrgPanel.select("a").get(0).text shouldBe "View the contact details we have for your business"
+      yourOrgPanel.select("a").get(0).attr("href") shouldBe desiDetailsRoutes.ViewContactDetailsController.showPage.url
+      yourOrgPanel.select("a").get(1).text shouldBe "View administrators"
+      yourOrgPanel.select("a").get(1).attr("href") shouldBe routes.AgentServicesController.administrators.url
+
       val userDetailsPanel = html.select("div#user-details")
+      userDetailsPanel.select(H2).get(0).text shouldBe "Your agent services account sign in details"
       userDetailsPanel.select(summaryListKeys).get(0).text() shouldBe "Name"
       userDetailsPanel.select(summaryListValues).get(0).text() shouldBe "Bob The Builder"
       userDetailsPanel.select(summaryListKeys).get(1).text() shouldBe "Email"
@@ -1063,17 +1069,11 @@ extends BaseISpec {
       userDetailsPanel.select(summaryListKeys).get(2).text() shouldBe "Role"
       userDetailsPanel.select(summaryListValues).get(2)
         .text() shouldBe "Standard user You can view your assigned access groups and clients. You can also view clients who are not in any access groups."
+      userDetailsPanel.select("a").get(0).text shouldBe "Change sign in or security details"
+      userDetailsPanel.select("a").get(0).attr("href") shouldBe "http://www.access.service.gov.uk/account-activity"
 
       val userGroupsPanel = html.select("div#user-groups")
       userGroupsPanel.isEmpty shouldBe true
-
-      val bottomPanel = html.select("div#yourorg-panel")
-      bottomPanel.select("h2").get(0).text shouldBe "Your organisation"
-      bottomPanel.select("a").get(0).text shouldBe "View the contact details we have for your business"
-      bottomPanel.select("a").get(0).attr("href") shouldBe desiDetailsRoutes.ViewContactDetailsController.showPage.url
-      bottomPanel.select("a").get(1).text shouldBe "View administrators"
-      bottomPanel.select("a").get(1).attr("href") shouldBe routes.AgentServicesController.administrators.url
-
     }
 
     "return status: OK and body containing content for status Opted-In_READY (access groups already created)" in {
@@ -1102,7 +1102,15 @@ extends BaseISpec {
       html.title() shouldBe "Your account - Agent services account - GOV.UK"
       html.select(H1).get(0).text shouldBe "Your account"
 
+      val yourOrgPanel = html.select("div#yourorg-panel")
+      yourOrgPanel.select(H2).get(0).text shouldBe "Your organisation"
+      yourOrgPanel.select("a").get(0).text shouldBe "View the contact details we have for your business"
+      yourOrgPanel.select("a").get(0).attr("href") shouldBe desiDetailsRoutes.ViewContactDetailsController.showPage.url
+      yourOrgPanel.select("a").get(1).text shouldBe "View administrators"
+      yourOrgPanel.select("a").get(1).attr("href") shouldBe routes.AgentServicesController.administrators.url
+
       val userDetailsPanel = html.select("div#user-details")
+      userDetailsPanel.select(H2).get(0).text shouldBe "Your agent services account sign in details"
       userDetailsPanel.select(summaryListKeys).get(0).text() shouldBe "Name"
       userDetailsPanel.select(summaryListValues).get(0).text() shouldBe "Bob The Builder"
       userDetailsPanel.select(summaryListKeys).get(1).text() shouldBe "Email"
@@ -1110,6 +1118,8 @@ extends BaseISpec {
       userDetailsPanel.select(summaryListKeys).get(2).text() shouldBe "Role"
       userDetailsPanel.select(summaryListValues).get(2)
         .text() shouldBe "Standard user You can view your assigned access groups and clients. You can also view clients who are not in any access groups."
+      userDetailsPanel.select("a").get(0).text shouldBe "Change sign in or security details"
+      userDetailsPanel.select("a").get(0).attr("href") shouldBe "http://www.access.service.gov.uk/account-activity"
 
       val userGroupsPanel = html.select("div#user-groups")
       val grps = userGroupsPanel.select("ul li a")
@@ -1121,19 +1131,9 @@ extends BaseISpec {
       grps.get(2).attr("href") shouldBe s"$wireMockBaseUrlAsString/agent-permissions/your-account/group-clients/tax/${taxSummary.groupId.toString}"
       userGroupsPanel.select("a").get(3).text shouldBe "View other clients"
       userGroupsPanel.select("a").get(3).attr("href") shouldBe s"$wireMockBaseUrlAsString/agent-permissions/your-account/other-clients"
-
-      // BOTTOM PANEL
-      val bottomPanel = html.select("div#yourorg-panel")
-      bottomPanel.select("h2").get(0).text shouldBe "Your organisation"
-      bottomPanel.select("a").get(0).text shouldBe "View the contact details we have for your business"
-      bottomPanel.select("a").get(0).attr("href") shouldBe desiDetailsRoutes.ViewContactDetailsController.showPage.url
-      bottomPanel.select("a").get(1).text shouldBe "View administrators"
-      bottomPanel.select("a").get(1).attr("href") shouldBe routes.AgentServicesController.administrators.url
-
     }
 
   }
-//  TODO: MODIFY TESTS ABOVE
 
   val adminUrl: String = routes.AgentServicesController.administrators.url
 
