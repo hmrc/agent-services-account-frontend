@@ -27,13 +27,15 @@ import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest.connectorReads
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest.connectorWrites
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionInfo
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.HttpResponse
+import uk.gov.hmrc.http.StringContextOps
 import uk.gov.hmrc.http.UpstreamErrorResponse
 import uk.gov.hmrc.agentservicesaccount.utils.RequestSupport._
 
-import java.net.URL
 import javax.inject.Inject
 import javax.inject.Singleton
 import scala.concurrent.ExecutionContext
@@ -46,36 +48,54 @@ class AgentServicesAccountConnector @Inject() (
 )(implicit val ec: ExecutionContext)
 extends Logging {
 
-  val url: String = s"${appConfig.agentServicesAccountBaseUrl}/agent-services-account/change-of-details-request"
+  val url: String = s"${appConfig.agentServicesAccountBaseUrl}/agent-services-account"
 
-  def find(arn: Arn)(implicit rh: RequestHeader): Future[Option[PendingChangeRequest]] = http.get(new URL(s"$url/${arn.value}")).execute[HttpResponse].map {
-    response =>
-      response.status match {
-        case OK => Some(response.json.as[PendingChangeRequest](connectorReads))
-        case NOT_FOUND => None
-        case status =>
-          logger.warn(s"[AgentServicesAccountConnector][find] - Unexpected response, received status: $status")
-          None
-      }
-  }
-
-  def insert(pendingChangeRequest: PendingChangeRequest)(implicit rh: RequestHeader): Future[Unit] = {
-    http.post(new URL(url)).withBody(Json.toJson(pendingChangeRequest)(connectorWrites)).execute[HttpResponse].map { response =>
-      response.status match {
-        case NO_CONTENT => ()
-        case status => throw UpstreamErrorResponse("[AgentServicesAccountConnector][insert] - Unable to insert record", status)
-      }
+  def findChangeRequest(
+    arn: Arn
+  )(implicit rh: RequestHeader): Future[Option[PendingChangeRequest]] = http
+    .get(url"$url/change-of-details-request/${arn.value}")
+    .execute[HttpResponse].map {
+      response =>
+        response.status match {
+          case OK => Some(response.json.as[PendingChangeRequest](connectorReads))
+          case NOT_FOUND => None
+          case status =>
+            logger.warn(s"[AgentServicesAccountConnector][find] - Unexpected response, received status: $status")
+            None
+        }
     }
-  }
 
-  def delete(arn: Arn)(implicit rh: RequestHeader): Future[Boolean] = http.delete(new URL(s"$url/${arn.value}")).execute[HttpResponse].map { response =>
-    response.status match {
-      case NO_CONTENT => true
-      case NOT_FOUND => false
-      case status =>
-        logger.warn(s"[AgentServicesAccountConnector][delete] - Unexpected response, received status: $status")
-        false
+  def insertChangeRequest(
+    pendingChangeRequest: PendingChangeRequest
+  )(implicit rh: RequestHeader): Future[Unit] = http
+    .post(url"$url/change-of-details-request")
+    .withBody(Json.toJson(pendingChangeRequest)(connectorWrites)).execute[HttpResponse].map {
+      response =>
+        response.status match {
+          case NO_CONTENT => ()
+          case status => throw UpstreamErrorResponse("[AgentServicesAccountConnector][insert] - Unable to insert record", status)
+        }
     }
-  }
+
+  def deleteChangeRequest(
+    arn: Arn
+  )(implicit rh: RequestHeader): Future[Boolean] = http
+    .delete(url"$url/change-of-details-request/${arn.value}")
+    .execute[HttpResponse].map {
+      response =>
+        response.status match {
+          case NO_CONTENT => true
+          case NOT_FOUND => false
+          case status =>
+            logger.warn(s"[AgentServicesAccountConnector][delete] - Unexpected response, received status: $status")
+            false
+        }
+    }
+
+  def getSubscriptionInfo(
+    regimes: Seq[LegacyRegime]
+  )(implicit rh: RequestHeader): Future[Seq[SubscriptionInfo]] = http
+    .get(url"$url/legacy-subscription-info?regimes=${regimes.map(_.toString)}")
+    .execute[Seq[SubscriptionInfo]]
 
 }

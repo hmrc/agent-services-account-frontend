@@ -34,6 +34,7 @@ import uk.gov.hmrc.agentservicesaccount.models.accessgroups.UserDetails
 import stubs.AgentAssuranceStubs._
 import stubs.AgentPermissionsStubs._
 import stubs.AgentUserClientDetailsStubs._
+import stubs.AgentServicesAccountStubs._
 import uk.gov.hmrc.http.UpstreamErrorResponse
 
 import java.util.UUID
@@ -133,6 +134,7 @@ extends BaseISpec {
 
         givenAuthorisedAsAgentWith(arn.value)
         givenHidePrivateBetaInviteNotFound()
+        givenSubscriptionInfoResponse()
 
         val result = controller.showAgentServicesAccount(fakeRequest())
         status(result) shouldBe OK
@@ -201,6 +203,7 @@ extends BaseISpec {
         givenAgentRecordFound(agentRecord)
 
         givenHidePrivateBetaInviteNotFound()
+        givenSubscriptionInfoResponse()
 
         val response = await(controller.showAgentServicesAccount()(fakeRequest("GET", "/home")))
         val html = Jsoup.parse(contentAsString(response))
@@ -359,6 +362,7 @@ extends BaseISpec {
 
         givenAuthorisedAsAgentWith(arn.value)
         givenHidePrivateBetaInvite()
+        givenSubscriptionInfoResponse()
 
         val controller = appBuilder().build().injector.instanceOf[AgentServicesController]
 

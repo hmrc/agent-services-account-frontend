@@ -166,6 +166,21 @@ asa.trusts-section.col2.h3=Manage your client’s trust
 asa.trusts-section.col2.register-trust-link.text=Use this service to update the details of your client’s trust or declare no changes on the trust register
 asa.trusts-section.h2=Trusts and estates
 
+# PAYE/CIS
+asa.legacy.paye.h2=PAYE/CIS
+asa.legacy.paye.h3=Test Content
+asa.legacy.paye.p1=Status: {0}
+
+# CT
+asa.legacy.ct.h2=CT
+asa.legacy.ct.h3=Test Content
+asa.legacy.ct.p1=Status: {0}
+
+# SA
+asa.legacy.sa.h2=SA
+asa.legacy.sa.h3=Test Content
+asa.legacy.sa.p1=Status: {0}
+
 # Custom UR banner
 banner.heading=Help improve HMRC services
 banner.link1=Try out our new access groups feature
@@ -666,7 +681,7 @@ amls.check-your-answers.p=Anti-money laundering supervision details
 amls.check-your-answers.supervisory-body=Supervisory body
 amls.check-your-answers.registration-number=Registration number
 amls.check-your-answers.renewal-date=Next renewal date
-amls.check-your-answers.submit-button=Submit your details 
+amls.check-your-answers.submit-button=Submit your details
 
 #AMLS Errors
 update-money-laundering-supervisory.error.date=Enter your next registration renewal date
