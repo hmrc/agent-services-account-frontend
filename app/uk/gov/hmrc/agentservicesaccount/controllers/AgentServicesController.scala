@@ -22,7 +22,6 @@ import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.models.Arn
 import uk.gov.hmrc.agentservicesaccount.actions.CallOps._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
-import uk.gov.hmrc.agentservicesaccount.actions.AgentInfo
 import uk.gov.hmrc.agentservicesaccount.actions.AuthActions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
@@ -33,6 +32,7 @@ import uk.gov.hmrc.agentservicesaccount.models.AmlsStatus
 import uk.gov.hmrc.agentservicesaccount.models.AmlsStatuses._
 import uk.gov.hmrc.agentservicesaccount.models.accessgroups.OptedInReady
 import uk.gov.hmrc.agentservicesaccount.models.accessgroups.OptinStatus
+import uk.gov.hmrc.agentservicesaccount.services.SubscriptionService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages._
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.assistant.administrators
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.assistant.your_account
@@ -49,6 +49,7 @@ class AgentServicesController @Inject() (
   agentPermissionsConnector: AgentPermissionsConnector,
   agentUserClientDetailsConnector: AgentUserClientDetailsConnector,
   agentAssuranceConnector: AgentAssuranceConnector,
+  subscriptionService: SubscriptionService,
   manage_account: manage_account,
   administrators_html: administrators,
   your_account: your_account,
@@ -76,20 +77,22 @@ with Logging {
      *      showFeatureInvite is unused at the mo
      * */
     withShowFeatureInvite(agentInfo.arn) { showFeatureInvite: Boolean =>
-      Future successful Ok(
+      for {
+        subscriptionInfo <-
+          if (appConfig.enableLegacySubscriptionLink)
+            subscriptionService
+              .getSubscriptionInfo(agentInfo.missingSubscriptions, agentInfo.existingSubscriptionInfo)
+          else
+            Future.successful(Nil)
+      } yield Ok(
         asaDashboard(
           formatArn(agentInfo.arn),
           showFeatureInvite && agentInfo.isAdmin,
           agentInfo.isAdmin,
-          showLegacySubscription(agentInfo)
+          subscriptionInfo
         )
       ).addingToSession(toReturnFromMapping())
     }
-  }
-
-  private def showLegacySubscription(info: AgentInfo): Boolean = {
-    val showLegacySubscription = appConfig.enableLegacySubscriptionLink && info.hasPayeSubscription
-    showLegacySubscription
   }
 
   private def toReturnFromMapping()(implicit request: Request[AnyContent]) = {

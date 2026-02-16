@@ -26,10 +26,12 @@ import support.BaseISpec
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
 import uk.gov.hmrc.agentservicesaccount.models.Arn
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest
-import stubs.AgentServicesAccountStubs.stubASADeleteResponse
-import stubs.AgentServicesAccountStubs.stubASAGetResponse
-import stubs.AgentServicesAccountStubs.stubASAGetResponseError
-import stubs.AgentServicesAccountStubs.stubASAPostResponse
+import stubs.AgentServicesAccountStubs._
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionInfo
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionStatus.SubscriptionInProgress
 import uk.gov.hmrc.http.UpstreamErrorResponse
 
 import java.time.Instant
@@ -43,68 +45,93 @@ with Injecting {
   val exampleModel: PendingChangeRequest = PendingChangeRequest(exampleArn, Instant.now().truncatedTo(ChronoUnit.SECONDS))
   val connector: AgentServicesAccountConnector = inject[AgentServicesAccountConnector]
 
-  ".find" should {
+  ".findChangeRequest" should {
 
     "return a PendingChangeRequest model when one is returned by agent-services-account" in {
       stubASAGetResponse(exampleModel)
 
-      val result = connector.find(exampleArn)
+      val result = connector.findChangeRequest(exampleArn)
       await(result) shouldBe Some(exampleModel)
     }
 
     "return None when no details could be found" in {
       stubASAGetResponseError(exampleArn, NOT_FOUND)
 
-      val result = connector.find(exampleArn)
+      val result = connector.findChangeRequest(exampleArn)
       await(result) shouldBe None
     }
 
     "return None when an unexpected status is returned" in {
       stubASAGetResponseError(exampleArn, FORBIDDEN)
 
-      val result = connector.find(exampleArn)
+      val result = connector.findChangeRequest(exampleArn)
       await(result) shouldBe None
     }
   }
 
-  ".insert" should {
+  ".insertChangeRequest" should {
 
     "return nothing when a NO_CONTENT (204) response is returned by agent-services-account" in {
       stubASAPostResponse(NO_CONTENT)
 
-      val result = connector.insert(exampleModel)
+      val result = connector.insertChangeRequest(exampleModel)
       await(result) shouldBe ()
     }
 
     "throw an UpstreamErrorResponse exception when an unexpected status is returned by agent-services-account" in {
       stubASAPostResponse(FORBIDDEN)
 
-      intercept[UpstreamErrorResponse](await(connector.insert(exampleModel)))
+      intercept[UpstreamErrorResponse](await(connector.insertChangeRequest(exampleModel)))
     }
   }
 
-  ".delete" should {
+  ".deleteChangeRequest" should {
 
     "return true when a NO_CONTENT (204) response is returned by agent-services-account" in {
       stubASADeleteResponse(exampleArn, NO_CONTENT)
 
-      val result = connector.delete(exampleArn)
+      val result = connector.deleteChangeRequest(exampleArn)
       await(result) shouldBe true
     }
 
     "return false when a NOT_FOUND (404) response is returned by agent-services-account" in {
       stubASADeleteResponse(exampleArn, NOT_FOUND)
 
-      val result = connector.delete(exampleArn)
+      val result = connector.deleteChangeRequest(exampleArn)
       await(result) shouldBe false
     }
 
     "return false when an unexpected status is returned by agent-services-account" in {
       stubASADeleteResponse(exampleArn, FORBIDDEN)
 
-      val result = connector.delete(exampleArn)
+      val result = connector.deleteChangeRequest(exampleArn)
       await(result) shouldBe false
     }
+  }
+
+  ".getSubscriptionInfo" should {
+
+    "return a sequence of SubscriptionInfo models when returned by agent-services-account" in {
+      givenSubscriptionInfoResponse()
+
+      val result = connector.getSubscriptionInfo(Seq(PAYE, CT, SA))
+
+      await(result) shouldBe Seq(
+        SubscriptionInfo(
+          regime = PAYE,
+          subscriptionStatus = SubscriptionInProgress
+        ),
+        SubscriptionInfo(
+          regime = CT,
+          subscriptionStatus = SubscriptionInProgress
+        ),
+        SubscriptionInfo(
+          regime = SA,
+          subscriptionStatus = SubscriptionInProgress
+        )
+      )
+    }
+
   }
 
 }

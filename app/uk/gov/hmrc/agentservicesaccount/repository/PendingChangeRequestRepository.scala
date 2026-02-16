@@ -75,7 +75,7 @@ with Logging {
       .headOption()
 
     if (appConfig.enableBackendPCRDatabase) {
-      asaConnector.find(arn).flatMap {
+      asaConnector.findChangeRequest(arn).flatMap {
         case Some(changeRequest) => Future.successful(Some(changeRequest))
         case _ => frontendDatabaseResult
       }
@@ -87,7 +87,7 @@ with Logging {
 
   def insert(pcod: PendingChangeRequest)(implicit rh: RequestHeader): Future[Unit] =
     if (appConfig.enableBackendPCRDatabase) {
-      asaConnector.insert(pcod)
+      asaConnector.insertChangeRequest(pcod)
     }
     else {
       collection
@@ -108,7 +108,7 @@ with Logging {
       .map(_ => ())
 
     if (appConfig.enableBackendPCRDatabase) {
-      asaConnector.delete(arn).flatMap {
+      asaConnector.deleteChangeRequest(arn).flatMap {
         case true => Future.successful(())
         case false => frontendDatabaseResult
       }
