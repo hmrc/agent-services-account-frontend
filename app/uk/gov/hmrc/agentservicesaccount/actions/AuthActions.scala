@@ -22,6 +22,9 @@ import play.api.Environment
 import play.api.Logging
 import uk.gov.hmrc.agentservicesaccount.models.Arn
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionInfo
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionStatus
 import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals._
@@ -56,7 +59,41 @@ case class AgentInfo(
       case _ => false
     }
 
-  val hasPayeSubscription: Boolean = enrolments.getEnrolment("IR-PAYE-AGENT").isDefined
+  private val hasPayeSubscription: Boolean = enrolments.getEnrolment("IR-PAYE-AGENT").exists(_.isActivated)
+  private val hasCtSubscription: Boolean = enrolments.getEnrolment("IR-CT-AGENT").exists(_.isActivated)
+  private val hasSaSubscription: Boolean = enrolments.getEnrolment("IR-SA-AGENT").exists(_.isActivated)
+
+  def existingSubscriptionInfo: Seq[SubscriptionInfo] =
+    Seq(
+      if (hasPayeSubscription)
+        Some(SubscriptionInfo(LegacyRegime.PAYE, SubscriptionStatus.Subscribed))
+      else
+        None,
+      if (hasCtSubscription)
+        Some(SubscriptionInfo(LegacyRegime.CT, SubscriptionStatus.Subscribed))
+      else
+        None,
+      if (hasSaSubscription)
+        Some(SubscriptionInfo(LegacyRegime.SA, SubscriptionStatus.Subscribed))
+      else
+        None
+    ).flatten
+
+  def missingSubscriptions: Seq[LegacyRegime] =
+    Seq(
+      if (!hasPayeSubscription)
+        Some(LegacyRegime.PAYE)
+      else
+        None,
+      if (!hasCtSubscription)
+        Some(LegacyRegime.CT)
+      else
+        None,
+      if (!hasSaSubscription)
+        Some(LegacyRegime.SA)
+      else
+        None
+    ).flatten
 
 }
 
