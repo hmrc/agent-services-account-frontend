@@ -32,7 +32,6 @@ class PayeSubscriptionRequestControllerISpec extends ComponentBaseISpec {
   private val confirmPath   = "/paye-subscription/request/confirm"
   private val submittedPath = "/paye-subscription/request/submitted"
 
-  /** Mutable test state (avoid binding a null/half-initialised field into Guice). */
   private object TestState {
     var status: PayeStatus =
       PayeStatus(hasSubscription = false, hasRequestInProgress = false)
