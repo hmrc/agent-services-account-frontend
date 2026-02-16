@@ -28,6 +28,7 @@ import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentPermissionsConnector
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentUserClientDetailsConnector
+import uk.gov.hmrc.agentservicesaccount.connectors.PayeSubscriptionConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.amls.{routes => amlsRoutes}
 import uk.gov.hmrc.agentservicesaccount.models.AmlsStatus
 import uk.gov.hmrc.agentservicesaccount.models.AmlsStatuses._
@@ -46,6 +47,7 @@ import scala.concurrent.Future
 class AgentServicesController @Inject() (
   authActions: AuthActions,
   actions: Actions,
+  agentPayeConnector: PayeSubscriptionConnector,
   agentPermissionsConnector: AgentPermissionsConnector,
   agentUserClientDetailsConnector: AgentUserClientDetailsConnector,
   agentAssuranceConnector: AgentAssuranceConnector,
@@ -76,14 +78,18 @@ with Logging {
      *      showFeatureInvite is unused at the mo
      * */
     withShowFeatureInvite(agentInfo.arn) { showFeatureInvite: Boolean =>
-      Future successful Ok(
-        asaDashboard(
-          formatArn(agentInfo.arn),
-          showFeatureInvite && agentInfo.isAdmin,
-          agentInfo.isAdmin,
-          showLegacySubscription(agentInfo)
-        )
-      ).addingToSession(toReturnFromMapping())
+      agentPayeConnector.getStatus().map { payeStatus =>
+        val showPayeRequestLink = !payeStatus.hasSubscription && !payeStatus.hasRequestInProgress
+        Ok(
+          asaDashboard(
+            formatArn(agentInfo.arn),
+            showFeatureInvite && agentInfo.isAdmin,
+            agentInfo.isAdmin,
+            showLegacySubscription(agentInfo),
+            showPayeRequestLink
+          )
+        ).addingToSession(toReturnFromMapping())
+      }
     }
   }
 

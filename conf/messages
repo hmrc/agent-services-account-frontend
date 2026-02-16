@@ -67,6 +67,20 @@ asa.p.manage=Allow other users in your organisation to access this agent service
 asa.paye-section.h2=View a client’s Income record
 asa.paye-section.link=View a client’s Income record
 asa.paye-section.text=Access a client’s Income record to help you complete their Self Assessment tax return.
+asa.paye-section.request-subscription.link=Request a PAYE subscription
+
+# PAYE subscription request (mock)
+paye.cya.h1=Check your details before requesting a PAYE subscription
+paye.cya.submit=Confirm and submit request
+paye.cya.return-home=Return to your agent services account
+paye.cya.agentName=Agent name
+paye.cya.contactName=Contact name
+paye.cya.telephoneNumber=Telephone number
+paye.cya.emailAddress=Email address
+paye.cya.address=Address
+paye.submitted.h1=PAYE subscription request submitted
+paye.submitted.p1=We have received your request. We will contact you when we have processed it.
+paye.submitted.return-home=Return to your agent services account
 
 # PPT
 asa.ppt.col1.h2=Plastic Packaging Tax

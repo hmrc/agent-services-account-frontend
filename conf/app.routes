@@ -114,3 +114,7 @@ GET        /manage-account/money-laundering-supervision/check-your-answers      
 POST       /manage-account/money-laundering-supervision/check-your-answers           @uk.gov.hmrc.agentservicesaccount.controllers.amls.CheckYourAnswersController.onSubmit
 
 GET        /manage-account/money-laundering-supervision/confirmation-new-supervision                   @uk.gov.hmrc.agentservicesaccount.controllers.amls.AmlsConfirmationController.showUpdatedAmlsConfirmationPage(updated: Boolean ?= true)
+
+GET   /paye-subscription/request/confirm    uk.gov.hmrc.agentservicesaccount.controllers.paye.PayeSubscriptionRequestController.showConfirm
+POST  /paye-subscription/request/confirm    uk.gov.hmrc.agentservicesaccount.controllers.paye.PayeSubscriptionRequestController.submit
+GET   /paye-subscription/request/submitted  uk.gov.hmrc.agentservicesaccount.controllers.paye.PayeSubscriptionRequestController.showSubmitted

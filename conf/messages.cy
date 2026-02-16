@@ -67,6 +67,20 @@ asa.p.manage=Caniatáu i ddefnyddwyr eraill yn eich sefydliad gael mynediad at y
 asa.paye-section.h2=Bwrw golwg dros gofnod incwm cleient
 asa.paye-section.link=Bwrw golwg dros gofnod incwm cleient
 asa.paye-section.text=Cael mynediad at gofnod incwm cleient i’ch helpu i lenwi ei Ffurflen Dreth Hunanasesiad.
+asa.paye-section.request-subscription.link=Request a PAYE subscription
+
+# PAYE subscription request (mock)
+paye.cya.h1=Check your details before requesting a PAYE subscription
+paye.cya.submit=Confirm and submit request
+paye.cya.return-home=Return to your agent services account
+paye.cya.agentName=Agent name
+paye.cya.contactName=Contact name
+paye.cya.telephoneNumber=Telephone number
+paye.cya.emailAddress=Email address
+paye.cya.address=Address
+paye.submitted.h1=PAYE subscription request submitted
+paye.submitted.p1=We have received your request. We will contact you when we have processed it.
+paye.submitted.return-home=Return to your agent services account
 
 # PPT
 asa.ppt.col1.h2=Treth Deunydd Pacio Plastig
