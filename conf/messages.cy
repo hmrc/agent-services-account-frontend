@@ -67,20 +67,20 @@ asa.p.manage=Caniatáu i ddefnyddwyr eraill yn eich sefydliad gael mynediad at y
 asa.paye-section.h2=Bwrw golwg dros gofnod incwm cleient
 asa.paye-section.link=Bwrw golwg dros gofnod incwm cleient
 asa.paye-section.text=Cael mynediad at gofnod incwm cleient i’ch helpu i lenwi ei Ffurflen Dreth Hunanasesiad.
-asa.paye-section.request-subscription.link=Request a PAYE subscription
+asa.paye-section.request-subscription.link=Cais am danysgrifiad TWE
 
 # PAYE subscription request (mock)
-paye.cya.h1=Check your details before requesting a PAYE subscription
-paye.cya.submit=Confirm and submit request
-paye.cya.return-home=Return to your agent services account
-paye.cya.agentName=Agent name
-paye.cya.contactName=Contact name
-paye.cya.telephoneNumber=Telephone number
-paye.cya.emailAddress=Email address
-paye.cya.address=Address
-paye.submitted.h1=PAYE subscription request submitted
-paye.submitted.p1=We have received your request. We will contact you when we have processed it.
-paye.submitted.return-home=Return to your agent services account
+paye.cya.h1=Gwiriwch eich manylion cyn gwneud cais am danysgrifiad TWE
+paye.cya.submit=Cadarnhau a chyflwyno’r cais
+paye.cya.return-home=Ewch yn ôl i’ch cyfrif gwasanaethau asiant
+paye.cya.agentName=Enw’r asiant
+paye.cya.contactName=Enw cyswllt
+paye.cya.telephoneNumber=Rhif ffôn
+paye.cya.emailAddress=Cyfeiriad e-bost
+paye.cya.address=Cyfeiriad
+paye.submitted.h1=Cais am danysgrifiad TWE wedi’i gyflwyno
+paye.submitted.p1=Mae’ch cais wedi dod i law. Byddwn yn cysylltu â chi pan fyddwn wedi’i brosesu.
+paye.submitted.return-home=Ewch yn ôl i’ch cyfrif gwasanaethau asiant
 
 # PPT
 asa.ppt.col1.h2=Treth Deunydd Pacio Plastig
