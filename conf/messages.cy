@@ -453,13 +453,13 @@ timeout-dialog.p1=Am resymau diogelwch, cewch eich allgofnodi o’ch cyfrif gwas
 
 # Your account
 your.account.h1=Eich cyfrif
-your.account.your.info.h2=TODO
+your.account.your.info.h2=Eich manylion mewngofnodi ar gyfer eich cyfrif gwasanaethau asiant
 your.account.name=Enw
 your.account.email=E-bost
 your.account.role.h3=Swydd
 your.account.role.p=Safonol - Fel defnyddiwr gyda chaniatâd safonol, gallwch fwrw golwg dros y grwpiau mynediad a’r cleientiaid sydd wedi’u neilltuo i chi. Cysylltwch â’ch gweinyddwr am ragor o wybodaeth.
 your.account.role=Swydd
-your.account.your.info.mfa.link=TODO
+your.account.your.info.mfa.link=Newidwch eich manylion mewngofnodi neu’ch manylion diogelwch
 your.account.unassigned-clients.a=Gweld cleientiaid eraill
 your.account.unassigned-clients.h2=Gallwch gael mynediad at y cleientiaid eraill hyn
 your.account.your.admins.h2=Gweinyddwyr eich sefydliad
