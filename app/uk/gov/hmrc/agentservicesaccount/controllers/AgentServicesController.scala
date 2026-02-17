@@ -83,11 +83,10 @@ with Logging {
         val showPayeRequestLink = !payeStatus.hasSubscription && !payeStatus.hasRequestInProgress
         Ok(
           asaDashboard(
-            formatArn(agentInfo.arn),
-            showFeatureInvite && agentInfo.isAdmin,
-            agentInfo.isAdmin,
-            showLegacySubscription(agentInfo),
-            showPayeRequestLink
+            arn = request.agentInfo.arn.value,
+            isAdmin = request.agentInfo.isAdmin,
+            isShownLegacySubscription = appConfig.enableLegacySubscriptionLink,
+            isShownPayeRequestLink = showPayeRequestLink
           )
         ).addingToSession(toReturnFromMapping())
       }
@@ -100,10 +99,10 @@ with Logging {
             Future.successful(Nil)
       } yield Ok(
         asaDashboard(
-          formatArn(agentInfo.arn),
-          showFeatureInvite && agentInfo.isAdmin,
-          agentInfo.isAdmin,
-          subscriptionInfo
+          arn = formatArn(agentInfo.arn),
+          isShownRecruitmentBanner = showFeatureInvite && agentInfo.isAdmin,
+          isAdmin = agentInfo.isAdmin,
+          subscriptionInfo = subscriptionInfo
         )
       ).addingToSession(toReturnFromMapping())
     }

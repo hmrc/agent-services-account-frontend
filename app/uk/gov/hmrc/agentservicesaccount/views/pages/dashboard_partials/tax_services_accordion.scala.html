@@ -26,11 +26,14 @@
 @this(
         p: p, h2: h2, h4: h4, a: a, span: span, ul_html: ul_html,
         govukWarningText: GovukWarningText,
-        govukAccordion: GovukAccordion,
+        govukAccordion: GovukAccordion
 )
-@(isShownLegacySubscription: Boolean = false, isShownPayeRequestLink: Boolean = false)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
 
-@(subscriptionInfo: Seq[SubscriptionInfo])(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
+@(
+        subscriptionInfo: Seq[SubscriptionInfo],
+        isShownLegacySubscription: Boolean = false,
+        isShownPayeRequestLink: Boolean = false
+)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
 
 @itsaAccordionItemLegacy = {
 @h4("asa.sectionITSA.col1.h4")
@@ -55,6 +58,7 @@
     )
 ))
 }
+
 @itsaAccordionItem = {
 @h4("asa.sectionITSA.col1.h4")
 @p(html = Some(Html(msgs("asa.sectionITSA.col1.p1", appConfig.govUkItsaAsAnAgent))))
@@ -68,11 +72,13 @@
 @h4("asa.sectionITSA.col4.h4")
 @p(html = Some(Html(msgs("asa.sectionITSA.col4.p1", appConfig.incomeTaxSubscriptionAgentFrontendUrl))))
 }
+
 @mtdForVatAccordionItem = {
 @h4("asa.section1.col1.h3")
     <p>
     @a("asa.section1.col1.p", href =  appConfig.agentClientRelationshipsFrontendInvitationsUrl)
     </p>
+
 @h4("asa.section1.col2.h3")
 @ul_html(
     items = Seq[Html](
@@ -82,9 +88,11 @@
     classes = Some("govuk-list--bullet")
 )
 }
-@payeIncomeRecordAccordionItem(isShownPayeRequestLink: Boolean) = {
+
+@payeIncomeRecordAccordionItem = {
 @p("asa.paye-section.text")
 @p(html = Some(a(href = appConfig.taxHistoryFrontendUrl, key = "asa.paye-section.link")))
+
 @if(isShownPayeRequestLink) {
     @p(html = Some(
         a(
@@ -94,6 +102,7 @@
     ))
 }
 }
+
 @trustsAccordionItem = {
 @h4("asa.trusts-section.col1.h3")
 @p(msgs("asa.trusts-section.col1.register-trust.p", appConfig.agentClientRelationshipsFrontendInvitationsUrl))
@@ -104,27 +113,33 @@
         key = "asa.trusts-section.col2.register-trust-link.text") + "."
 )))
 }
+
 @capitalGainsAccordionItem = {
 @h4("asa.section3.col1.h3")
 @p(html = Some(Html(
     span("asa.section3.col1.text1") + "" +
             span(msgs("asa.section3.col1.link1", msgs("asa.section3.col1.link1.href")))
 )))
+
 @p(html = Some(Html(
     span("asa.section3.col1.text2") + " " +
             span(key = msgs("asa.section3.col1.link2",msgs("asa.section3.col1.link2.href")))
 )))
+
 @h4("asa.section3.col2.h3")
 @p(key = msgs("asa.section3.col2.link1", msgs("asa.section3.col2.link1.href")))
 }
+
 @countryByCountryItem = {
 @h4("asa.section3.col1.h3")
 @p(msgs("asa.cbc-section.col1.link1.p", appConfig.agentClientRelationshipsFrontendInvitationsUrl))
+
 @h4("asa.cbc.col1.h2")
 @p(html = Some(
     a(href = "https://www.tax.service.gov.uk/send-a-country-by-country-report", key = "asa.cbc-section.col1.link2.p"))
 )
 }
+
 @plasticPackagingItem = {
 @h4("asa.ppt.col1.h3")
 @p(html = Some(Html(
@@ -137,86 +152,84 @@
     span("asa.ppt.col1.text2") + " " +
             span(key = msgs("asa.ppt.col1.link2", appConfig.agentClientRelationshipsFrontendInvitationsUrl))
 )))
-    )))
-
-    @p(html = Some(Html(
-        span("asa.ppt.col1.text2") + " " +
-            span(key = msgs("asa.ppt.col1.link2", appConfig.agentClientRelationshipsFrontendInvitationsUrl))
-    )))
-
-    @h4("asa.ppt.col2.h3")
-    @p(msgs("asa.ppt.col2.link1", msgs("asa.ppt.col2.link1.href")))
-}
 
 @h4("asa.ppt.col2.h3")
 @p(msgs("asa.ppt.col2.link1", msgs("asa.ppt.col2.link1.href")))
 }
+
 @pillar2Item = {
 @h4("asa.pillar2.col1.h3")
 @p(html = Some(Html(
     span("asa.pillar2.col1.text1") + "" +
             span(msgs("asa.pillar2.col1.link1", appConfig.pillar2GuidanceUrl))
 )))
+
 @p(html = Some(Html(
     span("asa.pillar2.col1.text2") + " " +
             span(key = msgs("asa.pillar2.col1.link2", appConfig.agentClientRelationshipsFrontendInvitationsUrl))
 )))
+
 @h4("asa.pillar2.col2.h3")
 @p(msgs("asa.pillar2.col2.link1", appConfig.pillar2StartUrl))
 }
+
 @otherTaxesItem = {
 @govukWarningText(WarningText(content = HtmlContent(span("asa.other.p1"))))
 }
-@payeItem = {
-@h4("asa.payeSection.col1.h3")
-@p("asa.payeSection.col1.text1")
 
 @payeItem(status: SubscriptionStatus) = {
-    @h4("asa.legacy.paye.h3")
-    @p(msgs("asa.legacy.paye.p1", status))
+@h4("asa.legacy.paye.h3")
+@p(msgs("asa.legacy.paye.p1", status))
 }
 
 @ctItem(status: SubscriptionStatus) = {
-    @h4("asa.legacy.ct.h3")
-    @p(msgs("asa.legacy.ct.p1", status))
+@h4("asa.legacy.ct.h3")
+@p(msgs("asa.legacy.ct.p1", status))
 }
 
 @saItem(status: SubscriptionStatus) = {
-    @h4("asa.legacy.sa.h3")
-    @p(msgs("asa.legacy.sa.p1", status))
+@h4("asa.legacy.sa.h3")
+@p(msgs("asa.legacy.sa.p1", status))
 }
+
 @accordionItems = @{
     val items = ListBuffer[Section]()
+
     items.append(
         Section(
             headingContent = Text(msgs("asa.sectionITSA.h2")),
             content = HtmlContent(itsaAccordionItem)
         )
     )
+
     items.append(
         Section(
             headingContent = Text(msgs("asa.section1.h2")),
             content = HtmlContent(mtdForVatAccordionItem)
         )
     )
+
     items.append(
         Section(
             headingContent = Text(msgs("asa.paye-section.h2")),
-            content = HtmlContent(payeIncomeRecordAccordionItem(isShownPayeRequestLink))
+            content = HtmlContent(payeIncomeRecordAccordionItem)
         )
     )
+
     items.append(
         Section(
             headingContent = Text(msgs("asa.trusts-section.h2")),
             content = HtmlContent(trustsAccordionItem)
         )
     )
+
     items.append(
         Section(
             headingContent = Text(msgs("asa.section3.col1.h2")),
             content = HtmlContent(capitalGainsAccordionItem)
         )
     )
+
     if(appConfig.enableCbc) {
         items.append(
             Section(
@@ -225,24 +238,28 @@
             )
         )
     }
+
     items.append(
         Section(
             headingContent = Text(msgs("asa.ppt.col1.h2")),
             content = HtmlContent(plasticPackagingItem)
         )
     )
+
     items.append(
         Section(
             headingContent = Text(msgs("asa.pillar2.col1.h2")),
             content = HtmlContent(pillar2Item)
         )
     )
+
     items.append(
         Section(
             headingContent = Text(msgs("asa.other.heading")),
             content = HtmlContent(otherTaxesItem)
         )
     )
+
     if(appConfig.enableLegacySubscriptionLink) {
         subscriptionInfo.find(_.regime == LegacyRegime.PAYE).map { info =>
             items.append(
@@ -269,8 +286,10 @@
             )
         }
     }
+
     items
 }
+
 @govukAccordion(
     Accordion(
         id = "tax-services-accordion",
