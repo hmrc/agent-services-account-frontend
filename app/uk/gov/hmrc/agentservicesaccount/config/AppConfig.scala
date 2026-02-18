@@ -114,8 +114,10 @@ extends Logging {
   val userManagementExternalUrl: String = getString("user-management.external-url")
   val manageUsersStartPath: String = getString("user-management.manage-users")
   val addUserStartPath: String = getString("user-management.add-user")
+  val yourAccountMfaLink: String = getString("user-management.your-account-mfa-link")
   lazy val manageUsersUrl: String = s"$userManagementExternalUrl$manageUsersStartPath"
   lazy val addUserUrl: String = s"$userManagementExternalUrl$addUserStartPath"
+  lazy val yourAccountMfaLinkUrl: String = s"$userManagementExternalUrl$yourAccountMfaLink"
 
   val vatExternalUrl: String = getConfString("vat-agent-client-lookup-frontend.external-url")
   val vatStartPath: String = getConfString("vat-agent-client-lookup-frontend.start.path")

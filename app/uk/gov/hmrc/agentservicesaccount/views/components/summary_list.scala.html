@@ -22,10 +22,11 @@
 
 @this(govukSummaryList: GovukSummaryList)
 
-@(rows: Seq[SummaryListData])(implicit msgs: Messages)
+@(rows: Seq[SummaryListData], classes: List[String] = List.empty)(implicit msgs: Messages)
 
     @govukSummaryList(
         SummaryList(
+            classes = classes.mkString(" "),
             rows = rows.map(summaryListRow =>
                 SummaryListRow(
                     Key(Text(msgs(summaryListRow.key))),
