@@ -1023,7 +1023,7 @@ extends BaseISpec {
       userDetailsPanel.select(summaryListValues).get(2)
         .text() shouldBe "Standard user You can view your assigned access groups and clients. You can also view clients who are not in any access groups."
       userDetailsPanel.select("a").get(0).text shouldBe "Change sign in or security details"
-      userDetailsPanel.select("a").get(0).attr("href") shouldBe "http://www.access.service.gov.uk/account-activity"
+      userDetailsPanel.select("a").get(0).attr("href") shouldBe appConfig.yourAccountMfaLinkUrl
 
       val userGroupsPanel = html.select("div#user-groups")
       val grps = userGroupsPanel.select("ul li a")
@@ -1070,7 +1070,7 @@ extends BaseISpec {
       userDetailsPanel.select(summaryListValues).get(2)
         .text() shouldBe "Standard user You can view your assigned access groups and clients. You can also view clients who are not in any access groups."
       userDetailsPanel.select("a").get(0).text shouldBe "Change sign in or security details"
-      userDetailsPanel.select("a").get(0).attr("href") shouldBe "http://www.access.service.gov.uk/account-activity"
+      userDetailsPanel.select("a").get(0).attr("href") shouldBe appConfig.yourAccountMfaLinkUrl
 
       val userGroupsPanel = html.select("div#user-groups")
       userGroupsPanel.isEmpty shouldBe true
@@ -1119,7 +1119,7 @@ extends BaseISpec {
       userDetailsPanel.select(summaryListValues).get(2)
         .text() shouldBe "Standard user You can view your assigned access groups and clients. You can also view clients who are not in any access groups."
       userDetailsPanel.select("a").get(0).text shouldBe "Change sign in or security details"
-      userDetailsPanel.select("a").get(0).attr("href") shouldBe "http://www.access.service.gov.uk/account-activity"
+      userDetailsPanel.select("a").get(0).attr("href") shouldBe appConfig.yourAccountMfaLinkUrl
 
       val userGroupsPanel = html.select("div#user-groups")
       val grps = userGroupsPanel.select("ul li a")
