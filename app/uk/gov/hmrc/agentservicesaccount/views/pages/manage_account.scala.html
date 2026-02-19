@@ -24,13 +24,13 @@
     main: main, h1: h1,
     p: p, a: a,
     ul_html: ul_html,
+    your_organisation: your_organisation,
+    team_members: team_members,
     info: info,
     maybe_inset_text: maybe_inset_text,
     access_groups_section: access_groups_section,
     clients: clients,
-    manage_team_members_groups: manage_team_members_groups,
-    team_members: team_members,
-    your_organisation: your_organisation
+    manage_team_members_groups: manage_team_members_groups
 )
 
 @(
@@ -44,6 +44,9 @@
 
     @h1("manage.account.h1")
     <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+    @your_organisation(amlsKey, amlsLinkHref)
+    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+    @team_members()
     @if(appConfig.granPermsEnabled && maybeOptinStatus.isDefined) {
         @info(maybeOptinStatus.get)
         @maybe_inset_text(maybeOptinStatus.get)
@@ -51,7 +54,4 @@
         @clients(maybeOptinStatus.get)
         @manage_team_members_groups(maybeOptinStatus.get)
     }
-    @team_members()
-    @your_organisation(amlsKey, amlsLinkHref)
-
 }
