@@ -21,6 +21,5 @@
 @()(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
 <section id="manage-sign-in-details">
     @h2("manage.account.manage-sign-in-details.heading")
-    @* TODO: Correct link below *@
-    @p(html = Some(a("manage.account.manage-sign-in-details.link", href = appConfig.yourAccountMfaLinkUrl)))
+    @p(html = Some(a("manage.account.manage-sign-in-details.link", href = appConfig.manageAccountMfaLinkUrl)))
 </section>
