@@ -40,7 +40,7 @@
     hasAnyGroups: Boolean = false
 )(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
 
-@main(pageTitle = msgs("manage.account.h1"), isAdmin = true, analyticsAdditionalJs = None, fullWidth = true) {
+@main(pageTitle = msgs("manage.account.h1"), isAdmin = true, analyticsAdditionalJs = None) {
 
     @h1("manage.account.h1")
     <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
