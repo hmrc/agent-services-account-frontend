@@ -388,7 +388,7 @@ extends BaseISpec {
     amlsAdded: Boolean = true
   ): Assertion = {
     val contactDetailsSection = html.select("#your-organisation")
-    contactDetailsSection.select("h2").text shouldBe "Your organisation"
+    contactDetailsSection.select("h2").text shouldBe "Your organisation account settings"
     val links = contactDetailsSection.select("p a")
     val amlsAction =
       if (amlsAdded)
@@ -747,7 +747,7 @@ extends BaseISpec {
 
       val html = Jsoup.parse(contentAsString(response))
       val contactDetailsSection = html.select("#your-organisation")
-      contactDetailsSection.select("h2").text shouldBe "Your organisation"
+      contactDetailsSection.select("h2").text shouldBe "Your organisation account settings"
       val links = contactDetailsSection.select("p a")
       links.get(0).text shouldBe "View or update anti-money laundering supervision details"
       links.get(0).attr("href") shouldBe "/agent-services-account/manage-account/money-laundering-supervision/view-details"
@@ -767,7 +767,7 @@ extends BaseISpec {
 
       val html = Jsoup.parse(contentAsString(response))
       val contactDetailsSection = html.select("#your-organisation")
-      contactDetailsSection.select("h2").text shouldBe "Your organisation"
+      contactDetailsSection.select("h2").text shouldBe "Your organisation account settings"
       val links = contactDetailsSection.select("p a")
       links.get(0).text shouldBe "View or update anti-money laundering supervision details"
       links.get(0).attr("href") shouldBe "/agent-services-account/manage-account/money-laundering-supervision/view-details"
@@ -787,7 +787,7 @@ extends BaseISpec {
 
       val html = Jsoup.parse(contentAsString(response))
       val contactDetailsSection = html.select("#your-organisation")
-      contactDetailsSection.select("h2").text shouldBe "Your organisation"
+      contactDetailsSection.select("h2").text shouldBe "Your organisation account settings"
       val links = contactDetailsSection.select("p a")
       links.get(0).text shouldBe "View or update anti-money laundering supervision details"
       links.get(0).attr("href") shouldBe "/agent-services-account/manage-account/money-laundering-supervision/view-details"
@@ -807,7 +807,7 @@ extends BaseISpec {
 
       val html = Jsoup.parse(contentAsString(response))
       val contactDetailsSection = html.select("#your-organisation")
-      contactDetailsSection.select("h2").text shouldBe "Your organisation"
+      contactDetailsSection.select("h2").text shouldBe "Your organisation account settings"
       val links = contactDetailsSection.select("p a")
       links.get(0).text shouldBe "View or update anti-money laundering supervision details"
       links.get(0).attr("href") shouldBe "/agent-services-account/manage-account/money-laundering-supervision/view-details"
@@ -827,7 +827,7 @@ extends BaseISpec {
 
       val html = Jsoup.parse(contentAsString(response))
       val contactDetailsSection = html.select("#your-organisation")
-      contactDetailsSection.select("h2").text shouldBe "Your organisation"
+      contactDetailsSection.select("h2").text shouldBe "Your organisation account settings"
       val links = contactDetailsSection.select("p a")
       links.get(0).text shouldBe "Action: Add anti-money laundering supervision details"
       links.get(0).attr("href") shouldBe "/agent-services-account/manage-account/money-laundering-supervision/view-details"
@@ -847,7 +847,7 @@ extends BaseISpec {
 
       val html = Jsoup.parse(contentAsString(response))
       val contactDetailsSection = html.select("#your-organisation")
-      contactDetailsSection.select("h2").text shouldBe "Your organisation"
+      contactDetailsSection.select("h2").text shouldBe "Your organisation account settings"
       val links = contactDetailsSection.select("p a")
       links.get(0).text shouldBe "Action: Add anti-money laundering supervision details"
       links.get(0).attr("href") shouldBe "/agent-services-account/manage-account/money-laundering-supervision/view-details"
@@ -867,7 +867,7 @@ extends BaseISpec {
 
       val html = Jsoup.parse(contentAsString(response))
       val contactDetailsSection = html.select("#your-organisation")
-      contactDetailsSection.select("h2").text shouldBe "Your organisation"
+      contactDetailsSection.select("h2").text shouldBe "Your organisation account settings"
       val links = contactDetailsSection.select("p a")
       links.get(0).text shouldBe "Action: Update anti-money laundering supervision details"
       links.get(0).attr("href") shouldBe "/agent-services-account/manage-account/money-laundering-supervision/view-details"
