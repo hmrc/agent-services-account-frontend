@@ -423,7 +423,10 @@ extends BaseISpec {
     section.select("hr").isEmpty shouldBe false
   }
 
-  def verifyInfoSection(html: Document, status: String = "on"): Assertion = {
+  def verifyInfoSection(
+    html: Document,
+    status: String = "on"
+  ): Assertion = {
     val section = html.select("#info-section")
     section.select("h2").text shouldBe "Manage access groups"
     section.select("p").get(0).text.shouldBe("Access groups allow you to restrict which team members can manage a client’s tax.")
@@ -455,13 +458,6 @@ extends BaseISpec {
     section.select("hr").isEmpty shouldBe false
   }
 
-//  TODO: MANAGE ACCOUNT TESTS START HERE - NEED TO REORDER VERIFY SECTIONS
-//  verifyYourOrganisationSection
-//  verifyManageYourOwnSignInDetailsSection
-//  verifyHowToManageSection
-//  verifyInfoSection
-//  verifyClientsSectionNotPresent/verifyClientsSection
-//  verifyManageTeamMembersSection
   "manage-account" should {
 
     val manageAccountTitle = "Manage account - Agent services account - GOV.UK"
@@ -901,7 +897,7 @@ extends BaseISpec {
     }
 
   }
-// TODO: MANAGE ACCOUNT TESTS END HERE - NEED TO REORDER VERIFY SECTION
+
   "account-details" should {
 
     "return status OK" when {
@@ -1016,7 +1012,7 @@ extends BaseISpec {
   val yourAccountUrl: String = routes.AgentServicesController.yourAccount.url
 
   s"GET on Your Account at url: $yourAccountUrl" should {
-// TODO: FAILURES HERE MAY MEAN messages VALUE IS BEING USED TWICE FOR HEADING - NEED TO INVESTIGATE
+
     "render correctly for Standard User who’s Opted-In_READY without Access Groups" in {
       val providerId = Random.nextLong().toString
       givenFullAuthorisedAsAgentWith(arn.value, providerId)
