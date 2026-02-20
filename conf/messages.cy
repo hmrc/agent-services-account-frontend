@@ -67,20 +67,6 @@ asa.p.manage=Caniatáu i ddefnyddwyr eraill yn eich sefydliad gael mynediad at y
 asa.paye-section.h2=Bwrw golwg dros gofnod incwm cleient
 asa.paye-section.link=Bwrw golwg dros gofnod incwm cleient
 asa.paye-section.text=Cael mynediad at gofnod incwm cleient i’ch helpu i lenwi ei Ffurflen Dreth Hunanasesiad.
-asa.paye-section.request-subscription.link=Cais am danysgrifiad TWE
-
-# PAYE subscription request (mock)
-paye.cya.h1=Gwiriwch eich manylion cyn gwneud cais am danysgrifiad TWE
-paye.cya.submit=Cadarnhau a chyflwyno’r cais
-paye.cya.return-home=Ewch yn ôl i’ch cyfrif gwasanaethau asiant
-paye.cya.agentName=Enw’r asiant
-paye.cya.contactName=Enw cyswllt
-paye.cya.telephoneNumber=Rhif ffôn
-paye.cya.emailAddress=Cyfeiriad e-bost
-paye.cya.address=Cyfeiriad
-paye.submitted.h1=Cais am danysgrifiad TWE wedi’i gyflwyno
-paye.submitted.p1=Mae’ch cais wedi dod i law. Byddwn yn cysylltu â chi pan fyddwn wedi’i brosesu.
-paye.submitted.return-home=Ewch yn ôl i’ch cyfrif gwasanaethau asiant
 
 # PPT
 asa.ppt.col1.h2=Treth Deunydd Pacio Plastig
@@ -184,6 +170,7 @@ asa.trusts-section.h2=Ymddiriedolaethau ac ystadau
 asa.legacy.paye.h2=PAYE/CIS
 asa.legacy.paye.col1.h3=Test Content
 asa.legacy.paye.col1.p1=Status: {0}
+asa.legacy.paye.link=Cais am danysgrifiad TWE
 
 # CT
 asa.legacy.ct.h2=CT
@@ -717,3 +704,16 @@ update-money-laundering-supervisory.body-codes.error.empty=Enter your money laun
 
 #Administrators
 administrators.link-text=Bwrw golwg dros y gweinyddwyr
+
+# PAYE subscription request (mock)
+paye.cya.h1=Gwiriwch eich manylion cyn gwneud cais am danysgrifiad TWE
+paye.cya.submit=Cadarnhau a chyflwyno’r cais
+paye.cya.return-home=Ewch yn ôl i’ch cyfrif gwasanaethau asiant
+paye.cya.agentName=Enw’r asiant
+paye.cya.contactName=Enw cyswllt
+paye.cya.telephoneNumber=Rhif ffôn
+paye.cya.emailAddress=Cyfeiriad e-bost
+paye.cya.address=Cyfeiriad
+paye.submitted.h1=Cais am danysgrifiad TWE wedi’i gyflwyno
+paye.submitted.p1=Mae’ch cais wedi dod i law. Byddwn yn cysylltu â chi pan fyddwn wedi’i brosesu.
+paye.submitted.return-home=Ewch yn ôl i’ch cyfrif gwasanaethau asiant
