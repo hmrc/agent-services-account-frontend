@@ -528,7 +528,7 @@ extends BaseISpec {
     }
 
     "return status: OK and body containing content for status Opted-In_READY (no access groups created yet)" in {
-// TODO: FIX
+
       givenAuthorisedAsAgentWith(arn.value)
       givenAgentRecordFound(agentRecord)
       givenArnAllowedOk()
@@ -542,11 +542,6 @@ extends BaseISpec {
 
       val html = Jsoup.parse(contentAsString(response))
 
-      val h2 = html.select(H2)
-
-      val li = html.select(LI)
-      val p = html.select(paragraphs)
-
       html.title() shouldBe manageAccountTitle
       html.select(H1).get(0).text shouldBe "Manage account"
 
@@ -554,25 +549,29 @@ extends BaseISpec {
       verifyManageYourOwnSignInDetailsSection(html)
       verifyHowToManageSection(html)
 
-      h2.get(0).text shouldBe "Access groups"
+      val infoH2 = html.select("#info-section h2")
+      infoH2.get(0).text shouldBe "Manage access groups"
       html.select("#opt-in-status").text shouldBe "Status Turned on"
       html.select("#opt-in-status").select("#status-value").text shouldBe "Turned on"
 
-      p.get(0).text
+      val infoLi = html.select("#info-section li")
+      val infoP = html.select("#info-section p")
+      infoP.get(0).text
         .shouldBe("Access groups allow you to restrict which team members can manage a client’s tax.")
-      li.get(0).child(0).text shouldBe "Create new access group"
-      li.get(0).child(0).hasClass("govuk-button") shouldBe false
-      li.get(0).child(0).attr("href") shouldBe s"http://localhost:$wireMockPort/agent-permissions/create-group/select-group-type?origin=manage-account"
-      li.get(1).child(0).text shouldBe "Manage access groups"
-      li.get(1).child(0).attr("href") shouldBe s"http://localhost:$wireMockPort/agent-permissions/manage-access-groups"
-      li.get(2).child(0).text shouldBe "Turn off access groups"
-      li.get(2).child(0).attr("href") shouldBe s"http://localhost:$wireMockPort/agent-permissions/turn-off-guide"
+      val li = html.select(LI)
+      li.get(3).child(0).text shouldBe "Create new access group"
+      li.get(3).child(0).hasClass("govuk-button") shouldBe false
+      li.get(3).child(0).attr("href") shouldBe s"http://localhost:$wireMockPort/agent-permissions/create-group/select-group-type?origin=manage-account"
+      li.get(4).child(0).text shouldBe "Manage access groups"
+      li.get(4).child(0).attr("href") shouldBe s"http://localhost:$wireMockPort/agent-permissions/manage-access-groups"
+      li.get(5).child(0).text shouldBe "Turn off access groups"
+      li.get(5).child(0).attr("href") shouldBe s"http://localhost:$wireMockPort/agent-permissions/turn-off-guide"
 
       verifyClientsSection(html)
     }
 
     "return status: OK and body containing content for status Opted-In_READY (access groups already created)" in {
-// TODO: FIX
+
       givenAuthorisedAsAgentWith(arn.value)
       givenAgentRecordFound(agentRecord)
       givenArnAllowedOk()
@@ -585,10 +584,6 @@ extends BaseISpec {
       status(response) shouldBe 200
 
       val html = Jsoup.parse(contentAsString(response))
-      val li = html.select(LI)
-
-      val h2 = html.select(H2)
-      val p = html.select(paragraphs)
 
       html.title() shouldBe manageAccountTitle
       html.select(H1).get(0).text shouldBe "Manage account"
@@ -597,15 +592,18 @@ extends BaseISpec {
       verifyManageYourOwnSignInDetailsSection(html)
       verifyHowToManageSection(html)
 
-      h2.get(0).text shouldBe "Access groups"
+      val infoH2 = html.select("#info-section h2")
+      infoH2.get(0).text shouldBe "Manage access groups"
       html.select("#opt-in-status").text shouldBe "Status Turned on"
       html.select("#opt-in-status").select("#status-value").text shouldBe "Turned on"
 
-      p.get(0).text
+      val infoP = html.select("#info-section p")
+      infoP.get(0).text
         .shouldBe("Access groups allow you to restrict which team members can manage a client’s tax.")
 
-      li.get(0).child(0).text shouldBe "Create new access group"
-      li.get(0).child(0).hasClass("govuk-button") shouldBe false
+      val li = html.select(LI)
+      li.get(3).child(0).text shouldBe "Create new access group"
+      li.get(3).child(0).hasClass("govuk-button") shouldBe false
 
       verifyClientsSection(html)
       verifyManageTeamMembersSection(html)
