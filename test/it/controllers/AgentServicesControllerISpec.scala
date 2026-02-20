@@ -406,7 +406,7 @@ extends BaseISpec {
   def verifyManageYourOwnSignInDetailsSection(html: Document): Assertion = {
     val section = html.select("#manage-sign-in-details")
     section.select("h2").text shouldBe "Manage your own sign in details"
-    section.select("a").text shouldBe "View or change your own sign in and security details"
+    section.select("a").text shouldBe "View or change your sign in and security details"
   }
 
   def verifyHowToManageSection(html: Document): Assertion = {
@@ -483,8 +483,9 @@ extends BaseISpec {
 
       html.title() shouldBe manageAccountTitle
       html.select(H1).get(0).text shouldBe "Manage account"
-      verifyHowToManageSection(html)
       verifyYourOrganisationSection(html, amlsAdded = false)
+      verifyManageYourOwnSignInDetailsSection(html)
+      verifyHowToManageSection(html)
     }
 
     "return Status: OK and body containing existing manage account content when gran perms FF is on but there was an error getting optin-status" in {
@@ -503,8 +504,9 @@ extends BaseISpec {
 
       html.title() shouldBe manageAccountTitle
       html.select(H1).get(0).text shouldBe "Manage account"
-      verifyHowToManageSection(html)
       verifyYourOrganisationSection(html)
+      verifyManageYourOwnSignInDetailsSection(html)
+      verifyHowToManageSection(html)
     }
 
     "return Status: OK and body containing existing manage account content when gran perms FF is on but ARN is not on allowed list" in {
@@ -524,12 +526,13 @@ extends BaseISpec {
 
       html.title() shouldBe manageAccountTitle
       html.select(H1).get(0).text shouldBe "Manage account"
-      verifyHowToManageSection(html)
       verifyYourOrganisationSection(html)
+      verifyManageYourOwnSignInDetailsSection(html)
+      verifyHowToManageSection(html)
     }
 
     "return status: OK and body containing content for status Opted-In_READY (no access groups created yet)" in {
-
+// TODO: FIX
       givenAuthorisedAsAgentWith(arn.value)
       givenAgentRecordFound(agentRecord)
       givenArnAllowedOk()
@@ -550,6 +553,11 @@ extends BaseISpec {
 
       html.title() shouldBe manageAccountTitle
       html.select(H1).get(0).text shouldBe "Manage account"
+
+      verifyYourOrganisationSection(html)
+      verifyManageYourOwnSignInDetailsSection(html)
+      verifyHowToManageSection(html)
+
       h2.get(0).text shouldBe "Access groups"
       html.select("#opt-in-status").text shouldBe "Status Turned on"
       html.select("#opt-in-status").select("#status-value").text shouldBe "Turned on"
@@ -565,12 +573,10 @@ extends BaseISpec {
       li.get(2).child(0).attr("href") shouldBe s"http://localhost:$wireMockPort/agent-permissions/turn-off-guide"
 
       verifyClientsSection(html)
-      verifyHowToManageSection(html)
-      verifyYourOrganisationSection(html)
     }
 
     "return status: OK and body containing content for status Opted-In_READY (access groups already created)" in {
-
+// TODO: FIX
       givenAuthorisedAsAgentWith(arn.value)
       givenAgentRecordFound(agentRecord)
       givenArnAllowedOk()
@@ -590,6 +596,11 @@ extends BaseISpec {
 
       html.title() shouldBe manageAccountTitle
       html.select(H1).get(0).text shouldBe "Manage account"
+
+      verifyYourOrganisationSection(html)
+      verifyManageYourOwnSignInDetailsSection(html)
+      verifyHowToManageSection(html)
+
       h2.get(0).text shouldBe "Access groups"
       html.select("#opt-in-status").text shouldBe "Status Turned on"
       html.select("#opt-in-status").select("#status-value").text shouldBe "Turned on"
@@ -602,8 +613,6 @@ extends BaseISpec {
 
       verifyClientsSection(html)
       verifyManageTeamMembersSection(html)
-      verifyHowToManageSection(html)
-
     }
 
     "return status: OK and body containing content for status Opted-In_NOT_READY" in {
@@ -622,17 +631,19 @@ extends BaseISpec {
       val html = Jsoup.parse(contentAsString(response))
       html.title() shouldBe manageAccountTitle
       html.select(H1).get(0).text shouldBe "Manage account"
+
+      verifyYourOrganisationSection(html)
+      verifyManageYourOwnSignInDetailsSection(html)
+      verifyHowToManageSection(html)
+
       html.select(insetText).get(0).text
         .shouldBe(
           "You have turned on access groups but need to wait until your client details are ready to use with access groups. You will receive a confirmation email after which you can start using access groups."
         )
 
       verifyInfoSection(html, "on")
-      verifyManageTeamMembersSection(html)
-      verifyHowToManageSection(html)
-      verifyYourOrganisationSection(html)
       verifyClientsSectionNotPresent(html)
-
+      verifyManageTeamMembersSection(html)
     }
 
     "return status: OK and body containing content for status Opted-In_SINGLE_USER" in {
@@ -653,16 +664,18 @@ extends BaseISpec {
       html.title() shouldBe manageAccountTitle
       html.select(H1).get(0).text shouldBe "Manage account"
 
+      verifyYourOrganisationSection(html)
+      verifyManageYourOwnSignInDetailsSection(html)
+      verifyHowToManageSection(html)
+
       html.select(insetText).get(0).text
         .shouldBe(
           "To use access groups you need to add more team members to your agent services account under ‘Manage team members on your agent services account’."
         )
 
       verifyInfoSection(html, "on")
-      verifyManageTeamMembersSection(html)
       verifyClientsSectionNotPresent(html)
-      verifyHowToManageSection(html)
-      verifyYourOrganisationSection(html)
+      verifyManageTeamMembersSection(html)
     }
 
     "return status: OK and body containing content for status Opted-Out_WRONG_CLIENT_COUNT" in {
@@ -683,14 +696,15 @@ extends BaseISpec {
       html.title() shouldBe manageAccountTitle
       html.select(H1).get(0).text shouldBe "Manage account"
 
+      verifyYourOrganisationSection(html)
+      verifyManageYourOwnSignInDetailsSection(html)
+      verifyHowToManageSection(html)
+
       html.select(insetText).get(0).text
         .shouldBe("To use access groups you need more than 1 client in your agent services account.")
 
       verifyInfoSection(html, "off")
-      verifyHowToManageSection(html)
       verifyClientsSectionNotPresent(html)
-      verifyYourOrganisationSection(html)
-
     }
 
     "return status: OK and body containing content for status Opted-Out_SINGLE_USER" in {
@@ -710,16 +724,17 @@ extends BaseISpec {
       html.title() shouldBe manageAccountTitle
       html.select(H1).get(0).text shouldBe "Manage account"
 
+      verifyYourOrganisationSection(html)
+      verifyManageYourOwnSignInDetailsSection(html)
+      verifyHowToManageSection(html)
+
       html.select(insetText).get(0).text
         .shouldBe(
           "To use access groups you need to add more team members to your agent services account under ‘Manage team members on your agent services account’."
         )
 
       verifyInfoSection(html, "off")
-      verifyHowToManageSection(html)
-      verifyYourOrganisationSection(html)
       verifyClientsSectionNotPresent(html)
-
     }
 
     "return status: OK and body containing content for status Opted-Out_ELIGIBLE" in {
@@ -737,8 +752,11 @@ extends BaseISpec {
 
       val html = Jsoup.parse(contentAsString(response))
 
-      verifyInfoSection(html, "off")
+      verifyYourOrganisationSection(html)
+      verifyManageYourOwnSignInDetailsSection(html)
       verifyHowToManageSection(html)
+
+      verifyInfoSection(html, "off")
       verifyClientsSectionNotPresent(html)
     }
 
@@ -998,7 +1016,7 @@ extends BaseISpec {
   val yourAccountUrl: String = routes.AgentServicesController.yourAccount.url
 
   s"GET on Your Account at url: $yourAccountUrl" should {
-
+// TODO: FAILURES HERE MAY MEAN messages VALUE IS BEING USED TWICE FOR HEADING - NEED TO INVESTIGATE
     "render correctly for Standard User who’s Opted-In_READY without Access Groups" in {
       val providerId = Random.nextLong().toString
       givenFullAuthorisedAsAgentWith(arn.value, providerId)
