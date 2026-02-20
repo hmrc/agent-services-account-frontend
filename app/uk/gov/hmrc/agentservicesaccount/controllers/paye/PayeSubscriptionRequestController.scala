@@ -61,6 +61,7 @@ with Logging {
       )
     )
   }
+
   def showConfirm: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     payeConnector
       .getStatus()
@@ -117,6 +118,7 @@ with Logging {
         technicalDifficultiesResult
       }
   }
+
   def submit: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     payeConnector
       .getStatus()
