@@ -19,10 +19,15 @@
 
 @this(p: p, h2: h2, ul_html: ul_html, a: a, contact_details_link: contact_details_link, administrators_link: administrators_link, amls_details_link:amls_details_link )
 
-@(amlsKeyO: Option[String], amlsLinkHrefO:Option[String], contactDetailsMessageKey: String = "manage.account.view-or-update-contact-details")(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
+@(
+    amlsKeyO: Option[String],
+    amlsLinkHrefO:Option[String],
+    contactDetailsMessageKey: String = "manage.account.view-or-update-contact-details",
+    yourOrgHeadingKey: String = "manage.account.your-organisation.heading"
+)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
 <section id="your-organisation">
 
-    @h2("manage.account.your-organisation.heading")
+    @h2(yourOrgHeadingKey)
 
     @ul_html(items = Seq(
         amls_details_link(amlsKeyO,amlsLinkHrefO),
