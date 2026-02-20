@@ -403,9 +403,39 @@ extends BaseISpec {
     links.get(2).attr("href") shouldBe "/agent-services-account/administrators"
   }
 
+  def verifyManageYourOwnSignInDetailsSection(html: Document): Assertion = {
+    val section = html.select("#manage-sign-in-details")
+    section.select("h2").text shouldBe "Manage your own sign in details"
+    section.select("a").text shouldBe "View or change your own sign in and security details"
+  }
+
+  def verifyHowToManageSection(html: Document): Assertion = {
+    val section = html.select("#how-to-manage-team-members-section")
+    section.select("h2").text shouldBe "Manage team members on your agent services account"
+    section.select(detailsSummary).text() shouldBe "How team members access the agent services account"
+    section.select(detailsText).text() shouldBe "When you add a team member, you get a temporary password to give to them. We also email them with a new Government Gateway user ID. The new user ID allows the team member to access this agent services account. An administrator can decide what level of access the team member gets to client details, taxes and schemes."
+
+    val list = section.select("ol.govuk-list--number li")
+    list.get(0).select("a").text shouldBe "Add, remove and manage team members"
+    list.get(0).select("a").attr("href") shouldBe s"http://localhost:1111/user-profile-redirect-frontend/group-profile-management"
+    list.get(1).select("a").text shouldBe "Choose which taxes and schemes the team members can access"
+    list.get(1).select("a").attr("href") shouldBe s"http://localhost:1111/tax-and-scheme-management/users?origin=ASA"
+    section.select("hr").isEmpty shouldBe false
+  }
+
+  def verifyInfoSection(html: Document, status: String = "on"): Assertion = {
+    val section = html.select("#info-section")
+    section.select("h2").text shouldBe "Manage access groups"
+    section.select("p").get(0).text.shouldBe("Access groups allow you to restrict which team members can manage a client’s tax.")
+    section.select("p").get(1).text.shouldBe(s"Status Turned $status")
+    html.select("#opt-in-status").text shouldBe s"Status Turned $status"
+    html.select("#opt-in-status").select("#status-value").text shouldBe s"Turned $status"
+  }
+
   def verifyClientsSectionNotPresent(html: Document): Assertion = {
     html.select("section#manage-clients-section").isEmpty shouldBe true
   }
+
   def verifyClientsSection(html: Document): Assertion = {
     val section = html.select("section#manage-clients-section")
     section.select("h2").text shouldBe "Clients"
@@ -423,36 +453,15 @@ extends BaseISpec {
     section.select("h2").text shouldBe "Manage team members’ access groups"
     section.select("a").text shouldBe "Manage team members’ access groups"
     section.select("hr").isEmpty shouldBe false
-
   }
 
-  def verifyHowToManageSection(html: Document): Assertion = {
-    val section = html.select("#how-to-manage-team-members-section")
-    section.select("h2").text shouldBe "Manage team members on your agent services account"
-    section.select(detailsSummary).text() shouldBe "How team members access the agent services account"
-    section.select(detailsText).text() shouldBe "When you add a team member, you get a temporary password to give to them. We also email them with a new Government Gateway user ID. The new user ID allows the team member to access this agent services account. An administrator can decide what level of access the team member gets to client details, taxes and schemes."
-
-    val list = section.select("ol.govuk-list--number li")
-    list.get(0).select("a").text shouldBe "Add, remove and manage team members"
-    list.get(0).select("a").attr("href") shouldBe s"http://localhost:1111/user-profile-redirect-frontend/group-profile-management"
-    list.get(1).select("a").text shouldBe "Choose which taxes and schemes the team members can access"
-    list.get(1).select("a").attr("href") shouldBe s"http://localhost:1111/tax-and-scheme-management/users?origin=ASA"
-    section.select("hr").isEmpty shouldBe false
-
-  }
-
-  def verifyInfoSection(
-    html: Document,
-    status: String = "on"
-  ): Assertion = {
-    val section = html.select("#info-section")
-    section.select("h2").text shouldBe "Manage access groups"
-    section.select("p").get(0).text.shouldBe("Access groups allow you to restrict which team members can manage a client’s tax.")
-    section.select("p").get(1).text.shouldBe(s"Status Turned $status")
-    html.select("#opt-in-status").text shouldBe s"Status Turned $status"
-    html.select("#opt-in-status").select("#status-value").text shouldBe s"Turned $status"
-  }
-
+//  TODO: MANAGE ACCOUNT TESTS START HERE - NEED TO REORDER VERIFY SECTIONS
+//  verifyYourOrganisationSection
+//  verifyManageYourOwnSignInDetailsSection
+//  verifyHowToManageSection
+//  verifyInfoSection
+//  verifyClientsSectionNotPresent/verifyClientsSection
+//  verifyManageTeamMembersSection
   "manage-account" should {
 
     val manageAccountTitle = "Manage account - Agent services account - GOV.UK"
@@ -874,7 +883,7 @@ extends BaseISpec {
     }
 
   }
-
+// TODO: MANAGE ACCOUNT TESTS END HERE - NEED TO REORDER VERIFY SECTION
   "account-details" should {
 
     "return status OK" when {
