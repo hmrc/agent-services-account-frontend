@@ -446,7 +446,7 @@ extends BaseISpec {
     status: String = "on"
   ): Assertion = {
     val section = html.select("#info-section")
-    section.select("h2").text shouldBe "Access groups"
+    section.select("h2").text shouldBe "Manage access groups"
     section.select("p").get(0).text.shouldBe("Access groups allow you to restrict which team members can manage a client’s tax.")
     section.select("p").get(1).text.shouldBe(s"Status Turned $status")
     html.select("#opt-in-status").text shouldBe s"Status Turned $status"
