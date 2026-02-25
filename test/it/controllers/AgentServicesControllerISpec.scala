@@ -388,8 +388,8 @@ extends BaseISpec {
     amlsAdded: Boolean = true
   ): Assertion = {
     val contactDetailsSection = html.select("#your-organisation")
-    contactDetailsSection.select("h2").text shouldBe "Your organisation"
-    val links = contactDetailsSection.select("p a")
+    contactDetailsSection.select("h2").text shouldBe "Your organisation account settings"
+    val links = contactDetailsSection.select("ul a")
     val amlsAction =
       if (amlsAdded)
         "View or update"
@@ -403,9 +403,42 @@ extends BaseISpec {
     links.get(2).attr("href") shouldBe "/agent-services-account/administrators"
   }
 
+  def verifyManageYourOwnSignInDetailsSection(html: Document): Assertion = {
+    val section = html.select("#manage-sign-in-details")
+    section.select("h2").text shouldBe "Manage your own sign in details"
+    section.select("a").text shouldBe "View or change your sign in and security details"
+  }
+
+  def verifyHowToManageSection(html: Document): Assertion = {
+    val section = html.select("#how-to-manage-team-members-section")
+    section.select("h2").text shouldBe "Manage team members on your agent services account"
+    section.select(detailsSummary).text() shouldBe "How team members access the agent services account"
+    section.select(detailsText).text() shouldBe "When you add a team member, you get a temporary password to give to them. We also email them with a new Government Gateway user ID. The new user ID allows the team member to access this agent services account. An administrator can decide what level of access the team member gets to client details, taxes and schemes."
+
+    val list = section.select("ol.govuk-list--number li")
+    list.get(0).select("a").text shouldBe "Add, remove and manage team members"
+    list.get(0).select("a").attr("href") shouldBe s"http://localhost:1111/user-profile-redirect-frontend/group-profile-management"
+    list.get(1).select("a").text shouldBe "Choose which taxes and schemes the team members can access"
+    list.get(1).select("a").attr("href") shouldBe s"http://localhost:1111/tax-and-scheme-management/users?origin=ASA"
+    section.select("hr").isEmpty shouldBe false
+  }
+
+  def verifyInfoSection(
+    html: Document,
+    status: String = "on"
+  ): Assertion = {
+    val section = html.select("#info-section")
+    section.select("h2").text shouldBe "Manage access groups"
+    section.select("p").get(0).text.shouldBe("Access groups allow you to restrict which team members can manage a client’s tax.")
+    section.select("p").get(1).text.shouldBe(s"Status Turned $status")
+    html.select("#opt-in-status").text shouldBe s"Status Turned $status"
+    html.select("#opt-in-status").select("#status-value").text shouldBe s"Turned $status"
+  }
+
   def verifyClientsSectionNotPresent(html: Document): Assertion = {
     html.select("section#manage-clients-section").isEmpty shouldBe true
   }
+
   def verifyClientsSection(html: Document): Assertion = {
     val section = html.select("section#manage-clients-section")
     section.select("h2").text shouldBe "Clients"
@@ -423,34 +456,6 @@ extends BaseISpec {
     section.select("h2").text shouldBe "Manage team members’ access groups"
     section.select("a").text shouldBe "Manage team members’ access groups"
     section.select("hr").isEmpty shouldBe false
-
-  }
-
-  def verifyHowToManageSection(html: Document): Assertion = {
-    val section = html.select("#how-to-manage-team-members-section")
-    section.select("h2").text shouldBe "Manage team members on your agent services account"
-    section.select(detailsSummary).text() shouldBe "How team members access the agent services account"
-    section.select(detailsText).text() shouldBe "When you add a team member, you get a temporary password to give to them. We also email them with a new Government Gateway user ID. The new user ID allows the team member to access this agent services account. An administrator can decide what level of access the team member gets to client details, taxes and schemes."
-
-    val list = section.select("ol.govuk-list--number li")
-    list.get(0).select("a").text shouldBe "Add, remove and manage team members"
-    list.get(0).select("a").attr("href") shouldBe s"http://localhost:1111/user-profile-redirect-frontend/group-profile-management"
-    list.get(1).select("a").text shouldBe "Choose which taxes and schemes the team members can access"
-    list.get(1).select("a").attr("href") shouldBe s"http://localhost:1111/tax-and-scheme-management/users?origin=ASA"
-    section.select("hr").isEmpty shouldBe false
-
-  }
-
-  def verifyInfoSection(
-    html: Document,
-    status: String = "on"
-  ): Assertion = {
-    val section = html.select("#info-section")
-    section.select("h2").text shouldBe "Access groups"
-    section.select("p").get(0).text.shouldBe("Access groups allow you to restrict which team members can manage a client’s tax.")
-    section.select("p").get(1).text.shouldBe(s"Status Turned $status")
-    html.select("#opt-in-status").text shouldBe s"Status Turned $status"
-    html.select("#opt-in-status").select("#status-value").text shouldBe s"Turned $status"
   }
 
   "manage-account" should {
@@ -474,8 +479,9 @@ extends BaseISpec {
 
       html.title() shouldBe manageAccountTitle
       html.select(H1).get(0).text shouldBe "Manage account"
-      verifyHowToManageSection(html)
       verifyYourOrganisationSection(html, amlsAdded = false)
+      verifyManageYourOwnSignInDetailsSection(html)
+      verifyHowToManageSection(html)
     }
 
     "return Status: OK and body containing existing manage account content when gran perms FF is on but there was an error getting optin-status" in {
@@ -494,8 +500,9 @@ extends BaseISpec {
 
       html.title() shouldBe manageAccountTitle
       html.select(H1).get(0).text shouldBe "Manage account"
-      verifyHowToManageSection(html)
       verifyYourOrganisationSection(html)
+      verifyManageYourOwnSignInDetailsSection(html)
+      verifyHowToManageSection(html)
     }
 
     "return Status: OK and body containing existing manage account content when gran perms FF is on but ARN is not on allowed list" in {
@@ -515,8 +522,9 @@ extends BaseISpec {
 
       html.title() shouldBe manageAccountTitle
       html.select(H1).get(0).text shouldBe "Manage account"
-      verifyHowToManageSection(html)
       verifyYourOrganisationSection(html)
+      verifyManageYourOwnSignInDetailsSection(html)
+      verifyHowToManageSection(html)
     }
 
     "return status: OK and body containing content for status Opted-In_READY (no access groups created yet)" in {
@@ -534,30 +542,32 @@ extends BaseISpec {
 
       val html = Jsoup.parse(contentAsString(response))
 
-      val h2 = html.select(H2)
-
-      val li = html.select(LI)
-      val p = html.select(paragraphs)
-
       html.title() shouldBe manageAccountTitle
       html.select(H1).get(0).text shouldBe "Manage account"
-      h2.get(0).text shouldBe "Access groups"
+
+      verifyYourOrganisationSection(html)
+      verifyManageYourOwnSignInDetailsSection(html)
+      verifyHowToManageSection(html)
+
+      val infoH2 = html.select("#info-section h2")
+      infoH2.get(0).text shouldBe "Manage access groups"
       html.select("#opt-in-status").text shouldBe "Status Turned on"
       html.select("#opt-in-status").select("#status-value").text shouldBe "Turned on"
 
-      p.get(0).text
+      val infoLi = html.select("#info-section li")
+      val infoP = html.select("#info-section p")
+      infoP.get(0).text
         .shouldBe("Access groups allow you to restrict which team members can manage a client’s tax.")
-      li.get(0).child(0).text shouldBe "Create new access group"
-      li.get(0).child(0).hasClass("govuk-button") shouldBe false
-      li.get(0).child(0).attr("href") shouldBe s"http://localhost:$wireMockPort/agent-permissions/create-group/select-group-type?origin=manage-account"
-      li.get(1).child(0).text shouldBe "Manage access groups"
-      li.get(1).child(0).attr("href") shouldBe s"http://localhost:$wireMockPort/agent-permissions/manage-access-groups"
-      li.get(2).child(0).text shouldBe "Turn off access groups"
-      li.get(2).child(0).attr("href") shouldBe s"http://localhost:$wireMockPort/agent-permissions/turn-off-guide"
+      val li = html.select(LI)
+      li.get(3).child(0).text shouldBe "Create new access group"
+      li.get(3).child(0).hasClass("govuk-button") shouldBe false
+      li.get(3).child(0).attr("href") shouldBe s"http://localhost:$wireMockPort/agent-permissions/create-group/select-group-type?origin=manage-account"
+      li.get(4).child(0).text shouldBe "Manage access groups"
+      li.get(4).child(0).attr("href") shouldBe s"http://localhost:$wireMockPort/agent-permissions/manage-access-groups"
+      li.get(5).child(0).text shouldBe "Turn off access groups"
+      li.get(5).child(0).attr("href") shouldBe s"http://localhost:$wireMockPort/agent-permissions/turn-off-guide"
 
       verifyClientsSection(html)
-      verifyHowToManageSection(html)
-      verifyYourOrganisationSection(html)
     }
 
     "return status: OK and body containing content for status Opted-In_READY (access groups already created)" in {
@@ -574,27 +584,29 @@ extends BaseISpec {
       status(response) shouldBe 200
 
       val html = Jsoup.parse(contentAsString(response))
-      val li = html.select(LI)
-
-      val h2 = html.select(H2)
-      val p = html.select(paragraphs)
 
       html.title() shouldBe manageAccountTitle
       html.select(H1).get(0).text shouldBe "Manage account"
-      h2.get(0).text shouldBe "Access groups"
+
+      verifyYourOrganisationSection(html)
+      verifyManageYourOwnSignInDetailsSection(html)
+      verifyHowToManageSection(html)
+
+      val infoH2 = html.select("#info-section h2")
+      infoH2.get(0).text shouldBe "Manage access groups"
       html.select("#opt-in-status").text shouldBe "Status Turned on"
       html.select("#opt-in-status").select("#status-value").text shouldBe "Turned on"
 
-      p.get(0).text
+      val infoP = html.select("#info-section p")
+      infoP.get(0).text
         .shouldBe("Access groups allow you to restrict which team members can manage a client’s tax.")
 
-      li.get(0).child(0).text shouldBe "Create new access group"
-      li.get(0).child(0).hasClass("govuk-button") shouldBe false
+      val li = html.select(LI)
+      li.get(3).child(0).text shouldBe "Create new access group"
+      li.get(3).child(0).hasClass("govuk-button") shouldBe false
 
       verifyClientsSection(html)
       verifyManageTeamMembersSection(html)
-      verifyHowToManageSection(html)
-
     }
 
     "return status: OK and body containing content for status Opted-In_NOT_READY" in {
@@ -613,17 +625,19 @@ extends BaseISpec {
       val html = Jsoup.parse(contentAsString(response))
       html.title() shouldBe manageAccountTitle
       html.select(H1).get(0).text shouldBe "Manage account"
+
+      verifyYourOrganisationSection(html)
+      verifyManageYourOwnSignInDetailsSection(html)
+      verifyHowToManageSection(html)
+
       html.select(insetText).get(0).text
         .shouldBe(
           "You have turned on access groups but need to wait until your client details are ready to use with access groups. You will receive a confirmation email after which you can start using access groups."
         )
 
       verifyInfoSection(html, "on")
-      verifyManageTeamMembersSection(html)
-      verifyHowToManageSection(html)
-      verifyYourOrganisationSection(html)
       verifyClientsSectionNotPresent(html)
-
+      verifyManageTeamMembersSection(html)
     }
 
     "return status: OK and body containing content for status Opted-In_SINGLE_USER" in {
@@ -644,16 +658,18 @@ extends BaseISpec {
       html.title() shouldBe manageAccountTitle
       html.select(H1).get(0).text shouldBe "Manage account"
 
+      verifyYourOrganisationSection(html)
+      verifyManageYourOwnSignInDetailsSection(html)
+      verifyHowToManageSection(html)
+
       html.select(insetText).get(0).text
         .shouldBe(
           "To use access groups you need to add more team members to your agent services account under ‘Manage team members on your agent services account’."
         )
 
       verifyInfoSection(html, "on")
-      verifyManageTeamMembersSection(html)
       verifyClientsSectionNotPresent(html)
-      verifyHowToManageSection(html)
-      verifyYourOrganisationSection(html)
+      verifyManageTeamMembersSection(html)
     }
 
     "return status: OK and body containing content for status Opted-Out_WRONG_CLIENT_COUNT" in {
@@ -674,14 +690,15 @@ extends BaseISpec {
       html.title() shouldBe manageAccountTitle
       html.select(H1).get(0).text shouldBe "Manage account"
 
+      verifyYourOrganisationSection(html)
+      verifyManageYourOwnSignInDetailsSection(html)
+      verifyHowToManageSection(html)
+
       html.select(insetText).get(0).text
         .shouldBe("To use access groups you need more than 1 client in your agent services account.")
 
       verifyInfoSection(html, "off")
-      verifyHowToManageSection(html)
       verifyClientsSectionNotPresent(html)
-      verifyYourOrganisationSection(html)
-
     }
 
     "return status: OK and body containing content for status Opted-Out_SINGLE_USER" in {
@@ -701,16 +718,17 @@ extends BaseISpec {
       html.title() shouldBe manageAccountTitle
       html.select(H1).get(0).text shouldBe "Manage account"
 
+      verifyYourOrganisationSection(html)
+      verifyManageYourOwnSignInDetailsSection(html)
+      verifyHowToManageSection(html)
+
       html.select(insetText).get(0).text
         .shouldBe(
           "To use access groups you need to add more team members to your agent services account under ‘Manage team members on your agent services account’."
         )
 
       verifyInfoSection(html, "off")
-      verifyHowToManageSection(html)
-      verifyYourOrganisationSection(html)
       verifyClientsSectionNotPresent(html)
-
     }
 
     "return status: OK and body containing content for status Opted-Out_ELIGIBLE" in {
@@ -728,8 +746,11 @@ extends BaseISpec {
 
       val html = Jsoup.parse(contentAsString(response))
 
-      verifyInfoSection(html, "off")
+      verifyYourOrganisationSection(html)
+      verifyManageYourOwnSignInDetailsSection(html)
       verifyHowToManageSection(html)
+
+      verifyInfoSection(html, "off")
       verifyClientsSectionNotPresent(html)
     }
 
@@ -747,8 +768,8 @@ extends BaseISpec {
 
       val html = Jsoup.parse(contentAsString(response))
       val contactDetailsSection = html.select("#your-organisation")
-      contactDetailsSection.select("h2").text shouldBe "Your organisation"
-      val links = contactDetailsSection.select("p a")
+      contactDetailsSection.select("h2").text shouldBe "Your organisation account settings"
+      val links = contactDetailsSection.select("ul a")
       links.get(0).text shouldBe "View or update anti-money laundering supervision details"
       links.get(0).attr("href") shouldBe "/agent-services-account/manage-account/money-laundering-supervision/view-details"
     }
@@ -767,8 +788,8 @@ extends BaseISpec {
 
       val html = Jsoup.parse(contentAsString(response))
       val contactDetailsSection = html.select("#your-organisation")
-      contactDetailsSection.select("h2").text shouldBe "Your organisation"
-      val links = contactDetailsSection.select("p a")
+      contactDetailsSection.select("h2").text shouldBe "Your organisation account settings"
+      val links = contactDetailsSection.select("ul a")
       links.get(0).text shouldBe "View or update anti-money laundering supervision details"
       links.get(0).attr("href") shouldBe "/agent-services-account/manage-account/money-laundering-supervision/view-details"
     }
@@ -787,8 +808,8 @@ extends BaseISpec {
 
       val html = Jsoup.parse(contentAsString(response))
       val contactDetailsSection = html.select("#your-organisation")
-      contactDetailsSection.select("h2").text shouldBe "Your organisation"
-      val links = contactDetailsSection.select("p a")
+      contactDetailsSection.select("h2").text shouldBe "Your organisation account settings"
+      val links = contactDetailsSection.select("ul a")
       links.get(0).text shouldBe "View or update anti-money laundering supervision details"
       links.get(0).attr("href") shouldBe "/agent-services-account/manage-account/money-laundering-supervision/view-details"
     }
@@ -807,8 +828,8 @@ extends BaseISpec {
 
       val html = Jsoup.parse(contentAsString(response))
       val contactDetailsSection = html.select("#your-organisation")
-      contactDetailsSection.select("h2").text shouldBe "Your organisation"
-      val links = contactDetailsSection.select("p a")
+      contactDetailsSection.select("h2").text shouldBe "Your organisation account settings"
+      val links = contactDetailsSection.select("ul a")
       links.get(0).text shouldBe "View or update anti-money laundering supervision details"
       links.get(0).attr("href") shouldBe "/agent-services-account/manage-account/money-laundering-supervision/view-details"
     }
@@ -827,8 +848,8 @@ extends BaseISpec {
 
       val html = Jsoup.parse(contentAsString(response))
       val contactDetailsSection = html.select("#your-organisation")
-      contactDetailsSection.select("h2").text shouldBe "Your organisation"
-      val links = contactDetailsSection.select("p a")
+      contactDetailsSection.select("h2").text shouldBe "Your organisation account settings"
+      val links = contactDetailsSection.select("ul a")
       links.get(0).text shouldBe "Action: Add anti-money laundering supervision details"
       links.get(0).attr("href") shouldBe "/agent-services-account/manage-account/money-laundering-supervision/view-details"
     }
@@ -847,8 +868,8 @@ extends BaseISpec {
 
       val html = Jsoup.parse(contentAsString(response))
       val contactDetailsSection = html.select("#your-organisation")
-      contactDetailsSection.select("h2").text shouldBe "Your organisation"
-      val links = contactDetailsSection.select("p a")
+      contactDetailsSection.select("h2").text shouldBe "Your organisation account settings"
+      val links = contactDetailsSection.select("ul a")
       links.get(0).text shouldBe "Action: Add anti-money laundering supervision details"
       links.get(0).attr("href") shouldBe "/agent-services-account/manage-account/money-laundering-supervision/view-details"
     }
@@ -867,8 +888,8 @@ extends BaseISpec {
 
       val html = Jsoup.parse(contentAsString(response))
       val contactDetailsSection = html.select("#your-organisation")
-      contactDetailsSection.select("h2").text shouldBe "Your organisation"
-      val links = contactDetailsSection.select("p a")
+      contactDetailsSection.select("h2").text shouldBe "Your organisation account settings"
+      val links = contactDetailsSection.select("ul a")
       links.get(0).text shouldBe "Action: Update anti-money laundering supervision details"
       links.get(0).attr("href") shouldBe "/agent-services-account/manage-account/money-laundering-supervision/view-details"
     }
@@ -1010,7 +1031,15 @@ extends BaseISpec {
       html.select(H1).get(0).text shouldBe "Your account"
       html.select(secondaryNavLinks).get(1).text shouldBe "Your account"
 
+      val yourOrgPanel = html.select("div#yourorg-panel")
+      yourOrgPanel.select("h2").get(0).text shouldBe "Your organisation"
+      yourOrgPanel.select("a").get(0).text shouldBe "View the contact details we have for your business"
+      yourOrgPanel.select("a").get(0).attr("href") shouldBe desiDetailsRoutes.ViewContactDetailsController.showPage.url
+      yourOrgPanel.select("a").get(1).text shouldBe "View administrators"
+      yourOrgPanel.select("a").get(1).attr("href") shouldBe routes.AgentServicesController.administrators.url
+
       val userDetailsPanel = html.select("div#user-details")
+      userDetailsPanel.select("h2").get(0).text shouldBe "Your agent services account sign in details"
       userDetailsPanel.select(summaryListKeys).get(0).text() shouldBe "Name"
       userDetailsPanel.select(summaryListValues).get(0).text() shouldBe "Bob The Builder"
       userDetailsPanel.select(summaryListKeys).get(1).text() shouldBe "Email"
@@ -1018,23 +1047,15 @@ extends BaseISpec {
       userDetailsPanel.select(summaryListKeys).get(2).text() shouldBe "Role"
       userDetailsPanel.select(summaryListValues).get(2)
         .text() shouldBe "Standard user You can view your assigned access groups and clients. You can also view clients who are not in any access groups."
+      userDetailsPanel.select("a").get(0).text shouldBe "Change sign in or security details"
+      userDetailsPanel.select("a").get(0).attr("href") shouldBe appConfig.yourAccountMfaLinkUrl
 
       val userGroupsPanel = html.select("div#user-groups")
       val grps = userGroupsPanel.select("ul li a")
       grps.isEmpty shouldBe true
       userGroupsPanel.select("p").get(0).text shouldBe "You are not currently assigned to any access groups."
-
       userGroupsPanel.select("a").get(0).text shouldBe "View other clients"
       userGroupsPanel.select("a").get(0).attr("href") shouldBe s"$wireMockBaseUrlAsString/agent-permissions/your-account/other-clients"
-
-      // BOTTOM PANEL
-      val bottomPanel = html.select("div#bottom-panel")
-      bottomPanel.select("h2").get(0).text shouldBe "Your organisation"
-      bottomPanel.select("a").get(0).text shouldBe "View the contact details we have for your business"
-      bottomPanel.select("a").get(0).attr("href") shouldBe desiDetailsRoutes.ViewContactDetailsController.showPage.url
-      bottomPanel.select("a").get(1).text shouldBe "View administrators"
-      bottomPanel.select("a").get(1).attr("href") shouldBe routes.AgentServicesController.administrators.url
-
     }
 
     "render correctly for Standard User who’s NOT Opted-In_READY without Access Groups" in {
@@ -1057,7 +1078,15 @@ extends BaseISpec {
       html.select(H1).get(0).text shouldBe "Your account"
       html.select(secondaryNavLinks).get(1).text shouldBe "Your account"
 
+      val yourOrgPanel = html.select("div#yourorg-panel")
+      yourOrgPanel.select("h2").get(0).text shouldBe "Your organisation"
+      yourOrgPanel.select("a").get(0).text shouldBe "View the contact details we have for your business"
+      yourOrgPanel.select("a").get(0).attr("href") shouldBe desiDetailsRoutes.ViewContactDetailsController.showPage.url
+      yourOrgPanel.select("a").get(1).text shouldBe "View administrators"
+      yourOrgPanel.select("a").get(1).attr("href") shouldBe routes.AgentServicesController.administrators.url
+
       val userDetailsPanel = html.select("div#user-details")
+      userDetailsPanel.select("h2").get(0).text shouldBe "Your agent services account sign in details"
       userDetailsPanel.select(summaryListKeys).get(0).text() shouldBe "Name"
       userDetailsPanel.select(summaryListValues).get(0).text() shouldBe "Bob The Builder"
       userDetailsPanel.select(summaryListKeys).get(1).text() shouldBe "Email"
@@ -1065,17 +1094,11 @@ extends BaseISpec {
       userDetailsPanel.select(summaryListKeys).get(2).text() shouldBe "Role"
       userDetailsPanel.select(summaryListValues).get(2)
         .text() shouldBe "Standard user You can view your assigned access groups and clients. You can also view clients who are not in any access groups."
+      userDetailsPanel.select("a").get(0).text shouldBe "Change sign in or security details"
+      userDetailsPanel.select("a").get(0).attr("href") shouldBe appConfig.yourAccountMfaLinkUrl
 
       val userGroupsPanel = html.select("div#user-groups")
       userGroupsPanel.isEmpty shouldBe true
-
-      val bottomPanel = html.select("div#bottom-panel")
-      bottomPanel.select("h2").get(0).text shouldBe "Your organisation"
-      bottomPanel.select("a").get(0).text shouldBe "View the contact details we have for your business"
-      bottomPanel.select("a").get(0).attr("href") shouldBe desiDetailsRoutes.ViewContactDetailsController.showPage.url
-      bottomPanel.select("a").get(1).text shouldBe "View administrators"
-      bottomPanel.select("a").get(1).attr("href") shouldBe routes.AgentServicesController.administrators.url
-
     }
 
     "return status: OK and body containing content for status Opted-In_READY (access groups already created)" in {
@@ -1104,7 +1127,15 @@ extends BaseISpec {
       html.title() shouldBe "Your account - Agent services account - GOV.UK"
       html.select(H1).get(0).text shouldBe "Your account"
 
+      val yourOrgPanel = html.select("div#yourorg-panel")
+      yourOrgPanel.select("h2").get(0).text shouldBe "Your organisation"
+      yourOrgPanel.select("a").get(0).text shouldBe "View the contact details we have for your business"
+      yourOrgPanel.select("a").get(0).attr("href") shouldBe desiDetailsRoutes.ViewContactDetailsController.showPage.url
+      yourOrgPanel.select("a").get(1).text shouldBe "View administrators"
+      yourOrgPanel.select("a").get(1).attr("href") shouldBe routes.AgentServicesController.administrators.url
+
       val userDetailsPanel = html.select("div#user-details")
+      userDetailsPanel.select("h2").get(0).text shouldBe "Your agent services account sign in details"
       userDetailsPanel.select(summaryListKeys).get(0).text() shouldBe "Name"
       userDetailsPanel.select(summaryListValues).get(0).text() shouldBe "Bob The Builder"
       userDetailsPanel.select(summaryListKeys).get(1).text() shouldBe "Email"
@@ -1112,6 +1143,8 @@ extends BaseISpec {
       userDetailsPanel.select(summaryListKeys).get(2).text() shouldBe "Role"
       userDetailsPanel.select(summaryListValues).get(2)
         .text() shouldBe "Standard user You can view your assigned access groups and clients. You can also view clients who are not in any access groups."
+      userDetailsPanel.select("a").get(0).text shouldBe "Change sign in or security details"
+      userDetailsPanel.select("a").get(0).attr("href") shouldBe appConfig.yourAccountMfaLinkUrl
 
       val userGroupsPanel = html.select("div#user-groups")
       val grps = userGroupsPanel.select("ul li a")
@@ -1123,15 +1156,6 @@ extends BaseISpec {
       grps.get(2).attr("href") shouldBe s"$wireMockBaseUrlAsString/agent-permissions/your-account/group-clients/tax/${taxSummary.groupId.toString}"
       userGroupsPanel.select("a").get(3).text shouldBe "View other clients"
       userGroupsPanel.select("a").get(3).attr("href") shouldBe s"$wireMockBaseUrlAsString/agent-permissions/your-account/other-clients"
-
-      // BOTTOM PANEL
-      val bottomPanel = html.select("div#bottom-panel")
-      bottomPanel.select("h2").get(0).text shouldBe "Your organisation"
-      bottomPanel.select("a").get(0).text shouldBe "View the contact details we have for your business"
-      bottomPanel.select("a").get(0).attr("href") shouldBe desiDetailsRoutes.ViewContactDetailsController.showPage.url
-      bottomPanel.select("a").get(1).text shouldBe "View administrators"
-      bottomPanel.select("a").get(1).attr("href") shouldBe routes.AgentServicesController.administrators.url
-
     }
 
   }
