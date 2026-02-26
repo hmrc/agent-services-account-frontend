@@ -40,10 +40,6 @@
     subscriptionInfo: Seq[SubscriptionInfo] = Seq.empty
 )(implicit request: RequestHeader, msgs: Messages, appConfig: AppConfig)
 
-@banner(content:Html) = {
-    @govukNotificationBanner(NotificationBanner(content = HtmlContent(content)))
-}
-
 @add_existingSA = {
     @h2("asa.section4.itsa.notification.h2")
     @p("asa.section4.itsa.notification.p.1")
@@ -58,7 +54,8 @@
 ) {
     @h1("asa.heading")
     @p(msgs("agent.accountNumber", arn))
-    @banner(add_existingSA)
+    @govukNotificationBanner(NotificationBanner(content = HtmlContent(add_existingSA)))
+
     <section id="client-authorisation-section">
         @h2("asa.section4.h2")
         @p("asa.client-authorisations.p")
