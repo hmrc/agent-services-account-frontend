@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.agentservicesaccount.controllers.paye
+package uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
 
 import play.api.Logging
 import play.api.i18n.I18nSupport
