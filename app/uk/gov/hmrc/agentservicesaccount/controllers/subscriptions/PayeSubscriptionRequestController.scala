@@ -58,7 +58,7 @@ with Logging {
         }
         else {
           payeConnector.getCyaData().map { data =>
-//            TODO: Pull this out into separate method
+//            TODO: 10593 Pull this out into separate method
             val addressHtml = Seq(
               Some(data.address.line1),
               Some(data.address.line2),
@@ -108,7 +108,7 @@ with Logging {
           Future.successful(Redirect(routes.AgentServicesController.showAgentServicesAccount()))
         }
         else {
-          //  TODO: Implement correct call to this endpoint
+          //  TODO: 10593 Implement correct call to this endpoint
           payeConnector
             .submitRequest()
             .map(_ => Redirect(subscriptionsRoutes.PayeSubscriptionRequestController.showSubmitted))
