@@ -27,7 +27,6 @@ import scala.concurrent.Future
 @ImplementedBy(classOf[PayeSubscriptionMockConnector])
 trait PayeSubscriptionConnector {
 
-  def getStatus()(implicit ec: ExecutionContext): Future[PayeStatus]
   def getCyaData()(implicit ec: ExecutionContext): Future[PayeCyaData]
   def submitRequest()(implicit ec: ExecutionContext): Future[Unit]
 
@@ -36,11 +35,6 @@ trait PayeSubscriptionConnector {
 @Singleton
 final class PayeSubscriptionMockConnector @Inject() ()
 extends PayeSubscriptionConnector {
-
-  override def getStatus()(implicit ec: ExecutionContext): Future[PayeStatus] = Future.successful(PayeStatus(
-    hasSubscription = false,
-    hasRequestInProgress = false
-  ))
 
   override def getCyaData()(implicit ec: ExecutionContext): Future[PayeCyaData] = Future.successful(
     PayeCyaData(

@@ -79,18 +79,6 @@ with Logging {
      *      showFeatureInvite is unused at the mo
      * */
     withShowFeatureInvite(agentInfo.arn) { showFeatureInvite: Boolean =>
-//      TODO: Duplicated calls here below. Analyse which needs removed
-      payeSubscriptionConnector.getStatus().map { payeStatus =>
-        val showPayeRequestLink = !payeStatus.hasSubscription && !payeStatus.hasRequestInProgress
-        Ok(
-          asaDashboard(
-            arn = request.agentInfo.arn.value,
-            isAdmin = request.agentInfo.isAdmin,
-            isShownLegacySubscription = appConfig.enableLegacySubscriptionLink,
-            isShownPayeRequestLink = showPayeRequestLink
-          )
-        ).addingToSession(toReturnFromMapping())
-      }
       for {
         subscriptionInfo <-
           if (appConfig.enableLegacySubscriptionLink)
