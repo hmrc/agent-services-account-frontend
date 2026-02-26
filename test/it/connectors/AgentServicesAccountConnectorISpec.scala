@@ -134,4 +134,20 @@ with Injecting {
 
   }
 
+  "getAgentRecord" should {
+    "return the agent record for a given agent" in {
+
+      givenGetAgentRecord(agentRecord)
+
+      await(connector.getAgentRecord) shouldBe agentRecord
+    }
+
+    "throw exception when 204 response" in {
+      givenGetAgentRecordErrorResponse(204)
+      intercept[UpstreamErrorResponse] {
+        await(connector.getAgentRecord)
+      }
+    }
+  }
+
 }

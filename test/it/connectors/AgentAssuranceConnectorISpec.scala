@@ -24,6 +24,7 @@ import uk.gov.hmrc.agentservicesaccount.models.AmlsDetails
 import uk.gov.hmrc.agentservicesaccount.models.AmlsDetailsResponse
 import uk.gov.hmrc.agentservicesaccount.models.AmlsStatuses
 import stubs.AgentAssuranceStubs._
+import stubs.AgentServicesAccountStubs.givenGetAgentRecord
 import uk.gov.hmrc.http.UpstreamErrorResponse
 
 import java.time.LocalDate

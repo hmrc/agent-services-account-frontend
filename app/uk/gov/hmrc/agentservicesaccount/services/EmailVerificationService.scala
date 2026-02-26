@@ -33,7 +33,7 @@ import scala.concurrent.Future
 
 @Singleton
 class EmailVerificationService @Inject() (
-  agentAssuranceConnector: AgentAssuranceConnector,
+  getAgentRecordService: GetAgentRecordService,
   emailVerificationConnector: EmailVerificationConnector
 )(implicit
   ec: ExecutionContext,
@@ -45,7 +45,7 @@ class EmailVerificationService @Inject() (
     credId: String
   )(implicit rh: RequestHeader): Future[EmailVerificationStatus] =
     for {
-      optCurrentEmail <- agentAssuranceConnector.getAgentRecord.map(_.agencyDetails.flatMap(_.agencyEmail))
+      optCurrentEmail <- getAgentRecordService.getAgentRecord.map(_.agencyDetails.flatMap(_.agencyEmail))
       isUnchanged = optCurrentEmail.exists(_.trim.equalsIgnoreCase(newEmail.trim))
       checkVerifications <- emailVerificationConnector.checkEmail(credId)
       previouslyCompletedEmailVerification = checkVerifications.flatMap(_.emails.find(completedEmail => completedEmail.equalsTrimmed(newEmail)))

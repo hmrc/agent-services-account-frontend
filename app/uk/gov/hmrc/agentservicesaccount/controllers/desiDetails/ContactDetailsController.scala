@@ -32,6 +32,7 @@ import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup._
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
 import uk.gov.hmrc.agentservicesaccount.services.DraftDetailsService
+import uk.gov.hmrc.agentservicesaccount.services.GetAgentRecordService
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -50,7 +51,7 @@ class ContactDetailsController @Inject() (
   beforeYouStartPage: before_you_start_page
 )(implicit
   appConfig: AppConfig,
-  agentAssuranceConnector: AgentAssuranceConnector,
+  getAgentRecordService: GetAgentRecordService,
   pcodRepository: PendingChangeRequestRepository,
   cc: MessagesControllerComponents,
   val ec: ExecutionContext
@@ -144,7 +145,7 @@ with Logging {
   def showBeforeYouStartPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     actions.ifFeatureEnabled(appConfig.enableChangeContactDetails) {
       if (request.agentInfo.isAdmin) {
-        agentAssuranceConnector.getAgentRecord.map(agentRecord =>
+        getAgentRecordService.getAgentRecord.map(agentRecord =>
           Ok(beforeYouStartPage(agentRecord.agencyDetails))
         )
       }

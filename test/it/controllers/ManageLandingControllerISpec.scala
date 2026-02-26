@@ -28,7 +28,7 @@ import uk.gov.hmrc.agentservicesaccount.models.AccessGroupSummaries
 import uk.gov.hmrc.agentservicesaccount.models.Arn
 import uk.gov.hmrc.agentservicesaccount.models.accessgroups.OptedInReady
 import uk.gov.hmrc.agentservicesaccount.models.accessgroups.OptedOutSingleUser
-import stubs.AgentAssuranceStubs.givenAgentRecordFound
+import stubs.AgentServicesAccountStubs.givenGetAgentRecord
 import stubs.AgentPermissionsStubs.givenAccessGroupsForArn
 import stubs.AgentPermissionsStubs.givenArnAllowedOk
 import stubs.AgentPermissionsStubs.givenOptinStatusSuccessReturnsForArn
@@ -46,7 +46,7 @@ extends BaseISpec {
 
     "return Status: Forbidden" in {
       givenAuthorisedAsAgentWith(arn.value, isAdmin = false)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       val response = await(controller.showAccessGroupSummaryForASA(FakeRequest(
         "GET",
         "/agent-services-access"
@@ -59,7 +59,7 @@ extends BaseISpec {
       // Given: auth agent with no opt in status
       givenAuthorisedAsAgentWith(arn.value)
       givenOptinStatusSuccessReturnsForArn(Arn(arn.value), OptedOutSingleUser)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       // When:
       val response = await(controller.showAccessGroupSummaryForASA()(FakeRequest(
         "GET",
@@ -81,7 +81,7 @@ extends BaseISpec {
 
     "return Status: OK & page with correct content whilst Optin" in {
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       givenArnAllowedOk()
       givenSyncEacdSuccess(Arn(arn.value))
       givenOptinStatusSuccessReturnsForArn(Arn(arn.value), OptedInReady) // access groups turned on

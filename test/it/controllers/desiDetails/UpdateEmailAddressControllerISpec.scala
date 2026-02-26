@@ -26,7 +26,7 @@ import uk.gov.hmrc.agentservicesaccount.models.desiDetails._
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.CompletedEmail
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.VerificationStatusResponse
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
-import stubs.AgentAssuranceStubs.givenAgentRecordFound
+import stubs.AgentServicesAccountStubs.givenGetAgentRecord
 import stubs.AgentServicesAccountStubs.stubASAGetResponseError
 import stubs.EmailVerificationStubs.givenCheckEmailSuccess
 import stubs.EmailVerificationStubs.givenVerifyEmailSuccess
@@ -53,7 +53,7 @@ extends ComponentBaseISpec {
     "display the enter email address page" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
 
       await(repo.putSession(currentSelectedChangesKey, Set("email")))
@@ -67,7 +67,7 @@ extends ComponentBaseISpec {
     "redirect to /select-changes if contact page request is invalid " in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
 
       await(repo.putSession(currentSelectedChangesKey, Set.empty[String]))
@@ -86,7 +86,7 @@ extends ComponentBaseISpec {
         providerId = "cred-id",
         email = "abc@abc.com"
       )
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
       givenCheckEmailSuccess(
         "cred-id",
@@ -118,7 +118,7 @@ extends ComponentBaseISpec {
         providerId = "cred-id",
         email = "abc@abc.com"
       )
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
       givenCheckEmailSuccess(
         "cred-id",
@@ -149,7 +149,7 @@ extends ComponentBaseISpec {
         providerId = "cred-id",
         email = "abc@abc.com"
       )
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
       givenCheckEmailSuccess(
         "cred-id",
@@ -179,7 +179,7 @@ extends ComponentBaseISpec {
         providerId = "cred-id",
         email = "abc@abc.com"
       )
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
       givenCheckEmailSuccess(
         "cred-id",
@@ -206,7 +206,7 @@ extends ComponentBaseISpec {
     "return Bad Request if the data submitted is invalid" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
 
       val result = post(updateEmailAddressPath)(body = Map("emailAddress" -> List("invalid")))
@@ -218,7 +218,7 @@ extends ComponentBaseISpec {
     "return Internal server error if the credential is missing an authProvider id" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
 
       val result = post(updateEmailAddressPath)(body = Map("emailAddress" -> List("new@abc.com")))
@@ -231,7 +231,7 @@ extends ComponentBaseISpec {
     "display the page" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
 
       val result = get(emailLockedPath)

@@ -32,6 +32,7 @@ import uk.gov.hmrc.agentservicesaccount.forms.SelectChangesForm
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.DesignatoryDetails
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.SelectChanges
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
+import uk.gov.hmrc.agentservicesaccount.services.GetAgentRecordService
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details.select_changes
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -51,7 +52,7 @@ class SelectDetailsController @Inject() (
   cc: MessagesControllerComponents,
   val ec: ExecutionContext,
   pcodRepository: PendingChangeRequestRepository,
-  agentAssuranceConnector: AgentAssuranceConnector
+  getAgentRecordService: GetAgentRecordService
 )
 extends FrontendController(cc)
 with DesiDetailsJourneySupport
@@ -99,7 +100,7 @@ with Logging {
   private def resetUncheckedAndNavigate(selectedChanges: SelectChanges)(implicit request: AuthRequestWithAgentInfo[AnyContent]): Future[Future[Result]] = {
     for {
       desiDetailsData <- sessionCacheService.get[DesignatoryDetails](draftNewContactDetailsKey)
-      oldContactDetails <- agentAssuranceConnector.getAgentRecord.map(_.agencyDetails.getOrElse {
+      oldContactDetails <- getAgentRecordService.getAgentRecord.map(_.agencyDetails.getOrElse {
         throw new RuntimeException(s"Could not retrieve current agency details for ${request.agentInfo.arn} from the backend")
       })
       journey <- isJourneyComplete()

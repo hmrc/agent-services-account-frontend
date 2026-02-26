@@ -26,6 +26,7 @@ import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.draftNewContactDetailsKey
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
+import uk.gov.hmrc.agentservicesaccount.services.GetAgentRecordService
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details.view_contact_details
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -39,7 +40,7 @@ import scala.concurrent.Future
 class ViewContactDetailsController @Inject() (
   actions: Actions,
   sessionCache: SessionCacheService,
-  agentAssuranceConnector: AgentAssuranceConnector,
+  getAgentRecordService: GetAgentRecordService,
   pcodRepository: PendingChangeRequestRepository,
   view_contact_details: view_contact_details
 )(implicit
@@ -62,7 +63,7 @@ with I18nSupport {
       for {
         _ <- sessionCache.delete(draftNewContactDetailsKey)
         mPendingChange <- pcodRepository.find(request.agentInfo.arn)
-        agencyDetails <- agentAssuranceConnector.getAgentRecord.map(_.agencyDetails.getOrElse {
+        agencyDetails <- getAgentRecordService.getAgentRecord.map(_.agencyDetails.getOrElse {
           throw new RuntimeException(s"Could not retrieve current agency details for ${request.agentInfo.arn} from the backend")
         })
       } yield Ok(view_contact_details(

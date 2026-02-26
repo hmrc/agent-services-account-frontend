@@ -18,7 +18,7 @@ package it.controllers.desiDetails
 
 import play.api.test.Helpers._
 import support.ComponentBaseISpec
-import stubs.AgentAssuranceStubs.givenAgentRecordFound
+import stubs.AgentServicesAccountStubs.givenGetAgentRecord
 import stubs.AgentServicesAccountStubs.stubASAGetResponseError
 
 class ViewContactDetailsControllerISpec
@@ -30,7 +30,7 @@ extends ComponentBaseISpec {
     "display the current details page normally if there is no change pending" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
 
       val result = get(viewContactDetailsPath)
@@ -42,7 +42,7 @@ extends ComponentBaseISpec {
     "return Internal Server Error if agencyDetails not available" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord.copy(agencyDetails = None))
+      givenGetAgentRecord(agentRecord.copy(agencyDetails = None))
       stubASAGetResponseError(arn, NOT_FOUND)
 
       val result = get(viewContactDetailsPath)

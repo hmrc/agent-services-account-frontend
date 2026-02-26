@@ -23,7 +23,7 @@ import uk.gov.hmrc.agentservicesaccount.models.AmlsStatuses.ValidAmlsDetailsUK
 import uk.gov.hmrc.agentservicesaccount.models.AmlsStatuses.ValidAmlsNonUK
 import uk.gov.hmrc.agentservicesaccount.models.UpdateAmlsJourney
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
-import stubs.AgentAssuranceStubs.givenAgentRecordFound
+import stubs.AgentServicesAccountStubs.givenGetAgentRecord
 
 import java.time.LocalDate
 
@@ -47,7 +47,7 @@ extends ComponentBaseISpec {
     "display the page with journey data" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
 
       await(repo.putSession(amlsJourneyKey, amlsJourney(newRegistrationNumber = Some("ABCD"))))
 
@@ -61,7 +61,7 @@ extends ComponentBaseISpec {
     "display the page without journey data" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
 
       await(repo.putSession(amlsJourneyKey, amlsJourney(newRegistrationNumber = None)))
 
@@ -77,7 +77,7 @@ extends ComponentBaseISpec {
     "redirect to /renewal-date and store data for UK agent " in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
 
       await(repo.putSession(amlsJourneyKey, amlsJourney(newRegistrationNumber = Some("ABC123"))))
 
@@ -97,7 +97,7 @@ extends ComponentBaseISpec {
     "redirect to CYA and store data for overseas agent " in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
 
       await(repo.putSession(amlsJourneyKey, amlsJourney(newRegistrationNumber = Some("ABC123")).copy(status = ValidAmlsNonUK)))
 
@@ -116,7 +116,7 @@ extends ComponentBaseISpec {
     "return BadRequest when invalid form submission" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
 
       await(repo.putSession(amlsJourneyKey, amlsJourney(newRegistrationNumber = Some("ABC123")).copy(status = ValidAmlsNonUK)))
 

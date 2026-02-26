@@ -27,7 +27,7 @@ import uk.gov.hmrc.agentservicesaccount.models.desiDetails._
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.CompletedEmail
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.VerificationStatusResponse
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
-import stubs.AgentAssuranceStubs.givenAgentRecordFound
+import stubs.AgentServicesAccountStubs.givenGetAgentRecord
 import stubs.AgentServicesAccountStubs.stubASAGetResponseError
 import stubs.EmailVerificationStubs.givenCheckEmailSuccess
 import stubs.EmailVerificationStubs.givenVerifyEmailSuccess
@@ -56,7 +56,7 @@ extends ComponentBaseISpec {
         "cred-id",
         isAdmin = true
       )
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
       givenCheckEmailSuccess(credId = "cred-id", verificationStatusResponse = VerificationStatusResponse(emails = List.empty[CompletedEmail]))
       givenVerifyEmailSuccess(redirectUri = "/continue-url")
@@ -80,7 +80,7 @@ extends ComponentBaseISpec {
         "cred-id",
         isAdmin = true
       )
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
 
       await(repo.putSession(currentSelectedChangesKey, Set("businessEmail")))
@@ -95,7 +95,7 @@ extends ComponentBaseISpec {
     "return Internal Server Error if authProviderId is not available" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
 
       await(repo.putSession(currentSelectedChangesKey, Set("email")))
@@ -114,7 +114,7 @@ extends ComponentBaseISpec {
         isAdmin = true,
         email = "abc@abc.com"
       )
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
       givenCheckEmailSuccess(
         credId = "cred-id",
@@ -147,7 +147,7 @@ extends ComponentBaseISpec {
         isAdmin = true,
         email = "abc@abc.com"
       )
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
       givenCheckEmailSuccess(
         credId = "cred-id",
@@ -179,7 +179,7 @@ extends ComponentBaseISpec {
         isAdmin = true,
         email = "abc@abc.com"
       )
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
       givenCheckEmailSuccess(
         credId = "cred-id",

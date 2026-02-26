@@ -21,7 +21,7 @@ import support.ComponentBaseISpec
 import uk.gov.hmrc.agentservicesaccount.controllers.currentSelectedChangesKey
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
-import stubs.AgentAssuranceStubs.givenAgentRecordFound
+import stubs.AgentServicesAccountStubs.givenGetAgentRecord
 import stubs.AgentServicesAccountStubs.stubASAGetResponseError
 
 class SelectDetailsControllerISpec
@@ -35,7 +35,7 @@ extends ComponentBaseISpec {
     "display the select changes page if " in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
 
       await(repo.putSession(currentSelectedChangesKey, Set("email")))
@@ -49,7 +49,7 @@ extends ComponentBaseISpec {
     "fill with previously entered answers" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
 
       await(repo.putSession(currentSelectedChangesKey, Set("businessName")))
@@ -67,7 +67,7 @@ extends ComponentBaseISpec {
     "store the selected changes in session and redirect to first selected page" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
 
       val result = post(selectDetailsPath)(body = Map("email" -> List("email"), "businessName" -> List("businessName")))
@@ -81,7 +81,7 @@ extends ComponentBaseISpec {
     "return Bad Request if the data submitted is invalid" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
 
       val result = post(selectDetailsPath)(body = Map("businessName" -> List("?!@£")))
@@ -93,7 +93,7 @@ extends ComponentBaseISpec {
     "return Bad Request if the data submitted is empty" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
 
       val result = post(selectDetailsPath)(body = Map("" -> List("")))

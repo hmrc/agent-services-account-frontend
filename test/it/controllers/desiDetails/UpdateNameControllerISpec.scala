@@ -26,7 +26,7 @@ import uk.gov.hmrc.agentservicesaccount.models.desiDetails.DesignatoryDetails
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.OtherServices
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.SaChanges
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
-import stubs.AgentAssuranceStubs.givenAgentRecordFound
+import stubs.AgentServicesAccountStubs.givenGetAgentRecord
 import stubs.AgentServicesAccountStubs.stubASAGetResponseError
 
 class UpdateNameControllerISpec
@@ -47,7 +47,7 @@ extends ComponentBaseISpec {
     "display the enter business name page" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
 
       await(repo.putSession(currentSelectedChangesKey, Set("businessName")))
@@ -61,7 +61,7 @@ extends ComponentBaseISpec {
     "redirect to manage-account/contact-changes/select-changes when contact details page request is invalid" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
 
       await(repo.putSession(currentSelectedChangesKey, Set("email")))
@@ -78,7 +78,7 @@ extends ComponentBaseISpec {
     "redirect to apply SA code page" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
 
       await(repo.putSession(draftNewContactDetailsKey, designatoryDetails))
@@ -94,7 +94,7 @@ extends ComponentBaseISpec {
     "return Bad Request if the data submitted is invalid" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
 
       val result = post(updateNamePath)(body = Map("invalid" -> List("???")))
