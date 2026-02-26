@@ -58,7 +58,6 @@ with Logging {
         }
         else {
           payeConnector.getCyaData().map { data =>
-//            TODO: 10593 Pull this out into separate method
             val addressHtml = Seq(
               Some(data.address.line1),
               Some(data.address.line2),
@@ -67,31 +66,11 @@ with Logging {
               Some(data.address.postCode)
             ).flatten.mkString("<br>")
             val rows = Seq(
-              SummaryListData(
-                "paye.cya.agentName",
-                data.agentName,
-                link = None
-              ),
-              SummaryListData(
-                "paye.cya.contactName",
-                data.contactName,
-                link = None
-              ),
-              SummaryListData(
-                "paye.cya.telephoneNumber",
-                data.telephoneNumber.getOrElse(""),
-                link = None
-              ),
-              SummaryListData(
-                "paye.cya.emailAddress",
-                data.emailAddress.getOrElse(""),
-                link = None
-              ),
-              SummaryListData(
-                "paye.cya.address",
-                addressHtml,
-                link = None
-              )
+              SummaryListData("paye.cya.agentName", data.agentName, link = None),
+              SummaryListData("paye.cya.contactName", data.contactName, link = None),
+              SummaryListData("paye.cya.telephoneNumber", data.telephoneNumber.getOrElse(""), link = None),
+              SummaryListData("paye.cya.emailAddress", data.emailAddress.getOrElse(""), link = None),
+              SummaryListData("paye.cya.address", addressHtml, link = None)
             )
             Ok(cyaView(rows))
           }
