@@ -37,7 +37,7 @@
 
     <h1 class="govuk-heading-l">@msgs("paye.cya.h1")</h1>
 
-    @formWithCSRF(action = uk.gov.hmrc.agentservicesaccount.controllers.paye.routes.PayeSubscriptionRequestController.submit) {
+    @formWithCSRF(action = uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.routes.PayeSubscriptionRequestController.submit) {
         @summary_list(model)
         @govukButton(Button(content = Text(msgs("paye.cya.submit"))))
     }

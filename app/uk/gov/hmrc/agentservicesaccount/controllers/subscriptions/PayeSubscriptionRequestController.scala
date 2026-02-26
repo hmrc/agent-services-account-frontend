@@ -25,8 +25,8 @@ import uk.gov.hmrc.agentservicesaccount.connectors.PayeSubscriptionConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.routes
 import uk.gov.hmrc.agentservicesaccount.controllers.paye.{routes => payeRoutes}
 import uk.gov.hmrc.agentservicesaccount.views.components.models.SummaryListData
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.paye.paye_check_your_answers
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.paye.paye_submitted
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.paye_check_your_answers
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.paye_submitted
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import javax.inject.Inject
 import javax.inject.Singleton
