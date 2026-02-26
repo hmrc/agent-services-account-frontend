@@ -39,24 +39,18 @@
     isAdmin: Boolean = false,
     subscriptionInfo: Seq[SubscriptionInfo] = Seq.empty
 )(implicit request: RequestHeader, msgs: Messages, appConfig: AppConfig)
+
 @banner(content:Html) = {
-@govukNotificationBanner(
-    NotificationBanner(
-        content = HtmlContent(
-            content
-        )
-    )
-)
+    @govukNotificationBanner(NotificationBanner(content = HtmlContent(content)))
 }
+
 @add_existingSA = {
-@h2("asa.section4.itsa.notification.h2")
-@p("asa.section4.itsa.notification.p.1")
-@p("asa.section4.itsa.notification.p.2")
-@a(
-    href = appConfig.agentMappingUrl,
-    key = "asa.section4.col2.link1"
-)
+    @h2("asa.section4.itsa.notification.h2")
+    @p("asa.section4.itsa.notification.p.1")
+    @p("asa.section4.itsa.notification.p.2")
+    @a(href = appConfig.agentMappingUrl, key = "asa.section4.col2.link1")
 }
+
 @main(
     pageTitle = msgs("asa.heading"),
     isAdmin = isAdmin,
@@ -77,9 +71,11 @@
             id = Some("client-auth-links")
         )
     </section>
+
     @if(isAdmin) {
         @manage_section()
     }
+
     <hr class="govuk-section-break hr-thick govuk-!-margin-bottom-6 govuk-!-margin-top-8">
     @h2("asa.tax-services", id = Some("tax-services-h2"))
     @tax_services_accordion(subscriptionInfo)
@@ -87,10 +83,6 @@
     <hr class="govuk-section-break hr-thick govuk-!-margin-bottom-6">
     <section id="help-and-guidance-section">
         @h2("asa.help.h2")
-        @p(html = Some(
-            a(href = "/agent-services-account/help-and-guidance",
-                key = "asa.help.link",
-            )
-        ))
+        @p(html = Some(a(href = "/agent-services-account/help-and-guidance", key = "asa.help.link")))
     </section>
 }
