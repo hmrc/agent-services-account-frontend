@@ -15,18 +15,16 @@
  *@
 
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+@import uk.gov.hmrc.agentservicesaccount.models.subscriptions.{LegacyRegime, SubscriptionInfo, SubscriptionStatus}
 @import uk.gov.hmrc.govukfrontend.views.Aliases.{Accordion, HtmlContent, Text, WarningText}
 @import uk.gov.hmrc.govukfrontend.views.html.components.{GovukAccordion, GovukWarningText}
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.accordion.Section
 @import scala.collection.mutable.ListBuffer
-@import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionInfo
-@import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
-@import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionStatus
 
 @this(
-        p: p, h2: h2, h4: h4, a: a, span: span, ul_html: ul_html,
-        govukWarningText: GovukWarningText,
-        govukAccordion: GovukAccordion
+  p: p, h2: h2, h4: h4, a: a, span: span, ul_html: ul_html,
+  govukWarningText: GovukWarningText,
+  govukAccordion: GovukAccordion
 )
 
 @(subscriptionInfo: Seq[SubscriptionInfo])(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)

@@ -19,29 +19,25 @@
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 @import uk.gov.hmrc.agentservicesaccount.views.html.pages.dashboard_partials._
 @import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionInfo
-
 @import uk.gov.hmrc.govukfrontend.views.html.components._
-@this(
-        main: main,
-        p: p, h1: h1, h2: h2, h4: h4,
-        ul_html: ul_html, a: a, span: span,
-        agents_ur_banner: agents_ur_banner,
-        tax_services_accordion: tax_services_accordion,
-        manage_section: manage_section,
-        govukNotificationBanner : GovukNotificationBanner
-)
 
-@* TODO: Review params passed into this template *@
+@this(
+    main: main,
+    p: p, h1: h1, h2: h2, h4: h4,
+    ul_html: ul_html, a: a, span: span,
+    agents_ur_banner: agents_ur_banner,
+    tax_services_accordion: tax_services_accordion,
+    manage_section: manage_section,
+    govukNotificationBanner : GovukNotificationBanner
+)
 
 @* TODO: Template needs to be cleaned up *@
 
 @(
-        arn: String,
-        isShownRecruitmentBanner: Boolean = false,
-        isAdmin: Boolean = false,
-        isShownLegacySubscription: Boolean = false,
-        subscriptionInfo: Seq[SubscriptionInfo] = Seq.empty,
-        isShownPayeRequestLink: Boolean = false
+    arn: String,
+    isShownRecruitmentBanner: Boolean = false,
+    isAdmin: Boolean = false,
+    subscriptionInfo: Seq[SubscriptionInfo] = Seq.empty
 )(implicit request: RequestHeader, msgs: Messages, appConfig: AppConfig)
 @banner(content:Html) = {
 @govukNotificationBanner(
