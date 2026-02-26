@@ -18,7 +18,6 @@ package uk.gov.hmrc.agentservicesaccount.controllers.paye
 
 import play.api.Logging
 import play.api.i18n.I18nSupport
-import play.api.i18n.Messages
 import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
@@ -26,7 +25,6 @@ import uk.gov.hmrc.agentservicesaccount.connectors.PayeSubscriptionConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.routes
 import uk.gov.hmrc.agentservicesaccount.controllers.paye.{routes => payeRoutes}
 import uk.gov.hmrc.agentservicesaccount.views.components.models.SummaryListData
-import uk.gov.hmrc.agentservicesaccount.views.html.error_template
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.paye.paye_check_your_answers
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.paye.paye_submitted
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -41,7 +39,6 @@ final class PayeSubscriptionRequestController @Inject() (
   payeConnector: PayeSubscriptionConnector,
   cyaView: paye_check_your_answers,
   submittedView: paye_submitted,
-  errorTemplate: error_template,
   cc: MessagesControllerComponents
 )(implicit
   appConfig: AppConfig,
@@ -50,17 +47,6 @@ final class PayeSubscriptionRequestController @Inject() (
 extends FrontendController(cc)
 with I18nSupport
 with Logging {
-
-  private def technicalDifficultiesResult(implicit request: RequestHeader): Result = {
-    val msgs = implicitly[Messages]
-    InternalServerError(
-      errorTemplate(
-        msgs("global.error.500.title"),
-        msgs("global.error.500.heading"),
-        msgs("global.error.500.message")
-      )
-    )
-  }
 
   def showConfirm: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     payeConnector
@@ -111,13 +97,6 @@ with Logging {
           }
         }
       }
-      .recover { case e =>
-        logger.error(
-          "[PayeSubscriptionRequestController][showConfirm] Failed to render PAYE subscription request confirmation screen",
-          e
-        )
-        technicalDifficultiesResult
-      }
   }
 
   def submit: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
@@ -134,11 +113,8 @@ with Logging {
             .map(_ => Redirect(payeRoutes.PayeSubscriptionRequestController.showSubmitted))
         }
       }
-      .recover { case e =>
-        logger.error("[PayeSubscriptionRequestController][submit] Failed to submit PAYE subscription request", e)
-        technicalDifficultiesResult
-      }
   }
+
   def showSubmitted: Action[AnyContent] = actions.authActionCheckSuspend { implicit request =>
     Ok(submittedView())
   }
