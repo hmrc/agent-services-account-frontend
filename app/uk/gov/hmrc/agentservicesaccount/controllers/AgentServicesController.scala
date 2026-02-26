@@ -47,15 +47,15 @@ import scala.concurrent.Future
 class AgentServicesController @Inject() (
   authActions: AuthActions,
   actions: Actions,
-  agentPayeConnector: PayeSubscriptionConnector,
+  agentAssuranceConnector: AgentAssuranceConnector,
   agentPermissionsConnector: AgentPermissionsConnector,
   agentUserClientDetailsConnector: AgentUserClientDetailsConnector,
-  agentAssuranceConnector: AgentAssuranceConnector,
+  payeSubscriptionConnector: PayeSubscriptionConnector,
   subscriptionService: SubscriptionService,
-  manage_account: manage_account,
-  administrators_html: administrators,
-  your_account: your_account,
   asaDashboard: asa_dashboard,
+  manage_account: manage_account,
+  your_account: your_account,
+  administrators_html: administrators,
   account_details: account_details,
   helpView: help
 )(implicit
@@ -79,7 +79,7 @@ with Logging {
      *      showFeatureInvite is unused at the mo
      * */
     withShowFeatureInvite(agentInfo.arn) { showFeatureInvite: Boolean =>
-      agentPayeConnector.getStatus().map { payeStatus =>
+      payeSubscriptionConnector.getStatus().map { payeStatus =>
         val showPayeRequestLink = !payeStatus.hasSubscription && !payeStatus.hasRequestInProgress
         Ok(
           asaDashboard(
