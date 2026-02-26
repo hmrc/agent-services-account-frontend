@@ -23,7 +23,7 @@ import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.PayeSubscriptionConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.routes
-import uk.gov.hmrc.agentservicesaccount.controllers.paye.{routes => payeRoutes}
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.{routes => subscriptionsRoutes}
 import uk.gov.hmrc.agentservicesaccount.views.components.models.SummaryListData
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.paye_check_your_answers
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.paye_submitted
@@ -111,7 +111,7 @@ with Logging {
           //  TODO: Implement correct call to this endpoint
           payeConnector
             .submitRequest()
-            .map(_ => Redirect(payeRoutes.PayeSubscriptionRequestController.showSubmitted))
+            .map(_ => Redirect(subscriptionsRoutes.PayeSubscriptionRequestController.showSubmitted))
         }
       }
   }

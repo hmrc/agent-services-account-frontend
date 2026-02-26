@@ -164,8 +164,8 @@
   @if(status != SubscriptionStatus.Subscribed) {
     @p(html = Some(
       a(
-            href = uk.gov.hmrc.agentservicesaccount.controllers.paye.routes.PayeSubscriptionRequestController.showConfirm.url,
-            key  = "asa.legacy.paye.link"
+        href = uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.routes.PayeSubscriptionRequestController.showConfirm.url,
+        key  = "asa.legacy.paye.link"
       )
     ))
   }
