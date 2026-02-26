@@ -72,6 +72,7 @@ with Logging {
         }
         else {
           payeConnector.getCyaData().map { data =>
+//            TODO: Pull this out into separate method
             val addressHtml = Seq(
               Some(data.address.line1),
               Some(data.address.line2),
