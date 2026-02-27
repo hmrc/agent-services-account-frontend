@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers.paye
+package it.controllers.subscriptions
 
 import play.api.Application
 import play.api.inject.bind
