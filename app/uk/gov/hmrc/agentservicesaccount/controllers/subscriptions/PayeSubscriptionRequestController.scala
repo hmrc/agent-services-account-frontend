@@ -60,8 +60,7 @@ with Logging {
         val eligible = subscriptionInfo.exists(_.regime == LegacyRegime.PAYE)
         if (!eligible) {
           Future.successful(Redirect(routes.AgentServicesController.showAgentServicesAccount()))
-        }
-        else {
+        } else {
           payeConnector.getCyaData().map { data =>
             val addressHtml = Seq(
               Some(data.address.line1),
@@ -104,14 +103,14 @@ with Logging {
   }
 
   def submit: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    payeConnector
-      .getStatus()
-      .flatMap { st =>
-        val eligible = !st.hasSubscription && !st.hasRequestInProgress
+    val agentInfo = request.agentInfo
+    subscriptionService
+      .getSubscriptionInfo(agentInfo.missingSubscriptions, agentInfo.existingSubscriptionInfo)
+      .flatMap { subscriptionInfo =>
+        val eligible = subscriptionInfo.exists(_.regime == LegacyRegime.PAYE)
         if (!eligible) {
           Future.successful(Redirect(routes.AgentServicesController.showAgentServicesAccount()))
-        }
-        else {
+        } else {
           //  TODO: 10593 Implement correct call to this endpoint
           payeConnector
             .submitRequest()

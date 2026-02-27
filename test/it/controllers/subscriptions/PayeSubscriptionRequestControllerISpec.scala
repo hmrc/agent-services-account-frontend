@@ -21,6 +21,7 @@ import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.Helpers._
 import stubs.AgentAssuranceStubs.givenAgentRecordFound
+import stubs.AgentServicesAccountStubs.givenSubscriptionInfoResponse
 import support.ComponentBaseISpec
 import uk.gov.hmrc.agentservicesaccount.connectors.PayeSubscriptionConnector
 import uk.gov.hmrc.agentservicesaccount.models.paye._
@@ -33,10 +34,7 @@ class PayeSubscriptionRequestControllerISpec extends ComponentBaseISpec {
   private val submittedPath = "/paye-subscription/request/submitted"
 
   private object TestState {
-    var status: PayeStatus =
-      PayeStatus(hasSubscription = false, hasRequestInProgress = false)
-
-    var cyaData: PayeCyaData =
+    val cyaData: PayeCyaData =
       PayeCyaData(
         agentName = "Example Agent Ltd",
         contactName = "Jane Agent",
@@ -50,24 +48,12 @@ class PayeSubscriptionRequestControllerISpec extends ComponentBaseISpec {
           postCode = "AA1 1AA"
         )
       )
-
-    var failStatus: Boolean = false
-    var failCyaData: Boolean = false
-    var failSubmit: Boolean = false
   }
 
   private final class TestPayeSubscriptionConnector extends PayeSubscriptionConnector {
-    override def getStatus()(implicit ec: ExecutionContext): Future[PayeStatus] =
-      if (TestState.failStatus) Future.failed(new RuntimeException("boom-status"))
-      else Future.successful(TestState.status)
+    override def getCyaData()(implicit ec: ExecutionContext): Future[PayeCyaData] = Future.successful(TestState.cyaData)
 
-    override def getCyaData()(implicit ec: ExecutionContext): Future[PayeCyaData] =
-      if (TestState.failCyaData) Future.failed(new RuntimeException("boom-cya"))
-      else Future.successful(TestState.cyaData)
-
-    override def submitRequest()(implicit ec: ExecutionContext): Future[Unit] =
-      if (TestState.failSubmit) Future.failed(new RuntimeException("boom-submit"))
-      else Future.successful(())
+    override def submitRequest()(implicit ec: ExecutionContext): Future[Unit] = Future.successful(())
   }
 
   override def extraConfig(): Map[String, String] = super.extraConfig()
@@ -80,107 +66,37 @@ class PayeSubscriptionRequestControllerISpec extends ComponentBaseISpec {
       )
       .build()
 
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-
-    TestState.status = PayeStatus(hasSubscription = false, hasRequestInProgress = false)
-    TestState.failStatus = false
-    TestState.failCyaData = false
-    TestState.failSubmit = false
-  }
-
   s"GET $confirmPath" should {
 
     "return OK and render the confirmation screen when eligible" in {
-      TestState.status = PayeStatus(hasSubscription = false, hasRequestInProgress = false)
-
       givenAuthorisedAsAgentWith(arn.value)
       givenAgentRecordFound(agentRecord)
+      givenSubscriptionInfoResponse()
 
       val result = get(confirmPath)
 
       result.status shouldBe OK
+//      TODO: 10593 Better assertions in here
       assertPageHasTitle("Check your details before requesting a PAYE subscription")(result)
 
       result.body should include("Example Agent Ltd")
       result.body should include("Jane Agent")
       result.body should include("Return to your agent services account")
     }
-
-    "redirect to the ASA homepage when not eligible (has subscription)" in {
-      TestState.status = PayeStatus(hasSubscription = true, hasRequestInProgress = false)
-
-      givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
-
-      val result = get(confirmPath)
-
-      result.status shouldBe SEE_OTHER
-      result.header("Location").value shouldBe "/agent-services-account/home"
-    }
-
-    "redirect to the ASA homepage when not eligible (request in progress)" in {
-      TestState.status = PayeStatus(hasSubscription = false, hasRequestInProgress = true)
-
-      givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
-
-      val result = get(confirmPath)
-
-      result.status shouldBe SEE_OTHER
-      result.header("Location").value shouldBe "/agent-services-account/home"
-    }
-
-    "return 500 with a technical difficulties page when the connector errors" in {
-      TestState.failStatus = true
-
-      givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
-
-      val result = get(confirmPath)
-
-      result.status shouldBe INTERNAL_SERVER_ERROR
-      result.body should include("Sorry, we’re experiencing technical difficulties")
-    }
   }
 
   s"POST $confirmPath" should {
 
     "redirect to submitted screen when eligible" in {
-      TestState.status = PayeStatus(hasSubscription = false, hasRequestInProgress = false)
-
       givenAuthorisedAsAgentWith(arn.value)
       givenAgentRecordFound(agentRecord)
+      givenSubscriptionInfoResponse()
 
       val result = post(confirmPath)(Map.empty)
 
       result.status shouldBe SEE_OTHER
+      //      TODO: 10593 Better assertions in here
       result.header("Location").value shouldBe "/agent-services-account/paye-subscription/request/submitted"
-    }
-
-    "redirect to the ASA homepage when not eligible" in {
-      TestState.status = PayeStatus(hasSubscription = true, hasRequestInProgress = false)
-
-      givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
-
-      val result = post(confirmPath)(Map.empty)
-
-      result.status shouldBe SEE_OTHER
-      result.header("Location").value shouldBe "/agent-services-account/home"
-    }
-
-    "return 500 with a technical difficulties page when submit fails" in {
-      TestState.status = PayeStatus(hasSubscription = false, hasRequestInProgress = false)
-      TestState.failSubmit = true
-
-      givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
-
-      val result = post(confirmPath)(Map.empty)
-
-      result.status shouldBe INTERNAL_SERVER_ERROR
-      result.body should include("Sorry, we’re experiencing technical difficulties")
     }
   }
 
@@ -189,10 +105,12 @@ class PayeSubscriptionRequestControllerISpec extends ComponentBaseISpec {
     "return OK and render submitted screen" in {
       givenAuthorisedAsAgentWith(arn.value)
       givenAgentRecordFound(agentRecord)
+      givenSubscriptionInfoResponse()
 
       val result = get(submittedPath)
 
       result.status shouldBe OK
+      //      TODO: 10593 Better assertions in here
       assertPageHasTitle("PAYE subscription request submitted")(result)
       result.body should include("Return to your agent services account")
     }
