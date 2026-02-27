@@ -20,7 +20,7 @@ import play.api.http.Status.OK
 import support.ComponentBaseISpec
 import uk.gov.hmrc.agentservicesaccount.models._
 import stubs.AgentAssuranceStubs.givenAMLSDetailsForArn
-import stubs.AgentAssuranceStubs.givenAgentRecordFound
+import stubs.AgentServicesAccountStubs.givenGetAgentRecord
 
 class ViewDetailsControllerISpec
 extends ComponentBaseISpec {
@@ -35,7 +35,7 @@ extends ComponentBaseISpec {
     "display AMLS details when existing details found" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       givenAMLSDetailsForArn(amlsDetailsResponse, arn.value)
 
       val result = get(viewDetailsPath)
@@ -47,7 +47,7 @@ extends ComponentBaseISpec {
     "display the page for the first time when AMLS details do not exist" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       givenAMLSDetailsForArn(noAmlsDetailsResponse, arn.value)
 
       val result = get(viewDetailsPath)

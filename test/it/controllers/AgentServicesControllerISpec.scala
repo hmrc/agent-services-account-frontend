@@ -31,7 +31,7 @@ import uk.gov.hmrc.agentservicesaccount.controllers.routes
 import uk.gov.hmrc.agentservicesaccount.models._
 import uk.gov.hmrc.agentservicesaccount.models.accessgroups.GroupSummary
 import uk.gov.hmrc.agentservicesaccount.models.accessgroups.UserDetails
-import stubs.AgentAssuranceStubs._
+import stubs.AgentAssuranceStubs.givenAMLSDetailsForArn
 import stubs.AgentPermissionsStubs._
 import stubs.AgentUserClientDetailsStubs._
 import stubs.AgentServicesAccountStubs._
@@ -69,7 +69,7 @@ extends BaseISpec {
 
     "redirect to agent service account when the user is not suspended" in {
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
 
       val response = controller.root()(fakeRequest())
 
@@ -79,7 +79,7 @@ extends BaseISpec {
 
     "redirect to suspended warning when user is suspended" in {
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(
+      givenGetAgentRecord(
         agentRecord.copy(suspensionDetails = Some(SuspensionDetails(suspensionStatus = true, regimes = Some(Set("ALL")))))
       )
 
@@ -91,7 +91,7 @@ extends BaseISpec {
 
     "redirect to suspended warning when user is suspended for AGSV" in {
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(
+      givenGetAgentRecord(
         agentRecord.copy(suspensionDetails = Some(SuspensionDetails(suspensionStatus = true, regimes = Some(Set("AGSV")))))
       )
 
@@ -103,7 +103,7 @@ extends BaseISpec {
 
     "redirect to suspended warning when user is suspended for ALL" in {
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(
+      givenGetAgentRecord(
         agentRecord.copy(suspensionDetails = Some(SuspensionDetails(suspensionStatus = true, regimes = Some(Set("ALL")))))
       )
 
@@ -115,7 +115,7 @@ extends BaseISpec {
 
     "throw an exception when get agent record returns NOT_FOUND for user" in {
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentDetailsErrorResponse(404)
+      givenGetAgentRecordErrorResponse(404)
 
       intercept[UpstreamErrorResponse] {
         await(controller.root()(fakeRequest()))
@@ -128,7 +128,7 @@ extends BaseISpec {
     "return status: OK" when {
 
       "No suspension details on the agent record" in {
-        givenAgentRecordFound(
+        givenGetAgentRecord(
           agentRecord.copy(suspensionDetails = None)
         )
 
@@ -141,7 +141,7 @@ extends BaseISpec {
       }
 
       "Agent is suspended should be redirected" in {
-        givenAgentRecordFound(
+        givenGetAgentRecord(
           agentRecord.copy(suspensionDetails = Some(SuspensionDetails(suspensionStatus = true, regimes = Some(Set("ALL")))))
         )
 
@@ -200,7 +200,7 @@ extends BaseISpec {
 
       "an authorised agent with no suspension" in {
         givenAuthorisedAsAgentWith(arn.value)
-        givenAgentRecordFound(agentRecord)
+        givenGetAgentRecord(agentRecord)
 
         givenHidePrivateBetaInviteNotFound()
         givenSubscriptionInfoResponse()
@@ -358,7 +358,7 @@ extends BaseISpec {
       }
 
       "agent with showFeatureInvite being false" in {
-        givenAgentRecordFound(agentRecord)
+        givenGetAgentRecord(agentRecord)
 
         givenAuthorisedAsAgentWith(arn.value)
         givenHidePrivateBetaInvite()
@@ -469,7 +469,7 @@ extends BaseISpec {
         .injector.instanceOf[AgentServicesController]
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       givenAMLSDetailsForArn(AmlsDetailsResponse(AmlsStatuses.NoAmlsDetailsUK, None), arn.value)
       val response = await(controllerWithGranPermsDisabled.manageAccount().apply(fakeRequest("GET", "/manage-account")))
 
@@ -486,7 +486,7 @@ extends BaseISpec {
 
     "return Status: OK and body containing existing manage account content when gran perms FF is on but there was an error getting optin-status" in {
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       givenArnAllowedOk()
       givenSyncEacdFailure(arn)
       givenOptinStatusFailedForArn(arn)
@@ -508,7 +508,7 @@ extends BaseISpec {
     "return Status: OK and body containing existing manage account content when gran perms FF is on but ARN is not on allowed list" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       givenArnAllowedNotOk() // agent-permissions allowlist
       givenSyncEacdSuccess(arn)
       givenOptinStatusSuccessReturnsForArn(arn, accessgroups.OptedInReady)
@@ -530,7 +530,7 @@ extends BaseISpec {
     "return status: OK and body containing content for status Opted-In_READY (no access groups created yet)" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       givenArnAllowedOk()
       givenSyncEacdSuccess(arn)
       givenOptinStatusSuccessReturnsForArn(arn, accessgroups.OptedInReady)
@@ -573,7 +573,7 @@ extends BaseISpec {
     "return status: OK and body containing content for status Opted-In_READY (access groups already created)" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       givenArnAllowedOk()
       givenSyncEacdSuccess(arn)
       givenOptinStatusSuccessReturnsForArn(arn, accessgroups.OptedInReady)
@@ -613,7 +613,7 @@ extends BaseISpec {
 
       givenAuthorisedAsAgentWith(arn.value)
       givenArnAllowedOk()
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       givenSyncEacdSuccess(arn)
       givenOptinStatusSuccessReturnsForArn(arn, accessgroups.OptedInNotReady)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq.empty))
@@ -644,7 +644,7 @@ extends BaseISpec {
 
       givenAuthorisedAsAgentWith(arn.value)
       givenArnAllowedOk()
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       givenSyncEacdSuccess(arn)
       givenOptinStatusSuccessReturnsForArn(arn, accessgroups.OptedInSingleUser)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq.empty))
@@ -676,7 +676,7 @@ extends BaseISpec {
 
       givenAuthorisedAsAgentWith(arn.value)
       givenArnAllowedOk()
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       givenSyncEacdSuccess(arn)
       givenOptinStatusSuccessReturnsForArn(arn, accessgroups.OptedOutWrongClientCount)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq.empty))
@@ -705,7 +705,7 @@ extends BaseISpec {
 
       givenAuthorisedAsAgentWith(arn.value)
       givenArnAllowedOk()
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       givenSyncEacdSuccess(arn)
       givenOptinStatusSuccessReturnsForArn(arn, accessgroups.OptedOutSingleUser)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq.empty))
@@ -735,7 +735,7 @@ extends BaseISpec {
 
       givenAuthorisedAsAgentWith(arn.value)
       givenArnAllowedOk()
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       givenSyncEacdSuccess(arn)
       givenOptinStatusSuccessReturnsForArn(arn, accessgroups.OptedOutEligible)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq.empty))
@@ -757,7 +757,7 @@ extends BaseISpec {
     "return view AMLS link for ValidAmlsDetailsUK" in {
       givenAuthorisedAsAgentWith(arn.value)
       givenArnAllowedOk()
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       givenSyncEacdSuccess(arn)
       givenOptinStatusSuccessReturnsForArn(arn, accessgroups.OptedInNotReady)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq.empty))
@@ -777,7 +777,7 @@ extends BaseISpec {
     "return view AMLS link for NoAmlsDetailsNonUK" in {
       givenAuthorisedAsAgentWith(arn.value)
       givenArnAllowedOk()
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       givenSyncEacdSuccess(arn)
       givenOptinStatusSuccessReturnsForArn(arn, accessgroups.OptedInNotReady)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq.empty))
@@ -797,7 +797,7 @@ extends BaseISpec {
     "return view AMLS link for ValidAmlsNonUK" in {
       givenAuthorisedAsAgentWith(arn.value)
       givenArnAllowedOk()
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       givenSyncEacdSuccess(arn)
       givenOptinStatusSuccessReturnsForArn(arn, accessgroups.OptedInNotReady)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq.empty))
@@ -817,7 +817,7 @@ extends BaseISpec {
     "return view AMLS link for PendingAmlsDetails" in {
       givenAuthorisedAsAgentWith(arn.value)
       givenArnAllowedOk()
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       givenSyncEacdSuccess(arn)
       givenOptinStatusSuccessReturnsForArn(arn, accessgroups.OptedInNotReady)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq.empty))
@@ -837,7 +837,7 @@ extends BaseISpec {
     "return add AMLS link for NoAmlsDetailsUK " in {
       givenAuthorisedAsAgentWith(arn.value)
       givenArnAllowedOk()
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       givenSyncEacdSuccess(arn)
       givenOptinStatusSuccessReturnsForArn(arn, accessgroups.OptedInNotReady)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq.empty))
@@ -857,7 +857,7 @@ extends BaseISpec {
     "return add AMLS link for PendingAmlsDetailsRejected " in {
       givenAuthorisedAsAgentWith(arn.value)
       givenArnAllowedOk()
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       givenSyncEacdSuccess(arn)
       givenOptinStatusSuccessReturnsForArn(arn, accessgroups.OptedInNotReady)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq.empty))
@@ -877,7 +877,7 @@ extends BaseISpec {
     "return update AMLS link for ExpiredAmlsDetailsUK" in {
       givenAuthorisedAsAgentWith(arn.value)
       givenArnAllowedOk()
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       givenSyncEacdSuccess(arn)
       givenOptinStatusSuccessReturnsForArn(arn, accessgroups.OptedInNotReady)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq.empty))
@@ -901,7 +901,7 @@ extends BaseISpec {
     "return status OK" when {
       "agent is admin and details found" in {
         givenAuthorisedAsAgentWith(arn.value)
-        givenAgentRecordFound(agentRecord)
+        givenGetAgentRecord(agentRecord)
 
         val response = await(controller.accountDetails().apply(fakeRequest("GET", "/account-details")))
         status(response) shouldBe OK
@@ -909,7 +909,7 @@ extends BaseISpec {
 
       "agent is assistant and details found" in {
         givenAuthorisedAsAgentWith(arn.value, isAdmin = false)
-        givenAgentRecordFound(agentRecord)
+        givenGetAgentRecord(agentRecord)
 
         val response = await(controller.accountDetails().apply(fakeRequest("GET", "/account-details")))
         status(response) shouldBe OK
@@ -919,7 +919,7 @@ extends BaseISpec {
     "display correct content" when {
       "agent is admin and details found" in {
         givenAuthorisedAsAgentWith(arn.value)
-        givenAgentRecordFound(agentRecord.copy(agencyDetails =
+        givenGetAgentRecord(agentRecord.copy(agencyDetails =
           Some(AgencyDetails(
             Some("My Agency"),
             Some("abc@abc.com"),
@@ -963,7 +963,7 @@ extends BaseISpec {
 
       "the agent is not Admin" in {
         givenAuthorisedAsAgentWith(arn.value, isAdmin = false)
-        givenAgentRecordFound(agentRecord.copy(agencyDetails =
+        givenGetAgentRecord(agentRecord.copy(agencyDetails =
           Some(AgencyDetails(
             Some("My Agency"),
             Some("abc@abc.com"),
@@ -1014,7 +1014,7 @@ extends BaseISpec {
     "render correctly for Standard User who’s Opted-In_READY without Access Groups" in {
       val providerId = Random.nextLong().toString
       givenFullAuthorisedAsAgentWith(arn.value, providerId)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       givenOptinRecordExistsForArn(arn, exists = true)
       givenAccessGroupsForTeamMember(
         arn,
@@ -1061,7 +1061,7 @@ extends BaseISpec {
     "render correctly for Standard User who’s NOT Opted-In_READY without Access Groups" in {
       val providerId = Random.nextLong().toString
       givenFullAuthorisedAsAgentWith(arn.value, providerId)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       givenOptinRecordExistsForArn(arn, exists = false)
       givenAccessGroupsForTeamMember(
         arn,
@@ -1112,7 +1112,7 @@ extends BaseISpec {
       )
       givenFullAuthorisedAsAgentWith(arn.value, providerId)
       givenOptinRecordExistsForArn(arn, exists = true)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(groupSummaries)) // there is already an access group
       givenAccessGroupsForTeamMember(
         arn,
@@ -1167,7 +1167,7 @@ extends BaseISpec {
     "render static data and list of Admin Users for ARN if standard user" in {
       givenAuthorisedAsAgentWith(arn.value, isAdmin = false)
       givenArnAllowedOk()
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       givenSyncEacdSuccess(arn)
       givenOptinStatusSuccessReturnsForArn(arn, accessgroups.OptedInReady)
       val teamMembers = Seq(
@@ -1219,7 +1219,7 @@ extends BaseISpec {
     "allow admin users" in {
       givenAuthorisedAsAgentWith(arn.value)
       givenArnAllowedOk()
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       givenSyncEacdSuccess(arn)
       val teamMembers = Seq(
         UserDetails(
@@ -1255,14 +1255,14 @@ extends BaseISpec {
 
     "return Status: OK" in {
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       val response = await(controller.showHelp().apply(fakeRequest("GET", "/help")))
       status(response) shouldBe OK
     }
 
     "contain matching heading in page title" in {
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       val response = await(controller.showHelp().apply(fakeRequest("GET", "/help")))
       val html = Jsoup.parse(contentAsString(response))
       html.title() shouldBe "Help and guidance - Agent services account - GOV.UK"
@@ -1271,7 +1271,7 @@ extends BaseISpec {
 
     "contain body with correct content" in {
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       val response = await(controller.showHelp().apply(fakeRequest("GET", "/help")))
       val html = Jsoup.parse(contentAsString(response))
       val h2 = html.select(H2)

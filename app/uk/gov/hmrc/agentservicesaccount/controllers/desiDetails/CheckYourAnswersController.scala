@@ -30,6 +30,7 @@ import uk.gov.hmrc.agentservicesaccount.models.PendingChangeOfDetails
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
 import uk.gov.hmrc.agentservicesaccount.services.AuditService
+import uk.gov.hmrc.agentservicesaccount.services.AgentRecordService
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -44,6 +45,7 @@ class CheckYourAnswersController @Inject() (
   actions: Actions,
   val sessionCacheService: SessionCacheService,
   agentAssuranceConnector: AgentAssuranceConnector,
+  agentRecordService: AgentRecordService,
   checkUpdatedDetailsView: check_updated_details,
   auditService: AuditService,
   summary_pdf: summaryPdf
@@ -87,9 +89,9 @@ with Logging {
         case Some(details) =>
           for {
             selectChanges <- sessionCacheService.get[Set[String]](currentSelectedChangesKey)
-            optUtr <- agentAssuranceConnector.getAgentRecord.map(_.uniqueTaxReference)
+            optUtr <- agentRecordService.getAgentRecord.map(_.uniqueTaxReference)
             submittedBy <- sessionCacheService.get[YourDetails](draftSubmittedByKey)
-            oldContactDetails <- agentAssuranceConnector.getAgentRecord.map(_.agencyDetails.getOrElse {
+            oldContactDetails <- agentRecordService.getAgentRecord.map(_.agencyDetails.getOrElse {
               throw new RuntimeException(s"Could not retrieve current agency details for ${request.agentInfo.arn} from the backend")
             })
             pendingChange = PendingChangeOfDetails(

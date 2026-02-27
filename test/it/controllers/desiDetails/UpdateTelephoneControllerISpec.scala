@@ -26,7 +26,7 @@ import uk.gov.hmrc.agentservicesaccount.models.desiDetails.DesignatoryDetails
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.OtherServices
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.SaChanges
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
-import stubs.AgentAssuranceStubs.givenAgentRecordFound
+import stubs.AgentServicesAccountStubs.givenGetAgentRecord
 import stubs.AgentServicesAccountStubs.stubASAGetResponseError
 
 class UpdateTelephoneControllerISpec
@@ -47,7 +47,7 @@ extends ComponentBaseISpec {
     "display the enter telephone number page" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
 
       await(repo.putSession(currentSelectedChangesKey, Set("telephone")))
@@ -61,7 +61,7 @@ extends ComponentBaseISpec {
     "render page with previous answers" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
 
       await(repo.putSession(currentSelectedChangesKey, Set("telephone")))
@@ -76,7 +76,7 @@ extends ComponentBaseISpec {
     "redirect to manage-account/contact-changes/select-changes if contact page request is invalid" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
 
       await(repo.putSession(currentSelectedChangesKey, Set("email")))
@@ -92,7 +92,7 @@ extends ComponentBaseISpec {
     "store the new telephone number in session and redirect to apply SA code page" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
 
       val result = post(updateTelephonePath)(body = Map("telephoneNumber" -> List("010101")))
@@ -106,7 +106,7 @@ extends ComponentBaseISpec {
     "return Bad Request if the data submitted is invalid" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
 
       val result = post(updateTelephonePath)(body = Map("telephoneNumber" -> List("ABC")))

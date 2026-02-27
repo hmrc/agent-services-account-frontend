@@ -26,7 +26,7 @@ import uk.gov.hmrc.agentservicesaccount.models.AmlsDetailsResponse
 import uk.gov.hmrc.agentservicesaccount.models.UpdateAmlsJourney
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
 import stubs.AgentAssuranceStubs.givenAMLSDetailsForArn
-import stubs.AgentAssuranceStubs.givenAgentRecordFound
+import stubs.AgentServicesAccountStubs.givenGetAgentRecord
 
 import java.time.LocalDate
 
@@ -54,7 +54,7 @@ extends ComponentBaseISpec {
     "display the page with an empty form if first time" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       givenAMLSDetailsForArn(amlsDetailsResponse, arn.value)
 
       await(repo.putSession(amlsJourneyKey, amlsJourney(isAmlsBodyStillTheSame = None)))
@@ -68,7 +68,7 @@ extends ComponentBaseISpec {
     "display the page with a filled out form if user is revisiting" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       givenAMLSDetailsForArn(amlsDetailsResponse, arn.value)
 
       await(repo.putSession(amlsJourneyKey, amlsJourney(isAmlsBodyStillTheSame = Some(true))))
@@ -86,7 +86,7 @@ extends ComponentBaseISpec {
       "return 303 SEE_OTHER and redirect to /confirm-registration-number when YES is selected" in {
 
         givenAuthorisedAsAgentWith(arn.value)
-        givenAgentRecordFound(agentRecord)
+        givenGetAgentRecord(agentRecord)
         givenAMLSDetailsForArn(amlsDetailsResponse, arn.value)
 
         await(repo.putSession(amlsJourneyKey, amlsJourney(isAmlsBodyStillTheSame = None)))
@@ -107,7 +107,7 @@ extends ComponentBaseISpec {
       "return 303 SEE_OTHER and redirect to /new-registration-number when YES is selected for overseas agent" in {
 
         givenAuthorisedAsAgentWith(arn.value)
-        givenAgentRecordFound(agentRecord)
+        givenGetAgentRecord(agentRecord)
         givenAMLSDetailsForArn(amlsDetailsResponse.copy(status = ValidAmlsNonUK), arn.value)
 
         await(repo.putSession(amlsJourneyKey, amlsJourney(isAmlsBodyStillTheSame = None).copy(status = ValidAmlsNonUK)))
@@ -127,7 +127,7 @@ extends ComponentBaseISpec {
       "return 303 SEE_OTHER and redirect to /new-supervisory-body when NO is selected" in {
 
         givenAuthorisedAsAgentWith(arn.value)
-        givenAgentRecordFound(agentRecord)
+        givenGetAgentRecord(agentRecord)
         givenAMLSDetailsForArn(amlsDetailsResponse.copy(status = ValidAmlsDetailsUK), arn.value)
 
         await(repo.putSession(amlsJourneyKey, amlsJourney(isAmlsBodyStillTheSame = None)))
@@ -147,7 +147,7 @@ extends ComponentBaseISpec {
       "return BadRequest when invalid form submission" in {
 
         givenAuthorisedAsAgentWith(arn.value)
-        givenAgentRecordFound(agentRecord)
+        givenGetAgentRecord(agentRecord)
         givenAMLSDetailsForArn(amlsDetailsResponse.copy(status = ValidAmlsDetailsUK), arn.value)
 
         await(repo.putSession(amlsJourneyKey, amlsJourney(isAmlsBodyStillTheSame = None)))

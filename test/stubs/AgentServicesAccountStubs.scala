@@ -20,6 +20,7 @@ import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.Status.OK
 import play.api.libs.json.Json
+import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
 import uk.gov.hmrc.agentservicesaccount.models.Arn
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest.connectorWrites
@@ -81,5 +82,22 @@ object AgentServicesAccountStubs {
           .withBody(Json.toJson(subscriptionInfo).toString())
       ))
   }
+
+  def givenGetAgentRecord(agentRecord: AgentDetailsDesResponse): StubMapping = stubFor(
+    get(urlEqualTo("/agent-services-account/agent-record-with-checks"))
+      .willReturn(
+        aResponse()
+          .withStatus(200)
+          .withBody(Json.toJson(agentRecord).toString)
+      )
+  )
+
+  def givenGetAgentRecordErrorResponse(status: Int): StubMapping = stubFor(
+    get(urlEqualTo("/agent-services-account/agent-record-with-checks"))
+      .willReturn(
+        aResponse()
+          .withStatus(status)
+      )
+  )
 
 }

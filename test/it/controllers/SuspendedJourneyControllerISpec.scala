@@ -27,7 +27,7 @@ import uk.gov.hmrc.agentservicesaccount.controllers.phoneKey
 import uk.gov.hmrc.agentservicesaccount.controllers.routes
 import uk.gov.hmrc.agentservicesaccount.models.SuspensionDetails
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
-import stubs.AgentAssuranceStubs.givenAgentRecordFound
+import stubs.AgentServicesAccountStubs.givenGetAgentRecord
 import stubs.EmailStubs._
 
 class SuspendedJourneyControllerISpec
@@ -47,7 +47,7 @@ extends ComponentBaseISpec {
     "return Ok and show the suspension warning page" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(suspendedAgentRecord)
+      givenGetAgentRecord(suspendedAgentRecord)
 
       val result = get(accountLimitedPath)
 
@@ -60,7 +60,7 @@ extends ComponentBaseISpec {
     "return Ok and show the contact details page" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(suspendedAgentRecord)
+      givenGetAgentRecord(suspendedAgentRecord)
 
       await(repo.putSession(nameKey, "Bob"))
       await(repo.putSession(emailKey, "abc@abc.com"))
@@ -82,7 +82,7 @@ extends ComponentBaseISpec {
     s"redirect to $recoveryDescriptionPath" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(suspendedAgentRecord)
+      givenGetAgentRecord(suspendedAgentRecord)
 
       val result =
         post(recoveryContactDetailsPath)(body =
@@ -105,7 +105,7 @@ extends ComponentBaseISpec {
     "return Bad Request if the data is invalid" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(suspendedAgentRecord)
+      givenGetAgentRecord(suspendedAgentRecord)
 
       val result =
         post(recoveryContactDetailsPath)(body =
@@ -125,7 +125,7 @@ extends ComponentBaseISpec {
     "return Ok and show the description recovery page" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(suspendedAgentRecord)
+      givenGetAgentRecord(suspendedAgentRecord)
 
       val result = get(recoveryDescriptionPath)
 
@@ -135,7 +135,7 @@ extends ComponentBaseISpec {
     "return Ok and bind previous answers" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(suspendedAgentRecord)
+      givenGetAgentRecord(suspendedAgentRecord)
 
       await(repo.putSession(descriptionKey, "Help"))
 
@@ -151,7 +151,7 @@ extends ComponentBaseISpec {
     "return 400 if form is submitted with errors" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(suspendedAgentRecord)
+      givenGetAgentRecord(suspendedAgentRecord)
 
       val result =
         post(recoveryContactDetailsPath)(body =
@@ -167,7 +167,7 @@ extends ComponentBaseISpec {
     s"redirect to ${routes.SuspendedJourneyController.showSuspendedSummary().url} when form is submitted with correct information" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(suspendedAgentRecord)
+      givenGetAgentRecord(suspendedAgentRecord)
 
       val result =
         post(recoveryDescriptionPath)(body =
@@ -187,7 +187,7 @@ extends ComponentBaseISpec {
     s"redirect to ${routes.SuspendedJourneyController.showContactDetails().url} when no details are present" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(suspendedAgentRecord)
+      givenGetAgentRecord(suspendedAgentRecord)
 
       val result = get(recoveryCheckYourAnswersPath)
 
@@ -199,7 +199,7 @@ extends ComponentBaseISpec {
     s"return Ok when session details are found" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(suspendedAgentRecord)
+      givenGetAgentRecord(suspendedAgentRecord)
 
       await(repo.putSession(nameKey, "Bob"))
       await(repo.putSession(emailKey, "abc@abc.com"))
@@ -217,7 +217,7 @@ extends ComponentBaseISpec {
     s"redirect to ${routes.SuspendedJourneyController.showContactDetails().url} when no summary details are present" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(suspendedAgentRecord)
+      givenGetAgentRecord(suspendedAgentRecord)
 
       val result = post(recoveryCheckYourAnswersPath)(body = Map("" -> List("")))
 
@@ -229,7 +229,7 @@ extends ComponentBaseISpec {
     s"redirect to ${routes.SuspendedJourneyController.showSuspendedConfirmation().url} when session details are found and send email" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(suspendedAgentRecord)
+      givenGetAgentRecord(suspendedAgentRecord)
       givenEmailSent()
 
       await(repo.putSession(nameKey, "Bob"))
@@ -249,7 +249,7 @@ extends ComponentBaseISpec {
     "return Ok and show the confirmation page" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(suspendedAgentRecord)
+      givenGetAgentRecord(suspendedAgentRecord)
 
       val result = get(recoveryRequestConfirmationPath)
 
