@@ -24,7 +24,6 @@ import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AddressLookupConnector
-import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.controllers._
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.DesiDetailsJourneySupport
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.NextPageSelector.getNextPage
@@ -32,7 +31,7 @@ import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup._
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
 import uk.gov.hmrc.agentservicesaccount.services.DraftDetailsService
-import uk.gov.hmrc.agentservicesaccount.services.GetAgentRecordService
+import uk.gov.hmrc.agentservicesaccount.services.AgentRecordService
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -51,7 +50,7 @@ class ContactDetailsController @Inject() (
   beforeYouStartPage: before_you_start_page
 )(implicit
   appConfig: AppConfig,
-  getAgentRecordService: GetAgentRecordService,
+  agentRecordService: AgentRecordService,
   pcodRepository: PendingChangeRequestRepository,
   cc: MessagesControllerComponents,
   val ec: ExecutionContext
@@ -145,7 +144,7 @@ with Logging {
   def showBeforeYouStartPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     actions.ifFeatureEnabled(appConfig.enableChangeContactDetails) {
       if (request.agentInfo.isAdmin) {
-        getAgentRecordService.getAgentRecord.map(agentRecord =>
+        agentRecordService.getAgentRecord.map(agentRecord =>
           Ok(beforeYouStartPage(agentRecord.agencyDetails))
         )
       }

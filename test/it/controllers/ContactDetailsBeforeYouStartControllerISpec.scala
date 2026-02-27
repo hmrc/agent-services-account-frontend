@@ -34,7 +34,7 @@ import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.ContactDetailsCo
 import uk.gov.hmrc.agentservicesaccount.controllers.draftNewContactDetailsKey
 import uk.gov.hmrc.agentservicesaccount.controllers.emailPendingVerificationKey
 import uk.gov.hmrc.agentservicesaccount.models._
-import uk.gov.hmrc.agentservicesaccount.services.GetAgentRecordService
+import uk.gov.hmrc.agentservicesaccount.services.AgentRecordService
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.authorise.Predicate
@@ -117,7 +117,7 @@ with MockFactory {
     val overrides =
       new AbstractModule() {
         override def configure(): Unit = {
-          bind(classOf[GetAgentRecordService]).toInstance(stub[GetAgentRecordService])
+          bind(classOf[AgentRecordService]).toInstance(stub[AgentRecordService])
           bind(classOf[AuthConnector]).toInstance(stubAuthConnector)
         }
       }
@@ -128,9 +128,9 @@ with MockFactory {
       "suspendedContactDetails.sendEmail" -> false
     ).overrides(overrides).build()
 
-    val getAgentRecordService: GetAgentRecordService = app.injector.instanceOf[GetAgentRecordService]
+    val agentRecordService: AgentRecordService = app.injector.instanceOf[AgentRecordService]
 
-    (getAgentRecordService.getAgentRecord(_: RequestHeader)).when(*).returns(Future.successful(agentRecord))
+    (agentRecordService.getAgentRecord(_: RequestHeader)).when(*).returns(Future.successful(agentRecord))
 
     val controller: ContactDetailsController = app.injector.instanceOf[ContactDetailsController]
     val sessionCache: SessionCacheService = app.injector.instanceOf[SessionCacheService]

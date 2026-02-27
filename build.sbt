@@ -13,6 +13,7 @@ val scalaCOptions = Seq(
   "-Wconf:src=*html:w", // silence html warnings as they are wrong
   "-Wconf:cat=unused-privates:s",
   "-Wconf:msg=match may not be exhaustive:is", // summarize warnings about non-exhaustive pattern matching
+  "-Ywarn-unused:imports",
 )
 
 ThisBuild / majorVersion := 2

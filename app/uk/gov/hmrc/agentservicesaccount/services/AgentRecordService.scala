@@ -27,7 +27,7 @@ import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
 import scala.concurrent.Future
 
 @Singleton
-class GetAgentRecordService @Inject() (
+class AgentRecordService @Inject() (
   agentAssuranceConnector: AgentAssuranceConnector,
   agentServicesAccountConnector: AgentServicesAccountConnector
 )(

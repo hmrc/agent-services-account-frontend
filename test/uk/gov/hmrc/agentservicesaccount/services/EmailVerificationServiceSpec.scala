@@ -49,13 +49,13 @@ with TestConstants {
 
     protected val mockEmailVerificationConnector: EmailVerificationConnector = mock[EmailVerificationConnector]
     protected val mockAppConfig: AppConfig = mock[AppConfig]
-    protected val mockGetAgentRecordService: GetAgentRecordService = mock[GetAgentRecordService]
+    protected val mockagentRecordService: AgentRecordService = mock[AgentRecordService]
     mockAppConfig.deskproServiceName returns "AOSS"
     mockAppConfig.accessibilityStatementUrl returns "/agent-services-account"
 
     object TestService
     extends EmailVerificationService(
-      mockGetAgentRecordService,
+      mockagentRecordService,
       mockEmailVerificationConnector
     )(ec, mockAppConfig)
 
@@ -150,7 +150,7 @@ with TestConstants {
   "getEmailVerificationStatus" should {
     "return EmailIsAlreadyVerified" when {
       "the user has already verified their email" in new Setup {
-        mockGetAgentRecordService.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
+        mockagentRecordService.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
         mockEmailVerificationConnector.checkEmail(ggCredentials.providerId)(*[RequestHeader]) returns Future.successful(
           Some(VerificationStatusResponse(List(CompletedEmail(
@@ -168,7 +168,7 @@ with TestConstants {
 
     "return EmailIsLocked" when {
       "the endpoint returns the email is locked" in new Setup {
-        mockGetAgentRecordService.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
+        mockagentRecordService.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
         mockEmailVerificationConnector.checkEmail(ggCredentials.providerId)(*[RequestHeader]) returns Future.successful(
           Some(VerificationStatusResponse(List(CompletedEmail(
@@ -186,7 +186,7 @@ with TestConstants {
 
     "return EmailNeedsVerifying" when {
       "there is no list of emails returned from email verification" in new Setup {
-        mockGetAgentRecordService.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
+        mockagentRecordService.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
         mockEmailVerificationConnector.checkEmail(ggCredentials.providerId)(*[RequestHeader]) returns Future.successful(
           Some(VerificationStatusResponse(List.empty))
         )
@@ -199,7 +199,7 @@ with TestConstants {
 
     "return EmailHasNotChanged" when {
       "the user entered email is the same as the stored one" in new Setup {
-        mockGetAgentRecordService.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
+        mockagentRecordService.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
         mockEmailVerificationConnector.checkEmail(ggCredentials.providerId)(*[RequestHeader]) returns Future.successful(
           Some(VerificationStatusResponse(List(CompletedEmail(
@@ -217,7 +217,7 @@ with TestConstants {
 
     "throw an exception" when {
       "the call to get agent record fails" in new Setup {
-        mockGetAgentRecordService.getAgentRecord(*[RequestHeader]) returns Future.failed(UpstreamErrorResponse("no agent record found", 500))
+        mockagentRecordService.getAgentRecord(*[RequestHeader]) returns Future.failed(UpstreamErrorResponse("no agent record found", 500))
 
         intercept[UpstreamErrorResponse] {
           await(TestService.getEmailVerificationStatus("abc@abc.com", ggCredentials.providerId))
@@ -225,7 +225,7 @@ with TestConstants {
 
       }
       "the call to check email verification status fails" in new Setup {
-        mockGetAgentRecordService.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
+        mockagentRecordService.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
         mockEmailVerificationConnector.checkEmail(ggCredentials.providerId)(*[RequestHeader]) returns Future.failed(new Exception("Something went wrong"))
 

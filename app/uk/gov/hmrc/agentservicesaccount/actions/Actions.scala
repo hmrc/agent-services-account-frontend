@@ -24,7 +24,7 @@ import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.routes
 import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
 import uk.gov.hmrc.agentservicesaccount.models.AmlsDetails
-import uk.gov.hmrc.agentservicesaccount.services.GetAgentRecordService
+import uk.gov.hmrc.agentservicesaccount.services.AgentRecordService
 
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -34,7 +34,7 @@ import scala.concurrent.Future
 @Singleton
 class Actions @Inject() (
   agentAssuranceConnector: AgentAssuranceConnector,
-  getAgentRecordService: GetAgentRecordService,
+  agentRecordService: AgentRecordService,
   authActions: AuthActions,
   actionBuilder: DefaultActionBuilder
 )(implicit ec: ExecutionContext) {
@@ -46,7 +46,7 @@ class Actions @Inject() (
       def filter[A](request: AuthRequestWithAgentInfo[A]): Future[Option[Result]] = {
         implicit val req: Request[A] = request.request
 
-        getAgentRecordService.getAgentRecord.map { agentRecord =>
+        agentRecordService.getAgentRecord.map { agentRecord =>
           {
             (onlyForSuspended, agentRecord.suspensionDetails.exists(_.suspensionStatus)) match {
               case (true, true) | (false, false) => None
@@ -88,7 +88,7 @@ class Actions @Inject() (
       override protected def refine[A](request: AuthRequestWithAgentInfo[A]): Future[Either[Result, AuthRequestWithAgentProfile[A]]] = {
         implicit val req: RequestHeader = request.request
 
-        getAgentRecordService.getAgentRecord.map(agentRecord => {
+        agentRecordService.getAgentRecord.map(agentRecord => {
           (onlyForSuspended, agentRecord.suspensionDetails.exists(_.suspensionStatus)) match {
             case (true, true) | (false, false) => Right(AuthRequestWithAgentProfile(request, agentRecord))
             case (true, false) => Left(Redirect(routes.AgentServicesController.showAgentServicesAccount()))
