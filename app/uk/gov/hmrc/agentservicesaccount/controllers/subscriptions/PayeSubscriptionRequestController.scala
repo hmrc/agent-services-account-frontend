@@ -24,10 +24,13 @@ import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.PayeSubscriptionConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.routes
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.{routes => subscriptionsRoutes}
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.services.SubscriptionService
 import uk.gov.hmrc.agentservicesaccount.views.components.models.SummaryListData
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.paye_check_your_answers
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.paye_submitted
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
+
 import javax.inject.Inject
 import javax.inject.Singleton
 import scala.concurrent.ExecutionContext
@@ -37,6 +40,7 @@ import scala.concurrent.Future
 final class PayeSubscriptionRequestController @Inject() (
   actions: Actions,
   payeConnector: PayeSubscriptionConnector,
+  subscriptionService: SubscriptionService,
   cyaView: paye_check_your_answers,
   submittedView: paye_submitted,
   cc: MessagesControllerComponents
@@ -49,10 +53,11 @@ with I18nSupport
 with Logging {
 
   def showConfirm: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    payeConnector
-      .getStatus()
-      .flatMap { st =>
-        val eligible = !st.hasSubscription && !st.hasRequestInProgress
+    val agentInfo = request.agentInfo
+    subscriptionService
+      .getSubscriptionInfo(agentInfo.missingSubscriptions, agentInfo.existingSubscriptionInfo)
+      .flatMap { subscriptionInfo =>
+        val eligible = subscriptionInfo.exists(_.regime == LegacyRegime.PAYE)
         if (!eligible) {
           Future.successful(Redirect(routes.AgentServicesController.showAgentServicesAccount()))
         }
@@ -66,11 +71,31 @@ with Logging {
               Some(data.address.postCode)
             ).flatten.mkString("<br>")
             val rows = Seq(
-              SummaryListData("paye.cya.agentName", data.agentName, link = None),
-              SummaryListData("paye.cya.contactName", data.contactName, link = None),
-              SummaryListData("paye.cya.telephoneNumber", data.telephoneNumber.getOrElse(""), link = None),
-              SummaryListData("paye.cya.emailAddress", data.emailAddress.getOrElse(""), link = None),
-              SummaryListData("paye.cya.address", addressHtml, link = None)
+              SummaryListData(
+                "paye.cya.agentName",
+                data.agentName,
+                link = None
+              ),
+              SummaryListData(
+                "paye.cya.contactName",
+                data.contactName,
+                link = None
+              ),
+              SummaryListData(
+                "paye.cya.telephoneNumber",
+                data.telephoneNumber.getOrElse(""),
+                link = None
+              ),
+              SummaryListData(
+                "paye.cya.emailAddress",
+                data.emailAddress.getOrElse(""),
+                link = None
+              ),
+              SummaryListData(
+                "paye.cya.address",
+                addressHtml,
+                link = None
+              )
             )
             Ok(cyaView(rows))
           }

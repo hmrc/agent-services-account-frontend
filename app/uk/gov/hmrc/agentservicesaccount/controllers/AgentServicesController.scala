@@ -27,7 +27,6 @@ import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentPermissionsConnector
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentUserClientDetailsConnector
-import uk.gov.hmrc.agentservicesaccount.connectors.PayeSubscriptionConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.amls.{routes => amlsRoutes}
 import uk.gov.hmrc.agentservicesaccount.models.AmlsStatus
 import uk.gov.hmrc.agentservicesaccount.models.AmlsStatuses._
@@ -50,7 +49,6 @@ class AgentServicesController @Inject() (
   agentAssuranceConnector: AgentAssuranceConnector,
   agentPermissionsConnector: AgentPermissionsConnector,
   agentUserClientDetailsConnector: AgentUserClientDetailsConnector,
-  payeSubscriptionConnector: PayeSubscriptionConnector,
   subscriptionService: SubscriptionService,
   asaDashboard: asa_dashboard,
   manage_account: manage_account,
