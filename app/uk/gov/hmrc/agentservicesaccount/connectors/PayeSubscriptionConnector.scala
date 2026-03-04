@@ -17,26 +17,22 @@
 package uk.gov.hmrc.agentservicesaccount.connectors
 
 import com.google.inject.ImplementedBy
+import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models.paye._
+import uk.gov.hmrc.http.client.HttpClientV2
 
 import javax.inject.Inject
 import javax.inject.Singleton
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
-@ImplementedBy(classOf[PayeSubscriptionMockConnector])
-trait PayeSubscriptionConnector {
-
-  def getCyaData()(implicit ec: ExecutionContext): Future[PayeCyaData]
-  def submitRequest()(implicit ec: ExecutionContext): Future[Unit]
-
-}
-
 @Singleton
-final class PayeSubscriptionMockConnector @Inject() ()
-extends PayeSubscriptionConnector {
+final class PayeSubscriptionConnector @Inject() (httpV2: HttpClientV2)(implicit
+   appConfig: AppConfig,
+   val ec: ExecutionContext
+) {
 
-  override def getCyaData()(implicit ec: ExecutionContext): Future[PayeCyaData] = Future.successful(
+  def getCyaData: Future[PayeCyaData] = Future.successful(
     PayeCyaData(
       agentName = "Example Agent Ltd",
       contactName = "Jane Agent",
@@ -53,6 +49,6 @@ extends PayeSubscriptionConnector {
   )
 
 //  TODO: 10593 Implement correct call to this endpoint
-  override def submitRequest()(implicit ec: ExecutionContext): Future[Unit] = Future.successful(())
+  def submitRequest(): Future[Unit] = Future.successful(())
 
 }
