@@ -17,10 +17,14 @@
 package uk.gov.hmrc.agentservicesaccount.connectors
 
 import com.google.inject.ImplementedBy
+import play.api.http.Status.{BAD_REQUEST, CREATED}
+import play.api.libs.json.Json
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models.paye._
+import uk.gov.hmrc.http.{HttpResponse, UpstreamErrorResponse}
 import uk.gov.hmrc.http.client.HttpClientV2
 
+import java.net.URL
 import javax.inject.Inject
 import javax.inject.Singleton
 import scala.concurrent.ExecutionContext
@@ -49,6 +53,18 @@ final class PayeSubscriptionConnector @Inject() (httpV2: HttpClientV2)(implicit
   )
 
 //  TODO: 10593 Implement correct call to this endpoint
-  def submitRequest(): Future[Unit] = Future.successful(())
+  def submitRequest(): Future[Unit] = {
+    httpV2
+      .post(new URL(s"$baseUrl/agent-assurance/amls/arn/${arn.value}")).withBody(Json.toJson(amlsRequest)).execute[HttpResponse]
+      .map {
+        response =>
+          response.status match {
+            case CREATED => Future.successful(())
+            case BAD_REQUEST => throw UpstreamErrorResponse(s"Error $BAD_REQUEST invalid request", BAD_REQUEST)
+            case e => throw UpstreamErrorResponse(s"Error $e unable to post amls details", e)
+          }
+      }
+    Future.successful(())
+  }
 
 }
