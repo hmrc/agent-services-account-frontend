@@ -26,6 +26,10 @@ final case class PayeAddress(
   postCode: String
 )
 
+object PayeAddress {
+  implicit val format: Format[PayeAddress] = Json.format[PayeAddress]
+}
+
 final case class PayeCyaData(
   agentName: String,
   contactName: String,
