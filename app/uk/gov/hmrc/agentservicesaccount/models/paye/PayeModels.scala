@@ -16,6 +16,8 @@
 
 package uk.gov.hmrc.agentservicesaccount.models.paye
 
+import play.api.libs.json.{Format, Json}
+
 final case class PayeAddress(
   line1: String,
   line2: String,
@@ -31,6 +33,10 @@ final case class PayeCyaData(
   emailAddress: Option[String],
   address: PayeAddress
 )
+
+object PayeCyaData {
+  implicit val format: Format[PayeCyaData] = Json.format[PayeCyaData]
+}
 
 final case class PayeStatus(
   hasSubscription: Boolean,

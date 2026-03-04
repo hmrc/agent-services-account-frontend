@@ -16,15 +16,13 @@
 
 package uk.gov.hmrc.agentservicesaccount.connectors
 
-import com.google.inject.ImplementedBy
 import play.api.http.Status.{BAD_REQUEST, CREATED}
 import play.api.libs.json.Json
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models.paye._
-import uk.gov.hmrc.http.{HttpResponse, UpstreamErrorResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps, UpstreamErrorResponse}
 import uk.gov.hmrc.http.client.HttpClientV2
 
-import java.net.URL
 import javax.inject.Inject
 import javax.inject.Singleton
 import scala.concurrent.ExecutionContext
@@ -35,6 +33,8 @@ final class PayeSubscriptionConnector @Inject() (httpV2: HttpClientV2)(implicit
    appConfig: AppConfig,
    val ec: ExecutionContext
 ) {
+
+  private lazy val url = s"${appConfig.agentServicesAccountBaseUrl}/agent-services-account"
 
   def getCyaData: Future[PayeCyaData] = Future.successful(
     PayeCyaData(
@@ -52,19 +52,17 @@ final class PayeSubscriptionConnector @Inject() (httpV2: HttpClientV2)(implicit
     )
   )
 
-//  TODO: 10593 Implement correct call to this endpoint
-  def submitRequest(): Future[Unit] = {
+  def submitRequest(cyaData: PayeCyaData)(implicit hc: HeaderCarrier): Future[Unit] = {
     httpV2
-      .post(new URL(s"$baseUrl/agent-assurance/amls/arn/${arn.value}")).withBody(Json.toJson(amlsRequest)).execute[HttpResponse]
+      .post(url"$url/legacy-subscription-request/paye").withBody(Json.toJson(cyaData)).execute[HttpResponse]
       .map {
         response =>
           response.status match {
             case CREATED => Future.successful(())
             case BAD_REQUEST => throw UpstreamErrorResponse(s"Error $BAD_REQUEST invalid request", BAD_REQUEST)
-            case e => throw UpstreamErrorResponse(s"Error $e unable to post amls details", e)
+            case e => throw UpstreamErrorResponse(s"Error $e unable to post paye legacy subscription request", e)
           }
       }
-    Future.successful(())
   }
 
 }

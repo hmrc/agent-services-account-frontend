@@ -61,7 +61,7 @@ with Logging {
         if (!eligible) {
           Future.successful(Redirect(routes.AgentServicesController.showAgentServicesAccount()))
         } else {
-          payeConnector.getCyaData().map { data =>
+          payeConnector.getCyaData.map { data =>
             val addressHtml = Seq(
               Some(data.address.line1),
               Some(data.address.line2),
@@ -111,10 +111,11 @@ with Logging {
         if (!eligible) {
           Future.successful(Redirect(routes.AgentServicesController.showAgentServicesAccount()))
         } else {
-          //  TODO: 10593 Implement correct call to this endpoint
-          payeConnector
-            .submitRequest()
-            .map(_ => Redirect(subscriptionsRoutes.PayeSubscriptionRequestController.showSubmitted))
+          val result = for {
+            cyaData <- payeConnector.getCyaData
+            submitRequestResult <- payeConnector.submitRequest(cyaData)
+          } yield submitRequestResult
+          result.map(_ => Redirect(subscriptionsRoutes.PayeSubscriptionRequestController.showSubmitted))
         }
       }
   }
