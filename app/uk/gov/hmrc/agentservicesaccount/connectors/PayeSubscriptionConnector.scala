@@ -29,7 +29,7 @@ import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
 @Singleton
-final class PayeSubscriptionConnector @Inject() (httpV2: HttpClientV2)(implicit
+class PayeSubscriptionConnector @Inject() (httpV2: HttpClientV2)(implicit
    appConfig: AppConfig,
    val ec: ExecutionContext
 ) {
