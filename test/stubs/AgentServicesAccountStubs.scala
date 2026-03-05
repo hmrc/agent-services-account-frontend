@@ -23,6 +23,7 @@ import play.api.libs.json.Json
 import uk.gov.hmrc.agentservicesaccount.models.Arn
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest.connectorWrites
+import uk.gov.hmrc.agentservicesaccount.models.paye.PayeCyaData
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime._
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionInfo
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionStatus.SubscriptionInProgress
@@ -79,6 +80,14 @@ object AgentServicesAccountStubs {
         aResponse()
           .withStatus(OK)
           .withBody(Json.toJson(subscriptionInfo).toString())
+      ))
+  }
+
+  def givenPayeStartSubscriptionResponse(status: Int): StubMapping = {
+    stubFor(post(urlEqualTo("/agent-services-account/legacy-subscription-request/paye"))
+      .willReturn(
+        aResponse()
+          .withStatus(status)
       ))
   }
 

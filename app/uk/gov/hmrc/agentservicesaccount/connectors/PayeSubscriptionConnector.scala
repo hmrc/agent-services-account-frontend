@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.agentservicesaccount.connectors
 
-import play.api.http.Status.{BAD_REQUEST, CREATED}
+import play.api.http.Status.{BAD_REQUEST, CREATED, NO_CONTENT, OK}
 import play.api.libs.json.Json
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models.paye._
@@ -58,9 +58,8 @@ class PayeSubscriptionConnector @Inject() (httpV2: HttpClientV2)(implicit
       .map {
         response =>
           response.status match {
-            case CREATED => Future.successful(())
-            case BAD_REQUEST => throw UpstreamErrorResponse(s"Error $BAD_REQUEST invalid request", BAD_REQUEST)
-            case e => throw UpstreamErrorResponse(s"Error $e unable to post paye legacy subscription request", e)
+            case OK => ()
+            case e => throw UpstreamErrorResponse(s"[PayeSubscriptionConnector][submitRequest] Error $e unable to post paye legacy subscription request", e)
           }
       }
   }
