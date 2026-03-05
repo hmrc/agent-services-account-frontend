@@ -37,7 +37,7 @@ import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
 @Singleton
-final class PayeSubscriptionRequestController @Inject() (
+class PayeSubscriptionRequestController @Inject() (
   actions: Actions,
   payeConnector: PayeSubscriptionConnector,
   subscriptionService: SubscriptionService,
