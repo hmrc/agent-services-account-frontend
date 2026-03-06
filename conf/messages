@@ -170,6 +170,7 @@ asa.trusts-section.h2=Trusts and estates
 asa.legacy.paye.h2=PAYE/CIS
 asa.legacy.paye.h3=Test Content
 asa.legacy.paye.p1=Status: {0}
+asa.legacy.paye.link=Request a PAYE subscription
 
 # CT
 asa.legacy.ct.h2=CT
@@ -708,3 +709,16 @@ update-money-laundering-supervisory.body-codes.error.empty=Enter your money laun
 
 #Administrators
 administrators.link-text=View administrators
+
+# PAYE subscription request (mock)
+paye.cya.h1=Check your details before requesting a PAYE subscription
+paye.cya.submit=Confirm and submit request
+paye.cya.return-home=Return to your agent services account
+paye.cya.agentName=Agent name
+paye.cya.contactName=Contact name
+paye.cya.telephoneNumber=Telephone number
+paye.cya.emailAddress=Email address
+paye.cya.address=Address
+paye.submitted.h1=PAYE subscription request submitted
+paye.submitted.p1=We have received your request. We will contact you when we have processed it.
+paye.submitted.return-home=Return to your agent services account

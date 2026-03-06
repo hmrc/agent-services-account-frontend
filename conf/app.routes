@@ -92,25 +92,29 @@ GET        /manage-account/contact-details/check-your-answers             @uk.go
 POST       /manage-account/contact-details/check-your-answers             @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.CheckYourAnswersController.onSubmit
 GET        /manage-account/contact-details/confirmation                   @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.ContactDetailsController.showChangeSubmitted
 
+GET        /paye-subscription/request/confirm                             @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.PayeSubscriptionRequestController.showConfirm
+POST       /paye-subscription/request/confirm                             @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.PayeSubscriptionRequestController.submit
+GET        /paye-subscription/request/submitted                           @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.PayeSubscriptionRequestController.showSubmitted
+
 # AMLS
-GET        /manage-account/money-laundering-supervision/view-details      @uk.gov.hmrc.agentservicesaccount.controllers.amls.ViewDetailsController.showPage
+GET        /manage-account/money-laundering-supervision/view-details                     @uk.gov.hmrc.agentservicesaccount.controllers.amls.ViewDetailsController.showPage
 
-GET        /manage-account/money-laundering-supervision/new-supervisory-body @uk.gov.hmrc.agentservicesaccount.controllers.amls.AmlsNewSupervisoryBodyController.showPage(cya: Boolean ?= false)
-POST       /manage-account/money-laundering-supervision/new-supervisory-body @uk.gov.hmrc.agentservicesaccount.controllers.amls.AmlsNewSupervisoryBodyController.onSubmit(cya: Boolean ?= false)
+GET        /manage-account/money-laundering-supervision/new-supervisory-body             @uk.gov.hmrc.agentservicesaccount.controllers.amls.AmlsNewSupervisoryBodyController.showPage(cya: Boolean ?= false)
+POST       /manage-account/money-laundering-supervision/new-supervisory-body             @uk.gov.hmrc.agentservicesaccount.controllers.amls.AmlsNewSupervisoryBodyController.onSubmit(cya: Boolean ?= false)
 
-GET        /manage-account/money-laundering-supervision/confirm-supervisory-body @uk.gov.hmrc.agentservicesaccount.controllers.amls.ConfirmSupervisoryBodyController.showPage
-POST       /manage-account/money-laundering-supervision/confirm-supervisory-body @uk.gov.hmrc.agentservicesaccount.controllers.amls.ConfirmSupervisoryBodyController.onSubmit
+GET        /manage-account/money-laundering-supervision/confirm-supervisory-body         @uk.gov.hmrc.agentservicesaccount.controllers.amls.ConfirmSupervisoryBodyController.showPage
+POST       /manage-account/money-laundering-supervision/confirm-supervisory-body         @uk.gov.hmrc.agentservicesaccount.controllers.amls.ConfirmSupervisoryBodyController.onSubmit
 
-GET        /manage-account/money-laundering-supervision/confirm-registration-number @uk.gov.hmrc.agentservicesaccount.controllers.amls.ConfirmRegistrationNumberController.showPage
-POST       /manage-account/money-laundering-supervision/confirm-registration-number @uk.gov.hmrc.agentservicesaccount.controllers.amls.ConfirmRegistrationNumberController.onSubmit
+GET        /manage-account/money-laundering-supervision/confirm-registration-number      @uk.gov.hmrc.agentservicesaccount.controllers.amls.ConfirmRegistrationNumberController.showPage
+POST       /manage-account/money-laundering-supervision/confirm-registration-number      @uk.gov.hmrc.agentservicesaccount.controllers.amls.ConfirmRegistrationNumberController.onSubmit
 
-GET        /manage-account/money-laundering-supervision/renewal-date      @uk.gov.hmrc.agentservicesaccount.controllers.amls.EnterRenewalDateController.showPage
-POST       /manage-account/money-laundering-supervision/renewal-date      @uk.gov.hmrc.agentservicesaccount.controllers.amls.EnterRenewalDateController.onSubmit
+GET        /manage-account/money-laundering-supervision/renewal-date                     @uk.gov.hmrc.agentservicesaccount.controllers.amls.EnterRenewalDateController.showPage
+POST       /manage-account/money-laundering-supervision/renewal-date                     @uk.gov.hmrc.agentservicesaccount.controllers.amls.EnterRenewalDateController.onSubmit
 
-GET        /manage-account/money-laundering-supervision/new-registration-number      @uk.gov.hmrc.agentservicesaccount.controllers.amls.EnterRegistrationNumberController.showPage(cya: Boolean ?= false)
-POST       /manage-account/money-laundering-supervision/new-registration-number      @uk.gov.hmrc.agentservicesaccount.controllers.amls.EnterRegistrationNumberController.onSubmit(cya: Boolean ?= false)
+GET        /manage-account/money-laundering-supervision/new-registration-number          @uk.gov.hmrc.agentservicesaccount.controllers.amls.EnterRegistrationNumberController.showPage(cya: Boolean ?= false)
+POST       /manage-account/money-laundering-supervision/new-registration-number          @uk.gov.hmrc.agentservicesaccount.controllers.amls.EnterRegistrationNumberController.onSubmit(cya: Boolean ?= false)
 
-GET        /manage-account/money-laundering-supervision/check-your-answers           @uk.gov.hmrc.agentservicesaccount.controllers.amls.CheckYourAnswersController.showPage
-POST       /manage-account/money-laundering-supervision/check-your-answers           @uk.gov.hmrc.agentservicesaccount.controllers.amls.CheckYourAnswersController.onSubmit
+GET        /manage-account/money-laundering-supervision/check-your-answers               @uk.gov.hmrc.agentservicesaccount.controllers.amls.CheckYourAnswersController.showPage
+POST       /manage-account/money-laundering-supervision/check-your-answers               @uk.gov.hmrc.agentservicesaccount.controllers.amls.CheckYourAnswersController.onSubmit
 
-GET        /manage-account/money-laundering-supervision/confirmation-new-supervision                   @uk.gov.hmrc.agentservicesaccount.controllers.amls.AmlsConfirmationController.showUpdatedAmlsConfirmationPage(updated: Boolean ?= true)
+GET        /manage-account/money-laundering-supervision/confirmation-new-supervision     @uk.gov.hmrc.agentservicesaccount.controllers.amls.AmlsConfirmationController.showUpdatedAmlsConfirmationPage(updated: Boolean ?= true)

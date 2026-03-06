@@ -19,44 +19,30 @@
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 @import uk.gov.hmrc.agentservicesaccount.views.html.pages.dashboard_partials._
 @import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionInfo
-
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 
 @this(
-        main: main,
-        p: p, h1: h1, h2: h2, h4: h4,
-        ul_html: ul_html, a: a, span: span,
-        agents_ur_banner: agents_ur_banner,
-        tax_services_accordion: tax_services_accordion,
-        manage_section: manage_section,
-        govukNotificationBanner : GovukNotificationBanner
+    main: main,
+    p: p, h1: h1, h2: h2, h4: h4,
+    ul_html: ul_html, a: a, span: span,
+    agents_ur_banner: agents_ur_banner,
+    tax_services_accordion: tax_services_accordion,
+    manage_section: manage_section,
+    govukNotificationBanner : GovukNotificationBanner
 )
 
 @(
-        arn: String,
-        isShownRecruitmentBanner: Boolean = false,
-        isAdmin: Boolean = false,
-        subscriptionInfo : Seq[SubscriptionInfo]
+    arn: String,
+    isShownRecruitmentBanner: Boolean = false,
+    isAdmin: Boolean = false,
+    subscriptionInfo: Seq[SubscriptionInfo] = Seq.empty
 )(implicit request: RequestHeader, msgs: Messages, appConfig: AppConfig)
-
-@banner(content:Html) = {
-    @govukNotificationBanner(
-        NotificationBanner(
-            content = HtmlContent(
-                content
-            )
-        )
-    )
-}
 
 @add_existingSA = {
     @h2("asa.section4.itsa.notification.h2")
     @p("asa.section4.itsa.notification.p.1")
     @p("asa.section4.itsa.notification.p.2")
-    @a(
-        href = appConfig.agentMappingUrl,
-        key = "asa.section4.col2.link1"
-    )
+    @a(href = appConfig.agentMappingUrl, key = "asa.section4.col2.link1")
 }
 
 @main(
@@ -66,7 +52,7 @@
 ) {
     @h1("asa.heading")
     @p(msgs("agent.accountNumber", arn))
-    @banner(add_existingSA)
+    @govukNotificationBanner(NotificationBanner(content = HtmlContent(add_existingSA)))
 
     <section id="client-authorisation-section">
         @h2("asa.section4.h2")
@@ -86,19 +72,12 @@
     }
 
     <hr class="govuk-section-break hr-thick govuk-!-margin-bottom-6 govuk-!-margin-top-8">
-
     @h2("asa.tax-services", id = Some("tax-services-h2"))
     @tax_services_accordion(subscriptionInfo)
 
     <hr class="govuk-section-break hr-thick govuk-!-margin-bottom-6">
-
     <section id="help-and-guidance-section">
         @h2("asa.help.h2")
-        @p(html = Some(
-            a(href = "/agent-services-account/help-and-guidance",
-                key = "asa.help.link",
-            )
-        ))
+        @p(html = Some(a(href = "/agent-services-account/help-and-guidance", key = "asa.help.link")))
     </section>
-
 }
