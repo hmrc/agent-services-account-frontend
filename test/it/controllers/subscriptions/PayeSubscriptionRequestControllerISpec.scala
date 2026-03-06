@@ -16,42 +16,18 @@
 
 package it.controllers.subscriptions
 
-//import play.api.Application
-//import play.api.inject.bind
-//import play.api.inject.guice.GuiceApplicationBuilder
-
-import scala.concurrent.{ExecutionContext, Future}
 import org.jsoup.Jsoup
-import org.jsoup.nodes.Document
-import org.scalatest.Assertion
-import play.api.i18n.Messages
 import play.api.test.Helpers
 import play.api.test.Helpers._
-import play.twirl.api.HtmlFormat
 import support.BaseISpec
-import support.Css._
-import uk.gov.hmrc.agentservicesaccount.connectors.PayeSubscriptionConnector
-import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.{routes => desiDetailsRoutes}
-import uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.routes
-import uk.gov.hmrc.agentservicesaccount.models._
-import uk.gov.hmrc.agentservicesaccount.models.accessgroups.GroupSummary
-import uk.gov.hmrc.agentservicesaccount.models.accessgroups.UserDetails
 import uk.gov.hmrc.agentservicesaccount.models.paye._
 import stubs.AgentAssuranceStubs._
-import stubs.AgentPermissionsStubs._
-import stubs.AgentUserClientDetailsStubs._
 import stubs.AgentServicesAccountStubs._
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.PayeSubscriptionRequestController
-import uk.gov.hmrc.http.UpstreamErrorResponse
-
-import java.util.UUID
-import scala.util.Random
 
 class PayeSubscriptionRequestControllerISpec
   extends BaseISpec {
-  private val confirmPath = "/paye-subscription/request/confirm"
-  private val submittedPath = "/paye-subscription/request/submitted"
 
   val cyaData: PayeCyaData =
     PayeCyaData(
@@ -69,22 +45,6 @@ class PayeSubscriptionRequestControllerISpec
     )
 
   val controller: PayeSubscriptionRequestController = inject[PayeSubscriptionRequestController]
-
-  //  private final class TestPayeSubscriptionConnector extends PayeSubscriptionConnector {
-  //    override def getCyaData()(implicit ec: ExecutionContext): Future[PayeCyaData] = Future.successful(TestState.cyaData)
-  //
-  //    override def submitRequest()(implicit ec: ExecutionContext): Future[Unit] = Future.successful(())
-  //  }
-  //
-  //  override def extraConfig(): Map[String, String] = super.extraConfig()
-  //
-  //  override lazy val app: Application =
-  //    new GuiceApplicationBuilder()
-  //      .configure(config ++ extraConfig() ++ downstreamServices)
-  //      .overrides(
-  //        bind[PayeSubscriptionConnector].toInstance(new TestPayeSubscriptionConnector)
-  //      )
-  //      .build()
 
   "showConfirm" should {
     "return OK and render the confirmation screen when eligible" in {
