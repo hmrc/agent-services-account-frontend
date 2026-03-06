@@ -33,7 +33,7 @@ import support.Css._
 import uk.gov.hmrc.agentservicesaccount.connectors.PayeSubscriptionConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.{routes => desiDetailsRoutes}
 import uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController
-import uk.gov.hmrc.agentservicesaccount.controllers.routes
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.routes
 import uk.gov.hmrc.agentservicesaccount.models._
 import uk.gov.hmrc.agentservicesaccount.models.accessgroups.GroupSummary
 import uk.gov.hmrc.agentservicesaccount.models.accessgroups.UserDetails
@@ -92,9 +92,10 @@ class PayeSubscriptionRequestControllerISpec
       givenAgentRecordFound(agentRecord)
       givenSubscriptionInfoResponse()
 
-      //      val result = get(confirmPath)
-      //
-      //      result.status shouldBe OK
+      val response = controller.showConfirm()(fakeRequest())
+
+      status(response) shouldBe OK
+      val html = Jsoup.parse(contentAsString(await(response)))
       ////      TODO: 10593 Better assertions in here
       //      assertPageHasTitle("Check your details before requesting a PAYE subscription")(result)
       //
@@ -104,17 +105,17 @@ class PayeSubscriptionRequestControllerISpec
     }
   }
 
-  "submitConfirm" should {
+  "submit" should {
     "redirect to submitted screen when eligible" in {
       givenAuthorisedAsAgentWith(arn.value)
       givenAgentRecordFound(agentRecord)
       givenSubscriptionInfoResponse()
+      givenPayeStartSubscriptionResponse(OK)
 
-      //      val result = post(confirmPath)(Map.empty)
-      //
-      //      result.status shouldBe SEE_OTHER
-      //      //      TODO: 10593 Better assertions in here
-      //      result.header("Location").value shouldBe "/agent-services-account/paye-subscription/request/submitted"
+      val response = controller.submit()(fakeRequest())
+
+      status(response) shouldBe SEE_OTHER
+      Helpers.redirectLocation(response) shouldBe Some(routes.PayeSubscriptionRequestController.showSubmitted.url)
     }
   }
 
@@ -124,9 +125,10 @@ class PayeSubscriptionRequestControllerISpec
       givenAgentRecordFound(agentRecord)
       givenSubscriptionInfoResponse()
 
-      //      val result = get(submittedPath)
-      //
-      //      result.status shouldBe OK
+      val response = controller.showSubmitted()(fakeRequest())
+
+      status(response) shouldBe OK
+      val html = Jsoup.parse(contentAsString(await(response)))
       //      //      TODO: 10593 Better assertions in here
       //      assertPageHasTitle("PAYE subscription request submitted")(result)
       //      result.body should include("Return to your agent services account")
