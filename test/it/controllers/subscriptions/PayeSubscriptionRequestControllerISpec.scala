@@ -22,7 +22,6 @@ import play.api.test.Helpers._
 import support.BaseISpec
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.routes
 import uk.gov.hmrc.agentservicesaccount.models.paye._
-import stubs.AgentAssuranceStubs._
 import stubs.AgentServicesAccountStubs._
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.PayeSubscriptionRequestController
 
@@ -56,7 +55,7 @@ extends BaseISpec {
   "showConfirm" should {
     "return OK and render the confirmation screen when eligible" in {
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       givenSubscriptionInfoResponse()
 
       val response = controller.showConfirm()(fakeRequest())
@@ -88,7 +87,7 @@ extends BaseISpec {
   "submit" should {
     "redirect to submitted screen when eligible" in {
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       givenSubscriptionInfoResponse()
       givenPayeStartSubscriptionResponse(OK)
 
@@ -102,7 +101,7 @@ extends BaseISpec {
   "showSubmitted" should {
     "return OK and render submitted screen" in {
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       givenSubscriptionInfoResponse()
 
       val response = controller.showSubmitted()(fakeRequest())
