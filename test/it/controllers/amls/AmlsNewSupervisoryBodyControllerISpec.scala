@@ -23,7 +23,7 @@ import uk.gov.hmrc.agentservicesaccount.controllers.amlsJourneyKey
 import uk.gov.hmrc.agentservicesaccount.models.AmlsStatuses
 import uk.gov.hmrc.agentservicesaccount.models.UpdateAmlsJourney
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
-import stubs.AgentAssuranceStubs.givenAgentRecordFound
+import stubs.AgentServicesAccountStubs.givenGetAgentRecord
 
 import java.time.LocalDate
 
@@ -54,7 +54,7 @@ extends ComponentBaseISpec {
     "display the page for UK agent" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
 
       await(repo.putSession(amlsJourneyKey, ukAmlsJourney))
 
@@ -67,7 +67,7 @@ extends ComponentBaseISpec {
     "display the page for overseas agent" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
 
       await(repo.putSession(amlsJourneyKey, overseasAmlsJourney))
 
@@ -84,7 +84,7 @@ extends ComponentBaseISpec {
     s"return 303 SEE_OTHER and redirect to $confirmRegistrationNumberPath" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
 
       await(repo.putSession(amlsJourneyKey, ukAmlsJourney))
 
@@ -98,7 +98,7 @@ extends ComponentBaseISpec {
     s"return 303 SEE_OTHER for CYA and redirect to $checkYourAnswersPath" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
 
       await(repo.putSession(amlsJourneyKey, ukAmlsJourney))
 
@@ -112,7 +112,7 @@ extends ComponentBaseISpec {
     s"return 303 SEE_OTHER for CYA and redirect to $newRegistrationNumberPath when body has changed to HMRC" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
 
       await(repo.putSession(amlsJourneyKey, ukAmlsJourney))
 
@@ -126,7 +126,7 @@ extends ComponentBaseISpec {
     s"return 303 SEE_OTHER to $newRegistrationNumberPath for overseas agent" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
 
       await(repo.putSession(amlsJourneyKey, overseasAmlsJourney))
 
@@ -140,7 +140,7 @@ extends ComponentBaseISpec {
     "return BadRequest when invalid form submission" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
 
       await(repo.putSession(amlsJourneyKey, overseasAmlsJourney))
 

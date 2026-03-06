@@ -20,7 +20,6 @@ import play.api.i18n.Lang
 import play.api.mvc.Call
 import play.api.mvc.RequestHeader
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.connectors.EmailVerificationConnector
 import uk.gov.hmrc.agentservicesaccount.controllers
 import uk.gov.hmrc.agentservicesaccount.models.emailverification._
@@ -33,7 +32,7 @@ import scala.concurrent.Future
 
 @Singleton
 class EmailVerificationService @Inject() (
-  agentAssuranceConnector: AgentAssuranceConnector,
+  agentRecordService: AgentRecordService,
   emailVerificationConnector: EmailVerificationConnector
 )(implicit
   ec: ExecutionContext,
@@ -45,7 +44,7 @@ class EmailVerificationService @Inject() (
     credId: String
   )(implicit rh: RequestHeader): Future[EmailVerificationStatus] =
     for {
-      optCurrentEmail <- agentAssuranceConnector.getAgentRecord.map(_.agencyDetails.flatMap(_.agencyEmail))
+      optCurrentEmail <- agentRecordService.getAgentRecord.map(_.agencyDetails.flatMap(_.agencyEmail))
       isUnchanged = optCurrentEmail.exists(_.trim.equalsIgnoreCase(newEmail.trim))
       checkVerifications <- emailVerificationConnector.checkEmail(credId)
       previouslyCompletedEmailVerification = checkVerifications.flatMap(_.emails.find(completedEmail => completedEmail.equalsTrimmed(newEmail)))

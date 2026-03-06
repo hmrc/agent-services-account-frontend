@@ -28,7 +28,7 @@ import uk.gov.hmrc.agentservicesaccount.controllers.BetaInviteController
 import uk.gov.hmrc.agentservicesaccount.controllers.routes
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
-import stubs.AgentAssuranceStubs.givenAgentRecordFound
+import stubs.AgentServicesAccountStubs.givenGetAgentRecord
 import stubs.AgentPermissionsStubs.givenHideBetaInviteResponse
 import uk.gov.hmrc.http.SessionKeys
 
@@ -55,7 +55,7 @@ extends BaseISpec {
   "POST hide invite" should {
     "redirect to home and decline beta invite" in {
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       givenHideBetaInviteResponse()
 
       implicit val request: FakeRequest[AnyContentAsEmpty.type] = postRequestNoBody("/private-beta-invite/decline")
@@ -71,7 +71,7 @@ extends BaseISpec {
   s"GET ${routes.BetaInviteController.showInvite.url}" should {
     "render yes no radio" in {
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       val result = await(controller.showInvite.apply(getRequest("/private-beta-testing")))
       // then
       status(result) shouldBe OK
@@ -86,7 +86,7 @@ extends BaseISpec {
     "redirect to ASA home if no" in {
       givenAuthorisedAsAgentWith(arn.value)
       givenHideBetaInviteResponse()
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = postRequestNoBody("/private-beta-testing")
         .withFormUrlEncodedBody("accept" -> "false")
 
@@ -99,7 +99,7 @@ extends BaseISpec {
 
     s"redirect to ${routes.BetaInviteController.showInviteDetails.url} if yes" in {
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = postRequestNoBody("/private-beta-testing")
         .withFormUrlEncodedBody("accept" -> "true")
 
@@ -112,7 +112,7 @@ extends BaseISpec {
 
     s"render ${routes.BetaInviteController.showInvite.url} if errors" in {
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = postRequestNoBody("/private-beta-testing")
         .withFormUrlEncodedBody("bad" -> "req")
 
@@ -128,7 +128,7 @@ extends BaseISpec {
   "GET showInviteDetails" should {
     "render number of clients radio" in {
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       val result = await(controller.showInviteDetails.apply(getRequest("/private-beta-testing-details")))
       // then
       status(result) shouldBe OK
@@ -152,7 +152,7 @@ extends BaseISpec {
                  |}""".stripMargin
             )
         ))
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       val result = await(controller.showInviteDetails.apply(getRequest("/your-account"))) // authActionCheckSuspend is used by the /your-account route
       status(result) shouldBe SEE_OTHER // 303
       redirectLocation(result) shouldBe Some("http://localhost:9437/agent-subscription/start")
@@ -162,7 +162,7 @@ extends BaseISpec {
   "POST showInviteDetails" should {
     "redirect to show contact details" in {
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       implicit val req: FakeRequest[AnyContentAsFormUrlEncoded] = postRequestNoBody("/private-beta-testing-details")
         .withFormUrlEncodedBody("size" -> "small")
 
@@ -175,7 +175,7 @@ extends BaseISpec {
 
     "error if no option selected" in {
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       implicit val req: FakeRequest[AnyContentAsEmpty.type] = postRequestNoBody("/private-beta-testing-details")
 
       val result = await(controller.submitInviteDetails().apply(req))
@@ -189,7 +189,7 @@ extends BaseISpec {
   "GET showInviteContactDetails" should {
     "render form for contact details" in {
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       val result = await(controller.showInviteContactDetails.apply(getRequest("/private-beta-testing-contact-details")))
       // then
       status(result) shouldBe OK
@@ -202,7 +202,7 @@ extends BaseISpec {
   "POST submit invite contact details" should {
     "redirect to check your answers" in {
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       implicit val req: FakeRequest[AnyContentAsFormUrlEncoded] = postRequestNoBody("/private-beta-testing-contact-details")
         .withFormUrlEncodedBody("name" -> "Fang", "email" -> "a@s.a")
 
@@ -214,7 +214,7 @@ extends BaseISpec {
     }
     "render form with errors" in {
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       implicit val req: FakeRequest[AnyContentAsFormUrlEncoded] = postRequestNoBody("/private-beta-testing-contact-details")
         .withFormUrlEncodedBody("name" -> "Fang", "email" -> "bAD")
 
@@ -230,7 +230,7 @@ extends BaseISpec {
   "GET showInviteCheckYourAnswers" should {
     "render check your answers page" in {
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       val result = await(controller.showInviteCheckYourAnswers.apply(getRequest("/private-beta-check-your-answers")))
       // then
       status(result) shouldBe OK

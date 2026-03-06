@@ -23,7 +23,7 @@ import uk.gov.hmrc.agentservicesaccount.models.AmlsStatuses.ValidAmlsDetailsUK
 import uk.gov.hmrc.agentservicesaccount.models.AmlsStatuses.ValidAmlsNonUK
 import uk.gov.hmrc.agentservicesaccount.models.UpdateAmlsJourney
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
-import stubs.AgentAssuranceStubs.givenAgentRecordFound
+import stubs.AgentServicesAccountStubs.givenGetAgentRecord
 
 import java.time.LocalDate
 
@@ -49,7 +49,7 @@ extends ComponentBaseISpec {
     "display the page for the first time" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
 
       await(repo.putSession(amlsJourneyKey, amlsJourney(newExpirationDate = None)))
 
@@ -62,7 +62,7 @@ extends ComponentBaseISpec {
     "display the page when answer already provided" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
 
       await(repo.putSession(amlsJourneyKey, amlsJourney(newExpirationDate = Some(validEndDate))))
 
@@ -79,7 +79,7 @@ extends ComponentBaseISpec {
     "Forbidden for overseas agents" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
 
       await(repo.putSession(amlsJourneyKey, amlsJourney(newExpirationDate = None).copy(status = ValidAmlsNonUK)))
 
@@ -93,7 +93,7 @@ extends ComponentBaseISpec {
       "return 303 SEE_OTHER and redirect to /check-your-answers" in {
 
         givenAuthorisedAsAgentWith(arn.value)
-        givenAgentRecordFound(agentRecord)
+        givenGetAgentRecord(agentRecord)
 
         await(repo.putSession(amlsJourneyKey, amlsJourney(newExpirationDate = None)))
 
@@ -118,7 +118,7 @@ extends ComponentBaseISpec {
       "return BadRequest when invalid form submission" in {
 
         givenAuthorisedAsAgentWith(arn.value)
-        givenAgentRecordFound(agentRecord)
+        givenGetAgentRecord(agentRecord)
 
         await(repo.putSession(amlsJourneyKey, amlsJourney(newExpirationDate = None)))
 

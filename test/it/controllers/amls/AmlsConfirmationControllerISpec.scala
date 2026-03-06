@@ -16,7 +16,7 @@
 
 package it.controllers.amls
 
-import stubs.AgentAssuranceStubs._
+import stubs.AgentServicesAccountStubs._
 import support.ComponentBaseISpec
 
 class AmlsConfirmationControllerISpec
@@ -28,7 +28,7 @@ extends ComponentBaseISpec {
     "return Ok and show the confirmation page for AMLS details updated" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
 
       val result = get(confirmationNewSupervisionPath)
       assertPageHasTitle("You’ve changed your supervision details")(result)

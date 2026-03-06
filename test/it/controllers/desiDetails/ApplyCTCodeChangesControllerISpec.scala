@@ -28,7 +28,7 @@ import uk.gov.hmrc.agentservicesaccount.models.desiDetails.OtherServices
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.SaChanges
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.YourDetails
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
-import stubs.AgentAssuranceStubs.givenAgentRecordFound
+import stubs.AgentServicesAccountStubs.givenGetAgentRecord
 import stubs.AgentServicesAccountStubs._
 
 class ApplyCTCodeChangesControllerISpec
@@ -55,7 +55,7 @@ extends ComponentBaseISpec {
     "display the page" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
 
       await(repo.putSession(currentSelectedChangesKey, Set.empty[String]))
@@ -69,7 +69,7 @@ extends ComponentBaseISpec {
     "redirect to /manage-account/contact-details/view when there are no changes selected" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
 
       val result = get(applyCtCodeChangesPath)
@@ -85,7 +85,7 @@ extends ComponentBaseISpec {
     "redirect to /enter-CT-code when answer YES " in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
 
       await(repo.putSession(draftNewContactDetailsKey, designatoryDetails))
@@ -103,7 +103,7 @@ extends ComponentBaseISpec {
     "redirect to /your-details when answer NO" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
 
       await(repo.putSession(draftNewContactDetailsKey, designatoryDetails))
@@ -121,7 +121,7 @@ extends ComponentBaseISpec {
     "redirect to /check-your-answers when journey complete" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
 
       await(repo.putSession(draftNewContactDetailsKey, designatoryDetails))
@@ -140,7 +140,7 @@ extends ComponentBaseISpec {
     "return BadRequest when invalid form submission" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
 
       await(repo.putSession(draftNewContactDetailsKey, designatoryDetails))

@@ -24,7 +24,7 @@ import uk.gov.hmrc.agentservicesaccount.controllers.draftNewContactDetailsKey
 import uk.gov.hmrc.agentservicesaccount.controllers.draftSubmittedByKey
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails._
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
-import stubs.AgentAssuranceStubs.givenAgentRecordFound
+import stubs.AgentServicesAccountStubs.givenGetAgentRecord
 import stubs.AgentServicesAccountStubs.stubASAGetResponseError
 
 class YourDetailsControllerISpec
@@ -47,7 +47,7 @@ extends ComponentBaseISpec {
     "display the Your details page normally if there is no change pending" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
 
       await(repo.putSession(currentSelectedChangesKey, Set.empty[String]))
@@ -62,7 +62,7 @@ extends ComponentBaseISpec {
     "render page with previously entered answers" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
 
       await(repo.putSession(currentSelectedChangesKey, Set.empty[String]))
@@ -78,7 +78,7 @@ extends ComponentBaseISpec {
     "redirect to manage-account/contact-details/view if other services page request is invalid" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
 
       await(repo.putSession(draftNewContactDetailsKey, designatoryDetails))
@@ -95,7 +95,7 @@ extends ComponentBaseISpec {
     "redirect to /check-your-answers" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
 
       val result = post(yourDetailsPath)(body = Map("fullName" -> List("Bob"), "telephone" -> List("010101")))
@@ -107,7 +107,7 @@ extends ComponentBaseISpec {
     "return Bad Request if invalid data supplied" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
 
       val result = post(yourDetailsPath)(body = Map("fullName" -> List("?!@£"), "telephone" -> List("?!@£")))

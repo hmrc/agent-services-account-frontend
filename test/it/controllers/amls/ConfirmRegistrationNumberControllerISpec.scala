@@ -23,7 +23,7 @@ import uk.gov.hmrc.agentservicesaccount.models.AmlsStatuses.ValidAmlsDetailsUK
 import uk.gov.hmrc.agentservicesaccount.models._
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
 import stubs.AgentAssuranceStubs.givenAMLSDetailsForArn
-import stubs.AgentAssuranceStubs.givenAgentRecordFound
+import stubs.AgentServicesAccountStubs.givenGetAgentRecord
 
 import java.time.LocalDate
 
@@ -50,7 +50,7 @@ extends ComponentBaseISpec {
     "display the page if the user has an AMLS reg number" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       givenAMLSDetailsForArn(amlsDetailsResponse(Some("123")), arn.value)
 
       await(repo.putSession(amlsJourneyKey, amlsJourney(ValidAmlsDetailsUK)))
@@ -64,7 +64,7 @@ extends ComponentBaseISpec {
     "display the page if the user has an AMLS reg number and previously answered the question" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       givenAMLSDetailsForArn(amlsDetailsResponse(Some("ref123")), arn.value)
 
       await(repo.putSession(amlsJourneyKey, amlsJourney(ValidAmlsDetailsUK).copy(isRegistrationNumberStillTheSame = Some(true))))
@@ -80,7 +80,7 @@ extends ComponentBaseISpec {
     "redirect the user to /new-registration-number if they do not have an AMLS reg number" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       givenAMLSDetailsForArn(amlsDetailsResponse(None), arn.value)
 
       val result = get(confirmRegistrationNumberPath)
@@ -95,7 +95,7 @@ extends ComponentBaseISpec {
     "redirect the user to /new-registration-number if they do not have an AMLS reg number" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       givenAMLSDetailsForArn(amlsDetailsResponse(None), arn.value)
 
       val result = post(confirmRegistrationNumberPath)(body = Map("accept" -> List("true")))
@@ -109,7 +109,7 @@ extends ComponentBaseISpec {
     "redirect to /renewal-date when YES is selected" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       givenAMLSDetailsForArn(amlsDetailsResponse(Some("ref123")), arn.value)
 
       await(repo.putSession(amlsJourneyKey, amlsJourney(ValidAmlsDetailsUK)))
@@ -129,7 +129,7 @@ extends ComponentBaseISpec {
     "redirect to /new-registration-number when NO is selected" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       givenAMLSDetailsForArn(amlsDetailsResponse(Some("ref123")), arn.value)
 
       await(repo.putSession(amlsJourneyKey, amlsJourney(ValidAmlsDetailsUK)))
@@ -148,7 +148,7 @@ extends ComponentBaseISpec {
     "return BadRequest when invalid form submission" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       givenAMLSDetailsForArn(amlsDetailsResponse(Some("ref123")), arn.value)
 
       await(repo.putSession(amlsJourneyKey, amlsJourney(ValidAmlsDetailsUK)))

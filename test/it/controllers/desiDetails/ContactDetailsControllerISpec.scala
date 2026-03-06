@@ -30,7 +30,7 @@ import uk.gov.hmrc.agentservicesaccount.models.desiDetails.OtherServices
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.SaChanges
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
 import stubs.AddressLookupStubs._
-import stubs.AgentAssuranceStubs.givenAgentRecordFound
+import stubs.AgentServicesAccountStubs.givenGetAgentRecord
 import stubs.AgentServicesAccountStubs.stubASAGetResponseError
 
 class ContactDetailsControllerISpec
@@ -71,7 +71,7 @@ extends ComponentBaseISpec {
     "redirect to the external service to look up an address" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       givenInitSuccess()
       stubASAGetResponseError(arn, NOT_FOUND)
 
@@ -87,7 +87,7 @@ extends ComponentBaseISpec {
     "store the new address in session and redirect to review new details page" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
       givenGetAddressSuccess("bar", confirmedAddressResponse)
       await(repo.putSession(draftNewContactDetailsKey, designatoryDetails))
@@ -113,7 +113,7 @@ extends ComponentBaseISpec {
     "return bad request when no id provided in a query param" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
 
       val result = get(s"$contactDetailsFinishAddressLookupPath")
@@ -126,7 +126,7 @@ extends ComponentBaseISpec {
     "display the confirmation page" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
 
       val result = get(contactDetailsConfirmationPath)
@@ -140,7 +140,7 @@ extends ComponentBaseISpec {
     "display the page" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
 
       val result = get(contactDetailsShowBeforeYouStartPath)

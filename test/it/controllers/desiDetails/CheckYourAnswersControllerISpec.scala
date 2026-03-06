@@ -25,7 +25,7 @@ import uk.gov.hmrc.agentservicesaccount.controllers.draftSubmittedByKey
 import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails._
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
-import stubs.AgentAssuranceStubs.givenAgentRecordFound
+import stubs.AgentServicesAccountStubs.givenGetAgentRecord
 import stubs.AgentAssuranceStubs.givenPostDesignatoryDetails
 import stubs.AgentServicesAccountStubs.stubASAGetResponseError
 import stubs.AgentServicesAccountStubs.stubASAPostResponse
@@ -59,7 +59,7 @@ extends ComponentBaseISpec {
     "display the review details page if there are designatory details in the session" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
 
       await(repo.putSession(draftNewContactDetailsKey, designatoryDetails))
@@ -75,7 +75,7 @@ extends ComponentBaseISpec {
     "redirect to /manage-account/contact-details/view if there are no new details in session" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
 
       await(repo.putSession(draftSubmittedByKey, submittedByDetails))
@@ -93,7 +93,7 @@ extends ComponentBaseISpec {
     "store the pending change of detail in repo and show the 'what happens next' page" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
       givenPostDesignatoryDetails(arn.value)
       stubASAPostResponse(204)
@@ -112,7 +112,7 @@ extends ComponentBaseISpec {
     "redirect to /view-details if no details are in session" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
 
       val result = post(checkYourAnswersPath)(Map("" -> List("")))
@@ -125,14 +125,14 @@ extends ComponentBaseISpec {
     "return Internal Server Error if agent details not found" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
 
       await(repo.putSession(draftNewContactDetailsKey, designatoryDetails))
       await(repo.putSession(draftSubmittedByKey, submittedByDetails))
       await(repo.putSession(currentSelectedChangesKey, Set("businessName")))
 
-      givenAgentRecordFound(emptyAgencyDetailsDesResponse)
+      givenGetAgentRecord(emptyAgencyDetailsDesResponse)
 
       val result = post(checkYourAnswersPath)(Map("" -> List("")))
 
@@ -142,14 +142,14 @@ extends ComponentBaseISpec {
     "return Internal Server Error if current selected changes empty" in {
 
       givenAuthorisedAsAgentWith(arn.value)
-      givenAgentRecordFound(agentRecord)
+      givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
 
       await(repo.putSession(draftNewContactDetailsKey, designatoryDetails))
       await(repo.putSession(draftSubmittedByKey, submittedByDetails))
       await(repo.putSession(currentSelectedChangesKey, Set.empty[String]))
 
-      givenAgentRecordFound(emptyAgencyDetailsDesResponse)
+      givenGetAgentRecord(emptyAgencyDetailsDesResponse)
 
       val result = post(checkYourAnswersPath)(Map("" -> List("")))
 

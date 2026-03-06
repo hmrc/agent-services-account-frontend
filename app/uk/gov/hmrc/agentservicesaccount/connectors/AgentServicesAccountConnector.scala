@@ -22,9 +22,10 @@ import play.api.http.Status.NO_CONTENT
 import play.api.http.Status.OK
 import play.api.libs.json.Json
 import play.api.mvc.RequestHeader
+import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
 import uk.gov.hmrc.agentservicesaccount.models.Arn
-import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest
+import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest.connectorReads
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest.connectorWrites
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
@@ -97,5 +98,14 @@ extends Logging {
   )(implicit rh: RequestHeader): Future[Seq[SubscriptionInfo]] = http
     .get(url"$url/legacy-subscription-info?regimes=${regimes.map(_.toString)}")
     .execute[Seq[SubscriptionInfo]]
+
+  def getAgentRecord(implicit rh: RequestHeader): Future[AgentDetailsDesResponse] = http
+    .get(url"$url/agent-record-with-checks")
+    .execute[HttpResponse].map(response =>
+      response.status match {
+        case OK => Json.parse(response.body).as[AgentDetailsDesResponse]
+        case other => throw UpstreamErrorResponse(s"agent record unavailable: hip response code: $other", 500)
+      }
+    )
 
 }

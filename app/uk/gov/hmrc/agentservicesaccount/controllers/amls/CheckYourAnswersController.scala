@@ -25,6 +25,7 @@ import uk.gov.hmrc.agentservicesaccount.controllers._
 import uk.gov.hmrc.agentservicesaccount.models.AmlsRequest
 import uk.gov.hmrc.agentservicesaccount.models.UpdateAmlsJourney
 import uk.gov.hmrc.agentservicesaccount.services.AuditService
+import uk.gov.hmrc.agentservicesaccount.services.AgentRecordService
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.components.models.SummaryListData
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.check_your_answers
@@ -42,6 +43,7 @@ import scala.util.Try
 class CheckYourAnswersController @Inject() (
   actions: Actions,
   agentAssuranceConnector: AgentAssuranceConnector,
+  agentRecordService: AgentRecordService,
   val sessionCacheService: SessionCacheService,
   checkYourAnswers: check_your_answers,
   cc: MessagesControllerComponents,
@@ -82,7 +84,7 @@ with I18nSupport {
               agentAssuranceConnector.getAMLSDetails(request.agentInfo.arn.value).map(Option(_))
             }.getOrElse(Future.successful(None))
             optUtr <- Try {
-              agentAssuranceConnector.getAgentRecord.map(_.uniqueTaxReference)
+              agentRecordService.getAgentRecord.map(_.uniqueTaxReference)
             }.getOrElse(Future.successful(None))
             _ = auditService.auditUpdateAmlSupervisionDetails(
               amlsRequest,

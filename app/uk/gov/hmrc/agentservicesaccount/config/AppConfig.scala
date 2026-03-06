@@ -165,6 +165,7 @@ extends Logging {
   val enableCbc: Boolean = getBoolean("features.enable-cbc")
   val enableBackendPCRDatabase: Boolean = getBoolean("features.enable-backend-pcr-database")
   val enableLegacySubscriptionLink: Boolean = getBoolean("features.enable-legacy-subscription-link")
+  val enableAgentRecordViaAsa: Boolean = getBoolean("features.enable-agent-record-via-asa")
 
   // Gran Perms
   val agentPermissionsBaseUrl: String = baseUrl("agent-permissions")

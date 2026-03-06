@@ -40,7 +40,7 @@ import uk.gov.hmrc.agentservicesaccount.models.AmlsStatuses.ValidAmlsNonUK
 import uk.gov.hmrc.agentservicesaccount.models._
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
 import stubs.AgentAssuranceStubs.givenAMLSDetailsForArn
-import stubs.AgentAssuranceStubs.givenAgentRecordFound
+import stubs.AgentServicesAccountStubs.givenGetAgentRecord
 import stubs.AgentAssuranceStubs.givenPostAMLSDetails
 
 import java.time.LocalDate
@@ -77,7 +77,7 @@ extends ComponentBaseISpec {
       "UK agent has successfully entered all the data for CYA page" in {
 
         givenAuthorisedAsAgentWith(arn.value)
-        givenAgentRecordFound(agentRecord)
+        givenGetAgentRecord(agentRecord)
 
         await(repo.putSession(amlsJourneyKey, amlsJourney(ValidAmlsDetailsUK)))
 
@@ -90,7 +90,7 @@ extends ComponentBaseISpec {
       "overseas agent has successfully entered all the data for CYA page" in {
 
         givenAuthorisedAsAgentWith(arn.value)
-        givenAgentRecordFound(agentRecord)
+        givenGetAgentRecord(agentRecord)
 
         await(repo.putSession(amlsJourneyKey, amlsJourney(ValidAmlsNonUK)))
 
@@ -104,7 +104,7 @@ extends ComponentBaseISpec {
       "There's no update amls journey in session" in {
 
         givenAuthorisedAsAgentWith(arn.value)
-        givenAgentRecordFound(agentRecord)
+        givenGetAgentRecord(agentRecord)
 
         val result = get(checkYourAnswersPath)
 
@@ -121,7 +121,7 @@ extends ComponentBaseISpec {
       "agent has successfully entered all the data for CYA page" in {
 
         givenAuthorisedAsAgentWith(arn.value)
-        givenAgentRecordFound(agentRecord)
+        givenGetAgentRecord(agentRecord)
         givenPostAMLSDetails(arn.value, amlsRequest)
         givenAMLSDetailsForArn(amlsDetailsResponse, arn.value)
 
@@ -140,7 +140,7 @@ extends ComponentBaseISpec {
       "invalid amls data held in session" in {
 
         givenAuthorisedAsAgentWith(arn.value)
-        givenAgentRecordFound(agentRecord)
+        givenGetAgentRecord(agentRecord)
 
         await(repo.putSession(
           amlsJourneyKey,
