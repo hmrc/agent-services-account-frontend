@@ -16,9 +16,6 @@
 
 package uk.gov.hmrc.agentservicesaccount.connectors
 
-import play.api.http.Status.BAD_REQUEST
-import play.api.http.Status.CREATED
-import play.api.http.Status.NO_CONTENT
 import play.api.http.Status.OK
 import play.api.libs.json.Json
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
