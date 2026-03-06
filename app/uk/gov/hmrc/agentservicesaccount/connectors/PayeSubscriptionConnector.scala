@@ -16,11 +16,17 @@
 
 package uk.gov.hmrc.agentservicesaccount.connectors
 
-import play.api.http.Status.{BAD_REQUEST, CREATED, NO_CONTENT, OK}
+import play.api.http.Status.BAD_REQUEST
+import play.api.http.Status.CREATED
+import play.api.http.Status.NO_CONTENT
+import play.api.http.Status.OK
 import play.api.libs.json.Json
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models.paye._
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps, UpstreamErrorResponse}
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.HttpResponse
+import uk.gov.hmrc.http.StringContextOps
+import uk.gov.hmrc.http.UpstreamErrorResponse
 import uk.gov.hmrc.http.client.HttpClientV2
 
 import javax.inject.Inject
@@ -30,8 +36,8 @@ import scala.concurrent.Future
 
 @Singleton
 class PayeSubscriptionConnector @Inject() (httpV2: HttpClientV2)(implicit
-   appConfig: AppConfig,
-   val ec: ExecutionContext
+  appConfig: AppConfig,
+  val ec: ExecutionContext
 ) {
 
   private lazy val url = s"${appConfig.agentServicesAccountBaseUrl}/agent-services-account"

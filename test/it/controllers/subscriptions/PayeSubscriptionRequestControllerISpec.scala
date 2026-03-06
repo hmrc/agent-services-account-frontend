@@ -27,22 +27,29 @@ import stubs.AgentServicesAccountStubs._
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.PayeSubscriptionRequestController
 
 class PayeSubscriptionRequestControllerISpec
-  extends BaseISpec {
+extends BaseISpec {
 
-  val cyaData: PayeCyaData =
-    PayeCyaData(
-      agentName = "Example Agent Ltd",
-      contactName = "Jane Agent",
-      telephoneNumber = Some("01632 960 001"),
-      emailAddress = Some("jane.agent@example.com"),
-      address = PayeAddress(
-        line1 = "1 High Street",
-        line2 = "Village",
-        line3 = Some("County"),
-        line4 = None,
-        postCode = "AA1 1AA"
-      )
+  val cyaData: PayeCyaData = PayeCyaData(
+    agentName = "Example Agent Ltd",
+    contactName = "Jane Agent",
+    telephoneNumber = Some("01632 960 001"),
+    emailAddress = Some("jane.agent@example.com"),
+    address = PayeAddress(
+      line1 = "1 High Street",
+      line2 = "Village",
+      line3 = Some("County"),
+      line4 = None,
+      postCode = "AA1 1AA"
     )
+  )
+
+  def getAddressCyaText(address: PayeAddress): String = Seq(
+    Some(address.line1),
+    Some(address.line2),
+    address.line3,
+    address.line4,
+    Some(address.postCode)
+  ).flatten.mkString(" ")
 
   val controller: PayeSubscriptionRequestController = inject[PayeSubscriptionRequestController]
 
@@ -56,12 +63,25 @@ class PayeSubscriptionRequestControllerISpec
 
       status(response) shouldBe OK
       val html = Jsoup.parse(contentAsString(await(response)))
-      ////      TODO: 10593 Better assertions in here
-      //      assertPageHasTitle("Check your details before requesting a PAYE subscription")(result)
-      //
-      //      result.body should include("Example Agent Ltd")
-      //      result.body should include("Jane Agent")
-      //      result.body should include("Return to your agent services account")
+      expectedH1(html, "Check your details before requesting a PAYE subscription")
+
+      val cyaKeysElements = html.select(".govuk-summary-list__key")
+      val cyaKeysWithIndex = List("Agent name", "Contact name", "Telephone number", "Email address", "Address").zipWithIndex
+      cyaKeysWithIndex.foreach {
+        case (cyaKey, index) => expectTextForElement(cyaKeysElements.get(index).getElementsByTag("dt").first(), cyaKey)
+      }
+
+      val cyaValuesElements = html.select(".govuk-summary-list__value")
+      val cyaValuesWithIndex = List(
+        cyaData.agentName,
+        cyaData.contactName,
+        cyaData.telephoneNumber.get,
+        cyaData.emailAddress.get,
+        getAddressCyaText(cyaData.address)
+      ).zipWithIndex
+      cyaValuesWithIndex.foreach {
+        case (cyaValue, index) => expectTextForElement(cyaValuesElements.get(index).getElementsByTag("dd").first(), cyaValue)
+      }
     }
   }
 
@@ -89,9 +109,8 @@ class PayeSubscriptionRequestControllerISpec
 
       status(response) shouldBe OK
       val html = Jsoup.parse(contentAsString(await(response)))
-      //      //      TODO: 10593 Better assertions in here
-      //      assertPageHasTitle("PAYE subscription request submitted")(result)
-      //      result.body should include("Return to your agent services account")
+      expectedH1(html, "PAYE subscription request submitted")
     }
   }
+
 }

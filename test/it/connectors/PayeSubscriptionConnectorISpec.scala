@@ -16,14 +16,16 @@
 
 package it.connectors
 
-import play.api.http.Status.{INTERNAL_SERVER_ERROR, OK}
+import play.api.http.Status.INTERNAL_SERVER_ERROR
+import play.api.http.Status.OK
 import play.api.test.Helpers.await
 import play.api.test.Helpers.defaultAwaitTimeout
 import play.api.test.Injecting
 import support.BaseISpec
 import uk.gov.hmrc.agentservicesaccount.connectors.PayeSubscriptionConnector
 import stubs.AgentServicesAccountStubs._
-import uk.gov.hmrc.agentservicesaccount.models.paye.{PayeAddress, PayeCyaData}
+import uk.gov.hmrc.agentservicesaccount.models.paye.PayeAddress
+import uk.gov.hmrc.agentservicesaccount.models.paye.PayeCyaData
 import uk.gov.hmrc.agentservicesaccount.utils.RequestSupport.hc
 import uk.gov.hmrc.http.UpstreamErrorResponse
 

@@ -60,7 +60,8 @@ with Logging {
         val eligible = subscriptionInfo.exists(_.regime == LegacyRegime.PAYE)
         if (!eligible) {
           Future.successful(Redirect(routes.AgentServicesController.showAgentServicesAccount()))
-        } else {
+        }
+        else {
           payeConnector.getCyaData.map { data =>
             val addressHtml = Seq(
               Some(data.address.line1),
@@ -110,11 +111,13 @@ with Logging {
         val eligible = subscriptionInfo.exists(_.regime == LegacyRegime.PAYE)
         if (!eligible) {
           Future.successful(Redirect(routes.AgentServicesController.showAgentServicesAccount()))
-        } else {
-          val result = for {
-            cyaData <- payeConnector.getCyaData
-            submitRequestResult <- payeConnector.submitRequest(cyaData)
-          } yield submitRequestResult
+        }
+        else {
+          val result =
+            for {
+              cyaData <- payeConnector.getCyaData
+              submitRequestResult <- payeConnector.submitRequest(cyaData)
+            } yield submitRequestResult
           result.map(_ => Redirect(subscriptionsRoutes.PayeSubscriptionRequestController.showSubmitted))
         }
       }

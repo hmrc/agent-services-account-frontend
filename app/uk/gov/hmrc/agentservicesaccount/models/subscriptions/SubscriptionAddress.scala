@@ -21,14 +21,15 @@ import play.api.libs.json.Json
 import play.api.libs.json.Writes
 
 case class SubscriptionAddress(
-                                line1: String,
-                                line2: String,
-                                line3: Option[String],
-                                line4: Option[String],
-                                postCode: Option[String]
-                              )
+  line1: String,
+  line2: String,
+  line3: Option[String],
+  line4: Option[String],
+  postCode: Option[String]
+)
 
 object SubscriptionAddress {
+
   implicit val format: Format[SubscriptionAddress] = Json.format[SubscriptionAddress]
   val payeRegistrationWrites: Writes[SubscriptionAddress] = Writes { address =>
     Json.obj(
@@ -39,4 +40,5 @@ object SubscriptionAddress {
       "postCode" -> address.postCode
     )
   }
+
 }

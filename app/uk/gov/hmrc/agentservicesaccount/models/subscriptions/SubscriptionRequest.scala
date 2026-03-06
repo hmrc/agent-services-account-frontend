@@ -16,19 +16,26 @@
 
 package uk.gov.hmrc.agentservicesaccount.models.subscriptions
 
-import play.api.libs.json.{JsError, JsSuccess, Json, Reads, Writes}
+import play.api.libs.json.JsError
+import play.api.libs.json.JsSuccess
+import play.api.libs.json.Json
+import play.api.libs.json.Reads
+import play.api.libs.json.Writes
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
 
 sealed trait SubscriptionRequest {
+
   val agentName: String
   val contactName: String
   val phoneNumber: Option[String]
   val emailAddress: Option[String]
   val address: SubscriptionAddress
   val isAbroad: Boolean
+
 }
 
 object SubscriptionRequest {
+
   def reads(regime: LegacyRegime): Reads[SubscriptionRequest] = Reads { json =>
     regime match {
       case PAYE => Json.fromJson(json)(Json.reads[PayeSubscriptionRequest])
@@ -38,16 +45,17 @@ object SubscriptionRequest {
   implicit val writes: Writes[SubscriptionRequest] = Writes {
     case payeRequest: PayeSubscriptionRequest => Json.writes[PayeSubscriptionRequest].writes(payeRequest)
   }
+
 }
 
 case class PayeSubscriptionRequest(
-                                    agentName: String,
-                                    contactName: String,
-                                    phoneNumber: Option[String],
-                                    emailAddress: Option[String],
-                                    address: SubscriptionAddress
-                                  )
-  extends SubscriptionRequest {
+  agentName: String,
+  contactName: String,
+  phoneNumber: Option[String],
+  emailAddress: Option[String],
+  address: SubscriptionAddress
+)
+extends SubscriptionRequest {
   val isAbroad: Boolean = false // Unused value for PAYE as postcode is always required
 }
 
