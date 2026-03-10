@@ -21,7 +21,7 @@ import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.connectors.PayeSubscriptionConnector
+import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.routes
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.{routes => subscriptionsRoutes}
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
@@ -39,7 +39,7 @@ import scala.concurrent.Future
 @Singleton
 class PayeSubscriptionRequestController @Inject() (
   actions: Actions,
-  payeConnector: PayeSubscriptionConnector,
+  agentServicesAccountConnector: AgentServicesAccountConnector,
   subscriptionService: SubscriptionService,
   cyaView: paye_check_your_answers,
   submittedView: paye_submitted,
@@ -62,7 +62,7 @@ with Logging {
           Future.successful(Redirect(routes.AgentServicesController.showAgentServicesAccount()))
         }
         else {
-          payeConnector.getCyaData.map { data =>
+          agentServicesAccountConnector.getPayeCyaData.map { data =>
             val addressHtml = Seq(
               Some(data.address.line1),
               Some(data.address.line2),
@@ -115,8 +115,8 @@ with Logging {
         else {
           val result =
             for {
-              cyaData <- payeConnector.getCyaData
-              submitRequestResult <- payeConnector.submitRequest(cyaData)
+              cyaData <- agentServicesAccountConnector.getPayeCyaData
+              submitRequestResult <- agentServicesAccountConnector.submitPayeRequest(cyaData)
             } yield submitRequestResult
           result.map(_ => Redirect(subscriptionsRoutes.PayeSubscriptionRequestController.showSubmitted))
         }
