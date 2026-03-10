@@ -85,7 +85,7 @@ object AgentServicesAccountStubs {
   }
 
   def givenPayeStartSubscriptionResponse(status: Int): StubMapping = {
-    stubFor(post(urlEqualTo("/agent-services-account/legacy-subscription-request/paye"))
+    stubFor(post(urlEqualTo("/agent-services-account/legacy-subscription-request/PAYE"))
       .willReturn(
         aResponse()
           .withStatus(status)
