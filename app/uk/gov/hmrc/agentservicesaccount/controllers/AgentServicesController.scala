@@ -46,14 +46,14 @@ import scala.concurrent.Future
 class AgentServicesController @Inject() (
   authActions: AuthActions,
   actions: Actions,
+  agentAssuranceConnector: AgentAssuranceConnector,
   agentPermissionsConnector: AgentPermissionsConnector,
   agentUserClientDetailsConnector: AgentUserClientDetailsConnector,
-  agentAssuranceConnector: AgentAssuranceConnector,
   subscriptionService: SubscriptionService,
-  manage_account: manage_account,
-  administrators_html: administrators,
-  your_account: your_account,
   asaDashboard: asa_dashboard,
+  manage_account: manage_account,
+  your_account: your_account,
+  administrators_html: administrators,
   account_details: account_details,
   helpView: help
 )(implicit
@@ -86,10 +86,10 @@ with Logging {
             Future.successful(Nil)
       } yield Ok(
         asaDashboard(
-          formatArn(agentInfo.arn),
-          showFeatureInvite && agentInfo.isAdmin,
-          agentInfo.isAdmin,
-          subscriptionInfo
+          arn = formatArn(agentInfo.arn),
+          isShownRecruitmentBanner = showFeatureInvite && agentInfo.isAdmin,
+          isAdmin = agentInfo.isAdmin,
+          subscriptionInfo = subscriptionInfo
         )
       ).addingToSession(toReturnFromMapping())
     }

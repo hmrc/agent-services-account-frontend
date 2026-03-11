@@ -16,9 +16,7 @@
 
 package it.connectors
 
-import play.api.http.Status.FORBIDDEN
-import play.api.http.Status.NOT_FOUND
-import play.api.http.Status.NO_CONTENT
+import play.api.http.Status.{FORBIDDEN, INTERNAL_SERVER_ERROR, NOT_FOUND, NO_CONTENT, OK}
 import play.api.test.Helpers.await
 import play.api.test.Helpers.defaultAwaitTimeout
 import play.api.test.Injecting
@@ -27,11 +25,11 @@ import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
 import uk.gov.hmrc.agentservicesaccount.models.Arn
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest
 import stubs.AgentServicesAccountStubs._
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
+import uk.gov.hmrc.agentservicesaccount.models.paye.{PayeAddress, PayeCyaData}
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.{CT, PAYE, SA}
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionInfo
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionStatus.SubscriptionInProgress
+import uk.gov.hmrc.agentservicesaccount.utils.RequestSupport.hc
 import uk.gov.hmrc.http.UpstreamErrorResponse
 
 import java.time.Instant
@@ -44,6 +42,20 @@ with Injecting {
   val exampleArn: Arn = Arn("XARN1234567")
   val exampleModel: PendingChangeRequest = PendingChangeRequest(exampleArn, Instant.now().truncatedTo(ChronoUnit.SECONDS))
   val connector: AgentServicesAccountConnector = inject[AgentServicesAccountConnector]
+
+  val examplePayeCyaData = PayeCyaData(
+    agentName = "Example Agent Ltd",
+    contactName = "Jane Agent",
+    telephoneNumber = Some("01632 960 001"),
+    emailAddress = Some("jane.agent@example.com"),
+    address = PayeAddress(
+      line1 = "1 High Street",
+      line2 = "Village",
+      line3 = Some("County"),
+      line4 = None,
+      postCode = "AA1 1AA"
+    )
+  )
 
   ".findChangeRequest" should {
 
@@ -147,6 +159,30 @@ with Injecting {
       intercept[UpstreamErrorResponse] {
         await(connector.getAgentRecord)
       }
+    }
+  }
+
+  ".submitPayeRequest" should {
+
+    "return nothing when a OK (200) response is returned by agent-services-account" in {
+      givenPayeStartSubscriptionResponse(OK)
+
+      val result = connector.submitPayeRequest(examplePayeCyaData)
+      await(result) shouldBe ()
+    }
+
+    "throw an UpstreamErrorResponse exception when an unexpected status is returned by agent-services-account" in {
+      givenPayeStartSubscriptionResponse(INTERNAL_SERVER_ERROR)
+
+      intercept[UpstreamErrorResponse](await(connector.submitPayeRequest(examplePayeCyaData)))
+    }
+  }
+
+  ".getPayeCyaData" should {
+
+    "return dummy CYA data (for now)" in {
+      val result = connector.getPayeCyaData
+      await(result) shouldBe examplePayeCyaData
     }
   }
 

@@ -28,13 +28,12 @@ import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest.connectorReads
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest.connectorWrites
+import uk.gov.hmrc.agentservicesaccount.models.paye.{PayeAddress, PayeCyaData}
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionInfo
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.client.HttpClientV2
-import uk.gov.hmrc.http.HttpResponse
-import uk.gov.hmrc.http.StringContextOps
-import uk.gov.hmrc.http.UpstreamErrorResponse
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps, UpstreamErrorResponse}
 import uk.gov.hmrc.agentservicesaccount.utils.RequestSupport._
 
 import javax.inject.Inject
@@ -108,4 +107,31 @@ extends Logging {
       }
     )
 
+  def submitPayeRequest(cyaData: PayeCyaData)(implicit hc: HeaderCarrier): Future[Unit] = {
+    http
+      .post(url"$url/legacy-subscription-request/PAYE").withBody(Json.toJson(cyaData)).execute[HttpResponse]
+      .map {
+        response =>
+          response.status match {
+            case OK => ()
+            case e => throw UpstreamErrorResponse(s"[PayeSubscriptionConnector][submitRequest] Error $e unable to post paye legacy subscription request", e)
+          }
+      }
+  }
+
+  def getPayeCyaData: Future[PayeCyaData] = Future.successful(
+    PayeCyaData(
+      agentName = "Example Agent Ltd",
+      contactName = "Jane Agent",
+      telephoneNumber = Some("01632 960 001"),
+      emailAddress = Some("jane.agent@example.com"),
+      address = PayeAddress(
+        line1 = "1 High Street",
+        line2 = "Village",
+        line3 = Some("County"),
+        line4 = None,
+        postCode = "AA1 1AA"
+      )
+    )
+  )
 }
