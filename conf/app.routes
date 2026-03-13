@@ -96,6 +96,9 @@ GET        /paye-subscription/request/confirm                             @uk.go
 POST       /paye-subscription/request/confirm                             @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.PayeSubscriptionRequestController.submit
 GET        /paye-subscription/request/submitted                           @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.PayeSubscriptionRequestController.showSubmitted
 
+GET        /ct-subscription/business-name                                 @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtUpdateBusinessNameController.showPage
+POST       /ct-subscription/business-name                                 @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtUpdateBusinessNameController.onSubmit
+
 # AMLS
 GET        /manage-account/money-laundering-supervision/view-details                     @uk.gov.hmrc.agentservicesaccount.controllers.amls.ViewDetailsController.showPage
 
