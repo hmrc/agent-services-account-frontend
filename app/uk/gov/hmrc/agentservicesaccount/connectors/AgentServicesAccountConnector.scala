@@ -28,12 +28,16 @@ import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest.connectorReads
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest.connectorWrites
-import uk.gov.hmrc.agentservicesaccount.models.paye.{PayeAddress, PayeCyaData}
+import uk.gov.hmrc.agentservicesaccount.models.paye.PayeAddress
+import uk.gov.hmrc.agentservicesaccount.models.paye.PayeCyaData
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionInfo
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.client.HttpClientV2
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps, UpstreamErrorResponse}
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.HttpResponse
+import uk.gov.hmrc.http.StringContextOps
+import uk.gov.hmrc.http.UpstreamErrorResponse
 import uk.gov.hmrc.agentservicesaccount.utils.RequestSupport._
 
 import javax.inject.Inject
@@ -134,4 +138,5 @@ extends Logging {
       )
     )
   )
+
 }
