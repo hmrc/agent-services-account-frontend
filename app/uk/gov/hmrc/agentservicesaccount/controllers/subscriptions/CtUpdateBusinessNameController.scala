@@ -52,11 +52,11 @@ with I18nSupport
 with Logging {
 
   val showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    Future.successful(Ok(ct_update_business_name(CtSubscriptionForms.businessNameForm)))
+    Future.successful(Ok(ct_update_business_name(CtSubscriptionForms.newBusinessNameForm)))
   }
 
   val onSubmit: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    CtSubscriptionForms.businessNameForm
+    CtSubscriptionForms.newBusinessNameForm
       .bindFromRequest()
       .fold(
         formWithErrors => Future.successful(BadRequest(ct_update_business_name(formWithErrors))),

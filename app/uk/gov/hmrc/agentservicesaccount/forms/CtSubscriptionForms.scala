@@ -17,10 +17,14 @@
 package uk.gov.hmrc.agentservicesaccount.forms
 
 import play.api.data.Form
+import play.api.data.Mapping
 import play.api.data.Forms._
-import uk.gov.hmrc.agentservicesaccount.models.ApplyCtCodeChanges
-import uk.gov.hmrc.agentservicesaccount.models.ApplySaCodeChanges
-import uk.gov.hmrc.agentservicesaccount.models.desiDetails.YourDetails
+
+case class CtBusinessNameFormValues(
+  useDefault: Boolean,
+  newBusinessName: String
+)
+//  TODO: Make newBusinessName: Option[String]
 
 object CtSubscriptionForms {
 
@@ -30,10 +34,21 @@ object CtSubscriptionForms {
 
 //  TODO: NEED YES/NO FOR SUBSCRIPTION BUSINESS NAME
 
-  val businessNameForm: Form[String] = Form(
-    single("name" -> trimmedText
-      .verifying("update-contact-details.name.error.empty", _.nonEmpty)
-      .verifying("update-contact-details.name.error.invalid", x => x.isEmpty || BusinessNameRegex.matches(x)))
-  )
+  private val useDefaultMapping: Mapping[Boolean] = optional(boolean)
+    .verifying("NEED TO SELECT YES/NO", _.isDefined)
+    .transform(_.get, (b: Boolean) => Option(b))
+
+  private val newBusinessNameOptionalMapping: Mapping[String] = trimmedText
+    .verifying("update-contact-details.name.error.empty", _.nonEmpty)
+    .verifying("update-contact-details.name.error.invalid", x => x.isEmpty || BusinessNameRegex.matches(x))
+
+  def newBusinessNameForm: Form[CtBusinessNameFormValues] = {
+    Form(
+      mapping(
+        "useDefault" -> useDefaultMapping,
+        "newBusinessName" -> newBusinessNameOptionalMapping
+      )(CtBusinessNameFormValues.apply)(CtBusinessNameFormValues.unapply)
+    )
+  }
 
 }

@@ -16,6 +16,7 @@
 
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
+@import uk.gov.hmrc.agentservicesaccount.forms.CtBusinessNameFormValues
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 @import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
 @import uk.gov.hmrc.govukfrontend.views.html.components._
@@ -34,7 +35,7 @@
     govukErrorSummary: GovukErrorSummary
 )
 
-@(form: Form[String])(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
+@(form: Form[CtBusinessNameFormValues])(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
 
 @newBusinessNameInput = {
     @govukInput(Input(
