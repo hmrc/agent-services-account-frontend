@@ -24,7 +24,7 @@ import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.{routes => homeRoutes}
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtJourneySupport
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.getNextPage
-import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms
+import uk.gov.hmrc.agentservicesaccount.forms.CtSubscriptionForms
 import uk.gov.hmrc.agentservicesaccount.services.DraftDetailsService
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions._
@@ -52,11 +52,11 @@ with I18nSupport
 with Logging {
 
   val showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    Future.successful(Ok(ct_update_business_name(UpdateDetailsForms.businessNameForm)))
+    Future.successful(Ok(ct_update_business_name(CtSubscriptionForms.businessNameForm)))
   }
 
   val onSubmit: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    UpdateDetailsForms.businessNameForm
+    CtSubscriptionForms.businessNameForm
       .bindFromRequest()
       .fold(
         formWithErrors => Future.successful(BadRequest(ct_update_business_name(formWithErrors))),

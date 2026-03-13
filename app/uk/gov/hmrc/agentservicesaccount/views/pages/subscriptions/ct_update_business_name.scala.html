@@ -36,6 +36,16 @@
 
 @(form: Form[String])(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
 
+@newBusinessNameInput = {
+    @govukInput(Input(
+        label = Label(
+            classes = "govuk-label--l",
+            content = HtmlContent(msgs("update-contact-details.name.heading"))
+        ),
+        hint = Some(Hint(content = Text(msgs("update-contact-details.name.hint"))))
+    ).withFormField(form("name")))
+}
+
 @main(
     pageTitle = withErrorPrefix(form.hasErrors, msgs("update-contact-details.name.heading")),
     mimicBrowserBackLink = true,
@@ -63,18 +73,11 @@
                 ),
                 RadioItem(
                     content = Text(msgs("common.no")),
-                    value = Some("false")
+                    value = Some("false"),
+                    conditionalHtml = Some(newBusinessNameInput)
                 )
             )
         ).withFormField(form("accept")))
-        @govukInput(Input(
-            label = Label(
-                classes = "govuk-label--l",
-                content = HtmlContent(msgs("update-contact-details.name.heading")),
-                isPageHeading = true
-            ),
-            hint = Some(Hint(content = Text(msgs("update-contact-details.name.hint"))))
-        ).withFormField(form("name")))
 
         @govukButton(Button(content = Text(msgs("common.continue"))))
     }
