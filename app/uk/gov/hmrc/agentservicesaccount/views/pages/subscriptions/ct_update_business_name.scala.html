@@ -18,7 +18,7 @@
 @import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 @import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
-@import uk.gov.hmrc.govukfrontend.views.html.components.{GovukButton, GovukFieldset, GovukInput, Input, Label, Text, _}
+@import uk.gov.hmrc.govukfrontend.views.html.components._
 @import uk.gov.hmrc.hmrcfrontend.views.Implicits.RichErrorSummary
 
 @this(
@@ -27,6 +27,7 @@
     formWithCSRF: FormWithCSRF,
     govukInput: GovukInput,
     govukFieldset: GovukFieldset,
+    govukRadios: GovukRadios,
     govukSummaryList: GovukSummaryList,
     govukInsetText : GovukInsetText,
     govukButton: GovukButton,
@@ -46,6 +47,26 @@
     }
 
     @formWithCSRF(action = subscriptions.routes.CtUpdateBusinessNameController.onSubmit) {
+        @govukRadios(Radios(
+            fieldset = Some(Fieldset(
+                legend = Some(Legend(
+                    content = Text(msgs("amls.confirm-supervisory-body.h1")),
+                    classes = "govuk-fieldset__legend--l",
+                    isPageHeading = true
+                ))
+            )),
+            name = "accept",
+            items = Seq(
+                RadioItem(
+                    content = Text(msgs("common.yes")),
+                    value = Some("true")
+                ),
+                RadioItem(
+                    content = Text(msgs("common.no")),
+                    value = Some("false")
+                )
+            )
+        ).withFormField(form("accept")))
         @govukInput(Input(
             label = Label(
                 classes = "govuk-label--l",

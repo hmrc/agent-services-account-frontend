@@ -20,26 +20,32 @@ import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
+import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.{routes => homeRoutes}
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtJourneySupport
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.forms.UpdateDetailsForms
-import uk.gov.hmrc.agentservicesaccount.services.{DraftDetailsService, SessionCacheService}
+import uk.gov.hmrc.agentservicesaccount.services.DraftDetailsService
+import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject._
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
+import scala.concurrent.Future
 
 @Singleton
-class CtUpdateBusinessNameController @Inject()(
+class CtUpdateBusinessNameController @Inject() (
   actions: Actions,
   val sessionCacheService: SessionCacheService,
   //  TODO: 10902 Only here to allow CtUpdateBusinessNameController to compile
   draftDetailsService: DraftDetailsService,
   ct_update_business_name: ct_update_business_name,
   cc: MessagesControllerComponents
-)(implicit val ec: ExecutionContext)
+)(implicit
+  appConfig: AppConfig,
+  val ec: ExecutionContext
+)
 extends FrontendController(cc)
 with CtJourneySupport
 with I18nSupport
@@ -59,12 +65,12 @@ with Logging {
 //              ctDetails.copy(agencyDetails = desiDetails.agencyDetails.copy(agencyName = Some(newBusinessName)))
 //            )
           draftDetailsService.dummyCtMethod()
-        .flatMap {
-            _ =>
+            .flatMap {
+              _ =>
 //              isJourneyComplete().flatMap(journeyComplete => Future.successful(getNextPage(journeyComplete, "businessName")))
-          //  TODO: 10902 Temp value here
-          case _ => Future.successful(Redirect(homeRoutes.AgentServicesController.root()))
-          }
+                //  TODO: 10902 Temp value here
+                Future.successful(Redirect(homeRoutes.AgentServicesController.root()))
+            }
         }
       )
   }
