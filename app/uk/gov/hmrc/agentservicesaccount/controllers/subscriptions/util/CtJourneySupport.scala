@@ -16,16 +16,26 @@
 
 package uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util
 
-import play.api.mvc.{RequestHeader, Result}
-import play.api.mvc.Results.{NotFound, Redirect}
+import play.api.mvc.RequestHeader
+import play.api.mvc.Result
+import play.api.mvc.Results.NotFound
+import play.api.mvc.Results.Redirect
 import uk.gov.hmrc.agentservicesaccount.actions.AuthRequestWithAgentInfo
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.controllers.{currentSelectedChangesKey, desiDetails, draftNewContactDetailsKey, draftSubmittedByKey, routes}
-import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{DesiDetailsJourney, DesignatoryDetails, OtherServices, YourDetails}
+import uk.gov.hmrc.agentservicesaccount.controllers.currentSelectedChangesKey
+import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
+import uk.gov.hmrc.agentservicesaccount.controllers.draftNewContactDetailsKey
+import uk.gov.hmrc.agentservicesaccount.controllers.draftSubmittedByKey
+import uk.gov.hmrc.agentservicesaccount.controllers.routes
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.DesiDetailsJourney
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.DesignatoryDetails
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.OtherServices
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.YourDetails
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
+import scala.concurrent.Future
 
 trait CtJourneySupport {
 
