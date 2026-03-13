@@ -173,9 +173,15 @@ asa.legacy.paye.p1=Status: {0}
 asa.legacy.paye.link=Request a PAYE subscription
 
 # CT
-asa.legacy.ct.h2=CT
+asa.legacy.ct.h2=Corporation Tax
 asa.legacy.ct.h3=Test Content
 asa.legacy.ct.p1=Status: {0}
+asa.legacy.ct.col1.h3=Before you start
+asa.legacy.ct.col1.link1.href=https://www.gov.uk/guidance/how-to-enrol-a-tax-service-onto-your-hmrc-online-services-account
+asa.legacy.ct.col1.p1=If you have already enrolled for Corporation Tax, you can continue managing your clients by <a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">signing into your HMRC online services for agents account.</a>
+asa.legacy.ct.col1.p2=This will sign you out of your agent services account.
+asa.legacy.ct.col2.h3=If you want to enrol for Corporation Tax
+asa.legacy.ct.col2.p1=You can <a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">use your agent services account to enrol</a> and manage your clients.
 
 # SA
 asa.legacy.sa.h2=SA

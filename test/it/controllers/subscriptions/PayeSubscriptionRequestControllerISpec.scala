@@ -65,19 +65,27 @@ extends BaseISpec {
       expectedH1(html, "Check your details before requesting a PAYE subscription")
 
       val cyaKeysElements = html.select(".govuk-summary-list__key")
-      val cyaKeysWithIndex = List("Agent name", "Contact name", "Telephone number", "Email address", "Address").zipWithIndex
+      val cyaKeysWithIndex =
+        List(
+          "Agent name",
+          "Contact name",
+          "Telephone number",
+          "Email address",
+          "Address"
+        ).zipWithIndex
       cyaKeysWithIndex.foreach {
         case (cyaKey, index) => expectTextForElement(cyaKeysElements.get(index).getElementsByTag("dt").first(), cyaKey)
       }
 
       val cyaValuesElements = html.select(".govuk-summary-list__value")
-      val cyaValuesWithIndex = List(
-        cyaData.agentName,
-        cyaData.contactName,
-        cyaData.telephoneNumber.get,
-        cyaData.emailAddress.get,
-        getAddressCyaText(cyaData.address)
-      ).zipWithIndex
+      val cyaValuesWithIndex =
+        List(
+          cyaData.agentName,
+          cyaData.contactName,
+          cyaData.telephoneNumber.get,
+          cyaData.emailAddress.get,
+          getAddressCyaText(cyaData.address)
+        ).zipWithIndex
       cyaValuesWithIndex.foreach {
         case (cyaValue, index) => expectTextForElement(cyaValuesElements.get(index).getElementsByTag("dd").first(), cyaValue)
       }

@@ -170,8 +170,16 @@
 }
 
 @ctItem(status: SubscriptionStatus) = {
-  @h4("asa.legacy.ct.h3")
-  @p(msgs("asa.legacy.ct.p1", status))
+  @if(status == SubscriptionStatus.NotSubscribed || status == SubscriptionStatus.SubscriptionFailed) {
+    @h4("asa.legacy.ct.col1.h3")
+    @p(msgs("asa.legacy.ct.col1.p1", msgs("asa.legacy.ct.col1.link1.href")))
+    @p(msgs("asa.legacy.ct.col1.p2"))
+    @h4("asa.legacy.ct.col2.h3")
+    @p(msgs("asa.legacy.ct.col2.p1", "CT business name page link"))
+  } else {
+    @h4("asa.legacy.ct.h3")
+    @p(msgs("asa.legacy.ct.p1", status))
+  }
 }
 
 @saItem(status: SubscriptionStatus) = {
