@@ -166,6 +166,8 @@ asa.trusts-section.col2.h3=Rheoli ymddiriedolaeth eich cleient
 asa.trusts-section.col2.register-trust-link.text=Defnyddiwch y gwasanaeth hwn i ddiweddaru manylion ymddiriedolaeth neu ystâd eich cleient neu i ddatgan dim newidiadau ar y gofrestr ymddiriedolaethau
 asa.trusts-section.h2=Ymddiriedolaethau ac ystadau
 
+# TODO: WELSH TRANSLATIONS NEEDED FOR ALL BELOW THIS LINE
+
 # PAYE/CIS
 asa.legacy.paye.h2=PAYE/CIS
 asa.legacy.paye.col1.h3=Test Content
@@ -187,6 +189,8 @@ asa.legacy.ct.col2.p1=You can <a class="govuk-link" href="{0}" target="_blank" r
 asa.legacy.sa.h2=SA
 asa.legacy.sa.col1.h3=Test Content
 asa.legacy.sa.col1.p1=Status: {0}
+
+# TODO: WELSH TRANSLATIONS NEEDED FOR ALL ABOVE THIS LINE
 
 # Custom UR banner
 banner.heading=Helpwch i wella CThEF
