@@ -29,14 +29,14 @@ object CtSubscriptionForms {
 
   private val trimmedText = text.transform[String](x => x.trim, x => x)
 
-  private val businessNameUseDefaultKey = "businessNameUseDefault"
+  private val businessNameUseAsaDataKey = "businessNameUseAsaData"
   private val businessNameNewKey = "businessNameNew"
 
 //  TODO: 10902: Check against subscription API regex
   private val BusinessNameRegex = """^[A-Za-z0-9\,\.\'\-\/\ ]{2,200}$""".r
 
-  private val businessNameUseDefaultMapping: Mapping[Boolean] = optional(boolean)
-    .verifying("asa.legacy.ct.business-name.default.error.required", _.isDefined)
+  private val businessNameUseAsaDataMapping: Mapping[Boolean] = optional(boolean)
+    .verifying("asa.legacy.ct.business-name.use-asa.error.required", _.isDefined)
     .transform(_.get, (b: Boolean) => Option(b))
 
   private val businessNameNewOptionalMapping: Mapping[String] = trimmedText
@@ -46,12 +46,12 @@ object CtSubscriptionForms {
   def newBusinessNameForm: Form[CtBusinessNameFormValues] = {
     Form(
       mapping(
-        businessNameUseDefaultKey -> businessNameUseDefaultMapping,
+        businessNameUseAsaDataKey -> businessNameUseAsaDataMapping,
         businessNameNewKey -> mandatoryIf(
-          isEqual(businessNameUseDefaultKey, "false"),
+          isEqual(businessNameUseAsaDataKey, "false"),
           businessNameNewOptionalMapping
         )
-      )(CtBusinessNameFormValues.apply)(o => Some(o.useDefault, o.newBusinessName))
+      )(CtBusinessNameFormValues.apply)(o => Some(o.useAsaData, o.newBusinessName))
     )
   }
 
