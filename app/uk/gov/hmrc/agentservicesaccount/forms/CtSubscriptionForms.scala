@@ -19,10 +19,12 @@ package uk.gov.hmrc.agentservicesaccount.forms
 import play.api.data.Form
 import play.api.data.Mapping
 import play.api.data.Forms._
+import uk.gov.voa.play.form.ConditionalMappings.isEqual
+import uk.gov.voa.play.form.ConditionalMappings.mandatoryIf
 
 case class CtBusinessNameFormValues(
   useDefault: Boolean,
-  newBusinessName: String
+  newBusinessName: Option[String]
 )
 //  TODO: Make newBusinessName: Option[String]
 
@@ -46,8 +48,11 @@ object CtSubscriptionForms {
     Form(
       mapping(
         "useDefault" -> useDefaultMapping,
-        "newBusinessName" -> newBusinessNameOptionalMapping
-      )(CtBusinessNameFormValues.apply)(CtBusinessNameFormValues.unapply)
+        "newBusinessName" -> mandatoryIf(
+          isEqual("useDefault", "false"),
+          newBusinessNameOptionalMapping
+        )
+      )(CtBusinessNameFormValues.apply)(o => Some(o.useDefault, o.newBusinessName))
     )
   }
 

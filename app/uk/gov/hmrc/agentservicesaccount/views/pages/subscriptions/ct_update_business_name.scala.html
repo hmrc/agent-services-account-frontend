@@ -44,7 +44,7 @@
             content = HtmlContent(msgs("update-contact-details.name.heading"))
         ),
         hint = Some(Hint(content = Text(msgs("update-contact-details.name.hint"))))
-    ).withFormField(form("name")))
+    ).withFormField(form("newBusinessName")))
 }
 
 @main(
@@ -66,7 +66,7 @@
                     isPageHeading = true
                 ))
             )),
-            name = "accept",
+            name = "useDefault",
             items = Seq(
                 RadioItem(
                     content = Text(msgs("common.yes")),
@@ -78,7 +78,7 @@
                     conditionalHtml = Some(newBusinessNameInput)
                 )
             )
-        ).withFormField(form("accept")))
+        ).withFormField(form("useDefault")))
 
         @govukButton(Button(content = Text(msgs("common.continue"))))
     }

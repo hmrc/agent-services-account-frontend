@@ -59,7 +59,9 @@ with Logging {
     CtSubscriptionForms.newBusinessNameForm
       .bindFromRequest()
       .fold(
-        formWithErrors => Future.successful(BadRequest(ct_update_business_name(formWithErrors))),
+        formWithErrors => {
+          Future.successful(BadRequest(ct_update_business_name(formWithErrors)))
+        },
         newBusinessName => {
 //            draftDetailsService.updateDraftDetails(ctDetails =>
 //              ctDetails.copy(agencyDetails = desiDetails.agencyDetails.copy(agencyName = Some(newBusinessName)))
