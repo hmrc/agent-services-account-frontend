@@ -22,19 +22,23 @@ import play.api.data.Forms._
 import uk.gov.voa.play.form.ConditionalMappings.isEqual
 import uk.gov.voa.play.form.ConditionalMappings.mandatoryIf
 
+//TODO: 10902 Add Form Spec
+
+// TODO: 10902 move into models
 case class CtBusinessNameFormValues(
   useDefault: Boolean,
   newBusinessName: Option[String]
 )
-//  TODO: Make newBusinessName: Option[String]
 
 object CtSubscriptionForms {
+
+//  TODO: 10902 move keys into private vals
 
   private val BusinessNameRegex = """^[A-Za-z0-9\,\.\'\-\/\ ]{2,200}$""".r
 
   private val trimmedText = text.transform[String](x => x.trim, x => x)
 
-//  TODO: NEED YES/NO FOR SUBSCRIPTION BUSINESS NAME
+//  TODO: 10902 move out string keys into messages file
 
   private val useDefaultMapping: Mapping[Boolean] = optional(boolean)
     .verifying("NEED TO SELECT YES/NO", _.isDefined)

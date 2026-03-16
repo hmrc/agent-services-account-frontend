@@ -35,6 +35,9 @@
     govukErrorSummary: GovukErrorSummary
 )
 
+@* TODO: 10902 check button text, pull out string keys to messages file, correct template display *@
+@* TODO: 10902 Add ViewSpec *@
+
 @(form: Form[CtBusinessNameFormValues])(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
 
 @newBusinessNameInput = {
