@@ -32,17 +32,16 @@ object CtSubscriptionForms {
   private val businessNameUseDefaultKey = "businessNameUseDefault"
   private val businessNameNewKey = "businessNameNew"
 
+//  TODO: 10902: Check against subscription API regex
   private val BusinessNameRegex = """^[A-Za-z0-9\,\.\'\-\/\ ]{2,200}$""".r
 
-//  TODO: 10902 move out string keys into messages file
-
   private val businessNameUseDefaultMapping: Mapping[Boolean] = optional(boolean)
-    .verifying("NEED TO SELECT YES/NO", _.isDefined)
+    .verifying("asa.legacy.ct.business-name.default.error.required", _.isDefined)
     .transform(_.get, (b: Boolean) => Option(b))
 
   private val businessNameNewOptionalMapping: Mapping[String] = trimmedText
-    .verifying("update-contact-details.name.error.empty", _.nonEmpty)
-    .verifying("update-contact-details.name.error.invalid", x => x.isEmpty || BusinessNameRegex.matches(x))
+    .verifying("asa.legacy.ct.business-name.now-input.error.empty", _.nonEmpty)
+    .verifying("asa.legacy.ct.business-name.now-input.error.invalid", x => x.isEmpty || BusinessNameRegex.matches(x))
 
   def newBusinessNameForm: Form[CtBusinessNameFormValues] = {
     Form(
