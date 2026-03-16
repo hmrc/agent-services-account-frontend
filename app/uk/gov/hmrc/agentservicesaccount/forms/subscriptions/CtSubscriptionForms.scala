@@ -14,21 +14,16 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.agentservicesaccount.forms
+package uk.gov.hmrc.agentservicesaccount.forms.subscriptions
 
+import play.api.data.Forms._
 import play.api.data.Form
 import play.api.data.Mapping
-import play.api.data.Forms._
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtBusinessNameFormValues
 import uk.gov.voa.play.form.ConditionalMappings.isEqual
 import uk.gov.voa.play.form.ConditionalMappings.mandatoryIf
 
 //TODO: 10902 Add Form Spec
-
-// TODO: 10902 move into models
-case class CtBusinessNameFormValues(
-  useDefault: Boolean,
-  newBusinessName: Option[String]
-)
 
 object CtSubscriptionForms {
 
