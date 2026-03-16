@@ -43,7 +43,7 @@
 @newBusinessNameInput = {
     @govukInput(Input(
         hint = Some(Hint(content = Text(msgs("update-contact-details.name.hint"))))
-    ).withFormField(form("newBusinessName")))
+    ).withFormField(form("businessNameNew")))
 }
 
 @main(
@@ -65,7 +65,7 @@
                     isPageHeading = true
                 ))
             )),
-            name = "useDefault",
+            name = "businessNameUseDefault",
             items = Seq(
                 RadioItem(
                     content = Text(msgs("common.yes")),
@@ -77,7 +77,7 @@
                     conditionalHtml = Some(newBusinessNameInput)
                 )
             )
-        ).withFormField(form("useDefault")))
+        ).withFormField(form("businessNameUseDefault")))
 
         @govukButton(Button(content = Text(msgs("common.continue"))))
     }

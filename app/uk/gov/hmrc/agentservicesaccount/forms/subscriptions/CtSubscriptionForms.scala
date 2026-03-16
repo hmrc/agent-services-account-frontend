@@ -27,29 +27,30 @@ import uk.gov.voa.play.form.ConditionalMappings.mandatoryIf
 
 object CtSubscriptionForms {
 
-//  TODO: 10902 move keys into private vals
+  private val trimmedText = text.transform[String](x => x.trim, x => x)
+
+  private val businessNameUseDefaultKey = "businessNameUseDefault"
+  private val businessNameNewKey = "businessNameNew"
 
   private val BusinessNameRegex = """^[A-Za-z0-9\,\.\'\-\/\ ]{2,200}$""".r
 
-  private val trimmedText = text.transform[String](x => x.trim, x => x)
-
 //  TODO: 10902 move out string keys into messages file
 
-  private val useDefaultMapping: Mapping[Boolean] = optional(boolean)
+  private val businessNameUseDefaultMapping: Mapping[Boolean] = optional(boolean)
     .verifying("NEED TO SELECT YES/NO", _.isDefined)
     .transform(_.get, (b: Boolean) => Option(b))
 
-  private val newBusinessNameOptionalMapping: Mapping[String] = trimmedText
+  private val businessNameNewOptionalMapping: Mapping[String] = trimmedText
     .verifying("update-contact-details.name.error.empty", _.nonEmpty)
     .verifying("update-contact-details.name.error.invalid", x => x.isEmpty || BusinessNameRegex.matches(x))
 
   def newBusinessNameForm: Form[CtBusinessNameFormValues] = {
     Form(
       mapping(
-        "useDefault" -> useDefaultMapping,
-        "newBusinessName" -> mandatoryIf(
-          isEqual("useDefault", "false"),
-          newBusinessNameOptionalMapping
+        businessNameUseDefaultKey -> businessNameUseDefaultMapping,
+        businessNameNewKey -> mandatoryIf(
+          isEqual(businessNameUseDefaultKey, "false"),
+          businessNameNewOptionalMapping
         )
       )(CtBusinessNameFormValues.apply)(o => Some(o.useDefault, o.newBusinessName))
     )
