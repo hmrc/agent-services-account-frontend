@@ -35,19 +35,18 @@
     govukErrorSummary: GovukErrorSummary
 )
 
-@* TODO: 10902 pull out string keys to messages file, correct template display *@
 @* TODO: 10902 Add ViewSpec *@
 
 @(form: Form[CtBusinessNameFormValues])(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
 
 @newBusinessNameInput = {
     @govukInput(Input(
-        hint = Some(Hint(content = Text(msgs("update-contact-details.name.hint"))))
+        hint = Some(Hint(content = Text(msgs("asa.legacy.ct.business-name.new-input.hint"))))
     ).withFormField(form("businessNameNew")))
 }
 
 @main(
-    pageTitle = withErrorPrefix(form.hasErrors, msgs("update-contact-details.name.heading")),
+    pageTitle = withErrorPrefix(form.hasErrors, msgs("asa.legacy.ct.business-name.title")),
     mimicBrowserBackLink = true,
     showSecondaryNav = false
 ) {
@@ -60,7 +59,7 @@
         @govukRadios(Radios(
             fieldset = Some(Fieldset(
                 legend = Some(Legend(
-                    content = Text(msgs("amls.confirm-supervisory-body.h1")),
+                    content = Text(msgs("asa.legacy.ct.business-name.title")),
                     classes = "govuk-fieldset__legend--l",
                     isPageHeading = true
                 ))
@@ -68,11 +67,11 @@
             name = "businessNameUseDefault",
             items = Seq(
                 RadioItem(
-                    content = Text(msgs("common.yes")),
+                    content = Text(msgs("TODO: 10902 Replace with fetched business name")),
                     value = Some("true")
                 ),
                 RadioItem(
-                    content = Text(msgs("common.no")),
+                    content = Text(msgs("asa.legacy.ct.business-name.default.false")),
                     value = Some("false"),
                     conditionalHtml = Some(newBusinessNameInput)
                 )
