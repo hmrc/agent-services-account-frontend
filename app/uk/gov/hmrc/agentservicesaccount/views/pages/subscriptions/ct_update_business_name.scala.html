@@ -37,7 +37,7 @@
 
 @* TODO: 10902 Add ViewSpec *@
 
-@(form: Form[CtBusinessNameFormValues])(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
+@(form: Form[CtBusinessNameFormValues], subscriptionBusinessName: String)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
 
 @newBusinessNameInput = {
     @govukInput(Input(
@@ -67,7 +67,7 @@
             name = "businessNameUseDefault",
             items = Seq(
                 RadioItem(
-                    content = Text(msgs("TODO: 10902 Replace with fetched business name")),
+                    content = Text(subscriptionBusinessName),
                     value = Some("true")
                 ),
                 RadioItem(

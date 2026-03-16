@@ -52,15 +52,20 @@ with I18nSupport
 with Logging {
 
   val showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-//    TODO: 10902: Pull in dummy business name from draftDetailsService and pass into template
-    Future.successful(Ok(ct_update_business_name(CtSubscriptionForms.newBusinessNameForm)))
+    draftDetailsService.dummyCtGetBusinessNameMethod().map(subscriptionBusinessName => {
+      Ok(ct_update_business_name(CtSubscriptionForms.newBusinessNameForm, subscriptionBusinessName))
+    })
   }
 
   val onSubmit: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     CtSubscriptionForms.newBusinessNameForm
       .bindFromRequest()
       .fold(
-        formWithErrors => Future.successful(BadRequest(ct_update_business_name(formWithErrors))),
+        formWithErrors => {
+          draftDetailsService.dummyCtGetBusinessNameMethod().map(subscriptionBusinessName => {
+            Ok(ct_update_business_name(formWithErrors, subscriptionBusinessName))
+          })
+        },
         newBusinessName => {
 //            draftDetailsService.updateDraftDetails(ctDetails =>
 //              ctDetails.copy(agencyDetails = desiDetails.agencyDetails.copy(agencyName = Some(newBusinessName)))
