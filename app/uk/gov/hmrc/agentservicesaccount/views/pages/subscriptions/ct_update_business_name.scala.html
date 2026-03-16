@@ -35,17 +35,13 @@
     govukErrorSummary: GovukErrorSummary
 )
 
-@* TODO: 10902 check button text, pull out string keys to messages file, correct template display *@
+@* TODO: 10902 pull out string keys to messages file, correct template display *@
 @* TODO: 10902 Add ViewSpec *@
 
 @(form: Form[CtBusinessNameFormValues])(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
 
 @newBusinessNameInput = {
     @govukInput(Input(
-        label = Label(
-            classes = "govuk-label--l",
-            content = HtmlContent(msgs("update-contact-details.name.heading"))
-        ),
         hint = Some(Hint(content = Text(msgs("update-contact-details.name.hint"))))
     ).withFormField(form("newBusinessName")))
 }
