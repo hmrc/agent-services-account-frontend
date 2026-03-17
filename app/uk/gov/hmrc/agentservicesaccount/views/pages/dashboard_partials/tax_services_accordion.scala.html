@@ -15,6 +15,7 @@
  *@
 
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+@import uk.gov.hmrc.agentservicesaccount.controllers.routes
 @import uk.gov.hmrc.agentservicesaccount.models.subscriptions.{LegacyRegime, SubscriptionInfo, SubscriptionStatus}
 @import uk.gov.hmrc.govukfrontend.views.Aliases.{Accordion, HtmlContent, Text, WarningText}
 @import uk.gov.hmrc.govukfrontend.views.html.components.{GovukAccordion, GovukWarningText}
@@ -175,7 +176,7 @@
     @p(msgs("asa.legacy.ct.col1.p1", msgs("asa.legacy.ct.col1.link1.href")))
     @p(msgs("asa.legacy.ct.col1.p2"))
     @h4("asa.legacy.ct.col2.h3")
-    @p(msgs("asa.legacy.ct.col2.p1", "CT business name page link"))
+    @p(msgs("asa.legacy.ct.col2.p1", routes.AgentServicesController.manageAccount.url))
   } else {
     @h4("asa.legacy.ct.h3")
     @p(msgs("asa.legacy.ct.p1", status))

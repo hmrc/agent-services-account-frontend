@@ -49,13 +49,13 @@ extends WrappedRequest[A](request)
 
 case class CtJourney(
   asaDetails: AgencyDetails,
-  businessNameFlag: Boolean,
+  useCustomBusinessName: Boolean,
   businessNameAnswer: Option[String],
-  phoneNumberFlag: Boolean,
+  useCustomPhoneNumber: Boolean,
   phoneNumberAnswer: Option[String],
-  emailFlag: Boolean,
+  useCustomEmail: Boolean,
   emailAnswer: Option[String],
-  addressFlag: Boolean,
+  useCustomAddress: Boolean,
   addressAnswer: Option[BusinessAddress]
 )
 

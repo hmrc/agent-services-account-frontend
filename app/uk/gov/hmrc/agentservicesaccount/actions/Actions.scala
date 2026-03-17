@@ -138,13 +138,13 @@ class Actions @Inject() (
           )
         def ctJourney(asaDetails: AgencyDetails) = CtJourney(
           asaDetails = asaDetails,
-          businessNameFlag = false,
+          useCustomBusinessName = false,
           businessNameAnswer = None,
-          phoneNumberFlag = false,
+          useCustomPhoneNumber = false,
           phoneNumberAnswer = None,
-          emailFlag = false,
+          useCustomEmail = false,
           emailAnswer = None,
-          addressFlag = false,
+          useCustomAddress = false,
           addressAnswer = None
         )
         implicit val ctJourneyFormat: OFormat[CtJourney] = Json.format[CtJourney]
@@ -154,14 +154,24 @@ class Actions @Inject() (
               case Some(journey) => Future.successful(buildRequest(journey))
               case None =>
                 agentServicesAccountConnector.getAgentRecord.flatMap { response =>
-                  val journey = ctJourney(response.agencyDetails.getOrElse(AgencyDetails(None, None, None, None)))
+                  val journey = ctJourney(response.agencyDetails.getOrElse(AgencyDetails(
+                    None,
+                    None,
+                    None,
+                    None
+                  )))
                   sessionCacheService.put(ctJourneyKey, journey).map { _ => buildRequest(journey) }
                 }
             }
           }
           else {
             // TODO: Feature disabled → initialise empty journey (no cache interaction); Should it return forbidden?
-            val emptyJourney = ctJourney(AgencyDetails(None, None, None, None))
+            val emptyJourney = ctJourney(AgencyDetails(
+              None,
+              None,
+              None,
+              None
+            ))
             Future.successful(buildRequest(emptyJourney))
           }
         resultF.map(Right(_))

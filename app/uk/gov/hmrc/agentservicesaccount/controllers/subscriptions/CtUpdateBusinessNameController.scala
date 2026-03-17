@@ -25,6 +25,7 @@ import uk.gov.hmrc.agentservicesaccount.controllers.{routes => homeRoutes}
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtJourneySupport
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionForms
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtBusinessNameFormValues
 import uk.gov.hmrc.agentservicesaccount.services.DraftDetailsService
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions._
@@ -54,9 +55,20 @@ with I18nSupport
 with Logging {
 
   val showPage: Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
-    draftDetailsService.dummyCtGetBusinessNameMethod().map(subscriptionBusinessName => {
-      Ok(ct_update_business_name(CtSubscriptionForms.newBusinessNameForm, subscriptionBusinessName))
-    })
+    val journey = request.ctSubscriptionJourney
+
+    val subscriptionBusinessName = journey.asaDetails.agencyName.getOrElse("")
+
+    val form = CtSubscriptionForms.newBusinessNameForm.fill(
+      CtBusinessNameFormValues(
+        useAsaData = !journey.useCustomBusinessName,
+        newBusinessName = journey.businessNameAnswer
+      )
+    )
+
+    Future.successful(
+      Ok(ct_update_business_name(form, subscriptionBusinessName))
+    )
   }
 
   val onSubmit: Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
