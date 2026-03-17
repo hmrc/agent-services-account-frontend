@@ -17,10 +17,13 @@
 package uk.gov.hmrc.agentservicesaccount.views.pages.subscriptions
 
 import org.jsoup.Jsoup
-import org.jsoup.nodes.{Document, Element}
+import org.jsoup.nodes.Document
+import org.jsoup.nodes.Element
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.data.Form
-import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionForms.{businessNameNewKey, businessNameUseAsaDataKey, newBusinessNameForm}
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionForms.businessNameNewKey
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionForms.businessNameUseAsaDataKey
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionForms.newBusinessNameForm
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtBusinessNameFormValues
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.ct_update_business_name
@@ -32,10 +35,14 @@ extends ViewBaseSpec {
   val subscriptionBusinessName = "ABC-No.1 Accountants"
 
   val form: Form[CtBusinessNameFormValues] = newBusinessNameForm
-  val formWithUseAsaError: Form[CtBusinessNameFormValues] =
-    form.withError(key = businessNameUseAsaDataKey, message = messages("asa.legacy.ct.business-name.use-asa.error.required"))
-  val formWithNewBusinessNameError: Form[CtBusinessNameFormValues] =
-    form.withError(key = businessNameNewKey, message = messages("asa.legacy.ct.business-name.new-input.error.empty"))
+  val formWithUseAsaError: Form[CtBusinessNameFormValues] = form.withError(
+    key = businessNameUseAsaDataKey,
+    message = messages("asa.legacy.ct.business-name.use-asa.error.required")
+  )
+  val formWithNewBusinessNameError: Form[CtBusinessNameFormValues] = form.withError(
+    key = businessNameNewKey,
+    message = messages("asa.legacy.ct.business-name.new-input.error.empty")
+  )
 
   "ct_update_business_name" when {
 
@@ -85,13 +92,19 @@ extends ViewBaseSpec {
       }
 
       "display correct radio options" in {
-//        TODO: Implement
-        true mustBe false
+        val radios = doc.select(".govuk-radios__item")
+        radios.size() mustBe 2
+        radios.get(0).text() mustBe subscriptionBusinessName
+        radios.get(0).select("input").attr("name") mustBe businessNameUseAsaDataKey
+        radios.get(1).text() mustBe messages("asa.legacy.ct.business-name.use-asa.false")
+        radios.get(1).select("input").attr("name") mustBe businessNameUseAsaDataKey
       }
 
       "hide the conditional new business name input" in {
-        //        TODO: Implement
-        true mustBe false
+        val conditionalHidden = doc.select(".govuk-radios__conditional--hidden")
+        conditionalHidden.size() mustBe 1
+        conditionalHidden.text() mustBe messages("asa.legacy.ct.business-name.new-input.hint")
+        conditionalHidden.select(".govuk-input").attr("name") mustBe businessNameNewKey
       }
     }
 

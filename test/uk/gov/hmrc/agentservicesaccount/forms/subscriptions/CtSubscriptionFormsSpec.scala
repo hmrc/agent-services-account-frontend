@@ -33,13 +33,17 @@ with Matchers {
 
   "newBusinessNameForm form binding" should {
     s"be successful when $businessNameUseAsaDataKey true" in {
-        val businessNameValues = List(emptyValue, validNewBusinessName, invalidNewBusinessName)
-        val params = Map(
-          businessNameUseAsaDataKey -> true.toString,
-          businessNameNewKey -> businessNameValues(Random.nextInt(businessNameValues.length))
-        )
+      val businessNameValues = List(
+        emptyValue,
+        validNewBusinessName,
+        invalidNewBusinessName
+      )
+      val params = Map(
+        businessNameUseAsaDataKey -> true.toString,
+        businessNameNewKey -> businessNameValues(Random.nextInt(businessNameValues.length))
+      )
 
-        newBusinessNameForm.bind(params).value shouldBe Some(CtBusinessNameFormValues(useAsaData = true, None))
+      newBusinessNameForm.bind(params).value shouldBe Some(CtBusinessNameFormValues(useAsaData = true, None))
     }
 
     s"be successful when $businessNameUseAsaDataKey false and $businessNameNewKey valid" in {
@@ -52,7 +56,11 @@ with Matchers {
     }
 
     s"error when $businessNameUseAsaDataKey empty" in {
-      val businessNameValues = List(emptyValue, validNewBusinessName, invalidNewBusinessName)
+      val businessNameValues = List(
+        emptyValue,
+        validNewBusinessName,
+        invalidNewBusinessName
+      )
       val params = Map(
         businessNameUseAsaDataKey -> emptyValue,
         businessNameNewKey -> businessNameValues(Random.nextInt(businessNameValues.length))
