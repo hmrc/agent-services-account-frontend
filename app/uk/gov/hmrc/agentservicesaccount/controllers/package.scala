@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.agentservicesaccount
 
+import uk.gov.hmrc.agentservicesaccount.actions.CtJourney
 import uk.gov.hmrc.agentservicesaccount.models.UpdateAmlsJourney
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.DesignatoryDetails
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.YourDetails
@@ -47,6 +48,8 @@ package object controllers {
   val emailPendingVerificationKey: DataKey[String] = DataKey("emailPendingVerification")
 
   val amlsJourneyKey: DataKey[UpdateAmlsJourney] = DataKey[UpdateAmlsJourney]("amlsJourney")
+
+  val ctJourneyKey: DataKey[CtJourney] = DataKey[CtJourney]("ctJourney")
 
   val sessionKeys: List[DataKey[String]] = List(
     agentSizeKey,

@@ -53,13 +53,13 @@ with CtJourneySupport
 with I18nSupport
 with Logging {
 
-  val showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
+  val showPage: Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
     draftDetailsService.dummyCtGetBusinessNameMethod().map(subscriptionBusinessName => {
       Ok(ct_update_business_name(CtSubscriptionForms.newBusinessNameForm, subscriptionBusinessName))
     })
   }
 
-  val onSubmit: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
+  val onSubmit: Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
     CtSubscriptionForms.newBusinessNameForm
       .bindFromRequest()
       .fold(

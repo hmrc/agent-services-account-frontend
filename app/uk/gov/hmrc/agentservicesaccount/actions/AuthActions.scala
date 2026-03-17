@@ -20,7 +20,9 @@ import play.api.mvc.Results._
 import play.api.mvc._
 import play.api.Environment
 import play.api.Logging
+import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
 import uk.gov.hmrc.agentservicesaccount.models.Arn
+import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionInfo
@@ -37,6 +39,26 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
+
+class CtJourneyRequest[A](
+  val ctSubscriptionJourney: CtJourney,
+  val agentInfo: AgentInfo,
+  val request: Request[A]
+)
+extends WrappedRequest[A](request)
+
+case class CtJourney(
+  asaDetails: AgencyDetails,
+  businessNameFlag: Boolean,
+  businessNameAnswer: Option[String],
+  phoneNumberFlag: Boolean,
+  phoneNumberAnswer: Option[String],
+  emailFlag: Boolean,
+  emailAnswer: Option[String],
+  addressFlag: Boolean,
+  addressAnswer: Option[BusinessAddress]
+)
+
 class AuthRequestWithAgentInfo[A](
   val agentInfo: AgentInfo,
   val request: Request[A]

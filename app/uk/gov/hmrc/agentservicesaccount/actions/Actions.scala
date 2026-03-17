@@ -16,15 +16,22 @@
 
 package uk.gov.hmrc.agentservicesaccount.actions
 
+import play.api.libs.json.Json
+import play.api.libs.json.OFormat
 import play.api.mvc.Results.Forbidden
 import play.api.mvc.Results.Redirect
 import play.api.mvc._
-import uk.gov.hmrc.agentservicesaccount.models.Arn
-import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
-import uk.gov.hmrc.agentservicesaccount.controllers.routes
+import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
 import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
 import uk.gov.hmrc.agentservicesaccount.models.AmlsDetails
+import uk.gov.hmrc.agentservicesaccount.models.Arn
+import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
+import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
+import uk.gov.hmrc.agentservicesaccount.controllers.ctJourneyKey
+import uk.gov.hmrc.agentservicesaccount.controllers.routes
 import uk.gov.hmrc.agentservicesaccount.services.AgentRecordService
+import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -35,9 +42,14 @@ import scala.concurrent.Future
 class Actions @Inject() (
   agentAssuranceConnector: AgentAssuranceConnector,
   agentRecordService: AgentRecordService,
+  sessionCacheService: SessionCacheService,
+  agentServicesAccountConnector: AgentServicesAccountConnector,
   authActions: AuthActions,
-  actionBuilder: DefaultActionBuilder
-)(implicit ec: ExecutionContext) {
+  actionBuilder: DefaultActionBuilder,
+  appConfig: AppConfig
+)(implicit
+  ec: ExecutionContext
+) {
 
   private def filterSuspendedAgent(onlyForSuspended: Boolean): ActionFilter[AuthRequestWithAgentInfo] =
     new ActionFilter[AuthRequestWithAgentInfo] {
@@ -104,5 +116,56 @@ class Actions @Inject() (
 
   def authActionWithSuspensionCheckWithAgentRecord: ActionBuilder[AuthRequestWithAgentProfile, AnyContent] =
     actionBuilder andThen authActions.authActionRefiner andThen withAgentRecord(false)
+
+  def authActionWithCtJourney: ActionBuilder[CtJourneyRequest, AnyContent] =
+    actionBuilder andThen
+      authActions.authActionRefiner andThen
+      filterSuspendedAgent(false) andThen
+      withCtJourney
+
+  private def withCtJourney: ActionRefiner[AuthRequestWithAgentInfo, CtJourneyRequest] =
+    new ActionRefiner[AuthRequestWithAgentInfo, CtJourneyRequest] {
+      override protected def executionContext: ExecutionContext = ec
+      override protected def refine[A](
+        request: AuthRequestWithAgentInfo[A]
+      ): Future[Either[Result, CtJourneyRequest[A]]] = {
+        implicit val req: Request[A] = request.request
+        def buildRequest(journey: CtJourney): CtJourneyRequest[A] =
+          new CtJourneyRequest(
+            ctSubscriptionJourney = journey,
+            agentInfo = request.agentInfo,
+            request = request.request
+          )
+        def ctJourney(asaDetails: AgencyDetails) = CtJourney(
+          asaDetails = asaDetails,
+          businessNameFlag = false,
+          businessNameAnswer = None,
+          phoneNumberFlag = false,
+          phoneNumberAnswer = None,
+          emailFlag = false,
+          emailAnswer = None,
+          addressFlag = false,
+          addressAnswer = None
+        )
+        implicit val ctJourneyFormat: OFormat[CtJourney] = Json.format[CtJourney]
+        val resultF: Future[CtJourneyRequest[A]] =
+          if (appConfig.enableLegacySubscriptionLink) {
+            sessionCacheService.get[CtJourney](ctJourneyKey).flatMap {
+              case Some(journey) => Future.successful(buildRequest(journey))
+              case None =>
+                agentServicesAccountConnector.getAgentRecord.flatMap { response =>
+                  val journey = ctJourney(response.agencyDetails.getOrElse(AgencyDetails(None, None, None, None)))
+                  sessionCacheService.put(ctJourneyKey, journey).map { _ => buildRequest(journey) }
+                }
+            }
+          }
+          else {
+            // TODO: Feature disabled → initialise empty journey (no cache interaction); Should it return forbidden?
+            val emptyJourney = ctJourney(AgencyDetails(None, None, None, None))
+            Future.successful(buildRequest(emptyJourney))
+          }
+        resultF.map(Right(_))
+      }
+    }
 
 }
