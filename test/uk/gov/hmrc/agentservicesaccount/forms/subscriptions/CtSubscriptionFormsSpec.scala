@@ -72,7 +72,7 @@ with Matchers {
 
       val validatedForm = newBusinessNameForm.bind(params)
       validatedForm.hasErrors shouldBe true
-      validatedForm.error(businessNameNewKey).get.message shouldBe "asa.legacy.ct.business-name.now-input.error.empty"
+      validatedForm.error(businessNameNewKey).get.message shouldBe "asa.legacy.ct.business-name.new-input.error.empty"
       validatedForm.errors.length shouldBe 1
     }
 
@@ -84,7 +84,7 @@ with Matchers {
 
       val validatedForm = newBusinessNameForm.bind(params)
       validatedForm.hasErrors shouldBe true
-      validatedForm.error(businessNameNewKey).get.message shouldBe "asa.legacy.ct.business-name.now-input.error.invalid"
+      validatedForm.error(businessNameNewKey).get.message shouldBe "asa.legacy.ct.business-name.new-input.error.invalid"
       validatedForm.errors.length shouldBe 1
     }
 

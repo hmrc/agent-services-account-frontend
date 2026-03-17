@@ -35,7 +35,7 @@ extends ViewBaseSpec {
   val formWithUseAsaError: Form[CtBusinessNameFormValues] =
     form.withError(key = businessNameUseAsaDataKey, message = messages("asa.legacy.ct.business-name.use-asa.error.required"))
   val formWithNewBusinessNameError: Form[CtBusinessNameFormValues] =
-    form.withError(key = businessNameNewKey, message = messages("asa.legacy.ct.business-name.now-input.error.empty"))
+    form.withError(key = businessNameNewKey, message = messages("asa.legacy.ct.business-name.new-input.error.empty"))
 
   "ct_update_business_name" when {
 
@@ -144,7 +144,7 @@ extends ViewBaseSpec {
 
       "display correct error summary link" in {
         val errorLink: Element = doc.select(".govuk-error-summary__list a").first()
-        errorLink.text() mustBe messages("asa.legacy.ct.business-name.now-input.error.empty")
+        errorLink.text() mustBe messages("asa.legacy.ct.business-name.new-input.error.empty")
         errorLink.attr("href") mustBe s"#$businessNameNewKey"
       }
 
@@ -153,7 +153,7 @@ extends ViewBaseSpec {
       }
 
       "display error message on form" in {
-        doc.select(".govuk-error-message").text() mustBe s"Error: ${messages("asa.legacy.ct.business-name.now-input.error.empty")}"
+        doc.select(".govuk-error-message").text() mustBe s"Error: ${messages("asa.legacy.ct.business-name.new-input.error.empty")}"
       }
     }
   }

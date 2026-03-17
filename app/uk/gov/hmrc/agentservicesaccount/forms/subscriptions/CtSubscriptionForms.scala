@@ -38,8 +38,8 @@ object CtSubscriptionForms {
     .transform(_.get, (b: Boolean) => Option(b))
 
   private val businessNameNewOptionalMapping: Mapping[String] = trimmedText
-    .verifying("asa.legacy.ct.business-name.now-input.error.empty", _.nonEmpty)
-    .verifying("asa.legacy.ct.business-name.now-input.error.invalid", x => x.isEmpty || BusinessNameRegex.matches(x))
+    .verifying("asa.legacy.ct.business-name.new-input.error.empty", _.nonEmpty)
+    .verifying("asa.legacy.ct.business-name.new-input.error.invalid", x => x.isEmpty || BusinessNameRegex.matches(x))
 
   def newBusinessNameForm: Form[CtBusinessNameFormValues] = {
     Form(
