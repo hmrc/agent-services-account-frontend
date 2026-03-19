@@ -16,20 +16,19 @@
 
 package uk.gov.hmrc.agentservicesaccount.actions
 
-import play.api.libs.json.Json
-import play.api.libs.json.OFormat
 import play.api.mvc.Results.Forbidden
+import play.api.mvc.Results.NotImplemented
 import play.api.mvc.Results.Redirect
 import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
-import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
-import uk.gov.hmrc.agentservicesaccount.models.AmlsDetails
-import uk.gov.hmrc.agentservicesaccount.models.Arn
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.ctJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.routes
+import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
+import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
+import uk.gov.hmrc.agentservicesaccount.models.AmlsDetails
+import uk.gov.hmrc.agentservicesaccount.models.Arn
 import uk.gov.hmrc.agentservicesaccount.services.AgentRecordService
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 
@@ -138,43 +137,33 @@ class Actions @Inject() (
           )
         def ctJourney(asaDetails: AgencyDetails) = CtJourney(
           asaDetails = asaDetails,
-          useCustomBusinessName = false,
+          useCustomBusinessName = None,
           businessNameAnswer = None,
-          useCustomPhoneNumber = false,
+          useCustomPhoneNumber = None,
           phoneNumberAnswer = None,
-          useCustomEmail = false,
+          useCustomEmail = None,
           emailAnswer = None,
-          useCustomAddress = false,
+          useCustomAddress = None,
           addressAnswer = None
         )
-        implicit val ctJourneyFormat: OFormat[CtJourney] = Json.format[CtJourney]
-        val resultF: Future[CtJourneyRequest[A]] =
-          if (appConfig.enableLegacySubscriptionLink) {
-            sessionCacheService.get[CtJourney](ctJourneyKey).flatMap {
-              case Some(journey) => Future.successful(buildRequest(journey))
-              case None =>
-                agentServicesAccountConnector.getAgentRecord.flatMap { response =>
-                  val journey = ctJourney(response.agencyDetails.getOrElse(AgencyDetails(
-                    None,
-                    None,
-                    None,
-                    None
-                  )))
-                  sessionCacheService.put(ctJourneyKey, journey).map { _ => buildRequest(journey) }
-                }
-            }
+        if (appConfig.enableLegacySubscriptionLink) {
+          sessionCacheService.get[CtJourney](ctJourneyKey).flatMap {
+            case Some(journey) => Future.successful(Right(buildRequest(journey)))
+            case None =>
+              agentServicesAccountConnector.getAgentRecord.flatMap { response =>
+                val journey = ctJourney(response.agencyDetails.getOrElse(AgencyDetails(
+                  None,
+                  None,
+                  None,
+                  None
+                )))
+                sessionCacheService.put(ctJourneyKey, journey).map { _ => Right(buildRequest(journey)) }
+              }
           }
-          else {
-            // TODO: Feature disabled → initialise empty journey (no cache interaction); Should it return forbidden?
-            val emptyJourney = ctJourney(AgencyDetails(
-              None,
-              None,
-              None,
-              None
-            ))
-            Future.successful(buildRequest(emptyJourney))
-          }
-        resultF.map(Right(_))
+        }
+        else {
+          Future.successful(Left(NotImplemented))
+        }
       }
     }
 

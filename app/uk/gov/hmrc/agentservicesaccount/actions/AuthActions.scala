@@ -16,24 +16,26 @@
 
 package uk.gov.hmrc.agentservicesaccount.actions
 
-import play.api.mvc.Results._
-import play.api.mvc._
 import play.api.Environment
 import play.api.Logging
+import play.api.libs.json.Json
+import play.api.libs.json.OFormat
+import play.api.mvc.Results._
+import play.api.mvc._
+import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
 import uk.gov.hmrc.agentservicesaccount.models.Arn
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
-import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionInfo
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionStatus
+import uk.gov.hmrc.agentservicesaccount.utils.RequestSupport._
 import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals._
 import uk.gov.hmrc.auth.core.retrieve.Credentials
 import uk.gov.hmrc.auth.core.retrieve.Name
 import uk.gov.hmrc.auth.core.retrieve.~
-import uk.gov.hmrc.agentservicesaccount.utils.RequestSupport._
 
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -49,15 +51,19 @@ extends WrappedRequest[A](request)
 
 case class CtJourney(
   asaDetails: AgencyDetails,
-  useCustomBusinessName: Boolean,
+  useCustomBusinessName: Option[Boolean],
   businessNameAnswer: Option[String],
-  useCustomPhoneNumber: Boolean,
+  useCustomPhoneNumber: Option[Boolean],
   phoneNumberAnswer: Option[String],
-  useCustomEmail: Boolean,
+  useCustomEmail: Option[Boolean],
   emailAnswer: Option[String],
-  useCustomAddress: Boolean,
+  useCustomAddress: Option[Boolean],
   addressAnswer: Option[BusinessAddress]
 )
+
+object CtJourney {
+  implicit val format: OFormat[CtJourney] = Json.format[CtJourney]
+}
 
 class AuthRequestWithAgentInfo[A](
   val agentInfo: AgentInfo,

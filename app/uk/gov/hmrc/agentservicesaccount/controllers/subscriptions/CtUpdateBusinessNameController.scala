@@ -21,12 +21,10 @@ import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+import uk.gov.hmrc.agentservicesaccount.controllers.ctJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.{routes => homeRoutes}
-import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtJourneySupport
-import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionForms
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtBusinessNameFormValues
-import uk.gov.hmrc.agentservicesaccount.services.DraftDetailsService
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -35,14 +33,10 @@ import javax.inject._
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
-// TODO: 10902 Add Controller IT Spec
-
 @Singleton
 class CtUpdateBusinessNameController @Inject() (
   actions: Actions,
   val sessionCacheService: SessionCacheService,
-  //  TODO: 10902 Only here to allow CtUpdateBusinessNameController to compile
-  draftDetailsService: DraftDetailsService,
   ct_update_business_name: ct_update_business_name,
   cc: MessagesControllerComponents
 )(implicit
@@ -50,7 +44,6 @@ class CtUpdateBusinessNameController @Inject() (
   val ec: ExecutionContext
 )
 extends FrontendController(cc)
-with CtJourneySupport
 with I18nSupport
 with Logging {
 
@@ -59,40 +52,52 @@ with Logging {
 
     val subscriptionBusinessName = journey.asaDetails.agencyName.getOrElse("")
 
-    val form = CtSubscriptionForms.newBusinessNameForm.fill(
-      CtBusinessNameFormValues(
-        useAsaData = !journey.useCustomBusinessName,
-        newBusinessName = journey.businessNameAnswer
-      )
-    )
+    val form =
+      journey.useCustomBusinessName match {
+
+        case Some(useCustom) =>
+          CtSubscriptionForms.newBusinessNameForm.fill(
+            CtBusinessNameFormValues(
+              useAsaData = !useCustom,
+              newBusinessName = journey.businessNameAnswer
+            )
+          )
+
+        case None => CtSubscriptionForms.newBusinessNameForm
+      }
 
     Future.successful(
       Ok(ct_update_business_name(form, subscriptionBusinessName))
     )
   }
 
-  val onSubmit: Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
-    CtSubscriptionForms.newBusinessNameForm
-      .bindFromRequest()
-      .fold(
-        formWithErrors => {
-          draftDetailsService.dummyCtGetBusinessNameMethod().map(subscriptionBusinessName => {
-            Ok(ct_update_business_name(formWithErrors, subscriptionBusinessName))
-          })
-        },
-        newBusinessName => {
-//            draftDetailsService.updateDraftDetails(ctDetails =>
-//              ctDetails.copy(agencyDetails = desiDetails.agencyDetails.copy(agencyName = Some(newBusinessName)))
-//            )
-          draftDetailsService.dummyCtMethod()
-            .flatMap {
-              _ =>
-//              isJourneyComplete().flatMap(journeyComplete => Future.successful(getNextPage(journeyComplete, "businessName")))
-                //  TODO: 10902 Temp value here
-                Future.successful(Redirect(homeRoutes.AgentServicesController.root()))
-            }
-        }
-      )
+  def onSubmit: Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
+    val journey = request.ctSubscriptionJourney
+
+    CtSubscriptionForms.newBusinessNameForm.bindFromRequest().fold(
+      formWithErrors => {
+        val subscriptionBusinessName = journey.asaDetails.agencyName.getOrElse("")
+        Future.successful(
+          BadRequest(ct_update_business_name(formWithErrors, subscriptionBusinessName))
+        )
+      },
+      data => {
+        val updatedJourney = journey.copy(
+          useCustomBusinessName = Some(!data.useAsaData),
+          businessNameAnswer =
+            if (data.useAsaData)
+              None
+            else
+              data.newBusinessName
+        )
+
+        sessionCacheService
+          .put(ctJourneyKey, updatedJourney)
+          .map { _ =>
+            Redirect(homeRoutes.AgentServicesController.root()) // replace with next page
+          }
+      }
+    )
   }
 
 }
