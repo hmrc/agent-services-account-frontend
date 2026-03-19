@@ -20,8 +20,7 @@ import play.api.data.Forms._
 import play.api.data.Form
 import play.api.data.Mapping
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtBusinessNameFormValues
-import uk.gov.voa.play.form.ConditionalMappings.isEqual
-import uk.gov.voa.play.form.ConditionalMappings.mandatoryIf
+import uk.gov.voa.play.form.ConditionalMappings.mandatoryIfFalse
 
 //TODO: 10902 Add Form Spec
 
@@ -47,10 +46,7 @@ object CtSubscriptionForms {
     Form(
       mapping(
         businessNameUseAsaDataKey -> businessNameUseAsaDataMapping,
-        businessNameNewKey -> mandatoryIf(
-          isEqual(businessNameUseAsaDataKey, "false"),
-          businessNameNewOptionalMapping
-        )
+        businessNameNewKey -> mandatoryIfFalse(businessNameUseAsaDataKey, businessNameNewOptionalMapping)
       )(CtBusinessNameFormValues.apply)(o => Some(o.useAsaData, o.newBusinessName))
     )
   }
