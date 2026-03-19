@@ -166,6 +166,8 @@ asa.trusts-section.col2.h3=Rheoli ymddiriedolaeth eich cleient
 asa.trusts-section.col2.register-trust-link.text=Defnyddiwch y gwasanaeth hwn i ddiweddaru manylion ymddiriedolaeth neu ystâd eich cleient neu i ddatgan dim newidiadau ar y gofrestr ymddiriedolaethau
 asa.trusts-section.h2=Ymddiriedolaethau ac ystadau
 
+# TODO: WELSH TRANSLATIONS NEEDED FOR ALL BELOW THIS LINE
+
 # PAYE/CIS
 asa.legacy.paye.h2=PAYE/CIS
 asa.legacy.paye.col1.h3=Test Content
@@ -183,10 +185,19 @@ asa.legacy.ct.col1.p2=This will sign you out of your agent services account.
 asa.legacy.ct.col2.h3=If you want to enrol for Corporation Tax
 asa.legacy.ct.col2.p1=You can <a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">use your agent services account to enrol</a> and manage your clients.
 
+asa.legacy.ct.business-name.title=What business name should we show to your Corporation Tax clients?
+asa.legacy.ct.business-name.use-asa.false=I want to use a different business name for Corporation Tax
+asa.legacy.ct.business-name.new-input.hint=Enter a business name
+asa.legacy.ct.business-name.use-asa.error.required=TODO (Default option required error)
+asa.legacy.ct.business-name.now-input.error.empty=TODO (New name input empty error)
+asa.legacy.ct.business-name.now-input.error.invalid=TODO (New name input invalid error)
+
 # SA
 asa.legacy.sa.h2=SA
 asa.legacy.sa.col1.h3=Test Content
 asa.legacy.sa.col1.p1=Status: {0}
+
+# TODO: WELSH TRANSLATIONS NEEDED FOR ALL ABOVE THIS LINE
 
 # Custom UR banner
 banner.heading=Helpwch i wella CThEF

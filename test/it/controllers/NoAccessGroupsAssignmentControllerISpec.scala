@@ -36,8 +36,10 @@ import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.actions.AuthActions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
+import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.NoAccessGroupsAssignmentController
 import uk.gov.hmrc.agentservicesaccount.services.AgentRecordService
+import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.admin_access_for_access_groups
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve._
@@ -58,8 +60,11 @@ with TestConstants {
   private val fakeRequest = FakeRequest()
 
   // TODO move auth/suspend actions to common file for all unit tests
-  val mockAgentAssuranceConnector: AgentAssuranceConnector = mock[AgentAssuranceConnector]
-  val mockagentRecordService = mock[AgentRecordService]
+  private val mockAgentAssuranceConnector: AgentAssuranceConnector = mock[AgentAssuranceConnector]
+  private val mockAgentRecordService = mock[AgentRecordService]
+  private val mockSessionCacheService = mock[SessionCacheService]
+  private val mockAgentServicesAccountConnector = mock[AgentServicesAccountConnector]
+  private val mockAppConfig: AppConfig = mock[AppConfig]
 
   private def authResponseAgent(credentialRole: CredentialRole): Future[Enrolments ~ Some[Credentials] ~ Some[Email] ~ Some[Name] ~ Some[CredentialRole]] =
     Future.successful(
@@ -78,7 +83,7 @@ with TestConstants {
       )
     )
 
-  def givenAgentRecord = mockagentRecordService.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
+  def givenAgentRecord = mockAgentRecordService.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 
   val mockAuthConnector: AuthConnector = mock[AuthConnector]
   def givenAuthorisedAgent(credentialRole: CredentialRole): ScalaOngoingStubbing[Future[Any]] = {
@@ -102,9 +107,12 @@ with TestConstants {
     protected val mockActions =
       new Actions(
         mockAgentAssuranceConnector,
-        mockagentRecordService,
+        mockAgentRecordService,
+        mockSessionCacheService,
+        mockAgentServicesAccountConnector,
         authActions,
-        actionBuilder
+        actionBuilder,
+        mockAppConfig
       )
 
     protected val mockView: admin_access_for_access_groups = mock[admin_access_for_access_groups]

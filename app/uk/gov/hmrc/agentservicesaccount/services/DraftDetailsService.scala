@@ -31,6 +31,12 @@ import scala.concurrent.Future
 
 @Singleton
 class DraftDetailsService @Inject() (sessionCacheService: SessionCacheService)(implicit ec: ExecutionContext) {
+
+//  TODO: 10902 Only here to allow CtUpdateBusinessNameController to compile
+  def dummyCtMethod()(implicit request: RequestHeader): Future[Unit] = Future.successful()
+
+  def dummyCtGetBusinessNameMethod()(implicit request: RequestHeader): Future[String] = Future.successful("ABC Accountants")
+
   def updateDraftDetails(f: DesignatoryDetails => DesignatoryDetails)(implicit request: RequestHeader): Future[Unit] =
     for {
       optDraftDetailsInSession <- sessionCacheService.get[DesignatoryDetails](draftNewContactDetailsKey)

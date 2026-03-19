@@ -17,14 +17,20 @@
 package uk.gov.hmrc.agentservicesaccount.actions
 
 import play.api.mvc.Results.Forbidden
+import play.api.mvc.Results.NotImplemented
 import play.api.mvc.Results.Redirect
 import play.api.mvc._
-import uk.gov.hmrc.agentservicesaccount.models.Arn
+import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
+import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
+import uk.gov.hmrc.agentservicesaccount.controllers.ctJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.routes
+import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
 import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
 import uk.gov.hmrc.agentservicesaccount.models.AmlsDetails
+import uk.gov.hmrc.agentservicesaccount.models.Arn
 import uk.gov.hmrc.agentservicesaccount.services.AgentRecordService
+import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -35,9 +41,14 @@ import scala.concurrent.Future
 class Actions @Inject() (
   agentAssuranceConnector: AgentAssuranceConnector,
   agentRecordService: AgentRecordService,
+  sessionCacheService: SessionCacheService,
+  agentServicesAccountConnector: AgentServicesAccountConnector,
   authActions: AuthActions,
-  actionBuilder: DefaultActionBuilder
-)(implicit ec: ExecutionContext) {
+  actionBuilder: DefaultActionBuilder,
+  appConfig: AppConfig
+)(implicit
+  ec: ExecutionContext
+) {
 
   private def filterSuspendedAgent(onlyForSuspended: Boolean): ActionFilter[AuthRequestWithAgentInfo] =
     new ActionFilter[AuthRequestWithAgentInfo] {
@@ -104,5 +115,56 @@ class Actions @Inject() (
 
   def authActionWithSuspensionCheckWithAgentRecord: ActionBuilder[AuthRequestWithAgentProfile, AnyContent] =
     actionBuilder andThen authActions.authActionRefiner andThen withAgentRecord(false)
+
+  def authActionWithCtJourney: ActionBuilder[CtJourneyRequest, AnyContent] =
+    actionBuilder andThen
+      authActions.authActionRefiner andThen
+      filterSuspendedAgent(false) andThen
+      withCtJourney
+
+  private def withCtJourney: ActionRefiner[AuthRequestWithAgentInfo, CtJourneyRequest] =
+    new ActionRefiner[AuthRequestWithAgentInfo, CtJourneyRequest] {
+      override protected def executionContext: ExecutionContext = ec
+      override protected def refine[A](
+        request: AuthRequestWithAgentInfo[A]
+      ): Future[Either[Result, CtJourneyRequest[A]]] = {
+        implicit val req: Request[A] = request.request
+        def buildRequest(journey: CtJourney): CtJourneyRequest[A] =
+          new CtJourneyRequest(
+            ctSubscriptionJourney = journey,
+            agentInfo = request.agentInfo,
+            request = request.request
+          )
+        def ctJourney(asaDetails: AgencyDetails) = CtJourney(
+          asaDetails = asaDetails,
+          useCustomBusinessName = None,
+          businessNameAnswer = None,
+          useCustomPhoneNumber = None,
+          phoneNumberAnswer = None,
+          useCustomEmail = None,
+          emailAnswer = None,
+          useCustomAddress = None,
+          addressAnswer = None
+        )
+        if (appConfig.enableLegacySubscriptionLink) {
+          sessionCacheService.get[CtJourney](ctJourneyKey).flatMap {
+            case Some(journey) => Future.successful(Right(buildRequest(journey)))
+            case None =>
+              agentServicesAccountConnector.getAgentRecord.flatMap { response =>
+                val journey = ctJourney(response.agencyDetails.getOrElse(AgencyDetails(
+                  None,
+                  None,
+                  None,
+                  None
+                )))
+                sessionCacheService.put(ctJourneyKey, journey).map { _ => Right(buildRequest(journey)) }
+              }
+          }
+        }
+        else {
+          Future.successful(Left(NotImplemented))
+        }
+      }
+    }
 
 }
