@@ -22,14 +22,12 @@ import play.api.data.Mapping
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtBusinessNameFormValues
 import uk.gov.voa.play.form.ConditionalMappings.mandatoryIfFalse
 
-//TODO: 10902 Add Form Spec
-
 object CtSubscriptionForms {
 
   private val trimmedText = text.transform[String](x => x.trim, x => x)
 
-  private val businessNameUseAsaDataKey = "businessNameUseAsaData"
-  private val businessNameNewKey = "businessNameNew"
+  val businessNameUseAsaDataKey = "businessNameUseAsaData"
+  val businessNameNewKey = "businessNameNew"
 
 //  TODO: 10902: Check against subscription API regex
   private val BusinessNameRegex = """^[A-Za-z0-9\,\.\'\-\/\ ]{2,200}$""".r
@@ -39,8 +37,8 @@ object CtSubscriptionForms {
     .transform(_.get, (b: Boolean) => Option(b))
 
   private val businessNameNewOptionalMapping: Mapping[String] = trimmedText
-    .verifying("asa.legacy.ct.business-name.now-input.error.empty", _.nonEmpty)
-    .verifying("asa.legacy.ct.business-name.now-input.error.invalid", x => x.isEmpty || BusinessNameRegex.matches(x))
+    .verifying("asa.legacy.ct.business-name.new-input.error.empty", _.nonEmpty)
+    .verifying("asa.legacy.ct.business-name.new-input.error.invalid", x => x.isEmpty || BusinessNameRegex.matches(x))
 
   def newBusinessNameForm: Form[CtBusinessNameFormValues] = {
     Form(
