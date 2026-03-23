@@ -99,7 +99,7 @@ with Matchers {
       validatedForm.errors.length shouldBe 1
     }
 
-    "unbind" in {
+    "unbind CtBusinessNameFormValues" in {
       val unboundForm = newBusinessNameForm.mapping.unbind(CtBusinessNameFormValues(useAsaData = true, Some(validNewBusinessName)))
 
       unboundForm shouldBe Map(
@@ -107,6 +107,8 @@ with Matchers {
         businessNameNewKey -> validNewBusinessName
       )
     }
+
+//    TODO: 10904: Add tests for email addres
 
   }
 
