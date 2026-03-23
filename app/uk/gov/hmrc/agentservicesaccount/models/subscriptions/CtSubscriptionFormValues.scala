@@ -25,3 +25,8 @@ case class CtPhoneNumberFormValues(
   useAsaData: Boolean,
   newPhoneNumber: Option[String]
 )
+
+case class CtEmailAddressFormValues(
+  useAsaData: Boolean,
+  newEmailAddress: Option[String]
+)

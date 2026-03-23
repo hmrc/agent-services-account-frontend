@@ -53,7 +53,7 @@
         @govukErrorSummary(ErrorSummary().withFormErrorsAsText(form))
     }
 
-    @formWithCSRF(action = subscriptions.routes.CtUpdateBusinessNameController.onSubmit) {
+    @formWithCSRF(action = subscriptions.routes.CtUpdateEmailAddressController.onSubmit) {
         @govukRadios(Radios(
             fieldset = Some(Fieldset(
                 legend = Some(Legend(

@@ -21,7 +21,8 @@ import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.controllers.{ctJourneyKey, routes => homeRoutes}
+import uk.gov.hmrc.agentservicesaccount.controllers.ctJourneyKey
+import uk.gov.hmrc.agentservicesaccount.controllers.{routes => homeRoutes}
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionForms
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtEmailAddressFormValues
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
@@ -29,10 +30,11 @@ import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject._
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
+import scala.concurrent.Future
 
 @Singleton
-class CtUpdateEmailAddressController @Inject()(
+class CtUpdateEmailAddressController @Inject() (
   actions: Actions,
   val sessionCacheService: SessionCacheService,
   ct_update_email_address: ct_update_email_address,
@@ -86,7 +88,7 @@ with Logging {
             if (data.useAsaData)
               None
             else
-              data.newEmailAddres
+              data.newEmailAddress
         )
 
         sessionCacheService
