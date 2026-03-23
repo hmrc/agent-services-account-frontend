@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,9 +22,9 @@ import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.ctJourneyKey
-import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.{routes => subscriptionRoutes}
+import uk.gov.hmrc.agentservicesaccount.controllers.{routes => homeRoutes}
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionForms
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtBusinessNameFormValues
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtPhoneNumberFormValues
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -34,10 +34,10 @@ import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
 @Singleton
-class CtUpdateBusinessNameController @Inject() (
+class CtUpdatePhoneNumberController @Inject() (
   actions: Actions,
   val sessionCacheService: SessionCacheService,
-  ct_update_business_name: ct_update_business_name,
+  ct_update_phone_number: ct_update_phone_number,
   cc: MessagesControllerComponents
 )(implicit
   appConfig: AppConfig,
@@ -50,51 +50,51 @@ with Logging {
   val showPage: Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
     val journey = request.ctSubscriptionJourney
 
-    val subscriptionBusinessName = journey.asaDetails.agencyName.getOrElse("")
+    val subscriptionPhoneNumber = journey.asaDetails.agencyTelephone.getOrElse("")
 
     val form =
-      journey.useCustomBusinessName match {
+      journey.useCustomPhoneNumber match {
 
         case Some(useCustom) =>
-          CtSubscriptionForms.newBusinessNameForm.fill(
-            CtBusinessNameFormValues(
+          CtSubscriptionForms.newPhoneNumberForm.fill(
+            CtPhoneNumberFormValues(
               useAsaData = !useCustom,
-              newBusinessName = journey.businessNameAnswer
+              newPhoneNumber = journey.phoneNumberAnswer
             )
           )
 
-        case None => CtSubscriptionForms.newBusinessNameForm
+        case None => CtSubscriptionForms.newPhoneNumberForm
       }
 
     Future.successful(
-      Ok(ct_update_business_name(form, subscriptionBusinessName))
+      Ok(ct_update_phone_number(form, subscriptionPhoneNumber))
     )
   }
 
   def onSubmit: Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
     val journey = request.ctSubscriptionJourney
 
-    CtSubscriptionForms.newBusinessNameForm.bindFromRequest().fold(
+    CtSubscriptionForms.newPhoneNumberForm.bindFromRequest().fold(
       formWithErrors => {
-        val subscriptionBusinessName = journey.asaDetails.agencyName.getOrElse("")
+        val subscriptionPhoneNumber = journey.asaDetails.agencyTelephone.getOrElse("")
         Future.successful(
-          BadRequest(ct_update_business_name(formWithErrors, subscriptionBusinessName))
+          BadRequest(ct_update_phone_number(formWithErrors, subscriptionPhoneNumber))
         )
       },
       data => {
         val updatedJourney = journey.copy(
-          useCustomBusinessName = Some(!data.useAsaData),
-          businessNameAnswer =
+          useCustomPhoneNumber = Some(!data.useAsaData),
+          phoneNumberAnswer =
             if (data.useAsaData)
               None
             else
-              data.newBusinessName
+              data.newPhoneNumber
         )
 
         sessionCacheService
           .put(ctJourneyKey, updatedJourney)
           .map { _ =>
-            Redirect(subscriptionRoutes.CtUpdatePhoneNumberController.showPage)
+            Redirect(homeRoutes.AgentServicesController.root()) // TODO: replace with next page
           }
       }
     )

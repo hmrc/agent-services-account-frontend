@@ -99,6 +99,9 @@ GET        /paye-subscription/request/submitted                           @uk.go
 GET        /ct-subscription/business-name                                 @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtUpdateBusinessNameController.showPage
 POST       /ct-subscription/business-name                                 @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtUpdateBusinessNameController.onSubmit
 
+GET        /ct-subscription/phone-number                                  @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtUpdatePhoneNumberController.showPage
+POST       /ct-subscription/phone-number                                  @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtUpdatePhoneNumberController.onSubmit
+
 # AMLS
 GET        /manage-account/money-laundering-supervision/view-details                     @uk.gov.hmrc.agentservicesaccount.controllers.amls.ViewDetailsController.showPage
 

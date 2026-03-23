@@ -190,6 +190,14 @@ asa.legacy.ct.business-name.use-asa.error.required=TODO (Default option required
 asa.legacy.ct.business-name.new-input.error.empty=TODO (New name input empty error)
 asa.legacy.ct.business-name.new-input.error.invalid=TODO (New name input invalid error)
 
+asa.legacy.ct.phone-number.title=What phone number should we show to call you about Corporation Tax?
+asa.legacy.ct.phone-number.use-asa.false=I want to use a different phone number for Corporation Tax
+asa.legacy.ct.phone-number.new-input.label=Enter a phone number
+asa.legacy.ct.phone-number.new-input.hint=For international numbers include the country code.
+asa.legacy.ct.phone-number.use-asa.error.required=TODO (Default option required error)
+asa.legacy.ct.phone-number.now-input.error.empty=TODO (New phone number input empty error)
+asa.legacy.ct.phone-number.now-input.error.invalid=TODO (New phone number input invalid error)
+
 # SA
 asa.legacy.sa.h2=SA
 asa.legacy.sa.h3=Test Content

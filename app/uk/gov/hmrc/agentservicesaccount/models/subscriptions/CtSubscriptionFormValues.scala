@@ -20,3 +20,8 @@ case class CtBusinessNameFormValues(
   useAsaData: Boolean,
   newBusinessName: Option[String]
 )
+
+case class CtPhoneNumberFormValues(
+  useAsaData: Boolean,
+  newPhoneNumber: Option[String]
+)
