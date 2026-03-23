@@ -17,9 +17,11 @@
 package uk.gov.hmrc.agentservicesaccount.forms.subscriptions
 
 import play.api.data.Forms._
-import play.api.data.{Form, Mapping}
+import play.api.data.Form
+import play.api.data.Mapping
 import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators.trimmedText
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.{CtBusinessNameFormValues, CtEmailAddressFormValues}
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtBusinessNameFormValues
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtEmailAddressFormValues
 import uk.gov.voa.play.form.ConditionalMappings.mandatoryIfFalse
 
 object CtSubscriptionEmailAddressForm {

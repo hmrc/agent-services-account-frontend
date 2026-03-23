@@ -56,14 +56,14 @@ with Logging {
       journey.useCustomEmail match {
 
         case Some(useCustom) =>
-          CtSubscriptionBusinessNameForm.newEmailAddressForm.fill(
+          CtSubscriptionEmailAddressForm.form.fill(
             CtEmailAddressFormValues(
               useAsaData = !useCustom,
               newEmailAddress = journey.businessNameAnswer
             )
           )
 
-        case None => CtSubscriptionBusinessNameForm.newEmailAddressForm
+        case None => CtSubscriptionEmailAddressForm.form
       }
 
     Future.successful(
@@ -74,7 +74,7 @@ with Logging {
   def onSubmit: Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
     val journey = request.ctSubscriptionJourney
 
-    CtSubscriptionBusinessNameForm.newEmailAddressForm.bindFromRequest().fold(
+    CtSubscriptionEmailAddressForm.form.bindFromRequest().fold(
       formWithErrors => {
         val subscriptionEmailAddress = journey.asaDetails.agencyEmail.getOrElse("")
         Future.successful(
