@@ -20,6 +20,7 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionForms._
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtBusinessNameFormValues
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtPhoneNumberFormValues
 
 import scala.util.Random
 
@@ -30,6 +31,8 @@ with Matchers {
   val emptyValue = ""
   val validNewBusinessName = "ABC-No.1 Accountants"
   val invalidNewBusinessName = "{][.',"
+  val validNewPhoneNumber = "1234567890"
+  val invalidNewPhoneNumber = "skdjfhjs"
 
   "newBusinessNameForm form binding" should {
     s"be successful when $businessNameUseAsaDataKey true" in {
@@ -102,6 +105,82 @@ with Matchers {
       unboundForm shouldBe Map(
         businessNameUseAsaDataKey -> true.toString,
         businessNameNewKey -> validNewBusinessName
+      )
+    }
+
+  }
+
+  "newPhoneNumberForm form binding" should {
+    s"be successful when $phoneNumberUseAsaDataKey true" in {
+      val phoneNumberValues = List(
+        emptyValue,
+        validNewPhoneNumber,
+        invalidNewPhoneNumber
+      )
+      val params = Map(
+        phoneNumberUseAsaDataKey -> true.toString,
+        phoneNumberNewKey -> phoneNumberValues(Random.nextInt(phoneNumberValues.length))
+      )
+
+      newPhoneNumberForm.bind(params).value shouldBe Some(CtPhoneNumberFormValues(useAsaData = true, None))
+    }
+
+    s"be successful when $phoneNumberUseAsaDataKey false and $phoneNumberNewKey valid" in {
+      val params = Map(
+        phoneNumberUseAsaDataKey -> false.toString,
+        phoneNumberNewKey -> validNewPhoneNumber
+      )
+
+      newPhoneNumberForm.bind(params).value shouldBe Some(CtPhoneNumberFormValues(useAsaData = false, Some(validNewPhoneNumber)))
+    }
+
+    s"error when $phoneNumberUseAsaDataKey empty" in {
+      val phoneNumberValues = List(
+        emptyValue,
+        validNewPhoneNumber,
+        invalidNewPhoneNumber
+      )
+      val params = Map(
+        phoneNumberUseAsaDataKey -> emptyValue,
+        phoneNumberNewKey -> phoneNumberValues(Random.nextInt(phoneNumberValues.length))
+      )
+
+      val validatedForm = newPhoneNumberForm.bind(params)
+      validatedForm.hasErrors shouldBe true
+      validatedForm.error(phoneNumberUseAsaDataKey).get.message shouldBe "asa.legacy.ct.phone-number.use-asa.error.required"
+      validatedForm.errors.length shouldBe 1
+    }
+
+    s"error when $phoneNumberUseAsaDataKey false and $phoneNumberNewKey empty" in {
+      val params = Map(
+        phoneNumberUseAsaDataKey -> false.toString,
+        phoneNumberNewKey -> emptyValue
+      )
+
+      val validatedForm = newPhoneNumberForm.bind(params)
+      validatedForm.hasErrors shouldBe true
+      validatedForm.error(phoneNumberNewKey).get.message shouldBe "asa.legacy.ct.phone-number.new-input.error.empty"
+      validatedForm.errors.length shouldBe 1
+    }
+
+    s"error when $phoneNumberUseAsaDataKey false and $phoneNumberNewKey invalid" in {
+      val params = Map(
+        phoneNumberUseAsaDataKey -> false.toString,
+        phoneNumberNewKey -> invalidNewPhoneNumber
+      )
+
+      val validatedForm = newPhoneNumberForm.bind(params)
+      validatedForm.hasErrors shouldBe true
+      validatedForm.error(phoneNumberNewKey).get.message shouldBe "asa.legacy.ct.phone-number.new-input.error.invalid"
+      validatedForm.errors.length shouldBe 1
+    }
+
+    "unbind" in {
+      val unboundForm = newPhoneNumberForm.mapping.unbind(CtPhoneNumberFormValues(useAsaData = true, Some(validNewPhoneNumber)))
+
+      unboundForm shouldBe Map(
+        phoneNumberUseAsaDataKey -> true.toString,
+        phoneNumberNewKey -> validNewPhoneNumber
       )
     }
 

@@ -1,5 +1,5 @@
 @*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
-@import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtBusinessNameFormValues
+@import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtPhoneNumberFormValues
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 @import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
 @import uk.gov.hmrc.govukfrontend.views.html.components._
@@ -35,19 +35,20 @@
     govukErrorSummary: GovukErrorSummary
 )
 
-@(form: Form[CtBusinessNameFormValues], subscriptionBusinessName: String)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
+@(form: Form[CtPhoneNumberFormValues], subscriptionPhoneNumber: String)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
 
-@newBusinessNameInput = {
+@newPhoneNumberInput = {
     @govukInput(Input(
         label = Label(
-            content = HtmlContent(msgs("asa.legacy.ct.business-name.new-input.hint")),
+            content = HtmlContent(msgs("asa.legacy.ct.phone-number.new-input.label")),
             classes = "govuk-label"
-        )
-    ).withFormField(form("businessNameNew")))
+        ),
+        hint = Some(Hint(content = Text(msgs("asa.legacy.ct.phone-number.new-input.hint"))))
+    ).withFormField(form("phoneNumberNew")))
 }
 
 @main(
-    pageTitle = withErrorPrefix(form.hasErrors, msgs("asa.legacy.ct.business-name.title")),
+    pageTitle = withErrorPrefix(form.hasErrors, msgs("asa.legacy.ct.phone-number.title")),
     mimicBrowserBackLink = true,
     showSecondaryNav = false
 ) {
@@ -56,28 +57,28 @@
         @govukErrorSummary(ErrorSummary().withFormErrorsAsText(form))
     }
 
-    @formWithCSRF(action = subscriptions.routes.CtUpdateBusinessNameController.onSubmit) {
+    @formWithCSRF(action = subscriptions.routes.CtUpdatePhoneNumberController.onSubmit) {
         @govukRadios(Radios(
             fieldset = Some(Fieldset(
                 legend = Some(Legend(
-                    content = Text(msgs("asa.legacy.ct.business-name.title")),
+                    content = Text(msgs("asa.legacy.ct.phone-number.title")),
                     classes = "govuk-fieldset__legend--l",
                     isPageHeading = true
                 ))
             )),
-            name = "businessNameUseAsaData",
+            name = "phoneNumberUseAsaData",
             items = Seq(
                 RadioItem(
-                    content = Text(subscriptionBusinessName),
+                    content = Text(subscriptionPhoneNumber),
                     value = Some("true")
                 ),
                 RadioItem(
-                    content = Text(msgs("asa.legacy.ct.business-name.use-asa.false")),
+                    content = Text(msgs("asa.legacy.ct.phone-number.use-asa.false")),
                     value = Some("false"),
-                    conditionalHtml = Some(newBusinessNameInput)
+                    conditionalHtml = Some(newPhoneNumberInput)
                 )
             )
-        ).withFormField(form("businessNameUseAsaData")))
+        ).withFormField(form("phoneNumberUseAsaData")))
 
         @govukButton(Button(content = Text(msgs("common.continue"))))
     }
