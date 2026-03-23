@@ -20,7 +20,7 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.{Document, Element}
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.data.Form
-import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionForms.{emailAddressNewKey, emailAddressUseAsaDataKey, newEmailAddressForm}
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionBusinessNameForm.{emailAddressNewKey, emailAddressUseAsaDataKey, newEmailAddressForm}
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtEmailAddressFormValues
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.ct_update_email_address

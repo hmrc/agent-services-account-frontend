@@ -21,9 +21,9 @@ import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.data.Form
-import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionForms.businessNameNewKey
-import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionForms.businessNameUseAsaDataKey
-import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionForms.newBusinessNameForm
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionBusinessNameForm.businessNameNewKey
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionBusinessNameForm.businessNameUseAsaDataKey
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionBusinessNameForm.form
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtBusinessNameFormValues
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.ct_update_business_name
@@ -34,7 +34,7 @@ extends ViewBaseSpec {
   val view: ct_update_business_name = inject[ct_update_business_name]
   val subscriptionBusinessName = "ABC-No.1 Accountants"
 
-  val form: Form[CtBusinessNameFormValues] = newBusinessNameForm
+  val form: Form[CtBusinessNameFormValues] = form
   val formWithUseAsaError: Form[CtBusinessNameFormValues] = form.withError(
     key = businessNameUseAsaDataKey,
     message = messages("asa.legacy.ct.business-name.use-asa.error.required")

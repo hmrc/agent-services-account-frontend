@@ -19,22 +19,23 @@ package uk.gov.hmrc.agentservicesaccount.forms.subscriptions
 import play.api.data.Forms._
 import play.api.data.Form
 import play.api.data.Mapping
+import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators.trimmedText
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtBusinessNameFormValues
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtPhoneNumberFormValues
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtEmailAddressFormValues
 import uk.gov.voa.play.form.ConditionalMappings.mandatoryIfFalse
 
-object CtSubscriptionForms {
+object CtSubscriptionBusinessNameForm {
 
   private val trimmedText = text.transform[String](x => x.trim, x => x)
   private val trimmedAndNormalisedText = text.transform[String](x => x.trim.replaceAll("[‘’]", "'"), x => x)
+
   val businessNameUseAsaDataKey = "businessNameUseAsaData"
   val businessNameNewKey = "businessNameNew"
   val phoneNumberUseAsaDataKey = "phoneNumberUseAsaData"
   val phoneNumberNewKey = "phoneNumberNew"
 
   private val businessNameRegex = """^[A-Za-z0-9\(\)&\-\'‘’\/,\. ]{1,54}$""".r
-  private val EmailAddressRegex = """^.{1,252}@.{1,256}\..{1,256}$""".r
 
   private val businessNameUseAsaDataMapping = useAsaDataMapping("asa.legacy.ct.business-name.use-asa.error.required")
 
@@ -42,7 +43,7 @@ object CtSubscriptionForms {
     .verifying("asa.legacy.ct.business-name.new-input.error.empty", _.nonEmpty)
     .verifying("asa.legacy.ct.business-name.new-input.error.invalid", x => x.isEmpty || businessNameRegex.matches(x))
 
-  def newBusinessNameForm: Form[CtBusinessNameFormValues] = {
+  def form: Form[CtBusinessNameFormValues] = {
     Form(
       mapping(
         businessNameUseAsaDataKey -> businessNameUseAsaDataMapping,
@@ -79,25 +80,4 @@ object CtSubscriptionForms {
   private def useAsaDataMapping(errorKey: String): Mapping[Boolean] = optional(boolean)
     .verifying(errorKey, _.isDefined)
     .transform(_.get, Some(_))
-
-  val emailAddressUseAsaDataKey = "emailAddressUseAsaData"
-  val emailAddressNewKey = "emailAddressNew"
-
-  private val emailAddressUseAsaDataMapping: Mapping[Boolean] = optional(boolean)
-    .verifying("asa.legacy.ct.email-address.use-asa.error.required", _.isDefined)
-    .transform(_.get, (b: Boolean) => Option(b))
-
-  private val emailAddressNewOptionalMapping: Mapping[String] = trimmedText
-    .verifying("asa.legacy.ct.email-address.new-input.error.empty", _.nonEmpty)
-    .verifying("asa.legacy.ct.email-address.new-input.error.invalid", x => x.isEmpty || EmailAddressRegex.matches(x))
-
-  def newEmailAddressForm: Form[CtEmailAddressFormValues] = {
-    Form(
-      mapping(
-        emailAddressUseAsaDataKey -> emailAddressUseAsaDataMapping,
-        emailAddressNewKey -> mandatoryIfFalse(emailAddressUseAsaDataKey, emailAddressNewOptionalMapping)
-      )(CtEmailAddressFormValues.apply)(o => Some(o.useAsaData, o.newEmailAddress))
-    )
-  }
-
 }

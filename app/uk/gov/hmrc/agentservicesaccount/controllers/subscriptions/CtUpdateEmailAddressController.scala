@@ -23,7 +23,7 @@ import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.ctJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.{routes => homeRoutes}
-import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionForms
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionEmailAddressForm
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtEmailAddressFormValues
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions._
@@ -56,14 +56,14 @@ with Logging {
       journey.useCustomEmail match {
 
         case Some(useCustom) =>
-          CtSubscriptionForms.newEmailAddressForm.fill(
+          CtSubscriptionBusinessNameForm.newEmailAddressForm.fill(
             CtEmailAddressFormValues(
               useAsaData = !useCustom,
               newEmailAddress = journey.businessNameAnswer
             )
           )
 
-        case None => CtSubscriptionForms.newEmailAddressForm
+        case None => CtSubscriptionBusinessNameForm.newEmailAddressForm
       }
 
     Future.successful(
@@ -74,7 +74,7 @@ with Logging {
   def onSubmit: Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
     val journey = request.ctSubscriptionJourney
 
-    CtSubscriptionForms.newEmailAddressForm.bindFromRequest().fold(
+    CtSubscriptionBusinessNameForm.newEmailAddressForm.bindFromRequest().fold(
       formWithErrors => {
         val subscriptionEmailAddress = journey.asaDetails.agencyEmail.getOrElse("")
         Future.successful(

@@ -16,11 +16,14 @@
 
 package uk.gov.hmrc.agentservicesaccount.forms
 
+import play.api.data.Forms.text
 import play.api.data.validation._
 
 import scala.annotation.tailrec
 
 object CommonValidators {
+
+  val trimmedText = text.transform[String](x => x.trim, x => x)
 
   def checkOneAtATime[A](constraints: Seq[Constraint[A]]): Constraint[A] = Constraint[A] { fieldValue: A =>
     @tailrec

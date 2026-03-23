@@ -18,13 +18,13 @@ package uk.gov.hmrc.agentservicesaccount.forms.subscriptions
 
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
-import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionForms._
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionBusinessNameForm._
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtBusinessNameFormValues
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtPhoneNumberFormValues
 
 import scala.util.Random
 
-class CtSubscriptionFormsSpec
+class CtSubscriptionBusinessNameFormSpec
 extends AnyWordSpec
 with Matchers {
 
@@ -46,7 +46,7 @@ with Matchers {
         businessNameNewKey -> businessNameValues(Random.nextInt(businessNameValues.length))
       )
 
-      newBusinessNameForm.bind(params).value shouldBe Some(CtBusinessNameFormValues(useAsaData = true, None))
+      form.bind(params).value shouldBe Some(CtBusinessNameFormValues(useAsaData = true, None))
     }
 
     s"be successful when $businessNameUseAsaDataKey false and $businessNameNewKey valid" in {
@@ -55,7 +55,7 @@ with Matchers {
         businessNameNewKey -> validNewBusinessName
       )
 
-      newBusinessNameForm.bind(params).value shouldBe Some(CtBusinessNameFormValues(useAsaData = false, Some(validNewBusinessName)))
+      form.bind(params).value shouldBe Some(CtBusinessNameFormValues(useAsaData = false, Some(validNewBusinessName)))
     }
 
     s"error when $businessNameUseAsaDataKey empty" in {
@@ -69,7 +69,7 @@ with Matchers {
         businessNameNewKey -> businessNameValues(Random.nextInt(businessNameValues.length))
       )
 
-      val validatedForm = newBusinessNameForm.bind(params)
+      val validatedForm = form.bind(params)
       validatedForm.hasErrors shouldBe true
       validatedForm.error(businessNameUseAsaDataKey).get.message shouldBe "asa.legacy.ct.business-name.use-asa.error.required"
       validatedForm.errors.length shouldBe 1
@@ -81,7 +81,7 @@ with Matchers {
         businessNameNewKey -> emptyValue
       )
 
-      val validatedForm = newBusinessNameForm.bind(params)
+      val validatedForm = form.bind(params)
       validatedForm.hasErrors shouldBe true
       validatedForm.error(businessNameNewKey).get.message shouldBe "asa.legacy.ct.business-name.new-input.error.empty"
       validatedForm.errors.length shouldBe 1
@@ -93,22 +93,20 @@ with Matchers {
         businessNameNewKey -> invalidNewBusinessName
       )
 
-      val validatedForm = newBusinessNameForm.bind(params)
+      val validatedForm = form.bind(params)
       validatedForm.hasErrors shouldBe true
       validatedForm.error(businessNameNewKey).get.message shouldBe "asa.legacy.ct.business-name.new-input.error.invalid"
       validatedForm.errors.length shouldBe 1
     }
 
     "unbind CtBusinessNameFormValues" in {
-      val unboundForm = newBusinessNameForm.mapping.unbind(CtBusinessNameFormValues(useAsaData = true, Some(validNewBusinessName)))
+      val unboundForm = form.mapping.unbind(CtBusinessNameFormValues(useAsaData = true, Some(validNewBusinessName)))
 
       unboundForm shouldBe Map(
         businessNameUseAsaDataKey -> true.toString,
         businessNameNewKey -> validNewBusinessName
       )
     }
-
-//    TODO: 10904: Add tests for email addres
 
   }
 
