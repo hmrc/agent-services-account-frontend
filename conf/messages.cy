@@ -192,9 +192,10 @@ asa.legacy.ct.business-name.use-asa.error.required=TODO (Default option for busi
 asa.legacy.ct.business-name.new-input.error.empty=TODO (New business name input empty error)
 asa.legacy.ct.business-name.new-input.error.invalid=TODO (New business name input invalid error)
 
-asa.legacy.ct.email-address.title=todostringone
-asa.legacy.ct.email-address.use-asa.false=todostringtwo
-asa.legacy.ct.email-address.new-input.hint=todostringthree
+asa.legacy.ct.email-address.title=What email address should we use to contact you about Corporation Tax?
+asa.legacy.ct.email-address.use-asa.false=I want to use a different email address for Corporation Tax
+asa.legacy.ct.email-address.new-input.label=Enter an email address
+asa.legacy.ct.email-address.new-input.hint=We’ll send a code to this email address to confirm it
 asa.legacy.ct.email-address.use-asa.error.required=TODO (Default option for email address required error)
 asa.legacy.ct.email-address.new-input.error.empty=TODO (New email address input empty error)
 asa.legacy.ct.email-address.new-input.error.invalid=TODO (New email address input invalid error)
