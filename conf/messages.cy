@@ -188,9 +188,16 @@ asa.legacy.ct.col2.p1=You can <a class="govuk-link" href="{0}" target="_blank" r
 asa.legacy.ct.business-name.title=What business name should we show to your Corporation Tax clients?
 asa.legacy.ct.business-name.use-asa.false=I want to use a different business name for Corporation Tax
 asa.legacy.ct.business-name.new-input.hint=Enter a business name
-asa.legacy.ct.business-name.use-asa.error.required=TODO (Default option required error)
-asa.legacy.ct.business-name.new-input.error.empty=TODO (New name input empty error)
-asa.legacy.ct.business-name.new-input.error.invalid=TODO (New name input invalid error)
+asa.legacy.ct.business-name.use-asa.error.required=TODO (Default option for business name required error)
+asa.legacy.ct.business-name.new-input.error.empty=TODO (New business name input empty error)
+asa.legacy.ct.business-name.new-input.error.invalid=TODO (New business name input invalid error)
+
+asa.legacy.ct.email-address.title=todostringone
+asa.legacy.ct.email-address.use-asa.false=todostringtwo
+asa.legacy.ct.email-address.new-input.hint=todostringthree
+asa.legacy.ct.email-address.use-asa.error.required=TODO (Default option for email address required error)
+asa.legacy.ct.email-address.new-input.error.empty=TODO (New email address input empty error)
+asa.legacy.ct.email-address.new-input.error.invalid=TODO (New email address input invalid error)
 
 # SA
 asa.legacy.sa.h2=SA
