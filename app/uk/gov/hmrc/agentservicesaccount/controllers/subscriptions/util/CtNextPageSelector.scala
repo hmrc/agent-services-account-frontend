@@ -18,20 +18,23 @@ package uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util
 
 import play.api.mvc.Result
 import play.api.mvc.Results.Redirect
-import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
+import uk.gov.hmrc.agentservicesaccount.actions.CtJourney
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
+import uk.gov.hmrc.agentservicesaccount.controllers.{routes => homeRoutes}
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.DesiDetailsJourney
 object CtNextPageSelector {
 
 //  TODO: 10902: Replace with CtJourney
   def getNextPage(
-    journey: DesiDetailsJourney,
+    oldJourney: DesiDetailsJourney,
+    journey: CtJourney,
     currentPage: String
   ): Result = {
-    if (journey.journeyComplete) {
-      Redirect(desiDetails.routes.CheckYourAnswersController.showPage)
+    if (oldJourney.journeyComplete) {
+      Redirect(homeRoutes.AgentServicesController.root())
     }
     else {
-      val nextPage: Option[String] = journey.contactChangesNeeded.flatMap { pages =>
+      val nextPage: Option[String] = oldJourney.contactChangesNeeded.flatMap { pages =>
         if (pages.contains(currentPage)) {
           pages.toSeq.sliding(2).find {
             case Seq(current, _) => current == currentPage
@@ -45,11 +48,9 @@ object CtNextPageSelector {
           pages.headOption
       }
       nextPage match {
-        case Some("businessName") => Redirect(desiDetails.routes.UpdateNameController.showPage)
-        case Some("address") => Redirect(desiDetails.routes.ContactDetailsController.startAddressLookup)
-        case Some("email") => Redirect(desiDetails.routes.UpdateEmailAddressController.showChangeEmailAddress)
-        case Some("telephone") => Redirect(desiDetails.routes.UpdateTelephoneController.showPage)
-        case None => Redirect(desiDetails.routes.ApplySACodeChangesController.showPage)
+        case Some("businessName") => Redirect(subscriptions.routes.CtUpdateBusinessNameController.showPage)
+        case Some("emailAddress") => Redirect(subscriptions.routes.CtUpdateEmailAddressController.showPage)
+        case None => Redirect(homeRoutes.AgentServicesController.root())
       }
     }
   }
