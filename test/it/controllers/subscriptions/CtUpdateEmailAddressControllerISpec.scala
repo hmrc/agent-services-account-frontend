@@ -134,8 +134,8 @@ with MockFactory {
 
     val baseJourney: CtJourney = CtJourney(
       asaDetails = AgencyDetails(
-        agencyName = Some("Test Agency"),
-        agencyEmail = None,
+        agencyName = None,
+        agencyEmail = Some("joe@bloggs.com"),
         agencyTelephone = None,
         agencyAddress = None
       ),
@@ -169,7 +169,7 @@ with MockFactory {
       private val result = controller.showPage()(FakeRequest()).futureValue
 
       status(result) shouldBe OK
-      contentAsString(result) should include("Test Agency")
+      contentAsString(result) should include("joe@bloggs.com")
     }
 
     "render pre-filled form when journey has existing answers" in new TestSetup {
@@ -186,7 +186,7 @@ with MockFactory {
       private val content = contentAsString(result)
 
       content should include("""value="true"""") // radio selected
-      content should include("businessNameNew") // input present
+      content should include("emailAddressNew") // input present
     }
   }
 
@@ -208,7 +208,7 @@ with MockFactory {
       private val request = FakeRequest(POST, "/")
         .withSession(session.toSeq: _*)
         .withFormUrlEncodedBody(
-          "businessNameUseAsaData" -> "true"
+          "emailAddressUseAsaData" -> "true"
         )
 
       implicit val implicitRequest: FakeRequest[AnyContentAsFormUrlEncoded] = request
@@ -229,8 +229,8 @@ with MockFactory {
       private val request = FakeRequest(POST, "/")
         .withSession(session.toSeq: _*)
         .withFormUrlEncodedBody(
-          "businessNameUseAsaData" -> "false",
-          "businessNameNew" -> "My Custom Ltd"
+          "emailAddressUseAsaData" -> "false",
+          "emailAddressNew" -> "jane@bloggs.com"
         )
 
       implicit val implicitRequest: FakeRequest[AnyContentAsFormUrlEncoded] = request
@@ -242,7 +242,7 @@ with MockFactory {
 
       val updated: Option[CtJourney] = sessionCache.get[CtJourney](ctJourneyKey).futureValue
       updated.value.useCustomEmail shouldBe Some(true)
-      updated.value.emailAnswer shouldBe Some("My Custom Ltd")
+      updated.value.emailAnswer shouldBe Some("jane@bloggs.com")
     }
   }
 
