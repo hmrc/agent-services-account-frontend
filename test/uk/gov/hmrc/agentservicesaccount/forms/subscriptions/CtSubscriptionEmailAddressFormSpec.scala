@@ -28,10 +28,10 @@ extends AnyWordSpec
 with Matchers {
 
   val emptyValue = ""
-  val validNewEmailAddress = "ABC-No.1 Accountants"
+  val validNewEmailAddress = "joe@bloggs.com"
   val invalidNewEmailAddress = "{][.',"
 
-  "newEmailAddressForm form binding" should {
+  "form binding" should {
     s"be successful when $emailAddressUseAsaDataKey true" in {
       val emailAddressValues = List(
         emptyValue,

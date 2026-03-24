@@ -105,8 +105,8 @@ with MockFactory {
             uniqueTaxReference = Some(uk.gov.hmrc.agentservicesaccount.models.Utr("0123456789")),
             agencyDetails = Some(
               uk.gov.hmrc.agentservicesaccount.models.AgencyDetails(
-                agencyName = Some("Test Agency"),
-                agencyEmail = None,
+                agencyName = None,
+                agencyEmail = Some("joe@bloggs.com"),
                 agencyTelephone = None,
                 agencyAddress = None
               )
