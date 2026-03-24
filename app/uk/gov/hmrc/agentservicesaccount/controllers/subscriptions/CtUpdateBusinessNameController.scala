@@ -22,7 +22,8 @@ import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.ctJourneyKey
-import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.{routes => subscriptionRoutes}
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.UpdateBusinessNamePage
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionBusinessNameForm
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtBusinessNameFormValues
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
@@ -94,7 +95,7 @@ with Logging {
         sessionCacheService
           .put(ctJourneyKey, updatedJourney)
           .map { _ =>
-            Redirect(subscriptionRoutes.CtUpdatePhoneNumberController.showPage)
+            Redirect(getNextPage(UpdateBusinessNamePage))
           }
       }
     )

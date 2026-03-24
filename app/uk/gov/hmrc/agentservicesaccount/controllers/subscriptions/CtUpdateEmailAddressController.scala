@@ -22,6 +22,8 @@ import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.ctJourneyKey
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.UpdateEmailAddressPage
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.controllers.{routes => homeRoutes}
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionEmailAddressForm
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtEmailAddressFormValues
@@ -94,8 +96,7 @@ with Logging {
         sessionCacheService
           .put(ctJourneyKey, updatedJourney)
           .map { _ =>
-            //            TODO: 10904 Use CtNexPageSelector here
-            Redirect(homeRoutes.AgentServicesController.root()) // replace with next page
+            Redirect(getNextPage(UpdateEmailAddressPage))
           }
       }
     )
