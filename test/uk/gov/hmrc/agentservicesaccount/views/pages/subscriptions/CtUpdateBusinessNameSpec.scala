@@ -113,6 +113,36 @@ extends ViewBaseSpec {
       }
     }
 
+    "when 'new business name' option is selected" should {
+
+      val filledForm: Form[CtBusinessNameFormValues] = businessNameForm.fill(
+        CtBusinessNameFormValues(
+          useAsaData = false,
+          newBusinessName = Some("New Accountants")
+        )
+      )
+
+      val doc: Document = render(filledForm)
+
+      "show the conditional input section" in {
+        val conditional = doc.select(".govuk-radios__conditional").first()
+        conditional.hasClass("govuk-radios__conditional--hidden") mustBe false
+      }
+
+      "have the new business name input present" in {
+        doc.select("#businessNameNew").size() mustBe 1
+      }
+
+      "pre-fill the new business name input" in {
+        doc.select("#businessNameNew").`val`() mustBe "New Accountants"
+      }
+
+      "have the correct radio selected" in {
+        val radios = doc.select("input[name=businessNameUseAsaData]")
+        radios.get(1).hasAttr("checked") mustBe true
+      }
+    }
+
     "form is submitted with useAsa errors should" should {
 
       val doc: Document = render(formWithUseAsaError)

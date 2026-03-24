@@ -28,7 +28,6 @@ import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtEmailAddressFormV
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.ct_update_email_address
 
-//TODO: 10904 do we need further assertions
 class CtUpdateEmailAddressSpec
 extends ViewBaseSpec {
 
@@ -106,11 +105,41 @@ extends ViewBaseSpec {
         radios.get(1).select("input").attr("name") mustBe emailAddressUseAsaDataKey
       }
 
-      "hide the conditional new business name input" in {
+      "hide the conditional new email address input" in {
         val conditionalHidden = doc.select(".govuk-radios__conditional--hidden")
         conditionalHidden.size() mustBe 1
         conditionalHidden.text() mustBe messages("asa.legacy.ct.email-address.new-input.hint")
         conditionalHidden.select(".govuk-input").attr("name") mustBe emailAddressNewKey
+      }
+    }
+
+    "when 'new email address' option is selected" should {
+
+      val filledForm: Form[CtEmailAddressFormValues] = emailAddressForm.fill(
+        CtEmailAddressFormValues(
+          useAsaData = false,
+          newEmailAddress = Some("hello@new.com")
+        )
+      )
+
+      val doc: Document = render(filledForm)
+
+      "show the conditional input section" in {
+        val conditional = doc.select(".govuk-radios__conditional").first()
+        conditional.hasClass("govuk-radios__conditional--hidden") mustBe false
+      }
+
+      "have the new email address input present" in {
+        doc.select("#emailAddressNew").size() mustBe 1
+      }
+
+      "pre-fill the new email address input" in {
+        doc.select("#emailAddressNew").`val`() mustBe "hello@new.com"
+      }
+
+      "have the correct radio selected" in {
+        val radios = doc.select("input[name=emailAddressUseAsaData]")
+        radios.get(1).hasAttr("checked") mustBe true
       }
     }
 
