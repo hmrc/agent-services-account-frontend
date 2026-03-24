@@ -16,8 +16,7 @@
 
 package uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util
 
-import play.api.mvc.Result
-import play.api.mvc.Results.Redirect
+import play.api.mvc.Call
 import uk.gov.hmrc.agentservicesaccount.actions.CtJourney
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
 import uk.gov.hmrc.agentservicesaccount.controllers.{routes => homeRoutes}
@@ -28,16 +27,16 @@ object CtNextPageSelector {
   val UpdatePhoneNumberPage = "phoneNumber"
   val UpdateEmailAddressPage = "emailAddress"
 
-  private val nextPage: String => Result = {
-    case UpdateBusinessNamePage => Redirect(subscriptions.routes.CtUpdatePhoneNumberController.showPage)
-    case UpdatePhoneNumberPage => Redirect(subscriptions.routes.CtUpdateEmailAddressController.showPage)
-    case UpdateEmailAddressPage => Redirect(homeRoutes.AgentServicesController.root())
+  private val nextPage: String => Call = {
+    case UpdateBusinessNamePage => subscriptions.routes.CtUpdatePhoneNumberController.showPage
+    case UpdatePhoneNumberPage => subscriptions.routes.CtUpdateEmailAddressController.showPage
+    case UpdateEmailAddressPage => homeRoutes.AgentServicesController.root()
   }
 
   def getNextPage(
     currentPage: String,
     journey: Option[CtJourney] = None
-  ): Result = {
+  ): Call = {
     nextPage(currentPage)
   }
 
