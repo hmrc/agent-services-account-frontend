@@ -39,6 +39,10 @@
 
 @newEmailAddressInput = {
     @govukInput(Input(
+        label = Label(
+            content = HtmlContent(msgs("asa.legacy.ct.email-address.new-input.label")),
+            classes = "govuk-label"
+        ),
         hint = Some(Hint(content = Text(msgs("asa.legacy.ct.email-address.new-input.hint"))))
     ).withFormField(form("emailAddressNew")))
 }
