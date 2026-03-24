@@ -21,38 +21,23 @@ import play.api.mvc.Results.Redirect
 import uk.gov.hmrc.agentservicesaccount.actions.CtJourney
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
 import uk.gov.hmrc.agentservicesaccount.controllers.{routes => homeRoutes}
-import uk.gov.hmrc.agentservicesaccount.models.desiDetails.DesiDetailsJourney
 
 object CtNextPageSelector {
 
-//  TODO: 10902: Replace with CtJourney
+  val UpdateBusinessNamePage = "businessName"
+  val UpdatePhoneNumberPage = "phoneNumber"
+  val UpdateEmailAddressPage = "emailAddress"
+
+  private val nextPage: String => Result = {
+    case UpdateBusinessNamePage => Redirect(subscriptions.routes.CtUpdatePhoneNumberController.showPage)
+    case UpdatePhoneNumberPage => Redirect(subscriptions.routes.CtUpdateEmailAddressController.showPage)
+    case UpdateEmailAddressPage => Redirect(homeRoutes.AgentServicesController.root())
+  }
+
   def getNextPage(
-    oldJourney: DesiDetailsJourney,
-    journey: CtJourney,
-    currentPage: String
+    currentPage: String,
+    journey: Option[CtJourney] = None
   ): Result = {
-    if (oldJourney.journeyComplete) {
-      Redirect(homeRoutes.AgentServicesController.root())
-    }
-    else {
-      val nextPage: Option[String] = oldJourney.contactChangesNeeded.flatMap { pages =>
-        if (pages.contains(currentPage)) {
-          pages.toSeq.sliding(2).find {
-            case Seq(current, _) => current == currentPage
-            case _ => false
-          }.flatMap {
-            case Seq(_, next) => Some(next)
-            case _ => None
-          }
-        }
-        else
-          pages.headOption
-      }
-      nextPage match {
-        case Some("businessName") => Redirect(subscriptions.routes.CtUpdateBusinessNameController.showPage)
-        case Some("emailAddress") => Redirect(subscriptions.routes.CtUpdateEmailAddressController.showPage)
-        case None => Redirect(homeRoutes.AgentServicesController.root())
-      }
-    }
+    nextPage(currentPage)
   }
 }
