@@ -35,6 +35,7 @@ extends ViewBaseSpec {
   val subscriptionEmailAddress = "joe@bloggs.com"
 
   val emailAddressForm: Form[CtEmailAddressFormValues] = CtSubscriptionEmailAddressForm.form
+
   val formWithUseAsaError: Form[CtEmailAddressFormValues] = emailAddressForm.withError(
     key = emailAddressUseAsaDataKey,
     message = messages("asa.legacy.ct.email-address.use-asa.error.required")
@@ -43,6 +44,16 @@ extends ViewBaseSpec {
     key = emailAddressNewKey,
     message = messages("asa.legacy.ct.email-address.new-input.error.empty")
   )
+
+  def render(form: Form[CtEmailAddressFormValues]): Document = Jsoup.parse(
+    view(form, subscriptionEmailAddress)(
+      messages,
+      fakeRequest,
+      appConfig
+    ).body
+  )
+
+  private val title: String = messages("asa.legacy.ct.email-address.title")
 
   "ct_update_email_address" when {
 
@@ -62,8 +73,6 @@ extends ViewBaseSpec {
       }
     }
 
-    val title: String = messages("asa.legacy.ct.email-address.title")
-
     def testPageStaticContent(doc: Document): Unit = {
 
       "have the correct h1 heading and introduction" in {
@@ -77,11 +86,7 @@ extends ViewBaseSpec {
 
     "first viewing page" should {
 
-      val doc: Document = Jsoup.parse(view.apply(emailAddressForm, subscriptionEmailAddress)(
-        messages,
-        fakeRequest,
-        appConfig
-      ).body)
+      val doc: Document = render(emailAddressForm)
 
       testServiceStaticContent(doc)
 
@@ -110,11 +115,7 @@ extends ViewBaseSpec {
 
     "form is submitted with useAsa errors should" should {
 
-      val doc: Document = Jsoup.parse(view.apply(formWithUseAsaError, subscriptionEmailAddress)(
-        messages,
-        fakeRequest,
-        appConfig
-      ).body)
+      val doc: Document = render(formWithUseAsaError)
 
       testServiceStaticContent(doc)
 
@@ -141,11 +142,7 @@ extends ViewBaseSpec {
 
     "form is submitted with newEmailAddress errors should" should {
 
-      val doc: Document = Jsoup.parse(view.apply(formWithNewEmailAddressError, subscriptionEmailAddress)(
-        messages,
-        fakeRequest,
-        appConfig
-      ).body)
+      val doc: Document = render(formWithNewEmailAddressError)
 
       testServiceStaticContent(doc)
 

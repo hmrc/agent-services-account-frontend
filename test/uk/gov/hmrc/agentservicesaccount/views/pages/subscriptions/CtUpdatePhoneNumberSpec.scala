@@ -31,7 +31,6 @@ class CtUpdatePhoneNumberSpec
 extends ViewBaseSpec {
 
   val view: ct_update_phone_number = inject[ct_update_phone_number]
-
   val subscriptionPhoneNumber = "07700 900123"
 
   val phoneNumberForm: Form[CtPhoneNumberFormValues] = CtSubscriptionPhoneNumberForm.form

@@ -35,6 +35,7 @@ extends ViewBaseSpec {
   val subscriptionBusinessName = "ABC-No.1 Accountants"
 
   val businessNameForm: Form[CtBusinessNameFormValues] = CtSubscriptionBusinessNameForm.form
+
   val formWithUseAsaError: Form[CtBusinessNameFormValues] = businessNameForm.withError(
     key = businessNameUseAsaDataKey,
     message = messages("asa.legacy.ct.business-name.use-asa.error.required")
@@ -43,6 +44,16 @@ extends ViewBaseSpec {
     key = businessNameNewKey,
     message = messages("asa.legacy.ct.business-name.new-input.error.empty")
   )
+
+  def render(form: Form[CtBusinessNameFormValues]): Document = Jsoup.parse(
+    view(form, subscriptionBusinessName)(
+      messages,
+      fakeRequest,
+      appConfig
+    ).body
+  )
+
+  private val title: String = messages("asa.legacy.ct.business-name.title")
 
   "ct_update_business_name" when {
 
@@ -62,8 +73,6 @@ extends ViewBaseSpec {
       }
     }
 
-    val title: String = messages("asa.legacy.ct.business-name.title")
-
     def testPageStaticContent(doc: Document): Unit = {
 
       "have the correct h1 heading and introduction" in {
@@ -77,11 +86,7 @@ extends ViewBaseSpec {
 
     "first viewing page" should {
 
-      val doc: Document = Jsoup.parse(view.apply(businessNameForm, subscriptionBusinessName)(
-        messages,
-        fakeRequest,
-        appConfig
-      ).body)
+      val doc: Document = render(businessNameForm)
 
       testServiceStaticContent(doc)
 
@@ -110,11 +115,7 @@ extends ViewBaseSpec {
 
     "form is submitted with useAsa errors should" should {
 
-      val doc: Document = Jsoup.parse(view.apply(formWithUseAsaError, subscriptionBusinessName)(
-        messages,
-        fakeRequest,
-        appConfig
-      ).body)
+      val doc: Document = render(formWithUseAsaError)
 
       testServiceStaticContent(doc)
 
@@ -141,11 +142,7 @@ extends ViewBaseSpec {
 
     "form is submitted with newBusinessName errors should" should {
 
-      val doc: Document = Jsoup.parse(view.apply(formWithNewBusinessNameError, subscriptionBusinessName)(
-        messages,
-        fakeRequest,
-        appConfig
-      ).body)
+      val doc: Document = render(formWithNewBusinessNameError)
 
       testServiceStaticContent(doc)
 
