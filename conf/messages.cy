@@ -187,7 +187,7 @@ asa.legacy.ct.col2.p1=You can <a class="govuk-link" href="{0}" target="_blank" r
 
 asa.legacy.ct.business-name.title=What business name should we show to your Corporation Tax clients?
 asa.legacy.ct.business-name.use-asa.false=I want to use a different business name for Corporation Tax
-asa.legacy.ct.business-name.new-input.hint=Enter a business name
+asa.legacy.ct.business-name.new-input.label=Enter a business name
 asa.legacy.ct.business-name.use-asa.error.required=TODO (Default option for business name required error)
 asa.legacy.ct.business-name.new-input.error.empty=TODO (New business name input empty error)
 asa.legacy.ct.business-name.new-input.error.invalid=TODO (New business name input invalid error)

@@ -108,7 +108,7 @@ extends ViewBaseSpec {
       "hide the conditional new business name input" in {
         val conditionalHidden = doc.select(".govuk-radios__conditional--hidden")
         conditionalHidden.size() mustBe 1
-        conditionalHidden.text() mustBe messages("asa.legacy.ct.business-name.new-input.hint")
+        conditionalHidden.text() mustBe messages("asa.legacy.ct.business-name.new-input.label")
         conditionalHidden.select(".govuk-input").attr("name") mustBe businessNameNewKey
       }
     }
