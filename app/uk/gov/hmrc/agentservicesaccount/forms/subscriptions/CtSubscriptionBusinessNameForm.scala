@@ -80,4 +80,5 @@ object CtSubscriptionBusinessNameForm {
   private def useAsaDataMapping(errorKey: String): Mapping[Boolean] = optional(boolean)
     .verifying(errorKey, _.isDefined)
     .transform(_.get, Some(_))
+
 }

@@ -22,13 +22,8 @@ import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.ctJourneyKey
-<<<<<<< HEAD
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.{routes => subscriptionRoutes}
-import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionForms
-=======
-import uk.gov.hmrc.agentservicesaccount.controllers.{routes => homeRoutes}
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionBusinessNameForm
->>>>>>> 0009106 (APB-10904: Splits forms into separate files and adds form spec)
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtBusinessNameFormValues
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions._

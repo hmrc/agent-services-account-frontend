@@ -23,7 +23,7 @@ import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.ctJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.{routes => homeRoutes}
-import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionForms
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionBusinessNameForm
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtPhoneNumberFormValues
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions._
@@ -56,14 +56,14 @@ with Logging {
       journey.useCustomPhoneNumber match {
 
         case Some(useCustom) =>
-          CtSubscriptionForms.newPhoneNumberForm.fill(
+          CtSubscriptionBusinessNameForm.newPhoneNumberForm.fill(
             CtPhoneNumberFormValues(
               useAsaData = !useCustom,
               newPhoneNumber = journey.phoneNumberAnswer
             )
           )
 
-        case None => CtSubscriptionForms.newPhoneNumberForm
+        case None => CtSubscriptionBusinessNameForm.newPhoneNumberForm
       }
 
     Future.successful(
@@ -74,7 +74,7 @@ with Logging {
   def onSubmit: Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
     val journey = request.ctSubscriptionJourney
 
-    CtSubscriptionForms.newPhoneNumberForm.bindFromRequest().fold(
+    CtSubscriptionBusinessNameForm.newPhoneNumberForm.bindFromRequest().fold(
       formWithErrors => {
         val subscriptionPhoneNumber = journey.asaDetails.agencyTelephone.getOrElse("")
         Future.successful(
