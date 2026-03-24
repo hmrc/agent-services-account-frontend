@@ -19,10 +19,7 @@ package uk.gov.hmrc.agentservicesaccount.forms.subscriptions
 import play.api.data.Forms._
 import play.api.data.Form
 import play.api.data.Mapping
-import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators.trimmedText
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtBusinessNameFormValues
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtPhoneNumberFormValues
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtEmailAddressFormValues
 import uk.gov.voa.play.form.ConditionalMappings.mandatoryIfFalse
 
 object CtSubscriptionBusinessNameForm {
@@ -32,8 +29,6 @@ object CtSubscriptionBusinessNameForm {
 
   val businessNameUseAsaDataKey = "businessNameUseAsaData"
   val businessNameNewKey = "businessNameNew"
-  val phoneNumberUseAsaDataKey = "phoneNumberUseAsaData"
-  val phoneNumberNewKey = "phoneNumberNew"
 
   private val businessNameRegex = """^[A-Za-z0-9\(\)&\-\'‘’\/,\. ]{1,54}$""".r
 
@@ -49,31 +44,6 @@ object CtSubscriptionBusinessNameForm {
         businessNameUseAsaDataKey -> businessNameUseAsaDataMapping,
         businessNameNewKey -> mandatoryIfFalse(businessNameUseAsaDataKey, businessNameNewOptionalMapping)
       )(CtBusinessNameFormValues.apply)(o => Some(o.useAsaData, o.newBusinessName))
-    )
-  }
-
-  // UI validation allows '+', spaces and parentheses for user-friendly input.
-  // Raw value is stored in cache; formatting characters are stripped only
-  // at final submission to meet API requirements of digits only.
-  private val phoneNumberRegex = """^(?=.*\d)[0-9 +()]+$""".r
-
-  private val phoneNumberUseAsaDataMapping = useAsaDataMapping("asa.legacy.ct.phone-number.use-asa.error.required")
-
-  private def isPhoneNumberValid(x: String): Boolean = {
-    val digits = x.replaceAll("[^0-9]", "")
-    phoneNumberRegex.matches(x) && digits.length <= 20
-  }
-
-  private val phoneNumberNewOptionalMapping: Mapping[String] = trimmedText
-    .verifying("asa.legacy.ct.phone-number.new-input.error.empty", _.nonEmpty)
-    .verifying("asa.legacy.ct.phone-number.new-input.error.invalid", x => x.isEmpty || isPhoneNumberValid(x))
-
-  def newPhoneNumberForm: Form[CtPhoneNumberFormValues] = {
-    Form(
-      mapping(
-        phoneNumberUseAsaDataKey -> phoneNumberUseAsaDataMapping,
-        phoneNumberNewKey -> mandatoryIfFalse(phoneNumberUseAsaDataKey, phoneNumberNewOptionalMapping)
-      )(CtPhoneNumberFormValues.apply)(o => Some(o.useAsaData, o.newPhoneNumber))
     )
   }
 
