@@ -31,7 +31,7 @@ with Matchers {
   val validNewBusinessName = "ABC-No.1 Accountants"
   val invalidNewBusinessName = "{][.',"
 
-  "newBusinessNameForm form binding" should {
+  "form binding" should {
     s"be successful when $businessNameUseAsaDataKey true" in {
       val businessNameValues = List(
         emptyValue,

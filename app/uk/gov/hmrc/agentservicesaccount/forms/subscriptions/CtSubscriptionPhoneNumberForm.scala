@@ -19,14 +19,12 @@ package uk.gov.hmrc.agentservicesaccount.forms.subscriptions
 import play.api.data.Forms._
 import play.api.data.Form
 import play.api.data.Mapping
+import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators.{trimmedText, useAsaDataMapping}
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtBusinessNameFormValues
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtPhoneNumberFormValues
 import uk.gov.voa.play.form.ConditionalMappings.mandatoryIfFalse
 
 object CtSubscriptionPhoneNumberForm {
-
-  private val trimmedText = text.transform[String](x => x.trim, x => x)
-  private val trimmedAndNormalisedText = text.transform[String](x => x.trim.replaceAll("[‘’]", "'"), x => x)
 
   val phoneNumberUseAsaDataKey = "phoneNumberUseAsaData"
   val phoneNumberNewKey = "phoneNumberNew"
@@ -47,7 +45,7 @@ object CtSubscriptionPhoneNumberForm {
     .verifying("asa.legacy.ct.phone-number.new-input.error.empty", _.nonEmpty)
     .verifying("asa.legacy.ct.phone-number.new-input.error.invalid", x => x.isEmpty || isPhoneNumberValid(x))
 
-  def newPhoneNumberForm: Form[CtPhoneNumberFormValues] = {
+  def form: Form[CtPhoneNumberFormValues] = {
     Form(
       mapping(
         phoneNumberUseAsaDataKey -> phoneNumberUseAsaDataMapping,
@@ -55,9 +53,5 @@ object CtSubscriptionPhoneNumberForm {
       )(CtPhoneNumberFormValues.apply)(o => Some(o.useAsaData, o.newPhoneNumber))
     )
   }
-
-  private def useAsaDataMapping(errorKey: String): Mapping[Boolean] = optional(boolean)
-    .verifying(errorKey, _.isDefined)
-    .transform(_.get, Some(_))
 
 }

@@ -56,14 +56,14 @@ with Logging {
       journey.useCustomPhoneNumber match {
 
         case Some(useCustom) =>
-          CtSubscriptionPhoneNumberForm.newPhoneNumberForm.fill(
+          CtSubscriptionPhoneNumberForm.form.fill(
             CtPhoneNumberFormValues(
               useAsaData = !useCustom,
               newPhoneNumber = journey.phoneNumberAnswer
             )
           )
 
-        case None => CtSubscriptionPhoneNumberForm.newPhoneNumberForm
+        case None => CtSubscriptionPhoneNumberForm.form
       }
 
     Future.successful(
@@ -74,7 +74,7 @@ with Logging {
   def onSubmit: Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
     val journey = request.ctSubscriptionJourney
 
-    CtSubscriptionPhoneNumberForm.newPhoneNumberForm.bindFromRequest().fold(
+    CtSubscriptionPhoneNumberForm.form.bindFromRequest().fold(
       formWithErrors => {
         val subscriptionPhoneNumber = journey.asaDetails.agencyTelephone.getOrElse("")
         Future.successful(

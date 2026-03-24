@@ -40,4 +40,5 @@ object CtNextPageSelector {
   ): Result = {
     nextPage(currentPage)
   }
+
 }

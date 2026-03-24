@@ -19,13 +19,11 @@ package uk.gov.hmrc.agentservicesaccount.forms.subscriptions
 import play.api.data.Forms._
 import play.api.data.Form
 import play.api.data.Mapping
+import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators.{trimmedAndNormalisedText, useAsaDataMapping}
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtBusinessNameFormValues
 import uk.gov.voa.play.form.ConditionalMappings.mandatoryIfFalse
 
 object CtSubscriptionBusinessNameForm {
-
-  private val trimmedText = text.transform[String](x => x.trim, x => x)
-  private val trimmedAndNormalisedText = text.transform[String](x => x.trim.replaceAll("[‘’]", "'"), x => x)
 
   val businessNameUseAsaDataKey = "businessNameUseAsaData"
   val businessNameNewKey = "businessNameNew"
@@ -46,9 +44,5 @@ object CtSubscriptionBusinessNameForm {
       )(CtBusinessNameFormValues.apply)(o => Some(o.useAsaData, o.newBusinessName))
     )
   }
-
-  private def useAsaDataMapping(errorKey: String): Mapping[Boolean] = optional(boolean)
-    .verifying(errorKey, _.isDefined)
-    .transform(_.get, Some(_))
 
 }

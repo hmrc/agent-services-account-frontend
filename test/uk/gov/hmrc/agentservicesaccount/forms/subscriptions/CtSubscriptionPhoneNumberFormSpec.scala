@@ -31,7 +31,7 @@ with Matchers {
   private val validNewPhoneNumber = "1234567890"
   private val invalidNewPhoneNumber = "skdjfhjs"
 
-  "newPhoneNumberForm form binding" should {
+  "form binding" should {
     s"be successful when $phoneNumberUseAsaDataKey true" in {
       val phoneNumberValues = List(
         emptyValue,
@@ -43,7 +43,7 @@ with Matchers {
         phoneNumberNewKey -> phoneNumberValues(Random.nextInt(phoneNumberValues.length))
       )
 
-      newPhoneNumberForm.bind(params).value shouldBe Some(CtPhoneNumberFormValues(useAsaData = true, None))
+      form.bind(params).value shouldBe Some(CtPhoneNumberFormValues(useAsaData = true, None))
     }
 
     s"be successful when $phoneNumberUseAsaDataKey false and $phoneNumberNewKey valid" in {
@@ -52,7 +52,7 @@ with Matchers {
         phoneNumberNewKey -> validNewPhoneNumber
       )
 
-      newPhoneNumberForm.bind(params).value shouldBe Some(CtPhoneNumberFormValues(useAsaData = false, Some(validNewPhoneNumber)))
+      form.bind(params).value shouldBe Some(CtPhoneNumberFormValues(useAsaData = false, Some(validNewPhoneNumber)))
     }
 
     s"error when $phoneNumberUseAsaDataKey empty" in {
@@ -66,7 +66,7 @@ with Matchers {
         phoneNumberNewKey -> phoneNumberValues(Random.nextInt(phoneNumberValues.length))
       )
 
-      val validatedForm = newPhoneNumberForm.bind(params)
+      val validatedForm = form.bind(params)
       validatedForm.hasErrors shouldBe true
       validatedForm.error(phoneNumberUseAsaDataKey).get.message shouldBe "asa.legacy.ct.phone-number.use-asa.error.required"
       validatedForm.errors.length shouldBe 1
@@ -78,7 +78,7 @@ with Matchers {
         phoneNumberNewKey -> emptyValue
       )
 
-      val validatedForm = newPhoneNumberForm.bind(params)
+      val validatedForm = form.bind(params)
       validatedForm.hasErrors shouldBe true
       validatedForm.error(phoneNumberNewKey).get.message shouldBe "asa.legacy.ct.phone-number.new-input.error.empty"
       validatedForm.errors.length shouldBe 1
@@ -90,14 +90,14 @@ with Matchers {
         phoneNumberNewKey -> invalidNewPhoneNumber
       )
 
-      val validatedForm = newPhoneNumberForm.bind(params)
+      val validatedForm = form.bind(params)
       validatedForm.hasErrors shouldBe true
       validatedForm.error(phoneNumberNewKey).get.message shouldBe "asa.legacy.ct.phone-number.new-input.error.invalid"
       validatedForm.errors.length shouldBe 1
     }
 
-    "unbind" in {
-      val unboundForm = newPhoneNumberForm.mapping.unbind(CtPhoneNumberFormValues(useAsaData = true, Some(validNewPhoneNumber)))
+    "unbind CtPhoneNumberFormValues" in {
+      val unboundForm = form.mapping.unbind(CtPhoneNumberFormValues(useAsaData = true, Some(validNewPhoneNumber)))
 
       unboundForm shouldBe Map(
         phoneNumberUseAsaDataKey -> true.toString,
