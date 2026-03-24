@@ -108,7 +108,7 @@ extends ViewBaseSpec {
       "hide the conditional new email address input" in {
         val conditionalHidden = doc.select(".govuk-radios__conditional--hidden")
         conditionalHidden.size() mustBe 1
-        conditionalHidden.text() mustBe messages("asa.legacy.ct.email-address.new-input.hint")
+        conditionalHidden.text() mustBe messages("asa.legacy.ct.email-address.new-input.label") + " " + messages("asa.legacy.ct.email-address.new-input.hint")
         conditionalHidden.select(".govuk-input").attr("name") mustBe emailAddressNewKey
       }
     }
