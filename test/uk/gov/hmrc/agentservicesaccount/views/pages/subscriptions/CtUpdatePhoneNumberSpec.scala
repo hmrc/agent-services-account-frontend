@@ -22,7 +22,7 @@ import org.jsoup.nodes.Element
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.data.Form
 import play.api.i18n.Messages
-import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionForms.newPhoneNumberForm
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionPhoneNumberForm
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtPhoneNumberFormValues
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.ct_update_phone_number
@@ -34,9 +34,9 @@ extends ViewBaseSpec {
 
   val subscriptionPhoneNumber = "07700 900123"
 
-  val form: Form[CtPhoneNumberFormValues] = newPhoneNumberForm
+  val phoneNumberForm: Form[CtPhoneNumberFormValues] = CtSubscriptionPhoneNumberForm.form
 
-  val formWithErrors: Form[CtPhoneNumberFormValues] = form.withError("phoneNumberUseAsaData", Messages("error.required"))
+  val formWithErrors: Form[CtPhoneNumberFormValues] = phoneNumberForm.withError("phoneNumberUseAsaData", Messages("error.required"))
 
   def render(form: Form[CtPhoneNumberFormValues]): Document = Jsoup.parse(
     view(form, subscriptionPhoneNumber)(
@@ -46,7 +46,7 @@ extends ViewBaseSpec {
     ).body
   )
 
-  val title = messages("asa.legacy.ct.phone-number.title")
+  private val title = messages("asa.legacy.ct.phone-number.title")
 
   def testServiceStaticContent(doc: Document): Unit = {
 
@@ -93,7 +93,7 @@ extends ViewBaseSpec {
 
     "first loaded" should {
 
-      val doc: Document = render(form)
+      val doc: Document = render(phoneNumberForm)
 
       testServiceStaticContent(doc)
       testPageStaticContent(doc)
@@ -134,7 +134,7 @@ extends ViewBaseSpec {
 
     "when 'new phone number' option is selected" should {
 
-      val filledForm: Form[CtPhoneNumberFormValues] = form.fill(
+      val filledForm: Form[CtPhoneNumberFormValues] = phoneNumberForm.fill(
         CtPhoneNumberFormValues(
           useAsaData = false,
           newPhoneNumber = Some("07123456789")
@@ -164,7 +164,7 @@ extends ViewBaseSpec {
 
     "when existing phone number is selected" should {
 
-      val filledForm: Form[CtPhoneNumberFormValues] = form.fill(
+      val filledForm: Form[CtPhoneNumberFormValues] = phoneNumberForm.fill(
         CtPhoneNumberFormValues(
           useAsaData = true,
           newPhoneNumber = None

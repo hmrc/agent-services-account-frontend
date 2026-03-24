@@ -21,9 +21,8 @@ import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.data.Form
-import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionBusinessNameForm.emailAddressNewKey
-import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionBusinessNameForm.emailAddressUseAsaDataKey
-import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionBusinessNameForm.newEmailAddressForm
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionEmailAddressForm
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionEmailAddressForm.{emailAddressNewKey, emailAddressUseAsaDataKey}
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtEmailAddressFormValues
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.ct_update_email_address
@@ -35,12 +34,12 @@ extends ViewBaseSpec {
   val view: ct_update_email_address = inject[ct_update_email_address]
   val subscriptionEmailAddress = "joe@bloggs.com"
 
-  val form: Form[CtEmailAddressFormValues] = newEmailAddressForm
-  val formWithUseAsaError: Form[CtEmailAddressFormValues] = form.withError(
+  val emailAddressForm: Form[CtEmailAddressFormValues] = CtSubscriptionEmailAddressForm.form
+  val formWithUseAsaError: Form[CtEmailAddressFormValues] = emailAddressForm.withError(
     key = emailAddressUseAsaDataKey,
     message = messages("asa.legacy.ct.email-address.use-asa.error.required")
   )
-  val formWithNewEmailAddressError: Form[CtEmailAddressFormValues] = form.withError(
+  val formWithNewEmailAddressError: Form[CtEmailAddressFormValues] = emailAddressForm.withError(
     key = emailAddressNewKey,
     message = messages("asa.legacy.ct.email-address.new-input.error.empty")
   )
@@ -78,7 +77,7 @@ extends ViewBaseSpec {
 
     "first viewing page" should {
 
-      val doc: Document = Jsoup.parse(view.apply(form, subscriptionEmailAddress)(
+      val doc: Document = Jsoup.parse(view.apply(emailAddressForm, subscriptionEmailAddress)(
         messages,
         fakeRequest,
         appConfig

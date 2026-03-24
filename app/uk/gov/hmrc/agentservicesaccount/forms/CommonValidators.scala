@@ -16,7 +16,9 @@
 
 package uk.gov.hmrc.agentservicesaccount.forms
 
-import play.api.data.Forms.{boolean, optional, text}
+import play.api.data.Forms.boolean
+import play.api.data.Forms.optional
+import play.api.data.Forms.text
 import play.api.data.Mapping
 import play.api.data.validation._
 

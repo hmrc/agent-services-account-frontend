@@ -19,7 +19,8 @@ package uk.gov.hmrc.agentservicesaccount.forms.subscriptions
 import play.api.data.Forms._
 import play.api.data.Form
 import play.api.data.Mapping
-import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators.{trimmedAndNormalisedText, useAsaDataMapping}
+import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators.trimmedAndNormalisedText
+import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators.useAsaDataMapping
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtBusinessNameFormValues
 import uk.gov.voa.play.form.ConditionalMappings.mandatoryIfFalse
 

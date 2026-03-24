@@ -21,9 +21,9 @@ import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.data.Form
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionBusinessNameForm
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionBusinessNameForm.businessNameNewKey
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionBusinessNameForm.businessNameUseAsaDataKey
-import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionBusinessNameForm.form
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtBusinessNameFormValues
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.ct_update_business_name
@@ -34,12 +34,12 @@ extends ViewBaseSpec {
   val view: ct_update_business_name = inject[ct_update_business_name]
   val subscriptionBusinessName = "ABC-No.1 Accountants"
 
-  val form: Form[CtBusinessNameFormValues] = form
-  val formWithUseAsaError: Form[CtBusinessNameFormValues] = form.withError(
+  val businessNameForm: Form[CtBusinessNameFormValues] = CtSubscriptionBusinessNameForm.form
+  val formWithUseAsaError: Form[CtBusinessNameFormValues] = businessNameForm.withError(
     key = businessNameUseAsaDataKey,
     message = messages("asa.legacy.ct.business-name.use-asa.error.required")
   )
-  val formWithNewBusinessNameError: Form[CtBusinessNameFormValues] = form.withError(
+  val formWithNewBusinessNameError: Form[CtBusinessNameFormValues] = businessNameForm.withError(
     key = businessNameNewKey,
     message = messages("asa.legacy.ct.business-name.new-input.error.empty")
   )
@@ -77,7 +77,7 @@ extends ViewBaseSpec {
 
     "first viewing page" should {
 
-      val doc: Document = Jsoup.parse(view.apply(form, subscriptionBusinessName)(
+      val doc: Document = Jsoup.parse(view.apply(businessNameForm, subscriptionBusinessName)(
         messages,
         fakeRequest,
         appConfig
