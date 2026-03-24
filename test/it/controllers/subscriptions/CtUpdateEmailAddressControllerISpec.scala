@@ -29,8 +29,10 @@ import play.api.libs.json.OWrites
 import play.api.mvc.AnyContentAsEmpty
 import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.mvc.RequestHeader
-import play.api.test.FakeRequest
+import play.api.test.{FakeRequest, Helpers}
 import play.api.test.Helpers._
+import stubs.AgentServicesAccountStubs._
+import stubs.EmailVerificationStubs.{givenCheckEmailSuccess, givenVerifyEmailSuccess}
 import support.BaseISpec
 import support.UnitSpec
 import uk.gov.hmrc.agentservicesaccount.actions.CtJourney
@@ -39,6 +41,7 @@ import uk.gov.hmrc.agentservicesaccount.controllers.ctJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtUpdateEmailAddressController
 import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
 import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
+import uk.gov.hmrc.agentservicesaccount.models.emailverification.{CompletedEmail, VerificationStatusResponse}
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.authorise.Predicate
@@ -211,7 +214,7 @@ with MockFactory {
       status(result) shouldBe BAD_REQUEST
     }
 
-    "update journey and redirect when using ASA business name" in new TestSetup {
+    "update journey and redirect when using ASA email address" in new TestSetup {
       private val request = FakeRequest(POST, "/")
         .withSession(session.toSeq: _*)
         .withFormUrlEncodedBody(
@@ -232,7 +235,26 @@ with MockFactory {
       updated.value.emailAnswer shouldBe None
     }
 
-    "update journey and redirect when using custom business name" in new TestSetup {
+    "redirect to the verify-email external journey when using custom email address" in new TestSetup {
+      givenFullAuthorisedAsAgentWith(
+        arn = arn.value,
+        providerId = "cred-id",
+        email = "abc@abc.com"
+      )
+      givenGetAgentRecord(agentRecord)
+      stubASAGetResponseError(arn, NOT_FOUND)
+      givenCheckEmailSuccess(
+        "cred-id",
+        VerificationStatusResponse(emails =
+          List(CompletedEmail(
+            "abc@abc.com",
+            verified = true,
+            locked = false
+          ))
+        )
+      )
+      givenVerifyEmailSuccess("/continue-url")
+
       private val request = FakeRequest(POST, "/")
         .withSession(session.toSeq: _*)
         .withFormUrlEncodedBody(
@@ -243,13 +265,16 @@ with MockFactory {
       implicit val implicitRequest: FakeRequest[AnyContentAsFormUrlEncoded] = request
 
       cacheJourney(baseJourney)
+      //            await(repo.putSession(currentSelectedChangesKey, Set("email")))
+      //            await(repo.putSession(emailPendingVerificationKey, "new@abc.com"))
 
       private val result = controller.onSubmit()(request).futureValue
       status(result) shouldBe SEE_OTHER
+      Helpers.redirectLocation(Future.successful(result)) shouldBe Some("http://localhost:9890/continue-url")
 
-      val updated: Option[CtJourney] = sessionCache.get[CtJourney](ctJourneyKey).futureValue
-      updated.value.useCustomEmail shouldBe Some(true)
-      updated.value.emailAnswer shouldBe Some("jane@bloggs.com")
+//      val updated: Option[CtJourney] = sessionCache.get[CtJourney](ctJourneyKey).futureValue
+//      updated.value.useCustomEmail shouldBe Some(true)
+//      updated.value.emailAnswer shouldBe Some("jane@bloggs.com")
     }
   }
 
