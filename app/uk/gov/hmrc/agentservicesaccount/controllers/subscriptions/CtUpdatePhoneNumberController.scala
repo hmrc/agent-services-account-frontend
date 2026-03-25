@@ -22,8 +22,10 @@ import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.ctJourneyKey
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.UpdatePhoneNumberPage
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.controllers.{routes => homeRoutes}
-import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionForms
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionPhoneNumberForm
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtPhoneNumberFormValues
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions._
@@ -56,14 +58,14 @@ with Logging {
       journey.useCustomPhoneNumber match {
 
         case Some(useCustom) =>
-          CtSubscriptionForms.newPhoneNumberForm.fill(
+          CtSubscriptionPhoneNumberForm.form.fill(
             CtPhoneNumberFormValues(
               useAsaData = !useCustom,
               newPhoneNumber = journey.phoneNumberAnswer
             )
           )
 
-        case None => CtSubscriptionForms.newPhoneNumberForm
+        case None => CtSubscriptionPhoneNumberForm.form
       }
 
     Future.successful(
@@ -74,7 +76,7 @@ with Logging {
   def onSubmit: Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
     val journey = request.ctSubscriptionJourney
 
-    CtSubscriptionForms.newPhoneNumberForm.bindFromRequest().fold(
+    CtSubscriptionPhoneNumberForm.form.bindFromRequest().fold(
       formWithErrors => {
         val subscriptionPhoneNumber = journey.asaDetails.agencyTelephone.getOrElse("")
         Future.successful(
@@ -94,7 +96,7 @@ with Logging {
         sessionCacheService
           .put(ctJourneyKey, updatedJourney)
           .map { _ =>
-            Redirect(homeRoutes.AgentServicesController.root()) // TODO: replace with next page
+            Redirect(getNextPage(UpdatePhoneNumberPage))
           }
       }
     )

@@ -16,7 +16,7 @@
 
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
-@import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtBusinessNameFormValues
+@import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtEmailAddressFormValues
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 @import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
 @import uk.gov.hmrc.govukfrontend.views.html.components._
@@ -35,19 +35,20 @@
     govukErrorSummary: GovukErrorSummary
 )
 
-@(form: Form[CtBusinessNameFormValues], subscriptionBusinessName: String)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
+@(form: Form[CtEmailAddressFormValues], subscriptionEmailAddress: String)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
 
-@newBusinessNameInput = {
+@newEmailAddressInput = {
     @govukInput(Input(
         label = Label(
-            content = HtmlContent(msgs("asa.legacy.ct.business-name.new-input.label")),
+            content = HtmlContent(msgs("asa.legacy.ct.email-address.new-input.label")),
             classes = "govuk-label"
-        )
-    ).withFormField(form("businessNameNew")))
+        ),
+        hint = Some(Hint(content = Text(msgs("asa.legacy.ct.email-address.new-input.hint"))))
+    ).withFormField(form("emailAddressNew")))
 }
 
 @main(
-    pageTitle = withErrorPrefix(form.hasErrors, msgs("asa.legacy.ct.business-name.title")),
+    pageTitle = withErrorPrefix(form.hasErrors, msgs("asa.legacy.ct.email-address.title")),
     mimicBrowserBackLink = true,
     showSecondaryNav = false
 ) {
@@ -56,28 +57,28 @@
         @govukErrorSummary(ErrorSummary().withFormErrorsAsText(form))
     }
 
-    @formWithCSRF(action = subscriptions.routes.CtUpdateBusinessNameController.onSubmit) {
+    @formWithCSRF(action = subscriptions.routes.CtUpdateEmailAddressController.onSubmit) {
         @govukRadios(Radios(
             fieldset = Some(Fieldset(
                 legend = Some(Legend(
-                    content = Text(msgs("asa.legacy.ct.business-name.title")),
+                    content = Text(msgs("asa.legacy.ct.email-address.title")),
                     classes = "govuk-fieldset__legend--l",
                     isPageHeading = true
                 ))
             )),
-            name = "businessNameUseAsaData",
+            name = "emailAddressUseAsaData",
             items = Seq(
                 RadioItem(
-                    content = Text(subscriptionBusinessName),
+                    content = Text(subscriptionEmailAddress),
                     value = Some("true")
                 ),
                 RadioItem(
-                    content = Text(msgs("asa.legacy.ct.business-name.use-asa.false")),
+                    content = Text(msgs("asa.legacy.ct.email-address.use-asa.false")),
                     value = Some("false"),
-                    conditionalHtml = Some(newBusinessNameInput)
+                    conditionalHtml = Some(newEmailAddressInput)
                 )
             )
-        ).withFormField(form("businessNameUseAsaData")))
+        ).withFormField(form("emailAddressUseAsaData")))
 
         @govukButton(Button(content = Text(msgs("common.continue"))))
     }

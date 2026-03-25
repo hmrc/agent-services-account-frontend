@@ -16,11 +16,22 @@
 
 package uk.gov.hmrc.agentservicesaccount.forms
 
+import play.api.data.Forms.boolean
+import play.api.data.Forms.optional
+import play.api.data.Forms.text
+import play.api.data.Mapping
 import play.api.data.validation._
 
 import scala.annotation.tailrec
 
 object CommonValidators {
+
+  val trimmedText: Mapping[String] = text.transform[String](x => x.trim, x => x)
+  val trimmedAndNormalisedText: Mapping[String] = text.transform[String](x => x.trim.replaceAll("[‘’]", "'"), x => x)
+
+  def useAsaDataMapping(errorKey: String): Mapping[Boolean] = optional(boolean)
+    .verifying(errorKey, _.isDefined)
+    .transform(_.get, Some(_))
 
   def checkOneAtATime[A](constraints: Seq[Constraint[A]]): Constraint[A] = Constraint[A] { fieldValue: A =>
     @tailrec

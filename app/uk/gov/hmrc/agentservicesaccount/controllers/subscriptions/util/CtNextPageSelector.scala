@@ -16,41 +16,28 @@
 
 package uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util
 
-import play.api.mvc.Result
-import play.api.mvc.Results.Redirect
-import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
-import uk.gov.hmrc.agentservicesaccount.models.desiDetails.DesiDetailsJourney
+import play.api.mvc.Call
+import uk.gov.hmrc.agentservicesaccount.actions.CtJourney
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
+import uk.gov.hmrc.agentservicesaccount.controllers.{routes => homeRoutes}
+
 object CtNextPageSelector {
 
-//  TODO: 10902: Replace with CtJourney
-  def getNextPage(
-    journey: DesiDetailsJourney,
-    currentPage: String
-  ): Result = {
-    if (journey.journeyComplete) {
-      Redirect(desiDetails.routes.CheckYourAnswersController.showPage)
-    }
-    else {
-      val nextPage: Option[String] = journey.contactChangesNeeded.flatMap { pages =>
-        if (pages.contains(currentPage)) {
-          pages.toSeq.sliding(2).find {
-            case Seq(current, _) => current == currentPage
-            case _ => false
-          }.flatMap {
-            case Seq(_, next) => Some(next)
-            case _ => None
-          }
-        }
-        else
-          pages.headOption
-      }
-      nextPage match {
-        case Some("businessName") => Redirect(desiDetails.routes.UpdateNameController.showPage)
-        case Some("address") => Redirect(desiDetails.routes.ContactDetailsController.startAddressLookup)
-        case Some("email") => Redirect(desiDetails.routes.UpdateEmailAddressController.showChangeEmailAddress)
-        case Some("telephone") => Redirect(desiDetails.routes.UpdateTelephoneController.showPage)
-        case None => Redirect(desiDetails.routes.ApplySACodeChangesController.showPage)
-      }
-    }
+  val UpdateBusinessNamePage = "businessName"
+  val UpdatePhoneNumberPage = "phoneNumber"
+  val UpdateEmailAddressPage = "emailAddress"
+
+  private val nextPage: String => Call = {
+    case UpdateBusinessNamePage => subscriptions.routes.CtUpdatePhoneNumberController.showPage
+    case UpdatePhoneNumberPage => subscriptions.routes.CtUpdateEmailAddressController.showPage
+    case UpdateEmailAddressPage => homeRoutes.AgentServicesController.root()
   }
+
+  def getNextPage(
+    currentPage: String,
+    journey: Option[CtJourney] = None
+  ): Call = {
+    nextPage(currentPage)
+  }
+
 }

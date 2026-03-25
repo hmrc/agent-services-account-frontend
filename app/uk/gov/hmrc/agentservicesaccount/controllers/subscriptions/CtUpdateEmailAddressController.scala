@@ -22,10 +22,11 @@ import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.ctJourneyKey
-import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.UpdateBusinessNamePage
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.UpdateEmailAddressPage
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.getNextPage
-import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionBusinessNameForm
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtBusinessNameFormValues
+import uk.gov.hmrc.agentservicesaccount.controllers.{routes => homeRoutes}
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionEmailAddressForm
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtEmailAddressFormValues
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -35,10 +36,10 @@ import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
 @Singleton
-class CtUpdateBusinessNameController @Inject() (
+class CtUpdateEmailAddressController @Inject() (
   actions: Actions,
   val sessionCacheService: SessionCacheService,
-  ct_update_business_name: ct_update_business_name,
+  ct_update_email_address: ct_update_email_address,
   cc: MessagesControllerComponents
 )(implicit
   appConfig: AppConfig,
@@ -51,51 +52,51 @@ with Logging {
   val showPage: Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
     val journey = request.ctSubscriptionJourney
 
-    val subscriptionBusinessName = journey.asaDetails.agencyName.getOrElse("")
+    val subscriptionEmailAddress = journey.asaDetails.agencyEmail.getOrElse("")
 
     val form =
-      journey.useCustomBusinessName match {
+      journey.useCustomEmail match {
 
         case Some(useCustom) =>
-          CtSubscriptionBusinessNameForm.form.fill(
-            CtBusinessNameFormValues(
+          CtSubscriptionEmailAddressForm.form.fill(
+            CtEmailAddressFormValues(
               useAsaData = !useCustom,
-              newBusinessName = journey.businessNameAnswer
+              newEmailAddress = journey.businessNameAnswer
             )
           )
 
-        case None => CtSubscriptionBusinessNameForm.form
+        case None => CtSubscriptionEmailAddressForm.form
       }
 
     Future.successful(
-      Ok(ct_update_business_name(form, subscriptionBusinessName))
+      Ok(ct_update_email_address(form, subscriptionEmailAddress))
     )
   }
 
   def onSubmit: Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
     val journey = request.ctSubscriptionJourney
 
-    CtSubscriptionBusinessNameForm.form.bindFromRequest().fold(
+    CtSubscriptionEmailAddressForm.form.bindFromRequest().fold(
       formWithErrors => {
-        val subscriptionBusinessName = journey.asaDetails.agencyName.getOrElse("")
+        val subscriptionEmailAddress = journey.asaDetails.agencyEmail.getOrElse("")
         Future.successful(
-          BadRequest(ct_update_business_name(formWithErrors, subscriptionBusinessName))
+          BadRequest(ct_update_email_address(formWithErrors, subscriptionEmailAddress))
         )
       },
       data => {
         val updatedJourney = journey.copy(
-          useCustomBusinessName = Some(!data.useAsaData),
-          businessNameAnswer =
+          useCustomEmail = Some(!data.useAsaData),
+          emailAnswer =
             if (data.useAsaData)
               None
             else
-              data.newBusinessName
+              data.newEmailAddress
         )
 
         sessionCacheService
           .put(ctJourneyKey, updatedJourney)
           .map { _ =>
-            Redirect(getNextPage(UpdateBusinessNamePage))
+            Redirect(getNextPage(UpdateEmailAddressPage))
           }
       }
     )

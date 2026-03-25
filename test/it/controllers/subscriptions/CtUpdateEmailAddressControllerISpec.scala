@@ -36,7 +36,8 @@ import support.UnitSpec
 import uk.gov.hmrc.agentservicesaccount.actions.CtJourney
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.ctJourneyKey
-import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtUpdateBusinessNameController
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtUpdateEmailAddressController
+import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
 import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.auth.core.AuthConnector
@@ -48,7 +49,7 @@ import uk.gov.hmrc.http.client.HttpClientV2
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
-class CtUpdateBusinessNameControllerISpec
+class CtUpdateEmailAddressControllerISpec
 extends BaseISpec
 with UnitSpec
 with Matchers
@@ -104,8 +105,8 @@ with MockFactory {
             uniqueTaxReference = Some(uk.gov.hmrc.agentservicesaccount.models.Utr("0123456789")),
             agencyDetails = Some(
               uk.gov.hmrc.agentservicesaccount.models.AgencyDetails(
-                agencyName = Some("Test Agency"),
-                agencyEmail = None,
+                agencyName = None,
+                agencyEmail = Some("joe@bloggs.com"),
                 agencyTelephone = None,
                 agencyAddress = None
               )
@@ -134,14 +135,14 @@ with MockFactory {
       .overrides(overrides)
       .build()
 
-    val controller: CtUpdateBusinessNameController = app.injector.instanceOf[CtUpdateBusinessNameController]
+    val controller: CtUpdateEmailAddressController = app.injector.instanceOf[CtUpdateEmailAddressController]
 
     val sessionCache: SessionCacheService = app.injector.instanceOf[SessionCacheService]
 
     val baseJourney: CtJourney = CtJourney(
-      asaDetails = uk.gov.hmrc.agentservicesaccount.models.AgencyDetails(
-        agencyName = Some("Test Agency"),
-        agencyEmail = None,
+      asaDetails = AgencyDetails(
+        agencyName = None,
+        agencyEmail = Some("joe@bloggs.com"),
         agencyTelephone = None,
         agencyAddress = None
       ),
@@ -167,7 +168,7 @@ with MockFactory {
 
   }
 
-  "GET /update-business-name" should {
+  "GET /update-email-address" should {
 
     "render empty form on first visit" in new TestSetup {
       cacheJourney(baseJourney)
@@ -175,13 +176,13 @@ with MockFactory {
       private val result = controller.showPage()(FakeRequest()).futureValue
 
       status(result) shouldBe OK
-      contentAsString(result) should include("Test Agency")
+      contentAsString(result) should include("joe@bloggs.com")
     }
 
     "render pre-filled form when journey has existing answers" in new TestSetup {
       private val journey = baseJourney.copy(
-        useCustomBusinessName = Some(true),
-        businessNameAnswer = Some("Custom Name Ltd")
+        useCustomEmail = Some(true),
+        emailAnswer = Some("Custom Name Ltd")
       )
 
       cacheJourney(journey)
@@ -191,18 +192,18 @@ with MockFactory {
       status(result) shouldBe OK
       private val content = contentAsString(result)
 
-      content should include("""value="true"""")
-      content should include("businessNameNew")
+      content should include("""value="true"""") // radio selected
+      content should include("emailAddressNew") // input present
     }
   }
 
-  "POST /update-business-name" should {
+  "POST /update-email-address" should {
 
     "return BAD_REQUEST when form is invalid" in new TestSetup {
       cacheJourney(baseJourney)
 
       private val request = FakeRequest().withSession(session.toSeq: _*).withFormUrlEncodedBody(
-        "useAsaData" -> ""
+        "useAsaData" -> "" // missing selection
       )
 
       private val result = controller.onSubmit()(request).futureValue
@@ -214,7 +215,7 @@ with MockFactory {
       private val request = FakeRequest(POST, "/")
         .withSession(session.toSeq: _*)
         .withFormUrlEncodedBody(
-          "businessNameUseAsaData" -> "true"
+          "emailAddressUseAsaData" -> "true"
         )
 
       implicit val implicitRequest: FakeRequest[AnyContentAsFormUrlEncoded] = request
@@ -227,16 +228,16 @@ with MockFactory {
 
       val updated: Option[CtJourney] = sessionCache.get[CtJourney](ctJourneyKey).futureValue
       updated shouldBe defined
-      updated.get.useCustomBusinessName shouldBe Some(false)
-      updated.value.businessNameAnswer shouldBe None
+      updated.get.useCustomEmail shouldBe Some(false)
+      updated.value.emailAnswer shouldBe None
     }
 
     "update journey and redirect when using custom business name" in new TestSetup {
       private val request = FakeRequest(POST, "/")
         .withSession(session.toSeq: _*)
         .withFormUrlEncodedBody(
-          "businessNameUseAsaData" -> "false",
-          "businessNameNew" -> "My Custom Ltd"
+          "emailAddressUseAsaData" -> "false",
+          "emailAddressNew" -> "jane@bloggs.com"
         )
 
       implicit val implicitRequest: FakeRequest[AnyContentAsFormUrlEncoded] = request
@@ -247,8 +248,8 @@ with MockFactory {
       status(result) shouldBe SEE_OTHER
 
       val updated: Option[CtJourney] = sessionCache.get[CtJourney](ctJourneyKey).futureValue
-      updated.value.useCustomBusinessName shouldBe Some(true)
-      updated.value.businessNameAnswer shouldBe Some("My Custom Ltd")
+      updated.value.useCustomEmail shouldBe Some(true)
+      updated.value.emailAnswer shouldBe Some("jane@bloggs.com")
     }
   }
 
