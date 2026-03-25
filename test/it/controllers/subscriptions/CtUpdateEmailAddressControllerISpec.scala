@@ -29,10 +29,12 @@ import play.api.libs.json.OWrites
 import play.api.mvc.AnyContentAsEmpty
 import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.mvc.RequestHeader
-import play.api.test.{FakeRequest, Helpers}
+import play.api.test.FakeRequest
+import play.api.test.Helpers
 import play.api.test.Helpers._
 import stubs.AgentServicesAccountStubs._
-import stubs.EmailVerificationStubs.{givenCheckEmailSuccess, givenVerifyEmailSuccess}
+import stubs.EmailVerificationStubs.givenCheckEmailSuccess
+import stubs.EmailVerificationStubs.givenVerifyEmailSuccess
 import support.BaseISpec
 import support.UnitSpec
 import uk.gov.hmrc.agentservicesaccount.actions.CtJourney
@@ -41,7 +43,8 @@ import uk.gov.hmrc.agentservicesaccount.controllers.ctJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtUpdateEmailAddressController
 import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
 import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
-import uk.gov.hmrc.agentservicesaccount.models.emailverification.{CompletedEmail, VerificationStatusResponse}
+import uk.gov.hmrc.agentservicesaccount.models.emailverification.CompletedEmail
+import uk.gov.hmrc.agentservicesaccount.models.emailverification.VerificationStatusResponse
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.authorise.Predicate

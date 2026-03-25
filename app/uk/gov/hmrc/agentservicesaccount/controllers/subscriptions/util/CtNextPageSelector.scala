@@ -27,7 +27,10 @@ object CtNextPageSelector {
   val UpdatePhoneNumberPage = "phoneNumber"
   val UpdateEmailAddressPage = "emailAddress"
 
-  private val nextPage: (String, Option[CtJourney]) => Call = {
+  private val nextPage: (
+    String,
+    Option[CtJourney]
+  ) => Call = {
     case (UpdateBusinessNamePage, _) => subscriptions.routes.CtUpdatePhoneNumberController.showPage
     case (UpdatePhoneNumberPage, _) => subscriptions.routes.CtUpdateEmailAddressController.showPage
     case (UpdateEmailAddressPage, Some(journey)) =>
