@@ -114,6 +114,7 @@ with IntegrationPatience {
 
   protected val amlsStartPath: String = "/agent-services-account/manage-account/money-laundering-supervision"
   protected val desiDetailsStartPath: String = "/agent-services-account/manage-account/contact-details"
+  protected val ctSubscriptionStartPath: String = "/agent-services-account/ct-subscription"
 
   override def beforeAll(): Unit = {
     startWiremock()
