@@ -104,6 +104,7 @@ POST       /ct-subscription/phone-number                                  @uk.go
 
 GET        /ct-subscription/email-address                                 @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtUpdateEmailAddressController.showPage
 POST       /ct-subscription/email-address                                 @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtUpdateEmailAddressController.onSubmit
+GET        /ct-subscription/email-verification-finish                     @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtEmailVerificationEndpointController.finishEmailVerification
 
 # AMLS
 GET        /manage-account/money-laundering-supervision/view-details                     @uk.gov.hmrc.agentservicesaccount.controllers.amls.ViewDetailsController.showPage
