@@ -63,6 +63,7 @@ with TestConstants {
 
   "initialiseEmailVerificationJourney" should {
     "return an absolute url for use locally" when {
+      //    TODO: 10904 FIX
       "successfully called out to Email Verification" in new Setup {
         mockAppConfig.emailVerificationFrontendBaseUrl returns "localhost"
 
@@ -92,6 +93,7 @@ with TestConstants {
     }
 
     "return a relative redirectUri" when {
+      //    TODO: 10904 FIX
       "successfully called out to Email Verification" in new Setup {
         mockAppConfig.emailVerificationFrontendBaseUrl returns ""
 
@@ -121,6 +123,7 @@ with TestConstants {
     }
 
     "throw an exception" when {
+      //    TODO: 10904 FIX
       "failed calling out to Email Verification" in new Setup {
         mockAppConfig.emailVerificationFrontendBaseUrl returns ""
 

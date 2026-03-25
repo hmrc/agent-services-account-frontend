@@ -80,6 +80,7 @@ extends ComponentBaseISpec {
       result.status shouldBe INTERNAL_SERVER_ERROR
     }
 
+//    TODO: 10904 FIX
     "redirect to routes.AgentServicesController.root() (TEMPORARILY) if email is already verified" in {
 
       givenFullAuthorisedAsAgentWith(

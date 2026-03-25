@@ -237,6 +237,7 @@ with MockFactory {
       updated.value.emailAnswer shouldBe None
     }
 
+    //    TODO: 10904 FIX
     "redirect to the verify-email external journey when using custom email address" in new TestSetup {
       givenFullAuthorisedAsAgentWith(
         arn = arn.value,
