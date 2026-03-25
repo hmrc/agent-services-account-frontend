@@ -25,9 +25,7 @@ import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.{EmailVerificationFinish, getNextPage}
 import uk.gov.hmrc.agentservicesaccount.controllers.emailPendingVerificationKey
-import uk.gov.hmrc.agentservicesaccount.models.emailverification.EmailHasNotChanged
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.EmailIsAlreadyVerified
-import uk.gov.hmrc.agentservicesaccount.models.emailverification.EmailIsLocked
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.EmailNeedsVerifying
 import uk.gov.hmrc.agentservicesaccount.services.EmailVerificationService
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
@@ -68,22 +66,18 @@ with Logging {
 //                }
 //                //                      journey <- isJourneyComplete()
 //              } yield Redirect(desiDetails.routes.CheckYourAnswersController.showPage)
+//              val updatedJourney = journey.copy(
+//                useCustomEmail = Some(false),
+//                emailAnswer = None
+//              )
+//
+//              sessionCacheService
+//                .put(ctJourneyKey, updatedJourney)
+//                .map { _ =>
+//                  Redirect(getNextPage(UpdateEmailAddressPage, Some(updatedJourney)))
+//                }
+//              TODO: 10904 Save ct here
               Future.successful(Redirect(getNextPage(EmailVerificationFinish)))
-            //                  case EmailIsLocked => Future.successful(Redirect(desiDetails.routes.UpdateEmailAddressController.showEmailLocked))
-            //                  case EmailHasNotChanged =>
-            //                    draftDetailsService.updateDraftDetails(desiDetails =>
-            //                      desiDetails.copy(agencyDetails = desiDetails.agencyDetails.copy(agencyEmail = Some(email)))
-            //                    ).flatMap {
-            //                      _ =>
-            //                        isJourneyComplete().map { journey =>
-            //                          {
-            //                            if (journey.journeyComplete)
-            //                              Redirect(desiDetails.routes.CheckYourAnswersController.showPage)
-            //                            else
-            //                              getNextPage(journey, "email")
-            //                          }
-            //                        }
-            //                    }
             case EmailNeedsVerifying =>
               for {
                 _ <- sessionCacheService.put(emailPendingVerificationKey, email)
@@ -95,15 +89,7 @@ with Logging {
                 )
               } yield Redirect(redirectUri)
           }
-        //              case None => Redirect(desiDetails.routes.CheckYourAnswersController.showPage)
-        //                isJourneyComplete().map { journey =>
-        //                  {
-        //                    if (journey.journeyComplete)
-        //                      Redirect(desiDetails.routes.CheckYourAnswersController.showPage)
-        //                    else
-        //                      getNextPage(journey, "email")
-        //                  }
-        //                }
+        case None => Future.successful(Redirect(routes.CtUpdateEmailAddressController.showPage))
       }
   }
 }

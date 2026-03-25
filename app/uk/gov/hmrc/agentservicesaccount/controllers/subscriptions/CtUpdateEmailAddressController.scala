@@ -99,6 +99,7 @@ with Logging {
             }
         }
         else {
+//          TODO: 10904 Remove Use of get if possible
           val newEmail = data.newEmailAddress.get
           val credId = request.agentInfo.credentials.map(_.providerId).getOrElse(throw new RuntimeException("no available cred id"))
           for {

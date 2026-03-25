@@ -64,7 +64,6 @@ with ScalaFutures
 with IntegrationPatience
 with MockFactory {
 
-//  TODO: 10904 Move this TestSetup into helper class
   class TestSetup {
 
     private val testArn = "TARN0000001"
