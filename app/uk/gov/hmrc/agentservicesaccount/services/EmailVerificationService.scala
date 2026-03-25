@@ -60,7 +60,8 @@ class EmailVerificationService @Inject() (
   def initialiseEmailVerificationJourney(
     credId: String,
     newEmail: String,
-    lang: Lang
+    lang: Lang,
+    continueUrl: Call
   )(implicit rh: RequestHeader): Future[String] = {
     val useAbsoluteUrls = appConfig.emailVerificationFrontendBaseUrl.contains("localhost")
 
@@ -72,7 +73,8 @@ class EmailVerificationService @Inject() (
 
     val emailRequest = VerifyEmailRequest(
       credId = credId,
-      continueUrl = makeUrl(controllers.desiDetails.routes.EmailVerificationEndpointController.finishEmailVerification),
+//      continueUrl = makeUrl(controllers.desiDetails.routes.EmailVerificationEndpointController.finishEmailVerification),
+      continueUrl = makeUrl(continueUrl),
       origin =
         if (lang.code == "cy")
           "Gwasanaethau Asiant CThEM"
