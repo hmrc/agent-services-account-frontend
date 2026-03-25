@@ -17,12 +17,19 @@
 package it.controllers.subscriptions
 
 import play.api.test.Helpers._
-import stubs.AgentServicesAccountStubs.{givenGetAgentRecord, stubASAGetResponseError}
-import stubs.EmailVerificationStubs.{givenCheckEmailSuccess, givenVerifyEmailSuccess}
+import stubs.AgentServicesAccountStubs.givenGetAgentRecord
+import stubs.AgentServicesAccountStubs.stubASAGetResponseError
+import stubs.EmailVerificationStubs.givenCheckEmailSuccess
+import stubs.EmailVerificationStubs.givenVerifyEmailSuccess
 import support.ComponentBaseISpec
-import uk.gov.hmrc.agentservicesaccount.controllers.{currentSelectedChangesKey, desiDetails, draftNewContactDetailsKey, draftSubmittedByKey, emailPendingVerificationKey}
+import uk.gov.hmrc.agentservicesaccount.controllers.currentSelectedChangesKey
+import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
+import uk.gov.hmrc.agentservicesaccount.controllers.draftNewContactDetailsKey
+import uk.gov.hmrc.agentservicesaccount.controllers.draftSubmittedByKey
+import uk.gov.hmrc.agentservicesaccount.controllers.emailPendingVerificationKey
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails._
-import uk.gov.hmrc.agentservicesaccount.models.emailverification.{CompletedEmail, VerificationStatusResponse}
+import uk.gov.hmrc.agentservicesaccount.models.emailverification.CompletedEmail
+import uk.gov.hmrc.agentservicesaccount.models.emailverification.VerificationStatusResponse
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
 
 class CtEmailVerificationEndpointControllerISpec
@@ -114,4 +121,5 @@ extends ComponentBaseISpec {
       result.header("Location").get shouldBe s"${desiDetails.routes.CheckYourAnswersController.showPage.url}"
     }
   }
+
 }

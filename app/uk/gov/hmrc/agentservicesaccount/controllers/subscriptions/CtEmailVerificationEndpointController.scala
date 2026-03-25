@@ -23,8 +23,9 @@ import play.api.mvc.AnyContent
 import play.api.mvc.MessagesControllerComponents
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.{EmailVerificationFinish, getNextPage}
-import uk.gov.hmrc.agentservicesaccount.controllers.emailPendingVerificationKey
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.EmailVerificationFinish
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.getNextPage
+import uk.gov.hmrc.agentservicesaccount.controllers.{ctJourneyKey, emailPendingVerificationKey}
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.EmailIsAlreadyVerified
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.EmailNeedsVerifying
 import uk.gov.hmrc.agentservicesaccount.services.EmailVerificationService
@@ -58,26 +59,17 @@ with Logging {
           val credId = request.agentInfo.credentials.map(_.providerId).getOrElse(throw new RuntimeException("no available cred id"))
           ev.getEmailVerificationStatus(email, credId).flatMap {
             case EmailIsAlreadyVerified =>
-//              for {
-//                _ <- draftDetailsService.updateDraftDetails(desiDetails =>
-//                  desiDetails.copy(agencyDetails = desiDetails.agencyDetails.copy(agencyEmail = Some(email)))
-//                ).flatMap {
-//                  _ => sessionCacheService.delete(emailPendingVerificationKey)
-//                }
-//                //                      journey <- isJourneyComplete()
-//              } yield Redirect(desiDetails.routes.CheckYourAnswersController.showPage)
-//              val updatedJourney = journey.copy(
-//                useCustomEmail = Some(false),
-//                emailAnswer = None
-//              )
-//
-//              sessionCacheService
-//                .put(ctJourneyKey, updatedJourney)
-//                .map { _ =>
-//                  Redirect(getNextPage(UpdateEmailAddressPage, Some(updatedJourney)))
-//                }
-//              TODO: 10904 Save ct here
-              Future.successful(Redirect(getNextPage(EmailVerificationFinish)))
+              val journey = request.ctSubscriptionJourney
+              val updatedJourney = journey.copy(
+                useCustomEmail = Some(true),
+                emailAnswer = Some(email)
+              )
+
+              sessionCacheService
+                .put(ctJourneyKey, updatedJourney)
+                .map { _ =>
+                  Redirect(getNextPage(EmailVerificationFinish))
+                }
             case EmailNeedsVerifying =>
               for {
                 _ <- sessionCacheService.put(emailPendingVerificationKey, email)
