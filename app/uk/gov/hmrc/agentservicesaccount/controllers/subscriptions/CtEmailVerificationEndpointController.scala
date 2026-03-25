@@ -23,16 +23,12 @@ import play.api.mvc.AnyContent
 import play.api.mvc.MessagesControllerComponents
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.DesiDetailsJourneySupport
-import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util.NextPageSelector.getNextPage
-import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.{EmailVerificationFinish, getNextPage}
 import uk.gov.hmrc.agentservicesaccount.controllers.emailPendingVerificationKey
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.EmailHasNotChanged
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.EmailIsAlreadyVerified
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.EmailIsLocked
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.EmailNeedsVerifying
-import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
-import uk.gov.hmrc.agentservicesaccount.services.DraftDetailsService
 import uk.gov.hmrc.agentservicesaccount.services.EmailVerificationService
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -46,16 +42,13 @@ import scala.concurrent.Future
 class CtEmailVerificationEndpointController @Inject() (
   actions: Actions,
   val sessionCacheService: SessionCacheService,
-  draftDetailsService: DraftDetailsService,
   cc: MessagesControllerComponents
 )(implicit
   appConfig: AppConfig,
   val ec: ExecutionContext,
-  pcodRepository: PendingChangeRequestRepository,
   ev: EmailVerificationService
 )
 extends FrontendController(cc)
-with DesiDetailsJourneySupport
 with I18nSupport
 with Logging {
 
@@ -75,7 +68,7 @@ with Logging {
 //                }
 //                //                      journey <- isJourneyComplete()
 //              } yield Redirect(desiDetails.routes.CheckYourAnswersController.showPage)
-              Future.successful(Redirect(desiDetails.routes.CheckYourAnswersController.showPage))
+              Future.successful(Redirect(getNextPage(EmailVerificationFinish)))
             //                  case EmailIsLocked => Future.successful(Redirect(desiDetails.routes.UpdateEmailAddressController.showEmailLocked))
             //                  case EmailHasNotChanged =>
             //                    draftDetailsService.updateDraftDetails(desiDetails =>

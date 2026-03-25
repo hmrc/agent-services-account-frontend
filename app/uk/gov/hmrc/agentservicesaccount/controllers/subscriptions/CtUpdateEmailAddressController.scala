@@ -21,16 +21,11 @@ import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.{routes => tempDesiRoutes}
 import uk.gov.hmrc.agentservicesaccount.controllers.ctJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.emailPendingVerificationKey
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.UpdateEmailAddressPage
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionEmailAddressForm
-import uk.gov.hmrc.agentservicesaccount.models.emailverification.EmailHasNotChanged
-import uk.gov.hmrc.agentservicesaccount.models.emailverification.EmailIsAlreadyVerified
-import uk.gov.hmrc.agentservicesaccount.models.emailverification.EmailIsLocked
-import uk.gov.hmrc.agentservicesaccount.models.emailverification.EmailNeedsVerifying
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtEmailAddressFormValues
 import uk.gov.hmrc.agentservicesaccount.services.EmailVerificationService
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
