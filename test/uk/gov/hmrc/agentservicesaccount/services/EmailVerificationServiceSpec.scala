@@ -83,7 +83,8 @@ with TestConstants {
         val result = TestService.initialiseEmailVerificationJourney(
           ggCredentials.providerId,
           "new@email.com",
-          Lang("en")
+          Lang("en"),
+          controllers.routes.AgentServicesController.root()
         )
 
         await(result) mustBe "localhost/emailVerificationUrl"
@@ -111,7 +112,8 @@ with TestConstants {
         val result = TestService.initialiseEmailVerificationJourney(
           ggCredentials.providerId,
           "new@email.com",
-          Lang("en")
+          Lang("en"),
+          controllers.routes.AgentServicesController.root()
         )
 
         await(result) mustBe "/emailVerificationUrl"
@@ -140,7 +142,8 @@ with TestConstants {
           await(TestService.initialiseEmailVerificationJourney(
             ggCredentials.providerId,
             "new@email.com",
-            Lang("en")
+            Lang("en"),
+            controllers.routes.AgentServicesController.root()
           ))
         }
       }

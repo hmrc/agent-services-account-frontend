@@ -73,7 +73,6 @@ class EmailVerificationService @Inject() (
 
     val emailRequest = VerifyEmailRequest(
       credId = credId,
-//      continueUrl = makeUrl(controllers.desiDetails.routes.EmailVerificationEndpointController.finishEmailVerification),
       continueUrl = makeUrl(continueUrl),
       origin =
         if (lang.code == "cy")
