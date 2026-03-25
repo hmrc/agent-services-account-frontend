@@ -88,12 +88,8 @@ with Logging {
       data => {
         if (data.useAsaData) {
           val updatedJourney = journey.copy(
-            useCustomEmail = Some(!data.useAsaData),
-            emailAnswer =
-              if (data.useAsaData)
-                None
-              else
-                data.newEmailAddress
+            useCustomEmail = Some(false),
+            emailAnswer = None
           )
 
           sessionCacheService
