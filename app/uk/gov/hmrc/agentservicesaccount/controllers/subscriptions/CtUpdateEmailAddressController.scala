@@ -21,13 +21,14 @@ import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.{routes => tempDesiRoutes}
 import uk.gov.hmrc.agentservicesaccount.controllers.{ctJourneyKey, emailPendingVerificationKey}
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.UpdateEmailAddressPage
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionEmailAddressForm
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.{EmailHasNotChanged, EmailIsAlreadyVerified, EmailIsLocked, EmailNeedsVerifying}
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtEmailAddressFormValues
-import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
+import uk.gov.hmrc.agentservicesaccount.services.{EmailVerificationService, SessionCacheService}
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
@@ -39,6 +40,7 @@ import scala.concurrent.Future
 class CtUpdateEmailAddressController @Inject() (
   actions: Actions,
   val sessionCacheService: SessionCacheService,
+  emailVerificationService: EmailVerificationService,
   ct_update_email_address: ct_update_email_address,
   cc: MessagesControllerComponents
 )(implicit
@@ -84,51 +86,36 @@ with Logging {
         )
       },
       data => {
-        val updatedJourney = journey.copy(
-          useCustomEmail = Some(!data.useAsaData),
-          emailAnswer =
-            if (data.useAsaData)
-              None
-            else
-              data.newEmailAddress
-        )
+        if (data.useAsaData) {
+          val updatedJourney = journey.copy(
+            useCustomEmail = Some(!data.useAsaData),
+            emailAnswer =
+              if (data.useAsaData)
+                None
+              else
+                data.newEmailAddress
+          )
 
-        sessionCacheService
-          .put(ctJourneyKey, updatedJourney)
-          .map { _ =>
-            Redirect(getNextPage(UpdateEmailAddressPage))
-          }
+          sessionCacheService
+            .put(ctJourneyKey, updatedJourney)
+            .map { _ =>
+              Redirect(getNextPage(UpdateEmailAddressPage, Some(updatedJourney)))
+            }
+        } else {
+          val newEmail = data.newEmailAddress.get
+          val credId = request.agentInfo.credentials.map(_.providerId).getOrElse(throw new RuntimeException("no available cred id"))
+          for {
+            _ <- sessionCacheService.put(emailPendingVerificationKey, newEmail)
+            redirectUri <- emailVerificationService.initialiseEmailVerificationJourney(
+              credId,
+              newEmail,
+              messagesApi.preferred(request).lang,
+//              TODO: routes.CtEmailVerificationEndpointController.finishEmailVerification
+              tempDesiRoutes.EmailVerificationEndpointController.finishEmailVerification
+            )
+          } yield Redirect(redirectUri)
+        }
       }
-//        newEmail => {
-//    val credId = request.agentInfo.credentials.map(_.providerId).getOrElse(throw new RuntimeException("no available cred id"))
-//    emailVerificationService.getEmailVerificationStatus(newEmail, credId).flatMap {
-//      case EmailIsAlreadyVerified =>
-//        for {
-//          _ <- draftDetailsService.updateDraftDetails(desiDetails =>
-//            desiDetails.copy(agencyDetails = desiDetails.agencyDetails.copy(agencyEmail = Some(newEmail)))
-//          )
-//          _ <- sessionCacheService.delete(emailPendingVerificationKey)
-//          journey <- isJourneyComplete()
-//        } yield getNextPage(journey, "email")
-//      case EmailIsLocked => Future.successful(Redirect(desiDetails.routes.UpdateEmailAddressController.showEmailLocked))
-//      case EmailHasNotChanged =>
-//        draftDetailsService.updateDraftDetails(desiDetails =>
-//          desiDetails.copy(agencyDetails = desiDetails.agencyDetails.copy(agencyEmail = Some(newEmail)))
-//        ).flatMap {
-//          _ =>
-//            isJourneyComplete().flatMap(journeyComplete => Future.successful(getNextPage(journeyComplete, "email")))
-//        }
-//      case EmailNeedsVerifying =>
-//        for {
-//          _ <- sessionCacheService.put(emailPendingVerificationKey, newEmail)
-//          redirectUri <- emailVerificationService.initialiseEmailVerificationJourney(
-//            credId,
-//            newEmail,
-//            messagesApi.preferred(request).lang
-//          )
-//        } yield Redirect(redirectUri)
-//    }
-//  }
     )
   }
 
