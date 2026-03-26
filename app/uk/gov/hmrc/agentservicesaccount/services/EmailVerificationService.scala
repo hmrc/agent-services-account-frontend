@@ -81,20 +81,26 @@ class EmailVerificationService @Inject() (
           "HMRC Agent Services",
       deskproServiceName = appConfig.deskproServiceName,
       accessibilityStatementUrl = s"/accessibility-statement${appConfig.accessibilityStatementUrl}",
+//      TODO: 10904 Need to be passed in
       email = Some(Email(newEmail, makeUrl(controllers.desiDetails.routes.UpdateEmailAddressController.showChangeEmailAddress))),
       lang = Some(lang.code),
+//      TODO: 10904 Need to be passed in
       backUrl = Some(makeUrl(controllers.desiDetails.routes.UpdateEmailAddressController.showChangeEmailAddress)),
       pageTitle = None
     )
 
-    emailVerificationConnector.verifyEmail(emailRequest).map {
-      case Some(emailVerificationResponse) if useAbsoluteUrls => appConfig.emailVerificationFrontendBaseUrl + emailVerificationResponse.redirectUri
-      case Some(emailVerificationResponse) => emailVerificationResponse.redirectUri
-      case None =>
-        throw new InternalServerException(
-          "[EmailVerificationService][initialiseEmailVerificationJourney] " +
-            "No response was returned from the email verification service"
-        )
+    emailVerificationConnector.verifyEmail(emailRequest).map { a =>
+//      TODO: 10904 Debugging failing test
+      val debug = 2
+      a match {
+        case Some(emailVerificationResponse) if useAbsoluteUrls => appConfig.emailVerificationFrontendBaseUrl + emailVerificationResponse.redirectUri
+        case Some(emailVerificationResponse) => emailVerificationResponse.redirectUri
+        case None =>
+          throw new InternalServerException(
+            "[EmailVerificationService][initialiseEmailVerificationJourney] " +
+              "No response was returned from the email verification service"
+          )
+      }
     }
   }
 

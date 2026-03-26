@@ -242,7 +242,7 @@ with MockFactory {
       givenFullAuthorisedAsAgentWith(
         arn = arn.value,
         providerId = "cred-id",
-        email = "abc@abc.com"
+        email = "joe@bloggs.com"
       )
       givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
@@ -250,7 +250,7 @@ with MockFactory {
         "cred-id",
         VerificationStatusResponse(emails =
           List(CompletedEmail(
-            "abc@abc.com",
+            "jane@bloggs.com",
             verified = true,
             locked = false
           ))
@@ -265,11 +265,7 @@ with MockFactory {
           "emailAddressNew" -> "jane@bloggs.com"
         )
 
-      implicit val implicitRequest: FakeRequest[AnyContentAsFormUrlEncoded] = request
-
       cacheJourney(baseJourney)
-      //            await(repo.putSession(currentSelectedChangesKey, Set("email")))
-      //            await(repo.putSession(emailPendingVerificationKey, "new@abc.com"))
 
       private val result = controller.onSubmit()(request).futureValue
       status(result) shouldBe SEE_OTHER
