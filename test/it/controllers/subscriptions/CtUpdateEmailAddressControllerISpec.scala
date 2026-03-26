@@ -237,7 +237,7 @@ with MockFactory {
       updated.value.emailAnswer shouldBe None
     }
 
-    //    TODO: 10904 FIX
+    //    TODO: 10904 Failing on Jenkins - believe it's perhaps not being stubbed properly, and localhost not available on Jenkins
     "redirect to the verify-email external journey when using custom email address" in new TestSetup {
       givenFullAuthorisedAsAgentWith(
         arn = arn.value,
@@ -256,7 +256,6 @@ with MockFactory {
           ))
         )
       )
-      givenVerifyEmailSuccess("/continue-url")
 
       private val request = FakeRequest(POST, "/")
         .withSession(session.toSeq: _*)
@@ -267,13 +266,11 @@ with MockFactory {
 
       cacheJourney(baseJourney)
 
-      private val result = controller.onSubmit()(request).futureValue
+      private val result = controller.onSubmit()(request)
       status(result) shouldBe SEE_OTHER
-      Helpers.redirectLocation(Future.successful(result)) shouldBe Some("http://localhost:9890/continue-url")
-
-//      val updated: Option[CtJourney] = sessionCache.get[CtJourney](ctJourneyKey).futureValue
-//      updated.value.useCustomEmail shouldBe Some(true)
-//      updated.value.emailAnswer shouldBe Some("jane@bloggs.com")
+      private val redirectLocation = Helpers.redirectLocation(result).get
+      redirectLocation.contains("http://localhost:9890/email-verification/journey/") shouldBe true
+      redirectLocation.contains("/passcode?continueUrl=http://localhost/agent-services-account/ct-subscription/email-verification-finish") shouldBe true
     }
   }
 

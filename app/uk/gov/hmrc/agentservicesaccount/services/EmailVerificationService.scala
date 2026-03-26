@@ -89,18 +89,14 @@ class EmailVerificationService @Inject() (
       pageTitle = None
     )
 
-    emailVerificationConnector.verifyEmail(emailRequest).map { a =>
-//      TODO: 10904 Debugging failing test
-      val debug = 2
-      a match {
-        case Some(emailVerificationResponse) if useAbsoluteUrls => appConfig.emailVerificationFrontendBaseUrl + emailVerificationResponse.redirectUri
-        case Some(emailVerificationResponse) => emailVerificationResponse.redirectUri
-        case None =>
-          throw new InternalServerException(
-            "[EmailVerificationService][initialiseEmailVerificationJourney] " +
-              "No response was returned from the email verification service"
-          )
-      }
+    emailVerificationConnector.verifyEmail(emailRequest).map {
+      case Some(emailVerificationResponse) if useAbsoluteUrls => appConfig.emailVerificationFrontendBaseUrl + emailVerificationResponse.redirectUri
+      case Some(emailVerificationResponse) => emailVerificationResponse.redirectUri
+      case None =>
+        throw new InternalServerException(
+          "[EmailVerificationService][initialiseEmailVerificationJourney] " +
+            "No response was returned from the email verification service"
+        )
     }
   }
 
