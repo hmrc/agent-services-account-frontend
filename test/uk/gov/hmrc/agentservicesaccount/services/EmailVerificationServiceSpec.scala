@@ -63,7 +63,6 @@ with TestConstants {
 
   "initialiseEmailVerificationJourney" should {
     "return an absolute url for use locally" when {
-      //    TODO: 10904 FIX
       "successfully called out to Email Verification" in new Setup {
         mockAppConfig.emailVerificationFrontendBaseUrl returns "localhost"
 
@@ -85,7 +84,7 @@ with TestConstants {
           ggCredentials.providerId,
           "new@email.com",
           Lang("en"),
-          controllers.routes.AgentServicesController.root()
+          controllers.desiDetails.routes.EmailVerificationEndpointController.finishEmailVerification
         )
 
         await(result) mustBe "localhost/emailVerificationUrl"
@@ -93,7 +92,6 @@ with TestConstants {
     }
 
     "return a relative redirectUri" when {
-      //    TODO: 10904 FIX
       "successfully called out to Email Verification" in new Setup {
         mockAppConfig.emailVerificationFrontendBaseUrl returns ""
 
@@ -115,7 +113,7 @@ with TestConstants {
           ggCredentials.providerId,
           "new@email.com",
           Lang("en"),
-          controllers.routes.AgentServicesController.root()
+          controllers.desiDetails.routes.EmailVerificationEndpointController.finishEmailVerification
         )
 
         await(result) mustBe "/emailVerificationUrl"
@@ -123,7 +121,6 @@ with TestConstants {
     }
 
     "throw an exception" when {
-      //    TODO: 10904 FIX
       "failed calling out to Email Verification" in new Setup {
         mockAppConfig.emailVerificationFrontendBaseUrl returns ""
 
@@ -146,7 +143,7 @@ with TestConstants {
             ggCredentials.providerId,
             "new@email.com",
             Lang("en"),
-            controllers.routes.AgentServicesController.root()
+            controllers.desiDetails.routes.EmailVerificationEndpointController.finishEmailVerification
           ))
         }
       }
