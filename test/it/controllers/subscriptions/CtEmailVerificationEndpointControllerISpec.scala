@@ -22,11 +22,7 @@ import stubs.AgentServicesAccountStubs.stubASAGetResponseError
 import stubs.EmailVerificationStubs.givenCheckEmailSuccess
 import stubs.EmailVerificationStubs.givenVerifyEmailSuccess
 import support.ComponentBaseISpec
-import uk.gov.hmrc.agentservicesaccount.controllers.currentSelectedChangesKey
-import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
-import uk.gov.hmrc.agentservicesaccount.controllers.draftNewContactDetailsKey
-import uk.gov.hmrc.agentservicesaccount.controllers.draftSubmittedByKey
-import uk.gov.hmrc.agentservicesaccount.controllers.emailPendingVerificationKey
+import uk.gov.hmrc.agentservicesaccount.controllers.{currentSelectedChangesKey, desiDetails, draftNewContactDetailsKey, draftSubmittedByKey, emailPendingVerificationKey, routes => homeRoutes}
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails._
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.CompletedEmail
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.VerificationStatusResponse
@@ -38,15 +34,6 @@ extends ComponentBaseISpec {
   private val finishEmailVerificationPath = s"$ctSubscriptionStartPath/email-verification-finish"
 
   private val repo = inject[SessionCacheRepository]
-
-  private val designatoryDetails = DesignatoryDetails(
-    agencyDetails = agentRecord.agencyDetails.get.copy(
-      agencyEmail = Some("new@email.com")
-    ),
-    otherServices = OtherServices(saChanges = SaChanges(applyChanges = false, None), ctChanges = CtChanges(applyChanges = false, None))
-  )
-
-  private val yourDetails = YourDetails(fullName = "John Tester", telephone = "078187777831")
 
   s"GET $finishEmailVerificationPath" should {
     "store the new email address in session and redirect to the continue url" in {
@@ -61,9 +48,6 @@ extends ComponentBaseISpec {
       givenCheckEmailSuccess(credId = "cred-id", verificationStatusResponse = VerificationStatusResponse(emails = List.empty[CompletedEmail]))
       givenVerifyEmailSuccess(redirectUri = "/continue-url")
 
-      await(repo.putSession(currentSelectedChangesKey, Set("email")))
-      await(repo.putSession(draftNewContactDetailsKey, designatoryDetails))
-      await(repo.putSession(draftSubmittedByKey, yourDetails))
       await(repo.putSession(emailPendingVerificationKey, "new@email.com"))
 
       val result = get(finishEmailVerificationPath)
@@ -79,7 +63,6 @@ extends ComponentBaseISpec {
       givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
 
-      await(repo.putSession(currentSelectedChangesKey, Set("email")))
       await(repo.putSession(emailPendingVerificationKey, "email@emaul.com"))
 
       val result = get(finishEmailVerificationPath)
@@ -87,7 +70,6 @@ extends ComponentBaseISpec {
       result.status shouldBe INTERNAL_SERVER_ERROR
     }
 
-//    TODO: 10904 FIX
     "redirect to routes.AgentServicesController.root() (TEMPORARILY) if email is already verified" in {
 
       givenFullAuthorisedAsAgentWith(
@@ -102,23 +84,20 @@ extends ComponentBaseISpec {
         credId = "cred-id",
         verificationStatusResponse = VerificationStatusResponse(
           emails = List(CompletedEmail(
-            "abc@abc.com",
+            "new@abc.com",
             verified = true,
             locked = false
           ))
         )
       )
 
-      await(repo.putSession(currentSelectedChangesKey, Set("email")))
-      await(repo.putSession(draftNewContactDetailsKey, designatoryDetails))
-      await(repo.putSession(draftSubmittedByKey, yourDetails))
-      await(repo.putSession(emailPendingVerificationKey, "abc@abc.com"))
+      await(repo.putSession(emailPendingVerificationKey, "new@abc.com"))
 
       val result = get(finishEmailVerificationPath)
 
       result.status shouldBe SEE_OTHER
 
-      result.header("Location").get shouldBe s"${desiDetails.routes.CheckYourAnswersController.showPage.url}"
+      result.header("Location").get shouldBe s"${homeRoutes.AgentServicesController.root()}"
     }
   }
 
