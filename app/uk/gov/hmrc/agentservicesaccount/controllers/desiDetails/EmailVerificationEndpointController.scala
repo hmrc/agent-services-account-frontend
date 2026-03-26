@@ -104,7 +104,8 @@ with Logging {
                         credId,
                         email,
                         messagesApi.preferred(request).lang,
-                        routes.EmailVerificationEndpointController.finishEmailVerification
+                        routes.EmailVerificationEndpointController.finishEmailVerification,
+                        routes.UpdateEmailAddressController.showChangeEmailAddress
                       )
                     } yield Redirect(redirectUri)
                 }

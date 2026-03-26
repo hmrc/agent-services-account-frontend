@@ -61,7 +61,8 @@ class EmailVerificationService @Inject() (
     credId: String,
     newEmail: String,
     lang: Lang,
-    continueUrl: Call
+    continueUrl: Call,
+    enterUrl: Call
   )(implicit rh: RequestHeader): Future[String] = {
     val useAbsoluteUrls = appConfig.emailVerificationFrontendBaseUrl.contains("localhost")
 
@@ -81,11 +82,9 @@ class EmailVerificationService @Inject() (
           "HMRC Agent Services",
       deskproServiceName = appConfig.deskproServiceName,
       accessibilityStatementUrl = s"/accessibility-statement${appConfig.accessibilityStatementUrl}",
-//      TODO: 10904 Need to be passed in
-      email = Some(Email(newEmail, makeUrl(controllers.desiDetails.routes.UpdateEmailAddressController.showChangeEmailAddress))),
+      email = Some(Email(newEmail, makeUrl(enterUrl))),
       lang = Some(lang.code),
-//      TODO: 10904 Need to be passed in
-      backUrl = Some(makeUrl(controllers.desiDetails.routes.UpdateEmailAddressController.showChangeEmailAddress)),
+      backUrl = Some(makeUrl(enterUrl)),
       pageTitle = None
     )
 

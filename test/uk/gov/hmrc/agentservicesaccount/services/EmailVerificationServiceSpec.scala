@@ -84,7 +84,8 @@ with TestConstants {
           ggCredentials.providerId,
           "new@email.com",
           Lang("en"),
-          controllers.desiDetails.routes.EmailVerificationEndpointController.finishEmailVerification
+          controllers.desiDetails.routes.EmailVerificationEndpointController.finishEmailVerification,
+          controllers.desiDetails.routes.UpdateEmailAddressController.showChangeEmailAddress
         )
 
         await(result) mustBe "localhost/emailVerificationUrl"
@@ -113,7 +114,8 @@ with TestConstants {
           ggCredentials.providerId,
           "new@email.com",
           Lang("en"),
-          controllers.desiDetails.routes.EmailVerificationEndpointController.finishEmailVerification
+          controllers.desiDetails.routes.EmailVerificationEndpointController.finishEmailVerification,
+          controllers.desiDetails.routes.UpdateEmailAddressController.showChangeEmailAddress
         )
 
         await(result) mustBe "/emailVerificationUrl"
@@ -143,7 +145,8 @@ with TestConstants {
             ggCredentials.providerId,
             "new@email.com",
             Lang("en"),
-            controllers.desiDetails.routes.EmailVerificationEndpointController.finishEmailVerification
+            controllers.desiDetails.routes.EmailVerificationEndpointController.finishEmailVerification,
+            controllers.desiDetails.routes.UpdateEmailAddressController.showChangeEmailAddress
           ))
         }
       }

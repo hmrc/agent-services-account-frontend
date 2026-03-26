@@ -108,7 +108,8 @@ with Logging {
               credId,
               newEmail,
               messagesApi.preferred(request).lang,
-              routes.CtEmailVerificationEndpointController.finishEmailVerification
+              routes.CtEmailVerificationEndpointController.finishEmailVerification,
+              routes.CtUpdateEmailAddressController.showPage
             )
           } yield Redirect(redirectUri)
         }
