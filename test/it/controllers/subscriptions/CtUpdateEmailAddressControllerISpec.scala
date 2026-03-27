@@ -33,6 +33,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers
 import play.api.test.Helpers._
 import stubs.AgentServicesAccountStubs._
+import stubs.AuthStubs
 import stubs.EmailVerificationStubs.givenCheckEmailSuccess
 import stubs.EmailVerificationStubs.givenVerifyEmailSuccess
 import support.BaseISpec
@@ -58,6 +59,7 @@ import scala.concurrent.Future
 class CtUpdateEmailAddressControllerISpec
 extends BaseISpec
 with UnitSpec
+with AuthStubs
 with Matchers
 with GuiceOneAppPerSuite
 with ScalaFutures
