@@ -36,8 +36,7 @@ import stubs.AgentServicesAccountStubs._
 import stubs.AuthStubs
 import stubs.EmailVerificationStubs.givenCheckEmailSuccess
 import stubs.EmailVerificationStubs.givenVerifyEmailSuccess
-import support.BaseISpec
-import support.UnitSpec
+import support.{BaseISpec, UnitSpec, WiremockHelper}
 import uk.gov.hmrc.agentservicesaccount.actions.CtJourney
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.ctJourneyKey
@@ -62,6 +61,7 @@ with UnitSpec
 with AuthStubs
 with Matchers
 with GuiceOneAppPerSuite
+with WiremockHelper
 with ScalaFutures
 with IntegrationPatience
 with MockFactory {
@@ -134,11 +134,38 @@ with MockFactory {
         }
       }
 
+    private val initialConfig = Map(
+      "auditing.enabled" -> false,
+      "metrics.enabled" -> false
+    )
+
+    def downstreamServices: Map[String, String] =
+      Seq(
+        "auth",
+        "agent-services-account",
+        "agent-assurance",
+        "agent-permissions",
+        "agent-user-client-details",
+        "email",
+        "address-lookup-frontend",
+        "email-verification"
+      ).flatMap { service =>
+        Seq(
+          s"microservice.services.$service.host" -> mockHost,
+          s"microservice.services.$service.port" -> mockPort
+        )
+      }.toMap
+
+//    override lazy val app: Application = new GuiceApplicationBuilder()
+//      .configure(config ++ extraConfig() ++ downstreamServices)
+//      .build()
+
+    val mockHost: String = WiremockHelper.wiremockHost
+    val mockPort: String = WiremockHelper.wiremockPort.toString
+    val mockUrl: String = s"http://$mockHost:$mockPort"
+
     implicit lazy val app: Application = new GuiceApplicationBuilder()
-      .configure(
-        "auditing.enabled" -> false,
-        "metrics.enabled" -> false
-      )
+      .configure(initialConfig ++ downstreamServices)
       .overrides(overrides)
       .build()
 
@@ -259,7 +286,7 @@ with MockFactory {
       cacheJourney(baseJourney)
 
 //      TODO: 10904: Changed to DesiDetails UpdateEmailAddressController - fails locally, but may have different Jenkins error
-//      givenVerifyEmailSuccess("/continue-url")
+      givenVerifyEmailSuccess("/continue-url")
 
       private val result = controller.onSubmit()(request)
       status(result) shouldBe SEE_OTHER
