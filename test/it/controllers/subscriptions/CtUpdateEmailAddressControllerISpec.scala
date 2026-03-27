@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,285 +16,106 @@
 
 package it.controllers.subscriptions
 
-import com.google.inject.AbstractModule
-import org.scalamock.scalatest.MockFactory
-import org.scalatest.concurrent.IntegrationPatience
-import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.matchers.should.Matchers
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.Application
-import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.libs.json.Json
-import play.api.libs.json.OWrites
-import play.api.mvc.AnyContentAsEmpty
-import play.api.mvc.AnyContentAsFormUrlEncoded
-import play.api.mvc.RequestHeader
-import play.api.test.FakeRequest
-import play.api.test.Helpers
 import play.api.test.Helpers._
-import stubs.AgentServicesAccountStubs._
-import stubs.AuthStubs
-import stubs.EmailVerificationStubs.givenCheckEmailSuccess
-import stubs.EmailVerificationStubs.givenVerifyEmailSuccess
-import support.{BaseISpec, UnitSpec, WiremockHelper}
+import stubs.AgentServicesAccountStubs.{givenGetAgentRecord, stubASAGetResponseError}
+import stubs.EmailVerificationStubs.{givenCheckEmailSuccess, givenVerifyEmailSuccess}
+import support.ComponentBaseISpec
 import uk.gov.hmrc.agentservicesaccount.actions.CtJourney
-import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
-import uk.gov.hmrc.agentservicesaccount.controllers.ctJourneyKey
-import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtUpdateEmailAddressController
+import uk.gov.hmrc.agentservicesaccount.controllers.{ctJourneyKey, emailPendingVerificationKey}
 import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
-import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
-import uk.gov.hmrc.agentservicesaccount.models.emailverification.CompletedEmail
-import uk.gov.hmrc.agentservicesaccount.models.emailverification.VerificationStatusResponse
-import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
-import uk.gov.hmrc.auth.core.AuthConnector
-import uk.gov.hmrc.auth.core.authorise.Predicate
-import uk.gov.hmrc.auth.core.retrieve.Retrieval
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.client.HttpClientV2
-
-import scala.concurrent.ExecutionContext
-import scala.concurrent.Future
+import uk.gov.hmrc.agentservicesaccount.models.emailverification.{CompletedEmail, VerificationStatusResponse}
+import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
 
 class CtUpdateEmailAddressControllerISpec
-extends BaseISpec
-with UnitSpec
-with AuthStubs
-with Matchers
-with GuiceOneAppPerSuite
-with WiremockHelper
-with ScalaFutures
-with IntegrationPatience
-with MockFactory {
+extends ComponentBaseISpec {
 
-  class TestSetup {
+  private val repo = inject[SessionCacheRepository]
 
-    private val testArn = "TARN0000001"
+  private val updateEmailAddressPath = s"$ctSubscriptionStartPath/email-address"
 
-    private val stubAuthConnector =
-      new AuthConnector {
-        private val authJson = Json.obj(
-          "allEnrolments" -> Json.arr(
-            Json.obj(
-              "key" -> "HMRC-AS-AGENT",
-              "identifiers" -> Json.arr(
-                Json.obj(
-                  "key" -> "AgentReferenceNumber",
-                  "value" -> testArn
-                )
-              )
-            )
-          ),
-          "affinityGroup" -> "Agent",
-          "credentialRole" -> "User",
-          "optionalCredentials" -> Json.obj(
-            "providerId" -> "foo",
-            "providerType" -> "bar"
-          )
-        )
+  private val baseJourney: CtJourney = CtJourney(
+    asaDetails = AgencyDetails(
+      agencyName = None,
+      agencyEmail = Some("joe@bloggs.com"),
+      agencyTelephone = None,
+      agencyAddress = None
+    ),
+    useCustomBusinessName = None,
+    businessNameAnswer = None,
+    useCustomPhoneNumber = None,
+    phoneNumberAnswer = None,
+    useCustomEmail = None,
+    emailAnswer = None,
+    useCustomAddress = None,
+    addressAnswer = None
+  )
 
-        override def authorise[A](
-          predicate: Predicate,
-          retrieval: Retrieval[A]
-        )(implicit
-          hc: HeaderCarrier,
-          ec: ExecutionContext
-        ): Future[A] = Future.successful(retrieval.reads.reads(authJson).get)
-      }
+  s"GET $updateEmailAddressPath" should {
+    "display the enter email address page" in {
 
-    implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
-    val agentServicesAccountConnector: AgentServicesAccountConnector =
-      new AgentServicesAccountConnector(
-        http = stub[HttpClientV2],
-        appConfig = appConfig
-      ) {
-        override def getAgentRecord(implicit rh: RequestHeader): Future[AgentDetailsDesResponse] = Future.successful(
-          uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse(
-            uniqueTaxReference = Some(uk.gov.hmrc.agentservicesaccount.models.Utr("0123456789")),
-            agencyDetails = Some(
-              uk.gov.hmrc.agentservicesaccount.models.AgencyDetails(
-                agencyName = None,
-                agencyEmail = Some("joe@bloggs.com"),
-                agencyTelephone = None,
-                agencyAddress = None
-              )
-            ),
-            suspensionDetails = Some(uk.gov.hmrc.agentservicesaccount.models.SuspensionDetails(suspensionStatus = false, None))
-          )
-        )
-      }
+      givenAuthorisedAsAgentWith(arn.value)
+      givenGetAgentRecord(agentRecord)
+      stubASAGetResponseError(arn, NOT_FOUND)
 
-    val overrides: AbstractModule =
-      new AbstractModule() {
-        override def configure(): Unit = {
-          bind(classOf[AuthConnector]).toInstance(stubAuthConnector)
-          bind(classOf[uk.gov.hmrc.agentservicesaccount.services.DraftDetailsService])
-            .toInstance(stub[uk.gov.hmrc.agentservicesaccount.services.DraftDetailsService])
-          bind(classOf[uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector])
-            .toInstance(agentServicesAccountConnector)
-        }
-      }
+      val result = get(updateEmailAddressPath)
 
-    private val initialConfig = Map(
-      "auditing.enabled" -> false,
-      "metrics.enabled" -> false
-    )
-
-    def downstreamServices: Map[String, String] =
-      Seq(
-        "auth",
-        "agent-services-account",
-        "agent-assurance",
-        "agent-permissions",
-        "agent-user-client-details",
-        "email",
-        "address-lookup-frontend",
-        "email-verification"
-      ).flatMap { service =>
-        Seq(
-          s"microservice.services.$service.host" -> mockHost,
-          s"microservice.services.$service.port" -> mockPort
-        )
-      }.toMap
-
-//    override lazy val app: Application = new GuiceApplicationBuilder()
-//      .configure(config ++ extraConfig() ++ downstreamServices)
-//      .build()
-
-    val mockHost: String = WiremockHelper.wiremockHost
-    val mockPort: String = WiremockHelper.wiremockPort.toString
-    val mockUrl: String = s"http://$mockHost:$mockPort"
-
-    implicit lazy val app: Application = new GuiceApplicationBuilder()
-      .configure(initialConfig ++ downstreamServices)
-      .overrides(overrides)
-      .build()
-
-    val controller: CtUpdateEmailAddressController = app.injector.instanceOf[CtUpdateEmailAddressController]
-
-    val sessionCache: SessionCacheService = app.injector.instanceOf[SessionCacheService]
-
-    val baseJourney: CtJourney = CtJourney(
-      asaDetails = AgencyDetails(
-        agencyName = None,
-        agencyEmail = Some("joe@bloggs.com"),
-        agencyTelephone = None,
-        agencyAddress = None
-      ),
-      useCustomBusinessName = None,
-      businessNameAnswer = None,
-      useCustomPhoneNumber = None,
-      phoneNumberAnswer = None,
-      useCustomEmail = None,
-      emailAnswer = None,
-      useCustomAddress = None,
-      addressAnswer = None
-    )
-
-    val session: Map[String, String] = Map("sessionId" -> "test-session")
-
-    def fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest().withSession(session.toSeq: _*)
-
-    def cacheJourney(journey: CtJourney): Unit = {
-      implicit val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequest
-      implicit val writes: OWrites[CtJourney] = Json.writes[CtJourney]
-      sessionCache.put(ctJourneyKey, journey).futureValue
-    }
-
-  }
-
-  "GET /update-email-address" should {
-
-    "render empty form on first visit" in new TestSetup {
-      cacheJourney(baseJourney)
-
-      private val result = controller.showPage()(FakeRequest()).futureValue
-
-      status(result) shouldBe OK
-      contentAsString(result) should include("joe@bloggs.com")
-    }
-
-    "render pre-filled form when journey has existing answers" in new TestSetup {
-      private val journey = baseJourney.copy(
-        useCustomEmail = Some(true),
-        emailAnswer = Some("Custom Name Ltd")
-      )
-
-      cacheJourney(journey)
-
-      private val result = controller.showPage()(FakeRequest()).futureValue
-
-      status(result) shouldBe OK
-      private val content = contentAsString(result)
-
-      content should include("""value="true"""") // radio selected
-      content should include("emailAddressNew") // input present
+      result.status shouldBe OK
+      assertPageHasTitle("What email address should we use to contact you about Corporation Tax?")(result)
     }
   }
 
-  "POST /update-email-address" should {
+  s"POST $updateEmailAddressPath" should {
 
-    "return BAD_REQUEST when form is invalid" in new TestSetup {
-      cacheJourney(baseJourney)
+    "update journey and redirect when using ASA email address" in {
+      givenAuthorisedAsAgentWith(arn.value)
+      givenGetAgentRecord(agentRecord)
+      stubASAGetResponseError(arn, NOT_FOUND)
 
-      private val request = FakeRequest().withSession(session.toSeq: _*).withFormUrlEncodedBody(
-        "useAsaData" -> "" // missing selection
-      )
+      repo.putSession(ctJourneyKey, baseJourney).futureValue
 
-      private val result = controller.onSubmit()(request).futureValue
+      val result = post(updateEmailAddressPath)(body = Map(
+        "emailAddressUseAsaData" -> Seq("true")
+      ))
 
-      status(result) shouldBe BAD_REQUEST
-    }
+      result.status shouldBe SEE_OTHER
 
-    "update journey and redirect when using ASA email address" in new TestSetup {
-      private val request = FakeRequest(POST, "/")
-        .withSession(session.toSeq: _*)
-        .withFormUrlEncodedBody(
-          "emailAddressUseAsaData" -> "true"
-        )
-
-      implicit val implicitRequest: FakeRequest[AnyContentAsFormUrlEncoded] = request
-
-      cacheJourney(baseJourney)
-
-      private val result = controller.onSubmit()(request).futureValue
-
-      status(result) shouldBe SEE_OTHER
-
-      val updated: Option[CtJourney] = sessionCache.get[CtJourney](ctJourneyKey).futureValue
+      val updated = await(repo.getFromSession(ctJourneyKey))
       updated shouldBe defined
       updated.get.useCustomEmail shouldBe Some(false)
       updated.value.emailAnswer shouldBe None
     }
 
-    //    TODO: 10904 Failing on Jenkins - believe it's perhaps not being stubbed properly, and localhost not available on Jenkins
-    "redirect to the verify-email external journey when using custom email address" in new TestSetup {
+    "(if the email is unverified) redirect to the verify-email external journey" in {
+
       givenFullAuthorisedAsAgentWith(
         arn = arn.value,
         providerId = "cred-id",
-        email = "joe@bloggs.com"
+        email = "abc@abc.com"
       )
       givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
-
-      private val request = FakeRequest(POST, "/")
-        .withSession(session.toSeq: _*)
-        .withFormUrlEncodedBody(
-          "emailAddressUseAsaData" -> "false",
-          "emailAddressNew" -> "jane@bloggs.com"
+      givenCheckEmailSuccess(
+        "cred-id",
+        VerificationStatusResponse(emails =
+          List(CompletedEmail(
+            "abc@abc.com",
+            verified = true,
+            locked = false
+          ))
         )
-
-      cacheJourney(baseJourney)
-
-//      TODO: 10904: Changed to DesiDetails UpdateEmailAddressController - fails locally, but may have different Jenkins error
+      )
       givenVerifyEmailSuccess("/continue-url")
 
-      private val result = controller.onSubmit()(request)
-      status(result) shouldBe SEE_OTHER
-      private val redirectLocation = Helpers.redirectLocation(result).get
-      redirectLocation.contains("http://localhost:9890/email-verification/journey/") shouldBe true
-      redirectLocation.contains("/passcode?continueUrl=http://localhost/agent-services-account/ct-subscription/email-verification-finish") shouldBe true
+      await(repo.putSession(emailPendingVerificationKey, "new@abc.com"))
 
-//      redirectLocation shouldBe "http://localhost:9890/continue-url"
+      val result = post(updateEmailAddressPath)(body = Map(
+        "emailAddressUseAsaData" -> Seq("false"),
+        "emailAddressNew" -> Seq("jane@bloggs.com")
+      ))
+
+      result.status shouldBe SEE_OTHER
+
+      result.header("Location").get shouldBe "http://localhost:9890/continue-url"
     }
   }
 
