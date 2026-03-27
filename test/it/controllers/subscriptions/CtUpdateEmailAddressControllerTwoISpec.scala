@@ -20,7 +20,9 @@ import play.api.test.Helpers._
 import stubs.AgentServicesAccountStubs.{givenGetAgentRecord, stubASAGetResponseError}
 import stubs.EmailVerificationStubs.{givenCheckEmailSuccess, givenVerifyEmailSuccess}
 import support.ComponentBaseISpec
-import uk.gov.hmrc.agentservicesaccount.controllers.{currentSelectedChangesKey, desiDetails, draftNewContactDetailsKey, draftSubmittedByKey, emailPendingVerificationKey}
+import uk.gov.hmrc.agentservicesaccount.actions.CtJourney
+import uk.gov.hmrc.agentservicesaccount.controllers.{ctJourneyKey, currentSelectedChangesKey, desiDetails, draftNewContactDetailsKey, draftSubmittedByKey, emailPendingVerificationKey}
+import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails._
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.{CompletedEmail, VerificationStatusResponse}
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
@@ -31,6 +33,23 @@ extends ComponentBaseISpec {
   private val repo = inject[SessionCacheRepository]
 
   private val updateEmailAddressPath = s"$ctSubscriptionStartPath/email-address"
+
+  private val baseJourney: CtJourney = CtJourney(
+    asaDetails = AgencyDetails(
+      agencyName = None,
+      agencyEmail = Some("joe@bloggs.com"),
+      agencyTelephone = None,
+      agencyAddress = None
+    ),
+    useCustomBusinessName = None,
+    businessNameAnswer = None,
+    useCustomPhoneNumber = None,
+    phoneNumberAnswer = None,
+    useCustomEmail = None,
+    emailAnswer = None,
+    useCustomAddress = None,
+    addressAnswer = None
+  )
 
   s"GET $updateEmailAddressPath" should {
     "display the enter email address page" in {
@@ -47,6 +66,25 @@ extends ComponentBaseISpec {
   }
 
   s"POST $updateEmailAddressPath" should {
+
+    "update journey and redirect when using ASA email address" in {
+      givenAuthorisedAsAgentWith(arn.value)
+      givenGetAgentRecord(agentRecord)
+      stubASAGetResponseError(arn, NOT_FOUND)
+
+      repo.putSession(ctJourneyKey, baseJourney).futureValue
+
+      val result = post(updateEmailAddressPath)(body = Map(
+        "emailAddressUseAsaData" -> Seq("true")
+      ))
+
+      result.status shouldBe SEE_OTHER
+
+      val updated = await(repo.getFromSession(ctJourneyKey))
+      updated shouldBe defined
+      updated.get.useCustomEmail shouldBe Some(false)
+      updated.value.emailAnswer shouldBe None
+    }
 
     "(if the email is unverified) redirect to the verify-email external journey" in {
 
