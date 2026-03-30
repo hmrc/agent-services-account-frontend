@@ -34,16 +34,16 @@
 @(model: Seq[SummaryListData])(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
 
 @main(
-  pageTitle = msgs("amls.check-your-answers.h1"),
-  mimicBrowserBackLink = true,
-  showSecondaryNav = false
+    pageTitle = msgs("amls.check-your-answers.h1"),
+    mimicBrowserBackLink = true,
+    showSecondaryNav = false
 ) {
 
-  <h1 class="govuk-heading-l">@msgs("amls.check-your-answers.h1")</h1>
-  <h2 class="govuk-heading-m">@msgs("amls.check-your-answers.p")</h2>
+    <h1 class="govuk-heading-l">@msgs("amls.check-your-answers.h1")</h1>
+    <h2 class="govuk-heading-m">@msgs("amls.check-your-answers.p")</h2>
 
     @formWithCSRF(action = amls.routes.CheckYourAnswersController.onSubmit) {
         @summary_list(model)
         @govukButton(Button(content = Text(msgs("amls.check-your-answers.submit-button"))))
     }
-    }
+}

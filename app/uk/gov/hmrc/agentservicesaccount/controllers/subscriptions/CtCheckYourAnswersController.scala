@@ -24,6 +24,7 @@ import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.{routes => subscriptionRoutes}
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtCyaData
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtSubscriptionRequest
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionAddress
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
@@ -147,13 +148,6 @@ with I18nSupport {
   ).flatten.map(play.twirl.api.HtmlFormat.escape)
     .map(_.body)
     .mkString("<br/>")
-
-  case class CtCyaData(
-    agencyName: String,
-    agencyEmail: String,
-    agencyTelephone: String,
-    agencyAddress: BusinessAddress
-  )
 
   private def withCtCyaData(
     journey: CtJourney

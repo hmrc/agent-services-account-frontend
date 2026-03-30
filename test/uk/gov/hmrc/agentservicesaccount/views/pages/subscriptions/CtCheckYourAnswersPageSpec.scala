@@ -19,7 +19,9 @@ package uk.gov.hmrc.agentservicesaccount.views.pages.subscriptions
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
-import play.api.i18n.{Lang, Messages, MessagesImpl}
+import play.api.i18n.Lang
+import play.api.i18n.Messages
+import play.api.i18n.MessagesImpl
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.ct_check_your_answers
 import uk.gov.hmrc.agentservicesaccount.views.components.models.SummaryListData
@@ -27,17 +29,19 @@ import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.routes
 
 import scala.jdk.CollectionConverters._
 
-class CtCheckYourAnswersPageSpec extends ViewBaseSpec {
+class CtCheckYourAnswersPageSpec
+extends ViewBaseSpec {
 
   private implicit val langs: Seq[Lang] = Seq(Lang("en"))
 
-  private val view: ct_check_your_answers =
-    app.injector.instanceOf[ct_check_your_answers]
+  private val view: ct_check_your_answers = app.injector.instanceOf[ct_check_your_answers]
 
   object MessageLookup {
+
     val heading = "Check your answers"
     val title = heading + " - Agent services account - GOV.UK"
     val submit = "Enrol for Corporation Tax"
+
   }
 
   private val model = Seq(
@@ -70,7 +74,11 @@ class CtCheckYourAnswersPageSpec extends ViewBaseSpec {
       val messages: Messages = MessagesImpl(langs.head, messagesApi)
 
       val doc: Document = Jsoup.parse(
-        view(model)(messages, fakeRequest, appConfig).body
+        view(model)(
+          messages,
+          fakeRequest,
+          appConfig
+        ).body
       )
 
       doc.title() mustBe MessageLookup.title
@@ -96,4 +104,5 @@ class CtCheckYourAnswersPageSpec extends ViewBaseSpec {
       button.text() mustBe MessageLookup.submit
     }
   }
+
 }

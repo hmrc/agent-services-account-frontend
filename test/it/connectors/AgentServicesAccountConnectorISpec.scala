@@ -34,6 +34,7 @@ import uk.gov.hmrc.agentservicesaccount.models.paye.PayeCyaData
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtSubscriptionRequest
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionInfo
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionStatus.SubscriptionInProgress
 import uk.gov.hmrc.agentservicesaccount.utils.RequestSupport.hc
@@ -190,6 +191,40 @@ with Injecting {
     "return dummy CYA data (for now)" in {
       val result = connector.getPayeCyaData
       await(result) shouldBe examplePayeCyaData
+    }
+  }
+
+  ".submitCtRequest" should {
+
+    val exampleCtRequest = CtSubscriptionRequest(
+      agentName = "Example Agent Ltd",
+      contactName = "Jane Agent",
+      phoneNumber = Some("01632 960 001"),
+      emailAddress = Some("jane.agent@example.com"),
+      address = uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionAddress(
+        line1 = "1 High Street",
+        line2 = "Village",
+        line3 = Some("County"),
+        line4 = None,
+        postCode = Some("AA1 1AA")
+      ),
+      countryCode = "GB"
+    )
+
+    "return nothing when a OK (200) response is returned by agent-services-account" in {
+      givenCtStartSubscriptionResponse(OK)
+
+      val result = connector.submitCtRequest(exampleCtRequest)
+
+      await(result) shouldBe ()
+    }
+
+    "throw an UpstreamErrorResponse exception when an unexpected status is returned by agent-services-account" in {
+      givenCtStartSubscriptionResponse(INTERNAL_SERVER_ERROR)
+
+      intercept[UpstreamErrorResponse] {
+        await(connector.submitCtRequest(exampleCtRequest))
+      }
     }
   }
 
