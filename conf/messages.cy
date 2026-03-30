@@ -200,6 +200,13 @@ asa.legacy.ct.email-address.use-asa.error.required=TODO (Default option for emai
 asa.legacy.ct.email-address.new-input.error.empty=TODO (New email address input empty error)
 asa.legacy.ct.email-address.new-input.error.invalid=TODO (New email address input invalid error)
 
+asa.legacy.ct.check-your-answers.h1=Check your answers
+asa.legacy.ct.check-your-answers.business-name=Business name
+asa.legacy.ct.check-your-answers.phone-number=Telephone number
+asa.legacy.ct.check-your-answers.email=Email address
+asa.legacy.ct.check-your-answers.address=Address
+asa.legacy.ct.check-your-answers.submit-button=Enrol for Corporation Tax
+
 # SA
 asa.legacy.sa.h2=SA
 asa.legacy.sa.col1.h3=Test Content

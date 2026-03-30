@@ -28,8 +28,6 @@ import play.api.libs.json.Json
 import play.api.mvc.RequestHeader
 import play.api.test.Helpers._
 import support.UnitSpec
-import uk.gov.hmrc.agentservicesaccount.connectors
-import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.ContactDetailsController
 import uk.gov.hmrc.agentservicesaccount.controllers.draftNewContactDetailsKey
 import uk.gov.hmrc.agentservicesaccount.controllers.emailPendingVerificationKey

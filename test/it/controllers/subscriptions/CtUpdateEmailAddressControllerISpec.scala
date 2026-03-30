@@ -17,13 +17,17 @@
 package it.controllers.subscriptions
 
 import play.api.test.Helpers._
-import stubs.AgentServicesAccountStubs.{givenGetAgentRecord, stubASAGetResponseError}
-import stubs.EmailVerificationStubs.{givenCheckEmailSuccess, givenVerifyEmailSuccess}
+import stubs.AgentServicesAccountStubs.givenGetAgentRecord
+import stubs.AgentServicesAccountStubs.stubASAGetResponseError
+import stubs.EmailVerificationStubs.givenCheckEmailSuccess
+import stubs.EmailVerificationStubs.givenVerifyEmailSuccess
 import support.ComponentBaseISpec
 import uk.gov.hmrc.agentservicesaccount.actions.CtJourney
-import uk.gov.hmrc.agentservicesaccount.controllers.{ctJourneyKey, emailPendingVerificationKey}
+import uk.gov.hmrc.agentservicesaccount.controllers.ctJourneyKey
+import uk.gov.hmrc.agentservicesaccount.controllers.emailPendingVerificationKey
 import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
-import uk.gov.hmrc.agentservicesaccount.models.emailverification.{CompletedEmail, VerificationStatusResponse}
+import uk.gov.hmrc.agentservicesaccount.models.emailverification.CompletedEmail
+import uk.gov.hmrc.agentservicesaccount.models.emailverification.VerificationStatusResponse
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
 
 class CtUpdateEmailAddressControllerISpec
@@ -73,9 +77,12 @@ extends ComponentBaseISpec {
 
       repo.putSession(ctJourneyKey, baseJourney).futureValue
 
-      val result = post(updateEmailAddressPath)(body = Map(
-        "emailAddressUseAsaData" -> Seq("true")
-      ))
+      val result =
+        post(updateEmailAddressPath)(body =
+          Map(
+            "emailAddressUseAsaData" -> Seq("true")
+          )
+        )
 
       result.status shouldBe SEE_OTHER
 
@@ -108,10 +115,13 @@ extends ComponentBaseISpec {
 
       await(repo.putSession(emailPendingVerificationKey, "new@abc.com"))
 
-      val result = post(updateEmailAddressPath)(body = Map(
-        "emailAddressUseAsaData" -> Seq("false"),
-        "emailAddressNew" -> Seq("jane@bloggs.com")
-      ))
+      val result =
+        post(updateEmailAddressPath)(body =
+          Map(
+            "emailAddressUseAsaData" -> Seq("false"),
+            "emailAddressNew" -> Seq("jane@bloggs.com")
+          )
+        )
 
       result.status shouldBe SEE_OTHER
 

@@ -22,7 +22,7 @@ import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.ctJourneyKey
-import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.UpdatePhoneNumberPage
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.updatePhoneNumberPage
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionPhoneNumberForm
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtPhoneNumberFormValues
@@ -95,7 +95,7 @@ with Logging {
         sessionCacheService
           .put(ctJourneyKey, updatedJourney)
           .map { _ =>
-            Redirect(getNextPage(UpdatePhoneNumberPage))
+            Redirect(getNextPage(updatePhoneNumberPage))
           }
       }
     )

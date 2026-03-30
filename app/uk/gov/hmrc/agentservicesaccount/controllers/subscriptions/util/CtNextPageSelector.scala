@@ -23,23 +23,25 @@ import uk.gov.hmrc.agentservicesaccount.controllers.{routes => homeRoutes}
 
 object CtNextPageSelector {
 
-  val UpdateBusinessNamePage = "businessName"
-  val UpdatePhoneNumberPage = "phoneNumber"
-  val UpdateEmailAddressPage = "emailAddress"
-  val EmailVerificationFinish = "emailVerificationFinish"
+  val updateBusinessNamePage = "businessName"
+  val updatePhoneNumberPage = "phoneNumber"
+  val updateEmailAddressPage = "emailAddress"
+  val emailVerificationFinish = "emailVerificationFinish"
+  val checkYourAnswersPage = "checkYourAnswers"
 
   private val nextPage: (
     String,
     Option[CtJourney]
   ) => Call = {
-    case (UpdateBusinessNamePage, _) => subscriptions.routes.CtUpdatePhoneNumberController.showPage
-    case (UpdatePhoneNumberPage, _) => subscriptions.routes.CtUpdateEmailAddressController.showPage
-    case (UpdateEmailAddressPage, Some(journey)) =>
+    case (`updateBusinessNamePage`, _) => subscriptions.routes.CtUpdatePhoneNumberController.showPage
+    case (`updatePhoneNumberPage`, _) => subscriptions.routes.CtUpdateEmailAddressController.showPage
+    case (`updateEmailAddressPage`, Some(journey)) =>
       journey.useCustomEmail match {
-        case Some(false) => homeRoutes.AgentServicesController.root()
+        case Some(false) => subscriptions.routes.CtCheckYourAnswersController.showPage
         case _ => subscriptions.routes.CtUpdateEmailAddressController.showPage
       }
-    case (EmailVerificationFinish, _) => homeRoutes.AgentServicesController.root()
+    case (`emailVerificationFinish`, _) => subscriptions.routes.CtCheckYourAnswersController.showPage
+    case (`checkYourAnswersPage`, _) => homeRoutes.AgentServicesController.root()
   }
 
   def getNextPage(

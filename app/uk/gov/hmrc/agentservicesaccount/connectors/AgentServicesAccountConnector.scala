@@ -30,6 +30,7 @@ import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest.connectorRea
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest.connectorWrites
 import uk.gov.hmrc.agentservicesaccount.models.paye.PayeAddress
 import uk.gov.hmrc.agentservicesaccount.models.paye.PayeCyaData
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtSubscriptionRequest
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionInfo
 import uk.gov.hmrc.http.HttpReads.Implicits._
@@ -118,7 +119,19 @@ extends Logging {
         response =>
           response.status match {
             case OK => ()
-            case e => throw UpstreamErrorResponse(s"[PayeSubscriptionConnector][submitRequest] Error $e unable to post paye legacy subscription request", e)
+            case e => throw UpstreamErrorResponse(s"[AgentServicesAccountConnector][submitRequest] Error $e unable to post paye legacy subscription request", e)
+          }
+      }
+  }
+
+  def submitCtRequest(ctSubscriptionRequest: CtSubscriptionRequest)(implicit hc: HeaderCarrier): Future[Unit] = {
+    http
+      .post(url"$url/legacy-subscription-request/CT").withBody(Json.toJson(ctSubscriptionRequest)).execute[HttpResponse]
+      .map {
+        response =>
+          response.status match {
+            case OK => ()
+            case e => throw UpstreamErrorResponse(s"[AgentServicesAccountConnector][submitRequest] Error $e unable to post CT legacy subscription request", e)
           }
       }
   }

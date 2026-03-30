@@ -21,7 +21,6 @@ import play.api.mvc.Call
 import play.api.mvc.RequestHeader
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.EmailVerificationConnector
-import uk.gov.hmrc.agentservicesaccount.controllers
 import uk.gov.hmrc.agentservicesaccount.models.emailverification._
 import uk.gov.hmrc.http.InternalServerException
 

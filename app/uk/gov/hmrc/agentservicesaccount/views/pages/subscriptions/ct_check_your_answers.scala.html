@@ -1,5 +1,5 @@
 @*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@
 
 
 @this(
-        main: main, a: a, p: p, h1: h1, h2: h2,
+        main: main, a: a, p: p, h1: h1,
         link_as_button: link_as_button,
         govukHint: GovukHint,
         summary_list: summary_list,
@@ -34,16 +34,15 @@
 @(model: Seq[SummaryListData])(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
 
 @main(
-    pageTitle = msgs("amls.check-your-answers.h1"),
-    mimicBrowserBackLink = true,
-    showSecondaryNav = false
+  pageTitle = msgs("asa.legacy.ct.check-your-answers.h1"),
+  mimicBrowserBackLink = true,
+  showSecondaryNav = false
 ) {
 
-    @h1("amls.check-your-answers.h1")
-    @h2("amls.check-your-answers.p")
+  <h1 class="govuk-heading-l">@msgs("asa.legacy.ct.check-your-answers.h1")</h1>
 
-    @formWithCSRF(action = amls.routes.CheckYourAnswersController.onSubmit) {
+    @formWithCSRF(action = subscriptions.routes.CtCheckYourAnswersController.onSubmit) {
         @summary_list(model)
-        @govukButton(Button(content = Text(msgs("amls.check-your-answers.submit-button"))))
+        @govukButton(Button(content = Text(msgs("asa.legacy.ct.check-your-answers.submit-button"))))
     }
-}
+    }
