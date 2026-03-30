@@ -23,9 +23,10 @@ import play.api.mvc.AnyContent
 import play.api.mvc.MessagesControllerComponents
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.EmailVerificationFinish
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.emailVerificationFinish
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.getNextPage
-import uk.gov.hmrc.agentservicesaccount.controllers.{ctJourneyKey, emailPendingVerificationKey}
+import uk.gov.hmrc.agentservicesaccount.controllers.ctJourneyKey
+import uk.gov.hmrc.agentservicesaccount.controllers.emailPendingVerificationKey
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.EmailIsAlreadyVerified
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.EmailNeedsVerifying
 import uk.gov.hmrc.agentservicesaccount.services.EmailVerificationService
@@ -68,7 +69,7 @@ with Logging {
               sessionCacheService
                 .put(ctJourneyKey, updatedJourney)
                 .map { _ =>
-                  Redirect(getNextPage(EmailVerificationFinish))
+                  Redirect(getNextPage(emailVerificationFinish))
                 }
             case EmailNeedsVerifying =>
               for {
