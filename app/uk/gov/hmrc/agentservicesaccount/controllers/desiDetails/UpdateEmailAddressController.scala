@@ -104,7 +104,9 @@ with Logging {
                     redirectUri <- emailVerificationService.initialiseEmailVerificationJourney(
                       credId,
                       newEmail,
-                      messagesApi.preferred(request).lang
+                      messagesApi.preferred(request).lang,
+                      routes.EmailVerificationEndpointController.finishEmailVerification,
+                      routes.UpdateEmailAddressController.showChangeEmailAddress
                     )
                   } yield Redirect(redirectUri)
               }

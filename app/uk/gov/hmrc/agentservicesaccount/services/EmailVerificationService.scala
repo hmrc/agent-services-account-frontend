@@ -60,7 +60,9 @@ class EmailVerificationService @Inject() (
   def initialiseEmailVerificationJourney(
     credId: String,
     newEmail: String,
-    lang: Lang
+    lang: Lang,
+    continueUrl: Call,
+    enterUrl: Call
   )(implicit rh: RequestHeader): Future[String] = {
     val useAbsoluteUrls = appConfig.emailVerificationFrontendBaseUrl.contains("localhost")
 
@@ -72,7 +74,7 @@ class EmailVerificationService @Inject() (
 
     val emailRequest = VerifyEmailRequest(
       credId = credId,
-      continueUrl = makeUrl(controllers.desiDetails.routes.EmailVerificationEndpointController.finishEmailVerification),
+      continueUrl = makeUrl(continueUrl),
       origin =
         if (lang.code == "cy")
           "Gwasanaethau Asiant CThEM"
@@ -80,9 +82,9 @@ class EmailVerificationService @Inject() (
           "HMRC Agent Services",
       deskproServiceName = appConfig.deskproServiceName,
       accessibilityStatementUrl = s"/accessibility-statement${appConfig.accessibilityStatementUrl}",
-      email = Some(Email(newEmail, makeUrl(controllers.desiDetails.routes.UpdateEmailAddressController.showChangeEmailAddress))),
+      email = Some(Email(newEmail, makeUrl(enterUrl))),
       lang = Some(lang.code),
-      backUrl = Some(makeUrl(controllers.desiDetails.routes.UpdateEmailAddressController.showChangeEmailAddress)),
+      backUrl = Some(makeUrl(enterUrl)),
       pageTitle = None
     )
 

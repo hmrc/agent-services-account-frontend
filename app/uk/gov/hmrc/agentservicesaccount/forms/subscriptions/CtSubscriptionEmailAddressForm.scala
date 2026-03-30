@@ -21,7 +21,6 @@ import play.api.data.Form
 import play.api.data.Mapping
 import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators.trimmedText
 import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators.useAsaDataMapping
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtBusinessNameFormValues
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtEmailAddressFormValues
 import uk.gov.voa.play.form.ConditionalMappings.mandatoryIfFalse
 
@@ -30,14 +29,11 @@ object CtSubscriptionEmailAddressForm {
   val emailAddressUseAsaDataKey = "emailAddressUseAsaData"
   val emailAddressNewKey = "emailAddressNew"
 
-  //  TODO: 10904: Check against subscription API regex
-  private val emailAddressRegex = """^.{1,252}@.{1,256}\..{1,256}$""".r
-
   private val emailAddressUseAsaDataMapping = useAsaDataMapping("asa.legacy.ct.email-address.use-asa.error.required")
 
   private val emailAddressNewOptionalMapping: Mapping[String] = trimmedText
     .verifying("asa.legacy.ct.email-address.new-input.error.empty", _.nonEmpty)
-    .verifying("asa.legacy.ct.email-address.new-input.error.invalid", x => x.isEmpty || emailAddressRegex.matches(x))
+    .verifying("asa.legacy.ct.email-address.new-input.error.invalid", x => x.isEmpty || (x.length <= 50 && x.contains("@")))
 
   def form: Form[CtEmailAddressFormValues] = {
     Form(
