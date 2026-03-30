@@ -23,7 +23,7 @@
 
 
 @this(
-        main: main, a: a, p: p, h1: h1,
+        main: main, a: a, p: p, h1: h1, h2: h2,
         link_as_button: link_as_button,
         govukHint: GovukHint,
         summary_list: summary_list,
@@ -39,8 +39,8 @@
     showSecondaryNav = false
 ) {
 
-    <h1 class="govuk-heading-l">@msgs("amls.check-your-answers.h1")</h1>
-    <h2 class="govuk-heading-m">@msgs("amls.check-your-answers.p")</h2>
+    @h1("amls.check-your-answers.h1")
+    @h2("amls.check-your-answers.p")
 
     @formWithCSRF(action = amls.routes.CheckYourAnswersController.onSubmit) {
         @summary_list(model)
