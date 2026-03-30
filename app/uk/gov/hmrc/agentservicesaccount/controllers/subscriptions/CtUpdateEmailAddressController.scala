@@ -23,7 +23,7 @@ import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.ctJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.emailPendingVerificationKey
-import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.UpdateEmailAddressPage
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.updateEmailAddressPage
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionEmailAddressForm
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtEmailAddressFormValues
@@ -63,7 +63,7 @@ with Logging {
           CtSubscriptionEmailAddressForm.form.fill(
             CtEmailAddressFormValues(
               useAsaData = !useCustom,
-              newEmailAddress = journey.businessNameAnswer
+              newEmailAddress = journey.emailAnswer
             )
           )
 
@@ -95,7 +95,7 @@ with Logging {
           sessionCacheService
             .put(ctJourneyKey, updatedJourney)
             .map { _ =>
-              Redirect(getNextPage(UpdateEmailAddressPage, Some(updatedJourney)))
+              Redirect(getNextPage(updateEmailAddressPage, Some(updatedJourney)))
             }
         }
         else {

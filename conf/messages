@@ -203,8 +203,15 @@ asa.legacy.ct.phone-number.use-asa.false=I want to use a different phone number 
 asa.legacy.ct.phone-number.new-input.label=Enter a phone number
 asa.legacy.ct.phone-number.new-input.hint=For international numbers include the country code.
 asa.legacy.ct.phone-number.use-asa.error.required=TODO (Default option required error)
-asa.legacy.ct.phone-number.now-input.error.empty=TODO (New phone number input empty error)
-asa.legacy.ct.phone-number.now-input.error.invalid=TODO (New phone number input invalid error)
+asa.legacy.ct.phone-number.new-input.error.empty=TODO (New phone number input empty error)
+asa.legacy.ct.phone-number.new-input.error.invalid=TODO (New phone number input invalid error)
+
+asa.legacy.ct.check-your-answers.h1=Check your answers
+asa.legacy.ct.check-your-answers.business-name=Business name
+asa.legacy.ct.check-your-answers.phone-number=Telephone number
+asa.legacy.ct.check-your-answers.email=Email address
+asa.legacy.ct.check-your-answers.address=Address
+asa.legacy.ct.check-your-answers.submit-button=Enrol for Corporation Tax
 
 # SA
 asa.legacy.sa.h2=SA

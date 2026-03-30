@@ -92,6 +92,14 @@ object AgentServicesAccountStubs {
       ))
   }
 
+  def givenCtStartSubscriptionResponse(status: Int): StubMapping = {
+    stubFor(post(urlEqualTo("/agent-services-account/legacy-subscription-request/CT"))
+      .willReturn(
+        aResponse()
+          .withStatus(status)
+      ))
+  }
+
   def givenGetAgentRecord(agentRecord: AgentDetailsDesResponse): StubMapping = stubFor(
     get(urlEqualTo("/agent-services-account/agent-record-with-checks"))
       .willReturn(

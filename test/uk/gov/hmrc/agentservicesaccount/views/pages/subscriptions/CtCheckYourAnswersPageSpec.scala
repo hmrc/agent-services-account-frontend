@@ -1,0 +1,99 @@
+/*
+ * Copyright 2026 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package uk.gov.hmrc.agentservicesaccount.views.pages.subscriptions
+
+import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
+import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+import play.api.i18n.{Lang, Messages, MessagesImpl}
+import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.ct_check_your_answers
+import uk.gov.hmrc.agentservicesaccount.views.components.models.SummaryListData
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.routes
+
+import scala.jdk.CollectionConverters._
+
+class CtCheckYourAnswersPageSpec extends ViewBaseSpec {
+
+  private implicit val langs: Seq[Lang] = Seq(Lang("en"))
+
+  private val view: ct_check_your_answers =
+    app.injector.instanceOf[ct_check_your_answers]
+
+  object MessageLookup {
+    val heading = "Check your answers"
+    val title = heading + " - Agent services account - GOV.UK"
+    val submit = "Enrol for Corporation Tax"
+  }
+
+  private val model = Seq(
+    SummaryListData(
+      key = "asa.legacy.ct.check-your-answers.business-name",
+      value = "Test Agency",
+      link = None
+    ),
+    SummaryListData(
+      key = "asa.legacy.ct.check-your-answers.phone-number",
+      value = "1234567890",
+      link = None
+    ),
+    SummaryListData(
+      key = "asa.legacy.ct.check-your-answers.email",
+      value = "test@test.com",
+      link = None
+    ),
+    SummaryListData(
+      key = "asa.legacy.ct.check-your-answers.address",
+      value = "Line 1<br/>Line 2",
+      link = None
+    )
+  )
+
+  "check_your_answers view" should {
+
+    "render page with heading, summary list and submit button" in {
+
+      val messages: Messages = MessagesImpl(langs.head, messagesApi)
+
+      val doc: Document = Jsoup.parse(
+        view(model)(messages, fakeRequest, appConfig).body
+      )
+
+      doc.title() mustBe MessageLookup.title
+
+      doc.select("h1").text() mustBe MessageLookup.heading
+
+      val keys = doc.select(".govuk-summary-list__key").asScala.map(_.text()).toList
+      keys must contain("Business name")
+      keys must contain("Telephone number")
+      keys must contain("Email address")
+      keys must contain("Address")
+
+      val values = doc.select(".govuk-summary-list__value").asScala.map(_.text()).toList
+      values must contain("Test Agency")
+      values must contain("1234567890")
+      values must contain("test@test.com")
+      values.exists(_.contains("Line 1")) mustBe true
+
+      val form = doc.select("form")
+      form.attr("action") mustBe routes.CtCheckYourAnswersController.onSubmit.url
+
+      val button = doc.select("button")
+      button.text() mustBe MessageLookup.submit
+    }
+  }
+}

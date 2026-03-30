@@ -118,10 +118,7 @@ with MockFactory {
       new AbstractModule() {
         override def configure(): Unit = {
           bind(classOf[AuthConnector]).toInstance(stubAuthConnector)
-          bind(classOf[uk.gov.hmrc.agentservicesaccount.services.DraftDetailsService])
-            .toInstance(stub[uk.gov.hmrc.agentservicesaccount.services.DraftDetailsService])
-          bind(classOf[uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector])
-            .toInstance(agentServicesAccountConnector)
+          bind(classOf[AgentServicesAccountConnector]).toInstance(agentServicesAccountConnector)
         }
       }
 

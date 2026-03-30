@@ -26,20 +26,20 @@ import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import play.api.libs.json.OWrites
-import play.api.mvc.AnyContentAsEmpty
-import play.api.mvc.AnyContentAsFormUrlEncoded
-import play.api.mvc.RequestHeader
+import play.api.mvc._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import stubs.AgentServicesAccountStubs._
 import support.BaseISpec
 import support.UnitSpec
 import uk.gov.hmrc.agentservicesaccount.actions.CtJourney
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.ctJourneyKey
-import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtUpdatePhoneNumberController
-import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtCheckYourAnswersController
+import uk.gov.hmrc.agentservicesaccount.models._
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtSubscriptionRequest
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
-import uk.gov.hmrc.auth.core.AuthConnector
+import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve.Retrieval
 import uk.gov.hmrc.http.HeaderCarrier
@@ -48,7 +48,7 @@ import uk.gov.hmrc.http.client.HttpClientV2
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
-class CtUpdatePhoneNumberControllerISpec
+class CtCheckYourAnswersControllerISpec
 extends BaseISpec
 with UnitSpec
 with Matchers
@@ -68,54 +68,50 @@ with MockFactory {
             Json.obj(
               "key" -> "HMRC-AS-AGENT",
               "identifiers" -> Json.arr(
-                Json.obj(
-                  "key" -> "AgentReferenceNumber",
-                  "value" -> testArn
-                )
+                Json.obj("key" -> "AgentReferenceNumber", "value" -> testArn)
               )
             )
           ),
-          "affinityGroup" -> "Agent",
-          "credentialRole" -> "User",
-          "optionalCredentials" -> Json.obj(
-            "providerId" -> "foo",
-            "providerType" -> "bar"
-          )
+          "affinityGroup" -> "Agent"
         )
 
         override def authorise[A](
           predicate: Predicate,
           retrieval: Retrieval[A]
-        )(implicit
+        )(
+          implicit
           hc: HeaderCarrier,
           ec: ExecutionContext
         ): Future[A] = Future.successful(retrieval.reads.reads(authJson).get)
       }
 
-    implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
+    implicit val ec: ExecutionContext = ExecutionContext.global
+
     val agentServicesAccountConnector: AgentServicesAccountConnector =
       new AgentServicesAccountConnector(
         http = stub[HttpClientV2],
         appConfig = appConfig
       ) {
         override def getAgentRecord(implicit rh: RequestHeader): Future[AgentDetailsDesResponse] = Future.successful(
-          uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse(
-            uniqueTaxReference = Some(uk.gov.hmrc.agentservicesaccount.models.Utr("0123456789")),
+          AgentDetailsDesResponse(
+            uniqueTaxReference = Some(Utr("0123456789")),
             agencyDetails = Some(
-              uk.gov.hmrc.agentservicesaccount.models.AgencyDetails(
+              AgencyDetails(
                 agencyName = None,
                 agencyEmail = None,
                 agencyTelephone = Some("1234567890"),
                 agencyAddress = None
               )
             ),
-            suspensionDetails = Some(uk.gov.hmrc.agentservicesaccount.models.SuspensionDetails(suspensionStatus = false, None))
+            suspensionDetails = Some(SuspensionDetails(suspensionStatus = false, None))
           )
         )
+
+        override def submitCtRequest(ctSubscriptionRequest: CtSubscriptionRequest)(implicit hc: HeaderCarrier): Future[Unit] = Future.successful(())
       }
 
     val overrides: AbstractModule =
-      new AbstractModule() {
+      new AbstractModule {
         override def configure(): Unit = {
           bind(classOf[AuthConnector]).toInstance(stubAuthConnector)
           bind(classOf[AgentServicesAccountConnector]).toInstance(agentServicesAccountConnector)
@@ -130,121 +126,129 @@ with MockFactory {
       .overrides(overrides)
       .build()
 
-    val controller: CtUpdatePhoneNumberController = app.injector.instanceOf[CtUpdatePhoneNumberController]
+    val controller: CtCheckYourAnswersController = app.injector.instanceOf[CtCheckYourAnswersController]
 
     val sessionCache: SessionCacheService = app.injector.instanceOf[SessionCacheService]
-
-    val baseJourney: CtJourney = CtJourney(
-      asaDetails = uk.gov.hmrc.agentservicesaccount.models.AgencyDetails(
-        agencyName = None,
-        agencyEmail = None,
-        agencyTelephone = Some("1234567890"),
-        agencyAddress = None
-      ),
-      useCustomBusinessName = None,
-      businessNameAnswer = None,
-      useCustomPhoneNumber = None,
-      phoneNumberAnswer = None,
-      useCustomEmail = None,
-      emailAnswer = None,
-      useCustomAddress = None,
-      addressAnswer = None
-    )
 
     val session: Map[String, String] = Map("sessionId" -> "test-session")
 
     def fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest().withSession(session.toSeq: _*)
 
+    val address = BusinessAddress(
+      addressLine1 = "Line 1",
+      addressLine2 = Some("Line 2"),
+      addressLine3 = Some("Line 3"),
+      addressLine4 = None,
+      postalCode = Some("AA1 1AA"),
+      countryCode = "GB"
+    )
+
+    val baseJourney: CtJourney = CtJourney(
+      asaDetails = AgencyDetails(
+        agencyName = Some("ASA Name"),
+        agencyEmail = Some("asa@test.com"),
+        agencyTelephone = Some("999999"),
+        agencyAddress = Some(address)
+      ),
+      useCustomBusinessName = Some(true),
+      businessNameAnswer = Some("Custom Name"),
+      useCustomPhoneNumber = Some(true),
+      phoneNumberAnswer = Some("123456"),
+      useCustomEmail = Some(true),
+      emailAnswer = Some("custom@test.com"),
+      useCustomAddress = Some(true),
+      addressAnswer = Some(address)
+    )
+
     def cacheJourney(journey: CtJourney): Unit = {
       implicit val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequest
       implicit val writes: OWrites[CtJourney] = Json.writes[CtJourney]
+
       sessionCache.put(ctJourneyKey, journey).futureValue
     }
 
   }
 
-  "GET /update-phone-number" should {
+  "GET /check-your-answers" should {
 
-    "render empty form on first visit" in new TestSetup {
+    "return OK and render page when valid data present" in new TestSetup {
+
       cacheJourney(baseJourney)
 
-      private val result = controller.showPage()(FakeRequest()).futureValue
+      val result = controller.showPage()(fakeRequest).futureValue
 
       status(result) shouldBe OK
-      contentAsString(result) should include("1234567890")
+      val body = contentAsString(result)
+
+      body should include("Custom Name")
+      body should include("123456")
+      body should include("custom@test.com")
+      body should include("Line 1")
     }
 
-    "render pre-filled form when journey has existing answers" in new TestSetup {
-      private val journey = baseJourney.copy(
+    "return BAD_REQUEST when journey data missing" in new TestSetup {
+      val invalidJourney = CtJourney(
+        asaDetails = AgencyDetails(
+          agencyName = None,
+          agencyEmail = None,
+          agencyTelephone = None,
+          agencyAddress = None
+        ),
+        useCustomBusinessName = Some(true),
+        businessNameAnswer = None,
         useCustomPhoneNumber = Some(true),
-        phoneNumberAnswer = Some("1234567890")
+        phoneNumberAnswer = None,
+        useCustomEmail = Some(true),
+        emailAnswer = None,
+        useCustomAddress = Some(true),
+        addressAnswer = None
       )
 
-      cacheJourney(journey)
+      cacheJourney(invalidJourney)
 
-      private val result = controller.showPage()(FakeRequest()).futureValue
+      val result = controller.showPage()(fakeRequest).futureValue
 
-      status(result) shouldBe OK
-      private val content = contentAsString(result)
-
-      content should include("""value="true"""")
-      content should include("phoneNumberNew")
+      status(result) shouldBe BAD_REQUEST
+      contentAsString(result) should include("missing CT CYA data")
     }
   }
 
-  "POST /update-phone-number" should {
+  "POST /check-your-answers" should {
 
-    "return BAD_REQUEST when form is invalid" in new TestSetup {
+    "redirect when submission succeeds" in new TestSetup {
+
       cacheJourney(baseJourney)
+      givenCtStartSubscriptionResponse(OK)
 
-      private val request = FakeRequest().withSession(session.toSeq: _*).withFormUrlEncodedBody(
-        "useAsaData" -> ""
+      val result = controller.onSubmit()(fakeRequest).futureValue
+
+      status(result) shouldBe SEE_OTHER
+      redirectLocation(result).value should include("/email-address")
+    }
+
+    "return BAD_REQUEST when journey data missing" in new TestSetup {
+      val emptyJourney = CtJourney(
+        asaDetails = AgencyDetails(
+          None,
+          None,
+          None,
+          None
+        ),
+        useCustomBusinessName = Some(true),
+        businessNameAnswer = None,
+        useCustomPhoneNumber = Some(true),
+        phoneNumberAnswer = None,
+        useCustomEmail = Some(true),
+        emailAnswer = None,
+        useCustomAddress = Some(true),
+        addressAnswer = None
       )
+      cacheJourney(emptyJourney)
 
-      private val result = controller.onSubmit()(request).futureValue
+      val result = controller.onSubmit()(fakeRequest).futureValue
 
       status(result) shouldBe BAD_REQUEST
-    }
-
-    "update journey and redirect when using ASA phone number" in new TestSetup {
-      private val request = FakeRequest(POST, "/")
-        .withSession(session.toSeq: _*)
-        .withFormUrlEncodedBody(
-          "phoneNumberUseAsaData" -> "true"
-        )
-
-      implicit val implicitRequest: FakeRequest[AnyContentAsFormUrlEncoded] = request
-
-      cacheJourney(baseJourney)
-
-      private val result = controller.onSubmit()(request).futureValue
-
-      status(result) shouldBe SEE_OTHER
-
-      val updated: Option[CtJourney] = sessionCache.get[CtJourney](ctJourneyKey).futureValue
-      updated shouldBe defined
-      updated.get.useCustomPhoneNumber shouldBe Some(false)
-      updated.value.phoneNumberAnswer shouldBe None
-    }
-
-    "update journey and redirect when using custom phone number" in new TestSetup {
-      private val request = FakeRequest(POST, "/")
-        .withSession(session.toSeq: _*)
-        .withFormUrlEncodedBody(
-          "phoneNumberUseAsaData" -> "false",
-          "phoneNumberNew" -> "0987654321"
-        )
-
-      implicit val implicitRequest: FakeRequest[AnyContentAsFormUrlEncoded] = request
-
-      cacheJourney(baseJourney)
-
-      private val result = controller.onSubmit()(request).futureValue
-      status(result) shouldBe SEE_OTHER
-
-      val updated: Option[CtJourney] = sessionCache.get[CtJourney](ctJourneyKey).futureValue
-      updated.value.useCustomPhoneNumber shouldBe Some(true)
-      updated.value.phoneNumberAnswer shouldBe Some("0987654321")
+      contentAsString(result) should include("missing CT CYA data")
     }
   }
 

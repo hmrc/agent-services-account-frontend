@@ -30,7 +30,7 @@ sealed trait SubscriptionRequest {
   val phoneNumber: Option[String]
   val emailAddress: Option[String]
   val address: SubscriptionAddress
-  val isAbroad: Boolean
+  def isAbroad: Boolean
 
 }
 
@@ -68,6 +68,31 @@ object PayeSubscriptionRequest {
       "telephoneNumber" -> request.phoneNumber,
       "emailAddress" -> request.emailAddress,
       "address" -> request.address
+    )
+  }
+}
+
+case class CtSubscriptionRequest(
+  agentName: String,
+  contactName: String,
+  phoneNumber: Option[String],
+  emailAddress: Option[String],
+  address: SubscriptionAddress,
+  countryCode: String
+)
+extends SubscriptionRequest {
+  override def isAbroad: Boolean = !countryCode.equalsIgnoreCase("GB")
+}
+
+object CtSubscriptionRequest {
+  implicit val registerWrites: Writes[CtSubscriptionRequest] = Writes { request =>
+    Json.obj(
+      "agentName" -> request.agentName,
+      "contactName" -> request.contactName,
+      "telephoneNumber" -> request.phoneNumber,
+      "emailAddress" -> request.emailAddress,
+      "address" -> request.address,
+      "isAbroad" -> request.isAbroad
     )
   }
 }
