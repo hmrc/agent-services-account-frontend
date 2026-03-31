@@ -59,7 +59,7 @@ extends ComponentBaseISpec {
       val result = get(updateAddressPath)
 
       result.status shouldBe OK
-      assertPageHasTitle("What address should we use to contact you about Corporation Tax?")(result)
+      assertPageHasTitle("What address should we use to send letters about Corporation Tax?")(result)
     }
   }
 

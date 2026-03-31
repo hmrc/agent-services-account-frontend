@@ -21,87 +21,45 @@ import org.scalatest.wordspec.AnyWordSpec
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionAddressForm._
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtAddressFormValues
 
-import scala.util.Random
-
 class CtSubscriptionAddressFormSpec
 extends AnyWordSpec
 with Matchers {
 
   val emptyValue = ""
-  val validNewAddress = "joe@bloggs.com"
-  val invalidNewAddress = "{][.',"
 
   "form binding" should {
     s"be successful when $addressUseAsaDataKey true" in {
-      val addressValues = List(
-        emptyValue,
-        validNewAddress,
-        invalidNewAddress
-      )
       val params = Map(
-        addressUseAsaDataKey -> true.toString,
-        addressNewKey -> addressValues(Random.nextInt(addressValues.length))
+        addressUseAsaDataKey -> true.toString
       )
 
-      form.bind(params).value shouldBe Some(CtAddressFormValues(useAsaData = true, None))
+      form.bind(params).value shouldBe Some(CtAddressFormValues(useAsaData = true))
     }
 
-    s"be successful when $addressUseAsaDataKey false and $addressNewKey valid" in {
+    s"be successful when $addressUseAsaDataKey false" in {
       val params = Map(
-        addressUseAsaDataKey -> false.toString,
-        addressNewKey -> validNewAddress
+        addressUseAsaDataKey -> false.toString
       )
 
-      form.bind(params).value shouldBe Some(CtAddressFormValues(useAsaData = false, Some(validNewAddress)))
+      form.bind(params).value shouldBe Some(CtAddressFormValues(useAsaData = false))
     }
 
     s"error when $addressUseAsaDataKey empty" in {
-      val addressValues = List(
-        emptyValue,
-        validNewAddress,
-        invalidNewAddress
-      )
       val params = Map(
-        addressUseAsaDataKey -> emptyValue,
-        addressNewKey -> addressValues(Random.nextInt(addressValues.length))
+        addressUseAsaDataKey -> emptyValue
       )
 
       val validatedForm = form.bind(params)
       validatedForm.hasErrors shouldBe true
-      validatedForm.error(addressUseAsaDataKey).get.message shouldBe "asa.legacy.ct.email-address.use-asa.error.required"
-      validatedForm.errors.length shouldBe 1
-    }
-
-    s"error when $addressUseAsaDataKey false and $addressNewKey empty" in {
-      val params = Map(
-        addressUseAsaDataKey -> false.toString,
-        addressNewKey -> emptyValue
-      )
-
-      val validatedForm = form.bind(params)
-      validatedForm.hasErrors shouldBe true
-      validatedForm.error(addressNewKey).get.message shouldBe "asa.legacy.ct.email-address.new-input.error.empty"
-      validatedForm.errors.length shouldBe 1
-    }
-
-    s"error when $addressUseAsaDataKey false and $addressNewKey invalid" in {
-      val params = Map(
-        addressUseAsaDataKey -> false.toString,
-        addressNewKey -> invalidNewAddress
-      )
-
-      val validatedForm = form.bind(params)
-      validatedForm.hasErrors shouldBe true
-      validatedForm.error(addressNewKey).get.message shouldBe "asa.legacy.ct.email-address.new-input.error.invalid"
+      validatedForm.error(addressUseAsaDataKey).get.message shouldBe "asa.legacy.ct.address.use-asa.error.required"
       validatedForm.errors.length shouldBe 1
     }
 
     "unbind CtAddressFormValues" in {
-      val unboundForm = form.mapping.unbind(CtAddressFormValues(useAsaData = true, Some(validNewAddress)))
+      val unboundForm = form.mapping.unbind(CtAddressFormValues(useAsaData = true))
 
       unboundForm shouldBe Map(
-        addressUseAsaDataKey -> true.toString,
-        addressNewKey -> validNewAddress
+        addressUseAsaDataKey -> true.toString
       )
     }
 

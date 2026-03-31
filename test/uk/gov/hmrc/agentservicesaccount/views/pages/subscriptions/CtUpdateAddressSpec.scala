@@ -22,6 +22,7 @@ import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.data.Form
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionAddressForm
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionAddressForm.addressUseAsaDataKey
+import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtAddressFormValues
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.ct_update_address
@@ -30,17 +31,34 @@ class CtUpdateAddressSpec
 extends ViewBaseSpec {
 
   val view: ct_update_address = inject[ct_update_address]
-  val subscriptionAddress = "joe@bloggs.com"
+
+  private def formatAddress(address: BusinessAddress): String = List(
+    Some(address.addressLine1),
+    address.addressLine2,
+    address.addressLine3,
+    address.addressLine4,
+    address.postalCode,
+    Some(address.countryCode)
+  ).flatten.map(play.twirl.api.HtmlFormat.escape)
+    .map(_.body)
+    .mkString(", ")
+
+  private val subscriptionBusinessAddress = BusinessAddress(
+    "25 Any Street",
+    Some("Central Grange"),
+    Some("Telford"),
+    None,
+    Some("TF4 3TR"),
+    "GB"
+  )
+
+  private val subscriptionAddress = formatAddress(subscriptionBusinessAddress)
 
   val addressForm: Form[CtAddressFormValues] = CtSubscriptionAddressForm.form
 
   val formWithUseAsaError: Form[CtAddressFormValues] = addressForm.withError(
     key = addressUseAsaDataKey,
-    message = messages("asa.legacy.ct.email-address.use-asa.error.required")
-  )
-  val formWithNewAddressError: Form[CtAddressFormValues] = addressForm.withError(
-    key = addressNewKey,
-    message = messages("asa.legacy.ct.email-address.new-input.error.empty")
+    message = messages("asa.legacy.ct.address.use-asa.error.required")
   )
 
   def render(form: Form[CtAddressFormValues]): Document = Jsoup.parse(
@@ -51,7 +69,7 @@ extends ViewBaseSpec {
     ).body
   )
 
-  private val title: String = messages("asa.legacy.ct.email-address.title")
+  private val title: String = messages("asa.legacy.ct.address.title")
 
   "ct_update_address" when {
 
@@ -99,45 +117,8 @@ extends ViewBaseSpec {
         radios.size() mustBe 2
         radios.get(0).text() mustBe subscriptionAddress
         radios.get(0).select("input").attr("name") mustBe addressUseAsaDataKey
-        radios.get(1).text() mustBe messages("asa.legacy.ct.email-address.use-asa.false")
+        radios.get(1).text() mustBe messages("asa.legacy.ct.address.use-asa.false")
         radios.get(1).select("input").attr("name") mustBe addressUseAsaDataKey
-      }
-
-      "hide the conditional new email address input" in {
-        val conditionalHidden = doc.select(".govuk-radios__conditional--hidden")
-        conditionalHidden.size() mustBe 1
-        conditionalHidden.text() mustBe messages("asa.legacy.ct.email-address.new-input.label") + " " + messages("asa.legacy.ct.email-address.new-input.hint")
-        conditionalHidden.select(".govuk-input").attr("name") mustBe addressNewKey
-      }
-    }
-
-    "when 'new email address' option is selected" should {
-
-      val filledForm: Form[CtAddressFormValues] = addressForm.fill(
-        CtAddressFormValues(
-          useAsaData = false,
-          newAddress = Some("hello@new.com")
-        )
-      )
-
-      val doc: Document = render(filledForm)
-
-      "show the conditional input section" in {
-        val conditional = doc.select(".govuk-radios__conditional").first()
-        conditional.hasClass("govuk-radios__conditional--hidden") mustBe false
-      }
-
-      "have the new email address input present" in {
-        doc.select("#addressNew").size() mustBe 1
-      }
-
-      "pre-fill the new email address input" in {
-        doc.select("#addressNew").`val`() mustBe "hello@new.com"
-      }
-
-      "have the correct radio selected" in {
-        val radios = doc.select("input[name=addressUseAsaData]")
-        radios.get(1).hasAttr("checked") mustBe true
       }
     }
 
@@ -155,7 +136,7 @@ extends ViewBaseSpec {
 
       "display correct error summary link" in {
         val errorLink: Element = doc.select(".govuk-error-summary__list a").first()
-        errorLink.text() mustBe messages("asa.legacy.ct.email-address.use-asa.error.required")
+        errorLink.text() mustBe messages("asa.legacy.ct.address.use-asa.error.required")
         errorLink.attr("href") mustBe s"#$addressUseAsaDataKey"
       }
 
@@ -164,36 +145,10 @@ extends ViewBaseSpec {
       }
 
       "display error message on form" in {
-        doc.select(".govuk-error-message").text() mustBe s"Error: ${messages("asa.legacy.ct.email-address.use-asa.error.required")}"
+        doc.select(".govuk-error-message").text() mustBe s"Error: ${messages("asa.legacy.ct.address.use-asa.error.required")}"
       }
     }
 
-    "form is submitted with newAddress errors should" should {
-
-      val doc: Document = render(formWithNewAddressError)
-
-      testServiceStaticContent(doc)
-
-      testPageStaticContent(doc)
-
-      "display error prefix on page title" in {
-        doc.title() mustBe s"Error: $title - Agent services account - GOV.UK"
-      }
-
-      "display correct error summary link" in {
-        val errorLink: Element = doc.select(".govuk-error-summary__list a").first()
-        errorLink.text() mustBe messages("asa.legacy.ct.email-address.new-input.error.empty")
-        errorLink.attr("href") mustBe s"#$addressNewKey"
-      }
-
-      "display error styling on form" in {
-        doc.select(".govuk-form-group--error").size() mustBe 1
-      }
-
-      "display error message on form" in {
-        doc.select(".govuk-error-message").text() mustBe s"Error: ${messages("asa.legacy.ct.email-address.new-input.error.empty")}"
-      }
-    }
   }
 
 }
