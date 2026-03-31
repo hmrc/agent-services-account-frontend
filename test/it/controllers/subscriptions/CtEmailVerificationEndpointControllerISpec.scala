@@ -70,7 +70,7 @@ extends ComponentBaseISpec {
       result.status shouldBe INTERNAL_SERVER_ERROR
     }
 
-    "redirect to routes.AgentServicesController.root() (TEMPORARILY) if email is already verified" in {
+    "redirect to CT update address page if email is already verified" in {
 
       givenFullAuthorisedAsAgentWith(
         arn.value,
@@ -97,7 +97,7 @@ extends ComponentBaseISpec {
 
       result.status shouldBe SEE_OTHER
 
-      result.header("Location").get shouldBe s"${subscriptions.routes.CtCheckYourAnswersController.showPage}"
+      result.header("Location").get shouldBe s"${subscriptions.routes.CtUpdateAddressController.showPage}"
     }
   }
 
