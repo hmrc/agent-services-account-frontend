@@ -59,7 +59,7 @@ with Logging {
     Some(address.countryCode)
   ).flatten.map(play.twirl.api.HtmlFormat.escape)
     .map(_.body)
-    .mkString("<br/>")
+    .mkString(", ")
 
   val showPage: Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
     val journey = request.ctSubscriptionJourney
@@ -97,8 +97,7 @@ with Logging {
       data => {
         if (data.useAsaData) {
           val updatedJourney = journey.copy(
-            useCustomAddress = Some(false),
-            emailAnswer = None
+            useCustomAddress = Some(false)
           )
 
           sessionCacheService
