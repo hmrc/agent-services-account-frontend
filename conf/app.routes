@@ -106,8 +106,12 @@ GET        /ct-subscription/email-address                                 @uk.go
 POST       /ct-subscription/email-address                                 @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtUpdateEmailAddressController.onSubmit
 GET        /ct-subscription/email-verification-finish                     @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtEmailVerificationEndpointController.finishEmailVerification
 
-GET        /ct-subscription/check-your-answers                             @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtCheckYourAnswersController.showPage
-POST       /ct-subscription/check-your-answers                             @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtCheckYourAnswersController.onSubmit
+GET        /ct-subscription/address                                       @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtUpdateAddressController.showPage
+POST       /ct-subscription/address                                       @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtUpdateAddressController.onSubmit
+
+GET        /ct-subscription/check-your-answers                            @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtCheckYourAnswersController.showPage
+POST       /ct-subscription/check-your-answers                            @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtCheckYourAnswersController.onSubmit
+
 # AMLS
 GET        /manage-account/money-laundering-supervision/view-details                     @uk.gov.hmrc.agentservicesaccount.controllers.amls.ViewDetailsController.showPage
 
