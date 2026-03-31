@@ -107,19 +107,7 @@ with Logging {
             }
         }
         else {
-//          data.newAddress.map(newAddress => {
-//            val credId = request.agentInfo.credentials.map(_.providerId).getOrElse(throw new RuntimeException("no available cred id"))
-//            for {
-//              _ <- sessionCacheService.put(emailPendingVerificationKey, newAddress)
-//              redirectUri <- emailVerificationService.initialiseAddressVerificationJourney(
-//                credId,
-//                newAddress,
-//                messagesApi.preferred(request).lang,
-//                routes.CtAddressVerificationEndpointController.finishAddressVerification,
-//                routes.CtUpdateAddressController.showPage
-//              )
-//            } yield Redirect(redirectUri)
-//          }).getOrElse(Future.successful(Redirect(routes.CtUpdateAddressController.showPage)))
+//          TODO: 10906: Add ALF journey here
           Future.successful(Redirect(routes.CtCheckYourAnswersController.showPage))
         }
       }
