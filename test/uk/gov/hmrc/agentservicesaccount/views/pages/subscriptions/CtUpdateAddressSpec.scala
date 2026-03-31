@@ -115,7 +115,7 @@ extends ViewBaseSpec {
       "display correct radio options" in {
         val radios = doc.select(".govuk-radios__item")
         radios.size() mustBe 2
-        radios.get(0).text() mustBe subscriptionAddress
+        radios.get(0).text() mustBe subscriptionAddress + " " + messages("asa.legacy.ct.address.use-asa.true.hint")
         radios.get(0).select("input").attr("name") mustBe addressUseAsaDataKey
         radios.get(1).text() mustBe messages("asa.legacy.ct.address.use-asa.false")
         radios.get(1).select("input").attr("name") mustBe addressUseAsaDataKey
