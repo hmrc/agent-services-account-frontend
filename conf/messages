@@ -208,6 +208,11 @@ asa.legacy.ct.email-address.use-asa.error.required=TODO (Default option for emai
 asa.legacy.ct.email-address.new-input.error.empty=TODO (New email address input empty error)
 asa.legacy.ct.email-address.new-input.error.invalid=TODO (New email address input invalid error)
 
+asa.legacy.ct.address.title=What address should we use to send letters about Corporation Tax?
+asa.legacy.ct.address.use-asa.true.hint=This is the address on your agent services account.
+asa.legacy.ct.address.use-asa.false=I want to use a different address for Corporation Tax
+asa.legacy.ct.address.use-asa.error.required=TODO (Default option for address required error)
+
 asa.legacy.ct.check-your-answers.h1=Check your answers
 asa.legacy.ct.check-your-answers.business-name=Business name
 asa.legacy.ct.check-your-answers.phone-number=Telephone number

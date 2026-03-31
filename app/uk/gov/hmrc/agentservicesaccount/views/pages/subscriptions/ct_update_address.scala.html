@@ -56,18 +56,19 @@
                     isPageHeading = true
                 ))
             )),
-            name = "emailAddressUseAsaData",
+            name = "addressUseAsaData",
             items = Seq(
                 RadioItem(
                     content = Text(subscriptionAddress),
-                    value = Some("true")
+                    value = Some("true"),
+                    hint = Some(Hint(content = Text(msgs("asa.legacy.ct.address.use-asa.true.hint"))))
                 ),
                 RadioItem(
                     content = Text(msgs("asa.legacy.ct.address.use-asa.false")),
                     value = Some("false")
                 )
             )
-        ).withFormField(form("emailAddressUseAsaData")))
+        ).withFormField(form("addressUseAsaData")))
 
         @govukButton(Button(content = Text(msgs("common.continue"))))
     }

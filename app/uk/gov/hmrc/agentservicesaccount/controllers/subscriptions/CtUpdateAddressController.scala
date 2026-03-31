@@ -120,7 +120,7 @@ with Logging {
 //              )
 //            } yield Redirect(redirectUri)
 //          }).getOrElse(Future.successful(Redirect(routes.CtUpdateAddressController.showPage)))
-          Future.successful(Redirect(routes.CtUpdateAddressController.showPage))
+          Future.successful(Redirect(routes.CtCheckYourAnswersController.showPage))
         }
       }
     )
