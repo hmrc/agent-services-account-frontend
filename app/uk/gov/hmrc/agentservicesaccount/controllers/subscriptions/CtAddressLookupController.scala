@@ -52,6 +52,11 @@ with Logging {
 
   //    TODO: 10906 Add in correct values for these messages
   private def alfJourneyLanguageLabels(implicit lang: Lang): JsObject = Json.obj(
+    "countryPickerLabels" -> Json.obj(
+      "title" -> messagesApi("asa.legacy.ct.address.country-picker.title"),
+      "heading" -> messagesApi("asa.legacy.ct.address.country-picker.heading"),
+      "countryLabel" -> ""
+    ),
     "lookupPageLabels" -> Json.obj(
       "title" -> messagesApi("asa.legacy.ct.address.lookup.title"),
       "heading" -> messagesApi("asa.legacy.ct.address.lookup.heading"),
@@ -88,7 +93,6 @@ with Logging {
     val alfJourneyConfig = JourneyConfigV2(
       options = JourneyOptions(
         continueUrl = continueUrl,
-        ukMode = Some(true),
         manualAddressEntryConfig = Some(ManualAddressEntryConfig(
           showOrganisationName = Some(false)
         ))
