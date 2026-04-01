@@ -53,30 +53,30 @@ with Logging {
   //    TODO: 10906 Add in correct values for these messages
   private def alfJourneyLanguageLabels(implicit lang: Lang): JsObject = Json.obj(
     "countryPickerLabels" -> Json.obj(
-      "title" -> messagesApi("asa.legacy.ct.address.country-picker.title"),
-      "heading" -> messagesApi("asa.legacy.ct.address.country-picker.heading"),
+      "title" -> messagesApi("asa.legacy.ct.alf.country-picker.title"),
+      "heading" -> messagesApi("asa.legacy.ct.alf.country-picker.heading"),
       "countryLabel" -> ""
     ),
     "lookupPageLabels" -> Json.obj(
-      "title" -> messagesApi("asa.legacy.ct.address.lookup.title"),
-      "heading" -> messagesApi("asa.legacy.ct.address.lookup.heading"),
-      "postcodeLabel" -> messagesApi("asa.legacy.ct.address.lookup.postcode.label")
+      "title" -> messagesApi("asa.legacy.ct.alf.lookup.title"),
+      "heading" -> messagesApi("asa.legacy.ct.alf.lookup.heading"),
+      "postcodeLabel" -> messagesApi("asa.legacy.ct.alf.lookup.postcode.label")
     ),
     "selectPageLabels" -> Json.obj(
-      "title" -> messagesApi("asa.legacy.ct.address.select.title"),
-      "title" -> messagesApi("asa.legacy.ct.address.select.heading")
+      "title" -> messagesApi("asa.legacy.ct.alf.select.title"),
+      "title" -> messagesApi("asa.legacy.ct.alf.select.heading")
     ),
     "editPageLabels" -> Json.obj(
-      "title" -> messagesApi("asa.legacy.ct.address.edit.title"),
-      "heading" -> messagesApi("asa.legacy.ct.address.edit.heading"),
-      "line1Label" -> messagesApi("asa.legacy.ct.address.edit.line1Label"),
-      "line2Label" -> messagesApi("asa.legacy.ct.address.edit.line2Label"),
-      "line3Label" -> messagesApi("asa.legacy.ct.address.edit.line3Label"),
-      "townLabel" -> messagesApi("asa.legacy.ct.address.edit.townLabel"),
-      "postcodeLabel" -> messagesApi("asa.legacy.ct.address.edit.postcodeLabel")
+      "title" -> messagesApi("asa.legacy.ct.alf.edit.title"),
+      "heading" -> messagesApi("asa.legacy.ct.alf.edit.heading"),
+      "line1Label" -> messagesApi("asa.legacy.ct.alf.edit.line1Label"),
+      "line2Label" -> messagesApi("asa.legacy.ct.alf.edit.line2Label"),
+      "line3Label" -> messagesApi("asa.legacy.ct.alf.edit.line3Label"),
+      "townLabel" -> messagesApi("asa.legacy.ct.alf.edit.townLabel"),
+      "postcodeLabel" -> messagesApi("asa.legacy.ct.alf.edit.postcodeLabel")
     ),
     "confirmPageLabels" -> Json.obj(
-      "title" -> messagesApi("asa.legacy.ct.address.confirm.title")
+      "title" -> messagesApi("asa.legacy.ct.alf.confirm.title")
     )
   )
 

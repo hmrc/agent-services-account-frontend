@@ -213,6 +213,22 @@ asa.legacy.ct.address.use-asa.true.hint=This is the address on your agent servic
 asa.legacy.ct.address.use-asa.false=I want to use a different address for Corporation Tax
 asa.legacy.ct.address.use-asa.error.required=TODO (Default option for address required error)
 
+asa.legacy.ct.alf.country-picker.title = asa.legacy.ct.alf.country-picker.title
+asa.legacy.ct.alf.country-picker.heading = asa.legacy.ct.alf.country-picker.heading
+asa.legacy.ct.alf.lookup.title = asa.legacy.ct.alf.lookup.title
+asa.legacy.ct.alf.lookup.heading = asa.legacy.ct.alf.lookup.heading
+asa.legacy.ct.alf.lookup.postcode.label = asa.legacy.ct.alf.lookup.postcode.label
+asa.legacy.ct.alf.select.title = asa.legacy.ct.alf.select.title
+asa.legacy.ct.alf.select.heading = asa.legacy.ct.alf.select.heading
+asa.legacy.ct.alf.edit.title = asa.legacy.ct.alf.edit.title
+asa.legacy.ct.alf.edit.heading = asa.legacy.ct.alf.edit.heading
+asa.legacy.ct.alf.edit.line1Label = asa.legacy.ct.alf.edit.line1Label
+asa.legacy.ct.alf.edit.line2Label = asa.legacy.ct.alf.edit.line2Label
+asa.legacy.ct.alf.edit.line3Label = asa.legacy.ct.alf.edit.line3Label
+asa.legacy.ct.alf.edit.townLabel = asa.legacy.ct.alf.edit.townLabel
+asa.legacy.ct.alf.edit.postcodeLabel = asa.legacy.ct.alf.edit.postcodeLabel
+asa.legacy.ct.alf.confirm.title = asa.legacy.ct.alf.confirm.title
+
 asa.legacy.ct.check-your-answers.h1=Check your answers
 asa.legacy.ct.check-your-answers.business-name=Business name
 asa.legacy.ct.check-your-answers.phone-number=Telephone number
