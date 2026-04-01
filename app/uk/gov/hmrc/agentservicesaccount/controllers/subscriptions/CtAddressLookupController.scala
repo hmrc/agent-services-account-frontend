@@ -25,7 +25,8 @@ import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AddressLookupConnector
 import uk.gov.hmrc.agentservicesaccount.controllers._
-import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.{addressLookupFinish, getNextPage}
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.addressLookupFinish
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup._
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
@@ -49,6 +50,31 @@ extends FrontendController(cc)
 with I18nSupport
 with Logging {
 
+  //    TODO: 10906 Add in correct values for these messages
+  private def alfJourneyLanguageLabels(implicit lang: Lang): JsObject = Json.obj(
+    "lookupPageLabels" -> Json.obj(
+      "title" -> messagesApi("asa.legacy.ct.address.lookup.title"),
+      "heading" -> messagesApi("asa.legacy.ct.address.lookup.heading"),
+      "postcodeLabel" -> messagesApi("asa.legacy.ct.address.lookup.postcode.label")
+    ),
+    "selectPageLabels" -> Json.obj(
+      "title" -> messagesApi("asa.legacy.ct.address.select.title"),
+      "title" -> messagesApi("asa.legacy.ct.address.select.heading")
+    ),
+    "editPageLabels" -> Json.obj(
+      "title" -> messagesApi("asa.legacy.ct.address.edit.title"),
+      "heading" -> messagesApi("asa.legacy.ct.address.edit.heading"),
+      "line1Label" -> messagesApi("asa.legacy.ct.address.edit.line1Label"),
+      "line2Label" -> messagesApi("asa.legacy.ct.address.edit.line2Label"),
+      "line3Label" -> messagesApi("asa.legacy.ct.address.edit.line3Label"),
+      "townLabel" -> messagesApi("asa.legacy.ct.address.edit.townLabel"),
+      "postcodeLabel" -> messagesApi("asa.legacy.ct.address.edit.postcodeLabel")
+    ),
+    "confirmPageLabels" -> Json.obj(
+      "title" -> messagesApi("asa.legacy.ct.address.confirm.title")
+    )
+  )
+
   def startAddressLookup: Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
     val continueUrl: String = {
       val useAbsoluteUrls = appConfig.addressLookupBaseUrl.contains("localhost")
@@ -59,36 +85,18 @@ with Logging {
         call.url
     }
 
-//    TODO: 10906 Verify what these messages values should now be???
-    def languageLabels(implicit lang: Lang): JsObject = Json.obj(
-      "countryPickerLabels" -> Json.obj(
-        "title" -> messagesApi("update-contact-details.address.country-picker.title"),
-        "heading" -> messagesApi("update-contact-details.address.country-picker"),
-        "countryLabel" -> ""
-      ),
-      "lookupPageLabels" -> Json.obj(
-        "title" -> messagesApi("update-contact-details.address.lookup.title"),
-        "heading" -> messagesApi("update-contact-details.address.lookup")
-      ),
-      "selectPageLabels" -> Json.obj(
-        "title" -> messagesApi("update-contact-details.address.select.title")
-      ),
-      "editPageLabels" -> Json.obj(
-        "title" -> messagesApi("update-contact-details.address.edit.title")
-      ),
-      "confirmPageLabels" -> Json.obj(
-        "title" -> messagesApi("update-contact-details.address.confirm.title")
-      )
-    )
-
     val alfJourneyConfig = JourneyConfigV2(
       options = JourneyOptions(
-        continueUrl = continueUrl
+        continueUrl = continueUrl,
+        ukMode = Some(true),
+        manualAddressEntryConfig = Some(ManualAddressEntryConfig(
+          showOrganisationName = Some(false)
+        ))
       ),
       version = 2,
       labels = Some(JourneyLabels(
-        en = Some(languageLabels(Lang("en"))),
-        cy = Some(languageLabels(Lang("cy")))
+        en = Some(alfJourneyLanguageLabels(Lang("en"))),
+        cy = Some(alfJourneyLanguageLabels(Lang("cy")))
       ))
     )
 
