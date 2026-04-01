@@ -90,12 +90,27 @@ with Logging {
         call.url
     }
 
+    val mandatoryFieldsConfig = MandatoryFieldsConfig(
+      addressLine1 = None,
+      addressLine2 = None,
+      addressLine3 = None,
+      town = None,
+      postcode = None
+    )
+
+    val manualAddressEntryConfig = ManualAddressEntryConfig(
+       line1MaxLength= None,
+       line2MaxLength= None,
+       line3MaxLength= None,
+       townMaxLength= None,
+       mandatoryFields = Some(mandatoryFieldsConfig),
+       showOrganisationName = Some(false)
+     )
+
     val alfJourneyConfig = JourneyConfigV2(
       options = JourneyOptions(
         continueUrl = continueUrl,
-        manualAddressEntryConfig = Some(ManualAddressEntryConfig(
-          showOrganisationName = Some(false)
-        ))
+        manualAddressEntryConfig = Some(manualAddressEntryConfig)
       ),
       version = 2,
       labels = Some(JourneyLabels(

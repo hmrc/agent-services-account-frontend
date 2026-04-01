@@ -65,8 +65,20 @@ case class ConfirmPageConfig(
   showConfirmChangeText: Option[Boolean] = None
 )
 
+case class MandatoryFieldsConfig(
+  addressLine1: Option[Boolean] = None,
+  addressLine2: Option[Boolean] = None,
+  addressLine3: Option[Boolean] = None,
+  town: Option[Boolean] = None,
+  postcode: Option[Boolean] = None
+)
+
 case class ManualAddressEntryConfig(
-//  TODO: 10906 Add in all fields needed here
+  line1MaxLength: Option[Int] = None,
+  line2MaxLength: Option[Int] = None,
+  line3MaxLength: Option[Int] = None,
+  townMaxLength: Option[Int] = None,
+  mandatoryFields: Option[MandatoryFieldsConfig] = None,
   showOrganisationName: Option[Boolean] = None
 )
 
@@ -86,6 +98,7 @@ object JourneyConfigV2 {
   implicit val labelsFormat: Format[JourneyLabels] = Json.format[JourneyLabels]
   implicit val selectConfigFormat: Format[SelectPageConfig] = Json.format[SelectPageConfig]
   implicit val confirmConfigFormat: Format[ConfirmPageConfig] = Json.format[ConfirmPageConfig]
+  implicit val mandatoryFieldsConfigFormat: Format[MandatoryFieldsConfig] = Json.format[MandatoryFieldsConfig]
   implicit val manualAddressEntryConfigFormat: Format[ManualAddressEntryConfig] = Json.format[ManualAddressEntryConfig]
   implicit val timeoutFormat: Format[TimeoutConfig] =
     (
