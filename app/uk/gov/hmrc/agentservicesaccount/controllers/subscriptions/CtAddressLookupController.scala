@@ -25,9 +25,9 @@ import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AddressLookupConnector
 import uk.gov.hmrc.agentservicesaccount.controllers._
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.{addressLookupFinish, getNextPage}
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup._
-import uk.gov.hmrc.agentservicesaccount.services.AgentRecordService
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
@@ -42,7 +42,6 @@ class CtAddressLookupController @Inject() (
   alfConnector: AddressLookupConnector
 )(implicit
   appConfig: AppConfig,
-  agentRecordService: AgentRecordService,
   cc: MessagesControllerComponents,
   val ec: ExecutionContext
 )
@@ -98,7 +97,9 @@ with Logging {
     }
   }
 
-  def finishAddressLookup(id: Option[String]): Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
+  def finishAddressLookup(id: Option[String]): Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
+    val journey = request.ctSubscriptionJourney
+
     id match {
       case None => Future.successful(BadRequest)
       case Some(addressJourneyId) =>
@@ -112,15 +113,13 @@ with Logging {
             postalCode = confirmedAddressResponse.address.postcode,
             countryCode = confirmedAddressResponse.address.country.map(_.code).get
           )
-//            _ <- draftDetailsService.updateDraftDetails(desiDetails =>
-//              desiDetails.copy(agencyDetails = desiDetails.agencyDetails.copy(agencyAddress = Some(newBusinessAddress)))
-//            )
-//            journeyComplete <- isJourneyComplete()
-//          TODO: 10906 Save ALF response to CtJourney
+          updatedJourney = journey.copy(
+            useCustomAddress = Some(true),
+            addressAnswer = Some(newBusinessAddress)
+          )
+          _ <- sessionCacheService.put(ctJourneyKey, updatedJourney)
         } yield {
-//            getNextPage(journeyComplete, "address")
-//          TODO: 10906 Redirect using CtNextPageSelector
-          Redirect(routes.AgentServicesController.root())
+          Redirect(getNextPage(addressLookupFinish, Some(updatedJourney)))
         }
     }
   }
