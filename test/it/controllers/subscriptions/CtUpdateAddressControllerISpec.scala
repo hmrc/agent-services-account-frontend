@@ -22,8 +22,8 @@ import stubs.AgentServicesAccountStubs.stubASAGetResponseError
 import support.ComponentBaseISpec
 import uk.gov.hmrc.agentservicesaccount.actions.CtJourney
 import uk.gov.hmrc.agentservicesaccount.controllers.ctJourneyKey
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
 import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
-import uk.gov.hmrc.agentservicesaccount.models.emailverification.VerificationStatusResponse
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
 
 class CtUpdateAddressControllerISpec
@@ -88,28 +88,27 @@ extends ComponentBaseISpec {
       updated.value.addressAnswer shouldBe None
     }
 
-//    TODO: 10906 Implement this IT
-//    "(if not using ASA address) redirect to the ALF external journey" in {
-//
-//      givenFullAuthorisedAsAgentWith(
-//        arn = arn.value,
-//        providerId = "cred-id",
-//        email = "abc@abc.com"
-//      )
-//      givenGetAgentRecord(agentRecord)
-//      stubASAGetResponseError(arn, NOT_FOUND)
-//
-//      val result =
-//        post(updateAddressPath)(body =
-//          Map(
-//            "emailAddressUseAsaData" -> Seq("false")
-//          )
-//        )
-//
-//      result.status shouldBe SEE_OTHER
-//
-//      result.header("Location").get shouldBe "http://localhost:9890/continue-url"
-//    }
+    "(if not using ASA address) redirect to the ALF external journey" in {
+
+      givenFullAuthorisedAsAgentWith(
+        arn = arn.value,
+        providerId = "cred-id",
+        email = "abc@abc.com"
+      )
+      givenGetAgentRecord(agentRecord)
+      stubASAGetResponseError(arn, NOT_FOUND)
+
+      val result =
+        post(updateAddressPath)(body =
+          Map(
+            "addressUseAsaData" -> Seq("false")
+          )
+        )
+
+      result.status shouldBe SEE_OTHER
+
+      result.header("Location").get shouldBe s"${subscriptions.routes.CtAddressLookupController.startAddressLookup}"
+    }
   }
 
 }
