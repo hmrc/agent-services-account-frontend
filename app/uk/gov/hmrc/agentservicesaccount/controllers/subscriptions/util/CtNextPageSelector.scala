@@ -27,6 +27,7 @@ object CtNextPageSelector {
   val updatePhoneNumberPage = "phoneNumber"
   val updateEmailAddressPage = "emailAddress"
   val emailVerificationFinish = "emailVerificationFinish"
+  val updateAddressPage = "address"
   val checkYourAnswersPage = "checkYourAnswers"
 
   private val nextPage: (
@@ -37,10 +38,15 @@ object CtNextPageSelector {
     case (`updatePhoneNumberPage`, _) => subscriptions.routes.CtUpdateEmailAddressController.showPage
     case (`updateEmailAddressPage`, Some(journey)) =>
       journey.useCustomEmail match {
-        case Some(false) => subscriptions.routes.CtCheckYourAnswersController.showPage
+        case Some(false) => subscriptions.routes.CtUpdateAddressController.showPage
         case _ => subscriptions.routes.CtUpdateEmailAddressController.showPage
       }
-    case (`emailVerificationFinish`, _) => subscriptions.routes.CtCheckYourAnswersController.showPage
+    case (`emailVerificationFinish`, _) => subscriptions.routes.CtUpdateAddressController.showPage
+    case (`updateAddressPage`, Some(journey)) =>
+      journey.useCustomAddress match {
+        case Some(false) => subscriptions.routes.CtCheckYourAnswersController.showPage
+        case _ => subscriptions.routes.CtUpdateAddressController.showPage
+      }
     case (`checkYourAnswersPage`, _) => homeRoutes.AgentServicesController.root()
   }
 

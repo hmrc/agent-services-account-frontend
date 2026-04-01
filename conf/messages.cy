@@ -192,6 +192,14 @@ asa.legacy.ct.business-name.use-asa.error.required=TODO (Default option for busi
 asa.legacy.ct.business-name.new-input.error.empty=TODO (New business name input empty error)
 asa.legacy.ct.business-name.new-input.error.invalid=TODO (New business name input invalid error)
 
+asa.legacy.ct.phone-number.title=What phone number should we show to call you about Corporation Tax?
+asa.legacy.ct.phone-number.use-asa.false=I want to use a different phone number for Corporation Tax
+asa.legacy.ct.phone-number.new-input.label=Enter a phone number
+asa.legacy.ct.phone-number.new-input.hint=For international numbers include the country code.
+asa.legacy.ct.phone-number.use-asa.error.required=TODO (Default option required error)
+asa.legacy.ct.phone-number.new-input.error.empty=TODO (New phone number input empty error)
+asa.legacy.ct.phone-number.new-input.error.invalid=TODO (New phone number input invalid error)
+
 asa.legacy.ct.email-address.title=What email address should we use to contact you about Corporation Tax?
 asa.legacy.ct.email-address.use-asa.false=I want to use a different email address for Corporation Tax
 asa.legacy.ct.email-address.new-input.label=Enter an email address
@@ -199,6 +207,11 @@ asa.legacy.ct.email-address.new-input.hint=We’ll send a code to this email add
 asa.legacy.ct.email-address.use-asa.error.required=TODO (Default option for email address required error)
 asa.legacy.ct.email-address.new-input.error.empty=TODO (New email address input empty error)
 asa.legacy.ct.email-address.new-input.error.invalid=TODO (New email address input invalid error)
+
+asa.legacy.ct.address.title=What address should we use to send letters about Corporation Tax?
+asa.legacy.ct.address.use-asa.true.hint=This is the address on your agent services account.
+asa.legacy.ct.address.use-asa.false=I want to use a different address for Corporation Tax
+asa.legacy.ct.address.use-asa.error.required=TODO (Default option for address required error)
 
 asa.legacy.ct.check-your-answers.h1=Check your answers
 asa.legacy.ct.check-your-answers.business-name=Business name

@@ -1,0 +1,76 @@
+@*
+ * Copyright 2024 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+@import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
+@import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtAddressFormValues
+@import uk.gov.hmrc.agentservicesaccount.views.html.main
+@import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
+@import uk.gov.hmrc.govukfrontend.views.html.components._
+@import uk.gov.hmrc.hmrcfrontend.views.Implicits.RichErrorSummary
+
+@this(
+    main: main,
+    h1: h1, p: p,
+    formWithCSRF: FormWithCSRF,
+    govukInput: GovukInput,
+    govukFieldset: GovukFieldset,
+    govukRadios: GovukRadios,
+    govukSummaryList: GovukSummaryList,
+    govukInsetText : GovukInsetText,
+    govukButton: GovukButton,
+    govukErrorSummary: GovukErrorSummary
+)
+
+@(form: Form[CtAddressFormValues], subscriptionAddress: String)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
+
+@main(
+    pageTitle = withErrorPrefix(form.hasErrors, msgs("asa.legacy.ct.address.title")),
+    mimicBrowserBackLink = true,
+    showSecondaryNav = false
+) {
+
+    @if(form.hasErrors) {
+        @govukErrorSummary(ErrorSummary().withFormErrorsAsText(form))
+    }
+
+    @formWithCSRF(action = subscriptions.routes.CtUpdateAddressController.onSubmit) {
+        @govukRadios(Radios(
+            fieldset = Some(Fieldset(
+                legend = Some(Legend(
+                    content = Text(msgs("asa.legacy.ct.address.title")),
+                    classes = "govuk-fieldset__legend--l",
+                    isPageHeading = true
+                ))
+            )),
+            name = "addressUseAsaData",
+            items = Seq(
+                RadioItem(
+                    content = Text(subscriptionAddress),
+                    value = Some("true"),
+                    hint = Some(Hint(content = Text(msgs("asa.legacy.ct.address.use-asa.true.hint"))))
+                ),
+                RadioItem(
+                    content = Text(msgs("asa.legacy.ct.address.use-asa.false")),
+                    value = Some("false")
+                )
+            )
+        ).withFormField(form("addressUseAsaData")))
+
+        @govukButton(Button(content = Text(msgs("common.continue"))))
+    }
+
+}

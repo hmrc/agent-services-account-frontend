@@ -30,3 +30,7 @@ case class CtEmailAddressFormValues(
   useAsaData: Boolean,
   newEmailAddress: Option[String]
 )
+
+case class CtAddressFormValues(
+  useAsaData: Boolean
+)
