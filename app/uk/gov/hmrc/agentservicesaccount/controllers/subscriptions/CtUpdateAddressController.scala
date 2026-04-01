@@ -39,7 +39,6 @@ import scala.concurrent.Future
 class CtUpdateAddressController @Inject() (
   actions: Actions,
   val sessionCacheService: SessionCacheService,
-//  emailVerificationService: AddressVerificationService,
   ct_update_address: ct_update_address,
   cc: MessagesControllerComponents
 )(implicit
