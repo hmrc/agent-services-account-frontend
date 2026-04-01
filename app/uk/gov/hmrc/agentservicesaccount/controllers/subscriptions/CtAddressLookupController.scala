@@ -99,13 +99,13 @@ with Logging {
     )
 
     val manualAddressEntryConfig = ManualAddressEntryConfig(
-       line1MaxLength= None,
-       line2MaxLength= None,
-       line3MaxLength= None,
-       townMaxLength= None,
-       mandatoryFields = Some(mandatoryFieldsConfig),
-       showOrganisationName = Some(false)
-     )
+      line1MaxLength = None,
+      line2MaxLength = None,
+      line3MaxLength = None,
+      townMaxLength = None,
+      mandatoryFields = Some(mandatoryFieldsConfig),
+      showOrganisationName = Some(false)
+    )
 
     val alfJourneyConfig = JourneyConfigV2(
       options = JourneyOptions(
