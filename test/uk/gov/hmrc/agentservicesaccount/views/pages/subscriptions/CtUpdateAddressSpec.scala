@@ -17,7 +17,8 @@
 package uk.gov.hmrc.agentservicesaccount.views.pages.subscriptions
 
 import org.jsoup.Jsoup
-import org.jsoup.nodes.{Document, Element}
+import org.jsoup.nodes.Document
+import org.jsoup.nodes.Element
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.data.Form
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionAddressForm

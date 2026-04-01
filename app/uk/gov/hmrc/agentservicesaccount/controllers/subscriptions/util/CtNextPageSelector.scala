@@ -29,6 +29,7 @@ object CtNextPageSelector {
   val emailVerificationFinish = "emailVerificationFinish"
   val updateAddressPage = "address"
   val checkYourAnswersPage = "checkYourAnswers"
+  val confirmationPage = "confirmationAnswers"
 
   private val nextPage: (
     String,
@@ -47,7 +48,8 @@ object CtNextPageSelector {
         case Some(false) => subscriptions.routes.CtCheckYourAnswersController.showPage
         case _ => subscriptions.routes.CtUpdateAddressController.showPage
       }
-    case (`checkYourAnswersPage`, _) => homeRoutes.AgentServicesController.root()
+    case (`checkYourAnswersPage`, _) => subscriptions.routes.CtConfirmationController.showConfirmationPage
+    case (`confirmationPage`, _) => homeRoutes.AgentServicesController.root()
   }
 
   def getNextPage(

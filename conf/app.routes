@@ -112,6 +112,8 @@ POST       /ct-subscription/address                                       @uk.go
 GET        /ct-subscription/check-your-answers                            @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtCheckYourAnswersController.showPage
 POST       /ct-subscription/check-your-answers                            @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtCheckYourAnswersController.onSubmit
 
+GET        /ct-subscription/confirmation                                  @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtConfirmationController.showConfirmationPage
+
 # AMLS
 GET        /manage-account/money-laundering-supervision/view-details                     @uk.gov.hmrc.agentservicesaccount.controllers.amls.ViewDetailsController.showPage
 

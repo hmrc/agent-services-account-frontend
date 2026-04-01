@@ -223,7 +223,7 @@ with MockFactory {
       val result = controller.onSubmit()(fakeRequest).futureValue
 
       status(result) shouldBe SEE_OTHER
-      redirectLocation(result).value should include("/email-address")
+      redirectLocation(result).value should include("/confirmation")
     }
 
     "return BAD_REQUEST when journey data missing" in new TestSetup {
