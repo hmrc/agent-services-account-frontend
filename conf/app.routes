@@ -109,6 +109,9 @@ GET        /ct-subscription/email-verification-finish                     @uk.go
 GET        /ct-subscription/address                                       @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtUpdateAddressController.showPage
 POST       /ct-subscription/address                                       @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtUpdateAddressController.onSubmit
 
+GET        /ct-subscription/address-lookup-start                          @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtAddressLookupController.startAddressLookup
+GET        /ct-subscription/address-lookup-finish                         @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtAddressLookupController.finishAddressLookup(id: Option[String])
+
 GET        /ct-subscription/check-your-answers                            @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtCheckYourAnswersController.showPage
 POST       /ct-subscription/check-your-answers                            @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtCheckYourAnswersController.onSubmit
 
