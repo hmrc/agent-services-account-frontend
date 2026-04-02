@@ -42,7 +42,11 @@ extends ComponentBaseISpec {
     auditRef = "foo",
     id = Some("bar"),
     address = ConfirmedResponseAddressDetails(
-      lines = Some(Seq("Line 1", "Line 2", "Line 3")),
+      lines = Some(Seq(
+        "Line 1",
+        "Line 2",
+        "Line 3"
+      )),
       postcode = Some("AA1 1AA"),
       country = Some(Country("GB", ""))
     )
