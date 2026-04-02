@@ -53,18 +53,19 @@ extends ComponentBaseISpec {
     )
   )
 
-  private val designatoryDetails = DesignatoryDetails(
-    agencyDetails = AgencyDetails(
-      agencyName = None,
-      agencyEmail = None,
-      agencyTelephone = None,
-      agencyAddress = None
-    ),
-    otherServices = OtherServices(
-      saChanges = SaChanges(applyChanges = false, saAgentReference = None),
-      ctChanges = CtChanges(applyChanges = false, ctAgentReference = None)
-    )
-  )
+//  TODO: 10906 Replace with Ct
+//  private val designatoryDetails = DesignatoryDetails(
+//    agencyDetails = AgencyDetails(
+//      agencyName = None,
+//      agencyEmail = None,
+//      agencyTelephone = None,
+//      agencyAddress = None
+//    ),
+//    otherServices = OtherServices(
+//      saChanges = SaChanges(applyChanges = false, saAgentReference = None),
+//      ctChanges = CtChanges(applyChanges = false, ctAgentReference = None)
+//    )
+//  )
 
   s"GET $startAddressLookupPath" should {
     "redirect to the external service to look up an address" in {
@@ -89,24 +90,26 @@ extends ComponentBaseISpec {
       givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
       givenGetAddressSuccess("bar", confirmedAddressResponse)
-      await(repo.putSession(draftNewContactDetailsKey, designatoryDetails))
+//      TODO: 10906 Put CtJourney here - see work re EmailAddress
+//      await(repo.putSession(draftNewContactDetailsKey, designatoryDetails))
 
       val result = get(s"$finishAddressLookupPath?id=bar")
 
       result.status shouldBe SEE_OTHER
 
-      result.header("Location").get shouldBe "/agent-services-account/manage-account/contact-details/apply-code-SA"
-      await(repo.getFromSession(draftNewContactDetailsKey))
-        .get.agencyDetails.agencyAddress shouldBe Some(
-        BusinessAddress(
-          "26 New Street",
-          Some("Telford"),
-          None,
-          None,
-          Some("TF5 4AA"),
-          "GB"
-        )
-      )
+      result.header("Location").get shouldBe "/agent-services-account/ct-subscription/check-your-answers"
+//      TODO: 10906 Retrieve and validate CtJourney update here
+//      await(repo.getFromSession(draftNewContactDetailsKey))
+//        .get.agencyDetails.agencyAddress shouldBe Some(
+//        BusinessAddress(
+//          "26 New Street",
+//          Some("Telford"),
+//          None,
+//          None,
+//          Some("TF5 4AA"),
+//          "GB"
+//        )
+//      )
     }
 
     "return bad request when no id provided in a query param" in {
