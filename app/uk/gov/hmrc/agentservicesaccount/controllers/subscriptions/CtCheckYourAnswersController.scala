@@ -104,40 +104,10 @@ with I18nSupport {
     )
   )
 
-//  TODO: 10906 Make this an implicit conversion on the model class
-  private def getCtCyaData(journey: CtJourney): Option[CtCyaData] =
-    for {
-      businessName <-
-        journey.useCustomBusinessName match {
-          case Some(true) => journey.businessNameAnswer
-          case _ => journey.asaDetails.agencyName
-        }
-      phoneNumber <-
-        journey.useCustomPhoneNumber match {
-          case Some(true) => journey.phoneNumberAnswer
-          case _ => journey.asaDetails.agencyTelephone
-        }
-      email <-
-        journey.useCustomEmail match {
-          case Some(true) => journey.emailAnswer
-          case _ => journey.asaDetails.agencyEmail
-        }
-      address <-
-        journey.useCustomAddress match {
-          case Some(true) => journey.addressAnswer
-          case _ => journey.asaDetails.agencyAddress
-        }
-    } yield CtCyaData(
-      agencyName = businessName,
-      agencyEmail = email,
-      agencyTelephone = phoneNumber,
-      agencyAddress = address
-    )
-
   private def withCtCyaData(
     journey: CtJourney
   )(f: CtCyaData => Future[Result]): Future[Result] =
-    getCtCyaData(journey) match {
+    (journey: Option[CtCyaData]) match {
       case Some(data) => f(data)
       case None =>
         Future.successful(
