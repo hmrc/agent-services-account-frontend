@@ -18,12 +18,19 @@ package it.controllers.subscriptions
 
 import play.api.test.Helpers._
 import stubs.AddressLookupStubs._
-import stubs.AgentServicesAccountStubs.{givenGetAgentRecord, stubASAGetResponseError}
+import stubs.AgentServicesAccountStubs.givenGetAgentRecord
+import stubs.AgentServicesAccountStubs.stubASAGetResponseError
 import support.ComponentBaseISpec
 import uk.gov.hmrc.agentservicesaccount.controllers.draftNewContactDetailsKey
-import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, BusinessAddress}
-import uk.gov.hmrc.agentservicesaccount.models.addresslookup.{ConfirmedResponseAddress, ConfirmedResponseAddressDetails, Country}
-import uk.gov.hmrc.agentservicesaccount.models.desiDetails.{CtChanges, DesignatoryDetails, OtherServices, SaChanges}
+import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
+import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
+import uk.gov.hmrc.agentservicesaccount.models.addresslookup.ConfirmedResponseAddress
+import uk.gov.hmrc.agentservicesaccount.models.addresslookup.ConfirmedResponseAddressDetails
+import uk.gov.hmrc.agentservicesaccount.models.addresslookup.Country
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.CtChanges
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.DesignatoryDetails
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.OtherServices
+import uk.gov.hmrc.agentservicesaccount.models.desiDetails.SaChanges
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
 
 //TODO: 10906 Implements these ITs correctly
@@ -32,10 +39,8 @@ extends ComponentBaseISpec {
 
   private val repo = inject[SessionCacheRepository]
 
-  private val StartAddressLookupPath = s"$ctSubscriptionStartPath/new-address"
-  private val FinishAddressLookupPath = s"$ctSubscriptionStartPath/address-lookup-finish"
-  private val ConfirmationPath = s"$ctSubscriptionStartPath/confirmation"
-  private val ShowBeforeYouStartPath = s"$ctSubscriptionStartPath/start-update"
+  private val startAddressLookupPath = s"$ctSubscriptionStartPath/address-lookup-start"
+  private val finishAddressLookupPath = s"$ctSubscriptionStartPath/address-lookup-finish"
 
   private val confirmedAddressResponse = ConfirmedResponseAddress(
     auditRef = "foo",
@@ -61,7 +66,7 @@ extends ComponentBaseISpec {
     )
   )
 
-  s"GET $StartAddressLookupPath" should {
+  s"GET $startAddressLookupPath" should {
     "redirect to the external service to look up an address" in {
 
       givenAuthorisedAsAgentWith(arn.value)
@@ -69,7 +74,7 @@ extends ComponentBaseISpec {
       givenInitSuccess()
       stubASAGetResponseError(arn, NOT_FOUND)
 
-      val result = get(StartAddressLookupPath)
+      val result = get(startAddressLookupPath)
 
       result.status shouldBe SEE_OTHER
 
@@ -77,7 +82,7 @@ extends ComponentBaseISpec {
     }
   }
 
-  s"GET $FinishAddressLookupPath" should {
+  s"GET $finishAddressLookupPath" should {
     "store the new address in session and redirect to review new details page" in {
 
       givenAuthorisedAsAgentWith(arn.value)
@@ -86,7 +91,7 @@ extends ComponentBaseISpec {
       givenGetAddressSuccess("bar", confirmedAddressResponse)
       await(repo.putSession(draftNewContactDetailsKey, designatoryDetails))
 
-      val result = get(s"$FinishAddressLookupPath?id=bar")
+      val result = get(s"$finishAddressLookupPath?id=bar")
 
       result.status shouldBe SEE_OTHER
 
@@ -110,37 +115,9 @@ extends ComponentBaseISpec {
       givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
 
-      val result = get(s"$FinishAddressLookupPath")
+      val result = get(s"$finishAddressLookupPath")
 
       result.status shouldBe BAD_REQUEST
-    }
-  }
-
-  s"GET $ConfirmationPath" should {
-    "display the confirmation page" in {
-
-      givenAuthorisedAsAgentWith(arn.value)
-      givenGetAgentRecord(agentRecord)
-      stubASAGetResponseError(arn, NOT_FOUND)
-
-      val result = get(ConfirmationPath)
-
-      result.status shouldBe OK
-      assertPageHasTitle("You have submitted new contact details")(result)
-    }
-  }
-
-  s"GET $ShowBeforeYouStartPath" should {
-    "display the page" in {
-
-      givenAuthorisedAsAgentWith(arn.value)
-      givenGetAgentRecord(agentRecord)
-      stubASAGetResponseError(arn, NOT_FOUND)
-
-      val result = get(ShowBeforeYouStartPath)
-
-      result.status shouldBe OK
-      assertPageHasTitle("Contact details")(result)
     }
   }
 
