@@ -50,7 +50,6 @@ extends FrontendController(cc)
 with I18nSupport
 with Logging {
 
-  //    TODO: 10906 Add in correct values for these messages
   private def alfJourneyLanguageLabels(implicit lang: Lang): JsObject = {
     val editPageLabels = Json.obj(
       "title" -> messagesApi("asa.legacy.ct.alf.edit.title"),
