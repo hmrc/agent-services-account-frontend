@@ -51,34 +51,35 @@ with I18nSupport
 with Logging {
 
   //    TODO: 10906 Add in correct values for these messages
-  private def alfJourneyLanguageLabels(implicit lang: Lang): JsObject = Json.obj(
-    "countryPickerLabels" -> Json.obj(
-      "title" -> messagesApi("asa.legacy.ct.alf.country-picker.title"),
-      "heading" -> messagesApi("asa.legacy.ct.alf.country-picker.heading"),
-      "countryLabel" -> ""
-    ),
-    "lookupPageLabels" -> Json.obj(
-      "title" -> messagesApi("asa.legacy.ct.alf.lookup.title"),
-      "heading" -> messagesApi("asa.legacy.ct.alf.lookup.heading"),
-      "postcodeLabel" -> messagesApi("asa.legacy.ct.alf.lookup.postcode.label")
-    ),
-    "selectPageLabels" -> Json.obj(
-      "title" -> messagesApi("asa.legacy.ct.alf.select.title"),
-      "title" -> messagesApi("asa.legacy.ct.alf.select.heading")
-    ),
-    "editPageLabels" -> Json.obj(
+  private def alfJourneyLanguageLabels(implicit lang: Lang): JsObject = {
+    val editPageLabels = Json.obj(
       "title" -> messagesApi("asa.legacy.ct.alf.edit.title"),
       "heading" -> messagesApi("asa.legacy.ct.alf.edit.heading"),
-      "line1Label" -> messagesApi("asa.legacy.ct.alf.edit.line1Label"),
-      "line2Label" -> messagesApi("asa.legacy.ct.alf.edit.line2Label"),
-      "line3Label" -> messagesApi("asa.legacy.ct.alf.edit.line3Label"),
-      "townLabel" -> messagesApi("asa.legacy.ct.alf.edit.townLabel"),
-      "postcodeLabel" -> messagesApi("asa.legacy.ct.alf.edit.postcodeLabel")
-    ),
-    "confirmPageLabels" -> Json.obj(
-      "title" -> messagesApi("asa.legacy.ct.alf.confirm.title")
+      "townLabel" -> messagesApi("asa.legacy.ct.alf.edit.townLabel")
     )
-  )
+    Json.obj(
+      "countryPickerLabels" -> Json.obj(
+        "title" -> messagesApi("asa.legacy.ct.alf.country-picker.title"),
+        "heading" -> messagesApi("asa.legacy.ct.alf.country-picker.heading"),
+        "countryLabel" -> ""
+      ),
+      "lookupPageLabels" -> Json.obj(
+        "title" -> messagesApi("asa.legacy.ct.alf.lookup.title"),
+        "heading" -> messagesApi("asa.legacy.ct.alf.lookup.heading"),
+        "postcodeLabel" -> messagesApi("asa.legacy.ct.alf.lookup.postcode.label")
+      ),
+      "selectPageLabels" -> Json.obj(
+        "title" -> messagesApi("asa.legacy.ct.alf.select.title")
+      ),
+      "editPageLabels" -> editPageLabels,
+      "international" -> Json.obj(
+        "editPageLabels" -> editPageLabels
+      ),
+      "confirmPageLabels" -> Json.obj(
+        "title" -> messagesApi("asa.legacy.ct.alf.confirm.title")
+      )
+    )
+  }
 
   def startAddressLookup: Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
     val continueUrl: String = {
@@ -91,10 +92,10 @@ with Logging {
     }
 
     val mandatoryFieldsConfig = MandatoryFieldsConfig(
-      addressLine1 = None,
-      addressLine2 = None,
-      addressLine3 = None,
-      town = None,
+      addressLine1 = Some(true),
+      addressLine2 = Some(true),
+      addressLine3 = Some(true),
+      town = Some(false),
       postcode = None
     )
 
