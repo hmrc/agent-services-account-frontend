@@ -100,10 +100,11 @@ with Logging {
     )
 
     val manualAddressEntryConfig = ManualAddressEntryConfig(
-      line1MaxLength = Some(28),
-      line2MaxLength = Some(28),
-      line3MaxLength = Some(28),
-      townMaxLength = Some(18),
+//      TODO: 10906 Below config is giving 400 from ALF???
+//      line1MaxLength = Some(28),
+//      line2MaxLength = Some(28),
+//      line3MaxLength = Some(28),
+//      townMaxLength = Some(18),
       mandatoryFields = Some(mandatoryFieldsConfig),
       showOrganisationName = Some(false)
     )
