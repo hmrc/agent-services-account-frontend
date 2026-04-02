@@ -21,19 +21,15 @@ import stubs.AddressLookupStubs._
 import stubs.AgentServicesAccountStubs.givenGetAgentRecord
 import stubs.AgentServicesAccountStubs.stubASAGetResponseError
 import support.ComponentBaseISpec
-import uk.gov.hmrc.agentservicesaccount.controllers.draftNewContactDetailsKey
+import uk.gov.hmrc.agentservicesaccount.actions.CtJourney
+import uk.gov.hmrc.agentservicesaccount.controllers.ctJourneyKey
 import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup.ConfirmedResponseAddress
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup.ConfirmedResponseAddressDetails
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup.Country
-import uk.gov.hmrc.agentservicesaccount.models.desiDetails.CtChanges
-import uk.gov.hmrc.agentservicesaccount.models.desiDetails.DesignatoryDetails
-import uk.gov.hmrc.agentservicesaccount.models.desiDetails.OtherServices
-import uk.gov.hmrc.agentservicesaccount.models.desiDetails.SaChanges
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
 
-//TODO: 10906 Implements these ITs correctly
 class CtAddressLookupControllerISpec
 extends ComponentBaseISpec {
 
@@ -46,26 +42,37 @@ extends ComponentBaseISpec {
     auditRef = "foo",
     id = Some("bar"),
     address = ConfirmedResponseAddressDetails(
-      organisation = Some("My Agency"),
-      lines = Some(Seq("26 New Street", "Telford")),
-      postcode = Some("TF5 4AA"),
+      lines = Some(Seq("Line 1", "Line 2", "Line 3")),
+      postcode = Some("AA1 1AA"),
       country = Some(Country("GB", ""))
     )
   )
 
-//  TODO: 10906 Replace with Ct
-//  private val designatoryDetails = DesignatoryDetails(
-//    agencyDetails = AgencyDetails(
-//      agencyName = None,
-//      agencyEmail = None,
-//      agencyTelephone = None,
-//      agencyAddress = None
-//    ),
-//    otherServices = OtherServices(
-//      saChanges = SaChanges(applyChanges = false, saAgentReference = None),
-//      ctChanges = CtChanges(applyChanges = false, ctAgentReference = None)
-//    )
-//  )
+  private val address = BusinessAddress(
+    addressLine1 = "Line 1",
+    addressLine2 = Some("Line 2"),
+    addressLine3 = Some("Line 3"),
+    addressLine4 = None,
+    postalCode = Some("AA1 1AA"),
+    countryCode = "GB"
+  )
+
+  private val baseJourney: CtJourney = CtJourney(
+    asaDetails = AgencyDetails(
+      agencyName = Some("ASA Name"),
+      agencyEmail = Some("asa@test.com"),
+      agencyTelephone = Some("999999"),
+      agencyAddress = Some(address)
+    ),
+    useCustomBusinessName = Some(true),
+    businessNameAnswer = Some("Custom Name"),
+    useCustomPhoneNumber = Some(true),
+    phoneNumberAnswer = Some("123456"),
+    useCustomEmail = Some(true),
+    emailAnswer = Some("custom@test.com"),
+    useCustomAddress = None,
+    addressAnswer = None
+  )
 
   s"GET $startAddressLookupPath" should {
     "redirect to the external service to look up an address" in {
@@ -90,26 +97,17 @@ extends ComponentBaseISpec {
       givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
       givenGetAddressSuccess("bar", confirmedAddressResponse)
-//      TODO: 10906 Put CtJourney here - see work re EmailAddress
-//      await(repo.putSession(draftNewContactDetailsKey, designatoryDetails))
+
+      await(repo.putSession(ctJourneyKey, baseJourney))
 
       val result = get(s"$finishAddressLookupPath?id=bar")
 
       result.status shouldBe SEE_OTHER
 
       result.header("Location").get shouldBe "/agent-services-account/ct-subscription/check-your-answers"
-//      TODO: 10906 Retrieve and validate CtJourney update here
-//      await(repo.getFromSession(draftNewContactDetailsKey))
-//        .get.agencyDetails.agencyAddress shouldBe Some(
-//        BusinessAddress(
-//          "26 New Street",
-//          Some("Telford"),
-//          None,
-//          None,
-//          Some("TF5 4AA"),
-//          "GB"
-//        )
-//      )
+      val updatedJourney = await(repo.getFromSession(ctJourneyKey))
+      updatedJourney.get.useCustomAddress shouldBe Some(true)
+      updatedJourney.get.addressAnswer shouldBe Some(address)
     }
 
     "return bad request when no id provided in a query param" in {
