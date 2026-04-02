@@ -108,8 +108,7 @@ with I18nSupport {
     SummaryListData(
       key = "asa.legacy.ct.check-your-answers.address",
       value = formatAddress(data.agencyAddress),
-//      TODO: 10906 Correct this link value
-      link = Some(subscriptionRoutes.CtConfirmationController.showConfirmationPage)
+      link = Some(subscriptionRoutes.CtUpdateAddressController.showPage)
     )
   )
 
