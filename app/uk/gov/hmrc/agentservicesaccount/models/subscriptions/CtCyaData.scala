@@ -23,4 +23,22 @@ case class CtCyaData(
   agencyEmail: String,
   agencyTelephone: String,
   agencyAddress: BusinessAddress
-)
+) {
+  def toSubscriptionRequest: CtSubscriptionRequest = {
+    val address = SubscriptionAddress(
+      line1 = agencyAddress.addressLine1,
+      line2 = agencyAddress.addressLine2.getOrElse(""),
+      line3 = agencyAddress.addressLine3,
+      line4 = agencyAddress.addressLine4,
+      postCode = agencyAddress.postalCode
+    )
+    CtSubscriptionRequest(
+      agentName = agencyName,
+      contactName = agencyName,
+      phoneNumber = Some(agencyTelephone),
+      emailAddress = Some(agencyEmail),
+      address = address,
+      countryCode = agencyAddress.countryCode
+    )
+  }
+}
