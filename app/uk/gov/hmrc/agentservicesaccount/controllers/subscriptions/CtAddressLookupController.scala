@@ -100,10 +100,10 @@ with Logging {
     )
 
     val manualAddressEntryConfig = ManualAddressEntryConfig(
-      line1MaxLength = None,
-      line2MaxLength = None,
-      line3MaxLength = None,
-      townMaxLength = None,
+      line1MaxLength = Some(28),
+      line2MaxLength = Some(28),
+      line3MaxLength = Some(28),
+      townMaxLength = Some(18),
       mandatoryFields = Some(mandatoryFieldsConfig),
       showOrganisationName = Some(false)
     )
