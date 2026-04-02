@@ -39,10 +39,10 @@
   showSecondaryNav = false
 ) {
 
-  <h1 class="govuk-heading-l">@msgs("asa.legacy.ct.check-your-answers.h1")</h1>
+  @h1("asa.legacy.ct.check-your-answers.h1")
 
     @formWithCSRF(action = subscriptions.routes.CtCheckYourAnswersController.onSubmit) {
         @summary_list(model)
         @govukButton(Button(content = Text(msgs("asa.legacy.ct.check-your-answers.submit-button"))))
     }
-    }
+  }

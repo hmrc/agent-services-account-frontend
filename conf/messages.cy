@@ -220,6 +220,13 @@ asa.legacy.ct.check-your-answers.email=Email address
 asa.legacy.ct.check-your-answers.address=Address
 asa.legacy.ct.check-your-answers.submit-button=Enrol for Corporation Tax
 
+asa.legacy.ct.confirmation.title=We are processing your enrolment
+asa.legacy.ct.confirmation.panel.body=This can take up to 5 days
+asa.legacy.ct.confirmation.p1=Once we’ve updated our system, you’ll find an agent code on your agent services account homepage.
+asa.legacy.ct.confirmation.p2=We’ll also send you a letter with your agent code for your records.
+asa.legacy.ct.confirmation.p3=This code must be kept private. Only share it with people who genuinely need to know it.
+asa.legacy.ct.return-home=Return to your agent services account homepage
+
 # SA
 asa.legacy.sa.h2=SA
 asa.legacy.sa.col1.h3=Test Content

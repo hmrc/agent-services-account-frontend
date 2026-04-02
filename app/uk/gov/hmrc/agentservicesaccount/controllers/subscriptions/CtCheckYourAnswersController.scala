@@ -22,6 +22,8 @@ import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.actions.CtJourney
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.checkYourAnswersPage
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.{routes => subscriptionRoutes}
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtCyaData
@@ -64,7 +66,7 @@ with I18nSupport {
 
       agentServicesAccountConnector
         .submitCtRequest(requestModel)
-        .map(_ => Redirect(subscriptionRoutes.CtUpdateEmailAddressController.showPage)) // TODO: update the correct link
+        .map(_ => Redirect(getNextPage(checkYourAnswersPage)))
     }
   }
 
@@ -105,7 +107,7 @@ with I18nSupport {
     SummaryListData(
       key = "asa.legacy.ct.check-your-answers.address",
       value = formatAddress(data.agencyAddress),
-      link = Some(subscriptionRoutes.CtUpdateEmailAddressController.showPage) // TODO: update the correct link
+      link = Some(subscriptionRoutes.CtConfirmationController.showConfirmationPage)
     )
   )
 
