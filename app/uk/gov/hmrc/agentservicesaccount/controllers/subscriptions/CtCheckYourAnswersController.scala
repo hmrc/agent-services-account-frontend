@@ -70,6 +70,7 @@ with I18nSupport {
     }
   }
 
+  //  TODO: 10906 Make this an implicit conversion on the model class
   private def toSubscriptionRequest(data: CtCyaData): CtSubscriptionRequest = {
     val address = SubscriptionAddress(
       line1 = data.agencyAddress.addressLine1,
@@ -107,10 +108,12 @@ with I18nSupport {
     SummaryListData(
       key = "asa.legacy.ct.check-your-answers.address",
       value = formatAddress(data.agencyAddress),
+//      TODO: 10906 Correct this link value
       link = Some(subscriptionRoutes.CtConfirmationController.showConfirmationPage)
     )
   )
 
+//  TODO: 10906 Make this an implicit conversion on the model class
   private def getCtCyaData(journey: CtJourney): Option[CtCyaData] =
     for {
       businessName <-
