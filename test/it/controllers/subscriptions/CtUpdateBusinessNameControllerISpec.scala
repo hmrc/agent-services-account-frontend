@@ -190,12 +190,13 @@ with TestConstants {
     }
 
     val journeyWithRedirectLocations = List(
-      (ctSubscriptionBaseJourney, "phone-number"),
-      (ctSubscriptionFullJourney, "check-your-answers")
+      (ctSubscriptionBaseJourney, "phone-number", "not complete"),
+      (ctSubscriptionFullJourney, "check-your-answers", "complete")
     )
 
     journeyWithRedirectLocations.foreach(journeyWithRedirectLocation => {
-      s"update journey and redirect to ${journeyWithRedirectLocation._2} when using ASA business name and journey not complete" in new TestSetup {
+      s"update journey and redirect to ${journeyWithRedirectLocation._2}" +
+        s"when using ASA business name and journey ${journeyWithRedirectLocation._3}" in new TestSetup {
         private val request = FakeRequest(POST, "/")
           .withSession(session.toSeq: _*)
           .withFormUrlEncodedBody(
@@ -216,7 +217,8 @@ with TestConstants {
         updated.value.businessNameAnswer shouldBe None
       }
 
-      s"update journey and redirect to ${journeyWithRedirectLocation._2} when using custom business name and journey not complete" in new TestSetup {
+      s"update journey and redirect to ${journeyWithRedirectLocation._2}" +
+        s"when using custom business name and journey ${journeyWithRedirectLocation._3}" in new TestSetup {
         private val request = FakeRequest(POST, "/")
           .withSession(session.toSeq: _*)
           .withFormUrlEncodedBody(

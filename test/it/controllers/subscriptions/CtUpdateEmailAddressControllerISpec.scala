@@ -37,23 +37,6 @@ extends ComponentBaseISpec {
 
   private val updateEmailAddressPath = s"$ctSubscriptionStartPath/email-address"
 
-  private val baseJourney: CtJourney = CtJourney(
-    asaDetails = AgencyDetails(
-      agencyName = None,
-      agencyEmail = Some("joe@bloggs.com"),
-      agencyTelephone = None,
-      agencyAddress = None
-    ),
-    useCustomBusinessName = None,
-    businessNameAnswer = None,
-    useCustomPhoneNumber = None,
-    phoneNumberAnswer = None,
-    useCustomEmail = None,
-    emailAnswer = None,
-    useCustomAddress = None,
-    addressAnswer = None
-  )
-
   s"GET $updateEmailAddressPath" should {
     "display the enter email address page" in {
 
@@ -70,27 +53,67 @@ extends ComponentBaseISpec {
 
   s"POST $updateEmailAddressPath" should {
 
-    "update journey and redirect when using ASA email address" in {
+    val journeyWithRedirectLocations = List(
+      (ctSubscriptionBaseJourney, "address", "not complete"),
+      (ctSubscriptionFullJourney, "check-your-answers", "complete")
+    )
+
+    journeyWithRedirectLocations.foreach(journeyWithRedirectLocation => {
+      s"update journey and redirect to ${journeyWithRedirectLocation._2}" +
+        s"when using ASA email address and journey ${journeyWithRedirectLocation._3}" in {
+        givenAuthorisedAsAgentWith(arn.value)
+        givenGetAgentRecord(agentRecord)
+        stubASAGetResponseError(arn, NOT_FOUND)
+
+        repo.putSession(ctJourneyKey, journeyWithRedirectLocation._1).futureValue
+
+        val result =
+          post(updateEmailAddressPath)(body =
+            Map(
+              "emailAddressUseAsaData" -> Seq("true")
+            )
+          )
+        result.status shouldBe SEE_OTHER
+        result.header(LOCATION) shouldBe Some(s"/agent-services-account/ct-subscription/${journeyWithRedirectLocation._2}")
+
+        val updated = await(repo.getFromSession(ctJourneyKey))
+        updated shouldBe defined
+        updated.get.useCustomEmail shouldBe Some(false)
+        updated.value.emailAnswer shouldBe None
+      }
+
+    })
+
+//    TODO: 10908 Implement this condition
+    "update journey and redirect to next page in flow when using same custom email address as previously answered" in {
       givenAuthorisedAsAgentWith(arn.value)
       givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
 
-      repo.putSession(ctJourneyKey, baseJourney).futureValue
+      val subscriptionJourneyWithCustomEmail = ctSubscriptionBaseJourney.copy(
+        useCustomEmail = Some(true),
+        emailAnswer = Some("jane@bloggs.com")
+      )
+
+      repo.putSession(ctJourneyKey, ctSubscriptionFullJourney).futureValue
 
       val result =
         post(updateEmailAddressPath)(body =
           Map(
-            "emailAddressUseAsaData" -> Seq("true")
+            "emailAddressUseAsaData" -> Seq("false"),
+            "emailAddressNew" -> Seq(subscriptionJourneyWithCustomEmail.emailAnswer.get)
           )
         )
 
       result.status shouldBe SEE_OTHER
+      result.headers.get(LOCATION) shouldBe Some("/agent-services-account/ct-subscription/address")
 
       val updated = await(repo.getFromSession(ctJourneyKey))
       updated shouldBe defined
-      updated.get.useCustomEmail shouldBe Some(false)
-      updated.value.emailAnswer shouldBe None
+      updated.get.useCustomEmail shouldBe Some(true)
+      updated.value.emailAnswer shouldBe subscriptionJourneyWithCustomEmail.emailAnswer
     }
+
 
     "(if the email is unverified) redirect to the verify-email external journey" in {
 
