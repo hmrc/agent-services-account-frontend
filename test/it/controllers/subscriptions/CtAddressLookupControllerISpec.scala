@@ -1,0 +1,129 @@
+/*
+ * Copyright 2024 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package it.controllers.subscriptions
+
+import play.api.test.Helpers._
+import stubs.AddressLookupStubs._
+import stubs.AgentServicesAccountStubs.givenGetAgentRecord
+import stubs.AgentServicesAccountStubs.stubASAGetResponseError
+import support.ComponentBaseISpec
+import uk.gov.hmrc.agentservicesaccount.actions.CtJourney
+import uk.gov.hmrc.agentservicesaccount.controllers.ctJourneyKey
+import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
+import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
+import uk.gov.hmrc.agentservicesaccount.models.addresslookup.ConfirmedResponseAddress
+import uk.gov.hmrc.agentservicesaccount.models.addresslookup.ConfirmedResponseAddressDetails
+import uk.gov.hmrc.agentservicesaccount.models.addresslookup.Country
+import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
+
+class CtAddressLookupControllerISpec
+extends ComponentBaseISpec {
+
+  private val repo = inject[SessionCacheRepository]
+
+  private val startAddressLookupPath = s"$ctSubscriptionStartPath/address-lookup-start"
+  private val finishAddressLookupPath = s"$ctSubscriptionStartPath/address-lookup-finish"
+
+  private val confirmedAddressResponse = ConfirmedResponseAddress(
+    auditRef = "foo",
+    id = Some("bar"),
+    address = ConfirmedResponseAddressDetails(
+      lines = Some(Seq(
+        "Line 1",
+        "Line 2",
+        "Line 3"
+      )),
+      postcode = Some("AA1 1AA"),
+      country = Some(Country("GB", ""))
+    )
+  )
+
+  private val address = BusinessAddress(
+    addressLine1 = "Line 1",
+    addressLine2 = Some("Line 2"),
+    addressLine3 = Some("Line 3"),
+    addressLine4 = None,
+    postalCode = Some("AA1 1AA"),
+    countryCode = "GB"
+  )
+
+  private val baseJourney: CtJourney = CtJourney(
+    asaDetails = AgencyDetails(
+      agencyName = Some("ASA Name"),
+      agencyEmail = Some("asa@test.com"),
+      agencyTelephone = Some("999999"),
+      agencyAddress = Some(address)
+    ),
+    useCustomBusinessName = Some(true),
+    businessNameAnswer = Some("Custom Name"),
+    useCustomPhoneNumber = Some(true),
+    phoneNumberAnswer = Some("123456"),
+    useCustomEmail = Some(true),
+    emailAnswer = Some("custom@test.com"),
+    useCustomAddress = None,
+    addressAnswer = None
+  )
+
+  s"GET $startAddressLookupPath" should {
+    "redirect to the external service to look up an address" in {
+
+      givenAuthorisedAsAgentWith(arn.value)
+      givenGetAgentRecord(agentRecord)
+      givenInitSuccess()
+      stubASAGetResponseError(arn, NOT_FOUND)
+
+      val result = get(startAddressLookupPath)
+
+      result.status shouldBe SEE_OTHER
+
+      result.header("Location").get shouldBe "/alf-start"
+    }
+  }
+
+  s"GET $finishAddressLookupPath" should {
+    "store the new address in session and redirect to review new details page" in {
+
+      givenAuthorisedAsAgentWith(arn.value)
+      givenGetAgentRecord(agentRecord)
+      stubASAGetResponseError(arn, NOT_FOUND)
+      givenGetAddressSuccess("bar", confirmedAddressResponse)
+
+      await(repo.putSession(ctJourneyKey, baseJourney))
+
+      val result = get(s"$finishAddressLookupPath?id=bar")
+
+      result.status shouldBe SEE_OTHER
+
+      result.header("Location").get shouldBe "/agent-services-account/ct-subscription/check-your-answers"
+      val updatedJourney = await(repo.getFromSession(ctJourneyKey))
+      updatedJourney.get.useCustomAddress shouldBe Some(true)
+      updatedJourney.get.addressAnswer shouldBe Some(address)
+    }
+
+    "return bad request when no id provided in a query param" in {
+
+      givenAuthorisedAsAgentWith(arn.value)
+      givenGetAgentRecord(agentRecord)
+      stubASAGetResponseError(arn, NOT_FOUND)
+
+      val result = get(s"$finishAddressLookupPath")
+
+      result.status shouldBe BAD_REQUEST
+    }
+  }
+
+}

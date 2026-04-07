@@ -43,6 +43,7 @@ case class JourneyOptions(
   allowedCountryCodes: Option[Set[String]] = None,
   selectPageConfig: Option[SelectPageConfig] = None,
   confirmPageConfig: Option[ConfirmPageConfig] = None,
+  manualAddressEntryConfig: Option[ManualAddressEntryConfig] = None,
   timeoutConfig: Option[TimeoutConfig] = None,
   serviceHref: Option[String] = None,
   pageHeadingStyle: Option[String] = None
@@ -64,6 +65,23 @@ case class ConfirmPageConfig(
   showConfirmChangeText: Option[Boolean] = None
 )
 
+case class MandatoryFieldsConfig(
+  addressLine1: Option[Boolean] = None,
+  addressLine2: Option[Boolean] = None,
+  addressLine3: Option[Boolean] = None,
+  town: Option[Boolean] = None,
+  postcode: Option[Boolean] = None
+)
+
+case class ManualAddressEntryConfig(
+  line1MaxLength: Option[Int] = None,
+  line2MaxLength: Option[Int] = None,
+  line3MaxLength: Option[Int] = None,
+  townMaxLength: Option[Int] = None,
+  mandatoryFields: Option[MandatoryFieldsConfig] = None,
+  showOrganisationName: Option[Boolean] = None
+)
+
 case class TimeoutConfig(
   timeoutAmount: Int,
   timeoutUrl: String,
@@ -80,6 +98,8 @@ object JourneyConfigV2 {
   implicit val labelsFormat: Format[JourneyLabels] = Json.format[JourneyLabels]
   implicit val selectConfigFormat: Format[SelectPageConfig] = Json.format[SelectPageConfig]
   implicit val confirmConfigFormat: Format[ConfirmPageConfig] = Json.format[ConfirmPageConfig]
+  implicit val mandatoryFieldsConfigFormat: Format[MandatoryFieldsConfig] = Json.format[MandatoryFieldsConfig]
+  implicit val manualAddressEntryConfigFormat: Format[ManualAddressEntryConfig] = Json.format[ManualAddressEntryConfig]
   implicit val timeoutFormat: Format[TimeoutConfig] =
     (
       (JsPath \ "timeoutAmount").format[Int](min(120)) and

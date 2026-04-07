@@ -106,8 +106,7 @@ with Logging {
             }
         }
         else {
-//          TODO: 10906: Add ALF journey here
-          Future.successful(Redirect(routes.CtCheckYourAnswersController.showPage))
+          Future.successful(Redirect(routes.CtAddressLookupController.startAddressLookup))
         }
       }
     )

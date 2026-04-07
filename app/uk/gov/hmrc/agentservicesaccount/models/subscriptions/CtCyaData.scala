@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.agentservicesaccount.models.subscriptions
 
+import uk.gov.hmrc.agentservicesaccount.actions.CtJourney
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 
 case class CtCyaData(
@@ -23,4 +24,54 @@ case class CtCyaData(
   agencyEmail: String,
   agencyTelephone: String,
   agencyAddress: BusinessAddress
-)
+) {
+  def toSubscriptionRequest: CtSubscriptionRequest = {
+    val address = SubscriptionAddress(
+      line1 = agencyAddress.addressLine1,
+      line2 = agencyAddress.addressLine2.getOrElse(""),
+      line3 = agencyAddress.addressLine3,
+      line4 = agencyAddress.addressLine4,
+      postCode = agencyAddress.postalCode
+    )
+    CtSubscriptionRequest(
+      agentName = agencyName,
+      contactName = agencyName,
+      phoneNumber = Some(agencyTelephone),
+      emailAddress = Some(agencyEmail),
+      address = address,
+      countryCode = agencyAddress.countryCode
+    )
+  }
+}
+
+object CtCyaData {
+  implicit def ctJourneyToCyaData(journey: CtJourney): Option[CtCyaData] = {
+    for {
+      businessName <-
+        journey.useCustomBusinessName match {
+          case Some(true) => journey.businessNameAnswer
+          case _ => journey.asaDetails.agencyName
+        }
+      phoneNumber <-
+        journey.useCustomPhoneNumber match {
+          case Some(true) => journey.phoneNumberAnswer
+          case _ => journey.asaDetails.agencyTelephone
+        }
+      email <-
+        journey.useCustomEmail match {
+          case Some(true) => journey.emailAnswer
+          case _ => journey.asaDetails.agencyEmail
+        }
+      address <-
+        journey.useCustomAddress match {
+          case Some(true) => journey.addressAnswer
+          case _ => journey.asaDetails.agencyAddress
+        }
+    } yield CtCyaData(
+      agencyName = businessName,
+      agencyEmail = email,
+      agencyTelephone = phoneNumber,
+      agencyAddress = address
+    )
+  }
+}

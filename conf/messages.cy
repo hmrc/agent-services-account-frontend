@@ -213,6 +213,17 @@ asa.legacy.ct.address.use-asa.true.hint=This is the address on your agent servic
 asa.legacy.ct.address.use-asa.false=I want to use a different address for Corporation Tax
 asa.legacy.ct.address.use-asa.error.required=TODO (Default option for address required error)
 
+asa.legacy.ct.alf.country-picker.title=Select the country - Agent services account - GOV.UK
+asa.legacy.ct.alf.country-picker.heading=What is the country where the business is based?
+asa.legacy.ct.alf.lookup.title=Find the address - Agent services account - GOV.UK
+asa.legacy.ct.alf.lookup.heading=Find your address
+asa.legacy.ct.alf.lookup.postcode.label=Postcode
+asa.legacy.ct.alf.select.title=Select the address - Agent services account - GOV.UK
+asa.legacy.ct.alf.edit.title=Enter the address - Agent services account - GOV.UK
+asa.legacy.ct.alf.edit.heading=Enter the address
+asa.legacy.ct.alf.edit.townLabel=Address line 4
+asa.legacy.ct.alf.confirm.title=Review and confirm - Agent services account - GOV.UK
+
 asa.legacy.ct.check-your-answers.h1=Check your answers
 asa.legacy.ct.check-your-answers.business-name=Business name
 asa.legacy.ct.check-your-answers.phone-number=Telephone number

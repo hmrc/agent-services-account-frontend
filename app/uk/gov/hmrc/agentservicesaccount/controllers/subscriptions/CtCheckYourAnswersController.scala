@@ -62,7 +62,7 @@ with I18nSupport {
 
   def onSubmit: Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
     withCtCyaData(request.ctSubscriptionJourney) { data =>
-      val requestModel = toSubscriptionRequest(data)
+      val requestModel = data.toSubscriptionRequest
 
       agentServicesAccountConnector
         .submitCtRequest(requestModel)
@@ -70,23 +70,16 @@ with I18nSupport {
     }
   }
 
-  private def toSubscriptionRequest(data: CtCyaData): CtSubscriptionRequest = {
-    val address = SubscriptionAddress(
-      line1 = data.agencyAddress.addressLine1,
-      line2 = data.agencyAddress.addressLine2.getOrElse(""),
-      line3 = data.agencyAddress.addressLine3,
-      line4 = data.agencyAddress.addressLine4,
-      postCode = data.agencyAddress.postalCode
-    )
-    CtSubscriptionRequest(
-      agentName = data.agencyName,
-      contactName = data.agencyName,
-      phoneNumber = Some(data.agencyTelephone),
-      emailAddress = Some(data.agencyEmail),
-      address = address,
-      countryCode = data.agencyAddress.countryCode
-    )
-  }
+  private def formatAddress(address: BusinessAddress): String = List(
+    Some(address.addressLine1),
+    address.addressLine2,
+    address.addressLine3,
+    address.addressLine4,
+    address.postalCode,
+    Some(address.countryCode)
+  ).flatten.map(play.twirl.api.HtmlFormat.escape)
+    .map(_.body)
+    .mkString("<br/>")
 
   private[subscriptions] def buildSummaryListItems(data: CtCyaData): Seq[SummaryListData] = Seq(
     SummaryListData(
@@ -107,54 +100,14 @@ with I18nSupport {
     SummaryListData(
       key = "asa.legacy.ct.check-your-answers.address",
       value = formatAddress(data.agencyAddress),
-      link = Some(subscriptionRoutes.CtConfirmationController.showConfirmationPage)
+      link = Some(subscriptionRoutes.CtUpdateAddressController.showPage)
     )
   )
-
-  private def getCtCyaData(journey: CtJourney): Option[CtCyaData] =
-    for {
-      businessName <-
-        journey.useCustomBusinessName match {
-          case Some(true) => journey.businessNameAnswer
-          case _ => journey.asaDetails.agencyName
-        }
-      phoneNumber <-
-        journey.useCustomPhoneNumber match {
-          case Some(true) => journey.phoneNumberAnswer
-          case _ => journey.asaDetails.agencyTelephone
-        }
-      email <-
-        journey.useCustomEmail match {
-          case Some(true) => journey.emailAnswer
-          case _ => journey.asaDetails.agencyEmail
-        }
-      address <-
-        journey.useCustomAddress match {
-          case Some(true) => journey.addressAnswer
-          case _ => journey.asaDetails.agencyAddress
-        }
-    } yield CtCyaData(
-      agencyName = businessName,
-      agencyEmail = email,
-      agencyTelephone = phoneNumber,
-      agencyAddress = address
-    )
-
-  private def formatAddress(address: BusinessAddress): String = List(
-    Some(address.addressLine1),
-    address.addressLine2,
-    address.addressLine3,
-    address.addressLine4,
-    address.postalCode,
-    Some(address.countryCode)
-  ).flatten.map(play.twirl.api.HtmlFormat.escape)
-    .map(_.body)
-    .mkString("<br/>")
 
   private def withCtCyaData(
     journey: CtJourney
   )(f: CtCyaData => Future[Result]): Future[Result] =
-    getCtCyaData(journey) match {
+    (journey: Option[CtCyaData]) match {
       case Some(data) => f(data)
       case None =>
         Future.successful(
