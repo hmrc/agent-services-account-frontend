@@ -32,14 +32,26 @@ case class CtJourney(
   useCustomAddress: Option[Boolean],
   addressAnswer: Option[BusinessAddress]
 ) {
+
+  private def answerComplete(
+    booleanField: Option[Boolean],
+    newAnswerField: Option[_]
+  ): Boolean = {
+    (booleanField, newAnswerField) match {
+      case (Some(false), _) => true
+      case (Some(true), Some(_)) => true
+      case _ => false
+    }
+  }
+
   val isComplete: Boolean = {
-//    TODO: 10908 Implement correct checks on conditions here
-    val bnComplete = true
-    val pnComplete = true
-    val eaComplete = true
-    val addressComplete = true
+    val bnComplete = answerComplete(useCustomBusinessName, businessNameAnswer)
+    val pnComplete = answerComplete(useCustomPhoneNumber, phoneNumberAnswer)
+    val eaComplete = answerComplete(useCustomEmail, emailAnswer)
+    val addressComplete = answerComplete(useCustomAddress, addressAnswer)
     bnComplete && pnComplete && eaComplete && addressComplete
   }
+
 }
 
 object CtJourney {

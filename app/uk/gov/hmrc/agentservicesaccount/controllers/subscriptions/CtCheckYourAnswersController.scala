@@ -27,8 +27,6 @@ import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.{routes => sub
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtCyaData
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtJourney
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtSubscriptionRequest
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionAddress
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.components.models.SummaryListData
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.ct_check_your_answers

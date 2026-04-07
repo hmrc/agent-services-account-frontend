@@ -94,9 +94,7 @@ with Logging {
 
           sessionCacheService
             .put(ctJourneyKey, updatedJourney)
-            .map { _ =>
-              Redirect(getNextPage(updateEmailAddressPage, Some(updatedJourney)))
-            }
+            .map(_ => Redirect(getNextPage(updateEmailAddressPage, Some(updatedJourney))))
         }
         else {
           data.newEmailAddress.map(newEmail => {

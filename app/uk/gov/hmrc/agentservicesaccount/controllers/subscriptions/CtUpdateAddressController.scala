@@ -102,9 +102,7 @@ with Logging {
 
           sessionCacheService
             .put(ctJourneyKey, updatedJourney)
-            .map { _ =>
-              Redirect(getNextPage(updateAddressPage, Some(updatedJourney)))
-            }
+            .map(_ => Redirect(getNextPage(updateAddressPage, Some(updatedJourney))))
         }
         else {
           Future.successful(Redirect(routes.CtAddressLookupController.startAddressLookup))

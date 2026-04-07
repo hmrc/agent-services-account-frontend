@@ -68,9 +68,8 @@ with Logging {
 
               sessionCacheService
                 .put(ctJourneyKey, updatedJourney)
-                .map { _ =>
-                  Redirect(getNextPage(emailVerificationFinish, Some(updatedJourney)))
-                }
+                .map(_ => Redirect(getNextPage(emailVerificationFinish, Some(updatedJourney))))
+
             case EmailNeedsVerifying =>
               for {
                 _ <- sessionCacheService.put(emailPendingVerificationKey, email)
