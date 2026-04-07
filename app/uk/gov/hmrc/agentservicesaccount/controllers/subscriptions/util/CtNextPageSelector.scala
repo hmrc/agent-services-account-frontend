@@ -36,6 +36,8 @@ object CtNextPageSelector {
     String,
     Option[CtJourney]
   ) => Call = {
+//    TODO: 10908 Need to pass in journey where needed in controllers (essentially all onSubmit)
+    case (_, Some(journey)) if journey.isComplete => subscriptions.routes.CtCheckYourAnswersController.showPage
     case (`updateBusinessNamePage`, _) => subscriptions.routes.CtUpdatePhoneNumberController.showPage
     case (`updatePhoneNumberPage`, _) => subscriptions.routes.CtUpdateEmailAddressController.showPage
     case (`updateEmailAddressPage`, Some(journey)) =>

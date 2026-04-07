@@ -31,7 +31,16 @@ case class CtJourney(
   emailAnswer: Option[String],
   useCustomAddress: Option[Boolean],
   addressAnswer: Option[BusinessAddress]
-)
+) {
+  val isComplete: Boolean = {
+//    TODO: 10908 Implement correct checks on conditions here
+    val bnComplete = true
+    val pnComplete = true
+    val eaComplete = true
+    val addressComplete = true
+    bnComplete && pnComplete && eaComplete && addressComplete
+  }
+}
 
 object CtJourney {
   implicit val format: OFormat[CtJourney] = Json.format[CtJourney]

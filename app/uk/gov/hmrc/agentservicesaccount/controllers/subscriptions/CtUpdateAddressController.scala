@@ -96,7 +96,8 @@ with Logging {
       data => {
         if (data.useAsaData) {
           val updatedJourney = journey.copy(
-            useCustomAddress = Some(false)
+            useCustomAddress = Some(false),
+            addressAnswer = None
           )
 
           sessionCacheService
