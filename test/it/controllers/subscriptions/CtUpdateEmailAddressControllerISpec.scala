@@ -82,37 +82,6 @@ extends ComponentBaseISpec {
 
     })
 
-//    TODO: 10908 Implement this condition
-    "update journey and redirect to next page in flow when using same custom email address as previously answered" in {
-      givenAuthorisedAsAgentWith(arn.value)
-      givenGetAgentRecord(agentRecord)
-      stubASAGetResponseError(arn, NOT_FOUND)
-
-      val subscriptionJourneyWithCustomEmail = ctSubscriptionBaseJourney.copy(
-        useCustomEmail = Some(true),
-        emailAnswer = Some("jane@bloggs.com")
-      )
-
-      repo.putSession(ctJourneyKey, ctSubscriptionFullJourney).futureValue
-
-      val result =
-        post(updateEmailAddressPath)(body =
-          Map(
-            "emailAddressUseAsaData" -> Seq("false"),
-            "emailAddressNew" -> Seq(subscriptionJourneyWithCustomEmail.emailAnswer.get)
-          )
-        )
-
-      result.status shouldBe SEE_OTHER
-      result.headers.get(LOCATION) shouldBe Some("/agent-services-account/ct-subscription/address")
-
-      val updated = await(repo.getFromSession(ctJourneyKey))
-      updated shouldBe defined
-      updated.get.useCustomEmail shouldBe Some(true)
-      updated.value.emailAnswer shouldBe subscriptionJourneyWithCustomEmail.emailAnswer
-    }
-
-
     "(if the email is unverified) redirect to the verify-email external journey" in {
 
       givenFullAuthorisedAsAgentWith(

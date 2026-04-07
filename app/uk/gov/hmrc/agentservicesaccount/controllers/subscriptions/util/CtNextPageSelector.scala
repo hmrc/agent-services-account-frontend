@@ -36,7 +36,6 @@ object CtNextPageSelector {
     String,
     Option[CtJourney]
   ) => Call = {
-//    TODO: 10908 Add ITs for these if possible
     case (_, Some(journey)) if journey.isComplete => subscriptions.routes.CtCheckYourAnswersController.showPage
     case (`updateBusinessNamePage`, _) => subscriptions.routes.CtUpdatePhoneNumberController.showPage
     case (`updatePhoneNumberPage`, _) => subscriptions.routes.CtUpdateEmailAddressController.showPage
