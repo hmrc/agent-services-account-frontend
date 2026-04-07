@@ -97,7 +97,6 @@ with Logging {
             .map(_ => Redirect(getNextPage(updateEmailAddressPage, Some(updatedJourney))))
         }
         else {
-//          TODO:
           data.newEmailAddress.map(newEmail => {
             val credId = request.agentInfo.credentials.map(_.providerId).getOrElse(throw new RuntimeException("no available cred id"))
             for {

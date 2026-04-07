@@ -66,28 +66,36 @@ extends ComponentBaseISpec {
 
   s"POST $updateAddressPath" should {
 
-    "update journey and redirect when using ASA address" in {
-      givenAuthorisedAsAgentWith(arn.value)
-      givenGetAgentRecord(agentRecord)
-      stubASAGetResponseError(arn, NOT_FOUND)
+    val journeyWithRedirectLocations = List(
+      (ctSubscriptionBaseJourney, "check-your-answers", "not complete"),
+      (ctSubscriptionFullJourney, "check-your-answers", "complete")
+    )
 
-      repo.putSession(ctJourneyKey, baseJourney).futureValue
+    journeyWithRedirectLocations.foreach(journeyWithRedirectLocation => {
+      s"update journey and redirect to ${journeyWithRedirectLocation._2}" +
+        s"when using ASA address and journey ${journeyWithRedirectLocation._3}" in {
+        givenAuthorisedAsAgentWith(arn.value)
+        givenGetAgentRecord(agentRecord)
+        stubASAGetResponseError(arn, NOT_FOUND)
 
-      val result =
-        post(updateAddressPath)(body =
-          Map(
-            "addressUseAsaData" -> Seq("true")
+        repo.putSession(ctJourneyKey, journeyWithRedirectLocation._1).futureValue
+
+        val result =
+          post(updateAddressPath)(body =
+            Map(
+              "addressUseAsaData" -> Seq("true")
+            )
           )
-        )
+        result.status shouldBe SEE_OTHER
+        result.header(LOCATION) shouldBe Some(s"/agent-services-account/ct-subscription/${journeyWithRedirectLocation._2}")
 
-      result.status shouldBe SEE_OTHER
-
-      val updated = await(repo.getFromSession(ctJourneyKey))
-      updated shouldBe defined
-      updated.get.useCustomAddress shouldBe Some(false)
-      updated.value.addressAnswer shouldBe None
-    }
-
+        val updated = await(repo.getFromSession(ctJourneyKey))
+        updated shouldBe defined
+        updated.get.useCustomAddress shouldBe Some(false)
+        updated.value.addressAnswer shouldBe None
+      }
+    })
+    
     "(if not using ASA address) redirect to the ALF external journey" in {
 
       givenFullAuthorisedAsAgentWith(
