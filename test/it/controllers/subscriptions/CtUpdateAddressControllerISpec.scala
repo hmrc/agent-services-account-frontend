@@ -22,8 +22,6 @@ import stubs.AgentServicesAccountStubs.stubASAGetResponseError
 import support.ComponentBaseISpec
 import uk.gov.hmrc.agentservicesaccount.controllers.ctJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
-import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtJourney
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
 
 class CtUpdateAddressControllerISpec
@@ -32,23 +30,6 @@ extends ComponentBaseISpec {
   private val repo = inject[SessionCacheRepository]
 
   private val updateAddressPath = s"$ctSubscriptionStartPath/address"
-
-  private val baseJourney: CtJourney = CtJourney(
-    asaDetails = AgencyDetails(
-      agencyName = None,
-      agencyEmail = Some("joe@bloggs.com"),
-      agencyTelephone = None,
-      agencyAddress = None
-    ),
-    useCustomBusinessName = None,
-    businessNameAnswer = None,
-    useCustomPhoneNumber = None,
-    phoneNumberAnswer = None,
-    useCustomEmail = None,
-    emailAnswer = None,
-    useCustomAddress = None,
-    addressAnswer = None
-  )
 
   s"GET $updateAddressPath" should {
     "display the enter address page" in {
@@ -95,7 +76,7 @@ extends ComponentBaseISpec {
         updated.value.addressAnswer shouldBe None
       }
     })
-    
+
     "(if not using ASA address) redirect to the ALF external journey" in {
 
       givenFullAuthorisedAsAgentWith(
