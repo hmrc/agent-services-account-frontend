@@ -95,6 +95,7 @@ with Logging {
         sessionCacheService
           .put(ctJourneyKey, updatedJourney)
           .map { _ =>
+//                  TODO: 10908 Add updated journey to getNextPage call
             Redirect(getNextPage(updatePhoneNumberPage))
           }
       }
