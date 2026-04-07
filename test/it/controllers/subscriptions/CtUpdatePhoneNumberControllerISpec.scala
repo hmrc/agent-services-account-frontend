@@ -136,23 +136,6 @@ with TestConstants {
 
     val sessionCache: SessionCacheService = app.injector.instanceOf[SessionCacheService]
 
-    val baseJourney: CtJourney = CtJourney(
-      asaDetails = uk.gov.hmrc.agentservicesaccount.models.AgencyDetails(
-        agencyName = None,
-        agencyEmail = None,
-        agencyTelephone = Some("1234567890"),
-        agencyAddress = None
-      ),
-      useCustomBusinessName = None,
-      businessNameAnswer = None,
-      useCustomPhoneNumber = None,
-      phoneNumberAnswer = None,
-      useCustomEmail = None,
-      emailAnswer = None,
-      useCustomAddress = None,
-      addressAnswer = None
-    )
-
     val session: Map[String, String] = Map("sessionId" -> "test-session")
 
     def fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest().withSession(session.toSeq: _*)
@@ -168,7 +151,7 @@ with TestConstants {
   "GET /update-phone-number" should {
 
     "render empty form on first visit" in new TestSetup {
-      cacheJourney(baseJourney)
+      cacheJourney(ctSubscriptionBaseJourney)
 
       private val result = controller.showPage()(FakeRequest()).futureValue
 
@@ -177,7 +160,7 @@ with TestConstants {
     }
 
     "render pre-filled form when journey has existing answers" in new TestSetup {
-      private val journey = baseJourney.copy(
+      private val journey = ctSubscriptionBaseJourney.copy(
         useCustomPhoneNumber = Some(true),
         phoneNumberAnswer = Some("1234567890")
       )
@@ -197,7 +180,7 @@ with TestConstants {
   "POST /update-phone-number" should {
 
     "return BAD_REQUEST when form is invalid" in new TestSetup {
-      cacheJourney(baseJourney)
+      cacheJourney(ctSubscriptionBaseJourney)
 
       private val request = FakeRequest().withSession(session.toSeq: _*).withFormUrlEncodedBody(
         "useAsaData" -> ""
@@ -208,46 +191,55 @@ with TestConstants {
       status(result) shouldBe BAD_REQUEST
     }
 
-    "update journey and redirect when using ASA phone number" in new TestSetup {
-      private val request = FakeRequest(POST, "/")
-        .withSession(session.toSeq: _*)
-        .withFormUrlEncodedBody(
-          "phoneNumberUseAsaData" -> "true"
-        )
+    val journeyWithRedirectLocations = List(
+      (ctSubscriptionBaseJourney, "email-address"),
+      (ctSubscriptionFullJourney, "check-your-answers")
+    )
 
-      implicit val implicitRequest: FakeRequest[AnyContentAsFormUrlEncoded] = request
+    journeyWithRedirectLocations.foreach(journeyWithRedirectLocation => {
+      s"update journey and redirect to ${journeyWithRedirectLocation._2}  when using ASA phone number" in new TestSetup {
+        private val request = FakeRequest(POST, "/")
+          .withSession(session.toSeq: _*)
+          .withFormUrlEncodedBody(
+            "phoneNumberUseAsaData" -> "true"
+          )
 
-      cacheJourney(baseJourney)
+        implicit val implicitRequest: FakeRequest[AnyContentAsFormUrlEncoded] = request
 
-      private val result = controller.onSubmit()(request).futureValue
+        cacheJourney(journeyWithRedirectLocation._1)
 
-      status(result) shouldBe SEE_OTHER
+        private val result = controller.onSubmit()(request).futureValue
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result) shouldBe Some(s"/agent-services-account/ct-subscription/${journeyWithRedirectLocation._2}")
 
-      val updated: Option[CtJourney] = sessionCache.get[CtJourney](ctJourneyKey).futureValue
-      updated shouldBe defined
-      updated.get.useCustomPhoneNumber shouldBe Some(false)
-      updated.value.phoneNumberAnswer shouldBe None
-    }
+        val updated: Option[CtJourney] = sessionCache.get[CtJourney](ctJourneyKey).futureValue
+        updated shouldBe defined
+        updated.get.useCustomPhoneNumber shouldBe Some(false)
+        updated.value.phoneNumberAnswer shouldBe None
+      }
 
-    "update journey and redirect when using custom phone number" in new TestSetup {
-      private val request = FakeRequest(POST, "/")
-        .withSession(session.toSeq: _*)
-        .withFormUrlEncodedBody(
-          "phoneNumberUseAsaData" -> "false",
-          "phoneNumberNew" -> "0987654321"
-        )
+      s"update journey and redirect to ${journeyWithRedirectLocation._2}  when using custom phone number" in new TestSetup {
+        private val request = FakeRequest(POST, "/")
+          .withSession(session.toSeq: _*)
+          .withFormUrlEncodedBody(
+            "phoneNumberUseAsaData" -> "false",
+            "phoneNumberNew" -> "0987654321"
+          )
 
-      implicit val implicitRequest: FakeRequest[AnyContentAsFormUrlEncoded] = request
+        implicit val implicitRequest: FakeRequest[AnyContentAsFormUrlEncoded] = request
 
-      cacheJourney(baseJourney)
+        cacheJourney(journeyWithRedirectLocation._1)
 
-      private val result = controller.onSubmit()(request).futureValue
-      status(result) shouldBe SEE_OTHER
+        private val result = controller.onSubmit()(request).futureValue
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result) shouldBe Some(s"/agent-services-account/ct-subscription/${journeyWithRedirectLocation._2}")
 
-      val updated: Option[CtJourney] = sessionCache.get[CtJourney](ctJourneyKey).futureValue
-      updated.value.useCustomPhoneNumber shouldBe Some(true)
-      updated.value.phoneNumberAnswer shouldBe Some("0987654321")
-    }
+        val updated: Option[CtJourney] = sessionCache.get[CtJourney](ctJourneyKey).futureValue
+        updated.value.useCustomPhoneNumber shouldBe Some(true)
+        updated.value.phoneNumberAnswer shouldBe Some("0987654321")
+      }
+    })
+
   }
 
 }

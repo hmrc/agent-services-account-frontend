@@ -134,23 +134,6 @@ with TestConstants {
 
     val sessionCache: SessionCacheService = app.injector.instanceOf[SessionCacheService]
 
-    val baseJourney: CtJourney = CtJourney(
-      asaDetails = uk.gov.hmrc.agentservicesaccount.models.AgencyDetails(
-        agencyName = Some("Test Agency"),
-        agencyEmail = None,
-        agencyTelephone = None,
-        agencyAddress = None
-      ),
-      useCustomBusinessName = None,
-      businessNameAnswer = None,
-      useCustomPhoneNumber = None,
-      phoneNumberAnswer = None,
-      useCustomEmail = None,
-      emailAnswer = None,
-      useCustomAddress = None,
-      addressAnswer = None
-    )
-
     val session: Map[String, String] = Map("sessionId" -> "test-session")
 
     def fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest().withSession(session.toSeq: _*)
@@ -166,7 +149,7 @@ with TestConstants {
   "GET /update-business-name" should {
 
     "render empty form on first visit" in new TestSetup {
-      cacheJourney(baseJourney)
+      cacheJourney(ctSubscriptionBaseJourney)
 
       private val result = controller.showPage()(FakeRequest()).futureValue
 
@@ -175,7 +158,7 @@ with TestConstants {
     }
 
     "render pre-filled form when journey has existing answers" in new TestSetup {
-      private val journey = baseJourney.copy(
+      private val journey = ctSubscriptionBaseJourney.copy(
         useCustomBusinessName = Some(true),
         businessNameAnswer = Some("Custom Name Ltd")
       )
@@ -195,7 +178,7 @@ with TestConstants {
   "POST /update-business-name" should {
 
     "return BAD_REQUEST when form is invalid" in new TestSetup {
-      cacheJourney(baseJourney)
+      cacheJourney(ctSubscriptionBaseJourney)
 
       private val request = FakeRequest().withSession(session.toSeq: _*).withFormUrlEncodedBody(
         "useAsaData" -> ""
