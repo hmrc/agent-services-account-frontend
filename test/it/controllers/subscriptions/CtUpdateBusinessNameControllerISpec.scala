@@ -31,8 +31,7 @@ import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.mvc.RequestHeader
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import support.BaseISpec
-import support.UnitSpec
+import support.{BaseISpec, TestConstants, UnitSpec}
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.ctJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtUpdateBusinessNameController
@@ -55,7 +54,8 @@ with Matchers
 with GuiceOneAppPerSuite
 with ScalaFutures
 with IntegrationPatience
-with MockFactory {
+with MockFactory
+with TestConstants {
 
   class TestSetup {
 
@@ -206,7 +206,7 @@ with MockFactory {
       status(result) shouldBe BAD_REQUEST
     }
 
-    "update journey and redirect when using ASA business name" in new TestSetup {
+    "update journey and redirect to phone-number when using ASA business name and journey not complete" in new TestSetup {
       private val request = FakeRequest(POST, "/")
         .withSession(session.toSeq: _*)
         .withFormUrlEncodedBody(
@@ -218,8 +218,8 @@ with MockFactory {
       cacheJourney(baseJourney)
 
       private val result = controller.onSubmit()(request).futureValue
-
       status(result) shouldBe SEE_OTHER
+      redirectLocation(result) shouldBe "/ct-subscription/phone-number"
 
       val updated: Option[CtJourney] = sessionCache.get[CtJourney](ctJourneyKey).futureValue
       updated shouldBe defined
@@ -227,7 +227,7 @@ with MockFactory {
       updated.value.businessNameAnswer shouldBe None
     }
 
-    "update journey and redirect when using custom business name" in new TestSetup {
+    "update journey and redirect to phone-number when using custom business name and journey not complete" in new TestSetup {
       private val request = FakeRequest(POST, "/")
         .withSession(session.toSeq: _*)
         .withFormUrlEncodedBody(
@@ -241,8 +241,10 @@ with MockFactory {
 
       private val result = controller.onSubmit()(request).futureValue
       status(result) shouldBe SEE_OTHER
+      redirectLocation(result) shouldBe "/ct-subscription/phone-number"
 
       val updated: Option[CtJourney] = sessionCache.get[CtJourney](ctJourneyKey).futureValue
+      updated shouldBe defined
       updated.value.useCustomBusinessName shouldBe Some(true)
       updated.value.businessNameAnswer shouldBe Some("My Custom Ltd")
     }

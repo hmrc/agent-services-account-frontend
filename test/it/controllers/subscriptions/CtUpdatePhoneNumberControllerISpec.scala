@@ -31,8 +31,7 @@ import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.mvc.RequestHeader
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import support.BaseISpec
-import support.UnitSpec
+import support.{BaseISpec, TestConstants, UnitSpec}
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.ctJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtUpdatePhoneNumberController
@@ -55,7 +54,8 @@ with Matchers
 with GuiceOneAppPerSuite
 with ScalaFutures
 with IntegrationPatience
-with MockFactory {
+with MockFactory
+with TestConstants {
 
   class TestSetup {
 
