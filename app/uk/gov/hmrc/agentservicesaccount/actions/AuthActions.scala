@@ -26,6 +26,7 @@ import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
 import uk.gov.hmrc.agentservicesaccount.models.Arn
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtJourney
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionInfo
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionStatus
@@ -48,22 +49,6 @@ class CtJourneyRequest[A](
   val request: Request[A]
 )
 extends WrappedRequest[A](request)
-
-case class CtJourney(
-  asaDetails: AgencyDetails,
-  useCustomBusinessName: Option[Boolean],
-  businessNameAnswer: Option[String],
-  useCustomPhoneNumber: Option[Boolean],
-  phoneNumberAnswer: Option[String],
-  useCustomEmail: Option[Boolean],
-  emailAnswer: Option[String],
-  useCustomAddress: Option[Boolean],
-  addressAnswer: Option[BusinessAddress]
-)
-
-object CtJourney {
-  implicit val format: OFormat[CtJourney] = Json.format[CtJourney]
-}
 
 class AuthRequestWithAgentInfo[A](
   val agentInfo: AgentInfo,
