@@ -206,48 +206,56 @@ with TestConstants {
       status(result) shouldBe BAD_REQUEST
     }
 
-    "update journey and redirect to phone-number when using ASA business name and journey not complete" in new TestSetup {
-      private val request = FakeRequest(POST, "/")
-        .withSession(session.toSeq: _*)
-        .withFormUrlEncodedBody(
-          "businessNameUseAsaData" -> "true"
-        )
+    val journeyWithRedirectLocations = List(
+      (ctSubscriptionBaseJourney, "phone-number"),
+      (ctSubscriptionFullJourney, "check-your-answers")
+    )
 
-      implicit val implicitRequest: FakeRequest[AnyContentAsFormUrlEncoded] = request
+    journeyWithRedirectLocations.foreach(journeyWithRedirectLocation => {
+      s"update journey and redirect to ${journeyWithRedirectLocation._2} when using ASA business name and journey not complete" in new TestSetup {
+        private val request = FakeRequest(POST, "/")
+          .withSession(session.toSeq: _*)
+          .withFormUrlEncodedBody(
+            "businessNameUseAsaData" -> "true"
+          )
 
-      cacheJourney(baseJourney)
+        implicit val implicitRequest: FakeRequest[AnyContentAsFormUrlEncoded] = request
 
-      private val result = controller.onSubmit()(request).futureValue
-      status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe "/ct-subscription/phone-number"
+        cacheJourney(journeyWithRedirectLocation._1)
 
-      val updated: Option[CtJourney] = sessionCache.get[CtJourney](ctJourneyKey).futureValue
-      updated shouldBe defined
-      updated.get.useCustomBusinessName shouldBe Some(false)
-      updated.value.businessNameAnswer shouldBe None
-    }
+        private val result = controller.onSubmit()(request).futureValue
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result) shouldBe Some(s"/agent-services-account/ct-subscription/${journeyWithRedirectLocation._2}")
 
-    "update journey and redirect to phone-number when using custom business name and journey not complete" in new TestSetup {
-      private val request = FakeRequest(POST, "/")
-        .withSession(session.toSeq: _*)
-        .withFormUrlEncodedBody(
-          "businessNameUseAsaData" -> "false",
-          "businessNameNew" -> "My Custom Ltd"
-        )
+        val updated: Option[CtJourney] = sessionCache.get[CtJourney](ctJourneyKey).futureValue
+        updated shouldBe defined
+        updated.get.useCustomBusinessName shouldBe Some(false)
+        updated.value.businessNameAnswer shouldBe None
+      }
 
-      implicit val implicitRequest: FakeRequest[AnyContentAsFormUrlEncoded] = request
+      s"update journey and redirect to ${journeyWithRedirectLocation._2} when using custom business name and journey not complete" in new TestSetup {
+        private val request = FakeRequest(POST, "/")
+          .withSession(session.toSeq: _*)
+          .withFormUrlEncodedBody(
+            "businessNameUseAsaData" -> "false",
+            "businessNameNew" -> "My Custom Ltd"
+          )
 
-      cacheJourney(baseJourney)
+        implicit val implicitRequest: FakeRequest[AnyContentAsFormUrlEncoded] = request
 
-      private val result = controller.onSubmit()(request).futureValue
-      status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe "/ct-subscription/phone-number"
+        cacheJourney(journeyWithRedirectLocation._1)
 
-      val updated: Option[CtJourney] = sessionCache.get[CtJourney](ctJourneyKey).futureValue
-      updated shouldBe defined
-      updated.value.useCustomBusinessName shouldBe Some(true)
-      updated.value.businessNameAnswer shouldBe Some("My Custom Ltd")
-    }
+        private val result = controller.onSubmit()(request).futureValue
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result)shouldBe Some(s"/agent-services-account/ct-subscription/${journeyWithRedirectLocation._2}")
+
+        val updated: Option[CtJourney] = sessionCache.get[CtJourney](ctJourneyKey).futureValue
+        updated shouldBe defined
+        updated.value.useCustomBusinessName shouldBe Some(true)
+        updated.value.businessNameAnswer shouldBe Some("My Custom Ltd")
+      }
+    })
   }
+
 
 }
