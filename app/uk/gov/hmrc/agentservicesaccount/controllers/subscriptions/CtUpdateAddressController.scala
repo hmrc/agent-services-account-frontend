@@ -27,6 +27,7 @@ import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPag
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionAddressForm
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtAddressFormValues
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -61,6 +62,7 @@ with Logging {
     .mkString(", ")
 
   val showPage: Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
+    val legacyRegime = LegacyRegime.CT
     val journey = request.ctSubscriptionJourney
 
     val subscriptionAddress = journey.asaDetails.agencyAddress.map(formatAddress).getOrElse("")
@@ -84,6 +86,7 @@ with Logging {
   }
 
   def onSubmit: Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
+    val legacyRegime = LegacyRegime.CT
     val journey = request.ctSubscriptionJourney
 
     CtSubscriptionAddressForm.form.bindFromRequest().fold(

@@ -29,6 +29,7 @@ import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPag
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup._
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
@@ -81,6 +82,8 @@ with Logging {
   }
 
   def startAddressLookup: Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
+    val legacyRegime = LegacyRegime.CT
+
     val continueUrl: String = {
       val useAbsoluteUrls = appConfig.addressLookupBaseUrl.contains("localhost")
       val call = subscriptions.routes.CtAddressLookupController.finishAddressLookup(None)
@@ -126,6 +129,7 @@ with Logging {
   }
 
   def finishAddressLookup(id: Option[String]): Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
+    val legacyRegime = LegacyRegime.CT
     val journey = request.ctSubscriptionJourney
 
     id match {

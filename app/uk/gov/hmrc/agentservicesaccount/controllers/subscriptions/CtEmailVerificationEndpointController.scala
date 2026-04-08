@@ -29,6 +29,7 @@ import uk.gov.hmrc.agentservicesaccount.controllers.ctJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.emailPendingVerificationKey
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.EmailIsAlreadyVerified
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.EmailNeedsVerifying
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.services.EmailVerificationService
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -55,6 +56,7 @@ with Logging {
   /* This is the callback endpoint (return url) from the email-verification service and not for use of our own frontend. */
   val finishEmailVerification: Action[AnyContent] = actions.authActionWithCtJourney.async {
     implicit request =>
+      val legacyRegime = LegacyRegime.CT
       sessionCacheService.get(emailPendingVerificationKey).flatMap {
         case Some(email) =>
           val credId = request.agentInfo.credentials.map(_.providerId).getOrElse(throw new RuntimeException("no available cred id"))

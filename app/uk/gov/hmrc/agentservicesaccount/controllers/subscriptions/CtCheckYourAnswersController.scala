@@ -27,6 +27,7 @@ import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.{routes => sub
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtCyaData
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtJourney
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.components.models.SummaryListData
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.ct_check_your_answers
@@ -52,6 +53,7 @@ extends FrontendController(cc)
 with I18nSupport {
 
   def showPage: Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
+    val legacyRegime = LegacyRegime.CT
     withCtCyaData(request.ctSubscriptionJourney) { data =>
       val summaryItems = buildSummaryListItems(data)
       Future.successful(Ok(checkYourAnswers(summaryItems)))
@@ -59,6 +61,7 @@ with I18nSupport {
   }
 
   def onSubmit: Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
+    val legacyRegime = LegacyRegime.CT
     withCtCyaData(request.ctSubscriptionJourney) { data =>
       val requestModel = data.toSubscriptionRequest
 
