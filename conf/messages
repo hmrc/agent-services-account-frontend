@@ -239,9 +239,68 @@ asa.legacy.ct.confirmation.p3=This code must be kept private. Only share it with
 asa.legacy.ct.return-home=Return to your agent services account homepage
 
 # SA
-asa.legacy.sa.h2=SA
+asa.legacy.sa.h2=Self Assessment
 asa.legacy.sa.h3=Test Content
 asa.legacy.sa.p1=Status: {0}
+asa.legacy.sa.col1.h3=Before you start
+asa.legacy.sa.col1.link1.href=https://www.gov.uk/guidance/how-to-enrol-a-tax-service-onto-your-hmrc-online-services-account
+asa.legacy.sa.col1.p1=If you have already enrolled for Self Assessment, you can continue managing your clients by <a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">signing into your HMRC online services for agents account.</a>
+asa.legacy.sa.col1.p2=This will sign you out of your agent services account.
+asa.legacy.sa.col2.h3=If you want to enrol for Self Assessment
+asa.legacy.sa.col2.p1=You can <a class="govuk-link" href="{0}" rel="noreferrer noopener">use your agent services account to enrol</a> and manage your clients.
+
+asa.legacy.sa.business-name.title=What business name should we show to your Self Assessment clients?
+asa.legacy.sa.business-name.use-asa.false=I want to use a different business name for Self Assessment
+asa.legacy.sa.business-name.new-input.label=Enter a business name
+asa.legacy.sa.business-name.use-asa.error.required=TODO (Default option for business name required error)
+asa.legacy.sa.business-name.new-input.error.empty=TODO (New business name input empty error)
+asa.legacy.sa.business-name.new-input.error.invalid=TODO (New business name input invalid error)
+
+asa.legacy.sa.phone-number.title=What phone number should we show to call you about Self Assessment?
+asa.legacy.sa.phone-number.use-asa.false=I want to use a different phone number for Self Assessment
+asa.legacy.sa.phone-number.new-input.label=Enter a phone number
+asa.legacy.sa.phone-number.new-input.hint=For international numbers include the country code.
+asa.legacy.sa.phone-number.use-asa.error.required=TODO (Default option required error)
+asa.legacy.sa.phone-number.new-input.error.empty=TODO (New phone number input empty error)
+asa.legacy.sa.phone-number.new-input.error.invalid=TODO (New phone number input invalid error)
+
+asa.legacy.sa.email-address.title=What email address should we use to contact you about Self Assessment?
+asa.legacy.sa.email-address.use-asa.false=I want to use a different email address for Self Assessment
+asa.legacy.sa.email-address.new-input.label=Enter an email address
+asa.legacy.sa.email-address.new-input.hint=We’ll send a code to this email address to confirm it
+asa.legacy.sa.email-address.use-asa.error.required=TODO (Default option for email address required error)
+asa.legacy.sa.email-address.new-input.error.empty=TODO (New email address input empty error)
+asa.legacy.sa.email-address.new-input.error.invalid=TODO (New email address input invalid error)
+
+asa.legacy.sa.address.title=What address should we use to send letters about Self Assessment?
+asa.legacy.sa.address.use-asa.true.hint=This is the address on your agent services account.
+asa.legacy.sa.address.use-asa.false=I want to use a different address for Self Assessment
+asa.legacy.sa.address.use-asa.error.required=TODO (Default option for address required error)
+
+asa.legacy.sa.alf.country-picker.title=Select the country - Agent services account - GOV.UK
+asa.legacy.sa.alf.country-picker.heading=What is the country where the business is based?
+asa.legacy.sa.alf.lookup.title=Find the address - Agent services account - GOV.UK
+asa.legacy.sa.alf.lookup.heading=Find your address
+asa.legacy.sa.alf.lookup.postcode.label=Postcode
+asa.legacy.sa.alf.select.title=Select the address - Agent services account - GOV.UK
+asa.legacy.sa.alf.edit.title=Enter the address - Agent services account - GOV.UK
+asa.legacy.sa.alf.edit.heading=Enter the address
+asa.legacy.sa.alf.edit.townLabel=Address line 4
+asa.legacy.sa.alf.confirm.title=Review and confirm - Agent services account - GOV.UK
+
+asa.legacy.sa.check-your-answers.h1=Check your answers
+asa.legacy.sa.check-your-answers.business-name=Business name
+asa.legacy.sa.check-your-answers.phone-number=Telephone number
+asa.legacy.sa.check-your-answers.email=Email address
+asa.legacy.sa.check-your-answers.address=Address
+asa.legacy.sa.check-your-answers.submit-button=Enrol for Self Assessment
+
+asa.legacy.sa.confirmation.title=We are processing your enrolment
+asa.legacy.sa.confirmation.panel.body=This can take up to 5 days
+asa.legacy.sa.confirmation.p1=Once we’ve updated our system, you’ll find an agent code on your agent services account homepage.
+asa.legacy.sa.confirmation.p2=We’ll also send you a letter with your agent code for your records.
+asa.legacy.sa.confirmation.p3=This code must be kept private. Only share it with people who genuinely need to know it.
+asa.legacy.sa.return-home=Return to your agent services account homepage
 
 # TODO: WELSH TRANSLATIONS NEEDED FOR ALL ABOVE THIS LINE
 
