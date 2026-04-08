@@ -14,11 +14,12 @@
  * limitations under the License.
  *@
 
+@import uk.gov.hmrc.agentservicesaccount.actions.AuthRequestWithAgentInfo
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+@import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionInfo
 @import uk.gov.hmrc.agentservicesaccount.views.html.components._
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 @import uk.gov.hmrc.agentservicesaccount.views.html.pages.dashboard_partials._
-@import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionInfo
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 
 @this(
@@ -36,7 +37,7 @@
     isShownRecruitmentBanner: Boolean = false,
     isAdmin: Boolean = false,
     subscriptionInfo: Seq[SubscriptionInfo] = Seq.empty
-)(implicit request: RequestHeader, msgs: Messages, appConfig: AppConfig)
+)(implicit request: AuthRequestWithAgentInfo[AnyContent], msgs: Messages, appConfig: AppConfig)
 
 @add_existingSA = {
     @h2("asa.section4.itsa.notification.h2")

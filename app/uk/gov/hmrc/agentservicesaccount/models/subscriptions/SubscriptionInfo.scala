@@ -19,10 +19,17 @@ package uk.gov.hmrc.agentservicesaccount.models.subscriptions
 import play.api.libs.json.Format
 import play.api.libs.json.Json
 
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
+
 case class SubscriptionInfo(
   regime: LegacyRegime,
-  subscriptionStatus: SubscriptionStatus
-)
+  subscriptionStatus: SubscriptionStatus,
+  creationDate: Option[Instant] = None
+) {
+  def localCreationDate: Option[LocalDate] = creationDate.map(_.atZone(ZoneId.of("Europe/London")).toLocalDate)
+}
 
 object SubscriptionInfo {
   implicit val format: Format[SubscriptionInfo] = Json.format[SubscriptionInfo]
