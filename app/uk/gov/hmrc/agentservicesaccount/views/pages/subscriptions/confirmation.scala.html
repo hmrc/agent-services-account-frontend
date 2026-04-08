@@ -16,23 +16,26 @@
 
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.controllers.routes
+@import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 @import uk.gov.hmrc.govukfrontend.views.Aliases.{Panel, Text}
 @import uk.gov.hmrc.govukfrontend.views.html.components.GovukPanel
 
 @this(main: main, p: p, a: a, govukPanel: GovukPanel)
 
-@()(implicit request: RequestHeader, msgs: Messages, appConfig: AppConfig)
+@(legacyRegime: LegacyRegime)(implicit request: RequestHeader, msgs: Messages, appConfig: AppConfig)
 
-@main(pageTitle = msgs("asa.legacy.ct.confirmation.title"), showSecondaryNav = false) {
+@legacyRegimePrefix = @{ s"asa.legacy.${legacyRegime.toString.toLowerCase}" }
+
+@main(pageTitle = msgs(s"$legacyRegimePrefix.confirmation.title"), showSecondaryNav = false) {
     @govukPanel(
         Panel(
-            title = Text(msgs("asa.legacy.ct.confirmation.title")),
-            content = Text(msgs("asa.legacy.ct.confirmation.panel.body"))
+            title = Text(msgs(s"$legacyRegimePrefix.confirmation.title")),
+            content = Text(msgs(s"$legacyRegimePrefix.confirmation.panel.body"))
         )
     )
-    @p("asa.legacy.ct.confirmation.p1")
-    @p("asa.legacy.ct.confirmation.p2")
-    @p("asa.legacy.ct.confirmation.p3")
-    @a(key = "asa.legacy.ct.return-home", href = s"${routes.AgentServicesController.root().url}")
+    @p(s"$legacyRegimePrefix.confirmation.p1")
+    @p(s"$legacyRegimePrefix.confirmation.p2")
+    @p(s"$legacyRegimePrefix.confirmation.p3")
+    @a(key = s"$legacyRegimePrefix.return-home", href = s"${routes.AgentServicesController.root().url}")
 }

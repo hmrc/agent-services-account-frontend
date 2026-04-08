@@ -24,7 +24,7 @@ import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.ToFuture
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.ct_confirmation
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.confirmation
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject.Inject
@@ -34,13 +34,13 @@ import javax.inject.Singleton
 class CtConfirmationController @Inject() (implicit
   appConfig: AppConfig,
   actions: Actions,
-  ct_confirmation: ct_confirmation,
+  confirmation: confirmation,
   cc: MessagesControllerComponents
 )
 extends FrontendController(cc)
 with I18nSupport {
   val showConfirmationPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     val legacyRegime = LegacyRegime.CT
-    Ok(ct_confirmation()).toFuture
+    Ok(confirmation(legacyRegime)).toFuture
   }
 }
