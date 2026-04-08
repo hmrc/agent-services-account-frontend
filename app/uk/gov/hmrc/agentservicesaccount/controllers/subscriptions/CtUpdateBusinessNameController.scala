@@ -28,7 +28,7 @@ import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionBusine
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtBusinessNameFormValues
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions._
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.update_business_name
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject._
@@ -39,7 +39,7 @@ import scala.concurrent.Future
 class CtUpdateBusinessNameController @Inject() (
   actions: Actions,
   val sessionCacheService: SessionCacheService,
-  ct_update_business_name: ct_update_business_name,
+  update_business_name: update_business_name,
   cc: MessagesControllerComponents
 )(implicit
   appConfig: AppConfig,
@@ -70,7 +70,11 @@ with Logging {
       }
 
     Future.successful(
-      Ok(ct_update_business_name(form, subscriptionBusinessName))
+      Ok(update_business_name(
+        form,
+        subscriptionBusinessName,
+        legacyRegime
+      ))
     )
   }
 
@@ -82,7 +86,11 @@ with Logging {
       formWithErrors => {
         val subscriptionBusinessName = journey.asaDetails.agencyName.getOrElse("")
         Future.successful(
-          BadRequest(ct_update_business_name(formWithErrors, subscriptionBusinessName))
+          BadRequest(update_business_name(
+            formWithErrors,
+            subscriptionBusinessName,
+            legacyRegime
+          ))
         )
       },
       data => {

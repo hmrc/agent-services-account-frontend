@@ -17,6 +17,7 @@
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
 @import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtBusinessNameFormValues
+@import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 @import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
 @import uk.gov.hmrc.govukfrontend.views.html.components._
@@ -35,19 +36,21 @@
     govukErrorSummary: GovukErrorSummary
 )
 
-@(form: Form[CtBusinessNameFormValues], subscriptionBusinessName: String)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
+@(form: Form[CtBusinessNameFormValues], subscriptionBusinessName: String, legacyRegime: LegacyRegime)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
+
+@legacyRegimePrefix = @{ s"asa.legacy.${legacyRegime.toString.toLowerCase}" }
 
 @newBusinessNameInput = {
     @govukInput(Input(
         label = Label(
-            content = HtmlContent(msgs("asa.legacy.ct.business-name.new-input.label")),
+            content = HtmlContent(msgs(s"$legacyRegimePrefix.business-name.new-input.label")),
             classes = "govuk-label"
         )
     ).withFormField(form("businessNameNew")))
 }
 
 @main(
-    pageTitle = withErrorPrefix(form.hasErrors, msgs("asa.legacy.ct.business-name.title")),
+    pageTitle = withErrorPrefix(form.hasErrors, msgs(s"$legacyRegimePrefix.business-name.title")),
     mimicBrowserBackLink = true,
     showSecondaryNav = false
 ) {
@@ -60,7 +63,7 @@
         @govukRadios(Radios(
             fieldset = Some(Fieldset(
                 legend = Some(Legend(
-                    content = Text(msgs("asa.legacy.ct.business-name.title")),
+                    content = Text(msgs(s"$legacyRegimePrefix.business-name.title")),
                     classes = "govuk-fieldset__legend--l",
                     isPageHeading = true
                 ))
@@ -72,7 +75,7 @@
                     value = Some("true")
                 ),
                 RadioItem(
-                    content = Text(msgs("asa.legacy.ct.business-name.use-asa.false")),
+                    content = Text(msgs(s"$legacyRegimePrefix.business-name.use-asa.false")),
                     value = Some("false"),
                     conditionalHtml = Some(newBusinessNameInput)
                 )

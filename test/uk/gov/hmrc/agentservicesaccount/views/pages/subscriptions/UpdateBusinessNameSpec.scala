@@ -24,36 +24,40 @@ import play.api.data.Form
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionBusinessNameForm
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionBusinessNameForm.businessNameNewKey
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionBusinessNameForm.businessNameUseAsaDataKey
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtBusinessNameFormValues
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.{CtBusinessNameFormValues, LegacyRegime}
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.ct_update_business_name
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.update_business_name
 
-class CtUpdateBusinessNameSpec
+class UpdateBusinessNameSpec
 extends ViewBaseSpec {
 
-  val view: ct_update_business_name = inject[ct_update_business_name]
-  val subscriptionBusinessName = "ABC-No.1 Accountants"
+  private val view: update_business_name = inject[update_business_name]
+  private val subscriptionBusinessName = "ABC-No.1 Accountants"
 
-  val businessNameForm: Form[CtBusinessNameFormValues] = CtSubscriptionBusinessNameForm.form
+  private val legacyRegime = LegacyRegime.CT
+  
+  private val legacyRegimePrefix = s"asa.legacy.${legacyRegime.toString.toLowerCase}"
 
-  val formWithUseAsaError: Form[CtBusinessNameFormValues] = businessNameForm.withError(
+  private val businessNameForm: Form[CtBusinessNameFormValues] = CtSubscriptionBusinessNameForm.form
+
+  private val formWithUseAsaError: Form[CtBusinessNameFormValues] = businessNameForm.withError(
     key = businessNameUseAsaDataKey,
-    message = messages("asa.legacy.ct.business-name.use-asa.error.required")
+    message = messages(s"$legacyRegimePrefix.business-name.use-asa.error.required")
   )
-  val formWithNewBusinessNameError: Form[CtBusinessNameFormValues] = businessNameForm.withError(
+  private val formWithNewBusinessNameError: Form[CtBusinessNameFormValues] = businessNameForm.withError(
     key = businessNameNewKey,
-    message = messages("asa.legacy.ct.business-name.new-input.error.empty")
+    message = messages(s"$legacyRegimePrefix.business-name.new-input.error.empty")
   )
 
   def render(form: Form[CtBusinessNameFormValues]): Document = Jsoup.parse(
-    view(form, subscriptionBusinessName)(
+    view(form, subscriptionBusinessName, legacyRegime)(
       messages,
       fakeRequest,
       appConfig
     ).body
   )
 
-  private val title: String = messages("asa.legacy.ct.business-name.title")
+  private val title: String = messages(s"$legacyRegimePrefix.business-name.title")
 
   "ct_update_business_name" when {
 
@@ -101,14 +105,14 @@ extends ViewBaseSpec {
         radios.size() mustBe 2
         radios.get(0).text() mustBe subscriptionBusinessName
         radios.get(0).select("input").attr("name") mustBe businessNameUseAsaDataKey
-        radios.get(1).text() mustBe messages("asa.legacy.ct.business-name.use-asa.false")
+        radios.get(1).text() mustBe messages(s"$legacyRegimePrefix.business-name.use-asa.false")
         radios.get(1).select("input").attr("name") mustBe businessNameUseAsaDataKey
       }
 
       "hide the conditional new business name input" in {
         val conditionalHidden = doc.select(".govuk-radios__conditional--hidden")
         conditionalHidden.size() mustBe 1
-        conditionalHidden.text() mustBe messages("asa.legacy.ct.business-name.new-input.label")
+        conditionalHidden.text() mustBe messages(s"$legacyRegimePrefix.business-name.new-input.label")
         conditionalHidden.select(".govuk-input").attr("name") mustBe businessNameNewKey
       }
     }
@@ -157,7 +161,7 @@ extends ViewBaseSpec {
 
       "display correct error summary link" in {
         val errorLink: Element = doc.select(".govuk-error-summary__list a").first()
-        errorLink.text() mustBe messages("asa.legacy.ct.business-name.use-asa.error.required")
+        errorLink.text() mustBe messages(s"$legacyRegimePrefix.business-name.use-asa.error.required")
         errorLink.attr("href") mustBe s"#$businessNameUseAsaDataKey"
       }
 
@@ -166,7 +170,7 @@ extends ViewBaseSpec {
       }
 
       "display error message on form" in {
-        doc.select(".govuk-error-message").text() mustBe s"Error: ${messages("asa.legacy.ct.business-name.use-asa.error.required")}"
+        doc.select(".govuk-error-message").text() mustBe s"Error: ${messages(s"$legacyRegimePrefix.business-name.use-asa.error.required")}"
       }
     }
 
@@ -184,7 +188,7 @@ extends ViewBaseSpec {
 
       "display correct error summary link" in {
         val errorLink: Element = doc.select(".govuk-error-summary__list a").first()
-        errorLink.text() mustBe messages("asa.legacy.ct.business-name.new-input.error.empty")
+        errorLink.text() mustBe messages(s"$legacyRegimePrefix.business-name.new-input.error.empty")
         errorLink.attr("href") mustBe s"#$businessNameNewKey"
       }
 
@@ -193,7 +197,7 @@ extends ViewBaseSpec {
       }
 
       "display error message on form" in {
-        doc.select(".govuk-error-message").text() mustBe s"Error: ${messages("asa.legacy.ct.business-name.new-input.error.empty")}"
+        doc.select(".govuk-error-message").text() mustBe s"Error: ${messages(s"$legacyRegimePrefix.business-name.new-input.error.empty")}"
       }
     }
   }
