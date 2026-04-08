@@ -18,14 +18,10 @@ package uk.gov.hmrc.agentservicesaccount.actions
 
 import play.api.Environment
 import play.api.Logging
-import play.api.libs.json.Json
-import play.api.libs.json.OFormat
 import play.api.mvc.Results._
 import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
 import uk.gov.hmrc.agentservicesaccount.models.Arn
-import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtJourney
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionInfo
@@ -79,15 +75,24 @@ case class AgentInfo(
   def existingSubscriptionInfo: Seq[SubscriptionInfo] =
     Seq(
       if (hasPayeSubscription)
-        Some(SubscriptionInfo(LegacyRegime.PAYE, SubscriptionStatus.Subscribed))
+        Some(SubscriptionInfo(
+          LegacyRegime.PAYE,
+          SubscriptionStatus.Subscribed
+        ))
       else
         None,
       if (hasCtSubscription)
-        Some(SubscriptionInfo(LegacyRegime.CT, SubscriptionStatus.Subscribed))
+        Some(SubscriptionInfo(
+          LegacyRegime.CT,
+          SubscriptionStatus.Subscribed
+        ))
       else
         None,
       if (hasSaSubscription)
-        Some(SubscriptionInfo(LegacyRegime.SA, SubscriptionStatus.Subscribed))
+        Some(SubscriptionInfo(
+          LegacyRegime.SA,
+          SubscriptionStatus.Subscribed
+        ))
       else
         None
     ).flatten
@@ -107,6 +112,13 @@ case class AgentInfo(
       else
         None
     ).flatten
+
+  def getAgentCodeFor(key: String): Option[String] = enrolments
+    .getEnrolment(key)
+    .flatMap(_.identifiers.headOption)
+    .map(_.value)
+
+  def ctAgentCode: Option[String] = getAgentCodeFor("IR-CT-AGENT")
 
 }
 
