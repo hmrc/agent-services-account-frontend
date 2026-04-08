@@ -23,22 +23,24 @@ import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.data.Form
 import play.api.i18n.Messages
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionPhoneNumberForm
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtPhoneNumberFormValues
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.{CtPhoneNumberFormValues, LegacyRegime}
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.ct_update_phone_number
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.update_phone_number
 
-class CtUpdatePhoneNumberSpec
+class UpdatePhoneNumberSpec
 extends ViewBaseSpec {
 
-  val view: ct_update_phone_number = inject[ct_update_phone_number]
-  val subscriptionPhoneNumber = "07700 900123"
+  private val view: update_phone_number = inject[update_phone_number]
+  private val subscriptionPhoneNumber = "07700 900123"
 
-  val phoneNumberForm: Form[CtPhoneNumberFormValues] = CtSubscriptionPhoneNumberForm.form
+  private val legacyRegime = LegacyRegime.CT
 
-  val formWithErrors: Form[CtPhoneNumberFormValues] = phoneNumberForm.withError("phoneNumberUseAsaData", Messages("error.required"))
+  private val phoneNumberForm: Form[CtPhoneNumberFormValues] = CtSubscriptionPhoneNumberForm.form
+
+  private val formWithErrors: Form[CtPhoneNumberFormValues] = phoneNumberForm.withError("phoneNumberUseAsaData", Messages("error.required"))
 
   def render(form: Form[CtPhoneNumberFormValues]): Document = Jsoup.parse(
-    view(form, subscriptionPhoneNumber)(
+    view(form, subscriptionPhoneNumber, legacyRegime)(
       messages,
       fakeRequest,
       appConfig
@@ -88,7 +90,7 @@ extends ViewBaseSpec {
     }
   }
 
-  "ct_update_phone_number view" when {
+  "update_phone_number view" when {
 
     "first loaded" should {
 

@@ -24,7 +24,8 @@ import play.api.data.Form
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionBusinessNameForm
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionBusinessNameForm.businessNameNewKey
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionBusinessNameForm.businessNameUseAsaDataKey
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.{CtBusinessNameFormValues, LegacyRegime}
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtBusinessNameFormValues
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.update_business_name
 
@@ -35,7 +36,7 @@ extends ViewBaseSpec {
   private val subscriptionBusinessName = "ABC-No.1 Accountants"
 
   private val legacyRegime = LegacyRegime.CT
-  
+
   private val legacyRegimePrefix = s"asa.legacy.${legacyRegime.toString.toLowerCase}"
 
   private val businessNameForm: Form[CtBusinessNameFormValues] = CtSubscriptionBusinessNameForm.form
@@ -50,7 +51,11 @@ extends ViewBaseSpec {
   )
 
   def render(form: Form[CtBusinessNameFormValues]): Document = Jsoup.parse(
-    view(form, subscriptionBusinessName, legacyRegime)(
+    view(
+      form,
+      subscriptionBusinessName,
+      legacyRegime
+    )(
       messages,
       fakeRequest,
       appConfig
