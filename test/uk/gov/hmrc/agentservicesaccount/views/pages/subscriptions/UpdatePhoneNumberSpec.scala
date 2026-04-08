@@ -23,7 +23,8 @@ import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.data.Form
 import play.api.i18n.Messages
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionPhoneNumberForm
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.{CtPhoneNumberFormValues, LegacyRegime}
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtPhoneNumberFormValues
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.update_phone_number
 
@@ -40,7 +41,11 @@ extends ViewBaseSpec {
   private val formWithErrors: Form[CtPhoneNumberFormValues] = phoneNumberForm.withError("phoneNumberUseAsaData", Messages("error.required"))
 
   def render(form: Form[CtPhoneNumberFormValues]): Document = Jsoup.parse(
-    view(form, subscriptionPhoneNumber, legacyRegime)(
+    view(
+      form,
+      subscriptionPhoneNumber,
+      legacyRegime
+    )(
       messages,
       fakeRequest,
       appConfig
