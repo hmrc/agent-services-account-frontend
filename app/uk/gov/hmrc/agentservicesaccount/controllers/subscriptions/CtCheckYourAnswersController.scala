@@ -30,7 +30,7 @@ import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtJourney
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.components.models.SummaryListData
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.ct_check_your_answers
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.check_your_answers
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject.Inject
@@ -43,7 +43,7 @@ class CtCheckYourAnswersController @Inject() (
   actions: Actions,
   agentServicesAccountConnector: AgentServicesAccountConnector,
   val sessionCacheService: SessionCacheService,
-  checkYourAnswers: ct_check_your_answers,
+  checkYourAnswers: check_your_answers,
   cc: MessagesControllerComponents
 )(implicit
   appConfig: AppConfig,
@@ -55,8 +55,8 @@ with I18nSupport {
   def showPage: Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
     val legacyRegime = LegacyRegime.CT
     withCtCyaData(request.ctSubscriptionJourney) { data =>
-      val summaryItems = buildSummaryListItems(data)
-      Future.successful(Ok(checkYourAnswers(summaryItems)))
+      val summaryItems = buildSummaryListItems(data, legacyRegime)
+      Future.successful(Ok(checkYourAnswers(summaryItems, legacyRegime)))
     }
   }
 
@@ -82,28 +82,34 @@ with I18nSupport {
     .map(_.body)
     .mkString("<br/>")
 
-  private[subscriptions] def buildSummaryListItems(data: CtCyaData): Seq[SummaryListData] = Seq(
-    SummaryListData(
-      key = "asa.legacy.ct.check-your-answers.business-name",
-      value = data.agencyName,
-      link = Some(subscriptionRoutes.CtUpdateBusinessNameController.showPage)
-    ),
-    SummaryListData(
-      key = "asa.legacy.ct.check-your-answers.phone-number",
-      value = data.agencyTelephone,
-      link = Some(subscriptionRoutes.CtUpdatePhoneNumberController.showPage)
-    ),
-    SummaryListData(
-      key = "asa.legacy.ct.check-your-answers.email",
-      value = data.agencyEmail,
-      link = Some(subscriptionRoutes.CtUpdateEmailAddressController.showPage)
-    ),
-    SummaryListData(
-      key = "asa.legacy.ct.check-your-answers.address",
-      value = formatAddress(data.agencyAddress),
-      link = Some(subscriptionRoutes.CtUpdateAddressController.showPage)
+  private[subscriptions] def buildSummaryListItems(
+    data: CtCyaData,
+    legacyRegime: LegacyRegime
+  ): Seq[SummaryListData] = {
+    val lr = legacyRegime.toString.toLowerCase
+    Seq(
+      SummaryListData(
+        key = s"asa.legacy.$lr.check-your-answers.business-name",
+        value = data.agencyName,
+        link = Some(subscriptionRoutes.CtUpdateBusinessNameController.showPage)
+      ),
+      SummaryListData(
+        key = s"asa.legacy.$lr.check-your-answers.phone-number",
+        value = data.agencyTelephone,
+        link = Some(subscriptionRoutes.CtUpdatePhoneNumberController.showPage)
+      ),
+      SummaryListData(
+        key = s"asa.legacy.$lr.check-your-answers.email",
+        value = data.agencyEmail,
+        link = Some(subscriptionRoutes.CtUpdateEmailAddressController.showPage)
+      ),
+      SummaryListData(
+        key = s"asa.legacy.$lr.check-your-answers.address",
+        value = formatAddress(data.agencyAddress),
+        link = Some(subscriptionRoutes.CtUpdateAddressController.showPage)
+      )
     )
-  )
+  }
 
   private def withCtCyaData(
     journey: CtJourney

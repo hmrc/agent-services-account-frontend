@@ -25,9 +25,9 @@ import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.confirmat
 class ConfirmationPageSpec
 extends ViewBaseSpec {
 
-  val view: confirmation = inject[confirmation]
+  private val view: confirmation = inject[confirmation]
 
-  val legacyRegime = LegacyRegime.CT
+  private val legacyRegime = LegacyRegime.CT
 
   "confirmation view" should {
 
