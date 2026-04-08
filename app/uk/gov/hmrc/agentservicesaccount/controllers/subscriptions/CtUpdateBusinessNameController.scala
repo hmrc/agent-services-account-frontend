@@ -26,8 +26,9 @@ import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPag
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionBusinessNameForm
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtBusinessNameFormValues
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions._
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.update_business_name
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject._
@@ -38,7 +39,7 @@ import scala.concurrent.Future
 class CtUpdateBusinessNameController @Inject() (
   actions: Actions,
   val sessionCacheService: SessionCacheService,
-  ct_update_business_name: ct_update_business_name,
+  update_business_name: update_business_name,
   cc: MessagesControllerComponents
 )(implicit
   appConfig: AppConfig,
@@ -49,6 +50,7 @@ with I18nSupport
 with Logging {
 
   val showPage: Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
+    val legacyRegime = LegacyRegime.CT
     val journey = request.ctSubscriptionJourney
 
     val subscriptionBusinessName = journey.asaDetails.agencyName.getOrElse("")
@@ -68,18 +70,27 @@ with Logging {
       }
 
     Future.successful(
-      Ok(ct_update_business_name(form, subscriptionBusinessName))
+      Ok(update_business_name(
+        form,
+        subscriptionBusinessName,
+        legacyRegime
+      ))
     )
   }
 
   def onSubmit: Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
+    val legacyRegime = LegacyRegime.CT
     val journey = request.ctSubscriptionJourney
 
     CtSubscriptionBusinessNameForm.form.bindFromRequest().fold(
       formWithErrors => {
         val subscriptionBusinessName = journey.asaDetails.agencyName.getOrElse("")
         Future.successful(
-          BadRequest(ct_update_business_name(formWithErrors, subscriptionBusinessName))
+          BadRequest(update_business_name(
+            formWithErrors,
+            subscriptionBusinessName,
+            legacyRegime
+          ))
         )
       },
       data => {

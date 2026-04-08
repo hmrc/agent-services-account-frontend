@@ -38,7 +38,7 @@ import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.ctJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtUpdateBusinessNameController
 import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtJourney
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.{CtJourney, LegacyRegime}
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.authorise.Predicate
@@ -211,7 +211,8 @@ with TestConstants {
 
           private val result = controller.onSubmit()(request).futureValue
           status(result) shouldBe SEE_OTHER
-          redirectLocation(result) shouldBe Some(s"/agent-services-account/ct-subscription/${journeyWithRedirectLocation._2}")
+          redirectLocation(result) shouldBe
+            Some(s"/agent-services-account/subscription/${LegacyRegime.CT.toString.toLowerCase}/${journeyWithRedirectLocation._2}")
 
           val updated: Option[CtJourney] = sessionCache.get[CtJourney](ctJourneyKey).futureValue
           updated shouldBe defined
@@ -234,7 +235,8 @@ with TestConstants {
 
           private val result = controller.onSubmit()(request).futureValue
           status(result) shouldBe SEE_OTHER
-          redirectLocation(result) shouldBe Some(s"/agent-services-account/ct-subscription/${journeyWithRedirectLocation._2}")
+          redirectLocation(result) shouldBe
+            Some(s"/agent-services-account/subscription/${LegacyRegime.CT.toString.toLowerCase}/${journeyWithRedirectLocation._2}")
 
           val updated: Option[CtJourney] = sessionCache.get[CtJourney](ctJourneyKey).futureValue
           updated shouldBe defined

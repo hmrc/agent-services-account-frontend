@@ -21,41 +21,50 @@ import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.data.Form
-import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionEmailAddressForm
-import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionEmailAddressForm.emailAddressNewKey
-import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionEmailAddressForm.emailAddressUseAsaDataKey
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtEmailAddressFormValues
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionBusinessNameForm
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionBusinessNameForm.businessNameNewKey
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionBusinessNameForm.businessNameUseAsaDataKey
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtBusinessNameFormValues
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.ct_update_email_address
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.update_business_name
 
-class CtUpdateEmailAddressSpec
+class UpdateBusinessNameSpec
 extends ViewBaseSpec {
 
-  val view: ct_update_email_address = inject[ct_update_email_address]
-  val subscriptionEmailAddress = "joe@bloggs.com"
+  private val view: update_business_name = inject[update_business_name]
+  private val subscriptionBusinessName = "ABC-No.1 Accountants"
 
-  val emailAddressForm: Form[CtEmailAddressFormValues] = CtSubscriptionEmailAddressForm.form
+  private val legacyRegime = LegacyRegime.CT
 
-  val formWithUseAsaError: Form[CtEmailAddressFormValues] = emailAddressForm.withError(
-    key = emailAddressUseAsaDataKey,
-    message = messages("asa.legacy.ct.email-address.use-asa.error.required")
+  private val legacyRegimePrefix = s"asa.legacy.${legacyRegime.toString.toLowerCase}"
+
+  private val businessNameForm: Form[CtBusinessNameFormValues] = CtSubscriptionBusinessNameForm.form
+
+  private val formWithUseAsaError: Form[CtBusinessNameFormValues] = businessNameForm.withError(
+    key = businessNameUseAsaDataKey,
+    message = messages(s"$legacyRegimePrefix.business-name.use-asa.error.required")
   )
-  val formWithNewEmailAddressError: Form[CtEmailAddressFormValues] = emailAddressForm.withError(
-    key = emailAddressNewKey,
-    message = messages("asa.legacy.ct.email-address.new-input.error.empty")
+  private val formWithNewBusinessNameError: Form[CtBusinessNameFormValues] = businessNameForm.withError(
+    key = businessNameNewKey,
+    message = messages(s"$legacyRegimePrefix.business-name.new-input.error.empty")
   )
 
-  def render(form: Form[CtEmailAddressFormValues]): Document = Jsoup.parse(
-    view(form, subscriptionEmailAddress)(
+  def render(form: Form[CtBusinessNameFormValues]): Document = Jsoup.parse(
+    view(
+      form,
+      subscriptionBusinessName,
+      legacyRegime
+    )(
       messages,
       fakeRequest,
       appConfig
     ).body
   )
 
-  private val title: String = messages("asa.legacy.ct.email-address.title")
+  private val title: String = messages(s"$legacyRegimePrefix.business-name.title")
 
-  "ct_update_email_address" when {
+  "ct_update_business_name" when {
 
     def testServiceStaticContent(doc: Document): Unit = {
 
@@ -86,7 +95,7 @@ extends ViewBaseSpec {
 
     "first viewing page" should {
 
-      val doc: Document = render(emailAddressForm)
+      val doc: Document = render(businessNameForm)
 
       testServiceStaticContent(doc)
 
@@ -99,26 +108,26 @@ extends ViewBaseSpec {
       "display correct radio options" in {
         val radios = doc.select(".govuk-radios__item")
         radios.size() mustBe 2
-        radios.get(0).text() mustBe subscriptionEmailAddress
-        radios.get(0).select("input").attr("name") mustBe emailAddressUseAsaDataKey
-        radios.get(1).text() mustBe messages("asa.legacy.ct.email-address.use-asa.false")
-        radios.get(1).select("input").attr("name") mustBe emailAddressUseAsaDataKey
+        radios.get(0).text() mustBe subscriptionBusinessName
+        radios.get(0).select("input").attr("name") mustBe businessNameUseAsaDataKey
+        radios.get(1).text() mustBe messages(s"$legacyRegimePrefix.business-name.use-asa.false")
+        radios.get(1).select("input").attr("name") mustBe businessNameUseAsaDataKey
       }
 
-      "hide the conditional new email address input" in {
+      "hide the conditional new business name input" in {
         val conditionalHidden = doc.select(".govuk-radios__conditional--hidden")
         conditionalHidden.size() mustBe 1
-        conditionalHidden.text() mustBe messages("asa.legacy.ct.email-address.new-input.label") + " " + messages("asa.legacy.ct.email-address.new-input.hint")
-        conditionalHidden.select(".govuk-input").attr("name") mustBe emailAddressNewKey
+        conditionalHidden.text() mustBe messages(s"$legacyRegimePrefix.business-name.new-input.label")
+        conditionalHidden.select(".govuk-input").attr("name") mustBe businessNameNewKey
       }
     }
 
-    "when 'new email address' option is selected" should {
+    "when 'new business name' option is selected" should {
 
-      val filledForm: Form[CtEmailAddressFormValues] = emailAddressForm.fill(
-        CtEmailAddressFormValues(
+      val filledForm: Form[CtBusinessNameFormValues] = businessNameForm.fill(
+        CtBusinessNameFormValues(
           useAsaData = false,
-          newEmailAddress = Some("hello@new.com")
+          newBusinessName = Some("New Accountants")
         )
       )
 
@@ -129,16 +138,16 @@ extends ViewBaseSpec {
         conditional.hasClass("govuk-radios__conditional--hidden") mustBe false
       }
 
-      "have the new email address input present" in {
-        doc.select("#emailAddressNew").size() mustBe 1
+      "have the new business name input present" in {
+        doc.select("#businessNameNew").size() mustBe 1
       }
 
-      "pre-fill the new email address input" in {
-        doc.select("#emailAddressNew").`val`() mustBe "hello@new.com"
+      "pre-fill the new business name input" in {
+        doc.select("#businessNameNew").`val`() mustBe "New Accountants"
       }
 
       "have the correct radio selected" in {
-        val radios = doc.select("input[name=emailAddressUseAsaData]")
+        val radios = doc.select("input[name=businessNameUseAsaData]")
         radios.get(1).hasAttr("checked") mustBe true
       }
     }
@@ -157,8 +166,8 @@ extends ViewBaseSpec {
 
       "display correct error summary link" in {
         val errorLink: Element = doc.select(".govuk-error-summary__list a").first()
-        errorLink.text() mustBe messages("asa.legacy.ct.email-address.use-asa.error.required")
-        errorLink.attr("href") mustBe s"#$emailAddressUseAsaDataKey"
+        errorLink.text() mustBe messages(s"$legacyRegimePrefix.business-name.use-asa.error.required")
+        errorLink.attr("href") mustBe s"#$businessNameUseAsaDataKey"
       }
 
       "display error styling on form" in {
@@ -166,13 +175,13 @@ extends ViewBaseSpec {
       }
 
       "display error message on form" in {
-        doc.select(".govuk-error-message").text() mustBe s"Error: ${messages("asa.legacy.ct.email-address.use-asa.error.required")}"
+        doc.select(".govuk-error-message").text() mustBe s"Error: ${messages(s"$legacyRegimePrefix.business-name.use-asa.error.required")}"
       }
     }
 
-    "form is submitted with newEmailAddress errors should" should {
+    "form is submitted with newBusinessName errors should" should {
 
-      val doc: Document = render(formWithNewEmailAddressError)
+      val doc: Document = render(formWithNewBusinessNameError)
 
       testServiceStaticContent(doc)
 
@@ -184,8 +193,8 @@ extends ViewBaseSpec {
 
       "display correct error summary link" in {
         val errorLink: Element = doc.select(".govuk-error-summary__list a").first()
-        errorLink.text() mustBe messages("asa.legacy.ct.email-address.new-input.error.empty")
-        errorLink.attr("href") mustBe s"#$emailAddressNewKey"
+        errorLink.text() mustBe messages(s"$legacyRegimePrefix.business-name.new-input.error.empty")
+        errorLink.attr("href") mustBe s"#$businessNameNewKey"
       }
 
       "display error styling on form" in {
@@ -193,7 +202,7 @@ extends ViewBaseSpec {
       }
 
       "display error message on form" in {
-        doc.select(".govuk-error-message").text() mustBe s"Error: ${messages("asa.legacy.ct.email-address.new-input.error.empty")}"
+        doc.select(".govuk-error-message").text() mustBe s"Error: ${messages(s"$legacyRegimePrefix.business-name.new-input.error.empty")}"
       }
     }
   }

@@ -26,8 +26,9 @@ import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPag
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionPhoneNumberForm
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtPhoneNumberFormValues
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions._
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.update_phone_number
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject._
@@ -38,7 +39,7 @@ import scala.concurrent.Future
 class CtUpdatePhoneNumberController @Inject() (
   actions: Actions,
   val sessionCacheService: SessionCacheService,
-  ct_update_phone_number: ct_update_phone_number,
+  update_phone_number: update_phone_number,
   cc: MessagesControllerComponents
 )(implicit
   appConfig: AppConfig,
@@ -49,6 +50,7 @@ with I18nSupport
 with Logging {
 
   val showPage: Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
+    val legacyRegime = LegacyRegime.CT
     val journey = request.ctSubscriptionJourney
 
     val subscriptionPhoneNumber = journey.asaDetails.agencyTelephone.getOrElse("")
@@ -68,18 +70,27 @@ with Logging {
       }
 
     Future.successful(
-      Ok(ct_update_phone_number(form, subscriptionPhoneNumber))
+      Ok(update_phone_number(
+        form,
+        subscriptionPhoneNumber,
+        legacyRegime
+      ))
     )
   }
 
   def onSubmit: Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
+    val legacyRegime = LegacyRegime.CT
     val journey = request.ctSubscriptionJourney
 
     CtSubscriptionPhoneNumberForm.form.bindFromRequest().fold(
       formWithErrors => {
         val subscriptionPhoneNumber = journey.asaDetails.agencyTelephone.getOrElse("")
         Future.successful(
-          BadRequest(ct_update_phone_number(formWithErrors, subscriptionPhoneNumber))
+          BadRequest(update_phone_number(
+            formWithErrors,
+            subscriptionPhoneNumber,
+            legacyRegime
+          ))
         )
       },
       data => {

@@ -26,6 +26,7 @@ import uk.gov.hmrc.agentservicesaccount.controllers.ctJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.emailPendingVerificationKey
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.CompletedEmail
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.VerificationStatusResponse
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
 
 class CtUpdateEmailAddressControllerISpec
@@ -33,7 +34,7 @@ extends ComponentBaseISpec {
 
   private val repo = inject[SessionCacheRepository]
 
-  private val updateEmailAddressPath = s"$ctSubscriptionStartPath/email-address"
+  private val updateEmailAddressPath = s"$subscriptionStartPath/${LegacyRegime.CT.toString.toLowerCase}/email-address"
 
   s"GET $updateEmailAddressPath" should {
     "display the enter email address page" in {
@@ -72,7 +73,7 @@ extends ComponentBaseISpec {
               )
             )
           result.status shouldBe SEE_OTHER
-          result.header(LOCATION) shouldBe Some(s"/agent-services-account/ct-subscription/${journeyWithRedirectLocation._2}")
+          result.header(LOCATION) shouldBe Some(s"$subscriptionStartPath/${LegacyRegime.CT.toString.toLowerCase}/${journeyWithRedirectLocation._2}")
 
           val updated = await(repo.getFromSession(ctJourneyKey))
           updated shouldBe defined

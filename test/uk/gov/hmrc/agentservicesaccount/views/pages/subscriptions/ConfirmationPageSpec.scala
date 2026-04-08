@@ -18,18 +18,21 @@ package uk.gov.hmrc.agentservicesaccount.views.pages.subscriptions
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.ct_confirmation
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.confirmation
 
-class CtConfirmationPageSpec
+class ConfirmationPageSpec
 extends ViewBaseSpec {
 
-  val view: ct_confirmation = inject[ct_confirmation]
+  private val view: confirmation = inject[confirmation]
 
-  "ct_confirmation view" should {
+  private val legacyRegime = LegacyRegime.CT
+
+  "confirmation view" should {
 
     val doc: Document = Jsoup.parse(
-      view.apply()(
+      view.apply(legacyRegime)(
         fakeRequest,
         messages,
         appConfig

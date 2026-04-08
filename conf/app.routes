@@ -92,30 +92,30 @@ GET        /manage-account/contact-details/check-your-answers             @uk.go
 POST       /manage-account/contact-details/check-your-answers             @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.CheckYourAnswersController.onSubmit
 GET        /manage-account/contact-details/confirmation                   @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.ContactDetailsController.showChangeSubmitted
 
-GET        /paye-subscription/request/confirm                             @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.PayeSubscriptionRequestController.showConfirm
-POST       /paye-subscription/request/confirm                             @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.PayeSubscriptionRequestController.submit
-GET        /paye-subscription/request/submitted                           @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.PayeSubscriptionRequestController.showSubmitted
+GET        /subscription/paye/request/confirm                             @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.PayeSubscriptionRequestController.showConfirm
+POST       /subscription/paye/request/confirm                             @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.PayeSubscriptionRequestController.submit
+GET        /subscription/paye/request/submitted                           @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.PayeSubscriptionRequestController.showSubmitted
 
-GET        /ct-subscription/business-name                                 @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtUpdateBusinessNameController.showPage
-POST       /ct-subscription/business-name                                 @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtUpdateBusinessNameController.onSubmit
+GET        /subscription/ct/business-name                                 @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtUpdateBusinessNameController.showPage
+POST       /subscription/ct/business-name                                 @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtUpdateBusinessNameController.onSubmit
 
-GET        /ct-subscription/phone-number                                  @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtUpdatePhoneNumberController.showPage
-POST       /ct-subscription/phone-number                                  @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtUpdatePhoneNumberController.onSubmit
+GET        /subscription/ct/phone-number                                  @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtUpdatePhoneNumberController.showPage
+POST       /subscription/ct/phone-number                                  @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtUpdatePhoneNumberController.onSubmit
 
-GET        /ct-subscription/email-address                                 @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtUpdateEmailAddressController.showPage
-POST       /ct-subscription/email-address                                 @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtUpdateEmailAddressController.onSubmit
-GET        /ct-subscription/email-verification-finish                     @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtEmailVerificationEndpointController.finishEmailVerification
+GET        /subscription/ct/email-address                                 @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtUpdateEmailAddressController.showPage
+POST       /subscription/ct/email-address                                 @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtUpdateEmailAddressController.onSubmit
+GET        /subscription/ct/email-verification-finish                     @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtEmailVerificationEndpointController.finishEmailVerification
 
-GET        /ct-subscription/address                                       @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtUpdateAddressController.showPage
-POST       /ct-subscription/address                                       @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtUpdateAddressController.onSubmit
+GET        /subscription/ct/address                                       @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtUpdateAddressController.showPage
+POST       /subscription/ct/address                                       @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtUpdateAddressController.onSubmit
 
-GET        /ct-subscription/address-lookup-start                          @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtAddressLookupController.startAddressLookup
-GET        /ct-subscription/address-lookup-finish                         @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtAddressLookupController.finishAddressLookup(id: Option[String])
+GET        /subscription/ct/address-lookup-start                          @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtAddressLookupController.startAddressLookup
+GET        /subscription/ct/address-lookup-finish                         @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtAddressLookupController.finishAddressLookup(id: Option[String])
 
-GET        /ct-subscription/check-your-answers                            @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtCheckYourAnswersController.showPage
-POST       /ct-subscription/check-your-answers                            @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtCheckYourAnswersController.onSubmit
+GET        /subscription/ct/check-your-answers                            @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtCheckYourAnswersController.showPage
+POST       /subscription/ct/check-your-answers                            @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtCheckYourAnswersController.onSubmit
 
-GET        /ct-subscription/confirmation                                  @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtConfirmationController.showConfirmationPage
+GET        /subscription/ct/confirmation                                  @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtConfirmationController.showConfirmationPage
 
 # AMLS
 GET        /manage-account/money-laundering-supervision/view-details                     @uk.gov.hmrc.agentservicesaccount.controllers.amls.ViewDetailsController.showPage

@@ -16,6 +16,7 @@
 
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.controllers._
+@import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 @import uk.gov.hmrc.agentservicesaccount.views.components.models.SummaryListData
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 @import uk.gov.hmrc.govukfrontend.views.Aliases.{Button, Text}
@@ -31,18 +32,20 @@
         formWithCSRF: FormWithCSRF
 )
 
-@(model: Seq[SummaryListData])(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
+@(model: Seq[SummaryListData], legacyRegime: LegacyRegime)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
+
+@legacyRegimePrefix = @{ s"asa.legacy.${legacyRegime.toString.toLowerCase}" }
 
 @main(
-  pageTitle = msgs("asa.legacy.ct.check-your-answers.h1"),
+  pageTitle = msgs(s"$legacyRegimePrefix.check-your-answers.h1"),
   mimicBrowserBackLink = true,
   showSecondaryNav = false
 ) {
 
-  @h1("asa.legacy.ct.check-your-answers.h1")
+  @h1(s"$legacyRegimePrefix.check-your-answers.h1")
 
     @formWithCSRF(action = subscriptions.routes.CtCheckYourAnswersController.onSubmit) {
         @summary_list(model)
-        @govukButton(Button(content = Text(msgs("asa.legacy.ct.check-your-answers.submit-button"))))
+        @govukButton(Button(content = Text(msgs(s"$legacyRegimePrefix.check-your-answers.submit-button"))))
     }
   }

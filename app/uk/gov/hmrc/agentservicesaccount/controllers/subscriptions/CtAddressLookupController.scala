@@ -29,6 +29,7 @@ import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPag
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup._
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
@@ -50,37 +51,40 @@ extends FrontendController(cc)
 with I18nSupport
 with Logging {
 
-  private def alfJourneyLanguageLabels(implicit lang: Lang): JsObject = {
+  private def alfJourneyLanguageLabels(legacyRegime: LegacyRegime)(implicit lang: Lang): JsObject = {
+    val lr = legacyRegime.toString.toLowerCase
     val editPageLabels = Json.obj(
-      "title" -> messagesApi("asa.legacy.ct.alf.edit.title"),
-      "heading" -> messagesApi("asa.legacy.ct.alf.edit.heading"),
-      "townLabel" -> messagesApi("asa.legacy.ct.alf.edit.townLabel")
+      "title" -> messagesApi(s"asa.legacy.$lr.alf.edit.title"),
+      "heading" -> messagesApi(s"asa.legacy.$lr.alf.edit.heading"),
+      "townLabel" -> messagesApi(s"asa.legacy.$lr.alf.edit.townLabel")
     )
     Json.obj(
       "countryPickerLabels" -> Json.obj(
-        "title" -> messagesApi("asa.legacy.ct.alf.country-picker.title"),
-        "heading" -> messagesApi("asa.legacy.ct.alf.country-picker.heading"),
+        "title" -> messagesApi(s"asa.legacy.$lr.alf.country-picker.title"),
+        "heading" -> messagesApi(s"asa.legacy.$lr.alf.country-picker.heading"),
         "countryLabel" -> ""
       ),
       "lookupPageLabels" -> Json.obj(
-        "title" -> messagesApi("asa.legacy.ct.alf.lookup.title"),
-        "heading" -> messagesApi("asa.legacy.ct.alf.lookup.heading"),
-        "postcodeLabel" -> messagesApi("asa.legacy.ct.alf.lookup.postcode.label")
+        "title" -> messagesApi(s"asa.legacy.$lr.alf.lookup.title"),
+        "heading" -> messagesApi(s"asa.legacy.$lr.alf.lookup.heading"),
+        "postcodeLabel" -> messagesApi(s"asa.legacy.$lr.alf.lookup.postcode.label")
       ),
       "selectPageLabels" -> Json.obj(
-        "title" -> messagesApi("asa.legacy.ct.alf.select.title")
+        "title" -> messagesApi(s"asa.legacy.$lr.alf.select.title")
       ),
       "editPageLabels" -> editPageLabels,
       "international" -> Json.obj(
         "editPageLabels" -> editPageLabels
       ),
       "confirmPageLabels" -> Json.obj(
-        "title" -> messagesApi("asa.legacy.ct.alf.confirm.title")
+        "title" -> messagesApi(s"asa.legacy.$lr.alf.confirm.title")
       )
     )
   }
 
   def startAddressLookup: Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
+    val legacyRegime = LegacyRegime.CT
+
     val continueUrl: String = {
       val useAbsoluteUrls = appConfig.addressLookupBaseUrl.contains("localhost")
       val call = subscriptions.routes.CtAddressLookupController.finishAddressLookup(None)
@@ -115,8 +119,8 @@ with Logging {
       ),
       version = 2,
       labels = Some(JourneyLabels(
-        en = Some(alfJourneyLanguageLabels(Lang("en"))),
-        cy = Some(alfJourneyLanguageLabels(Lang("cy")))
+        en = Some(alfJourneyLanguageLabels(legacyRegime)(Lang("en"))),
+        cy = Some(alfJourneyLanguageLabels(legacyRegime)(Lang("cy")))
       ))
     )
 
@@ -126,6 +130,7 @@ with Logging {
   }
 
   def finishAddressLookup(id: Option[String]): Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
+    val legacyRegime = LegacyRegime.CT
     val journey = request.ctSubscriptionJourney
 
     id match {

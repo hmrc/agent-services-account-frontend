@@ -20,6 +20,7 @@ import play.api.mvc.Call
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
 import uk.gov.hmrc.agentservicesaccount.controllers.{routes => homeRoutes}
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtJourney
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 
 object CtNextPageSelector {
 
@@ -63,6 +64,7 @@ object CtNextPageSelector {
     currentPage: String,
     journey: Option[CtJourney] = None
   ): Call = {
+    val legacyRegime = LegacyRegime.CT
     nextPage(currentPage, journey)
   }
 

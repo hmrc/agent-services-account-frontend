@@ -23,18 +23,21 @@ import play.api.i18n.Lang
 import play.api.i18n.Messages
 import play.api.i18n.MessagesImpl
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.ct_check_your_answers
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.check_your_answers
 import uk.gov.hmrc.agentservicesaccount.views.components.models.SummaryListData
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.routes
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 
 import scala.jdk.CollectionConverters._
 
-class CtCheckYourAnswersPageSpec
+class CheckYourAnswersPageSpec
 extends ViewBaseSpec {
 
   private implicit val langs: Seq[Lang] = Seq(Lang("en"))
 
-  private val view: ct_check_your_answers = app.injector.instanceOf[ct_check_your_answers]
+  private val view: check_your_answers = app.injector.instanceOf[check_your_answers]
+
+  private val legacyRegime = LegacyRegime.CT
 
   object MessageLookup {
 
@@ -44,28 +47,31 @@ extends ViewBaseSpec {
 
   }
 
-  private val model = Seq(
-    SummaryListData(
-      key = "asa.legacy.ct.check-your-answers.business-name",
-      value = "Test Agency",
-      link = None
-    ),
-    SummaryListData(
-      key = "asa.legacy.ct.check-your-answers.phone-number",
-      value = "1234567890",
-      link = None
-    ),
-    SummaryListData(
-      key = "asa.legacy.ct.check-your-answers.email",
-      value = "test@test.com",
-      link = None
-    ),
-    SummaryListData(
-      key = "asa.legacy.ct.check-your-answers.address",
-      value = "Line 1<br/>Line 2",
-      link = None
+  private def model(legacyRegime: LegacyRegime) = {
+    val lr = legacyRegime.toString.toLowerCase
+    Seq(
+      SummaryListData(
+        key = s"asa.legacy.$lr.check-your-answers.business-name",
+        value = "Test Agency",
+        link = None
+      ),
+      SummaryListData(
+        key = s"asa.legacy.$lr.check-your-answers.phone-number",
+        value = "1234567890",
+        link = None
+      ),
+      SummaryListData(
+        key = s"asa.legacy.$lr.check-your-answers.email",
+        value = "test@test.com",
+        link = None
+      ),
+      SummaryListData(
+        key = s"asa.legacy.$lr.check-your-answers.address",
+        value = "Line 1<br/>Line 2",
+        link = None
+      )
     )
-  )
+  }
 
   "check_your_answers view" should {
 
@@ -74,7 +80,7 @@ extends ViewBaseSpec {
       val messages: Messages = MessagesImpl(langs.head, messagesApi)
 
       val doc: Document = Jsoup.parse(
-        view(model)(
+        view(model(legacyRegime), legacyRegime)(
           messages,
           fakeRequest,
           appConfig

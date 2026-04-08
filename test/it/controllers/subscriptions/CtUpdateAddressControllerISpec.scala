@@ -22,6 +22,7 @@ import stubs.AgentServicesAccountStubs.stubASAGetResponseError
 import support.ComponentBaseISpec
 import uk.gov.hmrc.agentservicesaccount.controllers.ctJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
 
 class CtUpdateAddressControllerISpec
@@ -29,7 +30,7 @@ extends ComponentBaseISpec {
 
   private val repo = inject[SessionCacheRepository]
 
-  private val updateAddressPath = s"$ctSubscriptionStartPath/address"
+  private val updateAddressPath = s"$subscriptionStartPath/${LegacyRegime.CT.toString.toLowerCase}/address"
 
   s"GET $updateAddressPath" should {
     "display the enter address page" in {
@@ -68,7 +69,7 @@ extends ComponentBaseISpec {
               )
             )
           result.status shouldBe SEE_OTHER
-          result.header(LOCATION) shouldBe Some(s"/agent-services-account/ct-subscription/${journeyWithRedirectLocation._2}")
+          result.header(LOCATION) shouldBe Some(s"$subscriptionStartPath/${LegacyRegime.CT.toString.toLowerCase}/${journeyWithRedirectLocation._2}")
 
           val updated = await(repo.getFromSession(ctJourneyKey))
           updated shouldBe defined
