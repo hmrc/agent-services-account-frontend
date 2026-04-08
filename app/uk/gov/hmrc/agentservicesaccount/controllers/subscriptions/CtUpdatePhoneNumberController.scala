@@ -94,9 +94,7 @@ with Logging {
 
         sessionCacheService
           .put(ctJourneyKey, updatedJourney)
-          .map { _ =>
-            Redirect(getNextPage(updatePhoneNumberPage))
-          }
+          .map(_ => Redirect(getNextPage(updatePhoneNumberPage, Some(updatedJourney))))
       }
     )
   }

@@ -17,9 +17,9 @@
 package uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util
 
 import play.api.mvc.Call
-import uk.gov.hmrc.agentservicesaccount.actions.CtJourney
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
 import uk.gov.hmrc.agentservicesaccount.controllers.{routes => homeRoutes}
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtJourney
 
 object CtNextPageSelector {
 
@@ -36,6 +36,7 @@ object CtNextPageSelector {
     String,
     Option[CtJourney]
   ) => Call = {
+    case (_, Some(journey)) if journey.isComplete => subscriptions.routes.CtCheckYourAnswersController.showPage
     case (`updateBusinessNamePage`, _) => subscriptions.routes.CtUpdatePhoneNumberController.showPage
     case (`updatePhoneNumberPage`, _) => subscriptions.routes.CtUpdateEmailAddressController.showPage
     case (`updateEmailAddressPage`, Some(journey)) =>

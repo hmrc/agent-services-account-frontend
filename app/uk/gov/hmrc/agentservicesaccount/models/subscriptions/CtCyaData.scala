@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.agentservicesaccount.models.subscriptions
 
-import uk.gov.hmrc.agentservicesaccount.actions.CtJourney
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 
 case class CtCyaData(

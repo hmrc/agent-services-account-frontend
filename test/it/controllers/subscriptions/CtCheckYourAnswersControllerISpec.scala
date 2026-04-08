@@ -32,11 +32,11 @@ import play.api.test.Helpers._
 import stubs.AgentServicesAccountStubs._
 import support.BaseISpec
 import support.UnitSpec
-import uk.gov.hmrc.agentservicesaccount.actions.CtJourney
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.ctJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtCheckYourAnswersController
 import uk.gov.hmrc.agentservicesaccount.models._
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtJourney
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtSubscriptionRequest
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.auth.core._
@@ -143,7 +143,7 @@ with MockFactory {
       countryCode = "GB"
     )
 
-    val baseJourney: CtJourney = CtJourney(
+    val fullCtJourney: CtJourney = CtJourney(
       asaDetails = AgencyDetails(
         agencyName = Some("ASA Name"),
         agencyEmail = Some("asa@test.com"),
@@ -173,7 +173,7 @@ with MockFactory {
 
     "return OK and render page when valid data present" in new TestSetup {
 
-      cacheJourney(baseJourney)
+      cacheJourney(fullCtJourney)
 
       val result = controller.showPage()(fakeRequest).futureValue
 
@@ -217,7 +217,7 @@ with MockFactory {
 
     "redirect when submission succeeds" in new TestSetup {
 
-      cacheJourney(baseJourney)
+      cacheJourney(fullCtJourney)
       givenCtStartSubscriptionResponse(OK)
 
       val result = controller.onSubmit()(fakeRequest).futureValue

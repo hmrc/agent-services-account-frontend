@@ -21,9 +21,7 @@ import stubs.AddressLookupStubs._
 import stubs.AgentServicesAccountStubs.givenGetAgentRecord
 import stubs.AgentServicesAccountStubs.stubASAGetResponseError
 import support.ComponentBaseISpec
-import uk.gov.hmrc.agentservicesaccount.actions.CtJourney
 import uk.gov.hmrc.agentservicesaccount.controllers.ctJourneyKey
-import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup.ConfirmedResponseAddress
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup.ConfirmedResponseAddressDetails
@@ -61,23 +59,6 @@ extends ComponentBaseISpec {
     countryCode = "GB"
   )
 
-  private val baseJourney: CtJourney = CtJourney(
-    asaDetails = AgencyDetails(
-      agencyName = Some("ASA Name"),
-      agencyEmail = Some("asa@test.com"),
-      agencyTelephone = Some("999999"),
-      agencyAddress = Some(address)
-    ),
-    useCustomBusinessName = Some(true),
-    businessNameAnswer = Some("Custom Name"),
-    useCustomPhoneNumber = Some(true),
-    phoneNumberAnswer = Some("123456"),
-    useCustomEmail = Some(true),
-    emailAnswer = Some("custom@test.com"),
-    useCustomAddress = None,
-    addressAnswer = None
-  )
-
   s"GET $startAddressLookupPath" should {
     "redirect to the external service to look up an address" in {
 
@@ -95,24 +76,33 @@ extends ComponentBaseISpec {
   }
 
   s"GET $finishAddressLookupPath" should {
-    "store the new address in session and redirect to review new details page" in {
 
-      givenAuthorisedAsAgentWith(arn.value)
-      givenGetAgentRecord(agentRecord)
-      stubASAGetResponseError(arn, NOT_FOUND)
-      givenGetAddressSuccess("bar", confirmedAddressResponse)
+    val journeyWithRedirectLocations = List(
+      (ctSubscriptionBaseJourney, "check-your-answers", "not complete"),
+      (ctSubscriptionFullJourney, "check-your-answers", "complete")
+    )
 
-      await(repo.putSession(ctJourneyKey, baseJourney))
+    journeyWithRedirectLocations.foreach(journeyWithRedirectLocation => {
+      s"update journey with new address and redirect to ${journeyWithRedirectLocation._2}" +
+        s"when journey ${journeyWithRedirectLocation._3}" in {
 
-      val result = get(s"$finishAddressLookupPath?id=bar")
+          givenAuthorisedAsAgentWith(arn.value)
+          givenGetAgentRecord(agentRecord)
+          stubASAGetResponseError(arn, NOT_FOUND)
+          givenGetAddressSuccess("bar", confirmedAddressResponse)
 
-      result.status shouldBe SEE_OTHER
+          await(repo.putSession(ctJourneyKey, journeyWithRedirectLocation._1))
 
-      result.header("Location").get shouldBe "/agent-services-account/ct-subscription/check-your-answers"
-      val updatedJourney = await(repo.getFromSession(ctJourneyKey))
-      updatedJourney.get.useCustomAddress shouldBe Some(true)
-      updatedJourney.get.addressAnswer shouldBe Some(address)
-    }
+          val result = get(s"$finishAddressLookupPath?id=bar")
+          result.status shouldBe SEE_OTHER
+          result.header(LOCATION) shouldBe Some(s"/agent-services-account/ct-subscription/${journeyWithRedirectLocation._2}")
+
+          val updatedJourney = await(repo.getFromSession(ctJourneyKey))
+          updatedJourney shouldBe defined
+          updatedJourney.get.useCustomAddress shouldBe Some(true)
+          updatedJourney.get.addressAnswer shouldBe Some(address)
+        }
+    })
 
     "return bad request when no id provided in a query param" in {
 

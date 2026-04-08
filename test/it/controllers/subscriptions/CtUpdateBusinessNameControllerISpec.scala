@@ -32,12 +32,13 @@ import play.api.mvc.RequestHeader
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import support.BaseISpec
+import support.TestConstants
 import support.UnitSpec
-import uk.gov.hmrc.agentservicesaccount.actions.CtJourney
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.ctJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtUpdateBusinessNameController
 import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtJourney
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.authorise.Predicate
@@ -55,7 +56,8 @@ with Matchers
 with GuiceOneAppPerSuite
 with ScalaFutures
 with IntegrationPatience
-with MockFactory {
+with MockFactory
+with TestConstants {
 
   class TestSetup {
 
@@ -134,23 +136,6 @@ with MockFactory {
 
     val sessionCache: SessionCacheService = app.injector.instanceOf[SessionCacheService]
 
-    val baseJourney: CtJourney = CtJourney(
-      asaDetails = uk.gov.hmrc.agentservicesaccount.models.AgencyDetails(
-        agencyName = Some("Test Agency"),
-        agencyEmail = None,
-        agencyTelephone = None,
-        agencyAddress = None
-      ),
-      useCustomBusinessName = None,
-      businessNameAnswer = None,
-      useCustomPhoneNumber = None,
-      phoneNumberAnswer = None,
-      useCustomEmail = None,
-      emailAnswer = None,
-      useCustomAddress = None,
-      addressAnswer = None
-    )
-
     val session: Map[String, String] = Map("sessionId" -> "test-session")
 
     def fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest().withSession(session.toSeq: _*)
@@ -166,7 +151,7 @@ with MockFactory {
   "GET /update-business-name" should {
 
     "render empty form on first visit" in new TestSetup {
-      cacheJourney(baseJourney)
+      cacheJourney(ctSubscriptionBaseJourney)
 
       private val result = controller.showPage()(FakeRequest()).futureValue
 
@@ -175,7 +160,7 @@ with MockFactory {
     }
 
     "render pre-filled form when journey has existing answers" in new TestSetup {
-      private val journey = baseJourney.copy(
+      private val journey = ctSubscriptionBaseJourney.copy(
         useCustomBusinessName = Some(true),
         businessNameAnswer = Some("Custom Name Ltd")
       )
@@ -195,7 +180,7 @@ with MockFactory {
   "POST /update-business-name" should {
 
     "return BAD_REQUEST when form is invalid" in new TestSetup {
-      cacheJourney(baseJourney)
+      cacheJourney(ctSubscriptionBaseJourney)
 
       private val request = FakeRequest().withSession(session.toSeq: _*).withFormUrlEncodedBody(
         "useAsaData" -> ""
@@ -206,46 +191,57 @@ with MockFactory {
       status(result) shouldBe BAD_REQUEST
     }
 
-    "update journey and redirect when using ASA business name" in new TestSetup {
-      private val request = FakeRequest(POST, "/")
-        .withSession(session.toSeq: _*)
-        .withFormUrlEncodedBody(
-          "businessNameUseAsaData" -> "true"
-        )
+    val journeyWithRedirectLocations = List(
+      (ctSubscriptionBaseJourney, "phone-number", "not complete"),
+      (ctSubscriptionFullJourney, "check-your-answers", "complete")
+    )
 
-      implicit val implicitRequest: FakeRequest[AnyContentAsFormUrlEncoded] = request
+    journeyWithRedirectLocations.foreach(journeyWithRedirectLocation => {
+      s"update journey and redirect to ${journeyWithRedirectLocation._2}" +
+        s"when using ASA business name and journey ${journeyWithRedirectLocation._3}" in new TestSetup {
+          private val request = FakeRequest(POST, "/")
+            .withSession(session.toSeq: _*)
+            .withFormUrlEncodedBody(
+              "businessNameUseAsaData" -> "true"
+            )
 
-      cacheJourney(baseJourney)
+          implicit val implicitRequest: FakeRequest[AnyContentAsFormUrlEncoded] = request
 
-      private val result = controller.onSubmit()(request).futureValue
+          cacheJourney(journeyWithRedirectLocation._1)
 
-      status(result) shouldBe SEE_OTHER
+          private val result = controller.onSubmit()(request).futureValue
+          status(result) shouldBe SEE_OTHER
+          redirectLocation(result) shouldBe Some(s"/agent-services-account/ct-subscription/${journeyWithRedirectLocation._2}")
 
-      val updated: Option[CtJourney] = sessionCache.get[CtJourney](ctJourneyKey).futureValue
-      updated shouldBe defined
-      updated.get.useCustomBusinessName shouldBe Some(false)
-      updated.value.businessNameAnswer shouldBe None
-    }
+          val updated: Option[CtJourney] = sessionCache.get[CtJourney](ctJourneyKey).futureValue
+          updated shouldBe defined
+          updated.get.useCustomBusinessName shouldBe Some(false)
+          updated.value.businessNameAnswer shouldBe None
+        }
 
-    "update journey and redirect when using custom business name" in new TestSetup {
-      private val request = FakeRequest(POST, "/")
-        .withSession(session.toSeq: _*)
-        .withFormUrlEncodedBody(
-          "businessNameUseAsaData" -> "false",
-          "businessNameNew" -> "My Custom Ltd"
-        )
+      s"update journey and redirect to ${journeyWithRedirectLocation._2}" +
+        s"when using custom business name and journey ${journeyWithRedirectLocation._3}" in new TestSetup {
+          private val request = FakeRequest(POST, "/")
+            .withSession(session.toSeq: _*)
+            .withFormUrlEncodedBody(
+              "businessNameUseAsaData" -> "false",
+              "businessNameNew" -> "My Custom Ltd"
+            )
 
-      implicit val implicitRequest: FakeRequest[AnyContentAsFormUrlEncoded] = request
+          implicit val implicitRequest: FakeRequest[AnyContentAsFormUrlEncoded] = request
 
-      cacheJourney(baseJourney)
+          cacheJourney(journeyWithRedirectLocation._1)
 
-      private val result = controller.onSubmit()(request).futureValue
-      status(result) shouldBe SEE_OTHER
+          private val result = controller.onSubmit()(request).futureValue
+          status(result) shouldBe SEE_OTHER
+          redirectLocation(result) shouldBe Some(s"/agent-services-account/ct-subscription/${journeyWithRedirectLocation._2}")
 
-      val updated: Option[CtJourney] = sessionCache.get[CtJourney](ctJourneyKey).futureValue
-      updated.value.useCustomBusinessName shouldBe Some(true)
-      updated.value.businessNameAnswer shouldBe Some("My Custom Ltd")
-    }
+          val updated: Option[CtJourney] = sessionCache.get[CtJourney](ctJourneyKey).futureValue
+          updated shouldBe defined
+          updated.value.useCustomBusinessName shouldBe Some(true)
+          updated.value.businessNameAnswer shouldBe Some("My Custom Ltd")
+        }
+    })
   }
 
 }

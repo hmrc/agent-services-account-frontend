@@ -96,14 +96,13 @@ with Logging {
       data => {
         if (data.useAsaData) {
           val updatedJourney = journey.copy(
-            useCustomAddress = Some(false)
+            useCustomAddress = Some(false),
+            addressAnswer = None
           )
 
           sessionCacheService
             .put(ctJourneyKey, updatedJourney)
-            .map { _ =>
-              Redirect(getNextPage(updateAddressPage, Some(updatedJourney)))
-            }
+            .map(_ => Redirect(getNextPage(updateAddressPage, Some(updatedJourney))))
         }
         else {
           Future.successful(Redirect(routes.CtAddressLookupController.startAddressLookup))
