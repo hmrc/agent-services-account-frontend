@@ -86,24 +86,23 @@ extends ComponentBaseISpec {
       s"update journey with new address and redirect to ${journeyWithRedirectLocation._2}" +
         s"when journey ${journeyWithRedirectLocation._3}" in {
 
-        givenAuthorisedAsAgentWith(arn.value)
-        givenGetAgentRecord(agentRecord)
-        stubASAGetResponseError(arn, NOT_FOUND)
-        givenGetAddressSuccess("bar", confirmedAddressResponse)
+          givenAuthorisedAsAgentWith(arn.value)
+          givenGetAgentRecord(agentRecord)
+          stubASAGetResponseError(arn, NOT_FOUND)
+          givenGetAddressSuccess("bar", confirmedAddressResponse)
 
-        await(repo.putSession(ctJourneyKey, journeyWithRedirectLocation._1))
+          await(repo.putSession(ctJourneyKey, journeyWithRedirectLocation._1))
 
-        val result = get(s"$finishAddressLookupPath?id=bar")
-        result.status shouldBe SEE_OTHER
-        result.header(LOCATION) shouldBe Some(s"/agent-services-account/ct-subscription/${journeyWithRedirectLocation._2}")
+          val result = get(s"$finishAddressLookupPath?id=bar")
+          result.status shouldBe SEE_OTHER
+          result.header(LOCATION) shouldBe Some(s"/agent-services-account/ct-subscription/${journeyWithRedirectLocation._2}")
 
-        val updatedJourney = await(repo.getFromSession(ctJourneyKey))
-        updatedJourney shouldBe defined
-        updatedJourney.get.useCustomAddress shouldBe Some(true)
-        updatedJourney.get.addressAnswer shouldBe Some(address)
-      }
+          val updatedJourney = await(repo.getFromSession(ctJourneyKey))
+          updatedJourney shouldBe defined
+          updatedJourney.get.useCustomAddress shouldBe Some(true)
+          updatedJourney.get.addressAnswer shouldBe Some(address)
+        }
     })
-
 
     "return bad request when no id provided in a query param" in {
 

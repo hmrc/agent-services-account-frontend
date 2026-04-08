@@ -55,26 +55,26 @@ extends ComponentBaseISpec {
     journeyWithRedirectLocations.foreach(journeyWithRedirectLocation => {
       s"update journey and redirect to ${journeyWithRedirectLocation._2}" +
         s"when using ASA address and journey ${journeyWithRedirectLocation._3}" in {
-        givenAuthorisedAsAgentWith(arn.value)
-        givenGetAgentRecord(agentRecord)
-        stubASAGetResponseError(arn, NOT_FOUND)
+          givenAuthorisedAsAgentWith(arn.value)
+          givenGetAgentRecord(agentRecord)
+          stubASAGetResponseError(arn, NOT_FOUND)
 
-        repo.putSession(ctJourneyKey, journeyWithRedirectLocation._1).futureValue
+          repo.putSession(ctJourneyKey, journeyWithRedirectLocation._1).futureValue
 
-        val result =
-          post(updateAddressPath)(body =
-            Map(
-              "addressUseAsaData" -> Seq("true")
+          val result =
+            post(updateAddressPath)(body =
+              Map(
+                "addressUseAsaData" -> Seq("true")
+              )
             )
-          )
-        result.status shouldBe SEE_OTHER
-        result.header(LOCATION) shouldBe Some(s"/agent-services-account/ct-subscription/${journeyWithRedirectLocation._2}")
+          result.status shouldBe SEE_OTHER
+          result.header(LOCATION) shouldBe Some(s"/agent-services-account/ct-subscription/${journeyWithRedirectLocation._2}")
 
-        val updated = await(repo.getFromSession(ctJourneyKey))
-        updated shouldBe defined
-        updated.get.useCustomAddress shouldBe Some(false)
-        updated.value.addressAnswer shouldBe None
-      }
+          val updated = await(repo.getFromSession(ctJourneyKey))
+          updated shouldBe defined
+          updated.get.useCustomAddress shouldBe Some(false)
+          updated.value.addressAnswer shouldBe None
+        }
     })
 
     "(if not using ASA address) redirect to the ALF external journey" in {
