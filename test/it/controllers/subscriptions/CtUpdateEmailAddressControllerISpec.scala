@@ -73,7 +73,7 @@ extends ComponentBaseISpec {
               )
             )
           result.status shouldBe SEE_OTHER
-          result.header(LOCATION) shouldBe Some(s"/agent-services-account/ct-subscription/${journeyWithRedirectLocation._2}")
+          result.header(LOCATION) shouldBe Some(s"$subscriptionStartPath/${LegacyRegime.CT.toString.toLowerCase}/${journeyWithRedirectLocation._2}")
 
           val updated = await(repo.getFromSession(ctJourneyKey))
           updated shouldBe defined

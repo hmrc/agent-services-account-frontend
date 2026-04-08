@@ -24,7 +24,8 @@ import play.api.data.Form
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionAddressForm
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionAddressForm.addressUseAsaDataKey
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.{CtAddressFormValues, LegacyRegime}
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtAddressFormValues
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.update_address
 
@@ -67,7 +68,11 @@ extends ViewBaseSpec {
   )
 
   def render(form: Form[CtAddressFormValues]): Document = Jsoup.parse(
-    view(form, subscriptionAddress, legacyRegime)(
+    view(
+      form,
+      subscriptionAddress,
+      legacyRegime
+    )(
       messages,
       fakeRequest,
       appConfig
