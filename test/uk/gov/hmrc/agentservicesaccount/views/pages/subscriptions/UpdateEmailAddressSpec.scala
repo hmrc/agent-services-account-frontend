@@ -24,7 +24,8 @@ import play.api.data.Form
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionEmailAddressForm
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionEmailAddressForm.emailAddressNewKey
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionEmailAddressForm.emailAddressUseAsaDataKey
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.{CtEmailAddressFormValues, LegacyRegime}
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtEmailAddressFormValues
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.update_email_address
 
@@ -50,7 +51,11 @@ extends ViewBaseSpec {
   )
 
   def render(form: Form[CtEmailAddressFormValues]): Document = Jsoup.parse(
-    view(form, subscriptionEmailAddress, legacyRegime)(
+    view(
+      form,
+      subscriptionEmailAddress,
+      legacyRegime
+    )(
       messages,
       fakeRequest,
       appConfig
@@ -112,7 +117,9 @@ extends ViewBaseSpec {
       "hide the conditional new email address input" in {
         val conditionalHidden = doc.select(".govuk-radios__conditional--hidden")
         conditionalHidden.size() mustBe 1
-        conditionalHidden.text() mustBe messages(s"$legacyRegimePrefix.email-address.new-input.label") + " " + messages(s"$legacyRegimePrefix.email-address.new-input.hint")
+        conditionalHidden.text() mustBe messages(s"$legacyRegimePrefix.email-address.new-input.label") + " " + messages(
+          s"$legacyRegimePrefix.email-address.new-input.hint"
+        )
         conditionalHidden.select(".govuk-input").attr("name") mustBe emailAddressNewKey
       }
     }

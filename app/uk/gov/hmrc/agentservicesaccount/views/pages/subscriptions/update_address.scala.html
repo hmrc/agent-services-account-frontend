@@ -17,6 +17,7 @@
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
 @import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtAddressFormValues
+@import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 @import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
 @import uk.gov.hmrc.govukfrontend.views.html.components._
@@ -35,10 +36,12 @@
     govukErrorSummary: GovukErrorSummary
 )
 
-@(form: Form[CtAddressFormValues], subscriptionAddress: String)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
+@(form: Form[CtAddressFormValues], subscriptionAddress: String, legacyRegime: LegacyRegime)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
+
+@legacyRegimePrefix = @{ s"asa.legacy.${legacyRegime.toString.toLowerCase}" }
 
 @main(
-    pageTitle = withErrorPrefix(form.hasErrors, msgs("asa.legacy.ct.address.title")),
+    pageTitle = withErrorPrefix(form.hasErrors, msgs(s"$legacyRegimePrefix.address.title")),
     mimicBrowserBackLink = true,
     showSecondaryNav = false
 ) {
@@ -51,7 +54,7 @@
         @govukRadios(Radios(
             fieldset = Some(Fieldset(
                 legend = Some(Legend(
-                    content = Text(msgs("asa.legacy.ct.address.title")),
+                    content = Text(msgs(s"$legacyRegimePrefix.address.title")),
                     classes = "govuk-fieldset__legend--l",
                     isPageHeading = true
                 ))
@@ -61,10 +64,10 @@
                 RadioItem(
                     content = Text(subscriptionAddress),
                     value = Some("true"),
-                    hint = Some(Hint(content = Text(msgs("asa.legacy.ct.address.use-asa.true.hint"))))
+                    hint = Some(Hint(content = Text(msgs(s"$legacyRegimePrefix.address.use-asa.true.hint"))))
                 ),
                 RadioItem(
-                    content = Text(msgs("asa.legacy.ct.address.use-asa.false")),
+                    content = Text(msgs(s"$legacyRegimePrefix.address.use-asa.false")),
                     value = Some("false")
                 )
             )

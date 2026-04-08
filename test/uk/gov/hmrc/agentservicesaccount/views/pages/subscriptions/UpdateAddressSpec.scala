@@ -24,14 +24,18 @@ import play.api.data.Form
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionAddressForm
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionAddressForm.addressUseAsaDataKey
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtAddressFormValues
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.{CtAddressFormValues, LegacyRegime}
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.ct_update_address
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.update_address
 
-class CtUpdateAddressSpec
+class UpdateAddressSpec
 extends ViewBaseSpec {
 
-  val view: ct_update_address = inject[ct_update_address]
+  private val view: update_address = inject[update_address]
+
+  private val legacyRegime = LegacyRegime.CT
+
+  private val legacyRegimePrefix = s"asa.legacy.${legacyRegime.toString.toLowerCase}"
 
   private def formatAddress(address: BusinessAddress): String = List(
     Some(address.addressLine1),
@@ -55,24 +59,24 @@ extends ViewBaseSpec {
 
   private val subscriptionAddress = formatAddress(subscriptionBusinessAddress)
 
-  val addressForm: Form[CtAddressFormValues] = CtSubscriptionAddressForm.form
+  private val addressForm: Form[CtAddressFormValues] = CtSubscriptionAddressForm.form
 
-  val formWithUseAsaError: Form[CtAddressFormValues] = addressForm.withError(
+  private val formWithUseAsaError: Form[CtAddressFormValues] = addressForm.withError(
     key = addressUseAsaDataKey,
-    message = messages("asa.legacy.ct.address.use-asa.error.required")
+    message = messages(s"$legacyRegimePrefix.address.use-asa.error.required")
   )
 
   def render(form: Form[CtAddressFormValues]): Document = Jsoup.parse(
-    view(form, subscriptionAddress)(
+    view(form, subscriptionAddress, legacyRegime)(
       messages,
       fakeRequest,
       appConfig
     ).body
   )
 
-  private val title: String = messages("asa.legacy.ct.address.title")
+  private val title: String = messages(s"$legacyRegimePrefix.address.title")
 
-  "ct_update_address" when {
+  "update_address" when {
 
     def testServiceStaticContent(doc: Document): Unit = {
 
@@ -116,9 +120,9 @@ extends ViewBaseSpec {
       "display correct radio options" in {
         val radios = doc.select(".govuk-radios__item")
         radios.size() mustBe 2
-        radios.get(0).text() mustBe subscriptionAddress + " " + messages("asa.legacy.ct.address.use-asa.true.hint")
+        radios.get(0).text() mustBe subscriptionAddress + " " + messages(s"$legacyRegimePrefix.address.use-asa.true.hint")
         radios.get(0).select("input").attr("name") mustBe addressUseAsaDataKey
-        radios.get(1).text() mustBe messages("asa.legacy.ct.address.use-asa.false")
+        radios.get(1).text() mustBe messages(s"$legacyRegimePrefix.address.use-asa.false")
         radios.get(1).select("input").attr("name") mustBe addressUseAsaDataKey
       }
     }
@@ -137,7 +141,7 @@ extends ViewBaseSpec {
 
       "display correct error summary link" in {
         val errorLink: Element = doc.select(".govuk-error-summary__list a").first()
-        errorLink.text() mustBe messages("asa.legacy.ct.address.use-asa.error.required")
+        errorLink.text() mustBe messages(s"$legacyRegimePrefix.address.use-asa.error.required")
         errorLink.attr("href") mustBe s"#$addressUseAsaDataKey"
       }
 
@@ -146,7 +150,7 @@ extends ViewBaseSpec {
       }
 
       "display error message on form" in {
-        doc.select(".govuk-error-message").text() mustBe s"Error: ${messages("asa.legacy.ct.address.use-asa.error.required")}"
+        doc.select(".govuk-error-message").text() mustBe s"Error: ${messages(s"$legacyRegimePrefix.address.use-asa.error.required")}"
       }
     }
 

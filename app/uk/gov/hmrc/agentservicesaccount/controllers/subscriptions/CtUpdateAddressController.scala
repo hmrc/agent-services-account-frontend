@@ -29,7 +29,7 @@ import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtAddressFormValues
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions._
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.update_address
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject._
@@ -40,7 +40,7 @@ import scala.concurrent.Future
 class CtUpdateAddressController @Inject() (
   actions: Actions,
   val sessionCacheService: SessionCacheService,
-  ct_update_address: ct_update_address,
+  update_address: update_address,
   cc: MessagesControllerComponents
 )(implicit
   appConfig: AppConfig,
@@ -81,7 +81,11 @@ with Logging {
       }
 
     Future.successful(
-      Ok(ct_update_address(form, subscriptionAddress))
+      Ok(update_address(
+        form,
+        subscriptionAddress,
+        legacyRegime
+      ))
     )
   }
 
@@ -93,7 +97,11 @@ with Logging {
       formWithErrors => {
         val subscriptionAddress = journey.asaDetails.agencyAddress.map(formatAddress).getOrElse("")
         Future.successful(
-          BadRequest(ct_update_address(formWithErrors, subscriptionAddress))
+          BadRequest(update_address(
+            formWithErrors,
+            subscriptionAddress,
+            legacyRegime
+          ))
         )
       },
       data => {
