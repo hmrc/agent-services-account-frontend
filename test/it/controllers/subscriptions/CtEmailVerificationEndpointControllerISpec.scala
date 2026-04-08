@@ -32,7 +32,7 @@ import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
 class CtEmailVerificationEndpointControllerISpec
 extends ComponentBaseISpec {
 
-  private val finishEmailVerificationPath = s"$subscriptionStartPath/${LegacyRegime.CT}/email-verification-finish"
+  private val finishEmailVerificationPath = s"$subscriptionStartPath/${LegacyRegime.CT.toString.toLowerCase}/email-verification-finish"
 
   private val repo = inject[SessionCacheRepository]
 

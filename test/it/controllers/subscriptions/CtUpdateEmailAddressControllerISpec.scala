@@ -34,7 +34,7 @@ extends ComponentBaseISpec {
 
   private val repo = inject[SessionCacheRepository]
 
-  private val updateEmailAddressPath = s"$subscriptionStartPath/${LegacyRegime.CT}/email-address"
+  private val updateEmailAddressPath = s"$subscriptionStartPath/${LegacyRegime.CT.toString.toLowerCase}/email-address"
 
   s"GET $updateEmailAddressPath" should {
     "display the enter email address page" in {

@@ -34,8 +34,8 @@ extends ComponentBaseISpec {
 
   private val repo = inject[SessionCacheRepository]
 
-  private val startAddressLookupPath = s"$subscriptionStartPath/${LegacyRegime.CT}/address-lookup-start"
-  private val finishAddressLookupPath = s"$subscriptionStartPath/${LegacyRegime.CT}/address-lookup-finish"
+  private val startAddressLookupPath = s"$subscriptionStartPath/${LegacyRegime.CT.toString.toLowerCase}/address-lookup-start"
+  private val finishAddressLookupPath = s"$subscriptionStartPath/${LegacyRegime.CT.toString.toLowerCase}/address-lookup-finish"
 
   private val confirmedAddressResponse = ConfirmedResponseAddress(
     auditRef = "foo",
@@ -96,7 +96,7 @@ extends ComponentBaseISpec {
 
           val result = get(s"$finishAddressLookupPath?id=bar")
           result.status shouldBe SEE_OTHER
-          result.header(LOCATION) shouldBe Some(s"/agent-services-account/ct-subscription/${journeyWithRedirectLocation._2}")
+          result.header(LOCATION) shouldBe Some(s"$subscriptionStartPath/${LegacyRegime.CT.toString.toLowerCase}/${journeyWithRedirectLocation._2}")
 
           val updatedJourney = await(repo.getFromSession(ctJourneyKey))
           updatedJourney shouldBe defined
