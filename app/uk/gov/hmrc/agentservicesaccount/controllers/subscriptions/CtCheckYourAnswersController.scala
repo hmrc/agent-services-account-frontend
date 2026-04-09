@@ -86,25 +86,24 @@ with I18nSupport {
     data: CtCyaData,
     legacyRegime: LegacyRegime
   ): Seq[SummaryListData] = {
-    val lr = legacyRegime.toString.toLowerCase
     Seq(
       SummaryListData(
-        key = s"asa.legacy.$lr.check-your-answers.business-name",
+        key = s"${legacyRegime.msgPrefix}.check-your-answers.business-name",
         value = data.agencyName,
         link = Some(subscriptionRoutes.CtUpdateBusinessNameController.showPage)
       ),
       SummaryListData(
-        key = s"asa.legacy.$lr.check-your-answers.phone-number",
+        key = s"${legacyRegime.msgPrefix}.check-your-answers.phone-number",
         value = data.agencyTelephone,
         link = Some(subscriptionRoutes.CtUpdatePhoneNumberController.showPage)
       ),
       SummaryListData(
-        key = s"asa.legacy.$lr.check-your-answers.email",
+        key = s"${legacyRegime.msgPrefix}.check-your-answers.email",
         value = data.agencyEmail,
         link = Some(subscriptionRoutes.CtUpdateEmailAddressController.showPage)
       ),
       SummaryListData(
-        key = s"asa.legacy.$lr.check-your-answers.address",
+        key = s"${legacyRegime.msgPrefix}.check-your-answers.address",
         value = formatAddress(data.agencyAddress),
         link = Some(subscriptionRoutes.CtUpdateAddressController.showPage)
       )
