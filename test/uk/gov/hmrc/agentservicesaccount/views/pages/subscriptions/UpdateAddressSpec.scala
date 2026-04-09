@@ -21,10 +21,10 @@ import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.data.Form
-import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionAddressForm
-import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionAddressForm.addressUseAsaDataKey
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionAddressForm
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionAddressForm.addressUseAsaDataKey
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtAddressFormValues
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AddressFormValues
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.update_address
@@ -60,14 +60,14 @@ extends ViewBaseSpec {
 
   private val subscriptionAddress = formatAddress(subscriptionBusinessAddress)
 
-  private val addressForm: Form[CtAddressFormValues] = CtSubscriptionAddressForm.form
+  private val addressForm: Form[AddressFormValues] = SubscriptionAddressForm.form
 
-  private val formWithUseAsaError: Form[CtAddressFormValues] = addressForm.withError(
+  private val formWithUseAsaError: Form[AddressFormValues] = addressForm.withError(
     key = addressUseAsaDataKey,
     message = messages(s"$legacyRegimePrefix.address.use-asa.error.required")
   )
 
-  def render(form: Form[CtAddressFormValues]): Document = Jsoup.parse(
+  def render(form: Form[AddressFormValues]): Document = Jsoup.parse(
     view(
       form,
       subscriptionAddress,
