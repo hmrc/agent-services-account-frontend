@@ -41,6 +41,7 @@ extends ViewBaseSpec {
 
   object MessageLookup {
 
+//    TODO: 11053 Make non-dependent on CT
     val heading = "Check your answers"
     val title = heading + " - Agent services account - GOV.UK"
     val submit = "Enrol for Corporation Tax"

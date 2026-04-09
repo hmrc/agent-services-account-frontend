@@ -52,7 +52,7 @@ extends ViewBaseSpec {
     ).body
   )
 
-  private val title = messages("asa.legacy.ct.phone-number.title")
+  private val title = messages(s"${legacyRegime.msgPrefix}.phone-number.title")
 
   def testServiceStaticContent(doc: Document): Unit = {
 
