@@ -21,10 +21,10 @@ import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.data.Form
-import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionEmailAddressForm
-import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionEmailAddressForm.emailAddressNewKey
-import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionEmailAddressForm.emailAddressUseAsaDataKey
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtEmailAddressFormValues
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionEmailAddressForm
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionEmailAddressForm.emailAddressNewKey
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionEmailAddressForm.emailAddressUseAsaDataKey
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.EmailAddressFormValues
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.update_email_address
@@ -39,18 +39,18 @@ extends ViewBaseSpec {
 
   private val legacyRegimePrefix = legacyRegime.msgPrefix
 
-  private val emailAddressForm: Form[CtEmailAddressFormValues] = CtSubscriptionEmailAddressForm.form
+  private val emailAddressForm: Form[EmailAddressFormValues] = SubscriptionEmailAddressForm.form
 
-  private val formWithUseAsaError: Form[CtEmailAddressFormValues] = emailAddressForm.withError(
+  private val formWithUseAsaError: Form[EmailAddressFormValues] = emailAddressForm.withError(
     key = emailAddressUseAsaDataKey,
     message = messages(s"$legacyRegimePrefix.email-address.use-asa.error.required")
   )
-  private val formWithNewEmailAddressError: Form[CtEmailAddressFormValues] = emailAddressForm.withError(
+  private val formWithNewEmailAddressError: Form[EmailAddressFormValues] = emailAddressForm.withError(
     key = emailAddressNewKey,
     message = messages(s"$legacyRegimePrefix.email-address.new-input.error.empty")
   )
 
-  def render(form: Form[CtEmailAddressFormValues]): Document = Jsoup.parse(
+  def render(form: Form[EmailAddressFormValues]): Document = Jsoup.parse(
     view(
       form,
       subscriptionEmailAddress,
@@ -126,8 +126,8 @@ extends ViewBaseSpec {
 
     "when 'new email address' option is selected" should {
 
-      val filledForm: Form[CtEmailAddressFormValues] = emailAddressForm.fill(
-        CtEmailAddressFormValues(
+      val filledForm: Form[EmailAddressFormValues] = emailAddressForm.fill(
+        EmailAddressFormValues(
           useAsaData = false,
           newEmailAddress = Some("hello@new.com")
         )

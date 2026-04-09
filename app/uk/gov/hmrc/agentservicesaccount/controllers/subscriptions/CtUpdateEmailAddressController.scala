@@ -25,8 +25,8 @@ import uk.gov.hmrc.agentservicesaccount.controllers.ctJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.emailPendingVerificationKey
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.updateEmailAddressPage
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.getNextPage
-import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionEmailAddressForm
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtEmailAddressFormValues
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionEmailAddressForm
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.EmailAddressFormValues
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.services.EmailVerificationService
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
@@ -58,18 +58,19 @@ with Logging {
 
     val subscriptionEmailAddress = journey.asaDetails.agencyEmail.getOrElse("")
 
+    val initialForm = SubscriptionEmailAddressForm.form(legacyRegime)
     val form =
       journey.useCustomEmail match {
 
         case Some(useCustom) =>
-          CtSubscriptionEmailAddressForm.form.fill(
-            CtEmailAddressFormValues(
+          initialForm.fill(
+            EmailAddressFormValues(
               useAsaData = !useCustom,
               newEmailAddress = journey.emailAnswer
             )
           )
 
-        case None => CtSubscriptionEmailAddressForm.form
+        case None => initialForm
       }
 
     Future.successful(
@@ -85,7 +86,7 @@ with Logging {
     val legacyRegime = LegacyRegime.CT
     val journey = request.ctSubscriptionJourney
 
-    CtSubscriptionEmailAddressForm.form.bindFromRequest().fold(
+    SubscriptionEmailAddressForm.form(legacyRegime).bindFromRequest().fold(
       formWithErrors => {
         val subscriptionEmailAddress = journey.asaDetails.agencyEmail.getOrElse("")
         Future.successful(

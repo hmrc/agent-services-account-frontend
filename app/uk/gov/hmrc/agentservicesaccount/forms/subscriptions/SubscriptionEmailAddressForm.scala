@@ -21,26 +21,29 @@ import play.api.data.Form
 import play.api.data.Mapping
 import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators.trimmedText
 import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators.useAsaDataMapping
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtEmailAddressFormValues
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.EmailAddressFormValues
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.voa.play.form.ConditionalMappings.mandatoryIfFalse
 
-object CtSubscriptionEmailAddressForm {
+object SubscriptionEmailAddressForm {
 
   val emailAddressUseAsaDataKey = "emailAddressUseAsaData"
   val emailAddressNewKey = "emailAddressNew"
 
-  private val emailAddressUseAsaDataMapping = useAsaDataMapping("asa.legacy.ct.email-address.use-asa.error.required")
+  private def emailAddressUseAsaDataMapping(legacyRegime: LegacyRegime): Mapping[Boolean] = useAsaDataMapping(
+    s"${legacyRegime.msgPrefix}.email-address.use-asa.error.required"
+  )
 
-  private val emailAddressNewOptionalMapping: Mapping[String] = trimmedText
-    .verifying("asa.legacy.ct.email-address.new-input.error.empty", _.nonEmpty)
-    .verifying("asa.legacy.ct.email-address.new-input.error.invalid", x => x.isEmpty || (x.length <= 50 && x.contains("@")))
+  private def emailAddressNewOptionalMapping(legacyRegime: LegacyRegime): Mapping[String] = trimmedText
+    .verifying(s"${legacyRegime.msgPrefix}.email-address.new-input.error.empty", _.nonEmpty)
+    .verifying(s"${legacyRegime.msgPrefix}.email-address.new-input.error.invalid", x => x.isEmpty || (x.length <= 50 && x.contains("@")))
 
-  def form: Form[CtEmailAddressFormValues] = {
+  def form(legacyRegime: LegacyRegime): Form[EmailAddressFormValues] = {
     Form(
       mapping(
-        emailAddressUseAsaDataKey -> emailAddressUseAsaDataMapping,
-        emailAddressNewKey -> mandatoryIfFalse(emailAddressUseAsaDataKey, emailAddressNewOptionalMapping)
-      )(CtEmailAddressFormValues.apply)(o => Some(o.useAsaData, o.newEmailAddress))
+        emailAddressUseAsaDataKey -> emailAddressUseAsaDataMapping(legacyRegime),
+        emailAddressNewKey -> mandatoryIfFalse(emailAddressUseAsaDataKey, emailAddressNewOptionalMapping(legacyRegime))
+      )(EmailAddressFormValues.apply)(o => Some(o.useAsaData, o.newEmailAddress))
     )
   }
 
