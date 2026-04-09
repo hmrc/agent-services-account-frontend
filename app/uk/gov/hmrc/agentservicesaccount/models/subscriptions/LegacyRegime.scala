@@ -29,7 +29,6 @@ sealed trait LegacyRegime {
 
 object LegacyRegime {
 
-//  TODO: 11053 Add toLowerCaseString method on these and use instead of repeating helper method in multiple locations
   case object PAYE extends LegacyRegime {
     override def msgPrefix: String = s"asa.legacy.${PAYE.toString.toLowerCase}"
   }
