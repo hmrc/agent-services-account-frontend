@@ -23,17 +23,22 @@ import play.api.libs.json.Reads
 import play.api.libs.json.Writes
 
 // TODO when migrating to scala 3, replace this with the backend model from agent-services-account
-sealed trait LegacyRegime
+sealed trait LegacyRegime {
+  def msgPrefix: String
+}
 
 object LegacyRegime {
 
 //  TODO: 11053 Add toLowerCaseString method on these and use instead of repeating helper method in multiple locations
-  case object PAYE
-  extends LegacyRegime
-  case object SA
-  extends LegacyRegime
-  case object CT
-  extends LegacyRegime
+  case object PAYE extends LegacyRegime {
+    override def msgPrefix: String = s"asa.legacy.${PAYE.toString.toLowerCase}"
+  }
+  case object SA extends LegacyRegime {
+    override def msgPrefix: String = s"asa.legacy.${SA.toString.toLowerCase}"
+  }
+  case object CT extends LegacyRegime {
+    override def msgPrefix: String = s"asa.legacy.${CT.toString.toLowerCase}"
+  }
 
   implicit val format: Format[LegacyRegime] = Format(
     Reads { json =>
