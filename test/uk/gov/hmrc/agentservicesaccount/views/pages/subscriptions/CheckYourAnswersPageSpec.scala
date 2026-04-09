@@ -37,7 +37,7 @@ extends ViewBaseSpec {
 
   private val view: check_your_answers = app.injector.instanceOf[check_your_answers]
 
-  private val legacyRegime = LegacyRegime.CT
+  private val legacyRegime = LegacyRegime.SA
 
   private val heading = messages(s"${legacyRegime.msgPrefix}.check-your-answers.h1")
   private val title = s"$heading - Agent services account - GOV.UK"

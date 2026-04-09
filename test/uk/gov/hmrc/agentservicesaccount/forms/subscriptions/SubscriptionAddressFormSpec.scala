@@ -28,7 +28,7 @@ with Matchers {
 
   val emptyValue = ""
 
-  private val legacyRegime = LegacyRegime.CT
+  private val legacyRegime = LegacyRegime.SA
 
   private val legacyRegimePrefix = legacyRegime.msgPrefix
 

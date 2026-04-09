@@ -34,7 +34,7 @@ extends ViewBaseSpec {
   private val view: update_phone_number = inject[update_phone_number]
   private val subscriptionPhoneNumber = "07700 900123"
 
-  private val legacyRegime = LegacyRegime.CT
+  private val legacyRegime = LegacyRegime.SA
 
   private val phoneNumberForm: Form[PhoneNumberFormValues] = SubscriptionPhoneNumberForm.form(legacyRegime)
 

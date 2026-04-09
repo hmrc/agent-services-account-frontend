@@ -32,7 +32,7 @@ with Matchers {
   private val validNewPhoneNumber = "1234567890"
   private val invalidNewPhoneNumber = "skdjfhjs"
 
-  private val legacyRegime = LegacyRegime.CT
+  private val legacyRegime = LegacyRegime.SA
 
   private val legacyRegimePrefix = legacyRegime.msgPrefix
 

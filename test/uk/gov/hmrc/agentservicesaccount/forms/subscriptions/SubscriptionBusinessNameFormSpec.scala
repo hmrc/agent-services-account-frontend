@@ -32,7 +32,7 @@ with Matchers {
   val validNewBusinessName = "ABC-No.1 Accountants"
   val invalidNewBusinessName = "{][.',"
 
-  private val legacyRegime = LegacyRegime.CT
+  private val legacyRegime = LegacyRegime.SA
 
   private val legacyRegimePrefix = legacyRegime.msgPrefix
 

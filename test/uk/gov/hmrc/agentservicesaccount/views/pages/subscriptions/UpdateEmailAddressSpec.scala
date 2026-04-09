@@ -35,7 +35,7 @@ extends ViewBaseSpec {
   private val view: update_email_address = inject[update_email_address]
   private val subscriptionEmailAddress = "joe@bloggs.com"
 
-  private val legacyRegime = LegacyRegime.CT
+  private val legacyRegime = LegacyRegime.SA
 
   private val legacyRegimePrefix = legacyRegime.msgPrefix
 

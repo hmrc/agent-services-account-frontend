@@ -35,7 +35,7 @@ extends ViewBaseSpec {
   private val view: update_business_name = inject[update_business_name]
   private val subscriptionBusinessName = "ABC-No.1 Accountants"
 
-  private val legacyRegime = LegacyRegime.CT
+  private val legacyRegime = LegacyRegime.SA
 
   private val legacyRegimePrefix = legacyRegime.msgPrefix
 
