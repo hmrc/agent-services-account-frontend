@@ -87,7 +87,7 @@ extends ViewBaseSpec {
     }
 
     "have correct second radio (new number option)" in {
-      doc.select(".govuk-radios__item").get(1).text() must include(messages("asa.legacy.ct.phone-number.use-asa.false"))
+      doc.select(".govuk-radios__item").get(1).text() must include(messages(s"${legacyRegime.msgPrefix}.phone-number.use-asa.false"))
     }
 
     "have continue button" in {
