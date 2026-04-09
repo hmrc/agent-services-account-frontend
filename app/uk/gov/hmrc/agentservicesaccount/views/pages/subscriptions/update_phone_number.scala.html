@@ -38,7 +38,7 @@
 
 @(form: Form[CtPhoneNumberFormValues], subscriptionPhoneNumber: String, legacyRegime: LegacyRegime)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
 
-@legacyRegimePrefix = @{ s"asa.legacy.${legacyRegime.toString.toLowerCase}" }
+@legacyRegimePrefix = @{ legacyRegime.msgPrefix }
 
 @newPhoneNumberInput = {
     @govukInput(Input(

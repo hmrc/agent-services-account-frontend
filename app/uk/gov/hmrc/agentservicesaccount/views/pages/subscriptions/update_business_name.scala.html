@@ -38,7 +38,7 @@
 
 @(form: Form[CtBusinessNameFormValues], subscriptionBusinessName: String, legacyRegime: LegacyRegime)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
 
-@legacyRegimePrefix = @{ s"asa.legacy.${legacyRegime.toString.toLowerCase}" }
+@legacyRegimePrefix = @{ legacyRegime.msgPrefix }
 
 @newBusinessNameInput = {
     @govukInput(Input(
