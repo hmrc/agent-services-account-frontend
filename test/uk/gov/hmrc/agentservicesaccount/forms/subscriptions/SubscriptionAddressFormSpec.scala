@@ -30,6 +30,8 @@ with Matchers {
 
   private val legacyRegime = LegacyRegime.CT
 
+  private val legacyRegimePrefix = legacyRegime.msgPrefix
+
   private val initForm = form(legacyRegime)
 
   "form binding" should {
@@ -56,7 +58,7 @@ with Matchers {
 
       val validatedForm = initForm.bind(params)
       validatedForm.hasErrors shouldBe true
-      validatedForm.error(addressUseAsaDataKey).get.message shouldBe "asa.legacy.ct.address.use-asa.error.required"
+      validatedForm.error(addressUseAsaDataKey).get.message shouldBe s"$legacyRegimePrefix.address.use-asa.error.required"
       validatedForm.errors.length shouldBe 1
     }
 
