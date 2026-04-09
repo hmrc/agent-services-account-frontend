@@ -60,7 +60,7 @@ extends ViewBaseSpec {
 
   private val subscriptionAddress = formatAddress(subscriptionBusinessAddress)
 
-  private val addressForm: Form[AddressFormValues] = SubscriptionAddressForm.form
+  private val addressForm: Form[AddressFormValues] = SubscriptionAddressForm.form(legacyRegime)
 
   private val formWithUseAsaError: Form[AddressFormValues] = addressForm.withError(
     key = addressUseAsaDataKey,

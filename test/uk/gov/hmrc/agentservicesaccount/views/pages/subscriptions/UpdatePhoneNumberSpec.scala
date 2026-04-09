@@ -36,7 +36,7 @@ extends ViewBaseSpec {
 
   private val legacyRegime = LegacyRegime.CT
 
-  private val phoneNumberForm: Form[PhoneNumberFormValues] = SubscriptionPhoneNumberForm.form
+  private val phoneNumberForm: Form[PhoneNumberFormValues] = SubscriptionPhoneNumberForm.form(legacyRegime)
 
   private val formWithErrors: Form[PhoneNumberFormValues] = phoneNumberForm.withError("phoneNumberUseAsaData", Messages("error.required"))
 

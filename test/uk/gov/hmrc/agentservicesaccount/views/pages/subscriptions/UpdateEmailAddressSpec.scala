@@ -39,7 +39,7 @@ extends ViewBaseSpec {
 
   private val legacyRegimePrefix = legacyRegime.msgPrefix
 
-  private val emailAddressForm: Form[EmailAddressFormValues] = SubscriptionEmailAddressForm.form
+  private val emailAddressForm: Form[EmailAddressFormValues] = SubscriptionEmailAddressForm.form(legacyRegime)
 
   private val formWithUseAsaError: Form[EmailAddressFormValues] = emailAddressForm.withError(
     key = emailAddressUseAsaDataKey,
