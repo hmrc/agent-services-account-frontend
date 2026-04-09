@@ -37,7 +37,7 @@ extends ViewBaseSpec {
 
   private val legacyRegime = LegacyRegime.CT
 
-  private val legacyRegimePrefix = s"asa.legacy.${legacyRegime.toString.toLowerCase}"
+  private val legacyRegimePrefix = legacyRegime.msgPrefix
 
   private val emailAddressForm: Form[CtEmailAddressFormValues] = CtSubscriptionEmailAddressForm.form
 

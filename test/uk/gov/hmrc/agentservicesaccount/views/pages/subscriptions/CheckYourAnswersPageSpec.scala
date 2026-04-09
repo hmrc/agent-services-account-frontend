@@ -48,25 +48,24 @@ extends ViewBaseSpec {
   }
 
   private def model(legacyRegime: LegacyRegime) = {
-    val lr = legacyRegime.toString.toLowerCase
     Seq(
       SummaryListData(
-        key = s"asa.legacy.$lr.check-your-answers.business-name",
+        key = s"${legacyRegime.msgPrefix}.check-your-answers.business-name",
         value = "Test Agency",
         link = None
       ),
       SummaryListData(
-        key = s"asa.legacy.$lr.check-your-answers.phone-number",
+        key = s"${legacyRegime.msgPrefix}.check-your-answers.phone-number",
         value = "1234567890",
         link = None
       ),
       SummaryListData(
-        key = s"asa.legacy.$lr.check-your-answers.email",
+        key = s"${legacyRegime.msgPrefix}.check-your-answers.email",
         value = "test@test.com",
         link = None
       ),
       SummaryListData(
-        key = s"asa.legacy.$lr.check-your-answers.address",
+        key = s"${legacyRegime.msgPrefix}.check-your-answers.address",
         value = "Line 1<br/>Line 2",
         link = None
       )

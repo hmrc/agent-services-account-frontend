@@ -36,7 +36,7 @@ extends ViewBaseSpec {
 
   private val legacyRegime = LegacyRegime.CT
 
-  private val legacyRegimePrefix = s"asa.legacy.${legacyRegime.toString.toLowerCase}"
+  private val legacyRegimePrefix = legacyRegime.msgPrefix
 
   private def formatAddress(address: BusinessAddress): String = List(
     Some(address.addressLine1),
