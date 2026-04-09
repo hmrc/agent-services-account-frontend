@@ -39,14 +39,8 @@ extends ViewBaseSpec {
 
   private val legacyRegime = LegacyRegime.CT
 
-  object MessageLookup {
-
-//    TODO: 11053 Make non-dependent on CT
-    val heading = "Check your answers"
-    val title = heading + " - Agent services account - GOV.UK"
-    val submit = "Enrol for Corporation Tax"
-
-  }
+  private val heading = messages(s"${legacyRegime.msgPrefix}.check-your-answers.h1")
+  private val title = s"$heading - Agent services account - GOV.UK"
 
   private def model(legacyRegime: LegacyRegime) = {
     Seq(
@@ -87,9 +81,9 @@ extends ViewBaseSpec {
         ).body
       )
 
-      doc.title() mustBe MessageLookup.title
+      doc.title() mustBe title
 
-      doc.select("h1").text() mustBe MessageLookup.heading
+      doc.select("h1").text() mustBe heading
 
       val keys = doc.select(".govuk-summary-list__key").asScala.map(_.text()).toList
       keys must contain("Business name")
@@ -107,7 +101,7 @@ extends ViewBaseSpec {
       form.attr("action") mustBe routes.CtCheckYourAnswersController.onSubmit.url
 
       val button = doc.select("button")
-      button.text() mustBe MessageLookup.submit
+      button.text() mustBe messages(s"${legacyRegime.msgPrefix}.check-your-answers.submit-button")
     }
   }
 
