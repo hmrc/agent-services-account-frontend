@@ -29,13 +29,16 @@ sealed trait LegacyRegime {
 
 object LegacyRegime {
 
-  case object PAYE extends LegacyRegime {
+  case object PAYE
+  extends LegacyRegime {
     override def msgPrefix: String = s"asa.legacy.${PAYE.toString.toLowerCase}"
   }
-  case object SA extends LegacyRegime {
+  case object SA
+  extends LegacyRegime {
     override def msgPrefix: String = s"asa.legacy.${SA.toString.toLowerCase}"
   }
-  case object CT extends LegacyRegime {
+  case object CT
+  extends LegacyRegime {
     override def msgPrefix: String = s"asa.legacy.${CT.toString.toLowerCase}"
   }
 

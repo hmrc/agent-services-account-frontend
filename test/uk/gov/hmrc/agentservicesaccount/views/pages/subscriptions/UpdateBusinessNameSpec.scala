@@ -21,10 +21,10 @@ import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.data.Form
-import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionBusinessNameForm
-import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionBusinessNameForm.businessNameNewKey
-import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionBusinessNameForm.businessNameUseAsaDataKey
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtBusinessNameFormValues
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionBusinessNameForm
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionBusinessNameForm.businessNameNewKey
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionBusinessNameForm.businessNameUseAsaDataKey
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.BusinessNameFormValues
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.update_business_name
@@ -39,18 +39,18 @@ extends ViewBaseSpec {
 
   private val legacyRegimePrefix = legacyRegime.msgPrefix
 
-  private val businessNameForm: Form[CtBusinessNameFormValues] = CtSubscriptionBusinessNameForm.form
+  private val businessNameForm: Form[BusinessNameFormValues] = SubscriptionBusinessNameForm.form(legacyRegime)
 
-  private val formWithUseAsaError: Form[CtBusinessNameFormValues] = businessNameForm.withError(
+  private val formWithUseAsaError: Form[BusinessNameFormValues] = businessNameForm.withError(
     key = businessNameUseAsaDataKey,
     message = messages(s"$legacyRegimePrefix.business-name.use-asa.error.required")
   )
-  private val formWithNewBusinessNameError: Form[CtBusinessNameFormValues] = businessNameForm.withError(
+  private val formWithNewBusinessNameError: Form[BusinessNameFormValues] = businessNameForm.withError(
     key = businessNameNewKey,
     message = messages(s"$legacyRegimePrefix.business-name.new-input.error.empty")
   )
 
-  def render(form: Form[CtBusinessNameFormValues]): Document = Jsoup.parse(
+  def render(form: Form[BusinessNameFormValues]): Document = Jsoup.parse(
     view(
       form,
       subscriptionBusinessName,
@@ -124,8 +124,8 @@ extends ViewBaseSpec {
 
     "when 'new business name' option is selected" should {
 
-      val filledForm: Form[CtBusinessNameFormValues] = businessNameForm.fill(
-        CtBusinessNameFormValues(
+      val filledForm: Form[BusinessNameFormValues] = businessNameForm.fill(
+        BusinessNameFormValues(
           useAsaData = false,
           newBusinessName = Some("New Accountants")
         )

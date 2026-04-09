@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.agentservicesaccount.models.subscriptions
 
-case class CtBusinessNameFormValues(
+case class BusinessNameFormValues(
   useAsaData: Boolean,
   newBusinessName: Option[String]
 )

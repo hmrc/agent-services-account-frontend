@@ -21,28 +21,31 @@ import play.api.data.Form
 import play.api.data.Mapping
 import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators.trimmedAndNormalisedText
 import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators.useAsaDataMapping
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtBusinessNameFormValues
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.BusinessNameFormValues
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.voa.play.form.ConditionalMappings.mandatoryIfFalse
 
-object CtSubscriptionBusinessNameForm {
+object SubscriptionBusinessNameForm {
 
   val businessNameUseAsaDataKey = "businessNameUseAsaData"
   val businessNameNewKey = "businessNameNew"
 
   private val businessNameRegex = """^[A-Za-z0-9\(\)&\-\'‘’\/,\. ]{1,54}$""".r
 
-  private val businessNameUseAsaDataMapping = useAsaDataMapping("asa.legacy.ct.business-name.use-asa.error.required")
+  private def businessNameUseAsaDataMapping(legacyRegime: LegacyRegime): Mapping[Boolean] = useAsaDataMapping(
+    s"${legacyRegime.msgPrefix}.business-name.use-asa.error.required"
+  )
 
-  private val businessNameNewOptionalMapping: Mapping[String] = trimmedAndNormalisedText
-    .verifying("asa.legacy.ct.business-name.new-input.error.empty", _.nonEmpty)
-    .verifying("asa.legacy.ct.business-name.new-input.error.invalid", x => x.isEmpty || businessNameRegex.matches(x))
+  private def businessNameNewOptionalMapping(legacyRegime: LegacyRegime): Mapping[String] = trimmedAndNormalisedText
+    .verifying(s"${legacyRegime.msgPrefix}.business-name.new-input.error.empty", _.nonEmpty)
+    .verifying(s"${legacyRegime.msgPrefix}.business-name.new-input.error.invalid", x => x.isEmpty || businessNameRegex.matches(x))
 
-  def form: Form[CtBusinessNameFormValues] = {
+  def form(legacyRegime: LegacyRegime): Form[BusinessNameFormValues] = {
     Form(
       mapping(
-        businessNameUseAsaDataKey -> businessNameUseAsaDataMapping,
-        businessNameNewKey -> mandatoryIfFalse(businessNameUseAsaDataKey, businessNameNewOptionalMapping)
-      )(CtBusinessNameFormValues.apply)(o => Some(o.useAsaData, o.newBusinessName))
+        businessNameUseAsaDataKey -> businessNameUseAsaDataMapping(legacyRegime),
+        businessNameNewKey -> mandatoryIfFalse(businessNameUseAsaDataKey, businessNameNewOptionalMapping(legacyRegime))
+      )(BusinessNameFormValues.apply)(o => Some(o.useAsaData, o.newBusinessName))
     )
   }
 
