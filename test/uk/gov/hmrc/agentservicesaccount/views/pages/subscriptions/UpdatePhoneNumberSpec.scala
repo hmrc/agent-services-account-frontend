@@ -22,8 +22,8 @@ import org.jsoup.nodes.Element
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.data.Form
 import play.api.i18n.Messages
-import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionPhoneNumberForm
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtPhoneNumberFormValues
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionPhoneNumberForm
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.PhoneNumberFormValues
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.update_phone_number
@@ -36,11 +36,11 @@ extends ViewBaseSpec {
 
   private val legacyRegime = LegacyRegime.CT
 
-  private val phoneNumberForm: Form[CtPhoneNumberFormValues] = CtSubscriptionPhoneNumberForm.form
+  private val phoneNumberForm: Form[PhoneNumberFormValues] = SubscriptionPhoneNumberForm.form
 
-  private val formWithErrors: Form[CtPhoneNumberFormValues] = phoneNumberForm.withError("phoneNumberUseAsaData", Messages("error.required"))
+  private val formWithErrors: Form[PhoneNumberFormValues] = phoneNumberForm.withError("phoneNumberUseAsaData", Messages("error.required"))
 
-  def render(form: Form[CtPhoneNumberFormValues]): Document = Jsoup.parse(
+  def render(form: Form[PhoneNumberFormValues]): Document = Jsoup.parse(
     view(
       form,
       subscriptionPhoneNumber,
@@ -140,8 +140,8 @@ extends ViewBaseSpec {
 
     "when 'new phone number' option is selected" should {
 
-      val filledForm: Form[CtPhoneNumberFormValues] = phoneNumberForm.fill(
-        CtPhoneNumberFormValues(
+      val filledForm: Form[PhoneNumberFormValues] = phoneNumberForm.fill(
+        PhoneNumberFormValues(
           useAsaData = false,
           newPhoneNumber = Some("07123456789")
         )
@@ -170,8 +170,8 @@ extends ViewBaseSpec {
 
     "when existing phone number is selected" should {
 
-      val filledForm: Form[CtPhoneNumberFormValues] = phoneNumberForm.fill(
-        CtPhoneNumberFormValues(
+      val filledForm: Form[PhoneNumberFormValues] = phoneNumberForm.fill(
+        PhoneNumberFormValues(
           useAsaData = true,
           newPhoneNumber = None
         )
