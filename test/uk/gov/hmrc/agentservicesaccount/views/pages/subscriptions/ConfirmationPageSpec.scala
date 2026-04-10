@@ -27,7 +27,7 @@ extends ViewBaseSpec {
 
   private val view: confirmation = inject[confirmation]
 
-  private val legacyRegime = LegacyRegime.CT
+  private val legacyRegime = LegacyRegime.SA
 
   "confirmation view" should {
 

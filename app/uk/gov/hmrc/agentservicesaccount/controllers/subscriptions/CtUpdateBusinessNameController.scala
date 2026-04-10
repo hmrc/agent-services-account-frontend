@@ -24,8 +24,8 @@ import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.ctJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.updateBusinessNamePage
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.getNextPage
-import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionBusinessNameForm
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtBusinessNameFormValues
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionBusinessNameForm
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.BusinessNameFormValues
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.update_business_name
@@ -55,18 +55,19 @@ with Logging {
 
     val subscriptionBusinessName = journey.asaDetails.agencyName.getOrElse("")
 
+    val initialForm = SubscriptionBusinessNameForm.form(legacyRegime)
     val form =
       journey.useCustomBusinessName match {
 
         case Some(useCustom) =>
-          CtSubscriptionBusinessNameForm.form.fill(
-            CtBusinessNameFormValues(
+          initialForm.fill(
+            BusinessNameFormValues(
               useAsaData = !useCustom,
               newBusinessName = journey.businessNameAnswer
             )
           )
 
-        case None => CtSubscriptionBusinessNameForm.form
+        case None => initialForm
       }
 
     Future.successful(
@@ -82,7 +83,7 @@ with Logging {
     val legacyRegime = LegacyRegime.CT
     val journey = request.ctSubscriptionJourney
 
-    CtSubscriptionBusinessNameForm.form.bindFromRequest().fold(
+    SubscriptionBusinessNameForm.form(legacyRegime).bindFromRequest().fold(
       formWithErrors => {
         val subscriptionBusinessName = journey.asaDetails.agencyName.getOrElse("")
         Future.successful(

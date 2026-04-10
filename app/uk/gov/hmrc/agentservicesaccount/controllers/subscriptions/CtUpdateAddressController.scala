@@ -24,9 +24,9 @@ import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.ctJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.updateAddressPage
-import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionAddressForm
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionAddressForm
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtAddressFormValues
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AddressFormValues
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.update_address
@@ -67,17 +67,18 @@ with Logging {
 
     val subscriptionAddress = journey.asaDetails.agencyAddress.map(formatAddress).getOrElse("")
 
+    val initialForm = SubscriptionAddressForm.form(legacyRegime)
     val form =
       journey.useCustomAddress match {
 
         case Some(useCustom) =>
-          CtSubscriptionAddressForm.form.fill(
-            CtAddressFormValues(
+          initialForm.fill(
+            AddressFormValues(
               useAsaData = !useCustom
             )
           )
 
-        case None => CtSubscriptionAddressForm.form
+        case None => initialForm
       }
 
     Future.successful(
@@ -93,7 +94,7 @@ with Logging {
     val legacyRegime = LegacyRegime.CT
     val journey = request.ctSubscriptionJourney
 
-    CtSubscriptionAddressForm.form.bindFromRequest().fold(
+    SubscriptionAddressForm.form(legacyRegime).bindFromRequest().fold(
       formWithErrors => {
         val subscriptionAddress = journey.asaDetails.agencyAddress.map(formatAddress).getOrElse("")
         Future.successful(

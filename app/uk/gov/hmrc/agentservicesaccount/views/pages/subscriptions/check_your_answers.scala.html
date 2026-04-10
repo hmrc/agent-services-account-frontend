@@ -20,13 +20,11 @@
 @import uk.gov.hmrc.agentservicesaccount.views.components.models.SummaryListData
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 @import uk.gov.hmrc.govukfrontend.views.Aliases.{Button, Text}
-@import uk.gov.hmrc.govukfrontend.views.html.components.{FormWithCSRF, GovukButton, GovukHint}
+@import uk.gov.hmrc.govukfrontend.views.html.components.{FormWithCSRF, GovukButton}
 
 
 @this(
-        main: main, a: a, p: p, h1: h1,
-        link_as_button: link_as_button,
-        govukHint: GovukHint,
+        main: main, h1: h1,
         summary_list: summary_list,
         govukButton: GovukButton,
         formWithCSRF: FormWithCSRF
@@ -34,7 +32,7 @@
 
 @(model: Seq[SummaryListData], legacyRegime: LegacyRegime)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
 
-@legacyRegimePrefix = @{ s"asa.legacy.${legacyRegime.toString.toLowerCase}" }
+@legacyRegimePrefix = @{ legacyRegime.msgPrefix }
 
 @main(
   pageTitle = msgs(s"$legacyRegimePrefix.check-your-answers.h1"),
@@ -42,10 +40,10 @@
   showSecondaryNav = false
 ) {
 
-  @h1(s"$legacyRegimePrefix.check-your-answers.h1")
+    @h1(s"$legacyRegimePrefix.check-your-answers.h1")
 
     @formWithCSRF(action = subscriptions.routes.CtCheckYourAnswersController.onSubmit) {
         @summary_list(model)
         @govukButton(Button(content = Text(msgs(s"$legacyRegimePrefix.check-your-answers.submit-button"))))
     }
-  }
+}

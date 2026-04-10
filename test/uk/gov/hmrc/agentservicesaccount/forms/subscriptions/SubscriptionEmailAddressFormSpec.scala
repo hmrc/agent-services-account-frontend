@@ -18,18 +18,25 @@ package uk.gov.hmrc.agentservicesaccount.forms.subscriptions
 
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
-import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionEmailAddressForm._
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtEmailAddressFormValues
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionEmailAddressForm._
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.EmailAddressFormValues
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 
 import scala.util.Random
 
-class CtSubscriptionEmailAddressFormSpec
+class SubscriptionEmailAddressFormSpec
 extends AnyWordSpec
 with Matchers {
 
   val emptyValue = ""
   val validNewEmailAddress = "joe@bloggs.com"
   val invalidNewEmailAddress = "{][.',"
+
+  private val legacyRegime = LegacyRegime.SA
+
+  private val legacyRegimePrefix = legacyRegime.msgPrefix
+
+  private val initForm = form(legacyRegime)
 
   "form binding" should {
     s"be successful when $emailAddressUseAsaDataKey true" in {
@@ -43,7 +50,7 @@ with Matchers {
         emailAddressNewKey -> emailAddressValues(Random.nextInt(emailAddressValues.length))
       )
 
-      form.bind(params).value shouldBe Some(CtEmailAddressFormValues(useAsaData = true, None))
+      initForm.bind(params).value shouldBe Some(EmailAddressFormValues(useAsaData = true, None))
     }
 
     s"be successful when $emailAddressUseAsaDataKey false and $emailAddressNewKey valid" in {
@@ -52,7 +59,7 @@ with Matchers {
         emailAddressNewKey -> validNewEmailAddress
       )
 
-      form.bind(params).value shouldBe Some(CtEmailAddressFormValues(useAsaData = false, Some(validNewEmailAddress)))
+      initForm.bind(params).value shouldBe Some(EmailAddressFormValues(useAsaData = false, Some(validNewEmailAddress)))
     }
 
     s"error when $emailAddressUseAsaDataKey empty" in {
@@ -66,9 +73,9 @@ with Matchers {
         emailAddressNewKey -> emailAddressValues(Random.nextInt(emailAddressValues.length))
       )
 
-      val validatedForm = form.bind(params)
+      val validatedForm = initForm.bind(params)
       validatedForm.hasErrors shouldBe true
-      validatedForm.error(emailAddressUseAsaDataKey).get.message shouldBe "asa.legacy.ct.email-address.use-asa.error.required"
+      validatedForm.error(emailAddressUseAsaDataKey).get.message shouldBe s"$legacyRegimePrefix.email-address.use-asa.error.required"
       validatedForm.errors.length shouldBe 1
     }
 
@@ -78,9 +85,9 @@ with Matchers {
         emailAddressNewKey -> emptyValue
       )
 
-      val validatedForm = form.bind(params)
+      val validatedForm = initForm.bind(params)
       validatedForm.hasErrors shouldBe true
-      validatedForm.error(emailAddressNewKey).get.message shouldBe "asa.legacy.ct.email-address.new-input.error.empty"
+      validatedForm.error(emailAddressNewKey).get.message shouldBe s"$legacyRegimePrefix.email-address.new-input.error.empty"
       validatedForm.errors.length shouldBe 1
     }
 
@@ -90,14 +97,14 @@ with Matchers {
         emailAddressNewKey -> invalidNewEmailAddress
       )
 
-      val validatedForm = form.bind(params)
+      val validatedForm = initForm.bind(params)
       validatedForm.hasErrors shouldBe true
-      validatedForm.error(emailAddressNewKey).get.message shouldBe "asa.legacy.ct.email-address.new-input.error.invalid"
+      validatedForm.error(emailAddressNewKey).get.message shouldBe s"$legacyRegimePrefix.email-address.new-input.error.invalid"
       validatedForm.errors.length shouldBe 1
     }
 
     "unbind CtEmailAddressFormValues" in {
-      val unboundForm = form.mapping.unbind(CtEmailAddressFormValues(useAsaData = true, Some(validNewEmailAddress)))
+      val unboundForm = initForm.mapping.unbind(EmailAddressFormValues(useAsaData = true, Some(validNewEmailAddress)))
 
       unboundForm shouldBe Map(
         emailAddressUseAsaDataKey -> true.toString,

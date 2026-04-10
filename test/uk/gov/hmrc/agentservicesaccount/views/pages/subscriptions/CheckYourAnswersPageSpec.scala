@@ -37,36 +37,30 @@ extends ViewBaseSpec {
 
   private val view: check_your_answers = app.injector.instanceOf[check_your_answers]
 
-  private val legacyRegime = LegacyRegime.CT
+  private val legacyRegime = LegacyRegime.SA
 
-  object MessageLookup {
-
-    val heading = "Check your answers"
-    val title = heading + " - Agent services account - GOV.UK"
-    val submit = "Enrol for Corporation Tax"
-
-  }
+  private val heading = messages(s"${legacyRegime.msgPrefix}.check-your-answers.h1")
+  private val title = s"$heading - Agent services account - GOV.UK"
 
   private def model(legacyRegime: LegacyRegime) = {
-    val lr = legacyRegime.toString.toLowerCase
     Seq(
       SummaryListData(
-        key = s"asa.legacy.$lr.check-your-answers.business-name",
+        key = s"${legacyRegime.msgPrefix}.check-your-answers.business-name",
         value = "Test Agency",
         link = None
       ),
       SummaryListData(
-        key = s"asa.legacy.$lr.check-your-answers.phone-number",
+        key = s"${legacyRegime.msgPrefix}.check-your-answers.phone-number",
         value = "1234567890",
         link = None
       ),
       SummaryListData(
-        key = s"asa.legacy.$lr.check-your-answers.email",
+        key = s"${legacyRegime.msgPrefix}.check-your-answers.email",
         value = "test@test.com",
         link = None
       ),
       SummaryListData(
-        key = s"asa.legacy.$lr.check-your-answers.address",
+        key = s"${legacyRegime.msgPrefix}.check-your-answers.address",
         value = "Line 1<br/>Line 2",
         link = None
       )
@@ -87,9 +81,9 @@ extends ViewBaseSpec {
         ).body
       )
 
-      doc.title() mustBe MessageLookup.title
+      doc.title() mustBe title
 
-      doc.select("h1").text() mustBe MessageLookup.heading
+      doc.select("h1").text() mustBe heading
 
       val keys = doc.select(".govuk-summary-list__key").asScala.map(_.text()).toList
       keys must contain("Business name")
@@ -107,7 +101,7 @@ extends ViewBaseSpec {
       form.attr("action") mustBe routes.CtCheckYourAnswersController.onSubmit.url
 
       val button = doc.select("button")
-      button.text() mustBe MessageLookup.submit
+      button.text() mustBe messages(s"${legacyRegime.msgPrefix}.check-your-answers.submit-button")
     }
   }
 

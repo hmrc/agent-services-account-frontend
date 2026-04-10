@@ -18,14 +18,21 @@ package uk.gov.hmrc.agentservicesaccount.forms.subscriptions
 
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
-import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionAddressForm._
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtAddressFormValues
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionAddressForm._
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AddressFormValues
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 
-class CtSubscriptionAddressFormSpec
+class SubscriptionAddressFormSpec
 extends AnyWordSpec
 with Matchers {
 
   val emptyValue = ""
+
+  private val legacyRegime = LegacyRegime.SA
+
+  private val legacyRegimePrefix = legacyRegime.msgPrefix
+
+  private val initForm = form(legacyRegime)
 
   "form binding" should {
     s"be successful when $addressUseAsaDataKey true" in {
@@ -33,7 +40,7 @@ with Matchers {
         addressUseAsaDataKey -> true.toString
       )
 
-      form.bind(params).value shouldBe Some(CtAddressFormValues(useAsaData = true))
+      initForm.bind(params).value shouldBe Some(AddressFormValues(useAsaData = true))
     }
 
     s"be successful when $addressUseAsaDataKey false" in {
@@ -41,7 +48,7 @@ with Matchers {
         addressUseAsaDataKey -> false.toString
       )
 
-      form.bind(params).value shouldBe Some(CtAddressFormValues(useAsaData = false))
+      initForm.bind(params).value shouldBe Some(AddressFormValues(useAsaData = false))
     }
 
     s"error when $addressUseAsaDataKey empty" in {
@@ -49,14 +56,14 @@ with Matchers {
         addressUseAsaDataKey -> emptyValue
       )
 
-      val validatedForm = form.bind(params)
+      val validatedForm = initForm.bind(params)
       validatedForm.hasErrors shouldBe true
-      validatedForm.error(addressUseAsaDataKey).get.message shouldBe "asa.legacy.ct.address.use-asa.error.required"
+      validatedForm.error(addressUseAsaDataKey).get.message shouldBe s"$legacyRegimePrefix.address.use-asa.error.required"
       validatedForm.errors.length shouldBe 1
     }
 
     "unbind CtAddressFormValues" in {
-      val unboundForm = form.mapping.unbind(CtAddressFormValues(useAsaData = true))
+      val unboundForm = initForm.mapping.unbind(AddressFormValues(useAsaData = true))
 
       unboundForm shouldBe Map(
         addressUseAsaDataKey -> true.toString

@@ -25,7 +25,7 @@
 
 @(legacyRegime: LegacyRegime)(implicit request: RequestHeader, msgs: Messages, appConfig: AppConfig)
 
-@legacyRegimePrefix = @{ s"asa.legacy.${legacyRegime.toString.toLowerCase}" }
+@legacyRegimePrefix = @{ legacyRegime.msgPrefix }
 
 @main(pageTitle = msgs(s"$legacyRegimePrefix.confirmation.title"), showSecondaryNav = false) {
     @govukPanel(

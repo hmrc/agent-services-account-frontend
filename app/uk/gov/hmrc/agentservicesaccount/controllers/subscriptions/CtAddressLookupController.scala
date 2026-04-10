@@ -52,32 +52,32 @@ with I18nSupport
 with Logging {
 
   private def alfJourneyLanguageLabels(legacyRegime: LegacyRegime)(implicit lang: Lang): JsObject = {
-    val lr = legacyRegime.toString.toLowerCase
+    val legacyRegimePrefix = legacyRegime.msgPrefix
     val editPageLabels = Json.obj(
-      "title" -> messagesApi(s"asa.legacy.$lr.alf.edit.title"),
-      "heading" -> messagesApi(s"asa.legacy.$lr.alf.edit.heading"),
-      "townLabel" -> messagesApi(s"asa.legacy.$lr.alf.edit.townLabel")
+      "title" -> messagesApi(s"$legacyRegimePrefix.alf.edit.title"),
+      "heading" -> messagesApi(s"$legacyRegimePrefix.alf.edit.heading"),
+      "townLabel" -> messagesApi(s"$legacyRegimePrefix.alf.edit.townLabel")
     )
     Json.obj(
       "countryPickerLabels" -> Json.obj(
-        "title" -> messagesApi(s"asa.legacy.$lr.alf.country-picker.title"),
-        "heading" -> messagesApi(s"asa.legacy.$lr.alf.country-picker.heading"),
+        "title" -> messagesApi(s"$legacyRegimePrefix.alf.country-picker.title"),
+        "heading" -> messagesApi(s"$legacyRegimePrefix.alf.country-picker.heading"),
         "countryLabel" -> ""
       ),
       "lookupPageLabels" -> Json.obj(
-        "title" -> messagesApi(s"asa.legacy.$lr.alf.lookup.title"),
-        "heading" -> messagesApi(s"asa.legacy.$lr.alf.lookup.heading"),
-        "postcodeLabel" -> messagesApi(s"asa.legacy.$lr.alf.lookup.postcode.label")
+        "title" -> messagesApi(s"$legacyRegimePrefix.alf.lookup.title"),
+        "heading" -> messagesApi(s"$legacyRegimePrefix.alf.lookup.heading"),
+        "postcodeLabel" -> messagesApi(s"$legacyRegimePrefix.alf.lookup.postcode.label")
       ),
       "selectPageLabels" -> Json.obj(
-        "title" -> messagesApi(s"asa.legacy.$lr.alf.select.title")
+        "title" -> messagesApi(s"$legacyRegimePrefix.alf.select.title")
       ),
       "editPageLabels" -> editPageLabels,
       "international" -> Json.obj(
         "editPageLabels" -> editPageLabels
       ),
       "confirmPageLabels" -> Json.obj(
-        "title" -> messagesApi(s"asa.legacy.$lr.alf.confirm.title")
+        "title" -> messagesApi(s"$legacyRegimePrefix.alf.confirm.title")
       )
     )
   }

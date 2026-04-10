@@ -16,7 +16,7 @@
 
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
-@import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtBusinessNameFormValues
+@import uk.gov.hmrc.agentservicesaccount.models.subscriptions.BusinessNameFormValues
 @import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 @import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
@@ -25,20 +25,16 @@
 
 @this(
     main: main,
-    h1: h1, p: p,
     formWithCSRF: FormWithCSRF,
     govukInput: GovukInput,
-    govukFieldset: GovukFieldset,
     govukRadios: GovukRadios,
-    govukSummaryList: GovukSummaryList,
-    govukInsetText : GovukInsetText,
     govukButton: GovukButton,
     govukErrorSummary: GovukErrorSummary
 )
 
-@(form: Form[CtBusinessNameFormValues], subscriptionBusinessName: String, legacyRegime: LegacyRegime)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
+@(form: Form[BusinessNameFormValues], subscriptionBusinessName: String, legacyRegime: LegacyRegime)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
 
-@legacyRegimePrefix = @{ s"asa.legacy.${legacyRegime.toString.toLowerCase}" }
+@legacyRegimePrefix = @{ legacyRegime.msgPrefix }
 
 @newBusinessNameInput = {
     @govukInput(Input(

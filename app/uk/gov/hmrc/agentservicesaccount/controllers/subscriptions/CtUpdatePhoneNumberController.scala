@@ -24,8 +24,8 @@ import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.ctJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.updatePhoneNumberPage
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.getNextPage
-import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.CtSubscriptionPhoneNumberForm
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtPhoneNumberFormValues
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionPhoneNumberForm
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.PhoneNumberFormValues
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.update_phone_number
@@ -55,18 +55,19 @@ with Logging {
 
     val subscriptionPhoneNumber = journey.asaDetails.agencyTelephone.getOrElse("")
 
+    val initialForm = SubscriptionPhoneNumberForm.form(legacyRegime)
     val form =
       journey.useCustomPhoneNumber match {
 
         case Some(useCustom) =>
-          CtSubscriptionPhoneNumberForm.form.fill(
-            CtPhoneNumberFormValues(
+          initialForm.fill(
+            PhoneNumberFormValues(
               useAsaData = !useCustom,
               newPhoneNumber = journey.phoneNumberAnswer
             )
           )
 
-        case None => CtSubscriptionPhoneNumberForm.form
+        case None => initialForm
       }
 
     Future.successful(
@@ -82,7 +83,7 @@ with Logging {
     val legacyRegime = LegacyRegime.CT
     val journey = request.ctSubscriptionJourney
 
-    CtSubscriptionPhoneNumberForm.form.bindFromRequest().fold(
+    SubscriptionPhoneNumberForm.form(legacyRegime).bindFromRequest().fold(
       formWithErrors => {
         val subscriptionPhoneNumber = journey.asaDetails.agencyTelephone.getOrElse("")
         Future.successful(

@@ -16,21 +16,21 @@
 
 package uk.gov.hmrc.agentservicesaccount.models.subscriptions
 
-case class CtBusinessNameFormValues(
+case class BusinessNameFormValues(
   useAsaData: Boolean,
   newBusinessName: Option[String]
 )
 
-case class CtPhoneNumberFormValues(
+case class PhoneNumberFormValues(
   useAsaData: Boolean,
   newPhoneNumber: Option[String]
 )
 
-case class CtEmailAddressFormValues(
+case class EmailAddressFormValues(
   useAsaData: Boolean,
   newEmailAddress: Option[String]
 )
 
-case class CtAddressFormValues(
+case class AddressFormValues(
   useAsaData: Boolean
 )
