@@ -20,7 +20,7 @@ import play.api.test.Helpers._
 import stubs.AgentServicesAccountStubs.givenGetAgentRecord
 import stubs.AgentServicesAccountStubs.stubASAGetResponseError
 import support.ComponentBaseISpec
-import uk.gov.hmrc.agentservicesaccount.controllers.ctJourneyKey
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
@@ -61,7 +61,7 @@ extends ComponentBaseISpec {
           givenGetAgentRecord(agentRecord)
           stubASAGetResponseError(arn, NOT_FOUND)
 
-          repo.putSession(ctJourneyKey, journeyWithRedirectLocation._1).futureValue
+          repo.putSession(subscriptionJourneyKey(legacyRegime), journeyWithRedirectLocation._1).futureValue
 
           val result =
             post(updateAddressPath)(body =
@@ -72,7 +72,7 @@ extends ComponentBaseISpec {
           result.status shouldBe SEE_OTHER
           result.header(LOCATION) shouldBe Some(s"$subscriptionStartPath/$legacyRegime/${journeyWithRedirectLocation._2}")
 
-          val updated = await(repo.getFromSession(ctJourneyKey))
+          val updated = await(repo.getFromSession(subscriptionJourneyKey(legacyRegime)))
           updated shouldBe defined
           updated.get.useCustomAddress shouldBe Some(false)
           updated.value.addressAnswer shouldBe None

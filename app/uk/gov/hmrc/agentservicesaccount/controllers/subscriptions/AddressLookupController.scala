@@ -82,7 +82,7 @@ with Logging {
     )
   }
 
-  def startAddressLookup(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
+  def startAddressLookup(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
     val continueUrl: String = {
       val useAbsoluteUrls = appConfig.addressLookupBaseUrl.contains("localhost")
       val call = subscriptions.routes.AddressLookupController.finishAddressLookup(None, legacyRegime)
@@ -130,8 +130,8 @@ with Logging {
   def finishAddressLookup(
     id: Option[String],
     legacyRegime: LegacyRegime
-  ): Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
-    val journey = request.ctSubscriptionJourney
+  ): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
+    val journey = request.subscriptionJourney
 
     id match {
       case None => Future.successful(BadRequest)
@@ -150,7 +150,7 @@ with Logging {
             useCustomAddress = Some(true),
             addressAnswer = Some(newBusinessAddress)
           )
-          _ <- sessionCacheService.put(ctJourneyKey, updatedJourney)
+          _ <- sessionCacheService.put(subscriptionJourneyKey(legacyRegime), updatedJourney)
         } yield {
           Redirect(getNextPage(
             addressLookupFinish,

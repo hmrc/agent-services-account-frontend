@@ -26,7 +26,7 @@ import uk.gov.hmrc.agentservicesaccount.models.desiDetails.SaChanges
 import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
 import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtJourney
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
 import uk.gov.hmrc.auth.core.retrieve.Credentials
 import uk.gov.hmrc.auth.core.retrieve.Email
 import uk.gov.hmrc.auth.core.retrieve.Name
@@ -158,7 +158,7 @@ trait TestConstants {
   val desiDetailsCtChangesOtherServices = DesignatoryDetails(agencyDetails, ctChangesOtherServices)
   val desiDetailsSaChangesOtherServices = DesignatoryDetails(agencyDetails, saChangesOtherServices)
 
-  val ctSubscriptionBaseJourney: CtJourney = CtJourney(
+  val ctSubscriptionBaseJourney: SubscriptionJourney = SubscriptionJourney(
     asaDetails = AgencyDetails(
       agencyName = None,
       agencyEmail = Some("joe@bloggs.com"),
@@ -175,7 +175,7 @@ trait TestConstants {
     addressAnswer = None
   )
 
-  val ctSubscriptionFullJourney: CtJourney = CtJourney(
+  val ctSubscriptionFullJourney: SubscriptionJourney = SubscriptionJourney(
     asaDetails = AgencyDetails(
       agencyName = None,
       agencyEmail = Some("joe@bloggs.com"),

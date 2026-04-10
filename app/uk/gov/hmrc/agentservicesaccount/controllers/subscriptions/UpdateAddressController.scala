@@ -21,7 +21,7 @@ import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.controllers.ctJourneyKey
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.updateAddressPage
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionAddressForm
@@ -61,8 +61,8 @@ with Logging {
     .map(_.body)
     .mkString(", ")
 
-  def showPage(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
-    val journey = request.ctSubscriptionJourney
+  def showPage(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
+    val journey = request.subscriptionJourney
 
     val subscriptionAddress = journey.asaDetails.agencyAddress.map(formatAddress).getOrElse("")
 
@@ -89,8 +89,8 @@ with Logging {
     )
   }
 
-  def onSubmit(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
-    val journey = request.ctSubscriptionJourney
+  def onSubmit(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
+    val journey = request.subscriptionJourney
 
     SubscriptionAddressForm.form(legacyRegime).bindFromRequest().fold(
       formWithErrors => {
@@ -111,7 +111,7 @@ with Logging {
           )
 
           sessionCacheService
-            .put(ctJourneyKey, updatedJourney)
+            .put(subscriptionJourneyKey(legacyRegime), updatedJourney)
             .map(_ =>
               Redirect(getNextPage(
                 updateAddressPage,

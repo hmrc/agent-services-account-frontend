@@ -21,7 +21,7 @@ import play.api.libs.json.OFormat
 import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 
-case class CtJourney(
+case class SubscriptionJourney(
   asaDetails: AgencyDetails,
   useCustomBusinessName: Option[Boolean],
   businessNameAnswer: Option[String],
@@ -54,6 +54,6 @@ case class CtJourney(
 
 }
 
-object CtJourney {
-  implicit val format: OFormat[CtJourney] = Json.format[CtJourney]
+object SubscriptionJourney {
+  implicit val format: OFormat[SubscriptionJourney] = Json.format[SubscriptionJourney]
 }

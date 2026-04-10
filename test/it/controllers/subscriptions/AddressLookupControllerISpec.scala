@@ -21,12 +21,11 @@ import stubs.AddressLookupStubs._
 import stubs.AgentServicesAccountStubs.givenGetAgentRecord
 import stubs.AgentServicesAccountStubs.stubASAGetResponseError
 import support.ComponentBaseISpec
-import uk.gov.hmrc.agentservicesaccount.controllers.ctJourneyKey
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup.ConfirmedResponseAddress
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup.ConfirmedResponseAddressDetails
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup.Country
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
 
@@ -95,13 +94,13 @@ extends ComponentBaseISpec {
           stubASAGetResponseError(arn, NOT_FOUND)
           givenGetAddressSuccess("bar", confirmedAddressResponse)
 
-          await(repo.putSession(ctJourneyKey, journeyWithRedirectLocation._1))
+          await(repo.putSession(subscriptionJourneyKey(legacyRegime), journeyWithRedirectLocation._1))
 
           val result = get(s"$finishAddressLookupPath?id=bar")
           result.status shouldBe SEE_OTHER
           result.header(LOCATION) shouldBe Some(s"$subscriptionStartPath/$legacyRegime/${journeyWithRedirectLocation._2}")
 
-          val updatedJourney = await(repo.getFromSession(ctJourneyKey))
+          val updatedJourney = await(repo.getFromSession(subscriptionJourneyKey(legacyRegime)))
           updatedJourney shouldBe defined
           updatedJourney.get.useCustomAddress shouldBe Some(true)
           updatedJourney.get.addressAnswer shouldBe Some(address)

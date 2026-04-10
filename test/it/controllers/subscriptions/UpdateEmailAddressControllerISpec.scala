@@ -22,7 +22,7 @@ import stubs.AgentServicesAccountStubs.stubASAGetResponseError
 import stubs.EmailVerificationStubs.givenCheckEmailSuccess
 import stubs.EmailVerificationStubs.givenVerifyEmailSuccess
 import support.ComponentBaseISpec
-import uk.gov.hmrc.agentservicesaccount.controllers.ctJourneyKey
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.emailPendingVerificationKey
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.CompletedEmail
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.VerificationStatusResponse
@@ -65,7 +65,7 @@ extends ComponentBaseISpec {
           givenGetAgentRecord(agentRecord)
           stubASAGetResponseError(arn, NOT_FOUND)
 
-          repo.putSession(ctJourneyKey, journeyWithRedirectLocation._1).futureValue
+          repo.putSession(subscriptionJourneyKey(legacyRegime), journeyWithRedirectLocation._1).futureValue
 
           val result =
             post(updateEmailAddressPath)(body =
@@ -76,7 +76,7 @@ extends ComponentBaseISpec {
           result.status shouldBe SEE_OTHER
           result.header(LOCATION) shouldBe Some(s"$subscriptionStartPath/$legacyRegime/${journeyWithRedirectLocation._2}")
 
-          val updated = await(repo.getFromSession(ctJourneyKey))
+          val updated = await(repo.getFromSession(subscriptionJourneyKey(legacyRegime)))
           updated shouldBe defined
           updated.get.useCustomEmail shouldBe Some(false)
           updated.value.emailAnswer shouldBe None

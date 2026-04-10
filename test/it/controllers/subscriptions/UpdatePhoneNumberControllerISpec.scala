@@ -35,11 +35,11 @@ import support.BaseISpec
 import support.TestConstants
 import support.UnitSpec
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
-import uk.gov.hmrc.agentservicesaccount.controllers.ctJourneyKey
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdatePhoneNumberController
 import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtJourney
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.auth.core.AuthConnector
@@ -144,10 +144,10 @@ with TestConstants {
 
     def fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest().withSession(session.toSeq: _*)
 
-    def cacheJourney(journey: CtJourney): Unit = {
+    def cacheJourney(journey: SubscriptionJourney): Unit = {
       implicit val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequest
-      implicit val writes: OWrites[CtJourney] = Json.writes[CtJourney]
-      sessionCache.put(ctJourneyKey, journey).futureValue
+      implicit val writes: OWrites[SubscriptionJourney] = Json.writes[SubscriptionJourney]
+      sessionCache.put(subscriptionJourneyKey(legacyRegime), journey).futureValue
     }
 
   }
@@ -218,7 +218,7 @@ with TestConstants {
           redirectLocation(result) shouldBe
             Some(s"/agent-services-account/subscription/$legacyRegime/${journeyWithRedirectLocation._2}")
 
-          val updated: Option[CtJourney] = sessionCache.get[CtJourney](ctJourneyKey).futureValue
+          val updated: Option[SubscriptionJourney] = sessionCache.get[SubscriptionJourney](subscriptionJourneyKey(legacyRegime)).futureValue
           updated shouldBe defined
           updated.get.useCustomPhoneNumber shouldBe Some(false)
           updated.value.phoneNumberAnswer shouldBe None
@@ -242,7 +242,7 @@ with TestConstants {
           redirectLocation(result) shouldBe
             Some(s"/agent-services-account/subscription/$legacyRegime/${journeyWithRedirectLocation._2}")
 
-          val updated: Option[CtJourney] = sessionCache.get[CtJourney](ctJourneyKey).futureValue
+          val updated: Option[SubscriptionJourney] = sessionCache.get[SubscriptionJourney](subscriptionJourneyKey(legacyRegime)).futureValue
           updated.value.useCustomPhoneNumber shouldBe Some(true)
           updated.value.phoneNumberAnswer shouldBe Some("0987654321")
         }

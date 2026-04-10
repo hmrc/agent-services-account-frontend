@@ -22,12 +22,11 @@ import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.i18n.Lang
 import play.api.i18n.Messages
 import play.api.i18n.MessagesImpl
-import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.check_your_answers
-import uk.gov.hmrc.agentservicesaccount.views.components.models.SummaryListData
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.routes
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
+import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
+import uk.gov.hmrc.agentservicesaccount.views.components.models.SummaryListData
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.check_your_answers
 
 import scala.jdk.CollectionConverters._
 
