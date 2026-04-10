@@ -216,7 +216,7 @@ with TestConstants {
           private val result = controller.onSubmit(legacyRegime)(request).futureValue
           status(result) shouldBe SEE_OTHER
           redirectLocation(result) shouldBe
-            Some(s"/agent-services-account/subscription/${journeyWithRedirectLocation._2}/$legacyRegime")
+            Some(s"/agent-services-account/subscription/$legacyRegime/${journeyWithRedirectLocation._2}")
 
           val updated: Option[CtJourney] = sessionCache.get[CtJourney](ctJourneyKey).futureValue
           updated shouldBe defined
@@ -240,7 +240,7 @@ with TestConstants {
           private val result = controller.onSubmit(legacyRegime)(request).futureValue
           status(result) shouldBe SEE_OTHER
           redirectLocation(result) shouldBe
-            Some(s"/agent-services-account/subscription/${journeyWithRedirectLocation._2}/$legacyRegime")
+            Some(s"/agent-services-account/subscription/$legacyRegime/${journeyWithRedirectLocation._2}")
 
           val updated: Option[CtJourney] = sessionCache.get[CtJourney](ctJourneyKey).futureValue
           updated shouldBe defined

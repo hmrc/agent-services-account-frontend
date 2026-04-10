@@ -37,8 +37,8 @@ extends ComponentBaseISpec {
 
   private val legacyRegime = CT
 
-  private val startAddressLookupPath = s"$subscriptionStartPath/address-lookup-start/$legacyRegime"
-  private val finishAddressLookupPath = s"$subscriptionStartPath/address-lookup-finish/$legacyRegime"
+  private val startAddressLookupPath = s"$subscriptionStartPath/$legacyRegime/address-lookup-start"
+  private val finishAddressLookupPath = s"$subscriptionStartPath/$legacyRegime/address-lookup-finish"
 
   private val confirmedAddressResponse = ConfirmedResponseAddress(
     auditRef = "foo",
@@ -99,7 +99,7 @@ extends ComponentBaseISpec {
 
           val result = get(s"$finishAddressLookupPath?id=bar")
           result.status shouldBe SEE_OTHER
-          result.header(LOCATION) shouldBe Some(s"$subscriptionStartPath/${journeyWithRedirectLocation._2}/$legacyRegime")
+          result.header(LOCATION) shouldBe Some(s"$subscriptionStartPath/$legacyRegime/${journeyWithRedirectLocation._2}")
 
           val updatedJourney = await(repo.getFromSession(ctJourneyKey))
           updatedJourney shouldBe defined

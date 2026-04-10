@@ -31,7 +31,7 @@ extends ComponentBaseISpec {
 
   private val legacyRegime = CT
   private val repo = inject[SessionCacheRepository]
-  private val updateAddressPath = s"$subscriptionStartPath/address/$legacyRegime"
+  private val updateAddressPath = s"$subscriptionStartPath/$legacyRegime/address"
 
   s"GET $updateAddressPath" should {
     "display the enter address page" in {
@@ -70,7 +70,7 @@ extends ComponentBaseISpec {
               )
             )
           result.status shouldBe SEE_OTHER
-          result.header(LOCATION) shouldBe Some(s"$subscriptionStartPath/${journeyWithRedirectLocation._2}/$legacyRegime")
+          result.header(LOCATION) shouldBe Some(s"$subscriptionStartPath/$legacyRegime/${journeyWithRedirectLocation._2}")
 
           val updated = await(repo.getFromSession(ctJourneyKey))
           updated shouldBe defined

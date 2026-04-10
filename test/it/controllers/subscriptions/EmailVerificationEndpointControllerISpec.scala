@@ -34,7 +34,7 @@ class EmailVerificationEndpointControllerISpec
 extends ComponentBaseISpec {
 
   private val legacyRegime = CT
-  private val finishEmailVerificationPath = s"$subscriptionStartPath/email-verification-finish/$legacyRegime"
+  private val finishEmailVerificationPath = s"$subscriptionStartPath/$legacyRegime/email-verification-finish"
   private val repo = inject[SessionCacheRepository]
 
   s"GET $finishEmailVerificationPath" should {
