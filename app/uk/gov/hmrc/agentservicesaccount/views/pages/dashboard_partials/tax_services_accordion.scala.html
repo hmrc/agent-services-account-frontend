@@ -203,9 +203,33 @@
 
 }
 
-@saItem(status: SubscriptionStatus) = {
-  @h4("asa.legacy.sa.h3")
-  @p(msgs("asa.legacy.sa.p1", status))
+@* TODO: 11053 This is where improvements to subscription tiles will be called in *@
+@saItem(info: SubscriptionInfo) = {
+
+  @info.subscriptionStatus match {
+    case SubscriptionStatus.NotSubscribed | SubscriptionStatus.SubscriptionFailed => {
+      @h4("asa.legacy.sa.not-subscribed.h4.before-start")
+      @p(msgs("asa.legacy.sa.not-subscribed.p1", msgs("asa.legacy.sa.col1.link1.href")))
+      @p(msgs("asa.legacy.sa.not-subscribed.p2"))
+      @h4("asa.legacy.sa.not-subscribed.h4.enrol-for-ct")
+      @p(msgs("asa.legacy.sa.not-subscribed.p1", subscriptionRoutes.UpdateBusinessNameController.showPage(LegacyRegime.SA).url))
+    }
+    case SubscriptionStatus.SubscriptionInProgress => {
+      @p(msgs("asa.legacy.sa.in-progress.p1", info.localCreationDate.map(_.format(DateTimeFormatter.ofPattern("d MMMM yyyy"))).getOrElse("")))
+      @p(msgs("asa.legacy.sa.in-progress.p2"))
+    }
+    case SubscriptionStatus.Subscribed => {
+      @inset_text(msgs("asa.legacy.sa.subscribed.p1", request.agentInfo.ctAgentCode.getOrElse("")))
+      @h4(msgs("asa.legacy.sa.subscribed.p2"))
+      @p(msgs("asa.legacy.sa.subscribed.p3", "TODO link")) @* TODO: provide the link *@
+      @h4(msgs("asa.legacy.sa.subscribed.p4"))
+      @p(msgs("asa.legacy.sa.subscribed.p5", "TODO link")) @* TODO: provide the link *@
+    }
+    case _ => {
+      @h4("asa.legacy.sa.h3")
+      @p(msgs("asa.legacy.sa.p1", info.subscriptionStatus))
+    }
+  }
 }
 
 @accordionItems = @{
@@ -287,7 +311,7 @@
       items.append(
         Section(
           headingContent = Text(msgs("asa.legacy.sa.h2")),
-          content = HtmlContent(saItem(info.subscriptionStatus))
+          content = HtmlContent(saItem(info))
         )
       )
     }
