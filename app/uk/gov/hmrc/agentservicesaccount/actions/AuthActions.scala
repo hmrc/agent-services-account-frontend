@@ -40,7 +40,7 @@ import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
 class CtJourneyRequest[A](
-  val ctSubscriptionJourney: SubscriptionJourney,
+  val subscriptionJourney: SubscriptionJourney,
   val agentInfo: AgentInfo,
   val request: Request[A]
 )

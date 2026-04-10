@@ -62,7 +62,7 @@ with Logging {
     .mkString(", ")
 
   def showPage(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
-    val journey = request.ctSubscriptionJourney
+    val journey = request.subscriptionJourney
 
     val subscriptionAddress = journey.asaDetails.agencyAddress.map(formatAddress).getOrElse("")
 
@@ -90,7 +90,7 @@ with Logging {
   }
 
   def onSubmit(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
-    val journey = request.ctSubscriptionJourney
+    val journey = request.subscriptionJourney
 
     SubscriptionAddressForm.form(legacyRegime).bindFromRequest().fold(
       formWithErrors => {

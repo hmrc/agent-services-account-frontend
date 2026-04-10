@@ -25,7 +25,7 @@ import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageS
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.{routes => subscriptionRoutes}
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtCyaData
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionCyaData
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
@@ -53,14 +53,14 @@ extends FrontendController(cc)
 with I18nSupport {
 
   def showPage(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
-    withCtCyaData(request.ctSubscriptionJourney) { data =>
+    withSubscriptionCyaData(request.subscriptionJourney) { data =>
       val summaryItems = buildSummaryListItems(data, legacyRegime)
       Future.successful(Ok(checkYourAnswers(summaryItems, legacyRegime)))
     }
   }
 
   def onSubmit(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
-    withCtCyaData(request.ctSubscriptionJourney) { data =>
+    withSubscriptionCyaData(request.subscriptionJourney) { data =>
       val requestModel = data.toSubscriptionRequest
 
       agentServicesAccountConnector
@@ -81,7 +81,7 @@ with I18nSupport {
     .mkString("<br/>")
 
   private[subscriptions] def buildSummaryListItems(
-    data: CtCyaData,
+    data: SubscriptionCyaData,
     legacyRegime: LegacyRegime
   ): Seq[SummaryListData] = {
     Seq(
@@ -108,10 +108,10 @@ with I18nSupport {
     )
   }
 
-  private def withCtCyaData(
+  private def withSubscriptionCyaData(
     journey: SubscriptionJourney
-  )(f: CtCyaData => Future[Result]): Future[Result] =
-    (journey: Option[CtCyaData]) match {
+  )(f: SubscriptionCyaData => Future[Result]): Future[Result] =
+    (journey: Option[SubscriptionCyaData]) match {
       case Some(data) => f(data)
       case None =>
         Future.successful(

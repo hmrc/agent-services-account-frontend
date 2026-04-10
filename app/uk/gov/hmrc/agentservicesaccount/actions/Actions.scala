@@ -133,7 +133,7 @@ class Actions @Inject() (
         implicit val req: Request[A] = request.request
         def buildRequest(journey: SubscriptionJourney): CtJourneyRequest[A] =
           new CtJourneyRequest(
-            ctSubscriptionJourney = journey,
+            subscriptionJourney = journey,
             agentInfo = request.agentInfo,
             request = request.request
           )

@@ -131,7 +131,7 @@ with Logging {
     id: Option[String],
     legacyRegime: LegacyRegime
   ): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
-    val journey = request.ctSubscriptionJourney
+    val journey = request.subscriptionJourney
 
     id match {
       case None => Future.successful(BadRequest)

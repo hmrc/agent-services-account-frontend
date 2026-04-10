@@ -53,7 +53,7 @@ with I18nSupport
 with Logging {
 
   def showPage(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
-    val journey = request.ctSubscriptionJourney
+    val journey = request.subscriptionJourney
 
     val subscriptionEmailAddress = journey.asaDetails.agencyEmail.getOrElse("")
 
@@ -82,7 +82,7 @@ with Logging {
   }
 
   def onSubmit(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
-    val journey = request.ctSubscriptionJourney
+    val journey = request.subscriptionJourney
 
     SubscriptionEmailAddressForm.form(legacyRegime).bindFromRequest().fold(
       formWithErrors => {

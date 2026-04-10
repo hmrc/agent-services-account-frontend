@@ -61,7 +61,7 @@ with Logging {
           val credId = request.agentInfo.credentials.map(_.providerId).getOrElse(throw new RuntimeException("no available cred id"))
           ev.getEmailVerificationStatus(email, credId).flatMap {
             case EmailIsAlreadyVerified =>
-              val journey = request.ctSubscriptionJourney
+              val journey = request.subscriptionJourney
               val updatedJourney = journey.copy(
                 useCustomEmail = Some(true),
                 emailAnswer = Some(email)

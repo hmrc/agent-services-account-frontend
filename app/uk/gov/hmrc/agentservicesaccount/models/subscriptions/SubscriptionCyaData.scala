@@ -18,7 +18,7 @@ package uk.gov.hmrc.agentservicesaccount.models.subscriptions
 
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 
-case class CtCyaData(
+case class SubscriptionCyaData(
   agencyName: String,
   agencyEmail: String,
   agencyTelephone: String,
@@ -43,8 +43,8 @@ case class CtCyaData(
   }
 }
 
-object CtCyaData {
-  implicit def ctJourneyToCyaData(journey: SubscriptionJourney): Option[CtCyaData] = {
+object SubscriptionCyaData {
+  implicit def ctJourneyToCyaData(journey: SubscriptionJourney): Option[SubscriptionCyaData] = {
     for {
       businessName <-
         journey.useCustomBusinessName match {
@@ -66,7 +66,7 @@ object CtCyaData {
           case Some(true) => journey.addressAnswer
           case _ => journey.asaDetails.agencyAddress
         }
-    } yield CtCyaData(
+    } yield SubscriptionCyaData(
       agencyName = businessName,
       agencyEmail = email,
       agencyTelephone = phoneNumber,
