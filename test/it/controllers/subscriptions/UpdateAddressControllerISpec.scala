@@ -19,47 +19,44 @@ package it.controllers.subscriptions
 import play.api.test.Helpers._
 import stubs.AgentServicesAccountStubs.givenGetAgentRecord
 import stubs.AgentServicesAccountStubs.stubASAGetResponseError
-import stubs.EmailVerificationStubs.givenCheckEmailSuccess
-import stubs.EmailVerificationStubs.givenVerifyEmailSuccess
 import support.ComponentBaseISpec
 import uk.gov.hmrc.agentservicesaccount.controllers.ctJourneyKey
-import uk.gov.hmrc.agentservicesaccount.controllers.emailPendingVerificationKey
-import uk.gov.hmrc.agentservicesaccount.models.emailverification.CompletedEmail
-import uk.gov.hmrc.agentservicesaccount.models.emailverification.VerificationStatusResponse
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
 
-class CtUpdateEmailAddressControllerISpec
+class UpdateAddressControllerISpec
 extends ComponentBaseISpec {
 
+  private val legacyRegime = CT
   private val repo = inject[SessionCacheRepository]
+  private val updateAddressPath = s"$subscriptionStartPath/$legacyRegime/address"
 
-  private val updateEmailAddressPath = s"$subscriptionStartPath/${LegacyRegime.CT.toString.toLowerCase}/email-address"
-
-  s"GET $updateEmailAddressPath" should {
-    "display the enter email address page" in {
+  s"GET $updateAddressPath" should {
+    "display the enter address page" in {
 
       givenAuthorisedAsAgentWith(arn.value)
       givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
 
-      val result = get(updateEmailAddressPath)
+      val result = get(updateAddressPath)
 
       result.status shouldBe OK
-      assertPageHasTitle("What email address should we use to contact you about Corporation Tax?")(result)
+      assertPageHasTitle("What address should we use to send letters about Corporation Tax?")(result)
     }
   }
 
-  s"POST $updateEmailAddressPath" should {
+  s"POST $updateAddressPath" should {
 
     val journeyWithRedirectLocations = List(
-      (ctSubscriptionBaseJourney, "address", "not complete"),
+      (ctSubscriptionBaseJourney, "check-your-answers", "not complete"),
       (ctSubscriptionFullJourney, "check-your-answers", "complete")
     )
 
     journeyWithRedirectLocations.foreach(journeyWithRedirectLocation => {
       s"update journey and redirect to ${journeyWithRedirectLocation._2}" +
-        s"when using ASA email address and journey ${journeyWithRedirectLocation._3}" in {
+        s"when using ASA address and journey ${journeyWithRedirectLocation._3}" in {
           givenAuthorisedAsAgentWith(arn.value)
           givenGetAgentRecord(agentRecord)
           stubASAGetResponseError(arn, NOT_FOUND)
@@ -67,23 +64,22 @@ extends ComponentBaseISpec {
           repo.putSession(ctJourneyKey, journeyWithRedirectLocation._1).futureValue
 
           val result =
-            post(updateEmailAddressPath)(body =
+            post(updateAddressPath)(body =
               Map(
-                "emailAddressUseAsaData" -> Seq("true")
+                "addressUseAsaData" -> Seq("true")
               )
             )
           result.status shouldBe SEE_OTHER
-          result.header(LOCATION) shouldBe Some(s"$subscriptionStartPath/${LegacyRegime.CT.toString.toLowerCase}/${journeyWithRedirectLocation._2}")
+          result.header(LOCATION) shouldBe Some(s"$subscriptionStartPath/$legacyRegime/${journeyWithRedirectLocation._2}")
 
           val updated = await(repo.getFromSession(ctJourneyKey))
           updated shouldBe defined
-          updated.get.useCustomEmail shouldBe Some(false)
-          updated.value.emailAnswer shouldBe None
+          updated.get.useCustomAddress shouldBe Some(false)
+          updated.value.addressAnswer shouldBe None
         }
-
     })
 
-    "(if the email is unverified) redirect to the verify-email external journey" in {
+    "(if not using ASA address) redirect to the ALF external journey" in {
 
       givenFullAuthorisedAsAgentWith(
         arn = arn.value,
@@ -92,31 +88,17 @@ extends ComponentBaseISpec {
       )
       givenGetAgentRecord(agentRecord)
       stubASAGetResponseError(arn, NOT_FOUND)
-      givenCheckEmailSuccess(
-        "cred-id",
-        VerificationStatusResponse(emails =
-          List(CompletedEmail(
-            "abc@abc.com",
-            verified = true,
-            locked = false
-          ))
-        )
-      )
-      givenVerifyEmailSuccess("/continue-url")
-
-      await(repo.putSession(emailPendingVerificationKey, "new@abc.com"))
 
       val result =
-        post(updateEmailAddressPath)(body =
+        post(updateAddressPath)(body =
           Map(
-            "emailAddressUseAsaData" -> Seq("false"),
-            "emailAddressNew" -> Seq("jane@bloggs.com")
+            "addressUseAsaData" -> Seq("false")
           )
         )
 
       result.status shouldBe SEE_OTHER
 
-      result.header("Location").get shouldBe "http://localhost:9890/continue-url"
+      result.header("Location").get shouldBe s"${subscriptions.routes.AddressLookupController.startAddressLookup(legacyRegime)}"
     }
   }
 

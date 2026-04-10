@@ -31,7 +31,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class CtConfirmationController @Inject() (implicit
+class ConfirmationController @Inject() (implicit
   appConfig: AppConfig,
   actions: Actions,
   confirmation: confirmation,
@@ -39,8 +39,7 @@ class CtConfirmationController @Inject() (implicit
 )
 extends FrontendController(cc)
 with I18nSupport {
-  val showConfirmationPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    val legacyRegime = LegacyRegime.CT
+  def showConfirmationPage(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     Ok(confirmation(legacyRegime)).toFuture
   }
 }

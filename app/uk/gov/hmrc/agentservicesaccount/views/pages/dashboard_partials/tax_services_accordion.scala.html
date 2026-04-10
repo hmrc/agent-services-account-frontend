@@ -182,7 +182,7 @@
         @p(msgs("asa.legacy.ct.not-subscribed.p1", msgs("asa.legacy.ct.col1.link1.href")))
         @p(msgs("asa.legacy.ct.not-subscribed.p2"))
         @h4("asa.legacy.ct.not-subscribed.h4.enrol-for-ct")
-        @p(msgs("asa.legacy.ct.not-subscribed.p1", subscriptionRoutes.CtUpdateBusinessNameController.showPage.url))
+        @p(msgs("asa.legacy.ct.not-subscribed.p1", subscriptionRoutes.UpdateBusinessNameController.showPage(LegacyRegime.CT).url))
       }
       case SubscriptionStatus.SubscriptionInProgress => {
         @p(msgs("asa.legacy.ct.in-progress.p1", info.localCreationDate.map(_.format(DateTimeFormatter.ofPattern("d MMMM yyyy"))).getOrElse("")))

@@ -42,7 +42,7 @@
 
     @h1(s"$legacyRegimePrefix.check-your-answers.h1")
 
-    @formWithCSRF(action = subscriptions.routes.CtCheckYourAnswersController.onSubmit) {
+    @formWithCSRF(action = subscriptions.routes.CheckYourAnswersController.onSubmit(legacyRegime)) {
         @summary_list(model)
         @govukButton(Button(content = Text(msgs(s"$legacyRegimePrefix.check-your-answers.submit-button"))))
     }

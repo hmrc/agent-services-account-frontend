@@ -21,6 +21,7 @@ import play.api.libs.json.JsString
 import play.api.libs.json.JsSuccess
 import play.api.libs.json.Reads
 import play.api.libs.json.Writes
+import play.api.mvc.PathBindable
 
 // TODO when migrating to scala 3, replace this with the backend model from agent-services-account
 sealed trait LegacyRegime {
@@ -55,5 +56,27 @@ object LegacyRegime {
       JsString(regime.toString)
     }
   )
+
+  implicit val legacyRegimeBinder: PathBindable[LegacyRegime] =
+    new PathBindable[LegacyRegime] {
+
+      override def bind(
+        key: String,
+        value: String
+      ): Either[String, LegacyRegime] = fromString(value).toRight(s"Unknown regime: $value")
+
+      override def unbind(
+        key: String,
+        value: LegacyRegime
+      ): String = value.toString
+    }
+
+  def fromString(value: String): Option[LegacyRegime] =
+    value match {
+      case "PAYE" => Some(PAYE)
+      case "SA" => Some(SA)
+      case "CT" => Some(CT)
+      case _ => None
+    }
 
 }

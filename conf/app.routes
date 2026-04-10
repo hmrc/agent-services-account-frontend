@@ -96,26 +96,26 @@ GET        /subscription/paye/request/confirm                             @uk.go
 POST       /subscription/paye/request/confirm                             @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.PayeSubscriptionRequestController.submit
 GET        /subscription/paye/request/submitted                           @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.PayeSubscriptionRequestController.showSubmitted
 
-GET        /subscription/ct/business-name                                 @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtUpdateBusinessNameController.showPage
-POST       /subscription/ct/business-name                                 @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtUpdateBusinessNameController.onSubmit
+GET        /subscription/:regime/business-name                            @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdateBusinessNameController.showPage(regime: LegacyRegime)
+POST       /subscription/:regime/business-name                            @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdateBusinessNameController.onSubmit(regime: LegacyRegime)
 
-GET        /subscription/ct/phone-number                                  @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtUpdatePhoneNumberController.showPage
-POST       /subscription/ct/phone-number                                  @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtUpdatePhoneNumberController.onSubmit
+GET        /subscription/:regime/phone-number                             @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdatePhoneNumberController.showPage(regime: LegacyRegime)
+POST       /subscription/:regime/phone-number                             @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdatePhoneNumberController.onSubmit(regime: LegacyRegime)
 
-GET        /subscription/ct/email-address                                 @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtUpdateEmailAddressController.showPage
-POST       /subscription/ct/email-address                                 @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtUpdateEmailAddressController.onSubmit
-GET        /subscription/ct/email-verification-finish                     @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtEmailVerificationEndpointController.finishEmailVerification
+GET        /subscription/:regime/email-address                            @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdateEmailAddressController.showPage(regime: LegacyRegime)
+POST       /subscription/:regime/email-address                            @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdateEmailAddressController.onSubmit(regime: LegacyRegime)
+GET        /subscription/:regime/email-verification-finish                @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.EmailVerificationEndpointController.finishEmailVerification(regime: LegacyRegime)
 
-GET        /subscription/ct/address                                       @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtUpdateAddressController.showPage
-POST       /subscription/ct/address                                       @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtUpdateAddressController.onSubmit
+GET        /subscription/:regime/address                                  @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdateAddressController.showPage(regime: LegacyRegime)
+POST       /subscription/:regime/address                                  @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdateAddressController.onSubmit(regime: LegacyRegime)
 
-GET        /subscription/ct/address-lookup-start                          @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtAddressLookupController.startAddressLookup
-GET        /subscription/ct/address-lookup-finish                         @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtAddressLookupController.finishAddressLookup(id: Option[String])
+GET        /subscription/:regime/address-lookup-start                     @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.AddressLookupController.startAddressLookup(regime: LegacyRegime)
+GET        /subscription/:regime/address-lookup-finish                    @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.AddressLookupController.finishAddressLookup(id: Option[String], regime: LegacyRegime)
 
-GET        /subscription/ct/check-your-answers                            @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtCheckYourAnswersController.showPage
-POST       /subscription/ct/check-your-answers                            @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtCheckYourAnswersController.onSubmit
+GET        /subscription/:regime/check-your-answers                       @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CheckYourAnswersController.showPage(regime: LegacyRegime)
+POST       /subscription/:regime/check-your-answers                       @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CheckYourAnswersController.onSubmit(regime: LegacyRegime)
 
-GET        /subscription/ct/confirmation                                  @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtConfirmationController.showConfirmationPage
+GET        /subscription/:regime/confirmation                                     @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.ConfirmationController.showConfirmationPage(regime: LegacyRegime)
 
 # AMLS
 GET        /manage-account/money-laundering-supervision/view-details                     @uk.gov.hmrc.agentservicesaccount.controllers.amls.ViewDetailsController.showPage

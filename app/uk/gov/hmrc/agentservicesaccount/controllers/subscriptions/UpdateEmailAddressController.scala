@@ -23,8 +23,8 @@ import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.ctJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.emailPendingVerificationKey
-import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.updateEmailAddressPage
-import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.getNextPage
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.updateEmailAddressPage
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionEmailAddressForm
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.EmailAddressFormValues
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
@@ -38,7 +38,7 @@ import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
 @Singleton
-class CtUpdateEmailAddressController @Inject() (
+class UpdateEmailAddressController @Inject() (
   actions: Actions,
   val sessionCacheService: SessionCacheService,
   emailVerificationService: EmailVerificationService,
@@ -52,8 +52,7 @@ extends FrontendController(cc)
 with I18nSupport
 with Logging {
 
-  val showPage: Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
-    val legacyRegime = LegacyRegime.CT
+  def showPage(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
     val journey = request.ctSubscriptionJourney
 
     val subscriptionEmailAddress = journey.asaDetails.agencyEmail.getOrElse("")
@@ -82,8 +81,7 @@ with Logging {
     )
   }
 
-  def onSubmit: Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
-    val legacyRegime = LegacyRegime.CT
+  def onSubmit(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
     val journey = request.ctSubscriptionJourney
 
     SubscriptionEmailAddressForm.form(legacyRegime).bindFromRequest().fold(
@@ -106,7 +104,13 @@ with Logging {
 
           sessionCacheService
             .put(ctJourneyKey, updatedJourney)
-            .map(_ => Redirect(getNextPage(updateEmailAddressPage, Some(updatedJourney))))
+            .map(_ =>
+              Redirect(getNextPage(
+                updateEmailAddressPage,
+                Some(updatedJourney),
+                legacyRegime
+              ))
+            )
         }
         else {
           data.newEmailAddress.map(newEmail => {
@@ -117,11 +121,11 @@ with Logging {
                 credId,
                 newEmail,
                 messagesApi.preferred(request).lang,
-                routes.CtEmailVerificationEndpointController.finishEmailVerification,
-                routes.CtUpdateEmailAddressController.showPage
+                routes.EmailVerificationEndpointController.finishEmailVerification(legacyRegime),
+                routes.UpdateEmailAddressController.showPage(legacyRegime)
               )
             } yield Redirect(redirectUri)
-          }).getOrElse(Future.successful(Redirect(routes.CtUpdateEmailAddressController.showPage)))
+          }).getOrElse(Future.successful(Redirect(routes.UpdateEmailAddressController.showPage(legacyRegime))))
         }
       }
     )

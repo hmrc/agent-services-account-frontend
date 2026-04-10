@@ -25,8 +25,8 @@ import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AddressLookupConnector
 import uk.gov.hmrc.agentservicesaccount.controllers._
-import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.addressLookupFinish
-import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.getNextPage
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.addressLookupFinish
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup._
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
@@ -38,7 +38,7 @@ import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
 @Singleton
-class CtAddressLookupController @Inject() (
+class AddressLookupController @Inject() (
   actions: Actions,
   val sessionCacheService: SessionCacheService,
   alfConnector: AddressLookupConnector
@@ -82,12 +82,10 @@ with Logging {
     )
   }
 
-  def startAddressLookup: Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
-    val legacyRegime = LegacyRegime.CT
-
+  def startAddressLookup(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
     val continueUrl: String = {
       val useAbsoluteUrls = appConfig.addressLookupBaseUrl.contains("localhost")
-      val call = subscriptions.routes.CtAddressLookupController.finishAddressLookup(None)
+      val call = subscriptions.routes.AddressLookupController.finishAddressLookup(None, legacyRegime)
       if (useAbsoluteUrls)
         call.absoluteURL()
       else
@@ -129,8 +127,10 @@ with Logging {
     }
   }
 
-  def finishAddressLookup(id: Option[String]): Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
-    val legacyRegime = LegacyRegime.CT
+  def finishAddressLookup(
+    id: Option[String],
+    legacyRegime: LegacyRegime
+  ): Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
     val journey = request.ctSubscriptionJourney
 
     id match {
@@ -152,7 +152,11 @@ with Logging {
           )
           _ <- sessionCacheService.put(ctJourneyKey, updatedJourney)
         } yield {
-          Redirect(getNextPage(addressLookupFinish, Some(updatedJourney)))
+          Redirect(getNextPage(
+            addressLookupFinish,
+            Some(updatedJourney),
+            legacyRegime
+          ))
         }
     }
   }

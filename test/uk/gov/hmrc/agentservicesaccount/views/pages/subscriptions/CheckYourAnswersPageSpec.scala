@@ -27,6 +27,7 @@ import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.check_you
 import uk.gov.hmrc.agentservicesaccount.views.components.models.SummaryListData
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.routes
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
 
 import scala.jdk.CollectionConverters._
 
@@ -98,7 +99,7 @@ extends ViewBaseSpec {
       values.exists(_.contains("Line 1")) mustBe true
 
       val form = doc.select("form")
-      form.attr("action") mustBe routes.CtCheckYourAnswersController.onSubmit.url
+      form.attr("action") mustBe routes.CheckYourAnswersController.onSubmit(legacyRegime).url
 
       val button = doc.select("button")
       button.text() mustBe messages(s"${legacyRegime.msgPrefix}.check-your-answers.submit-button")

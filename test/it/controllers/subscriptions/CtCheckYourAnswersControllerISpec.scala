@@ -34,10 +34,12 @@ import support.BaseISpec
 import support.UnitSpec
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.ctJourneyKey
-import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CtCheckYourAnswersController
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CheckYourAnswersController
 import uk.gov.hmrc.agentservicesaccount.models._
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtJourney
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtSubscriptionRequest
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.authorise.Predicate
@@ -48,7 +50,7 @@ import uk.gov.hmrc.http.client.HttpClientV2
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
-class CtCheckYourAnswersControllerISpec
+class CheckYourAnswersControllerISpec
 extends BaseISpec
 with UnitSpec
 with Matchers
@@ -58,6 +60,8 @@ with IntegrationPatience
 with MockFactory {
 
   class TestSetup {
+
+    val legacyRegime: LegacyRegime = CT
 
     private val testArn = "TARN0000001"
 
@@ -126,7 +130,7 @@ with MockFactory {
       .overrides(overrides)
       .build()
 
-    val controller: CtCheckYourAnswersController = app.injector.instanceOf[CtCheckYourAnswersController]
+    val controller: CheckYourAnswersController = app.injector.instanceOf[CheckYourAnswersController]
 
     val sessionCache: SessionCacheService = app.injector.instanceOf[SessionCacheService]
 
@@ -175,7 +179,7 @@ with MockFactory {
 
       cacheJourney(fullCtJourney)
 
-      val result = controller.showPage()(fakeRequest).futureValue
+      val result = controller.showPage(legacyRegime)(fakeRequest).futureValue
 
       status(result) shouldBe OK
       val body = contentAsString(result)
@@ -206,7 +210,7 @@ with MockFactory {
 
       cacheJourney(invalidJourney)
 
-      val result = controller.showPage()(fakeRequest).futureValue
+      val result = controller.showPage(legacyRegime)(fakeRequest).futureValue
 
       status(result) shouldBe BAD_REQUEST
       contentAsString(result) should include("missing CT CYA data")
@@ -220,7 +224,7 @@ with MockFactory {
       cacheJourney(fullCtJourney)
       givenCtStartSubscriptionResponse(OK)
 
-      val result = controller.onSubmit()(fakeRequest).futureValue
+      val result = controller.onSubmit(legacyRegime)(fakeRequest).futureValue
 
       status(result) shouldBe SEE_OTHER
       redirectLocation(result).value should include("/confirmation")
@@ -245,7 +249,7 @@ with MockFactory {
       )
       cacheJourney(emptyJourney)
 
-      val result = controller.onSubmit()(fakeRequest).futureValue
+      val result = controller.onSubmit(legacyRegime)(fakeRequest).futureValue
 
       status(result) shouldBe BAD_REQUEST
       contentAsString(result) should include("missing CT CYA data")

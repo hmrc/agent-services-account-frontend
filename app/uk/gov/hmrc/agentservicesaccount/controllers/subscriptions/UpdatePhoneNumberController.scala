@@ -22,8 +22,8 @@ import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.ctJourneyKey
-import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.updatePhoneNumberPage
-import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.getNextPage
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.updatePhoneNumberPage
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionPhoneNumberForm
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.PhoneNumberFormValues
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
@@ -36,7 +36,7 @@ import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
 @Singleton
-class CtUpdatePhoneNumberController @Inject() (
+class UpdatePhoneNumberController @Inject() (
   actions: Actions,
   val sessionCacheService: SessionCacheService,
   update_phone_number: update_phone_number,
@@ -49,8 +49,7 @@ extends FrontendController(cc)
 with I18nSupport
 with Logging {
 
-  val showPage: Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
-    val legacyRegime = LegacyRegime.CT
+  def showPage(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
     val journey = request.ctSubscriptionJourney
 
     val subscriptionPhoneNumber = journey.asaDetails.agencyTelephone.getOrElse("")
@@ -79,8 +78,7 @@ with Logging {
     )
   }
 
-  def onSubmit: Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
-    val legacyRegime = LegacyRegime.CT
+  def onSubmit(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
     val journey = request.ctSubscriptionJourney
 
     SubscriptionPhoneNumberForm.form(legacyRegime).bindFromRequest().fold(
@@ -106,7 +104,13 @@ with Logging {
 
         sessionCacheService
           .put(ctJourneyKey, updatedJourney)
-          .map(_ => Redirect(getNextPage(updatePhoneNumberPage, Some(updatedJourney))))
+          .map(_ =>
+            Redirect(getNextPage(
+              updatePhoneNumberPage,
+              Some(updatedJourney),
+              legacyRegime
+            ))
+          )
       }
     )
   }

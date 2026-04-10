@@ -27,15 +27,18 @@ import uk.gov.hmrc.agentservicesaccount.models.addresslookup.ConfirmedResponseAd
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup.ConfirmedResponseAddressDetails
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup.Country
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
 
-class CtAddressLookupControllerISpec
+class AddressLookupControllerISpec
 extends ComponentBaseISpec {
 
   private val repo = inject[SessionCacheRepository]
 
-  private val startAddressLookupPath = s"$subscriptionStartPath/${LegacyRegime.CT.toString.toLowerCase}/address-lookup-start"
-  private val finishAddressLookupPath = s"$subscriptionStartPath/${LegacyRegime.CT.toString.toLowerCase}/address-lookup-finish"
+  private val legacyRegime = CT
+
+  private val startAddressLookupPath = s"$subscriptionStartPath/$legacyRegime/address-lookup-start"
+  private val finishAddressLookupPath = s"$subscriptionStartPath/$legacyRegime/address-lookup-finish"
 
   private val confirmedAddressResponse = ConfirmedResponseAddress(
     auditRef = "foo",
@@ -96,7 +99,7 @@ extends ComponentBaseISpec {
 
           val result = get(s"$finishAddressLookupPath?id=bar")
           result.status shouldBe SEE_OTHER
-          result.header(LOCATION) shouldBe Some(s"$subscriptionStartPath/${LegacyRegime.CT.toString.toLowerCase}/${journeyWithRedirectLocation._2}")
+          result.header(LOCATION) shouldBe Some(s"$subscriptionStartPath/$legacyRegime/${journeyWithRedirectLocation._2}")
 
           val updatedJourney = await(repo.getFromSession(ctJourneyKey))
           updatedJourney shouldBe defined

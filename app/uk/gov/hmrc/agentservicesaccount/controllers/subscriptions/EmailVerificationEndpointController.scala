@@ -23,8 +23,8 @@ import play.api.mvc.AnyContent
 import play.api.mvc.MessagesControllerComponents
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.emailVerificationFinish
-import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.getNextPage
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.emailVerificationFinish
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.controllers.ctJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.emailPendingVerificationKey
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.EmailIsAlreadyVerified
@@ -40,7 +40,7 @@ import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
 @Singleton
-class CtEmailVerificationEndpointController @Inject() (
+class EmailVerificationEndpointController @Inject() (
   actions: Actions,
   val sessionCacheService: SessionCacheService,
   cc: MessagesControllerComponents
@@ -54,9 +54,8 @@ with I18nSupport
 with Logging {
 
   /* This is the callback endpoint (return url) from the email-verification service and not for use of our own frontend. */
-  val finishEmailVerification: Action[AnyContent] = actions.authActionWithCtJourney.async {
+  def finishEmailVerification(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithCtJourney.async {
     implicit request =>
-      val legacyRegime = LegacyRegime.CT
       sessionCacheService.get(emailPendingVerificationKey).flatMap {
         case Some(email) =>
           val credId = request.agentInfo.credentials.map(_.providerId).getOrElse(throw new RuntimeException("no available cred id"))
@@ -70,7 +69,13 @@ with Logging {
 
               sessionCacheService
                 .put(ctJourneyKey, updatedJourney)
-                .map(_ => Redirect(getNextPage(emailVerificationFinish, Some(updatedJourney))))
+                .map(_ =>
+                  Redirect(getNextPage(
+                    emailVerificationFinish,
+                    Some(updatedJourney),
+                    legacyRegime
+                  ))
+                )
 
             case EmailNeedsVerifying =>
               for {
@@ -79,12 +84,12 @@ with Logging {
                   credId,
                   email,
                   messagesApi.preferred(request).lang,
-                  routes.CtEmailVerificationEndpointController.finishEmailVerification,
-                  routes.CtUpdateEmailAddressController.showPage
+                  routes.EmailVerificationEndpointController.finishEmailVerification(legacyRegime),
+                  routes.UpdateEmailAddressController.showPage(legacyRegime)
                 )
               } yield Redirect(redirectUri)
           }
-        case None => Future.successful(Redirect(routes.CtUpdateEmailAddressController.showPage))
+        case None => Future.successful(Redirect(routes.UpdateEmailAddressController.showPage(legacyRegime)))
       }
   }
 }
