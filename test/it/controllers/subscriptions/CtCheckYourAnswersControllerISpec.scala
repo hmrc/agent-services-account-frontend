@@ -33,10 +33,10 @@ import stubs.AgentServicesAccountStubs._
 import support.BaseISpec
 import support.UnitSpec
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
-import uk.gov.hmrc.agentservicesaccount.controllers.ctJourneyKey
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CheckYourAnswersController
 import uk.gov.hmrc.agentservicesaccount.models._
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtJourney
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtSubscriptionRequest
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
@@ -147,7 +147,7 @@ with MockFactory {
       countryCode = "GB"
     )
 
-    val fullCtJourney: CtJourney = CtJourney(
+    val fullCtJourney: SubscriptionJourney = SubscriptionJourney(
       asaDetails = AgencyDetails(
         agencyName = Some("ASA Name"),
         agencyEmail = Some("asa@test.com"),
@@ -164,11 +164,11 @@ with MockFactory {
       addressAnswer = Some(address)
     )
 
-    def cacheJourney(journey: CtJourney): Unit = {
+    def cacheJourney(journey: SubscriptionJourney): Unit = {
       implicit val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequest
-      implicit val writes: OWrites[CtJourney] = Json.writes[CtJourney]
+      implicit val writes: OWrites[SubscriptionJourney] = Json.writes[SubscriptionJourney]
 
-      sessionCache.put(ctJourneyKey, journey).futureValue
+      sessionCache.put(subscriptionJourneyKey(legacyRegime), journey).futureValue
     }
 
   }
@@ -191,7 +191,7 @@ with MockFactory {
     }
 
     "return BAD_REQUEST when journey data missing" in new TestSetup {
-      val invalidJourney = CtJourney(
+      val invalidJourney = SubscriptionJourney(
         asaDetails = AgencyDetails(
           agencyName = None,
           agencyEmail = None,
@@ -231,7 +231,7 @@ with MockFactory {
     }
 
     "return BAD_REQUEST when journey data missing" in new TestSetup {
-      val emptyJourney = CtJourney(
+      val emptyJourney = SubscriptionJourney(
         asaDetails = AgencyDetails(
           None,
           None,

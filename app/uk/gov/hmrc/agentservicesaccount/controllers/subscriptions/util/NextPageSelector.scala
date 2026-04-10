@@ -19,7 +19,7 @@ package uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util
 import play.api.mvc.Call
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
 import uk.gov.hmrc.agentservicesaccount.controllers.{routes => homeRoutes}
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtJourney
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 
 object NextPageSelector {
@@ -35,7 +35,7 @@ object NextPageSelector {
 
   private val nextPage: (
     String,
-    Option[CtJourney],
+    Option[SubscriptionJourney],
     LegacyRegime
   ) => Call = {
     case (_, Some(journey), regime) if journey.isComplete => subscriptions.routes.CheckYourAnswersController.showPage(regime)
@@ -63,7 +63,7 @@ object NextPageSelector {
 
   def getNextPage(
     currentPage: String,
-    journey: Option[CtJourney] = None,
+    journey: Option[SubscriptionJourney] = None,
     legacyRegime: LegacyRegime
   ): Call = {
     nextPage(

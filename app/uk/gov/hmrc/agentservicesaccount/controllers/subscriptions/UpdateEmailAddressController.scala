@@ -21,7 +21,7 @@ import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.controllers.ctJourneyKey
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.emailPendingVerificationKey
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.updateEmailAddressPage
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.getNextPage
@@ -52,7 +52,7 @@ extends FrontendController(cc)
 with I18nSupport
 with Logging {
 
-  def showPage(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
+  def showPage(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
     val journey = request.ctSubscriptionJourney
 
     val subscriptionEmailAddress = journey.asaDetails.agencyEmail.getOrElse("")
@@ -81,7 +81,7 @@ with Logging {
     )
   }
 
-  def onSubmit(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
+  def onSubmit(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
     val journey = request.ctSubscriptionJourney
 
     SubscriptionEmailAddressForm.form(legacyRegime).bindFromRequest().fold(
@@ -103,7 +103,7 @@ with Logging {
           )
 
           sessionCacheService
-            .put(ctJourneyKey, updatedJourney)
+            .put(subscriptionJourneyKey(legacyRegime), updatedJourney)
             .map(_ =>
               Redirect(getNextPage(
                 updateEmailAddressPage,

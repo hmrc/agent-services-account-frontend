@@ -26,7 +26,7 @@ import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageS
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.{routes => subscriptionRoutes}
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtCyaData
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtJourney
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.components.models.SummaryListData
@@ -52,14 +52,14 @@ class CheckYourAnswersController @Inject() (
 extends FrontendController(cc)
 with I18nSupport {
 
-  def showPage(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
+  def showPage(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
     withCtCyaData(request.ctSubscriptionJourney) { data =>
       val summaryItems = buildSummaryListItems(data, legacyRegime)
       Future.successful(Ok(checkYourAnswers(summaryItems, legacyRegime)))
     }
   }
 
-  def onSubmit(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
+  def onSubmit(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
     withCtCyaData(request.ctSubscriptionJourney) { data =>
       val requestModel = data.toSubscriptionRequest
 
@@ -109,7 +109,7 @@ with I18nSupport {
   }
 
   private def withCtCyaData(
-    journey: CtJourney
+    journey: SubscriptionJourney
   )(f: CtCyaData => Future[Result]): Future[Result] =
     (journey: Option[CtCyaData]) match {
       case Some(data) => f(data)

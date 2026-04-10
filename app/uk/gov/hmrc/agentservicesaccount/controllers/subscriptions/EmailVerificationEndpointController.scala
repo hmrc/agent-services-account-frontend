@@ -25,7 +25,7 @@ import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.emailVerificationFinish
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.getNextPage
-import uk.gov.hmrc.agentservicesaccount.controllers.ctJourneyKey
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.emailPendingVerificationKey
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.EmailIsAlreadyVerified
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.EmailNeedsVerifying
@@ -54,7 +54,7 @@ with I18nSupport
 with Logging {
 
   /* This is the callback endpoint (return url) from the email-verification service and not for use of our own frontend. */
-  def finishEmailVerification(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithCtJourney.async {
+  def finishEmailVerification(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async {
     implicit request =>
       sessionCacheService.get(emailPendingVerificationKey).flatMap {
         case Some(email) =>
@@ -68,7 +68,7 @@ with Logging {
               )
 
               sessionCacheService
-                .put(ctJourneyKey, updatedJourney)
+                .put(subscriptionJourneyKey(legacyRegime), updatedJourney)
                 .map(_ =>
                   Redirect(getNextPage(
                     emailVerificationFinish,

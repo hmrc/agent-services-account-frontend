@@ -22,7 +22,7 @@ import play.api.mvc.Results._
 import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models.Arn
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtJourney
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionInfo
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionStatus
@@ -40,7 +40,7 @@ import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
 class CtJourneyRequest[A](
-  val ctSubscriptionJourney: CtJourney,
+  val ctSubscriptionJourney: SubscriptionJourney,
   val agentInfo: AgentInfo,
   val request: Request[A]
 )

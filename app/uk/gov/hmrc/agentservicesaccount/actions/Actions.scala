@@ -23,13 +23,14 @@ import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
-import uk.gov.hmrc.agentservicesaccount.controllers.ctJourneyKey
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.routes
 import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
 import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
 import uk.gov.hmrc.agentservicesaccount.models.AmlsDetails
 import uk.gov.hmrc.agentservicesaccount.models.Arn
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtJourney
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.services.AgentRecordService
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 
@@ -117,26 +118,26 @@ class Actions @Inject() (
   def authActionWithSuspensionCheckWithAgentRecord: ActionBuilder[AuthRequestWithAgentProfile, AnyContent] =
     actionBuilder andThen authActions.authActionRefiner andThen withAgentRecord(false)
 
-  def authActionWithCtJourney: ActionBuilder[CtJourneyRequest, AnyContent] =
+  def authActionWithSubscriptionJourney(legacyRegime: LegacyRegime): ActionBuilder[CtJourneyRequest, AnyContent] =
     actionBuilder andThen
       authActions.authActionRefiner andThen
       filterSuspendedAgent(false) andThen
-      withCtJourney
+      withSubscriptionJourney(legacyRegime)
 
-  private def withCtJourney: ActionRefiner[AuthRequestWithAgentInfo, CtJourneyRequest] =
+  private def withSubscriptionJourney(legacyRegime: LegacyRegime): ActionRefiner[AuthRequestWithAgentInfo, CtJourneyRequest] =
     new ActionRefiner[AuthRequestWithAgentInfo, CtJourneyRequest] {
       override protected def executionContext: ExecutionContext = ec
       override protected def refine[A](
         request: AuthRequestWithAgentInfo[A]
       ): Future[Either[Result, CtJourneyRequest[A]]] = {
         implicit val req: Request[A] = request.request
-        def buildRequest(journey: CtJourney): CtJourneyRequest[A] =
+        def buildRequest(journey: SubscriptionJourney): CtJourneyRequest[A] =
           new CtJourneyRequest(
             ctSubscriptionJourney = journey,
             agentInfo = request.agentInfo,
             request = request.request
           )
-        def ctJourney(asaDetails: AgencyDetails) = CtJourney(
+        def subscriptionJourney(asaDetails: AgencyDetails) = SubscriptionJourney(
           asaDetails = asaDetails,
           useCustomBusinessName = None,
           businessNameAnswer = None,
@@ -148,17 +149,17 @@ class Actions @Inject() (
           addressAnswer = None
         )
         if (appConfig.enableLegacySubscriptionLink) {
-          sessionCacheService.get[CtJourney](ctJourneyKey).flatMap {
+          sessionCacheService.get[SubscriptionJourney](subscriptionJourneyKey(legacyRegime)).flatMap {
             case Some(journey) => Future.successful(Right(buildRequest(journey)))
             case None =>
               agentServicesAccountConnector.getAgentRecord.flatMap { response =>
-                val journey = ctJourney(response.agencyDetails.getOrElse(AgencyDetails(
+                val journey = subscriptionJourney(response.agencyDetails.getOrElse(AgencyDetails(
                   None,
                   None,
                   None,
                   None
                 )))
-                sessionCacheService.put(ctJourneyKey, journey).map { _ => Right(buildRequest(journey)) }
+                sessionCacheService.put(subscriptionJourneyKey(legacyRegime), journey).map { _ => Right(buildRequest(journey)) }
               }
           }
         }
