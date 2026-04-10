@@ -21,8 +21,8 @@ import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
-import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.checkYourAnswersPage
-import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.getNextPage
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.checkYourAnswersPage
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.{routes => subscriptionRoutes}
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtCyaData
@@ -39,7 +39,7 @@ import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
 @Singleton
-class CtCheckYourAnswersController @Inject() (
+class CheckYourAnswersController @Inject() (
   actions: Actions,
   agentServicesAccountConnector: AgentServicesAccountConnector,
   val sessionCacheService: SessionCacheService,
@@ -52,22 +52,20 @@ class CtCheckYourAnswersController @Inject() (
 extends FrontendController(cc)
 with I18nSupport {
 
-  def showPage: Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
-    val legacyRegime = LegacyRegime.CT
+  def showPage(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
     withCtCyaData(request.ctSubscriptionJourney) { data =>
       val summaryItems = buildSummaryListItems(data, legacyRegime)
       Future.successful(Ok(checkYourAnswers(summaryItems, legacyRegime)))
     }
   }
 
-  def onSubmit: Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
-    val legacyRegime = LegacyRegime.CT
+  def onSubmit(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
     withCtCyaData(request.ctSubscriptionJourney) { data =>
       val requestModel = data.toSubscriptionRequest
 
       agentServicesAccountConnector
         .submitCtRequest(requestModel)
-        .map(_ => Redirect(getNextPage(checkYourAnswersPage)))
+        .map(_ => Redirect(getNextPage(currentPage = checkYourAnswersPage, legacyRegime = legacyRegime)))
     }
   }
 
@@ -90,22 +88,22 @@ with I18nSupport {
       SummaryListData(
         key = s"${legacyRegime.msgPrefix}.check-your-answers.business-name",
         value = data.agencyName,
-        link = Some(subscriptionRoutes.CtUpdateBusinessNameController.showPage)
+        link = Some(subscriptionRoutes.UpdateBusinessNameController.showPage(legacyRegime))
       ),
       SummaryListData(
         key = s"${legacyRegime.msgPrefix}.check-your-answers.phone-number",
         value = data.agencyTelephone,
-        link = Some(subscriptionRoutes.CtUpdatePhoneNumberController.showPage)
+        link = Some(subscriptionRoutes.UpdatePhoneNumberController.showPage(legacyRegime))
       ),
       SummaryListData(
         key = s"${legacyRegime.msgPrefix}.check-your-answers.email",
         value = data.agencyEmail,
-        link = Some(subscriptionRoutes.CtUpdateEmailAddressController.showPage)
+        link = Some(subscriptionRoutes.UpdateEmailAddressController.showPage(legacyRegime))
       ),
       SummaryListData(
         key = s"${legacyRegime.msgPrefix}.check-your-answers.address",
         value = formatAddress(data.agencyAddress),
-        link = Some(subscriptionRoutes.CtUpdateAddressController.showPage)
+        link = Some(subscriptionRoutes.UpdateAddressController.showPage(legacyRegime))
       )
     )
   }
@@ -117,7 +115,7 @@ with I18nSupport {
       case Some(data) => f(data)
       case None =>
         Future.successful(
-          BadRequest("[CtCheckYourAnswersController] missing CT CYA data")
+          BadRequest("[CheckYourAnswersController] missing CT CYA data")
         )
     }
 

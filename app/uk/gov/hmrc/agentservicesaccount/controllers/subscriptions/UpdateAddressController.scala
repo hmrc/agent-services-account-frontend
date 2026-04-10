@@ -22,8 +22,8 @@ import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.ctJourneyKey
-import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.getNextPage
-import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.updateAddressPage
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.getNextPage
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.updateAddressPage
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionAddressForm
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AddressFormValues
@@ -37,7 +37,7 @@ import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
 @Singleton
-class CtUpdateAddressController @Inject() (
+class UpdateAddressController @Inject() (
   actions: Actions,
   val sessionCacheService: SessionCacheService,
   update_address: update_address,
@@ -61,8 +61,7 @@ with Logging {
     .map(_.body)
     .mkString(", ")
 
-  val showPage: Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
-    val legacyRegime = LegacyRegime.CT
+  def showPage(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
     val journey = request.ctSubscriptionJourney
 
     val subscriptionAddress = journey.asaDetails.agencyAddress.map(formatAddress).getOrElse("")
@@ -90,8 +89,7 @@ with Logging {
     )
   }
 
-  def onSubmit: Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
-    val legacyRegime = LegacyRegime.CT
+  def onSubmit(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
     val journey = request.ctSubscriptionJourney
 
     SubscriptionAddressForm.form(legacyRegime).bindFromRequest().fold(
@@ -114,10 +112,16 @@ with Logging {
 
           sessionCacheService
             .put(ctJourneyKey, updatedJourney)
-            .map(_ => Redirect(getNextPage(updateAddressPage, Some(updatedJourney))))
+            .map(_ =>
+              Redirect(getNextPage(
+                updateAddressPage,
+                Some(updatedJourney),
+                legacyRegime
+              ))
+            )
         }
         else {
-          Future.successful(Redirect(routes.CtAddressLookupController.startAddressLookup))
+          Future.successful(Redirect(routes.AddressLookupController.startAddressLookup(legacyRegime)))
         }
       }
     )

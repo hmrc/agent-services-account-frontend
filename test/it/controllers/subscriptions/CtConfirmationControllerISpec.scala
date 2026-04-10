@@ -20,11 +20,13 @@ import play.api.test.Helpers._
 import support.ComponentBaseISpec
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.routes
 import stubs.AgentServicesAccountStubs.givenGetAgentRecord
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
 
-class CtConfirmationControllerISpec
+class ConfirmationControllerISpec
 extends ComponentBaseISpec {
 
-  private val path = routes.CtConfirmationController.showConfirmationPage.url
+  private val legacyRegime = CT
+  private val path = routes.ConfirmationController.showConfirmationPage(legacyRegime).url
 
   s"GET $path" should {
 

@@ -22,7 +22,7 @@ import uk.gov.hmrc.agentservicesaccount.controllers.{routes => homeRoutes}
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtJourney
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 
-object CtNextPageSelector {
+object NextPageSelector {
 
   val updateBusinessNamePage = "businessName"
   val updatePhoneNumberPage = "phoneNumber"
@@ -35,37 +35,42 @@ object CtNextPageSelector {
 
   private val nextPage: (
     String,
-    Option[CtJourney]
+    Option[CtJourney],
+    LegacyRegime
   ) => Call = {
-    case (_, Some(journey)) if journey.isComplete => subscriptions.routes.CtCheckYourAnswersController.showPage
-    case (`updateBusinessNamePage`, _) => subscriptions.routes.CtUpdatePhoneNumberController.showPage
-    case (`updatePhoneNumberPage`, _) => subscriptions.routes.CtUpdateEmailAddressController.showPage
-    case (`updateEmailAddressPage`, Some(journey)) =>
+    case (_, Some(journey), regime) if journey.isComplete => subscriptions.routes.CheckYourAnswersController.showPage(regime)
+    case (`updateBusinessNamePage`, _, regime) => subscriptions.routes.UpdatePhoneNumberController.showPage(regime)
+    case (`updatePhoneNumberPage`, _, regime) => subscriptions.routes.UpdateEmailAddressController.showPage(regime)
+    case (`updateEmailAddressPage`, Some(journey), regime) =>
       journey.useCustomEmail match {
-        case Some(false) => subscriptions.routes.CtUpdateAddressController.showPage
-        case _ => subscriptions.routes.CtUpdateEmailAddressController.showPage
+        case Some(false) => subscriptions.routes.UpdateAddressController.showPage(regime)
+        case _ => subscriptions.routes.UpdateEmailAddressController.showPage(regime)
       }
-    case (`emailVerificationFinish`, _) => subscriptions.routes.CtUpdateAddressController.showPage
-    case (`updateAddressPage`, Some(journey)) =>
+    case (`emailVerificationFinish`, _, regime) => subscriptions.routes.UpdateAddressController.showPage(regime)
+    case (`updateAddressPage`, Some(journey), regime) =>
       journey.useCustomAddress match {
-        case Some(false) => subscriptions.routes.CtCheckYourAnswersController.showPage
-        case _ => subscriptions.routes.CtUpdateAddressController.showPage
+        case Some(false) => subscriptions.routes.CheckYourAnswersController.showPage(regime)
+        case _ => subscriptions.routes.UpdateAddressController.showPage(regime)
       }
-    case (`addressLookupFinish`, Some(journey)) =>
+    case (`addressLookupFinish`, Some(journey), regime) =>
       (journey.useCustomAddress, journey.addressAnswer) match {
-        case (Some(true), Some(_)) => subscriptions.routes.CtCheckYourAnswersController.showPage
-        case _ => subscriptions.routes.CtUpdateAddressController.showPage
+        case (Some(true), Some(_)) => subscriptions.routes.CheckYourAnswersController.showPage(regime)
+        case _ => subscriptions.routes.UpdateAddressController.showPage(regime)
       }
-    case (`checkYourAnswersPage`, _) => subscriptions.routes.CtConfirmationController.showConfirmationPage
-    case (`confirmationPage`, _) => homeRoutes.AgentServicesController.root()
+    case (`checkYourAnswersPage`, _, regime) => subscriptions.routes.ConfirmationController.showConfirmationPage(regime)
+    case (`confirmationPage`, _, _) => homeRoutes.AgentServicesController.root()
   }
 
   def getNextPage(
     currentPage: String,
-    journey: Option[CtJourney] = None
+    journey: Option[CtJourney] = None,
+    legacyRegime: LegacyRegime
   ): Call = {
-    val legacyRegime = LegacyRegime.CT
-    nextPage(currentPage, journey)
+    nextPage(
+      currentPage,
+      journey,
+      legacyRegime
+    )
   }
 
 }

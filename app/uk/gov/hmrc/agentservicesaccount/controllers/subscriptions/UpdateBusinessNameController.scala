@@ -22,8 +22,8 @@ import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.ctJourneyKey
-import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.updateBusinessNamePage
-import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.CtNextPageSelector.getNextPage
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.updateBusinessNamePage
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionBusinessNameForm
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.BusinessNameFormValues
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
@@ -36,7 +36,7 @@ import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
 @Singleton
-class CtUpdateBusinessNameController @Inject() (
+class UpdateBusinessNameController @Inject() (
   actions: Actions,
   val sessionCacheService: SessionCacheService,
   update_business_name: update_business_name,
@@ -49,8 +49,7 @@ extends FrontendController(cc)
 with I18nSupport
 with Logging {
 
-  val showPage: Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
-    val legacyRegime = LegacyRegime.CT
+  def showPage(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
     val journey = request.ctSubscriptionJourney
 
     val subscriptionBusinessName = journey.asaDetails.agencyName.getOrElse("")
@@ -79,8 +78,7 @@ with Logging {
     )
   }
 
-  def onSubmit: Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
-    val legacyRegime = LegacyRegime.CT
+  def onSubmit(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithCtJourney.async { implicit request =>
     val journey = request.ctSubscriptionJourney
 
     SubscriptionBusinessNameForm.form(legacyRegime).bindFromRequest().fold(
@@ -106,7 +104,13 @@ with Logging {
 
         sessionCacheService
           .put(ctJourneyKey, updatedJourney)
-          .map(_ => Redirect(getNextPage(updateBusinessNamePage, Some(updatedJourney))))
+          .map(_ =>
+            Redirect(getNextPage(
+              updateBusinessNamePage,
+              Some(updatedJourney),
+              legacyRegime
+            ))
+          )
       }
     )
   }
