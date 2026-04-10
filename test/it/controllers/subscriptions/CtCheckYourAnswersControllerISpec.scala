@@ -147,7 +147,7 @@ with MockFactory {
       countryCode = "GB"
     )
 
-    val fullCtJourney: SubscriptionJourney = SubscriptionJourney(
+    val fullSubscriptionJourney: SubscriptionJourney = SubscriptionJourney(
       asaDetails = AgencyDetails(
         agencyName = Some("ASA Name"),
         agencyEmail = Some("asa@test.com"),
@@ -177,7 +177,7 @@ with MockFactory {
 
     "return OK and render page when valid data present" in new TestSetup {
 
-      cacheJourney(fullCtJourney)
+      cacheJourney(fullSubscriptionJourney)
 
       val result = controller.showPage(legacyRegime)(fakeRequest).futureValue
 
@@ -221,7 +221,7 @@ with MockFactory {
 
     "redirect when submission succeeds" in new TestSetup {
 
-      cacheJourney(fullCtJourney)
+      cacheJourney(fullSubscriptionJourney)
       givenCtStartSubscriptionResponse(OK)
 
       val result = controller.onSubmit(legacyRegime)(fakeRequest).futureValue

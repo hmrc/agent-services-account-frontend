@@ -39,7 +39,7 @@ import javax.inject.Singleton
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
-class CtJourneyRequest[A](
+class SubscriptionJourneyRequest[A](
   val subscriptionJourney: SubscriptionJourney,
   val agentInfo: AgentInfo,
   val request: Request[A]

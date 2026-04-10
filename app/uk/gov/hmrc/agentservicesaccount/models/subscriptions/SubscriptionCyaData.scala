@@ -44,7 +44,7 @@ case class SubscriptionCyaData(
 }
 
 object SubscriptionCyaData {
-  implicit def ctJourneyToCyaData(journey: SubscriptionJourney): Option[SubscriptionCyaData] = {
+  implicit def subscriptionJourneyToCyaData(journey: SubscriptionJourney): Option[SubscriptionCyaData] = {
     for {
       businessName <-
         journey.useCustomBusinessName match {

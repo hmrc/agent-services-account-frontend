@@ -118,21 +118,21 @@ class Actions @Inject() (
   def authActionWithSuspensionCheckWithAgentRecord: ActionBuilder[AuthRequestWithAgentProfile, AnyContent] =
     actionBuilder andThen authActions.authActionRefiner andThen withAgentRecord(false)
 
-  def authActionWithSubscriptionJourney(legacyRegime: LegacyRegime): ActionBuilder[CtJourneyRequest, AnyContent] =
+  def authActionWithSubscriptionJourney(legacyRegime: LegacyRegime): ActionBuilder[SubscriptionJourneyRequest, AnyContent] =
     actionBuilder andThen
       authActions.authActionRefiner andThen
       filterSuspendedAgent(false) andThen
       withSubscriptionJourney(legacyRegime)
 
-  private def withSubscriptionJourney(legacyRegime: LegacyRegime): ActionRefiner[AuthRequestWithAgentInfo, CtJourneyRequest] =
-    new ActionRefiner[AuthRequestWithAgentInfo, CtJourneyRequest] {
+  private def withSubscriptionJourney(legacyRegime: LegacyRegime): ActionRefiner[AuthRequestWithAgentInfo, SubscriptionJourneyRequest] =
+    new ActionRefiner[AuthRequestWithAgentInfo, SubscriptionJourneyRequest] {
       override protected def executionContext: ExecutionContext = ec
       override protected def refine[A](
         request: AuthRequestWithAgentInfo[A]
-      ): Future[Either[Result, CtJourneyRequest[A]]] = {
+      ): Future[Either[Result, SubscriptionJourneyRequest[A]]] = {
         implicit val req: Request[A] = request.request
-        def buildRequest(journey: SubscriptionJourney): CtJourneyRequest[A] =
-          new CtJourneyRequest(
+        def buildRequest(journey: SubscriptionJourney): SubscriptionJourneyRequest[A] =
+          new SubscriptionJourneyRequest(
             subscriptionJourney = journey,
             agentInfo = request.agentInfo,
             request = request.request
