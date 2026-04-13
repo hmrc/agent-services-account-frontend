@@ -203,7 +203,6 @@
 
 }
 
-@* TODO: 11053 This is where improvements to subscription tiles will be called in *@
 @saItem(info: SubscriptionInfo) = {
 
   @info.subscriptionStatus match {
@@ -219,7 +218,7 @@
       @p(msgs("asa.legacy.sa.in-progress.p2"))
     }
     case SubscriptionStatus.Subscribed => {
-      @inset_text(msgs("asa.legacy.sa.subscribed.p1", request.agentInfo.ctAgentCode.getOrElse("")))
+      @inset_text(msgs("asa.legacy.sa.subscribed.p1", request.agentInfo.saAgentCode.getOrElse("")))
       @h4(msgs("asa.legacy.sa.subscribed.p2"))
       @p(msgs("asa.legacy.sa.subscribed.p3", "TODO link")) @* TODO: provide the link *@
       @h4(msgs("asa.legacy.sa.subscribed.p4"))
