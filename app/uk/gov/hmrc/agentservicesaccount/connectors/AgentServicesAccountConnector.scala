@@ -112,6 +112,7 @@ extends Logging {
       }
     )
 
+//  TODO: 11053 Submit PayeSubscriptionRequest instead
   def submitPayeRequest(cyaData: PayeCyaData)(implicit hc: HeaderCarrier): Future[Unit] = {
     http
       .post(url"$url/legacy-subscription-request/PAYE").withBody(Json.toJson(cyaData)).execute[HttpResponse]
@@ -135,6 +136,9 @@ extends Logging {
           }
       }
   }
+
+//  TODO: 11053 Add submitSaRequest method here
+//  TODO: 11053 Consolidate into singleSubmitLegacySubscriptionRequest(legacyRegime)
 
   def getPayeCyaData: Future[PayeCyaData] = Future.successful(
     PayeCyaData(

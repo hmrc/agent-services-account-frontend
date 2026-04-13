@@ -19,6 +19,7 @@ package uk.gov.hmrc.agentservicesaccount.models.paye
 import play.api.libs.json.Format
 import play.api.libs.json.Json
 
+// TODO: 11053 Remove where possible
 final case class PayeAddress(
   line1: String,
   line2: String,

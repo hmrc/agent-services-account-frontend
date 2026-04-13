@@ -63,6 +63,7 @@ with I18nSupport {
     withSubscriptionCyaData(request.subscriptionJourney) { data =>
       val requestModel = data.toSubscriptionRequest
 
+//      TODO: 11053 Call different method depending on legacyRegime
       agentServicesAccountConnector
         .submitCtRequest(requestModel)
         .map(_ => Redirect(getNextPage(currentPage = checkYourAnswersPage, legacyRegime = legacyRegime)))

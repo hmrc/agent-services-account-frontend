@@ -21,6 +21,7 @@ import play.api.libs.json.Reads
 import play.api.libs.json.Writes
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
 
+//TODO: 11053 Analyse and copy from ASA BE if helpful
 sealed trait SubscriptionRequest {
 
   val agentName: String
@@ -57,6 +58,7 @@ extends SubscriptionRequest {
   val isAbroad: Boolean = false // Unused value for PAYE as postcode is always required
 }
 
+//TODO: 11053: Use in submitPayeRequest
 object PayeSubscriptionRequest {
 //  given Writes[SubscriptionAddress] = SubscriptionAddress.payeRegistrationWrites
   implicit val registerWrites: Writes[PayeSubscriptionRequest] = Writes { request =>
@@ -94,3 +96,5 @@ object CtSubscriptionRequest {
     )
   }
 }
+
+//TODO: 11053 Add SaSubscriptionRequest here, copy from ASA BE if helpful
