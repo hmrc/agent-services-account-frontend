@@ -119,6 +119,7 @@ case class AgentInfo(
     .map(_.value)
 
   def ctAgentCode: Option[String] = getAgentCodeFor("IR-CT-AGENT")
+  def saAgentCode: Option[String] = getAgentCodeFor("IR-SA-AGENT")
 
 }
 
