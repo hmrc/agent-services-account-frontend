@@ -23,7 +23,8 @@ import support.ComponentBaseISpec
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.{CT, SA}
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
 
 class UpdateAddressControllerISpec
@@ -43,10 +44,11 @@ extends ComponentBaseISpec {
       val result = get(updateAddressPath)
 
       result.status shouldBe OK
-      val expectedTitle: String = (legacyRegime: LegacyRegime) match {
-        case CT => "What address should we use to send letters about Corporation Tax?"
-        case SA => "What address should we use to send letters about Self Assessment?"
-      }
+      val expectedTitle: String =
+        (legacyRegime: LegacyRegime) match {
+          case CT => "What address should we use to send letters about Corporation Tax?"
+          case SA => "What address should we use to send letters about Self Assessment?"
+        }
       assertPageHasTitle(expectedTitle)(result)
     }
   }
