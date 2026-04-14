@@ -24,6 +24,7 @@ import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.routes
 import uk.gov.hmrc.agentservicesaccount.models.paye._
 import stubs.AgentServicesAccountStubs._
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.PayeSubscriptionRequestController
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
 
 class PayeSubscriptionRequestControllerISpec
 extends BaseISpec {
@@ -97,7 +98,7 @@ extends BaseISpec {
       givenAuthorisedAsAgentWith(arn.value)
       givenGetAgentRecord(agentRecord)
       givenSubscriptionInfoResponse()
-      givenPayeStartSubscriptionResponse(OK)
+      givenStartLegacySubscriptionResponse(PAYE, OK)
 
       val response = controller.submit()(fakeRequest())
 

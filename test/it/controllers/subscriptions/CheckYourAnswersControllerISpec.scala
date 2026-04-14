@@ -222,7 +222,7 @@ with MockFactory {
     "redirect when submission succeeds" in new TestSetup {
 
       cacheJourney(fullSubscriptionJourney)
-      givenCtStartSubscriptionResponse(OK)
+      givenStartLegacySubscriptionResponse(legacyRegime, OK)
 
       val result = controller.onSubmit(legacyRegime)(fakeRequest).futureValue
 

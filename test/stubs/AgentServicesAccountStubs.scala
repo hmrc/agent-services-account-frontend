@@ -83,16 +83,6 @@ object AgentServicesAccountStubs {
       ))
   }
 
-  def givenCtStartSubscriptionResponse(status: Int): StubMapping =
-    givenStartLegacySubscriptionResponse(CT, status)
-
-  def givenPayeStartSubscriptionResponse(status: Int): StubMapping =
-    givenStartLegacySubscriptionResponse(PAYE, status)
-
-  def givenSaStartSubscriptionResponse(status: Int): StubMapping =
-    givenStartLegacySubscriptionResponse(SA, status)
-
-  //  TODO: 11053 Remove above three methods and use this only
   def givenStartLegacySubscriptionResponse(legacyRegime: LegacyRegime, status: Int): StubMapping = {
     stubFor(post(urlEqualTo(s"/agent-services-account/legacy-subscription-request/${legacyRegime.toString}"))
       .willReturn(
