@@ -205,8 +205,7 @@ with Injecting {
         legacyRegime match {
           case CT => givenCtStartSubscriptionResponse(OK)
           case PAYE => givenPayeStartSubscriptionResponse(OK)
-//          TODO: 11053 Add for SA
-          case SA => givenCtStartSubscriptionResponse(OK)
+          case SA => givenSaStartSubscriptionResponse(OK)
         }
 
         val request = getSubscriptionRequestForLegacyRegime(legacyRegime)
@@ -218,8 +217,7 @@ with Injecting {
         legacyRegime match {
           case CT => givenCtStartSubscriptionResponse(INTERNAL_SERVER_ERROR)
           case PAYE => givenPayeStartSubscriptionResponse(INTERNAL_SERVER_ERROR)
-          //          TODO: 11053 Add for SA
-          case SA => givenCtStartSubscriptionResponse(INTERNAL_SERVER_ERROR)
+          case SA => givenSaStartSubscriptionResponse(INTERNAL_SERVER_ERROR)
         }
 
         val request = getSubscriptionRequestForLegacyRegime(legacyRegime)

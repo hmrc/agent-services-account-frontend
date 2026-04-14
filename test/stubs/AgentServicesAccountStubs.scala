@@ -25,7 +25,7 @@ import uk.gov.hmrc.agentservicesaccount.models.Arn
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest.connectorWrites
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime._
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionInfo
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.{LegacyRegime, SubscriptionInfo}
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionStatus.SubscriptionInProgress
 
 object AgentServicesAccountStubs {
@@ -83,16 +83,17 @@ object AgentServicesAccountStubs {
       ))
   }
 
-  def givenPayeStartSubscriptionResponse(status: Int): StubMapping = {
-    stubFor(post(urlEqualTo("/agent-services-account/legacy-subscription-request/PAYE"))
-      .willReturn(
-        aResponse()
-          .withStatus(status)
-      ))
-  }
+  def givenCtStartSubscriptionResponse(status: Int): StubMapping =
+    givenStartLegacySubscriptionResponse(CT, status)
 
-  def givenCtStartSubscriptionResponse(status: Int): StubMapping = {
-    stubFor(post(urlEqualTo("/agent-services-account/legacy-subscription-request/CT"))
+  def givenPayeStartSubscriptionResponse(status: Int): StubMapping =
+    givenStartLegacySubscriptionResponse(PAYE, status)
+
+  def givenSaStartSubscriptionResponse(status: Int): StubMapping =
+    givenStartLegacySubscriptionResponse(SA, status)
+
+  def givenStartLegacySubscriptionResponse(legacyRegime: LegacyRegime, status: Int): StubMapping = {
+    stubFor(post(urlEqualTo(s"/agent-services-account/legacy-subscription-request/${legacyRegime.toString}"))
       .willReturn(
         aResponse()
           .withStatus(status)
