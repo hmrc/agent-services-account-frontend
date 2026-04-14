@@ -34,8 +34,7 @@ import uk.gov.hmrc.agentservicesaccount.models.paye.PayeCyaData
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtSubscriptionRequest
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionInfo
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.{CtSubscriptionRequest, PayeSubscriptionRequest, SaSubscriptionRequest, SubscriptionInfo}
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionStatus.SubscriptionInProgress
 import uk.gov.hmrc.agentservicesaccount.utils.RequestSupport.hc
 import uk.gov.hmrc.http.UpstreamErrorResponse
@@ -50,20 +49,6 @@ with Injecting {
   val exampleArn: Arn = Arn("XARN1234567")
   val exampleModel: PendingChangeRequest = PendingChangeRequest(exampleArn, Instant.now().truncatedTo(ChronoUnit.SECONDS))
   val connector: AgentServicesAccountConnector = inject[AgentServicesAccountConnector]
-
-  val examplePayeCyaData = PayeCyaData(
-    agentName = "Example Agent Ltd",
-    contactName = "Jane Agent",
-    telephoneNumber = Some("01632 960 001"),
-    emailAddress = Some("jane.agent@example.com"),
-    address = PayeAddress(
-      line1 = "1 High Street",
-      line2 = "Village",
-      line3 = Some("County"),
-      line4 = None,
-      postCode = "AA1 1AA"
-    )
-  )
 
   ".findChangeRequest" should {
 
@@ -170,44 +155,50 @@ with Injecting {
     }
   }
 
+  val exampleAgentName = "Example Agent Ltd"
+  val exampleContactName = "Jane Agent"
+  val examplePhoneNumber = "01632 960 001"
+  val exampleEmailAddress = "jane.agent@example.com"
+  val exampleSubscriptionAddress = uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionAddress(
+    line1 = "1 High Street",
+    line2 = "Village",
+    line3 = Some("County"),
+    line4 = None,
+    postCode = Some("AA1 1AA")
+  )
+
   ".submitPayeRequest" should {
+
+    val examplePayeRequest = PayeSubscriptionRequest(
+      agentName = exampleAgentName,
+      contactName = exampleContactName,
+      phoneNumber = Some(examplePhoneNumber),
+      emailAddress = Some(exampleEmailAddress),
+      address = exampleSubscriptionAddress
+    )
 
     "return nothing when a OK (200) response is returned by agent-services-account" in {
       givenPayeStartSubscriptionResponse(OK)
 
-      val result = connector.submitPayeRequest(examplePayeCyaData.toSubscriptionRequest)
+      val result = connector.submitPayeRequest(examplePayeRequest)
       await(result) shouldBe ()
     }
 
     "throw an UpstreamErrorResponse exception when an unexpected status is returned by agent-services-account" in {
       givenPayeStartSubscriptionResponse(INTERNAL_SERVER_ERROR)
 
-      intercept[UpstreamErrorResponse](await(connector.submitPayeRequest(examplePayeCyaData.toSubscriptionRequest)))
-    }
-  }
-
-  ".getPayeCyaData" should {
-
-    "return dummy CYA data (for now)" in {
-      val result = connector.getPayeCyaData
-      await(result) shouldBe examplePayeCyaData
+      intercept[UpstreamErrorResponse](await(connector.submitPayeRequest(examplePayeRequest)))
     }
   }
 
   ".submitCtRequest" should {
 
     val exampleCtRequest = CtSubscriptionRequest(
-      agentName = "Example Agent Ltd",
-      contactName = "Jane Agent",
-      phoneNumber = Some("01632 960 001"),
-      emailAddress = Some("jane.agent@example.com"),
-      address = uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionAddress(
-        line1 = "1 High Street",
-        line2 = "Village",
-        line3 = Some("County"),
-        line4 = None,
-        postCode = Some("AA1 1AA")
-      ),
+      agentName = exampleAgentName,
+      contactName = exampleContactName,
+      phoneNumber = Some(examplePhoneNumber),
+      emailAddress = Some(exampleEmailAddress),
+      address = exampleSubscriptionAddress,
       countryCode = "GB"
     )
 
@@ -225,6 +216,55 @@ with Injecting {
       intercept[UpstreamErrorResponse] {
         await(connector.submitCtRequest(exampleCtRequest))
       }
+    }
+  }
+
+  ".submitSaRequest" should {
+
+    val exampleSaRequest = SaSubscriptionRequest(
+      agentName = exampleAgentName,
+      contactName = exampleContactName,
+      phoneNumber = Some(examplePhoneNumber),
+      emailAddress = Some(exampleEmailAddress),
+      address = exampleSubscriptionAddress,
+      countryCode = "GB"
+    )
+
+    "return nothing when a OK (200) response is returned by agent-services-account" in {
+      givenCtStartSubscriptionResponse(OK)
+
+      val result = connector.submitSaRequest(exampleSaRequest)
+
+      await(result) shouldBe ()
+    }
+
+    "throw an UpstreamErrorResponse exception when an unexpected status is returned by agent-services-account" in {
+      givenCtStartSubscriptionResponse(INTERNAL_SERVER_ERROR)
+
+      intercept[UpstreamErrorResponse] {
+        await(connector.submitSaRequest(exampleSaRequest))
+      }
+    }
+  }
+
+  ".getPayeCyaData" should {
+
+    "return dummy CYA data (for now)" in {
+      val examplePayeCyaData = PayeCyaData(
+        agentName = "Example Agent Ltd",
+        contactName = "Jane Agent",
+        telephoneNumber = Some("01632 960 001"),
+        emailAddress = Some("jane.agent@example.com"),
+        address = PayeAddress(
+          line1 = "1 High Street",
+          line2 = "Village",
+          line3 = Some("County"),
+          line4 = None,
+          postCode = "AA1 1AA"
+        )
+      )
+      val result = connector.getPayeCyaData
+      await(result) shouldBe examplePayeCyaData
     }
   }
 

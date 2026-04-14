@@ -111,44 +111,14 @@ extends Logging {
       }
     )
 
-  def submitPayeRequest(payeSubscriptionRequest: PayeSubscriptionRequest)(implicit hc: HeaderCarrier): Future[Unit] = {
-//    http
-//      .post(url"$url/legacy-subscription-request/PAYE").withBody(Json.toJson(payeSubscriptionRequest)).execute[HttpResponse]
-//      .map {
-//        response =>
-//          response.status match {
-//            case OK => ()
-//            case e => throw UpstreamErrorResponse(s"[AgentServicesAccountConnector][submitRequest] Error $e unable to post PAYE legacy subscription request", e)
-//          }
-//      }
+  def submitPayeRequest(payeSubscriptionRequest: PayeSubscriptionRequest)(implicit hc: HeaderCarrier): Future[Unit] =
     submitLegacySubscriptionRequest(payeSubscriptionRequest, PAYE)
-  }
 
-  def submitCtRequest(ctSubscriptionRequest: CtSubscriptionRequest)(implicit hc: HeaderCarrier): Future[Unit] = {
-//    http
-//      .post(url"$url/legacy-subscription-request/CT").withBody(Json.toJson(ctSubscriptionRequest)).execute[HttpResponse]
-//      .map {
-//        response =>
-//          response.status match {
-//            case OK => ()
-//            case e => throw UpstreamErrorResponse(s"[AgentServicesAccountConnector][submitRequest] Error $e unable to post CT legacy subscription request", e)
-//          }
-//      }
+  def submitCtRequest(ctSubscriptionRequest: CtSubscriptionRequest)(implicit hc: HeaderCarrier): Future[Unit] =
     submitLegacySubscriptionRequest(ctSubscriptionRequest, CT)
-  }
 
-  def submitSaRequest(saSubscriptionRequest: SaSubscriptionRequest)(implicit hc: HeaderCarrier): Future[Unit] = {
-//    http
-//      .post(url"$url/legacy-subscription-request/SA").withBody(Json.toJson(saSubscriptionRequest)).execute[HttpResponse]
-//      .map {
-//        response =>
-//          response.status match {
-//            case OK => ()
-//            case e => throw UpstreamErrorResponse(s"[AgentServicesAccountConnector][submitRequest] Error $e unable to post SA legacy subscription request", e)
-//          }
-//      }
+  def submitSaRequest(saSubscriptionRequest: SaSubscriptionRequest)(implicit hc: HeaderCarrier): Future[Unit] =
     submitLegacySubscriptionRequest(saSubscriptionRequest, SA)
-  }
 
   def submitLegacySubscriptionRequest(subscriptionRequest: SubscriptionRequest, legacyRegime: LegacyRegime)(implicit hc: HeaderCarrier): Future[Unit] = {
     http
