@@ -194,24 +194,36 @@ with Injecting {
       address = exampleSubscriptionAddress
     )
 
-    val legacyRegimeWithSubscriptionRequestList: Map[LegacyRegime, SubscriptionRequest] = Map(
+    val getSubscriptionRequestForLegacyRegime: Map[LegacyRegime, SubscriptionRequest] = Map(
       (CT, exampleCtRequest),
       (PAYE, examplePayeRequest),
       (SA, exampleSaRequest)
     )
 
-    legacyRegimeWithSubscriptionRequestList.foreach(regimeWithRequest => {
-      s"return nothing when a OK (200) response is returned by agent-services-account for ${regimeWithRequest._1.toString}" in {
-        givenPayeStartSubscriptionResponse(OK)
+    List(CT, PAYE, SA).foreach(legacyRegime => {
+      s"return nothing when a OK (200) response is returned by agent-services-account for ${legacyRegime.toString}" in {
+        legacyRegime match {
+          case CT => givenCtStartSubscriptionResponse(OK)
+          case PAYE => givenPayeStartSubscriptionResponse(OK)
+//          TODO: 11053 Add for SA
+          case SA => givenCtStartSubscriptionResponse(OK)
+        }
 
-        val result = connector.submitLegacySubscriptionRequest(regimeWithRequest._2, regimeWithRequest._1)
+        val request = getSubscriptionRequestForLegacyRegime(legacyRegime)
+        val result = connector.submitLegacySubscriptionRequest(request, legacyRegime)
         await(result) shouldBe ()
       }
 
-      s"throw an UpstreamErrorResponse exception when an unexpected status is returned by agent-services-account for ${regimeWithRequest._1.toString}" in {
-        givenPayeStartSubscriptionResponse(INTERNAL_SERVER_ERROR)
+      s"throw an UpstreamErrorResponse exception when an unexpected status is returned by agent-services-account for ${legacyRegime.toString}" in {
+        legacyRegime match {
+          case CT => givenCtStartSubscriptionResponse(INTERNAL_SERVER_ERROR)
+          case PAYE => givenPayeStartSubscriptionResponse(INTERNAL_SERVER_ERROR)
+          //          TODO: 11053 Add for SA
+          case SA => givenCtStartSubscriptionResponse(INTERNAL_SERVER_ERROR)
+        }
 
-        intercept[UpstreamErrorResponse](await(connector.submitLegacySubscriptionRequest(regimeWithRequest._2, regimeWithRequest._1)))
+        val request = getSubscriptionRequestForLegacyRegime(legacyRegime)
+        intercept[UpstreamErrorResponse](await(connector.submitLegacySubscriptionRequest(request, legacyRegime)))
       }
     })
   }
