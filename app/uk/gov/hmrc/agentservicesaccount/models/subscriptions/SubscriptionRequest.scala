@@ -64,7 +64,6 @@ extends SubscriptionRequest {
   val isAbroad: Boolean = false // Unused value for PAYE as postcode is always required
 }
 
-//TODO: 11053: Use in submitPayeRequest
 object PayeSubscriptionRequest {
 //  given Writes[SubscriptionAddress] = SubscriptionAddress.payeRegistrationWrites
   implicit val registerWrites: Writes[PayeSubscriptionRequest] = Writes { request =>
