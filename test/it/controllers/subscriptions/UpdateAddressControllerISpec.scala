@@ -22,7 +22,8 @@ import stubs.AgentServicesAccountStubs.stubASAGetResponseError
 import support.ComponentBaseISpec
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.{CT, SA}
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
 
 class UpdateAddressControllerISpec
@@ -33,7 +34,6 @@ extends ComponentBaseISpec {
   private val updateAddressPath = s"$subscriptionStartPath/$legacyRegime/address"
 
   s"GET $updateAddressPath" should {
-    //      TODO: 11053 FIX for SA
     "display the enter address page" in {
 
       givenAuthorisedAsAgentWith(arn.value)
@@ -43,7 +43,11 @@ extends ComponentBaseISpec {
       val result = get(updateAddressPath)
 
       result.status shouldBe OK
-      assertPageHasTitle("What address should we use to send letters about Corporation Tax?")(result)
+      val expectedTitle: String = (legacyRegime: LegacyRegime) match {
+        case CT => "What address should we use to send letters about Corporation Tax?"
+        case SA => "What address should we use to send letters about Self Assessment?"
+      }
+      assertPageHasTitle(expectedTitle)(result)
     }
   }
 

@@ -26,7 +26,8 @@ import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.emailPendingVerificationKey
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.CompletedEmail
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.VerificationStatusResponse
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.{CT, SA}
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
 
 class UpdateEmailAddressControllerISpec
@@ -38,7 +39,6 @@ extends ComponentBaseISpec {
   private val updateEmailAddressPath = s"$subscriptionStartPath/$legacyRegime/email-address"
 
   s"GET $updateEmailAddressPath" should {
-    //      TODO: 11053 FIX for SA
     "display the enter email address page" in {
 
       givenAuthorisedAsAgentWith(arn.value)
@@ -48,7 +48,11 @@ extends ComponentBaseISpec {
       val result = get(updateEmailAddressPath)
 
       result.status shouldBe OK
-      assertPageHasTitle("What email address should we use to contact you about Corporation Tax?")(result)
+      val expectedTitle: String = (legacyRegime: LegacyRegime) match {
+        case CT => "What email address should we use to contact you about Corporation Tax?"
+        case SA => "What email address should we use to contact you about Self Assessment?"
+      }
+      assertPageHasTitle(expectedTitle)(result)
     }
   }
 
