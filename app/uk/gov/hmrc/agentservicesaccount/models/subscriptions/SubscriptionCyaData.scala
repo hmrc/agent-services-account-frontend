@@ -36,13 +36,6 @@ case class SubscriptionCyaData(
   }
 
   def toCtSubscriptionRequest: CtSubscriptionRequest = {
-//    val subscriptionAddress = SubscriptionAddress(
-//      line1 = address.addressLine1,
-//      line2 = address.addressLine2.getOrElse(""),
-//      line3 = address.addressLine3,
-//      line4 = address.addressLine4,
-//      postCode = address.postalCode
-//    )
     CtSubscriptionRequest(
       agentName = businessName,
       contactName = businessName,
@@ -54,13 +47,6 @@ case class SubscriptionCyaData(
   }
 
   def toSaSubscriptionRequest: SaSubscriptionRequest = {
-//    val subscriptionAddress = SubscriptionAddress(
-//      line1 = address.addressLine1,
-//      line2 = address.addressLine2.getOrElse(""),
-//      line3 = address.addressLine3,
-//      line4 = address.addressLine4,
-//      postCode = address.postalCode
-//    )
     SaSubscriptionRequest(
       agentName = businessName,
       contactName = businessName,
