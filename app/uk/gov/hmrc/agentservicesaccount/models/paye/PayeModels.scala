@@ -18,7 +18,8 @@ package uk.gov.hmrc.agentservicesaccount.models.paye
 
 import play.api.libs.json.Format
 import play.api.libs.json.Json
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.{PayeSubscriptionRequest, SubscriptionAddress}
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.PayeSubscriptionRequest
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionAddress
 
 final case class PayeAddress(
   line1: String,

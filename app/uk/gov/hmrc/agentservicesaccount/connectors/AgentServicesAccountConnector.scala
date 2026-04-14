@@ -30,7 +30,11 @@ import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest.connectorRea
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest.connectorWrites
 import uk.gov.hmrc.agentservicesaccount.models.paye.PayeAddress
 import uk.gov.hmrc.agentservicesaccount.models.paye.PayeCyaData
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.{CtSubscriptionRequest, LegacyRegime, PayeSubscriptionRequest, SaSubscriptionRequest, SubscriptionInfo}
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtSubscriptionRequest
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.PayeSubscriptionRequest
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SaSubscriptionRequest
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionInfo
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.HeaderCarrier
@@ -134,17 +138,17 @@ extends Logging {
       }
   }
 
-def submitSaRequest(saSubscriptionRequest: SaSubscriptionRequest)(implicit hc: HeaderCarrier): Future[Unit] = {
-  http
-    .post(url"$url/legacy-subscription-request/SA").withBody(Json.toJson(saSubscriptionRequest)).execute[HttpResponse]
-    .map {
-      response =>
-        response.status match {
-          case OK => ()
-          case e => throw UpstreamErrorResponse(s"[AgentServicesAccountConnector][submitRequest] Error $e unable to post SA legacy subscription request", e)
-        }
-    }
-}
+  def submitSaRequest(saSubscriptionRequest: SaSubscriptionRequest)(implicit hc: HeaderCarrier): Future[Unit] = {
+    http
+      .post(url"$url/legacy-subscription-request/SA").withBody(Json.toJson(saSubscriptionRequest)).execute[HttpResponse]
+      .map {
+        response =>
+          response.status match {
+            case OK => ()
+            case e => throw UpstreamErrorResponse(s"[AgentServicesAccountConnector][submitRequest] Error $e unable to post SA legacy subscription request", e)
+          }
+      }
+  }
 //  TODO: 11053 Consolidate into single submitLegacySubscriptionRequest(legacyRegime)
 
   def getPayeCyaData: Future[PayeCyaData] = Future.successful(

@@ -18,7 +18,12 @@ package uk.gov.hmrc.agentservicesaccount.models.subscriptions
 
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 
-case class SubscriptionCyaData(businessName: String, phoneNumber: String, email: String, address: BusinessAddress) {
+case class SubscriptionCyaData(
+  businessName: String,
+  phoneNumber: String,
+  email: String,
+  address: BusinessAddress
+) {
   def toCtSubscriptionRequest: CtSubscriptionRequest = {
     val subscriptionAddress = SubscriptionAddress(
       line1 = address.addressLine1,
@@ -63,6 +68,11 @@ object SubscriptionCyaData {
           case Some(true) => journey.addressAnswer
           case _ => journey.asaDetails.agencyAddress
         }
-    } yield SubscriptionCyaData(businessName = businessName, phoneNumber = phoneNumber, email = email, address = address)
+    } yield SubscriptionCyaData(
+      businessName = businessName,
+      phoneNumber = phoneNumber,
+      email = email,
+      address = address
+    )
   }
 }

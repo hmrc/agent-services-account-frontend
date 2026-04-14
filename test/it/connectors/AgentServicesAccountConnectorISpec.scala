@@ -175,14 +175,14 @@ with Injecting {
     "return nothing when a OK (200) response is returned by agent-services-account" in {
       givenPayeStartSubscriptionResponse(OK)
 
-      val result = connector.submitPayeRequest(examplePayeCyaData)
+      val result = connector.submitPayeRequest(examplePayeCyaData.toSubscriptionRequest)
       await(result) shouldBe ()
     }
 
     "throw an UpstreamErrorResponse exception when an unexpected status is returned by agent-services-account" in {
       givenPayeStartSubscriptionResponse(INTERNAL_SERVER_ERROR)
 
-      intercept[UpstreamErrorResponse](await(connector.submitPayeRequest(examplePayeCyaData)))
+      intercept[UpstreamErrorResponse](await(connector.submitPayeRequest(examplePayeCyaData.toSubscriptionRequest)))
     }
   }
 

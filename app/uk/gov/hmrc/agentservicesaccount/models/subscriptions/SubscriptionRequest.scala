@@ -16,8 +16,14 @@
 
 package uk.gov.hmrc.agentservicesaccount.models.subscriptions
 
-import play.api.libs.json.{JsError, JsSuccess, Json, Reads, Writes}
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.{CT, PAYE, SA}
+import play.api.libs.json.JsError
+import play.api.libs.json.JsSuccess
+import play.api.libs.json.Json
+import play.api.libs.json.Reads
+import play.api.libs.json.Writes
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
 
 sealed trait SubscriptionRequest {
 
@@ -33,11 +39,12 @@ sealed trait SubscriptionRequest {
 object SubscriptionRequest {
 
   def reads(regime: LegacyRegime): Reads[SubscriptionRequest] = Reads { json =>
-    val initialRead = regime match {
-      case PAYE => Json.fromJson(json)(Json.reads[PayeSubscriptionRequest])
-      case SA => Json.fromJson(json)(Json.reads[SaSubscriptionRequest])
-      case CT => Json.fromJson(json)(Json.reads[CtSubscriptionRequest])
-    }
+    val initialRead =
+      regime match {
+        case PAYE => Json.fromJson(json)(Json.reads[PayeSubscriptionRequest])
+        case SA => Json.fromJson(json)(Json.reads[SaSubscriptionRequest])
+        case CT => Json.fromJson(json)(Json.reads[CtSubscriptionRequest])
+      }
     initialRead match {
       case JsSuccess(request: SubscriptionRequest, _) if !request.isAbroad && request.address.postCode.isEmpty =>
         JsError("Postcode is required for legacy subscriptions in UK")
@@ -103,14 +110,14 @@ object CtSubscriptionRequest {
 }
 
 case class SaSubscriptionRequest(
-                                  agentName: String,
-                                  contactName: String,
-                                  phoneNumber: Option[String],
-                                  emailAddress: Option[String],
-                                  address: SubscriptionAddress,
-                                  countryCode: String
-                                )
-  extends SubscriptionRequest {
+  agentName: String,
+  contactName: String,
+  phoneNumber: Option[String],
+  emailAddress: Option[String],
+  address: SubscriptionAddress,
+  countryCode: String
+)
+extends SubscriptionRequest {
   override def isAbroad: Boolean = !countryCode.equalsIgnoreCase("GB")
 }
 
