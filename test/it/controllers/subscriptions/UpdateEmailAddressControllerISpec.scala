@@ -26,13 +26,13 @@ import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.emailPendingVerificationKey
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.CompletedEmail
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.VerificationStatusResponse
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
 
 class UpdateEmailAddressControllerISpec
 extends ComponentBaseISpec {
 
-  private val legacyRegime = CT
+  private val legacyRegime = SA
   private val repo = inject[SessionCacheRepository]
 
   private val updateEmailAddressPath = s"$subscriptionStartPath/$legacyRegime/email-address"

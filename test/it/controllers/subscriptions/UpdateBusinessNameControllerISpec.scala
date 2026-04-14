@@ -40,7 +40,7 @@ import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdateBusiness
 import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.authorise.Predicate
@@ -63,7 +63,7 @@ with TestConstants {
 
   class TestSetup {
 
-    val legacyRegime: LegacyRegime = CT
+    val legacyRegime: LegacyRegime = SA
 
     private val testArn = "TARN0000001"
 
