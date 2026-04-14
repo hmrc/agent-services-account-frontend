@@ -30,11 +30,8 @@ import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest.connectorRea
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest.connectorWrites
 import uk.gov.hmrc.agentservicesaccount.models.paye.PayeAddress
 import uk.gov.hmrc.agentservicesaccount.models.paye.PayeCyaData
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtSubscriptionRequest
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.PayeSubscriptionRequest
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SaSubscriptionRequest
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionInfo
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.{CT, PAYE, SA}
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.{CtSubscriptionRequest, LegacyRegime, PayeSubscriptionRequest, SaSubscriptionRequest, SubscriptionInfo, SubscriptionRequest}
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.HeaderCarrier
@@ -115,41 +112,55 @@ extends Logging {
     )
 
   def submitPayeRequest(payeSubscriptionRequest: PayeSubscriptionRequest)(implicit hc: HeaderCarrier): Future[Unit] = {
-    http
-      .post(url"$url/legacy-subscription-request/PAYE").withBody(Json.toJson(payeSubscriptionRequest)).execute[HttpResponse]
-      .map {
-        response =>
-          response.status match {
-            case OK => ()
-            case e => throw UpstreamErrorResponse(s"[AgentServicesAccountConnector][submitRequest] Error $e unable to post PAYE legacy subscription request", e)
-          }
-      }
+//    http
+//      .post(url"$url/legacy-subscription-request/PAYE").withBody(Json.toJson(payeSubscriptionRequest)).execute[HttpResponse]
+//      .map {
+//        response =>
+//          response.status match {
+//            case OK => ()
+//            case e => throw UpstreamErrorResponse(s"[AgentServicesAccountConnector][submitRequest] Error $e unable to post PAYE legacy subscription request", e)
+//          }
+//      }
+    submitLegacySubscriptionRequest(payeSubscriptionRequest, PAYE)
   }
 
   def submitCtRequest(ctSubscriptionRequest: CtSubscriptionRequest)(implicit hc: HeaderCarrier): Future[Unit] = {
-    http
-      .post(url"$url/legacy-subscription-request/CT").withBody(Json.toJson(ctSubscriptionRequest)).execute[HttpResponse]
-      .map {
-        response =>
-          response.status match {
-            case OK => ()
-            case e => throw UpstreamErrorResponse(s"[AgentServicesAccountConnector][submitRequest] Error $e unable to post CT legacy subscription request", e)
-          }
-      }
+//    http
+//      .post(url"$url/legacy-subscription-request/CT").withBody(Json.toJson(ctSubscriptionRequest)).execute[HttpResponse]
+//      .map {
+//        response =>
+//          response.status match {
+//            case OK => ()
+//            case e => throw UpstreamErrorResponse(s"[AgentServicesAccountConnector][submitRequest] Error $e unable to post CT legacy subscription request", e)
+//          }
+//      }
+    submitLegacySubscriptionRequest(ctSubscriptionRequest, CT)
   }
 
   def submitSaRequest(saSubscriptionRequest: SaSubscriptionRequest)(implicit hc: HeaderCarrier): Future[Unit] = {
+//    http
+//      .post(url"$url/legacy-subscription-request/SA").withBody(Json.toJson(saSubscriptionRequest)).execute[HttpResponse]
+//      .map {
+//        response =>
+//          response.status match {
+//            case OK => ()
+//            case e => throw UpstreamErrorResponse(s"[AgentServicesAccountConnector][submitRequest] Error $e unable to post SA legacy subscription request", e)
+//          }
+//      }
+    submitLegacySubscriptionRequest(saSubscriptionRequest, SA)
+  }
+
+  def submitLegacySubscriptionRequest(subscriptionRequest: SubscriptionRequest, legacyRegime: LegacyRegime)(implicit hc: HeaderCarrier): Future[Unit] = {
     http
-      .post(url"$url/legacy-subscription-request/SA").withBody(Json.toJson(saSubscriptionRequest)).execute[HttpResponse]
+      .post(url"$url/legacy-subscription-request/${legacyRegime.toString}").withBody(Json.toJson(subscriptionRequest)).execute[HttpResponse]
       .map {
         response =>
           response.status match {
             case OK => ()
-            case e => throw UpstreamErrorResponse(s"[AgentServicesAccountConnector][submitRequest] Error $e unable to post SA legacy subscription request", e)
+            case e => throw UpstreamErrorResponse(s"[AgentServicesAccountConnector][submitLegacySubscriptionRequest] Error $e unable to post ${legacyRegime.toString} legacy subscription request", e)
           }
       }
   }
-//  TODO: 11053 Consolidate into single submitLegacySubscriptionRequest(legacyRegime)
 
   def getPayeCyaData: Future[PayeCyaData] = Future.successful(
     PayeCyaData(
