@@ -30,9 +30,7 @@ import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest.connectorRea
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest.connectorWrites
 import uk.gov.hmrc.agentservicesaccount.models.paye.PayeAddress
 import uk.gov.hmrc.agentservicesaccount.models.paye.PayeCyaData
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtSubscriptionRequest
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionInfo
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.{CtSubscriptionRequest, LegacyRegime, PayeSubscriptionRequest, SubscriptionInfo}
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.HeaderCarrier
@@ -113,9 +111,9 @@ extends Logging {
     )
 
 //  TODO: 11053 Submit PayeSubscriptionRequest instead
-  def submitPayeRequest(cyaData: PayeCyaData)(implicit hc: HeaderCarrier): Future[Unit] = {
+  def submitPayeRequest(payeSubscriptionRequest: PayeSubscriptionRequest)(implicit hc: HeaderCarrier): Future[Unit] = {
     http
-      .post(url"$url/legacy-subscription-request/PAYE").withBody(Json.toJson(cyaData)).execute[HttpResponse]
+      .post(url"$url/legacy-subscription-request/PAYE").withBody(Json.toJson(payeSubscriptionRequest)).execute[HttpResponse]
       .map {
         response =>
           response.status match {

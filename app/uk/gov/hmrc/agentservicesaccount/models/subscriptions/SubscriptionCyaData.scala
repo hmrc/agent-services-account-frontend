@@ -18,6 +18,7 @@ package uk.gov.hmrc.agentservicesaccount.models.subscriptions
 
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 
+//TODO: 11053: Remove agencyFromNamingHere
 case class SubscriptionCyaData(
   agencyName: String,
   agencyEmail: String,

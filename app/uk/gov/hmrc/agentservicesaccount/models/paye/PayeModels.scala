@@ -18,6 +18,7 @@ package uk.gov.hmrc.agentservicesaccount.models.paye
 
 import play.api.libs.json.Format
 import play.api.libs.json.Json
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.{PayeSubscriptionRequest, SubscriptionAddress}
 
 // TODO: 11053 Remove where possible
 final case class PayeAddress(
@@ -38,7 +39,24 @@ final case class PayeCyaData(
   telephoneNumber: Option[String],
   emailAddress: Option[String],
   address: PayeAddress
-)
+) {
+  def toSubscriptionRequest: PayeSubscriptionRequest = {
+    val subscriptionAddress = SubscriptionAddress(
+      line1 = address.line1,
+      line2 = address.line2,
+      line3 = address.line3,
+      line4 = address.line4,
+      postCode = Some(address.postCode)
+    )
+    PayeSubscriptionRequest(
+      agentName = agentName,
+      contactName = contactName,
+      phoneNumber = telephoneNumber,
+      emailAddress = emailAddress,
+      address = subscriptionAddress,
+    )
+  }
+}
 
 object PayeCyaData {
   implicit val format: Format[PayeCyaData] = Json.format[PayeCyaData]
