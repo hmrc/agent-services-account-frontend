@@ -174,17 +174,15 @@
   }
 }
 
-@* TODO: 11053: Fix first link and messages on here - regression bug from APB-10910 *@
-
 @ctItem(info: SubscriptionInfo) = {
 
     @info.subscriptionStatus match {
       case SubscriptionStatus.NotSubscribed | SubscriptionStatus.SubscriptionFailed => {
-        @h4("asa.legacy.ct.not-subscribed.h4.before-start")
-        @p(msgs("asa.legacy.ct.not-subscribed.p1", msgs("asa.legacy.ct.col1.link1.href")))
-        @p(msgs("asa.legacy.ct.not-subscribed.p2"))
-        @h4("asa.legacy.ct.not-subscribed.h4.enrol-for-ct")
-        @p(msgs("asa.legacy.ct.not-subscribed.p1", subscriptionRoutes.UpdateBusinessNameController.showPage(LegacyRegime.CT).url))
+        @h4("asa.legacy.ct.not-subscribed.before-start.h4")
+        @p(msgs("asa.legacy.ct.not-subscribed.before-start.p1", msgs("asa.legacy.ct.not-subscribed.before-start.link1.href")))
+        @p(msgs("asa.legacy.ct.not-subscribed.before-start.p2"))
+        @h4("asa.legacy.ct.not-subscribed.enrol-for-ct.h4")
+        @p(msgs("asa.legacy.ct.not-subscribed.enrol-for-ct.p1", subscriptionRoutes.UpdateBusinessNameController.showPage(LegacyRegime.CT).url))
       }
       case SubscriptionStatus.SubscriptionInProgress => {
         @p(msgs("asa.legacy.ct.in-progress.p1", info.localCreationDate.map(_.format(DateTimeFormatter.ofPattern("d MMMM yyyy"))).getOrElse("")))
@@ -209,11 +207,11 @@
 
   @info.subscriptionStatus match {
     case SubscriptionStatus.NotSubscribed | SubscriptionStatus.SubscriptionFailed => {
-      @h4("asa.legacy.sa.not-subscribed.h4.before-start")
-      @p(msgs("asa.legacy.sa.not-subscribed.p1", msgs("asa.legacy.sa.col1.link1.href")))
-      @p(msgs("asa.legacy.sa.not-subscribed.p2"))
-      @h4("asa.legacy.sa.not-subscribed.h4.enrol-for-ct")
-      @p(msgs("asa.legacy.sa.not-subscribed.p1", subscriptionRoutes.UpdateBusinessNameController.showPage(LegacyRegime.SA).url))
+      @h4("asa.legacy.sa.not-subscribed.before-start.h4")
+      @p(msgs("asa.legacy.sa.not-subscribed.before-start.p1", msgs("asa.legacy.sa.not-subscribed.before-start.link1.href")))
+      @p(msgs("asa.legacy.sa.not-subscribed.before-start.p2"))
+      @h4("asa.legacy.sa.not-subscribed.enrol-for-ct.h4")
+      @p(msgs("asa.legacy.sa.not-subscribed.enrol-for-ct.p1", subscriptionRoutes.UpdateBusinessNameController.showPage(LegacyRegime.SA).url))
     }
     case SubscriptionStatus.SubscriptionInProgress => {
       @p(msgs("asa.legacy.sa.in-progress.p1", info.localCreationDate.map(_.format(DateTimeFormatter.ofPattern("d MMMM yyyy"))).getOrElse("")))

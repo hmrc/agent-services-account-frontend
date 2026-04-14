@@ -36,7 +36,9 @@ import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CheckYourAnswersController
 import uk.gov.hmrc.agentservicesaccount.models._
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.{LegacyRegime, SubscriptionJourney, SubscriptionRequest}
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionRequest
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.auth.core._
@@ -109,7 +111,10 @@ with MockFactory {
           )
         )
 
-        override def submitLegacySubscriptionRequest(subscriptionRequest: SubscriptionRequest, legacyRegime: LegacyRegime)(implicit hc: HeaderCarrier): Future[Unit] = Future.successful(())
+        override def submitLegacySubscriptionRequest(
+          subscriptionRequest: SubscriptionRequest,
+          legacyRegime: LegacyRegime
+        )(implicit hc: HeaderCarrier): Future[Unit] = Future.successful(())
       }
 
     val overrides: AbstractModule =
