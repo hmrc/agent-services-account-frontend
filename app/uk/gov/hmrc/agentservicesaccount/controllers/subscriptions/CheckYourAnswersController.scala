@@ -28,6 +28,7 @@ import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionCyaData
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.{CT, SA}
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.components.models.SummaryListData
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.check_your_answers
@@ -61,13 +62,19 @@ with I18nSupport {
 
   def onSubmit(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
     withSubscriptionCyaData(request.subscriptionJourney) { data =>
-//      TODO: 11053: Consolidate into single submitLegacySubscriptionRequest(legacyRegime) - pass inLegacyRegime
-      val requestModel = data.toCtSubscriptionRequest
-
-//      TODO: 11053 Call different method depending on legacyRegime
-      agentServicesAccountConnector
-        .submitCtRequest(requestModel)
-        .map(_ => Redirect(getNextPage(currentPage = checkYourAnswersPage, legacyRegime = legacyRegime)))
+      //      TODO: 11053: Consolidate into single submitLegacySubscriptionRequest(legacyRegime) - pass inLegacyRegime
+      legacyRegime match {
+        case CT =>
+          val requestModel = data.toCtSubscriptionRequest
+          agentServicesAccountConnector
+            .submitCtRequest(requestModel)
+            .map(_ => Redirect(getNextPage(currentPage = checkYourAnswersPage, legacyRegime = legacyRegime)))
+        case SA =>
+          val requestModel = data.toSaSubscriptionRequest
+          agentServicesAccountConnector
+            .submitSaRequest(requestModel)
+            .map(_ => Redirect(getNextPage(currentPage = checkYourAnswersPage, legacyRegime = legacyRegime)))
+      }
     }
   }
 
