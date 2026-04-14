@@ -33,11 +33,12 @@ sealed trait SubscriptionRequest {
 object SubscriptionRequest {
 
   def reads(regime: LegacyRegime): Reads[SubscriptionRequest] = Reads { json =>
-    regime match {
+    val initialRead = regime match {
       case PAYE => Json.fromJson(json)(Json.reads[PayeSubscriptionRequest])
       case SA => Json.fromJson(json)(Json.reads[SaSubscriptionRequest])
       case CT => Json.fromJson(json)(Json.reads[CtSubscriptionRequest])
-    } match {
+    }
+    initialRead match {
       case JsSuccess(request: SubscriptionRequest, _) if !request.isAbroad && request.address.postCode.isEmpty =>
         JsError("Postcode is required for legacy subscriptions in UK")
       case other => other
