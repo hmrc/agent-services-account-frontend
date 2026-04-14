@@ -30,7 +30,7 @@ import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest.connectorRea
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest.connectorWrites
 import uk.gov.hmrc.agentservicesaccount.models.paye.PayeAddress
 import uk.gov.hmrc.agentservicesaccount.models.paye.PayeCyaData
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.{CtSubscriptionRequest, LegacyRegime, PayeSubscriptionRequest, SubscriptionInfo}
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.{CtSubscriptionRequest, LegacyRegime, PayeSubscriptionRequest, SaSubscriptionRequest, SubscriptionInfo}
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.HeaderCarrier
@@ -110,7 +110,6 @@ extends Logging {
       }
     )
 
-//  TODO: 11053 Submit PayeSubscriptionRequest instead
   def submitPayeRequest(payeSubscriptionRequest: PayeSubscriptionRequest)(implicit hc: HeaderCarrier): Future[Unit] = {
     http
       .post(url"$url/legacy-subscription-request/PAYE").withBody(Json.toJson(payeSubscriptionRequest)).execute[HttpResponse]
@@ -118,7 +117,7 @@ extends Logging {
         response =>
           response.status match {
             case OK => ()
-            case e => throw UpstreamErrorResponse(s"[AgentServicesAccountConnector][submitRequest] Error $e unable to post paye legacy subscription request", e)
+            case e => throw UpstreamErrorResponse(s"[AgentServicesAccountConnector][submitRequest] Error $e unable to post PAYE legacy subscription request", e)
           }
       }
   }
@@ -135,7 +134,17 @@ extends Logging {
       }
   }
 
-//  TODO: 11053 Add submitSaRequest method here
+def submitSaRequest(saSubscriptionRequest: SaSubscriptionRequest)(implicit hc: HeaderCarrier): Future[Unit] = {
+  http
+    .post(url"$url/legacy-subscription-request/SA").withBody(Json.toJson(saSubscriptionRequest)).execute[HttpResponse]
+    .map {
+      response =>
+        response.status match {
+          case OK => ()
+          case e => throw UpstreamErrorResponse(s"[AgentServicesAccountConnector][submitRequest] Error $e unable to post SA legacy subscription request", e)
+        }
+    }
+}
 //  TODO: 11053 Consolidate into singleSubmitLegacySubscriptionRequest(legacyRegime)
 
   def getPayeCyaData: Future[PayeCyaData] = Future.successful(

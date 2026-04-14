@@ -116,7 +116,7 @@ case class SaSubscriptionRequest(
 }
 
 object SaSubscriptionRequest {
-  implicit val registerWrites: Writes[CtSubscriptionRequest] = Writes { request =>
+  implicit val registerWrites: Writes[SaSubscriptionRequest] = Writes { request =>
     Json.obj(
       "agentName" -> request.agentName,
       "contactName" -> request.contactName,
