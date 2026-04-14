@@ -34,7 +34,7 @@ import uk.gov.hmrc.agentservicesaccount.models.paye.PayeCyaData
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.{CtSubscriptionRequest, PayeSubscriptionRequest, SaSubscriptionRequest, SubscriptionInfo}
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.{CtSubscriptionRequest, LegacyRegime, PayeSubscriptionRequest, SaSubscriptionRequest, SubscriptionInfo, SubscriptionRequest}
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionStatus.SubscriptionInProgress
 import uk.gov.hmrc.agentservicesaccount.utils.RequestSupport.hc
 import uk.gov.hmrc.http.UpstreamErrorResponse
@@ -155,43 +155,18 @@ with Injecting {
     }
   }
 
-  val exampleAgentName = "Example Agent Ltd"
-  val exampleContactName = "Jane Agent"
-  val examplePhoneNumber = "01632 960 001"
-  val exampleEmailAddress = "jane.agent@example.com"
-  val exampleSubscriptionAddress = uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionAddress(
-    line1 = "1 High Street",
-    line2 = "Village",
-    line3 = Some("County"),
-    line4 = None,
-    postCode = Some("AA1 1AA")
-  )
-
-  ".submitPayeRequest" should {
-
-    val examplePayeRequest = PayeSubscriptionRequest(
-      agentName = exampleAgentName,
-      contactName = exampleContactName,
-      phoneNumber = Some(examplePhoneNumber),
-      emailAddress = Some(exampleEmailAddress),
-      address = exampleSubscriptionAddress
+  ".submitLegacySubscriptionRequest" should {
+    val exampleAgentName = "Example Agent Ltd"
+    val exampleContactName = "Jane Agent"
+    val examplePhoneNumber = "01632 960 001"
+    val exampleEmailAddress = "jane.agent@example.com"
+    val exampleSubscriptionAddress = uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionAddress(
+      line1 = "1 High Street",
+      line2 = "Village",
+      line3 = Some("County"),
+      line4 = None,
+      postCode = Some("AA1 1AA")
     )
-
-    "return nothing when a OK (200) response is returned by agent-services-account" in {
-      givenPayeStartSubscriptionResponse(OK)
-
-      val result = connector.submitPayeRequest(examplePayeRequest)
-      await(result) shouldBe ()
-    }
-
-    "throw an UpstreamErrorResponse exception when an unexpected status is returned by agent-services-account" in {
-      givenPayeStartSubscriptionResponse(INTERNAL_SERVER_ERROR)
-
-      intercept[UpstreamErrorResponse](await(connector.submitPayeRequest(examplePayeRequest)))
-    }
-  }
-
-  ".submitCtRequest" should {
 
     val exampleCtRequest = CtSubscriptionRequest(
       agentName = exampleAgentName,
@@ -202,25 +177,6 @@ with Injecting {
       countryCode = "GB"
     )
 
-    "return nothing when a OK (200) response is returned by agent-services-account" in {
-      givenCtStartSubscriptionResponse(OK)
-
-      val result = connector.submitCtRequest(exampleCtRequest)
-
-      await(result) shouldBe ()
-    }
-
-    "throw an UpstreamErrorResponse exception when an unexpected status is returned by agent-services-account" in {
-      givenCtStartSubscriptionResponse(INTERNAL_SERVER_ERROR)
-
-      intercept[UpstreamErrorResponse] {
-        await(connector.submitCtRequest(exampleCtRequest))
-      }
-    }
-  }
-
-  ".submitSaRequest" should {
-
     val exampleSaRequest = SaSubscriptionRequest(
       agentName = exampleAgentName,
       contactName = exampleContactName,
@@ -230,22 +186,126 @@ with Injecting {
       countryCode = "GB"
     )
 
-    "return nothing when a OK (200) response is returned by agent-services-account" in {
-      givenCtStartSubscriptionResponse(OK)
+    val examplePayeRequest = PayeSubscriptionRequest(
+      agentName = exampleAgentName,
+      contactName = exampleContactName,
+      phoneNumber = Some(examplePhoneNumber),
+      emailAddress = Some(exampleEmailAddress),
+      address = exampleSubscriptionAddress
+    )
 
-      val result = connector.submitSaRequest(exampleSaRequest)
+    val legacyRegimeWithSubscriptionRequestList: Map[LegacyRegime, SubscriptionRequest] = Map(
+      (CT, exampleCtRequest),
+      (PAYE, examplePayeRequest),
+      (SA, exampleSaRequest)
+    )
 
-      await(result) shouldBe ()
-    }
+    legacyRegimeWithSubscriptionRequestList.foreach(regimeWithRequest => {
+      s"return nothing when a OK (200) response is returned by agent-services-account for ${regimeWithRequest._1.toString}" in {
+        givenPayeStartSubscriptionResponse(OK)
 
-    "throw an UpstreamErrorResponse exception when an unexpected status is returned by agent-services-account" in {
-      givenCtStartSubscriptionResponse(INTERNAL_SERVER_ERROR)
-
-      intercept[UpstreamErrorResponse] {
-        await(connector.submitSaRequest(exampleSaRequest))
+        val result = connector.submitLegacySubscriptionRequest(regimeWithRequest._2, regimeWithRequest._1)
+        await(result) shouldBe ()
       }
-    }
+
+      s"throw an UpstreamErrorResponse exception when an unexpected status is returned by agent-services-account for ${regimeWithRequest._1.toString}" in {
+        givenPayeStartSubscriptionResponse(INTERNAL_SERVER_ERROR)
+
+        intercept[UpstreamErrorResponse](await(connector.submitLegacySubscriptionRequest(regimeWithRequest._2, regimeWithRequest._1)))
+      }
+    })
   }
+//  val exampleAgentName = "Example Agent Ltd"
+//  val exampleContactName = "Jane Agent"
+//  val examplePhoneNumber = "01632 960 001"
+//  val exampleEmailAddress = "jane.agent@example.com"
+//  val exampleSubscriptionAddress = uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionAddress(
+//    line1 = "1 High Street",
+//    line2 = "Village",
+//    line3 = Some("County"),
+//    line4 = None,
+//    postCode = Some("AA1 1AA")
+//  )
+//
+//  ".submitPayeRequest" should {
+//
+//    val examplePayeRequest = PayeSubscriptionRequest(
+//      agentName = exampleAgentName,
+//      contactName = exampleContactName,
+//      phoneNumber = Some(examplePhoneNumber),
+//      emailAddress = Some(exampleEmailAddress),
+//      address = exampleSubscriptionAddress
+//    )
+//
+//    "return nothing when a OK (200) response is returned by agent-services-account" in {
+//      givenPayeStartSubscriptionResponse(OK)
+//
+//      val result = connector.submitPayeRequest(examplePayeRequest)
+//      await(result) shouldBe ()
+//    }
+//
+//    "throw an UpstreamErrorResponse exception when an unexpected status is returned by agent-services-account" in {
+//      givenPayeStartSubscriptionResponse(INTERNAL_SERVER_ERROR)
+//
+//      intercept[UpstreamErrorResponse](await(connector.submitPayeRequest(examplePayeRequest)))
+//    }
+//  }
+//
+//  ".submitCtRequest" should {
+//
+//    val exampleCtRequest = CtSubscriptionRequest(
+//      agentName = exampleAgentName,
+//      contactName = exampleContactName,
+//      phoneNumber = Some(examplePhoneNumber),
+//      emailAddress = Some(exampleEmailAddress),
+//      address = exampleSubscriptionAddress,
+//      countryCode = "GB"
+//    )
+//
+//    "return nothing when a OK (200) response is returned by agent-services-account" in {
+//      givenCtStartSubscriptionResponse(OK)
+//
+//      val result = connector.submitCtRequest(exampleCtRequest)
+//
+//      await(result) shouldBe ()
+//    }
+//
+//    "throw an UpstreamErrorResponse exception when an unexpected status is returned by agent-services-account" in {
+//      givenCtStartSubscriptionResponse(INTERNAL_SERVER_ERROR)
+//
+//      intercept[UpstreamErrorResponse] {
+//        await(connector.submitCtRequest(exampleCtRequest))
+//      }
+//    }
+//  }
+//
+//  ".submitSaRequest" should {
+//
+//    val exampleSaRequest = SaSubscriptionRequest(
+//      agentName = exampleAgentName,
+//      contactName = exampleContactName,
+//      phoneNumber = Some(examplePhoneNumber),
+//      emailAddress = Some(exampleEmailAddress),
+//      address = exampleSubscriptionAddress,
+//      countryCode = "GB"
+//    )
+//
+//    "return nothing when a OK (200) response is returned by agent-services-account" in {
+//      givenCtStartSubscriptionResponse(OK)
+//
+//      val result = connector.submitSaRequest(exampleSaRequest)
+//
+//      await(result) shouldBe ()
+//    }
+//
+//    "throw an UpstreamErrorResponse exception when an unexpected status is returned by agent-services-account" in {
+//      givenCtStartSubscriptionResponse(INTERNAL_SERVER_ERROR)
+//
+//      intercept[UpstreamErrorResponse] {
+//        await(connector.submitSaRequest(exampleSaRequest))
+//      }
+//    }
+//  }
 
   ".getPayeCyaData" should {
 
