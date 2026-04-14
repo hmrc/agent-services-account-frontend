@@ -145,7 +145,7 @@ def submitSaRequest(saSubscriptionRequest: SaSubscriptionRequest)(implicit hc: H
         }
     }
 }
-//  TODO: 11053 Consolidate into singleSubmitLegacySubscriptionRequest(legacyRegime)
+//  TODO: 11053 Consolidate into single submitLegacySubscriptionRequest(legacyRegime)
 
   def getPayeCyaData: Future[PayeCyaData] = Future.successful(
     PayeCyaData(

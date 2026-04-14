@@ -18,30 +18,26 @@ package uk.gov.hmrc.agentservicesaccount.models.subscriptions
 
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 
-//TODO: 11053: Remove agencyFromNamingHere
-case class SubscriptionCyaData(
-  agencyName: String,
-  agencyEmail: String,
-  agencyTelephone: String,
-  agencyAddress: BusinessAddress
-) {
-  def toSubscriptionRequest: CtSubscriptionRequest = {
-    val address = SubscriptionAddress(
-      line1 = agencyAddress.addressLine1,
-      line2 = agencyAddress.addressLine2.getOrElse(""),
-      line3 = agencyAddress.addressLine3,
-      line4 = agencyAddress.addressLine4,
-      postCode = agencyAddress.postalCode
+case class SubscriptionCyaData(businessName: String, phoneNumber: String, email: String, address: BusinessAddress) {
+  def toCtSubscriptionRequest: CtSubscriptionRequest = {
+    val subscriptionAddress = SubscriptionAddress(
+      line1 = address.addressLine1,
+      line2 = address.addressLine2.getOrElse(""),
+      line3 = address.addressLine3,
+      line4 = address.addressLine4,
+      postCode = address.postalCode
     )
     CtSubscriptionRequest(
-      agentName = agencyName,
-      contactName = agencyName,
-      phoneNumber = Some(agencyTelephone),
-      emailAddress = Some(agencyEmail),
-      address = address,
-      countryCode = agencyAddress.countryCode
+      agentName = businessName,
+      contactName = businessName,
+      phoneNumber = Some(phoneNumber),
+      emailAddress = Some(email),
+      address = subscriptionAddress,
+      countryCode = address.countryCode
     )
   }
+
+//  TODO: 11053 Implement toSaSubscriptionRequest here
 }
 
 object SubscriptionCyaData {
@@ -67,11 +63,6 @@ object SubscriptionCyaData {
           case Some(true) => journey.addressAnswer
           case _ => journey.asaDetails.agencyAddress
         }
-    } yield SubscriptionCyaData(
-      agencyName = businessName,
-      agencyEmail = email,
-      agencyTelephone = phoneNumber,
-      agencyAddress = address
-    )
+    } yield SubscriptionCyaData(businessName = businessName, phoneNumber = phoneNumber, email = email, address = address)
   }
 }

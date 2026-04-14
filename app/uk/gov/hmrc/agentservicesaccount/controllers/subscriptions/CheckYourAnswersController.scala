@@ -61,7 +61,8 @@ with I18nSupport {
 
   def onSubmit(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
     withSubscriptionCyaData(request.subscriptionJourney) { data =>
-      val requestModel = data.toSubscriptionRequest
+//      TODO: 11053: Consolidate into single submitLegacySubscriptionRequest(legacyRegime) - pass inLegacyRegime
+      val requestModel = data.toCtSubscriptionRequest
 
 //      TODO: 11053 Call different method depending on legacyRegime
       agentServicesAccountConnector
@@ -88,22 +89,22 @@ with I18nSupport {
     Seq(
       SummaryListData(
         key = s"${legacyRegime.msgPrefix}.check-your-answers.business-name",
-        value = data.agencyName,
+        value = data.businessName,
         link = Some(subscriptionRoutes.UpdateBusinessNameController.showPage(legacyRegime))
       ),
       SummaryListData(
         key = s"${legacyRegime.msgPrefix}.check-your-answers.phone-number",
-        value = data.agencyTelephone,
+        value = data.phoneNumber,
         link = Some(subscriptionRoutes.UpdatePhoneNumberController.showPage(legacyRegime))
       ),
       SummaryListData(
         key = s"${legacyRegime.msgPrefix}.check-your-answers.email",
-        value = data.agencyEmail,
+        value = data.email,
         link = Some(subscriptionRoutes.UpdateEmailAddressController.showPage(legacyRegime))
       ),
       SummaryListData(
         key = s"${legacyRegime.msgPrefix}.check-your-answers.address",
-        value = formatAddress(data.agencyAddress),
+        value = formatAddress(data.address),
         link = Some(subscriptionRoutes.UpdateAddressController.showPage(legacyRegime))
       )
     )
