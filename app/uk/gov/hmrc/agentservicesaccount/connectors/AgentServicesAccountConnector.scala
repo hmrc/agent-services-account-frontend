@@ -120,6 +120,7 @@ extends Logging {
   def submitSaRequest(saSubscriptionRequest: SaSubscriptionRequest)(implicit hc: HeaderCarrier): Future[Unit] =
     submitLegacySubscriptionRequest(saSubscriptionRequest, SA)
 
+  //  TODO: 11053 Remove above three methods and use this only
   def submitLegacySubscriptionRequest(subscriptionRequest: SubscriptionRequest, legacyRegime: LegacyRegime)(implicit hc: HeaderCarrier): Future[Unit] = {
     http
       .post(url"$url/legacy-subscription-request/${legacyRegime.toString}").withBody(Json.toJson(subscriptionRequest)).execute[HttpResponse]

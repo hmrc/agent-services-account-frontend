@@ -202,11 +202,7 @@ with Injecting {
 
     List(CT, PAYE, SA).foreach(legacyRegime => {
       s"return nothing when a OK (200) response is returned by agent-services-account for ${legacyRegime.toString}" in {
-        legacyRegime match {
-          case CT => givenCtStartSubscriptionResponse(OK)
-          case PAYE => givenPayeStartSubscriptionResponse(OK)
-          case SA => givenSaStartSubscriptionResponse(OK)
-        }
+        givenStartLegacySubscriptionResponse(legacyRegime, OK)
 
         val request = getSubscriptionRequestForLegacyRegime(legacyRegime)
         val result = connector.submitLegacySubscriptionRequest(request, legacyRegime)
@@ -214,11 +210,7 @@ with Injecting {
       }
 
       s"throw an UpstreamErrorResponse exception when an unexpected status is returned by agent-services-account for ${legacyRegime.toString}" in {
-        legacyRegime match {
-          case CT => givenCtStartSubscriptionResponse(INTERNAL_SERVER_ERROR)
-          case PAYE => givenPayeStartSubscriptionResponse(INTERNAL_SERVER_ERROR)
-          case SA => givenSaStartSubscriptionResponse(INTERNAL_SERVER_ERROR)
-        }
+        givenStartLegacySubscriptionResponse(legacyRegime, INTERNAL_SERVER_ERROR)
 
         val request = getSubscriptionRequestForLegacyRegime(legacyRegime)
         intercept[UpstreamErrorResponse](await(connector.submitLegacySubscriptionRequest(request, legacyRegime)))
