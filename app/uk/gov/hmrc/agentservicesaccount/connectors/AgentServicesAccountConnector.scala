@@ -30,8 +30,15 @@ import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest.connectorRea
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest.connectorWrites
 import uk.gov.hmrc.agentservicesaccount.models.paye.PayeAddress
 import uk.gov.hmrc.agentservicesaccount.models.paye.PayeCyaData
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.{CT, PAYE, SA}
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.{CtSubscriptionRequest, LegacyRegime, PayeSubscriptionRequest, SaSubscriptionRequest, SubscriptionInfo, SubscriptionRequest}
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtSubscriptionRequest
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.PayeSubscriptionRequest
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SaSubscriptionRequest
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionInfo
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionRequest
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.HeaderCarrier
@@ -111,24 +118,37 @@ extends Logging {
       }
     )
 
-  def submitPayeRequest(payeSubscriptionRequest: PayeSubscriptionRequest)(implicit hc: HeaderCarrier): Future[Unit] =
-    submitLegacySubscriptionRequest(payeSubscriptionRequest, PAYE)
+  def submitPayeRequest(payeSubscriptionRequest: PayeSubscriptionRequest)(implicit hc: HeaderCarrier): Future[Unit] = submitLegacySubscriptionRequest(
+    payeSubscriptionRequest,
+    PAYE
+  )
 
-  def submitCtRequest(ctSubscriptionRequest: CtSubscriptionRequest)(implicit hc: HeaderCarrier): Future[Unit] =
-    submitLegacySubscriptionRequest(ctSubscriptionRequest, CT)
+  def submitCtRequest(ctSubscriptionRequest: CtSubscriptionRequest)(implicit hc: HeaderCarrier): Future[Unit] = submitLegacySubscriptionRequest(
+    ctSubscriptionRequest,
+    CT
+  )
 
-  def submitSaRequest(saSubscriptionRequest: SaSubscriptionRequest)(implicit hc: HeaderCarrier): Future[Unit] =
-    submitLegacySubscriptionRequest(saSubscriptionRequest, SA)
+  def submitSaRequest(saSubscriptionRequest: SaSubscriptionRequest)(implicit hc: HeaderCarrier): Future[Unit] = submitLegacySubscriptionRequest(
+    saSubscriptionRequest,
+    SA
+  )
 
   //  TODO: 11053 Remove above three methods and use this only
-  def submitLegacySubscriptionRequest(subscriptionRequest: SubscriptionRequest, legacyRegime: LegacyRegime)(implicit hc: HeaderCarrier): Future[Unit] = {
+  def submitLegacySubscriptionRequest(
+    subscriptionRequest: SubscriptionRequest,
+    legacyRegime: LegacyRegime
+  )(implicit hc: HeaderCarrier): Future[Unit] = {
     http
       .post(url"$url/legacy-subscription-request/${legacyRegime.toString}").withBody(Json.toJson(subscriptionRequest)).execute[HttpResponse]
       .map {
         response =>
           response.status match {
             case OK => ()
-            case e => throw UpstreamErrorResponse(s"[AgentServicesAccountConnector][submitLegacySubscriptionRequest] Error $e unable to post ${legacyRegime.toString} legacy subscription request", e)
+            case e =>
+              throw UpstreamErrorResponse(
+                s"[AgentServicesAccountConnector][submitLegacySubscriptionRequest] Error $e unable to post ${legacyRegime.toString} legacy subscription request",
+                e
+              )
           }
       }
   }

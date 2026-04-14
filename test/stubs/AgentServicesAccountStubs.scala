@@ -25,7 +25,8 @@ import uk.gov.hmrc.agentservicesaccount.models.Arn
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest.connectorWrites
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime._
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.{LegacyRegime, SubscriptionInfo}
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionInfo
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionStatus.SubscriptionInProgress
 
 object AgentServicesAccountStubs {
@@ -83,7 +84,10 @@ object AgentServicesAccountStubs {
       ))
   }
 
-  def givenStartLegacySubscriptionResponse(legacyRegime: LegacyRegime, status: Int): StubMapping = {
+  def givenStartLegacySubscriptionResponse(
+    legacyRegime: LegacyRegime,
+    status: Int
+  ): StubMapping = {
     stubFor(post(urlEqualTo(s"/agent-services-account/legacy-subscription-request/${legacyRegime.toString}"))
       .willReturn(
         aResponse()

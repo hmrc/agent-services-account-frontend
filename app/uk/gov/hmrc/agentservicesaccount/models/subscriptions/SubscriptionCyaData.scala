@@ -17,7 +17,8 @@
 package uk.gov.hmrc.agentservicesaccount.models.subscriptions
 
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.{CT, SA}
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
 
 case class SubscriptionCyaData(
   businessName: String,
@@ -25,6 +26,7 @@ case class SubscriptionCyaData(
   email: String,
   address: BusinessAddress
 ) {
+
   implicit def toSubscriptionAddress(address: BusinessAddress): SubscriptionAddress = {
     val subscriptionAddress = SubscriptionAddress(
       line1 = address.addressLine1,
@@ -64,6 +66,7 @@ case class SubscriptionCyaData(
       case SA => this.toSaSubscriptionRequest
     }
   }
+
 }
 
 object SubscriptionCyaData {

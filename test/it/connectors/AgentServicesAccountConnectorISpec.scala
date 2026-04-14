@@ -34,7 +34,12 @@ import uk.gov.hmrc.agentservicesaccount.models.paye.PayeCyaData
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.{CtSubscriptionRequest, LegacyRegime, PayeSubscriptionRequest, SaSubscriptionRequest, SubscriptionInfo, SubscriptionRequest}
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtSubscriptionRequest
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.PayeSubscriptionRequest
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SaSubscriptionRequest
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionInfo
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionRequest
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionStatus.SubscriptionInProgress
 import uk.gov.hmrc.agentservicesaccount.utils.RequestSupport.hc
 import uk.gov.hmrc.http.UpstreamErrorResponse

@@ -34,6 +34,7 @@ final case class PayeCyaData(
   emailAddress: Option[String],
   address: PayeAddress
 ) {
+
   implicit def toSubscriptionAddress(address: PayeAddress): SubscriptionAddress = {
     val subscriptionAddress = SubscriptionAddress(
       line1 = address.line1,
@@ -54,4 +55,5 @@ final case class PayeCyaData(
       address = address: SubscriptionAddress
     )
   }
+
 }
