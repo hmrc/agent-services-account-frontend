@@ -62,19 +62,10 @@ with I18nSupport {
 
   def onSubmit(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
     withSubscriptionCyaData(request.subscriptionJourney) { data =>
-      //      TODO: 11053: Consolidate into single submitLegacySubscriptionRequest(legacyRegime) - pass inLegacyRegime
-      legacyRegime match {
-        case CT =>
-          val requestModel = data.toCtSubscriptionRequest
-          agentServicesAccountConnector
-            .submitCtRequest(requestModel)
-            .map(_ => Redirect(getNextPage(currentPage = checkYourAnswersPage, legacyRegime = legacyRegime)))
-        case SA =>
-          val requestModel = data.toSaSubscriptionRequest
-          agentServicesAccountConnector
-            .submitSaRequest(requestModel)
-            .map(_ => Redirect(getNextPage(currentPage = checkYourAnswersPage, legacyRegime = legacyRegime)))
-      }
+      val requestModel = data.toSubscriptionRequest(legacyRegime)
+      agentServicesAccountConnector
+        .submitLegacySubscriptionRequest(requestModel, legacyRegime)
+        .map(_ => Redirect(getNextPage(currentPage = checkYourAnswersPage, legacyRegime = legacyRegime)))
     }
   }
 

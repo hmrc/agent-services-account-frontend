@@ -17,6 +17,7 @@
 package uk.gov.hmrc.agentservicesaccount.models.subscriptions
 
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.{CT, SA}
 
 case class SubscriptionCyaData(
   businessName: String,
@@ -35,7 +36,7 @@ case class SubscriptionCyaData(
     subscriptionAddress
   }
 
-  def toCtSubscriptionRequest: CtSubscriptionRequest = {
+  implicit def toCtSubscriptionRequest: CtSubscriptionRequest = {
     CtSubscriptionRequest(
       agentName = businessName,
       contactName = businessName,
@@ -46,7 +47,7 @@ case class SubscriptionCyaData(
     )
   }
 
-  def toSaSubscriptionRequest: SaSubscriptionRequest = {
+  implicit def toSaSubscriptionRequest: SaSubscriptionRequest = {
     SaSubscriptionRequest(
       agentName = businessName,
       contactName = businessName,
@@ -55,6 +56,13 @@ case class SubscriptionCyaData(
       address = address: SubscriptionAddress,
       countryCode = address.countryCode
     )
+  }
+
+  def toSubscriptionRequest(legacyRegime: LegacyRegime): SubscriptionRequest = {
+    legacyRegime match {
+      case CT => this.toCtSubscriptionRequest
+      case SA => this.toSaSubscriptionRequest
+    }
   }
 }
 
