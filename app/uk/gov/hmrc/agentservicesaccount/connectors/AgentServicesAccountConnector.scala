@@ -118,20 +118,20 @@ extends Logging {
       }
     )
 
-  def submitPayeRequest(payeSubscriptionRequest: PayeSubscriptionRequest)(implicit hc: HeaderCarrier): Future[Unit] = submitLegacySubscriptionRequest(
-    payeSubscriptionRequest,
-    PAYE
-  )
-
-  def submitCtRequest(ctSubscriptionRequest: CtSubscriptionRequest)(implicit hc: HeaderCarrier): Future[Unit] = submitLegacySubscriptionRequest(
-    ctSubscriptionRequest,
-    CT
-  )
-
-  def submitSaRequest(saSubscriptionRequest: SaSubscriptionRequest)(implicit hc: HeaderCarrier): Future[Unit] = submitLegacySubscriptionRequest(
-    saSubscriptionRequest,
-    SA
-  )
+//  def submitPayeRequest(payeSubscriptionRequest: PayeSubscriptionRequest)(implicit hc: HeaderCarrier): Future[Unit] = submitLegacySubscriptionRequest(
+//    payeSubscriptionRequest,
+//    PAYE
+//  )
+//
+//  def submitCtRequest(ctSubscriptionRequest: CtSubscriptionRequest)(implicit hc: HeaderCarrier): Future[Unit] = submitLegacySubscriptionRequest(
+//    ctSubscriptionRequest,
+//    CT
+//  )
+//
+//  def submitSaRequest(saSubscriptionRequest: SaSubscriptionRequest)(implicit hc: HeaderCarrier): Future[Unit] = submitLegacySubscriptionRequest(
+//    saSubscriptionRequest,
+//    SA
+//  )
 
   //  TODO: 11053 Remove above three methods and use this only
   def submitLegacySubscriptionRequest(

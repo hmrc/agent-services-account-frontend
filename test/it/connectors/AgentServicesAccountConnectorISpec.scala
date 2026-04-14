@@ -206,7 +206,6 @@ with Injecting {
     )
 
     List(CT, PAYE, SA).foreach(legacyRegime => {
-//      TODO: 11053 FIX for SA
       s"return nothing when a OK (200) response is returned by agent-services-account for ${legacyRegime.toString}" in {
         givenStartLegacySubscriptionResponse(legacyRegime, OK)
 
