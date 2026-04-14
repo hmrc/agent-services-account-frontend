@@ -33,6 +33,7 @@ extends ComponentBaseISpec {
   private val updateAddressPath = s"$subscriptionStartPath/$legacyRegime/address"
 
   s"GET $updateAddressPath" should {
+    //      TODO: 11053 FIX for SA
     "display the enter address page" in {
 
       givenAuthorisedAsAgentWith(arn.value)
