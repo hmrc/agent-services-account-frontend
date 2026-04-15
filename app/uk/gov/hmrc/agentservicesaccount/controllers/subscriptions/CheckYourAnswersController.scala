@@ -114,7 +114,7 @@ with I18nSupport {
       case Some(data) => f(data)
       case None =>
         Future.successful(
-          BadRequest("[CheckYourAnswersController] missing CYA data")
+          BadRequest("[CheckYourAnswersController] missing Legacy Subscription CYA data")
         )
     }
 

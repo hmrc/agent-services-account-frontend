@@ -216,7 +216,7 @@ with MockFactory {
       val result = controller.showPage(legacyRegime)(fakeRequest).futureValue
 
       status(result) shouldBe BAD_REQUEST
-      contentAsString(result) should include("missing CT CYA data")
+      contentAsString(result) should include("missing Legacy Subscription CYA data")
     }
   }
 
@@ -255,7 +255,7 @@ with MockFactory {
       val result = controller.onSubmit(legacyRegime)(fakeRequest).futureValue
 
       status(result) shouldBe BAD_REQUEST
-      contentAsString(result) should include("missing CT CYA data")
+      contentAsString(result) should include("missing Legacy Subscription CYA data")
     }
   }
 
