@@ -46,7 +46,7 @@ final case class PayeCyaData(
     subscriptionAddress
   }
 
-  def toSubscriptionRequest: PayeSubscriptionRequest = {
+  def toPayeSubscriptionRequest: PayeSubscriptionRequest = {
     PayeSubscriptionRequest(
       agentName = agentName,
       contactName = contactName,

@@ -38,7 +38,7 @@ case class SubscriptionCyaData(
     subscriptionAddress
   }
 
-  implicit def toCtSubscriptionRequest: CtSubscriptionRequest = {
+  private val toCtSubscriptionRequest: CtSubscriptionRequest = {
     CtSubscriptionRequest(
       agentName = businessName,
       contactName = businessName,
@@ -49,7 +49,7 @@ case class SubscriptionCyaData(
     )
   }
 
-  implicit def toSaSubscriptionRequest: SaSubscriptionRequest = {
+  private val toSaSubscriptionRequest: SaSubscriptionRequest = {
     SaSubscriptionRequest(
       agentName = businessName,
       contactName = businessName,
@@ -62,8 +62,8 @@ case class SubscriptionCyaData(
 
   def toSubscriptionRequest(legacyRegime: LegacyRegime): SubscriptionRequest = {
     legacyRegime match {
-      case CT => this.toCtSubscriptionRequest
-      case SA => this.toSaSubscriptionRequest
+      case CT => toCtSubscriptionRequest
+      case SA => toSaSubscriptionRequest
     }
   }
 

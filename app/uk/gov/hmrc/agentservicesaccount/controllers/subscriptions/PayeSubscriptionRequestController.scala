@@ -116,7 +116,7 @@ with Logging {
           val result =
             for {
               cyaData <- agentServicesAccountConnector.getPayeCyaData
-              submitRequestResult <- agentServicesAccountConnector.submitLegacySubscriptionRequest(cyaData.toSubscriptionRequest, LegacyRegime.PAYE)
+              submitRequestResult <- agentServicesAccountConnector.submitLegacySubscriptionRequest(cyaData.toPayeSubscriptionRequest, LegacyRegime.PAYE)
             } yield submitRequestResult
           result.map(_ => Redirect(subscriptionsRoutes.PayeSubscriptionRequestController.showSubmitted))
         }
