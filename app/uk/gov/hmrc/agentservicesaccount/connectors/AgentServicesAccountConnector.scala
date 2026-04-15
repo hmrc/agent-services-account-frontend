@@ -118,6 +118,9 @@ extends Logging {
       }
     )
 
+  //  TODO: 10862 Add agent-record-update method here in connector, to call in desiDetails CYA controller.
+  //  TODO: 10862 It is a PUT, need to be certain that we can do partial updates of individual fields
+
   def submitLegacySubscriptionRequest(
     subscriptionRequest: SubscriptionRequest,
     legacyRegime: LegacyRegime

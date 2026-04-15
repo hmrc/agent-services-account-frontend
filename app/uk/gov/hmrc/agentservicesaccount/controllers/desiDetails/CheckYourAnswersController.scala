@@ -108,6 +108,8 @@ with Logging {
               selectChanges.getOrElse(throw new RuntimeException("Cannot submit without select changes details"))
             ).toString()
             _ = auditService.auditUpdateContactDetailsRequest(optUtr, pendingChange)
+//            TODO: 10862 Put behind own feature switch
+//            TODO: 10862 AC1 (SA/CT Not Selected) use agent-record-update in ASA BE only, in case of AC2 (SA or CT selected) use this and agent-assurance line below
             result <- agentAssuranceConnector.postDesignatoryDetails(arn, java.util.Base64.getEncoder.encodeToString(htmlForPdf.getBytes()))
             _ <- pcodRepository.insert(PendingChangeRequest(arn, pendingChange.timeSubmitted))
             _ <- sessionCacheService.delete(draftNewContactDetailsKey)
