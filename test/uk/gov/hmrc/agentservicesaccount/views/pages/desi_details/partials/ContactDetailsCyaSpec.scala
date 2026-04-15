@@ -63,7 +63,7 @@ extends ViewBaseSpec {
       val businessNameKey: String = "Business name shown to clients"
 
       val rawFirstLineAddressValue: String = "Test &amp; Street<br>"
-      val addressValue: String = "Test & Street Test Town TE5 7ED GB"
+      val addressValue: String = "Test & Street Test Town TE5 7ED United Kingdom"
 
       val emailValue: String = "test@email.com"
       val telephoneValue: String = "01234 567890"

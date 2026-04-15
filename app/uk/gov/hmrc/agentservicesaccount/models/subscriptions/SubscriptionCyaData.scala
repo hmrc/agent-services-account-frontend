@@ -24,12 +24,12 @@ case class SubscriptionCyaData(
   agencyTelephone: String,
   agencyAddress: BusinessAddress
 ) {
-  def toSubscriptionRequest: CtSubscriptionRequest = {
+  def toSubscriptionRequest(countryName: String): CtSubscriptionRequest = {
     val address = SubscriptionAddress(
       line1 = agencyAddress.addressLine1,
       line2 = agencyAddress.addressLine2.getOrElse(""),
       line3 = agencyAddress.addressLine3,
-      line4 = agencyAddress.addressLine4,
+      line4 = Some(countryName),
       postCode = agencyAddress.postalCode
     )
     CtSubscriptionRequest(

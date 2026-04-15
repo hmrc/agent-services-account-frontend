@@ -16,10 +16,11 @@
 
 @import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
 @import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
+@import uk.gov.hmrc.agentservicesaccount.utils.CountryResolver
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
 
-@this(govukSummaryList: GovukSummaryList, p: p, ul: ul)
+@this(govukSummaryList: GovukSummaryList, countryResolver: CountryResolver, p: p, ul: ul)
 
 @(agencyDetails: AgencyDetails, selectChanges: Set[String], forPdf: Boolean = false)(implicit msgs: Messages, request: RequestHeader)
 
@@ -51,7 +52,7 @@
                 content = HtmlContent(
                     s"""${
                         agencyDetails.agencyAddress.map(
-                            ba => List(Some(ba.addressLine1), ba.addressLine2, ba.addressLine3, ba.addressLine4, ba.postalCode, Some(ba.countryCode)).flatten
+                            ba => List(Some(ba.addressLine1), ba.addressLine2, ba.addressLine3, ba.addressLine4, ba.postalCode, Some(countryResolver.countryName(ba.countryCode))).flatten
                         ).map(_.mkString("<br />").replace("&", "&amp;")).getOrElse(msgs("contact-details.summary-list.none"))
                     }"""))
         else
@@ -59,7 +60,7 @@
                 content = HtmlContent(
                     s"""${
                         agencyDetails.agencyAddress.map(
-                            ba => List(Some(ba.addressLine1), ba.addressLine2, ba.addressLine3, ba.addressLine4, ba.postalCode, Some(ba.countryCode)).flatten
+                            ba => List(Some(ba.addressLine1), ba.addressLine2, ba.addressLine3, ba.addressLine4, ba.postalCode, Some(countryResolver.countryName(ba.countryCode))).flatten
                         ).map(_.mkString("<br />")).getOrElse(msgs("contact-details.summary-list.none"))
                     }""")
             ),

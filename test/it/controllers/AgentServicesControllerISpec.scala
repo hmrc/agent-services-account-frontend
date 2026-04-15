@@ -554,7 +554,6 @@ extends BaseISpec {
       html.select("#opt-in-status").text shouldBe "Status Turned on"
       html.select("#opt-in-status").select("#status-value").text shouldBe "Turned on"
 
-      val infoLi = html.select("#info-section li")
       val infoP = html.select("#info-section p")
       infoP.get(0).text
         .shouldBe("Access groups allow you to restrict which team members can manage a client’s tax.")
@@ -958,7 +957,7 @@ extends BaseISpec {
         html.select(summaryListKeys).get(2).text shouldBe "Name"
         html.select(summaryListValues).get(2).text shouldBe "My Agency"
         html.select(summaryListKeys).get(3).text shouldBe "Address"
-        html.select(summaryListValues).get(3).text shouldBe "25 Any Street Any Town TF3 4TR GB"
+        html.select(summaryListValues).get(3).text shouldBe "25 Any Street Any Town TF3 4TR United Kingdom"
       }
 
       "the agent is not Admin" in {
@@ -1000,7 +999,7 @@ extends BaseISpec {
         html.select(summaryListKeys).get(2).text shouldBe "Name"
         html.select(summaryListValues).get(2).text shouldBe "My Agency"
         html.select(summaryListKeys).get(3).text shouldBe "Address"
-        html.select(summaryListValues).get(3).text shouldBe "25 Any Street Any Town TF3 4TR GB"
+        html.select(summaryListValues).get(3).text shouldBe "25 Any Street Any Town TF3 4TR United Kingdom"
 
       }
     }
