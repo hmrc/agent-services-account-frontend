@@ -88,7 +88,7 @@ object AgentServicesAccountStubs {
     legacyRegime: LegacyRegime,
     status: Int
   ): StubMapping = {
-    stubFor(post(urlEqualTo(s"/agent-services-account/legacy-subscription-request/${legacyRegime.toString}"))
+    stubFor(post(urlEqualTo(s"/agent-services-account/legacy-subscription-request/$legacyRegime"))
       .willReturn(
         aResponse()
           .withStatus(status)

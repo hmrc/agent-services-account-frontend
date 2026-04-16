@@ -123,14 +123,14 @@ extends Logging {
     legacyRegime: LegacyRegime
   )(implicit hc: HeaderCarrier): Future[Unit] = {
     http
-      .post(url"$url/legacy-subscription-request/${legacyRegime.toString}").withBody(Json.toJson(subscriptionRequest)).execute[HttpResponse]
+      .post(url"$url/legacy-subscription-request/$legacyRegime").withBody(Json.toJson(subscriptionRequest)).execute[HttpResponse]
       .map {
         response =>
           response.status match {
             case OK => ()
             case e =>
               throw UpstreamErrorResponse(
-                s"[AgentServicesAccountConnector][submitLegacySubscriptionRequest] Error $e unable to post ${legacyRegime.toString} legacy subscription request",
+                s"[AgentServicesAccountConnector][submitLegacySubscriptionRequest] Error $e unable to post $legacyRegime legacy subscription request",
                 e
               )
           }
