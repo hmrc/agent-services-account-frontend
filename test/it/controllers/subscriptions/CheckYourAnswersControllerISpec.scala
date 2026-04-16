@@ -39,7 +39,7 @@ import uk.gov.hmrc.agentservicesaccount.models._
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionRequest
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.{CT, SA}
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.authorise.Predicate
@@ -59,9 +59,9 @@ with ScalaFutures
 with IntegrationPatience
 with MockFactory {
 
-  class TestSetup {
+  private val legacyRegimes = List(CT, SA)
 
-    val legacyRegime: LegacyRegime = SA
+  class TestSetup(legacyRegime: LegacyRegime) {
 
     private val testArn = "TARN0000001"
 
@@ -175,88 +175,91 @@ with MockFactory {
     }
 
   }
+  
+  legacyRegimes.foreach(legacyRegime => {
 
-  "GET /check-your-answers" should {
+    s"GET /subscription/$legacyRegime/check-your-answers" should {
 
-    "return OK and render page when valid data present" in new TestSetup {
+      "return OK and render page when valid data present" in new TestSetup(legacyRegime) {
 
-      cacheJourney(fullSubscriptionJourney)
+        cacheJourney(fullSubscriptionJourney)
 
-      val result = controller.showPage(legacyRegime)(fakeRequest).futureValue
+        val result = controller.showPage(legacyRegime)(fakeRequest).futureValue
 
-      status(result) shouldBe OK
-      val body = contentAsString(result)
+        status(result) shouldBe OK
+        val body = contentAsString(result)
 
-      body should include("Custom Name")
-      body should include("123456")
-      body should include("custom@test.com")
-      body should include("Line 1")
+        body should include("Custom Name")
+        body should include("123456")
+        body should include("custom@test.com")
+        body should include("Line 1")
+      }
+
+      "return BAD_REQUEST when journey data missing" in new TestSetup(legacyRegime) {
+        val invalidJourney = SubscriptionJourney(
+          asaDetails = AgencyDetails(
+            agencyName = None,
+            agencyEmail = None,
+            agencyTelephone = None,
+            agencyAddress = None
+          ),
+          useCustomBusinessName = Some(true),
+          businessNameAnswer = None,
+          useCustomPhoneNumber = Some(true),
+          phoneNumberAnswer = None,
+          useCustomEmail = Some(true),
+          emailAnswer = None,
+          useCustomAddress = Some(true),
+          addressAnswer = None
+        )
+
+        cacheJourney(invalidJourney)
+
+        val result = controller.showPage(legacyRegime)(fakeRequest).futureValue
+
+        status(result) shouldBe BAD_REQUEST
+        contentAsString(result) should include("missing Legacy Subscription CYA data")
+      }
     }
 
-    "return BAD_REQUEST when journey data missing" in new TestSetup {
-      val invalidJourney = SubscriptionJourney(
-        asaDetails = AgencyDetails(
-          agencyName = None,
-          agencyEmail = None,
-          agencyTelephone = None,
-          agencyAddress = None
-        ),
-        useCustomBusinessName = Some(true),
-        businessNameAnswer = None,
-        useCustomPhoneNumber = Some(true),
-        phoneNumberAnswer = None,
-        useCustomEmail = Some(true),
-        emailAnswer = None,
-        useCustomAddress = Some(true),
-        addressAnswer = None
-      )
+    s"POST /subscription/$legacyRegime/check-your-answers" should {
+      "redirect when submission succeeds" in new TestSetup(legacyRegime) {
 
-      cacheJourney(invalidJourney)
+        cacheJourney(fullSubscriptionJourney)
+        givenStartLegacySubscriptionResponse(legacyRegime, OK)
 
-      val result = controller.showPage(legacyRegime)(fakeRequest).futureValue
+        val result = controller.onSubmit(legacyRegime)(fakeRequest).futureValue
 
-      status(result) shouldBe BAD_REQUEST
-      contentAsString(result) should include("missing Legacy Subscription CYA data")
-    }
-  }
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result).value should include("/confirmation")
+      }
 
-  "POST /check-your-answers" should {
+      "return BAD_REQUEST when journey data missing" in new TestSetup(legacyRegime) {
+        val emptyJourney = SubscriptionJourney(
+          asaDetails = AgencyDetails(
+            None,
+            None,
+            None,
+            None
+          ),
+          useCustomBusinessName = Some(true),
+          businessNameAnswer = None,
+          useCustomPhoneNumber = Some(true),
+          phoneNumberAnswer = None,
+          useCustomEmail = Some(true),
+          emailAnswer = None,
+          useCustomAddress = Some(true),
+          addressAnswer = None
+        )
+        cacheJourney(emptyJourney)
 
-    "redirect when submission succeeds" in new TestSetup {
+        val result = controller.onSubmit(legacyRegime)(fakeRequest).futureValue
 
-      cacheJourney(fullSubscriptionJourney)
-      givenStartLegacySubscriptionResponse(legacyRegime, OK)
-
-      val result = controller.onSubmit(legacyRegime)(fakeRequest).futureValue
-
-      status(result) shouldBe SEE_OTHER
-      redirectLocation(result).value should include("/confirmation")
+        status(result) shouldBe BAD_REQUEST
+        contentAsString(result) should include("missing Legacy Subscription CYA data")
+      }
     }
 
-    "return BAD_REQUEST when journey data missing" in new TestSetup {
-      val emptyJourney = SubscriptionJourney(
-        asaDetails = AgencyDetails(
-          None,
-          None,
-          None,
-          None
-        ),
-        useCustomBusinessName = Some(true),
-        businessNameAnswer = None,
-        useCustomPhoneNumber = Some(true),
-        phoneNumberAnswer = None,
-        useCustomEmail = Some(true),
-        emailAnswer = None,
-        useCustomAddress = Some(true),
-        addressAnswer = None
-      )
-      cacheJourney(emptyJourney)
-
-      val result = controller.onSubmit(legacyRegime)(fakeRequest).futureValue
-
-      status(result) shouldBe BAD_REQUEST
-      contentAsString(result) should include("missing Legacy Subscription CYA data")
-    }
-  }
+  })
 
 }
