@@ -65,8 +65,6 @@ with TestConstants {
 
   class TestSetup(legacyRegime: LegacyRegime) {
 
-//    val legacyRegime: LegacyRegime = SA
-
     private val testArn = "TARN0000001"
 
     private val stubAuthConnector =
