@@ -29,7 +29,7 @@ case class SubscriptionCyaData(
       line1 = agencyAddress.addressLine1,
       line2 = agencyAddress.addressLine2.getOrElse(""),
       line3 = agencyAddress.addressLine3,
-      line4 = Some(countryName), //TODO: TBC - passing country name in line4
+      line4 = Option.when(agencyAddress.countryCode != "GB")(countryName).orElse(agencyAddress.addressLine4),
       postCode = agencyAddress.postalCode
     )
     CtSubscriptionRequest(
