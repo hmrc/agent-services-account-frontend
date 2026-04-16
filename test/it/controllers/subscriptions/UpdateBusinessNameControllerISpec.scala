@@ -40,7 +40,7 @@ import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdateBusiness
 import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.{CT, SA}
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.authorise.Predicate
@@ -60,10 +60,12 @@ with ScalaFutures
 with IntegrationPatience
 with MockFactory
 with TestConstants {
+  
+  private val legacyRegimes = List(CT, SA)
 
-  class TestSetup {
+  class TestSetup(legacyRegime: LegacyRegime) {
 
-    val legacyRegime: LegacyRegime = SA
+//    val legacyRegime: LegacyRegime = SA
 
     private val testArn = "TARN0000001"
 
@@ -151,58 +153,59 @@ with TestConstants {
     }
 
   }
+  
+  legacyRegimes.foreach(legacyRegime => {
+    s"GET /subscription/$legacyRegime/business-name" should {
 
-  "GET /update-business-name" should {
+      "render empty form on first visit" in new TestSetup(legacyRegime) {
+        cacheJourney(ctSubscriptionBaseJourney)
 
-    "render empty form on first visit" in new TestSetup {
-      cacheJourney(ctSubscriptionBaseJourney)
+        private val result = controller.showPage(legacyRegime)(FakeRequest()).futureValue
 
-      private val result = controller.showPage(legacyRegime)(FakeRequest()).futureValue
+        status(result) shouldBe OK
+        contentAsString(result) should include("Test Agency")
+      }
 
-      status(result) shouldBe OK
-      contentAsString(result) should include("Test Agency")
+      "render pre-filled form when journey has existing answers" in new TestSetup(legacyRegime) {
+        private val journey = ctSubscriptionBaseJourney.copy(
+          useCustomBusinessName = Some(true),
+          businessNameAnswer = Some("Custom Name Ltd")
+        )
+
+        cacheJourney(journey)
+
+        private val result = controller.showPage(legacyRegime)(FakeRequest()).futureValue
+
+        status(result) shouldBe OK
+        private val content = contentAsString(result)
+
+        content should include("""value="true"""")
+        content should include("businessNameNew")
+      }
     }
 
-    "render pre-filled form when journey has existing answers" in new TestSetup {
-      private val journey = ctSubscriptionBaseJourney.copy(
-        useCustomBusinessName = Some(true),
-        businessNameAnswer = Some("Custom Name Ltd")
+    s"POST /subscription/$legacyRegime/business-name" should {
+
+      "return BAD_REQUEST when form is invalid" in new TestSetup(legacyRegime) {
+        cacheJourney(ctSubscriptionBaseJourney)
+
+        private val request = FakeRequest().withSession(session.toSeq: _*).withFormUrlEncodedBody(
+          "useAsaData" -> ""
+        )
+
+        private val result = controller.onSubmit(legacyRegime)(request).futureValue
+
+        status(result) shouldBe BAD_REQUEST
+      }
+
+      val journeyWithRedirectLocations = List(
+        (ctSubscriptionBaseJourney, "phone-number", "not complete"),
+        (ctSubscriptionFullJourney, "check-your-answers", "complete")
       )
 
-      cacheJourney(journey)
-
-      private val result = controller.showPage(legacyRegime)(FakeRequest()).futureValue
-
-      status(result) shouldBe OK
-      private val content = contentAsString(result)
-
-      content should include("""value="true"""")
-      content should include("businessNameNew")
-    }
-  }
-
-  "POST /update-business-name" should {
-
-    "return BAD_REQUEST when form is invalid" in new TestSetup {
-      cacheJourney(ctSubscriptionBaseJourney)
-
-      private val request = FakeRequest().withSession(session.toSeq: _*).withFormUrlEncodedBody(
-        "useAsaData" -> ""
-      )
-
-      private val result = controller.onSubmit(legacyRegime)(request).futureValue
-
-      status(result) shouldBe BAD_REQUEST
-    }
-
-    val journeyWithRedirectLocations = List(
-      (ctSubscriptionBaseJourney, "phone-number", "not complete"),
-      (ctSubscriptionFullJourney, "check-your-answers", "complete")
-    )
-
-    journeyWithRedirectLocations.foreach(journeyWithRedirectLocation => {
-      s"update journey and redirect to ${journeyWithRedirectLocation._2}" +
-        s"when using ASA business name and journey ${journeyWithRedirectLocation._3}" in new TestSetup {
+      journeyWithRedirectLocations.foreach(journeyWithRedirectLocation => {
+        s"update journey and redirect to ${journeyWithRedirectLocation._2}" +
+          s"when using ASA business name and journey ${journeyWithRedirectLocation._3}" in new TestSetup(legacyRegime) {
           private val request = FakeRequest(POST, "/")
             .withSession(session.toSeq: _*)
             .withFormUrlEncodedBody(
@@ -224,8 +227,8 @@ with TestConstants {
           updated.value.businessNameAnswer shouldBe None
         }
 
-      s"update journey and redirect to ${journeyWithRedirectLocation._2}" +
-        s"when using custom business name and journey ${journeyWithRedirectLocation._3}" in new TestSetup {
+        s"update journey and redirect to ${journeyWithRedirectLocation._2}" +
+          s"when using custom business name and journey ${journeyWithRedirectLocation._3}" in new TestSetup(legacyRegime) {
           private val request = FakeRequest(POST, "/")
             .withSession(session.toSeq: _*)
             .withFormUrlEncodedBody(
@@ -247,7 +250,10 @@ with TestConstants {
           updated.value.useCustomBusinessName shouldBe Some(true)
           updated.value.businessNameAnswer shouldBe Some("My Custom Ltd")
         }
-    })
-  }
+      })
+    }
+
+  })
+
 
 }
