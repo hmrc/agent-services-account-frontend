@@ -34,8 +34,9 @@ import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
 class UpdateEmailAddressControllerISpec
 extends ComponentBaseISpec {
 
-  private val legacyRegimes = List(CT, SA)
   private val repo = inject[SessionCacheRepository]
+
+  private val legacyRegimes = List(CT, SA)
 
   legacyRegimes.foreach(legacyRegime => {
     val updateEmailAddressPath = s"$subscriptionStartPath/$legacyRegime/email-address"
