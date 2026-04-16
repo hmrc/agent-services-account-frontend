@@ -20,55 +20,59 @@ import play.api.test.Helpers._
 import support.ComponentBaseISpec
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.routes
 import stubs.AgentServicesAccountStubs.givenGetAgentRecord
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.{CT, SA}
 
 class ConfirmationControllerISpec
 extends ComponentBaseISpec {
 
-  private val legacyRegime = SA
-  private val path = routes.ConfirmationController.showConfirmationPage(legacyRegime).url
+  private val legacyRegimes = List(CT, SA)
 
-  s"GET $path" should {
+  legacyRegimes.foreach(legacyRegime => {
+    val path = routes.ConfirmationController.showConfirmationPage(legacyRegime).url
 
-    "return OK and render the confirmation page when user is authorised" in {
+    s"GET $path" should {
 
-      givenAuthorisedAsAgentWith(arn.value)
-      givenGetAgentRecord(agentRecord)
+      "return OK and render the confirmation page when user is authorised" in {
 
-      val result = get(path)
+        givenAuthorisedAsAgentWith(arn.value)
+        givenGetAgentRecord(agentRecord)
 
-      result.status shouldBe OK
+        val result = get(path)
 
-      result.body should include("We are processing your enrolment")
-      result.body should include("This can take up to 5 days")
-    }
+        result.status shouldBe OK
 
-    "redirect to sign in when user is not authorised" in {
+        result.body should include("We are processing your enrolment")
+        result.body should include("This can take up to 5 days")
+      }
 
-      GivenIsNotLoggedIn()
+      "redirect to sign in when user is not authorised" in {
 
-      val result = get(path)
+        GivenIsNotLoggedIn()
 
-      result.status shouldBe SEE_OTHER
-      result.header("Location").value should include("/bas-gateway/sign-in")
-    }
+        val result = get(path)
 
-    "redirect when agent is suspended" in {
+        result.status shouldBe SEE_OTHER
+        result.header("Location").value should include("/bas-gateway/sign-in")
+      }
 
-      givenAuthorisedAsAgentWith(arn.value)
+      "redirect when agent is suspended" in {
 
-      givenGetAgentRecord(
-        agentRecord.copy(
-          suspensionDetails = Some(agentRecord.suspensionDetails.get.copy(suspensionStatus = true))
+        givenAuthorisedAsAgentWith(arn.value)
+
+        givenGetAgentRecord(
+          agentRecord.copy(
+            suspensionDetails = Some(agentRecord.suspensionDetails.get.copy(suspensionStatus = true))
+          )
         )
-      )
 
-      val result = get(path)
+        val result = get(path)
 
-      result.status shouldBe SEE_OTHER
+        result.status shouldBe SEE_OTHER
 
-      result.header("Location").value should include("/agent-services-account/account-limited")
+        result.header("Location").value should include("/agent-services-account/account-limited")
+      }
     }
-  }
+
+  })
 
 }
