@@ -17,6 +17,7 @@
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.controllers.routes
 @import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
+@import uk.gov.hmrc.agentservicesaccount.utils.CountryResolver
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
@@ -24,6 +25,7 @@
 @this(
     main: main, h1: h1, h2: h2,
     govukSummaryList: GovukSummaryList,
+    countryResolver: CountryResolver,
     inset_text:inset_text
 )
 
@@ -80,7 +82,7 @@
                     content = HtmlContent(
                         s"""${
                             agencyDetails.flatMap(_.agencyAddress).map(
-                                ba => List(Some(ba.addressLine1), ba.addressLine2, ba.addressLine3, ba.addressLine4, ba.postalCode, Some(ba.countryCode)).flatten
+                                ba => List(Some(ba.addressLine1), ba.addressLine2, ba.addressLine3, ba.addressLine4, ba.postalCode, Some(countryResolver.countryName(ba.countryCode))).flatten
                             ).map(_.mkString("<br>")).getOrElse("")
                         }""")
                 ),

@@ -115,7 +115,7 @@ GET        /subscription/:regime/address-lookup-finish                    @uk.go
 GET        /subscription/:regime/check-your-answers                       @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CheckYourAnswersController.showPage(regime: LegacyRegime)
 POST       /subscription/:regime/check-your-answers                       @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CheckYourAnswersController.onSubmit(regime: LegacyRegime)
 
-GET        /subscription/:regime/confirmation                                     @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.ConfirmationController.showConfirmationPage(regime: LegacyRegime)
+GET        /subscription/:regime/confirmation                             @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.ConfirmationController.showConfirmationPage(regime: LegacyRegime)
 
 # AMLS
 GET        /manage-account/money-laundering-supervision/view-details                     @uk.gov.hmrc.agentservicesaccount.controllers.amls.ViewDetailsController.showPage

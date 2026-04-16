@@ -120,8 +120,8 @@ with TestConstants {
       val telephoneKey: String = "Telephone number"
       val businessNameKey: String = "Business name shown to clients"
 
-      val oldAddressValue: String = "25 Any Street Central Grange Telford TF4 3TR GB"
-      val newAddressValue: String = "Test Street Test Town TE5 7ED GB"
+      val oldAddressValue: String = "25 Any Street Central Grange Telford TF4 3TR United Kingdom"
+      val newAddressValue: String = "Test Street Test Town TE5 7ED United Kingdom"
 
       val otherServicesHeading: String = "Update other services"
       val otherServicesApplySAKey: String = "Apply changes to Self Assessment"
