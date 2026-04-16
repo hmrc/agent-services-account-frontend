@@ -29,6 +29,7 @@ import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AddressFormValues
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
+import uk.gov.hmrc.agentservicesaccount.utils.CountryResolver
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.update_address
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
@@ -40,6 +41,7 @@ import scala.concurrent.Future
 class UpdateAddressController @Inject() (
   actions: Actions,
   val sessionCacheService: SessionCacheService,
+  countryResolver: CountryResolver,
   update_address: update_address,
   cc: MessagesControllerComponents
 )(implicit
@@ -56,7 +58,7 @@ with Logging {
     address.addressLine3,
     address.addressLine4,
     address.postalCode,
-    Some(address.countryCode)
+    Some(countryResolver.countryName(address.countryCode))
   ).flatten.map(play.twirl.api.HtmlFormat.escape)
     .map(_.body)
     .mkString(", ")

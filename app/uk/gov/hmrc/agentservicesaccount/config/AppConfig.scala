@@ -19,6 +19,7 @@ package uk.gov.hmrc.agentservicesaccount.config
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import play.api.i18n.Lang
+import play.api.libs.json._
 import play.api.mvc.Call
 import play.api.Configuration
 import play.api.Environment
@@ -206,5 +207,16 @@ extends Logging {
 
   val pillar2StartUrl = s"$pillar2SubmissionFrontendExternalUrl/report-pillar2-top-up-taxes/asa/input-pillar-2-id"
   val pillar2GuidanceUrl = "https://www.gov.uk/guidance/report-pillar-2-top-up-taxes"
+
+  lazy val countryCodeMap: Map[String, String] = {
+    val stream = env.resourceAsStream(servicesConfig.getString("country.list.location"))
+      .getOrElse(throw new RuntimeException("country list not found"))
+
+    val json =
+      try Json.parse(stream)
+      finally stream.close()
+
+    json.as[Map[String, String]]
+  }
 
 }

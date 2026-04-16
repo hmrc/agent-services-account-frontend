@@ -27,43 +27,49 @@ case class SubscriptionCyaData(
   address: BusinessAddress
 ) {
 
-  implicit def toSubscriptionAddress(address: BusinessAddress): SubscriptionAddress = {
+  private def toSubscriptionAddress(
+    address: BusinessAddress,
+    countryName: String
+  ): SubscriptionAddress = {
     val subscriptionAddress = SubscriptionAddress(
       line1 = address.addressLine1,
       line2 = address.addressLine2.getOrElse(""),
       line3 = address.addressLine3,
-      line4 = address.addressLine4,
+      line4 = Option.when(address.countryCode != "GB")(countryName).orElse(address.addressLine4),
       postCode = address.postalCode
     )
     subscriptionAddress
   }
 
-  private val toCtSubscriptionRequest: CtSubscriptionRequest = {
+  private def toCtSubscriptionRequest(countryName: String): CtSubscriptionRequest = {
     CtSubscriptionRequest(
       agentName = businessName,
       contactName = businessName,
       phoneNumber = Some(phoneNumber),
       emailAddress = Some(email),
-      address = address: SubscriptionAddress,
+      address = toSubscriptionAddress(address, countryName),
       countryCode = address.countryCode
     )
   }
 
-  private val toSaSubscriptionRequest: SaSubscriptionRequest = {
+  private def toSaSubscriptionRequest(countryName: String): SaSubscriptionRequest = {
     SaSubscriptionRequest(
       agentName = businessName,
       contactName = businessName,
       phoneNumber = Some(phoneNumber),
       emailAddress = Some(email),
-      address = address: SubscriptionAddress,
+      address = toSubscriptionAddress(address, countryName),
       countryCode = address.countryCode
     )
   }
 
-  def toSubscriptionRequest(legacyRegime: LegacyRegime): SubscriptionRequest = {
+  def toSubscriptionRequest(
+    legacyRegime: LegacyRegime,
+    countryName: String
+  ): SubscriptionRequest = {
     legacyRegime match {
-      case CT => toCtSubscriptionRequest
-      case SA => toSaSubscriptionRequest
+      case CT => toCtSubscriptionRequest(countryName)
+      case SA => toSaSubscriptionRequest(countryName)
     }
   }
 

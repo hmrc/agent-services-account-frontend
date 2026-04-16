@@ -20,7 +20,8 @@ import play.api.test.Helpers._
 import support.ComponentBaseISpec
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.routes
 import stubs.AgentServicesAccountStubs.givenGetAgentRecord
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.{CT, SA}
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
 
 class ConfirmationControllerISpec
 extends ComponentBaseISpec {

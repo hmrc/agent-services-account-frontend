@@ -29,6 +29,7 @@ import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionCyaData
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
+import uk.gov.hmrc.agentservicesaccount.utils.CountryResolver
 import uk.gov.hmrc.agentservicesaccount.views.components.models.SummaryListData
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.check_your_answers
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -43,6 +44,7 @@ class CheckYourAnswersController @Inject() (
   actions: Actions,
   agentServicesAccountConnector: AgentServicesAccountConnector,
   val sessionCacheService: SessionCacheService,
+  countryResolver: CountryResolver,
   checkYourAnswers: check_your_answers,
   cc: MessagesControllerComponents
 )(implicit
@@ -61,7 +63,8 @@ with I18nSupport {
 
   def onSubmit(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
     withSubscriptionCyaData(request.subscriptionJourney) { data =>
-      val requestModel = data.toSubscriptionRequest(legacyRegime)
+      val requestModel = data.toSubscriptionRequest(legacyRegime, countryResolver.countryName(data.address.countryCode))
+
       agentServicesAccountConnector
         .submitLegacySubscriptionRequest(requestModel, legacyRegime)
         .map(_ => Redirect(getNextPage(currentPage = checkYourAnswersPage, legacyRegime = legacyRegime)))
@@ -74,7 +77,7 @@ with I18nSupport {
     address.addressLine3,
     address.addressLine4,
     address.postalCode,
-    Some(address.countryCode)
+    Some(countryResolver.countryName(address.countryCode))
   ).flatten.map(play.twirl.api.HtmlFormat.escape)
     .map(_.body)
     .mkString("<br/>")

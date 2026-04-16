@@ -38,7 +38,8 @@ import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdatePhoneNumberController
 import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.{CT, SA}
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
@@ -151,7 +152,7 @@ with TestConstants {
     }
 
   }
-  
+
   legacyRegimes.foreach(legacyRegime => {
     s"GET /subscription/$legacyRegime/phone-number" should {
 
@@ -204,54 +205,53 @@ with TestConstants {
       journeyWithRedirectLocations.foreach(journeyWithRedirectLocation => {
         s"update journey and redirect to ${journeyWithRedirectLocation._2}" +
           s"when using ASA phone number and journey ${journeyWithRedirectLocation._3}" in new TestSetup(legacyRegime) {
-          private val request = FakeRequest(POST, "/")
-            .withSession(session.toSeq: _*)
-            .withFormUrlEncodedBody(
-              "phoneNumberUseAsaData" -> "true"
-            )
+            private val request = FakeRequest(POST, "/")
+              .withSession(session.toSeq: _*)
+              .withFormUrlEncodedBody(
+                "phoneNumberUseAsaData" -> "true"
+              )
 
-          implicit val implicitRequest: FakeRequest[AnyContentAsFormUrlEncoded] = request
+            implicit val implicitRequest: FakeRequest[AnyContentAsFormUrlEncoded] = request
 
-          cacheJourney(journeyWithRedirectLocation._1)
+            cacheJourney(journeyWithRedirectLocation._1)
 
-          private val result = controller.onSubmit(legacyRegime)(request).futureValue
-          status(result) shouldBe SEE_OTHER
-          redirectLocation(result) shouldBe
-            Some(s"/agent-services-account/subscription/$legacyRegime/${journeyWithRedirectLocation._2}")
+            private val result = controller.onSubmit(legacyRegime)(request).futureValue
+            status(result) shouldBe SEE_OTHER
+            redirectLocation(result) shouldBe
+              Some(s"/agent-services-account/subscription/$legacyRegime/${journeyWithRedirectLocation._2}")
 
-          val updated: Option[SubscriptionJourney] = sessionCache.get[SubscriptionJourney](subscriptionJourneyKey(legacyRegime)).futureValue
-          updated shouldBe defined
-          updated.get.useCustomPhoneNumber shouldBe Some(false)
-          updated.value.phoneNumberAnswer shouldBe None
-        }
+            val updated: Option[SubscriptionJourney] = sessionCache.get[SubscriptionJourney](subscriptionJourneyKey(legacyRegime)).futureValue
+            updated shouldBe defined
+            updated.get.useCustomPhoneNumber shouldBe Some(false)
+            updated.value.phoneNumberAnswer shouldBe None
+          }
 
         s"update journey and redirect to ${journeyWithRedirectLocation._2}" +
           s"when using custom phone number and journey ${journeyWithRedirectLocation._3}" in new TestSetup(legacyRegime) {
-          private val request = FakeRequest(POST, "/")
-            .withSession(session.toSeq: _*)
-            .withFormUrlEncodedBody(
-              "phoneNumberUseAsaData" -> "false",
-              "phoneNumberNew" -> "0987654321"
-            )
+            private val request = FakeRequest(POST, "/")
+              .withSession(session.toSeq: _*)
+              .withFormUrlEncodedBody(
+                "phoneNumberUseAsaData" -> "false",
+                "phoneNumberNew" -> "0987654321"
+              )
 
-          implicit val implicitRequest: FakeRequest[AnyContentAsFormUrlEncoded] = request
+            implicit val implicitRequest: FakeRequest[AnyContentAsFormUrlEncoded] = request
 
-          cacheJourney(journeyWithRedirectLocation._1)
+            cacheJourney(journeyWithRedirectLocation._1)
 
-          private val result = controller.onSubmit(legacyRegime)(request).futureValue
-          status(result) shouldBe SEE_OTHER
-          redirectLocation(result) shouldBe
-            Some(s"/agent-services-account/subscription/$legacyRegime/${journeyWithRedirectLocation._2}")
+            private val result = controller.onSubmit(legacyRegime)(request).futureValue
+            status(result) shouldBe SEE_OTHER
+            redirectLocation(result) shouldBe
+              Some(s"/agent-services-account/subscription/$legacyRegime/${journeyWithRedirectLocation._2}")
 
-          val updated: Option[SubscriptionJourney] = sessionCache.get[SubscriptionJourney](subscriptionJourneyKey(legacyRegime)).futureValue
-          updated.value.useCustomPhoneNumber shouldBe Some(true)
-          updated.value.phoneNumberAnswer shouldBe Some("0987654321")
-        }
+            val updated: Option[SubscriptionJourney] = sessionCache.get[SubscriptionJourney](subscriptionJourneyKey(legacyRegime)).futureValue
+            updated.value.useCustomPhoneNumber shouldBe Some(true)
+            updated.value.phoneNumberAnswer shouldBe Some("0987654321")
+          }
       })
 
     }
 
   })
-
 
 }

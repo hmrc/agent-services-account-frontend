@@ -40,7 +40,8 @@ import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdateBusiness
 import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.{CT, SA}
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.authorise.Predicate
@@ -60,7 +61,7 @@ with ScalaFutures
 with IntegrationPatience
 with MockFactory
 with TestConstants {
-  
+
   private val legacyRegimes = List(CT, SA)
 
   class TestSetup(legacyRegime: LegacyRegime) {
@@ -151,7 +152,7 @@ with TestConstants {
     }
 
   }
-  
+
   legacyRegimes.foreach(legacyRegime => {
     s"GET /subscription/$legacyRegime/business-name" should {
 
@@ -204,54 +205,53 @@ with TestConstants {
       journeyWithRedirectLocations.foreach(journeyWithRedirectLocation => {
         s"update journey and redirect to ${journeyWithRedirectLocation._2}" +
           s"when using ASA business name and journey ${journeyWithRedirectLocation._3}" in new TestSetup(legacyRegime) {
-          private val request = FakeRequest(POST, "/")
-            .withSession(session.toSeq: _*)
-            .withFormUrlEncodedBody(
-              "businessNameUseAsaData" -> "true"
-            )
+            private val request = FakeRequest(POST, "/")
+              .withSession(session.toSeq: _*)
+              .withFormUrlEncodedBody(
+                "businessNameUseAsaData" -> "true"
+              )
 
-          implicit val implicitRequest: FakeRequest[AnyContentAsFormUrlEncoded] = request
+            implicit val implicitRequest: FakeRequest[AnyContentAsFormUrlEncoded] = request
 
-          cacheJourney(journeyWithRedirectLocation._1)
+            cacheJourney(journeyWithRedirectLocation._1)
 
-          private val result = controller.onSubmit(legacyRegime)(request).futureValue
-          status(result) shouldBe SEE_OTHER
-          redirectLocation(result) shouldBe
-            Some(s"/agent-services-account/subscription/$legacyRegime/${journeyWithRedirectLocation._2}")
+            private val result = controller.onSubmit(legacyRegime)(request).futureValue
+            status(result) shouldBe SEE_OTHER
+            redirectLocation(result) shouldBe
+              Some(s"/agent-services-account/subscription/$legacyRegime/${journeyWithRedirectLocation._2}")
 
-          val updated: Option[SubscriptionJourney] = sessionCache.get[SubscriptionJourney](subscriptionJourneyKey(legacyRegime)).futureValue
-          updated shouldBe defined
-          updated.get.useCustomBusinessName shouldBe Some(false)
-          updated.value.businessNameAnswer shouldBe None
-        }
+            val updated: Option[SubscriptionJourney] = sessionCache.get[SubscriptionJourney](subscriptionJourneyKey(legacyRegime)).futureValue
+            updated shouldBe defined
+            updated.get.useCustomBusinessName shouldBe Some(false)
+            updated.value.businessNameAnswer shouldBe None
+          }
 
         s"update journey and redirect to ${journeyWithRedirectLocation._2}" +
           s"when using custom business name and journey ${journeyWithRedirectLocation._3}" in new TestSetup(legacyRegime) {
-          private val request = FakeRequest(POST, "/")
-            .withSession(session.toSeq: _*)
-            .withFormUrlEncodedBody(
-              "businessNameUseAsaData" -> "false",
-              "businessNameNew" -> "My Custom Ltd"
-            )
+            private val request = FakeRequest(POST, "/")
+              .withSession(session.toSeq: _*)
+              .withFormUrlEncodedBody(
+                "businessNameUseAsaData" -> "false",
+                "businessNameNew" -> "My Custom Ltd"
+              )
 
-          implicit val implicitRequest: FakeRequest[AnyContentAsFormUrlEncoded] = request
+            implicit val implicitRequest: FakeRequest[AnyContentAsFormUrlEncoded] = request
 
-          cacheJourney(journeyWithRedirectLocation._1)
+            cacheJourney(journeyWithRedirectLocation._1)
 
-          private val result = controller.onSubmit(legacyRegime)(request).futureValue
-          status(result) shouldBe SEE_OTHER
-          redirectLocation(result) shouldBe
-            Some(s"/agent-services-account/subscription/$legacyRegime/${journeyWithRedirectLocation._2}")
+            private val result = controller.onSubmit(legacyRegime)(request).futureValue
+            status(result) shouldBe SEE_OTHER
+            redirectLocation(result) shouldBe
+              Some(s"/agent-services-account/subscription/$legacyRegime/${journeyWithRedirectLocation._2}")
 
-          val updated: Option[SubscriptionJourney] = sessionCache.get[SubscriptionJourney](subscriptionJourneyKey(legacyRegime)).futureValue
-          updated shouldBe defined
-          updated.value.useCustomBusinessName shouldBe Some(true)
-          updated.value.businessNameAnswer shouldBe Some("My Custom Ltd")
-        }
+            val updated: Option[SubscriptionJourney] = sessionCache.get[SubscriptionJourney](subscriptionJourneyKey(legacyRegime)).futureValue
+            updated shouldBe defined
+            updated.value.useCustomBusinessName shouldBe Some(true)
+            updated.value.businessNameAnswer shouldBe Some("My Custom Ltd")
+          }
       })
     }
 
   })
-
 
 }

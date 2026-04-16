@@ -22,7 +22,6 @@ import stubs.AgentServicesAccountStubs.stubASAGetResponseError
 import support.ComponentBaseISpec
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
@@ -66,26 +65,26 @@ extends ComponentBaseISpec {
       journeyWithRedirectLocations.foreach(journeyWithRedirectLocation => {
         s"update journey and redirect to ${journeyWithRedirectLocation._2}" +
           s"when using ASA address and journey ${journeyWithRedirectLocation._3}" in {
-          givenAuthorisedAsAgentWith(arn.value)
-          givenGetAgentRecord(agentRecord)
-          stubASAGetResponseError(arn, NOT_FOUND)
+            givenAuthorisedAsAgentWith(arn.value)
+            givenGetAgentRecord(agentRecord)
+            stubASAGetResponseError(arn, NOT_FOUND)
 
-          repo.putSession(subscriptionJourneyKey(legacyRegime), journeyWithRedirectLocation._1).futureValue
+            repo.putSession(subscriptionJourneyKey(legacyRegime), journeyWithRedirectLocation._1).futureValue
 
-          val result =
-            post(updateAddressPath)(body =
-              Map(
-                "addressUseAsaData" -> Seq("true")
+            val result =
+              post(updateAddressPath)(body =
+                Map(
+                  "addressUseAsaData" -> Seq("true")
+                )
               )
-            )
-          result.status shouldBe SEE_OTHER
-          result.header(LOCATION) shouldBe Some(s"$subscriptionStartPath/$legacyRegime/${journeyWithRedirectLocation._2}")
+            result.status shouldBe SEE_OTHER
+            result.header(LOCATION) shouldBe Some(s"$subscriptionStartPath/$legacyRegime/${journeyWithRedirectLocation._2}")
 
-          val updated = await(repo.getFromSession(subscriptionJourneyKey(legacyRegime)))
-          updated shouldBe defined
-          updated.get.useCustomAddress shouldBe Some(false)
-          updated.value.addressAnswer shouldBe None
-        }
+            val updated = await(repo.getFromSession(subscriptionJourneyKey(legacyRegime)))
+            updated shouldBe defined
+            updated.get.useCustomAddress shouldBe Some(false)
+            updated.value.addressAnswer shouldBe None
+          }
       })
 
       "(if not using ASA address) redirect to the ALF external journey" in {
@@ -111,6 +110,5 @@ extends ComponentBaseISpec {
       }
     }
   })
-
 
 }
