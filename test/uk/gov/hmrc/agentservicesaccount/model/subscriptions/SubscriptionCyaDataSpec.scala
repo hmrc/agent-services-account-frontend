@@ -54,7 +54,6 @@ with Matchers {
       val result = cya.toSubscriptionRequest(legacyRegime, "Portugal")
 
       result.address.line4 shouldBe Some("Line 4")
-//      result.countryCode shouldBe "GB"
     }
 
     "use countryName when country is not GB" in {
@@ -68,7 +67,6 @@ with Matchers {
       val result = cya.toSubscriptionRequest(legacyRegime, "Portugal")
 
       result.address.line4 shouldBe Some("Portugal")
-//      result.countryCode shouldBe "PT"
     }
 
     "fallback to existing addressLine4 if non-GB and countryName is empty string" in {
