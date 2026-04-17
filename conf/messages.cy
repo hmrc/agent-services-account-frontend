@@ -178,12 +178,12 @@ asa.legacy.paye.link=Cais am danysgrifiad TWE
 asa.legacy.ct.h2=Corporation Tax
 asa.legacy.ct.h3=Test Content
 asa.legacy.ct.p1=Status: {0}
-asa.legacy.ct.not-subscribed.h4.before-start=Before you start
-asa.legacy.ct.not-subscribed.link1.href=https://www.gov.uk/guidance/how-to-enrol-a-tax-service-onto-your-hmrc-online-services-account
-asa.legacy.ct.not-subscribed.p1=If you have already enrolled for Corporation Tax, you can continue managing your clients by <a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">signing into your HMRC online services for agents account.</a>
-asa.legacy.ct.not-subscribed.p2=This will sign you out of your agent services account.
-asa.legacy.ct.not-subscribed.h4.enrol-for-ct=If you want to enrol for Corporation Tax
-asa.legacy.ct.not-subscribed.p1=You can <a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">use your agent services account to enrol</a> and manage your clients.
+asa.legacy.ct.not-subscribed.before-start.h4=Before you start
+asa.legacy.ct.not-subscribed.before-start.p1=If you have already enrolled for Corporation Tax, you can continue managing your clients by <a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">signing into your HMRC online services for agents account.</a>
+asa.legacy.ct.not-subscribed.before-start.link1.href=https://www.gov.uk/guidance/how-to-enrol-a-tax-service-onto-your-hmrc-online-services-account
+asa.legacy.ct.not-subscribed.before-start.p2=This will sign you out of your agent services account.
+asa.legacy.ct.not-subscribed.enrol-for.h4=If you want to enrol for Corporation Tax
+asa.legacy.ct.not-subscribed.enrol-for.p1=You can <a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">use your agent services account to enrol</a> and manage your clients.
 asa.legacy.ct.in-progress.p1=We are still processing the enrolment you did on {0}.
 asa.legacy.ct.in-progress.p2=Processing can take up to 5 days.
 asa.legacy.ct.subscribed.p1=Your agent code is: {0}
@@ -249,12 +249,20 @@ asa.legacy.ct.return-home=Return to your agent services account homepage
 asa.legacy.sa.h2=Self Assessment
 asa.legacy.sa.h3=Test Content
 asa.legacy.sa.p1=Status: {0}
-asa.legacy.sa.col1.h3=Before you start
-asa.legacy.sa.col1.link1.href=https://www.gov.uk/guidance/how-to-enrol-a-tax-service-onto-your-hmrc-online-services-account
-asa.legacy.sa.col1.p1=If you have already enrolled for Self Assessment, you can continue managing your clients by <a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">signing into your HMRC online services for agents account.</a>
-asa.legacy.sa.col1.p2=This will sign you out of your agent services account.
-asa.legacy.sa.col2.h3=If you want to enrol for Self Assessment
-asa.legacy.sa.col2.p1=You can <a class="govuk-link" href="{0}" rel="noreferrer noopener">use your agent services account to enrol</a> and manage your clients.
+
+asa.legacy.sa.not-subscribed.before-start.h4=Before you start
+asa.legacy.sa.not-subscribed.before-start.p1=If you have already enrolled for Self Assessment, you can continue managing your clients by <a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">signing into your HMRC online services for agents account.</a>
+asa.legacy.sa.not-subscribed.before-start.link1.href=https://www.gov.uk/guidance/how-to-enrol-a-tax-service-onto-your-hmrc-online-services-account
+asa.legacy.sa.not-subscribed.before-start.p2=This will sign you out of your agent services account.
+asa.legacy.sa.not-subscribed.enrol-for.h4=If you want to enrol for Self Assessment
+asa.legacy.sa.not-subscribed.enrol-for.p1=You can <a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">use your agent services account to enrol</a> and manage your clients.
+asa.legacy.sa.in-progress.p1=We are still processing the enrolment you did on {0}.
+asa.legacy.sa.in-progress.p2=Processing can take up to 5 days.
+asa.legacy.sa.subscribed.p1=Your agent code is: {0}
+asa.legacy.sa.subscribed.p2=Get permission from new clients
+asa.legacy.sa.subscribed.p3=<a class="govuk-link" href="{0}" rel="noreferrer noopener">Ask a client to authorise you</a>
+asa.legacy.sa.subscribed.p4=Manage your client’s Self Assessment
+asa.legacy.sa.subscribed.p5=<a class="govuk-link" href="{0}" rel="noreferrer noopener">View and manage your client list for Self Assessment</a>
 
 asa.legacy.sa.business-name.title=What business name should we show to your Self Assessment clients?
 asa.legacy.sa.business-name.use-asa.false=I want to use a different business name for Self Assessment

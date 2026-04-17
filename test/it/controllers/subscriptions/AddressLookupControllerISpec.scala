@@ -27,6 +27,7 @@ import uk.gov.hmrc.agentservicesaccount.models.addresslookup.ConfirmedResponseAd
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup.ConfirmedResponseAddressDetails
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup.Country
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
 
 class AddressLookupControllerISpec
@@ -34,10 +35,7 @@ extends ComponentBaseISpec {
 
   private val repo = inject[SessionCacheRepository]
 
-  private val legacyRegime = CT
-
-  private val startAddressLookupPath = s"$subscriptionStartPath/$legacyRegime/address-lookup-start"
-  private val finishAddressLookupPath = s"$subscriptionStartPath/$legacyRegime/address-lookup-finish"
+  private val legacyRegimes = List(CT, SA)
 
   private val confirmedAddressResponse = ConfirmedResponseAddress(
     auditRef = "foo",
@@ -62,61 +60,66 @@ extends ComponentBaseISpec {
     countryCode = "GB"
   )
 
-  s"GET $startAddressLookupPath" should {
-    "redirect to the external service to look up an address" in {
+  legacyRegimes.foreach(legacyRegime => {
+    val startAddressLookupPath = s"$subscriptionStartPath/$legacyRegime/address-lookup-start"
+    val finishAddressLookupPath = s"$subscriptionStartPath/$legacyRegime/address-lookup-finish"
 
-      givenAuthorisedAsAgentWith(arn.value)
-      givenGetAgentRecord(agentRecord)
-      givenInitSuccess()
-      stubASAGetResponseError(arn, NOT_FOUND)
+    s"GET $startAddressLookupPath" should {
+      "redirect to the external service to look up an address" in {
 
-      val result = get(startAddressLookupPath)
+        givenAuthorisedAsAgentWith(arn.value)
+        givenGetAgentRecord(agentRecord)
+        givenInitSuccess()
+        stubASAGetResponseError(arn, NOT_FOUND)
 
-      result.status shouldBe SEE_OTHER
+        val result = get(startAddressLookupPath)
 
-      result.header("Location").get shouldBe "/alf-start"
+        result.status shouldBe SEE_OTHER
+
+        result.header("Location").get shouldBe "/alf-start"
+      }
     }
-  }
 
-  s"GET $finishAddressLookupPath" should {
+    s"GET $finishAddressLookupPath" should {
 
-    val journeyWithRedirectLocations = List(
-      (ctSubscriptionBaseJourney, "check-your-answers", "not complete"),
-      (ctSubscriptionFullJourney, "check-your-answers", "complete")
-    )
+      val journeyWithRedirectLocations = List(
+        (ctSubscriptionBaseJourney, "check-your-answers", "not complete"),
+        (ctSubscriptionFullJourney, "check-your-answers", "complete")
+      )
 
-    journeyWithRedirectLocations.foreach(journeyWithRedirectLocation => {
-      s"update journey with new address and redirect to ${journeyWithRedirectLocation._2}" +
-        s"when journey ${journeyWithRedirectLocation._3}" in {
+      journeyWithRedirectLocations.foreach(journeyWithRedirectLocation => {
+        s"update journey with new address and redirect to ${journeyWithRedirectLocation._2}" +
+          s"when journey ${journeyWithRedirectLocation._3}" in {
 
-          givenAuthorisedAsAgentWith(arn.value)
-          givenGetAgentRecord(agentRecord)
-          stubASAGetResponseError(arn, NOT_FOUND)
-          givenGetAddressSuccess("bar", confirmedAddressResponse)
+            givenAuthorisedAsAgentWith(arn.value)
+            givenGetAgentRecord(agentRecord)
+            stubASAGetResponseError(arn, NOT_FOUND)
+            givenGetAddressSuccess("bar", confirmedAddressResponse)
 
-          await(repo.putSession(subscriptionJourneyKey(legacyRegime), journeyWithRedirectLocation._1))
+            await(repo.putSession(subscriptionJourneyKey(legacyRegime), journeyWithRedirectLocation._1))
 
-          val result = get(s"$finishAddressLookupPath?id=bar")
-          result.status shouldBe SEE_OTHER
-          result.header(LOCATION) shouldBe Some(s"$subscriptionStartPath/$legacyRegime/${journeyWithRedirectLocation._2}")
+            val result = get(s"$finishAddressLookupPath?id=bar")
+            result.status shouldBe SEE_OTHER
+            result.header(LOCATION) shouldBe Some(s"$subscriptionStartPath/$legacyRegime/${journeyWithRedirectLocation._2}")
 
-          val updatedJourney = await(repo.getFromSession(subscriptionJourneyKey(legacyRegime)))
-          updatedJourney shouldBe defined
-          updatedJourney.get.useCustomAddress shouldBe Some(true)
-          updatedJourney.get.addressAnswer shouldBe Some(address)
-        }
-    })
+            val updatedJourney = await(repo.getFromSession(subscriptionJourneyKey(legacyRegime)))
+            updatedJourney shouldBe defined
+            updatedJourney.get.useCustomAddress shouldBe Some(true)
+            updatedJourney.get.addressAnswer shouldBe Some(address)
+          }
+      })
 
-    "return bad request when no id provided in a query param" in {
+      "return bad request when no id provided in a query param" in {
 
-      givenAuthorisedAsAgentWith(arn.value)
-      givenGetAgentRecord(agentRecord)
-      stubASAGetResponseError(arn, NOT_FOUND)
+        givenAuthorisedAsAgentWith(arn.value)
+        givenGetAgentRecord(agentRecord)
+        stubASAGetResponseError(arn, NOT_FOUND)
 
-      val result = get(s"$finishAddressLookupPath")
+        val result = get(s"$finishAddressLookupPath")
 
-      result.status shouldBe BAD_REQUEST
+        result.status shouldBe BAD_REQUEST
+      }
     }
-  }
+  })
 
 }

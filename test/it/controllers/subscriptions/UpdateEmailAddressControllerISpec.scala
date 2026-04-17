@@ -26,99 +26,110 @@ import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.emailPendingVerificationKey
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.CompletedEmail
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.VerificationStatusResponse
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
 
 class UpdateEmailAddressControllerISpec
 extends ComponentBaseISpec {
 
-  private val legacyRegime = CT
   private val repo = inject[SessionCacheRepository]
 
-  private val updateEmailAddressPath = s"$subscriptionStartPath/$legacyRegime/email-address"
+  private val legacyRegimes = List(CT, SA)
 
-  s"GET $updateEmailAddressPath" should {
-    "display the enter email address page" in {
+  legacyRegimes.foreach(legacyRegime => {
+    val updateEmailAddressPath = s"$subscriptionStartPath/$legacyRegime/email-address"
 
-      givenAuthorisedAsAgentWith(arn.value)
-      givenGetAgentRecord(agentRecord)
-      stubASAGetResponseError(arn, NOT_FOUND)
+    s"GET $updateEmailAddressPath" should {
+      "display the enter email address page" in {
 
-      val result = get(updateEmailAddressPath)
+        givenAuthorisedAsAgentWith(arn.value)
+        givenGetAgentRecord(agentRecord)
+        stubASAGetResponseError(arn, NOT_FOUND)
 
-      result.status shouldBe OK
-      assertPageHasTitle("What email address should we use to contact you about Corporation Tax?")(result)
+        val result = get(updateEmailAddressPath)
+
+        result.status shouldBe OK
+        val expectedTitle: String =
+          (legacyRegime: LegacyRegime) match {
+            case CT => "What email address should we use to contact you about Corporation Tax?"
+            case SA => "What email address should we use to contact you about Self Assessment?"
+          }
+        assertPageHasTitle(expectedTitle)(result)
+      }
     }
-  }
 
-  s"POST $updateEmailAddressPath" should {
+    s"POST $updateEmailAddressPath" should {
 
-    val journeyWithRedirectLocations = List(
-      (ctSubscriptionBaseJourney, "address", "not complete"),
-      (ctSubscriptionFullJourney, "check-your-answers", "complete")
-    )
+      val journeyWithRedirectLocations = List(
+        (ctSubscriptionBaseJourney, "address", "not complete"),
+        (ctSubscriptionFullJourney, "check-your-answers", "complete")
+      )
 
-    journeyWithRedirectLocations.foreach(journeyWithRedirectLocation => {
-      s"update journey and redirect to ${journeyWithRedirectLocation._2}" +
-        s"when using ASA email address and journey ${journeyWithRedirectLocation._3}" in {
-          givenAuthorisedAsAgentWith(arn.value)
-          givenGetAgentRecord(agentRecord)
-          stubASAGetResponseError(arn, NOT_FOUND)
+      journeyWithRedirectLocations.foreach(journeyWithRedirectLocation => {
+        s"update journey and redirect to ${journeyWithRedirectLocation._2}" +
+          s"when using ASA email address and journey ${journeyWithRedirectLocation._3}" in {
+            givenAuthorisedAsAgentWith(arn.value)
+            givenGetAgentRecord(agentRecord)
+            stubASAGetResponseError(arn, NOT_FOUND)
 
-          repo.putSession(subscriptionJourneyKey(legacyRegime), journeyWithRedirectLocation._1).futureValue
+            repo.putSession(subscriptionJourneyKey(legacyRegime), journeyWithRedirectLocation._1).futureValue
 
-          val result =
-            post(updateEmailAddressPath)(body =
-              Map(
-                "emailAddressUseAsaData" -> Seq("true")
+            val result =
+              post(updateEmailAddressPath)(body =
+                Map(
+                  "emailAddressUseAsaData" -> Seq("true")
+                )
               )
-            )
-          result.status shouldBe SEE_OTHER
-          result.header(LOCATION) shouldBe Some(s"$subscriptionStartPath/$legacyRegime/${journeyWithRedirectLocation._2}")
+            result.status shouldBe SEE_OTHER
+            result.header(LOCATION) shouldBe Some(s"$subscriptionStartPath/$legacyRegime/${journeyWithRedirectLocation._2}")
 
-          val updated = await(repo.getFromSession(subscriptionJourneyKey(legacyRegime)))
-          updated shouldBe defined
-          updated.get.useCustomEmail shouldBe Some(false)
-          updated.value.emailAnswer shouldBe None
-        }
+            val updated = await(repo.getFromSession(subscriptionJourneyKey(legacyRegime)))
+            updated shouldBe defined
+            updated.get.useCustomEmail shouldBe Some(false)
+            updated.value.emailAnswer shouldBe None
+          }
 
-    })
+      })
 
-    "(if the email is unverified) redirect to the verify-email external journey" in {
+      "(if the email is unverified) redirect to the verify-email external journey" in {
 
-      givenFullAuthorisedAsAgentWith(
-        arn = arn.value,
-        providerId = "cred-id",
-        email = "abc@abc.com"
-      )
-      givenGetAgentRecord(agentRecord)
-      stubASAGetResponseError(arn, NOT_FOUND)
-      givenCheckEmailSuccess(
-        "cred-id",
-        VerificationStatusResponse(emails =
-          List(CompletedEmail(
-            "abc@abc.com",
-            verified = true,
-            locked = false
-          ))
+        givenFullAuthorisedAsAgentWith(
+          arn = arn.value,
+          providerId = "cred-id",
+          email = "abc@abc.com"
         )
-      )
-      givenVerifyEmailSuccess("/continue-url")
-
-      await(repo.putSession(emailPendingVerificationKey, "new@abc.com"))
-
-      val result =
-        post(updateEmailAddressPath)(body =
-          Map(
-            "emailAddressUseAsaData" -> Seq("false"),
-            "emailAddressNew" -> Seq("jane@bloggs.com")
+        givenGetAgentRecord(agentRecord)
+        stubASAGetResponseError(arn, NOT_FOUND)
+        givenCheckEmailSuccess(
+          "cred-id",
+          VerificationStatusResponse(emails =
+            List(CompletedEmail(
+              "abc@abc.com",
+              verified = true,
+              locked = false
+            ))
           )
         )
+        givenVerifyEmailSuccess("/continue-url")
 
-      result.status shouldBe SEE_OTHER
+        await(repo.putSession(emailPendingVerificationKey, "new@abc.com"))
 
-      result.header("Location").get shouldBe "http://localhost:9890/continue-url"
+        val result =
+          post(updateEmailAddressPath)(body =
+            Map(
+              "emailAddressUseAsaData" -> Seq("false"),
+              "emailAddressNew" -> Seq("jane@bloggs.com")
+            )
+          )
+
+        result.status shouldBe SEE_OTHER
+
+        result.header("Location").get shouldBe "http://localhost:9890/continue-url"
+      }
     }
-  }
+
+  })
 
 }

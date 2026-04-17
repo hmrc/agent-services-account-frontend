@@ -18,14 +18,16 @@ package uk.gov.hmrc.agentservicesaccount.model.subscriptions
 
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
-import play.api.libs.json._
 import uk.gov.hmrc.agentservicesaccount.models._
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionCyaData
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
 
 class SubscriptionCyaDataSpec
 extends AnyWordSpec
 with Matchers {
+
+  private val legacyRegime = SA
 
   private def businessAddress(
     countryCode: String,
@@ -43,41 +45,39 @@ with Matchers {
 
     "use addressLine4 when country is GB" in {
       val cya = SubscriptionCyaData(
-        agencyName = "Test Name",
-        agencyEmail = "test@test.com",
-        agencyTelephone = "123456",
-        agencyAddress = businessAddress("GB", Some("Line 4"))
+        businessName = "Test Name",
+        phoneNumber = "123456",
+        email = "test@test.com",
+        address = businessAddress("GB", Some("Line 4"))
       )
 
-      val result = cya.toSubscriptionRequest("Portugal")
+      val result = cya.toSubscriptionRequest(legacyRegime, "Portugal")
 
       result.address.line4 shouldBe Some("Line 4")
-      result.countryCode shouldBe "GB"
     }
 
     "use countryName when country is not GB" in {
       val cya = SubscriptionCyaData(
-        agencyName = "Test Name",
-        agencyEmail = "test@test.com",
-        agencyTelephone = "123456",
-        agencyAddress = businessAddress("PT", Some("Line 4"))
+        businessName = "Test Name",
+        phoneNumber = "123456",
+        email = "test@test.com",
+        address = businessAddress("PT", Some("Line 4"))
       )
 
-      val result = cya.toSubscriptionRequest("Portugal")
+      val result = cya.toSubscriptionRequest(legacyRegime, "Portugal")
 
       result.address.line4 shouldBe Some("Portugal")
-      result.countryCode shouldBe "PT"
     }
 
     "fallback to existing addressLine4 if non-GB and countryName is empty string" in {
       val cya = SubscriptionCyaData(
-        agencyName = "Test Name",
-        agencyEmail = "test@test.com",
-        agencyTelephone = "123456",
-        agencyAddress = businessAddress("PT", Some("Line 4"))
+        businessName = "Test Name",
+        phoneNumber = "123456",
+        email = "test@test.com",
+        address = businessAddress("PT", Some("Line 4"))
       )
 
-      val result = cya.toSubscriptionRequest("")
+      val result = cya.toSubscriptionRequest(legacyRegime, "")
 
       result.address.line4 shouldBe Some("")
     }
@@ -94,12 +94,12 @@ with Matchers {
 
       val cya = SubscriptionCyaData(
         "Test Name",
-        "test@test.com",
         "123456",
+        "test@test.com",
         address
       )
 
-      val result = cya.toSubscriptionRequest("Portugal")
+      val result = cya.toSubscriptionRequest(legacyRegime, "Portugal")
 
       result.address.line2 shouldBe ""
     }
@@ -132,8 +132,8 @@ with Matchers {
       result shouldBe Some(
         SubscriptionCyaData(
           "Custom Name",
-          "custom@test.com",
           "123456",
+          "custom@test.com",
           address
         )
       )
@@ -164,8 +164,8 @@ with Matchers {
       result shouldBe Some(
         SubscriptionCyaData(
           "ASA Name",
-          "asa@test.com",
           "999999",
+          "asa@test.com",
           address
         )
       )

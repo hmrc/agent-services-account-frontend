@@ -22,83 +22,94 @@ import stubs.AgentServicesAccountStubs.stubASAGetResponseError
 import support.ComponentBaseISpec
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
 
 class UpdateAddressControllerISpec
 extends ComponentBaseISpec {
 
-  private val legacyRegime = CT
   private val repo = inject[SessionCacheRepository]
-  private val updateAddressPath = s"$subscriptionStartPath/$legacyRegime/address"
 
-  s"GET $updateAddressPath" should {
-    "display the enter address page" in {
+  private val legacyRegimes = List(CT, SA)
 
-      givenAuthorisedAsAgentWith(arn.value)
-      givenGetAgentRecord(agentRecord)
-      stubASAGetResponseError(arn, NOT_FOUND)
+  legacyRegimes.foreach(legacyRegime => {
+    val updateAddressPath = s"$subscriptionStartPath/$legacyRegime/address"
 
-      val result = get(updateAddressPath)
+    s"GET $updateAddressPath" should {
+      "display the enter address page" in {
 
-      result.status shouldBe OK
-      assertPageHasTitle("What address should we use to send letters about Corporation Tax?")(result)
+        givenAuthorisedAsAgentWith(arn.value)
+        givenGetAgentRecord(agentRecord)
+        stubASAGetResponseError(arn, NOT_FOUND)
+
+        val result = get(updateAddressPath)
+
+        result.status shouldBe OK
+        val expectedTitle: String =
+          (legacyRegime: LegacyRegime) match {
+            case CT => "What address should we use to send letters about Corporation Tax?"
+            case SA => "What address should we use to send letters about Self Assessment?"
+          }
+        assertPageHasTitle(expectedTitle)(result)
+      }
     }
-  }
 
-  s"POST $updateAddressPath" should {
+    s"POST $updateAddressPath" should {
 
-    val journeyWithRedirectLocations = List(
-      (ctSubscriptionBaseJourney, "check-your-answers", "not complete"),
-      (ctSubscriptionFullJourney, "check-your-answers", "complete")
-    )
-
-    journeyWithRedirectLocations.foreach(journeyWithRedirectLocation => {
-      s"update journey and redirect to ${journeyWithRedirectLocation._2}" +
-        s"when using ASA address and journey ${journeyWithRedirectLocation._3}" in {
-          givenAuthorisedAsAgentWith(arn.value)
-          givenGetAgentRecord(agentRecord)
-          stubASAGetResponseError(arn, NOT_FOUND)
-
-          repo.putSession(subscriptionJourneyKey(legacyRegime), journeyWithRedirectLocation._1).futureValue
-
-          val result =
-            post(updateAddressPath)(body =
-              Map(
-                "addressUseAsaData" -> Seq("true")
-              )
-            )
-          result.status shouldBe SEE_OTHER
-          result.header(LOCATION) shouldBe Some(s"$subscriptionStartPath/$legacyRegime/${journeyWithRedirectLocation._2}")
-
-          val updated = await(repo.getFromSession(subscriptionJourneyKey(legacyRegime)))
-          updated shouldBe defined
-          updated.get.useCustomAddress shouldBe Some(false)
-          updated.value.addressAnswer shouldBe None
-        }
-    })
-
-    "(if not using ASA address) redirect to the ALF external journey" in {
-
-      givenFullAuthorisedAsAgentWith(
-        arn = arn.value,
-        providerId = "cred-id",
-        email = "abc@abc.com"
+      val journeyWithRedirectLocations = List(
+        (ctSubscriptionBaseJourney, "check-your-answers", "not complete"),
+        (ctSubscriptionFullJourney, "check-your-answers", "complete")
       )
-      givenGetAgentRecord(agentRecord)
-      stubASAGetResponseError(arn, NOT_FOUND)
 
-      val result =
-        post(updateAddressPath)(body =
-          Map(
-            "addressUseAsaData" -> Seq("false")
-          )
+      journeyWithRedirectLocations.foreach(journeyWithRedirectLocation => {
+        s"update journey and redirect to ${journeyWithRedirectLocation._2}" +
+          s"when using ASA address and journey ${journeyWithRedirectLocation._3}" in {
+            givenAuthorisedAsAgentWith(arn.value)
+            givenGetAgentRecord(agentRecord)
+            stubASAGetResponseError(arn, NOT_FOUND)
+
+            repo.putSession(subscriptionJourneyKey(legacyRegime), journeyWithRedirectLocation._1).futureValue
+
+            val result =
+              post(updateAddressPath)(body =
+                Map(
+                  "addressUseAsaData" -> Seq("true")
+                )
+              )
+            result.status shouldBe SEE_OTHER
+            result.header(LOCATION) shouldBe Some(s"$subscriptionStartPath/$legacyRegime/${journeyWithRedirectLocation._2}")
+
+            val updated = await(repo.getFromSession(subscriptionJourneyKey(legacyRegime)))
+            updated shouldBe defined
+            updated.get.useCustomAddress shouldBe Some(false)
+            updated.value.addressAnswer shouldBe None
+          }
+      })
+
+      "(if not using ASA address) redirect to the ALF external journey" in {
+
+        givenFullAuthorisedAsAgentWith(
+          arn = arn.value,
+          providerId = "cred-id",
+          email = "abc@abc.com"
         )
+        givenGetAgentRecord(agentRecord)
+        stubASAGetResponseError(arn, NOT_FOUND)
 
-      result.status shouldBe SEE_OTHER
+        val result =
+          post(updateAddressPath)(body =
+            Map(
+              "addressUseAsaData" -> Seq("false")
+            )
+          )
 
-      result.header("Location").get shouldBe s"${subscriptions.routes.AddressLookupController.startAddressLookup(legacyRegime)}"
+        result.status shouldBe SEE_OTHER
+
+        result.header("Location").get shouldBe s"${subscriptions.routes.AddressLookupController.startAddressLookup(legacyRegime)}"
+      }
     }
-  }
+  })
 
 }

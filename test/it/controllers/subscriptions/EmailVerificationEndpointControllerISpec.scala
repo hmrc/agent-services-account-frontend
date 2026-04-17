@@ -27,79 +27,84 @@ import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.CompletedEmail
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.VerificationStatusResponse
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
 
 class EmailVerificationEndpointControllerISpec
 extends ComponentBaseISpec {
 
-  private val legacyRegime = CT
-  private val finishEmailVerificationPath = s"$subscriptionStartPath/$legacyRegime/email-verification-finish"
   private val repo = inject[SessionCacheRepository]
 
-  s"GET $finishEmailVerificationPath" should {
-    "store the new email address in session and redirect to the continue url" in {
+  private val legacyRegimes = List(CT, SA)
 
-      givenFullAuthorisedAsAgentWith(
-        arn.value,
-        "cred-id",
-        isAdmin = true
-      )
-      givenGetAgentRecord(agentRecord)
-      stubASAGetResponseError(arn, NOT_FOUND)
-      givenCheckEmailSuccess(credId = "cred-id", verificationStatusResponse = VerificationStatusResponse(emails = List.empty[CompletedEmail]))
-      givenVerifyEmailSuccess(redirectUri = "/continue-url")
+  legacyRegimes.foreach(legacyRegime => {
+    val finishEmailVerificationPath = s"$subscriptionStartPath/$legacyRegime/email-verification-finish"
 
-      await(repo.putSession(emailPendingVerificationKey, "new@email.com"))
+    s"GET $finishEmailVerificationPath" should {
+      "store the new email address in session and redirect to the continue url" in {
 
-      val result = get(finishEmailVerificationPath)
-
-      result.status shouldBe SEE_OTHER
-
-      result.header("Location").get shouldBe "http://localhost:9890/continue-url"
-    }
-
-    "return Internal Server Error if authProviderId is not available" in {
-
-      givenAuthorisedAsAgentWith(arn.value)
-      givenGetAgentRecord(agentRecord)
-      stubASAGetResponseError(arn, NOT_FOUND)
-
-      await(repo.putSession(emailPendingVerificationKey, "email@emaul.com"))
-
-      val result = get(finishEmailVerificationPath)
-
-      result.status shouldBe INTERNAL_SERVER_ERROR
-    }
-
-    "redirect to CT update address page if email is already verified" in {
-
-      givenFullAuthorisedAsAgentWith(
-        arn.value,
-        "cred-id",
-        isAdmin = true,
-        email = "abc@abc.com"
-      )
-      givenGetAgentRecord(agentRecord)
-      stubASAGetResponseError(arn, NOT_FOUND)
-      givenCheckEmailSuccess(
-        credId = "cred-id",
-        verificationStatusResponse = VerificationStatusResponse(
-          emails = List(CompletedEmail(
-            "new@abc.com",
-            verified = true,
-            locked = false
-          ))
+        givenFullAuthorisedAsAgentWith(
+          arn.value,
+          "cred-id",
+          isAdmin = true
         )
-      )
+        givenGetAgentRecord(agentRecord)
+        stubASAGetResponseError(arn, NOT_FOUND)
+        givenCheckEmailSuccess(credId = "cred-id", verificationStatusResponse = VerificationStatusResponse(emails = List.empty[CompletedEmail]))
+        givenVerifyEmailSuccess(redirectUri = "/continue-url")
 
-      await(repo.putSession(emailPendingVerificationKey, "new@abc.com"))
+        await(repo.putSession(emailPendingVerificationKey, "new@email.com"))
 
-      val result = get(finishEmailVerificationPath)
+        val result = get(finishEmailVerificationPath)
 
-      result.status shouldBe SEE_OTHER
+        result.status shouldBe SEE_OTHER
 
-      result.header("Location").get shouldBe s"${subscriptions.routes.UpdateAddressController.showPage(legacyRegime)}"
+        result.header("Location").get shouldBe "http://localhost:9890/continue-url"
+      }
+
+      "return Internal Server Error if authProviderId is not available" in {
+
+        givenAuthorisedAsAgentWith(arn.value)
+        givenGetAgentRecord(agentRecord)
+        stubASAGetResponseError(arn, NOT_FOUND)
+
+        await(repo.putSession(emailPendingVerificationKey, "email@emaul.com"))
+
+        val result = get(finishEmailVerificationPath)
+
+        result.status shouldBe INTERNAL_SERVER_ERROR
+      }
+
+      "redirect to update address page if email is already verified" in {
+
+        givenFullAuthorisedAsAgentWith(
+          arn.value,
+          "cred-id",
+          isAdmin = true,
+          email = "abc@abc.com"
+        )
+        givenGetAgentRecord(agentRecord)
+        stubASAGetResponseError(arn, NOT_FOUND)
+        givenCheckEmailSuccess(
+          credId = "cred-id",
+          verificationStatusResponse = VerificationStatusResponse(
+            emails = List(CompletedEmail(
+              "new@abc.com",
+              verified = true,
+              locked = false
+            ))
+          )
+        )
+
+        await(repo.putSession(emailPendingVerificationKey, "new@abc.com"))
+
+        val result = get(finishEmailVerificationPath)
+
+        result.status shouldBe SEE_OTHER
+
+        result.header("Location").get shouldBe s"${subscriptions.routes.UpdateAddressController.showPage(legacyRegime)}"
+      }
     }
-  }
+  })
 
 }

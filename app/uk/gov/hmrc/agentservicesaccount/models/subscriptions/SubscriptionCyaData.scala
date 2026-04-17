@@ -17,30 +17,62 @@
 package uk.gov.hmrc.agentservicesaccount.models.subscriptions
 
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
 
 case class SubscriptionCyaData(
-  agencyName: String,
-  agencyEmail: String,
-  agencyTelephone: String,
-  agencyAddress: BusinessAddress
+  businessName: String,
+  phoneNumber: String,
+  email: String,
+  address: BusinessAddress
 ) {
-  def toSubscriptionRequest(countryName: String): CtSubscriptionRequest = {
-    val address = SubscriptionAddress(
-      line1 = agencyAddress.addressLine1,
-      line2 = agencyAddress.addressLine2.getOrElse(""),
-      line3 = agencyAddress.addressLine3,
-      line4 = Option.when(agencyAddress.countryCode != "GB")(countryName).orElse(agencyAddress.addressLine4),
-      postCode = agencyAddress.postalCode
+
+  private def toSubscriptionAddress(
+    address: BusinessAddress,
+    countryName: String
+  ): SubscriptionAddress = {
+    val subscriptionAddress = SubscriptionAddress(
+      line1 = address.addressLine1,
+      line2 = address.addressLine2.getOrElse(""),
+      line3 = address.addressLine3,
+      line4 = Option.when(address.countryCode != "GB")(countryName).orElse(address.addressLine4),
+      postCode = address.postalCode
     )
+    subscriptionAddress
+  }
+
+  private def toCtSubscriptionRequest(countryName: String): CtSubscriptionRequest = {
     CtSubscriptionRequest(
-      agentName = agencyName,
-      contactName = agencyName,
-      phoneNumber = Some(agencyTelephone),
-      emailAddress = Some(agencyEmail),
-      address = address,
-      countryCode = agencyAddress.countryCode
+      agentName = businessName,
+      contactName = businessName,
+      phoneNumber = Some(phoneNumber),
+      emailAddress = Some(email),
+      address = toSubscriptionAddress(address, countryName),
+      countryCode = address.countryCode
     )
   }
+
+  private def toSaSubscriptionRequest(countryName: String): SaSubscriptionRequest = {
+    SaSubscriptionRequest(
+      agentName = businessName,
+      contactName = businessName,
+      phoneNumber = Some(phoneNumber),
+      emailAddress = Some(email),
+      address = toSubscriptionAddress(address, countryName),
+      countryCode = address.countryCode
+    )
+  }
+
+  def toSubscriptionRequest(
+    legacyRegime: LegacyRegime,
+    countryName: String
+  ): SubscriptionRequest = {
+    legacyRegime match {
+      case CT => toCtSubscriptionRequest(countryName)
+      case SA => toSaSubscriptionRequest(countryName)
+    }
+  }
+
 }
 
 object SubscriptionCyaData {
@@ -67,10 +99,10 @@ object SubscriptionCyaData {
           case _ => journey.asaDetails.agencyAddress
         }
     } yield SubscriptionCyaData(
-      agencyName = businessName,
-      agencyEmail = email,
-      agencyTelephone = phoneNumber,
-      agencyAddress = address
+      businessName = businessName,
+      phoneNumber = phoneNumber,
+      email = email,
+      address = address
     )
   }
 }
