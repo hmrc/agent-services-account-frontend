@@ -75,7 +75,7 @@ extends ComponentBaseISpec {
         result.status shouldBe INTERNAL_SERVER_ERROR
       }
 
-      "redirect to CT update address page if email is already verified" in {
+      "redirect to update address page if email is already verified" in {
 
         givenFullAuthorisedAsAgentWith(
           arn.value,
