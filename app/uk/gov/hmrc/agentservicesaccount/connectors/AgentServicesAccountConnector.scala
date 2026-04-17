@@ -120,6 +120,15 @@ extends Logging {
 
   //  TODO: 10862 Add agent-record-update method here in connector, to call in desiDetails CYA controller.
   //  TODO: 10862 It is a PUT, need to be certain that we can do partial updates of individual fields
+  //            TODO: 10862 Build up use of this function call
+  def updateAgentRecord(implicit rh: RequestHeader): Future[AgentDetailsDesResponse] = http
+    .get(url"$url/agent-record-update")
+    .execute[HttpResponse].map(response =>
+      response.status match {
+        case OK => Json.parse(response.body).as[AgentDetailsDesResponse]
+        case other => throw UpstreamErrorResponse(s"agent record unavailable: hip response code: $other", 500)
+      }
+    )
 
   def submitLegacySubscriptionRequest(
     subscriptionRequest: SubscriptionRequest,

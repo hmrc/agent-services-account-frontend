@@ -21,7 +21,7 @@ import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
+import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentServicesAccountConnector}
 import uk.gov.hmrc.agentservicesaccount.controllers._
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util._
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.DesignatoryDetails
@@ -44,6 +44,7 @@ import scala.concurrent.Future
 class CheckYourAnswersController @Inject() (
   actions: Actions,
   val sessionCacheService: SessionCacheService,
+  agentServicesAccountConnector: AgentServicesAccountConnector,
   agentAssuranceConnector: AgentAssuranceConnector,
   agentRecordService: AgentRecordService,
   checkUpdatedDetailsView: check_updated_details,
@@ -87,6 +88,8 @@ with Logging {
         case None => // graceful redirect in case of expired session data etc.
           Future.successful(Redirect(desiDetails.routes.ViewContactDetailsController.showPage))
         case Some(details) =>
+          val ctApplied = details.otherServices.ctChanges.applyChanges
+          val saApplied = details.otherServices.saChanges.applyChanges
           for {
             selectChanges <- sessionCacheService.get[Set[String]](currentSelectedChangesKey)
             optUtr <- agentRecordService.getAgentRecord.map(_.uniqueTaxReference)
@@ -108,9 +111,13 @@ with Logging {
               selectChanges.getOrElse(throw new RuntimeException("Cannot submit without select changes details"))
             ).toString()
             _ = auditService.auditUpdateContactDetailsRequest(optUtr, pendingChange)
-//            TODO: 10862 Put behind own feature switch
+//            TODO: 10862 Feature switch to use is enableAgentRecordViaAsa
+//            TODO: 10862 Build up use of this function call
+            _ <- agentServicesAccountConnector.updateAgentRecord
 //            TODO: 10862 AC1 (SA/CT Not Selected) use agent-record-update in ASA BE only, in case of AC2 (SA or CT selected) use this and agent-assurance line below
-            result <- agentAssuranceConnector.postDesignatoryDetails(arn, java.util.Base64.getEncoder.encodeToString(htmlForPdf.getBytes()))
+            _ <- if (details.otherServices.ctOrSaApplied) {
+              agentAssuranceConnector.postDesignatoryDetails(arn, java.util.Base64.getEncoder.encodeToString(htmlForPdf.getBytes()))
+            } else Future.successful()
             _ <- pcodRepository.insert(PendingChangeRequest(arn, pendingChange.timeSubmitted))
             _ <- sessionCacheService.delete(draftNewContactDetailsKey)
             _ <- sessionCacheService.delete(draftSubmittedByKey)
