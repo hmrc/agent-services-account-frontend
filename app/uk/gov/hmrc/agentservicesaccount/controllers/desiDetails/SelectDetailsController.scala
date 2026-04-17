@@ -59,7 +59,6 @@ with I18nSupport
 with Logging {
 
   def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-//    TODO: 10862 AC3 Content changes for this flow do not have to be behind feature switch
     ifChangeContactFeatureEnabledAndNoPendingChanges {
       sessionCacheService.get[Set[String]](currentSelectedChangesKey).map {
         case Some(data) => {

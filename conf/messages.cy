@@ -634,7 +634,7 @@ view-contact-details.pending-changes.insetText=Cyflwynwyd manylion newydd ar {0}
 contact-details.summary-list.email=Cyfeiriad e-bost
 contact-details.summary-list.phone=Rhif ffôn
 contact-details.summary-list.name=Enw’r busnes a ddangosir i gleientiaid
-contact-details.summary-list.address=Cyfeiriad ar gyfer y cyfrif gwasanaethau asiant
+contact-details.summary-list.address=Cyfeiriad ar gyfer gohebu
 contact-details.summary-list.none=Dim
 
 update-contact-details.start-page.body.p1=I ddiweddaru’r manylion cyswllt ar gyfer {0}, mae’n rhaid eich bod wedi’ch awdurdodi gan y canlynol:
@@ -654,7 +654,7 @@ update-contact-details.select-changes.error=Rhowch wybod i ni pa fanylion cyswll
 update-contact-details.select-changes.h1=Pa fanylion cyswllt yr hoffech eu newid?
 update-contact-details.select-changes.hint=Dewiswch bob un sy’n berthnasol.
 update-contact-details.select-changes.business-name=Enw’r busnes a ddangosir i gleientiaid
-update-contact-details.select-changes.address=Cyfeiriad ar gyfer y cyfrif gwasanaethau asiant
+update-contact-details.select-changes.address=Cyfeiriad ar gyfer gohebu
 update-contact-details.select-changes.email=Cyfeiriad e-bost
 update-contact-details.select-changes.telephone=Rhif ffôn
 
@@ -677,7 +677,7 @@ update-contact-details.email.error.invalid=Nodwch gyfeiriad e-bost ag enw, y sym
 update-contact-details.address.country-picker.title=Select your country - Agent services account - GOV.UK TBC
 update-contact-details.address.country-picker=What is the country where your business is based? TBC
 update-contact-details.address.lookup.title=Find your address - Agent services account - GOV.UK TBC
-update-contact-details.address.lookup=What is your business address? TBC
+update-contact-details.address.lookup=What is your correspondence address? TBC
 update-contact-details.address.select.title=Select your address - Agent services account - GOV.UK TBC
 update-contact-details.address.edit.title=Enter your address - Agent services account - GOV.UK TBC
 update-contact-details.address.confirm.title=Review and confirm - Agent services account - GOV.UK TBC

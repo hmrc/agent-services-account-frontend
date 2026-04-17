@@ -60,6 +60,7 @@ with DesiDetailsJourneySupport
 with I18nSupport
 with Logging {
 
+//  TODO: 10862 Remove organisation field from ALF config
   val startAddressLookup: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     val continueUrl: String = {
       val useAbsoluteUrls = appConfig.addressLookupBaseUrl.contains("localhost")
