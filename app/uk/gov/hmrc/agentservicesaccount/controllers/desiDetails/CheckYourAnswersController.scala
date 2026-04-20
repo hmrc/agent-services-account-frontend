@@ -111,11 +111,9 @@ with Logging {
               selectChanges.getOrElse(throw new RuntimeException("Cannot submit without select changes details"))
             ).toString()
             _ = auditService.auditUpdateContactDetailsRequest(optUtr, pendingChange)
-//            TODO: 10862 Feature switch to use is enableAgentRecordViaAsa
-//            TODO: 10862 Build up use of this function call
-            _ <- agentServicesAccountConnector.updateAgentRecord
-//            TODO: 10862 AC1 (SA/CT Not Selected) use agent-record-update in ASA BE only, in case of AC2 (SA or CT selected) use this and agent-assurance line below
-            _ <- if (details.otherServices.ctOrSaApplied) {
+//            TODO: 10862 Build up use of agent-record-update method here call with correct payload
+            _ <- if (appConfig.enableAgentRecordViaAsa) agentServicesAccountConnector.updateAgentRecord else Future.successful()
+            _ <- if (details.otherServices.ctOrSaApplied || !appConfig.enableAgentRecordViaAsa) {
               agentAssuranceConnector.postDesignatoryDetails(arn, java.util.Base64.getEncoder.encodeToString(htmlForPdf.getBytes()))
             } else Future.successful()
             _ <- pcodRepository.insert(PendingChangeRequest(arn, pendingChange.timeSubmitted))
