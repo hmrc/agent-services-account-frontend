@@ -80,8 +80,7 @@ case class OtherServices(
   saChanges: SaChanges,
   ctChanges: CtChanges
 ) {
-//  TODO: 10862 Correctly implement this value
-  val ctOrSaApplied = true
+  val ctOrSaApplied: Boolean = ctChanges.applyChanges || saChanges.applyChanges
 }
 
 object OtherServices {

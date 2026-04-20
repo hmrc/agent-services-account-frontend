@@ -88,8 +88,6 @@ with Logging {
         case None => // graceful redirect in case of expired session data etc.
           Future.successful(Redirect(desiDetails.routes.ViewContactDetailsController.showPage))
         case Some(details) =>
-          val ctApplied = details.otherServices.ctChanges.applyChanges
-          val saApplied = details.otherServices.saChanges.applyChanges
           for {
             selectChanges <- sessionCacheService.get[Set[String]](currentSelectedChangesKey)
             optUtr <- agentRecordService.getAgentRecord.map(_.uniqueTaxReference)
