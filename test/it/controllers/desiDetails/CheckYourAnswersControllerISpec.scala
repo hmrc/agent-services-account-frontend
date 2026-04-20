@@ -30,6 +30,7 @@ import stubs.AgentAssuranceStubs.givenPostDesignatoryDetails
 import stubs.AgentServicesAccountStubs.stubASAGetResponseError
 import stubs.AgentServicesAccountStubs.stubASAPostResponse
 
+//TODO: 10862 Add ITs for new call to agent-record-update, need to mock app-config
 class CheckYourAnswersControllerISpec
 extends ComponentBaseISpec {
 
