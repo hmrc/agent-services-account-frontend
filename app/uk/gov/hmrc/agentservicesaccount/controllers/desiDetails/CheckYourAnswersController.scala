@@ -21,7 +21,8 @@ import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.connectors.{AgentAssuranceConnector, AgentServicesAccountConnector}
+import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
+import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
 import uk.gov.hmrc.agentservicesaccount.controllers._
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util._
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.DesignatoryDetails
@@ -110,10 +111,17 @@ with Logging {
             ).toString()
             _ = auditService.auditUpdateContactDetailsRequest(optUtr, pendingChange)
 //            TODO: 10862 Build up use of agent-record-update method here call with correct payload
-            _ <- if (appConfig.enableAgentRecordViaAsa) agentServicesAccountConnector.updateAgentRecord else Future.successful()
-            _ <- if (details.otherServices.ctOrSaApplied || !appConfig.enableAgentRecordViaAsa) {
-              agentAssuranceConnector.postDesignatoryDetails(arn, java.util.Base64.getEncoder.encodeToString(htmlForPdf.getBytes()))
-            } else Future.successful()
+            _ <-
+              if (appConfig.enableAgentRecordViaAsa)
+                agentServicesAccountConnector.updateAgentRecord
+              else
+                Future.successful()
+            _ <-
+              if (details.otherServices.ctOrSaApplied || !appConfig.enableAgentRecordViaAsa) {
+                agentAssuranceConnector.postDesignatoryDetails(arn, java.util.Base64.getEncoder.encodeToString(htmlForPdf.getBytes()))
+              }
+              else
+                Future.successful()
             _ <- pcodRepository.insert(PendingChangeRequest(arn, pendingChange.timeSubmitted))
             _ <- sessionCacheService.delete(draftNewContactDetailsKey)
             _ <- sessionCacheService.delete(draftSubmittedByKey)
