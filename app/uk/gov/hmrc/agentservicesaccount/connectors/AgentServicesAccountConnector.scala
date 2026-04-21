@@ -116,14 +116,16 @@ extends Logging {
       }
     )
 
-  //  TODO: 10862 Build up use of agent-record-update method here call with correct payload
-  //  TODO: 10862 It is a PUT, need to be certain that we can do partial updates of individual fields
-  def updateAgentRecord(agentRecordUpdateRequest: AgentRecordUpdateRequest)(implicit rh: RequestHeader): Future[AgentDetailsDesResponse] = http
-    .get(url"$url/agent-record-update")
+  def updateAgentRecord(agentRecordUpdateRequest: AgentRecordUpdateRequest)(implicit rh: RequestHeader): Future[Unit] = http
+    .put(url"$url/agent-record-update")
+    .withBody(Json.toJson(agentRecordUpdateRequest))
     .execute[HttpResponse].map(response =>
       response.status match {
-        case OK => Json.parse(response.body).as[AgentDetailsDesResponse]
-        case other => throw UpstreamErrorResponse(s"agent record unavailable: hip response code: $other", 500)
+        case OK => ()
+        case e => throw UpstreamErrorResponse(
+          s"[AgentServicesAccountConnector][updateAgentRecord] Error $e unable to put agent record update",
+          e
+        )
       }
     )
 
