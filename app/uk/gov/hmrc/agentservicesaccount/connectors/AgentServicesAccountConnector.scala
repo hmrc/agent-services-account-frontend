@@ -22,9 +22,7 @@ import play.api.http.Status.NO_CONTENT
 import play.api.http.Status.OK
 import play.api.libs.json.Json
 import play.api.mvc.RequestHeader
-import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
-import uk.gov.hmrc.agentservicesaccount.models.Arn
-import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest
+import uk.gov.hmrc.agentservicesaccount.models.{AgentDetailsDesResponse, AgentRecordUpdateRequest, Arn, PendingChangeRequest}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest.connectorReads
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest.connectorWrites
@@ -120,7 +118,7 @@ extends Logging {
 
   //  TODO: 10862 Build up use of agent-record-update method here call with correct payload
   //  TODO: 10862 It is a PUT, need to be certain that we can do partial updates of individual fields
-  def updateAgentRecord(implicit rh: RequestHeader): Future[AgentDetailsDesResponse] = http
+  def updateAgentRecord(agentRecordUpdateRequest: AgentRecordUpdateRequest)(implicit rh: RequestHeader): Future[AgentDetailsDesResponse] = http
     .get(url"$url/agent-record-update")
     .execute[HttpResponse].map(response =>
       response.status match {

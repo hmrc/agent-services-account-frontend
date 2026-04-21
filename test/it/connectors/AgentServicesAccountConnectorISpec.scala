@@ -47,7 +47,6 @@ import uk.gov.hmrc.http.UpstreamErrorResponse
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 
-//TODO: 10862 Add ITs for new call to agent-record-update
 class AgentServicesAccountConnectorISpec
 extends BaseISpec
 with Injecting {
@@ -145,7 +144,7 @@ with Injecting {
 
   }
 
-  "getAgentRecord" should {
+  ".getAgentRecord" should {
     "return the agent record for a given agent" in {
 
       givenGetAgentRecord(agentRecord)
@@ -159,6 +158,11 @@ with Injecting {
         await(connector.getAgentRecord)
       }
     }
+  }
+
+  //TODO: 10862 Add ITs for new call to agent-record-update
+  ".updateAgentRecord" should {
+
   }
 
   ".submitLegacySubscriptionRequest" should {
