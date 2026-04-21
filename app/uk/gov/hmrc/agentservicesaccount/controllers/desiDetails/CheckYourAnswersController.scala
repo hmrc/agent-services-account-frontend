@@ -27,7 +27,10 @@ import uk.gov.hmrc.agentservicesaccount.controllers._
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util._
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.DesignatoryDetails
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.YourDetails
-import uk.gov.hmrc.agentservicesaccount.models.{AgentRecordUpdateRequest, AgentRecordUpdateResponse, PendingChangeOfDetails, PendingChangeRequest}
+import uk.gov.hmrc.agentservicesaccount.models.AgentRecordUpdateRequest
+import uk.gov.hmrc.agentservicesaccount.models.AgentRecordUpdateResponse
+import uk.gov.hmrc.agentservicesaccount.models.PendingChangeOfDetails
+import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
 import uk.gov.hmrc.agentservicesaccount.services.AuditService
 import uk.gov.hmrc.agentservicesaccount.services.AgentRecordService

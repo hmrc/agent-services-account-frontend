@@ -48,7 +48,7 @@ extends ViewBaseSpec {
       val hint: String = "Select all that apply."
 
       val checkboxLabel1: String = "Business name shown to clients"
-      val checkboxLabel2: String = "Address for agent services account"
+      val checkboxLabel2: String = "Correspondence address"
       val checkboxLabel3: String = "Email address"
       val checkboxLabel4: String = "Telephone number"
 
@@ -64,7 +64,7 @@ extends ViewBaseSpec {
       val hint: String = "Dewiswch bob un sy’n berthnasol."
 
       val checkboxLabel1: String = "Enw’r busnes a ddangosir i gleientiaid"
-      val checkboxLabel2: String = "Cyfeiriad ar gyfer y cyfrif gwasanaethau asiant"
+      val checkboxLabel2: String = "Cyfeiriad ar gyfer gohebu"
       val checkboxLabel3: String = "Cyfeiriad e-bost"
       val checkboxLabel4: String = "Rhif ffôn"
 

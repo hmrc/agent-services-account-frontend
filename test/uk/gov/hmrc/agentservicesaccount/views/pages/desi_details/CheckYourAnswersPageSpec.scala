@@ -106,7 +106,7 @@ extends ViewBaseSpec {
       }
 
       val selectChangesKey: String = "What you want to change"
-      val addressKey: String = "Address for agent services account"
+      val addressKey: String = "Correspondence address"
       val emailKey: String = "Email address"
       val telephoneKey: String = "Telephone number"
       val businessNameKey: String = "Business name shown to clients"

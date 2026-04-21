@@ -26,7 +26,10 @@ import play.api.test.Helpers.defaultAwaitTimeout
 import play.api.test.Injecting
 import support.BaseISpec
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
-import uk.gov.hmrc.agentservicesaccount.models.{AgentRecordUpdateRequest, AgentRecordUpdateResponse, Arn, PendingChangeRequest}
+import uk.gov.hmrc.agentservicesaccount.models.AgentRecordUpdateRequest
+import uk.gov.hmrc.agentservicesaccount.models.AgentRecordUpdateResponse
+import uk.gov.hmrc.agentservicesaccount.models.Arn
+import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest
 import stubs.AgentServicesAccountStubs._
 import uk.gov.hmrc.agentservicesaccount.models.paye.PayeAddress
 import uk.gov.hmrc.agentservicesaccount.models.paye.PayeCyaData

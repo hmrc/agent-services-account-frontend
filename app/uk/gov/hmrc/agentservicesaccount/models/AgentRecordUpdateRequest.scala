@@ -16,12 +16,13 @@
 
 package uk.gov.hmrc.agentservicesaccount.models
 
-import play.api.libs.json.{Format, Json}
+import play.api.libs.json.Format
+import play.api.libs.json.Json
 
 case class AgentRecordUpdateRequest(
 //                                     amlsDetails: Option[AmlsDetails],
-                                     agencyDetails: Option[AgencyDetails]
-                                   )
+  agencyDetails: Option[AgencyDetails]
+)
 
 object AgentRecordUpdateRequest {
   implicit val format: Format[AgentRecordUpdateRequest] = Json.format[AgentRecordUpdateRequest]

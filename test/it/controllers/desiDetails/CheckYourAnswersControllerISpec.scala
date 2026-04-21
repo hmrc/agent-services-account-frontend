@@ -30,7 +30,6 @@ import stubs.AgentAssuranceStubs.givenPostDesignatoryDetails
 import stubs.AgentServicesAccountStubs.stubASAGetResponseError
 import stubs.AgentServicesAccountStubs.stubASAPostResponse
 
-//TODO: 10862 Add ITs for new call to agent-record-update, need to mock app-config
 class CheckYourAnswersControllerISpec
 extends ComponentBaseISpec {
 
@@ -91,6 +90,7 @@ extends ComponentBaseISpec {
   }
 
   s"POST $checkYourAnswersPath" should {
+    // TODO: 10862 Fix for new call to agent-record-update, may need to mock app-config
     "store the pending change of detail in repo and show the 'what happens next' page" in {
 
       givenAuthorisedAsAgentWith(arn.value)

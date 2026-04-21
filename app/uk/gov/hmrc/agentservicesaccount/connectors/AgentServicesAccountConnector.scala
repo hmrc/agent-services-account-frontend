@@ -20,9 +20,14 @@ import play.api.Logging
 import play.api.http.Status.NOT_FOUND
 import play.api.http.Status.NO_CONTENT
 import play.api.http.Status.OK
-import play.api.libs.json.{JsPath, Json}
+import play.api.libs.json.JsPath
+import play.api.libs.json.Json
 import play.api.mvc.RequestHeader
-import uk.gov.hmrc.agentservicesaccount.models.{AgentDetailsDesResponse, AgentRecordUpdateRequest, AgentRecordUpdateResponse, Arn, PendingChangeRequest}
+import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
+import uk.gov.hmrc.agentservicesaccount.models.AgentRecordUpdateRequest
+import uk.gov.hmrc.agentservicesaccount.models.AgentRecordUpdateResponse
+import uk.gov.hmrc.agentservicesaccount.models.Arn
+import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest.connectorReads
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest.connectorWrites
@@ -123,10 +128,11 @@ extends Logging {
     .execute[HttpResponse].map(response =>
       response.status match {
         case OK => Json.parse(response.body).as[AgentRecordUpdateResponse]
-        case e => throw UpstreamErrorResponse(
-          s"[AgentServicesAccountConnector][updateAgentRecord] Error $e unable to put agent record update",
-          e
-        )
+        case e =>
+          throw UpstreamErrorResponse(
+            s"[AgentServicesAccountConnector][updateAgentRecord] Error $e unable to put agent record update",
+            e
+          )
       }
     )
 
