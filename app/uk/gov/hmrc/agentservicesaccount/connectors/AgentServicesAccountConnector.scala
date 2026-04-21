@@ -20,9 +20,9 @@ import play.api.Logging
 import play.api.http.Status.NOT_FOUND
 import play.api.http.Status.NO_CONTENT
 import play.api.http.Status.OK
-import play.api.libs.json.Json
+import play.api.libs.json.{JsPath, Json}
 import play.api.mvc.RequestHeader
-import uk.gov.hmrc.agentservicesaccount.models.{AgentDetailsDesResponse, AgentRecordUpdateRequest, Arn, PendingChangeRequest}
+import uk.gov.hmrc.agentservicesaccount.models.{AgentDetailsDesResponse, AgentRecordUpdateRequest, AgentRecordUpdateResponse, Arn, PendingChangeRequest}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest.connectorReads
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest.connectorWrites
@@ -45,6 +45,7 @@ import uk.gov.hmrc.http.StringContextOps
 import uk.gov.hmrc.http.UpstreamErrorResponse
 import uk.gov.hmrc.agentservicesaccount.utils.RequestSupport._
 
+import java.time.Instant
 import javax.inject.Inject
 import javax.inject.Singleton
 import scala.concurrent.ExecutionContext
@@ -116,12 +117,12 @@ extends Logging {
       }
     )
 
-  def updateAgentRecord(agentRecordUpdateRequest: AgentRecordUpdateRequest)(implicit rh: RequestHeader): Future[Unit] = http
+  def updateAgentRecord(agentRecordUpdateRequest: AgentRecordUpdateRequest)(implicit rh: RequestHeader): Future[AgentRecordUpdateResponse] = http
     .put(url"$url/agent-record-update")
     .withBody(Json.toJson(agentRecordUpdateRequest))
     .execute[HttpResponse].map(response =>
       response.status match {
-        case OK => ()
+        case OK => Json.parse(response.body).as[AgentRecordUpdateResponse]
         case e => throw UpstreamErrorResponse(
           s"[AgentServicesAccountConnector][updateAgentRecord] Error $e unable to put agent record update",
           e

@@ -26,8 +26,7 @@ import play.api.test.Helpers.defaultAwaitTimeout
 import play.api.test.Injecting
 import support.BaseISpec
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
-import uk.gov.hmrc.agentservicesaccount.models.Arn
-import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest
+import uk.gov.hmrc.agentservicesaccount.models.{AgentRecordUpdateRequest, AgentRecordUpdateResponse, Arn, PendingChangeRequest}
 import stubs.AgentServicesAccountStubs._
 import uk.gov.hmrc.agentservicesaccount.models.paye.PayeAddress
 import uk.gov.hmrc.agentservicesaccount.models.paye.PayeCyaData
@@ -146,7 +145,6 @@ with Injecting {
 
   ".getAgentRecord" should {
     "return the agent record for a given agent" in {
-
       givenGetAgentRecord(agentRecord)
 
       await(connector.getAgentRecord) shouldBe agentRecord
@@ -160,9 +158,25 @@ with Injecting {
     }
   }
 
-  //TODO: 10862 Add ITs for new call to agent-record-update
   ".updateAgentRecord" should {
+    val agentRecordUpdateRequest: AgentRecordUpdateRequest = AgentRecordUpdateRequest(
+      agencyDetails = Some(agencyDetails)
+    )
 
+    "return nothing when a OK (200) response is returned by agent-services-account" in {
+//      TODO: 10862 Use Proper Date
+      val response = AgentRecordUpdateResponse(processingDate = "DATE")
+      stubAgentRecordUpdateResponseSuccess(response)
+
+      val result = connector.updateAgentRecord(agentRecordUpdateRequest)
+      await(result) shouldBe response
+    }
+
+    "throw an UpstreamErrorResponse exception when an unexpected status is returned by agent-services-account" in {
+      stubAgentRecordUpdateResponse(FORBIDDEN)
+
+      intercept[UpstreamErrorResponse](await(connector.updateAgentRecord(agentRecordUpdateRequest)))
+    }
   }
 
   ".submitLegacySubscriptionRequest" should {
