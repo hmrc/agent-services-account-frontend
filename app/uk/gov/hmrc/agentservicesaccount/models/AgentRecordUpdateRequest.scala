@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.agentservicesaccount.models
 
-import play.api.libs.json.{*, Format, Json}
+import play.api.libs.json.{Format, Json}
 
 case class AgentRecordUpdateRequest(
 //                                     amlsDetails: Option[AmlsDetails],
