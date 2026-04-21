@@ -164,8 +164,7 @@ with Injecting {
     )
 
     "return nothing when a OK (200) response is returned by agent-services-account" in {
-//      TODO: 10862 Use Proper Date
-      val response = AgentRecordUpdateResponse(processingDate = "DATE")
+      val response = AgentRecordUpdateResponse(processingDate = Instant.now())
       stubAgentRecordUpdateResponseSuccess(response)
 
       val result = connector.updateAgentRecord(agentRecordUpdateRequest)

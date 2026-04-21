@@ -16,11 +16,12 @@
 
 package uk.gov.hmrc.agentservicesaccount.models
 
-import play.api.libs.json.{Format, Json}
+import play.api.libs.json.{Json, OFormat}
 
-//TODO: 10862 Send to Instant
-case class AgentRecordUpdateResponse(processingDate: String)
+import java.time.Instant
+
+case class AgentRecordUpdateResponse(processingDate: Instant)
 
 object AgentRecordUpdateResponse {
-  implicit val format: Format[AgentRecordUpdateResponse] = Json.format[AgentRecordUpdateResponse]
+  implicit val format: OFormat[AgentRecordUpdateResponse] = Json.format[AgentRecordUpdateResponse]
 }
