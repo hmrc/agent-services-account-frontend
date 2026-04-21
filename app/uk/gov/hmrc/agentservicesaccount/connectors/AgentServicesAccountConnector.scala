@@ -130,7 +130,7 @@ extends Logging {
             case OK => ()
             case e =>
               throw UpstreamErrorResponse(
-                s"[AgentServicesAccountConnector][submitLegacySubscriptionRequest] Error $e unable to post $legacyRegime legacy subscription request",
+                s"[AgentServicesAccountConnector][submitLegacySubscriptionRequest] Error $e unable to post $legacyRegime legacy subscription request.\nResponse = ${response.body}",
                 e
               )
           }

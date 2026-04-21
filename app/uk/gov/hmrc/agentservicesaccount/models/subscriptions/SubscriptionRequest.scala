@@ -16,14 +16,8 @@
 
 package uk.gov.hmrc.agentservicesaccount.models.subscriptions
 
-import play.api.libs.json.JsError
-import play.api.libs.json.JsSuccess
 import play.api.libs.json.Json
-import play.api.libs.json.Reads
 import play.api.libs.json.Writes
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
 
 sealed trait SubscriptionRequest {
 
@@ -38,25 +32,7 @@ sealed trait SubscriptionRequest {
 
 object SubscriptionRequest {
 
-  def reads(regime: LegacyRegime): Reads[SubscriptionRequest] = Reads { json =>
-    val initialRead =
-      regime match {
-        case PAYE => Json.fromJson(json)(Json.reads[PayeSubscriptionRequest])
-        case SA => Json.fromJson(json)(Json.reads[SaSubscriptionRequest])
-        case CT => Json.fromJson(json)(Json.reads[CtSubscriptionRequest])
-      }
-    initialRead match {
-      case JsSuccess(request: SubscriptionRequest, _) if !request.isAbroad && request.address.postCode.isEmpty =>
-        JsError("Postcode is required for legacy subscriptions in UK")
-      case other => other
-    }
-  }
-
-  implicit val writes: Writes[SubscriptionRequest] = Writes {
-    case payeRequest: PayeSubscriptionRequest => Json.writes[PayeSubscriptionRequest].writes(payeRequest)
-    case saRequest: SaSubscriptionRequest => Json.writes[SaSubscriptionRequest].writes(saRequest)
-    case ctRequest: CtSubscriptionRequest => Json.writes[CtSubscriptionRequest].writes(ctRequest)
-  }
+  implicit val writes: Writes[SubscriptionRequest] = Json.writes[SubscriptionRequest]
 
 }
 
@@ -72,12 +48,11 @@ extends SubscriptionRequest {
 }
 
 object PayeSubscriptionRequest {
-//  given Writes[SubscriptionAddress] = SubscriptionAddress.payeRegistrationWrites
-  implicit val registerWrites: Writes[PayeSubscriptionRequest] = Writes { request =>
+  implicit val writes: Writes[PayeSubscriptionRequest] = Writes { request =>
     Json.obj(
       "agentName" -> request.agentName,
       "contactName" -> request.contactName,
-      "telephoneNumber" -> request.phoneNumber,
+      "phoneNumber" -> request.phoneNumber,
       "emailAddress" -> request.emailAddress,
       "address" -> request.address
     )
@@ -97,11 +72,11 @@ extends SubscriptionRequest {
 }
 
 object CtSubscriptionRequest {
-  implicit val registerWrites: Writes[CtSubscriptionRequest] = Writes { request =>
+  implicit val writes: Writes[CtSubscriptionRequest] = Writes { request =>
     Json.obj(
       "agentName" -> request.agentName,
       "contactName" -> request.contactName,
-      "telephoneNumber" -> request.phoneNumber,
+      "phoneNumber" -> request.phoneNumber,
       "emailAddress" -> request.emailAddress,
       "address" -> request.address,
       "isAbroad" -> request.isAbroad
@@ -122,11 +97,11 @@ extends SubscriptionRequest {
 }
 
 object SaSubscriptionRequest {
-  implicit val registerWrites: Writes[SaSubscriptionRequest] = Writes { request =>
+  implicit val writes: Writes[SaSubscriptionRequest] = Writes { request =>
     Json.obj(
       "agentName" -> request.agentName,
       "contactName" -> request.contactName,
-      "telephoneNumber" -> request.phoneNumber,
+      "phoneNumber" -> request.phoneNumber,
       "emailAddress" -> request.emailAddress,
       "address" -> request.address,
       "isAbroad" -> request.isAbroad
