@@ -27,8 +27,7 @@ import uk.gov.hmrc.agentservicesaccount.controllers._
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util._
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.DesignatoryDetails
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.YourDetails
-import uk.gov.hmrc.agentservicesaccount.models.PendingChangeOfDetails
-import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest
+import uk.gov.hmrc.agentservicesaccount.models.{AgentRecordUpdateRequest, PendingChangeOfDetails, PendingChangeRequest}
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
 import uk.gov.hmrc.agentservicesaccount.services.AuditService
 import uk.gov.hmrc.agentservicesaccount.services.AgentRecordService
@@ -96,6 +95,7 @@ with Logging {
             oldContactDetails <- agentRecordService.getAgentRecord.map(_.agencyDetails.getOrElse {
               throw new RuntimeException(s"Could not retrieve current agency details for ${request.agentInfo.arn} from the backend")
             })
+            agentRecordUpdateRequest = AgentRecordUpdateRequest(agencyDetails = Some(details.agencyDetails))
             pendingChange = PendingChangeOfDetails(
               arn = arn,
               oldDetails = oldContactDetails,
@@ -110,10 +110,9 @@ with Logging {
               selectChanges.getOrElse(throw new RuntimeException("Cannot submit without select changes details"))
             ).toString()
             _ = auditService.auditUpdateContactDetailsRequest(optUtr, pendingChange)
-//            TODO: 10862 Build up use of agent-record-update method here call with correct payload
             _ <-
               if (appConfig.enableAgentRecordViaAsa)
-                agentServicesAccountConnector.updateAgentRecord
+                agentServicesAccountConnector.updateAgentRecord(agentRecordUpdateRequest)
               else
                 Future.successful()
             _ <-
