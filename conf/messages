@@ -634,7 +634,7 @@ view-contact-details.pending-changes.insetText=New contact details were submitte
 contact-details.summary-list.email=Email address
 contact-details.summary-list.phone=Telephone number
 contact-details.summary-list.name=Business name shown to clients
-contact-details.summary-list.address=Address for agent services account
+contact-details.summary-list.address=Correspondence address
 contact-details.summary-list.none=None
 
 update-contact-details.start-page.body.p1=To update contact details for {0}, you must be authorised by a:
@@ -654,7 +654,7 @@ update-contact-details.select-changes.error=Tell us which contact details you wa
 update-contact-details.select-changes.h1=Which contact details do you want to change?
 update-contact-details.select-changes.hint=Select all that apply.
 update-contact-details.select-changes.business-name=Business name shown to clients
-update-contact-details.select-changes.address=Address for agent services account
+update-contact-details.select-changes.address=Correspondence address
 update-contact-details.select-changes.email=Email address
 update-contact-details.select-changes.telephone=Telephone number
 
@@ -677,7 +677,7 @@ update-contact-details.email.error.invalid=Enter an email address with a name, @
 update-contact-details.address.country-picker.title=Select your country - Agent services account - GOV.UK
 update-contact-details.address.country-picker=What is the country where your business is based?
 update-contact-details.address.lookup.title=Find your address - Agent services account - GOV.UK
-update-contact-details.address.lookup=What is your business address?
+update-contact-details.address.lookup=What is your correspondence address?
 update-contact-details.address.select.title=Select your address - Agent services account - GOV.UK
 update-contact-details.address.edit.title=Enter your address - Agent services account - GOV.UK
 update-contact-details.address.confirm.title=Review and confirm - Agent services account - GOV.UK

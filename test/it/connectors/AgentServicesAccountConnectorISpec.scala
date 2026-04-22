@@ -26,6 +26,8 @@ import play.api.test.Helpers.defaultAwaitTimeout
 import play.api.test.Injecting
 import support.BaseISpec
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
+import uk.gov.hmrc.agentservicesaccount.models.AgentRecordUpdateRequest
+import uk.gov.hmrc.agentservicesaccount.models.AgentRecordUpdateResponse
 import uk.gov.hmrc.agentservicesaccount.models.Arn
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest
 import stubs.AgentServicesAccountStubs._
@@ -144,9 +146,8 @@ with Injecting {
 
   }
 
-  "getAgentRecord" should {
+  ".getAgentRecord" should {
     "return the agent record for a given agent" in {
-
       givenGetAgentRecord(agentRecord)
 
       await(connector.getAgentRecord) shouldBe agentRecord
@@ -157,6 +158,26 @@ with Injecting {
       intercept[UpstreamErrorResponse] {
         await(connector.getAgentRecord)
       }
+    }
+  }
+
+  ".updateAgentRecord" should {
+    val agentRecordUpdateRequest: AgentRecordUpdateRequest = AgentRecordUpdateRequest(
+      agencyDetails = Some(agencyDetails)
+    )
+
+    "return nothing when a OK (200) response is returned by agent-services-account" in {
+      val response = AgentRecordUpdateResponse(processingDate = Instant.now())
+      stubAgentRecordUpdateResponseSuccess(response)
+
+      val result = connector.updateAgentRecord(agentRecordUpdateRequest)
+      await(result) shouldBe response
+    }
+
+    "throw an UpstreamErrorResponse exception when an unexpected status is returned by agent-services-account" in {
+      stubAgentRecordUpdateResponse(FORBIDDEN)
+
+      intercept[UpstreamErrorResponse](await(connector.updateAgentRecord(agentRecordUpdateRequest)))
     }
   }
 

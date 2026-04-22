@@ -79,7 +79,9 @@ object SaChanges {
 case class OtherServices(
   saChanges: SaChanges,
   ctChanges: CtChanges
-)
+) {
+  val ctOrSaApplied: Boolean = ctChanges.applyChanges || saChanges.applyChanges
+}
 
 object OtherServices {
 

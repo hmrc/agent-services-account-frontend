@@ -93,7 +93,8 @@ with Logging {
 
     val alfJourneyConfig = JourneyConfigV2(
       options = JourneyOptions(
-        continueUrl = continueUrl
+        continueUrl = continueUrl,
+        manualAddressEntryConfig = Some(ManualAddressEntryConfig(showOrganisationName = Some(false)))
       ),
       version = 2,
       labels = Some(JourneyLabels(

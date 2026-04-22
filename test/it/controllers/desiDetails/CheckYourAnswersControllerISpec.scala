@@ -22,13 +22,13 @@ import uk.gov.hmrc.agentservicesaccount.controllers.currentSelectedChangesKey
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
 import uk.gov.hmrc.agentservicesaccount.controllers.draftNewContactDetailsKey
 import uk.gov.hmrc.agentservicesaccount.controllers.draftSubmittedByKey
-import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
+import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, AgentRecordUpdateResponse}
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails._
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
-import stubs.AgentServicesAccountStubs.givenGetAgentRecord
+import stubs.AgentServicesAccountStubs.{givenGetAgentRecord, stubASAGetResponseError, stubASAPostResponse, stubAgentRecordUpdateResponseSuccess}
 import stubs.AgentAssuranceStubs.givenPostDesignatoryDetails
-import stubs.AgentServicesAccountStubs.stubASAGetResponseError
-import stubs.AgentServicesAccountStubs.stubASAPostResponse
+
+import java.time.Instant
 
 class CheckYourAnswersControllerISpec
 extends ComponentBaseISpec {
@@ -97,6 +97,8 @@ extends ComponentBaseISpec {
       stubASAGetResponseError(arn, NOT_FOUND)
       givenPostDesignatoryDetails(arn.value)
       stubASAPostResponse(204)
+      val response = AgentRecordUpdateResponse(processingDate = Instant.now())
+      stubAgentRecordUpdateResponseSuccess(response)
 
       await(repo.putSession(draftNewContactDetailsKey, designatoryDetails))
       await(repo.putSession(draftSubmittedByKey, submittedByDetails))

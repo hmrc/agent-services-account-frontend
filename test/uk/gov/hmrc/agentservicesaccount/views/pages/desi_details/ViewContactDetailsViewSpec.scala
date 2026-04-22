@@ -89,7 +89,7 @@ with TestConstants {
           s"You cannot change contact details again until ${localDate.plusMonths(1).format(dateTimeFormatter)}."
       }
 
-      val addressKey: String = "Address for agent services account"
+      val addressKey: String = "Correspondence address"
       val emailKey: String = "Email address"
       val telephoneKey: String = "Telephone number"
       val businessNameKey: String = "Business name shown to clients"
@@ -117,7 +117,7 @@ with TestConstants {
           s"Ni allwch wneud unrhyw newidiadau pellach i’r manylion cyswllt tan ${localDate.plusMonths(1).format(dateTimeFormatter)}."
       }
 
-      val addressKey: String = "Cyfeiriad ar gyfer y cyfrif gwasanaethau asiant"
+      val addressKey: String = "Cyfeiriad ar gyfer gohebu"
       val emailKey: String = "Cyfeiriad e-bost"
       val telephoneKey: String = "Rhif ffôn"
       val businessNameKey: String = "Enw’r busnes a ddangosir i gleientiaid"

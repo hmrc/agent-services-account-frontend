@@ -22,10 +22,13 @@ import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
+import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
 import uk.gov.hmrc.agentservicesaccount.controllers._
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.util._
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.DesignatoryDetails
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.YourDetails
+import uk.gov.hmrc.agentservicesaccount.models.AgentRecordUpdateRequest
+import uk.gov.hmrc.agentservicesaccount.models.AgentRecordUpdateResponse
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeOfDetails
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest
 import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepository
@@ -44,6 +47,7 @@ import scala.concurrent.Future
 class CheckYourAnswersController @Inject() (
   actions: Actions,
   val sessionCacheService: SessionCacheService,
+  agentServicesAccountConnector: AgentServicesAccountConnector,
   agentAssuranceConnector: AgentAssuranceConnector,
   agentRecordService: AgentRecordService,
   checkUpdatedDetailsView: check_updated_details,
@@ -94,6 +98,7 @@ with Logging {
             oldContactDetails <- agentRecordService.getAgentRecord.map(_.agencyDetails.getOrElse {
               throw new RuntimeException(s"Could not retrieve current agency details for ${request.agentInfo.arn} from the backend")
             })
+            agentRecordUpdateRequest = AgentRecordUpdateRequest(agencyDetails = Some(details.agencyDetails))
             pendingChange = PendingChangeOfDetails(
               arn = arn,
               oldDetails = oldContactDetails,
@@ -108,7 +113,17 @@ with Logging {
               selectChanges.getOrElse(throw new RuntimeException("Cannot submit without select changes details"))
             ).toString()
             _ = auditService.auditUpdateContactDetailsRequest(optUtr, pendingChange)
-            result <- agentAssuranceConnector.postDesignatoryDetails(arn, java.util.Base64.getEncoder.encodeToString(htmlForPdf.getBytes()))
+            _ <-
+              if (appConfig.enableAgentRecordViaAsa)
+                agentServicesAccountConnector.updateAgentRecord(agentRecordUpdateRequest)
+              else
+                Future.successful()
+            _ <-
+              if (details.otherServices.ctOrSaApplied || !appConfig.enableAgentRecordViaAsa) {
+                agentAssuranceConnector.postDesignatoryDetails(arn, java.util.Base64.getEncoder.encodeToString(htmlForPdf.getBytes()))
+              }
+              else
+                Future.successful()
             _ <- pcodRepository.insert(PendingChangeRequest(arn, pendingChange.timeSubmitted))
             _ <- sessionCacheService.delete(draftNewContactDetailsKey)
             _ <- sessionCacheService.delete(draftSubmittedByKey)
