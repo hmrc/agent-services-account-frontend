@@ -76,7 +76,7 @@ with Matchers {
 
       val validatedForm = initForm.bind(params)
       validatedForm.hasErrors shouldBe true
-      validatedForm.error(businessNameUseAsaDataKey).get.message shouldBe s"$legacyRegimePrefix.business-name.use-asa.error.required"
+      validatedForm.error(businessNameUseAsaDataKey).get.message shouldBe s"$legacyRegimePrefix.contact-name.use-asa.error.required"
       validatedForm.errors.length shouldBe 1
     }
 
@@ -88,7 +88,7 @@ with Matchers {
 
       val validatedForm = initForm.bind(params)
       validatedForm.hasErrors shouldBe true
-      validatedForm.error(businessNameNewKey).get.message shouldBe s"$legacyRegimePrefix.business-name.new-input.error.empty"
+      validatedForm.error(businessNameNewKey).get.message shouldBe s"$legacyRegimePrefix.contact-name.new-input.error.empty"
       validatedForm.errors.length shouldBe 1
     }
 
@@ -100,7 +100,7 @@ with Matchers {
 
       val validatedForm = initForm.bind(params)
       validatedForm.hasErrors shouldBe true
-      validatedForm.error(businessNameNewKey).get.message shouldBe s"$legacyRegimePrefix.business-name.new-input.error.invalid"
+      validatedForm.error(businessNameNewKey).get.message shouldBe s"$legacyRegimePrefix.contact-name.new-input.error.invalid"
       validatedForm.errors.length shouldBe 1
     }
 
