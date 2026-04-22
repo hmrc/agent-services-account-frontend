@@ -36,7 +36,7 @@ import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
 @Singleton
-class PayeUpdateBusinessNameController @Inject() (
+class PayeUpdateContactNameController @Inject()(
   actions: Actions,
   val sessionCacheService: SessionCacheService,
   paye_update_business_name: paye_update_business_name,

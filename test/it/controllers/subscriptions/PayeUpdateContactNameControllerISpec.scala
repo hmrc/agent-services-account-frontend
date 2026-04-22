@@ -30,7 +30,7 @@ import play.api.test.Helpers._
 import support.{BaseISpec, TestConstants, UnitSpec}
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
-import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.PayeUpdateBusinessNameController
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.PayeUpdateContactNameController
 import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
@@ -43,7 +43,7 @@ import uk.gov.hmrc.http.client.HttpClientV2
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class PayeUpdateBusinessNameControllerISpec
+class PayeUpdateContactNameControllerISpec
 extends BaseISpec
 with UnitSpec
 with Matchers
@@ -126,7 +126,7 @@ with TestConstants {
       .overrides(overrides)
       .build()
 
-    val controller: PayeUpdateBusinessNameController = app.injector.instanceOf[PayeUpdateBusinessNameController]
+    val controller: PayeUpdateContactNameController = app.injector.instanceOf[PayeUpdateContactNameController]
 
     val sessionCache: SessionCacheService = app.injector.instanceOf[SessionCacheService]
 
