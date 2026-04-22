@@ -19,12 +19,12 @@ package uk.gov.hmrc.agentservicesaccount.forms.subscriptions
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.PayeSubscriptionContactNameForm._
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.BusinessNameFormValues
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.PayeContactNameFormValues
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 
 import scala.util.Random
 
-//TODO: 11186 Need to correct this code
+//TODO: 11186 Need to correct this code, should be contact name rather than business name
 class PayeSubscriptionContactNameFormSpec
 extends AnyWordSpec
 with Matchers {
@@ -51,7 +51,7 @@ with Matchers {
         businessNameNewKey -> businessNameValues(Random.nextInt(businessNameValues.length))
       )
 
-      initForm.bind(params).value shouldBe Some(BusinessNameFormValues(useAsaData = true, None))
+      initForm.bind(params).value shouldBe Some(PayeContactNameFormValues(useAsaData = true, None))
     }
 
     s"be successful when $businessNameUseAsaDataKey false and $businessNameNewKey valid" in {
@@ -60,7 +60,7 @@ with Matchers {
         businessNameNewKey -> validNewBusinessName
       )
 
-      initForm.bind(params).value shouldBe Some(BusinessNameFormValues(useAsaData = false, Some(validNewBusinessName)))
+      initForm.bind(params).value shouldBe Some(PayeContactNameFormValues(useAsaData = false, Some(validNewBusinessName)))
     }
 
     s"error when $businessNameUseAsaDataKey empty" in {
@@ -104,8 +104,8 @@ with Matchers {
       validatedForm.errors.length shouldBe 1
     }
 
-    "unbind CtBusinessNameFormValues" in {
-      val unboundForm = initForm.mapping.unbind(BusinessNameFormValues(useAsaData = true, Some(validNewBusinessName)))
+    "unbind PayeContactNameFormValues" in {
+      val unboundForm = initForm.mapping.unbind(PayeContactNameFormValues(useAsaData = true, Some(validNewBusinessName)))
 
       unboundForm shouldBe Map(
         businessNameUseAsaDataKey -> true.toString,

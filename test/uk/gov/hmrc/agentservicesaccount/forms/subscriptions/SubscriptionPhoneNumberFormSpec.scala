@@ -103,7 +103,7 @@ with Matchers {
       validatedForm.errors.length shouldBe 1
     }
 
-    "unbind CtPhoneNumberFormValues" in {
+    "unbind PhoneNumberFormValues" in {
       val unboundForm = initForm.mapping.unbind(PhoneNumberFormValues(useAsaData = true, Some(validNewPhoneNumber)))
 
       unboundForm shouldBe Map(

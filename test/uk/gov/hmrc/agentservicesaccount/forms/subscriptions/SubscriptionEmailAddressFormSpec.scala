@@ -103,7 +103,7 @@ with Matchers {
       validatedForm.errors.length shouldBe 1
     }
 
-    "unbind CtEmailAddressFormValues" in {
+    "unbind EmailAddressFormValues" in {
       val unboundForm = initForm.mapping.unbind(EmailAddressFormValues(useAsaData = true, Some(validNewEmailAddress)))
 
       unboundForm shouldBe Map(
