@@ -37,14 +37,14 @@
 @newBusinessNameInput = {
     @govukInput(Input(
         label = Label(
-            content = HtmlContent(msgs("asa.legacy.paye.business-name.new-input.label")),
+            content = HtmlContent(msgs("asa.legacy.paye.contact-name.new-input.label")),
             classes = "govuk-label"
         )
     ).withFormField(form("businessNameNew")))
 }
 
 @main(
-    pageTitle = withErrorPrefix(form.hasErrors, msgs("asa.legacy.paye.business-name.title")),
+    pageTitle = withErrorPrefix(form.hasErrors, msgs("asa.legacy.paye.contact-name.title")),
     mimicBrowserBackLink = true,
     showSecondaryNav = false
 ) {
@@ -57,7 +57,7 @@
         @govukRadios(Radios(
             fieldset = Some(Fieldset(
                 legend = Some(Legend(
-                    content = Text(msgs("asa.legacy.paye.business-name.title")),
+                    content = Text(msgs("asa.legacy.paye.contact-name.title")),
                     classes = "govuk-fieldset__legend--l",
                     isPageHeading = true
                 ))
@@ -69,7 +69,7 @@
                     value = Some("true")
                 ),
                 RadioItem(
-                    content = Text(msgs("asa.legacy.paye.business-name.use-asa.false")),
+                    content = Text(msgs("asa.legacy.paye.contact-name.use-asa.false")),
                     value = Some("false"),
                     conditionalHtml = Some(newBusinessNameInput)
                 )

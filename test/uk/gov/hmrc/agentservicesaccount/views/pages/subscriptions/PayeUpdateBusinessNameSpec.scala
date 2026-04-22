@@ -39,11 +39,11 @@ extends ViewBaseSpec {
 
   private val formWithUseAsaError: Form[BusinessNameFormValues] = businessNameForm.withError(
     key = businessNameUseAsaDataKey,
-    message = messages("asa.legacy.paye.business-name.use-asa.error.required")
+    message = messages("asa.legacy.paye.contact-name.use-asa.error.required")
   )
   private val formWithNewBusinessNameError: Form[BusinessNameFormValues] = businessNameForm.withError(
     key = businessNameNewKey,
-    message = messages("asa.legacy.paye.business-name.new-input.error.empty")
+    message = messages("asa.legacy.paye.contact-name.new-input.error.empty")
   )
 
   def render(form: Form[BusinessNameFormValues]): Document = Jsoup.parse(
@@ -57,7 +57,7 @@ extends ViewBaseSpec {
     ).body
   )
 
-  private val title: String = messages("asa.legacy.paye.business-name.title")
+  private val title: String = messages("asa.legacy.paye.contact-name.title")
 
   "ct_update_business_name" when {
 
@@ -105,14 +105,14 @@ extends ViewBaseSpec {
         radios.size() mustBe 2
         radios.get(0).text() mustBe subscriptionBusinessName
         radios.get(0).select("input").attr("name") mustBe businessNameUseAsaDataKey
-        radios.get(1).text() mustBe messages("asa.legacy.paye.business-name.use-asa.false")
+        radios.get(1).text() mustBe messages("asa.legacy.paye.contact-name.use-asa.false")
         radios.get(1).select("input").attr("name") mustBe businessNameUseAsaDataKey
       }
 
       "hide the conditional new business name input" in {
         val conditionalHidden = doc.select(".govuk-radios__conditional--hidden")
         conditionalHidden.size() mustBe 1
-        conditionalHidden.text() mustBe messages("asa.legacy.paye.business-name.new-input.label")
+        conditionalHidden.text() mustBe messages("asa.legacy.paye.contact-name.new-input.label")
         conditionalHidden.select(".govuk-input").attr("name") mustBe businessNameNewKey
       }
     }
@@ -161,7 +161,7 @@ extends ViewBaseSpec {
 
       "display correct error summary link" in {
         val errorLink: Element = doc.select(".govuk-error-summary__list a").first()
-        errorLink.text() mustBe messages("asa.legacy.paye.business-name.use-asa.error.required")
+        errorLink.text() mustBe messages("asa.legacy.paye.contact-name.use-asa.error.required")
         errorLink.attr("href") mustBe s"#$businessNameUseAsaDataKey"
       }
 
@@ -170,7 +170,7 @@ extends ViewBaseSpec {
       }
 
       "display error message on form" in {
-        doc.select(".govuk-error-message").text() mustBe s"Error: ${messages("asa.legacy.paye.business-name.use-asa.error.required")}"
+        doc.select(".govuk-error-message").text() mustBe s"Error: ${messages("asa.legacy.paye.contact-name.use-asa.error.required")}"
       }
     }
 
@@ -188,7 +188,7 @@ extends ViewBaseSpec {
 
       "display correct error summary link" in {
         val errorLink: Element = doc.select(".govuk-error-summary__list a").first()
-        errorLink.text() mustBe messages("asa.legacy.paye.business-name.new-input.error.empty")
+        errorLink.text() mustBe messages("asa.legacy.paye.contact-name.new-input.error.empty")
         errorLink.attr("href") mustBe s"#$businessNameNewKey"
       }
 
@@ -197,7 +197,7 @@ extends ViewBaseSpec {
       }
 
       "display error message on form" in {
-        doc.select(".govuk-error-message").text() mustBe s"Error: ${messages("asa.legacy.paye.business-name.new-input.error.empty")}"
+        doc.select(".govuk-error-message").text() mustBe s"Error: ${messages("asa.legacy.paye.contact-name.new-input.error.empty")}"
       }
     }
   }

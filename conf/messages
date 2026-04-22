@@ -265,12 +265,12 @@ asa.legacy.paye.subscribed.p3=<a class="govuk-link" href="{0}" rel="noreferrer n
 asa.legacy.paye.subscribed.p4=Manage your client’s Pay As You Earn
 asa.legacy.paye.subscribed.p5=<a class="govuk-link" href="{0}" rel="noreferrer noopener">View and manage your client list for Pay As You Earn</a>
 
-asa.legacy.paye.business-name.title=What business name should we show to your Pay As You Earn clients?
-asa.legacy.paye.business-name.use-asa.false=I want to use a different business name for Pay As You Earn
-asa.legacy.paye.business-name.new-input.label=Enter a business name
-asa.legacy.paye.business-name.use-asa.error.required=TODO (Default option for business name required error)
-asa.legacy.paye.business-name.new-input.error.empty=TODO (New business name input empty error)
-asa.legacy.paye.business-name.new-input.error.invalid=TODO (New business name input invalid error)
+asa.legacy.paye.contact-name.title=What business name should we show to your Pay As You Earn clients?
+asa.legacy.paye.contact-name.use-asa.false=I want to use a different business name for Pay As You Earn
+asa.legacy.paye.contact-name.new-input.label=Enter a business name
+asa.legacy.paye.contact-name.use-asa.error.required=TODO (Default option for business name required error)
+asa.legacy.paye.contact-name.new-input.error.empty=TODO (New business name input empty error)
+asa.legacy.paye.contact-name.new-input.error.invalid=TODO (New business name input invalid error)
 
 asa.legacy.paye.phone-number.title=What phone number should we show to call you about Pay As You Earn?
 asa.legacy.paye.phone-number.use-asa.false=I want to use a different phone number for Pay As You Earn
