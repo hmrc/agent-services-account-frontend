@@ -16,6 +16,12 @@
 
 package uk.gov.hmrc.agentservicesaccount.models.subscriptions
 
+//TODO: 11186 Correct this
+case class PayeContactNameFormValues(
+  useAsaData: Boolean,
+  newBusinessName: Option[String]
+)
+
 case class BusinessNameFormValues(
   useAsaData: Boolean,
   newBusinessName: Option[String]

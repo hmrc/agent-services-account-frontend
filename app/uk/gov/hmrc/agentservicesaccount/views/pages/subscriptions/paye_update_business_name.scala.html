@@ -16,7 +16,7 @@
 
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
-@import uk.gov.hmrc.agentservicesaccount.models.subscriptions.BusinessNameFormValues
+@import uk.gov.hmrc.agentservicesaccount.models.subscriptions.PayeContactNameFormValues
 @import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 @import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
@@ -32,7 +32,9 @@
     govukErrorSummary: GovukErrorSummary
 )
 
-@(form: Form[BusinessNameFormValues], subscriptionBusinessName: String)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
+@* TODO: 11186 Correct this template *@
+
+@(form: Form[PayeContactNameFormValues], subscriptionBusinessName: String)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
 
 @newBusinessNameInput = {
     @govukInput(Input(

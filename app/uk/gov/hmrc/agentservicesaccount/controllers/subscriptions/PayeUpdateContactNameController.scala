@@ -24,9 +24,9 @@ import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.updateBusinessNamePage
-import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionBusinessNameForm
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.PayeSubscriptionContactNameForm
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.BusinessNameFormValues
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.PayeContactNameFormValues
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.paye_update_business_name
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -36,7 +36,7 @@ import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
 @Singleton
-class PayeUpdateContactNameController @Inject()(
+class PayeUpdateContactNameController @Inject() (
   actions: Actions,
   val sessionCacheService: SessionCacheService,
   paye_update_business_name: paye_update_business_name,
@@ -55,13 +55,13 @@ with Logging {
 
     val subscriptionBusinessName = journey.asaDetails.agencyName.getOrElse("")
 
-    val initialForm = SubscriptionBusinessNameForm.form(PAYE)
+    val initialForm = PayeSubscriptionContactNameForm.form(PAYE)
     val form =
       journey.useCustomBusinessName match {
 
         case Some(useCustom) =>
           initialForm.fill(
-            BusinessNameFormValues(
+            PayeContactNameFormValues(
               useAsaData = !useCustom,
               newBusinessName = journey.businessNameAnswer
             )
@@ -81,7 +81,7 @@ with Logging {
   def onSubmit: Action[AnyContent] = actions.authActionWithSubscriptionJourney(PAYE).async { implicit request =>
     val journey = request.subscriptionJourney
 
-    SubscriptionBusinessNameForm.form(PAYE).bindFromRequest().fold(
+    PayeSubscriptionContactNameForm.form(PAYE).bindFromRequest().fold(
       formWithErrors => {
         val subscriptionBusinessName = journey.asaDetails.agencyName.getOrElse("")
         Future.successful(
