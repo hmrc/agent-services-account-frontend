@@ -158,7 +158,7 @@ trait TestConstants {
   val desiDetailsCtChangesOtherServices = DesignatoryDetails(agencyDetails, ctChangesOtherServices)
   val desiDetailsSaChangesOtherServices = DesignatoryDetails(agencyDetails, saChangesOtherServices)
 
-  val ctSubscriptionBaseJourney: SubscriptionJourney = SubscriptionJourney(
+  val subscriptionBaseJourney: SubscriptionJourney = SubscriptionJourney(
     asaDetails = AgencyDetails(
       agencyName = None,
       agencyEmail = Some("joe@bloggs.com"),
@@ -175,7 +175,7 @@ trait TestConstants {
     addressAnswer = None
   )
 
-  val ctSubscriptionFullJourney: SubscriptionJourney = SubscriptionJourney(
+  val subscriptionFullJourney: SubscriptionJourney = SubscriptionJourney(
     asaDetails = AgencyDetails(
       agencyName = None,
       agencyEmail = Some("joe@bloggs.com"),

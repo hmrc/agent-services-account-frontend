@@ -53,7 +53,7 @@
         @govukErrorSummary(ErrorSummary().withFormErrorsAsText(form))
     }
 
-    @formWithCSRF(action = subscriptions.routes.UpdateBusinessNameController.onSubmit(LegacyRegime.PAYE)) {
+    @formWithCSRF(action = subscriptions.routes.PayeUpdateBusinessNameController.onSubmit) {
         @govukRadios(Radios(
             fieldset = Some(Fieldset(
                 legend = Some(Legend(

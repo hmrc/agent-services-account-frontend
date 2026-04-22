@@ -84,8 +84,8 @@ extends ComponentBaseISpec {
     s"GET $finishAddressLookupPath" should {
 
       val journeyWithRedirectLocations = List(
-        (ctSubscriptionBaseJourney, "check-your-answers", "not complete"),
-        (ctSubscriptionFullJourney, "check-your-answers", "complete")
+        (subscriptionBaseJourney, "check-your-answers", "not complete"),
+        (subscriptionFullJourney, "check-your-answers", "complete")
       )
 
       journeyWithRedirectLocations.foreach(journeyWithRedirectLocation => {

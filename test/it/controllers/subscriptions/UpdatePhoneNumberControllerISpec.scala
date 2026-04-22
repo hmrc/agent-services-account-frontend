@@ -158,7 +158,7 @@ with TestConstants {
     s"GET /subscription/$legacyRegime/phone-number" should {
 
       "render empty form on first visit" in new TestSetup(legacyRegime) {
-        cacheJourney(ctSubscriptionBaseJourney)
+        cacheJourney(subscriptionBaseJourney)
 
         private val result = controller.showPage(legacyRegime)(FakeRequest()).futureValue
 
@@ -167,7 +167,7 @@ with TestConstants {
       }
 
       "render pre-filled form when journey has existing answers" in new TestSetup(legacyRegime) {
-        private val journey = ctSubscriptionBaseJourney.copy(
+        private val journey = subscriptionBaseJourney.copy(
           useCustomPhoneNumber = Some(true),
           phoneNumberAnswer = Some("1234567890")
         )
@@ -187,7 +187,7 @@ with TestConstants {
     s"POST /subscription/$legacyRegime/phone-number" should {
 
       "return BAD_REQUEST when form is invalid" in new TestSetup(legacyRegime) {
-        cacheJourney(ctSubscriptionBaseJourney)
+        cacheJourney(subscriptionBaseJourney)
 
         private val request = FakeRequest().withSession(session.toSeq: _*).withFormUrlEncodedBody(
           "useAsaData" -> ""
@@ -199,8 +199,8 @@ with TestConstants {
       }
 
       val journeyWithRedirectLocations = List(
-        (ctSubscriptionBaseJourney, "email-address", "not complete"),
-        (ctSubscriptionFullJourney, "check-your-answers", "complete")
+        (subscriptionBaseJourney, "email-address", "not complete"),
+        (subscriptionFullJourney, "check-your-answers", "complete")
       )
 
       journeyWithRedirectLocations.foreach(journeyWithRedirectLocation => {

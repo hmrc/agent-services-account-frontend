@@ -62,7 +62,6 @@ with IntegrationPatience
 with MockFactory
 with TestConstants {
 
-//  TODO: 11186: PAYE needs to be handled separately for this controller ITs
   private val legacyRegimes = List(CT, SA)
 
   class TestSetup(legacyRegime: LegacyRegime) {
@@ -158,7 +157,7 @@ with TestConstants {
     s"GET /subscription/$legacyRegime/business-name" should {
 
       "render empty form on first visit" in new TestSetup(legacyRegime) {
-        cacheJourney(ctSubscriptionBaseJourney)
+        cacheJourney(subscriptionBaseJourney)
 
         private val result = controller.showPage(legacyRegime)(FakeRequest()).futureValue
 
@@ -167,7 +166,7 @@ with TestConstants {
       }
 
       "render pre-filled form when journey has existing answers" in new TestSetup(legacyRegime) {
-        private val journey = ctSubscriptionBaseJourney.copy(
+        private val journey = subscriptionBaseJourney.copy(
           useCustomBusinessName = Some(true),
           businessNameAnswer = Some("Custom Name Ltd")
         )
@@ -187,7 +186,7 @@ with TestConstants {
     s"POST /subscription/$legacyRegime/business-name" should {
 
       "return BAD_REQUEST when form is invalid" in new TestSetup(legacyRegime) {
-        cacheJourney(ctSubscriptionBaseJourney)
+        cacheJourney(subscriptionBaseJourney)
 
         private val request = FakeRequest().withSession(session.toSeq: _*).withFormUrlEncodedBody(
           "useAsaData" -> ""
@@ -199,8 +198,8 @@ with TestConstants {
       }
 
       val journeyWithRedirectLocations = List(
-        (ctSubscriptionBaseJourney, "phone-number", "not complete"),
-        (ctSubscriptionFullJourney, "check-your-answers", "complete")
+        (subscriptionBaseJourney, "phone-number", "not complete"),
+        (subscriptionFullJourney, "check-your-answers", "complete")
       )
 
       journeyWithRedirectLocations.foreach(journeyWithRedirectLocation => {

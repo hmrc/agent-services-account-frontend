@@ -22,14 +22,13 @@ import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
-import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.updateBusinessNamePage
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.getNextPage
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.updateBusinessNamePage
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionBusinessNameForm
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.BusinessNameFormValues
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.BusinessNameFormValues
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.update_business_name
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.paye_update_business_name
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject._
@@ -37,10 +36,10 @@ import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
 @Singleton
-class UpdateBusinessNameController @Inject() (
+class PayeUpdateBusinessNameController @Inject() (
   actions: Actions,
   val sessionCacheService: SessionCacheService,
-  update_business_name: update_business_name,
+  paye_update_business_name: paye_update_business_name,
   cc: MessagesControllerComponents
 )(implicit
   appConfig: AppConfig,
@@ -49,51 +48,46 @@ class UpdateBusinessNameController @Inject() (
 extends FrontendController(cc)
 with I18nSupport
 with Logging {
+//  TODO: 11186: Build this into correct design and saving mechanism
 
-  def showPage(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
-    legacyRegime match {
-      case PAYE => Future.successful(Redirect(routes.PayeUpdateBusinessNameController.showPage))
-      case _ =>
-        val journey = request.subscriptionJourney
-
-        val subscriptionBusinessName = journey.asaDetails.agencyName.getOrElse("")
-
-        val initialForm = SubscriptionBusinessNameForm.form(legacyRegime)
-        val form =
-          journey.useCustomBusinessName match {
-
-            case Some(useCustom) =>
-              initialForm.fill(
-                BusinessNameFormValues(
-                  useAsaData = !useCustom,
-                  newBusinessName = journey.businessNameAnswer
-                )
-              )
-
-            case None => initialForm
-          }
-
-        Future.successful(
-          Ok(update_business_name(
-            form,
-            subscriptionBusinessName,
-            legacyRegime
-          ))
-        )
-    }
-  }
-
-  def onSubmit(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
+  def showPage: Action[AnyContent] = actions.authActionWithSubscriptionJourney(PAYE).async { implicit request =>
     val journey = request.subscriptionJourney
 
-    SubscriptionBusinessNameForm.form(legacyRegime).bindFromRequest().fold(
+    val subscriptionBusinessName = journey.asaDetails.agencyName.getOrElse("")
+
+    val initialForm = SubscriptionBusinessNameForm.form(PAYE)
+    val form =
+      journey.useCustomBusinessName match {
+
+        case Some(useCustom) =>
+          initialForm.fill(
+            BusinessNameFormValues(
+              useAsaData = !useCustom,
+              newBusinessName = journey.businessNameAnswer
+            )
+          )
+
+        case None => initialForm
+      }
+
+    Future.successful(
+      Ok(paye_update_business_name(
+        form,
+        subscriptionBusinessName
+      ))
+    )
+  }
+
+  def onSubmit: Action[AnyContent] = actions.authActionWithSubscriptionJourney(PAYE).async { implicit request =>
+    val journey = request.subscriptionJourney
+
+    SubscriptionBusinessNameForm.form(PAYE).bindFromRequest().fold(
       formWithErrors => {
         val subscriptionBusinessName = journey.asaDetails.agencyName.getOrElse("")
         Future.successful(
-          BadRequest(update_business_name(
+          BadRequest(paye_update_business_name(
             formWithErrors,
-            subscriptionBusinessName,
-            legacyRegime
+            subscriptionBusinessName
           ))
         )
       },
@@ -108,12 +102,12 @@ with Logging {
         )
 
         sessionCacheService
-          .put(subscriptionJourneyKey(legacyRegime), updatedJourney)
+          .put(subscriptionJourneyKey(PAYE), updatedJourney)
           .map(_ =>
             Redirect(getNextPage(
               updateBusinessNamePage,
               Some(updatedJourney),
-              legacyRegime
+              PAYE
             ))
           )
       }

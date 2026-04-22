@@ -65,8 +65,8 @@ extends ComponentBaseISpec {
     s"POST $updateEmailAddressPath" should {
 
       val journeyWithRedirectLocations = List(
-        (ctSubscriptionBaseJourney, "address", "not complete"),
-        (ctSubscriptionFullJourney, "check-your-answers", "complete")
+        (subscriptionBaseJourney, "address", "not complete"),
+        (subscriptionFullJourney, "check-your-answers", "complete")
       )
 
       journeyWithRedirectLocations.foreach(journeyWithRedirectLocation => {
