@@ -32,7 +32,7 @@ with Matchers {
   val validNewEmailAddress = "joe@bloggs.com"
   val invalidNewEmailAddress = "{][.',"
 
-  private val legacyRegime = LegacyRegime.SA
+  private val legacyRegime = LegacyRegime.PAYE
 
   private val legacyRegimePrefix = legacyRegime.msgPrefix
 

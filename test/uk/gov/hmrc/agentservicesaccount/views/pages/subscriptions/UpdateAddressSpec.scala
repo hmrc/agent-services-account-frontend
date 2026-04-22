@@ -34,7 +34,7 @@ extends ViewBaseSpec {
 
   private val view: update_address = inject[update_address]
 
-  private val legacyRegime = LegacyRegime.SA
+  private val legacyRegime = LegacyRegime.PAYE
 
   private val legacyRegimePrefix = legacyRegime.msgPrefix
 

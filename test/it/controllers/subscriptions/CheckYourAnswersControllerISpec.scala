@@ -39,8 +39,7 @@ import uk.gov.hmrc.agentservicesaccount.models._
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionRequest
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.{CT, PAYE, SA}
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.authorise.Predicate
@@ -60,7 +59,8 @@ with ScalaFutures
 with IntegrationPatience
 with MockFactory {
 
-  private val legacyRegimes = List(CT, SA)
+  //  TODO: 11186: PAYE may need to be handled separately for this controller ITs
+  private val legacyRegimes = List(CT, PAYE, SA)
 
   class TestSetup(legacyRegime: LegacyRegime) {
 

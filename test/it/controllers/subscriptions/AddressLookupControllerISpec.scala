@@ -26,8 +26,7 @@ import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup.ConfirmedResponseAddress
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup.ConfirmedResponseAddressDetails
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup.Country
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.{CT, PAYE, SA}
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
 
 class AddressLookupControllerISpec
@@ -35,7 +34,7 @@ extends ComponentBaseISpec {
 
   private val repo = inject[SessionCacheRepository]
 
-  private val legacyRegimes = List(CT, SA)
+  private val legacyRegimes = List(CT, PAYE, SA)
 
   private val confirmedAddressResponse = ConfirmedResponseAddress(
     auditRef = "foo",

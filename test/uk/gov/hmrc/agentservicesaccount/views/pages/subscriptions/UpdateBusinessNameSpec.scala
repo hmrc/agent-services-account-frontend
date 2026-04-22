@@ -35,6 +35,7 @@ extends ViewBaseSpec {
   private val view: update_business_name = inject[update_business_name]
   private val subscriptionBusinessName = "ABC-No.1 Accountants"
 
+  //  TODO: 11186: PAYE needs to be handled separately for this unit tests
   private val legacyRegime = LegacyRegime.SA
 
   private val legacyRegimePrefix = legacyRegime.msgPrefix

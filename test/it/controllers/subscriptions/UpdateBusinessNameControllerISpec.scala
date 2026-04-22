@@ -62,6 +62,7 @@ with IntegrationPatience
 with MockFactory
 with TestConstants {
 
+//  TODO: 11186: PAYE needs to be handled separately for this controller ITs
   private val legacyRegimes = List(CT, SA)
 
   class TestSetup(legacyRegime: LegacyRegime) {
