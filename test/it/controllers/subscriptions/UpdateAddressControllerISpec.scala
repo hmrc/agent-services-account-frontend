@@ -51,6 +51,7 @@ extends ComponentBaseISpec {
         val expectedTitle: String =
           (legacyRegime: LegacyRegime) match {
             case CT => "What address should we use to send letters about Corporation Tax?"
+            case PAYE => "What address should we use to send letters about Pay As You Earn?"
             case SA => "What address should we use to send letters about Self Assessment?"
           }
         assertPageHasTitle(expectedTitle)(result)
