@@ -55,20 +55,20 @@ with Logging {
 
     val subscriptionBusinessName = journey.asaDetails.agencyName.getOrElse("")
 
-    val initialForm = PayeSubscriptionContactNameForm.form(PAYE)
-    val form =
-      journey.useCustomBusinessName match {
-
-        case Some(useCustom) =>
-          initialForm.fill(
-            PayeContactNameFormValues(
-              useAsaData = !useCustom,
-              newBusinessName = journey.businessNameAnswer
-            )
-          )
-
-        case None => initialForm
-      }
+    val initialForm = PayeSubscriptionContactNameForm.form
+//    val form =
+//      journey.useCustomBusinessName match {
+//
+//        case Some(useCustom) =>
+//          initialForm.fill(
+//            PayeContactNameFormValues(
+//              contactName = subscriptionBusinessName
+//            )
+//          )
+//
+//        case None => initialForm
+//      }
+    val form = initialForm
 
     Future.successful(
       Ok(paye_update_contact_name(
@@ -81,7 +81,7 @@ with Logging {
   def onSubmit: Action[AnyContent] = actions.authActionWithSubscriptionJourney(PAYE).async { implicit request =>
     val journey = request.subscriptionJourney
 
-    PayeSubscriptionContactNameForm.form(PAYE).bindFromRequest().fold(
+    PayeSubscriptionContactNameForm.form.bindFromRequest().fold(
       formWithErrors => {
         val subscriptionBusinessName = journey.asaDetails.agencyName.getOrElse("")
         Future.successful(
@@ -93,12 +93,12 @@ with Logging {
       },
       data => {
         val updatedJourney = journey.copy(
-          useCustomBusinessName = Some(!data.useAsaData),
-          businessNameAnswer =
-            if (data.useAsaData)
-              None
-            else
-              data.newBusinessName
+//          useCustomBusinessName = Some(!data.useAsaData),
+//          businessNameAnswer =
+//            if (data.useAsaData)
+//              None
+//            else
+//              data.newBusinessName
         )
 
         sessionCacheService

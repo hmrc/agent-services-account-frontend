@@ -20,33 +20,23 @@ import play.api.data.Forms._
 import play.api.data.Form
 import play.api.data.Mapping
 import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators.trimmedAndNormalisedText
-import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators.useAsaDataMapping
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.PayeContactNameFormValues
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
-import uk.gov.voa.play.form.ConditionalMappings.mandatoryIfFalse
 
-//TODO: 11186 Need to correct this code
 object PayeSubscriptionContactNameForm {
 
-  val businessNameUseAsaDataKey = "businessNameUseAsaData"
-  val businessNameNewKey = "businessNameNew"
+  val contactNameNewKey = "contactName"
 
-  private val businessNameRegex = """^[A-Za-z0-9\(\)&\-\'‘’\/,\. ]{1,54}$""".r
+  private val contactNameRegex = """^[A-Za-z0-9\(\)&\-\'‘’\/,\. ]{1,54}$""".r
 
-  private def businessNameUseAsaDataMapping(legacyRegime: LegacyRegime): Mapping[Boolean] = useAsaDataMapping(
-    s"${legacyRegime.msgPrefix}.contact-name.use-asa.error.required"
-  )
+  private val contactNameMapping: Mapping[String] = trimmedAndNormalisedText
+    .verifying("asa.legacy.paye.contact-name.new-input.error.empty", _.nonEmpty)
+    .verifying("asa.legacy.paye.contact-name.new-input.error.invalid", x => x.isEmpty || contactNameRegex.matches(x))
 
-  private def businessNameNewOptionalMapping(legacyRegime: LegacyRegime): Mapping[String] = trimmedAndNormalisedText
-    .verifying(s"${legacyRegime.msgPrefix}.contact-name.new-input.error.empty", _.nonEmpty)
-    .verifying(s"${legacyRegime.msgPrefix}.contact-name.new-input.error.invalid", x => x.isEmpty || businessNameRegex.matches(x))
-
-  def form(legacyRegime: LegacyRegime): Form[PayeContactNameFormValues] = {
+  def form: Form[PayeContactNameFormValues] = {
     Form(
       mapping(
-        businessNameUseAsaDataKey -> businessNameUseAsaDataMapping(legacyRegime),
-        businessNameNewKey -> mandatoryIfFalse(businessNameUseAsaDataKey, businessNameNewOptionalMapping(legacyRegime))
-      )(PayeContactNameFormValues.apply)(o => Some(o.useAsaData, o.newBusinessName))
+        contactNameNewKey -> contactNameMapping
+      )(PayeContactNameFormValues.apply)(o => Some(o.contactName))
     )
   }
 

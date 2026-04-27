@@ -32,7 +32,6 @@ with Matchers {
   val validNewBusinessName = "ABC-No.1 Accountants"
   val invalidNewBusinessName = "{][.',"
 
-  //  TODO: 11186: PAYE needs to be handled separately for this unit tests
   private val legacyRegime = LegacyRegime.SA
 
   private val legacyRegimePrefix = legacyRegime.msgPrefix
