@@ -44,6 +44,7 @@ case class SubscriptionJourney(
     }
   }
 
+  //      TODO: 11186 Implement for PAYE
   val isComplete: Boolean = {
     val bnComplete = answerComplete(useCustomBusinessName, businessNameAnswer)
     val pnComplete = answerComplete(useCustomPhoneNumber, phoneNumberAnswer)
