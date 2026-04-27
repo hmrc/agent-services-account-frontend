@@ -1,0 +1,72 @@
+@*
+ * Copyright 2026 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+@import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.{routes => subscriptionRoutes}
+@import uk.gov.hmrc.agentservicesaccount.models.subscriptions.{LegacyRegime, SubscriptionInfo, SubscriptionStatus}
+@import uk.gov.hmrc.agentservicesaccount.actions.AuthRequestWithAgentInfo
+
+@this(p: p, h2: h2, a: a, ul_html: ul_html)
+
+@(
+        subscriptionInfo: Seq[SubscriptionInfo],
+        isAbroad: Boolean
+)(implicit
+        msgs: Messages,
+        request: AuthRequestWithAgentInfo[AnyContent],
+        appConfig: AppConfig
+)
+
+@defining({
+    def isUnsubscribed(regime: LegacyRegime): Boolean =
+        subscriptionInfo.exists(s =>
+            s.regime == regime &&
+                    (s.subscriptionStatus == SubscriptionStatus.NotSubscribed ||
+                            s.subscriptionStatus == SubscriptionStatus.SubscriptionFailed)
+        )
+
+    val regimes =
+        Seq(
+            if(!isAbroad && isUnsubscribed(LegacyRegime.PAYE)) Some(LegacyRegime.PAYE) else None,
+            Some(LegacyRegime.CT).filter(isUnsubscribed),
+            Some(LegacyRegime.SA).filter(isUnsubscribed)
+        ).flatten
+
+    regimes
+}) { regimes =>
+    @if(regimes.nonEmpty) {
+        <hr class="govuk-section-break hr-thick govuk-!-margin-bottom-6 govuk-!-margin-top-8">
+        @h2(
+            if(regimes.size == 1)
+                "asa.apply-to-act-for.single-service.section"
+            else
+                "asa.apply-to-act-for.multi-service.section",
+            id = Some("tax-services-h2")
+        )
+        @p(msgs("asa.apply-to-act-for.p1"))
+        @ul_html(
+            items = regimes.map { regime =>
+                val url = regime match {
+                    case LegacyRegime.PAYE =>
+                        subscriptionRoutes.PayeSubscriptionRequestController.showConfirm.url
+                    case _ =>
+                        subscriptionRoutes.UpdateBusinessNameController.showPage(regime).url
+                }
+                a(href = url, key = s"asa.apply-to-act-for.${regime.toString.toLowerCase}")
+            }
+        )
+    }
+}

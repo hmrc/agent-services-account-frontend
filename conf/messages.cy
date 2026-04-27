@@ -168,6 +168,13 @@ asa.trusts-section.h2=Ymddiriedolaethau ac ystadau
 
 # TODO: WELSH TRANSLATIONS NEEDED FOR ALL BELOW THIS LINE
 
+asa.apply-to-act-for.multi-service.section=Apply to act as an agent for these tax services
+asa.apply-to-act-for.single-service.section=Apply to act as an agent for this tax service
+asa.apply-to-act-for.p1=Once you apply, you'll get a new agent code within 5 days. You can use it to manage your clients.
+asa.apply-to-act-for.paye=Pay as you earn (PAYE)/Construction Industry Scheme (CIS)
+asa.apply-to-act-for.sa=Self Assessment
+asa.apply-to-act-for.ct=Corporation Tax
+
 # PAYE/CIS
 asa.legacy.paye.h2=PAYE/CIS
 asa.legacy.paye.col1.h3=Test Content
