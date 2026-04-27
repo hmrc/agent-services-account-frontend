@@ -31,14 +31,5 @@ case class SubscriptionAddress(
 object SubscriptionAddress {
 
   implicit val format: Format[SubscriptionAddress] = Json.format[SubscriptionAddress]
-  val payeRegistrationWrites: Writes[SubscriptionAddress] = Writes { address =>
-    Json.obj(
-      "addressLine1" -> address.line1,
-      "addressLine2" -> address.line2,
-      "addressLine3" -> address.line3,
-      "addressLine4" -> address.line4,
-      "postCode" -> address.postCode
-    )
-  }
 
 }

@@ -361,6 +361,7 @@ common.sign-out=Allgofnodi
 common.what.happens.next=Yr hyn sy’n digwydd nesaf
 common.yes=Iawn
 common.not-provided=Heb ei ddarparu
+common.tryAgain=Rhowch gynnig arall arni
 details.link-hidden= ar gyfer {0}
 
 # Errors
@@ -794,6 +795,7 @@ amls.view-details.pendingAMLSDetailsRejected.inset.p2=Pan fyddwch wedi dod o hyd
 amls.view-details.noAMLSDetails.list.item1=enw’r corff goruchwylio
 amls.view-details.noAMLSDetails.list.item2=eich rhif cofrestru
 amls.view-details.noAMLSDetails.list.item3=dyddiad adnewyddu eich cofrestriad
+amls.view-details.noAMLSDetails.list.item4=tystiolaeth o’ch cofrestriad
 
 amls.view-details.noAMLSDetails.link=Darllenwch ragor am gofrestru (yn agor tab newydd)
 
@@ -804,9 +806,9 @@ amls.view-details.common.add-details=Ychwanegu manylion o ran goruchwyliaeth
 amls.view-details.common.add-new-supervision-details=Ychwanegu manylion newydd o ran goruchwyliaeth
 amls.view-details.common.update-details=Diweddaru’r manylion
 
-amls.new-supervisory-body.title=Beth yw enw’ch corff goruchwylio?
-amls.new-supervisory-body.hint=Dechreuwch deipio ac yna dewiswch eich corff goruchwylio o’r rhestr
-amls.new-supervisory-body.error=Rhowch enw eich corff goruchwylio i ni
+amls.new-supervisory-body.title=Beth yw enw’r corff goruchwylio ar gyfer {0}?
+amls.new-supervisory-body.hint=Dechreuwch nodi enw, ac yna dewiswch eich goruchwyliwr o’r rhestr
+amls.new-supervisory-body.error=Nodwch enw’r corff goruchwylio ar gyfer {0}
 amls.new-supervisory-body.error.os.max-length=Mae’n rhaid i enw’r corff goruchwylio fod yn 100 o gymeriadau neu lai
 amls.new-supervisory-body.error.os.regex=Mae’n rhaid i enw’r corff goruchwylio gynnwys y llythrennau a i z, rhifau, collnodau, comas, ampersandau (&), cromfachau crwn,  blaenslaesys, atalnodau llawn, cysylltnodau a bylchau yn unig
 amls.confirm-supervisory-body.h1=A ydych wedi’ch cofrestru â {0} o hyd?
@@ -815,16 +817,55 @@ amls.confirm-registration-number.h1=Ai {0} yw’ch rhif cofrestru o hyd?
 amls.confirm-registration-number.error=Dewiswch ‘Iawn’ os mai {0} yw’ch rhif cofrestru o hyd
 amls.enter-renewal-date.h1=Pryd y mae angen i chi adnewyddu’ch cofrestriad?
 amls.enter-renewal-date.hint=Er enghraifft, 31 3 2025
-amls.enter-registration-number.h1=Beth yw’ch rhif cofrestru?
-amls.enter-registration-number.error.empty=Nodwch eich rhif cofrestru
+amls.enter-registration-number.h1=Beth yw’r rhif cofrestru?
+amls.enter-registration-number.error.empty=Nodwch y rhif cofrestru
 amls.enter-registration-number.error.not-hmrc.invalid=Mae’n rhaid i’r rhif cofrestru gynnwys llythrennau a rhifau yn unig
-amls.enter-registration-number.error.hmrc.invalid=Nodwch eich rhif cofrestru yn y fformat cywir, er enghraifft XAML00000123456
+amls.enter-registration-number.error.hmrc.invalid=Nodwch rif cofrestru yn y fformat cywir, er enghraifft, XAML00000123456
 amls.check-your-answers.h1=Gwirio’ch atebion
 amls.check-your-answers.p=Manylion ynghylch goruchwyliaeth gwrth-wyngalchu arian
 amls.check-your-answers.supervisory-body=Corff goruchwylio
 amls.check-your-answers.registration-number=Rhif cofrestru
 amls.check-your-answers.renewal-date=Dyddiad nesaf ar gyfer adnewyddu
+amls.check-your-answers.evidence=Tystiolaeth
 amls.check-your-answers.submit-button=Cyflwyno’ch manylion
+
+
+## AMLS Evidence upload
+amls.evidence-upload.title = Uwchlwythwch dystiolaeth
+amls.evidence-upload.p1 = Uwchlwythwch dystiolaeth i ddangos mai {0} yw eich goruchwyliaeth gwrth-wyngalchu arian presennol.
+amls.evidence-upload.p2 = Gallwch ddewis pa dystiolaeth i’w huwchlwytho.
+amls.evidence-upload.p3 = Gall tystiolaeth addas fod yn lythyr, e-bost neu’n dderbynneb o daliad oddi wrth eich corff goruchwylio, sy’n cadarnhau eich bod wedi’ch cofrestru.
+amls.evidence-upload.p4 = Mae’n rhaid i’r ffeil fod yn llai na 6 MB.
+amls.evidence-upload.details.summary = Mathau o ffeiliau y gallwn eu derbyn
+amls.evidence-upload.fileTypes.p1 = Caniateir y mathau hyn o ffeiliau:
+amls.evidence-upload.fileTypes.bullet1 = delwedd (.jpg, .jpeg, .png neu .tiff)
+amls.evidence-upload.fileTypes.bullet2 = PDF (.pdf)
+amls.evidence-upload.fileTypes.bullet3 = e-bost (.txt neu .msg)
+amls.evidence-upload.fileTypes.bullet4 = Microsoft (Word, Excel neu PowerPoint)
+amls.evidence-upload.fileTypes.bullet5 = Fformat Dogfen Agored (ODF)
+amls.evidence-upload.label = Dewiswch eich ffeil
+amls.evidence-upload.fileUploadProgress.message = Checking file
+amls.evidence-upload.error.required = Dewiswch ffeil
+amls.evidence-upload.error.wrong-file-type = Mae’n rhaid i’r ffeil dan sylw fod yn JPG, JPEG, PNG, TIFF, PDF, TXT, MSG, DOC, DOCX, XLS, XLSX, PPT, PPTX, ODT, ODS neu ODP
+amls.evidence-upload.error.file-too-large = Mae’n rhaid i bob ffeil fod yn llai na 6MB. Dewiswch ffeil gwahanol.
+amls.evidence-upload.error.file-empty = Mae’r ffeil yn wag. Dewiswch ffeil gwahanol.
+amls.evidence-upload.error.virus = Mae feirws yn y ffeil. Dewiswch ffeil gwahanol.
+amls.evidence-upload.error.generic = Nid oedd modd uwchlwytho’r ffeil. Rhowch gynnig arall arni
+
+amls.evidence-upload-progress.title=We are checking your upload
+amls.evidence-upload-progress.complete.title=Your upload is complete
+amls.evidence-upload-progress.failed.title=Your upload has failed scanning
+amls.evidence-upload-progress.virus.title=Your upload has a virus
+amls.evidence-upload-progress.message=Checking file
+amls.evidence-upload-progress.inProgress=Wait a few seconds and then select ‘Continue’.
+amls.evidence-upload-progress.complete=Your file {0} has been uploaded successfully.
+amls.evidence-upload-progress.failed=Your file upload has failed scanning. Try uploading another file.
+amls.evidence-upload-progress.virus=A virus has been detected in your uploaded file, try uploading another file.
+
+amls.evidence-upload-error.EntityTooLarge.title = Your upload is too large
+amls.evidence-upload-error.EntityTooLarge.message = The file you are trying to upload is too large. The maximum file size is 6MB. Try uploading a smaller file.
+amls.evidence-upload-error.Unknown.title = Your upload has failed
+amls.evidence-upload-error.Unknown.message = Your file upload has failed scanning. Try uploading another file.
 
 #AMLS Errors
 update-money-laundering-supervisory.error.date=Enter your next registration renewal date TBC

@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,20 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.agentservicesaccount.models
+package uk.gov.hmrc.agentservicesaccount.models.upscan;
 
-import play.api.libs.json.Json
-import play.api.libs.json.OFormat
-
-import java.time.LocalDate
-
-case class AmlsRequest(
-  ukRecord: Boolean,
-  supervisoryBody: String,
-  membershipNumber: String,
-  membershipExpiresOn: Option[LocalDate],
-  evidenceObjectReference: Option[String]
-)
-
-object AmlsRequest {
-  implicit val format: OFormat[AmlsRequest] = Json.format[AmlsRequest]
+// TODO rewrite as enum when switching to scala 3
+sealed trait UpscanErrorCode
+object UpscanErrorCode {
+  def fromString(string: String): Option[UpscanErrorCode] =
+    string.toLowerCase match {
+      case "unknown" => Some(Unknown)
+      case "entitytoolarge" => Some(EntityTooLarge)
+      case _ => None
+    }
 }
+
+case object Unknown
+extends UpscanErrorCode
+case object EntityTooLarge
+extends UpscanErrorCode

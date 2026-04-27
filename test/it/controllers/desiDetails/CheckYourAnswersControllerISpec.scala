@@ -22,10 +22,14 @@ import uk.gov.hmrc.agentservicesaccount.controllers.currentSelectedChangesKey
 import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
 import uk.gov.hmrc.agentservicesaccount.controllers.draftNewContactDetailsKey
 import uk.gov.hmrc.agentservicesaccount.controllers.draftSubmittedByKey
-import uk.gov.hmrc.agentservicesaccount.models.{AgencyDetails, AgentRecordUpdateResponse}
+import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
+import uk.gov.hmrc.agentservicesaccount.models.AgentRecordUpdateResponse
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails._
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
-import stubs.AgentServicesAccountStubs.{givenGetAgentRecord, stubASAGetResponseError, stubASAPostResponse, stubAgentRecordUpdateResponseSuccess}
+import stubs.AgentServicesAccountStubs.givenGetAgentRecord
+import stubs.AgentServicesAccountStubs.stubASAGetResponseError
+import stubs.AgentServicesAccountStubs.stubASAPostResponse
+import stubs.AgentServicesAccountStubs.stubAgentRecordUpdateResponseSuccess
 import stubs.AgentAssuranceStubs.givenPostDesignatoryDetails
 
 import java.time.Instant

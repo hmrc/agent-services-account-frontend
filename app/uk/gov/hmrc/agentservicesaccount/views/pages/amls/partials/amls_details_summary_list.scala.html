@@ -19,10 +19,12 @@
 
 @import java.time.format.DateTimeFormatter
 @import java.util.Locale
+@import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 
 @this(
-        govukSummaryList : GovukSummaryList)
-
+        govukSummaryList: GovukSummaryList,
+        appConfig: AppConfig
+)
 
 @(amlsDetails: AmlsDetails, pendingStatus: Option[String] = None)(implicit msgs: Messages)
 
@@ -33,19 +35,23 @@
 @mMembershipNumberItem = @{
     amlsDetails.membershipNumber.map(num => SummaryListRow(
         key = Key(content = Text(msgs("amls.view-details.registration-number"))),
-        value = Value(content = Text(num))) )
+        value = Value(content = Text(num))))
 }
 
 @mRenewalDate = @{
-    amlsDetails.membershipExpiresOn.map(date => SummaryListRow(
-        key = Key(content = Text(msgs("amls.view-details.renewal-date"))),
-        value = Value(content = Text(date.format(dtf(msgs.lang.toLocale))))))
+    if(appConfig.enableAgentRecordHipUpdates) {
+        None
+    } else {
+        amlsDetails.membershipExpiresOn.map(date => SummaryListRow(
+            key = Key(content = Text(msgs("amls.view-details.renewal-date"))),
+            value = Value(content = Text(date.format(dtf(msgs.lang.toLocale))))))
+    }
 }
 
 @mPendingRejected = @{
     pendingStatus.map(status => SummaryListRow(
         key = Key(content = Text(msgs("amls.view-details.pending-status"))),
-        value = Value(content = Text(msgs(s"amls.view-details.pending-status-$status"))) ))
+        value = Value(content = Text(msgs(s"amls.view-details.pending-status-$status")))))
 }
 
 @govukSummaryList(SummaryList(
@@ -58,5 +64,5 @@
                 content = Text(amlsDetails.supervisoryBody)
             )
         )
-        ) ++ mMembershipNumberItem ++ mRenewalDate ++ mPendingRejected
+    ) ++ mMembershipNumberItem ++ mRenewalDate ++ mPendingRejected
 ))

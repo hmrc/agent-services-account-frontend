@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,19 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.agentservicesaccount.models
+package uk.gov.hmrc.agentservicesaccount.models.upscan
 
 import play.api.libs.json.Json
-import play.api.libs.json.OFormat
+import play.api.libs.json.Format
 
-import java.time.LocalDate
-
-case class AmlsRequest(
-  ukRecord: Boolean,
-  supervisoryBody: String,
-  membershipNumber: String,
-  membershipExpiresOn: Option[LocalDate],
-  evidenceObjectReference: Option[String]
+final case class UpscanInitiateRequest(
+  callbackUrl: String,
+  successRedirect: Option[String] = None,
+  errorRedirect: Option[String] = None,
+  minimumFileSize: Option[Long] = None,
+  maximumFileSize: Option[Long] = None
 )
 
-object AmlsRequest {
-  implicit val format: OFormat[AmlsRequest] = Json.format[AmlsRequest]
+object UpscanInitiateRequest {
+  implicit val format: Format[UpscanInitiateRequest] = Json.format[UpscanInitiateRequest]
 }

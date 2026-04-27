@@ -18,15 +18,17 @@
 @import uk.gov.hmrc.govukfrontend.views.html.components.{TwoThirdsMainContent, _}
 @import uk.gov.hmrc.hmrcfrontend.views.config.StandardBetaBanner
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers._
-@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.hmrcstandardpage._
 @import views.html.helper.CSPNonce
-
+@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.hmrcstandardpage.HmrcStandardPageParams
+@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.hmrcstandardpage.TemplateOverrides
+@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.hmrcstandardpage.Banners
+@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.hmrcstandardpage.ServiceURLs
 
 @this(
         hmrcStandardPage: HmrcStandardPage,
         secondary_nav: agents_secondary_nav,
         standardBetaBanner: StandardBetaBanner,
-        govukBackLink : GovukBackLink,
+        govukBackLink: GovukBackLink,
         autocompleteCss: HmrcAccessibleAutocompleteCss,
         autocompleteJavascript: HmrcAccessibleAutocompleteJavascript,
         hmrcLanguageSelectHelper: HmrcLanguageSelectHelper,
@@ -84,6 +86,7 @@
 @head = {
     <meta name="format-detection" content="telephone=no">
     <link rel="stylesheet" href="@controllers.routes.Assets.at("stylesheets/asa.css")" >
+    @additionalCss.getOrElse(Html(""))
     @autocompleteCss()
 
     @if(isSignedIn) {
@@ -92,6 +95,10 @@
             timeoutUrl = Some(routes.SignOutController.timeOut.url)
         )
     }
+}
+@scripts = {
+    @autocompleteJavascript()
+    @additionalScripts.getOrElse(Html(""))
 }
 @hmrcStandardPage(HmrcStandardPageParams(
     serviceURLs = ServiceURLs(
@@ -104,7 +111,7 @@
     templateOverrides = TemplateOverrides(
         additionalHeadBlock = Some(head),
         beforeContentBlock = Some(beforeContent),
-        additionalScriptsBlock = Some(autocompleteJavascript()),
+        additionalScriptsBlock = Some(scripts),
         mainContentLayout = if(fullWidth) Some(fullWidthMainContent(_)) else Some(twoThirdsLayout(_))
     ),
     isWelshTranslationAvailable = true,

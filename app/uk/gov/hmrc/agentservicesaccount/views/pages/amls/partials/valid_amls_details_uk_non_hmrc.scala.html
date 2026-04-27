@@ -17,27 +17,33 @@
 @import uk.gov.hmrc.agentservicesaccount.controllers.amls.routes
 @import uk.gov.hmrc.agentservicesaccount.models.AmlsDetails
 @import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.partials._
+@import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 
 @this(
-        p:p,
-        h2:h2,
+        p: p,
+        h2: h2,
         a: a,
         ul: ul,
-        amls_details_summary_list: amls_details_summary_list
+        amls_details_summary_list: amls_details_summary_list,
+        appConfig: AppConfig
 )
 @(amlsDetails: AmlsDetails)(implicit msgs: Messages)
 
- @amls_details_summary_list(amlsDetails)
+@amls_details_summary_list(amlsDetails)
 
- @h2(msgs("amls.view-details.common.h2"))
+@h2(msgs("amls.view-details.common.h2"))
 
- @p(msgs("amls.view-details.validAMLSDetailsUK.non-hmrc.p"))
+@if(appConfig.enableAgentRecordHipUpdates) {
+    @p(msgs("amls.view-details.validAMLSDetailsUK.hmrc.p"))
+} else {
+    @p(msgs("amls.view-details.validAMLSDetailsUK.non-hmrc.p"))
+    @ul(items = (1 to 2).map(i => msgs(s"amls.view-details.validAMLSDetailsUK.non-hmrc.list.item$i")))
+}
 
- @ul(items = (1 to 2).map( i => msgs(s"amls.view-details.validAMLSDetailsUK.non-hmrc.list.item$i")))
-
- @p(html = Some(
-  a(
-   key = msgs("amls.view-details.common.start-journey"),
-   id = Some("start-journey"),
-   href = routes.ConfirmSupervisoryBodyController.showPage.url)
-  ))
+@p(html = Some(
+    a(
+        key = msgs("amls.view-details.common.start-journey"),
+        id = Some("start-journey"),
+        href = if(appConfig.enableAgentRecordHipUpdates) routes.AmlsNewSupervisoryBodyController.showPage().url else routes.ConfirmSupervisoryBodyController.showPage.url
+    )
+))

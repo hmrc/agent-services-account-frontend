@@ -18,6 +18,7 @@ package uk.gov.hmrc.agentservicesaccount.config
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
+import com.typesafe.config.ConfigMemorySize
 import play.api.i18n.Lang
 import play.api.libs.json._
 import play.api.mvc.Call
@@ -33,6 +34,7 @@ import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import views.html.helper.urlEncode
 
 import scala.concurrent.duration.Duration
+import scala.concurrent.duration.FiniteDuration
 
 @Singleton
 class AppConfig @Inject() (
@@ -66,6 +68,8 @@ extends Logging {
 
   val addressLookupBaseUrl: String = baseUrl("address-lookup-frontend")
 
+  val upscanInitiateBaseUrl: String = baseUrl("upscan-initiate")
+
   val emailVerificationBaseUrl: String = baseUrl("email-verification")
   val emailVerificationFrontendBaseUrl: String = getString("microservice.services.email-verification-frontend.external-url")
 
@@ -75,7 +79,8 @@ extends Logging {
   val suspendedContactDetailsSendToAddress: String = getString("suspendedContactDetails.sendToAddress")
   val suspendedContactDetailsSendEmail: Boolean = getBoolean("suspendedContactDetails.sendEmail")
 
-  val asaFrontendExternalUrl: String = getConfString("agent-services-account-frontend.external-url")
+  val asaFrontendBaseUrl: String = baseUrl("agent-services-account-frontend") // To be used when we need to provide an internal api url to other services
+  val asaFrontendExternalUrl: String = getConfString("agent-services-account-frontend.external-url") // To be used to provide full frontend urls to other services
 
   private val basGatewayFrontendExternalUrl: String = getConfString("bas-gateway-frontend.external-url")
   private val signOutPath: String = getConfString("bas-gateway-frontend.sign-out.path")
@@ -158,6 +163,7 @@ extends Logging {
 
   lazy val sessionCacheExpiryDuration: Duration = servicesConfig.getDuration("mongodb.cache.expiry")
   val pendingChangeTTL: Long = getInt("mongodb.desi-details.lockout-period").toLong
+  val upscanExpiryDuration: Long = getInt("mongodb.upscan-details.expiry").toLong
 
   // feature flags
   val feedbackSurveyServiceSelect: Boolean = getBoolean("features.enable-feedback-survey-service-select")
@@ -167,6 +173,7 @@ extends Logging {
   val enableBackendPCRDatabase: Boolean = getBoolean("features.enable-backend-pcr-database")
   val enableLegacySubscriptionLink: Boolean = getBoolean("features.enable-legacy-subscription-link")
   val enableAgentRecordViaAsa: Boolean = getBoolean("features.enable-agent-record-via-asa")
+  val enableAgentRecordHipUpdates: Boolean = getBoolean("features.enable-agent-record-hip-updates")
 
   // Gran Perms
   val agentPermissionsBaseUrl: String = baseUrl("agent-permissions")
@@ -218,5 +225,19 @@ extends Logging {
 
     json.as[Map[String, String]]
   }
+
+  object UpscanAmls {
+
+    val maxFileSize: ConfigMemorySize = config.underlying.getMemorySize("upscan.amls.max-file-size")
+    val checkUploadStatusInterval: FiniteDuration = config.get[FiniteDuration]("upscan.amls.check-upload-status-interval")
+    val checkUploadStatusMaxAttempts: Int = config.get[Int]("upscan.amls.check-upload-status-max-attempts")
+    val acceptMimeTypes: String = config.get[String]("upscan.amls.accept-mime-types")
+
+  }
+
+  val objectStoreOwner = config.get[String]("object-store.owner")
+
+  val internalAuthBaseUrl: String = servicesConfig.baseUrl("internal-auth")
+  val internalAuthToken: String = servicesConfig.getString("internal-auth.token")
 
 }

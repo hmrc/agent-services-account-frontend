@@ -15,18 +15,23 @@
  *@
 
 @import uk.gov.hmrc.agentservicesaccount.controllers.amls.routes
+@import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 
 @this(
-        p:p,
+        p: p,
         ul: ul,
-        link_as_button: link_as_button
+        link_as_button: link_as_button,
+        appConfig: AppConfig
 )
 @()(implicit msgs: Messages)
 
- @p(msgs("amls.view-details.noAMLSDetailsNonUK.p1"))
+@p(msgs("amls.view-details.noAMLSDetailsNonUK.p1"))
 
+@ul(items = Seq(
+    Some("amls.view-details.noAMLSDetails.list.item1"),
+    Some("amls.view-details.noAMLSDetails.list.item2"),
+    if(appConfig.enableAgentRecordHipUpdates) Some("amls.view-details.noAMLSDetails.list.item4") else None
+).flatten)
 
- @ul(items = (1 to 2).map(i => s"amls.view-details.noAMLSDetails.list.item$i"))
-
- @link_as_button(href = routes.AmlsNewSupervisoryBodyController.showPage().url, key = msgs("amls.view-details.common.add-details"))
+@link_as_button(href = routes.AmlsNewSupervisoryBodyController.showPage().url, key = msgs("amls.view-details.common.add-details"))
 

@@ -114,12 +114,12 @@ with Logging {
             ).toString()
             _ = auditService.auditUpdateContactDetailsRequest(optUtr, pendingChange)
             _ <-
-              if (appConfig.enableAgentRecordViaAsa)
+              if (appConfig.enableAgentRecordHipUpdates)
                 agentServicesAccountConnector.updateAgentRecord(agentRecordUpdateRequest)
               else
                 Future.successful()
             _ <-
-              if (details.otherServices.ctOrSaApplied || !appConfig.enableAgentRecordViaAsa) {
+              if (details.otherServices.ctOrSaApplied || !appConfig.enableAgentRecordHipUpdates) {
                 agentAssuranceConnector.postDesignatoryDetails(arn, java.util.Base64.getEncoder.encodeToString(htmlForPdf.getBytes()))
               }
               else
