@@ -27,13 +27,12 @@ import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.PayeSubscriptionCont
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.PayeContactNameFormValues
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.paye_update_business_name
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.paye_update_contact_name
 
-//TODO: 11186 Should be contact name rather than business name
-class PayeUpdateBusinessNameSpec
+class PayeUpdateContactNameSpec
 extends ViewBaseSpec {
 
-  private val view: paye_update_business_name = inject[paye_update_business_name]
+  private val view: paye_update_contact_name = inject[paye_update_contact_name]
   private val subscriptionBusinessName = "ABC-No.1 Accountants"
 
   private val payeContactNameForm: Form[PayeContactNameFormValues] = PayeSubscriptionContactNameForm.form(PAYE)
@@ -60,7 +59,7 @@ extends ViewBaseSpec {
 
   private val title: String = messages("asa.legacy.paye.contact-name.title")
 
-  "ct_update_business_name" when {
+  "paye_update_contact_name" when {
 
     def testServiceStaticContent(doc: Document): Unit = {
 

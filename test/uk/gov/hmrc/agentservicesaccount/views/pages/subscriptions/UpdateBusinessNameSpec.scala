@@ -64,7 +64,7 @@ extends ViewBaseSpec {
 
   private val title: String = messages(s"$legacyRegimePrefix.business-name.title")
 
-  "ct_update_business_name" when {
+  "update_business_name" when {
 
     def testServiceStaticContent(doc: Document): Unit = {
 

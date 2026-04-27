@@ -95,7 +95,7 @@ extends ViewBaseSpec {
     }
   }
 
-  "update_phone_number view" when {
+  "update_phone_number" when {
 
     "first loaded" should {
 
