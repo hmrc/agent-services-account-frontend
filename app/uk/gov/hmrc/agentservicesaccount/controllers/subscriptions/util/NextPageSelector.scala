@@ -21,10 +21,12 @@ import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
 import uk.gov.hmrc.agentservicesaccount.controllers.{routes => homeRoutes}
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
 
 object NextPageSelector {
 
   val updateBusinessNamePage = "businessName"
+  val payeUpdateContactNamePage = "payeContactName"
   val updatePhoneNumberPage = "phoneNumber"
   val updateEmailAddressPage = "emailAddress"
   val emailVerificationFinish = "emailVerificationFinish"
@@ -39,7 +41,7 @@ object NextPageSelector {
     LegacyRegime
   ) => Call = {
     case (_, Some(journey), regime) if journey.isComplete => subscriptions.routes.CheckYourAnswersController.showPage(regime)
-//    TODO: 11186 Need to add for PAYE Contact Name Page
+    case (`payeUpdateContactNamePage`, _, PAYE) => subscriptions.routes.UpdatePhoneNumberController.showPage(PAYE)
     case (`updateBusinessNamePage`, _, regime) => subscriptions.routes.UpdatePhoneNumberController.showPage(regime)
     case (`updatePhoneNumberPage`, _, regime) => subscriptions.routes.UpdateEmailAddressController.showPage(regime)
     case (`updateEmailAddressPage`, Some(journey), regime) =>
