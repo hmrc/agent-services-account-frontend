@@ -20,96 +20,53 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.PayeSubscriptionContactNameForm._
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.PayeContactNameFormValues
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 
-import scala.util.Random
-
-//TODO: 11186 Need to correct this code, should be contact name rather than business name
 class PayeSubscriptionContactNameFormSpec
 extends AnyWordSpec
 with Matchers {
 
   val emptyValue = ""
-  val validNewBusinessName = "ABC-No.1 Accountants"
-  val invalidNewBusinessName = "{][.',"
+  val validNewContactName = "My Name"
+  val invalidNewContactName = "{][.',"
 
-  private val legacyRegime = LegacyRegime.PAYE
-
-  private val legacyRegimePrefix = legacyRegime.msgPrefix
-
-  private val initForm = form(legacyRegime)
+  private val initForm = form
 
   "form binding" should {
-    s"be successful when $businessNameUseAsaDataKey true" in {
-      val businessNameValues = List(
-        emptyValue,
-        validNewBusinessName,
-        invalidNewBusinessName
-      )
+    s"be successful when $contactNameNewKey valid" in {
       val params = Map(
-        businessNameUseAsaDataKey -> true.toString,
-        businessNameNewKey -> businessNameValues(Random.nextInt(businessNameValues.length))
+        contactNameNewKey -> validNewContactName
       )
 
-      initForm.bind(params).value shouldBe Some(PayeContactNameFormValues(useAsaData = true, None))
+      initForm.bind(params).value shouldBe Some(PayeContactNameFormValues(validNewContactName))
     }
 
-    s"be successful when $businessNameUseAsaDataKey false and $businessNameNewKey valid" in {
+    s"error when $contactNameNewKey empty" in {
       val params = Map(
-        businessNameUseAsaDataKey -> false.toString,
-        businessNameNewKey -> validNewBusinessName
-      )
-
-      initForm.bind(params).value shouldBe Some(PayeContactNameFormValues(useAsaData = false, Some(validNewBusinessName)))
-    }
-
-    s"error when $businessNameUseAsaDataKey empty" in {
-      val businessNameValues = List(
-        emptyValue,
-        validNewBusinessName,
-        invalidNewBusinessName
-      )
-      val params = Map(
-        businessNameUseAsaDataKey -> emptyValue,
-        businessNameNewKey -> businessNameValues(Random.nextInt(businessNameValues.length))
+        contactNameNewKey -> emptyValue
       )
 
       val validatedForm = initForm.bind(params)
       validatedForm.hasErrors shouldBe true
-      validatedForm.error(businessNameUseAsaDataKey).get.message shouldBe s"$legacyRegimePrefix.contact-name.use-asa.error.required"
+      validatedForm.error(contactNameNewKey).get.message shouldBe "asa.legacy.paye.contact-name.new-input.error.empty"
       validatedForm.errors.length shouldBe 1
     }
 
-    s"error when $businessNameUseAsaDataKey false and $businessNameNewKey empty" in {
+    s"error when $contactNameNewKey invalid" in {
       val params = Map(
-        businessNameUseAsaDataKey -> false.toString,
-        businessNameNewKey -> emptyValue
+        contactNameNewKey -> invalidNewContactName
       )
 
       val validatedForm = initForm.bind(params)
       validatedForm.hasErrors shouldBe true
-      validatedForm.error(businessNameNewKey).get.message shouldBe s"$legacyRegimePrefix.contact-name.new-input.error.empty"
-      validatedForm.errors.length shouldBe 1
-    }
-
-    s"error when $businessNameUseAsaDataKey false and $businessNameNewKey invalid" in {
-      val params = Map(
-        businessNameUseAsaDataKey -> false.toString,
-        businessNameNewKey -> invalidNewBusinessName
-      )
-
-      val validatedForm = initForm.bind(params)
-      validatedForm.hasErrors shouldBe true
-      validatedForm.error(businessNameNewKey).get.message shouldBe s"$legacyRegimePrefix.contact-name.new-input.error.invalid"
+      validatedForm.error(contactNameNewKey).get.message shouldBe "asa.legacy.paye.contact-name.new-input.error.invalid"
       validatedForm.errors.length shouldBe 1
     }
 
     "unbind PayeContactNameFormValues" in {
-      val unboundForm = initForm.mapping.unbind(PayeContactNameFormValues(useAsaData = true, Some(validNewBusinessName)))
+      val unboundForm = initForm.mapping.unbind(PayeContactNameFormValues(validNewContactName))
 
       unboundForm shouldBe Map(
-        businessNameUseAsaDataKey -> true.toString,
-        businessNameNewKey -> validNewBusinessName
+        contactNameNewKey -> validNewContactName
       )
     }
 
