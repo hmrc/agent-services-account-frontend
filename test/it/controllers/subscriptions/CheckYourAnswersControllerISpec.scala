@@ -155,7 +155,7 @@ with MockFactory {
   legacyRegimes.foreach(legacyRegime => {
 
     s"GET /subscription/$legacyRegime/check-your-answers" should {
-
+      //    TODO: 11188 Fix for all
       "return OK and render page when valid data present" in new TestSetup(legacyRegime) {
 
         cacheJourney(subscriptionFullJourney(legacyRegime))
@@ -212,6 +212,7 @@ with MockFactory {
     }
 
     s"POST /subscription/$legacyRegime/check-your-answers" should {
+      //    TODO: 11188 Fix for all
       "redirect when submission succeeds" in new TestSetup(legacyRegime) {
 
         cacheJourney(subscriptionFullJourney(legacyRegime))

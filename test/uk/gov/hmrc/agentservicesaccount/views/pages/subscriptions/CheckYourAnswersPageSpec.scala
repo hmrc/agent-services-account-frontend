@@ -78,6 +78,7 @@ extends ViewBaseSpec {
   }
 
   legacyRegimes.foreach(legacyRegime => {
+//    TODO: 11188 Fix for PAYE
     s"check_your_answers view for $legacyRegime" should {
 
       "render page with heading, summary list and submit button" in {
