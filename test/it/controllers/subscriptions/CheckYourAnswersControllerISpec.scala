@@ -61,10 +61,7 @@ with ScalaFutures
 with IntegrationPatience
 with MockFactory {
 
-  //  TODO: 11188: PAYE may need to be handled separately for this controller ITs
-//  TODO: 11188: Fix PAYE Submission
-//  private val legacyRegimes = List(CT, PAYE, SA)
-  private val legacyRegimes = List(CT, SA)
+  private val legacyRegimes = List(CT, PAYE, SA)
 
   class TestSetup(legacyRegime: LegacyRegime) {
 
@@ -146,32 +143,6 @@ with MockFactory {
 
     def fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest().withSession(session.toSeq: _*)
 
-    val address = BusinessAddress(
-      addressLine1 = "Line 1",
-      addressLine2 = Some("Line 2"),
-      addressLine3 = Some("Line 3"),
-      addressLine4 = None,
-      postalCode = Some("AA1 1AA"),
-      countryCode = "GB"
-    )
-
-    val fullSubscriptionJourney: SubscriptionJourney = SubscriptionJourney(
-      asaDetails = AgencyDetails(
-        agencyName = Some("ASA Name"),
-        agencyEmail = Some("asa@test.com"),
-        agencyTelephone = Some("999999"),
-        agencyAddress = Some(address)
-      ),
-      useCustomBusinessName = Some(true),
-      businessNameAnswer = Some("Custom Name"),
-      useCustomPhoneNumber = Some(true),
-      phoneNumberAnswer = Some("123456"),
-      useCustomEmail = Some(true),
-      emailAnswer = Some("custom@test.com"),
-      useCustomAddress = Some(true),
-      addressAnswer = Some(address)
-    )
-
     def cacheJourney(journey: SubscriptionJourney): Unit = {
       implicit val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequest
       implicit val writes: OWrites[SubscriptionJourney] = Json.writes[SubscriptionJourney]
@@ -187,16 +158,29 @@ with MockFactory {
 
       "return OK and render page when valid data present" in new TestSetup(legacyRegime) {
 
-        cacheJourney(fullSubscriptionJourney)
+        cacheJourney(subscriptionFullJourney(legacyRegime))
 
         val result = controller.showPage(legacyRegime)(fakeRequest).futureValue
 
         status(result) shouldBe OK
         val body = contentAsString(result)
 
-        body should include("Custom Name")
+        if (legacyRegime == PAYE) {
+          body should include("Contact name")
+          body should include("My Name")
+          body should not include("Business name")
+          body should not include("Custom name")
+        } else {
+          body should include("Business name")
+          body should include("Custom name")
+          body should not include("Contact name")
+          body should not include("My Name")
+        }
+        body should include("Telephone number")
         body should include("123456")
+        body should include("Email address")
         body should include("custom@test.com")
+        body should include("Address")
         body should include("Line 1")
       }
 
@@ -230,7 +214,7 @@ with MockFactory {
     s"POST /subscription/$legacyRegime/check-your-answers" should {
       "redirect when submission succeeds" in new TestSetup(legacyRegime) {
 
-        cacheJourney(fullSubscriptionJourney)
+        cacheJourney(subscriptionFullJourney(legacyRegime))
         givenStartLegacySubscriptionResponse(legacyRegime, OK)
 
         val result = controller.onSubmit(legacyRegime)(fakeRequest).futureValue
@@ -240,23 +224,7 @@ with MockFactory {
       }
 
       "return BAD_REQUEST when journey data missing" in new TestSetup(legacyRegime) {
-        val emptyJourney = SubscriptionJourney(
-          asaDetails = AgencyDetails(
-            None,
-            None,
-            None,
-            None
-          ),
-          useCustomBusinessName = Some(true),
-          businessNameAnswer = None,
-          useCustomPhoneNumber = Some(true),
-          phoneNumberAnswer = None,
-          useCustomEmail = Some(true),
-          emailAnswer = None,
-          useCustomAddress = Some(true),
-          addressAnswer = None
-        )
-        cacheJourney(emptyJourney)
+        cacheJourney(subscriptionBaseJourney)
 
         val result = controller.onSubmit(legacyRegime)(fakeRequest).futureValue
 
