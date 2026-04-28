@@ -52,7 +52,6 @@ with Logging {
 
   def showPage(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
     legacyRegime match {
-//      TODO: 11186 Add IT for this redirect
       case PAYE => Future.successful(Redirect(routes.PayeUpdateContactNameController.showPage))
       case _ =>
         val journey = request.subscriptionJourney
