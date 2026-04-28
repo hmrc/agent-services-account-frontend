@@ -46,10 +46,11 @@ case class SubscriptionJourney(
   }
 
   def isComplete(legacyRegime: LegacyRegime): Boolean = {
-    val nameComplete = legacyRegime match {
-      case LegacyRegime.PAYE => payeContactName.isDefined
-      case _ => answerComplete(useCustomBusinessName, businessNameAnswer)
-    }
+    val nameComplete =
+      legacyRegime match {
+        case LegacyRegime.PAYE => payeContactName.isDefined
+        case _ => answerComplete(useCustomBusinessName, businessNameAnswer)
+      }
     val pnComplete = answerComplete(useCustomPhoneNumber, phoneNumberAnswer)
     val eaComplete = answerComplete(useCustomEmail, emailAnswer)
     val addressComplete = answerComplete(useCustomAddress, addressAnswer)

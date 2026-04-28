@@ -55,13 +55,14 @@ with Logging {
     val subscriptionBusinessName = journey.asaDetails.agencyName.getOrElse("")
 
     val initialForm = PayeSubscriptionContactNameForm.form
-    val form = journey.payeContactName match {
-      case Some(contactName) =>
-        initialForm.fill(
-          PayeContactNameFormValues(contactName = contactName)
-        )
-      case None => initialForm
-    }
+    val form =
+      journey.payeContactName match {
+        case Some(contactName) =>
+          initialForm.fill(
+            PayeContactNameFormValues(contactName = contactName)
+          )
+        case None => initialForm
+      }
 
     Future.successful(
       Ok(paye_update_contact_name(

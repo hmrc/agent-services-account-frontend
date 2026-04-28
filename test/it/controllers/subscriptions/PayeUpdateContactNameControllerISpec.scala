@@ -198,24 +198,24 @@ with TestConstants {
     journeyWithRedirectLocations.foreach(journeyWithRedirectLocation => {
       s"update journey and redirect to ${journeyWithRedirectLocation._2}" +
         s"when journey ${journeyWithRedirectLocation._3}" in new TestSetup {
-        private val request = FakeRequest(POST, "/")
-          .withSession(session.toSeq: _*)
-          .withFormUrlEncodedBody(
-            "contactName" -> "New Name"
-          )
+          private val request = FakeRequest(POST, "/")
+            .withSession(session.toSeq: _*)
+            .withFormUrlEncodedBody(
+              "contactName" -> "New Name"
+            )
 
-        implicit val implicitRequest: FakeRequest[AnyContentAsFormUrlEncoded] = request
+          implicit val implicitRequest: FakeRequest[AnyContentAsFormUrlEncoded] = request
 
-        cacheJourney(journeyWithRedirectLocation._1)
+          cacheJourney(journeyWithRedirectLocation._1)
 
-        private val result = controller.onSubmit(request).futureValue
-        status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe
-          Some(s"/agent-services-account/subscription/PAYE/${journeyWithRedirectLocation._2}")
+          private val result = controller.onSubmit(request).futureValue
+          status(result) shouldBe SEE_OTHER
+          redirectLocation(result) shouldBe
+            Some(s"/agent-services-account/subscription/PAYE/${journeyWithRedirectLocation._2}")
 
-        val updated: Option[SubscriptionJourney] = sessionCache.get[SubscriptionJourney](subscriptionJourneyKey(PAYE)).futureValue
-        updated shouldBe defined
-        updated.value.payeContactName shouldBe Some("New Name")
+          val updated: Option[SubscriptionJourney] = sessionCache.get[SubscriptionJourney](subscriptionJourneyKey(PAYE)).futureValue
+          updated shouldBe defined
+          updated.value.payeContactName shouldBe Some("New Name")
         }
     })
   }
