@@ -30,12 +30,17 @@ extends ViewBaseSpec {
 
   val view: new_supervisory_body = inject[new_supervisory_body]
 
+  val agentName = "Test Agent Name"
   val amlsBodies = Map("ACCA" -> "Association of Certified Chartered Accountant")
   val selectedBody = "Association of Certified Chartered Accountant"
 
-  def form(isUk: Boolean): Form[String] = NewAmlsSupervisoryBodyForm.form(amlsBodies)(isUk)
-  def prePopulateForm(isUk: Boolean): Form[String] = NewAmlsSupervisoryBodyForm.form(amlsBodies)(isUk).fill(selectedBody)
-  def formWithErrors(isUk: Boolean): Form[String] = form(isUk).withError(key = "body", message = "amls.new-supervisory-body.error")
+  def form(isUk: Boolean): Form[String] = NewAmlsSupervisoryBodyForm.form(amlsBodies)(isUk, Some(agentName))
+  def prePopulateForm(isUk: Boolean): Form[String] = NewAmlsSupervisoryBodyForm.form(amlsBodies)(isUk, Some(agentName)).fill(selectedBody)
+  def formWithErrors(isUk: Boolean): Form[String] = form(isUk).withError(
+    key = "body",
+    message = "amls.new-supervisory-body.error",
+    args = agentName
+  )
 
   "new_supervisory_body" when {
 
@@ -58,13 +63,13 @@ extends ViewBaseSpec {
     def testPageStaticContent(doc: Document)(isUk: Boolean): Unit = {
 
       "have the correct h1 heading and legend" in {
-        doc.select("h1").first.text() mustBe "What’s the name of your supervisory body?"
-        doc.select("legend").text() mustBe "What’s the name of your supervisory body?"
+        doc.select("h1").first.text() mustBe "What is the name of the supervisory body for Test Agent Name?"
+        doc.select("legend").text() mustBe "What is the name of the supervisory body for Test Agent Name?"
       }
 
       if (isUk) {
         "have the correct hint" in {
-          doc.select(".govuk-hint").first().text() mustBe "Start typing and select the anti-money laundering supervisor from the list"
+          doc.select(".govuk-hint").first().text() mustBe "Start to enter a name and choose your supervisor from the list"
         }
       }
 
@@ -80,6 +85,7 @@ extends ViewBaseSpec {
         form(isUk),
         amlsBodies,
         isUk,
+        Some(agentName),
         cya = false
       )(
         fakeRequest,
@@ -92,7 +98,7 @@ extends ViewBaseSpec {
       testPageStaticContent(doc)(isUk)
 
       "display the correct page title" in {
-        doc.title() mustBe "What’s the name of your supervisory body? - Agent services account - GOV.UK"
+        doc.title() mustBe "What is the name of the supervisory body for Test Agent Name? - Agent services account - GOV.UK"
       }
     }
 
@@ -103,6 +109,7 @@ extends ViewBaseSpec {
         prePopulateForm(isUk),
         amlsBodies,
         isUk,
+        Some(agentName),
         cya = false
       )(
         fakeRequest,
@@ -115,7 +122,7 @@ extends ViewBaseSpec {
       testPageStaticContent(doc)(isUk)
 
       "display the correct page title" in {
-        doc.title() mustBe "What’s the name of your supervisory body? - Agent services account - GOV.UK"
+        doc.title() mustBe "What is the name of the supervisory body for Test Agent Name? - Agent services account - GOV.UK"
       }
 
       "display pre-populated selected supervisory body" in {
@@ -130,6 +137,7 @@ extends ViewBaseSpec {
         form(isUk),
         amlsBodies,
         isUk,
+        Some(agentName),
         cya = false
       )(
         fakeRequest,
@@ -142,7 +150,7 @@ extends ViewBaseSpec {
       testPageStaticContent(doc)(isUk)
 
       "display the correct page title" in {
-        doc.title() mustBe "What’s the name of your supervisory body? - Agent services account - GOV.UK"
+        doc.title() mustBe "What is the name of the supervisory body for Test Agent Name? - Agent services account - GOV.UK"
       }
     }
 
@@ -153,6 +161,7 @@ extends ViewBaseSpec {
         formWithErrors(isUk),
         amlsBodies,
         isUk,
+        Some(agentName),
         cya = false
       )(
         fakeRequest,
@@ -165,12 +174,12 @@ extends ViewBaseSpec {
       testPageStaticContent(doc)(isUk)
 
       "display error prefix on page title" in {
-        doc.title() mustBe "Error: What’s the name of your supervisory body? - Agent services account - GOV.UK"
+        doc.title() mustBe "Error: What is the name of the supervisory body for Test Agent Name? - Agent services account - GOV.UK"
       }
 
       "display correct error summary link" in {
         val errorLink: Element = doc.select(".govuk-error-summary__list a").first()
-        errorLink.text() mustBe "Tell us the name of your supervisory body"
+        errorLink.text() mustBe "Enter the name of the supervisory body for Test Agent Name"
         errorLink.attr("href") mustBe "#body"
       }
 
@@ -179,7 +188,7 @@ extends ViewBaseSpec {
       }
 
       "display error message on form" in {
-        doc.select(".govuk-error-message").text() mustBe "Error: Tell us the name of your supervisory body"
+        doc.select(".govuk-error-message").text() mustBe "Error: Enter the name of the supervisory body for Test Agent Name"
       }
     }
   }

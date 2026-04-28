@@ -54,7 +54,7 @@ extends ComponentBaseISpec {
       val result = get(newRegistrationNumberPath)
 
       result.status shouldBe OK
-      assertPageHasTitle("What’s your registration number?")(result)
+      assertPageHasTitle("What is the registration number?")(result)
       result.body should include("ABCD")
     }
 
@@ -68,13 +68,13 @@ extends ComponentBaseISpec {
       val result = get(newRegistrationNumberPath)
 
       result.status shouldBe OK
-      assertPageHasTitle("What’s your registration number?")(result)
+      assertPageHasTitle("What is the registration number?")(result)
     }
   }
 
   s"POST $newRegistrationNumberPath" should {
 
-    "redirect to /renewal-date and store data for UK agent " in {
+    "redirect to /upload-evidence and store data for UK agent " in {
 
       givenAuthorisedAsAgentWith(arn.value)
       givenGetAgentRecord(agentRecord)
@@ -85,7 +85,7 @@ extends ComponentBaseISpec {
 
       result.status shouldBe SEE_OTHER
 
-      result.header("Location").get shouldBe "/agent-services-account/manage-account/money-laundering-supervision/renewal-date"
+      result.header("Location").get shouldBe "/agent-services-account/manage-account/money-laundering-supervision/upload-evidence"
 
       val updatedSession = await(repo.getFromSession(amlsJourneyKey)).get
 
@@ -94,7 +94,7 @@ extends ComponentBaseISpec {
 
     }
 
-    "redirect to CYA and store data for overseas agent " in {
+    "redirect to upload evidence and store data for overseas agent " in {
 
       givenAuthorisedAsAgentWith(arn.value)
       givenGetAgentRecord(agentRecord)
@@ -105,12 +105,31 @@ extends ComponentBaseISpec {
 
       result.status shouldBe SEE_OTHER
 
-      result.header("Location").get shouldBe "/agent-services-account/manage-account/money-laundering-supervision/check-your-answers"
+      result.header("Location").get shouldBe "/agent-services-account/manage-account/money-laundering-supervision/upload-evidence"
 
       val updatedSession = await(repo.getFromSession(amlsJourneyKey)).get
 
       updatedSession.newRegistrationNumber shouldBe Some("ABC123")
       updatedSession.isRegistrationNumberStillTheSame shouldBe Some(true)
+    }
+
+    "redirect to CYA and store data for agent with HMRC AMLS" in {
+
+      givenAuthorisedAsAgentWith(arn.value)
+      givenGetAgentRecord(agentRecord)
+
+      await(repo.putSession(amlsJourneyKey, amlsJourney(None).copy(newAmlsBody = Some("HM Revenue and Customs (HMRC)"))))
+
+      val result = post(newRegistrationNumberPath)(body = Map("number" -> List("XAML00000123456")))
+
+      result.status shouldBe SEE_OTHER
+
+      result.header("Location").get shouldBe "/agent-services-account/manage-account/money-laundering-supervision/check-your-answers"
+
+      val updatedSession = await(repo.getFromSession(amlsJourneyKey)).get
+
+      updatedSession.newRegistrationNumber shouldBe Some("XAML00000123456")
+      updatedSession.isRegistrationNumberStillTheSame shouldBe Some(false)
     }
 
     "return BadRequest when invalid form submission" in {
@@ -123,7 +142,7 @@ extends ComponentBaseISpec {
       val result = post(newRegistrationNumberPath)(body = Map("invalid" -> List("???")))
 
       result.status shouldBe BAD_REQUEST
-      assertPageHasTitle("Error: What’s your registration number?")(result)
+      assertPageHasTitle("Error: What is the registration number?")(result)
     }
   }
 

@@ -39,10 +39,14 @@ import uk.gov.hmrc.agentservicesaccount.models.AmlsStatuses.ValidAmlsDetailsUK
 import uk.gov.hmrc.agentservicesaccount.models.AmlsStatuses.ValidAmlsNonUK
 import uk.gov.hmrc.agentservicesaccount.models._
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
+import uk.gov.hmrc.agentservicesaccount.repository.UpscanRepository
 import stubs.AgentAssuranceStubs.givenAMLSDetailsForArn
 import stubs.AgentServicesAccountStubs.givenGetAgentRecord
 import stubs.AgentAssuranceStubs.givenPostAMLSDetails
+import uk.gov.hmrc.agentservicesaccount.models.upscan.FileUploadReference
+import uk.gov.hmrc.agentservicesaccount.models.upscan.UpscanSuccess
 
+import java.time.Instant
 import java.time.LocalDate
 
 class CheckYourAnswersControllerISpec
@@ -51,25 +55,52 @@ extends ComponentBaseISpec {
   val checkYourAnswersPath = s"$amlsStartPath/check-your-answers"
 
   val repo = inject[SessionCacheRepository]
+  val upscanRepo = inject[UpscanRepository]
 
-  private def amlsJourney(status: AmlsStatus) = UpdateAmlsJourney(
+  private def amlsJourney(
+    status: AmlsStatus,
+    isHmrc: Boolean
+  ) = UpdateAmlsJourney(
     status = status,
-    newAmlsBody = Some("ABC"),
+    newAmlsBody =
+      if (isHmrc)
+        Some("HM Revenue and Customs (HMRC)")
+      else
+        Some("ABC"),
     newRegistrationNumber = Some("1234567890"),
-    newExpirationDate = Some(LocalDate.now())
+    newExpirationDate = None,
+    newEvidenceObjectReference =
+      if (isHmrc)
+        None
+      else
+        Some("123")
   )
 
-  private val amlsRequest: AmlsRequest =
-    new AmlsRequest(
-      ukRecord = true,
-      supervisoryBody = "ABC",
-      membershipNumber = "1234567890",
-      membershipExpiresOn = Some(LocalDate.now())
-    )
+  private val amlsRequest: AmlsRequest = AmlsRequest(
+    ukRecord = true,
+    supervisoryBody = "ABC",
+    membershipNumber = "1234567890",
+    membershipExpiresOn = None,
+    evidenceObjectReference = Some("123")
+  )
 
   private val amlsDetailsResponse = AmlsDetailsResponse(
     status = ValidAmlsDetailsUK,
-    details = Some(AmlsDetails(supervisoryBody = "ABC", membershipNumber = Some("1234567890")))
+    details = Some(AmlsDetails(
+      supervisoryBody = "ABC",
+      membershipNumber = Some("1234567890"),
+      Some("123")
+    ))
+  )
+
+  private val upscanSuccess = UpscanSuccess(
+    FileUploadReference("123"),
+    Instant.now,
+    "download/url",
+    "file.dat",
+    "text",
+    "checksum",
+    1234
   )
 
   s"GET $checkYourAnswersPath" should {
@@ -79,7 +110,8 @@ extends ComponentBaseISpec {
         givenAuthorisedAsAgentWith(arn.value)
         givenGetAgentRecord(agentRecord)
 
-        await(repo.putSession(amlsJourneyKey, amlsJourney(ValidAmlsDetailsUK)))
+        await(repo.putSession(amlsJourneyKey, amlsJourney(ValidAmlsDetailsUK, isHmrc = false)))
+        await(upscanRepo.saveUpscanDetails(upscanSuccess))
 
         val result = get(checkYourAnswersPath)
 
@@ -87,12 +119,12 @@ extends ComponentBaseISpec {
         assertPageHasTitle("Check your answers")(result)
       }
 
-      "overseas agent has successfully entered all the data for CYA page" in {
+      "HMRC AMLS agent has successfully entered all the data for CYA page" in {
 
         givenAuthorisedAsAgentWith(arn.value)
         givenGetAgentRecord(agentRecord)
 
-        await(repo.putSession(amlsJourneyKey, amlsJourney(ValidAmlsNonUK)))
+        await(repo.putSession(amlsJourneyKey, amlsJourney(ValidAmlsDetailsUK, isHmrc = true)))
 
         val result = get(checkYourAnswersPath)
 
@@ -125,7 +157,7 @@ extends ComponentBaseISpec {
         givenPostAMLSDetails(arn.value, amlsRequest)
         givenAMLSDetailsForArn(amlsDetailsResponse, arn.value)
 
-        await(repo.putSession(amlsJourneyKey, amlsJourney(ValidAmlsDetailsUK)))
+        await(repo.putSession(amlsJourneyKey, amlsJourney(ValidAmlsDetailsUK, isHmrc = false)))
 
         val result = post(checkYourAnswersPath)(Map.empty)
 

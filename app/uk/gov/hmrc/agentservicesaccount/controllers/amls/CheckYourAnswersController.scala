@@ -87,9 +87,7 @@ with I18nSupport {
                   )
                 ))
               case _ => Redirect(amls.routes.EvidenceUploadController.showPage)
-
             }
-
           case _ => Redirect(amls.routes.EvidenceUploadController.showPage).toFuture
         }
       }
@@ -123,7 +121,7 @@ with I18nSupport {
               None
             else
               journeyData.newExpirationDate,
-            if (appConfig.enableAgentRecordHipUpdates && journeyData.isHmrc)
+            if (appConfig.enableAgentRecordHipUpdates && !journeyData.isHmrc)
               journeyData.newEvidenceObjectReference
             else
               None

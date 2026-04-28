@@ -45,31 +45,6 @@ extends BaseISpec {
       val summaryListKeys = doc.select(".govuk-summary-list__key")
       val summaryListValues = doc.select(".govuk-summary-list__value")
 
-      summaryListKeys.size() shouldBe 3
-      summaryListValues.size() shouldBe 3
-
-      summaryListKeys.get(0).text() shouldBe "Supervisory body"
-      summaryListValues.get(0).text() shouldBe "HMRC"
-
-      summaryListKeys.get(1).text() shouldBe "Registration number"
-      summaryListValues.get(1).text() shouldBe "1234"
-
-      summaryListKeys.get(2).text() shouldBe "Next renewal date"
-      summaryListValues.get(2).text() shouldBe "7 December 2024"
-    }
-
-    "display amls details without a renewal date" in {
-
-      val amlsDetails = AmlsDetails(
-        supervisoryBody = "HMRC",
-        membershipNumber = Some("1234"),
-        membershipExpiresOn = None
-      )
-      val doc = Jsoup.parse(view.apply(amlsDetails)(messages).body)
-
-      val summaryListKeys = doc.select(".govuk-summary-list__key")
-      val summaryListValues = doc.select(".govuk-summary-list__value")
-
       summaryListKeys.size() shouldBe 2
       summaryListValues.size() shouldBe 2
 
@@ -78,7 +53,6 @@ extends BaseISpec {
 
       summaryListKeys.get(1).text() shouldBe "Registration number"
       summaryListValues.get(1).text() shouldBe "1234"
-
     }
 
     "display amls details when supervisory body is the only available field" in {
@@ -168,12 +142,8 @@ extends BaseISpec {
       val summaryListKeys = doc.select(".govuk-summary-list__key")
       val summaryListValues = doc.select(".govuk-summary-list__value")
 
-      summaryListKeys.size() shouldBe 3
-      summaryListValues.size() shouldBe 3
-
-      summaryListKeys.get(2).text() shouldBe "Dyddiad nesaf ar gyfer adnewyddu"
-      summaryListValues.get(2).text() shouldBe "7 Rhagfyr 2024"
-
+      summaryListKeys.size() shouldBe 2
+      summaryListValues.size() shouldBe 2
     }
   }
 
