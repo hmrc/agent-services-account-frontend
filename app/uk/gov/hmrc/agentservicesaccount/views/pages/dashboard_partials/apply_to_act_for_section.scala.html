@@ -40,7 +40,7 @@
 
     val regimes =
         Seq(
-            if(!isAbroad && isUnsubscribed(LegacyRegime.PAYE)) Some(LegacyRegime.PAYE) else None,
+            if (!isAbroad) Some(LegacyRegime.PAYE).filter(isUnsubscribed) else None,
             Some(LegacyRegime.CT).filter(isUnsubscribed),
             Some(LegacyRegime.SA).filter(isUnsubscribed)
         ).flatten
