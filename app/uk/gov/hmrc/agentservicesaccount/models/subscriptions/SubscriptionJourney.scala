@@ -45,7 +45,7 @@ case class SubscriptionJourney(
     }
   }
 
-  //      TODO: 11186 Implement for PAYE
+  //      TODO: 11188 Implement for PAYE
   def isComplete(legacyRegime: LegacyRegime): Boolean = {
     val bnComplete = answerComplete(useCustomBusinessName, businessNameAnswer)
     val pnComplete = answerComplete(useCustomPhoneNumber, phoneNumberAnswer)
