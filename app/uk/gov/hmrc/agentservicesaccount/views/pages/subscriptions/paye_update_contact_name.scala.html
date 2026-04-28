@@ -17,7 +17,6 @@
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
 @import uk.gov.hmrc.agentservicesaccount.models.subscriptions.PayeContactNameFormValues
-@import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 @import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
 @import uk.gov.hmrc.govukfrontend.views.html.components._
@@ -27,23 +26,11 @@
     main: main,
     formWithCSRF: FormWithCSRF,
     govukInput: GovukInput,
-    govukRadios: GovukRadios,
     govukButton: GovukButton,
     govukErrorSummary: GovukErrorSummary
 )
 
-@* TODO: 11186 Correct this template *@
-
 @(form: Form[PayeContactNameFormValues], subscriptionBusinessName: String)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
-
-@newBusinessNameInput = {
-    @govukInput(Input(
-        label = Label(
-            content = HtmlContent(msgs("asa.legacy.paye.contact-name.new-input.label")),
-            classes = "govuk-label"
-        )
-    ).withFormField(form("businessNameNew")))
-}
 
 @main(
     pageTitle = withErrorPrefix(form.hasErrors, msgs("asa.legacy.paye.contact-name.title")),
@@ -56,27 +43,14 @@
     }
 
     @formWithCSRF(action = subscriptions.routes.PayeUpdateContactNameController.onSubmit) {
-        @govukRadios(Radios(
-            fieldset = Some(Fieldset(
-                legend = Some(Legend(
-                    content = Text(msgs("asa.legacy.paye.contact-name.title")),
-                    classes = "govuk-fieldset__legend--l",
-                    isPageHeading = true
-                ))
-            )),
-            name = "businessNameUseAsaData",
-            items = Seq(
-                RadioItem(
-                    content = Text(subscriptionBusinessName),
-                    value = Some("true")
-                ),
-                RadioItem(
-                    content = Text(msgs("asa.legacy.paye.contact-name.use-asa.false")),
-                    value = Some("false"),
-                    conditionalHtml = Some(newBusinessNameInput)
-                )
-            )
-        ).withFormField(form("businessNameUseAsaData")))
+        @govukInput(Input(
+            label = Label(
+                classes = "govuk-label--l",
+                content = HtmlContent(msgs("asa.legacy.paye.contact-name.input.heading", subscriptionBusinessName)),
+                isPageHeading = true
+            ),
+            hint = Some(Hint(content = Text(msgs("asa.legacy.paye.contact-name.input.hint"))))
+        ).withFormField(form("contactName")))
 
         @govukButton(Button(content = Text(msgs("common.continue"))))
     }

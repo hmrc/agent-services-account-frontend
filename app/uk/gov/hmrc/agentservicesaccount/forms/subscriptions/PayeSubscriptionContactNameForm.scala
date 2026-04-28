@@ -29,8 +29,8 @@ object PayeSubscriptionContactNameForm {
   private val contactNameRegex = """^[A-Za-z0-9\(\)&\-\'‘’\/,\. ]{1,54}$""".r
 
   private val contactNameMapping: Mapping[String] = trimmedAndNormalisedText
-    .verifying("asa.legacy.paye.contact-name.new-input.error.empty", _.nonEmpty)
-    .verifying("asa.legacy.paye.contact-name.new-input.error.invalid", x => x.isEmpty || contactNameRegex.matches(x))
+    .verifying("asa.legacy.paye.contact-name.input.error.empty", _.nonEmpty)
+    .verifying("asa.legacy.paye.contact-name.input.error.invalid", x => x.isEmpty || contactNameRegex.matches(x))
 
   def form: Form[PayeContactNameFormValues] = {
     Form(

@@ -265,10 +265,11 @@ asa.legacy.paye.subscribed.p3=<a class="govuk-link" href="{0}" rel="noreferrer n
 asa.legacy.paye.subscribed.p4=Manage your client’s Pay As You Earn
 asa.legacy.paye.subscribed.p5=<a class="govuk-link" href="{0}" rel="noreferrer noopener">View and manage your client list for Pay As You Earn</a>
 
-asa.legacy.paye.contact-name.title=What contact name should we show to your Pay As You Earn clients?
-asa.legacy.paye.contact-name.new-input.label=Enter a contact name
-asa.legacy.paye.contact-name.new-input.error.empty=TODO (New contact name input empty error)
-asa.legacy.paye.contact-name.new-input.error.invalid=TODO (New contact name input invalid error)
+asa.legacy.paye.contact-name.title=Who should we contact about PAYE?
+asa.legacy.paye.contact-name.input.heading=Who at {0} should we contact about PAYE?
+asa.legacy.paye.contact-name.input.hint=Enter their full name
+asa.legacy.paye.contact-name.input.error.empty=TODO (Contact name input empty error)
+asa.legacy.paye.contact-name.input.error.invalid=TODO (Contact name input invalid error)
 
 asa.legacy.paye.phone-number.title=What phone number should we show to call you about Pay As You Earn?
 asa.legacy.paye.phone-number.use-asa.false=I want to use a different phone number for Pay As You Earn
