@@ -184,4 +184,10 @@ trait TestConstants {
     addressAnswer = None
   )
 
+  val payeSubscriptionFullJourney: SubscriptionJourney = subscriptionFullJourney.copy(
+    useCustomBusinessName = None,
+    businessNameAnswer = None,
+    payeContactName = Some("My Name")
+  )
+
 }

@@ -50,7 +50,6 @@ import uk.gov.hmrc.http.client.HttpClientV2
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
-//TODO: 11186 Need to write correct ITs for this
 class PayeUpdateContactNameControllerISpec
 extends BaseISpec
 with UnitSpec
@@ -150,7 +149,7 @@ with TestConstants {
 
   }
 
-  "GET /subscription/PAYE/business-name" should {
+  "GET /subscription/PAYE/contact-name" should {
 
     "render empty form on first visit" in new TestSetup {
       cacheJourney(subscriptionBaseJourney)
@@ -163,8 +162,7 @@ with TestConstants {
 
     "render pre-filled form when journey has existing answers" in new TestSetup {
       private val journey = subscriptionBaseJourney.copy(
-        useCustomBusinessName = Some(true),
-        businessNameAnswer = Some("Custom Name Ltd")
+        payeContactName = Some("My Name")
       )
 
       cacheJourney(journey)
@@ -174,18 +172,17 @@ with TestConstants {
       status(result) shouldBe OK
       private val content = contentAsString(result)
 
-      content should include("""value="true"""")
-      content should include("businessNameNew")
+      content should include("contactName")
     }
   }
 
-  "POST /subscription/PAYE/business-name" should {
+  "POST /subscription/PAYE/contact-name" should {
 
     "return BAD_REQUEST when form is invalid" in new TestSetup {
       cacheJourney(subscriptionBaseJourney)
 
       private val request = FakeRequest().withSession(session.toSeq: _*).withFormUrlEncodedBody(
-        "useAsaData" -> ""
+        "contactName" -> ""
       )
 
       private val result = controller.onSubmit(request).futureValue
@@ -195,55 +192,30 @@ with TestConstants {
 
     val journeyWithRedirectLocations = List(
       (subscriptionBaseJourney, "phone-number", "not complete"),
-      (subscriptionFullJourney, "check-your-answers", "complete")
+      (payeSubscriptionFullJourney, "check-your-answers", "complete")
     )
 
     journeyWithRedirectLocations.foreach(journeyWithRedirectLocation => {
       s"update journey and redirect to ${journeyWithRedirectLocation._2}" +
-        s"when using ASA business name and journey ${journeyWithRedirectLocation._3}" in new TestSetup {
-          private val request = FakeRequest(POST, "/")
-            .withSession(session.toSeq: _*)
-            .withFormUrlEncodedBody(
-              "businessNameUseAsaData" -> "true"
-            )
+        s"when journey ${journeyWithRedirectLocation._3}" in new TestSetup {
+        private val request = FakeRequest(POST, "/")
+          .withSession(session.toSeq: _*)
+          .withFormUrlEncodedBody(
+            "contactName" -> "New Name"
+          )
 
-          implicit val implicitRequest: FakeRequest[AnyContentAsFormUrlEncoded] = request
+        implicit val implicitRequest: FakeRequest[AnyContentAsFormUrlEncoded] = request
 
-          cacheJourney(journeyWithRedirectLocation._1)
+        cacheJourney(journeyWithRedirectLocation._1)
 
-          private val result = controller.onSubmit(request).futureValue
-          status(result) shouldBe SEE_OTHER
-          redirectLocation(result) shouldBe
-            Some(s"/agent-services-account/subscription/PAYE/${journeyWithRedirectLocation._2}")
+        private val result = controller.onSubmit(request).futureValue
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result) shouldBe
+          Some(s"/agent-services-account/subscription/PAYE/${journeyWithRedirectLocation._2}")
 
-          val updated: Option[SubscriptionJourney] = sessionCache.get[SubscriptionJourney](subscriptionJourneyKey(PAYE)).futureValue
-          updated shouldBe defined
-          updated.get.useCustomBusinessName shouldBe Some(false)
-          updated.value.businessNameAnswer shouldBe None
-        }
-
-      s"update journey and redirect to ${journeyWithRedirectLocation._2}" +
-        s"when using custom business name and journey ${journeyWithRedirectLocation._3}" in new TestSetup {
-          private val request = FakeRequest(POST, "/")
-            .withSession(session.toSeq: _*)
-            .withFormUrlEncodedBody(
-              "businessNameUseAsaData" -> "false",
-              "businessNameNew" -> "My Custom Ltd"
-            )
-
-          implicit val implicitRequest: FakeRequest[AnyContentAsFormUrlEncoded] = request
-
-          cacheJourney(journeyWithRedirectLocation._1)
-
-          private val result = controller.onSubmit(request).futureValue
-          status(result) shouldBe SEE_OTHER
-          redirectLocation(result) shouldBe
-            Some(s"/agent-services-account/subscription/PAYE/${journeyWithRedirectLocation._2}")
-
-          val updated: Option[SubscriptionJourney] = sessionCache.get[SubscriptionJourney](subscriptionJourneyKey(PAYE)).futureValue
-          updated shouldBe defined
-          updated.value.useCustomBusinessName shouldBe Some(true)
-          updated.value.businessNameAnswer shouldBe Some("My Custom Ltd")
+        val updated: Option[SubscriptionJourney] = sessionCache.get[SubscriptionJourney](subscriptionJourneyKey(PAYE)).futureValue
+        updated shouldBe defined
+        updated.value.payeContactName shouldBe Some("New Name")
         }
     })
   }
