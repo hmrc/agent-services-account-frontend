@@ -214,13 +214,13 @@ with TestConstants {
       }
 
       val journeyWithRedirectLocations = List(
-        (subscriptionBaseJourney, "phone-number", "not complete"),
-        (subscriptionFullJourney(legacyRegime), "check-your-answers", "complete")
+        (subscriptionBaseJourney, "phone-number"),
+        (subscriptionFullJourney(legacyRegime), "check-your-answers")
       )
 
       journeyWithRedirectLocations.foreach(journeyWithRedirectLocation => {
-        s"update journey and redirect to ${journeyWithRedirectLocation._2}" +
-          s"when using ASA business name and journey ${journeyWithRedirectLocation._3}" in new TestSetup(legacyRegime) {
+        s"update journey and redirect to ${journeyWithRedirectLocation._2} when using ASA business name " +
+          s"and journey ${if(journeyWithRedirectLocation._1.isComplete(legacyRegime)) "" else "not "}" in new TestSetup(legacyRegime) {
             private val request = FakeRequest(POST, "/")
               .withSession(session.toSeq: _*)
               .withFormUrlEncodedBody(
@@ -242,8 +242,8 @@ with TestConstants {
             updated.value.businessNameAnswer shouldBe None
           }
 
-        s"update journey and redirect to ${journeyWithRedirectLocation._2}" +
-          s"when using custom business name and journey ${journeyWithRedirectLocation._3}" in new TestSetup(legacyRegime) {
+        s"update journey and redirect to ${journeyWithRedirectLocation._2} when using custom business name " +
+          s"and journey ${if(journeyWithRedirectLocation._1.isComplete(legacyRegime)) "" else "not "}" in new TestSetup(legacyRegime) {
             private val request = FakeRequest(POST, "/")
               .withSession(session.toSeq: _*)
               .withFormUrlEncodedBody(

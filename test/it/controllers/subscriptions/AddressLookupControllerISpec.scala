@@ -84,13 +84,13 @@ extends ComponentBaseISpec {
     s"GET $finishAddressLookupPath" should {
 
       val journeyWithRedirectLocations = List(
-        (subscriptionBaseJourney, "check-your-answers", "not complete"),
-        (subscriptionFullJourney(legacyRegime), "check-your-answers", "complete")
+        (subscriptionBaseJourney, "check-your-answers"),
+        (subscriptionFullJourney(legacyRegime), "check-your-answers")
       )
 
       journeyWithRedirectLocations.foreach(journeyWithRedirectLocation => {
         s"update journey with new address and redirect to ${journeyWithRedirectLocation._2}" +
-          s"when journey ${journeyWithRedirectLocation._3}" in {
+          s"when journey ${if(journeyWithRedirectLocation._1.isComplete(legacyRegime)) "" else "not "}" in {
 
             givenAuthorisedAsAgentWith(arn.value)
             givenGetAgentRecord(agentRecord)

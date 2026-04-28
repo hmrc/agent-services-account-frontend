@@ -61,13 +61,13 @@ extends ComponentBaseISpec {
     s"POST $updateAddressPath" should {
 
       val journeyWithRedirectLocations = List(
-        (subscriptionBaseJourney, "check-your-answers", "not complete"),
-        (subscriptionFullJourney(legacyRegime), "check-your-answers", "complete")
+        (subscriptionBaseJourney, "check-your-answers"),
+        (subscriptionFullJourney(legacyRegime), "check-your-answers")
       )
 
       journeyWithRedirectLocations.foreach(journeyWithRedirectLocation => {
-        s"update journey and redirect to ${journeyWithRedirectLocation._2}" +
-          s"when using ASA address and journey ${journeyWithRedirectLocation._3}" in {
+        s"update journey and redirect to ${journeyWithRedirectLocation._2} when using ASA address " +
+          s"and journey ${if(journeyWithRedirectLocation._1.isComplete(legacyRegime)) "" else "not "}" in {
             givenAuthorisedAsAgentWith(arn.value)
             givenGetAgentRecord(agentRecord)
             stubASAGetResponseError(arn, NOT_FOUND)
