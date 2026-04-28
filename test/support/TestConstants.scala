@@ -164,15 +164,7 @@ trait TestConstants {
       agencyEmail = Some("joe@bloggs.com"),
       agencyTelephone = None,
       agencyAddress = None
-    ),
-    useCustomBusinessName = None,
-    businessNameAnswer = None,
-    useCustomPhoneNumber = None,
-    phoneNumberAnswer = None,
-    useCustomEmail = None,
-    emailAnswer = None,
-    useCustomAddress = None,
-    addressAnswer = None
+    )
   )
 
   val subscriptionFullJourney: SubscriptionJourney = SubscriptionJourney(

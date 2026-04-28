@@ -35,7 +35,7 @@ extends ViewBaseSpec {
   private val subscriptionBusinessName = "ABC-No.1 Accountants"
 
   private val payeContactNameForm: Form[PayeContactNameFormValues] = PayeSubscriptionContactNameForm.form
-  
+
   private val formWithNewContactNameError: Form[PayeContactNameFormValues] = payeContactNameForm.withError(
     key = contactNameNewKey,
     message = messages("asa.legacy.paye.contact-name.new-input.error.empty")

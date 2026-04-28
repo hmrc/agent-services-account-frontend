@@ -137,17 +137,7 @@ class Actions @Inject() (
             agentInfo = request.agentInfo,
             request = request.request
           )
-        def subscriptionJourney(asaDetails: AgencyDetails) = SubscriptionJourney(
-          asaDetails = asaDetails,
-          useCustomBusinessName = None,
-          businessNameAnswer = None,
-          useCustomPhoneNumber = None,
-          phoneNumberAnswer = None,
-          useCustomEmail = None,
-          emailAnswer = None,
-          useCustomAddress = None,
-          addressAnswer = None
-        )
+        def subscriptionJourney(asaDetails: AgencyDetails) = SubscriptionJourney(asaDetails = asaDetails)
         if (appConfig.enableLegacySubscriptionLink) {
           sessionCacheService.get[SubscriptionJourney](subscriptionJourneyKey(legacyRegime)).flatMap {
             case Some(journey) => Future.successful(Right(buildRequest(journey)))

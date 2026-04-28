@@ -40,7 +40,7 @@ object NextPageSelector {
     Option[SubscriptionJourney],
     LegacyRegime
   ) => Call = {
-    case (_, Some(journey), regime) if journey.isComplete => subscriptions.routes.CheckYourAnswersController.showPage(regime)
+    case (_, Some(journey), regime) if journey.isComplete(regime) => subscriptions.routes.CheckYourAnswersController.showPage(regime)
     case (`payeUpdateContactNamePage`, _, PAYE) => subscriptions.routes.UpdatePhoneNumberController.showPage(PAYE)
     case (`updateBusinessNamePage`, _, regime) => subscriptions.routes.UpdatePhoneNumberController.showPage(regime)
     case (`updatePhoneNumberPage`, _, regime) => subscriptions.routes.UpdateEmailAddressController.showPage(regime)

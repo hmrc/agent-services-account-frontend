@@ -23,14 +23,15 @@ import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 
 case class SubscriptionJourney(
   asaDetails: AgencyDetails,
-  useCustomBusinessName: Option[Boolean],
-  businessNameAnswer: Option[String],
-  useCustomPhoneNumber: Option[Boolean],
-  phoneNumberAnswer: Option[String],
-  useCustomEmail: Option[Boolean],
-  emailAnswer: Option[String],
-  useCustomAddress: Option[Boolean],
-  addressAnswer: Option[BusinessAddress]
+  payeContactName: Option[String] = None,
+  useCustomBusinessName: Option[Boolean] = None,
+  businessNameAnswer: Option[String] = None,
+  useCustomPhoneNumber: Option[Boolean] = None,
+  phoneNumberAnswer: Option[String] = None,
+  useCustomEmail: Option[Boolean] = None,
+  emailAnswer: Option[String] = None,
+  useCustomAddress: Option[Boolean] = None,
+  addressAnswer: Option[BusinessAddress] = None
 ) {
 
   private def answerComplete(
@@ -45,7 +46,7 @@ case class SubscriptionJourney(
   }
 
   //      TODO: 11186 Implement for PAYE
-  val isComplete: Boolean = {
+  def isComplete(legacyRegime: LegacyRegime): Boolean = {
     val bnComplete = answerComplete(useCustomBusinessName, businessNameAnswer)
     val pnComplete = answerComplete(useCustomPhoneNumber, phoneNumberAnswer)
     val eaComplete = answerComplete(useCustomEmail, emailAnswer)
