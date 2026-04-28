@@ -32,33 +32,33 @@ with Matchers {
   private val initForm = form
 
   "form binding" should {
-    s"be successful when $contactNameNewKey valid" in {
+    s"be successful when $contactNameKey valid" in {
       val params = Map(
-        contactNameNewKey -> validNewContactName
+        contactNameKey -> validNewContactName
       )
 
       initForm.bind(params).value shouldBe Some(PayeContactNameFormValues(validNewContactName))
     }
 
-    s"error when $contactNameNewKey empty" in {
+    s"error when $contactNameKey empty" in {
       val params = Map(
-        contactNameNewKey -> emptyValue
+        contactNameKey -> emptyValue
       )
 
       val validatedForm = initForm.bind(params)
       validatedForm.hasErrors shouldBe true
-      validatedForm.error(contactNameNewKey).get.message shouldBe "asa.legacy.paye.contact-name.new-input.error.empty"
+      validatedForm.error(contactNameKey).get.message shouldBe "asa.legacy.paye.contact-name.new-input.error.empty"
       validatedForm.errors.length shouldBe 1
     }
 
-    s"error when $contactNameNewKey invalid" in {
+    s"error when $contactNameKey invalid" in {
       val params = Map(
-        contactNameNewKey -> invalidNewContactName
+        contactNameKey -> invalidNewContactName
       )
 
       val validatedForm = initForm.bind(params)
       validatedForm.hasErrors shouldBe true
-      validatedForm.error(contactNameNewKey).get.message shouldBe "asa.legacy.paye.contact-name.new-input.error.invalid"
+      validatedForm.error(contactNameKey).get.message shouldBe "asa.legacy.paye.contact-name.new-input.error.invalid"
       validatedForm.errors.length shouldBe 1
     }
 
@@ -66,7 +66,7 @@ with Matchers {
       val unboundForm = initForm.mapping.unbind(PayeContactNameFormValues(validNewContactName))
 
       unboundForm shouldBe Map(
-        contactNameNewKey -> validNewContactName
+        contactNameKey -> validNewContactName
       )
     }
 

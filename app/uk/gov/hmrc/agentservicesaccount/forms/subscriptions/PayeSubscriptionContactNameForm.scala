@@ -24,7 +24,7 @@ import uk.gov.hmrc.agentservicesaccount.models.subscriptions.PayeContactNameForm
 
 object PayeSubscriptionContactNameForm {
 
-  val contactNameNewKey = "contactName"
+  val contactNameKey = "contactName"
 
   private val contactNameRegex = """^[A-Za-z0-9\(\)&\-\'‘’\/,\. ]{1,54}$""".r
 
@@ -35,7 +35,7 @@ object PayeSubscriptionContactNameForm {
   def form: Form[PayeContactNameFormValues] = {
     Form(
       mapping(
-        contactNameNewKey -> contactNameMapping
+        contactNameKey -> contactNameMapping
       )(PayeContactNameFormValues.apply)(o => Some(o.contactName))
     )
   }

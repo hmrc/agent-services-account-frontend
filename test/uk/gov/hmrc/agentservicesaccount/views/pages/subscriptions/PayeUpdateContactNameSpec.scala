@@ -22,12 +22,11 @@ import org.jsoup.nodes.Element
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.data.Form
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.PayeSubscriptionContactNameForm
-import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.PayeSubscriptionContactNameForm.contactNameNewKey
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.PayeSubscriptionContactNameForm.contactNameKey
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.PayeContactNameFormValues
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.paye_update_contact_name
 
-//TODO: 11186 Update this when template dev done
 class PayeUpdateContactNameSpec
 extends ViewBaseSpec {
 
@@ -36,9 +35,9 @@ extends ViewBaseSpec {
 
   private val payeContactNameForm: Form[PayeContactNameFormValues] = PayeSubscriptionContactNameForm.form
 
-  private val formWithNewContactNameError: Form[PayeContactNameFormValues] = payeContactNameForm.withError(
-    key = contactNameNewKey,
-    message = messages("asa.legacy.paye.contact-name.new-input.error.empty")
+  private val formWithContactNameError: Form[PayeContactNameFormValues] = payeContactNameForm.withError(
+    key = contactNameKey,
+    message = messages("asa.legacy.paye.contact-name.input.error.empty")
   )
 
   def render(form: Form[PayeContactNameFormValues]): Document = Jsoup.parse(
@@ -53,6 +52,7 @@ extends ViewBaseSpec {
   )
 
   private val title: String = messages("asa.legacy.paye.contact-name.title")
+  private val heading: String = messages("asa.legacy.paye.contact-name.input.heading", subscriptionBusinessName)
 
   "paye_update_contact_name" when {
 
@@ -74,8 +74,8 @@ extends ViewBaseSpec {
 
     def testPageStaticContent(doc: Document): Unit = {
 
-      "have the correct h1 heading and introduction" in {
-        doc.select("h1").first.text() mustBe title
+      "have the correct h1 heading" in {
+        doc.select("h1").first.text() mustBe heading
       }
 
       "have the correct continue button" in {
@@ -95,56 +95,20 @@ extends ViewBaseSpec {
         doc.title() mustBe s"$title - Agent services account - GOV.UK"
       }
 
-//      "display correct radio options" in {
-//        val radios = doc.select(".govuk-radios__item")
-//        radios.size() mustBe 2
-//        radios.get(0).text() mustBe subscriptionBusinessName
-//        radios.get(0).select("input").attr("name") mustBe contactNameUseAsaDataKey
-//        radios.get(1).text() mustBe messages("asa.legacy.paye.contact-name.use-asa.false")
-//        radios.get(1).select("input").attr("name") mustBe contactNameUseAsaDataKey
-//      }
+      "display the correct hint" in {
+        val hint = doc.select(".govuk-hint")
+        hint.first().text() mustBe messages("asa.legacy.paye.contact-name.input.hint")
+      }
 
-      "hide the conditional new business name input" in {
-        val conditionalHidden = doc.select(".govuk-radios__conditional--hidden")
-        conditionalHidden.size() mustBe 1
-        conditionalHidden.text() mustBe messages("asa.legacy.paye.contact-name.new-input.label")
-        conditionalHidden.select(".govuk-input").attr("name") mustBe contactNameNewKey
+      "display the contact name input" in {
+        val input = doc.select(".govuk-input")
+        input.first().attr("name") mustBe contactNameKey
       }
     }
 
-//    "when 'new business name' option is selected" should {
-//
-//      val filledForm: Form[PayeContactNameFormValues] = payeContactNameForm.fill(
-//        PayeContactNameFormValues(
-//          useAsaData = false,
-//          newContactName = Some("New Accountants")
-//        )
-//      )
-//
-//      val doc: Document = render(filledForm)
-//
-//      "show the conditional input section" in {
-//        val conditional = doc.select(".govuk-radios__conditional").first()
-//        conditional.hasClass("govuk-radios__conditional--hidden") mustBe false
-//      }
-//
-//      "have the new business name input present" in {
-//        doc.select("#contactNameNew").size() mustBe 1
-//      }
-//
-//      "pre-fill the new business name input" in {
-//        doc.select("#contactNameNew").`val`() mustBe "New Accountants"
-//      }
-//
-//      "have the correct radio selected" in {
-//        val radios = doc.select("input[name=contactNameUseAsaData]")
-//        radios.get(1).hasAttr("checked") mustBe true
-//      }
-//    }
-
     "form is submitted with newContactName errors should" should {
 
-      val doc: Document = render(formWithNewContactNameError)
+      val doc: Document = render(formWithContactNameError)
 
       testServiceStaticContent(doc)
 
@@ -156,8 +120,8 @@ extends ViewBaseSpec {
 
       "display correct error summary link" in {
         val errorLink: Element = doc.select(".govuk-error-summary__list a").first()
-        errorLink.text() mustBe messages("asa.legacy.paye.contact-name.new-input.error.empty")
-        errorLink.attr("href") mustBe s"#$contactNameNewKey"
+        errorLink.text() mustBe messages("asa.legacy.paye.contact-name.input.error.empty")
+        errorLink.attr("href") mustBe s"#$contactNameKey"
       }
 
       "display error styling on form" in {
@@ -165,7 +129,7 @@ extends ViewBaseSpec {
       }
 
       "display error message on form" in {
-        doc.select(".govuk-error-message").text() mustBe s"Error: ${messages("asa.legacy.paye.contact-name.new-input.error.empty")}"
+        doc.select(".govuk-error-message").text() mustBe s"Error: ${messages("asa.legacy.paye.contact-name.input.error.empty")}"
       }
     }
   }
