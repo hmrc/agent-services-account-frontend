@@ -48,7 +48,6 @@ class PayeUpdateContactNameController @Inject() (
 extends FrontendController(cc)
 with I18nSupport
 with Logging {
-//  TODO: 11186: Build this into correct design and saving mechanism
 
   def showPage: Action[AnyContent] = actions.authActionWithSubscriptionJourney(PAYE).async { implicit request =>
     val journey = request.subscriptionJourney
@@ -56,19 +55,13 @@ with Logging {
     val subscriptionBusinessName = journey.asaDetails.agencyName.getOrElse("")
 
     val initialForm = PayeSubscriptionContactNameForm.form
-//    val form =
-//      journey.useCustomBusinessName match {
-//
-//        case Some(useCustom) =>
-//          initialForm.fill(
-//            PayeContactNameFormValues(
-//              contactName = subscriptionBusinessName
-//            )
-//          )
-//
-//        case None => initialForm
-//      }
-    val form = initialForm
+    val form = journey.payeContactName match {
+      case Some(contactName) =>
+        initialForm.fill(
+          PayeContactNameFormValues(contactName = contactName)
+        )
+      case None => initialForm
+    }
 
     Future.successful(
       Ok(paye_update_contact_name(
@@ -93,12 +86,7 @@ with Logging {
       },
       data => {
         val updatedJourney = journey.copy(
-//          useCustomBusinessName = Some(!data.useAsaData),
-//          businessNameAnswer =
-//            if (data.useAsaData)
-//              None
-//            else
-//              data.newBusinessName
+          payeContactName = Some(data.contactName)
         )
 
         sessionCacheService
