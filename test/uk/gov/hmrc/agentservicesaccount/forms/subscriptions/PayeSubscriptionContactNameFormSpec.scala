@@ -47,7 +47,7 @@ with Matchers {
 
       val validatedForm = initForm.bind(params)
       validatedForm.hasErrors shouldBe true
-      validatedForm.error(contactNameKey).get.message shouldBe "asa.legacy.paye.contact-name.new-input.error.empty"
+      validatedForm.error(contactNameKey).get.message shouldBe "asa.legacy.paye.contact-name.input.error.empty"
       validatedForm.errors.length shouldBe 1
     }
 
@@ -58,7 +58,7 @@ with Matchers {
 
       val validatedForm = initForm.bind(params)
       validatedForm.hasErrors shouldBe true
-      validatedForm.error(contactNameKey).get.message shouldBe "asa.legacy.paye.contact-name.new-input.error.invalid"
+      validatedForm.error(contactNameKey).get.message shouldBe "asa.legacy.paye.contact-name.input.error.invalid"
       validatedForm.errors.length shouldBe 1
     }
 
