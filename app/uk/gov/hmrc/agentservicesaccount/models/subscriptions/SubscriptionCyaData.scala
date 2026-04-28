@@ -76,6 +76,7 @@ case class SubscriptionCyaData(
 
 }
 
+//      TODO: 11188 Implement for PAYE, probably need to pass in legacyRegime
 object SubscriptionCyaData {
   implicit def subscriptionJourneyToCyaData(journey: SubscriptionJourney): Option[SubscriptionCyaData] = {
     for {
