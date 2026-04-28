@@ -30,4 +30,33 @@ import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionInfo
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionStatus.SubscriptionInProgress
 
-object UpscanStubs {}
+object UpscanStubs {
+  def givenUpscanInitiateSucceeds(reference: String = "test-ref"): StubMapping = {
+    stubFor(
+      post(urlEqualTo("/upscan/v2/initiate"))
+        .willReturn(
+          aResponse()
+            .withStatus(OK)
+            .withHeader("Content-Type", "application/json")
+            .withBody(s"""
+              {
+                "reference": "$reference",
+                "uploadRequest": {
+                  "href": "https://bucket-url",
+                  "fields": {
+                    "key": "$reference",
+                    "acl": "private",
+                    "x-amz-algorithm": "AWS4-HMAC-SHA256",
+                    "x-amz-credential": "CREDENTIAL",
+                    "x-amz-date": "20220401T000000Z",
+                    "x-amz-meta-callback-url": "https://callback.url",
+                    "policy": "POLICY",
+                    "x-amz-signature": "SIGNATURE"
+                  }
+                }
+              }
+            """.stripMargin)
+        )
+    )
+  }
+}
