@@ -215,7 +215,7 @@ with TestConstants {
 
       val journeyWithRedirectLocations = List(
         (subscriptionBaseJourney, "phone-number", "not complete"),
-        (subscriptionFullJourney, "check-your-answers", "complete")
+        (subscriptionFullJourney(legacyRegime), "check-your-answers", "complete")
       )
 
       journeyWithRedirectLocations.foreach(journeyWithRedirectLocation => {

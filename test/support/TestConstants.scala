@@ -26,7 +26,8 @@ import uk.gov.hmrc.agentservicesaccount.models.desiDetails.SaChanges
 import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
 import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.{LegacyRegime, SubscriptionJourney}
 import uk.gov.hmrc.auth.core.retrieve.Credentials
 import uk.gov.hmrc.auth.core.retrieve.Email
 import uk.gov.hmrc.auth.core.retrieve.Name
@@ -167,7 +168,7 @@ trait TestConstants {
     )
   )
 
-  val subscriptionFullJourney: SubscriptionJourney = SubscriptionJourney(
+  val ctSaSubscriptionFullJourney: SubscriptionJourney = SubscriptionJourney(
     asaDetails = AgencyDetails(
       agencyName = None,
       agencyEmail = Some("joe@bloggs.com"),
@@ -184,10 +185,15 @@ trait TestConstants {
     addressAnswer = None
   )
 
-  val payeSubscriptionFullJourney: SubscriptionJourney = subscriptionFullJourney.copy(
+  val payeSubscriptionFullJourney: SubscriptionJourney = ctSaSubscriptionFullJourney.copy(
     useCustomBusinessName = None,
     businessNameAnswer = None,
     payeContactName = Some("My Name")
   )
+
+  def subscriptionFullJourney(legacyRegime: LegacyRegime): SubscriptionJourney = legacyRegime match {
+    case PAYE => payeSubscriptionFullJourney
+    case _ => ctSaSubscriptionFullJourney
+  }
 
 }

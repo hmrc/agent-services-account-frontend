@@ -62,7 +62,7 @@ extends ComponentBaseISpec {
 
       val journeyWithRedirectLocations = List(
         (subscriptionBaseJourney, "check-your-answers", "not complete"),
-        (subscriptionFullJourney, "check-your-answers", "complete")
+        (subscriptionFullJourney(legacyRegime), "check-your-answers", "complete")
       )
 
       journeyWithRedirectLocations.foreach(journeyWithRedirectLocation => {
