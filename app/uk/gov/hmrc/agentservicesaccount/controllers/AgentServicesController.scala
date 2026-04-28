@@ -19,6 +19,8 @@ package uk.gov.hmrc.agentservicesaccount.controllers
 import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc._
+import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
+import uk.gov.hmrc.agentservicesaccount.models.AmlsStatus
 import uk.gov.hmrc.agentservicesaccount.models.Arn
 import uk.gov.hmrc.agentservicesaccount.actions.CallOps._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
@@ -28,10 +30,11 @@ import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentPermissionsConnector
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentUserClientDetailsConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.amls.{routes => amlsRoutes}
-import uk.gov.hmrc.agentservicesaccount.models.AmlsStatus
 import uk.gov.hmrc.agentservicesaccount.models.AmlsStatuses._
 import uk.gov.hmrc.agentservicesaccount.models.accessgroups.OptedInReady
 import uk.gov.hmrc.agentservicesaccount.models.accessgroups.OptinStatus
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionInfo
+import uk.gov.hmrc.agentservicesaccount.services.AgentRecordService
 import uk.gov.hmrc.agentservicesaccount.services.SubscriptionService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages._
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.assistant.administrators
@@ -50,6 +53,7 @@ class AgentServicesController @Inject() (
   agentPermissionsConnector: AgentPermissionsConnector,
   agentUserClientDetailsConnector: AgentUserClientDetailsConnector,
   subscriptionService: SubscriptionService,
+  agentRecordService: AgentRecordService,
   asaDashboard: asa_dashboard,
   manage_account: manage_account,
   your_account: your_account,
@@ -77,21 +81,41 @@ with Logging {
      *      showFeatureInvite is unused at the mo
      * */
     withShowFeatureInvite(agentInfo.arn) { showFeatureInvite: Boolean =>
+      val subscriptionInfoF: Future[Seq[SubscriptionInfo]] =
+        if (appConfig.enableLegacySubscriptionLink)
+          subscriptionService.getSubscriptionInfo(
+            agentInfo.missingSubscriptions,
+            agentInfo.existingSubscriptionInfo
+          )
+        else
+          Future.successful(Seq.empty)
+
+      val isAbroadF: Future[Boolean] =
+        if (appConfig.enableLegacySubscriptionLink)
+          agentRecordService.getAgentRecord.map { record =>
+            val countryCodeOpt = record.agencyDetails
+              .flatMap(_.agencyAddress)
+              .map(_.countryCode)
+
+            countryCodeOpt.exists(_ != "GB")
+          }
+        else
+          Future.successful(false)
+
       for {
-        subscriptionInfo <-
-          if (appConfig.enableLegacySubscriptionLink)
-            subscriptionService
-              .getSubscriptionInfo(agentInfo.missingSubscriptions, agentInfo.existingSubscriptionInfo)
-          else
-            Future.successful(Nil)
-      } yield Ok(
-        asaDashboard(
-          arn = formatArn(agentInfo.arn),
-          isShownRecruitmentBanner = showFeatureInvite && agentInfo.isAdmin,
-          isAdmin = agentInfo.isAdmin,
-          subscriptionInfo = subscriptionInfo
-        )
-      ).addingToSession(toReturnFromMapping())
+        subscriptionInfo <- subscriptionInfoF
+        isAbroad <- isAbroadF
+      } yield {
+        Ok(
+          asaDashboard(
+            arn = formatArn(agentInfo.arn),
+            isShownRecruitmentBanner = showFeatureInvite && agentInfo.isAdmin,
+            isAdmin = agentInfo.isAdmin,
+            isAbroad = isAbroad,
+            subscriptionInfo = subscriptionInfo
+          )
+        ).addingToSession(toReturnFromMapping())
+      }
     }
   }
 

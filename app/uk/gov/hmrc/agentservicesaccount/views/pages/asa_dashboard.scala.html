@@ -29,6 +29,7 @@
     agents_ur_banner: agents_ur_banner,
     tax_services_accordion: tax_services_accordion,
     manage_section: manage_section,
+    apply_to_act_for_section: apply_to_act_for_section,
     govukNotificationBanner : GovukNotificationBanner
 )
 
@@ -36,6 +37,7 @@
     arn: String,
     isShownRecruitmentBanner: Boolean = false,
     isAdmin: Boolean = false,
+    isAbroad: Boolean = false,
     subscriptionInfo: Seq[SubscriptionInfo] = Seq.empty
 )(implicit request: AuthRequestWithAgentInfo[AnyContent], msgs: Messages, appConfig: AppConfig)
 
@@ -71,6 +73,8 @@
     @if(isAdmin) {
         @manage_section()
     }
+
+    @apply_to_act_for_section(subscriptionInfo, isAbroad)
 
     <hr class="govuk-section-break hr-thick govuk-!-margin-bottom-6 govuk-!-margin-top-8">
     @h2("asa.tax-services", id = Some("tax-services-h2"))
