@@ -54,13 +54,9 @@ with Matchers {
     s"SubscriptionCyaData.toSubscriptionRequest - $legacyRegime" should {
 
 //      TODO: 11188 Implement
-      "use businessName as agencyName" in {
+      "use businessName as agencyName" in {}
 
-      }
-
-      "use businessName as contactName" in {
-
-      }
+      "use businessName as contactName" in {}
 
       "use addressLine4 when country is GB" in {
         val result = exampleGBCyaData.toSubscriptionRequest(legacyRegime, "Portugal")
@@ -194,13 +190,9 @@ with Matchers {
   "SubscriptionCyaData.toSubscriptionRequest - PAYE" should {
 
     //      TODO: 11188 Implement
-    "use ASA agencyName as agencyName" in {
+    "use ASA agencyName as agencyName" in {}
 
-    }
-
-    "use payeContactName as contactName" in {
-
-    }
+    "use payeContactName as contactName" in {}
 
     "use addressLine4 when country is GB" in {
       val result = exampleGBCyaData.toSubscriptionRequest(PAYE, "Portugal")
