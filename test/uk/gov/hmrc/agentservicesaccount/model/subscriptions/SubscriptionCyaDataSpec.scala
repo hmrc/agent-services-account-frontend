@@ -27,6 +27,7 @@ class SubscriptionCyaDataSpec
 extends AnyWordSpec
 with Matchers {
 
+//  TODO: 11188 Implement for all 3 legacyRegimes
   private val legacyRegime = SA
 
   private def businessAddress(
