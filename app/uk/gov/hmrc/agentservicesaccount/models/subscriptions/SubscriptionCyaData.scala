@@ -21,7 +21,7 @@ import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
 
 case class SubscriptionCyaData(
-  businessName: String,
+  name: String,
   phoneNumber: String,
   email: String,
   address: BusinessAddress
@@ -43,8 +43,8 @@ case class SubscriptionCyaData(
 
   private def toCtSubscriptionRequest(countryName: String): CtSubscriptionRequest = {
     CtSubscriptionRequest(
-      agentName = businessName,
-      contactName = businessName,
+      agentName = name,
+      contactName = name,
       phoneNumber = Some(phoneNumber),
       emailAddress = Some(email),
       address = toSubscriptionAddress(address, countryName),
@@ -54,8 +54,8 @@ case class SubscriptionCyaData(
 
   private def toSaSubscriptionRequest(countryName: String): SaSubscriptionRequest = {
     SaSubscriptionRequest(
-      agentName = businessName,
-      contactName = businessName,
+      agentName = name,
+      contactName = name,
       phoneNumber = Some(phoneNumber),
       emailAddress = Some(email),
       address = toSubscriptionAddress(address, countryName),
@@ -101,7 +101,7 @@ object SubscriptionCyaData {
           case _ => journey.asaDetails.agencyAddress
         }
     } yield SubscriptionCyaData(
-      businessName = businessName,
+      name = businessName,
       phoneNumber = phoneNumber,
       email = email,
       address = address

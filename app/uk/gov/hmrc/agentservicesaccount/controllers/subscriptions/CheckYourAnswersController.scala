@@ -90,7 +90,7 @@ with I18nSupport {
     Seq(
       SummaryListData(
         key = s"${legacyRegime.msgPrefix}.check-your-answers.business-name",
-        value = data.businessName,
+        value = data.name,
         link = Some(subscriptionRoutes.UpdateBusinessNameController.showPage(legacyRegime))
       ),
       SummaryListData(

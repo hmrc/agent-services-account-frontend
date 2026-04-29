@@ -45,7 +45,7 @@ with Matchers {
 
     "use addressLine4 when country is GB" in {
       val cya = SubscriptionCyaData(
-        businessName = "Test Name",
+        name = "Test Name",
         phoneNumber = "123456",
         email = "test@test.com",
         address = businessAddress("GB", Some("Line 4"))
@@ -58,7 +58,7 @@ with Matchers {
 
     "use countryName when country is not GB" in {
       val cya = SubscriptionCyaData(
-        businessName = "Test Name",
+        name = "Test Name",
         phoneNumber = "123456",
         email = "test@test.com",
         address = businessAddress("PT", Some("Line 4"))
@@ -71,7 +71,7 @@ with Matchers {
 
     "fallback to existing addressLine4 if non-GB and countryName is empty string" in {
       val cya = SubscriptionCyaData(
-        businessName = "Test Name",
+        name = "Test Name",
         phoneNumber = "123456",
         email = "test@test.com",
         address = businessAddress("PT", Some("Line 4"))
