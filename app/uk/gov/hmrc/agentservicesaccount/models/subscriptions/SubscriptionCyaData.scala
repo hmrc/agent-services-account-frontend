@@ -32,10 +32,11 @@ case class SubscriptionCyaData(
     address: BusinessAddress,
     countryName: Option[String] = None
   ): SubscriptionAddress = {
-    val line4: Option[String] = (address.countryCode == "GB", countryName.isDefined) match {
-      case (false, true) => countryName
-      case _ => address.addressLine4
-    }
+    val line4: Option[String] =
+      (address.countryCode == "GB", countryName.isDefined) match {
+        case (false, true) => countryName
+        case _ => address.addressLine4
+      }
     val subscriptionAddress = SubscriptionAddress(
       line1 = address.addressLine1,
       line2 = address.addressLine2.getOrElse(""),
@@ -57,15 +58,14 @@ case class SubscriptionCyaData(
     )
   }
 
-  private def toPayeSubscriptionRequest: CtSubscriptionRequest = {
-    //      TODO: 11188 Implement for PAYE
-    CtSubscriptionRequest(
+  private def toPayeSubscriptionRequest: PayeSubscriptionRequest = {
+    //      TODO: 11188 Pass in agentName for PAYE
+    PayeSubscriptionRequest(
       agentName = name,
       contactName = name,
       phoneNumber = Some(phoneNumber),
       emailAddress = Some(email),
-      address = toSubscriptionAddress(address),
-      countryCode = address.countryCode
+      address = toSubscriptionAddress(address)
     )
   }
 
