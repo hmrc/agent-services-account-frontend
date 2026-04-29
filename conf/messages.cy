@@ -304,7 +304,7 @@ asa.legacy.paye.alf.edit.townLabel=Address line 4
 asa.legacy.paye.alf.confirm.title=Review and confirm - Agent services account - GOV.UK
 
 asa.legacy.paye.check-your-answers.h1=Check your answers
-asa.legacy.paye.check-your-answers.business-name=Business name
+asa.legacy.paye.check-your-answers.contact-name=Contact name
 asa.legacy.paye.check-your-answers.phone-number=Telephone number
 asa.legacy.paye.check-your-answers.email=Email address
 asa.legacy.paye.check-your-answers.address=Address
