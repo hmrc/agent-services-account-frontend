@@ -28,6 +28,8 @@ import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionCyaData
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionCyaData.subscriptionJourneyToCyaData
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.utils.CountryResolver
 import uk.gov.hmrc.agentservicesaccount.views.components.models.SummaryListData
@@ -55,14 +57,14 @@ extends FrontendController(cc)
 with I18nSupport {
 
   def showPage(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
-    withSubscriptionCyaData(request.subscriptionJourney) { data =>
+    withSubscriptionCyaData(request.subscriptionJourney, legacyRegime) { data =>
       val summaryItems = buildSummaryListItems(data, legacyRegime)
       Future.successful(Ok(checkYourAnswers(summaryItems, legacyRegime)))
     }
   }
 
   def onSubmit(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
-    withSubscriptionCyaData(request.subscriptionJourney) { data =>
+    withSubscriptionCyaData(request.subscriptionJourney, legacyRegime) { data =>
       val requestModel = data.toSubscriptionRequest(legacyRegime, countryResolver.countryName(data.address.countryCode))
 
       agentServicesAccountConnector
@@ -82,7 +84,6 @@ with I18nSupport {
     .map(_.body)
     .mkString("<br/>")
 
-//  TODO: 11188 Need to correct this for PAYE
   private[subscriptions] def buildSummaryListItems(
     data: SubscriptionCyaData,
     legacyRegime: LegacyRegime
@@ -91,7 +92,11 @@ with I18nSupport {
       SummaryListData(
         key = s"${legacyRegime.msgPrefix}.check-your-answers.business-name",
         value = data.name,
-        link = Some(subscriptionRoutes.UpdateBusinessNameController.showPage(legacyRegime))
+        link = if (legacyRegime == PAYE) {
+          Some(subscriptionRoutes.PayeUpdateContactNameController.showPage)
+        } else {
+          Some(subscriptionRoutes.UpdateBusinessNameController.showPage(legacyRegime))
+        }
       ),
       SummaryListData(
         key = s"${legacyRegime.msgPrefix}.check-your-answers.phone-number",
@@ -112,9 +117,10 @@ with I18nSupport {
   }
 
   private def withSubscriptionCyaData(
-    journey: SubscriptionJourney
+    journey: SubscriptionJourney,
+    legacyRegime: LegacyRegime
   )(f: SubscriptionCyaData => Future[Result]): Future[Result] =
-    (journey: Option[SubscriptionCyaData]) match {
+    (subscriptionJourneyToCyaData(journey, legacyRegime): Option[SubscriptionCyaData]) match {
       case Some(data) => f(data)
       case None =>
         Future.successful(

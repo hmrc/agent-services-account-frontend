@@ -76,9 +76,9 @@ case class SubscriptionCyaData(
 
 }
 
-//      TODO: 11188 Implement for PAYE, probably need to pass in legacyRegime
+//      TODO: 11188 Implement for PAYE
 object SubscriptionCyaData {
-  implicit def subscriptionJourneyToCyaData(journey: SubscriptionJourney): Option[SubscriptionCyaData] = {
+  def subscriptionJourneyToCyaData(journey: SubscriptionJourney, legacyRegime: LegacyRegime): Option[SubscriptionCyaData] = {
     for {
       businessName <-
         journey.useCustomBusinessName match {
