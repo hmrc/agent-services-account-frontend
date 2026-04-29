@@ -19,7 +19,7 @@ package uk.gov.hmrc.agentservicesaccount.model.subscriptions
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import uk.gov.hmrc.agentservicesaccount.models._
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.{CT, PAYE, SA}
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionCyaData
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
 
@@ -28,7 +28,7 @@ extends AnyWordSpec
 with Matchers {
 
 //  TODO: 11188 Implement for all 3 legacyRegimes
-  private val legacyRegime = SA
+  private val legacyRegimes = List(CT, PAYE, SA)
 
   private def businessAddress(
     countryCode: String,
@@ -42,8 +42,165 @@ with Matchers {
     countryCode = countryCode
   )
 
-  "SubscriptionCyaData.toSubscriptionRequest" should {
+  List(CT, SA).foreach(legacyRegime => {
+    s"SubscriptionCyaData.toSubscriptionRequest - $legacyRegime" should {
 
+      "use addressLine4 when country is GB" in {
+        val cya = SubscriptionCyaData(
+          name = "Test Name",
+          phoneNumber = "123456",
+          email = "test@test.com",
+          address = businessAddress("GB", Some("Line 4"))
+        )
+
+        val result = cya.toSubscriptionRequest(legacyRegime, "Portugal")
+
+        result.address.line4 shouldBe Some("Line 4")
+      }
+
+      "use countryName when country is not GB" in {
+        val cya = SubscriptionCyaData(
+          name = "Test Name",
+          phoneNumber = "123456",
+          email = "test@test.com",
+          address = businessAddress("PT", Some("Line 4"))
+        )
+
+        val result = cya.toSubscriptionRequest(legacyRegime, "Portugal")
+
+        result.address.line4 shouldBe Some("Portugal")
+      }
+
+      "fallback to existing addressLine4 if non-GB and countryName is empty string" in {
+        val cya = SubscriptionCyaData(
+          name = "Test Name",
+          phoneNumber = "123456",
+          email = "test@test.com",
+          address = businessAddress("PT", Some("Line 4"))
+        )
+
+        val result = cya.toSubscriptionRequest(legacyRegime, "")
+
+        result.address.line4 shouldBe Some("")
+      }
+
+      "set empty string when addressLine2 is None" in {
+        val address = BusinessAddress(
+          addressLine1 = "Line 1",
+          addressLine2 = None,
+          addressLine3 = Some("Line 3"),
+          addressLine4 = Some("Line 4"),
+          postalCode = Some("AA1 1AA"),
+          countryCode = "GB"
+        )
+
+        val cya = SubscriptionCyaData(
+          "Test Name",
+          "123456",
+          "test@test.com",
+          address
+        )
+
+        val result = cya.toSubscriptionRequest(legacyRegime, "Portugal")
+
+        result.address.line2 shouldBe ""
+      }
+    }
+
+    s"SubscriptionCyaData.subscriptionJourneyToCyaData - $legacyRegime" should {
+
+      "use custom values when flags are true" in {
+        val address = businessAddress("GB")
+
+        val journey = SubscriptionJourney(
+          asaDetails = AgencyDetails(
+            agencyName = Some("ASA Name"),
+            agencyEmail = Some("asa@test.com"),
+            agencyTelephone = Some("999999"),
+            agencyAddress = Some(address)
+          ),
+          useCustomBusinessName = Some(true),
+          businessNameAnswer = Some("Custom Name"),
+          useCustomPhoneNumber = Some(true),
+          phoneNumberAnswer = Some("123456"),
+          useCustomEmail = Some(true),
+          emailAnswer = Some("custom@test.com"),
+          useCustomAddress = Some(true),
+          addressAnswer = Some(address)
+        )
+
+        val result = SubscriptionCyaData.subscriptionJourneyToCyaData(journey, legacyRegime)
+
+        result shouldBe Some(
+          SubscriptionCyaData(
+            "Custom Name",
+            "123456",
+            "custom@test.com",
+            address
+          )
+        )
+      }
+
+      "fallback to ASA details when flags are false" in {
+        val address = businessAddress("GB")
+
+        val journey = SubscriptionJourney(
+          asaDetails = AgencyDetails(
+            agencyName = Some("ASA Name"),
+            agencyEmail = Some("asa@test.com"),
+            agencyTelephone = Some("999999"),
+            agencyAddress = Some(address)
+          ),
+          useCustomBusinessName = Some(false),
+          businessNameAnswer = None,
+          useCustomPhoneNumber = Some(false),
+          phoneNumberAnswer = None,
+          useCustomEmail = Some(false),
+          emailAnswer = None,
+          useCustomAddress = Some(false),
+          addressAnswer = None
+        )
+
+        val result = SubscriptionCyaData.subscriptionJourneyToCyaData(journey, legacyRegime)
+
+        result shouldBe Some(
+          SubscriptionCyaData(
+            "ASA Name",
+            "999999",
+            "asa@test.com",
+            address
+          )
+        )
+      }
+
+      "return None when required data is missing" in {
+        val journey = SubscriptionJourney(
+          asaDetails = AgencyDetails(
+            None,
+            None,
+            None,
+            None
+          ),
+          useCustomBusinessName = Some(true),
+          businessNameAnswer = None,
+          useCustomPhoneNumber = Some(true),
+          phoneNumberAnswer = None,
+          useCustomEmail = Some(true),
+          emailAnswer = None,
+          useCustomAddress = Some(true),
+          addressAnswer = None
+        )
+
+        val result = SubscriptionCyaData.subscriptionJourneyToCyaData(journey, legacyRegime)
+
+        result shouldBe None
+      }
+    }
+  })
+
+  "SubscriptionCyaData.toSubscriptionRequest - PAYE" should {
+
+    //      TODO: 11188 Are these relevant for PAYE?
     "use addressLine4 when country is GB" in {
       val cya = SubscriptionCyaData(
         name = "Test Name",
@@ -52,7 +209,7 @@ with Matchers {
         address = businessAddress("GB", Some("Line 4"))
       )
 
-      val result = cya.toSubscriptionRequest(legacyRegime, "Portugal")
+      val result = cya.toSubscriptionRequest(PAYE, "Portugal")
 
       result.address.line4 shouldBe Some("Line 4")
     }
@@ -65,7 +222,7 @@ with Matchers {
         address = businessAddress("PT", Some("Line 4"))
       )
 
-      val result = cya.toSubscriptionRequest(legacyRegime, "Portugal")
+      val result = cya.toSubscriptionRequest(PAYE, "Portugal")
 
       result.address.line4 shouldBe Some("Portugal")
     }
@@ -78,7 +235,7 @@ with Matchers {
         address = businessAddress("PT", Some("Line 4"))
       )
 
-      val result = cya.toSubscriptionRequest(legacyRegime, "")
+      val result = cya.toSubscriptionRequest(PAYE, "")
 
       result.address.line4 shouldBe Some("")
     }
@@ -100,14 +257,14 @@ with Matchers {
         address
       )
 
-      val result = cya.toSubscriptionRequest(legacyRegime, "Portugal")
+      val result = cya.toSubscriptionRequest(PAYE, "Portugal")
 
       result.address.line2 shouldBe ""
     }
   }
 
-  "SubscriptionCyaData.subscriptionJourneyToCyaData" should {
-
+  "SubscriptionCyaData.subscriptionJourneyToCyaData - PAYE" should {
+//TODO: 11188 Correct for PAYE
     "use custom values when flags are true" in {
       val address = businessAddress("GB")
 
@@ -128,7 +285,7 @@ with Matchers {
         addressAnswer = Some(address)
       )
 
-      val result = SubscriptionCyaData.subscriptionJourneyToCyaData(journey)
+      val result = SubscriptionCyaData.subscriptionJourneyToCyaData(journey, PAYE)
 
       result shouldBe Some(
         SubscriptionCyaData(
@@ -160,7 +317,7 @@ with Matchers {
         addressAnswer = None
       )
 
-      val result = SubscriptionCyaData.subscriptionJourneyToCyaData(journey)
+      val result = SubscriptionCyaData.subscriptionJourneyToCyaData(journey, PAYE)
 
       result shouldBe Some(
         SubscriptionCyaData(
@@ -190,7 +347,7 @@ with Matchers {
         addressAnswer = None
       )
 
-      val result = SubscriptionCyaData.subscriptionJourneyToCyaData(journey)
+      val result = SubscriptionCyaData.subscriptionJourneyToCyaData(journey, PAYE)
 
       result shouldBe None
     }
