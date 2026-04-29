@@ -17,7 +17,9 @@
 package uk.gov.hmrc.agentservicesaccount.models.subscriptions
 
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.{CT, PAYE, SA}
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
 
 case class SubscriptionCyaData(
   name: String,
@@ -76,17 +78,22 @@ case class SubscriptionCyaData(
 }
 
 object SubscriptionCyaData {
-  def subscriptionJourneyToCyaData(journey: SubscriptionJourney, legacyRegime: LegacyRegime): Option[SubscriptionCyaData] = {
+  def subscriptionJourneyToCyaData(
+    journey: SubscriptionJourney,
+    legacyRegime: LegacyRegime
+  ): Option[SubscriptionCyaData] = {
     for {
-      name <- if (legacyRegime == PAYE) {
-        //      TODO: 11188 Implement for PAYE
-        Some("TO BE IMPLEMENTED")
-      } else {
-        journey.useCustomBusinessName match {
-          case Some(true) => journey.businessNameAnswer
-          case _ => journey.asaDetails.agencyName
+      name <-
+        if (legacyRegime == PAYE) {
+          //      TODO: 11188 Implement for PAYE
+          Some("TO BE IMPLEMENTED")
         }
-      }
+        else {
+          journey.useCustomBusinessName match {
+            case Some(true) => journey.businessNameAnswer
+            case _ => journey.asaDetails.agencyName
+          }
+        }
       phoneNumber <-
         journey.useCustomPhoneNumber match {
           case Some(true) => journey.phoneNumberAnswer

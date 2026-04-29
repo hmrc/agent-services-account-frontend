@@ -91,13 +91,20 @@ with I18nSupport {
   ): Seq[SummaryListData] = {
     Seq(
       SummaryListData(
-        key = s"${legacyRegime.msgPrefix}.check-your-answers.${if(legacyRegime == PAYE) "contact" else "business"}-name",
+//        TODO: 11188: Pull out into two vals
+        key =
+          s"${legacyRegime.msgPrefix}.check-your-answers.${if (legacyRegime == PAYE)
+              "contact"
+            else
+              "business"}-name",
         value = data.name,
-        link = if (legacyRegime == PAYE) {
-          Some(subscriptionRoutes.PayeUpdateContactNameController.showPage)
-        } else {
-          Some(subscriptionRoutes.UpdateBusinessNameController.showPage(legacyRegime))
-        }
+        link =
+          if (legacyRegime == PAYE) {
+            Some(subscriptionRoutes.PayeUpdateContactNameController.showPage)
+          }
+          else {
+            Some(subscriptionRoutes.UpdateBusinessNameController.showPage(legacyRegime))
+          }
       ),
       SummaryListData(
         key = s"${legacyRegime.msgPrefix}.check-your-answers.phone-number",

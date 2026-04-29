@@ -168,13 +168,14 @@ with MockFactory {
         if (legacyRegime == PAYE) {
           body should include("Contact name")
           body should include("My Name")
-          body should not include("Business name")
-          body should not include("Custom name")
-        } else {
+          body should not include ("Business name")
+          body should not include ("Custom name")
+        }
+        else {
           body should include("Business name")
           body should include("Custom name")
-          body should not include("Contact name")
-          body should not include("My Name")
+          body should not include ("Contact name")
+          body should not include ("My Name")
         }
         body should include("Telephone number")
         body should include("123456")

@@ -24,7 +24,9 @@ import play.api.i18n.Messages
 import play.api.i18n.MessagesImpl
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.routes
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.{CT, PAYE, SA}
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 import uk.gov.hmrc.agentservicesaccount.views.components.models.SummaryListData
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.check_your_answers
@@ -44,19 +46,21 @@ extends ViewBaseSpec {
   private def title(legacyRegime: LegacyRegime) = s"${heading(legacyRegime)} - Agent services account - GOV.UK"
 
   private def model(legacyRegime: LegacyRegime) = {
-    val nameRow = if (legacyRegime == PAYE) {
-      SummaryListData(
-        key = s"${legacyRegime.msgPrefix}.check-your-answers.contact-name",
-        value = "Manager Employee",
-        link = None
-      )
-    } else {
-      SummaryListData(
-        key = s"${legacyRegime.msgPrefix}.check-your-answers.business-name",
-        value = "Test Agency",
-        link = None
-      )
-    }
+    val nameRow =
+      if (legacyRegime == PAYE) {
+        SummaryListData(
+          key = s"${legacyRegime.msgPrefix}.check-your-answers.contact-name",
+          value = "Manager Employee",
+          link = None
+        )
+      }
+      else {
+        SummaryListData(
+          key = s"${legacyRegime.msgPrefix}.check-your-answers.business-name",
+          value = "Test Agency",
+          link = None
+        )
+      }
     val commonRows = Seq(
       SummaryListData(
         key = s"${legacyRegime.msgPrefix}.check-your-answers.phone-number",
@@ -100,10 +104,11 @@ extends ViewBaseSpec {
         val keys = doc.select(".govuk-summary-list__key").asScala.map(_.text()).toList
         if (legacyRegime == PAYE) {
           keys must contain("Contact name")
-          keys must not contain("Business name")
-        } else {
+          keys must not contain ("Business name")
+        }
+        else {
           keys must contain("Business name")
-          keys must not contain("Contact name")
+          keys must not contain ("Contact name")
         }
         keys must contain("Telephone number")
         keys must contain("Email address")
@@ -112,10 +117,11 @@ extends ViewBaseSpec {
         val values = doc.select(".govuk-summary-list__value").asScala.map(_.text()).toList
         if (legacyRegime == PAYE) {
           values must contain("Manager Employee")
-          values must not contain("Test Agency")
-        } else {
+          values must not contain ("Test Agency")
+        }
+        else {
           values must contain("Test Agency")
-          values must not contain("Manager Employee")
+          values must not contain ("Manager Employee")
         }
         values must contain("1234567890")
         values must contain("test@test.com")
