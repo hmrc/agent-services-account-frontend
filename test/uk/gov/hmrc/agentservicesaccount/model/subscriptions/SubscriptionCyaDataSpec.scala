@@ -41,45 +41,39 @@ with Matchers {
     countryCode = countryCode
   )
 
+  private val exampleGBCyaData = SubscriptionCyaData(
+    name = "Test Name",
+    phoneNumber = "123456",
+    email = "test@test.com",
+    address = businessAddress("GB", Some("Line 4"))
+  )
+
+  private val exampleNonGBCyaData = exampleGBCyaData.copy(address = businessAddress("PT", Some("Line 4")))
+
   List(CT, SA).foreach(legacyRegime => {
     s"SubscriptionCyaData.toSubscriptionRequest - $legacyRegime" should {
 
+//      TODO: 11188 Implement
+      "use businessName as agencyName" in {
+
+      }
+
+      "use businessName as contactName" in {
+
+      }
+
       "use addressLine4 when country is GB" in {
-        val cya = SubscriptionCyaData(
-          name = "Test Name",
-          phoneNumber = "123456",
-          email = "test@test.com",
-          address = businessAddress("GB", Some("Line 4"))
-        )
-
-        val result = cya.toSubscriptionRequest(legacyRegime, "Portugal")
-
+        val result = exampleGBCyaData.toSubscriptionRequest(legacyRegime, "Portugal")
         result.address.line4 shouldBe Some("Line 4")
       }
 
       "use countryName when country is not GB" in {
-        val cya = SubscriptionCyaData(
-          name = "Test Name",
-          phoneNumber = "123456",
-          email = "test@test.com",
-          address = businessAddress("PT", Some("Line 4"))
-        )
-
-        val result = cya.toSubscriptionRequest(legacyRegime, "Portugal")
-
+        val result = exampleNonGBCyaData.toSubscriptionRequest(legacyRegime, "Portugal")
         result.address.line4 shouldBe Some("Portugal")
       }
 
       "fallback to existing addressLine4 if non-GB and countryName is empty string" in {
-        val cya = SubscriptionCyaData(
-          name = "Test Name",
-          phoneNumber = "123456",
-          email = "test@test.com",
-          address = businessAddress("PT", Some("Line 4"))
-        )
-
-        val result = cya.toSubscriptionRequest(legacyRegime, "")
-
+        val result = exampleNonGBCyaData.toSubscriptionRequest(legacyRegime, "")
         result.address.line4 shouldBe Some("")
       }
 
@@ -199,29 +193,22 @@ with Matchers {
 
   "SubscriptionCyaData.toSubscriptionRequest - PAYE" should {
 
+    //      TODO: 11188 Implement
+    "use ASA agencyName as agencyName" in {
+
+    }
+
+    "use payeContactName as contactName" in {
+
+    }
+
     "use addressLine4 when country is GB" in {
-      val cya = SubscriptionCyaData(
-        name = "Test Name",
-        phoneNumber = "123456",
-        email = "test@test.com",
-        address = businessAddress("GB", Some("Line 4"))
-      )
-
-      val result = cya.toSubscriptionRequest(PAYE, "Portugal")
-
+      val result = exampleGBCyaData.toSubscriptionRequest(PAYE, "Portugal")
       result.address.line4 shouldBe Some("Line 4")
     }
 
     "return null when country is not GB" in {
-      val cya = SubscriptionCyaData(
-        name = "Test Name",
-        phoneNumber = "123456",
-        email = "test@test.com",
-        address = businessAddress("PT", Some("Line 4"))
-      )
-
-      val result = cya.toSubscriptionRequest(PAYE, "Portugal")
-
+      val result = exampleNonGBCyaData.toSubscriptionRequest(PAYE, "Portugal")
       result shouldBe null
     }
 
