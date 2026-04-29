@@ -65,6 +65,7 @@ with I18nSupport {
 
   def onSubmit(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
     withSubscriptionCyaData(request.subscriptionJourney, legacyRegime) { data =>
+//      TODO: 11188 What is countryCode for PAYE?
       val requestModel = data.toSubscriptionRequest(legacyRegime, countryResolver.countryName(data.address.countryCode))
 
       agentServicesAccountConnector
