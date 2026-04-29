@@ -26,7 +26,8 @@ import uk.gov.hmrc.agentservicesaccount.models.desiDetails.SaChanges
 import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
 import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.{LegacyRegime, SubscriptionJourney}
 import uk.gov.hmrc.auth.core.retrieve.Credentials
 import uk.gov.hmrc.auth.core.retrieve.Email
 import uk.gov.hmrc.auth.core.retrieve.Name
@@ -158,24 +159,16 @@ trait TestConstants {
   val desiDetailsCtChangesOtherServices = DesignatoryDetails(agencyDetails, ctChangesOtherServices)
   val desiDetailsSaChangesOtherServices = DesignatoryDetails(agencyDetails, saChangesOtherServices)
 
-  val ctSubscriptionBaseJourney: SubscriptionJourney = SubscriptionJourney(
+  val subscriptionBaseJourney: SubscriptionJourney = SubscriptionJourney(
     asaDetails = AgencyDetails(
       agencyName = None,
       agencyEmail = Some("joe@bloggs.com"),
       agencyTelephone = None,
       agencyAddress = None
-    ),
-    useCustomBusinessName = None,
-    businessNameAnswer = None,
-    useCustomPhoneNumber = None,
-    phoneNumberAnswer = None,
-    useCustomEmail = None,
-    emailAnswer = None,
-    useCustomAddress = None,
-    addressAnswer = None
+    )
   )
 
-  val ctSubscriptionFullJourney: SubscriptionJourney = SubscriptionJourney(
+  val ctSaSubscriptionFullJourney: SubscriptionJourney = SubscriptionJourney(
     asaDetails = AgencyDetails(
       agencyName = None,
       agencyEmail = Some("joe@bloggs.com"),
@@ -191,5 +184,16 @@ trait TestConstants {
     useCustomAddress = Some(false),
     addressAnswer = None
   )
+
+  val payeSubscriptionFullJourney: SubscriptionJourney = ctSaSubscriptionFullJourney.copy(
+    useCustomBusinessName = None,
+    businessNameAnswer = None,
+    payeContactName = Some("My Name")
+  )
+
+  def subscriptionFullJourney(legacyRegime: LegacyRegime): SubscriptionJourney = legacyRegime match {
+    case PAYE => payeSubscriptionFullJourney
+    case _ => ctSaSubscriptionFullJourney
+  }
 
 }

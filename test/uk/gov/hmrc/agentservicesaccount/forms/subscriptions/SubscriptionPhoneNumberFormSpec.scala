@@ -32,7 +32,7 @@ with Matchers {
   private val validNewPhoneNumber = "1234567890"
   private val invalidNewPhoneNumber = "skdjfhjs"
 
-  private val legacyRegime = LegacyRegime.SA
+  private val legacyRegime = LegacyRegime.PAYE
 
   private val legacyRegimePrefix = legacyRegime.msgPrefix
 
@@ -103,7 +103,7 @@ with Matchers {
       validatedForm.errors.length shouldBe 1
     }
 
-    "unbind CtPhoneNumberFormValues" in {
+    "unbind PhoneNumberFormValues" in {
       val unboundForm = initForm.mapping.unbind(PhoneNumberFormValues(useAsaData = true, Some(validNewPhoneNumber)))
 
       unboundForm shouldBe Map(

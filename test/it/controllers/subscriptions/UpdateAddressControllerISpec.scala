@@ -24,6 +24,7 @@ import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
 
@@ -32,7 +33,7 @@ extends ComponentBaseISpec {
 
   private val repo = inject[SessionCacheRepository]
 
-  private val legacyRegimes = List(CT, SA)
+  private val legacyRegimes = List(CT, PAYE, SA)
 
   legacyRegimes.foreach(legacyRegime => {
     val updateAddressPath = s"$subscriptionStartPath/$legacyRegime/address"
@@ -50,6 +51,7 @@ extends ComponentBaseISpec {
         val expectedTitle: String =
           (legacyRegime: LegacyRegime) match {
             case CT => "What address should we use to send letters about Corporation Tax?"
+            case PAYE => "What address should we use to send letters about Pay As You Earn?"
             case SA => "What address should we use to send letters about Self Assessment?"
           }
         assertPageHasTitle(expectedTitle)(result)
@@ -59,13 +61,13 @@ extends ComponentBaseISpec {
     s"POST $updateAddressPath" should {
 
       val journeyWithRedirectLocations = List(
-        (ctSubscriptionBaseJourney, "check-your-answers", "not complete"),
-        (ctSubscriptionFullJourney, "check-your-answers", "complete")
+        (subscriptionBaseJourney, "check-your-answers"),
+        (subscriptionFullJourney(legacyRegime), "check-your-answers")
       )
 
       journeyWithRedirectLocations.foreach(journeyWithRedirectLocation => {
-        s"update journey and redirect to ${journeyWithRedirectLocation._2}" +
-          s"when using ASA address and journey ${journeyWithRedirectLocation._3}" in {
+        s"update journey and redirect to ${journeyWithRedirectLocation._2} when using ASA address " +
+          s"and journey ${if(journeyWithRedirectLocation._1.isComplete(legacyRegime)) "" else "not "}" in {
             givenAuthorisedAsAgentWith(arn.value)
             givenGetAgentRecord(agentRecord)
             stubASAGetResponseError(arn, NOT_FOUND)

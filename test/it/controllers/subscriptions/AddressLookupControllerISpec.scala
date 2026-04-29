@@ -27,6 +27,7 @@ import uk.gov.hmrc.agentservicesaccount.models.addresslookup.ConfirmedResponseAd
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup.ConfirmedResponseAddressDetails
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup.Country
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
 
@@ -35,7 +36,7 @@ extends ComponentBaseISpec {
 
   private val repo = inject[SessionCacheRepository]
 
-  private val legacyRegimes = List(CT, SA)
+  private val legacyRegimes = List(CT, PAYE, SA)
 
   private val confirmedAddressResponse = ConfirmedResponseAddress(
     auditRef = "foo",
@@ -83,13 +84,13 @@ extends ComponentBaseISpec {
     s"GET $finishAddressLookupPath" should {
 
       val journeyWithRedirectLocations = List(
-        (ctSubscriptionBaseJourney, "check-your-answers", "not complete"),
-        (ctSubscriptionFullJourney, "check-your-answers", "complete")
+        (subscriptionBaseJourney, "check-your-answers"),
+        (subscriptionFullJourney(legacyRegime), "check-your-answers")
       )
 
       journeyWithRedirectLocations.foreach(journeyWithRedirectLocation => {
         s"update journey with new address and redirect to ${journeyWithRedirectLocation._2}" +
-          s"when journey ${journeyWithRedirectLocation._3}" in {
+          s"when journey ${if(journeyWithRedirectLocation._1.isComplete(legacyRegime)) "" else "not "}" in {
 
             givenAuthorisedAsAgentWith(arn.value)
             givenGetAgentRecord(agentRecord)

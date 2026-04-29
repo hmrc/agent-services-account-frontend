@@ -27,6 +27,7 @@ import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageS
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionBusinessNameForm
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.BusinessNameFormValues
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.update_business_name
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -50,32 +51,36 @@ with I18nSupport
 with Logging {
 
   def showPage(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
-    val journey = request.subscriptionJourney
+    legacyRegime match {
+      case PAYE => Future.successful(Redirect(routes.PayeUpdateContactNameController.showPage))
+      case _ =>
+        val journey = request.subscriptionJourney
 
-    val subscriptionBusinessName = journey.asaDetails.agencyName.getOrElse("")
+        val subscriptionBusinessName = journey.asaDetails.agencyName.getOrElse("")
 
-    val initialForm = SubscriptionBusinessNameForm.form(legacyRegime)
-    val form =
-      journey.useCustomBusinessName match {
+        val initialForm = SubscriptionBusinessNameForm.form(legacyRegime)
+        val form =
+          journey.useCustomBusinessName match {
 
-        case Some(useCustom) =>
-          initialForm.fill(
-            BusinessNameFormValues(
-              useAsaData = !useCustom,
-              newBusinessName = journey.businessNameAnswer
-            )
-          )
+            case Some(useCustom) =>
+              initialForm.fill(
+                BusinessNameFormValues(
+                  useAsaData = !useCustom,
+                  newBusinessName = journey.businessNameAnswer
+                )
+              )
 
-        case None => initialForm
-      }
+            case None => initialForm
+          }
 
-    Future.successful(
-      Ok(update_business_name(
-        form,
-        subscriptionBusinessName,
-        legacyRegime
-      ))
-    )
+        Future.successful(
+          Ok(update_business_name(
+            form,
+            subscriptionBusinessName,
+            legacyRegime
+          ))
+        )
+    }
   }
 
   def onSubmit(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>

@@ -21,12 +21,13 @@ import support.ComponentBaseISpec
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.routes
 import stubs.AgentServicesAccountStubs.givenGetAgentRecord
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
 
 class ConfirmationControllerISpec
 extends ComponentBaseISpec {
 
-  private val legacyRegimes = List(CT, SA)
+  private val legacyRegimes = List(CT, PAYE, SA)
 
   legacyRegimes.foreach(legacyRegime => {
     val path = routes.ConfirmationController.showConfirmationPage(legacyRegime).url

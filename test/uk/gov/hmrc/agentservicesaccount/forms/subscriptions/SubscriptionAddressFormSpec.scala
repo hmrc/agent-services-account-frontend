@@ -28,7 +28,7 @@ with Matchers {
 
   val emptyValue = ""
 
-  private val legacyRegime = LegacyRegime.SA
+  private val legacyRegime = LegacyRegime.PAYE
 
   private val legacyRegimePrefix = legacyRegime.msgPrefix
 
@@ -62,7 +62,7 @@ with Matchers {
       validatedForm.errors.length shouldBe 1
     }
 
-    "unbind CtAddressFormValues" in {
+    "unbind AddressFormValues" in {
       val unboundForm = initForm.mapping.unbind(AddressFormValues(useAsaData = true))
 
       unboundForm shouldBe Map(

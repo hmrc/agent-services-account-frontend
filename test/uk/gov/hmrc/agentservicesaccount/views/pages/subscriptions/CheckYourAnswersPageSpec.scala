@@ -37,6 +37,7 @@ extends ViewBaseSpec {
 
   private val view: check_your_answers = app.injector.instanceOf[check_your_answers]
 
+  //  TODO: 11188: PAYE needs to be handled separately for this unit tests
   private val legacyRegime = LegacyRegime.SA
 
   private val heading = messages(s"${legacyRegime.msgPrefix}.check-your-answers.h1")

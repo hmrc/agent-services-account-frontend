@@ -34,7 +34,7 @@ extends ViewBaseSpec {
   private val view: update_phone_number = inject[update_phone_number]
   private val subscriptionPhoneNumber = "07700 900123"
 
-  private val legacyRegime = LegacyRegime.SA
+  private val legacyRegime = LegacyRegime.PAYE
 
   private val phoneNumberForm: Form[PhoneNumberFormValues] = SubscriptionPhoneNumberForm.form(legacyRegime)
 
@@ -95,7 +95,7 @@ extends ViewBaseSpec {
     }
   }
 
-  "update_phone_number view" when {
+  "update_phone_number" when {
 
     "first loaded" should {
 

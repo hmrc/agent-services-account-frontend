@@ -61,7 +61,7 @@
             items = regimes.map { regime =>
                 val url = regime match {
                     case LegacyRegime.PAYE =>
-                        subscriptionRoutes.PayeSubscriptionRequestController.showConfirm.url
+                        subscriptionRoutes.PayeUpdateContactNameController.showPage.url
                     case _ =>
                         subscriptionRoutes.UpdateBusinessNameController.showPage(regime).url
                 }

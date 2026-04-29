@@ -82,6 +82,7 @@ with I18nSupport {
     .map(_.body)
     .mkString("<br/>")
 
+//  TODO: 11188 Need to correct this for PAYE
   private[subscriptions] def buildSummaryListItems(
     data: SubscriptionCyaData,
     legacyRegime: LegacyRegime

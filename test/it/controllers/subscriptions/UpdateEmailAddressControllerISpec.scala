@@ -28,6 +28,7 @@ import uk.gov.hmrc.agentservicesaccount.models.emailverification.CompletedEmail
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.VerificationStatusResponse
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
 
@@ -36,7 +37,7 @@ extends ComponentBaseISpec {
 
   private val repo = inject[SessionCacheRepository]
 
-  private val legacyRegimes = List(CT, SA)
+  private val legacyRegimes = List(CT, PAYE, SA)
 
   legacyRegimes.foreach(legacyRegime => {
     val updateEmailAddressPath = s"$subscriptionStartPath/$legacyRegime/email-address"
@@ -54,6 +55,7 @@ extends ComponentBaseISpec {
         val expectedTitle: String =
           (legacyRegime: LegacyRegime) match {
             case CT => "What email address should we use to contact you about Corporation Tax?"
+            case PAYE => "What email address should we use to contact you about Pay As You Earn?"
             case SA => "What email address should we use to contact you about Self Assessment?"
           }
         assertPageHasTitle(expectedTitle)(result)
@@ -63,13 +65,13 @@ extends ComponentBaseISpec {
     s"POST $updateEmailAddressPath" should {
 
       val journeyWithRedirectLocations = List(
-        (ctSubscriptionBaseJourney, "address", "not complete"),
-        (ctSubscriptionFullJourney, "check-your-answers", "complete")
+        (subscriptionBaseJourney, "address"),
+        (subscriptionFullJourney(legacyRegime), "check-your-answers")
       )
 
       journeyWithRedirectLocations.foreach(journeyWithRedirectLocation => {
-        s"update journey and redirect to ${journeyWithRedirectLocation._2}" +
-          s"when using ASA email address and journey ${journeyWithRedirectLocation._3}" in {
+        s"update journey and redirect to ${journeyWithRedirectLocation._2} when using ASA email address " +
+          s"and journey ${if(journeyWithRedirectLocation._1.isComplete(legacyRegime)) "" else "not "}" in {
             givenAuthorisedAsAgentWith(arn.value)
             givenGetAgentRecord(agentRecord)
             stubASAGetResponseError(arn, NOT_FOUND)
