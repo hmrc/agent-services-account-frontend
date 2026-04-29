@@ -90,7 +90,7 @@ with I18nSupport {
   ): Seq[SummaryListData] = {
     Seq(
       SummaryListData(
-        key = s"${legacyRegime.msgPrefix}.check-your-answers.business-name",
+        key = s"${legacyRegime.msgPrefix}.check-your-answers.${if(legacyRegime == PAYE) "contact" else "business"}-name",
         value = data.name,
         link = if (legacyRegime == PAYE) {
           Some(subscriptionRoutes.PayeUpdateContactNameController.showPage)
