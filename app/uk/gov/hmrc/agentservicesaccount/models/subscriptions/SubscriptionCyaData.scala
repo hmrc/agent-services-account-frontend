@@ -69,7 +69,7 @@ case class SubscriptionCyaData(
     countryName: String
   ): SubscriptionRequest = {
     legacyRegime match {
-//      TODO: 11188 Implement for PAYE
+//      TODO: 11188 Implement for PAYE - assume countryName is passed in, should always be United Kingdom for PAYE
       case CT => toCtSubscriptionRequest(countryName)
       case SA => toSaSubscriptionRequest(countryName)
     }
