@@ -185,7 +185,7 @@ asa.legacy.ct.not-subscribed.before-start.link1.href=https://www.gov.uk/guidance
 asa.legacy.ct.not-subscribed.before-start.p2=This will sign you out of your agent services account.
 asa.legacy.ct.not-subscribed.enrol-for.h4=If you want to enrol for Corporation Tax
 asa.legacy.ct.not-subscribed.enrol-for.p1=You can <a class="govuk-link" href="{0}" rel="noreferrer noopener">use your agent services account to enrol</a> and manage your clients.
-asa.legacy.ct.in-progress.p1=We are still processing the enrolment you did on {0}.
+asa.legacy.ct.in-progress.p1=We are still processing the application you did on {0}.
 asa.legacy.ct.in-progress.p2=Processing can take up to 5 days.
 asa.legacy.ct.subscribed.p1=Your agent code is: {0}
 asa.legacy.ct.subscribed.p2=Get permission from new clients

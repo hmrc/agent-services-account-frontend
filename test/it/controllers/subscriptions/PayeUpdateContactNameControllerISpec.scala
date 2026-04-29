@@ -197,7 +197,10 @@ with TestConstants {
 
     journeyWithRedirectLocations.foreach(journeyWithRedirectLocation => {
       s"update journey and redirect to ${journeyWithRedirectLocation._2}" +
-        s"when journey ${if(journeyWithRedirectLocation._1.isComplete(PAYE)) "" else "not "}" in new TestSetup {
+        s"when journey ${if (journeyWithRedirectLocation._1.isComplete(PAYE))
+            ""
+          else
+            "not "}" in new TestSetup {
           private val request = FakeRequest(POST, "/")
             .withSession(session.toSeq: _*)
             .withFormUrlEncodedBody(
