@@ -20,16 +20,21 @@
 @import uk.gov.hmrc.govukfrontend.views.html.components.GovukInsetText
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.insettext.InsetText
+@import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 
 @this(
-        govukInsetText : GovukInsetText,
+        govukInsetText: GovukInsetText,
         amls_details_summary_list: amls_details_summary_list,
-        link_as_button: link_as_button)
+        link_as_button: link_as_button,
+        appConfig: AppConfig)
 
 @(amlsDetails: AmlsDetails)(implicit msgs: Messages)
 
- @govukInsetText(InsetText(content = Text(msgs("amls.view-details.expiredAMLSDetailsUK.inset"))))
+@govukInsetText(InsetText(content = Text(msgs("amls.view-details.expiredAMLSDetailsUK.inset"))))
 
- @amls_details_summary_list(amlsDetails)
+@amls_details_summary_list(amlsDetails)
 
- @link_as_button(key = msgs("amls.view-details.common.update-details"), href = routes.ConfirmSupervisoryBodyController.showPage.url)
+@link_as_button(
+    key = msgs("amls.view-details.common.update-details"),
+    href = if(appConfig.enableAgentRecordHipUpdates) routes.AmlsNewSupervisoryBodyController.showPage().url else routes.ConfirmSupervisoryBodyController.showPage.url
+)
