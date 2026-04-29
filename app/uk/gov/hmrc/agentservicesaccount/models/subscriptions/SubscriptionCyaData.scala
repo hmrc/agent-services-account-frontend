@@ -30,13 +30,17 @@ case class SubscriptionCyaData(
 
   private def toSubscriptionAddress(
     address: BusinessAddress,
-    countryName: String
+    countryName: Option[String] = None
   ): SubscriptionAddress = {
+    val line4: Option[String] = (address.countryCode == "GB", countryName.isDefined) match {
+      case (false, true) => countryName
+      case _ => address.addressLine4
+    }
     val subscriptionAddress = SubscriptionAddress(
       line1 = address.addressLine1,
       line2 = address.addressLine2.getOrElse(""),
       line3 = address.addressLine3,
-      line4 = Option.when(address.countryCode != "GB")(countryName).orElse(address.addressLine4),
+      line4 = line4,
       postCode = address.postalCode
     )
     subscriptionAddress
@@ -48,7 +52,19 @@ case class SubscriptionCyaData(
       contactName = name,
       phoneNumber = Some(phoneNumber),
       emailAddress = Some(email),
-      address = toSubscriptionAddress(address, countryName),
+      address = toSubscriptionAddress(address, Some(countryName)),
+      countryCode = address.countryCode
+    )
+  }
+
+  private def toPayeSubscriptionRequest: CtSubscriptionRequest = {
+    //      TODO: 11188 Implement for PAYE
+    CtSubscriptionRequest(
+      agentName = name,
+      contactName = name,
+      phoneNumber = Some(phoneNumber),
+      emailAddress = Some(email),
+      address = toSubscriptionAddress(address),
       countryCode = address.countryCode
     )
   }
@@ -59,7 +75,7 @@ case class SubscriptionCyaData(
       contactName = name,
       phoneNumber = Some(phoneNumber),
       emailAddress = Some(email),
-      address = toSubscriptionAddress(address, countryName),
+      address = toSubscriptionAddress(address, Some(countryName)),
       countryCode = address.countryCode
     )
   }
@@ -68,10 +84,11 @@ case class SubscriptionCyaData(
     legacyRegime: LegacyRegime,
     countryName: String
   ): SubscriptionRequest = {
-    legacyRegime match {
-//      TODO: 11188 Implement for PAYE - assume countryName is passed in, should always be United Kingdom for PAYE
-      case CT => toCtSubscriptionRequest(countryName)
-      case SA => toSaSubscriptionRequest(countryName)
+    (legacyRegime, address.countryCode != "GB") match {
+      case (PAYE, true) => null
+      case (PAYE, false) => toPayeSubscriptionRequest
+      case (CT, _) => toCtSubscriptionRequest(countryName)
+      case (SA, _) => toSaSubscriptionRequest(countryName)
     }
   }
 
@@ -82,11 +99,11 @@ object SubscriptionCyaData {
     journey: SubscriptionJourney,
     legacyRegime: LegacyRegime
   ): Option[SubscriptionCyaData] = {
+//    TODO: 11188 Reduce complexity if possible
     for {
       name <-
         if (legacyRegime == PAYE) {
-          //      TODO: 11188 Implement for PAYE
-          Some("TO BE IMPLEMENTED")
+          journey.payeContactName
         }
         else {
           journey.useCustomBusinessName match {

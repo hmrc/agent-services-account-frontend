@@ -29,9 +29,6 @@ class SubscriptionCyaDataSpec
 extends AnyWordSpec
 with Matchers {
 
-//  TODO: 11188 Implement for all 3 legacyRegimes
-  private val legacyRegimes = List(CT, PAYE, SA)
-
   private def businessAddress(
     countryCode: String,
     line4: Option[String] = Some("Line 4")
@@ -202,7 +199,6 @@ with Matchers {
 
   "SubscriptionCyaData.toSubscriptionRequest - PAYE" should {
 
-    //      TODO: 11188 Are these relevant for PAYE?
     "use addressLine4 when country is GB" in {
       val cya = SubscriptionCyaData(
         name = "Test Name",
@@ -216,7 +212,7 @@ with Matchers {
       result.address.line4 shouldBe Some("Line 4")
     }
 
-    "use countryName when country is not GB" in {
+    "return null when country is not GB" in {
       val cya = SubscriptionCyaData(
         name = "Test Name",
         phoneNumber = "123456",
@@ -226,20 +222,7 @@ with Matchers {
 
       val result = cya.toSubscriptionRequest(PAYE, "Portugal")
 
-      result.address.line4 shouldBe Some("Portugal")
-    }
-
-    "fallback to existing addressLine4 if non-GB and countryName is empty string" in {
-      val cya = SubscriptionCyaData(
-        name = "Test Name",
-        phoneNumber = "123456",
-        email = "test@test.com",
-        address = businessAddress("PT", Some("Line 4"))
-      )
-
-      val result = cya.toSubscriptionRequest(PAYE, "")
-
-      result.address.line4 shouldBe Some("")
+      result shouldBe null
     }
 
     "set empty string when addressLine2 is None" in {
@@ -266,7 +249,7 @@ with Matchers {
   }
 
   "SubscriptionCyaData.subscriptionJourneyToCyaData - PAYE" should {
-//TODO: 11188 Correct for PAYE
+
     "use custom values when flags are true" in {
       val address = businessAddress("GB")
 
@@ -277,8 +260,7 @@ with Matchers {
           agencyTelephone = Some("999999"),
           agencyAddress = Some(address)
         ),
-        useCustomBusinessName = Some(true),
-        businessNameAnswer = Some("Custom Name"),
+        payeContactName = Some("Your Name"),
         useCustomPhoneNumber = Some(true),
         phoneNumberAnswer = Some("123456"),
         useCustomEmail = Some(true),
@@ -291,7 +273,7 @@ with Matchers {
 
       result shouldBe Some(
         SubscriptionCyaData(
-          "Custom Name",
+          "Your Name",
           "123456",
           "custom@test.com",
           address
@@ -309,8 +291,7 @@ with Matchers {
           agencyTelephone = Some("999999"),
           agencyAddress = Some(address)
         ),
-        useCustomBusinessName = Some(false),
-        businessNameAnswer = None,
+        payeContactName = Some("Your Name"),
         useCustomPhoneNumber = Some(false),
         phoneNumberAnswer = None,
         useCustomEmail = Some(false),
@@ -323,7 +304,7 @@ with Matchers {
 
       result shouldBe Some(
         SubscriptionCyaData(
-          "ASA Name",
+          "Your Name",
           "999999",
           "asa@test.com",
           address
@@ -339,8 +320,7 @@ with Matchers {
           None,
           None
         ),
-        useCustomBusinessName = Some(true),
-        businessNameAnswer = None,
+        payeContactName = None,
         useCustomPhoneNumber = Some(true),
         phoneNumberAnswer = None,
         useCustomEmail = Some(true),
