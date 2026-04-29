@@ -88,22 +88,19 @@ with I18nSupport {
     data: SubscriptionCyaData,
     legacyRegime: LegacyRegime
   ): Seq[SummaryListData] = {
+    val nameRowKeyDescriptor = if (legacyRegime == PAYE) "contact" else "business"
+    val nameRowKey = s"${legacyRegime.msgPrefix}.check-your-answers.$nameRowKeyDescriptor-name"
+    val nameRowLink = if (legacyRegime == PAYE) {
+      Some(subscriptionRoutes.PayeUpdateContactNameController.showPage)
+    }
+    else {
+      Some(subscriptionRoutes.UpdateBusinessNameController.showPage(legacyRegime))
+    }
     Seq(
       SummaryListData(
-//        TODO: 11188: Pull out into two vals
-        key =
-          s"${legacyRegime.msgPrefix}.check-your-answers.${if (legacyRegime == PAYE)
-              "contact"
-            else
-              "business"}-name",
+        key = nameRowKey,
         value = data.name,
-        link =
-          if (legacyRegime == PAYE) {
-            Some(subscriptionRoutes.PayeUpdateContactNameController.showPage)
-          }
-          else {
-            Some(subscriptionRoutes.UpdateBusinessNameController.showPage(legacyRegime))
-          }
+        link = nameRowLink
       ),
       SummaryListData(
         key = s"${legacyRegime.msgPrefix}.check-your-answers.phone-number",
