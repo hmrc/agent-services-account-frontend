@@ -39,7 +39,9 @@ class ConfirmationController @Inject() (implicit
 )
 extends FrontendController(cc)
 with I18nSupport {
-  def showConfirmationPage(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
+  def showConfirmationPage(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
+    val journey = request.subscriptionJourney
+//    TODO: 11190 Use isSubmitted here and redirect to home if not
     Ok(confirmation(legacyRegime)).toFuture
   }
 }

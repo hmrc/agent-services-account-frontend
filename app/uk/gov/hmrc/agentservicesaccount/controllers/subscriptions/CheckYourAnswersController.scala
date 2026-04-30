@@ -80,6 +80,7 @@ with I18nSupport {
       requestModelOpt.map(requestModel => {
         agentServicesAccountConnector
           .submitLegacySubscriptionRequest(requestModel, legacyRegime)
+//          TODO: 11190 Save isSubmitted here
           .map(_ => Redirect(getNextPage(currentPage = checkYourAnswersPage, legacyRegime = legacyRegime)))
       }).getOrElse(Future.successful(Redirect(routes.CheckYourAnswersController.showPage(legacyRegime))))
     }
