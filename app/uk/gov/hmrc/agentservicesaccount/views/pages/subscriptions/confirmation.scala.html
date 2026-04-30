@@ -21,7 +21,7 @@
 @import uk.gov.hmrc.govukfrontend.views.Aliases.{Panel, Text}
 @import uk.gov.hmrc.govukfrontend.views.html.components.GovukPanel
 
-@this(main: main, p: p, a: a, govukPanel: GovukPanel)
+@this(main: main, h2: h2, p: p, a: a, govukPanel: GovukPanel)
 
 @(legacyRegime: LegacyRegime)(implicit request: RequestHeader, msgs: Messages, appConfig: AppConfig)
 
@@ -34,6 +34,7 @@
             content = Text(msgs(s"$legacyRegimePrefix.confirmation.panel.body"))
         )
     )
+    @h2("common.what.happens.next")
     @p(s"$legacyRegimePrefix.confirmation.p1")
     @p(s"$legacyRegimePrefix.confirmation.p2")
     @p(s"$legacyRegimePrefix.confirmation.p3")
