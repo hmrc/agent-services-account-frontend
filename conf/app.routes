@@ -99,6 +99,9 @@ GET        /subscription/paye/request/submitted                           @uk.go
 GET        /subscription/PAYE/contact-name                                @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.PayeUpdateContactNameController.showPage
 POST       /subscription/PAYE/contact-name                                @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.PayeUpdateContactNameController.onSubmit
 
+GET        /subscription/:regime/do-you-already-manage                    @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.DoYouAlreadyManageController.showPage(regime: LegacyRegime)
+POST       /subscription/:regime/do-you-already-manage                    @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.DoYouAlreadyManageController.onSubmit(regime: LegacyRegime)
+
 GET        /subscription/:regime/business-name                            @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdateBusinessNameController.showPage(regime: LegacyRegime)
 POST       /subscription/:regime/business-name                            @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdateBusinessNameController.onSubmit(regime: LegacyRegime)
 

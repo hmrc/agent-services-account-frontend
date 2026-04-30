@@ -113,6 +113,7 @@ with Matchers {
             agencyTelephone = Some("999999"),
             agencyAddress = Some(address)
           ),
+          doYouAlreadyManage = Some(false),
           useCustomBusinessName = Some(true),
           businessNameAnswer = Some("Custom Name"),
           useCustomPhoneNumber = Some(true),
@@ -145,6 +146,7 @@ with Matchers {
             agencyTelephone = Some("999999"),
             agencyAddress = Some(address)
           ),
+          doYouAlreadyManage = Some(false),
           useCustomBusinessName = Some(false),
           businessNameAnswer = None,
           useCustomPhoneNumber = Some(false),
@@ -175,6 +177,7 @@ with Matchers {
             None,
             None
           ),
+          doYouAlreadyManage = Some(false),
           useCustomBusinessName = Some(true),
           businessNameAnswer = None,
           useCustomPhoneNumber = Some(true),

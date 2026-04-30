@@ -30,7 +30,7 @@ import play.api.test.Helpers._
 import support.{BaseISpec, TestConstants, UnitSpec}
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
-import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.{UpdateBusinessNameController, routes => subscriptionRoutes}
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.{DoYouAlreadyManageController, routes => subscriptionRoutes}
 import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.{CT, PAYE, SA}
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.{LegacyRegime, SubscriptionJourney}
@@ -43,7 +43,7 @@ import uk.gov.hmrc.http.client.HttpClientV2
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class UpdateBusinessNameControllerISpec
+class DoYouAlreadyManageControllerISpec
 extends BaseISpec
 with UnitSpec
 with Matchers
@@ -53,7 +53,7 @@ with IntegrationPatience
 with MockFactory
 with TestConstants {
 
-  private val legacyRegimes = List(CT, SA)
+  private val legacyRegimes = List(CT, SA, PAYE)
 
   class TestSetup(legacyRegime: LegacyRegime) {
 
@@ -128,7 +128,7 @@ with TestConstants {
       .overrides(overrides)
       .build()
 
-    val controller: UpdateBusinessNameController = app.injector.instanceOf[UpdateBusinessNameController]
+    val controller: DoYouAlreadyManageController = app.injector.instanceOf[DoYouAlreadyManageController]
 
     val sessionCache: SessionCacheService = app.injector.instanceOf[SessionCacheService]
 
@@ -144,117 +144,109 @@ with TestConstants {
 
   }
 
-  "GET /subscription/PAYE/business-name" should {
+  legacyRegimes.foreach { regime =>
+    s"GET /subscription/$regime/do-you-already-manage" should {
 
-    "redirect to /subscription/PAYE/contact-name" in new TestSetup(PAYE) {
-      cacheJourney(subscriptionBaseJourney)
-
-      private val result = controller.showPage(PAYE)(FakeRequest()).futureValue
-
-      status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some(subscriptionRoutes.PayeUpdateContactNameController.showPage.url)
-    }
-  }
-
-  legacyRegimes.foreach(legacyRegime => {
-    s"GET /subscription/$legacyRegime/business-name" should {
-
-      "render empty form on first visit" in new TestSetup(legacyRegime) {
+      "render page with empty form" in new TestSetup(regime) {
         cacheJourney(subscriptionBaseJourney)
 
-        private val result = controller.showPage(legacyRegime)(FakeRequest()).futureValue
+        val result = controller.showPage(regime)(fakeRequest).futureValue
 
         status(result) shouldBe OK
-        contentAsString(result) should include("Test Agency")
       }
 
-      "render pre-filled form when journey has existing answers" in new TestSetup(legacyRegime) {
-        private val journey = subscriptionBaseJourney.copy(
-          useCustomBusinessName = Some(true),
-          businessNameAnswer = Some("Custom Name Ltd")
+      "render pre-filled form when journey has value" in new TestSetup(regime) {
+        val journey = subscriptionBaseJourney.copy(
+          doYouAlreadyManage = Some(true)
         )
 
         cacheJourney(journey)
 
-        private val result = controller.showPage(legacyRegime)(FakeRequest()).futureValue
+        val result = controller.showPage(regime)(fakeRequest).futureValue
 
         status(result) shouldBe OK
-        private val content = contentAsString(result)
-
-        content should include("""value="true"""")
-        content should include("businessNameNew")
+        contentAsString(result) should include("""value="true"""")
       }
     }
+  }
 
-    s"POST /subscription/$legacyRegime/business-name" should {
+  legacyRegimes.foreach { regime =>
+    s"POST /subscription/$regime/do-you-already-manage" should {
 
-      "return BAD_REQUEST when form is invalid" in new TestSetup(legacyRegime) {
+      "return BAD_REQUEST when no option selected" in new TestSetup(regime) {
         cacheJourney(subscriptionBaseJourney)
 
-        private val request = FakeRequest().withSession(session.toSeq: _*).withFormUrlEncodedBody(
-          "useAsaData" -> ""
-        )
+        val request = FakeRequest(POST, "/")
+          .withSession(session.toSeq: _*)
+          .withFormUrlEncodedBody(
+            "doYouAlreadyManage" -> ""
+          )
 
-        private val result = controller.onSubmit(legacyRegime)(request).futureValue
+        val result = controller.onSubmit(regime)(request).futureValue
 
         status(result) shouldBe BAD_REQUEST
       }
 
-      val journeyWithRedirectLocations = List(
-        (subscriptionBaseJourney, "phone-number"),
-        (subscriptionFullJourney(legacyRegime), "check-your-answers")
-      )
+      "redirect correctly when YES selected" in new TestSetup(regime) {
+        cacheJourney(subscriptionBaseJourney)
 
-      journeyWithRedirectLocations.foreach(journeyWithRedirectLocation => {
-        s"update journey and redirect to ${journeyWithRedirectLocation._2} when using ASA business name " +
-          s"and journey ${completeString(journeyWithRedirectLocation._1, legacyRegime)}}" in new TestSetup(legacyRegime) {
-            private val request = FakeRequest(POST, "/")
-              .withSession(session.toSeq: _*)
-              .withFormUrlEncodedBody(
-                "businessNameUseAsaData" -> "true"
-              )
+        val request = FakeRequest(POST, "/")
+          .withSession(session.toSeq: _*)
+          .withFormUrlEncodedBody(
+            "doYouAlreadyManage" -> "true"
+          )
 
-            implicit val implicitRequest: FakeRequest[AnyContentAsFormUrlEncoded] = request
+        implicit val implicitRequest: FakeRequest[AnyContentAsFormUrlEncoded] = request
 
-            cacheJourney(journeyWithRedirectLocation._1)
+        val result = controller.onSubmit(regime)(request).futureValue
 
-            private val result = controller.onSubmit(legacyRegime)(request).futureValue
-            status(result) shouldBe SEE_OTHER
-            redirectLocation(result) shouldBe
-              Some(s"/agent-services-account/subscription/$legacyRegime/${journeyWithRedirectLocation._2}")
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result) shouldBe
+          Some(subscriptionRoutes.UpdateBusinessNameController.showPage(regime).url)
 
-            val updated: Option[SubscriptionJourney] = sessionCache.get[SubscriptionJourney](subscriptionJourneyKey(legacyRegime)).futureValue
-            updated shouldBe defined
-            updated.get.useCustomBusinessName shouldBe Some(false)
-            updated.value.businessNameAnswer shouldBe None
-          }
+        val updated = sessionCache.get[SubscriptionJourney](subscriptionJourneyKey(regime)).futureValue
+        updated shouldBe defined
+        updated.value.doYouAlreadyManage shouldBe Some(true)
+      }
 
-        s"update journey and redirect to ${journeyWithRedirectLocation._2} when using custom business name " +
-          s"and journey ${completeString(journeyWithRedirectLocation._1, legacyRegime)}}" in new TestSetup(legacyRegime) {
-            private val request = FakeRequest(POST, "/")
-              .withSession(session.toSeq: _*)
-              .withFormUrlEncodedBody(
-                "businessNameUseAsaData" -> "false",
-                "businessNameNew" -> "My Custom Ltd"
-              )
+      "redirect correctly when NO selected (PAYE)" in new TestSetup(PAYE) {
+        cacheJourney(subscriptionBaseJourney)
 
-            implicit val implicitRequest: FakeRequest[AnyContentAsFormUrlEncoded] = request
+        val request = FakeRequest(POST, "/")
+          .withSession(session.toSeq: _*)
+          .withFormUrlEncodedBody(
+            "doYouAlreadyManage" -> "false"
+          )
 
-            cacheJourney(journeyWithRedirectLocation._1)
+        implicit val implicitRequest: FakeRequest[AnyContentAsFormUrlEncoded] = request
 
-            private val result = controller.onSubmit(legacyRegime)(request).futureValue
-            status(result) shouldBe SEE_OTHER
-            redirectLocation(result) shouldBe
-              Some(s"/agent-services-account/subscription/$legacyRegime/${journeyWithRedirectLocation._2}")
+        val result = controller.onSubmit(PAYE)(request).futureValue
 
-            val updated: Option[SubscriptionJourney] = sessionCache.get[SubscriptionJourney](subscriptionJourneyKey(legacyRegime)).futureValue
-            updated shouldBe defined
-            updated.value.useCustomBusinessName shouldBe Some(true)
-            updated.value.businessNameAnswer shouldBe Some("My Custom Ltd")
-          }
-      })
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result) shouldBe
+          Some(subscriptionRoutes.PayeUpdateContactNameController.showPage.url)
+
+        val updated = sessionCache.get[SubscriptionJourney](subscriptionJourneyKey(PAYE)).futureValue
+        updated shouldBe defined
+        updated.value.doYouAlreadyManage shouldBe Some(false)
+      }
+
+      "redirect correctly when NO selected (non-PAYE)" in new TestSetup(CT) {
+        cacheJourney(subscriptionBaseJourney)
+
+        val request = FakeRequest(POST, "/")
+          .withSession(session.toSeq: _*)
+          .withFormUrlEncodedBody(
+            "doYouAlreadyManage" -> "false"
+          )
+
+        val result = controller.onSubmit(CT)(request).futureValue
+
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result) shouldBe
+          Some(subscriptionRoutes.UpdateBusinessNameController.showPage(CT).url)
+      }
     }
-
-  })
+  }
 
 }

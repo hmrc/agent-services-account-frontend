@@ -20,6 +20,10 @@ case class PayeContactNameFormValues(
   contactName: String
 )
 
+case class DoYouAlreadyManageFormValues(
+  doYouAlreadyManage: Boolean
+)
+
 case class BusinessNameFormValues(
   useAsaData: Boolean,
   newBusinessName: Option[String]
