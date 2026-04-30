@@ -116,11 +116,27 @@ object SubscriptionCyaData {
           journey.payeContactName
         }
         else {
-          getCustomAnswerOrAsaDetailsDefault(journey.useCustomBusinessName, journey.businessNameAnswer, journey.asaDetails.agencyName)
+          getCustomAnswerOrAsaDetailsDefault(
+            journey.useCustomBusinessName,
+            journey.businessNameAnswer,
+            journey.asaDetails.agencyName
+          )
         }
-      phoneNumber <- getCustomAnswerOrAsaDetailsDefault(journey.useCustomPhoneNumber, journey.phoneNumberAnswer, journey.asaDetails.agencyTelephone)
-      email <- getCustomAnswerOrAsaDetailsDefault(journey.useCustomEmail, journey.emailAnswer, journey.asaDetails.agencyEmail)
-      address <- getCustomAnswerOrAsaDetailsDefault(journey.useCustomAddress, journey.addressAnswer, journey.asaDetails.agencyAddress)
+      phoneNumber <- getCustomAnswerOrAsaDetailsDefault(
+        journey.useCustomPhoneNumber,
+        journey.phoneNumberAnswer,
+        journey.asaDetails.agencyTelephone
+      )
+      email <- getCustomAnswerOrAsaDetailsDefault(
+        journey.useCustomEmail,
+        journey.emailAnswer,
+        journey.asaDetails.agencyEmail
+      )
+      address <- getCustomAnswerOrAsaDetailsDefault(
+        journey.useCustomAddress,
+        journey.addressAnswer,
+        journey.asaDetails.agencyAddress
+      )
     } yield SubscriptionCyaData(
       name = name,
       phoneNumber = phoneNumber,

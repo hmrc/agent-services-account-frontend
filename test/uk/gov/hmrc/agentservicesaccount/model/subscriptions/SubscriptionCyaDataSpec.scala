@@ -219,12 +219,20 @@ with Matchers {
     val asaAgencyName = "Agency Name"
 
     "use ASA agencyName as agentName" in {
-      val result = exampleGBCyaData.toSubscriptionRequest(PAYE, "", Some(asaAgencyName))
+      val result = exampleGBCyaData.toSubscriptionRequest(
+        PAYE,
+        "",
+        Some(asaAgencyName)
+      )
       result.get.agentName shouldBe asaAgencyName
     }
 
     "use payeContactName as contactName" in {
-      val result = exampleGBCyaData.toSubscriptionRequest(PAYE, "", Some(asaAgencyName))
+      val result = exampleGBCyaData.toSubscriptionRequest(
+        PAYE,
+        "",
+        Some(asaAgencyName)
+      )
       result.get.contactName shouldBe exampleGBCyaData.name
     }
 
@@ -234,12 +242,20 @@ with Matchers {
     }
 
     "use addressLine4 when country is GB" in {
-      val result = exampleGBCyaData.toSubscriptionRequest(PAYE, "Portugal", Some(asaAgencyName))
+      val result = exampleGBCyaData.toSubscriptionRequest(
+        PAYE,
+        "Portugal",
+        Some(asaAgencyName)
+      )
       result.get.address.line4 shouldBe Some("Line 4")
     }
 
     "return None when country is not GB" in {
-      val result = exampleNonGBCyaData.toSubscriptionRequest(PAYE, "Portugal", Some(asaAgencyName))
+      val result = exampleNonGBCyaData.toSubscriptionRequest(
+        PAYE,
+        "Portugal",
+        Some(asaAgencyName)
+      )
       result shouldBe None
     }
 
@@ -260,7 +276,11 @@ with Matchers {
         address
       )
 
-      val result = cya.toSubscriptionRequest(PAYE, "Portugal", Some(asaAgencyName))
+      val result = cya.toSubscriptionRequest(
+        PAYE,
+        "Portugal",
+        Some(asaAgencyName)
+      )
 
       result.get.address.line2 shouldBe ""
     }
