@@ -18,10 +18,11 @@ package uk.gov.hmrc.agentservicesaccount.models.subscriptions
 
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
 
 case class SubscriptionCyaData(
-  businessName: String,
+  name: String,
   phoneNumber: String,
   email: String,
   address: BusinessAddress
@@ -29,13 +30,18 @@ case class SubscriptionCyaData(
 
   private def toSubscriptionAddress(
     address: BusinessAddress,
-    countryName: String
+    countryName: Option[String] = None
   ): SubscriptionAddress = {
+    val line4: Option[String] =
+      (address.countryCode == "GB", countryName.isDefined) match {
+        case (false, true) => countryName
+        case _ => address.addressLine4
+      }
     val subscriptionAddress = SubscriptionAddress(
       line1 = address.addressLine1,
       line2 = address.addressLine2.getOrElse(""),
       line3 = address.addressLine3,
-      line4 = Option.when(address.countryCode != "GB")(countryName).orElse(address.addressLine4),
+      line4 = line4,
       postCode = address.postalCode
     )
     subscriptionAddress
@@ -43,64 +49,96 @@ case class SubscriptionCyaData(
 
   private def toCtSubscriptionRequest(countryName: String): CtSubscriptionRequest = {
     CtSubscriptionRequest(
-      agentName = businessName,
-      contactName = businessName,
+      agentName = name,
+      contactName = name,
       phoneNumber = Some(phoneNumber),
       emailAddress = Some(email),
-      address = toSubscriptionAddress(address, countryName),
+      address = toSubscriptionAddress(address, Some(countryName)),
       countryCode = address.countryCode
+    )
+  }
+
+  private def toPayeSubscriptionRequest(asaAgentName: String): PayeSubscriptionRequest = {
+    PayeSubscriptionRequest(
+      agentName = asaAgentName,
+      contactName = name,
+      phoneNumber = Some(phoneNumber),
+      emailAddress = Some(email),
+      address = toSubscriptionAddress(address)
     )
   }
 
   private def toSaSubscriptionRequest(countryName: String): SaSubscriptionRequest = {
     SaSubscriptionRequest(
-      agentName = businessName,
-      contactName = businessName,
+      agentName = name,
+      contactName = name,
       phoneNumber = Some(phoneNumber),
       emailAddress = Some(email),
-      address = toSubscriptionAddress(address, countryName),
+      address = toSubscriptionAddress(address, Some(countryName)),
       countryCode = address.countryCode
     )
   }
 
   def toSubscriptionRequest(
     legacyRegime: LegacyRegime,
-    countryName: String
-  ): SubscriptionRequest = {
-    legacyRegime match {
-//      TODO: 11188 Implement for PAYE
-      case CT => toCtSubscriptionRequest(countryName)
-      case SA => toSaSubscriptionRequest(countryName)
+    countryName: String,
+    asaAgentNameOpt: Option[String] = None
+  ): Option[SubscriptionRequest] = {
+    (legacyRegime, address.countryCode != "GB", asaAgentNameOpt) match {
+      case (PAYE, false, Some(asaAgentName)) => Some(toPayeSubscriptionRequest(asaAgentName))
+      case (PAYE, _, _) => None
+      case (CT, _, _) => Some(toCtSubscriptionRequest(countryName))
+      case (SA, _, _) => Some(toSaSubscriptionRequest(countryName))
     }
   }
 
 }
 
 object SubscriptionCyaData {
-  implicit def subscriptionJourneyToCyaData(journey: SubscriptionJourney): Option[SubscriptionCyaData] = {
+  def subscriptionJourneyToCyaData(
+    journey: SubscriptionJourney,
+    legacyRegime: LegacyRegime
+  ): Option[SubscriptionCyaData] = {
+    def getCustomAnswerOrAsaDetailsDefault[A](
+      useCustom: Option[Boolean],
+      customAnswer: Option[A],
+      asaDetailsDefault: Option[A]
+    ): Option[A] = {
+      useCustom match {
+        case Some(true) => customAnswer
+        case Some(false) => asaDetailsDefault
+        case None => None
+      }
+    }
     for {
-      businessName <-
-        journey.useCustomBusinessName match {
-          case Some(true) => journey.businessNameAnswer
-          case _ => journey.asaDetails.agencyName
+      name <-
+        if (legacyRegime == PAYE) {
+          journey.payeContactName
         }
-      phoneNumber <-
-        journey.useCustomPhoneNumber match {
-          case Some(true) => journey.phoneNumberAnswer
-          case _ => journey.asaDetails.agencyTelephone
+        else {
+          getCustomAnswerOrAsaDetailsDefault(
+            journey.useCustomBusinessName,
+            journey.businessNameAnswer,
+            journey.asaDetails.agencyName
+          )
         }
-      email <-
-        journey.useCustomEmail match {
-          case Some(true) => journey.emailAnswer
-          case _ => journey.asaDetails.agencyEmail
-        }
-      address <-
-        journey.useCustomAddress match {
-          case Some(true) => journey.addressAnswer
-          case _ => journey.asaDetails.agencyAddress
-        }
+      phoneNumber <- getCustomAnswerOrAsaDetailsDefault(
+        journey.useCustomPhoneNumber,
+        journey.phoneNumberAnswer,
+        journey.asaDetails.agencyTelephone
+      )
+      email <- getCustomAnswerOrAsaDetailsDefault(
+        journey.useCustomEmail,
+        journey.emailAnswer,
+        journey.asaDetails.agencyEmail
+      )
+      address <- getCustomAnswerOrAsaDetailsDefault(
+        journey.useCustomAddress,
+        journey.addressAnswer,
+        journey.asaDetails.agencyAddress
+      )
     } yield SubscriptionCyaData(
-      businessName = businessName,
+      name = name,
       phoneNumber = phoneNumber,
       email = email,
       address = address
