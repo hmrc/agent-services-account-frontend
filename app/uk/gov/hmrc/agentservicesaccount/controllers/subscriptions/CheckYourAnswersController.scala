@@ -65,8 +65,11 @@ with I18nSupport {
 
   def onSubmit(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
     withSubscriptionCyaData(request.subscriptionJourney, legacyRegime) { data =>
-//      TODO: 11188 Pass in agentName for PAYE
-      val requestModel = data.toSubscriptionRequest(legacyRegime, countryResolver.countryName(data.address.countryCode))
+      val requestModel = if (legacyRegime == PAYE) {
+        data.toSubscriptionRequest(legacyRegime, countryResolver.countryName(data.address.countryCode), request.subscriptionJourney.asaDetails.agencyName)
+      } else {
+        data.toSubscriptionRequest(legacyRegime, countryResolver.countryName(data.address.countryCode))
+      }
 
       agentServicesAccountConnector
         .submitLegacySubscriptionRequest(requestModel, legacyRegime)
