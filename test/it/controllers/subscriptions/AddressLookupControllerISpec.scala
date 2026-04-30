@@ -89,12 +89,8 @@ extends ComponentBaseISpec {
       )
 
       journeyWithRedirectLocations.foreach(journeyWithRedirectLocation => {
-//        TODO: 11188 Here (and elsewhere) add "complete" to end of this - perhaps small util function
         s"update journey with new address and redirect to ${journeyWithRedirectLocation._2}" +
-          s"when journey ${if (journeyWithRedirectLocation._1.isComplete(legacyRegime))
-              ""
-            else
-              "not "}" in {
+          s"when journey ${completeString(journeyWithRedirectLocation._1, legacyRegime)}" in {
 
             givenAuthorisedAsAgentWith(arn.value)
             givenGetAgentRecord(agentRecord)

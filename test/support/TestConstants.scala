@@ -198,4 +198,9 @@ trait TestConstants {
       case _ => ctSaSubscriptionFullJourney
     }
 
+  def completeString(journey: SubscriptionJourney, legacyRegime: LegacyRegime) = if (journey.isComplete(legacyRegime))
+    "complete"
+  else
+    "not complete"
+
 }
