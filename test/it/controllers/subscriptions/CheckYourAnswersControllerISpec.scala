@@ -218,7 +218,6 @@ with MockFactory {
         redirectLocation(result).value should include("/confirmation")
       }
 
-      //    TODO: 11188 Fix these tests
       "return BAD_REQUEST when journey data missing" in new TestSetup(legacyRegime) {
         cacheJourney(subscriptionBaseJourney)
 

@@ -167,7 +167,7 @@ with Matchers {
         )
       }
 
-      "return None when required data is missing" in {
+      "return None when required data is missing - custom Some(true)" in {
         val journey = SubscriptionJourney(
           asaDetails = AgencyDetails(
             None,
@@ -186,6 +186,29 @@ with Matchers {
         )
 
         val result = SubscriptionCyaData.subscriptionJourneyToCyaData(journey, legacyRegime)
+
+        result shouldBe None
+      }
+
+      "return None when required data is missing - custom None" in {
+        val journey = SubscriptionJourney(
+          asaDetails = AgencyDetails(
+            None,
+            None,
+            None,
+            None
+          ),
+          useCustomBusinessName = None,
+          businessNameAnswer = None,
+          useCustomPhoneNumber = None,
+          phoneNumberAnswer = None,
+          useCustomEmail = None,
+          emailAnswer = None,
+          useCustomAddress = None,
+          addressAnswer = None
+        )
+
+        val result = SubscriptionCyaData.subscriptionJourneyToCyaData(journey, PAYE)
 
         result shouldBe None
       }
@@ -307,7 +330,7 @@ with Matchers {
       )
     }
 
-    "return None when required data is missing" in {
+    "return None when required data is missing - custom Some(true)" in {
       val journey = SubscriptionJourney(
         asaDetails = AgencyDetails(
           None,
@@ -315,12 +338,34 @@ with Matchers {
           None,
           None
         ),
-        payeContactName = None,
+        payeContactName = Some("Paye Contact"),
         useCustomPhoneNumber = Some(true),
         phoneNumberAnswer = None,
         useCustomEmail = Some(true),
         emailAnswer = None,
         useCustomAddress = Some(true),
+        addressAnswer = None
+      )
+
+      val result = SubscriptionCyaData.subscriptionJourneyToCyaData(journey, PAYE)
+
+      result shouldBe None
+    }
+
+    "return None when required data is missing - custom None" in {
+      val journey = SubscriptionJourney(
+        asaDetails = AgencyDetails(
+          None,
+          None,
+          None,
+          None
+        ),
+        payeContactName = Some("Paye Contact"),
+        useCustomPhoneNumber = None,
+        phoneNumberAnswer = None,
+        useCustomEmail = None,
+        emailAnswer = None,
+        useCustomAddress = None,
         addressAnswer = None
       )
 

@@ -133,9 +133,7 @@ with I18nSupport {
     journey: SubscriptionJourney,
     legacyRegime: LegacyRegime
   )(f: SubscriptionCyaData => Future[Result]): Future[Result] = {
-    val checkValue = subscriptionJourneyToCyaData(journey, legacyRegime): Option[SubscriptionCyaData]
-//    TODO: 11188 This returns Some even for subscriptionBaseJourney
-    (checkValue) match {
+    (subscriptionJourneyToCyaData(journey, legacyRegime): Option[SubscriptionCyaData]) match {
       case Some(data) => f(data)
       case None =>
         Future.successful(

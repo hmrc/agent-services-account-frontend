@@ -96,21 +96,21 @@ case class SubscriptionCyaData(
 }
 
 object SubscriptionCyaData {
-  //    TODO: 11188 This returns Some even for subscriptionBaseJourney - for comprehensions need correcting
-  private def getCustomAnswerOrAsaDetailsDefault[A](
-   useCustom: Option[Boolean],
-   customAnswer: Option[A],
-   asaDetailsDefault: Option[A]
-   ): Option[A] = {
-    useCustom match {
-      case Some(true) => customAnswer
-      case _ => asaDetailsDefault
-    }
-  }
   def subscriptionJourneyToCyaData(
     journey: SubscriptionJourney,
     legacyRegime: LegacyRegime
   ): Option[SubscriptionCyaData] = {
+    def getCustomAnswerOrAsaDetailsDefault[A](
+      useCustom: Option[Boolean],
+      customAnswer: Option[A],
+      asaDetailsDefault: Option[A]
+    ): Option[A] = {
+      useCustom match {
+        case Some(true) => customAnswer
+        case Some(false) => asaDetailsDefault
+        case None => None
+      }
+    }
     for {
       name <-
         if (legacyRegime == PAYE) {
