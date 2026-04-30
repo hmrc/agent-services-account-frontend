@@ -97,37 +97,31 @@ case class SubscriptionCyaData(
 
 object SubscriptionCyaData {
   //    TODO: 11188 This returns Some even for subscriptionBaseJourney - for comprehensions need correcting
+  private def getCustomAnswerOrAsaDetailsDefault[A](
+   useCustom: Option[Boolean],
+   customAnswer: Option[A],
+   asaDetailsDefault: Option[A]
+   ): Option[A] = {
+    useCustom match {
+      case Some(true) => customAnswer
+      case _ => asaDetailsDefault
+    }
+  }
   def subscriptionJourneyToCyaData(
     journey: SubscriptionJourney,
     legacyRegime: LegacyRegime
   ): Option[SubscriptionCyaData] = {
-//    TODO: 11188 Reduce complexity if possible
     for {
       name <-
         if (legacyRegime == PAYE) {
           journey.payeContactName
         }
         else {
-          journey.useCustomBusinessName match {
-            case Some(true) => journey.businessNameAnswer
-            case _ => journey.asaDetails.agencyName
-          }
+          getCustomAnswerOrAsaDetailsDefault(journey.useCustomBusinessName, journey.businessNameAnswer, journey.asaDetails.agencyName)
         }
-      phoneNumber <-
-        journey.useCustomPhoneNumber match {
-          case Some(true) => journey.phoneNumberAnswer
-          case _ => journey.asaDetails.agencyTelephone
-        }
-      email <-
-        journey.useCustomEmail match {
-          case Some(true) => journey.emailAnswer
-          case _ => journey.asaDetails.agencyEmail
-        }
-      address <-
-        journey.useCustomAddress match {
-          case Some(true) => journey.addressAnswer
-          case _ => journey.asaDetails.agencyAddress
-        }
+      phoneNumber <- getCustomAnswerOrAsaDetailsDefault(journey.useCustomPhoneNumber, journey.phoneNumberAnswer, journey.asaDetails.agencyTelephone)
+      email <- getCustomAnswerOrAsaDetailsDefault(journey.useCustomEmail, journey.emailAnswer, journey.asaDetails.agencyEmail)
+      address <- getCustomAnswerOrAsaDetailsDefault(journey.useCustomAddress, journey.addressAnswer, journey.asaDetails.agencyAddress)
     } yield SubscriptionCyaData(
       name = name,
       phoneNumber = phoneNumber,
