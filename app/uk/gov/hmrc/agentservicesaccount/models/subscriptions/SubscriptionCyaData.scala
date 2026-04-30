@@ -79,17 +79,16 @@ case class SubscriptionCyaData(
     )
   }
 
-//  TODO: 11188: Make this an Option[SubscriptionRequest]
   def toSubscriptionRequest(
     legacyRegime: LegacyRegime,
     countryName: String,
     asaAgentNameOpt: Option[String] = None
-  ): SubscriptionRequest = {
+  ): Option[SubscriptionRequest] = {
     (legacyRegime, address.countryCode != "GB", asaAgentNameOpt) match {
-      case (PAYE, false, Some(asaAgentName)) => toPayeSubscriptionRequest(asaAgentName)
-      case (PAYE, _, _) => null
-      case (CT, _, _) => toCtSubscriptionRequest(countryName)
-      case (SA, _, _) => toSaSubscriptionRequest(countryName)
+      case (PAYE, false, Some(asaAgentName)) => Some(toPayeSubscriptionRequest(asaAgentName))
+      case (PAYE, _, _) => None
+      case (CT, _, _) => Some(toCtSubscriptionRequest(countryName))
+      case (SA, _, _) => Some(toSaSubscriptionRequest(countryName))
     }
   }
 

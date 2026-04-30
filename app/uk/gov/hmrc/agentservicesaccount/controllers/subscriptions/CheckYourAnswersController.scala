@@ -65,15 +65,17 @@ with I18nSupport {
 
   def onSubmit(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
     withSubscriptionCyaData(request.subscriptionJourney, legacyRegime) { data =>
-      val requestModel = if (legacyRegime == PAYE) {
+      val requestModelOpt = if (legacyRegime == PAYE) {
         data.toSubscriptionRequest(legacyRegime, countryResolver.countryName(data.address.countryCode), request.subscriptionJourney.asaDetails.agencyName)
       } else {
         data.toSubscriptionRequest(legacyRegime, countryResolver.countryName(data.address.countryCode))
       }
 
-      agentServicesAccountConnector
-        .submitLegacySubscriptionRequest(requestModel, legacyRegime)
-        .map(_ => Redirect(getNextPage(currentPage = checkYourAnswersPage, legacyRegime = legacyRegime)))
+      requestModelOpt.map(requestModel => {
+        agentServicesAccountConnector
+          .submitLegacySubscriptionRequest(requestModel, legacyRegime)
+          .map(_ => Redirect(getNextPage(currentPage = checkYourAnswersPage, legacyRegime = legacyRegime)))
+      }).getOrElse(Future.successful(Redirect(routes.CheckYourAnswersController.showPage(legacyRegime))))
     }
   }
 
