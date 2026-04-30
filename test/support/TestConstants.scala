@@ -160,22 +160,26 @@ trait TestConstants {
   val desiDetailsCtChangesOtherServices = DesignatoryDetails(agencyDetails, ctChangesOtherServices)
   val desiDetailsSaChangesOtherServices = DesignatoryDetails(agencyDetails, saChangesOtherServices)
 
+  val subscriptionAgencyDetails: AgencyDetails = AgencyDetails(
+    agencyName = Some("Agency Name"),
+    agencyEmail = Some("joe@bloggs.com"),
+    agencyTelephone = Some("01237654321"),
+    agencyAddress = Some(BusinessAddress(
+      "25 Any Street",
+      Some("Central Grange"),
+      Some("Telford"),
+      None,
+      Some("TF4 3TR"),
+      "GB"
+    ))
+  )
+
   val subscriptionBaseJourney: SubscriptionJourney = SubscriptionJourney(
-    asaDetails = AgencyDetails(
-      agencyName = None,
-      agencyEmail = Some("joe@bloggs.com"),
-      agencyTelephone = None,
-      agencyAddress = None
-    )
+    asaDetails = subscriptionAgencyDetails
   )
 
   val ctSaSubscriptionFullJourney: SubscriptionJourney = SubscriptionJourney(
-    asaDetails = AgencyDetails(
-      agencyName = None,
-      agencyEmail = Some("joe@bloggs.com"),
-      agencyTelephone = None,
-      agencyAddress = None
-    ),
+    asaDetails = subscriptionAgencyDetails,
     useCustomBusinessName = Some(false),
     businessNameAnswer = None,
     useCustomPhoneNumber = Some(false),
@@ -201,7 +205,7 @@ trait TestConstants {
   def completeString(
     journey: SubscriptionJourney,
     legacyRegime: LegacyRegime
-  ) =
+  ): String =
     if (journey.isComplete(legacyRegime))
       "complete"
     else

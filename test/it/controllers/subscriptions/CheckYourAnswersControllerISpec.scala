@@ -101,14 +101,7 @@ with MockFactory {
         override def getAgentRecord(implicit rh: RequestHeader): Future[AgentDetailsDesResponse] = Future.successful(
           AgentDetailsDesResponse(
             uniqueTaxReference = Some(Utr("0123456789")),
-            agencyDetails = Some(
-              AgencyDetails(
-                agencyName = None,
-                agencyEmail = None,
-                agencyTelephone = Some("1234567890"),
-                agencyAddress = None
-              )
-            ),
+            agencyDetails = Some(subscriptionAgencyDetails),
             suspensionDetails = Some(SuspensionDetails(suspensionStatus = false, None))
           )
         )
@@ -155,7 +148,7 @@ with MockFactory {
   legacyRegimes.foreach(legacyRegime => {
 
     s"GET /subscription/$legacyRegime/check-your-answers" should {
-      //    TODO: 11188 Fix for all
+
       "return OK and render page when valid data present" in new TestSetup(legacyRegime) {
 
         cacheJourney(subscriptionFullJourney(legacyRegime))
@@ -169,20 +162,20 @@ with MockFactory {
           body should include("Contact name")
           body should include("My Name")
           body should not include ("Business name")
-          body should not include ("Custom name")
+          body should not include ("Agency name")
         }
         else {
           body should include("Business name")
-          body should include("Custom name")
+          body should include("Agency Name")
           body should not include ("Contact name")
           body should not include ("My Name")
         }
         body should include("Telephone number")
-        body should include("123456")
+        body should include("01237654321")
         body should include("Email address")
-        body should include("custom@test.com")
+        body should include("joe@bloggs.com")
         body should include("Address")
-        body should include("Line 1")
+        body should include("25 Any Street")
       }
 
       "return BAD_REQUEST when journey data missing" in new TestSetup(legacyRegime) {
@@ -213,7 +206,7 @@ with MockFactory {
     }
 
     s"POST /subscription/$legacyRegime/check-your-answers" should {
-      //    TODO: 11188 Fix for all
+
       "redirect when submission succeeds" in new TestSetup(legacyRegime) {
 
         cacheJourney(subscriptionFullJourney(legacyRegime))
@@ -225,6 +218,7 @@ with MockFactory {
         redirectLocation(result).value should include("/confirmation")
       }
 
+      //    TODO: 11188 Fix these tests
       "return BAD_REQUEST when journey data missing" in new TestSetup(legacyRegime) {
         cacheJourney(subscriptionBaseJourney)
 
