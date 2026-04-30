@@ -58,10 +58,9 @@ case class SubscriptionCyaData(
     )
   }
 
-  private def toPayeSubscriptionRequest: PayeSubscriptionRequest = {
-    //      TODO: 11188 Pass in agentName for PAYE
+  private def toPayeSubscriptionRequest(asaAgentName: String): PayeSubscriptionRequest = {
     PayeSubscriptionRequest(
-      agentName = name,
+      agentName = asaAgentName,
       contactName = name,
       phoneNumber = Some(phoneNumber),
       emailAddress = Some(email),
@@ -82,14 +81,14 @@ case class SubscriptionCyaData(
 
   def toSubscriptionRequest(
     legacyRegime: LegacyRegime,
-    countryName: String
-    //      TODO: 11188 Pass in agentName for PAYE
+    countryName: String,
+    asaAgentNameOpt: Option[String] = None
   ): SubscriptionRequest = {
-    (legacyRegime, address.countryCode != "GB") match {
-      case (PAYE, true) => null
-      case (PAYE, false) => toPayeSubscriptionRequest
-      case (CT, _) => toCtSubscriptionRequest(countryName)
-      case (SA, _) => toSaSubscriptionRequest(countryName)
+    (legacyRegime, address.countryCode != "GB", asaAgentNameOpt) match {
+      case (PAYE, false, Some(asaAgentName)) => toPayeSubscriptionRequest(asaAgentName)
+      case (PAYE, _, _) => null
+      case (CT, _, _) => toCtSubscriptionRequest(countryName)
+      case (SA, _, _) => toSaSubscriptionRequest(countryName)
     }
   }
 
