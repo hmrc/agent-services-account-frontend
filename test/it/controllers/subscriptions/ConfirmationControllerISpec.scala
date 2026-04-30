@@ -34,7 +34,8 @@ extends ComponentBaseISpec {
 
     s"GET $path" should {
 
-      "return OK and render the confirmation page when user is authorised" in {
+//      TODO: 11190 Implement
+      "return OK and render the confirmation page when user has submitted their SubscriptionJourney" in {
 
         givenAuthorisedAsAgentWith(arn.value)
         givenGetAgentRecord(agentRecord)
@@ -45,6 +46,17 @@ extends ComponentBaseISpec {
 
         result.body should include("We are processing your enrolment")
         result.body should include("This can take up to 5 days")
+      }
+
+//      TODO: 11190 Implement
+      "redirect to home when user has not submitted their SubscriptionJourney" in {
+
+        givenAuthorisedAsAgentWith(arn.value)
+        givenGetAgentRecord(agentRecord)
+
+        val result = get(path)
+
+        result.status shouldBe SEE_OTHER
       }
 
       "redirect to sign in when user is not authorised" in {

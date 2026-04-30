@@ -217,6 +217,7 @@ with MockFactory {
 
         status(result) shouldBe SEE_OTHER
         redirectLocation(result).value should include("/confirmation")
+//        TODO: 11190 Check value of isSubmitted is true
       }
 
       "return BAD_REQUEST when journey data missing" in new TestSetup(legacyRegime) {
