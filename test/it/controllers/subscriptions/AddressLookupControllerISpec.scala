@@ -90,7 +90,10 @@ extends ComponentBaseISpec {
 
       journeyWithRedirectLocations.foreach(journeyWithRedirectLocation => {
         s"update journey with new address and redirect to ${journeyWithRedirectLocation._2}" +
-          s"when journey ${if(journeyWithRedirectLocation._1.isComplete(legacyRegime)) "" else "not "}" in {
+          s"when journey ${if (journeyWithRedirectLocation._1.isComplete(legacyRegime))
+              ""
+            else
+              "not "}" in {
 
             givenAuthorisedAsAgentWith(arn.value)
             givenGetAgentRecord(agentRecord)

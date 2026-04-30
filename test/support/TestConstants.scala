@@ -27,7 +27,8 @@ import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
 import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.{LegacyRegime, SubscriptionJourney}
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
 import uk.gov.hmrc.auth.core.retrieve.Credentials
 import uk.gov.hmrc.auth.core.retrieve.Email
 import uk.gov.hmrc.auth.core.retrieve.Name
@@ -191,9 +192,10 @@ trait TestConstants {
     payeContactName = Some("My Name")
   )
 
-  def subscriptionFullJourney(legacyRegime: LegacyRegime): SubscriptionJourney = legacyRegime match {
-    case PAYE => payeSubscriptionFullJourney
-    case _ => ctSaSubscriptionFullJourney
-  }
+  def subscriptionFullJourney(legacyRegime: LegacyRegime): SubscriptionJourney =
+    legacyRegime match {
+      case PAYE => payeSubscriptionFullJourney
+      case _ => ctSaSubscriptionFullJourney
+    }
 
 }
