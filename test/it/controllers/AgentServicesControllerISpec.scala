@@ -352,6 +352,13 @@ extends BaseISpec {
         ninePs.get(2).text shouldBe "Report and manage your client’s Pillar 2 top-up taxes"
         ninePs.get(2).select("a").get(0).text shouldBe "Report and manage your client’s Pillar 2 top-up taxes"
         ninePs.get(2).select("a").get(0).attr("href") shouldBe "http://localhost:10053/report-pillar2-top-up-taxes/asa/input-pillar-2-id"
+
+        // PAYE/CIS
+        val ten = accordion.select("#tax-services-accordion-content-10")
+
+        val tenPs = three.select("p")
+        tenPs.get(0).text shouldBe "We are still processing the application you did on ."
+        tenPs.get(1).text shouldBe "Processing can take up to 5 days."
       }
       "agent with showFeatureInvite being false" in {
         givenGetAgentRecord(agentRecord)

@@ -160,17 +160,25 @@
 @govukWarningText(WarningText(content = HtmlContent(span("asa.other.p1"))))
 }
 
-@payeItem(status: SubscriptionStatus) = {
-@h4("asa.legacy.paye.h3")
-@p(msgs("asa.legacy.paye.p1", status))
-@if(status != SubscriptionStatus.Subscribed) {
-    @p(html = Some(
-        a(
-            href = uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.routes.PayeSubscriptionRequestController.showConfirm.url,
-            key  = "asa.legacy.paye.link"
-        )
-    ))
+@payeItem(info: SubscriptionInfo) = {
+
+@info.subscriptionStatus match {
+    case SubscriptionStatus.SubscriptionInProgress => {
+        @p(msgs("asa.legacy.paye.in-progress.p1", info.localCreationDate.map(_.format(DateTimeFormatter.ofPattern("d MMMM yyyy"))).getOrElse("")))
+        @p(msgs("asa.legacy.paye.in-progress.p2"))
+    }
+
+    case SubscriptionStatus.Subscribed => {
+        @inset_text(msgs("asa.legacy.paye.subscribed.p1", request.agentInfo.ctAgentCode.getOrElse("")))
+        @h4(msgs("asa.legacy.paye.subscribed.p2"))
+        @p(msgs("asa.legacy.paye.subscribed.p3", "TODO link")) @* TODO: provide the link *@
+        @h4(msgs("asa.legacy.paye.subscribed.p4"))
+        @p(msgs("asa.legacy.paye.subscribed.p5", "TODO link")) @* TODO: provide the link *@
+        @p(msgs("asa.legacy.paye.subscribed.p6", "TODO link")) @* TODO: provide the link *@
+    }
+
 }
+
 }
 
 @ctItem(info: SubscriptionInfo) = {
@@ -303,7 +311,7 @@
             items.append(
                 Section(
                     headingContent = Text(msgs("asa.legacy.paye.h2")),
-                    content = HtmlContent(payeItem(info.subscriptionStatus))
+                    content = HtmlContent(payeItem(info))
                 )
             )
         }
