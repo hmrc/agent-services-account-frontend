@@ -23,7 +23,8 @@ import play.api.mvc.MessagesControllerComponents
 import play.api.mvc.Results.Redirect
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.controllers.{ToFuture, routes}
+import uk.gov.hmrc.agentservicesaccount.controllers.ToFuture
+import uk.gov.hmrc.agentservicesaccount.controllers.routes
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.confirmation
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -45,7 +46,8 @@ with I18nSupport {
     val journey = request.subscriptionJourney
     if (journey.isSubmitted) {
       Ok(confirmation()).toFuture
-    } else {
+    }
+    else {
       Future.successful(Redirect(routes.AgentServicesController.root()))
     }
   }
