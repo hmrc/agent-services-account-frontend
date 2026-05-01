@@ -35,21 +35,17 @@ extends ComponentBaseISpec {
   private val legacyRegimes = List(CT, PAYE, SA)
 
   legacyRegimes.foreach(legacyRegime => {
-    val journeyWithRedirectLocations = List(
-      (subscriptionBaseJourney, "address"),
-      (subscriptionFullJourney(legacyRegime), "check-your-answers")
-    )
 
     val path = routes.ConfirmationController.showConfirmationPage(legacyRegime).url
 
     s"GET $path" should {
 
-      "return OK and render the confirmation page when user has submitted their SubscriptionJourney" in {
+      "return OK and render the confirmation page when user has submitted their complete SubscriptionJourney" in {
 
         givenAuthorisedAsAgentWith(arn.value)
         givenGetAgentRecord(agentRecord)
 
-        repo.putSession(subscriptionJourneyKey(legacyRegime), subscriptionFullJourney(legacyRegime)).futureValue
+        repo.putSession(subscriptionJourneyKey(legacyRegime), subscriptionFullJourney(legacyRegime).copy(isSubmitted = true)).futureValue
 
         val result = get(path)
 
