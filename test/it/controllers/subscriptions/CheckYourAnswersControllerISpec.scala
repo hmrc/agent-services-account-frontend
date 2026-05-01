@@ -216,8 +216,10 @@ with MockFactory {
         val result = controller.onSubmit(legacyRegime)(fakeRequest).futureValue
 
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result).value should include("/confirmation")
-//        TODO: 11190 Check value of isSubmitted is true
+        redirectLocation(result).value should include(s"/agent-services-account/subscription/$legacyRegime/confirmation")
+        val updated: Option[SubscriptionJourney] = sessionCache.get[SubscriptionJourney](subscriptionJourneyKey(legacyRegime)).futureValue
+        updated shouldBe defined
+        updated.value.isSubmitted shouldBe true
       }
 
       "return BAD_REQUEST when journey data missing" in new TestSetup(legacyRegime) {
