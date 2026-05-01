@@ -16,6 +16,7 @@
 
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
+@import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionBusinessNameForm.businessNameNewKey
 @import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionBusinessNameForm.businessNameUseAsaDataKey
 @import uk.gov.hmrc.agentservicesaccount.models.subscriptions.BusinessNameFormValues
 @import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
@@ -43,7 +44,7 @@
             content = HtmlContent(msgs(s"$legacyRegimePrefix.business-name.new-input.label")),
             classes = "govuk-label"
         )
-    ).withFormField(form("businessNameNew")))
+    ).withFormField(form(businessNameNewKey)))
 }
 
 @main(

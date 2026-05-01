@@ -38,6 +38,7 @@ import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.DoYouAlreadyManageController
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.{routes => subscriptionRoutes}
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.DoYouAlreadyManageForm.doYouAlreadyManageKey
 import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
@@ -190,7 +191,7 @@ with TestConstants {
         val request = FakeRequest(POST, "/")
           .withSession(session.toSeq: _*)
           .withFormUrlEncodedBody(
-            "doYouAlreadyManage" -> ""
+            doYouAlreadyManageKey -> ""
           )
 
         val result = controller.onSubmit(regime)(request).futureValue
@@ -204,7 +205,7 @@ with TestConstants {
         val request = FakeRequest(POST, "/")
           .withSession(session.toSeq: _*)
           .withFormUrlEncodedBody(
-            "doYouAlreadyManage" -> "true"
+            doYouAlreadyManageKey -> "true"
           )
 
         implicit val implicitRequest: FakeRequest[AnyContentAsFormUrlEncoded] = request
@@ -226,7 +227,7 @@ with TestConstants {
         val request = FakeRequest(POST, "/")
           .withSession(session.toSeq: _*)
           .withFormUrlEncodedBody(
-            "doYouAlreadyManage" -> "false"
+            doYouAlreadyManageKey -> "false"
           )
 
         implicit val implicitRequest: FakeRequest[AnyContentAsFormUrlEncoded] = request
@@ -248,7 +249,7 @@ with TestConstants {
         val request = FakeRequest(POST, "/")
           .withSession(session.toSeq: _*)
           .withFormUrlEncodedBody(
-            "doYouAlreadyManage" -> "false"
+            doYouAlreadyManageKey -> "false"
           )
 
         val result = controller.onSubmit(CT)(request).futureValue

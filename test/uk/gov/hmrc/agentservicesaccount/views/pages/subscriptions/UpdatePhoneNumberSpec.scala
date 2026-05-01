@@ -23,6 +23,7 @@ import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.data.Form
 import play.api.i18n.Messages
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionPhoneNumberForm
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionPhoneNumberForm.phoneNumberUseAsaDataKey
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.PhoneNumberFormValues
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
@@ -38,7 +39,7 @@ extends ViewBaseSpec {
 
   private val phoneNumberForm: Form[PhoneNumberFormValues] = SubscriptionPhoneNumberForm.form(legacyRegime)
 
-  private val formWithErrors: Form[PhoneNumberFormValues] = phoneNumberForm.withError("phoneNumberUseAsaData", Messages("error.required"))
+  private val formWithErrors: Form[PhoneNumberFormValues] = phoneNumberForm.withError(phoneNumberUseAsaDataKey, Messages("error.required"))
 
   def render(form: Form[PhoneNumberFormValues]): Document = Jsoup.parse(
     view(
@@ -130,7 +131,7 @@ extends ViewBaseSpec {
 
       "display error link" in {
         val errorLink: Element = doc.select(".govuk-error-summary__list a").first()
-        errorLink.attr("href") mustBe "#phoneNumberUseAsaData"
+        errorLink.attr("href") mustBe s"#$phoneNumberUseAsaDataKey"
       }
 
       "highlight radio group with error" in {
@@ -163,7 +164,7 @@ extends ViewBaseSpec {
       }
 
       "have the correct radio selected" in {
-        val radios = doc.select("input[name=phoneNumberUseAsaData]")
+        val radios = doc.select(s"input[name=$phoneNumberUseAsaDataKey]")
         radios.get(1).hasAttr("checked") mustBe true
       }
     }
@@ -180,7 +181,7 @@ extends ViewBaseSpec {
       val doc: Document = render(filledForm)
 
       "select the first radio option" in {
-        val radios = doc.select("input[name=phoneNumberUseAsaData]")
+        val radios = doc.select(s"input[name=$phoneNumberUseAsaDataKey]")
         radios.get(0).hasAttr("checked") mustBe true
       }
 

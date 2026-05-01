@@ -37,6 +37,8 @@ import support.UnitSpec
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdatePhoneNumberController
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionPhoneNumberForm.phoneNumberNewKey
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionPhoneNumberForm.phoneNumberUseAsaDataKey
 import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
@@ -180,7 +182,7 @@ with TestConstants {
         private val content = contentAsString(result)
 
         content should include("""value="true"""")
-        content should include("phoneNumberNew")
+        content should include(phoneNumberNewKey)
       }
     }
 
@@ -209,7 +211,7 @@ with TestConstants {
             private val request = FakeRequest(POST, "/")
               .withSession(session.toSeq: _*)
               .withFormUrlEncodedBody(
-                "phoneNumberUseAsaData" -> "true"
+                phoneNumberUseAsaDataKey -> "true"
               )
 
             implicit val implicitRequest: FakeRequest[AnyContentAsFormUrlEncoded] = request
@@ -232,8 +234,8 @@ with TestConstants {
             private val request = FakeRequest(POST, "/")
               .withSession(session.toSeq: _*)
               .withFormUrlEncodedBody(
-                "phoneNumberUseAsaData" -> "false",
-                "phoneNumberNew" -> "0987654321"
+                phoneNumberUseAsaDataKey -> "false",
+                phoneNumberNewKey -> "0987654321"
               )
 
             implicit val implicitRequest: FakeRequest[AnyContentAsFormUrlEncoded] = request

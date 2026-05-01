@@ -16,6 +16,7 @@
 
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
+@import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionEmailAddressForm.emailAddressNewKey
 @import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionEmailAddressForm.emailAddressUseAsaDataKey
 @import uk.gov.hmrc.agentservicesaccount.models.subscriptions.EmailAddressFormValues
 @import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
@@ -44,7 +45,7 @@
             classes = "govuk-label"
         ),
         hint = Some(Hint(content = Text(msgs(s"$legacyRegimePrefix.email-address.new-input.hint"))))
-    ).withFormField(form("emailAddressNew")))
+    ).withFormField(form(emailAddressNewKey)))
 }
 
 @main(

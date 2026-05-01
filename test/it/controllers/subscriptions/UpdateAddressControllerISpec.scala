@@ -22,6 +22,7 @@ import stubs.AgentServicesAccountStubs.stubASAGetResponseError
 import support.ComponentBaseISpec
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionAddressForm.addressUseAsaDataKey
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
@@ -77,7 +78,7 @@ extends ComponentBaseISpec {
             val result =
               post(updateAddressPath)(body =
                 Map(
-                  "addressUseAsaData" -> Seq("true")
+                  addressUseAsaDataKey -> Seq("true")
                 )
               )
             result.status shouldBe SEE_OTHER
@@ -103,7 +104,7 @@ extends ComponentBaseISpec {
         val result =
           post(updateAddressPath)(body =
             Map(
-              "addressUseAsaData" -> Seq("false")
+              addressUseAsaDataKey -> Seq("false")
             )
           )
 

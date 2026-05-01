@@ -37,6 +37,7 @@ import support.UnitSpec
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.PayeUpdateContactNameController
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.PayeSubscriptionContactNameForm.contactNameKey
 import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
@@ -172,7 +173,7 @@ with TestConstants {
       status(result) shouldBe OK
       private val content = contentAsString(result)
 
-      content should include("contactName")
+      content should include(contactNameKey)
     }
   }
 
@@ -182,7 +183,7 @@ with TestConstants {
       cacheJourney(subscriptionBaseJourney)
 
       private val request = FakeRequest().withSession(session.toSeq: _*).withFormUrlEncodedBody(
-        "contactName" -> ""
+        contactNameKey -> ""
       )
 
       private val result = controller.onSubmit(request).futureValue
@@ -201,7 +202,7 @@ with TestConstants {
           private val request = FakeRequest(POST, "/")
             .withSession(session.toSeq: _*)
             .withFormUrlEncodedBody(
-              "contactName" -> "New Name"
+              contactNameKey -> "New Name"
             )
 
           implicit val implicitRequest: FakeRequest[AnyContentAsFormUrlEncoded] = request

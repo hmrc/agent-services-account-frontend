@@ -38,6 +38,8 @@ import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdateBusinessNameController
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.{routes => subscriptionRoutes}
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionBusinessNameForm.businessNameNewKey
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionBusinessNameForm.businessNameUseAsaDataKey
 import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
@@ -193,7 +195,7 @@ with TestConstants {
         private val content = contentAsString(result)
 
         content should include("""value="true"""")
-        content should include("businessNameNew")
+        content should include(businessNameNewKey)
       }
     }
 
@@ -222,7 +224,7 @@ with TestConstants {
             private val request = FakeRequest(POST, "/")
               .withSession(session.toSeq: _*)
               .withFormUrlEncodedBody(
-                "businessNameUseAsaData" -> "true"
+                businessNameUseAsaDataKey -> "true"
               )
 
             implicit val implicitRequest: FakeRequest[AnyContentAsFormUrlEncoded] = request
@@ -245,8 +247,8 @@ with TestConstants {
             private val request = FakeRequest(POST, "/")
               .withSession(session.toSeq: _*)
               .withFormUrlEncodedBody(
-                "businessNameUseAsaData" -> "false",
-                "businessNameNew" -> "My Custom Ltd"
+                businessNameUseAsaDataKey -> "false",
+                businessNameNewKey -> "My Custom Ltd"
               )
 
             implicit val implicitRequest: FakeRequest[AnyContentAsFormUrlEncoded] = request
