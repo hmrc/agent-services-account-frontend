@@ -78,13 +78,6 @@ with I18nSupport {
           data.toSubscriptionRequest(legacyRegime, countryResolver.countryName(data.address.countryCode))
         }
 
-//      requestModelOpt.map(requestModel => {
-//        agentServicesAccountConnector
-//          .submitLegacySubscriptionRequest(requestModel, legacyRegime)
-////          TODO: 11190 Save isSubmitted here
-//          .map(_ => Redirect(getNextPage(currentPage = checkYourAnswersPage, legacyRegime = legacyRegime)))
-//      }).getOrElse(Future.successful(Redirect(routes.CheckYourAnswersController.showPage(legacyRegime))))
-
       requestModelOpt.map(requestModel => {
         for {
           _ <- agentServicesAccountConnector.submitLegacySubscriptionRequest(requestModel, legacyRegime)

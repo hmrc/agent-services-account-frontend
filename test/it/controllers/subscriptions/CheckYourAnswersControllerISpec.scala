@@ -35,6 +35,7 @@ import support.UnitSpec
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CheckYourAnswersController
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionBusinessNameForm.businessNameUseAsaDataKey
 import uk.gov.hmrc.agentservicesaccount.models._
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
@@ -150,12 +151,12 @@ with MockFactory {
     s"GET /subscription/$legacyRegime/check-your-answers" should {
 
       "return OK and render page when valid data present" in new TestSetup(legacyRegime) {
-
         cacheJourney(subscriptionFullJourney(legacyRegime))
 
         val result = controller.showPage(legacyRegime)(fakeRequest).futureValue
 
         status(result) shouldBe OK
+
         val body = contentAsString(result)
 
         if (legacyRegime == PAYE) {
@@ -210,9 +211,14 @@ with MockFactory {
 
 //      TODO: 11190 Fix there - not sure why failing??
       "redirect when submission succeeds" in new TestSetup(legacyRegime) {
+        private val request = FakeRequest(POST, "/")
+          .withSession(session.toSeq: _*)
+          .withFormUrlEncodedBody()
 
         cacheJourney(subscriptionFullJourney(legacyRegime))
         givenStartLegacySubscriptionResponse(legacyRegime, OK)
+
+        implicit val implicitRequest: FakeRequest[AnyContentAsFormUrlEncoded] = request
 
         val result = controller.onSubmit(legacyRegime)(fakeRequest).futureValue
 
