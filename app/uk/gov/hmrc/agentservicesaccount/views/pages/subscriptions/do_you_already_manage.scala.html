@@ -24,7 +24,7 @@
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 @import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
 @import uk.gov.hmrc.hmrcfrontend.views.Implicits.RichErrorSummary
-@import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.DoYouAlreadyManageForm
+@import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.DoYouAlreadyManageForm.doYouAlreadyManageKey
 @import uk.gov.hmrc.agentservicesaccount.models.subscriptions.DoYouAlreadyManageFormValues
 
 @this(
@@ -61,7 +61,7 @@
     @formWithCSRF(action = subscriptions.routes.DoYouAlreadyManageController.onSubmit(legacyRegime)) {
 
         @govukRadios(Radios(
-            name = DoYouAlreadyManageForm.doYouAlreadyManageKey,
+            name = doYouAlreadyManageKey,
             fieldset = Some(Fieldset(
                 legend = Some(Legend(
                     content = Text(pageTitle),
@@ -79,7 +79,7 @@
                     value = Some("false")
                 )
             )
-        ).withFormField(form(DoYouAlreadyManageForm.doYouAlreadyManageKey)))
+        ).withFormField(form(doYouAlreadyManageKey)))
 
         @govukButton(Button(content = Text(msgs("common.continue"))))
     }

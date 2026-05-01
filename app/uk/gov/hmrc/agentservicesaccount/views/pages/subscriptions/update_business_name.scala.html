@@ -16,6 +16,7 @@
 
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
+@import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionBusinessNameForm.businessNameUseAsaDataKey
 @import uk.gov.hmrc.agentservicesaccount.models.subscriptions.BusinessNameFormValues
 @import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
@@ -64,7 +65,7 @@
                     isPageHeading = true
                 ))
             )),
-            name = "businessNameUseAsaData",
+            name = businessNameUseAsaDataKey,
             items = Seq(
                 RadioItem(
                     content = Text(subscriptionBusinessName),
@@ -76,7 +77,7 @@
                     conditionalHtml = Some(newBusinessNameInput)
                 )
             )
-        ).withFormField(form("businessNameUseAsaData")))
+        ).withFormField(form(businessNameUseAsaDataKey)))
 
         @govukButton(Button(content = Text(msgs("common.continue"))))
     }

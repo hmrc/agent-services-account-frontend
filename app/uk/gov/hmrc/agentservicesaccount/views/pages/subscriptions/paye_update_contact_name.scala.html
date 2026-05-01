@@ -16,6 +16,7 @@
 
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
+@import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.PayeSubscriptionContactNameForm.contactNameKey
 @import uk.gov.hmrc.agentservicesaccount.models.subscriptions.PayeContactNameFormValues
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 @import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
@@ -50,7 +51,7 @@
                 isPageHeading = true
             ),
             hint = Some(Hint(content = Text(msgs("asa.legacy.paye.contact-name.input.hint"))))
-        ).withFormField(form("contactName")))
+        ).withFormField(form(contactNameKey)))
 
         @govukButton(Button(content = Text(msgs("common.continue"))))
     }

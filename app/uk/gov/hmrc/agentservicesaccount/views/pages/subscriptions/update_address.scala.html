@@ -16,6 +16,7 @@
 
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
+@import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionAddressForm.addressUseAsaDataKey
 @import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AddressFormValues
 @import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
@@ -54,7 +55,7 @@
                     isPageHeading = true
                 ))
             )),
-            name = "addressUseAsaData",
+            name = addressUseAsaDataKey,
             items = Seq(
                 RadioItem(
                     content = Text(subscriptionAddress),
@@ -66,7 +67,7 @@
                     value = Some("false")
                 )
             )
-        ).withFormField(form("addressUseAsaData")))
+        ).withFormField(form(addressUseAsaDataKey)))
 
         @govukButton(Button(content = Text(msgs("common.continue"))))
     }
