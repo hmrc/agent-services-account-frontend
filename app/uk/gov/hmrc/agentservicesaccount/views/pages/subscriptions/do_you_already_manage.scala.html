@@ -1,5 +1,5 @@
 @*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,30 +14,42 @@
  * limitations under the License.
  *@
 
+@import play.api.data.Form
+@import play.api.i18n.Messages
+@import play.api.mvc.RequestHeader
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
-@import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionAddressForm.addressUseAsaDataKey
-@import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AddressFormValues
 @import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
-@import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
 @import uk.gov.hmrc.govukfrontend.views.html.components._
+@import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
 @import uk.gov.hmrc.hmrcfrontend.views.Implicits.RichErrorSummary
+@import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.DoYouAlreadyManageForm.doYouAlreadyManageKey
+@import uk.gov.hmrc.agentservicesaccount.models.subscriptions.DoYouAlreadyManageFormValues
 
 @this(
-    main: main,
-    formWithCSRF: FormWithCSRF,
-    govukRadios: GovukRadios,
-    govukButton: GovukButton,
-    govukErrorSummary: GovukErrorSummary
+        main: main,
+        formWithCSRF: FormWithCSRF,
+        govukRadios: GovukRadios,
+        govukButton: GovukButton,
+        govukErrorSummary: GovukErrorSummary
 )
 
-@(form: Form[AddressFormValues], subscriptionAddress: String, legacyRegime: LegacyRegime)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
+
+@(form: Form[DoYouAlreadyManageFormValues], legacyRegime: LegacyRegime, subscriptionBusinessName: String)(
+        implicit msgs: Messages,
+        request: RequestHeader,
+        appConfig: AppConfig
+)
 
 @legacyRegimePrefix = @{ legacyRegime.msgPrefix }
 
+@pageTitle = @{
+    msgs(s"asa.legacy.${legacyRegime.toString.toLowerCase}.do-you-already-manage.title", subscriptionBusinessName)
+}
+
 @main(
-    pageTitle = withErrorPrefix(form.hasErrors, msgs(s"$legacyRegimePrefix.address.title")),
+    pageTitle = withErrorPrefix(form.hasErrors, pageTitle),
     mimicBrowserBackLink = true,
     showSecondaryNav = false
 ) {
@@ -46,30 +58,29 @@
         @govukErrorSummary(ErrorSummary().withFormErrorsAsText(form))
     }
 
-    @formWithCSRF(action = subscriptions.routes.UpdateAddressController.onSubmit(legacyRegime)) {
+    @formWithCSRF(action = subscriptions.routes.DoYouAlreadyManageController.onSubmit(legacyRegime)) {
+
         @govukRadios(Radios(
+            name = doYouAlreadyManageKey,
             fieldset = Some(Fieldset(
                 legend = Some(Legend(
-                    content = Text(msgs(s"$legacyRegimePrefix.address.title")),
+                    content = Text(pageTitle),
                     classes = "govuk-fieldset__legend--l",
                     isPageHeading = true
                 ))
             )),
-            name = addressUseAsaDataKey,
             items = Seq(
                 RadioItem(
-                    content = Text(subscriptionAddress),
-                    value = Some("true"),
-                    hint = Some(Hint(content = Text(msgs(s"$legacyRegimePrefix.address.use-asa.true.hint"))))
+                    content = Text(msgs(s"asa.legacy.do-you-already-manage.existing.true")),
+                    value = Some("true")
                 ),
                 RadioItem(
-                    content = Text(msgs(s"$legacyRegimePrefix.address.use-asa.false")),
+                    content = Text(msgs(s"asa.legacy.${legacyRegime.toString.toLowerCase}.do-you-already-manage.existing.false")),
                     value = Some("false")
                 )
             )
-        ).withFormField(form(addressUseAsaDataKey)))
+        ).withFormField(form(doYouAlreadyManageKey)))
 
         @govukButton(Button(content = Text(msgs("common.continue"))))
     }
-
 }

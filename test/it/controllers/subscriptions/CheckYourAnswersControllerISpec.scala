@@ -186,6 +186,7 @@ with MockFactory {
             agencyTelephone = None,
             agencyAddress = None
           ),
+          doYouAlreadyManage = Some(false),
           useCustomBusinessName = Some(true),
           businessNameAnswer = None,
           useCustomPhoneNumber = Some(true),

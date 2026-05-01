@@ -59,12 +59,7 @@
         @p(msgs("asa.apply-to-act-for.p1"))
         @ul_html(
             items = regimes.map { regime =>
-                val url = regime match {
-                    case LegacyRegime.PAYE =>
-                        subscriptionRoutes.PayeUpdateContactNameController.showPage.url
-                    case _ =>
-                        subscriptionRoutes.UpdateBusinessNameController.showPage(regime).url
-                }
+                val url = subscriptionRoutes.DoYouAlreadyManageController.showPage(regime).url
                 a(href = url, key = s"asa.apply-to-act-for.${regime.toString.toLowerCase}")
             }
         )

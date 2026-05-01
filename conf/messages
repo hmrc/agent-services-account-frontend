@@ -175,6 +175,8 @@ asa.apply-to-act-for.paye=Pay as you earn (PAYE)/Construction Industry Scheme (C
 asa.apply-to-act-for.sa=Self Assessment
 asa.apply-to-act-for.ct=Corporation Tax
 
+asa.legacy.do-you-already-manage.existing.true=Yes, through their existing HMRC online services account
+
 # CT
 asa.legacy.ct.h2=Corporation Tax
 asa.legacy.ct.h3=Test Content
@@ -192,6 +194,9 @@ asa.legacy.ct.subscribed.p2=Get permission from new clients
 asa.legacy.ct.subscribed.p3=<a class="govuk-link" href="{0}" rel="noreferrer noopener">Ask a client to authorise you</a>
 asa.legacy.ct.subscribed.p4=Manage your client’s Corporation Tax
 asa.legacy.ct.subscribed.p5=<a class="govuk-link" href="{0}" rel="noreferrer noopener">View and manage your client list for Corporation Tax</a>
+
+asa.legacy.ct.do-you-already-manage.title=Does {0} already manage Corporation Tax clients?
+asa.legacy.ct.do-you-already-manage.existing.false=No, this is their first time managing Corporation Tax clients
 
 asa.legacy.ct.business-name.title=What business name should we show to your Corporation Tax clients?
 asa.legacy.ct.business-name.use-asa.false=I want to use a different business name for Corporation Tax
@@ -265,6 +270,9 @@ asa.legacy.paye.subscribed.p3=<a class="govuk-link" href="{0}" rel="noreferrer n
 asa.legacy.paye.subscribed.p4=Manage your client’s Pay As You Earn
 asa.legacy.paye.subscribed.p5=<a class="govuk-link" href="{0}" rel="noreferrer noopener">View and manage your client list for Pay As You Earn</a>
 
+asa.legacy.paye.do-you-already-manage.title=Does {0} already manage PAYE clients?
+asa.legacy.paye.do-you-already-manage.existing.false=No, this is their first time managing PAYE clients
+
 asa.legacy.paye.contact-name.title=Who should we contact about PAYE?
 asa.legacy.paye.contact-name.input.heading=Who at {0} should we contact about PAYE?
 asa.legacy.paye.contact-name.input.hint=Enter their full name
@@ -335,6 +343,9 @@ asa.legacy.sa.subscribed.p2=Get permission from new clients
 asa.legacy.sa.subscribed.p3=<a class="govuk-link" href="{0}" rel="noreferrer noopener">Ask a client to authorise you</a>
 asa.legacy.sa.subscribed.p4=Manage your client’s Self Assessment
 asa.legacy.sa.subscribed.p5=<a class="govuk-link" href="{0}" rel="noreferrer noopener">View and manage your client list for Self Assessment</a>
+
+asa.legacy.sa.do-you-already-manage.title=Does {0} already manage Self Assessment clients?
+asa.legacy.sa.do-you-already-manage.existing.false=No, this is their first time managing Self Assessment clients
 
 asa.legacy.sa.business-name.title=What business name should we show to your Self Assessment clients?
 asa.legacy.sa.business-name.use-asa.false=I want to use a different business name for Self Assessment

@@ -36,10 +36,14 @@ import support.TestConstants
 import support.UnitSpec
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
-import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.PayeUpdateContactNameController
-import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.PayeSubscriptionContactNameForm.contactNameKey
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.DoYouAlreadyManageController
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.{routes => subscriptionRoutes}
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.DoYouAlreadyManageForm.doYouAlreadyManageKey
 import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.auth.core.AuthConnector
@@ -51,7 +55,7 @@ import uk.gov.hmrc.http.client.HttpClientV2
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
-class PayeUpdateContactNameControllerISpec
+class DoYouAlreadyManageControllerISpec
 extends BaseISpec
 with UnitSpec
 with Matchers
@@ -61,7 +65,9 @@ with IntegrationPatience
 with MockFactory
 with TestConstants {
 
-  class TestSetup {
+  private val legacyRegimes = List(CT, SA, PAYE)
+
+  class TestSetup(legacyRegime: LegacyRegime) {
 
     private val testArn = "TARN0000001"
 
@@ -134,7 +140,7 @@ with TestConstants {
       .overrides(overrides)
       .build()
 
-    val controller: PayeUpdateContactNameController = app.injector.instanceOf[PayeUpdateContactNameController]
+    val controller: DoYouAlreadyManageController = app.injector.instanceOf[DoYouAlreadyManageController]
 
     val sessionCache: SessionCacheService = app.injector.instanceOf[SessionCacheService]
 
@@ -145,80 +151,114 @@ with TestConstants {
     def cacheJourney(journey: SubscriptionJourney): Unit = {
       implicit val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequest
       implicit val writes: OWrites[SubscriptionJourney] = Json.writes[SubscriptionJourney]
-      sessionCache.put(subscriptionJourneyKey(PAYE), journey).futureValue
+      sessionCache.put(subscriptionJourneyKey(legacyRegime), journey).futureValue
     }
 
   }
 
-  "GET /subscription/PAYE/contact-name" should {
+  legacyRegimes.foreach { regime =>
+    s"GET /subscription/$regime/do-you-already-manage" should {
 
-    "render empty form on first visit" in new TestSetup {
-      cacheJourney(subscriptionBaseJourney)
+      "render page with empty form" in new TestSetup(regime) {
+        cacheJourney(subscriptionBaseJourney)
 
-      private val result = controller.showPage(FakeRequest()).futureValue
+        val result = controller.showPage(regime)(fakeRequest).futureValue
 
-      status(result) shouldBe OK
-      contentAsString(result) should include("Test Agency")
-    }
+        status(result) shouldBe OK
+      }
 
-    "render pre-filled form when journey has existing answers" in new TestSetup {
-      private val journey = subscriptionBaseJourney.copy(
-        payeContactName = Some("My Name")
-      )
+      "render pre-filled form when journey has value" in new TestSetup(regime) {
+        val journey = subscriptionBaseJourney.copy(
+          doYouAlreadyManage = Some(true)
+        )
 
-      cacheJourney(journey)
+        cacheJourney(journey)
 
-      private val result = controller.showPage(FakeRequest()).futureValue
+        val result = controller.showPage(regime)(fakeRequest).futureValue
 
-      status(result) shouldBe OK
-      private val content = contentAsString(result)
-
-      content should include(contactNameKey)
+        status(result) shouldBe OK
+        contentAsString(result) should include("""value="true"""")
+      }
     }
   }
 
-  "POST /subscription/PAYE/contact-name" should {
+  legacyRegimes.foreach { regime =>
+    s"POST /subscription/$regime/do-you-already-manage" should {
 
-    "return BAD_REQUEST when form is invalid" in new TestSetup {
-      cacheJourney(subscriptionBaseJourney)
+      "return BAD_REQUEST when no option selected" in new TestSetup(regime) {
+        cacheJourney(subscriptionBaseJourney)
 
-      private val request = FakeRequest().withSession(session.toSeq: _*).withFormUrlEncodedBody(
-        contactNameKey -> ""
-      )
+        val request = FakeRequest(POST, "/")
+          .withSession(session.toSeq: _*)
+          .withFormUrlEncodedBody(
+            doYouAlreadyManageKey -> ""
+          )
 
-      private val result = controller.onSubmit(request).futureValue
+        val result = controller.onSubmit(regime)(request).futureValue
 
-      status(result) shouldBe BAD_REQUEST
+        status(result) shouldBe BAD_REQUEST
+      }
+
+      "redirect correctly when YES selected" in new TestSetup(regime) {
+        cacheJourney(subscriptionBaseJourney)
+
+        val request = FakeRequest(POST, "/")
+          .withSession(session.toSeq: _*)
+          .withFormUrlEncodedBody(
+            doYouAlreadyManageKey -> "true"
+          )
+
+        implicit val implicitRequest: FakeRequest[AnyContentAsFormUrlEncoded] = request
+
+        val result = controller.onSubmit(regime)(request).futureValue
+
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result) shouldBe
+          Some(subscriptionRoutes.UpdateBusinessNameController.showPage(regime).url)
+
+        val updated = sessionCache.get[SubscriptionJourney](subscriptionJourneyKey(regime)).futureValue
+        updated shouldBe defined
+        updated.value.doYouAlreadyManage shouldBe Some(true)
+      }
+
+      "redirect correctly when NO selected (PAYE)" in new TestSetup(PAYE) {
+        cacheJourney(subscriptionBaseJourney)
+
+        val request = FakeRequest(POST, "/")
+          .withSession(session.toSeq: _*)
+          .withFormUrlEncodedBody(
+            doYouAlreadyManageKey -> "false"
+          )
+
+        implicit val implicitRequest: FakeRequest[AnyContentAsFormUrlEncoded] = request
+
+        val result = controller.onSubmit(PAYE)(request).futureValue
+
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result) shouldBe
+          Some(subscriptionRoutes.PayeUpdateContactNameController.showPage.url)
+
+        val updated = sessionCache.get[SubscriptionJourney](subscriptionJourneyKey(PAYE)).futureValue
+        updated shouldBe defined
+        updated.value.doYouAlreadyManage shouldBe Some(false)
+      }
+
+      "redirect correctly when NO selected (non-PAYE)" in new TestSetup(CT) {
+        cacheJourney(subscriptionBaseJourney)
+
+        val request = FakeRequest(POST, "/")
+          .withSession(session.toSeq: _*)
+          .withFormUrlEncodedBody(
+            doYouAlreadyManageKey -> "false"
+          )
+
+        val result = controller.onSubmit(CT)(request).futureValue
+
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result) shouldBe
+          Some(subscriptionRoutes.UpdateBusinessNameController.showPage(CT).url)
+      }
     }
-
-    val journeyWithRedirectLocations = List(
-      (subscriptionBaseJourney, "phone-number"),
-      (payeSubscriptionFullJourney, "check-your-answers")
-    )
-
-    journeyWithRedirectLocations.foreach(journeyWithRedirectLocation => {
-      s"update journey and redirect to ${journeyWithRedirectLocation._2}" +
-        s"when journey ${completeString(journeyWithRedirectLocation._1, PAYE)}}" in new TestSetup {
-          private val request = FakeRequest(POST, "/")
-            .withSession(session.toSeq: _*)
-            .withFormUrlEncodedBody(
-              contactNameKey -> "New Name"
-            )
-
-          implicit val implicitRequest: FakeRequest[AnyContentAsFormUrlEncoded] = request
-
-          cacheJourney(journeyWithRedirectLocation._1)
-
-          private val result = controller.onSubmit(request).futureValue
-          status(result) shouldBe SEE_OTHER
-          redirectLocation(result) shouldBe
-            Some(s"/agent-services-account/subscription/PAYE/${journeyWithRedirectLocation._2}")
-
-          val updated: Option[SubscriptionJourney] = sessionCache.get[SubscriptionJourney](subscriptionJourneyKey(PAYE)).futureValue
-          updated shouldBe defined
-          updated.value.payeContactName shouldBe Some("New Name")
-        }
-    })
   }
 
 }

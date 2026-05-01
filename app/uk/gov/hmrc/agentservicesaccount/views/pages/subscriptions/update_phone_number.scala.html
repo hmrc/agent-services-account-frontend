@@ -17,6 +17,8 @@
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
 @import uk.gov.hmrc.agentservicesaccount.models.subscriptions.PhoneNumberFormValues
+@import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionPhoneNumberForm.phoneNumberNewKey
+@import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionPhoneNumberForm.phoneNumberUseAsaDataKey
 @import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 @import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
@@ -43,7 +45,7 @@
             classes = "govuk-label"
         ),
         hint = Some(Hint(content = Text(msgs(s"$legacyRegimePrefix.phone-number.new-input.hint"))))
-    ).withFormField(form("phoneNumberNew")))
+    ).withFormField(form(phoneNumberNewKey)))
 }
 
 @main(
@@ -65,7 +67,7 @@
                     isPageHeading = true
                 ))
             )),
-            name = "phoneNumberUseAsaData",
+            name = phoneNumberUseAsaDataKey,
             items = Seq(
                 RadioItem(
                     content = Text(subscriptionPhoneNumber),
@@ -77,7 +79,7 @@
                     conditionalHtml = Some(newPhoneNumberInput)
                 )
             )
-        ).withFormField(form("phoneNumberUseAsaData")))
+        ).withFormField(form(phoneNumberUseAsaDataKey)))
 
         @govukButton(Button(content = Text(msgs("common.continue"))))
     }
