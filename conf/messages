@@ -177,6 +177,13 @@ asa.apply-to-act-for.ct=Corporation Tax
 
 asa.legacy.do-you-already-manage.existing.true=Yes, through their existing HMRC online services account
 
+asa.legacy.confirmation.title=We’re processing your application
+asa.legacy.confirmation.panel.body=You’ll get an agent code within 5 days
+asa.legacy.confirmation.p1=You’ll receive an email once your agent code is ready. You can then use it to ask for authorisation from your clients.
+asa.legacy.confirmation.p2=We’ll also send you a letter with your agent code for your records.
+asa.legacy.confirmation.p3=This code must be kept private. Only share it with people who genuinely need to know it.
+asa.legacy.confirmation.return-home=Return to your agent services account homepage
+
 # CT
 asa.legacy.ct.h2=Corporation Tax
 asa.legacy.ct.h3=Test Content
@@ -243,13 +250,6 @@ asa.legacy.ct.check-your-answers.phone-number=Telephone number
 asa.legacy.ct.check-your-answers.email=Email address
 asa.legacy.ct.check-your-answers.address=Address
 asa.legacy.ct.check-your-answers.submit-button=Enrol for Corporation Tax
-
-asa.legacy.ct.confirmation.title=We’re processing your application
-asa.legacy.ct.confirmation.panel.body=You’ll get an agent code within 5 days
-asa.legacy.ct.confirmation.p1=You’ll receive an email once your agent code is ready. You can then use it to ask for authorisation from your clients.
-asa.legacy.ct.confirmation.p2=We’ll also send you a letter with your agent code for your records.
-asa.legacy.ct.confirmation.p3=This code must be kept private. Only share it with people who genuinely need to know it.
-asa.legacy.ct.return-home=Return to your agent services account homepage
 
 # PAYE/CIS
 asa.legacy.paye.h2=PAYE/CIS
@@ -318,13 +318,6 @@ asa.legacy.paye.check-your-answers.email=Email address
 asa.legacy.paye.check-your-answers.address=Address
 asa.legacy.paye.check-your-answers.submit-button=Enrol for Pay As You Earn
 
-asa.legacy.paye.confirmation.title=We’re processing your application
-asa.legacy.paye.confirmation.panel.body=You’ll get an agent code within 5 days
-asa.legacy.paye.confirmation.p1=You’ll receive an email once your agent code is ready. You can then use it to ask for authorisation from your clients.
-asa.legacy.paye.confirmation.p2=We’ll also send you a letter with your agent code for your records.
-asa.legacy.paye.confirmation.p3=This code must be kept private. Only share it with people who genuinely need to know it.
-asa.legacy.paye.return-home=Return to your agent services account homepage
-
 # SA
 asa.legacy.sa.h2=Self Assessment
 asa.legacy.sa.h3=Test Content
@@ -392,13 +385,6 @@ asa.legacy.sa.check-your-answers.phone-number=Telephone number
 asa.legacy.sa.check-your-answers.email=Email address
 asa.legacy.sa.check-your-answers.address=Address
 asa.legacy.sa.check-your-answers.submit-button=Enrol for Self Assessment
-
-asa.legacy.sa.confirmation.title=We’re processing your application
-asa.legacy.sa.confirmation.panel.body=You’ll get an agent code within 5 days
-asa.legacy.sa.confirmation.p1=You’ll receive an email once your agent code is ready. You can then use it to ask for authorisation from your clients.
-asa.legacy.sa.confirmation.p2=We’ll also send you a letter with your agent code for your records.
-asa.legacy.sa.confirmation.p3=This code must be kept private. Only share it with people who genuinely need to know it.
-asa.legacy.sa.return-home=Return to your agent services account homepage
 
 # TODO: WELSH TRANSLATIONS NEEDED FOR ALL ABOVE THIS LINE
 
