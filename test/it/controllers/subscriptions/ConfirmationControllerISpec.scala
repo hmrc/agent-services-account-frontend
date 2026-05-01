@@ -18,45 +18,58 @@ package it.controllers.subscriptions
 
 import play.api.test.Helpers._
 import support.ComponentBaseISpec
+import uk.gov.hmrc.agentservicesaccount.controllers.{routes => homeRoutes}
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.routes
 import stubs.AgentServicesAccountStubs.givenGetAgentRecord
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
+import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
 
 class ConfirmationControllerISpec
 extends ComponentBaseISpec {
 
+  private val repo = inject[SessionCacheRepository]
+
   private val legacyRegimes = List(CT, PAYE, SA)
 
   legacyRegimes.foreach(legacyRegime => {
+    val journeyWithRedirectLocations = List(
+      (subscriptionBaseJourney, "address"),
+      (subscriptionFullJourney(legacyRegime), "check-your-answers")
+    )
+
     val path = routes.ConfirmationController.showConfirmationPage(legacyRegime).url
 
     s"GET $path" should {
 
-//      TODO: 11190 Implement
       "return OK and render the confirmation page when user has submitted their SubscriptionJourney" in {
 
         givenAuthorisedAsAgentWith(arn.value)
         givenGetAgentRecord(agentRecord)
 
+        repo.putSession(subscriptionJourneyKey(legacyRegime), subscriptionFullJourney(legacyRegime)).futureValue
+
         val result = get(path)
 
         result.status shouldBe OK
 
-        result.body should include("We are processing your enrolment")
-        result.body should include("This can take up to 5 days")
+        result.body should include("We’re processing your application")
+        result.body should include("You’ll get an agent code within 5 days")
       }
 
-//      TODO: 11190 Implement
       "redirect to home when user has not submitted their SubscriptionJourney" in {
 
         givenAuthorisedAsAgentWith(arn.value)
         givenGetAgentRecord(agentRecord)
 
+        repo.putSession(subscriptionJourneyKey(legacyRegime), subscriptionBaseJourney).futureValue
+
         val result = get(path)
 
         result.status shouldBe SEE_OTHER
+        result.header("Location").value should include(homeRoutes.AgentServicesController.root().url)
       }
 
       "redirect to sign in when user is not authorised" in {

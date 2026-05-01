@@ -23,6 +23,8 @@
 
 @this(main: main, h2: h2, p: p, a: a, govukPanel: GovukPanel)
 
+@* TODO: 11190 Can remove legacyRegime dependence *@
+
 @(legacyRegime: LegacyRegime)(implicit request: RequestHeader, msgs: Messages, appConfig: AppConfig)
 
 @legacyRegimePrefix = @{ legacyRegime.msgPrefix }
@@ -38,5 +40,6 @@
     @p(s"$legacyRegimePrefix.confirmation.p1")
     @p(s"$legacyRegimePrefix.confirmation.p2")
     @p(s"$legacyRegimePrefix.confirmation.p3")
+    @* TODO: 11190 Look into key value here - perhaps asa.legacy.confirmation.return-home *@
     @a(key = s"$legacyRegimePrefix.return-home", href = s"${routes.AgentServicesController.root().url}")
 }
