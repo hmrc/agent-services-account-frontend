@@ -40,6 +40,7 @@ object NextPageSelector {
     Option[SubscriptionJourney],
     LegacyRegime
   ) => Call = {
+    case (_, Some(journey), regime) if journey.isSubmitted => subscriptions.routes.ConfirmationController.showConfirmationPage(regime)
     case (_, Some(journey), regime) if journey.isComplete(regime) => subscriptions.routes.CheckYourAnswersController.showPage(regime)
     case (`payeUpdateContactNamePage`, _, PAYE) => subscriptions.routes.UpdatePhoneNumberController.showPage(PAYE)
     case (`updateBusinessNamePage`, _, regime) => subscriptions.routes.UpdatePhoneNumberController.showPage(regime)
@@ -60,8 +61,6 @@ object NextPageSelector {
         case (Some(true), Some(_)) => subscriptions.routes.CheckYourAnswersController.showPage(regime)
         case _ => subscriptions.routes.UpdateAddressController.showPage(regime)
       }
-    case (`checkYourAnswersPage`, _, regime) => subscriptions.routes.ConfirmationController.showConfirmationPage(regime)
-    case (`confirmationPage`, _, _) => homeRoutes.AgentServicesController.root()
   }
 
   def getNextPage(

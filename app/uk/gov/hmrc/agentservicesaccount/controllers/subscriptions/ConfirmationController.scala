@@ -20,15 +20,18 @@ import play.api.i18n.I18nSupport
 import play.api.mvc.Action
 import play.api.mvc.AnyContent
 import play.api.mvc.MessagesControllerComponents
+import play.api.mvc.Results.Redirect
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.ToFuture
+import uk.gov.hmrc.agentservicesaccount.controllers.routes
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.confirmation
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject.Inject
 import javax.inject.Singleton
+import scala.concurrent.Future
 
 @Singleton
 class ConfirmationController @Inject() (implicit
@@ -39,7 +42,13 @@ class ConfirmationController @Inject() (implicit
 )
 extends FrontendController(cc)
 with I18nSupport {
-  def showConfirmationPage(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    Ok(confirmation(legacyRegime)).toFuture
+  def showConfirmationPage(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
+    val journey = request.subscriptionJourney
+    if (journey.isSubmitted) {
+      Ok(confirmation()).toFuture
+    }
+    else {
+      Future.successful(Redirect(routes.AgentServicesController.root()))
+    }
   }
 }

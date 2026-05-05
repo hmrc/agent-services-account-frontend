@@ -35,6 +35,7 @@ import support.UnitSpec
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CheckYourAnswersController
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionBusinessNameForm.businessNameUseAsaDataKey
 import uk.gov.hmrc.agentservicesaccount.models._
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
@@ -150,12 +151,12 @@ with MockFactory {
     s"GET /subscription/$legacyRegime/check-your-answers" should {
 
       "return OK and render page when valid data present" in new TestSetup(legacyRegime) {
-
         cacheJourney(subscriptionFullJourney(legacyRegime))
 
         val result = controller.showPage(legacyRegime)(fakeRequest).futureValue
 
         status(result) shouldBe OK
+
         val body = contentAsString(result)
 
         if (legacyRegime == PAYE) {
@@ -209,14 +210,22 @@ with MockFactory {
     s"POST /subscription/$legacyRegime/check-your-answers" should {
 
       "redirect when submission succeeds" in new TestSetup(legacyRegime) {
+        private val request = FakeRequest(POST, "/")
+          .withSession(session.toSeq: _*)
+          .withFormUrlEncodedBody()
 
         cacheJourney(subscriptionFullJourney(legacyRegime))
         givenStartLegacySubscriptionResponse(legacyRegime, OK)
 
+        implicit val implicitRequest: FakeRequest[AnyContentAsFormUrlEncoded] = request
+
         val result = controller.onSubmit(legacyRegime)(fakeRequest).futureValue
 
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result).value should include("/confirmation")
+        redirectLocation(result).value should include(s"/agent-services-account/subscription/$legacyRegime/confirmation")
+        val updated: Option[SubscriptionJourney] = sessionCache.get[SubscriptionJourney](subscriptionJourneyKey(legacyRegime)).futureValue
+        updated shouldBe defined
+        updated.value.isSubmitted shouldBe true
       }
 
       "return BAD_REQUEST when journey data missing" in new TestSetup(legacyRegime) {

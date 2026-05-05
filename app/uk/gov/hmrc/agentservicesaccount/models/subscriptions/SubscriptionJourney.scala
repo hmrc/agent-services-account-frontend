@@ -32,7 +32,8 @@ case class SubscriptionJourney(
   useCustomEmail: Option[Boolean] = None,
   emailAnswer: Option[String] = None,
   useCustomAddress: Option[Boolean] = None,
-  addressAnswer: Option[BusinessAddress] = None
+  addressAnswer: Option[BusinessAddress] = None,
+  isSubmitted: Boolean = false
 ) {
 
   private def answerComplete(

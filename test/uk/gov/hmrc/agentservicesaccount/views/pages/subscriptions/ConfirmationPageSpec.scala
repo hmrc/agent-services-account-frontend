@@ -27,12 +27,13 @@ extends ViewBaseSpec {
 
   private val view: confirmation = inject[confirmation]
 
-  private val legacyRegime = LegacyRegime.PAYE
+  private val heading = messages("asa.legacy.confirmation.title")
+  private val title = s"$heading - Agent services account - GOV.UK"
 
   "confirmation view" should {
 
     val doc: Document = Jsoup.parse(
-      view.apply(legacyRegime)(
+      view.apply()(
         fakeRequest,
         messages,
         appConfig
@@ -50,13 +51,13 @@ extends ViewBaseSpec {
     }
 
     "display the correct page title" in {
-      doc.title() shouldBe "We are processing your enrolment - Agent services account - GOV.UK"
+      doc.title() shouldBe title
     }
 
     "display the confirmation panel with correct content" in {
       val panel = doc.select(".govuk-panel")
 
-      panel.select(".govuk-panel__title").text() shouldBe "We are processing your enrolment"
+      panel.select(".govuk-panel__title").text() shouldBe heading
       panel.select(".govuk-panel__body").text() should not be empty
     }
 

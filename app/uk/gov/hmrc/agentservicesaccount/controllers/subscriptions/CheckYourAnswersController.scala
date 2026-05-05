@@ -21,6 +21,7 @@ import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.checkYourAnswersPage
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.{routes => subscriptionRoutes}
@@ -78,9 +79,15 @@ with I18nSupport {
         }
 
       requestModelOpt.map(requestModel => {
-        agentServicesAccountConnector
-          .submitLegacySubscriptionRequest(requestModel, legacyRegime)
-          .map(_ => Redirect(getNextPage(currentPage = checkYourAnswersPage, legacyRegime = legacyRegime)))
+        for {
+          _ <- agentServicesAccountConnector.submitLegacySubscriptionRequest(requestModel, legacyRegime)
+          updatedJourney = request.subscriptionJourney.copy(isSubmitted = true)
+          _ <- sessionCacheService.put(subscriptionJourneyKey(legacyRegime), updatedJourney)
+        } yield Redirect(getNextPage(
+          checkYourAnswersPage,
+          Some(updatedJourney),
+          legacyRegime
+        ))
       }).getOrElse(Future.successful(Redirect(routes.CheckYourAnswersController.showPage(legacyRegime))))
     }
   }
