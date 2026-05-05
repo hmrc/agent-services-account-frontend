@@ -67,6 +67,17 @@ with TestConstants {
 
   private val legacyRegimes = List(CT, PAYE, SA)
 
+  private def agencyDetails(hasSubscriptionPhoneNumber: Boolean) = uk.gov.hmrc.agentservicesaccount.models.AgencyDetails(
+    agencyName = None,
+    agencyEmail = None,
+    agencyTelephone =
+      if (hasSubscriptionPhoneNumber)
+        Some("1234554321")
+      else
+        None,
+    agencyAddress = None
+  )
+
   class TestSetup(
     legacyRegime: LegacyRegime,
     hasSubscriptionPhoneNumber: Boolean = true
@@ -114,18 +125,7 @@ with TestConstants {
         override def getAgentRecord(implicit rh: RequestHeader): Future[AgentDetailsDesResponse] = Future.successful(
           uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse(
             uniqueTaxReference = Some(uk.gov.hmrc.agentservicesaccount.models.Utr("0123456789")),
-            agencyDetails = Some(
-              uk.gov.hmrc.agentservicesaccount.models.AgencyDetails(
-                agencyName = None,
-                agencyEmail = None,
-                agencyTelephone =
-                  if (hasSubscriptionPhoneNumber)
-                    Some("1234554321")
-                  else
-                    None,
-                agencyAddress = None
-              )
-            ),
+            agencyDetails = Some(agencyDetails(hasSubscriptionPhoneNumber)),
             suspensionDetails = Some(uk.gov.hmrc.agentservicesaccount.models.SuspensionDetails(suspensionStatus = false, None))
           )
         )
@@ -169,7 +169,7 @@ with TestConstants {
       List(true, false).foreach(hasSubscriptionPhoneNumber => {
         "render empty form on first visit " +
           s"when subscription has phone number $hasSubscriptionPhoneNumber" in new TestSetup(legacyRegime, hasSubscriptionPhoneNumber) {
-            cacheJourney(subscriptionBaseJourney)
+            cacheJourney(subscriptionBaseJourney.copy(asaDetails = agencyDetails(hasSubscriptionPhoneNumber)))
 
             private val result = controller.showPage(legacyRegime)(FakeRequest()).futureValue
 
@@ -192,6 +192,7 @@ with TestConstants {
         "render pre-filled form when journey has existing answers " +
           s"and subscription has phone number $hasSubscriptionPhoneNumber" in new TestSetup(legacyRegime, hasSubscriptionPhoneNumber) {
             private val journey = subscriptionBaseJourney.copy(
+              asaDetails = agencyDetails(hasSubscriptionPhoneNumber),
               useCustomPhoneNumber = Some(true),
               phoneNumberAnswer = Some("1234567890")
             )
@@ -212,7 +213,7 @@ with TestConstants {
               content should not include messages(s"${legacyRegime.msgPrefix}.phone-number.new-input.label")
               content should not include messages(s"${legacyRegime.msgPrefix}.phone-number.use-asa.false")
             }
-            content should include("""value="true"""")
+            content should include("""value="false"""")
             content should include(phoneNumberNewKey)
             content should include("1234567890")
           }
