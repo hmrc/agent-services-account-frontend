@@ -172,8 +172,7 @@ extends BaseISpec {
       }
 
       def expectedClientAuthContent(
-        html: Document,
-        betaInviteContent: Boolean = true
+        html: Document
       ): Assertion = {
         val clientAuthSection = html.select("#client-authorisation-section")
         clientAuthSection.select("h2").text() shouldBe "Client authorisations"
@@ -185,17 +184,6 @@ extends BaseISpec {
         links.get(1).attr("href") shouldBe "http://localhost:9435/agent-client-relationships/manage-authorisation-requests"
         links.get(2).text() shouldBe "Cancel a client’s authorisation"
         links.get(2).attr("href") shouldBe "http://localhost:9435/agent-client-relationships/agent-cancel-authorisation"
-
-        val notification = html.select(".govuk-notification-banner")
-        notification.isEmpty() shouldBe false
-        notification.select(".govuk-notification-banner__title").text() shouldBe "Important"
-        val notificationText = notification.text()
-        notificationText should include("Get ready for Making Tax Digital for Income Tax")
-        notificationText should include("You can use Self Assessment client authorisations to manage Making Tax Digital for Income Tax.")
-        notificationText should include("To do this, make sure all your Self Assessment client authorisations have been added to this account")
-        val mappingLink = notification.select("a[href=http://localhost:9438/agent-mapping/start]")
-        mappingLink.size() should be > 0
-        mappingLink.first().text() shouldBe "Add existing Self Assessment authorisations to your agent services account"
       }
 
       "an authorised agent with no suspension" in {
@@ -213,14 +201,15 @@ extends BaseISpec {
         expectedHomeBannerContent(html)
         expectedUrBannerContent(html)
         expectedClientAuthContent(html)
+        html.text() should not include "Get ready for Making Tax Digital for Income Tax"
 
         // accordion includes Income Record Viewer section
         html.select("#tax-services-h2").text() shouldBe "Tax services you can access through this account"
         val accordion = html.select("#tax-services-accordion")
         accordion.select("#tax-services-accordion-heading-1").text() shouldBe "Making Tax Digital for Income Tax"
-        accordion.select("#tax-services-accordion-heading-2").text() shouldBe "VAT"
-        accordion.select("#tax-services-accordion-heading-3").text() shouldBe "Corporation Tax"
-        accordion.select("#tax-services-accordion-heading-4").text() shouldBe "View a client’s Income record"
+        accordion.select("#tax-services-accordion-heading-2").text() shouldBe "View a client’s Income record"
+        accordion.select("#tax-services-accordion-heading-3").text() shouldBe "VAT"
+        accordion.select("#tax-services-accordion-heading-4").text() shouldBe "Corporation Tax"
         accordion.select("#tax-services-accordion-heading-5").text() shouldBe "Trusts and estates"
         accordion.select("#tax-services-accordion-heading-6").text() shouldBe "Capital Gains Tax on UK property"
         accordion.select("#tax-services-accordion-heading-7").text() shouldBe "Country-by-country reports"
@@ -248,32 +237,32 @@ extends BaseISpec {
         one.select("a").get(4).text() shouldBe "Manage Self Assessment details for clients that are already signed up"
         one.select("a").get(4).attr("href") shouldBe "http://localhost:9081/report-quarterly/income-and-expenses/view/agents"
 
-        // VAT
+        // Income Record Viewer
         val two = accordion.select("#tax-services-accordion-content-2")
-        two.select("h4").get(0).text() shouldBe "Before you start"
-        two.select("h4").get(1).text() shouldBe "Manage your client’s VAT"
-        two.select("p").get(0).text shouldBe "You must first get an authorisation from your client."
-        two.select("p").get(0).select("a").text shouldBe "You must first get an authorisation from your client."
-        two.select("p").get(0).select("a").attr("href") shouldBe "http://localhost:9435/agent-client-relationships/authorisation-request"
+        two.select("p").get(0).text shouldBe "Access a client’s Income record to help you complete their Self Assessment tax return."
+        two.select("p").get(1).text shouldBe "View a client’s Income record"
+        two.select("p").get(1).select("a").text() shouldBe "View a client’s Income record"
+        two.select("p").get(1).select("a").attr("href") shouldBe "http://localhost:9996/tax-history/select-client"
 
-        two.select("a").get(1).text shouldBe "Register your client for VAT (opens in a new tab)"
-        two.select("a").get(1).attr("href") shouldBe "https://www.tax.service.gov.uk/register-for-vat"
-        two.select("a").get(2).text shouldBe "Manage, submit and view your client’s VAT details (opens in a new tab)"
-        two.select("a").get(2).attr("href") shouldBe "http://localhost:9149/vat-through-software/representative/client-vat-number"
+        // VAT
+        val three = accordion.select("#tax-services-accordion-content-3")
+        three.select("h4").get(0).text() shouldBe "Before you start"
+        three.select("h4").get(1).text() shouldBe "Manage your client’s VAT"
+        three.select("p").get(0).text shouldBe "You must first get an authorisation from your client."
+        three.select("p").get(0).select("a").text shouldBe "You must first get an authorisation from your client."
+        three.select("p").get(0).select("a").attr("href") shouldBe "http://localhost:9435/agent-client-relationships/authorisation-request"
+
+        three.select("a").get(1).text shouldBe "Register your client for VAT (opens in a new tab)"
+        three.select("a").get(1).attr("href") shouldBe "https://www.tax.service.gov.uk/register-for-vat"
+        three.select("a").get(2).text shouldBe "Manage, submit and view your client’s VAT details (opens in a new tab)"
+        three.select("a").get(2).attr("href") shouldBe "http://localhost:9149/vat-through-software/representative/client-vat-number"
 
         // Corporation Tax
-        val three = accordion.select("#tax-services-accordion-content-3")
-
-        val threePs = three.select("p")
-        threePs.get(0).text shouldBe "We are still processing the application you did on ."
-        threePs.get(1).text shouldBe "Processing can take up to 5 days."
-
-        // Income Record Viewer
         val four = accordion.select("#tax-services-accordion-content-4")
-        four.select("p").get(0).text shouldBe "Access a client’s Income record to help you complete their Self Assessment tax return."
-        four.select("p").get(1).text shouldBe "View a client’s Income record"
-        four.select("p").get(1).select("a").text() shouldBe "View a client’s Income record"
-        four.select("p").get(1).select("a").attr("href") shouldBe "http://localhost:9996/tax-history/select-client"
+
+        val fourPs = four.select("p")
+        fourPs.get(0).text shouldBe "We are still processing the application you did on ."
+        fourPs.get(1).text shouldBe "Processing can take up to 5 days."
 
         // Trusts
         val five = accordion.select("#tax-services-accordion-content-5")
@@ -377,7 +366,7 @@ extends BaseISpec {
         val html = Jsoup.parse(contentAsString(response))
 
         expectedHomeBannerContent(html)
-        expectedClientAuthContent(html, betaInviteContent = false)
+        expectedClientAuthContent(html)
 
         // no beta invite
         html.text().contains("Help improve our new feature") shouldBe false
