@@ -67,7 +67,7 @@ with TestConstants {
 
   private val legacyRegimes = List(CT, PAYE, SA)
 
-  class TestSetup(legacyRegime: LegacyRegime) {
+  class TestSetup(legacyRegime: LegacyRegime, hasSubscriptionPhoneNumber: Boolean = true) {
 
     private val testArn = "TARN0000001"
 
@@ -115,7 +115,7 @@ with TestConstants {
               uk.gov.hmrc.agentservicesaccount.models.AgencyDetails(
                 agencyName = None,
                 agencyEmail = None,
-                agencyTelephone = Some("1234567890"),
+                agencyTelephone = if (hasSubscriptionPhoneNumber) Some("1234554321") else None,
                 agencyAddress = None
               )
             ),
@@ -159,31 +159,60 @@ with TestConstants {
   legacyRegimes.foreach(legacyRegime => {
     s"GET /subscription/$legacyRegime/phone-number" should {
 
-      "render empty form on first visit" in new TestSetup(legacyRegime) {
-        cacheJourney(subscriptionBaseJourney)
+      List(true, false).foreach(hasSubscriptionPhoneNumber => {
+        "render empty form on first visit" +
+          s"when subscription has phone number $hasSubscriptionPhoneNumber" in new TestSetup(legacyRegime, hasSubscriptionPhoneNumber) {
+          cacheJourney(subscriptionBaseJourney)
 
-        private val result = controller.showPage(legacyRegime)(FakeRequest()).futureValue
+          private val result = controller.showPage(legacyRegime)(FakeRequest()).futureValue
 
-        status(result) shouldBe OK
-        contentAsString(result) should include("1234567890")
-      }
+          status(result) shouldBe OK
+          private val content = contentAsString(result)
+          content should include(messages(s"${legacyRegime.msgPrefix}.phone-number.title"))
+          if (hasSubscriptionPhoneNumber) {
+            content should include(messages(s"${legacyRegime.msgPrefix}.phone-number.new-input.label"))
+            content should include(messages(s"${legacyRegime.msgPrefix}.phone-number.new-input.hint"))
+            content should include(messages(s"${legacyRegime.msgPrefix}.phone-number.use-asa.false"))
+            content should not include messages(s"${legacyRegime.msgPrefix}.phone-number.single-input.hint")
+          } else {
+            content should include(messages(s"${legacyRegime.msgPrefix}.phone-number.single-input.hint"))
+            content should not include messages(s"${legacyRegime.msgPrefix}.phone-number.new-input.label")
+            content should not include messages(s"${legacyRegime.msgPrefix}.phone-number.new-input.hint")
+            content should not include messages(s"${legacyRegime.msgPrefix}.phone-number.use-asa.false")
+          }
+          content should include("1234567890")
+        }
 
-      "render pre-filled form when journey has existing answers" in new TestSetup(legacyRegime) {
-        private val journey = subscriptionBaseJourney.copy(
-          useCustomPhoneNumber = Some(true),
-          phoneNumberAnswer = Some("1234567890")
-        )
+        "render pre-filled form when journey has existing answers" +
+          s"and subscription has phone number $hasSubscriptionPhoneNumber" in new TestSetup(legacyRegime, hasSubscriptionPhoneNumber) {
+          private val journey = subscriptionBaseJourney.copy(
+            useCustomPhoneNumber = Some(true),
+            phoneNumberAnswer = Some("1234567890")
+          )
 
-        cacheJourney(journey)
+          cacheJourney(journey)
 
-        private val result = controller.showPage(legacyRegime)(FakeRequest()).futureValue
+          private val result = controller.showPage(legacyRegime)(FakeRequest()).futureValue
 
-        status(result) shouldBe OK
-        private val content = contentAsString(result)
-
-        content should include("""value="true"""")
-        content should include(phoneNumberNewKey)
-      }
+          status(result) shouldBe OK
+          private val content = contentAsString(result)
+          content should include(messages(s"${legacyRegime.msgPrefix}.phone-number.title"))
+          if (hasSubscriptionPhoneNumber) {
+            content should include(messages(s"${legacyRegime.msgPrefix}.phone-number.new-input.label"))
+            content should include(messages(s"${legacyRegime.msgPrefix}.phone-number.new-input.hint"))
+            content should include(messages(s"${legacyRegime.msgPrefix}.phone-number.use-asa.false"))
+            content should not include messages(s"${legacyRegime.msgPrefix}.phone-number.single-input.hint")
+          } else {
+            content should include(messages(s"${legacyRegime.msgPrefix}.phone-number.single-input.hint"))
+            content should not include messages(s"${legacyRegime.msgPrefix}.phone-number.new-input.label")
+            content should not include messages(s"${legacyRegime.msgPrefix}.phone-number.new-input.hint")
+            content should not include messages(s"${legacyRegime.msgPrefix}.phone-number.use-asa.false")
+          }
+          content should include("""value="true"""")
+          content should include(phoneNumberNewKey)
+          content should include("1234567890")
+        }
+      })
     }
 
     s"POST /subscription/$legacyRegime/phone-number" should {

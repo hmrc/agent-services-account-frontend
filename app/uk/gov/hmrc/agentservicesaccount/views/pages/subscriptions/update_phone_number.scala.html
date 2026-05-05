@@ -34,7 +34,7 @@
     govukErrorSummary: GovukErrorSummary
 )
 
-@(form: Form[PhoneNumberFormValues], subscriptionPhoneNumber: String, legacyRegime: LegacyRegime)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
+@(form: Form[PhoneNumberFormValues], subscriptionPhoneNumberOpt: Option[String], legacyRegime: LegacyRegime)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
 
 @legacyRegimePrefix = @{ legacyRegime.msgPrefix }
 
@@ -48,6 +48,34 @@
     ).withFormField(form(phoneNumberNewKey)))
 }
 
+@radiosAndConditionalInputForm(subscriptionPhoneNumber: String) = {
+    @govukRadios(Radios(
+        fieldset = Some(Fieldset(
+            legend = Some(Legend(
+                content = Text(msgs(s"$legacyRegimePrefix.phone-number.title")),
+                classes = "govuk-fieldset__legend--l",
+                isPageHeading = true
+            ))
+        )),
+        name = phoneNumberUseAsaDataKey,
+        items = Seq(
+            RadioItem(
+                content = Text(subscriptionPhoneNumber),
+                value = Some("true")
+            ),
+            RadioItem(
+                content = Text(msgs(s"$legacyRegimePrefix.phone-number.use-asa.false")),
+                value = Some("false"),
+                conditionalHtml = Some(newPhoneNumberInput)
+            )
+        )
+    ).withFormField(form(phoneNumberUseAsaDataKey)))
+}
+
+@simpleInputForm = @{
+    newPhoneNumberInput
+}
+
 @main(
     pageTitle = withErrorPrefix(form.hasErrors, msgs(s"$legacyRegimePrefix.phone-number.title")),
     mimicBrowserBackLink = true,
@@ -59,27 +87,9 @@
     }
 
     @formWithCSRF(action = subscriptions.routes.UpdatePhoneNumberController.onSubmit(legacyRegime)) {
-        @govukRadios(Radios(
-            fieldset = Some(Fieldset(
-                legend = Some(Legend(
-                    content = Text(msgs(s"$legacyRegimePrefix.phone-number.title")),
-                    classes = "govuk-fieldset__legend--l",
-                    isPageHeading = true
-                ))
-            )),
-            name = phoneNumberUseAsaDataKey,
-            items = Seq(
-                RadioItem(
-                    content = Text(subscriptionPhoneNumber),
-                    value = Some("true")
-                ),
-                RadioItem(
-                    content = Text(msgs(s"$legacyRegimePrefix.phone-number.use-asa.false")),
-                    value = Some("false"),
-                    conditionalHtml = Some(newPhoneNumberInput)
-                )
-            )
-        ).withFormField(form(phoneNumberUseAsaDataKey)))
+        @{
+            subscriptionPhoneNumberOpt.map(radiosAndConditionalInputForm).getOrElse(simpleInputForm)
+        }
 
         @govukButton(Button(content = Text(msgs("common.continue"))))
     }
