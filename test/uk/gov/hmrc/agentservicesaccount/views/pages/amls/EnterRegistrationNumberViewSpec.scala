@@ -54,9 +54,10 @@ extends ViewBaseSpec {
 
     def testPageStaticContent(doc: Document): Unit = {
 
-      "have the correct h1 heading and legend" in {
+      "have the correct h1 heading and label" in {
         doc.select("h1").first.text() mustBe "What’s your registration number?"
-        doc.select("legend").text() mustBe "What’s your registration number?"
+        doc.select("label").text() mustBe "What’s your registration number?"
+        doc.select("label").hasClass("govuk-label--l") mustBe true
       }
 
       "have the correct continue button" in {

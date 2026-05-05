@@ -38,16 +38,6 @@
 
 @(form: Form[LocalDate])(implicit request: RequestHeader, msgs: Messages, appConfig: AppConfig)
 
-@fieldSetHtml = {
-    @inputDate(
-        field = form("endDate"),
-        legend = msgs("amls.enter-renewal-date.h1"),
-        legendClass = "govuk-fieldset__legend--l",
-        hint = Some(msgs("amls.enter-renewal-date.hint")),
-        legendAsHeading = true
-    )
-}
-
 @main(
     pageTitle = withErrorPrefix(form.hasErrors, msgs("amls.enter-renewal-date.h1")),
     mimicBrowserBackLink = true,
@@ -58,10 +48,13 @@
     }
 
     @formWithCSRF(action = routes.EnterRenewalDateController.onSubmit) {
-        @govukFieldset(Fieldset(
-            html = fieldSetHtml,
-            legend = None,
-        ))
+        @inputDate(
+            field = form("endDate"),
+            legend = msgs("amls.enter-renewal-date.h1"),
+            legendClass = "govuk-fieldset__legend--l",
+            hint = Some(msgs("amls.enter-renewal-date.hint")),
+            legendAsHeading = true
+        )
 
         @govukButton(Button(content = Text(msgs("common.continue"))))
     }
