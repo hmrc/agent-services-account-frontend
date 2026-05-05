@@ -199,7 +199,7 @@ with TestConstants {
 
             cacheJourney(journey)
 
-            private val result = controller.showPage(legacyRegime)(FakeRequest()).futureValue
+            private val result = controller.showPage(legacyRegime)(fakeRequest).futureValue
 
             status(result) shouldBe OK
             private val content = contentAsString(result)
