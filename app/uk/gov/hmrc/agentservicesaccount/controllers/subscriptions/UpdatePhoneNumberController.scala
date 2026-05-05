@@ -84,7 +84,8 @@ with Logging {
 
     SubscriptionPhoneNumberForm.form(legacyRegime).bindFromRequest().fold(
       formWithErrors => {
-        val subscriptionPhoneNumber: Option[String] = journey.asaDetails.agencyTelephone
+//        val subscriptionPhoneNumber: Option[String] = journey.asaDetails.agencyTelephone
+        val subscriptionPhoneNumber = None
         Future.successful(
           BadRequest(update_phone_number(
             formWithErrors,

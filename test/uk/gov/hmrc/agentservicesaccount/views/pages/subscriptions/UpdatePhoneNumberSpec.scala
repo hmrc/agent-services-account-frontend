@@ -23,7 +23,8 @@ import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.data.Form
 import play.api.i18n.Messages
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionPhoneNumberForm
-import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionPhoneNumberForm.{phoneNumberNewKey, phoneNumberUseAsaDataKey}
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionPhoneNumberForm.phoneNumberNewKey
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionPhoneNumberForm.phoneNumberUseAsaDataKey
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.PhoneNumberFormValues
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
@@ -41,7 +42,10 @@ extends ViewBaseSpec {
 
   private val formWithInputErrors: Form[PhoneNumberFormValues] = phoneNumberForm.withError(phoneNumberNewKey, Messages("error.required"))
 
-  def render(form: Form[PhoneNumberFormValues], subPhoneNumberOpt: Option[String] = Some(subscriptionPhoneNumber)): Document = Jsoup.parse(
+  def render(
+    form: Form[PhoneNumberFormValues],
+    subPhoneNumberOpt: Option[String] = Some(subscriptionPhoneNumber)
+  ): Document = Jsoup.parse(
     view(
       form,
       subPhoneNumberOpt,
@@ -201,6 +205,7 @@ extends ViewBaseSpec {
       )
     )
 
+//    TODO: 11281 Check for hidden input
     val doc: Document = render(filledForm, subPhoneNumberOpt = None)
 
     "show no radios" in {

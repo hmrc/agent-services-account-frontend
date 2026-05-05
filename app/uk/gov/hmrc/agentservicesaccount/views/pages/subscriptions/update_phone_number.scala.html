@@ -72,8 +72,9 @@
     ).withFormField(form(phoneNumberUseAsaDataKey)))
 }
 
-@simpleInputForm = @{
-    govukInput(Input(
+@simpleInputForm = {
+    <input type="hidden" name="phoneNumberUseAsaData" value="false">
+    @govukInput(Input(
         label = Label(
             content = HtmlContent(msgs(s"$legacyRegimePrefix.phone-number.title")),
             classes = "govuk-label--l",
