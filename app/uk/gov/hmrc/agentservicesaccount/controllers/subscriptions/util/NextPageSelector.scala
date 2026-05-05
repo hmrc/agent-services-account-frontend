@@ -61,9 +61,6 @@ object NextPageSelector {
         case (Some(true), Some(_)) => subscriptions.routes.CheckYourAnswersController.showPage(regime)
         case _ => subscriptions.routes.UpdateAddressController.showPage(regime)
       }
-//    TODO: 11190 Think can remove these - need to test manually
-//    case (`checkYourAnswersPage`, _, regime) => subscriptions.routes.ConfirmationController.showConfirmationPage(regime)
-//    case (`confirmationPage`, _, _) => homeRoutes.AgentServicesController.root()
   }
 
   def getNextPage(
