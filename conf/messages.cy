@@ -184,6 +184,9 @@ asa.legacy.confirmation.p2=We’ll also send you a letter with your agent code f
 asa.legacy.confirmation.p3=This code must be kept private. Only share it with people who genuinely need to know it.
 asa.legacy.confirmation.return-home=Return to your agent services account homepage
 
+asa.legacy.you-may-not-need-to-apply.p1=You only need to apply and get a new agent code if you want to manage your clients between different team members or office locations.
+asa.legacy.you-may-not-need-to-apply.h1=Do you still want to apply?
+
 # CT
 asa.legacy.ct.h2=Corporation Tax
 asa.legacy.ct.h3=Test Content
@@ -204,6 +207,9 @@ asa.legacy.ct.subscribed.p5=<a class="govuk-link" href="{0}" rel="noreferrer noo
 
 asa.legacy.ct.do-you-already-manage.title=Does {0} already manage Corporation Tax clients?
 asa.legacy.ct.do-you-already-manage.existing.false=No, this is their first time managing Corporation Tax clients
+
+asa.legacy.ct.you-may-not-need-to-apply.title=You may not need to apply for Corporation Tax
+asa.legacy.ct.you-may-not-need-to-apply.p2=You can continue to manage your existing Corporation Tax clients through your HMRC Online Services for Agents account.
 
 asa.legacy.ct.business-name.title=What business name should we show to your Corporation Tax clients?
 asa.legacy.ct.business-name.use-asa.false=I want to use a different business name for Corporation Tax
@@ -273,6 +279,9 @@ asa.legacy.paye.subscribed.p5=<a class="govuk-link" href="{0}" rel="noreferrer n
 asa.legacy.paye.do-you-already-manage.title=Does {0} already manage PAYE clients?
 asa.legacy.paye.do-you-already-manage.existing.false=No, this is their first time managing PAYE clients
 
+asa.legacy.paye.you-may-not-need-to-apply.title=You may not need to apply for PAYE
+asa.legacy.paye.you-may-not-need-to-apply.p2=You can continue to manage your existing PAYE clients through your HMRC Online Services for Agents account.
+
 asa.legacy.paye.contact-name.title=Who should we contact about PAYE?
 asa.legacy.paye.contact-name.input.heading=Who at {0} should we contact about PAYE?
 asa.legacy.paye.contact-name.input.hint=Enter their full name
@@ -339,6 +348,9 @@ asa.legacy.sa.subscribed.p5=<a class="govuk-link" href="{0}" rel="noreferrer noo
 
 asa.legacy.sa.do-you-already-manage.title=Does {0} already manage Self Assessment clients?
 asa.legacy.sa.do-you-already-manage.existing.false=No, this is their first time managing Self Assessment clients
+
+asa.legacy.sa.you-may-not-need-to-apply.title=You may not need to apply for Self Assessment
+asa.legacy.sa.you-may-not-need-to-apply.p2=You can continue to manage your existing Self Assessment clients through your HMRC Online Services for Agents account.
 
 asa.legacy.sa.business-name.title=What business name should we show to your Self Assessment clients?
 asa.legacy.sa.business-name.use-asa.false=I want to use a different business name for Self Assessment

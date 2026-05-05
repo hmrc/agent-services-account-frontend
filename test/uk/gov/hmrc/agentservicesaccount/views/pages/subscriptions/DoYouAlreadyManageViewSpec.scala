@@ -33,134 +33,138 @@ extends ViewBaseSpec {
 
   private val view: do_you_already_manage = inject[do_you_already_manage]
 
-  private val legacyRegime = LegacyRegime.SA
   private val subscriptionBusinessName = "Test Agency"
 
-  private val form: Form[DoYouAlreadyManageFormValues] = DoYouAlreadyManageForm.form(legacyRegime)
-
-  private val formWithError: Form[DoYouAlreadyManageFormValues] = form.withError(
-    key = doYouAlreadyManageKey,
-    message = messages(s"${legacyRegime.msgPrefix}.do-you-already-manage.error.required")
+  private val regimes = Seq(
+    LegacyRegime.SA,
+    LegacyRegime.CT,
+    LegacyRegime.PAYE
   )
 
-  def render(form: Form[DoYouAlreadyManageFormValues]): Document = Jsoup.parse(
-    view(
-      form,
-      legacyRegime,
-      subscriptionBusinessName
-    )(
-      messages,
-      fakeRequest,
-      appConfig
-    ).body
-  )
+  regimes.foreach { regime =>
+    s"do_you_already_manage view for regime $regime" when {
 
-  private val title: String = messages(s"asa.legacy.${legacyRegime.toString.toLowerCase}.do-you-already-manage.title", subscriptionBusinessName)
+      val form: Form[DoYouAlreadyManageFormValues] = DoYouAlreadyManageForm.form(regime)
 
-  "do_you_already_manage" when {
+      val formWithError: Form[DoYouAlreadyManageFormValues] = form.withError(
+        key = doYouAlreadyManageKey,
+        message = messages(s"${regime.msgPrefix}.do-you-already-manage.error.required")
+      )
 
-    def testServiceStaticContent(doc: Document): Unit = {
+      def render(form: Form[DoYouAlreadyManageFormValues]): Document = Jsoup.parse(
+        view(
+          form,
+          regime,
+          subscriptionBusinessName
+        )(
+          messages,
+          fakeRequest,
+          appConfig
+        ).body
+      )
 
-      "have the correct service name link" in {
-        doc.select(".govuk-header__service-name").first.text() mustBe "Agent services account"
-        doc.select(".govuk-header__service-name").first.attr("href") mustBe "/agent-services-account"
+      val title: String = messages(
+        s"asa.legacy.${regime.toString.toLowerCase}.do-you-already-manage.title",
+        subscriptionBusinessName
+      )
+
+      def testServiceStaticContent(doc: Document): Unit = {
+
+        "have the correct service name link" in {
+          doc.select(".govuk-header__service-name").text() mustBe "Agent services account"
+        }
+
+        "have the correct sign out link" in {
+          doc.select(".hmrc-sign-out-nav__link").text() mustBe "Sign out"
+        }
+
+        "have the correct back link" in {
+          doc.select(".govuk-back-link").text() mustBe "Back"
+        }
       }
 
-      "have the correct sign out link" in {
-        doc.select(".hmrc-sign-out-nav__link").first.text() mustBe "Sign out"
-        doc.select(".hmrc-sign-out-nav__link").first.attr("href") mustBe "/agent-services-account/sign-out"
+      def testPageStaticContent(doc: Document): Unit = {
+
+        "have the correct heading" in {
+          doc.select("h1").text() mustBe title
+        }
+
+        "have the correct continue button" in {
+          doc.select(".govuk-button").text() mustBe "Continue"
+        }
       }
 
-      "have the correct back link" in {
-        doc.select(".govuk-back-link").first.text() mustBe "Back"
-        doc.select(".govuk-back-link").first.attr("href") mustBe "#"
-      }
-    }
+      "first viewing page" should {
 
-    def testPageStaticContent(doc: Document): Unit = {
+        val doc = render(form)
 
-      "have the correct heading" in {
-        doc.select("h1").first.text() mustBe title
-      }
+        testServiceStaticContent(doc)
+        testPageStaticContent(doc)
 
-      "have the correct continue button" in {
-        doc.select(".govuk-button").first.text() mustBe "Continue"
-      }
-    }
+        "display correct page title" in {
+          doc.title() mustBe s"$title - Agent services account - GOV.UK"
+        }
 
-    "first viewing page" should {
+        "display correct radio options" in {
+          val radios = doc.select(".govuk-radios__item")
 
-      val doc: Document = render(form)
+          radios.size() mustBe 2
 
-      testServiceStaticContent(doc)
-      testPageStaticContent(doc)
+          radios.get(0).text() mustBe messages("asa.legacy.do-you-already-manage.existing.true")
+          radios.get(0).select("input").attr("value") mustBe "true"
 
-      "display correct page title" in {
-        doc.title() mustBe s"$title - Agent services account - GOV.UK"
+          radios.get(1).text() mustBe
+            messages(s"asa.legacy.${regime.toString.toLowerCase}.do-you-already-manage.existing.false")
+          radios.get(1).select("input").attr("value") mustBe "false"
+        }
       }
 
-      "display correct radio options" in {
-        val radios = doc.select(".govuk-radios__item")
+      "when form is pre-filled with true" should {
 
-        radios.size() mustBe 2
+        val doc = render(form.fill(DoYouAlreadyManageFormValues(true)))
 
-        radios.get(0).text() mustBe messages("asa.legacy.do-you-already-manage.existing.true")
-        radios.get(0).select("input").attr("name") mustBe doYouAlreadyManageKey
-        radios.get(0).select("input").attr("value") mustBe "true"
-
-        radios.get(1).text() mustBe messages(s"asa.legacy.${legacyRegime.toString.toLowerCase}.do-you-already-manage.existing.false")
-        radios.get(1).select("input").attr("name") mustBe doYouAlreadyManageKey
-        radios.get(1).select("input").attr("value") mustBe "false"
-      }
-    }
-
-    "when form is pre-filled with true" should {
-
-      val filledForm = form.fill(DoYouAlreadyManageFormValues(true))
-      val doc = render(filledForm)
-
-      "have the correct radio selected" in {
-        val radios = doc.select(s"input[name=$doYouAlreadyManageKey]")
-        radios.get(0).hasAttr("checked") mustBe true
-      }
-    }
-
-    "when form is pre-filled with false" should {
-
-      val filledForm = form.fill(DoYouAlreadyManageFormValues(false))
-      val doc = render(filledForm)
-
-      "have the correct radio selected" in {
-        val radios = doc.select(s"input[name=$doYouAlreadyManageKey]")
-        radios.get(1).hasAttr("checked") mustBe true
-      }
-    }
-
-    "form submitted with error" should {
-
-      val doc: Document = render(formWithError)
-
-      testServiceStaticContent(doc)
-      testPageStaticContent(doc)
-
-      "display error prefix in title" in {
-        doc.title() mustBe s"Error: $title - Agent services account - GOV.UK"
+        "have the correct radio selected" in {
+          doc.select(s"input[name=$doYouAlreadyManageKey]").get(0).hasAttr("checked") mustBe true
+        }
       }
 
-      "display error summary" in {
-        val errorLink: Element = doc.select(".govuk-error-summary__list a").first()
+      "when form is pre-filled with false" should {
 
-        errorLink.text() mustBe messages(s"${legacyRegime.msgPrefix}.do-you-already-manage.error.required")
-        errorLink.attr("href") mustBe s"#$doYouAlreadyManageKey"
+        val doc = render(form.fill(DoYouAlreadyManageFormValues(false)))
+
+        "have the correct radio selected" in {
+          doc.select(s"input[name=$doYouAlreadyManageKey]").get(1).hasAttr("checked") mustBe true
+        }
       }
 
-      "display error styling" in {
-        doc.select(".govuk-form-group--error").size() mustBe 1
-      }
+      "form submitted with error" should {
 
-      "display error message" in {
-        doc.select(".govuk-error-message").text() mustBe
-          s"Error: ${messages(s"${legacyRegime.msgPrefix}.do-you-already-manage.error.required")}"
+        val doc = render(formWithError)
+
+        testServiceStaticContent(doc)
+        testPageStaticContent(doc)
+
+        "display error prefix in title" in {
+          doc.title() mustBe s"Error: $title - Agent services account - GOV.UK"
+        }
+
+        "display error summary" in {
+          val errorLink = doc.select(".govuk-error-summary__list a").first()
+
+          errorLink.text() mustBe
+            messages(s"${regime.msgPrefix}.do-you-already-manage.error.required")
+
+          errorLink.attr("href") mustBe s"#$doYouAlreadyManageKey"
+        }
+
+        "display error styling" in {
+          doc.select(".govuk-form-group--error").size() mustBe 1
+        }
+
+        "display error message" in {
+          doc.select(".govuk-error-message").text() mustBe
+            s"Error: ${messages(s"${regime.msgPrefix}.do-you-already-manage.error.required")}"
+        }
       }
     }
   }

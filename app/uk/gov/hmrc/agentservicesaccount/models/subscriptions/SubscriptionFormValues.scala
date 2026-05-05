@@ -24,6 +24,10 @@ case class DoYouAlreadyManageFormValues(
   doYouAlreadyManage: Boolean
 )
 
+case class YouMayNotNeedToApplyFormValues(
+  doYouStillWantToApply: Boolean
+)
+
 case class BusinessNameFormValues(
   useAsaData: Boolean,
   newBusinessName: Option[String]

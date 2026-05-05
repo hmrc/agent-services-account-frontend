@@ -99,6 +99,9 @@ GET        /subscription/paye/request/submitted                           @uk.go
 GET        /subscription/:regime/do-you-already-manage                    @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.DoYouAlreadyManageController.showPage(regime: LegacyRegime)
 POST       /subscription/:regime/do-you-already-manage                    @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.DoYouAlreadyManageController.onSubmit(regime: LegacyRegime)
 
+GET        /subscription/:regime/you-may-not-need-to-apply                @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.YouMayNotNeedToApplyController.showPage(regime: LegacyRegime)
+POST       /subscription/:regime/you-may-not-need-to-apply                @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.YouMayNotNeedToApplyController.onSubmit(regime: LegacyRegime)
+
 GET        /subscription/PAYE/contact-name                                @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.PayeUpdateContactNameController.showPage
 POST       /subscription/PAYE/contact-name                                @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.PayeUpdateContactNameController.onSubmit
 
