@@ -131,7 +131,7 @@ extends ViewBaseSpec {
 
       "display error link" in {
         val errorLink: Element = doc.select(".govuk-error-summary__list a").first()
-        errorLink.attr("href") mustBe s"#$phoneNumberUseAsaDataKey"
+        errorLink.attr("href") mustBe s"#$phoneNumberNewKey"
       }
 
       "highlight radio group with error" in {
