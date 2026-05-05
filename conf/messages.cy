@@ -175,6 +175,15 @@ asa.apply-to-act-for.paye=Pay as you earn (PAYE)/Construction Industry Scheme (C
 asa.apply-to-act-for.sa=Self Assessment
 asa.apply-to-act-for.ct=Corporation Tax
 
+asa.legacy.do-you-already-manage.existing.true=Yes, through their existing HMRC online services account
+
+asa.legacy.confirmation.title=We’re processing your application
+asa.legacy.confirmation.panel.body=You’ll get an agent code within 5 days
+asa.legacy.confirmation.p1=You’ll receive an email once your agent code is ready. You can then use it to ask for authorisation from your clients.
+asa.legacy.confirmation.p2=We’ll also send you a letter with your agent code for your records.
+asa.legacy.confirmation.p3=This code must be kept private. Only share it with people who genuinely need to know it.
+asa.legacy.confirmation.return-home=Return to your agent services account homepage
+
 # CT
 asa.legacy.ct.h2=Corporation Tax
 asa.legacy.ct.h3=Test Content
@@ -192,6 +201,9 @@ asa.legacy.ct.subscribed.p2=Get permission from new clients
 asa.legacy.ct.subscribed.p3=<a class="govuk-link" href="{0}" rel="noreferrer noopener">Ask a client to authorise you</a>
 asa.legacy.ct.subscribed.p4=Manage your client’s Corporation Tax
 asa.legacy.ct.subscribed.p5=<a class="govuk-link" href="{0}" rel="noreferrer noopener">View and manage your client list for Corporation Tax</a>
+
+asa.legacy.ct.do-you-already-manage.title=Does {0} already manage Corporation Tax clients?
+asa.legacy.ct.do-you-already-manage.existing.false=No, this is their first time managing Corporation Tax clients
 
 asa.legacy.ct.business-name.title=What business name should we show to your Corporation Tax clients?
 asa.legacy.ct.business-name.use-asa.false=I want to use a different business name for Corporation Tax
@@ -239,31 +251,27 @@ asa.legacy.ct.check-your-answers.email=Email address
 asa.legacy.ct.check-your-answers.address=Address
 asa.legacy.ct.check-your-answers.submit-button=Enrol for Corporation Tax
 
-asa.legacy.ct.confirmation.title=We are processing your enrolment
-asa.legacy.ct.confirmation.panel.body=This can take up to 5 days
-asa.legacy.ct.confirmation.p1=Once we’ve updated our system, you’ll find an agent code on your agent services account homepage.
-asa.legacy.ct.confirmation.p2=We’ll also send you a letter with your agent code for your records.
-asa.legacy.ct.confirmation.p3=This code must be kept private. Only share it with people who genuinely need to know it.
-asa.legacy.ct.return-home=Return to your agent services account homepage
-
 # PAYE/CIS
 asa.legacy.paye.h2=PAYE/CIS
 asa.legacy.paye.col1.h3=Test Content
 asa.legacy.paye.col1.p1=Status: {0}
 asa.legacy.paye.link=Cais am danysgrifiad TWE
 asa.legacy.paye.not-subscribed.before-start.h4=Before you start
-asa.legacy.paye.not-subscribed.before-start.p1=If you have already enrolled for Pay As You Earn, you can continue managing your clients by <a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">signing into your HMRC online services for agents account.</a>
+asa.legacy.paye.not-subscribed.before-start.p1=If you have already enrolled for PAYE, you can continue managing your clients by <a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">signing into your HMRC online services for agents account.</a>
 asa.legacy.paye.not-subscribed.before-start.link1.href=https://www.gov.uk/guidance/how-to-enrol-a-tax-service-onto-your-hmrc-online-services-account
 asa.legacy.paye.not-subscribed.before-start.p2=This will sign you out of your agent services account.
-asa.legacy.paye.not-subscribed.enrol-for.h4=If you want to enrol for Pay As You Earn
+asa.legacy.paye.not-subscribed.enrol-for.h4=If you want to enrol for PAYE
 asa.legacy.paye.not-subscribed.enrol-for.p1=You can <a class="govuk-link" href="{0}" rel="noreferrer noopener">use your agent services account to enrol</a> and manage your clients.
 asa.legacy.paye.in-progress.p1=We are still processing the enrolment you did on {0}.
 asa.legacy.paye.in-progress.p2=Processing can take up to 5 days.
 asa.legacy.paye.subscribed.p1=Your agent code is: {0}
 asa.legacy.paye.subscribed.p2=Get permission from new clients
 asa.legacy.paye.subscribed.p3=<a class="govuk-link" href="{0}" rel="noreferrer noopener">Ask a client to authorise you</a>
-asa.legacy.paye.subscribed.p4=Manage your client’s Pay As You Earn
-asa.legacy.paye.subscribed.p5=<a class="govuk-link" href="{0}" rel="noreferrer noopener">View and manage your client list for Pay As You Earn</a>
+asa.legacy.paye.subscribed.p4=Manage your client’s PAYE
+asa.legacy.paye.subscribed.p5=<a class="govuk-link" href="{0}" rel="noreferrer noopener">View and manage your client list for PAYE</a>
+
+asa.legacy.paye.do-you-already-manage.title=Does {0} already manage PAYE clients?
+asa.legacy.paye.do-you-already-manage.existing.false=No, this is their first time managing PAYE clients
 
 asa.legacy.paye.contact-name.title=Who should we contact about PAYE?
 asa.legacy.paye.contact-name.input.heading=Who at {0} should we contact about PAYE?
@@ -271,25 +279,25 @@ asa.legacy.paye.contact-name.input.hint=Enter their full name
 asa.legacy.paye.contact-name.input.error.empty=TODO (Contact name input empty error)
 asa.legacy.paye.contact-name.input.error.invalid=TODO (Contact name input invalid error)
 
-asa.legacy.paye.phone-number.title=What phone number should we show to call you about Pay As You Earn?
-asa.legacy.paye.phone-number.use-asa.false=I want to use a different phone number for Pay As You Earn
+asa.legacy.paye.phone-number.title=What phone number should we show to call you about PAYE?
+asa.legacy.paye.phone-number.use-asa.false=I want to use a different phone number for PAYE
 asa.legacy.paye.phone-number.new-input.label=Enter a phone number
 asa.legacy.paye.phone-number.new-input.hint=For international numbers include the country code.
 asa.legacy.paye.phone-number.use-asa.error.required=TODO (Default option required error)
 asa.legacy.paye.phone-number.new-input.error.empty=TODO (New phone number input empty error)
 asa.legacy.paye.phone-number.new-input.error.invalid=TODO (New phone number input invalid error)
 
-asa.legacy.paye.email-address.title=What email address should we use to contact you about Pay As You Earn?
-asa.legacy.paye.email-address.use-asa.false=I want to use a different email address for Pay As You Earn
+asa.legacy.paye.email-address.title=What email address should we use to contact you about PAYE?
+asa.legacy.paye.email-address.use-asa.false=I want to use a different email address for PAYE
 asa.legacy.paye.email-address.new-input.label=Enter an email address
 asa.legacy.paye.email-address.new-input.hint=We’ll send a code to this email address to confirm it
 asa.legacy.paye.email-address.use-asa.error.required=TODO (Default option for email address required error)
 asa.legacy.paye.email-address.new-input.error.empty=TODO (New email address input empty error)
 asa.legacy.paye.email-address.new-input.error.invalid=TODO (New email address input invalid error)
 
-asa.legacy.paye.address.title=What address should we use to send letters about Pay As You Earn?
+asa.legacy.paye.address.title=What address should we use to send letters about PAYE?
 asa.legacy.paye.address.use-asa.true.hint=This is the address on your agent services account.
-asa.legacy.paye.address.use-asa.false=I want to use a different address for Pay As You Earn
+asa.legacy.paye.address.use-asa.false=I want to use a different address for PAYE
 asa.legacy.paye.address.use-asa.error.required=TODO (Default option for address required error)
 
 asa.legacy.paye.alf.country-picker.title=Select the country - Agent services account - GOV.UK
@@ -308,14 +316,7 @@ asa.legacy.paye.check-your-answers.contact-name=Contact name
 asa.legacy.paye.check-your-answers.phone-number=Telephone number
 asa.legacy.paye.check-your-answers.email=Email address
 asa.legacy.paye.check-your-answers.address=Address
-asa.legacy.paye.check-your-answers.submit-button=Enrol for Pay As You Earn
-
-asa.legacy.paye.confirmation.title=We are processing your enrolment
-asa.legacy.paye.confirmation.panel.body=This can take up to 5 days
-asa.legacy.paye.confirmation.p1=Once we’ve updated our system, you’ll find an agent code on your agent services account homepage.
-asa.legacy.paye.confirmation.p2=We’ll also send you a letter with your agent code for your records.
-asa.legacy.paye.confirmation.p3=This code must be kept private. Only share it with people who genuinely need to know it.
-asa.legacy.paye.return-home=Return to your agent services account homepage
+asa.legacy.paye.check-your-answers.submit-button=Enrol for PAYE
 
 # SA
 asa.legacy.sa.h2=Self Assessment
@@ -335,6 +336,9 @@ asa.legacy.sa.subscribed.p2=Get permission from new clients
 asa.legacy.sa.subscribed.p3=<a class="govuk-link" href="{0}" rel="noreferrer noopener">Ask a client to authorise you</a>
 asa.legacy.sa.subscribed.p4=Manage your client’s Self Assessment
 asa.legacy.sa.subscribed.p5=<a class="govuk-link" href="{0}" rel="noreferrer noopener">View and manage your client list for Self Assessment</a>
+
+asa.legacy.sa.do-you-already-manage.title=Does {0} already manage Self Assessment clients?
+asa.legacy.sa.do-you-already-manage.existing.false=No, this is their first time managing Self Assessment clients
 
 asa.legacy.sa.business-name.title=What business name should we show to your Self Assessment clients?
 asa.legacy.sa.business-name.use-asa.false=I want to use a different business name for Self Assessment
@@ -381,13 +385,6 @@ asa.legacy.sa.check-your-answers.phone-number=Telephone number
 asa.legacy.sa.check-your-answers.email=Email address
 asa.legacy.sa.check-your-answers.address=Address
 asa.legacy.sa.check-your-answers.submit-button=Enrol for Self Assessment
-
-asa.legacy.sa.confirmation.title=We are processing your enrolment
-asa.legacy.sa.confirmation.panel.body=This can take up to 5 days
-asa.legacy.sa.confirmation.p1=Once we’ve updated our system, you’ll find an agent code on your agent services account homepage.
-asa.legacy.sa.confirmation.p2=We’ll also send you a letter with your agent code for your records.
-asa.legacy.sa.confirmation.p3=This code must be kept private. Only share it with people who genuinely need to know it.
-asa.legacy.sa.return-home=Return to your agent services account homepage
 
 # TODO: WELSH TRANSLATIONS NEEDED FOR ALL ABOVE THIS LINE
 
