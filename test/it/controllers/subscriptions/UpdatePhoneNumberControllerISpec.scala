@@ -167,7 +167,7 @@ with TestConstants {
     s"GET /subscription/$legacyRegime/phone-number" should {
 
       List(true, false).foreach(hasSubscriptionPhoneNumber => {
-        "render empty form on first visit" +
+        "render empty form on first visit " +
           s"when subscription has phone number $hasSubscriptionPhoneNumber" in new TestSetup(legacyRegime, hasSubscriptionPhoneNumber) {
             cacheJourney(subscriptionBaseJourney)
 
@@ -180,15 +180,16 @@ with TestConstants {
             if (hasSubscriptionPhoneNumber) {
               content should include(messages(s"${legacyRegime.msgPrefix}.phone-number.new-input.label"))
               content should include(messages(s"${legacyRegime.msgPrefix}.phone-number.use-asa.false"))
+              content should include("1234554321")
             }
             else {
               content should not include messages(s"${legacyRegime.msgPrefix}.phone-number.new-input.label")
               content should not include messages(s"${legacyRegime.msgPrefix}.phone-number.use-asa.false")
+              content should not include "1234554321"
             }
-            content should include("1234567890")
           }
 
-        "render pre-filled form when journey has existing answers" +
+        "render pre-filled form when journey has existing answers " +
           s"and subscription has phone number $hasSubscriptionPhoneNumber" in new TestSetup(legacyRegime, hasSubscriptionPhoneNumber) {
             private val journey = subscriptionBaseJourney.copy(
               useCustomPhoneNumber = Some(true),
