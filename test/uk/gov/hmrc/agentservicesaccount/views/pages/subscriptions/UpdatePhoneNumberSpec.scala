@@ -23,7 +23,7 @@ import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.data.Form
 import play.api.i18n.Messages
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionPhoneNumberForm
-import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionPhoneNumberForm.phoneNumberUseAsaDataKey
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionPhoneNumberForm.{phoneNumberNewKey, phoneNumberUseAsaDataKey}
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.PhoneNumberFormValues
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
@@ -39,12 +39,12 @@ extends ViewBaseSpec {
 
   private val phoneNumberForm: Form[PhoneNumberFormValues] = SubscriptionPhoneNumberForm.form(legacyRegime)
 
-  private val formWithErrors: Form[PhoneNumberFormValues] = phoneNumberForm.withError(phoneNumberUseAsaDataKey, Messages("error.required"))
+  private val formWithInputErrors: Form[PhoneNumberFormValues] = phoneNumberForm.withError(phoneNumberNewKey, Messages("error.required"))
 
-  def render(form: Form[PhoneNumberFormValues]): Document = Jsoup.parse(
+  def render(form: Form[PhoneNumberFormValues], subPhoneNumberOpt: Option[String] = Some(subscriptionPhoneNumber)): Document = Jsoup.parse(
     view(
       form,
-      subscriptionPhoneNumber,
+      subPhoneNumberOpt,
       legacyRegime
     )(
       messages,
@@ -116,7 +116,7 @@ extends ViewBaseSpec {
 
     "form submitted with errors" should {
 
-      val doc: Document = render(formWithErrors)
+      val doc: Document = render(formWithInputErrors)
 
       testServiceStaticContent(doc)
       testPageStaticContent(doc)
@@ -139,7 +139,7 @@ extends ViewBaseSpec {
       }
     }
 
-    "when 'new phone number' option is selected" should {
+    "when 'new phone number' option is selected - subscription phone number defined" should {
 
       val filledForm: Form[PhoneNumberFormValues] = phoneNumberForm.fill(
         PhoneNumberFormValues(
@@ -169,7 +169,7 @@ extends ViewBaseSpec {
       }
     }
 
-    "when existing phone number is selected" should {
+    "when existing phone number is selected - subscription phone number defined" should {
 
       val filledForm: Form[PhoneNumberFormValues] = phoneNumberForm.fill(
         PhoneNumberFormValues(
@@ -189,6 +189,31 @@ extends ViewBaseSpec {
         val conditional = doc.select(".govuk-radios__conditional").first()
         conditional.hasClass("govuk-radios__conditional--hidden") mustBe true
       }
+    }
+  }
+
+  "when subscription phone number empty" should {
+
+    val filledForm: Form[PhoneNumberFormValues] = phoneNumberForm.fill(
+      PhoneNumberFormValues(
+        useAsaData = false,
+        newPhoneNumber = Some("07123456789")
+      )
+    )
+
+    val doc: Document = render(filledForm, subPhoneNumberOpt = None)
+
+    "show no radios" in {
+      val radios = doc.select(".govuk-radios")
+      radios.size() mustBe 0
+    }
+
+    "have the single phone number input present" in {
+      doc.select("#phoneNumberNew").size() mustBe 1
+    }
+
+    "pre-fill the single phone number input" in {
+      doc.select("#phoneNumberNew").`val`() mustBe "07123456789"
     }
   }
 
