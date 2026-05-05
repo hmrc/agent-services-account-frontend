@@ -73,7 +73,14 @@
 }
 
 @simpleInputForm = @{
-    newPhoneNumberInput
+    govukInput(Input(
+        label = Label(
+            content = HtmlContent(msgs(s"$legacyRegimePrefix.phone-number.title")),
+            classes = "govuk-label--l",
+            isPageHeading = true
+        ),
+        hint = Some(Hint(content = Text(msgs(s"$legacyRegimePrefix.phone-number.simple-input.hint"))))
+    ).withFormField(form(phoneNumberNewKey)))
 }
 
 @main(
