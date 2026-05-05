@@ -176,16 +176,13 @@ with TestConstants {
             status(result) shouldBe OK
             private val content = contentAsString(result)
             content should include(messages(s"${legacyRegime.msgPrefix}.phone-number.title"))
+            content should include(messages(s"${legacyRegime.msgPrefix}.phone-number.new-input.hint"))
             if (hasSubscriptionPhoneNumber) {
               content should include(messages(s"${legacyRegime.msgPrefix}.phone-number.new-input.label"))
-              content should include(messages(s"${legacyRegime.msgPrefix}.phone-number.new-input.hint"))
               content should include(messages(s"${legacyRegime.msgPrefix}.phone-number.use-asa.false"))
-              content should not include messages(s"${legacyRegime.msgPrefix}.phone-number.single-input.hint")
             }
             else {
-              content should include(messages(s"${legacyRegime.msgPrefix}.phone-number.single-input.hint"))
               content should not include messages(s"${legacyRegime.msgPrefix}.phone-number.new-input.label")
-              content should not include messages(s"${legacyRegime.msgPrefix}.phone-number.new-input.hint")
               content should not include messages(s"${legacyRegime.msgPrefix}.phone-number.use-asa.false")
             }
             content should include("1234567890")
@@ -205,16 +202,13 @@ with TestConstants {
             status(result) shouldBe OK
             private val content = contentAsString(result)
             content should include(messages(s"${legacyRegime.msgPrefix}.phone-number.title"))
+            content should include(messages(s"${legacyRegime.msgPrefix}.phone-number.new-input.hint"))
             if (hasSubscriptionPhoneNumber) {
               content should include(messages(s"${legacyRegime.msgPrefix}.phone-number.new-input.label"))
-              content should include(messages(s"${legacyRegime.msgPrefix}.phone-number.new-input.hint"))
               content should include(messages(s"${legacyRegime.msgPrefix}.phone-number.use-asa.false"))
-              content should not include messages(s"${legacyRegime.msgPrefix}.phone-number.single-input.hint")
             }
             else {
-              content should include(messages(s"${legacyRegime.msgPrefix}.phone-number.single-input.hint"))
               content should not include messages(s"${legacyRegime.msgPrefix}.phone-number.new-input.label")
-              content should not include messages(s"${legacyRegime.msgPrefix}.phone-number.new-input.hint")
               content should not include messages(s"${legacyRegime.msgPrefix}.phone-number.use-asa.false")
             }
             content should include("""value="true"""")

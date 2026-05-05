@@ -205,12 +205,12 @@ extends ViewBaseSpec {
       )
     )
 
-//    TODO: 11281 Check for hidden input
     val doc: Document = render(filledForm, subPhoneNumberOpt = None)
 
-    "show no radios" in {
+    "show no radios and include the hidden input set to false" in {
       val radios = doc.select(".govuk-radios")
       radios.size() mustBe 0
+      doc.html() should include(s"<input type=\"hidden\" name=\"$phoneNumberUseAsaDataKey\" value=\"false\">")
     }
 
     "have the single phone number input present" in {
