@@ -212,7 +212,7 @@ asa.legacy.ct.business-name.use-asa.error.required=TODO (Default option for busi
 asa.legacy.ct.business-name.new-input.error.empty=TODO (New business name input empty error)
 asa.legacy.ct.business-name.new-input.error.invalid=TODO (New business name input invalid error)
 
-asa.legacy.ct.phone-number.title=What phone number should we show to call you about Corporation Tax?
+asa.legacy.ct.phone-number.title=What phone number should we use to call you about Corporation Tax?
 asa.legacy.ct.phone-number.use-asa.false=I want to use a different phone number for Corporation Tax
 asa.legacy.ct.phone-number.new-input.label=Enter a phone number
 asa.legacy.ct.phone-number.new-input.hint=For international numbers include the country code.
@@ -279,7 +279,7 @@ asa.legacy.paye.contact-name.input.hint=Enter their full name
 asa.legacy.paye.contact-name.input.error.empty=TODO (Contact name input empty error)
 asa.legacy.paye.contact-name.input.error.invalid=TODO (Contact name input invalid error)
 
-asa.legacy.paye.phone-number.title=What phone number should we show to call you about PAYE?
+asa.legacy.paye.phone-number.title=What phone number should we use to call you about PAYE?
 asa.legacy.paye.phone-number.use-asa.false=I want to use a different phone number for PAYE
 asa.legacy.paye.phone-number.new-input.label=Enter a phone number
 asa.legacy.paye.phone-number.new-input.hint=For international numbers include the country code.
@@ -347,7 +347,7 @@ asa.legacy.sa.business-name.use-asa.error.required=TODO (Default option for busi
 asa.legacy.sa.business-name.new-input.error.empty=TODO (New business name input empty error)
 asa.legacy.sa.business-name.new-input.error.invalid=TODO (New business name input invalid error)
 
-asa.legacy.sa.phone-number.title=What phone number should we show to call you about Self Assessment?
+asa.legacy.sa.phone-number.title=What phone number should we use to call you about Self Assessment?
 asa.legacy.sa.phone-number.use-asa.false=I want to use a different phone number for Self Assessment
 asa.legacy.sa.phone-number.new-input.label=Enter a phone number
 asa.legacy.sa.phone-number.new-input.hint=For international numbers include the country code.
