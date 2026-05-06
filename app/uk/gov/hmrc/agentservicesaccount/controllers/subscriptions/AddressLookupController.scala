@@ -101,7 +101,7 @@ with Logging {
     )
 
     val manualAddressEntryConfig = ManualAddressEntryConfig(
-//      TODO: 10906/ 35 is min max length value that you can set with ALF. Our API requires 28 for lines1,2,3 and 18 for town
+//      NOTE: 35 is min max length value that you can set with ALF. Our API requires 28 for lines1,2,3 and 18 for town
       line1MaxLength = Some(35),
       line2MaxLength = Some(35),
       line3MaxLength = Some(35),
