@@ -53,9 +53,11 @@ with Matchers {
         val doc = Jsoup.parse(html.toString())
 
         val h1s = doc.select("h1")
-
+        h1s.size() shouldBe 1
         h1s.get(0).text() shouldBe title
-        h1s.get(1).text() shouldBe messages("asa.legacy.you-may-not-need-to-apply.h1")
+
+        doc.select(".govuk-fieldset__legend").text() shouldBe
+          messages("asa.legacy.you-may-not-need-to-apply.h1")
 
         doc.select("input[type=radio]").size() shouldBe 2
 
