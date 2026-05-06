@@ -211,8 +211,8 @@ asa.legacy.ct.you-may-not-need-to-apply.p2=You can continue to manage your exist
 asa.legacy.ct.business-name.title=What business name should we show to your Corporation Tax clients?
 asa.legacy.ct.business-name.use-asa.false=I want to use a different business name for Corporation Tax
 asa.legacy.ct.business-name.new-input.label=Enter a business name
-asa.legacy.ct.business-name.use-asa.error.required=TODO (Default option for business name required error)
-asa.legacy.ct.business-name.new-input.error.empty=TODO (New business name input empty error)
+asa.legacy.ct.business-name.use-asa.error.required=Select the business name we should show to your Corporation Tax clients
+asa.legacy.ct.business-name.new-input.error.empty=Enter a business name
 asa.legacy.ct.business-name.new-input.error.invalid=TODO (New business name input invalid error)
 
 asa.legacy.ct.phone-number.title=What phone number should we use to call you about Corporation Tax?
@@ -353,8 +353,8 @@ asa.legacy.sa.you-may-not-need-to-apply.p2=You can continue to manage your exist
 asa.legacy.sa.business-name.title=What business name should we show to your Self Assessment clients?
 asa.legacy.sa.business-name.use-asa.false=I want to use a different business name for Self Assessment
 asa.legacy.sa.business-name.new-input.label=Enter a business name
-asa.legacy.sa.business-name.use-asa.error.required=TODO (Default option for business name required error)
-asa.legacy.sa.business-name.new-input.error.empty=TODO (New business name input empty error)
+asa.legacy.sa.business-name.use-asa.error.required=Select the business name we should show to your Self Assessment clients
+asa.legacy.sa.business-name.new-input.error.empty=Enter a business name
 asa.legacy.sa.business-name.new-input.error.invalid=TODO (New business name input invalid error)
 
 asa.legacy.sa.phone-number.title=What phone number should we use to call you about Self Assessment?
