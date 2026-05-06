@@ -31,6 +31,7 @@ object SubscriptionEmailAddressForm {
   val emailAddressNewKey = "emailAddressNew"
 
   private def emailAddressUseAsaDataMapping(legacyRegime: LegacyRegime): Mapping[Boolean] = useAsaDataMapping(
+    //    TODO: 11329 Need to pass in businessName
     s"${legacyRegime.msgPrefix}.email-address.use-asa.error.required"
   )
 
