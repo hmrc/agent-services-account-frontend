@@ -213,7 +213,7 @@ asa.legacy.ct.business-name.use-asa.false=I want to use a different business nam
 asa.legacy.ct.business-name.new-input.label=Enter a business name
 asa.legacy.ct.business-name.use-asa.error.required=Select the business name we should show to your Corporation Tax clients
 asa.legacy.ct.business-name.new-input.error.empty=Enter a business name
-asa.legacy.ct.business-name.new-input.error.invalid=TODO (New business name input invalid error)
+asa.legacy.ct.business-name.new-input.error.invalid=Enter a business name that only contains letters, numbers, spaces and the characters . , ( ) & - ‘ /
 
 asa.legacy.ct.phone-number.title=What phone number should we use to call you about Corporation Tax?
 asa.legacy.ct.phone-number.use-asa.false=I want to use a different phone number for Corporation Tax
@@ -355,7 +355,7 @@ asa.legacy.sa.business-name.use-asa.false=I want to use a different business nam
 asa.legacy.sa.business-name.new-input.label=Enter a business name
 asa.legacy.sa.business-name.use-asa.error.required=Select the business name we should show to your Self Assessment clients
 asa.legacy.sa.business-name.new-input.error.empty=Enter a business name
-asa.legacy.sa.business-name.new-input.error.invalid=TODO (New business name input invalid error)
+asa.legacy.sa.business-name.new-input.error.invalid=Enter a business name that only contains letters, numbers, spaces and the characters . , ( ) & - ‘ /
 
 asa.legacy.sa.phone-number.title=What phone number should we use to call you about Self Assessment?
 asa.legacy.sa.phone-number.use-asa.false=I want to use a different phone number for Self Assessment
