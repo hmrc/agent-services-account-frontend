@@ -30,6 +30,7 @@ object SubscriptionBusinessNameForm {
   val businessNameUseAsaDataKey = "businessNameUseAsaData"
   val businessNameNewKey = "businessNameNew"
 
+  //  TODO: 11329 Check regex matches API spec, including by legacyRegime
   private val businessNameRegex = """^[A-Za-z0-9\(\)&\-\'‘’\/,\. ]{1,54}$""".r
 
   private def businessNameUseAsaDataMapping(legacyRegime: LegacyRegime): Mapping[Boolean] = useAsaDataMapping(

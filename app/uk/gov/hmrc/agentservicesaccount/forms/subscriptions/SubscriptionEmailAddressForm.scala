@@ -37,6 +37,7 @@ object SubscriptionEmailAddressForm {
 
   private def emailAddressNewOptionalMapping(legacyRegime: LegacyRegime): Mapping[String] = trimmedText
     .verifying(s"${legacyRegime.msgPrefix}.email-address.new-input.error.empty", _.nonEmpty)
+    //  TODO: 11329 Check regex matches API spec, including by legacyRegime
     .verifying(s"${legacyRegime.msgPrefix}.email-address.new-input.error.invalid", x => x.isEmpty || (x.length <= 50 && x.contains("@")))
 
   def form(legacyRegime: LegacyRegime): Form[EmailAddressFormValues] = {
