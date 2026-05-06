@@ -26,65 +26,71 @@ class DoYouAlreadyManageFormSpec
 extends AnyWordSpec
 with Matchers {
 
-  private val legacyRegime = LegacyRegime.SA
-  private val legacyRegimePrefix = legacyRegime.msgPrefix
+  private val regimes = Seq(
+    LegacyRegime.SA,
+    LegacyRegime.CT,
+    LegacyRegime.PAYE
+  )
 
-  private val initForm = form(legacyRegime)
+  regimes.foreach { regime =>
+    val prefix = regime.msgPrefix
+    val initForm = form(regime)
 
-  "DoYouAlreadyManageForm" should {
+    s"DoYouAlreadyManageForm for regime $regime" should {
 
-    "bind successfully when true" in {
-      val params = Map(
-        doYouAlreadyManageKey -> "true"
-      )
+      "bind successfully when true" in {
+        val params = Map(
+          doYouAlreadyManageKey -> "true"
+        )
 
-      initForm.bind(params).value shouldBe Some(
-        DoYouAlreadyManageFormValues(true)
-      )
-    }
+        initForm.bind(params).value shouldBe Some(
+          DoYouAlreadyManageFormValues(true)
+        )
+      }
 
-    "bind successfully when false" in {
-      val params = Map(
-        doYouAlreadyManageKey -> "false"
-      )
+      "bind successfully when false" in {
+        val params = Map(
+          doYouAlreadyManageKey -> "false"
+        )
 
-      initForm.bind(params).value shouldBe Some(
-        DoYouAlreadyManageFormValues(false)
-      )
-    }
+        initForm.bind(params).value shouldBe Some(
+          DoYouAlreadyManageFormValues(false)
+        )
+      }
 
-    "return error when value is missing" in {
-      val params = Map(
-        doYouAlreadyManageKey -> ""
-      )
+      "return error when value is empty" in {
+        val params = Map(
+          doYouAlreadyManageKey -> ""
+        )
 
-      val validatedForm = initForm.bind(params)
+        val validatedForm = initForm.bind(params)
 
-      validatedForm.hasErrors shouldBe true
-      validatedForm.error(doYouAlreadyManageKey).get.message shouldBe
-        s"$legacyRegimePrefix.do-you-already-manage.error.required"
-      validatedForm.errors.length shouldBe 1
-    }
+        validatedForm.hasErrors shouldBe true
+        validatedForm.error(doYouAlreadyManageKey).get.message shouldBe
+          s"$prefix.do-you-already-manage.error.required"
+        validatedForm.errors.length shouldBe 1
+      }
 
-    "return error when value is not provided at all" in {
-      val params = Map.empty[String, String]
+      "return error when value is not provided at all" in {
+        val params = Map.empty[String, String]
 
-      val validatedForm = initForm.bind(params)
+        val validatedForm = initForm.bind(params)
 
-      validatedForm.hasErrors shouldBe true
-      validatedForm.error(doYouAlreadyManageKey).get.message shouldBe
-        s"$legacyRegimePrefix.do-you-already-manage.error.required"
-      validatedForm.errors.length shouldBe 1
-    }
+        validatedForm.hasErrors shouldBe true
+        validatedForm.error(doYouAlreadyManageKey).get.message shouldBe
+          s"$prefix.do-you-already-manage.error.required"
+        validatedForm.errors.length shouldBe 1
+      }
 
-    "unbind correctly" in {
-      val unboundForm = initForm.mapping.unbind(
-        DoYouAlreadyManageFormValues(true)
-      )
+      "unbind correctly" in {
+        val unboundForm = initForm.mapping.unbind(
+          DoYouAlreadyManageFormValues(true)
+        )
 
-      unboundForm shouldBe Map(
-        doYouAlreadyManageKey -> "true"
-      )
+        unboundForm shouldBe Map(
+          doYouAlreadyManageKey -> "true"
+        )
+      }
     }
   }
 

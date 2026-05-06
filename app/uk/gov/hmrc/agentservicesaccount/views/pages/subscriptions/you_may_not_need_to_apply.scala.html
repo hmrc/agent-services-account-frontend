@@ -1,0 +1,93 @@
+@*
+ * Copyright 2026 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import play.api.data.Form
+@import play.api.i18n.Messages
+@import play.api.mvc.RequestHeader
+@import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+@import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
+@import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+@import uk.gov.hmrc.agentservicesaccount.views.html.main
+@import uk.gov.hmrc.govukfrontend.views.html.components._
+@import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
+@import uk.gov.hmrc.hmrcfrontend.views.Implicits.RichErrorSummary
+@import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.YouMayNotNeedToApplyForm.doYouStillWantToApplyKey
+@import uk.gov.hmrc.agentservicesaccount.models.subscriptions.YouMayNotNeedToApplyFormValues
+
+@this(
+        main: main,
+        formWithCSRF: FormWithCSRF,
+        govukRadios: GovukRadios,
+        govukButton: GovukButton,
+        govukErrorSummary: GovukErrorSummary,
+        p: p, h1: h1
+)
+
+
+@(form: Form[YouMayNotNeedToApplyFormValues], legacyRegime: LegacyRegime)(
+        implicit msgs: Messages,
+        request: RequestHeader,
+        appConfig: AppConfig
+)
+
+@legacyRegimePrefix = @{ legacyRegime.msgPrefix }
+
+@pageTitle = @{
+    msgs(s"$legacyRegimePrefix.you-may-not-need-to-apply.title")
+}
+
+@main(
+    pageTitle = withErrorPrefix(form.hasErrors, pageTitle),
+    mimicBrowserBackLink = true,
+    showSecondaryNav = false
+) {
+
+    @if(form.hasErrors) {
+        @govukErrorSummary(ErrorSummary().withFormErrorsAsText(form))
+    }
+
+    @h1(pageTitle)
+
+    @p("asa.legacy.you-may-not-need-to-apply.p1")
+
+    @p(s"$legacyRegimePrefix.you-may-not-need-to-apply.p2")
+
+    @formWithCSRF(action = subscriptions.routes.YouMayNotNeedToApplyController.onSubmit(legacyRegime)) {
+
+        @govukRadios(Radios(
+            name = doYouStillWantToApplyKey,
+            fieldset = Some(Fieldset(
+                legend = Some(Legend(
+                    content = Text(msgs("asa.legacy.you-may-not-need-to-apply.h1")),
+                    classes = "govuk-fieldset__legend--m",
+                    isPageHeading = false
+                ))
+            )),
+            items = Seq(
+                RadioItem(
+                    content = Text(msgs("common.yes")),
+                    value = Some("true")
+                ),
+                RadioItem(
+                    content = Text(msgs("common.no")),
+                    value = Some("false")
+                )
+            )
+        ).withFormField(form(doYouStillWantToApplyKey)))
+
+        @govukButton(Button(content = Text(msgs("common.continue"))))
+    }
+}

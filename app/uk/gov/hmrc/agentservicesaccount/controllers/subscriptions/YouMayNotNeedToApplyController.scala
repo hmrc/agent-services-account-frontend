@@ -21,12 +21,13 @@ import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
-import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.DoYouAlreadyManageForm
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.DoYouAlreadyManageFormValues
+import uk.gov.hmrc.agentservicesaccount.controllers.{routes => homeRoutes}
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.YouMayNotNeedToApplyForm
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.YouMayNotNeedToApplyFormValues
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.do_you_already_manage
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.you_may_not_need_to_apply
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject._
@@ -34,10 +35,10 @@ import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
 @Singleton
-class DoYouAlreadyManageController @Inject() (
+class YouMayNotNeedToApplyController @Inject() (
   actions: Actions,
   val sessionCacheService: SessionCacheService,
-  do_you_already_manage: do_you_already_manage,
+  you_may_not_need_to_apply: you_may_not_need_to_apply,
   cc: MessagesControllerComponents
 )(implicit
   appConfig: AppConfig,
@@ -50,41 +51,39 @@ with I18nSupport {
     val journey = request.subscriptionJourney
 
     val form =
-      journey.doYouAlreadyManage match {
-        case Some(value) => DoYouAlreadyManageForm.form(legacyRegime).fill(DoYouAlreadyManageFormValues(value))
-        case None => DoYouAlreadyManageForm.form(legacyRegime)
+      journey.youMayNotNeedToApply match {
+        case Some(value) => YouMayNotNeedToApplyForm.form(legacyRegime).fill(YouMayNotNeedToApplyFormValues(value))
+        case None => YouMayNotNeedToApplyForm.form(legacyRegime)
       }
 
-    Future.successful(Ok(do_you_already_manage(
+    Future.successful(Ok(you_may_not_need_to_apply(
       form,
-      legacyRegime,
-      journey.asaDetails.agencyName.getOrElse("")
+      legacyRegime
     )))
   }
 
   def onSubmit(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
     val journey = request.subscriptionJourney
 
-    DoYouAlreadyManageForm.form(legacyRegime).bindFromRequest().fold(
+    YouMayNotNeedToApplyForm.form(legacyRegime).bindFromRequest().fold(
       formWithErrors =>
-        Future.successful(BadRequest(do_you_already_manage(
+        Future.successful(BadRequest(you_may_not_need_to_apply(
           formWithErrors,
-          legacyRegime,
-          journey.asaDetails.agencyName.getOrElse("")
+          legacyRegime
         ))),
       answer => {
         val updatedJourney = journey.copy(
-          doYouAlreadyManage = Some(answer.doYouAlreadyManage)
+          youMayNotNeedToApply = Some(answer.doYouStillWantToApply)
         )
 
         val nextPage =
-          if (answer.doYouAlreadyManage)
-            routes.YouMayNotNeedToApplyController.showPage(legacyRegime)
-          else {
+          if (answer.doYouStillWantToApply)
             legacyRegime match {
               case PAYE => routes.PayeUpdateContactNameController.showPage
               case _ => routes.UpdateBusinessNameController.showPage(legacyRegime)
             }
+          else {
+            homeRoutes.AgentServicesController.root()
           }
 
         sessionCacheService

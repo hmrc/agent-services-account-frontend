@@ -24,6 +24,7 @@ import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 case class SubscriptionJourney(
   asaDetails: AgencyDetails,
   doYouAlreadyManage: Option[Boolean] = None,
+  youMayNotNeedToApply: Option[Boolean] = None,
   payeContactName: Option[String] = None,
   useCustomBusinessName: Option[Boolean] = None,
   businessNameAnswer: Option[String] = None,
