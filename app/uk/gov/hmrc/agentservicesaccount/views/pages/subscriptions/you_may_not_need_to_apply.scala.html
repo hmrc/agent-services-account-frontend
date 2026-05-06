@@ -46,7 +46,7 @@
 @legacyRegimePrefix = @{ legacyRegime.msgPrefix }
 
 @pageTitle = @{
-    msgs(s"asa.legacy.${legacyRegime.toString.toLowerCase}.you-may-not-need-to-apply.title")
+    msgs(s"$legacyRegimePrefix.you-may-not-need-to-apply.title")
 }
 
 @main(
@@ -63,7 +63,7 @@
 
     @p("asa.legacy.you-may-not-need-to-apply.p1")
 
-    @p(s"asa.legacy.${legacyRegime.toString.toLowerCase}.you-may-not-need-to-apply.p2")
+    @p(s"$legacyRegimePrefix.you-may-not-need-to-apply.p2")
 
     @formWithCSRF(action = subscriptions.routes.YouMayNotNeedToApplyController.onSubmit(legacyRegime)) {
 

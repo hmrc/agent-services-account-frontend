@@ -20,6 +20,7 @@ import org.jsoup.Jsoup
 import org.scalatest.matchers.should.Matchers
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.YouMayNotNeedToApplyForm
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.YouMayNotNeedToApplyFormValues
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.you_may_not_need_to_apply
 
@@ -38,7 +39,7 @@ with Matchers {
   regimes.foreach { regime =>
     s"YouMayNotNeedToApply view for regime $regime" should {
 
-      val title = messages(s"asa.legacy.${regime.toString.toLowerCase}.you-may-not-need-to-apply.title")
+      val title = messages(s"${regime.msgPrefix}.you-may-not-need-to-apply.title")
 
       "render page correctly without errors" in {
         val form = YouMayNotNeedToApplyForm.form(regime)
@@ -79,10 +80,7 @@ with Matchers {
       }
 
       "pre-select radio when value exists (true)" in {
-        val form = YouMayNotNeedToApplyForm.form(regime)
-          .fill(
-            uk.gov.hmrc.agentservicesaccount.models.subscriptions.YouMayNotNeedToApplyFormValues(true)
-          )
+        val form = YouMayNotNeedToApplyForm.form(regime).fill(YouMayNotNeedToApplyFormValues(true))
 
         val doc = Jsoup.parse(
           view(form, regime)(
@@ -96,10 +94,7 @@ with Matchers {
       }
 
       "pre-select radio when value exists (false)" in {
-        val form = YouMayNotNeedToApplyForm.form(regime)
-          .fill(
-            uk.gov.hmrc.agentservicesaccount.models.subscriptions.YouMayNotNeedToApplyFormValues(false)
-          )
+        val form = YouMayNotNeedToApplyForm.form(regime).fill(YouMayNotNeedToApplyFormValues(false))
 
         val doc = Jsoup.parse(
           view(form, regime)(
