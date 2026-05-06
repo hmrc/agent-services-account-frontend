@@ -283,7 +283,7 @@ asa.legacy.paye.you-may-not-need-to-apply.p2=You can continue to manage your exi
 asa.legacy.paye.contact-name.title=Who should we contact about PAYE?
 asa.legacy.paye.contact-name.input.heading=Who at {0} should we contact about PAYE?
 asa.legacy.paye.contact-name.input.hint=Enter their full name
-asa.legacy.paye.contact-name.input.error.empty=TODO (Contact name input empty error)
+asa.legacy.paye.contact-name.input.error.empty=Enter the full name of the person we should contact about PAYE
 asa.legacy.paye.contact-name.input.error.invalid=TODO (Contact name input invalid error)
 
 asa.legacy.paye.phone-number.title=What phone number should we use to call you about PAYE?
