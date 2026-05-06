@@ -174,15 +174,15 @@ asa.apply-to-act-for.ct=Corporation Tax
 
 asa.legacy.do-you-already-manage.existing.true=Yes, through their existing HMRC online services account
 
+asa.legacy.you-may-not-need-to-apply.p1=You only need to apply and get a new agent code if you want to manage your clients between different team members or office locations.
+asa.legacy.you-may-not-need-to-apply.h1=Do you still want to apply?
+
 asa.legacy.confirmation.title=We’re processing your application
 asa.legacy.confirmation.panel.body=You’ll get an agent code within 5 days
 asa.legacy.confirmation.p1=You’ll receive an email once your agent code is ready. You can then use it to ask for authorisation from your clients.
 asa.legacy.confirmation.p2=We’ll also send you a letter with your agent code for your records.
 asa.legacy.confirmation.p3=This code must be kept private. Only share it with people who genuinely need to know it.
 asa.legacy.confirmation.return-home=Return to your agent services account homepage
-
-asa.legacy.you-may-not-need-to-apply.p1=You only need to apply and get a new agent code if you want to manage your clients between different team members or office locations.
-asa.legacy.you-may-not-need-to-apply.h1=Do you still want to apply?
 
 # CT
 asa.legacy.ct.h2=Corporation Tax
@@ -234,7 +234,7 @@ asa.legacy.ct.email-address.new-input.error.invalid=Enter an email address in th
 asa.legacy.ct.address.title=What address should we use to send letters about Corporation Tax?
 asa.legacy.ct.address.use-asa.true.hint=This is the address on your agent services account.
 asa.legacy.ct.address.use-asa.false=I want to use a different address for Corporation Tax
-asa.legacy.ct.address.use-asa.error.required=TODO (Default option for address required error)
+asa.legacy.ct.address.use-asa.error.required=Select the address we should use to send letters about Corporation Tax
 
 asa.legacy.ct.alf.country-picker.title=Select the country - Agent services account - GOV.UK
 asa.legacy.ct.alf.country-picker.heading=What is the country where the business is based?
@@ -305,7 +305,7 @@ asa.legacy.paye.email-address.new-input.error.invalid=Enter an email address in 
 asa.legacy.paye.address.title=What address should we use to send letters about PAYE?
 asa.legacy.paye.address.use-asa.true.hint=This is the address on your agent services account.
 asa.legacy.paye.address.use-asa.false=I want to use a different address for PAYE
-asa.legacy.paye.address.use-asa.error.required=TODO (Default option for address required error)
+asa.legacy.paye.address.use-asa.error.required=Select the address we should use to send letters about PAYE
 
 asa.legacy.paye.alf.country-picker.title=Select the country - Agent services account - GOV.UK
 asa.legacy.paye.alf.country-picker.heading=What is the country where the business is based?
@@ -376,7 +376,7 @@ asa.legacy.sa.email-address.new-input.error.invalid=Enter an email address in th
 asa.legacy.sa.address.title=What address should we use to send letters about Self Assessment?
 asa.legacy.sa.address.use-asa.true.hint=This is the address on your agent services account.
 asa.legacy.sa.address.use-asa.false=I want to use a different address for Self Assessment
-asa.legacy.sa.address.use-asa.error.required=TODO (Default option for address required error)
+asa.legacy.sa.address.use-asa.error.required=Select the address we should use to send letters about Self Assessment
 
 asa.legacy.sa.alf.country-picker.title=Select the country - Agent services account - GOV.UK
 asa.legacy.sa.alf.country-picker.heading=What is the country where the business is based?
