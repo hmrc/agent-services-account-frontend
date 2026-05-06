@@ -120,6 +120,7 @@ case class AgentInfo(
 
   def ctAgentCode: Option[String] = getAgentCodeFor("IR-CT-AGENT")
   def saAgentCode: Option[String] = getAgentCodeFor("IR-SA-AGENT")
+  def payeAgentCode: Option[String] = getAgentCodeFor("IR-PAYE-AGENT")
 
 }
 

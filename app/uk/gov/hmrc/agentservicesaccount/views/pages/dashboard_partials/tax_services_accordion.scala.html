@@ -31,7 +31,8 @@
         inset_text:inset_text
 )
 
-@(subscriptionInfo: Seq[SubscriptionInfo])(implicit msgs: Messages, request: AuthRequestWithAgentInfo[AnyContent], appConfig: AppConfig)
+@(subscriptionInfo: Seq[SubscriptionInfo])(
+        implicit msgs: Messages, request: AuthRequestWithAgentInfo[AnyContent], appConfig: AppConfig)
 
 @itsaAccordionItemLegacy = {
 @h4("asa.sectionITSA.col1.h4")
@@ -169,12 +170,12 @@
     }
 
     case SubscriptionStatus.Subscribed => {
-        @inset_text(msgs("asa.legacy.paye.subscribed.p1", request.agentInfo.ctAgentCode.getOrElse("")))
+        @inset_text(msgs("asa.legacy.paye.subscribed.p1", request.agentInfo.payeAgentCode.getOrElse("")))
         @h4(msgs("asa.legacy.paye.subscribed.p2"))
-        @p(msgs("asa.legacy.paye.subscribed.p3", "TODO link")) @* TODO: provide the link *@
+        @p(msgs("asa.legacy.paye.subscribed.p3", "https://www.tax.service.gov.uk/account/authorise-client/agent/", request.agentInfo.payeAgentCode))
         @h4(msgs("asa.legacy.paye.subscribed.p4"))
-        @p(msgs("asa.legacy.paye.subscribed.p5", "TODO link")) @* TODO: provide the link *@
-        @p(msgs("asa.legacy.paye.subscribed.p6", "TODO link")) @* TODO: provide the link *@
+        @p(msgs("asa.legacy.paye.subscribed.p5", "https://www.tax.service.gov.uk/agent/remember-to-remove"))
+        @p(msgs("asa.legacy.paye.subscribed.p6", "https://www.tax.service.gov.uk/construction-ind-scheme/agent/", request.agentInfo.payeAgentCode.getOrElse("")))
     }
 
 }
@@ -227,9 +228,9 @@
     case SubscriptionStatus.Subscribed => {
         @inset_text(msgs("asa.legacy.sa.subscribed.p1", request.agentInfo.saAgentCode.getOrElse("")))
         @h4(msgs("asa.legacy.sa.subscribed.p2"))
-        @p(msgs("asa.legacy.sa.subscribed.p3", "TODO link")) @* TODO: provide the link *@
+        @p(msgs("asa.legacy.sa.subscribed.p3", "https://www.tax.service.gov.uk/account/authorise-client/agent/", request.agentInfo.saAgentCode))
         @h4(msgs("asa.legacy.sa.subscribed.p4"))
-        @p(msgs("asa.legacy.sa.subscribed.p5", "TODO link")) @* TODO: provide the link *@
+        @p(msgs("asa.legacy.sa.subscribed.p5", "https://www.tax.service.gov.uk/self-assessment/agent/", request.agentInfo.saAgentCode.getOrElse("")))
     }
     case _ => {
         @h4("asa.legacy.sa.h3")
