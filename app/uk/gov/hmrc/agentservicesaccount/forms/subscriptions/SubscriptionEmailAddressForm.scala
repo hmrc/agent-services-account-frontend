@@ -23,6 +23,7 @@ import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators.trimmedText
 import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators.useAsaDataMapping
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.EmailAddressFormValues
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
 import uk.gov.voa.play.form.ConditionalMappings.mandatoryIfFalse
 
 object SubscriptionEmailAddressForm {
@@ -30,15 +31,20 @@ object SubscriptionEmailAddressForm {
   val emailAddressUseAsaDataKey = "emailAddressUseAsaData"
   val emailAddressNewKey = "emailAddressNew"
 
+  private val PAYE_EMAIL_MAX_LENGTH = 129
+  private val CT_SA_EMAIL_MAX_LENGTH = 50
+
   private def emailAddressUseAsaDataMapping(legacyRegime: LegacyRegime): Mapping[Boolean] = useAsaDataMapping(
     //    TODO: 11329 Need to pass in businessName
     s"${legacyRegime.msgPrefix}.email-address.use-asa.error.required"
   )
 
-  private def emailAddressNewOptionalMapping(legacyRegime: LegacyRegime): Mapping[String] = trimmedText
-    .verifying(s"${legacyRegime.msgPrefix}.email-address.new-input.error.empty", _.nonEmpty)
-    //  TODO: 11329 Check regex matches API spec, including by legacyRegime
-    .verifying(s"${legacyRegime.msgPrefix}.email-address.new-input.error.invalid", x => x.isEmpty || (x.length <= 50 && x.contains("@")))
+  private def emailAddressNewOptionalMapping(legacyRegime: LegacyRegime): Mapping[String] = {
+    val maxLength = if (legacyRegime == PAYE) PAYE_EMAIL_MAX_LENGTH else CT_SA_EMAIL_MAX_LENGTH
+    trimmedText
+      .verifying(s"${legacyRegime.msgPrefix}.email-address.new-input.error.empty", _.nonEmpty)
+      .verifying(s"${legacyRegime.msgPrefix}.email-address.new-input.error.invalid", x => x.isEmpty || (x.length <= maxLength && x.contains("@")))
+  }
 
   def form(legacyRegime: LegacyRegime): Form[EmailAddressFormValues] = {
     Form(
