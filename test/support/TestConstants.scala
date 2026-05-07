@@ -29,6 +29,7 @@ import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
+import uk.gov.hmrc.auth.core.retrieve.AgentInformation
 import uk.gov.hmrc.auth.core.retrieve.Credentials
 import uk.gov.hmrc.auth.core.retrieve.Email
 import uk.gov.hmrc.auth.core.retrieve.Name
@@ -51,6 +52,11 @@ trait TestConstants {
       state = "Active",
       delegatedAuthRule = None
     )
+  )
+  val testAgentInformation = AgentInformation(
+    agentId = None,
+    agentCode = Some("ABC123"),
+    agentFriendlyName = None
   )
 
   val ggCredentials: Credentials = Credentials("ggId", "GovernmentGateway")

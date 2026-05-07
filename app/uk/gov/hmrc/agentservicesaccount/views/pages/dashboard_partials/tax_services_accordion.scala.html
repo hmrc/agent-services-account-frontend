@@ -172,7 +172,7 @@
     case SubscriptionStatus.Subscribed => {
         @inset_text(msgs("asa.legacy.paye.subscribed.p1", request.agentInfo.payeAgentCode.getOrElse("")))
         @h4(msgs("asa.legacy.paye.subscribed.p2"))
-        @p(msgs("asa.legacy.paye.subscribed.p3", "https://www.tax.service.gov.uk/account/authorise-client/agent/", request.agentInfo.payeAgentCode))
+        @p(msgs("asa.legacy.paye.subscribed.p3", "https://www.tax.service.gov.uk/account/authorise-client/agent/", request.agentInfo.agentInformation.agentCode))
         @h4(msgs("asa.legacy.paye.subscribed.p4"))
         @p(msgs("asa.legacy.paye.subscribed.p5", "https://www.tax.service.gov.uk/agent/remember-to-remove"))
         @p(msgs("asa.legacy.paye.subscribed.p6", "https://www.tax.service.gov.uk/construction-ind-scheme/agent/", request.agentInfo.payeAgentCode.getOrElse("")))
@@ -199,9 +199,9 @@
     case SubscriptionStatus.Subscribed => {
         @inset_text(msgs("asa.legacy.ct.subscribed.p1", request.agentInfo.ctAgentCode.getOrElse("")))
         @h4(msgs("asa.legacy.ct.subscribed.p2"))
-        @p(msgs("asa.legacy.ct.subscribed.p3", "TODO link")) @* TODO: provide the link *@
+        @p(msgs("asa.legacy.ct.subscribed.p3", "https://www.tax.service.gov.uk/account/authorise-client/agent/", request.agentInfo.agentInformation.agentCode))
         @h4(msgs("asa.legacy.ct.subscribed.p4"))
-        @p(msgs("asa.legacy.ct.subscribed.p5", "TODO link")) @* TODO: provide the link *@
+        @p(msgs("asa.legacy.ct.subscribed.p5", "https://www.tax.service.gov.uk//corporation-tax/agent/", request.agentInfo.ctAgentCode.getOrElse("")))
     }
     case _ => {
         @h4("asa.legacy.ct.h3")
@@ -228,7 +228,7 @@
     case SubscriptionStatus.Subscribed => {
         @inset_text(msgs("asa.legacy.sa.subscribed.p1", request.agentInfo.saAgentCode.getOrElse("")))
         @h4(msgs("asa.legacy.sa.subscribed.p2"))
-        @p(msgs("asa.legacy.sa.subscribed.p3", "https://www.tax.service.gov.uk/account/authorise-client/agent/", request.agentInfo.saAgentCode))
+        @p(msgs("asa.legacy.sa.subscribed.p3", "https://www.tax.service.gov.uk/account/authorise-client/agent/", request.agentInfo.agentInformation.agentCode))
         @h4(msgs("asa.legacy.sa.subscribed.p4"))
         @p(msgs("asa.legacy.sa.subscribed.p5", "https://www.tax.service.gov.uk/self-assessment/agent/", request.agentInfo.saAgentCode.getOrElse("")))
     }

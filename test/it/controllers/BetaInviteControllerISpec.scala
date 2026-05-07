@@ -148,6 +148,9 @@ extends BaseISpec {
                  |  "internalId": "some-id",
                  |  "affinityGroup": "Agent",
                  |  "credentialRole": "Admin",
+                 |    "agentInformation": {
+                 |    "agentCode": "ABC123"
+                 |  },
                  |  "allEnrolments": []
                  |}""".stripMargin
             )

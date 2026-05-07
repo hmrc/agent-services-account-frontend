@@ -19,9 +19,9 @@ package uk.gov.hmrc.agentservicesaccount.controllers
 import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc._
+import uk.gov.hmrc.agentservicesaccount.actions.CallOps._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.actions.AuthActions
-import uk.gov.hmrc.agentservicesaccount.actions.CallOps._
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentPermissionsConnector
@@ -113,14 +113,13 @@ with Logging {
             isAbroad = isAbroad,
             subscriptionInfo = subscriptionInfo
           )
-        ).addingToSession(toReturnFromMapping())
+        ).addingToSession(aossOriginCookie())
       }
     }
   }
 
-  private def toReturnFromMapping()(implicit request: Request[AnyContent]) = {
-    val sessionKeyUsedInMappingService = "OriginForMapping"
-    sessionKeyUsedInMappingService -> localFriendlyUrl(env)(request.path, request.host)
+  private def aossOriginCookie() = {
+    "origin" -> "ASA"
   }
 
   val manageAccount: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>

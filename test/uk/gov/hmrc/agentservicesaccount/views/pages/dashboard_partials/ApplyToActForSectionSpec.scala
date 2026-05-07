@@ -32,6 +32,7 @@ import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.dashboard_partials.apply_to_act_for_section
 import uk.gov.hmrc.auth.core.Admin
 import uk.gov.hmrc.auth.core.Enrolments
+import uk.gov.hmrc.auth.core.retrieve.AgentInformation
 
 class ApplyToActForSectionSpec
 extends ViewBaseSpec {
@@ -42,13 +43,20 @@ extends ViewBaseSpec {
   private def fakeRequestWithAgentInfo: AuthRequestWithAgentInfo[AnyContent] = {
     val fakeRequest = FakeRequest("GET", "/")
 
+    val testAgentInformation = AgentInformation(
+      agentId = None,
+      agentCode = Some("ABC123"),
+      agentFriendlyName = None
+    )
+
     val agentInfo = AgentInfo(
       arn = Arn("TARN0000001"),
       enrolments = Enrolments(Set.empty),
       credentialRole = Some(Admin),
       email = Some("test@test.com"),
       name = None,
-      credentials = None
+      credentials = None,
+      agentInformation = testAgentInformation
     )
 
     new AuthRequestWithAgentInfo(agentInfo, fakeRequest)
