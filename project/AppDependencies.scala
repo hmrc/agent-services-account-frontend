@@ -13,6 +13,7 @@ object AppDependencies {
     "uk.gov.hmrc"       %% s"play-conditional-form-mapping-$playVersion" % "3.5.0",
     "uk.gov.hmrc"       %% s"crypto-json-$playVersion"                   % "8.4.0",
     "uk.gov.hmrc"       %% s"domain-$playVersion"                        % "11.0.0",
+    "uk.gov.hmrc.objectstore" %% s"object-store-client-$playVersion" % "2.5.0",
     "com.beachape"      %% "enumeratum-play"                             % "1.9.0",
     "org.julienrf"      %% "play-json-derived-codecs"                    % "11.0.0",
     "org.apache.commons" % "commons-text"                                % "1.15.0"

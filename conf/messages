@@ -439,6 +439,7 @@ common.sign-out=Sign out
 common.what.happens.next=What happens next
 common.yes=Yes
 common.not-provided=Not provided
+common.tryAgain=Try Again
 details.link-hidden= for {0}
 
 # Errors
@@ -872,6 +873,7 @@ amls.view-details.pendingAMLSDetailsRejected.inset.p2=When you’ve found an org
 amls.view-details.noAMLSDetails.list.item1=the name of your supervisory body
 amls.view-details.noAMLSDetails.list.item2=your registration number
 amls.view-details.noAMLSDetails.list.item3=the renewal date of your registration
+amls.view-details.noAMLSDetails.list.item4=evidence of your registration
 
 amls.view-details.noAMLSDetails.link=Read more about registration (opens in a new tab)
 
@@ -882,9 +884,9 @@ amls.view-details.common.add-details=Add supervision details
 amls.view-details.common.add-new-supervision-details=Add new supervision details
 amls.view-details.common.update-details=Update details
 
-amls.new-supervisory-body.title=What’s the name of your supervisory body?
-amls.new-supervisory-body.hint=Start typing and select the anti-money laundering supervisor from the list
-amls.new-supervisory-body.error=Tell us the name of your supervisory body
+amls.new-supervisory-body.title=What is the name of the supervisory body for {0}?
+amls.new-supervisory-body.hint=Start to enter a name and choose your supervisor from the list
+amls.new-supervisory-body.error=Enter the name of the supervisory body for {0}
 amls.new-supervisory-body.error.os.max-length=Name of supervisory body must be 100 characters or less
 amls.new-supervisory-body.error.os.regex=Name of supervisory body must only include letters a to z, numbers, apostrophes, commas, ampersands (&), round brackets, forward slashes, full stops, hyphens and spaces
 amls.confirm-supervisory-body.h1=Are you still registered with {0}?
@@ -893,8 +895,8 @@ amls.confirm-registration-number.h1=Is your registration number still {0}?
 amls.confirm-registration-number.error=Select yes if your registration number is still {0}
 amls.enter-renewal-date.h1=When do you need to renew your registration?
 amls.enter-renewal-date.hint=For example, 31 3 2025
-amls.enter-registration-number.h1=What’s your registration number?
-amls.enter-registration-number.error.empty=Enter your registration number
+amls.enter-registration-number.h1=What is the registration number?
+amls.enter-registration-number.error.empty=Enter the registration number
 amls.enter-registration-number.error.not-hmrc.invalid=Registration number must include only letters and numbers
 amls.enter-registration-number.error.hmrc.invalid=Enter a registration number in the correct format, for example XAML00000123456
 amls.check-your-answers.h1=Check your answers
@@ -902,7 +904,45 @@ amls.check-your-answers.p=Anti-money laundering supervision details
 amls.check-your-answers.supervisory-body=Supervisory body
 amls.check-your-answers.registration-number=Registration number
 amls.check-your-answers.renewal-date=Next renewal date
+amls.check-your-answers.evidence=Evidence
 amls.check-your-answers.submit-button=Submit your details
+
+## AMLS Evidence upload
+amls.evidence-upload.title = Upload evidence
+amls.evidence-upload.p1=Upload evidence to show that {0} is your current anti-money laundering supervisor.
+amls.evidence-upload.p2=You can choose what evidence to upload.
+amls.evidence-upload.p3=Suitable evidence might be a letter, email or payment receipt from your supervisory body, confirming you’re covered.
+amls.evidence-upload.p4=The file must be smaller than 6MB.
+amls.evidence-upload.details.summary=Types of file we can accept
+amls.evidence-upload.fileTypes.p1=These file types are allowed:
+amls.evidence-upload.fileTypes.bullet1=image (.jpg, .jpeg, .png or .tiff)
+amls.evidence-upload.fileTypes.bullet2=PDF (.pdf)
+amls.evidence-upload.fileTypes.bullet3=email (.txt or .msg)
+amls.evidence-upload.fileTypes.bullet4=Microsoft (Word, Excel or PowerPoint)
+amls.evidence-upload.fileTypes.bullet5=Open Document Format (ODF)
+amls.evidence-upload.label=Choose your file
+amls.evidence-upload.fileUploadProgress.message = Checking file
+amls.evidence-upload.error.required = Select a file
+amls.evidence-upload.error.wrong-file-type = The selected file must be a JPG, JPEG, PNG, TIFF, PDF, TXT, MSG, DOC, DOCX, XLS, XLSX, PPT, PPTX, ODT, ODS or ODP file
+amls.evidence-upload.error.file-too-large = The file must be smaller than 6MB. Choose a different file.
+amls.evidence-upload.error.file-empty = The file is empty. Choose a different file.
+amls.evidence-upload.error.virus = The file contains a virus. Choose a different file.
+amls.evidence-upload.error.generic = The file could not be uploaded. Try again
+
+amls.evidence-upload-progress.title=We are checking your upload
+amls.evidence-upload-progress.complete.title=Your upload is complete
+amls.evidence-upload-progress.failed.title=Your upload has failed scanning
+amls.evidence-upload-progress.virus.title=Your upload has a virus
+amls.evidence-upload-progress.message=Checking file
+amls.evidence-upload-progress.inProgress=Wait a few seconds and then select ‘Continue’.
+amls.evidence-upload-progress.complete=Your file {0} has been uploaded successfully.
+amls.evidence-upload-progress.failed=Your file upload has failed scanning. Try uploading another file.
+amls.evidence-upload-progress.virus=A virus has been detected in your uploaded file, try uploading another file.
+
+amls.evidence-upload-error.EntityTooLarge.title = Your upload is too large
+amls.evidence-upload-error.EntityTooLarge.message = The file you are trying to upload is too large. The maximum file size is 6MB. Try uploading a smaller file.
+amls.evidence-upload-error.Unknown.title = Your upload has failed
+amls.evidence-upload-error.Unknown.message = Your file upload has failed scanning. Try uploading another file.
 
 #AMLS Errors
 update-money-laundering-supervisory.error.date=Enter your next registration renewal date

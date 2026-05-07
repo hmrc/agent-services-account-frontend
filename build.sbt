@@ -22,6 +22,9 @@ ThisBuild / scalaVersion := "2.13.18"
 TwirlKeys.templateImports ++= Seq(
   "uk.gov.hmrc.agentservicesaccount.views.html.components._",
   "uk.gov.hmrc.agentservicesaccount.utils.ViewUtils._",
+  "uk.gov.hmrc.govukfrontend.views.html.components._",
+  "uk.gov.hmrc.govukfrontend.views.html.components._",
+  "uk.gov.hmrc.hmrcfrontend.views.html.components._"
 )
 
 lazy val root = (project in file("."))

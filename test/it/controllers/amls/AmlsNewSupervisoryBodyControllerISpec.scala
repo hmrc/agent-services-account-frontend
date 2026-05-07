@@ -61,7 +61,7 @@ extends ComponentBaseISpec {
       val result = get(newSupervisoryBodyPath)
 
       result.status shouldBe OK
-      assertPageHasTitle("What’s the name of your supervisory body?")(result)
+      assertPageHasTitle("What is the name of the supervisory body for My Agency?")(result)
     }
 
     "display the page for overseas agent" in {
@@ -75,7 +75,7 @@ extends ComponentBaseISpec {
 
       result.status shouldBe OK
 
-      result.body should include("What’s the name of your supervisory body?")
+      result.body should include("What is the name of the supervisory body for My Agency?")
     }
   }
 
@@ -147,7 +147,7 @@ extends ComponentBaseISpec {
       val result: WSResponse = post(newSupervisoryBodyPath)(Map("something" -> List("invalid")))
 
       result.status shouldBe BAD_REQUEST
-      assertPageHasTitle("Error: What’s the name of your supervisory body?")(result)
+      assertPageHasTitle("Error: What is the name of the supervisory body for My Agency?")(result)
 
     }
   }

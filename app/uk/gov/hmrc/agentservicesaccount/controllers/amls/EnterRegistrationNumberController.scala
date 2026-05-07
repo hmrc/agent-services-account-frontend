@@ -84,11 +84,18 @@ with I18nSupport {
   private def nextPage(
     cya: Boolean,
     journey: UpdateAmlsJourney
-  ): String = {
-    if (cya | !journey.isUkAgent)
-      routes.CheckYourAnswersController.showPage.url
-    else
-      routes.EnterRenewalDateController.showPage.url
-  }
+  ): String =
+    if (appConfig.enableAgentRecordHipUpdates) {
+      if (journey.isHmrc)
+        routes.CheckYourAnswersController.showPage.url
+      else
+        routes.EvidenceUploadController.showPage.url
+    }
+    else {
+      if (cya || !journey.isUkAgent)
+        routes.CheckYourAnswersController.showPage.url
+      else
+        routes.EnterRenewalDateController.showPage.url
+    }
 
 }

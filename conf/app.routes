@@ -144,6 +144,11 @@ POST       /manage-account/money-laundering-supervision/renewal-date            
 GET        /manage-account/money-laundering-supervision/new-registration-number          @uk.gov.hmrc.agentservicesaccount.controllers.amls.EnterRegistrationNumberController.showPage(cya: Boolean ?= false)
 POST       /manage-account/money-laundering-supervision/new-registration-number          @uk.gov.hmrc.agentservicesaccount.controllers.amls.EnterRegistrationNumberController.onSubmit(cya: Boolean ?= false)
 
+GET        /manage-account/money-laundering-supervision/upload-evidence                  @uk.gov.hmrc.agentservicesaccount.controllers.amls.EvidenceUploadController.showPage
+GET        /manage-account/money-laundering-supervision/upload-status-check              @uk.gov.hmrc.agentservicesaccount.controllers.amls.EvidenceUploadController.checkUploadStatus(key: String)
+GET        /manage-account/money-laundering-supervision/upload-result                    @uk.gov.hmrc.agentservicesaccount.controllers.amls.EvidenceUploadController.showUploadResult(key: Option[String] ?= None)
+GET        /manage-account/money-laundering-supervision/upload-error                     @uk.gov.hmrc.agentservicesaccount.controllers.amls.EvidenceUploadController.showUploadError(errorCode: Option[String] ?= None, errorMessage: Option[String] ?= None, errorRequestId: Option[String] ?= None, key: Option[String] ?= None)
+
 GET        /manage-account/money-laundering-supervision/check-your-answers               @uk.gov.hmrc.agentservicesaccount.controllers.amls.CheckYourAnswersController.showPage
 POST       /manage-account/money-laundering-supervision/check-your-answers               @uk.gov.hmrc.agentservicesaccount.controllers.amls.CheckYourAnswersController.onSubmit
 

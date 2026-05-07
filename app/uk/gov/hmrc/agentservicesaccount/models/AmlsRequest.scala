@@ -25,7 +25,8 @@ case class AmlsRequest(
   ukRecord: Boolean,
   supervisoryBody: String,
   membershipNumber: String,
-  membershipExpiresOn: Option[LocalDate]
+  membershipExpiresOn: Option[LocalDate],
+  evidenceObjectReference: Option[String] = None
 )
 
 object AmlsRequest {

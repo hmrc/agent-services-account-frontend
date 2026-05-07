@@ -69,7 +69,10 @@ with IntegrationPatience {
       "agent-user-client-details",
       "email",
       "address-lookup-frontend",
-      "email-verification"
+      "email-verification",
+      "object-store",
+      "internal-auth",
+      "upscan-initiate"
     ).flatMap { service =>
       Seq(
         s"microservice.services.$service.host" -> mockHost,
@@ -95,7 +98,8 @@ with IntegrationPatience {
     "fieldLevelEncryption.enabled" -> "true",
     "suspendedContactDetails.sendEmail" -> "false",
     "mongodb.desi-details.lockout-period" -> Duration(28, DAYS).toMinutes.toString,
-    "enable-backend-pcr-database" -> "true"
+    "enable-backend-pcr-database" -> "true",
+    "internal-auth-token-enabled-on-start" -> "false"
   )
 
   val mongoComponent: MongoComponent = app.injector.instanceOf[MongoComponent]

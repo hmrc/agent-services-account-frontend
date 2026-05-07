@@ -23,6 +23,7 @@ class NewAmlsSupervisoryBodyFormSpec
 extends AnyWordSpec
 with Matchers {
 
+  val agentName = "Test Agent Name"
   val amlsBodies = Map("ACCA" -> "Association of Certified Chartered Accountants")
 
   "NewAmlsSupervisoryBodyForm binding" should {
@@ -31,7 +32,7 @@ with Matchers {
         "body" -> "ACCA"
       )
 
-      NewAmlsSupervisoryBodyForm.form(amlsBodies)(isUk = true).bind(data).value shouldBe Some("ACCA")
+      NewAmlsSupervisoryBodyForm.form(amlsBodies)(isUk = true, Some(agentName)).bind(data).value shouldBe Some("ACCA")
     }
 
     "generate error when nothing entered for UK agent" in {
@@ -39,7 +40,7 @@ with Matchers {
         "body" -> ""
       )
 
-      val result = NewAmlsSupervisoryBodyForm.form(amlsBodies)(isUk = true).bind(data)
+      val result = NewAmlsSupervisoryBodyForm.form(amlsBodies)(isUk = true, Some(agentName)).bind(data)
 
       result.value shouldBe None
       result.errors.size shouldBe 1
@@ -51,7 +52,7 @@ with Matchers {
         "body" -> "%^$"
       )
 
-      val result = NewAmlsSupervisoryBodyForm.form(amlsBodies)(isUk = true).bind(data)
+      val result = NewAmlsSupervisoryBodyForm.form(amlsBodies)(isUk = true, Some(agentName)).bind(data)
 
       result.value shouldBe None
       result.errors.size shouldBe 1
@@ -63,7 +64,7 @@ with Matchers {
         "body" -> "OS AMLS"
       )
 
-      val result = NewAmlsSupervisoryBodyForm.form(amlsBodies)(isUk = false).bind(data)
+      val result = NewAmlsSupervisoryBodyForm.form(amlsBodies)(isUk = false, Some(agentName)).bind(data)
 
       result.value shouldBe Some("OS AMLS")
     }
@@ -73,7 +74,7 @@ with Matchers {
         "body" -> ""
       )
 
-      val result = NewAmlsSupervisoryBodyForm.form(amlsBodies)(isUk = false).bind(data)
+      val result = NewAmlsSupervisoryBodyForm.form(amlsBodies)(isUk = false, Some(agentName)).bind(data)
 
       result.value shouldBe None
       result.errors.size shouldBe 1
@@ -85,7 +86,7 @@ with Matchers {
         "body" -> "&%$"
       )
 
-      val result = NewAmlsSupervisoryBodyForm.form(amlsBodies)(isUk = false).bind(data)
+      val result = NewAmlsSupervisoryBodyForm.form(amlsBodies)(isUk = false, Some(agentName)).bind(data)
 
       result.value shouldBe None
       result.errors.size shouldBe 1
@@ -97,7 +98,7 @@ with Matchers {
         "body" -> new scala.util.Random().alphanumeric.take(101).mkString
       )
 
-      val result = NewAmlsSupervisoryBodyForm.form(amlsBodies)(isUk = false).bind(data)
+      val result = NewAmlsSupervisoryBodyForm.form(amlsBodies)(isUk = false, Some(agentName)).bind(data)
 
       result.value shouldBe None
       result.errors.size shouldBe 1

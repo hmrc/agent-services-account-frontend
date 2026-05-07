@@ -1,0 +1,4 @@
+# Routes only accessible by other MDTP services, not the web
+
++nocsrf
+POST        /upscan-callback        @uk.gov.hmrc.agentservicesaccount.controllers.internal.UpscanCallbackController.callback()

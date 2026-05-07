@@ -55,8 +55,8 @@ extends ViewBaseSpec {
     def testPageStaticContent(doc: Document): Unit = {
 
       "have the correct h1 heading and legend" in {
-        doc.select("h1").first.text() mustBe "What’s your registration number?"
-        doc.select("legend").text() mustBe "What’s your registration number?"
+        doc.select("h1").first.text() mustBe "What is the registration number?"
+        doc.select("legend").text() mustBe "What is the registration number?"
       }
 
       "have the correct continue button" in {
@@ -77,7 +77,7 @@ extends ViewBaseSpec {
       testPageStaticContent(doc)
 
       "display the correct page title" in {
-        doc.title() mustBe "What’s your registration number? - Agent services account - GOV.UK"
+        doc.title() mustBe "What is the registration number? - Agent services account - GOV.UK"
       }
     }
 
@@ -94,12 +94,12 @@ extends ViewBaseSpec {
       testPageStaticContent(doc)
 
       "display error prefix on page title" in {
-        doc.title() mustBe "Error: What’s your registration number? - Agent services account - GOV.UK"
+        doc.title() mustBe "Error: What is the registration number? - Agent services account - GOV.UK"
       }
 
       "display correct error summary link" in {
         val errorLink: Element = doc.select(".govuk-error-summary__list a").first()
-        errorLink.text() mustBe "Enter your registration number"
+        errorLink.text() mustBe "Enter the registration number"
         errorLink.attr("href") mustBe "#number"
       }
 
@@ -108,7 +108,7 @@ extends ViewBaseSpec {
       }
 
       "display error message on form" in {
-        doc.select(".govuk-error-message").text() mustBe "Error: Enter your registration number"
+        doc.select(".govuk-error-message").text() mustBe "Error: Enter the registration number"
       }
     }
   }

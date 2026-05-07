@@ -23,7 +23,9 @@ import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.controllers._
 import uk.gov.hmrc.agentservicesaccount.models.AmlsRequest
-import uk.gov.hmrc.agentservicesaccount.models.UpdateAmlsJourney
+import uk.gov.hmrc.agentservicesaccount.models.upscan.FileUploadReference
+import uk.gov.hmrc.agentservicesaccount.models.upscan.UpscanSuccess
+import uk.gov.hmrc.agentservicesaccount.repository.UpscanRepository
 import uk.gov.hmrc.agentservicesaccount.services.AuditService
 import uk.gov.hmrc.agentservicesaccount.services.AgentRecordService
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
@@ -32,7 +34,6 @@ import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.check_your_answers
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import java.time.format.DateTimeFormatter
-import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 import scala.concurrent.ExecutionContext
@@ -47,7 +48,8 @@ class CheckYourAnswersController @Inject() (
   val sessionCacheService: SessionCacheService,
   checkYourAnswers: check_your_answers,
   cc: MessagesControllerComponents,
-  auditService: AuditService
+  auditService: AuditService,
+  upscanRepository: UpscanRepository
 )(implicit
   appConfig: AppConfig,
   val ec: ExecutionContext
@@ -58,12 +60,52 @@ with I18nSupport {
 
   def showPage: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     withUpdateAmlsJourney { journeyData =>
-      val model = buildSummaryListItems(
-        journeyData.isUkAgent,
-        journeyData,
-        request.messages.lang.locale
+      val mandatoryItems = Seq(
+        SummaryListData(
+          key = "amls.check-your-answers.supervisory-body",
+          value = journeyData.newAmlsBody.getOrElse(throw new Exception("Expected AMLS journey data missing")),
+          link = Some(amls.routes.AmlsNewSupervisoryBodyController.showPage(true))
+        ),
+        SummaryListData(
+          key = "amls.check-your-answers.registration-number",
+          value = journeyData.newRegistrationNumber.getOrElse(throw new Exception("Expected AMLS journey data missing")),
+          link = Some(amls.routes.EnterRegistrationNumberController.showPage(true))
+        )
       )
-      Ok(checkYourAnswers(model)).toFuture
+
+      if (appConfig.enableAgentRecordHipUpdates) {
+        (journeyData.isHmrc, journeyData.newEvidenceObjectReference) match {
+          case (true, _) => Ok(checkYourAnswers(mandatoryItems)).toFuture
+          case (false, Some(reference)) =>
+            upscanRepository.findByReference(FileUploadReference(reference)).map {
+              case Some(details: UpscanSuccess) =>
+                Ok(checkYourAnswers(
+                  mandatoryItems :+ SummaryListData(
+                    key = "amls.check-your-answers.evidence",
+                    value = details.fileName,
+                    link = Some(amls.routes.EvidenceUploadController.showPage)
+                  )
+                ))
+              case _ => Redirect(amls.routes.EvidenceUploadController.showPage)
+            }
+          case _ => Redirect(amls.routes.EvidenceUploadController.showPage).toFuture
+        }
+      }
+      else {
+        (journeyData.isUkAgent, journeyData.newExpirationDate) match {
+          case (false, _) => Ok(checkYourAnswers(mandatoryItems)).toFuture
+          case (true, Some(date)) =>
+            val formatter = DateTimeFormatter.ofPattern("d MMMM yyyy", request.messages.lang.locale)
+            Ok(checkYourAnswers(
+              mandatoryItems :+ SummaryListData(
+                key = "amls.check-your-answers.renewal-date",
+                value = date.format(formatter),
+                link = Some(amls.routes.EnterRenewalDateController.showPage)
+              )
+            )).toFuture
+          case _ => Redirect(amls.routes.EnterRenewalDateController.showPage).toFuture
+        }
+      }
     }
   }
 
@@ -75,7 +117,14 @@ with I18nSupport {
             journeyData.isUkAgent,
             newAmlsBody,
             newRegistrationNumber,
-            journeyData.newExpirationDate
+            if (appConfig.enableAgentRecordHipUpdates)
+              None
+            else
+              journeyData.newExpirationDate,
+            if (appConfig.enableAgentRecordHipUpdates && !journeyData.isHmrc)
+              journeyData.newEvidenceObjectReference
+            else
+              None
           )
 
           for {
@@ -99,40 +148,5 @@ with I18nSupport {
       }
     }
   }
-
-  private[amls] def buildSummaryListItems(
-    isUkAgent: Boolean,
-    journey: UpdateAmlsJourney,
-    lang: Locale
-  ): Seq[SummaryListData] = {
-    for {
-      body <- journey.newAmlsBody
-      regNumber <- journey.newRegistrationNumber
-    } yield {
-      val items = Seq(
-        SummaryListData(
-          key = "amls.check-your-answers.supervisory-body",
-          value = body,
-          link = Some(amls.routes.AmlsNewSupervisoryBodyController.showPage(true))
-        ),
-        SummaryListData(
-          key = "amls.check-your-answers.registration-number",
-          value = regNumber,
-          link = Some(amls.routes.EnterRegistrationNumberController.showPage(true))
-        )
-      )
-
-      (isUkAgent, journey.newExpirationDate) match {
-        case (false, _) => items
-        case (true, Some(date)) =>
-          val formatter = DateTimeFormatter.ofPattern("d MMMM yyyy", lang)
-          items ++ Seq(SummaryListData(
-            key = "amls.check-your-answers.renewal-date",
-            value = date.format(formatter),
-            link = Some(amls.routes.EnterRenewalDateController.showPage)
-          ))
-      }
-    }
-  }.getOrElse(throw new Exception("Expected AMLS journey data missing"))
 
 }

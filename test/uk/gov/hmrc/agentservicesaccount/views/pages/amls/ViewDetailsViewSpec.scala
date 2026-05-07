@@ -84,7 +84,7 @@ extends ViewBaseSpec {
       "display unordered list content" in {
         doc.select(".govuk-list--item").get(0).text() shouldBe "the name of your supervisory body"
         doc.select(".govuk-list--item").get(1).text() shouldBe "your registration number"
-        doc.select(".govuk-list--item").get(2).text() shouldBe "the renewal date of your registration"
+        doc.select(".govuk-list--item").get(2).text() shouldBe "evidence of your registration"
       }
       "display a link styled as button" in {
         doc.select(".govuk-button").first().text() shouldBe "Add supervision details"
@@ -147,12 +147,10 @@ extends ViewBaseSpec {
         doc.select(".govuk-summary-list__value").get(0).text() shouldBe "HMRC"
         doc.select(".govuk-summary-list__key").get(1).text() shouldBe "Registration number"
         doc.select(".govuk-summary-list__value").get(1).text() shouldBe "123"
-        doc.select(".govuk-summary-list__key").get(2).text() shouldBe "Next renewal date"
-        doc.select(".govuk-summary-list__value").get(2).text() shouldBe "10 February 2024"
       }
       "display a link styled as button" in {
         doc.select(".govuk-button").first().text() shouldBe "Update details"
-        doc.select(".govuk-button").first().attr("href") shouldBe "/agent-services-account/manage-account/money-laundering-supervision/confirm-supervisory-body"
+        doc.select(".govuk-button").first().attr("href") shouldBe "/agent-services-account/manage-account/money-laundering-supervision/new-supervisory-body"
       }
     }
 
@@ -178,8 +176,6 @@ extends ViewBaseSpec {
         doc.select(".govuk-summary-list__value").get(0).text() shouldBe "HMRC"
         doc.select(".govuk-summary-list__key").get(1).text() shouldBe "Registration number"
         doc.select(".govuk-summary-list__value").get(1).text() shouldBe "123"
-        doc.select(".govuk-summary-list__key").get(2).text() shouldBe "Next renewal date"
-        doc.select(".govuk-summary-list__value").get(2).text() shouldBe "10 February 2025"
       }
       "display h2" in {
         doc.select("h2").first().text() shouldBe "Keep your details up to date"
@@ -194,7 +190,7 @@ extends ViewBaseSpec {
         doc.select("#start-journey").first().text() shouldBe "Update anti-money laundering supervision details"
         doc.select(
           "#start-journey"
-        ).first().attr("href") shouldBe "/agent-services-account/manage-account/money-laundering-supervision/confirm-supervisory-body"
+        ).first().attr("href") shouldBe "/agent-services-account/manage-account/money-laundering-supervision/new-supervisory-body"
       }
     }
 
@@ -220,25 +216,20 @@ extends ViewBaseSpec {
         doc.select(".govuk-summary-list__value").get(0).text() shouldBe "ICAEW"
         doc.select(".govuk-summary-list__key").get(1).text() shouldBe "Registration number"
         doc.select(".govuk-summary-list__value").get(1).text() shouldBe "123"
-        doc.select(".govuk-summary-list__key").get(2).text() shouldBe "Next renewal date"
-        doc.select(".govuk-summary-list__value").get(2).text() shouldBe "10 February 2025"
       }
       "display h2" in {
         doc.select("h2").first().text() shouldBe "Keep your details up to date"
       }
       "display paragraph content" in {
-        doc.select(".govuk-body").first().text() shouldBe "You need to confirm your anti-money laundering supervisions details with us:"
+        doc.select(
+          ".govuk-body"
+        ).first().text() shouldBe "You need to confirm your anti-money laundering supervisions details with us whenever you change to a new provider."
       }
-      "display unordered list content" in {
-        doc.select(".govuk-list--item").get(0).text() shouldBe "once a year, after you renew your registration with the same provider"
-        doc.select(".govuk-list--item").get(1).text() shouldBe "whenever you change to a new supervision provider"
-      }
-
       "display a link to update supervisory details" in {
         doc.select("#start-journey").first().text() shouldBe "Update anti-money laundering supervision details"
         doc.select(
           "#start-journey"
-        ).first().attr("href") shouldBe "/agent-services-account/manage-account/money-laundering-supervision/confirm-supervisory-body"
+        ).first().attr("href") shouldBe "/agent-services-account/manage-account/money-laundering-supervision/new-supervisory-body"
       }
     }
 
@@ -277,7 +268,7 @@ extends ViewBaseSpec {
         doc.select("#start-journey").first().text() shouldBe "Update anti-money laundering supervision details"
         doc.select(
           "#start-journey"
-        ).first().attr("href") shouldBe "/agent-services-account/manage-account/money-laundering-supervision/confirm-supervisory-body"
+        ).first().attr("href") shouldBe "/agent-services-account/manage-account/money-laundering-supervision/new-supervisory-body"
       }
     }
 

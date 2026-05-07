@@ -49,23 +49,27 @@ extends FrontendController(cc)
 with AmlsJourneySupport
 with I18nSupport {
 
-  def showPage(cya: Boolean): Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
+  def showPage(cya: Boolean): Action[AnyContent] = actions.authActionWithSuspensionCheckWithAgentRecord.async { implicit request =>
     withUpdateAmlsJourney { amlsJourney =>
       val amlsBodies = amlsLoader.load("/amls.csv")
-      val form = NewAmlsSupervisoryBodyForm.form(amlsBodies)(amlsJourney.isUkAgent).fill(amlsJourney.newAmlsBody.getOrElse(""))
+      val agencyName = request.agentDetailsDesResponse.agencyDetails.flatMap(_.agencyName)
+      val form = NewAmlsSupervisoryBodyForm.form(amlsBodies)(amlsJourney.isUkAgent, agencyName)
+        .fill(amlsJourney.newAmlsBody.getOrElse(""))
       Ok(newSupervisoryBody(
         form,
         amlsBodies,
         amlsJourney.isUkAgent,
+        agencyName,
         cya
       )).toFuture
     }
   }
 
-  def onSubmit(cya: Boolean): Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
+  def onSubmit(cya: Boolean): Action[AnyContent] = actions.authActionWithSuspensionCheckWithAgentRecord.async { implicit request =>
     withUpdateAmlsJourney { journey =>
       val amlsBodies = amlsLoader.load("/amls.csv")
-      NewAmlsSupervisoryBodyForm.form(amlsBodies)(journey.isUkAgent)
+      val agencyName = request.agentDetailsDesResponse.agencyDetails.flatMap(_.agencyName)
+      NewAmlsSupervisoryBodyForm.form(amlsBodies)(journey.isUkAgent, agencyName)
         .bindFromRequest()
         .fold(
           formWithErrors =>
@@ -73,6 +77,7 @@ with I18nSupport {
               formWithErrors,
               amlsBodies,
               journey.isUkAgent,
+              agencyName,
               cya
             )).toFuture,
           data => {
