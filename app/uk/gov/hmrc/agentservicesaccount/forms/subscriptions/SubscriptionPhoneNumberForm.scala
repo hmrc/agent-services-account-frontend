@@ -33,7 +33,6 @@ object SubscriptionPhoneNumberForm {
   // UI validation allows '+', spaces and parentheses for user-friendly input.
   // Raw value is stored in cache; formatting characters are stripped only
   // at final submission to meet API requirements of digits only.
-  //  TODO: 11329 Check regex matches API spec, including by legacyRegime
   private val phoneNumberRegex = """^(?=.*\d)[0-9 +()]+$""".r
 
   private def phoneNumberUseAsaDataMapping(legacyRegime: LegacyRegime): Mapping[Boolean] = useAsaDataMapping(
