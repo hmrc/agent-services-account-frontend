@@ -56,7 +56,7 @@ with Logging {
       case _ =>
         val journey = request.subscriptionJourney
 
-        val subscriptionBusinessName = journey.asaDetails.agencyName.getOrElse("")
+        val asaDetailsAgencyName = journey.asaDetails.agencyName.getOrElse("")
 
         val initialForm = SubscriptionBusinessNameForm.form(legacyRegime)
         val form =
@@ -76,7 +76,7 @@ with Logging {
         Future.successful(
           Ok(update_business_name(
             form,
-            subscriptionBusinessName,
+            asaDetailsAgencyName,
             legacyRegime
           ))
         )
@@ -88,11 +88,11 @@ with Logging {
 
     SubscriptionBusinessNameForm.form(legacyRegime).bindFromRequest().fold(
       formWithErrors => {
-        val subscriptionBusinessName = journey.asaDetails.agencyName.getOrElse("")
+        val asaDetailsAgencyName = journey.asaDetails.agencyName.getOrElse("")
         Future.successful(
           BadRequest(update_business_name(
             formWithErrors,
-            subscriptionBusinessName,
+            asaDetailsAgencyName,
             legacyRegime
           ))
         )

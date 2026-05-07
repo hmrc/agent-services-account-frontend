@@ -40,7 +40,11 @@ object SubscriptionEmailAddressForm {
   )
 
   private def emailAddressNewOptionalMapping(legacyRegime: LegacyRegime): Mapping[String] = {
-    val maxLength = if (legacyRegime == PAYE) PAYE_EMAIL_MAX_LENGTH else CT_SA_EMAIL_MAX_LENGTH
+    val maxLength =
+      if (legacyRegime == PAYE)
+        PAYE_EMAIL_MAX_LENGTH
+      else
+        CT_SA_EMAIL_MAX_LENGTH
     trimmedText
       .verifying(s"${legacyRegime.msgPrefix}.email-address.new-input.error.empty", _.nonEmpty)
       .verifying(s"${legacyRegime.msgPrefix}.email-address.new-input.error.invalid", x => x.isEmpty || (x.length <= maxLength && x.contains("@")))

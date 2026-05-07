@@ -34,7 +34,7 @@
     govukErrorSummary: GovukErrorSummary
 )
 
-@(form: Form[BusinessNameFormValues], subscriptionBusinessName: String, legacyRegime: LegacyRegime)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
+@(form: Form[BusinessNameFormValues], asaDetailsAgencyName: String, legacyRegime: LegacyRegime)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
 
 @legacyRegimePrefix = @{ legacyRegime.msgPrefix }
 
@@ -69,7 +69,7 @@
             name = businessNameUseAsaDataKey,
             items = Seq(
                 RadioItem(
-                    content = Text(subscriptionBusinessName),
+                    content = Text(asaDetailsAgencyName),
                     value = Some("true")
                 ),
                 RadioItem(
