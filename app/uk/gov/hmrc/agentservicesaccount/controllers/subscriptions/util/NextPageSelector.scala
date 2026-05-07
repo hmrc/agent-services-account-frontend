@@ -18,7 +18,6 @@ package uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util
 
 import play.api.mvc.Call
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
-import uk.gov.hmrc.agentservicesaccount.controllers.{routes => homeRoutes}
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE

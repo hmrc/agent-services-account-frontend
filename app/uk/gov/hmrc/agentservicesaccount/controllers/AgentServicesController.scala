@@ -19,7 +19,6 @@ package uk.gov.hmrc.agentservicesaccount.controllers
 import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc._
-import uk.gov.hmrc.agentservicesaccount.actions.CallOps._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.actions.AuthActions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
@@ -28,11 +27,11 @@ import uk.gov.hmrc.agentservicesaccount.connectors.AgentPermissionsConnector
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentUserClientDetailsConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.amls.{routes => amlsRoutes}
 import uk.gov.hmrc.agentservicesaccount.models.AmlsStatuses._
-import uk.gov.hmrc.agentservicesaccount.models.AmlsStatus
-import uk.gov.hmrc.agentservicesaccount.models.Arn
 import uk.gov.hmrc.agentservicesaccount.models.accessgroups.OptedInReady
 import uk.gov.hmrc.agentservicesaccount.models.accessgroups.OptinStatus
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionInfo
+import uk.gov.hmrc.agentservicesaccount.models.AmlsStatus
+import uk.gov.hmrc.agentservicesaccount.models.Arn
 import uk.gov.hmrc.agentservicesaccount.services.AgentRecordService
 import uk.gov.hmrc.agentservicesaccount.services.SubscriptionService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages._

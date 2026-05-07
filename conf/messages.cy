@@ -271,8 +271,8 @@ asa.legacy.paye.subscribed.p1=Your agent code is: {0}
 asa.legacy.paye.subscribed.p2=Get permission from new clients
 asa.legacy.paye.subscribed.p3=<a class="govuk-link" href="{0}" rel="noreferrer noopener">Ask a client to authorise you</a>
 asa.legacy.paye.subscribed.p4=Manage your client’s PAYE/CIS
-asa.legacy.paye.subscribed.p5=<a class="govuk-link" href="{0}" rel="noreferrer noopener">View and manage your client list for PAYE</a>
-asa.legacy.paye.subscribed.p6=<a class="govuk-link" href="{0}" rel="noreferrer noopener">View and manage your client list for CIS</a>
+asa.legacy.paye.subscribed.p5=<a class="govuk-link" href="{0}{1}" rel="noreferrer noopener">View and manage your client list for PAYE</a>
+asa.legacy.paye.subscribed.p6=<a class="govuk-link" href="{0}{1}" rel="noreferrer noopener">View and manage your client list for CIS</a>
 
 asa.legacy.paye.do-you-already-manage.title=Does {0} already manage PAYE clients?
 asa.legacy.paye.do-you-already-manage.existing.false=No, this is their first time managing PAYE clients
@@ -340,9 +340,9 @@ asa.legacy.sa.in-progress.p1=We are still processing the application you did on 
 asa.legacy.sa.in-progress.p2=Processing can take up to 5 days.
 asa.legacy.sa.subscribed.p1=Your agent code is: {0}
 asa.legacy.sa.subscribed.p2=Get permission from new clients
-asa.legacy.sa.subscribed.p3=<a class="govuk-link" href="{0}" rel="noreferrer noopener">Ask a client to authorise you</a>
+asa.legacy.sa.subscribed.p3=<a class="govuk-link" href="{0}{1}" rel="noreferrer noopener">Ask a client to authorise you</a>
 asa.legacy.sa.subscribed.p4=Manage your client’s Self Assessment
-asa.legacy.sa.subscribed.p5=<a class="govuk-link" href="{0}" rel="noreferrer noopener">View and manage your client list for Self Assessment</a>
+asa.legacy.sa.subscribed.p5=<a class="govuk-link" href="{0}{1}" rel="noreferrer noopener">View and manage your client list for Self Assessment</a>
 
 asa.legacy.sa.do-you-already-manage.title=Does {0} already manage Self Assessment clients?
 asa.legacy.sa.do-you-already-manage.existing.false=No, this is their first time managing Self Assessment clients
