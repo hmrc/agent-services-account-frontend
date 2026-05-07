@@ -33,7 +33,7 @@ class UpdateEmailAddressSpec
 extends ViewBaseSpec {
 
   private val view: update_email_address = inject[update_email_address]
-  private val subscriptionEmailAddress = "joe@bloggs.com"
+  private val asaDetailsAgencyEmail = "joe@bloggs.com"
 
   private val legacyRegime = LegacyRegime.PAYE
 
@@ -53,7 +53,7 @@ extends ViewBaseSpec {
   def render(form: Form[EmailAddressFormValues]): Document = Jsoup.parse(
     view(
       form,
-      subscriptionEmailAddress,
+      asaDetailsAgencyEmail,
       legacyRegime
     )(
       messages,
@@ -108,7 +108,7 @@ extends ViewBaseSpec {
       "display correct radio options" in {
         val radios = doc.select(".govuk-radios__item")
         radios.size() mustBe 2
-        radios.get(0).text() mustBe subscriptionEmailAddress
+        radios.get(0).text() mustBe asaDetailsAgencyEmail
         radios.get(0).select("input").attr("name") mustBe emailAddressUseAsaDataKey
         radios.get(1).text() mustBe messages(s"$legacyRegimePrefix.email-address.use-asa.false")
         radios.get(1).select("input").attr("name") mustBe emailAddressUseAsaDataKey

@@ -52,7 +52,7 @@ with Logging {
   def showPage(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
     val journey = request.subscriptionJourney
 
-    val subscriptionPhoneNumber: Option[String] = journey.asaDetails.agencyTelephone
+    val asaDetailsAgencyTelephone: Option[String] = journey.asaDetails.agencyTelephone
     val initialForm = SubscriptionPhoneNumberForm.form(legacyRegime)
     val form =
       journey.useCustomPhoneNumber match {
@@ -71,7 +71,7 @@ with Logging {
     Future.successful(
       Ok(update_phone_number(
         form,
-        subscriptionPhoneNumber,
+        asaDetailsAgencyTelephone,
         legacyRegime
       ))
     )
@@ -82,11 +82,11 @@ with Logging {
 
     SubscriptionPhoneNumberForm.form(legacyRegime).bindFromRequest().fold(
       formWithErrors => {
-        val subscriptionPhoneNumber: Option[String] = journey.asaDetails.agencyTelephone
+        val asaDetailsAgencyTelephone: Option[String] = journey.asaDetails.agencyTelephone
         Future.successful(
           BadRequest(update_phone_number(
             formWithErrors,
-            subscriptionPhoneNumber,
+            asaDetailsAgencyTelephone,
             legacyRegime
           ))
         )

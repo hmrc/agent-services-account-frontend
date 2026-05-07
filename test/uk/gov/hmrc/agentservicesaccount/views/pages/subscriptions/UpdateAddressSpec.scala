@@ -58,7 +58,7 @@ extends ViewBaseSpec {
     "GB"
   )
 
-  private val subscriptionAddress = formatAddress(subscriptionBusinessAddress)
+  private val asaDetailsAgencyAddress = formatAddress(subscriptionBusinessAddress)
 
   private val addressForm: Form[AddressFormValues] = SubscriptionAddressForm.form(legacyRegime)
 
@@ -70,7 +70,7 @@ extends ViewBaseSpec {
   def render(form: Form[AddressFormValues]): Document = Jsoup.parse(
     view(
       form,
-      subscriptionAddress,
+      asaDetailsAgencyAddress,
       legacyRegime
     )(
       messages,
@@ -125,7 +125,7 @@ extends ViewBaseSpec {
       "display correct radio options" in {
         val radios = doc.select(".govuk-radios__item")
         radios.size() mustBe 2
-        radios.get(0).text() mustBe subscriptionAddress + " " + messages(s"$legacyRegimePrefix.address.use-asa.true.hint")
+        radios.get(0).text() mustBe asaDetailsAgencyAddress + " " + messages(s"$legacyRegimePrefix.address.use-asa.true.hint")
         radios.get(0).select("input").attr("name") mustBe addressUseAsaDataKey
         radios.get(1).text() mustBe messages(s"$legacyRegimePrefix.address.use-asa.false")
         radios.get(1).select("input").attr("name") mustBe addressUseAsaDataKey

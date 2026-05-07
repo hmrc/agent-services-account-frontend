@@ -37,14 +37,14 @@ case class SubscriptionCyaData(
         case (false, true) => countryName
         case _ => address.addressLine4
       }
-    val subscriptionAddress = SubscriptionAddress(
+    val asaDetailsAgencyAddress = SubscriptionAddress(
       line1 = address.addressLine1,
       line2 = address.addressLine2.getOrElse(""),
       line3 = address.addressLine3,
       line4 = line4,
       postCode = address.postalCode
     )
-    subscriptionAddress
+    asaDetailsAgencyAddress
   }
 
   private def toCtSubscriptionRequest(countryName: String): CtSubscriptionRequest = {

@@ -34,7 +34,7 @@ class UpdatePhoneNumberSpec
 extends ViewBaseSpec {
 
   private val view: update_phone_number = inject[update_phone_number]
-  private val subscriptionPhoneNumber = "07700 900123"
+  private val asaDetailsAgencyTelephone = "07700 900123"
 
   private val legacyRegime = LegacyRegime.PAYE
 
@@ -44,7 +44,7 @@ extends ViewBaseSpec {
 
   def render(
     form: Form[PhoneNumberFormValues],
-    subPhoneNumberOpt: Option[String] = Some(subscriptionPhoneNumber)
+    subPhoneNumberOpt: Option[String] = Some(asaDetailsAgencyTelephone)
   ): Document = Jsoup.parse(
     view(
       form,
@@ -88,7 +88,7 @@ extends ViewBaseSpec {
     }
 
     "have correct first radio (existing number)" in {
-      doc.select(".govuk-radios__item").get(0).text() must include(subscriptionPhoneNumber)
+      doc.select(".govuk-radios__item").get(0).text() must include(asaDetailsAgencyTelephone)
     }
 
     "have correct second radio (new number option)" in {

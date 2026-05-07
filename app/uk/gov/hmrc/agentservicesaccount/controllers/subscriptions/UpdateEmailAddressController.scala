@@ -55,7 +55,7 @@ with Logging {
   def showPage(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
     val journey = request.subscriptionJourney
 
-    val subscriptionEmailAddress = journey.asaDetails.agencyEmail.getOrElse("")
+    val asaDetailsAgencyEmail = journey.asaDetails.agencyEmail.getOrElse("")
 
     val initialForm = SubscriptionEmailAddressForm.form(legacyRegime)
     val form =
@@ -75,7 +75,7 @@ with Logging {
     Future.successful(
       Ok(update_email_address(
         form,
-        subscriptionEmailAddress,
+        asaDetailsAgencyEmail,
         legacyRegime
       ))
     )
@@ -86,11 +86,11 @@ with Logging {
 
     SubscriptionEmailAddressForm.form(legacyRegime).bindFromRequest().fold(
       formWithErrors => {
-        val subscriptionEmailAddress = journey.asaDetails.agencyEmail.getOrElse("")
+        val asaDetailsAgencyEmail = journey.asaDetails.agencyEmail.getOrElse("")
         Future.successful(
           BadRequest(update_email_address(
             formWithErrors,
-            subscriptionEmailAddress,
+            asaDetailsAgencyEmail,
             legacyRegime
           ))
         )

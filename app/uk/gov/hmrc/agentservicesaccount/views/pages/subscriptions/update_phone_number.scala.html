@@ -34,7 +34,7 @@
     govukErrorSummary: GovukErrorSummary
 )
 
-@(form: Form[PhoneNumberFormValues], subscriptionPhoneNumberOpt: Option[String], legacyRegime: LegacyRegime)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
+@(form: Form[PhoneNumberFormValues], asaDetailsAgencyTelephoneOpt: Option[String], legacyRegime: LegacyRegime)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
 
 @legacyRegimePrefix = @{ legacyRegime.msgPrefix }
 
@@ -48,7 +48,7 @@
     ).withFormField(form(phoneNumberNewKey)))
 }
 
-@radiosAndConditionalInputForm(subscriptionPhoneNumber: String) = {
+@radiosAndConditionalInputForm(asaDetailsAgencyTelephone: String) = {
     @govukRadios(Radios(
         fieldset = Some(Fieldset(
             legend = Some(Legend(
@@ -60,7 +60,7 @@
         name = phoneNumberUseAsaDataKey,
         items = Seq(
             RadioItem(
-                content = Text(subscriptionPhoneNumber),
+                content = Text(asaDetailsAgencyTelephone),
                 value = Some("true")
             ),
             RadioItem(
@@ -96,7 +96,7 @@
 
     @formWithCSRF(action = subscriptions.routes.UpdatePhoneNumberController.onSubmit(legacyRegime)) {
         @{
-            subscriptionPhoneNumberOpt.map(radiosAndConditionalInputForm).getOrElse(simpleInputForm)
+            asaDetailsAgencyTelephoneOpt.map(radiosAndConditionalInputForm).getOrElse(simpleInputForm)
         }
 
         @govukButton(Button(content = Text(msgs("common.continue"))))
