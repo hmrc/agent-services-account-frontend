@@ -201,7 +201,7 @@
         @h4(msgs("asa.legacy.ct.subscribed.p2"))
         @p(msgs("asa.legacy.ct.subscribed.p3", "https://www.tax.service.gov.uk/account/authorise-client/agent/", request.agentInfo.agentInformation.agentCode))
         @h4(msgs("asa.legacy.ct.subscribed.p4"))
-        @p(msgs("asa.legacy.ct.subscribed.p5", "https://www.tax.service.gov.uk//corporation-tax/agent/", request.agentInfo.ctAgentCode.getOrElse("")))
+        @p(msgs("asa.legacy.ct.subscribed.p5", "https://www.tax.service.gov.uk/corporation-tax/agent/", request.agentInfo.ctAgentCode.getOrElse("")))
     }
     case _ => {
         @h4("asa.legacy.ct.h3")
@@ -228,9 +228,9 @@
     case SubscriptionStatus.Subscribed => {
         @inset_text(msgs("asa.legacy.sa.subscribed.p1", request.agentInfo.saAgentCode.getOrElse("")))
         @h4(msgs("asa.legacy.sa.subscribed.p2"))
-        @p(msgs("asa.legacy.sa.subscribed.p3", "https://www.tax.service.gov.uk/account/authorise-client/agent/", request.agentInfo.agentInformation.agentCode))
+        @p(msgs("asa.legacy.sa.subscribed.p3", "https:/www.tax.service.gov.uk/account/authorise-client/agent/", request.agentInfo.agentInformation.agentCode))
         @h4(msgs("asa.legacy.sa.subscribed.p4"))
-        @p(msgs("asa.legacy.sa.subscribed.p5", "https://www.tax.service.gov.uk/self-assessment/agent/", request.agentInfo.saAgentCode.getOrElse("")))
+        @p(msgs("asa.legacy.sa.subscribed.p5", "https:/www.tax.service.gov.uk/self-assessment/agent/", request.agentInfo.saAgentCode.getOrElse("")))
     }
     case _ => {
         @h4("asa.legacy.sa.h3")
