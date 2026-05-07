@@ -241,6 +241,12 @@
     )
     items.append(
         Section(
+            headingContent = Text(msgs("asa.paye-section.h2")),
+            content = HtmlContent(payeIncomeRecordAccordionItem)
+        )
+    )
+    items.append(
+        Section(
             headingContent = Text(msgs("asa.section1.h2")),
             content = HtmlContent(mtdForVatAccordionItem)
         )
@@ -255,12 +261,6 @@
             )
         }
     }
-    items.append(
-        Section(
-            headingContent = Text(msgs("asa.paye-section.h2")),
-            content = HtmlContent(payeIncomeRecordAccordionItem)
-        )
-    )
     items.append(
         Section(
             headingContent = Text(msgs("asa.trusts-section.h2")),

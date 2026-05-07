@@ -20,17 +20,15 @@
 @import uk.gov.hmrc.agentservicesaccount.views.html.components._
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 @import uk.gov.hmrc.agentservicesaccount.views.html.pages.dashboard_partials._
-@import uk.gov.hmrc.govukfrontend.views.html.components._
 
 @this(
     main: main,
-    p: p, h1: h1, h2: h2, h4: h4,
-    ul_html: ul_html, a: a, span: span,
+    p: p, h1: h1, h2: h2,
+    ul_html: ul_html, a: a,
     agents_ur_banner: agents_ur_banner,
     tax_services_accordion: tax_services_accordion,
     manage_section: manage_section,
-    apply_to_act_for_section: apply_to_act_for_section,
-    govukNotificationBanner : GovukNotificationBanner
+    apply_to_act_for_section: apply_to_act_for_section
 )
 
 @(
@@ -41,13 +39,6 @@
     subscriptionInfo: Seq[SubscriptionInfo] = Seq.empty
 )(implicit request: AuthRequestWithAgentInfo[AnyContent], msgs: Messages, appConfig: AppConfig)
 
-@add_existingSA = {
-    @h2("asa.section4.itsa.notification.h2")
-    @p("asa.section4.itsa.notification.p.1")
-    @p("asa.section4.itsa.notification.p.2")
-    @a(href = appConfig.agentMappingUrl, key = "asa.section4.col2.link1")
-}
-
 @main(
     pageTitle = msgs("asa.heading"),
     isAdmin = isAdmin,
@@ -55,7 +46,6 @@
 ) {
     @h1("asa.heading")
     @p(msgs("agent.accountNumber", arn))
-    @govukNotificationBanner(NotificationBanner(content = HtmlContent(add_existingSA)))
 
     <section id="client-authorisation-section">
         @h2("asa.section4.h2")
