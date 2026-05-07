@@ -18,8 +18,12 @@ package uk.gov.hmrc.agentservicesaccount.models.subscriptions
 
 import play.api.libs.json.Json
 import play.api.libs.json.OFormat
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.ChangeSubscriptionAddressForm
 import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
 
 case class SubscriptionJourney(
   asaDetails: AgencyDetails,
@@ -56,8 +60,44 @@ case class SubscriptionJourney(
       }
     val pnComplete = answerComplete(useCustomPhoneNumber, phoneNumberAnswer)
     val eaComplete = answerComplete(useCustomEmail, emailAnswer)
-    val addressComplete = answerComplete(useCustomAddress, addressAnswer)
+    val addressComplete = answerComplete(useCustomAddress, addressAnswer) && addressValidForRegime(legacyRegime)
     nameComplete && pnComplete && eaComplete && addressComplete
+  }
+
+  // This is needed because address validation rules differ between ALF, ASA and the 3 legacy regimes,
+  // so any selection of address (custom or ALF) must be validated against the regime-specific rules
+  def addressValidForRegime(legacyRegime: LegacyRegime): Boolean = {
+    val optAddress =
+      if (useCustomAddress.contains(true))
+        addressAnswer
+      else
+        asaDetails.agencyAddress
+    (legacyRegime, optAddress) match {
+      case (PAYE, Some(address)) =>
+        Seq(
+          address.addressLine1.length <= ChangeSubscriptionAddressForm.maxLen(legacyRegime, 1),
+          address.addressLine2.exists(_.length <= ChangeSubscriptionAddressForm.maxLen(legacyRegime, 2)),
+          address.addressLine3.fold(true)(_.length <= ChangeSubscriptionAddressForm.maxLen(legacyRegime, 3)),
+          address.addressLine4.fold(true)(_.length <= ChangeSubscriptionAddressForm.maxLen(legacyRegime, 4)),
+          address.postalCode.isDefined
+        ).forall(identity)
+      case (CT | SA, Some(address)) if address.isUk =>
+        Seq(
+          address.addressLine1.length <= ChangeSubscriptionAddressForm.maxLen(legacyRegime, 1),
+          address.addressLine2.exists(_.length <= ChangeSubscriptionAddressForm.maxLen(legacyRegime, 2)),
+          address.addressLine3.fold(true)(_.length <= ChangeSubscriptionAddressForm.maxLen(legacyRegime, 3)),
+          address.addressLine4.fold(true)(_.length <= ChangeSubscriptionAddressForm.maxLen(legacyRegime, 4)),
+          address.postalCode.isDefined,
+          address.countryCode == "GB"
+        ).forall(identity)
+      case (CT | SA, Some(address)) if !address.isUk =>
+        Seq(
+          address.addressLine1.length <= ChangeSubscriptionAddressForm.maxLen(legacyRegime, 1),
+          address.addressLine2.exists(_.length <= ChangeSubscriptionAddressForm.maxLen(legacyRegime, 2)),
+          address.addressLine3.exists(_.length <= ChangeSubscriptionAddressForm.maxLen(legacyRegime, 3))
+        ).forall(identity)
+      case _ => false
+    }
   }
 
 }

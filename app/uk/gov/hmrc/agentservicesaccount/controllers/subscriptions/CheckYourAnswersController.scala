@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
 
+import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
@@ -25,6 +26,7 @@ import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.checkYourAnswersPage
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.{routes => subscriptionRoutes}
+import uk.gov.hmrc.agentservicesaccount.controllers.{routes => asaRoutes}
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionCyaData
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
@@ -55,11 +57,16 @@ class CheckYourAnswersController @Inject() (
   val ec: ExecutionContext
 )
 extends FrontendController(cc)
-with I18nSupport {
+with I18nSupport
+with Logging {
 
   def showPage(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
     withSubscriptionCyaData(request.subscriptionJourney, legacyRegime) { data =>
-      val summaryItems = buildSummaryListItems(data, legacyRegime)
+      val summaryItems = buildSummaryListItems(
+        data,
+        legacyRegime,
+        request.subscriptionJourney
+      )
       Future.successful(Ok(checkYourAnswers(summaryItems, legacyRegime)))
     }
   }
@@ -105,7 +112,8 @@ with I18nSupport {
 
   private[subscriptions] def buildSummaryListItems(
     data: SubscriptionCyaData,
-    legacyRegime: LegacyRegime
+    legacyRegime: LegacyRegime,
+    journey: SubscriptionJourney
   ): Seq[SummaryListData] = {
     val nameRowKeyDescriptor =
       if (legacyRegime == PAYE)
@@ -139,7 +147,10 @@ with I18nSupport {
       SummaryListData(
         key = s"${legacyRegime.msgPrefix}.check-your-answers.address",
         value = formatAddress(data.address),
-        link = Some(subscriptionRoutes.UpdateAddressController.showPage(legacyRegime))
+        link = Some(if (journey.useCustomAddress.contains(true))
+          subscriptionRoutes.UpdateAddressController.showChange(legacyRegime, isInvalid = false)
+        else
+          subscriptionRoutes.UpdateAddressController.showPage(legacyRegime))
       )
     )
   }
@@ -149,11 +160,11 @@ with I18nSupport {
     legacyRegime: LegacyRegime
   )(f: SubscriptionCyaData => Future[Result]): Future[Result] = {
     (subscriptionJourneyToCyaData(journey, legacyRegime): Option[SubscriptionCyaData]) match {
-      case Some(data) => f(data)
-      case None =>
-        Future.successful(
-          BadRequest("[CheckYourAnswersController] missing Legacy Subscription CYA data")
-        )
+      case Some(data) if !journey.isSubmitted => f(data)
+      case _ if journey.isSubmitted => Future.successful(Redirect(subscriptionRoutes.ConfirmationController.showConfirmationPage(legacyRegime)))
+      case _ =>
+        logger.warn("[CheckYourAnswersController] missing Legacy Subscription CYA data")
+        Future.successful(Redirect(asaRoutes.AgentServicesController.showAgentServicesAccount()))
     }
   }
 
