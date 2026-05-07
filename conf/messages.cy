@@ -208,6 +208,7 @@ asa.legacy.ct.do-you-already-manage.error.required=Select yes if {0} already man
 
 asa.legacy.ct.you-may-not-need-to-apply.title=You may not need to apply for Corporation Tax
 asa.legacy.ct.you-may-not-need-to-apply.p2=You can continue to manage your existing Corporation Tax clients through your HMRC Online Services for Agents account.
+asa.legacy.ct.you-may-not-need-to-apply.error.required=Select yes if you still want to apply
 
 asa.legacy.ct.business-name.title=What business name should we show to your Corporation Tax clients?
 asa.legacy.ct.business-name.use-asa.false=I want to use a different business name for Corporation Tax
@@ -277,10 +278,11 @@ asa.legacy.paye.subscribed.p6=<a class="govuk-link" href="{0}{1}" rel="noreferre
 
 asa.legacy.paye.do-you-already-manage.title=Does {0} already manage PAYE clients?
 asa.legacy.paye.do-you-already-manage.existing.false=No, this is their first time managing PAYE clients
-asa.legacy.paye.do-you-already-manage.error.required=Select yes if {0} already manages PAYE clients
+asa.legacy.paye.do-you-already-manage.error.required=Select yes if {0} already manages PAYE/CIS clients
 
 asa.legacy.paye.you-may-not-need-to-apply.title=You may not need to apply for PAYE
 asa.legacy.paye.you-may-not-need-to-apply.p2=You can continue to manage your existing PAYE clients through your HMRC Online Services for Agents account.
+asa.legacy.paye.you-may-not-need-to-apply.error.required=Select yes if you still want to apply
 
 asa.legacy.paye.contact-name.title=Who should we contact about PAYE?
 asa.legacy.paye.contact-name.input.heading=Who at {0} should we contact about PAYE?
@@ -352,6 +354,7 @@ asa.legacy.sa.do-you-already-manage.error.required=Select yes if {0} already man
 
 asa.legacy.sa.you-may-not-need-to-apply.title=You may not need to apply for Self Assessment
 asa.legacy.sa.you-may-not-need-to-apply.p2=You can continue to manage your existing Self Assessment clients through your HMRC Online Services for Agents account.
+asa.legacy.sa.you-may-not-need-to-apply.error.required=Select yes if you still want to apply
 
 asa.legacy.sa.business-name.title=What business name should we show to your Self Assessment clients?
 asa.legacy.sa.business-name.use-asa.false=I want to use a different business name for Self Assessment

@@ -27,7 +27,6 @@ object YouMayNotNeedToApplyForm {
 
   val doYouStillWantToApplyKey = "doYouStillWantToApply"
 
-  //  TODO: 11329 Add error for this key
   private def doYouStillWantToApplyMapping(legacyRegime: LegacyRegime): Mapping[Boolean] = useAsaDataMapping(
     s"${legacyRegime.msgPrefix}.you-may-not-need-to-apply.error.required"
   )
