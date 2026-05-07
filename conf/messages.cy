@@ -204,6 +204,7 @@ asa.legacy.ct.subscribed.p5=<a class="govuk-link" href="{0}{1}" rel="noreferrer 
 
 asa.legacy.ct.do-you-already-manage.title=Does {0} already manage Corporation Tax clients?
 asa.legacy.ct.do-you-already-manage.existing.false=No, this is their first time managing Corporation Tax clients
+asa.legacy.ct.do-you-already-manage.error.required=Select yes if {0} already manages Corporation Tax clients
 
 asa.legacy.ct.you-may-not-need-to-apply.title=You may not need to apply for Corporation Tax
 asa.legacy.ct.you-may-not-need-to-apply.p2=You can continue to manage your existing Corporation Tax clients through your HMRC Online Services for Agents account.
@@ -276,6 +277,7 @@ asa.legacy.paye.subscribed.p6=<a class="govuk-link" href="{0}{1}" rel="noreferre
 
 asa.legacy.paye.do-you-already-manage.title=Does {0} already manage PAYE clients?
 asa.legacy.paye.do-you-already-manage.existing.false=No, this is their first time managing PAYE clients
+asa.legacy.paye.do-you-already-manage.error.required=Select yes if {0} already manages PAYE clients
 
 asa.legacy.paye.you-may-not-need-to-apply.title=You may not need to apply for PAYE
 asa.legacy.paye.you-may-not-need-to-apply.p2=You can continue to manage your existing PAYE clients through your HMRC Online Services for Agents account.
@@ -346,6 +348,7 @@ asa.legacy.sa.subscribed.p5=<a class="govuk-link" href="{0}{1}" rel="noreferrer 
 
 asa.legacy.sa.do-you-already-manage.title=Does {0} already manage Self Assessment clients?
 asa.legacy.sa.do-you-already-manage.existing.false=No, this is their first time managing Self Assessment clients
+asa.legacy.sa.do-you-already-manage.error.required=Select yes if {0} already manages Self Assessment clients
 
 asa.legacy.sa.you-may-not-need-to-apply.title=You may not need to apply for Self Assessment
 asa.legacy.sa.you-may-not-need-to-apply.p2=You can continue to manage your existing Self Assessment clients through your HMRC Online Services for Agents account.
