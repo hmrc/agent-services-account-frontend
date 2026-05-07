@@ -35,7 +35,7 @@ object SubscriptionEmailAddressForm {
   private val CT_SA_EMAIL_MAX_LENGTH = 50
 
   private def emailAddressUseAsaDataMapping(legacyRegime: LegacyRegime): Mapping[Boolean] = useAsaDataMapping(
-    //    TODO: 11329 Need to pass in businessName
+    //    TODO: 11329 Need to pass in ASA agencyDetails businessName
     s"${legacyRegime.msgPrefix}.email-address.use-asa.error.required"
   )
 

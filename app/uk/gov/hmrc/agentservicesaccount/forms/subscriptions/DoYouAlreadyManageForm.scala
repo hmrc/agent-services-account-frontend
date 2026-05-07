@@ -28,7 +28,7 @@ object DoYouAlreadyManageForm {
   val doYouAlreadyManageKey = "doYouAlreadyManage"
 
   private def doYouAlreadyManageMapping(legacyRegime: LegacyRegime): Mapping[Boolean] = useAsaDataMapping(
-    //    TODO: 11329 Need to pass in businessName
+    //    TODO: 11329 Need to pass in ASA agencyDetails businessName
     s"${legacyRegime.msgPrefix}.do-you-already-manage.error.required"
   )
 
