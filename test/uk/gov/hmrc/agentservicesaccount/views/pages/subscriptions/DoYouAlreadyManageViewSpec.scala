@@ -44,7 +44,7 @@ extends ViewBaseSpec {
   regimes.foreach { regime =>
     s"do_you_already_manage view for regime $regime" when {
 
-      val form: Form[DoYouAlreadyManageFormValues] = DoYouAlreadyManageForm.form(regime)
+      val form: Form[DoYouAlreadyManageFormValues] = DoYouAlreadyManageForm.form(regime, asaDetailsAgencyName)
 
       val formWithError: Form[DoYouAlreadyManageFormValues] = form.withError(
         key = doYouAlreadyManageKey,
