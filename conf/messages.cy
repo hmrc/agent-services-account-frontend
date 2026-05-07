@@ -288,7 +288,7 @@ asa.legacy.paye.contact-name.title=Who should we contact about PAYE?
 asa.legacy.paye.contact-name.input.heading=Who at {0} should we contact about PAYE?
 asa.legacy.paye.contact-name.input.hint=Enter their full name
 asa.legacy.paye.contact-name.input.error.empty=Enter the full name of the person we should contact about PAYE
-asa.legacy.paye.contact-name.input.error.invalid=TODO 11329 (Contact name input invalid error)
+asa.legacy.paye.contact-name.input.error.invalid=The name of the person can only contain letters, hyphens and apostrophes
 
 asa.legacy.paye.phone-number.title=What phone number should we use to call you about PAYE?
 asa.legacy.paye.phone-number.use-asa.false=I want to use a different phone number for PAYE
