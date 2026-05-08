@@ -31,6 +31,14 @@ object ChangeSubscriptionAddressForm {
   val postcodeKey = "postcode"
   val countryCodeKey = "countryCode"
 
+  def lineRegex(legacyRegime: LegacyRegime): String =
+    if (legacyRegime == LegacyRegime.PAYE)
+      "^[a-zA-Z0-9 .,()!@-]*$"
+    else
+      "^[a-zA-Z0-9 ()&‘/,.-]*$"
+
+  val postcodeRegex = "^[A-Z]{1,2}[0-9][0-9A-Z]?\\s?[0-9][A-Z]{2}$|BFPO\\s?[0-9]{1,5}$"
+
   def maxLen(
     legacyRegime: LegacyRegime,
     row: Int
@@ -49,14 +57,7 @@ object ChangeSubscriptionAddressForm {
     trimmedText
       .verifying(s"${legacyRegime.msgPrefix}.error.addressLine$row.required", _.nonEmpty)
       .verifying(s"${legacyRegime.msgPrefix}.error.addressLine$row.length", _.length <= maxLen(legacyRegime, row))
-      .verifying(
-        s"${legacyRegime.msgPrefix}.error.addressLine$row.invalid",
-        address =>
-          if (legacyRegime == LegacyRegime.PAYE)
-            address.matches("^[a-zA-Z0-9 .,()!@-]*$")
-          else
-            address.matches("^[a-zA-Z0-9 ()&‘/,.-]*$")
-      )
+      .verifying(s"${legacyRegime.msgPrefix}.error.addressLine$row.invalid", _.matches(lineRegex(legacyRegime)))
   }
 
   private def postcodeMapping(legacyRegime: LegacyRegime) = {
@@ -65,7 +66,7 @@ object ChangeSubscriptionAddressForm {
       .verifying(
         s"${legacyRegime.msgPrefix}.error.postcode.invalid",
         address =>
-          address.toUpperCase.matches("^[A-Z]{1,2}[0-9][0-9A-Z]?\\s?[0-9][A-Z]{2}$|BFPO\\s?[0-9]{1,5}$")
+          address.toUpperCase.matches(postcodeRegex)
       )
   }
 

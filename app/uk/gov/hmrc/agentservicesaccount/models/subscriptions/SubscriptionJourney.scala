@@ -18,7 +18,9 @@ package uk.gov.hmrc.agentservicesaccount.models.subscriptions
 
 import play.api.libs.json.Json
 import play.api.libs.json.OFormat
-import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.ChangeSubscriptionAddressForm
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.ChangeSubscriptionAddressForm.lineRegex
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.ChangeSubscriptionAddressForm.maxLen
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.ChangeSubscriptionAddressForm.postcodeRegex
 import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
@@ -73,28 +75,19 @@ case class SubscriptionJourney(
       else
         asaDetails.agencyAddress
     (legacyRegime, optAddress) match {
-      case (PAYE, Some(address)) =>
+      case (_, Some(address)) if address.isUk =>
         Seq(
-          address.addressLine1.length <= ChangeSubscriptionAddressForm.maxLen(legacyRegime, 1),
-          address.addressLine2.exists(_.length <= ChangeSubscriptionAddressForm.maxLen(legacyRegime, 2)),
-          address.addressLine3.fold(true)(_.length <= ChangeSubscriptionAddressForm.maxLen(legacyRegime, 3)),
-          address.addressLine4.fold(true)(_.length <= ChangeSubscriptionAddressForm.maxLen(legacyRegime, 4)),
-          address.postalCode.isDefined
-        ).forall(identity)
-      case (CT | SA, Some(address)) if address.isUk =>
-        Seq(
-          address.addressLine1.length <= ChangeSubscriptionAddressForm.maxLen(legacyRegime, 1),
-          address.addressLine2.exists(_.length <= ChangeSubscriptionAddressForm.maxLen(legacyRegime, 2)),
-          address.addressLine3.fold(true)(_.length <= ChangeSubscriptionAddressForm.maxLen(legacyRegime, 3)),
-          address.addressLine4.fold(true)(_.length <= ChangeSubscriptionAddressForm.maxLen(legacyRegime, 4)),
-          address.postalCode.isDefined,
-          address.countryCode == "GB"
+          address.addressLine1.length <= maxLen(legacyRegime, 1) && address.addressLine1.matches(lineRegex(legacyRegime)),
+          address.addressLine2.exists(line => line.length <= maxLen(legacyRegime, 2) && line.matches(lineRegex(legacyRegime))),
+          address.addressLine3.fold(true)(line => line.length <= maxLen(legacyRegime, 3) && line.matches(lineRegex(legacyRegime))),
+          address.addressLine4.fold(true)(line => line.length <= maxLen(legacyRegime, 4) && line.matches(lineRegex(legacyRegime))),
+          address.postalCode.exists(_.matches(postcodeRegex))
         ).forall(identity)
       case (CT | SA, Some(address)) if !address.isUk =>
         Seq(
-          address.addressLine1.length <= ChangeSubscriptionAddressForm.maxLen(legacyRegime, 1),
-          address.addressLine2.exists(_.length <= ChangeSubscriptionAddressForm.maxLen(legacyRegime, 2)),
-          address.addressLine3.exists(_.length <= ChangeSubscriptionAddressForm.maxLen(legacyRegime, 3))
+          address.addressLine1.length <= maxLen(legacyRegime, 1) && address.addressLine1.matches(lineRegex(legacyRegime)),
+          address.addressLine2.exists(line => line.length <= maxLen(legacyRegime, 2) && line.matches(lineRegex(legacyRegime))),
+          address.addressLine3.exists(line => line.length <= maxLen(legacyRegime, 3) && line.matches(lineRegex(legacyRegime)))
         ).forall(identity)
       case _ => false
     }
