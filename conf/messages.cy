@@ -186,14 +186,8 @@ asa.legacy.you-may-not-need-to-apply.h1=Do you still want to apply?
 
 # CT
 asa.legacy.ct.h2=Corporation Tax
-asa.legacy.ct.h3=Test Content
 asa.legacy.ct.p1=Status: {0}
-asa.legacy.ct.not-subscribed.before-start.h4=Before you start
-asa.legacy.ct.not-subscribed.before-start.p1=If you have already enrolled for Corporation Tax, you can continue managing your clients by <a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">signing into your HMRC online services for agents account.</a>
 asa.legacy.ct.not-subscribed.before-start.link1.href=https://www.gov.uk/guidance/how-to-enrol-a-tax-service-onto-your-hmrc-online-services-account
-asa.legacy.ct.not-subscribed.before-start.p2=This will sign you out of your agent services account.
-asa.legacy.ct.not-subscribed.enrol-for.h4=If you want to enrol for Corporation Tax
-asa.legacy.ct.not-subscribed.enrol-for.p1=You can <a class="govuk-link" href="{0}" rel="noreferrer noopener">use your agent services account to enrol</a> and manage your clients.
 asa.legacy.ct.in-progress.p1=We are still processing the application you did on {0}.
 asa.legacy.ct.in-progress.p2=Processing can take up to 5 days.
 asa.legacy.ct.subscribed.p1=Your agent code is: {0}
@@ -327,15 +321,8 @@ asa.legacy.paye.check-your-answers.submit-button=Enrol for PAYE
 
 # SA
 asa.legacy.sa.h2=Self Assessment
-asa.legacy.sa.h3=Test Content
-asa.legacy.sa.p1=Status: {0}
 
-asa.legacy.sa.not-subscribed.before-start.h4=Before you start
-asa.legacy.sa.not-subscribed.before-start.p1=If you have already enrolled for Self Assessment, you can continue managing your clients by <a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">signing into your HMRC online services for agents account.</a>
 asa.legacy.sa.not-subscribed.before-start.link1.href=https://www.gov.uk/guidance/how-to-enrol-a-tax-service-onto-your-hmrc-online-services-account
-asa.legacy.sa.not-subscribed.before-start.p2=This will sign you out of your agent services account.
-asa.legacy.sa.not-subscribed.enrol-for.h4=If you want to enrol for Self Assessment
-asa.legacy.sa.not-subscribed.enrol-for.p1=You can <a class="govuk-link" href="{0}" rel="noreferrer noopener">use your agent services account to enrol</a> and manage your clients.
 asa.legacy.sa.in-progress.p1=We are still processing the application you did on {0}.
 asa.legacy.sa.in-progress.p2=Processing can take up to 5 days.
 asa.legacy.sa.subscribed.p1=Your agent code is: {0}
