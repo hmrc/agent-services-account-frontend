@@ -57,7 +57,7 @@ with Logging {
 
     val asaDetailsAgencyEmail = journey.asaDetails.agencyEmail.getOrElse("")
 
-    val initialForm = SubscriptionEmailAddressForm.form(legacyRegime)
+    val initialForm = SubscriptionEmailAddressForm.form(legacyRegime, journey.asaDetails.agencyName.getOrElse(""))
     val form =
       journey.useCustomEmail match {
 
@@ -84,7 +84,7 @@ with Logging {
   def onSubmit(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
     val journey = request.subscriptionJourney
 
-    SubscriptionEmailAddressForm.form(legacyRegime).bindFromRequest().fold(
+    SubscriptionEmailAddressForm.form(legacyRegime, journey.asaDetails.agencyName.getOrElse("")).bindFromRequest().fold(
       formWithErrors => {
         val asaDetailsAgencyEmail = journey.asaDetails.agencyEmail.getOrElse("")
         Future.successful(

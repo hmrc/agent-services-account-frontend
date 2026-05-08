@@ -19,8 +19,8 @@ package uk.gov.hmrc.agentservicesaccount.forms.subscriptions
 import play.api.data.Forms._
 import play.api.data.Form
 import play.api.data.Mapping
-import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators.trimmedText
-import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators.useAsaDataMapping
+import play.api.i18n.Messages
+import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators.{CT_SA_EMAIL_MAX_LENGTH, PAYE_EMAIL_MAX_LENGTH, trimmedText, useAsaDataMapping}
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.EmailAddressFormValues
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
@@ -31,12 +31,11 @@ object SubscriptionEmailAddressForm {
   val emailAddressUseAsaDataKey = "emailAddressUseAsaData"
   val emailAddressNewKey = "emailAddressNew"
 
-  private val PAYE_EMAIL_MAX_LENGTH = 129
-  private val CT_SA_EMAIL_MAX_LENGTH = 50
-
-  private def emailAddressUseAsaDataMapping(legacyRegime: LegacyRegime): Mapping[Boolean] = useAsaDataMapping(
-    //    TODO: 11329 Need to pass in ASA agencyDetails businessName
-    s"${legacyRegime.msgPrefix}.email-address.use-asa.error.required"
+  private def emailAddressUseAsaDataMapping(
+    legacyRegime: LegacyRegime,
+    asaDetailsAgencyName: String
+  )(implicit msgs: Messages): Mapping[Boolean] = useAsaDataMapping(
+    msgs(s"${legacyRegime.msgPrefix}.email-address.use-asa.error.required", asaDetailsAgencyName)
   )
 
   private def emailAddressNewOptionalMapping(legacyRegime: LegacyRegime): Mapping[String] = {
@@ -50,10 +49,13 @@ object SubscriptionEmailAddressForm {
       .verifying(s"${legacyRegime.msgPrefix}.email-address.new-input.error.invalid", x => x.isEmpty || (x.length <= maxLength && x.contains("@")))
   }
 
-  def form(legacyRegime: LegacyRegime): Form[EmailAddressFormValues] = {
+  def form(
+    legacyRegime: LegacyRegime,
+    asaDetailsAgencyName: String
+  )(implicit msgs: Messages): Form[EmailAddressFormValues] = {
     Form(
       mapping(
-        emailAddressUseAsaDataKey -> emailAddressUseAsaDataMapping(legacyRegime),
+        emailAddressUseAsaDataKey -> emailAddressUseAsaDataMapping(legacyRegime, asaDetailsAgencyName),
         emailAddressNewKey -> mandatoryIfFalse(emailAddressUseAsaDataKey, emailAddressNewOptionalMapping(legacyRegime))
       )(EmailAddressFormValues.apply)(o => Some(o.useAsaData, o.newEmailAddress))
     )
