@@ -21,18 +21,17 @@ import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.actions.AuthActions
-import uk.gov.hmrc.agentservicesaccount.actions.CallOps._
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentPermissionsConnector
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentUserClientDetailsConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.amls.{routes => amlsRoutes}
 import uk.gov.hmrc.agentservicesaccount.models.AmlsStatuses._
-import uk.gov.hmrc.agentservicesaccount.models.AmlsStatus
-import uk.gov.hmrc.agentservicesaccount.models.Arn
 import uk.gov.hmrc.agentservicesaccount.models.accessgroups.OptedInReady
 import uk.gov.hmrc.agentservicesaccount.models.accessgroups.OptinStatus
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionInfo
+import uk.gov.hmrc.agentservicesaccount.models.AmlsStatus
+import uk.gov.hmrc.agentservicesaccount.models.Arn
 import uk.gov.hmrc.agentservicesaccount.services.AgentRecordService
 import uk.gov.hmrc.agentservicesaccount.services.SubscriptionService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages._
@@ -113,14 +112,13 @@ with Logging {
             isAbroad = isAbroad,
             subscriptionInfo = subscriptionInfo
           )
-        ).addingToSession(toReturnFromMapping())
+        ).addingToSession(aossOriginCookie())
       }
     }
   }
 
-  private def toReturnFromMapping()(implicit request: Request[AnyContent]) = {
-    val sessionKeyUsedInMappingService = "OriginForMapping"
-    sessionKeyUsedInMappingService -> localFriendlyUrl(env)(request.path, request.host)
+  private def aossOriginCookie() = {
+    "origin" -> "ASA"
   }
 
   val manageAccount: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>

@@ -79,6 +79,9 @@ with MockFactory {
     private val stubAuthConnector =
       new AuthConnector {
         private val authJson = Json.obj(
+          "agentInformation" -> Json.obj(
+            "agentCode" -> "ABC123"
+          ),
           "allEnrolments" -> Json.arr(
             Json.obj(
               "key" -> "HMRC-AS-AGENT",

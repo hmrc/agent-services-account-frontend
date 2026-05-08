@@ -17,15 +17,7 @@
 package uk.gov.hmrc.agentservicesaccount.models.upscan
 
 import play.api.libs.functional.syntax.toFunctionalBuilderOps
-import play.api.libs.json.JsonConfiguration.Aux
-import play.api.libs.json.Format
-import play.api.libs.json.JsError
-import play.api.libs.json.JsSuccess
-import play.api.libs.json.Json
-import play.api.libs.json.JsonConfiguration
-import play.api.libs.json.JsonNaming
-import play.api.libs.json.Reads
-import play.api.libs.json.__
+import play.api.libs.json._
 import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
 
 import java.time.Instant

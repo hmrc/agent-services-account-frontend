@@ -30,6 +30,7 @@ import uk.gov.hmrc.agentservicesaccount.utils.RequestSupport._
 import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals._
+import uk.gov.hmrc.auth.core.retrieve.AgentInformation
 import uk.gov.hmrc.auth.core.retrieve.Credentials
 import uk.gov.hmrc.auth.core.retrieve.Name
 import uk.gov.hmrc.auth.core.retrieve.~
@@ -58,7 +59,8 @@ case class AgentInfo(
   credentialRole: Option[CredentialRole],
   email: Option[String] = None,
   name: Option[Name] = None,
-  credentials: Option[Credentials] = None
+  credentials: Option[Credentials] = None,
+  agentInformation: AgentInformation
 ) {
 
   val isAdmin: Boolean =
@@ -120,6 +122,7 @@ case class AgentInfo(
 
   def ctAgentCode: Option[String] = getAgentCodeFor("IR-CT-AGENT")
   def saAgentCode: Option[String] = getAgentCodeFor("IR-SA-AGENT")
+  def payeAgentCode: Option[String] = getAgentCodeFor("IR-PAYE-AGENT")
 
 }
 
@@ -139,8 +142,8 @@ with Logging {
         implicit val r: Request[A] = request
 
         authorised(AuthProviders(GovernmentGateway) and AffinityGroup.Agent)
-          .retrieve(allEnrolments and credentials and email and name and credentialRole) {
-            case enrols ~ creds ~ email ~ name ~ credRole =>
+          .retrieve(allEnrolments and credentials and email and name and credentialRole and agentInformation) {
+            case enrols ~ creds ~ email ~ name ~ credRole ~ agentInformation =>
               getArn(enrols) match {
                 case Some(arn) =>
                   Future.successful(Right(new AuthRequestWithAgentInfo(
@@ -150,7 +153,8 @@ with Logging {
                       credentialRole = credRole,
                       email = email,
                       name = name,
-                      credentials = creds
+                      credentials = creds,
+                      agentInformation = agentInformation
                     ),
                     r
                   )))

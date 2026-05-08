@@ -20,7 +20,6 @@ import play.api.i18n.I18nSupport
 import play.api.mvc.Action
 import play.api.mvc.AnyContent
 import play.api.mvc.MessagesControllerComponents
-import play.api.mvc.Results.Redirect
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.ToFuture

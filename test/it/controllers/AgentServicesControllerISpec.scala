@@ -353,6 +353,7 @@ extends BaseISpec {
         ninePs.get(2).select("a").get(0).text shouldBe "Report and manage your client’s Pillar 2 top-up taxes"
         ninePs.get(2).select("a").get(0).attr("href") shouldBe "http://localhost:10053/report-pillar2-top-up-taxes/asa/input-pillar-2-id"
       }
+
       "agent with showFeatureInvite being false" in {
         givenGetAgentRecord(agentRecord)
 

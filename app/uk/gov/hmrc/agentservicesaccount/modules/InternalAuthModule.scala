@@ -23,9 +23,6 @@ import uk.gov.hmrc.agentservicesaccount.config.InternalAuthTokenInitialiser
 import uk.gov.hmrc.agentservicesaccount.config.InternalAuthTokenInitialiserImpl
 import uk.gov.hmrc.agentservicesaccount.config.NoOpInternalAuthTokenInitialiser
 
-import java.time.Clock
-import java.time.ZoneId
-
 class InternalAuthModule(
   environment: Environment,
   configuration: Configuration

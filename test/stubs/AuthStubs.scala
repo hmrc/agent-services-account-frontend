@@ -37,6 +37,9 @@ trait AuthStubs {
                |  "internalId": "some-id",
                |  "affinityGroup": "Agent",
                |  "credentialRole": "$credRole",
+               |  "agentInformation": {
+               |    "agentCode": "ABC123"
+               |  },
                |  "allEnrolments": [{
                |    "key": "HMRC-AS-AGENT",
                |    "identifiers": [{ "key": "AgentReferenceNumber", "value": "$arn" }]
@@ -67,6 +70,9 @@ trait AuthStubs {
                |  "affinityGroup": "Agent",
                |  "credentialRole": "$credRole",
                |  "email": "$email",
+               |  "agentInformation": {
+               |    "agentCode": "ABC123"
+               |  },
                |  "optionalCredentials": {
                |    "providerId": "$providerId",
                |    "providerType": "whatever"

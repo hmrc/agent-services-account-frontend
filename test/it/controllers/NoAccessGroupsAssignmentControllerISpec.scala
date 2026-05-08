@@ -66,8 +66,10 @@ with TestConstants {
   private val mockAgentServicesAccountConnector = mock[AgentServicesAccountConnector]
   private val mockAppConfig: AppConfig = mock[AppConfig]
 
-  private def authResponseAgent(credentialRole: CredentialRole): Future[Enrolments ~ Some[Credentials] ~ Some[Email] ~ Some[Name] ~ Some[CredentialRole]] =
-    Future.successful(
+  private def authResponseAgent(
+    credentialRole: CredentialRole
+  ): Future[Enrolments ~ Some[Credentials] ~ Some[Email] ~ Some[Name] ~ Some[CredentialRole] ~ AgentInformation] = Future.successful(
+    new ~(
       new ~(
         new ~(
           new ~(
@@ -80,8 +82,10 @@ with TestConstants {
           Some(Name(Some("Troy"), Some("Barnes")))
         ),
         Some(credentialRole)
-      )
+      ),
+      testAgentInformation
     )
+  )
 
   def givenAgentRecord = mockAgentRecordService.getAgentRecord(*[RequestHeader]) returns Future.successful(agentRecord)
 

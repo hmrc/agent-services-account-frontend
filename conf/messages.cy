@@ -198,9 +198,9 @@ asa.legacy.ct.in-progress.p1=We are still processing the application you did on 
 asa.legacy.ct.in-progress.p2=Processing can take up to 5 days.
 asa.legacy.ct.subscribed.p1=Your agent code is: {0}
 asa.legacy.ct.subscribed.p2=Get permission from new clients
-asa.legacy.ct.subscribed.p3=<a class="govuk-link" href="{0}" rel="noreferrer noopener">Ask a client to authorise you</a>
+asa.legacy.ct.subscribed.p3=<a class="govuk-link" href="{0}{1}" rel="noreferrer noopener">Ask a client to authorise you</a>
 asa.legacy.ct.subscribed.p4=Manage your client’s Corporation Tax
-asa.legacy.ct.subscribed.p5=<a class="govuk-link" href="{0}" rel="noreferrer noopener">View and manage your client list for Corporation Tax</a>
+asa.legacy.ct.subscribed.p5=<a class="govuk-link" href="{0}{1}" rel="noreferrer noopener">View and manage your client list for Corporation Tax</a>
 
 asa.legacy.ct.do-you-already-manage.title=Does {0} already manage Corporation Tax clients?
 asa.legacy.ct.do-you-already-manage.existing.false=No, this is their first time managing Corporation Tax clients
@@ -255,7 +255,7 @@ asa.legacy.ct.check-your-answers.address=Address
 asa.legacy.ct.check-your-answers.submit-button=Enrol for Corporation Tax
 
 # PAYE/CIS
-asa.legacy.paye.h2=PAYE/CIS
+asa.legacy.paye.h2=Pay as you earn (PAYE)/Construction Industry Scheme (CIS)
 asa.legacy.paye.col1.h3=Test Content
 asa.legacy.paye.col1.p1=Status: {0}
 asa.legacy.paye.link=Cais am danysgrifiad TWE
@@ -265,13 +265,14 @@ asa.legacy.paye.not-subscribed.before-start.link1.href=https://www.gov.uk/guidan
 asa.legacy.paye.not-subscribed.before-start.p2=This will sign you out of your agent services account.
 asa.legacy.paye.not-subscribed.enrol-for.h4=If you want to enrol for PAYE
 asa.legacy.paye.not-subscribed.enrol-for.p1=You can <a class="govuk-link" href="{0}" rel="noreferrer noopener">use your agent services account to enrol</a> and manage your clients.
-asa.legacy.paye.in-progress.p1=We are still processing the enrolment you did on {0}.
+asa.legacy.paye.in-progress.p1=We are still processing the application you did on {0}.
 asa.legacy.paye.in-progress.p2=Processing can take up to 5 days.
 asa.legacy.paye.subscribed.p1=Your agent code is: {0}
 asa.legacy.paye.subscribed.p2=Get permission from new clients
 asa.legacy.paye.subscribed.p3=<a class="govuk-link" href="{0}" rel="noreferrer noopener">Ask a client to authorise you</a>
-asa.legacy.paye.subscribed.p4=Manage your client’s PAYE
-asa.legacy.paye.subscribed.p5=<a class="govuk-link" href="{0}" rel="noreferrer noopener">View and manage your client list for PAYE</a>
+asa.legacy.paye.subscribed.p4=Manage your client’s PAYE/CIS
+asa.legacy.paye.subscribed.p5=<a class="govuk-link" href="{0}{1}" rel="noreferrer noopener">View and manage your client list for PAYE</a>
+asa.legacy.paye.subscribed.p6=<a class="govuk-link" href="{0}{1}" rel="noreferrer noopener">View and manage your client list for CIS</a>
 
 asa.legacy.paye.do-you-already-manage.title=Does {0} already manage PAYE clients?
 asa.legacy.paye.do-you-already-manage.existing.false=No, this is their first time managing PAYE clients
@@ -335,13 +336,13 @@ asa.legacy.sa.not-subscribed.before-start.link1.href=https://www.gov.uk/guidance
 asa.legacy.sa.not-subscribed.before-start.p2=This will sign you out of your agent services account.
 asa.legacy.sa.not-subscribed.enrol-for.h4=If you want to enrol for Self Assessment
 asa.legacy.sa.not-subscribed.enrol-for.p1=You can <a class="govuk-link" href="{0}" rel="noreferrer noopener">use your agent services account to enrol</a> and manage your clients.
-asa.legacy.sa.in-progress.p1=We are still processing the enrolment you did on {0}.
+asa.legacy.sa.in-progress.p1=We are still processing the application you did on {0}.
 asa.legacy.sa.in-progress.p2=Processing can take up to 5 days.
 asa.legacy.sa.subscribed.p1=Your agent code is: {0}
 asa.legacy.sa.subscribed.p2=Get permission from new clients
-asa.legacy.sa.subscribed.p3=<a class="govuk-link" href="{0}" rel="noreferrer noopener">Ask a client to authorise you</a>
+asa.legacy.sa.subscribed.p3=<a class="govuk-link" href="{0}{1}" rel="noreferrer noopener">Ask a client to authorise you</a>
 asa.legacy.sa.subscribed.p4=Manage your client’s Self Assessment
-asa.legacy.sa.subscribed.p5=<a class="govuk-link" href="{0}" rel="noreferrer noopener">View and manage your client list for Self Assessment</a>
+asa.legacy.sa.subscribed.p5=<a class="govuk-link" href="{0}{1}" rel="noreferrer noopener">View and manage your client list for Self Assessment</a>
 
 asa.legacy.sa.do-you-already-manage.title=Does {0} already manage Self Assessment clients?
 asa.legacy.sa.do-you-already-manage.existing.false=No, this is their first time managing Self Assessment clients
