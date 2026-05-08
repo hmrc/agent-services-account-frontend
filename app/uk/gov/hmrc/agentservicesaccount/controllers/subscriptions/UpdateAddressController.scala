@@ -22,14 +22,17 @@ import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.changeAddressPage
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.updateAddressPage
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.ChangeSubscriptionAddressForm
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionAddressForm
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AddressFormValues
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.utils.CountryResolver
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.change_address
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.update_address
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
@@ -43,6 +46,7 @@ class UpdateAddressController @Inject() (
   val sessionCacheService: SessionCacheService,
   countryResolver: CountryResolver,
   update_address: update_address,
+  change_address: change_address,
   cc: MessagesControllerComponents
 )(implicit
   appConfig: AppConfig,
@@ -127,6 +131,91 @@ with Logging {
         }
       }
     )
+  }
+
+  def showChange(
+    legacyRegime: LegacyRegime,
+    isInvalid: Boolean
+  ): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
+    val journey = request.subscriptionJourney
+
+    val address =
+      journey.useCustomAddress match {
+        case Some(true) => journey.addressAnswer
+        case Some(false) => journey.asaDetails.agencyAddress
+        case _ => None
+      }
+
+    address match {
+      case None => Future.successful(Redirect(routes.UpdateAddressController.showPage(legacyRegime)))
+      case Some(address) =>
+        val form =
+          if (address.isUk) {
+            ChangeSubscriptionAddressForm.ukForm(legacyRegime).fill(address)
+          }
+          else {
+            ChangeSubscriptionAddressForm.nonUkForm(legacyRegime).fill(address)
+          }
+        Future.successful(
+          Ok(change_address(
+            form,
+            legacyRegime,
+            address.isUk,
+            isInvalid
+          ))
+        )
+    }
+  }
+
+  def onSubmitChange(
+    legacyRegime: LegacyRegime,
+    isInvalid: Boolean
+  ): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
+    val journey = request.subscriptionJourney
+
+    val address =
+      journey.useCustomAddress match {
+        case Some(true) => journey.addressAnswer
+        case Some(false) => journey.asaDetails.agencyAddress
+        case _ => None
+      }
+
+    address match {
+      case None => Future.successful(Redirect(routes.UpdateAddressController.showPage(legacyRegime)))
+      case Some(address) =>
+        val form =
+          if (address.isUk) {
+            ChangeSubscriptionAddressForm.ukForm(legacyRegime)
+          }
+          else {
+            ChangeSubscriptionAddressForm.nonUkForm(legacyRegime)
+          }
+        form.bindFromRequest().fold(
+          formWithErrors =>
+            Future.successful(BadRequest(change_address(
+              formWithErrors,
+              legacyRegime,
+              address.isUk,
+              isInvalid
+            ))),
+          newAddress => {
+            val updatedJourney = journey.copy(
+              useCustomAddress = Some(true),
+              addressAnswer = Some(newAddress)
+            )
+
+            sessionCacheService
+              .put(subscriptionJourneyKey(legacyRegime), updatedJourney)
+              .map(_ =>
+                Redirect(getNextPage(
+                  changeAddressPage,
+                  Some(updatedJourney),
+                  legacyRegime
+                ))
+              )
+          }
+        )
+    }
   }
 
 }

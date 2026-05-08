@@ -27,6 +27,7 @@ import scala.annotation.tailrec
 object CommonValidators {
 
   val trimmedText: Mapping[String] = text.transform[String](x => x.trim, x => x)
+  val textWithoutWhitespace: Mapping[String] = text.transform[String](x => x.replaceAll(" ", ""), x => x)
   val trimmedAndNormalisedText: Mapping[String] = text.transform[String](x => x.trim.replaceAll("[‘’]", "'"), x => x)
 
   def useAsaDataMapping(errorKey: String): Mapping[Boolean] = optional(boolean)

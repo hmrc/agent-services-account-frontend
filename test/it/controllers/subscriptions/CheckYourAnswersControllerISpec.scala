@@ -181,7 +181,7 @@ with MockFactory {
         body should include("25 Any Street")
       }
 
-      "return BAD_REQUEST when journey data missing" in new TestSetup(legacyRegime) {
+      "redirect to homepage when journey data missing" in new TestSetup(legacyRegime) {
         val invalidJourney = SubscriptionJourney(
           asaDetails = AgencyDetails(
             agencyName = None,
@@ -204,8 +204,16 @@ with MockFactory {
 
         val result = controller.showPage(legacyRegime)(fakeRequest).futureValue
 
-        status(result) shouldBe BAD_REQUEST
-        contentAsString(result) should include("missing Legacy Subscription CYA data")
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result).value shouldBe "/agent-services-account/home"
+      }
+      "redirect to confirmation page when journey complete" in new TestSetup(legacyRegime) {
+        cacheJourney(subscriptionFullJourney(legacyRegime).copy(isSubmitted = true))
+
+        val result = controller.showPage(legacyRegime)(fakeRequest).futureValue
+
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result).value shouldBe s"/agent-services-account/subscription/$legacyRegime/confirmation"
       }
     }
 
@@ -230,13 +238,22 @@ with MockFactory {
         updated.value.isSubmitted shouldBe true
       }
 
-      "return BAD_REQUEST when journey data missing" in new TestSetup(legacyRegime) {
+      "redirect to homepage when journey data missing" in new TestSetup(legacyRegime) {
         cacheJourney(subscriptionBaseJourney)
 
         val result = controller.onSubmit(legacyRegime)(fakeRequest).futureValue
 
-        status(result) shouldBe BAD_REQUEST
-        contentAsString(result) should include("missing Legacy Subscription CYA data")
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result).value shouldBe "/agent-services-account/home"
+      }
+
+      "redirect to confirmation page when journey complete" in new TestSetup(legacyRegime) {
+        cacheJourney(subscriptionFullJourney(legacyRegime).copy(isSubmitted = true))
+
+        val result = controller.onSubmit(legacyRegime)(fakeRequest).futureValue
+
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result).value shouldBe s"/agent-services-account/subscription/$legacyRegime/confirmation"
       }
     }
 

@@ -117,6 +117,10 @@ GET        /subscription/:regime/email-verification-finish                @uk.go
 
 GET        /subscription/:regime/address                                  @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdateAddressController.showPage(regime: LegacyRegime)
 POST       /subscription/:regime/address                                  @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdateAddressController.onSubmit(regime: LegacyRegime)
+GET        /subscription/:regime/address-change                           @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdateAddressController.showChange(regime: LegacyRegime, isInvalid: Boolean = false)
+POST       /subscription/:regime/address-change                           @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdateAddressController.onSubmitChange(regime: LegacyRegime, isInvalid: Boolean = false)
+GET        /subscription/:regime/address-fix                              @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdateAddressController.showChange(regime: LegacyRegime, isInvalid: Boolean = true)
+POST       /subscription/:regime/address-fix                              @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdateAddressController.onSubmitChange(regime: LegacyRegime, isInvalid: Boolean = true)
 
 GET        /subscription/:regime/address-lookup-start                     @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.AddressLookupController.startAddressLookup(regime: LegacyRegime)
 GET        /subscription/:regime/address-lookup-finish                    @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.AddressLookupController.finishAddressLookup(id: Option[String], regime: LegacyRegime)

@@ -1,0 +1,153 @@
+@*
+ * Copyright 2024 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+@import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.routes
+@import uk.gov.hmrc.govukfrontend.views.html.components.{CharacterCount => CharCount}
+@import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+@import uk.gov.hmrc.agentservicesaccount.views.html.main
+@import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
+@import uk.gov.hmrc.govukfrontend.views.html.components._
+@import uk.gov.hmrc.hmrcfrontend.views.Implicits.RichErrorSummary
+@import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
+@import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.ChangeSubscriptionAddressForm._
+@import uk.gov.hmrc.govukfrontend.views.html.components.implicits.RichCharacterCount
+@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.accessibleautocomplete.AccessibleAutocomplete
+
+@this(
+        main: main,
+        h1: h1,
+        formWithCSRF: FormWithCSRF,
+        govukInput: GovukInput,
+        govukButton: GovukButton,
+        govukErrorSummary: GovukErrorSummary,
+        govukCharacterCount: GovukCharacterCount,
+        govukSelect: GovukSelect,
+        govukInsetText: GovukInsetText
+)
+
+@(form: Form[BusinessAddress], legacyRegime: LegacyRegime, isUk: Boolean, isInvalid: Boolean)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
+
+@legacyRegimePrefix = @{
+    legacyRegime.msgPrefix
+}
+
+@title = @{
+    msgs(s"$legacyRegimePrefix.change-address.title${if(isInvalid) ".invalid" else ""}")
+}
+
+@main(
+    pageTitle = withErrorPrefix(form.hasErrors, title),
+    mimicBrowserBackLink = true,
+    showSecondaryNav = false
+) {
+
+    @if(form.hasErrors) {
+        @govukErrorSummary(ErrorSummary().withFormErrorsAsText(form))
+    }
+
+    @h1(title)
+
+    @if(isInvalid) {
+        @govukInsetText(InsetText(content = HtmlContent(msgs(s"$legacyRegimePrefix.change-address.inset.invalid"))))
+    }
+
+    @formWithCSRF(action = routes.UpdateAddressController.onSubmitChange(legacyRegime, isInvalid)) {
+        @govukCharacterCount(CharCount(
+            rows = 1,
+            maxLength = Some(maxLen(legacyRegime, 1)),
+            label = Label(
+                content = HtmlContent(msgs(s"$legacyRegimePrefix.change-address.line1.label")),
+                classes = "govuk-label"
+            )
+        ).withFormField(form(line1Key)))
+
+        @govukCharacterCount(CharCount(
+            rows = 1,
+            maxLength = Some(maxLen(legacyRegime, 2)),
+            label = Label(
+                content = HtmlContent(msgs(s"$legacyRegimePrefix.change-address.line2.label")),
+                classes = "govuk-label"
+            )
+        ).withFormField(form(line2Key)))
+
+        @govukCharacterCount(CharCount(
+            rows = 1,
+            maxLength = Some(maxLen(legacyRegime, 3)),
+            label = Label(
+                content = HtmlContent(msgs(s"$legacyRegimePrefix.change-address.line3.label${if(isUk) ".optional" else ""}")),
+                classes = "govuk-label"
+            )
+        ).withFormField(form(line3Key)))
+
+        @if(isUk) {
+            @govukCharacterCount(CharCount(
+                rows = 1,
+                maxLength = Some(maxLen(legacyRegime, 4)),
+                label = Label(
+                    content = HtmlContent(msgs(s"$legacyRegimePrefix.change-address.line4.label.optional")),
+                    classes = "govuk-label"
+                )
+            ).withFormField(form(line4Key)))
+        }
+
+        @if(isUk) {
+            @govukInput(Input(
+                label = Label(
+                    content = HtmlContent(msgs(s"$legacyRegimePrefix.change-address.postcode.label")),
+                    classes = "govuk-label"
+                )
+            ).withFormField(form(postcodeKey)))
+        }
+
+        @if(!isUk) {
+            @govukSelect(Select(
+                items = Seq(SelectItem(
+                    value = Some(""),
+                    text = "")).++(
+                    appConfig.countryCodeMap.flatMap {
+                        case (code, name) => Seq(
+                            if(form(countryCodeKey).value.getOrElse("").equals(name)) {
+                                SelectItem(
+                                    value = Some(code),
+                                    text = name,
+                                    selected = true
+                                )
+                            } else {
+                                SelectItem(
+                                    value = Some(code),
+                                    text = name
+                                )
+                            }
+                        )
+
+                    }
+                ),
+                label = Label(
+                    content = HtmlContent(msgs(s"$legacyRegimePrefix.change-address.country.label")),
+                    classes = "govuk-label"
+                )
+            ).asAccessibleAutocomplete(Some(
+                AccessibleAutocomplete(
+                    defaultValue = Some(""),
+                    showAllValues = true)
+            )).withFormField(form(countryCodeKey)))
+        }
+
+        @govukButton(Button(content = Text(msgs("common.continue"))))
+    }
+
+}

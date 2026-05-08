@@ -61,6 +61,15 @@ extends ComponentBaseISpec {
     countryCode = "GB"
   )
 
+  private val invalidAddress = BusinessAddress(
+    addressLine1 = "123456789012345678901234567890", // 30 characters, which is too long for CT/SA
+    addressLine2 = Some("123456789012345678901234567890"),
+    addressLine3 = None,
+    addressLine4 = None,
+    postalCode = None, // Required for PAYE
+    countryCode = "GB"
+  )
+
   legacyRegimes.foreach(legacyRegime => {
     val startAddressLookupPath = s"$subscriptionStartPath/$legacyRegime/address-lookup-start"
     val finishAddressLookupPath = s"$subscriptionStartPath/$legacyRegime/address-lookup-finish"
@@ -89,7 +98,7 @@ extends ComponentBaseISpec {
       )
 
       journeyWithRedirectLocations.foreach(journeyWithRedirectLocation => {
-        s"update journey with new address and redirect to ${journeyWithRedirectLocation._2}" +
+        s"update journey with new address and redirect to ${journeyWithRedirectLocation._2} " +
           s"when journey ${completeString(journeyWithRedirectLocation._1, legacyRegime)}" in {
 
             givenAuthorisedAsAgentWith(arn.value)
@@ -109,6 +118,29 @@ extends ComponentBaseISpec {
             updatedJourney.get.addressAnswer shouldBe Some(address)
           }
       })
+
+      "update journey with invalid address and redirect to address-fix" in {
+        givenAuthorisedAsAgentWith(arn.value)
+        givenGetAgentRecord(agentRecord)
+        stubASAGetResponseError(arn, NOT_FOUND)
+        givenGetAddressSuccess(
+          "bar",
+          confirmedAddressResponse.copy(address =
+            confirmedAddressResponse.address.copy(lines = Some(Seq(invalidAddress.addressLine1, invalidAddress.addressLine2.get)), postcode = None)
+          )
+        )
+
+        await(repo.putSession(subscriptionJourneyKey(legacyRegime), subscriptionBaseJourney))
+
+        val result = get(s"$finishAddressLookupPath?id=bar")
+        result.status shouldBe SEE_OTHER
+        result.header(LOCATION) shouldBe Some(s"$subscriptionStartPath/$legacyRegime/address-fix")
+
+        val updatedJourney = await(repo.getFromSession(subscriptionJourneyKey(legacyRegime)))
+        updatedJourney shouldBe defined
+        updatedJourney.get.useCustomAddress shouldBe Some(true)
+        updatedJourney.get.addressAnswer shouldBe Some(invalidAddress)
+      }
 
       "return bad request when no id provided in a query param" in {
 

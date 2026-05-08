@@ -17,10 +17,16 @@
 package uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util
 
 import play.api.mvc.Call
+import uk.gov.hmrc.agentservicesaccount.controllers.arnKey
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
+import uk.gov.hmrc.agentservicesaccount.controllers.{routes => homeRoutes}
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.ChangeSubscriptionAddressForm
+import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
 
 object NextPageSelector {
 
@@ -30,6 +36,7 @@ object NextPageSelector {
   val updateEmailAddressPage = "emailAddress"
   val emailVerificationFinish = "emailVerificationFinish"
   val updateAddressPage = "address"
+  val changeAddressPage = "changeAddress"
   val addressLookupFinish = "addressLookupFinish"
   val checkYourAnswersPage = "checkYourAnswers"
   val confirmationPage = "confirmationAnswers"
@@ -52,14 +59,17 @@ object NextPageSelector {
     case (`emailVerificationFinish`, _, regime) => subscriptions.routes.UpdateAddressController.showPage(regime)
     case (`updateAddressPage`, Some(journey), regime) =>
       journey.useCustomAddress match {
-        case Some(false) => subscriptions.routes.CheckYourAnswersController.showPage(regime)
+        case Some(false) if journey.addressValidForRegime(regime) => subscriptions.routes.CheckYourAnswersController.showPage(regime)
+        case Some(false) => subscriptions.routes.UpdateAddressController.showChange(regime, isInvalid = true)
         case _ => subscriptions.routes.UpdateAddressController.showPage(regime)
       }
     case (`addressLookupFinish`, Some(journey), regime) =>
       (journey.useCustomAddress, journey.addressAnswer) match {
-        case (Some(true), Some(_)) => subscriptions.routes.CheckYourAnswersController.showPage(regime)
+        case (Some(true), Some(_)) if journey.addressValidForRegime(regime) => subscriptions.routes.CheckYourAnswersController.showPage(regime)
+        case (Some(true), Some(_)) => subscriptions.routes.UpdateAddressController.showChange(regime, isInvalid = true)
         case _ => subscriptions.routes.UpdateAddressController.showPage(regime)
       }
+    case (`changeAddressPage`, _, regime) => subscriptions.routes.CheckYourAnswersController.showPage(regime)
   }
 
   def getNextPage(

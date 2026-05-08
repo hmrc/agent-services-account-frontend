@@ -22,7 +22,12 @@ import stubs.AgentServicesAccountStubs.stubASAGetResponseError
 import support.ComponentBaseISpec
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.ChangeSubscriptionAddressForm.line1Key
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.ChangeSubscriptionAddressForm.line2Key
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.ChangeSubscriptionAddressForm.line3Key
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.ChangeSubscriptionAddressForm.postcodeKey
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionAddressForm.addressUseAsaDataKey
+import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
@@ -35,6 +40,29 @@ extends ComponentBaseISpec {
   private val repo = inject[SessionCacheRepository]
 
   private val legacyRegimes = List(CT, PAYE, SA)
+
+  private val changeRouteCases = List(
+    ("address-change", "Change your address"),
+    ("address-fix", "Change the address lines that are too long")
+  )
+
+  private val changedAddress = BusinessAddress(
+    addressLine1 = "12 Changed Street",
+    addressLine2 = Some("Changed District"),
+    addressLine3 = Some("Changed Town"),
+    addressLine4 = None,
+    postalCode = Some("AA1 1AA"),
+    countryCode = "GB"
+  )
+
+  private val invalidAddress = BusinessAddress(
+    addressLine1 = "123456789012345678901234567890", // 30 characters, which is too long for CT/SA
+    addressLine2 = Some("123456789012345678901234567890"),
+    addressLine3 = None,
+    addressLine4 = None,
+    postalCode = None, // Required for PAYE
+    countryCode = "GB"
+  )
 
   legacyRegimes.foreach(legacyRegime => {
     val updateAddressPath = s"$subscriptionStartPath/$legacyRegime/address"
@@ -63,12 +91,13 @@ extends ComponentBaseISpec {
 
       val journeyWithRedirectLocations = List(
         (subscriptionBaseJourney, "check-your-answers"),
-        (subscriptionFullJourney(legacyRegime), "check-your-answers")
+        (subscriptionFullJourney(legacyRegime), "check-your-answers"),
+        (subscriptionFullJourney(legacyRegime).copy(asaDetails = subscriptionAgencyDetails.copy(agencyAddress = Some(invalidAddress))), "address-fix")
       )
 
       journeyWithRedirectLocations.foreach(journeyWithRedirectLocation => {
         s"update journey and redirect to ${journeyWithRedirectLocation._2} when using ASA address " +
-          s"and journey ${completeString(journeyWithRedirectLocation._1, legacyRegime)}}" in {
+          s"and journey ${completeString(journeyWithRedirectLocation._1, legacyRegime)}" in {
             givenAuthorisedAsAgentWith(arn.value)
             givenGetAgentRecord(agentRecord)
             stubASAGetResponseError(arn, NOT_FOUND)
@@ -111,6 +140,105 @@ extends ComponentBaseISpec {
         result.status shouldBe SEE_OTHER
 
         result.header("Location").get shouldBe s"${subscriptions.routes.AddressLookupController.startAddressLookup(legacyRegime)}"
+      }
+    }
+
+    changeRouteCases.foreach { case (routeSuffix, expectedTitle) =>
+      val changeAddressPath = s"$subscriptionStartPath/$legacyRegime/$routeSuffix"
+
+      s"GET $changeAddressPath" should {
+        s"display the change address page with title '$expectedTitle'" in {
+
+          givenAuthorisedAsAgentWith(arn.value)
+          givenGetAgentRecord(agentRecord)
+          stubASAGetResponseError(arn, NOT_FOUND)
+
+          repo.putSession(subscriptionJourneyKey(legacyRegime), subscriptionBaseJourney.copy(useCustomAddress = Some(false))).futureValue
+
+          val result = get(changeAddressPath)
+
+          result.status shouldBe OK
+          assertPageHasTitle(expectedTitle)(result)
+        }
+
+        "redirect to the address selection page when there is no address to change" in {
+
+          givenAuthorisedAsAgentWith(arn.value)
+          givenGetAgentRecord(agentRecord)
+          stubASAGetResponseError(arn, NOT_FOUND)
+
+          repo.putSession(subscriptionJourneyKey(legacyRegime), subscriptionBaseJourney).futureValue
+
+          val result = get(changeAddressPath)
+
+          result.status shouldBe SEE_OTHER
+          result.header(LOCATION) shouldBe Some(s"$subscriptionStartPath/$legacyRegime/address")
+        }
+      }
+
+      s"POST $changeAddressPath" should {
+        "update the journey and redirect to the address selection page when the form is valid" in {
+
+          givenAuthorisedAsAgentWith(arn.value)
+          givenGetAgentRecord(agentRecord)
+          stubASAGetResponseError(arn, NOT_FOUND)
+
+          repo.putSession(subscriptionJourneyKey(legacyRegime), subscriptionBaseJourney.copy(useCustomAddress = Some(false))).futureValue
+
+          val result =
+            post(changeAddressPath)(body =
+              Map(
+                line1Key -> Seq(changedAddress.addressLine1),
+                line2Key -> Seq(changedAddress.addressLine2.get),
+                line3Key -> Seq(changedAddress.addressLine3.get),
+                postcodeKey -> Seq(changedAddress.postalCode.get)
+              )
+            )
+
+          result.status shouldBe SEE_OTHER
+          result.header(LOCATION) shouldBe Some(s"$subscriptionStartPath/$legacyRegime/check-your-answers")
+
+          val updated = await(repo.getFromSession(subscriptionJourneyKey(legacyRegime)))
+          updated shouldBe defined
+          updated.get.useCustomAddress shouldBe Some(true)
+          updated.value.addressAnswer shouldBe Some(changedAddress)
+        }
+
+        s"return BAD_REQUEST with title 'Error: $expectedTitle' when the form is invalid" in {
+
+          givenAuthorisedAsAgentWith(arn.value)
+          givenGetAgentRecord(agentRecord)
+          stubASAGetResponseError(arn, NOT_FOUND)
+
+          repo.putSession(subscriptionJourneyKey(legacyRegime), subscriptionBaseJourney.copy(useCustomAddress = Some(false))).futureValue
+
+          val result = post(changeAddressPath)(body = Map.empty)
+
+          result.status shouldBe BAD_REQUEST
+          assertPageHasTitle(s"Error: $expectedTitle")(result)
+        }
+
+        "redirect to the address selection page when there is no address to change" in {
+
+          givenAuthorisedAsAgentWith(arn.value)
+          givenGetAgentRecord(agentRecord)
+          stubASAGetResponseError(arn, NOT_FOUND)
+
+          repo.putSession(subscriptionJourneyKey(legacyRegime), subscriptionBaseJourney).futureValue
+
+          val result =
+            post(changeAddressPath)(body =
+              Map(
+                line1Key -> Seq(changedAddress.addressLine1),
+                line2Key -> Seq(changedAddress.addressLine2.get),
+                line3Key -> Seq(changedAddress.addressLine3.get),
+                postcodeKey -> Seq(changedAddress.postalCode.get)
+              )
+            )
+
+          result.status shouldBe SEE_OTHER
+          result.header(LOCATION) shouldBe Some(s"$subscriptionStartPath/$legacyRegime/address")
+        }
       }
     }
   })

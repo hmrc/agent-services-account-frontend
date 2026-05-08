@@ -18,8 +18,15 @@ package uk.gov.hmrc.agentservicesaccount.models.subscriptions
 
 import play.api.libs.json.Json
 import play.api.libs.json.OFormat
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.ChangeSubscriptionAddressForm
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.ChangeSubscriptionAddressForm.lineRegex
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.ChangeSubscriptionAddressForm.maxLen
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.ChangeSubscriptionAddressForm.postcodeRegex
 import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
 
 case class SubscriptionJourney(
   asaDetails: AgencyDetails,
@@ -56,8 +63,46 @@ case class SubscriptionJourney(
       }
     val pnComplete = answerComplete(useCustomPhoneNumber, phoneNumberAnswer)
     val eaComplete = answerComplete(useCustomEmail, emailAnswer)
-    val addressComplete = answerComplete(useCustomAddress, addressAnswer)
+    val addressComplete = answerComplete(useCustomAddress, addressAnswer) && addressValidForRegime(legacyRegime)
     nameComplete && pnComplete && eaComplete && addressComplete
+  }
+
+  // This is needed because address validation rules differ between ALF, ASA and the 3 legacy regimes,
+  // so any selection of address (custom or ALF) must be validated against the regime-specific rules
+  def addressValidForRegime(legacyRegime: LegacyRegime): Boolean = {
+    val optAddress =
+      if (useCustomAddress.contains(true))
+        addressAnswer
+      else
+        asaDetails.agencyAddress
+    (legacyRegime, optAddress) match {
+      case (_, Some(address)) if address.isUk =>
+        ChangeSubscriptionAddressForm.ukForm(legacyRegime).bind(
+          Map(
+            ChangeSubscriptionAddressForm.line1Key -> address.addressLine1,
+            ChangeSubscriptionAddressForm.line2Key -> address.addressLine2.getOrElse(""),
+            ChangeSubscriptionAddressForm.line3Key -> address.addressLine3.getOrElse(""),
+            ChangeSubscriptionAddressForm.line4Key -> address.addressLine4.getOrElse(""),
+            ChangeSubscriptionAddressForm.postcodeKey -> address.postalCode.getOrElse("")
+          )
+        ).fold(
+          _ => false,
+          _ => true
+        )
+      case (CT | SA, Some(address)) if !address.isUk =>
+        ChangeSubscriptionAddressForm.nonUkForm(legacyRegime).bind(
+          Map(
+            ChangeSubscriptionAddressForm.line1Key -> address.addressLine1,
+            ChangeSubscriptionAddressForm.line2Key -> address.addressLine2.getOrElse(""),
+            ChangeSubscriptionAddressForm.line3Key -> address.addressLine3.getOrElse(""),
+            ChangeSubscriptionAddressForm.countryCodeKey -> address.countryCode
+          )
+        ).fold(
+          _ => false,
+          _ => true
+        )
+      case _ => false
+    }
   }
 
 }
