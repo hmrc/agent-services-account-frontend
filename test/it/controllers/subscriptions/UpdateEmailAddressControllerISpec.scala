@@ -136,4 +136,87 @@ extends ComponentBaseISpec {
 
   })
 
+  List(CT, SA).foreach(legacyRegime => {
+    val customEmailAddressPath = s"$subscriptionStartPath/$legacyRegime/email-address-too-lomg"
+
+    s"GET $customEmailAddressPath" should {
+      //  TODO: 11240 Correct ITs
+      "display the custom email address page" in {
+
+        givenAuthorisedAsAgentWith(arn.value)
+        givenGetAgentRecord(agentRecord)
+        stubASAGetResponseError(arn, NOT_FOUND)
+
+        val result = get(customEmailAddressPath)
+
+        result.status shouldBe OK
+        val expectedTitle: String =
+          (legacyRegime: LegacyRegime) match {
+            case CT => "What email address should we use to contact you about Corporation Tax?"
+            case SA => "What email address should we use to contact you about Self Assessment?"
+          }
+        assertPageHasTitle(expectedTitle)(result)
+      }
+    }
+
+    s"POST $customEmailAddressPath" should {
+
+      //  TODO: 11240 Correct ITs
+      "(if the email is unverified) redirect to the verify-email external journey" in {
+
+        givenFullAuthorisedAsAgentWith(
+          arn = arn.value,
+          providerId = "cred-id",
+          email = "abc@abc.com"
+        )
+        givenGetAgentRecord(agentRecord)
+        stubASAGetResponseError(arn, NOT_FOUND)
+        givenCheckEmailSuccess(
+          "cred-id",
+          VerificationStatusResponse(emails =
+            List(CompletedEmail(
+              "abc@abc.com",
+              verified = true,
+              locked = false
+            ))
+          )
+        )
+        givenVerifyEmailSuccess("/continue-url")
+
+        await(repo.putSession(emailPendingVerificationKey, "new@abc.com"))
+
+        val result =
+          post(customEmailAddressPath)(body =
+            Map(
+              emailAddressUseAsaDataKey -> Seq("false"),
+              emailAddressNewKey -> Seq("jane@bloggs.com")
+            )
+          )
+
+        result.status shouldBe SEE_OTHER
+
+        result.header("Location").get shouldBe "http://localhost:9890/continue-url"
+      }
+    }
+
+  })
+
+  val customEmailAddressPathFromPaye = s"$subscriptionStartPath/PAYE/email-address-too-long"
+
+  s"GET $customEmailAddressPathFromPaye" should {
+    "redirect to /subscription/PAYE/email-address" in {
+
+      givenAuthorisedAsAgentWith(arn.value)
+      givenGetAgentRecord(agentRecord)
+      stubASAGetResponseError(arn, NOT_FOUND)
+
+      val result = get(customEmailAddressPathFromPaye)
+
+      result.status shouldBe SEE_OTHER
+//      TODO: 11240 Correct condition
+//      redirectLocation(result) shouldBe Some(subscriptionRoutes.UpdateEmailAddressController.showPage(PAYE).url)
+    }
+  }
+
+
 }

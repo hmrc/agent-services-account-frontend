@@ -133,7 +133,7 @@ with Logging {
     )
   }
 
-//  TODO: 11240 Add ITs
+//  TODO: 11240 Correct ITs
   def showSaCtCustomPage(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
 //    TODO: 11240 Redirect to showPage if LegacyRegime PAYE, will need IT
     val journey = request.subscriptionJourney
@@ -152,7 +152,7 @@ with Logging {
     )
   }
 
-//  TODO: 11240 Add ITs
+//  TODO: 11240 Correct ITs
   def onSaCtCustomSubmit(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
     val journey = request.subscriptionJourney
 
