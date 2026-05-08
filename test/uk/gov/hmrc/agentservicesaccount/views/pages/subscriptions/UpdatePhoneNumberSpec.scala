@@ -38,7 +38,7 @@ extends ViewBaseSpec {
 
   private val legacyRegime = LegacyRegime.PAYE
 
-  private val phoneNumberForm: Form[PhoneNumberFormValues] = SubscriptionPhoneNumberForm.form(legacyRegime)
+  private val phoneNumberForm: Form[PhoneNumberFormValues] = SubscriptionPhoneNumberForm.form(legacyRegime, "Agency Name")
 
   private val formWithInputErrors: Form[PhoneNumberFormValues] = phoneNumberForm.withError(phoneNumberNewKey, Messages("error.required"))
 

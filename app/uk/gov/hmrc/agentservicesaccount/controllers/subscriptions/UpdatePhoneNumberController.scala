@@ -53,7 +53,7 @@ with Logging {
     val journey = request.subscriptionJourney
 
     val asaDetailsAgencyTelephone: Option[String] = journey.asaDetails.agencyTelephone
-    val initialForm = SubscriptionPhoneNumberForm.form(legacyRegime)
+    val initialForm = SubscriptionPhoneNumberForm.form(legacyRegime, journey.asaDetails.agencyName.getOrElse(""))
     val form =
       journey.useCustomPhoneNumber match {
 
@@ -80,7 +80,7 @@ with Logging {
   def onSubmit(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
     val journey = request.subscriptionJourney
 
-    SubscriptionPhoneNumberForm.form(legacyRegime).bindFromRequest().fold(
+    SubscriptionPhoneNumberForm.form(legacyRegime, journey.asaDetails.agencyName.getOrElse("")).bindFromRequest().fold(
       formWithErrors => {
         val asaDetailsAgencyTelephone: Option[String] = journey.asaDetails.agencyTelephone
         Future.successful(
