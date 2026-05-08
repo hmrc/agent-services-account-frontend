@@ -20,7 +20,10 @@ import play.api.data.Forms._
 import play.api.data.Form
 import play.api.data.Mapping
 import play.api.i18n.Messages
-import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators.{CT_SA_EMAIL_MAX_LENGTH, PAYE_EMAIL_MAX_LENGTH, trimmedText, useAsaDataMapping}
+import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators.CT_SA_EMAIL_MAX_LENGTH
+import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators.PAYE_EMAIL_MAX_LENGTH
+import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators.trimmedText
+import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators.useAsaDataMapping
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.EmailAddressFormValues
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
