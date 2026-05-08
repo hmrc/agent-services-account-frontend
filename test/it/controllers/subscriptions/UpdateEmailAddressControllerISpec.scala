@@ -137,7 +137,7 @@ extends ComponentBaseISpec {
   })
 
   List(CT, SA).foreach(legacyRegime => {
-    val customEmailAddressPath = s"$subscriptionStartPath/$legacyRegime/email-address-too-lomg"
+    val customEmailAddressPath = s"$subscriptionStartPath/$legacyRegime/email-address-too-long"
 
     s"GET $customEmailAddressPath" should {
       //  TODO: 11240 Correct ITs
