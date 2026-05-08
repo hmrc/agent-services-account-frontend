@@ -34,7 +34,8 @@ object NextPageSelector {
   val payeUpdateContactNamePage = "payeContactName"
   val updatePhoneNumberPage = "phoneNumber"
   val updateEmailAddressPage = "emailAddress"
-//  TODO: 11240 Need to add routing for email too long page (to and from)
+//  TODO: 11240 Email too long page has no routing from as goes to email verification
+//  TODO: 11240 Routing to is exclusively from updateEmailAddressPage - this should go above CYA, as selecting ASA email too long when journey complete must still go to custom email address page
 //  TODO: 11240 Routing to sactCustomEmailAddressPage must override journey.isComplete!!! Manually test this flow
   val sactCustomEmailAddressPage = "sactCustommailAddress"
   val emailVerificationFinish = "emailVerificationFinish"
