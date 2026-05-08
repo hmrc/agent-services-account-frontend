@@ -18,6 +18,7 @@ package uk.gov.hmrc.agentservicesaccount.models.subscriptions
 
 import play.api.libs.json.Json
 import play.api.libs.json.OFormat
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.ChangeSubscriptionAddressForm
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.ChangeSubscriptionAddressForm.lineRegex
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.ChangeSubscriptionAddressForm.maxLen
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.ChangeSubscriptionAddressForm.postcodeRegex
@@ -76,19 +77,30 @@ case class SubscriptionJourney(
         asaDetails.agencyAddress
     (legacyRegime, optAddress) match {
       case (_, Some(address)) if address.isUk =>
-        Seq(
-          address.addressLine1.length <= maxLen(legacyRegime, 1) && address.addressLine1.matches(lineRegex(legacyRegime)),
-          address.addressLine2.exists(line => line.length <= maxLen(legacyRegime, 2) && line.matches(lineRegex(legacyRegime))),
-          address.addressLine3.fold(true)(line => line.length <= maxLen(legacyRegime, 3) && line.matches(lineRegex(legacyRegime))),
-          address.addressLine4.fold(true)(line => line.length <= maxLen(legacyRegime, 4) && line.matches(lineRegex(legacyRegime))),
-          address.postalCode.exists(_.matches(postcodeRegex))
-        ).forall(identity)
+        ChangeSubscriptionAddressForm.ukForm(legacyRegime).bind(
+          Map(
+            ChangeSubscriptionAddressForm.line1Key -> address.addressLine1,
+            ChangeSubscriptionAddressForm.line2Key -> address.addressLine2.getOrElse(""),
+            ChangeSubscriptionAddressForm.line3Key -> address.addressLine3.getOrElse(""),
+            ChangeSubscriptionAddressForm.line4Key -> address.addressLine4.getOrElse(""),
+            ChangeSubscriptionAddressForm.postcodeKey -> address.postalCode.getOrElse("")
+          )
+        ).fold(
+          _ => false,
+          _ => true
+        )
       case (CT | SA, Some(address)) if !address.isUk =>
-        Seq(
-          address.addressLine1.length <= maxLen(legacyRegime, 1) && address.addressLine1.matches(lineRegex(legacyRegime)),
-          address.addressLine2.exists(line => line.length <= maxLen(legacyRegime, 2) && line.matches(lineRegex(legacyRegime))),
-          address.addressLine3.exists(line => line.length <= maxLen(legacyRegime, 3) && line.matches(lineRegex(legacyRegime)))
-        ).forall(identity)
+        ChangeSubscriptionAddressForm.nonUkForm(legacyRegime).bind(
+          Map(
+            ChangeSubscriptionAddressForm.line1Key -> address.addressLine1,
+            ChangeSubscriptionAddressForm.line2Key -> address.addressLine2.getOrElse(""),
+            ChangeSubscriptionAddressForm.line3Key -> address.addressLine3.getOrElse(""),
+            ChangeSubscriptionAddressForm.countryCodeKey -> address.countryCode
+          )
+        ).fold(
+          _ => false,
+          _ => true
+        )
       case _ => false
     }
   }

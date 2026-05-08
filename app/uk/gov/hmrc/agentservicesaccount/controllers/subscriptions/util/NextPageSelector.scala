@@ -65,7 +65,7 @@ object NextPageSelector {
       }
     case (`addressLookupFinish`, Some(journey), regime) =>
       (journey.useCustomAddress, journey.addressAnswer) match {
-        case (Some(true), Some(answer)) if journey.addressValidForRegime(regime) => subscriptions.routes.CheckYourAnswersController.showPage(regime)
+        case (Some(true), Some(_)) if journey.addressValidForRegime(regime) => subscriptions.routes.CheckYourAnswersController.showPage(regime)
         case (Some(true), Some(_)) => subscriptions.routes.UpdateAddressController.showChange(regime, isInvalid = true)
         case _ => subscriptions.routes.UpdateAddressController.showPage(regime)
       }

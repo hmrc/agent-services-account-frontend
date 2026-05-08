@@ -29,6 +29,7 @@
 
 @this(
         main: main,
+        h1: h1,
         formWithCSRF: FormWithCSRF,
         govukInput: GovukInput,
         govukButton: GovukButton,
@@ -44,8 +45,12 @@
     legacyRegime.msgPrefix
 }
 
+@title = @{
+    msgs(s"$legacyRegimePrefix.change-address.title${if(isInvalid) ".invalid" else ""}")
+}
+
 @main(
-    pageTitle = withErrorPrefix(form.hasErrors, msgs(s"$legacyRegimePrefix.change-address.title${if(isInvalid) ".invalid" else ""}")),
+    pageTitle = withErrorPrefix(form.hasErrors, title),
     mimicBrowserBackLink = true,
     showSecondaryNav = false
 ) {
@@ -54,7 +59,7 @@
         @govukErrorSummary(ErrorSummary().withFormErrorsAsText(form))
     }
 
-    <h1 class="govuk-heading-l">@msgs(s"$legacyRegimePrefix.change-address.title${if(isInvalid) ".invalid" else ""}")</h1>
+    @h1(title)
 
     @if(isInvalid) {
         @govukInsetText(InsetText(content = HtmlContent(msgs(s"$legacyRegimePrefix.change-address.inset.invalid"))))

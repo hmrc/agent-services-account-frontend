@@ -65,7 +65,7 @@ with Logging {
       val summaryItems = buildSummaryListItems(
         data,
         legacyRegime,
-        request.subscriptionJourney
+        request.subscriptionJourney.useCustomAddress
       )
       Future.successful(Ok(checkYourAnswers(summaryItems, legacyRegime)))
     }
@@ -113,7 +113,7 @@ with Logging {
   private[subscriptions] def buildSummaryListItems(
     data: SubscriptionCyaData,
     legacyRegime: LegacyRegime,
-    journey: SubscriptionJourney
+    useCustomAddress: Option[Boolean]
   ): Seq[SummaryListData] = {
     val nameRowKeyDescriptor =
       if (legacyRegime == PAYE)
@@ -147,7 +147,7 @@ with Logging {
       SummaryListData(
         key = s"${legacyRegime.msgPrefix}.check-your-answers.address",
         value = formatAddress(data.address),
-        link = Some(if (journey.useCustomAddress.contains(true))
+        link = Some(if (useCustomAddress.contains(true))
           subscriptionRoutes.UpdateAddressController.showChange(legacyRegime, isInvalid = false)
         else
           subscriptionRoutes.UpdateAddressController.showPage(legacyRegime))
