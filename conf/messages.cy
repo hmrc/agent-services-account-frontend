@@ -972,16 +972,3 @@ update-money-laundering-supervisory.body-codes.error.empty=Enter your money laun
 
 #Administrators
 administrators.link-text=Bwrw golwg dros y gweinyddwyr
-
-# PAYE subscription request (mock)
-paye.cya.h1=Gwiriwch eich manylion cyn gwneud cais am danysgrifiad TWE
-paye.cya.submit=Cadarnhau a chyflwyno’r cais
-paye.cya.return-home=Ewch yn ôl i’ch cyfrif gwasanaethau asiant
-paye.cya.agentName=Enw’r asiant
-paye.cya.contactName=Enw cyswllt
-paye.cya.telephoneNumber=Rhif ffôn
-paye.cya.emailAddress=Cyfeiriad e-bost
-paye.cya.address=Cyfeiriad
-paye.submitted.h1=Cais am danysgrifiad TWE wedi’i gyflwyno
-paye.submitted.p1=Mae’ch cais wedi dod i law. Byddwn yn cysylltu â chi pan fyddwn wedi’i brosesu.
-paye.submitted.return-home=Ewch yn ôl i’ch cyfrif gwasanaethau asiant

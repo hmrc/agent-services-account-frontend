@@ -92,10 +92,6 @@ GET        /manage-account/contact-details/check-your-answers             @uk.go
 POST       /manage-account/contact-details/check-your-answers             @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.CheckYourAnswersController.onSubmit
 GET        /manage-account/contact-details/confirmation                   @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.ContactDetailsController.showChangeSubmitted
 
-GET        /subscription/paye/request/confirm                             @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.PayeSubscriptionRequestController.showConfirm
-POST       /subscription/paye/request/confirm                             @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.PayeSubscriptionRequestController.submit
-GET        /subscription/paye/request/submitted                           @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.PayeSubscriptionRequestController.showSubmitted
-
 GET        /subscription/:regime/do-you-already-manage                    @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.DoYouAlreadyManageController.showPage(regime: LegacyRegime)
 POST       /subscription/:regime/do-you-already-manage                    @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.DoYouAlreadyManageController.onSubmit(regime: LegacyRegime)
 
