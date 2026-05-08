@@ -16,6 +16,7 @@
 
 package it.controllers.subscriptions
 
+import play.api.test.Helpers
 import play.api.test.Helpers._
 import stubs.AgentServicesAccountStubs.givenGetAgentRecord
 import stubs.AgentServicesAccountStubs.stubASAGetResponseError
@@ -140,7 +141,6 @@ extends ComponentBaseISpec {
     val customEmailAddressPath = s"$subscriptionStartPath/$legacyRegime/email-address-too-long"
 
     s"GET $customEmailAddressPath" should {
-      //  TODO: 11240 Correct ITs
       "display the custom email address page" in {
 
         givenAuthorisedAsAgentWith(arn.value)
@@ -150,18 +150,13 @@ extends ComponentBaseISpec {
         val result = get(customEmailAddressPath)
 
         result.status shouldBe OK
-        val expectedTitle: String =
-          (legacyRegime: LegacyRegime) match {
-            case CT => "What email address should we use to contact you about Corporation Tax?"
-            case SA => "What email address should we use to contact you about Self Assessment?"
-          }
+        val expectedTitle: String = "Your agent services account email address is too long"
         assertPageHasTitle(expectedTitle)(result)
       }
     }
 
     s"POST $customEmailAddressPath" should {
 
-      //  TODO: 11240 Correct ITs
       "(if the email is unverified) redirect to the verify-email external journey" in {
 
         givenFullAuthorisedAsAgentWith(
@@ -213,8 +208,7 @@ extends ComponentBaseISpec {
       val result = get(customEmailAddressPathFromPaye)
 
       result.status shouldBe SEE_OTHER
-//      TODO: 11240 Correct condition
-//      redirectLocation(result) shouldBe Some(subscriptionRoutes.UpdateEmailAddressController.showPage(PAYE).url)
+      result.header(LOCATION) shouldBe Some(s"$subscriptionStartPath/PAYE/email-address")
     }
   }
 
