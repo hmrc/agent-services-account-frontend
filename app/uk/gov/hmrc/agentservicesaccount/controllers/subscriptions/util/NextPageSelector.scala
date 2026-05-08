@@ -34,6 +34,9 @@ object NextPageSelector {
   val payeUpdateContactNamePage = "payeContactName"
   val updatePhoneNumberPage = "phoneNumber"
   val updateEmailAddressPage = "emailAddress"
+//  TODO: 11240 Need to add routing for email too long page (to and from)
+//  TODO: 11240 Routing to sactCustomEmailAddressPage must override journey.isComplete!!! Manually test this flow
+  val sactCustomEmailAddressPage = "sactCustommailAddress"
   val emailVerificationFinish = "emailVerificationFinish"
   val updateAddressPage = "address"
   val changeAddressPage = "changeAddress"

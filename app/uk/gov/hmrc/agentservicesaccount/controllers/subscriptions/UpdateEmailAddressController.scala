@@ -30,6 +30,7 @@ import uk.gov.hmrc.agentservicesaccount.models.subscriptions.EmailAddressFormVal
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.services.EmailVerificationService
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.ctsa_custom_email_address
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.update_email_address
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
@@ -43,6 +44,7 @@ class UpdateEmailAddressController @Inject() (
   val sessionCacheService: SessionCacheService,
   emailVerificationService: EmailVerificationService,
   update_email_address: update_email_address,
+  ctsa_custom_email_address: ctsa_custom_email_address,
   cc: MessagesControllerComponents
 )(implicit
   appConfig: AppConfig,
@@ -127,6 +129,58 @@ with Logging {
             } yield Redirect(redirectUri)
           }).getOrElse(Future.successful(Redirect(routes.UpdateEmailAddressController.showPage(legacyRegime))))
         }
+      }
+    )
+  }
+
+//  TODO: 11240 Add ITs
+  def showSaCtCustomPage(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
+//    TODO: 11240 Redirect to showPage if LegacyRegime PAYE, will need IT
+    val journey = request.subscriptionJourney
+
+    val subscriptionEmailAddress = journey.asaDetails.agencyEmail.getOrElse("")
+
+//    TODO: 11240 Can I reuse form or do I need to make a new one?
+    val form = SubscriptionEmailAddressForm.form(legacyRegime)
+
+    Future.successful(
+      Ok(ctsa_custom_email_address(
+        form,
+        subscriptionEmailAddress,
+        legacyRegime
+      ))
+    )
+  }
+
+//  TODO: 11240 Add ITs
+  def onSaCtCustomSubmit(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
+    val journey = request.subscriptionJourney
+
+    SubscriptionEmailAddressForm.form(legacyRegime).bindFromRequest().fold(
+      formWithErrors => {
+        val subscriptionEmailAddress = journey.asaDetails.agencyEmail.getOrElse("")
+        Future.successful(
+          BadRequest(ctsa_custom_email_address(
+            formWithErrors,
+            subscriptionEmailAddress,
+            legacyRegime
+          ))
+        )
+      },
+      data => {
+        data.newEmailAddress.map(newEmail => {
+          val credId = request.agentInfo.credentials.map(_.providerId).getOrElse(throw new RuntimeException("no available cred id"))
+          for {
+            _ <- sessionCacheService.put(emailPendingVerificationKey, newEmail)
+            redirectUri <- emailVerificationService.initialiseEmailVerificationJourney(
+              credId,
+              newEmail,
+              messagesApi.preferred(request).lang,
+              routes.EmailVerificationEndpointController.finishEmailVerification(legacyRegime),
+              routes.UpdateEmailAddressController.showSaCtCustomPage(legacyRegime)
+            )
+          } yield Redirect(redirectUri)
+        }).getOrElse(Future.successful(Redirect(routes.UpdateEmailAddressController.showSaCtCustomPage(legacyRegime))))
       }
     )
   }

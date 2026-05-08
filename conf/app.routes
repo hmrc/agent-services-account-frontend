@@ -109,6 +109,8 @@ POST       /subscription/:regime/phone-number                             @uk.go
 
 GET        /subscription/:regime/email-address                            @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdateEmailAddressController.showPage(regime: LegacyRegime)
 POST       /subscription/:regime/email-address                            @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdateEmailAddressController.onSubmit(regime: LegacyRegime)
+GET        /subscription/:regime/email-address-too-long                   @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdateEmailAddressController.showSaCtCustomPage(regime: LegacyRegime)
+POST       /subscription/:regime/email-address-too-long                   @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdateEmailAddressController.onSaCtCustomSubmit(regime: LegacyRegime)
 GET        /subscription/:regime/email-verification-finish                @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.EmailVerificationEndpointController.finishEmailVerification(regime: LegacyRegime)
 
 GET        /subscription/:regime/address                                  @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdateAddressController.showPage(regime: LegacyRegime)
