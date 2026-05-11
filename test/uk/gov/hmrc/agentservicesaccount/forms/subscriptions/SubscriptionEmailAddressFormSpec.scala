@@ -23,6 +23,7 @@ import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionEmailAdd
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.EmailAddressFormValues
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import play.api.test.Helpers
+import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators.CT_SA_EMAIL_MAX_LENGTH
 
 import scala.util.Random
 
@@ -34,7 +35,7 @@ with Matchers {
   val validNewEmailAddress = "joe@bloggs.com"
   val invalidNewEmailAddress = "{][.',"
 
-  private val legacyRegime = LegacyRegime.PAYE
+  private val legacyRegime = LegacyRegime.CT
 
   private val legacyRegimePrefix = legacyRegime.msgPrefix
 
@@ -90,7 +91,19 @@ with Matchers {
 
       val validatedForm = initForm.bind(params)
       validatedForm.hasErrors shouldBe true
-      validatedForm.error(emailAddressNewKey).get.message shouldBe s"$legacyRegimePrefix.email-address.new-input.error.empty"
+      validatedForm.error(emailAddressNewKey).get.message shouldBe s"$legacyRegimePrefix.email-address.input.error.empty"
+      validatedForm.errors.length shouldBe 1
+    }
+
+    s"error when $emailAddressUseAsaDataKey false and $emailAddressNewKey too long" in {
+      val params = Map(
+        emailAddressUseAsaDataKey -> false.toString,
+        emailAddressNewKey -> s"${(1 to CT_SA_EMAIL_MAX_LENGTH).map("a")}@email.com"
+      )
+
+      val validatedForm = initForm.bind(params)
+      validatedForm.hasErrors shouldBe true
+      validatedForm.error(emailAddressNewKey).get.message shouldBe s"$legacyRegimePrefix.email-address.input.error.length"
       validatedForm.errors.length shouldBe 1
     }
 
@@ -102,7 +115,7 @@ with Matchers {
 
       val validatedForm = initForm.bind(params)
       validatedForm.hasErrors shouldBe true
-      validatedForm.error(emailAddressNewKey).get.message shouldBe s"$legacyRegimePrefix.email-address.new-input.error.invalid"
+      validatedForm.error(emailAddressNewKey).get.message shouldBe s"$legacyRegimePrefix.email-address.input.error.invalid"
       validatedForm.errors.length shouldBe 1
     }
 

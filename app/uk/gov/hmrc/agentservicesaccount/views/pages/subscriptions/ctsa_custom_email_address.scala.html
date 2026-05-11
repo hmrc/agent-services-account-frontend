@@ -27,13 +27,14 @@
 
 @this(
     main: main,
+    h1: h1, p: p, inset_text: inset_text,
     formWithCSRF: FormWithCSRF,
     govukInput: GovukInput,
     govukButton: GovukButton,
     govukErrorSummary: GovukErrorSummary
 )
 
-@* TODO: 11240 Build up template correctly *@
+@* TODO: 11240 Add messages *@
 
 @(form: Form[EmailAddressFormValues], asaDetailsAgencyEmail: String, legacyRegime: LegacyRegime)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
 
@@ -49,7 +50,15 @@
         @govukErrorSummary(ErrorSummary().withFormErrorsAsText(form))
     }
 
-    @formWithCSRF(action = subscriptions.routes.UpdateEmailAddressController.onSubmit(legacyRegime)) {
+    @h1(s"$legacyRegimePrefix.custom-email-address.title")
+
+    @p(s"$legacyRegimePrefix.custom-email-address.p1")
+
+    @inset_text(asaDetailsAgencyEmail)
+
+    @p(s"$legacyRegimePrefix.custom-email-address.p2")
+
+    @formWithCSRF(action = subscriptions.routes.UpdateEmailAddressController.onSaCtCustomSubmit(legacyRegime)) {
         <input type="hidden" name="emailAddressUseAsaData" value="false">
         @govukInput(Input(
             label = Label(

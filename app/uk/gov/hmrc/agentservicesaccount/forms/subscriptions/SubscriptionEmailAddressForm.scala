@@ -48,11 +48,12 @@ object SubscriptionEmailAddressForm {
       else
         CT_SA_EMAIL_MAX_LENGTH
     trimmedText
-      .verifying(s"${legacyRegime.msgPrefix}.email-address.new-input.error.empty", _.nonEmpty)
-      .verifying(s"${legacyRegime.msgPrefix}.email-address.new-input.error.invalid", x => x.isEmpty || (x.length <= maxLength && x.contains("@")))
+      .verifying(s"${legacyRegime.msgPrefix}.email-address.input.error.empty", _.nonEmpty)
+//      TODO: 11240 Add messages
+      .verifying(s"${legacyRegime.msgPrefix}.email-address.input.error.length", x => x.isEmpty || x.length <= maxLength)
+      .verifying(s"${legacyRegime.msgPrefix}.email-address.input.error.invalid", x => x.isEmpty || x.contains("@"))
   }
 
-//  TODO: 11240 May need to split out too-long/single-input form as error messages will be different
   def form(
     legacyRegime: LegacyRegime,
     asaDetailsAgencyName: String

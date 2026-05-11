@@ -224,8 +224,8 @@ asa.legacy.ct.email-address.use-asa.false=I want to use a different email addres
 asa.legacy.ct.email-address.new-input.label=Enter an email address
 asa.legacy.ct.email-address.new-input.hint=We’ll send a code to this email address to confirm it
 asa.legacy.ct.email-address.use-asa.error.required=Select the email address we should use to contact {0} about Corporation Tax
-asa.legacy.ct.email-address.new-input.error.empty=Enter an email address
-asa.legacy.ct.email-address.new-input.error.invalid=Enter an email address in the correct format, for example name@example.com
+asa.legacy.ct.email-address.input.error.empty=Enter an email address
+asa.legacy.ct.email-address.input.error.invalid=Enter an email address in the correct format, for example name@example.com
 
 asa.legacy.ct.address.title=What address should we use to send letters about Corporation Tax?
 asa.legacy.ct.address.use-asa.true.hint=This is the address on your agent services account.
@@ -323,8 +323,8 @@ asa.legacy.paye.email-address.use-asa.false=I want to use a different email addr
 asa.legacy.paye.email-address.new-input.label=Enter an email address
 asa.legacy.paye.email-address.new-input.hint=We’ll send a code to this email address to confirm it
 asa.legacy.paye.email-address.use-asa.error.required=Select the email address we should use to contact {0} about PAYE
-asa.legacy.paye.email-address.new-input.error.empty=Enter an email address
-asa.legacy.paye.email-address.new-input.error.invalid=Enter an email address in the correct format, for example name@example.com
+asa.legacy.paye.email-address.input.error.empty=Enter an email address
+asa.legacy.paye.email-address.input.error.invalid=Enter an email address in the correct format, for example name@example.com
 
 asa.legacy.paye.address.title=What address should we use to send letters about PAYE?
 asa.legacy.paye.address.use-asa.true.hint=This is the address on your agent services account.
@@ -415,8 +415,8 @@ asa.legacy.sa.email-address.use-asa.false=I want to use a different email addres
 asa.legacy.sa.email-address.new-input.label=Enter an email address
 asa.legacy.sa.email-address.new-input.hint=We’ll send a code to this email address to confirm it
 asa.legacy.sa.email-address.use-asa.error.required=Select the email address we should use to contact {0} about Self Assessment
-asa.legacy.sa.email-address.new-input.error.empty=Enter an email address
-asa.legacy.sa.email-address.new-input.error.invalid=Enter an email address in the correct format, for example name@example.com
+asa.legacy.sa.email-address.input.error.empty=Enter an email address
+asa.legacy.sa.email-address.input.error.invalid=Enter an email address in the correct format, for example name@example.com
 
 asa.legacy.sa.address.title=What address should we use to send letters about Self Assessment?
 asa.legacy.sa.address.use-asa.true.hint=This is the address on your agent services account.

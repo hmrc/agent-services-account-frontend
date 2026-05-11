@@ -102,8 +102,7 @@ extends ComponentBaseISpec {
         }
       }
 
-
-    journeyWithRedirectLocations.foreach(journeyWithRedirectLocation => {
+      journeyWithRedirectLocations.foreach(journeyWithRedirectLocation => {
         s"update journey and redirect to ${journeyWithRedirectLocation._2} when using ASA email address " +
           s"and journey ${completeString(journeyWithRedirectLocation._1, legacyRegime)}}" in {
             givenAuthorisedAsAgentWith(arn.value)

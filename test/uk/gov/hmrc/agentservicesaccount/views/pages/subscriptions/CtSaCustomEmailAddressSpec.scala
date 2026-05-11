@@ -43,7 +43,7 @@ extends ViewBaseSpec {
 
   private val formWithNewEmailAddressError: Form[EmailAddressFormValues] = emailAddressForm.withError(
     key = emailAddressNewKey,
-    message = messages(s"$legacyRegimePrefix.custom-email-address.new-input.error.empty")
+    message = messages(s"$legacyRegimePrefix.custom-email-address.input.error.empty")
   )
 
   def render(form: Form[EmailAddressFormValues]): Document = Jsoup.parse(
@@ -135,7 +135,7 @@ extends ViewBaseSpec {
 
       "display correct error summary link" in {
         val errorLink: Element = doc.select(".govuk-error-summary__list a").first()
-        errorLink.text() mustBe messages(s"$legacyRegimePrefix.custom-email-address.new-input.error.empty")
+        errorLink.text() mustBe messages(s"$legacyRegimePrefix.custom-email-address.input.error.empty")
         errorLink.attr("href") mustBe s"#$emailAddressNewKey"
       }
 
@@ -144,7 +144,7 @@ extends ViewBaseSpec {
       }
 
       "display error message on form" in {
-        doc.select(".govuk-error-message").text() mustBe s"Error: ${messages(s"$legacyRegimePrefix.custom-email-address.new-input.error.empty")}"
+        doc.select(".govuk-error-message").text() mustBe s"Error: ${messages(s"$legacyRegimePrefix.custom-email-address.input.error.empty")}"
       }
     }
   }
