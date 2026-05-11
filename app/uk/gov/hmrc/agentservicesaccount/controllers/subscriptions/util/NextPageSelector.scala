@@ -20,6 +20,7 @@ import play.api.mvc.Call
 import uk.gov.hmrc.agentservicesaccount.controllers.arnKey
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
 import uk.gov.hmrc.agentservicesaccount.controllers.{routes => homeRoutes}
+import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators.CT_SA_EMAIL_MAX_LENGTH
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.ChangeSubscriptionAddressForm
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
@@ -34,16 +35,11 @@ object NextPageSelector {
   val payeUpdateContactNamePage = "payeContactName"
   val updatePhoneNumberPage = "phoneNumber"
   val updateEmailAddressPage = "emailAddress"
-//  TODO: 11240 Email too long page has no routing from as goes to email verification
-//  TODO: 11240 Routing to is exclusively from updateEmailAddressPage - this should go above CYA, as selecting ASA email too long when journey complete must still go to custom email address page
-//  TODO: 11240 Routing to sactCustomEmailAddressPage must override journey.isComplete!!! Manually test this flow
-  val sactCustomEmailAddressPage = "sactCustommailAddress"
   val emailVerificationFinish = "emailVerificationFinish"
   val updateAddressPage = "address"
   val changeAddressPage = "changeAddress"
   val addressLookupFinish = "addressLookupFinish"
   val checkYourAnswersPage = "checkYourAnswers"
-  val confirmationPage = "confirmationAnswers"
 
   private val nextPage: (
     String,
@@ -56,8 +52,10 @@ object NextPageSelector {
     case (`updateBusinessNamePage`, _, regime) => subscriptions.routes.UpdatePhoneNumberController.showPage(regime)
     case (`updatePhoneNumberPage`, _, regime) => subscriptions.routes.UpdateEmailAddressController.showPage(regime)
     case (`updateEmailAddressPage`, Some(journey), regime) =>
-      journey.useCustomEmail match {
-        case Some(false) => subscriptions.routes.UpdateAddressController.showPage(regime)
+      (journey.useCustomEmail, regime, journey.asaDetails.agencyEmail.map(_.length)) match {
+        case (Some(false), CT | SA, Some(length)) if length > CT_SA_EMAIL_MAX_LENGTH =>
+          subscriptions.routes.UpdateEmailAddressController.showSaCtCustomPage(regime)
+        case (Some(false), _, _) => subscriptions.routes.UpdateAddressController.showPage(regime)
         case _ => subscriptions.routes.UpdateEmailAddressController.showPage(regime)
       }
     case (`emailVerificationFinish`, _, regime) => subscriptions.routes.UpdateAddressController.showPage(regime)
