@@ -27,11 +27,12 @@ import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageS
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.{routes => subscriptionRoutes}
 import uk.gov.hmrc.agentservicesaccount.controllers.{routes => asaRoutes}
+import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators.CT_SA_EMAIL_MAX_LENGTH
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionCyaData
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.{CT, PAYE, SA}
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionCyaData.subscriptionJourneyToCyaData
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.utils.CountryResolver
@@ -65,6 +66,7 @@ with Logging {
       val summaryItems = buildSummaryListItems(
         data,
         legacyRegime,
+        request.subscriptionJourney.asaDetails.agencyEmail.map(_.length),
         request.subscriptionJourney.useCustomAddress
       )
       Future.successful(Ok(checkYourAnswers(summaryItems, legacyRegime)))
@@ -113,6 +115,7 @@ with Logging {
   private[subscriptions] def buildSummaryListItems(
     data: SubscriptionCyaData,
     legacyRegime: LegacyRegime,
+    agencyDetailsEmailLength: Option[Int],
     useCustomAddress: Option[Boolean]
   ): Seq[SummaryListData] = {
     val nameRowKeyDescriptor =
@@ -121,13 +124,20 @@ with Logging {
       else
         "business"
     val nameRowKey = s"${legacyRegime.msgPrefix}.check-your-answers.$nameRowKeyDescriptor-name"
-    val nameRowLink =
+    val nameRowLink = {
       if (legacyRegime == PAYE) {
         Some(subscriptionRoutes.PayeUpdateContactNameController.showPage)
       }
       else {
         Some(subscriptionRoutes.UpdateBusinessNameController.showPage(legacyRegime))
       }
+    }
+    val emailAddressLink = (legacyRegime, agencyDetailsEmailLength) match {
+      //  TODO: 11240 TEMP CHANGE FROM 50 FOR MANUAL TESTING
+      case (CT | SA, Some(length)) if length > 5 => Some(subscriptionRoutes.UpdateEmailAddressController.showSaCtCustomPage(legacyRegime))
+//      case (CT | SA, Some(length)) if length > CT_SA_EMAIL_MAX_LENGTH => Some(subscriptionRoutes.UpdateEmailAddressController.showSaCtCustomPage(legacyRegime))
+      case _ => Some(subscriptionRoutes.UpdateEmailAddressController.showPage(legacyRegime))
+    }
     Seq(
       SummaryListData(
         key = nameRowKey,
@@ -142,9 +152,8 @@ with Logging {
       SummaryListData(
         key = s"${legacyRegime.msgPrefix}.check-your-answers.email",
         value = data.email,
-        link = Some(subscriptionRoutes.UpdateEmailAddressController.showPage(legacyRegime))
+        link = emailAddressLink
       ),
-//      TODO: 11240 IF ASA AGENCY EMAIL TOO LONG, MUST ROUTE TO CtSaCustomEmailAddress
       SummaryListData(
         key = s"${legacyRegime.msgPrefix}.check-your-answers.address",
         value = formatAddress(data.address),

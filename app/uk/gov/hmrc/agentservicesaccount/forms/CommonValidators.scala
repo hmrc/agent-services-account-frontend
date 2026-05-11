@@ -27,7 +27,6 @@ import scala.annotation.tailrec
 object CommonValidators {
 
   val PAYE_EMAIL_MAX_LENGTH = 129
-//  TODO: 11240 TEMP CHANGE FROM 50 FOR MANUAL TESTING
   val CT_SA_EMAIL_MAX_LENGTH = 50
 
   val trimmedText: Mapping[String] = text.transform[String](x => x.trim, x => x)
