@@ -28,6 +28,7 @@ import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageS
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionEmailAddressForm
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.EmailAddressFormValues
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
 import uk.gov.hmrc.agentservicesaccount.services.EmailVerificationService
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.ctsa_custom_email_address
@@ -134,20 +135,23 @@ with Logging {
   }
 
   def showSaCtCustomPage(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
-    //    TODO: 11240 Redirect to showPage if LegacyRegime PAYE
-    val journey = request.subscriptionJourney
+    legacyRegime match {
+      case PAYE => Future.successful(Redirect(routes.UpdateEmailAddressController.showPage(PAYE)))
+      case _ =>
+        val journey = request.subscriptionJourney
 
-    val asaDetailsAgencyEmail = journey.asaDetails.agencyEmail.getOrElse("")
+        val asaDetailsAgencyEmail = journey.asaDetails.agencyEmail.getOrElse("")
 
-    val form = SubscriptionEmailAddressForm.form(legacyRegime, journey.asaDetails.agencyName.getOrElse(""))
+        val form = SubscriptionEmailAddressForm.form(legacyRegime, journey.asaDetails.agencyName.getOrElse(""))
 
-    Future.successful(
-      Ok(ctsa_custom_email_address(
-        form,
-        asaDetailsAgencyEmail,
-        legacyRegime
-      ))
-    )
+        Future.successful(
+          Ok(ctsa_custom_email_address(
+            form,
+            asaDetailsAgencyEmail,
+            legacyRegime
+          ))
+        )
+    }
   }
 
   def onSaCtCustomSubmit(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
