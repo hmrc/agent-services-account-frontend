@@ -28,6 +28,7 @@ import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.ctsa_custom_email_address
 
+//TODO: 11240 FIX
 class CtSaCustomEmailAddressSpec
 extends ViewBaseSpec {
 

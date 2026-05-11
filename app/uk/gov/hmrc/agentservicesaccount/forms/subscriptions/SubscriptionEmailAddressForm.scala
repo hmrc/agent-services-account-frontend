@@ -52,6 +52,7 @@ object SubscriptionEmailAddressForm {
       .verifying(s"${legacyRegime.msgPrefix}.email-address.new-input.error.invalid", x => x.isEmpty || (x.length <= maxLength && x.contains("@")))
   }
 
+//  TODO: 11240 May need to split out too-long/single-input form as error messages will be different
   def form(
     legacyRegime: LegacyRegime,
     asaDetailsAgencyName: String

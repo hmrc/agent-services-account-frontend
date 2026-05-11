@@ -134,6 +134,7 @@ with Logging {
   }
 
   def showSaCtCustomPage(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
+    //    TODO: 11240 Redirect to showPage if LegacyRegime PAYE
     val journey = request.subscriptionJourney
 
     val asaDetailsAgencyEmail = journey.asaDetails.agencyEmail.getOrElse("")
