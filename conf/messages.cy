@@ -225,6 +225,7 @@ asa.legacy.ct.email-address.new-input.label=Enter an email address
 asa.legacy.ct.email-address.new-input.hint=We’ll send a code to this email address to confirm it
 asa.legacy.ct.email-address.use-asa.error.required=Select the email address we should use to contact {0} about Corporation Tax
 asa.legacy.ct.email-address.input.error.empty=Enter an email address
+asa.legacy.ct.email-address.input.error.length=Enter an email address that is 50 characters or less.
 asa.legacy.ct.email-address.input.error.invalid=Enter an email address in the correct format, for example name@example.com
 
 asa.legacy.ct.address.title=What address should we use to send letters about Corporation Tax?
@@ -324,6 +325,7 @@ asa.legacy.paye.email-address.new-input.label=Enter an email address
 asa.legacy.paye.email-address.new-input.hint=We’ll send a code to this email address to confirm it
 asa.legacy.paye.email-address.use-asa.error.required=Select the email address we should use to contact {0} about PAYE
 asa.legacy.paye.email-address.input.error.empty=Enter an email address
+asa.legacy.paye.email-address.input.error.length=Enter an email address that is 129 characters or less.
 asa.legacy.paye.email-address.input.error.invalid=Enter an email address in the correct format, for example name@example.com
 
 asa.legacy.paye.address.title=What address should we use to send letters about PAYE?
@@ -416,6 +418,7 @@ asa.legacy.sa.email-address.new-input.label=Enter an email address
 asa.legacy.sa.email-address.new-input.hint=We’ll send a code to this email address to confirm it
 asa.legacy.sa.email-address.use-asa.error.required=Select the email address we should use to contact {0} about Self Assessment
 asa.legacy.sa.email-address.input.error.empty=Enter an email address
+asa.legacy.sa.email-address.input.error.length=Enter an email address that is 50 characters or less.
 asa.legacy.sa.email-address.input.error.invalid=Enter an email address in the correct format, for example name@example.com
 
 asa.legacy.sa.address.title=What address should we use to send letters about Self Assessment?

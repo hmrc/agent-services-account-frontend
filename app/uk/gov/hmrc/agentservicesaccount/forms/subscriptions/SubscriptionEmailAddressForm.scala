@@ -49,7 +49,6 @@ object SubscriptionEmailAddressForm {
         CT_SA_EMAIL_MAX_LENGTH
     trimmedText
       .verifying(s"${legacyRegime.msgPrefix}.email-address.input.error.empty", _.nonEmpty)
-//      TODO: 11240 Add messages
       .verifying(s"${legacyRegime.msgPrefix}.email-address.input.error.length", x => x.isEmpty || x.length <= maxLength)
       .verifying(s"${legacyRegime.msgPrefix}.email-address.input.error.invalid", x => x.isEmpty || x.contains("@"))
   }
