@@ -62,9 +62,8 @@
 
     @if(isAdmin) {
         @manage_section()
+        @apply_to_act_for_section(subscriptionInfo, isAbroad)
     }
-
-    @apply_to_act_for_section(subscriptionInfo, isAbroad)
 
     <hr class="govuk-section-break hr-thick govuk-!-margin-bottom-6 govuk-!-margin-top-8">
     @h2("asa.tax-services", id = Some("tax-services-h2"))
