@@ -25,8 +25,10 @@ import stubs.EmailVerificationStubs.givenVerifyEmailSuccess
 import support.ComponentBaseISpec
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.emailPendingVerificationKey
+import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators.CT_SA_EMAIL_MAX_LENGTH
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionEmailAddressForm.emailAddressNewKey
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionEmailAddressForm.emailAddressUseAsaDataKey
+import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.CompletedEmail
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.VerificationStatusResponse
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
@@ -73,7 +75,35 @@ extends ComponentBaseISpec {
         (subscriptionFullJourney(legacyRegime), "check-your-answers")
       )
 
-      journeyWithRedirectLocations.foreach(journeyWithRedirectLocation => {
+      if (legacyRegime != PAYE) {
+        "update journey and redirect to email-address-too-long when using ASA email address that is too long" in {
+          givenAuthorisedAsAgentWith(arn.value)
+          givenGetAgentRecord(agentRecord)
+          stubASAGetResponseError(arn, NOT_FOUND)
+
+          val tooLongEmailAddress = s"${(1 to CT_SA_EMAIL_MAX_LENGTH).map("a")}@email.com"
+          val newAsaDetails = subscriptionAgencyDetails.copy(agencyEmail = Some(tooLongEmailAddress))
+          val subscriptionJourney = subscriptionBaseJourney.copy(asaDetails = newAsaDetails)
+
+          repo.putSession(subscriptionJourneyKey(legacyRegime), subscriptionJourney).futureValue
+
+          val result =
+            post(updateEmailAddressPath)(body =
+              Map(
+                emailAddressUseAsaDataKey -> Seq("true")
+              )
+            )
+          result.status shouldBe SEE_OTHER
+          result.header(LOCATION) shouldBe Some(s"$subscriptionStartPath/$legacyRegime/email-address-too-long")
+
+          val updated = await(repo.getFromSession(subscriptionJourneyKey(legacyRegime)))
+          updated shouldBe defined
+          updated.get.useCustomEmail shouldBe None
+        }
+      }
+
+
+    journeyWithRedirectLocations.foreach(journeyWithRedirectLocation => {
         s"update journey and redirect to ${journeyWithRedirectLocation._2} when using ASA email address " +
           s"and journey ${completeString(journeyWithRedirectLocation._1, legacyRegime)}}" in {
             givenAuthorisedAsAgentWith(arn.value)
