@@ -212,5 +212,4 @@ extends ComponentBaseISpec {
     }
   }
 
-
 }

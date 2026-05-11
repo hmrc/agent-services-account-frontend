@@ -17,12 +17,15 @@
 package uk.gov.hmrc.agentservicesaccount.views.pages.subscriptions
 
 import org.jsoup.Jsoup
-import org.jsoup.nodes.{Document, Element}
+import org.jsoup.nodes.Document
+import org.jsoup.nodes.Element
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.data.Form
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionEmailAddressForm
-import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionEmailAddressForm.{emailAddressNewKey, emailAddressUseAsaDataKey}
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.{EmailAddressFormValues, LegacyRegime}
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionEmailAddressForm.emailAddressNewKey
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionEmailAddressForm.emailAddressUseAsaDataKey
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.EmailAddressFormValues
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.ctsa_custom_email_address
 
@@ -30,7 +33,7 @@ class CtSaCustomEmailAddressSpec
 extends ViewBaseSpec {
 
   private val view: ctsa_custom_email_address = inject[ctsa_custom_email_address]
-  private val subscriptionEmailAddress = "joe@bloggs.com"
+  private val asaDetailsAgencyEmail = "joe@bloggs.com"
 
   private val legacyRegime = LegacyRegime.PAYE
 
@@ -46,7 +49,7 @@ extends ViewBaseSpec {
   def render(form: Form[EmailAddressFormValues]): Document = Jsoup.parse(
     view(
       form,
-      subscriptionEmailAddress,
+      asaDetailsAgencyEmail,
       legacyRegime
     )(
       messages,
@@ -99,7 +102,7 @@ extends ViewBaseSpec {
 
       "display the agencyDetails emailAddress as inset text" in {
         val hint = doc.select(".govuk-inset")
-        hint.first().text() mustBe subscriptionEmailAddress
+        hint.first().text() mustBe asaDetailsAgencyEmail
       }
 
       "display the correct label" in {

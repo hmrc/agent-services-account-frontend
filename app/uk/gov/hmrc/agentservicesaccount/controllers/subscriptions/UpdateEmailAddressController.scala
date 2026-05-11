@@ -137,15 +137,15 @@ with Logging {
 //    TODO: 11240 Redirect to showPage if LegacyRegime PAYE, will need IT
     val journey = request.subscriptionJourney
 
-    val subscriptionEmailAddress = journey.asaDetails.agencyEmail.getOrElse("")
+    val asaDetailsAgencyEmail = journey.asaDetails.agencyEmail.getOrElse("")
 
 //    TODO: 11240 Can I reuse form or do I need to make a new one?
-    val form = SubscriptionEmailAddressForm.form(legacyRegime)
+    val form = SubscriptionEmailAddressForm.form(legacyRegime, journey.asaDetails.agencyName.getOrElse(""))
 
     Future.successful(
       Ok(ctsa_custom_email_address(
         form,
-        subscriptionEmailAddress,
+        asaDetailsAgencyEmail,
         legacyRegime
       ))
     )
@@ -154,13 +154,13 @@ with Logging {
   def onSaCtCustomSubmit(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
     val journey = request.subscriptionJourney
 
-    SubscriptionEmailAddressForm.form(legacyRegime).bindFromRequest().fold(
+    SubscriptionEmailAddressForm.form(legacyRegime, journey.asaDetails.agencyName.getOrElse("")).bindFromRequest().fold(
       formWithErrors => {
-        val subscriptionEmailAddress = journey.asaDetails.agencyEmail.getOrElse("")
+        val asaDetailsAgencyEmail = journey.asaDetails.agencyEmail.getOrElse("")
         Future.successful(
           BadRequest(ctsa_custom_email_address(
             formWithErrors,
-            subscriptionEmailAddress,
+            asaDetailsAgencyEmail,
             legacyRegime
           ))
         )
