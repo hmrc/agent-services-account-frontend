@@ -34,8 +34,6 @@
     govukErrorSummary: GovukErrorSummary
 )
 
-@* TODO: 11240 Add messages *@
-
 @(form: Form[EmailAddressFormValues], asaDetailsAgencyEmail: String, legacyRegime: LegacyRegime)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
 
 @legacyRegimePrefix = @{ legacyRegime.msgPrefix }
@@ -62,10 +60,10 @@
         <input type="hidden" name="emailAddressUseAsaData" value="false">
         @govukInput(Input(
             label = Label(
-                content = HtmlContent(msgs(s"$legacyRegimePrefix.custom-email-address.new-input.label")),
-                classes = "govuk-label"
+                content = HtmlContent(msgs(s"$legacyRegimePrefix.custom-email-address.input.label")),
+                classes = "govuk-label--m"
             ),
-            hint = Some(Hint(content = Text(msgs(s"$legacyRegimePrefix.custom-email-address.new-input.hint"))))
+            hint = Some(Hint(content = Text(msgs(s"$legacyRegimePrefix.custom-email-address.input.hint"))))
         ).withFormField(form(emailAddressNewKey)))
 
         @govukButton(Button(content = Text(msgs("common.continue"))))
