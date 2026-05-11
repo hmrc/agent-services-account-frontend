@@ -174,15 +174,15 @@ asa.apply-to-act-for.ct=Corporation Tax
 
 asa.legacy.do-you-already-manage.existing.true=Yes, through their existing HMRC online services account
 
+asa.legacy.you-may-not-need-to-apply.p1=You only need to apply and get a new agent code if you want to manage your clients between different team members or office locations.
+asa.legacy.you-may-not-need-to-apply.h1=Do you still want to apply?
+
 asa.legacy.confirmation.title=We’re processing your application
 asa.legacy.confirmation.panel.body=You’ll get an agent code within 5 days
 asa.legacy.confirmation.p1=You’ll receive an email once your agent code is ready. You can then use it to ask for authorisation from your clients.
 asa.legacy.confirmation.p2=We’ll also send you a letter with your agent code for your records.
 asa.legacy.confirmation.p3=This code must be kept private. Only share it with people who genuinely need to know it.
 asa.legacy.confirmation.return-home=Return to your agent services account homepage
-
-asa.legacy.you-may-not-need-to-apply.p1=You only need to apply and get a new agent code if you want to manage your clients between different team members or office locations.
-asa.legacy.you-may-not-need-to-apply.h1=Do you still want to apply?
 
 # CT
 asa.legacy.ct.h2=Corporation Tax
@@ -198,37 +198,39 @@ asa.legacy.ct.subscribed.p5=<a class="govuk-link" href="{0}{1}" rel="noreferrer 
 
 asa.legacy.ct.do-you-already-manage.title=Does {0} already manage Corporation Tax clients?
 asa.legacy.ct.do-you-already-manage.existing.false=No, this is their first time managing Corporation Tax clients
+asa.legacy.ct.do-you-already-manage.error.required=Select yes if {0} already manages Corporation Tax clients
 
 asa.legacy.ct.you-may-not-need-to-apply.title=You may not need to apply for Corporation Tax
 asa.legacy.ct.you-may-not-need-to-apply.p2=You can continue to manage your existing Corporation Tax clients through your HMRC Online Services for Agents account.
+asa.legacy.ct.you-may-not-need-to-apply.error.required=Select yes if you still want to apply
 
 asa.legacy.ct.business-name.title=What business name should we show to your Corporation Tax clients?
 asa.legacy.ct.business-name.use-asa.false=I want to use a different business name for Corporation Tax
 asa.legacy.ct.business-name.new-input.label=Enter a business name
-asa.legacy.ct.business-name.use-asa.error.required=TODO (Default option for business name required error)
-asa.legacy.ct.business-name.new-input.error.empty=TODO (New business name input empty error)
-asa.legacy.ct.business-name.new-input.error.invalid=TODO (New business name input invalid error)
+asa.legacy.ct.business-name.use-asa.error.required=Select the business name we should show to your Corporation Tax clients
+asa.legacy.ct.business-name.new-input.error.empty=Enter a business name
+asa.legacy.ct.business-name.new-input.error.invalid=Enter a business name that only contains letters, numbers, spaces and the characters . , ( ) & - ‘ /
 
 asa.legacy.ct.phone-number.title=What phone number should we use to call you about Corporation Tax?
 asa.legacy.ct.phone-number.use-asa.false=I want to use a different phone number for Corporation Tax
 asa.legacy.ct.phone-number.new-input.label=Enter a phone number
 asa.legacy.ct.phone-number.new-input.hint=For international numbers include the country code.
-asa.legacy.ct.phone-number.use-asa.error.required=TODO (Default option required error)
-asa.legacy.ct.phone-number.new-input.error.empty=TODO (New phone number input empty error)
-asa.legacy.ct.phone-number.new-input.error.invalid=TODO (New phone number input invalid error)
+asa.legacy.ct.phone-number.use-asa.error.required=Enter the phone number we should use to call {0} about Corporation Tax
+asa.legacy.ct.phone-number.new-input.error.empty=Enter a phone number
+asa.legacy.ct.phone-number.new-input.error.invalid=The phone number must only include numbers
 
 asa.legacy.ct.email-address.title=What email address should we use to contact you about Corporation Tax?
 asa.legacy.ct.email-address.use-asa.false=I want to use a different email address for Corporation Tax
 asa.legacy.ct.email-address.new-input.label=Enter an email address
 asa.legacy.ct.email-address.new-input.hint=We’ll send a code to this email address to confirm it
-asa.legacy.ct.email-address.use-asa.error.required=TODO (Default option for email address required error)
-asa.legacy.ct.email-address.new-input.error.empty=TODO (New email address input empty error)
-asa.legacy.ct.email-address.new-input.error.invalid=TODO (New email address input invalid error)
+asa.legacy.ct.email-address.use-asa.error.required=Select the email address we should use to contact {0} about Corporation Tax
+asa.legacy.ct.email-address.new-input.error.empty=Enter an email address
+asa.legacy.ct.email-address.new-input.error.invalid=Enter an email address in the correct format, for example name@example.com
 
 asa.legacy.ct.address.title=What address should we use to send letters about Corporation Tax?
 asa.legacy.ct.address.use-asa.true.hint=This is the address on your agent services account.
 asa.legacy.ct.address.use-asa.false=I want to use a different address for Corporation Tax
-asa.legacy.ct.address.use-asa.error.required=TODO (Default option for address required error)
+asa.legacy.ct.address.use-asa.error.required=Select the address we should use to send letters about Corporation Tax
 
 asa.legacy.ct.alf.country-picker.title=Select the country - Agent services account - GOV.UK
 asa.legacy.ct.alf.country-picker.heading=What is the country where the business is based?
@@ -296,36 +298,38 @@ asa.legacy.paye.subscribed.p6=<a class="govuk-link" href="{0}{1}" rel="noreferre
 
 asa.legacy.paye.do-you-already-manage.title=Does {0} already manage PAYE clients?
 asa.legacy.paye.do-you-already-manage.existing.false=No, this is their first time managing PAYE clients
+asa.legacy.paye.do-you-already-manage.error.required=Select yes if {0} already manages PAYE/CIS clients
 
 asa.legacy.paye.you-may-not-need-to-apply.title=You may not need to apply for PAYE
 asa.legacy.paye.you-may-not-need-to-apply.p2=You can continue to manage your existing PAYE clients through your HMRC Online Services for Agents account.
+asa.legacy.paye.you-may-not-need-to-apply.error.required=Select yes if you still want to apply
 
 asa.legacy.paye.contact-name.title=Who should we contact about PAYE?
 asa.legacy.paye.contact-name.input.heading=Who at {0} should we contact about PAYE?
 asa.legacy.paye.contact-name.input.hint=Enter their full name
-asa.legacy.paye.contact-name.input.error.empty=TODO (Contact name input empty error)
-asa.legacy.paye.contact-name.input.error.invalid=TODO (Contact name input invalid error)
+asa.legacy.paye.contact-name.input.error.empty=Enter the full name of the person we should contact about PAYE
+asa.legacy.paye.contact-name.input.error.invalid=The name of the person can only contain letters, hyphens and apostrophes
 
 asa.legacy.paye.phone-number.title=What phone number should we use to call you about PAYE?
 asa.legacy.paye.phone-number.use-asa.false=I want to use a different phone number for PAYE
 asa.legacy.paye.phone-number.new-input.label=Enter a phone number
 asa.legacy.paye.phone-number.new-input.hint=For international numbers include the country code.
-asa.legacy.paye.phone-number.use-asa.error.required=TODO (Default option required error)
-asa.legacy.paye.phone-number.new-input.error.empty=TODO (New phone number input empty error)
-asa.legacy.paye.phone-number.new-input.error.invalid=TODO (New phone number input invalid error)
+asa.legacy.paye.phone-number.use-asa.error.required=Enter the phone number we should use to call {0} about PAYE
+asa.legacy.paye.phone-number.new-input.error.empty=Enter a UK phone number
+asa.legacy.paye.phone-number.new-input.error.invalid=Enter a UK phone number, like 07700 900 982 or +44 808 157 0192
 
 asa.legacy.paye.email-address.title=What email address should we use to contact you about PAYE?
 asa.legacy.paye.email-address.use-asa.false=I want to use a different email address for PAYE
 asa.legacy.paye.email-address.new-input.label=Enter an email address
 asa.legacy.paye.email-address.new-input.hint=We’ll send a code to this email address to confirm it
-asa.legacy.paye.email-address.use-asa.error.required=TODO (Default option for email address required error)
-asa.legacy.paye.email-address.new-input.error.empty=TODO (New email address input empty error)
-asa.legacy.paye.email-address.new-input.error.invalid=TODO (New email address input invalid error)
+asa.legacy.paye.email-address.use-asa.error.required=Select the email address we should use to contact {0} about PAYE
+asa.legacy.paye.email-address.new-input.error.empty=Enter an email address
+asa.legacy.paye.email-address.new-input.error.invalid=Enter an email address in the correct format, for example name@example.com
 
 asa.legacy.paye.address.title=What address should we use to send letters about PAYE?
 asa.legacy.paye.address.use-asa.true.hint=This is the address on your agent services account.
 asa.legacy.paye.address.use-asa.false=I want to use a different address for PAYE
-asa.legacy.paye.address.use-asa.error.required=TODO (Default option for address required error)
+asa.legacy.paye.address.use-asa.error.required=Select the address we should use to send letters about PAYE
 
 asa.legacy.paye.alf.country-picker.title=Select the country - Agent services account - GOV.UK
 asa.legacy.paye.alf.country-picker.heading=What is the country where the business is based?
@@ -385,37 +389,39 @@ asa.legacy.sa.subscribed.p5=<a class="govuk-link" href="{0}{1}" rel="noreferrer 
 
 asa.legacy.sa.do-you-already-manage.title=Does {0} already manage Self Assessment clients?
 asa.legacy.sa.do-you-already-manage.existing.false=No, this is their first time managing Self Assessment clients
+asa.legacy.sa.do-you-already-manage.error.required=Select yes if {0} already manages Self Assessment clients
 
 asa.legacy.sa.you-may-not-need-to-apply.title=You may not need to apply for Self Assessment
 asa.legacy.sa.you-may-not-need-to-apply.p2=You can continue to manage your existing Self Assessment clients through your HMRC Online Services for Agents account.
+asa.legacy.sa.you-may-not-need-to-apply.error.required=Select yes if you still want to apply
 
 asa.legacy.sa.business-name.title=What business name should we show to your Self Assessment clients?
 asa.legacy.sa.business-name.use-asa.false=I want to use a different business name for Self Assessment
 asa.legacy.sa.business-name.new-input.label=Enter a business name
-asa.legacy.sa.business-name.use-asa.error.required=TODO (Default option for business name required error)
-asa.legacy.sa.business-name.new-input.error.empty=TODO (New business name input empty error)
-asa.legacy.sa.business-name.new-input.error.invalid=TODO (New business name input invalid error)
+asa.legacy.sa.business-name.use-asa.error.required=Select the business name we should show to your Self Assessment clients
+asa.legacy.sa.business-name.new-input.error.empty=Enter a business name
+asa.legacy.sa.business-name.new-input.error.invalid=Enter a business name that only contains letters, numbers, spaces and the characters . , ( ) & - ‘ /
 
 asa.legacy.sa.phone-number.title=What phone number should we use to call you about Self Assessment?
 asa.legacy.sa.phone-number.use-asa.false=I want to use a different phone number for Self Assessment
 asa.legacy.sa.phone-number.new-input.label=Enter a phone number
 asa.legacy.sa.phone-number.new-input.hint=For international numbers include the country code.
-asa.legacy.sa.phone-number.use-asa.error.required=TODO (Default option required error)
-asa.legacy.sa.phone-number.new-input.error.empty=TODO (New phone number input empty error)
-asa.legacy.sa.phone-number.new-input.error.invalid=TODO (New phone number input invalid error)
+asa.legacy.sa.phone-number.use-asa.error.required=Enter the phone number we should use to call {0} about Self Assessment
+asa.legacy.sa.phone-number.new-input.error.empty=Enter a phone number
+asa.legacy.sa.phone-number.new-input.error.invalid=The phone number must only include numbers
 
 asa.legacy.sa.email-address.title=What email address should we use to contact you about Self Assessment?
 asa.legacy.sa.email-address.use-asa.false=I want to use a different email address for Self Assessment
 asa.legacy.sa.email-address.new-input.label=Enter an email address
 asa.legacy.sa.email-address.new-input.hint=We’ll send a code to this email address to confirm it
-asa.legacy.sa.email-address.use-asa.error.required=TODO (Default option for email address required error)
-asa.legacy.sa.email-address.new-input.error.empty=TODO (New email address input empty error)
-asa.legacy.sa.email-address.new-input.error.invalid=TODO (New email address input invalid error)
+asa.legacy.sa.email-address.use-asa.error.required=Select the email address we should use to contact {0} about Self Assessment
+asa.legacy.sa.email-address.new-input.error.empty=Enter an email address
+asa.legacy.sa.email-address.new-input.error.invalid=Enter an email address in the correct format, for example name@example.com
 
 asa.legacy.sa.address.title=What address should we use to send letters about Self Assessment?
 asa.legacy.sa.address.use-asa.true.hint=This is the address on your agent services account.
 asa.legacy.sa.address.use-asa.false=I want to use a different address for Self Assessment
-asa.legacy.sa.address.use-asa.error.required=TODO (Default option for address required error)
+asa.legacy.sa.address.use-asa.error.required=Select the address we should use to send letters about Self Assessment
 
 asa.legacy.sa.alf.country-picker.title=Select the country - Agent services account - GOV.UK
 asa.legacy.sa.alf.country-picker.heading=What is the country where the business is based?
@@ -1031,16 +1037,3 @@ update-money-laundering-supervisory.body-codes.error.empty=Enter your money laun
 
 #Administrators
 administrators.link-text=Bwrw golwg dros y gweinyddwyr
-
-# PAYE subscription request (mock)
-paye.cya.h1=Gwiriwch eich manylion cyn gwneud cais am danysgrifiad TWE
-paye.cya.submit=Cadarnhau a chyflwyno’r cais
-paye.cya.return-home=Ewch yn ôl i’ch cyfrif gwasanaethau asiant
-paye.cya.agentName=Enw’r asiant
-paye.cya.contactName=Enw cyswllt
-paye.cya.telephoneNumber=Rhif ffôn
-paye.cya.emailAddress=Cyfeiriad e-bost
-paye.cya.address=Cyfeiriad
-paye.submitted.h1=Cais am danysgrifiad TWE wedi’i gyflwyno
-paye.submitted.p1=Mae’ch cais wedi dod i law. Byddwn yn cysylltu â chi pan fyddwn wedi’i brosesu.
-paye.submitted.return-home=Ewch yn ôl i’ch cyfrif gwasanaethau asiant

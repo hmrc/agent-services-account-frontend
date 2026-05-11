@@ -33,7 +33,7 @@ class UpdateBusinessNameSpec
 extends ViewBaseSpec {
 
   private val view: update_business_name = inject[update_business_name]
-  private val subscriptionBusinessName = "ABC-No.1 Accountants"
+  private val asaDetailsAgencyName = "ABC-No.1 Accountants"
 
   private val legacyRegime = LegacyRegime.SA
 
@@ -53,7 +53,7 @@ extends ViewBaseSpec {
   def render(form: Form[BusinessNameFormValues]): Document = Jsoup.parse(
     view(
       form,
-      subscriptionBusinessName,
+      asaDetailsAgencyName,
       legacyRegime
     )(
       messages,
@@ -108,7 +108,7 @@ extends ViewBaseSpec {
       "display correct radio options" in {
         val radios = doc.select(".govuk-radios__item")
         radios.size() mustBe 2
-        radios.get(0).text() mustBe subscriptionBusinessName
+        radios.get(0).text() mustBe asaDetailsAgencyName
         radios.get(0).select("input").attr("name") mustBe businessNameUseAsaDataKey
         radios.get(1).text() mustBe messages(s"$legacyRegimePrefix.business-name.use-asa.false")
         radios.get(1).select("input").attr("name") mustBe businessNameUseAsaDataKey

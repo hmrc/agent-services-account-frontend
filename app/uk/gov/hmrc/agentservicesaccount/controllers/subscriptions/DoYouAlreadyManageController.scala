@@ -48,29 +48,31 @@ with I18nSupport {
 
   def showPage(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
     val journey = request.subscriptionJourney
+    val asaDetailsAgencyName = journey.asaDetails.agencyName.getOrElse("")
 
     val form =
       journey.doYouAlreadyManage match {
-        case Some(value) => DoYouAlreadyManageForm.form(legacyRegime).fill(DoYouAlreadyManageFormValues(value))
-        case None => DoYouAlreadyManageForm.form(legacyRegime)
+        case Some(value) => DoYouAlreadyManageForm.form(legacyRegime, asaDetailsAgencyName).fill(DoYouAlreadyManageFormValues(value))
+        case None => DoYouAlreadyManageForm.form(legacyRegime, asaDetailsAgencyName)
       }
 
     Future.successful(Ok(do_you_already_manage(
       form,
       legacyRegime,
-      journey.asaDetails.agencyName.getOrElse("")
+      asaDetailsAgencyName
     )))
   }
 
   def onSubmit(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
     val journey = request.subscriptionJourney
+    val asaDetailsAgencyName = journey.asaDetails.agencyName.getOrElse("")
 
-    DoYouAlreadyManageForm.form(legacyRegime).bindFromRequest().fold(
+    DoYouAlreadyManageForm.form(legacyRegime, asaDetailsAgencyName).bindFromRequest().fold(
       formWithErrors =>
         Future.successful(BadRequest(do_you_already_manage(
           formWithErrors,
           legacyRegime,
-          journey.asaDetails.agencyName.getOrElse("")
+          asaDetailsAgencyName
         ))),
       answer => {
         val updatedJourney = journey.copy(

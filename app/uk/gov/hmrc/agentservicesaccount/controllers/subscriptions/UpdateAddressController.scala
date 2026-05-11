@@ -70,7 +70,7 @@ with Logging {
   def showPage(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
     val journey = request.subscriptionJourney
 
-    val subscriptionAddress = journey.asaDetails.agencyAddress.map(formatAddress).getOrElse("")
+    val asaDetailsAgencyAddress = journey.asaDetails.agencyAddress.map(formatAddress).getOrElse("")
 
     val initialForm = SubscriptionAddressForm.form(legacyRegime)
     val form =
@@ -89,7 +89,7 @@ with Logging {
     Future.successful(
       Ok(update_address(
         form,
-        subscriptionAddress,
+        asaDetailsAgencyAddress,
         legacyRegime
       ))
     )
@@ -100,11 +100,11 @@ with Logging {
 
     SubscriptionAddressForm.form(legacyRegime).bindFromRequest().fold(
       formWithErrors => {
-        val subscriptionAddress = journey.asaDetails.agencyAddress.map(formatAddress).getOrElse("")
+        val asaDetailsAgencyAddress = journey.asaDetails.agencyAddress.map(formatAddress).getOrElse("")
         Future.successful(
           BadRequest(update_address(
             formWithErrors,
-            subscriptionAddress,
+            asaDetailsAgencyAddress,
             legacyRegime
           ))
         )

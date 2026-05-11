@@ -19,6 +19,7 @@ package uk.gov.hmrc.agentservicesaccount.forms.subscriptions
 import play.api.data.Forms._
 import play.api.data.Form
 import play.api.data.Mapping
+import play.api.i18n.Messages
 import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators.trimmedText
 import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators.useAsaDataMapping
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.PhoneNumberFormValues
@@ -35,8 +36,11 @@ object SubscriptionPhoneNumberForm {
   // at final submission to meet API requirements of digits only.
   private val phoneNumberRegex = """^(?=.*\d)[0-9 +()]+$""".r
 
-  private def phoneNumberUseAsaDataMapping(legacyRegime: LegacyRegime): Mapping[Boolean] = useAsaDataMapping(
-    s"${legacyRegime.msgPrefix}.phone-number.use-asa.error.required"
+  private def phoneNumberUseAsaDataMapping(
+    legacyRegime: LegacyRegime,
+    asaDetailsAgencyName: String
+  )(implicit msgs: Messages): Mapping[Boolean] = useAsaDataMapping(
+    msgs(s"${legacyRegime.msgPrefix}.phone-number.use-asa.error.required", asaDetailsAgencyName)
   )
 
   private def isPhoneNumberValid(x: String): Boolean = {
@@ -48,10 +52,13 @@ object SubscriptionPhoneNumberForm {
     .verifying(s"${legacyRegime.msgPrefix}.phone-number.new-input.error.empty", _.nonEmpty)
     .verifying(s"${legacyRegime.msgPrefix}.phone-number.new-input.error.invalid", x => x.isEmpty || isPhoneNumberValid(x))
 
-  def form(legacyRegime: LegacyRegime): Form[PhoneNumberFormValues] = {
+  def form(
+    legacyRegime: LegacyRegime,
+    asaDetailsAgencyName: String
+  )(implicit msgs: Messages): Form[PhoneNumberFormValues] = {
     Form(
       mapping(
-        phoneNumberUseAsaDataKey -> phoneNumberUseAsaDataMapping(legacyRegime),
+        phoneNumberUseAsaDataKey -> phoneNumberUseAsaDataMapping(legacyRegime, asaDetailsAgencyName),
         phoneNumberNewKey -> mandatoryIfFalse(phoneNumberUseAsaDataKey, phoneNumberNewOptionalMapping(legacyRegime))
       )(PhoneNumberFormValues.apply)(o => Some(o.useAsaData, o.newPhoneNumber))
     )

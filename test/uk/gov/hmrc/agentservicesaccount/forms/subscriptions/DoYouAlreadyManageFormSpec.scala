@@ -18,9 +18,11 @@ package uk.gov.hmrc.agentservicesaccount.forms.subscriptions
 
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
+import play.api.i18n.Messages
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.DoYouAlreadyManageForm._
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.DoYouAlreadyManageFormValues
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import play.api.test.Helpers
 
 class DoYouAlreadyManageFormSpec
 extends AnyWordSpec
@@ -32,9 +34,12 @@ with Matchers {
     LegacyRegime.PAYE
   )
 
+  private val asaDetailsAgencyName = "Test Agency"
+
   regimes.foreach { regime =>
+    implicit val messages: Messages = Helpers.stubMessages()
     val prefix = regime.msgPrefix
-    val initForm = form(regime)
+    val initForm = form(regime, asaDetailsAgencyName)
 
     s"DoYouAlreadyManageForm for regime $regime" should {
 

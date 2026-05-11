@@ -31,7 +31,7 @@ class PayeUpdateContactNameSpec
 extends ViewBaseSpec {
 
   private val view: paye_update_contact_name = inject[paye_update_contact_name]
-  private val subscriptionBusinessName = "ABC-No.1 Accountants"
+  private val asaDetailsAgencyName = "ABC-No.1 Accountants"
 
   private val payeContactNameForm: Form[PayeContactNameFormValues] = PayeSubscriptionContactNameForm.form
 
@@ -43,7 +43,7 @@ extends ViewBaseSpec {
   def render(form: Form[PayeContactNameFormValues]): Document = Jsoup.parse(
     view(
       form,
-      subscriptionBusinessName
+      asaDetailsAgencyName
     )(
       messages,
       fakeRequest,
@@ -52,7 +52,7 @@ extends ViewBaseSpec {
   )
 
   private val title: String = messages("asa.legacy.paye.contact-name.title")
-  private val heading: String = messages("asa.legacy.paye.contact-name.input.heading", subscriptionBusinessName)
+  private val heading: String = messages("asa.legacy.paye.contact-name.input.heading", asaDetailsAgencyName)
 
   "paye_update_contact_name" when {
 

@@ -33,7 +33,7 @@ extends ViewBaseSpec {
 
   private val view: do_you_already_manage = inject[do_you_already_manage]
 
-  private val subscriptionBusinessName = "Test Agency"
+  private val asaDetailsAgencyName = "Test Agency"
 
   private val regimes = Seq(
     LegacyRegime.SA,
@@ -44,7 +44,7 @@ extends ViewBaseSpec {
   regimes.foreach { regime =>
     s"do_you_already_manage view for regime $regime" when {
 
-      val form: Form[DoYouAlreadyManageFormValues] = DoYouAlreadyManageForm.form(regime)
+      val form: Form[DoYouAlreadyManageFormValues] = DoYouAlreadyManageForm.form(regime, asaDetailsAgencyName)
 
       val formWithError: Form[DoYouAlreadyManageFormValues] = form.withError(
         key = doYouAlreadyManageKey,
@@ -55,7 +55,7 @@ extends ViewBaseSpec {
         view(
           form,
           regime,
-          subscriptionBusinessName
+          asaDetailsAgencyName
         )(
           messages,
           fakeRequest,
@@ -65,7 +65,7 @@ extends ViewBaseSpec {
 
       val title: String = messages(
         s"asa.legacy.${regime.toString.toLowerCase}.do-you-already-manage.title",
-        subscriptionBusinessName
+        asaDetailsAgencyName
       )
 
       def testServiceStaticContent(doc: Document): Unit = {

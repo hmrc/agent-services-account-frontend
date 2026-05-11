@@ -18,9 +18,11 @@ package uk.gov.hmrc.agentservicesaccount.forms.subscriptions
 
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
+import play.api.i18n.Messages
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionEmailAddressForm._
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.EmailAddressFormValues
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import play.api.test.Helpers
 
 import scala.util.Random
 
@@ -36,7 +38,8 @@ with Matchers {
 
   private val legacyRegimePrefix = legacyRegime.msgPrefix
 
-  private val initForm = form(legacyRegime)
+  implicit val messages: Messages = Helpers.stubMessages()
+  private val initForm = form(legacyRegime, "Agency Name")
 
   "form binding" should {
     s"be successful when $emailAddressUseAsaDataKey true" in {

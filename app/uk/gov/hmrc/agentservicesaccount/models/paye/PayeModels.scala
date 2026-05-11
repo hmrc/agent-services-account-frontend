@@ -36,14 +36,14 @@ final case class PayeCyaData(
 ) {
 
   implicit def toSubscriptionAddress(address: PayeAddress): SubscriptionAddress = {
-    val subscriptionAddress = SubscriptionAddress(
+    val asaDetailsAgencyAddress = SubscriptionAddress(
       line1 = address.line1,
       line2 = address.line2,
       line3 = address.line3,
       line4 = address.line4,
       postCode = Some(address.postCode)
     )
-    subscriptionAddress
+    asaDetailsAgencyAddress
   }
 
   def toPayeSubscriptionRequest: PayeSubscriptionRequest = {

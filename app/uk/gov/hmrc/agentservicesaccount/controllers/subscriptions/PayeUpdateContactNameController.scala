@@ -52,7 +52,7 @@ with Logging {
   def showPage: Action[AnyContent] = actions.authActionWithSubscriptionJourney(PAYE).async { implicit request =>
     val journey = request.subscriptionJourney
 
-    val subscriptionBusinessName = journey.asaDetails.agencyName.getOrElse("")
+    val asaDetailsAgencyName = journey.asaDetails.agencyName.getOrElse("")
 
     val initialForm = PayeSubscriptionContactNameForm.form
     val form =
@@ -67,7 +67,7 @@ with Logging {
     Future.successful(
       Ok(paye_update_contact_name(
         form,
-        subscriptionBusinessName
+        asaDetailsAgencyName
       ))
     )
   }
@@ -77,11 +77,11 @@ with Logging {
 
     PayeSubscriptionContactNameForm.form.bindFromRequest().fold(
       formWithErrors => {
-        val subscriptionBusinessName = journey.asaDetails.agencyName.getOrElse("")
+        val asaDetailsAgencyName = journey.asaDetails.agencyName.getOrElse("")
         Future.successful(
           BadRequest(paye_update_contact_name(
             formWithErrors,
-            subscriptionBusinessName
+            asaDetailsAgencyName
           ))
         )
       },

@@ -143,20 +143,4 @@ extends Logging {
       }
   }
 
-  def getPayeCyaData: Future[PayeCyaData] = Future.successful(
-    PayeCyaData(
-      agentName = "Example Agent Ltd",
-      contactName = "Jane Agent",
-      telephoneNumber = Some("01632 960 001"),
-      emailAddress = Some("jane.agent@example.com"),
-      address = PayeAddress(
-        line1 = "1 High Street",
-        line2 = "Village",
-        line3 = Some("County"),
-        line4 = None,
-        postCode = "AA1 1AA"
-      )
-    )
-  )
-
 }

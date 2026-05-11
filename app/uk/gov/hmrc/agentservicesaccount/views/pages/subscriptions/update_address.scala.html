@@ -32,7 +32,7 @@
     govukErrorSummary: GovukErrorSummary
 )
 
-@(form: Form[AddressFormValues], subscriptionAddress: String, legacyRegime: LegacyRegime)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
+@(form: Form[AddressFormValues], asaDetailsAgencyAddress: String, legacyRegime: LegacyRegime)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
 
 @legacyRegimePrefix = @{ legacyRegime.msgPrefix }
 
@@ -58,7 +58,7 @@
             name = addressUseAsaDataKey,
             items = Seq(
                 RadioItem(
-                    content = Text(subscriptionAddress),
+                    content = Text(asaDetailsAgencyAddress),
                     value = Some("true"),
                     hint = Some(Hint(content = Text(msgs(s"$legacyRegimePrefix.address.use-asa.true.hint"))))
                 ),

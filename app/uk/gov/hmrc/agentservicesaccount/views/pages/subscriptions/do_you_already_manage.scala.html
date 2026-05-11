@@ -36,7 +36,7 @@
 )
 
 
-@(form: Form[DoYouAlreadyManageFormValues], legacyRegime: LegacyRegime, subscriptionBusinessName: String)(
+@(form: Form[DoYouAlreadyManageFormValues], legacyRegime: LegacyRegime, asaDetailsAgencyName: String)(
         implicit msgs: Messages,
         request: RequestHeader,
         appConfig: AppConfig
@@ -45,7 +45,7 @@
 @legacyRegimePrefix = @{ legacyRegime.msgPrefix }
 
 @pageTitle = @{
-    msgs(s"asa.legacy.${legacyRegime.toString.toLowerCase}.do-you-already-manage.title", subscriptionBusinessName)
+    msgs(s"asa.legacy.${legacyRegime.toString.toLowerCase}.do-you-already-manage.title", asaDetailsAgencyName)
 }
 
 @main(

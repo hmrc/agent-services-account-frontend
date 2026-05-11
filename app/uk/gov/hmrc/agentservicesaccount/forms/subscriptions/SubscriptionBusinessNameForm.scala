@@ -30,7 +30,7 @@ object SubscriptionBusinessNameForm {
   val businessNameUseAsaDataKey = "businessNameUseAsaData"
   val businessNameNewKey = "businessNameNew"
 
-  private val businessNameRegex = """^[A-Za-z0-9\(\)&\-\'‘’\/,\. ]{1,54}$""".r
+  private val businessNameRegex = """^[A-Za-z0-9 .,()/&\-'‘’]{1,54}$""".r
 
   private def businessNameUseAsaDataMapping(legacyRegime: LegacyRegime): Mapping[Boolean] = useAsaDataMapping(
     s"${legacyRegime.msgPrefix}.business-name.use-asa.error.required"

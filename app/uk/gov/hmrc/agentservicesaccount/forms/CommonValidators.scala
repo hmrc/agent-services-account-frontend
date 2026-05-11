@@ -26,6 +26,9 @@ import scala.annotation.tailrec
 
 object CommonValidators {
 
+  val PAYE_EMAIL_MAX_LENGTH = 129
+  val CT_SA_EMAIL_MAX_LENGTH = 50
+
   val trimmedText: Mapping[String] = text.transform[String](x => x.trim, x => x)
   val textWithoutWhitespace: Mapping[String] = text.transform[String](x => x.replaceAll(" ", ""), x => x)
   val trimmedAndNormalisedText: Mapping[String] = text.transform[String](x => x.trim.replaceAll("[‘’]", "'"), x => x)
