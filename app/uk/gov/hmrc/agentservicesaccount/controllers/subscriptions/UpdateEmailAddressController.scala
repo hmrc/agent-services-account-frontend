@@ -134,12 +134,10 @@ with Logging {
   }
 
   def showSaCtCustomPage(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
-//    TODO: 11240 Redirect to showPage if LegacyRegime PAYE, will need IT
     val journey = request.subscriptionJourney
 
     val asaDetailsAgencyEmail = journey.asaDetails.agencyEmail.getOrElse("")
 
-//    TODO: 11240 Can I reuse form or do I need to make a new one?
     val form = SubscriptionEmailAddressForm.form(legacyRegime, journey.asaDetails.agencyName.getOrElse(""))
 
     Future.successful(

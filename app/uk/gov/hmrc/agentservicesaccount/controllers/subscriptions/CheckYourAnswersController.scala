@@ -144,6 +144,7 @@ with Logging {
         value = data.email,
         link = Some(subscriptionRoutes.UpdateEmailAddressController.showPage(legacyRegime))
       ),
+//      TODO: 11240 IF ASA AGENCY EMAIL TOO LONG, MUST ROUTE TO CtSaCustomEmailAddress
       SummaryListData(
         key = s"${legacyRegime.msgPrefix}.check-your-answers.address",
         value = formatAddress(data.address),
