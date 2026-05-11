@@ -76,6 +76,7 @@ extends ComponentBaseISpec {
       )
 
       if (legacyRegime != PAYE) {
+        //TODO: 11240 FIX THIS TEST
         "update journey and redirect to email-address-too-long when using ASA email address that is too long" in {
           givenAuthorisedAsAgentWith(arn.value)
           givenGetAgentRecord(agentRecord)

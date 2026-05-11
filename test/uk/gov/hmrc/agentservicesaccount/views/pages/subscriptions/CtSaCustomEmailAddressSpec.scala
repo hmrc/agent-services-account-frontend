@@ -28,7 +28,6 @@ import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.ctsa_custom_email_address
 
-//TODO: 11240 FIX
 class CtSaCustomEmailAddressSpec
 extends ViewBaseSpec {
 
@@ -100,6 +99,7 @@ extends ViewBaseSpec {
         doc.title() mustBe s"$title - Agent services account - GOV.UK"
       }
 
+      //TODO: 11240 FIX THIS TEST
       "display the agencyDetails emailAddress as inset text" in {
         val hint = doc.select(".govuk-inset")
         hint.first().text() mustBe asaDetailsAgencyEmail
