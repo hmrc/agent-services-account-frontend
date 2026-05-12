@@ -374,74 +374,73 @@ asa.legacy.paye.check-your-answers.address=Cyfeiriad
 asa.legacy.paye.check-your-answers.submit-button=Ymrestru ar gyfer TWE
 
 # SA
-asa.legacy.sa.h2=Self Assessment
+asa.legacy.sa.h2=Hunanasesiad
 
-asa.legacy.sa.not-subscribed.before-start.link1.href=https://www.gov.uk/guidance/how-to-enrol-a-tax-service-onto-your-hmrc-online-services-account
-asa.legacy.sa.in-progress.p1=We are still processing the application you did on {0}.
-asa.legacy.sa.in-progress.p2=Processing can take up to 5 days.
-asa.legacy.sa.subscribed.p1=Your agent code is: {0}
-asa.legacy.sa.subscribed.p2=Get permission from new clients
-asa.legacy.sa.subscribed.p3=<a class="govuk-link" href="{0}{1}" rel="noreferrer noopener">Ask a client to authorise you</a>
-asa.legacy.sa.subscribed.p4=Manage your client’s Self Assessment
-asa.legacy.sa.subscribed.p5=<a class="govuk-link" href="{0}{1}" rel="noreferrer noopener">View and manage your client list for Self Assessment</a>
+asa.legacy.sa.in-progress.p1=Rydym yn dal i brosesu’r cofrestriad a wnaethoch ar {0}.
+asa.legacy.sa.in-progress.p2=Gall prosesu gymryd hyd at 5 diwrnod.
+asa.legacy.sa.subscribed.p1=Eich cod asiant yw: {0}
+asa.legacy.sa.subscribed.p2=Cael caniatâd gan gleientiaid newydd
+asa.legacy.sa.subscribed.p3=<a class="govuk-link" href="{0}{1}" rel="noreferrer noopener">Gofynnwch i gleient eich awdurdodi</a>
+asa.legacy.sa.subscribed.p4=Rheoli Hunanasesiad eich cleient
+asa.legacy.sa.subscribed.p5=<a class="govuk-link" href="{0}{1}" rel="noreferrer noopener">Bwrw golwg dros a rheoli’ch rhestr o gleientiaid ar gyfer Hunanasesiad</a>
 
-asa.legacy.sa.do-you-already-manage.title=Does {0} already manage Self Assessment clients?
-asa.legacy.sa.do-you-already-manage.existing.false=No, this is their first time managing Self Assessment clients
-asa.legacy.sa.do-you-already-manage.error.required=Select yes if {0} already manages Self Assessment clients
+asa.legacy.sa.do-you-already-manage.title=Ydy {0} eisoes yn rheoli cleientiaid Hunanasesiad?
+asa.legacy.sa.do-you-already-manage.existing.false=Na, dyma’r tro cyntaf iddo reoli cleientiaid Hunanasesiad
+asa.legacy.sa.do-you-already-manage.error.required=Select yes if {0} already manages Self Assessment clients #TODO
 
-asa.legacy.sa.you-may-not-need-to-apply.title=You may not need to apply for Self Assessment
-asa.legacy.sa.you-may-not-need-to-apply.p2=You can continue to manage your existing Self Assessment clients through your HMRC Online Services for Agents account.
-asa.legacy.sa.you-may-not-need-to-apply.error.required=Select yes if you still want to apply
+asa.legacy.sa.you-may-not-need-to-apply.title=You may not need to apply for Self Assessment #TODO
+asa.legacy.sa.you-may-not-need-to-apply.p2=You can continue to manage your existing Self Assessment clients through your HMRC Online Services for Agents account. #TODO
+asa.legacy.sa.you-may-not-need-to-apply.error.required=Select yes if you still want to apply #TODO
 
-asa.legacy.sa.business-name.title=What business name should we show to your Self Assessment clients?
-asa.legacy.sa.business-name.use-asa.false=I want to use a different business name for Self Assessment
-asa.legacy.sa.business-name.new-input.label=Enter a business name
-asa.legacy.sa.business-name.use-asa.error.required=Select the business name we should show to your Self Assessment clients
-asa.legacy.sa.business-name.new-input.error.empty=Enter a business name
-asa.legacy.sa.business-name.new-input.error.invalid=Enter a business name that only contains letters, numbers, spaces and the characters . , ( ) & - ‘ /
+asa.legacy.sa.business-name.title=Pa enw busnes ddylem ei ddangos i’ch cleientiaid Hunanasesiad?
+asa.legacy.sa.business-name.use-asa.false=Rwyf am ddefnyddio enw busnes gwahanol ar gyfer Hunanasesiad
+asa.legacy.sa.business-name.new-input.label=Nodwch enw busnes
+asa.legacy.sa.business-name.use-asa.error.required=Select the business name we should show to your Self Assessment clients #TODO
+asa.legacy.sa.business-name.new-input.error.empty=Nodwch enw busnes
+asa.legacy.sa.business-name.new-input.error.invalid=Enter a business name that only contains letters, numbers, spaces and the characters . , ( ) & - ‘ / #TODO
 
-asa.legacy.sa.phone-number.title=What phone number should we use to call you about Self Assessment?
-asa.legacy.sa.phone-number.use-asa.false=I want to use a different phone number for Self Assessment
-asa.legacy.sa.phone-number.new-input.label=Enter a phone number
-asa.legacy.sa.phone-number.new-input.hint=For international numbers include the country code.
-asa.legacy.sa.phone-number.use-asa.error.required=Enter the phone number we should use to call {0} about Self Assessment
-asa.legacy.sa.phone-number.new-input.error.empty=Enter a phone number
-asa.legacy.sa.phone-number.new-input.error.invalid=The phone number must only include numbers
+asa.legacy.sa.phone-number.title=Pa rif ffôn ddylem ei ddefnyddio i ffonio chi ynglŷn â Hunanasesiad?
+asa.legacy.sa.phone-number.use-asa.false=Rwyf am ddefnyddio rhif ffôn gwahanol ar gyfer Hunanasesiad
+asa.legacy.sa.phone-number.new-input.label=Nodwch rif ffôn
+asa.legacy.sa.phone-number.new-input.hint=Ar gyfer rhifau rhyngwladol, dylech gynnwys cod y wlad.
+asa.legacy.sa.phone-number.use-asa.error.required=Enter the phone number we should use to call {0} about Self Assessment #TODO
+asa.legacy.sa.phone-number.new-input.error.empty=Nodwch rif ffôn
+asa.legacy.sa.phone-number.new-input.error.invalid=The phone number must only include numbers #TODO
 
-asa.legacy.sa.email-address.title=What email address should we use to contact you about Self Assessment?
-asa.legacy.sa.email-address.use-asa.false=I want to use a different email address for Self Assessment
-asa.legacy.sa.email-address.new-input.label=Enter an email address
-asa.legacy.sa.email-address.new-input.hint=We’ll send a code to this email address to confirm it
-asa.legacy.sa.email-address.use-asa.error.required=Select the email address we should use to contact {0} about Self Assessment
-asa.legacy.sa.email-address.input.error.empty=Enter an email address
-asa.legacy.sa.email-address.input.error.length=Enter an email address that is 50 characters or less.
-asa.legacy.sa.email-address.input.error.invalid=Enter an email address in the correct format, for example name@example.com
+asa.legacy.sa.email-address.title=Pa gyfeiriad e-bost ddylem ei ddefnyddio i gysylltu â chi ynglŷn â Hunanasesiad?
+asa.legacy.sa.email-address.use-asa.false=Rwyf am ddefnyddio cyfeiriad e-bost gwahanol ar gyfer Hunanasesiad
+asa.legacy.sa.email-address.new-input.label=Nodwch gyfeiriad e-bost
+asa.legacy.sa.email-address.new-input.hint=Byddwn yn anfon cod i’r cyfeiriad e-bost hwn i’w gadarnhau
+asa.legacy.sa.email-address.use-asa.error.required=Select the email address we should use to contact {0} about Self Assessment #TODO
+asa.legacy.sa.email-address.input.error.empty=Nodwch gyfeiriad e-bost
+asa.legacy.sa.email-address.input.error.length=Enter an email address that is 50 characters or less. #TODO
+asa.legacy.sa.email-address.input.error.invalid=Enter an email address in the correct format, for example name@example.com #TODO
 
-asa.legacy.sa.custom-email-address.title=Your agent services account email address is too long
-asa.legacy.sa.custom-email-address.p1=We currently have this email address connected to your agent services account:
-asa.legacy.sa.custom-email-address.p2=For Self Assessment, the email address must be 50 characters or less.
-asa.legacy.sa.custom-email-address.input.label=Enter a shorter email address
-asa.legacy.sa.custom-email-address.input.hint=We’ll send a code to this email address to confirm it
+asa.legacy.sa.custom-email-address.title=Your agent services account email address is too long #TODO
+asa.legacy.sa.custom-email-address.p1=We currently have this email address connected to your agent services account: #TODO
+asa.legacy.sa.custom-email-address.p2=For Self Assessment, the email address must be 50 characters or less. #TODO
+asa.legacy.sa.custom-email-address.input.label=Enter a shorter email address #TODO
+asa.legacy.sa.custom-email-address.input.hint=Byddwn yn anfon cod i’r cyfeiriad e-bost hwn i’w gadarnhau
 
-asa.legacy.sa.address.title=What address should we use to send letters about Self Assessment?
-asa.legacy.sa.address.use-asa.true.hint=This is the address on your agent services account.
-asa.legacy.sa.address.use-asa.false=I want to use a different address for Self Assessment
-asa.legacy.sa.address.use-asa.error.required=Select the address we should use to send letters about Self Assessment
+asa.legacy.sa.address.title=Pa gyfeiriad ddylem ei ddefnyddio i anfon llythyrau ynglŷn â Hunanasesiad?
+asa.legacy.sa.address.use-asa.true.hint=Dyma’r cyfeiriad ar eich cyfrif gwasanaethau asiant.
+asa.legacy.sa.address.use-asa.false=Rwyf am ddefnyddio cyfeiriad gwahanol ar gyfer Hunanasesiad
+asa.legacy.sa.address.use-asa.error.required=Select the address we should use to send letters about Self Assessment #TODO
 
-asa.legacy.sa.alf.country-picker.title=Select the country - Agent services account - GOV.UK
-asa.legacy.sa.alf.country-picker.heading=What is the country where the business is based?
-asa.legacy.sa.alf.lookup.title=Find the address - Agent services account - GOV.UK
-asa.legacy.sa.alf.lookup.heading=Find your address
+asa.legacy.sa.alf.country-picker.title=Dewiswch y wlad - Cyfrif gwasanaethau asiant - GOV.UK
+asa.legacy.sa.alf.country-picker.heading=Beth yw’r wlad lle mae’r busnes wedi’i leoli?
+asa.legacy.sa.alf.lookup.title=Dod o hyd i’r cyfeiriad - Cyfrif gwasanaethau asiant - GOV.UK
+asa.legacy.sa.alf.lookup.heading=Dod o hyd i’ch cyfeiriad
 asa.legacy.sa.alf.lookup.postcode.label=Cod post
-asa.legacy.sa.alf.select.title=Select the address - Agent services account - GOV.UK
-asa.legacy.sa.alf.edit.title=Enter the address - Agent services account - GOV.UK
-asa.legacy.sa.alf.edit.heading=Enter the address
+asa.legacy.sa.alf.select.title=Dewiswch y cyfeiriad - Cyfrif gwasanaethau asiant - GOV.UK
+asa.legacy.sa.alf.edit.title=Nodwch y cyfeiriad - Cyfrif gwasanaethau asiant - GOV.UK
+asa.legacy.sa.alf.edit.heading=Nodwch y cyfeiriad
 asa.legacy.sa.alf.edit.townLabel=Cyfeiriad – llinell 4
-asa.legacy.sa.alf.confirm.title=Review and confirm - Agent services account - GOV.UK
+asa.legacy.sa.alf.confirm.title=Adolygu a chadarnhau - Cyfrif gwasanaethau asiant - GOV.UK
 
-asa.legacy.sa.change-address.title=Change your address
-asa.legacy.sa.change-address.title.invalid=Change the address lines that are too long
-asa.legacy.sa.change-address.inset.invalid=Our system can only accept a limited amount of characters in each address line.
+asa.legacy.sa.change-address.title=Change your address #TODO
+asa.legacy.sa.change-address.title.invalid=Change the address lines that are too long #TODO
+asa.legacy.sa.change-address.inset.invalid=Our system can only accept a limited amount of characters in each address line. #TODO
 asa.legacy.sa.change-address.line1.label=Cyfeiriad – llinell 1
 asa.legacy.sa.change-address.line2.label=Cyfeiriad – llinell 2
 asa.legacy.sa.change-address.line3.label=Cyfeiriad – llinell 3
@@ -451,26 +450,26 @@ asa.legacy.sa.change-address.postcode.label=Cod post
 asa.legacy.sa.change-address.country.label=Gwlad
 asa.legacy.sa.error.addressLine1.required=Nodwch gyfeiriad – llinell 1
 asa.legacy.sa.error.addressLine1.length=Mae angen i linell 1 y cyfeiriad fod yn 28 o gymeriadau neu lai
-asa.legacy.sa.error.addressLine1.invalid=Enter an address line 1 that only contains letters, numbers, spaces and the characters . , ( ) & - ‘ /
+asa.legacy.sa.error.addressLine1.invalid=Enter an address line 1 that only contains letters, numbers, spaces and the characters . , ( ) & - ‘ / #TODO
 asa.legacy.sa.error.addressLine2.required=Nodwch gyfeiriad – llinell 2
 asa.legacy.sa.error.addressLine2.length=Mae angen i linell 2 y cyfeiriad fod yn 28 o gymeriadau neu lai
-asa.legacy.sa.error.addressLine2.invalid=Enter an address line 2 that only contains letters, numbers, spaces and the characters . , ( ) & - ‘ /
+asa.legacy.sa.error.addressLine2.invalid=Enter an address line 2 that only contains letters, numbers, spaces and the characters . , ( ) & - ‘ / #TODO
 asa.legacy.sa.error.addressLine3.required=Nodwch gyfeiriad – llinell 3
 asa.legacy.sa.error.addressLine3.length=Mae angen i linell 3 y cyfeiriad fod yn 28 o gymeriadau neu lai
-asa.legacy.sa.error.addressLine3.invalid=Enter an address line 3 that only contains letters, numbers, spaces and the characters . , ( ) & - ‘ /
+asa.legacy.sa.error.addressLine3.invalid=Enter an address line 3 that only contains letters, numbers, spaces and the characters . , ( ) & - ‘ / #TODO
 asa.legacy.sa.error.addressLine4.required=Nodwch gyfeiriad – llinell 4
 asa.legacy.sa.error.addressLine4.length=Mae angen i linell 4 y cyfeiriad fod yn 18 o gymeriadau neu lai
-asa.legacy.sa.error.addressLine4.invalid=Enter an address line 4 that only contains letters, numbers, spaces and the characters . , ( ) & - ‘ /
+asa.legacy.sa.error.addressLine4.invalid=Enter an address line 4 that only contains letters, numbers, spaces and the characters . , ( ) & - ‘ / #TODO
 asa.legacy.sa.error.postcode.required=Nodwch god post
-asa.legacy.sa.error.postcode.invalid=Enter a postcode in the correct format
-asa.legacy.sa.error.country.required=Select a country
+asa.legacy.sa.error.postcode.invalid=Enter a postcode in the correct format #TODO
+asa.legacy.sa.error.country.required=Select a country #TODO
 
-asa.legacy.sa.check-your-answers.h1=Check your answers
-asa.legacy.sa.check-your-answers.business-name=Business name
-asa.legacy.sa.check-your-answers.phone-number=Telephone number
-asa.legacy.sa.check-your-answers.email=Email address
-asa.legacy.sa.check-your-answers.address=Address
-asa.legacy.sa.check-your-answers.submit-button=Enrol for Self Assessment
+asa.legacy.sa.check-your-answers.h1=Gwiriwch eich atebion
+asa.legacy.sa.check-your-answers.business-name=Enw’r busnes
+asa.legacy.sa.check-your-answers.phone-number=Rhif ffôn
+asa.legacy.sa.check-your-answers.email=Cyfeiriad e-bost
+asa.legacy.sa.check-your-answers.address=Cyfeiriad
+asa.legacy.sa.check-your-answers.submit-button=Ymrestru ar gyfer Hunanasesiad
 
 # TODO: WELSH TRANSLATIONS NEEDED FOR ALL ABOVE THIS LINE
 
