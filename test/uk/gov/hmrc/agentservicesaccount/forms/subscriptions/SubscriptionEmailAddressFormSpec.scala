@@ -95,11 +95,11 @@ with Matchers {
       validatedForm.errors.length shouldBe 1
     }
 
-    //TODO: 11240 FIX THIS TEST
     s"error when $emailAddressUseAsaDataKey false and $emailAddressNewKey too long" in {
+      val tooLongEmail: String = Iterator.continually(Random.nextPrintableChar()).filter(_.isLetter).take(CT_SA_EMAIL_MAX_LENGTH).mkString + "@email.com"
       val params = Map(
         emailAddressUseAsaDataKey -> false.toString,
-        emailAddressNewKey -> s"${(1 to CT_SA_EMAIL_MAX_LENGTH).map("a")}@email.com"
+        emailAddressNewKey -> tooLongEmail
       )
 
       val validatedForm = initForm.bind(params)

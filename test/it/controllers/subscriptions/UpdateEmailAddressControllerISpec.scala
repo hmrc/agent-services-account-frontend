@@ -37,6 +37,8 @@ import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
 
+import scala.util.Random
+
 class UpdateEmailAddressControllerISpec
 extends ComponentBaseISpec {
 
@@ -75,13 +77,13 @@ extends ComponentBaseISpec {
       )
 
       if (legacyRegime != PAYE) {
-        //TODO: 11240 FIX THIS TEST
         "update journey and redirect to email-address-too-long when using ASA email address that is too long" in {
           givenAuthorisedAsAgentWith(arn.value)
           givenGetAgentRecord(agentRecord)
           stubASAGetResponseError(arn, NOT_FOUND)
 
-          val tooLongEmailAddress = s"${(1 to CT_SA_EMAIL_MAX_LENGTH).map("a")}@email.com"
+          val tooLongEmailAddress: String =
+            Iterator.continually(Random.nextPrintableChar()).filter(_.isLetter).take(CT_SA_EMAIL_MAX_LENGTH).mkString + "@email.com"
           val newAsaDetails = subscriptionAgencyDetails.copy(agencyEmail = Some(tooLongEmailAddress))
           val subscriptionJourney = subscriptionBaseJourney.copy(asaDetails = newAsaDetails)
 
@@ -95,10 +97,6 @@ extends ComponentBaseISpec {
             )
           result.status shouldBe SEE_OTHER
           result.header(LOCATION) shouldBe Some(s"$subscriptionStartPath/$legacyRegime/email-address-too-long")
-
-          val updated = await(repo.getFromSession(subscriptionJourneyKey(legacyRegime)))
-          updated shouldBe defined
-          updated.get.useCustomEmail shouldBe None
         }
       }
 

@@ -99,15 +99,14 @@ extends ViewBaseSpec {
         doc.title() mustBe s"$title - Agent services account - GOV.UK"
       }
 
-      //TODO: 11240 FIX THIS TEST
       "display the agencyDetails emailAddress as inset text" in {
-        val hint = doc.select(".govuk-inset")
-        hint.first().text() mustBe asaDetailsAgencyEmail
+        val insetText = doc.select(".govuk-inset-text")
+        insetText.first().text() mustBe asaDetailsAgencyEmail
       }
 
       "display the correct label" in {
-        val hint = doc.select(".govuk-label")
-        hint.first().text() mustBe messages(s"$legacyRegimePrefix.custom-email-address.input.label")
+        val label = doc.select(".govuk-label")
+        label.first().text() mustBe messages(s"$legacyRegimePrefix.custom-email-address.input.label")
       }
 
       "display the correct hint" in {

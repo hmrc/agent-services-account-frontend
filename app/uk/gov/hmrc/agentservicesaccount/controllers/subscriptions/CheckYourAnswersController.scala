@@ -32,7 +32,9 @@ import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionCyaData
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.{CT, PAYE, SA}
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionCyaData.subscriptionJourneyToCyaData
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.utils.CountryResolver
@@ -124,20 +126,19 @@ with Logging {
       else
         "business"
     val nameRowKey = s"${legacyRegime.msgPrefix}.check-your-answers.$nameRowKeyDescriptor-name"
-    val nameRowLink = {
+    val nameRowLink =
       if (legacyRegime == PAYE) {
         Some(subscriptionRoutes.PayeUpdateContactNameController.showPage)
       }
       else {
         Some(subscriptionRoutes.UpdateBusinessNameController.showPage(legacyRegime))
       }
-    }
-    val emailAddressLink = (legacyRegime, agencyDetailsEmailLength) match {
-      //  TODO: 11240 TEMP CHANGE FROM 50 FOR MANUAL TESTING
-      case (CT | SA, Some(length)) if length > 5 => Some(subscriptionRoutes.UpdateEmailAddressController.showSaCtCustomPage(legacyRegime))
-//      case (CT | SA, Some(length)) if length > CT_SA_EMAIL_MAX_LENGTH => Some(subscriptionRoutes.UpdateEmailAddressController.showSaCtCustomPage(legacyRegime))
-      case _ => Some(subscriptionRoutes.UpdateEmailAddressController.showPage(legacyRegime))
-    }
+    val emailAddressLink =
+      (legacyRegime, agencyDetailsEmailLength) match {
+        case (CT | SA, Some(length)) if length > CT_SA_EMAIL_MAX_LENGTH =>
+          Some(subscriptionRoutes.UpdateEmailAddressController.showSaCtCustomPage(legacyRegime))
+        case _ => Some(subscriptionRoutes.UpdateEmailAddressController.showPage(legacyRegime))
+      }
     Seq(
       SummaryListData(
         key = nameRowKey,
