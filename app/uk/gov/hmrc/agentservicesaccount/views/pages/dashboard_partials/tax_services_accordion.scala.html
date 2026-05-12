@@ -160,6 +160,17 @@
 @otherTaxesItem = {
 @govukWarningText(WarningText(content = HtmlContent(span("asa.other.p1"))))
 }
+@otherTaxesSubscribedItem = {
+@p(msgs("asa.other.subscribed.p1", "/home/services"))
+}
+@otherTaxesMappedItem = {
+@p(msgs("asa.other.mapped.p1", "https://www.gov.uk/government/collections/hmrc-online-services-for-agents#hmrc-online-services-for-agents-account"))
+@p(msgs("asa.other.mapped.p2"))
+}
+@otherTaxesUnknownItem = {
+@p(msgs("asa.other.unknown.p1", "https://www.gov.uk/government/collections/hmrc-online-services-for-agents#hmrc-online-services-for-agents-account"))
+@p(msgs("asa.other.unknown.p2"))
+}
 
 @payeItemInProgress(info: SubscriptionInfo) = {
 @p(msgs("asa.legacy.paye.in-progress.p1", info.localCreationDate.map(_.format(DateTimeFormatter.ofPattern("d MMMM yyyy"))).getOrElse("")))
@@ -209,6 +220,27 @@
             content = HtmlContent(itsaAccordionItem)
         )
     )
+    if(appConfig.enableLegacySubscriptionLink) {
+        subscriptionInfo.find(_.regime == LegacyRegime.SA).map { info =>
+            info.subscriptionStatus match {
+                case SubscriptionStatus.SubscriptionInProgress if request.agentInfo.isAdmin =>
+                    items.append(
+                        Section(
+                            headingContent = Text(msgs("asa.legacy.sa.h2")),
+                            content = HtmlContent(saItemInProgress(info))
+                        )
+                    )
+                case SubscriptionStatus.Subscribed =>
+                    items.append(
+                        Section(
+                            headingContent = Text(msgs("asa.legacy.sa.h2")),
+                            content = HtmlContent(saItemComplete)
+                        )
+                    )
+                case _ =>
+            }
+        }
+    }
     items.append(
         Section(
             headingContent = Text(msgs("asa.paye-section.h2")),
@@ -232,13 +264,30 @@
                             content = HtmlContent(ctItemInProgress(info))
                         )
                     )
-
                 case SubscriptionStatus.Subscribed =>
                     items.append(
                         Section(
                             headingContent = Text(msgs("asa.legacy.ct.h2")),
                             content = HtmlContent(ctItemComplete)
                         )
+                    )
+                case _ =>
+            }
+        }
+        subscriptionInfo.find(_.regime == LegacyRegime.PAYE).map { info =>
+            info.subscriptionStatus match {
+                case SubscriptionStatus.SubscriptionInProgress if request.agentInfo.isAdmin =>
+                    items.append(
+                        Section(
+                            headingContent = Text(msgs("asa.legacy.paye.h2")),
+                            content = HtmlContent(payeItemInProgress(info))
+                        )
+                    )
+                case SubscriptionStatus.Subscribed =>
+                    items.append(
+                        Section(
+                            headingContent = Text(msgs("asa.legacy.paye.h2")),
+                            content = HtmlContent(payeItemComplete))
                     )
                 case _ =>
             }
@@ -279,50 +328,14 @@
     items.append(
         Section(
             headingContent = Text(msgs("asa.other.heading")),
-            content = HtmlContent(otherTaxesItem)
+            content = HtmlContent(
+                if(!appConfig.enableLegacySubscriptionLink) otherTaxesItem
+                else if(request.agentInfo.hasOtherEnrolments) otherTaxesSubscribedItem
+                else if(subscriptionInfo.exists(info => info.subscriptionStatus == SubscriptionStatus.SubscriptionMapped)) otherTaxesMappedItem
+                else otherTaxesUnknownItem
+            )
         )
     )
-    if(appConfig.enableLegacySubscriptionLink) {
-        subscriptionInfo.find(_.regime == LegacyRegime.PAYE).map { info =>
-            info.subscriptionStatus match {
-                case SubscriptionStatus.SubscriptionInProgress if request.agentInfo.isAdmin =>
-                    items.append(
-                        Section(
-                            headingContent = Text(msgs("asa.legacy.paye.h2")),
-                            content = HtmlContent(payeItemInProgress(info))
-                        )
-                    )
-
-                case SubscriptionStatus.Subscribed =>
-                    items.append(
-                        Section(
-                            headingContent = Text(msgs("asa.legacy.paye.h2")),
-                            content = HtmlContent(payeItemComplete))
-                    )
-                case _ =>
-            }
-        }
-        subscriptionInfo.find(_.regime == LegacyRegime.SA).map { info =>
-            info.subscriptionStatus match {
-                case SubscriptionStatus.SubscriptionInProgress if request.agentInfo.isAdmin =>
-                    items.append(
-                        Section(
-                            headingContent = Text(msgs("asa.legacy.sa.h2")),
-                            content = HtmlContent(saItemInProgress(info))
-                        )
-                    )
-
-                case SubscriptionStatus.Subscribed =>
-                    items.append(
-                        Section(
-                            headingContent = Text(msgs("asa.legacy.sa.h2")),
-                            content = HtmlContent(saItemComplete)
-                        )
-                    )
-                case _ =>
-            }
-        }
-    }
     items
 }
 
