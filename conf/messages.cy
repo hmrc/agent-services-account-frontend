@@ -224,8 +224,15 @@ asa.legacy.ct.email-address.use-asa.false=I want to use a different email addres
 asa.legacy.ct.email-address.new-input.label=Enter an email address
 asa.legacy.ct.email-address.new-input.hint=We’ll send a code to this email address to confirm it
 asa.legacy.ct.email-address.use-asa.error.required=Select the email address we should use to contact {0} about Corporation Tax
-asa.legacy.ct.email-address.new-input.error.empty=Enter an email address
-asa.legacy.ct.email-address.new-input.error.invalid=Enter an email address in the correct format, for example name@example.com
+asa.legacy.ct.email-address.input.error.empty=Enter an email address
+asa.legacy.ct.email-address.input.error.length=Enter an email address that is 50 characters or less.
+asa.legacy.ct.email-address.input.error.invalid=Enter an email address in the correct format, for example name@example.com
+
+asa.legacy.ct.custom-email-address.title=Your agent services account email address is too long
+asa.legacy.ct.custom-email-address.p1=We currently have this email address connected to your agent services account:
+asa.legacy.ct.custom-email-address.p2=For Corporation Tax, the email address must be 50 characters or less.
+asa.legacy.ct.custom-email-address.input.label=Enter a shorter email address
+asa.legacy.ct.custom-email-address.input.hint=We’ll send a code to this email address to confirm it
 
 asa.legacy.ct.address.title=What address should we use to send letters about Corporation Tax?
 asa.legacy.ct.address.use-asa.true.hint=This is the address on your agent services account.
@@ -323,8 +330,9 @@ asa.legacy.paye.email-address.use-asa.false=I want to use a different email addr
 asa.legacy.paye.email-address.new-input.label=Enter an email address
 asa.legacy.paye.email-address.new-input.hint=We’ll send a code to this email address to confirm it
 asa.legacy.paye.email-address.use-asa.error.required=Select the email address we should use to contact {0} about PAYE
-asa.legacy.paye.email-address.new-input.error.empty=Enter an email address
-asa.legacy.paye.email-address.new-input.error.invalid=Enter an email address in the correct format, for example name@example.com
+asa.legacy.paye.email-address.input.error.empty=Enter an email address
+asa.legacy.paye.email-address.input.error.length=Enter an email address that is 129 characters or less.
+asa.legacy.paye.email-address.input.error.invalid=Enter an email address in the correct format, for example name@example.com
 
 asa.legacy.paye.address.title=What address should we use to send letters about PAYE?
 asa.legacy.paye.address.use-asa.true.hint=This is the address on your agent services account.
@@ -415,8 +423,15 @@ asa.legacy.sa.email-address.use-asa.false=I want to use a different email addres
 asa.legacy.sa.email-address.new-input.label=Enter an email address
 asa.legacy.sa.email-address.new-input.hint=We’ll send a code to this email address to confirm it
 asa.legacy.sa.email-address.use-asa.error.required=Select the email address we should use to contact {0} about Self Assessment
-asa.legacy.sa.email-address.new-input.error.empty=Enter an email address
-asa.legacy.sa.email-address.new-input.error.invalid=Enter an email address in the correct format, for example name@example.com
+asa.legacy.sa.email-address.input.error.empty=Enter an email address
+asa.legacy.sa.email-address.input.error.length=Enter an email address that is 50 characters or less.
+asa.legacy.sa.email-address.input.error.invalid=Enter an email address in the correct format, for example name@example.com
+
+asa.legacy.sa.custom-email-address.title=Your agent services account email address is too long
+asa.legacy.sa.custom-email-address.p1=We currently have this email address connected to your agent services account:
+asa.legacy.sa.custom-email-address.p2=For Self Assessment, the email address must be 50 characters or less.
+asa.legacy.sa.custom-email-address.input.label=Enter a shorter email address
+asa.legacy.sa.custom-email-address.input.hint=We’ll send a code to this email address to confirm it
 
 asa.legacy.sa.address.title=What address should we use to send letters about Self Assessment?
 asa.legacy.sa.address.use-asa.true.hint=This is the address on your agent services account.

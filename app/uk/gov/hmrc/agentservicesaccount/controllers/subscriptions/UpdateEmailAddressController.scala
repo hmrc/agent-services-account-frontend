@@ -28,8 +28,10 @@ import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageS
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionEmailAddressForm
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.EmailAddressFormValues
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
 import uk.gov.hmrc.agentservicesaccount.services.EmailVerificationService
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.ctsa_custom_email_address
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.update_email_address
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
@@ -43,6 +45,7 @@ class UpdateEmailAddressController @Inject() (
   val sessionCacheService: SessionCacheService,
   emailVerificationService: EmailVerificationService,
   update_email_address: update_email_address,
+  ctsa_custom_email_address: ctsa_custom_email_address,
   cc: MessagesControllerComponents
 )(implicit
   appConfig: AppConfig,
@@ -127,6 +130,58 @@ with Logging {
             } yield Redirect(redirectUri)
           }).getOrElse(Future.successful(Redirect(routes.UpdateEmailAddressController.showPage(legacyRegime))))
         }
+      }
+    )
+  }
+
+  def showSaCtCustomPage(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
+    legacyRegime match {
+      case PAYE => Future.successful(Redirect(routes.UpdateEmailAddressController.showPage(PAYE)))
+      case _ =>
+        val journey = request.subscriptionJourney
+
+        val asaDetailsAgencyEmail = journey.asaDetails.agencyEmail.getOrElse("")
+
+        val form = SubscriptionEmailAddressForm.form(legacyRegime, journey.asaDetails.agencyName.getOrElse(""))
+
+        Future.successful(
+          Ok(ctsa_custom_email_address(
+            form,
+            asaDetailsAgencyEmail,
+            legacyRegime
+          ))
+        )
+    }
+  }
+
+  def onSaCtCustomSubmit(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
+    val journey = request.subscriptionJourney
+
+    SubscriptionEmailAddressForm.form(legacyRegime, journey.asaDetails.agencyName.getOrElse("")).bindFromRequest().fold(
+      formWithErrors => {
+        val asaDetailsAgencyEmail = journey.asaDetails.agencyEmail.getOrElse("")
+        Future.successful(
+          BadRequest(ctsa_custom_email_address(
+            formWithErrors,
+            asaDetailsAgencyEmail,
+            legacyRegime
+          ))
+        )
+      },
+      data => {
+        data.newEmailAddress.map(newEmail => {
+          val credId = request.agentInfo.credentials.map(_.providerId).getOrElse(throw new RuntimeException("no available cred id"))
+          for {
+            _ <- sessionCacheService.put(emailPendingVerificationKey, newEmail)
+            redirectUri <- emailVerificationService.initialiseEmailVerificationJourney(
+              credId,
+              newEmail,
+              messagesApi.preferred(request).lang,
+              routes.EmailVerificationEndpointController.finishEmailVerification(legacyRegime),
+              routes.UpdateEmailAddressController.showSaCtCustomPage(legacyRegime)
+            )
+          } yield Redirect(redirectUri)
+        }).getOrElse(Future.successful(Redirect(routes.UpdateEmailAddressController.showSaCtCustomPage(legacyRegime))))
       }
     )
   }

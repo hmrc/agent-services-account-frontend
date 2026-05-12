@@ -23,16 +23,15 @@ import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.data.Form
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionEmailAddressForm
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionEmailAddressForm.emailAddressNewKey
-import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionEmailAddressForm.emailAddressUseAsaDataKey
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.EmailAddressFormValues
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.update_email_address
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.ctsa_custom_email_address
 
-class UpdateEmailAddressSpec
+class CtSaCustomEmailAddressSpec
 extends ViewBaseSpec {
 
-  private val view: update_email_address = inject[update_email_address]
+  private val view: ctsa_custom_email_address = inject[ctsa_custom_email_address]
   private val asaDetailsAgencyEmail = "joe@bloggs.com"
 
   private val legacyRegime = LegacyRegime.PAYE
@@ -41,13 +40,9 @@ extends ViewBaseSpec {
 
   private val emailAddressForm: Form[EmailAddressFormValues] = SubscriptionEmailAddressForm.form(legacyRegime, "Agency Name")
 
-  private val formWithUseAsaError: Form[EmailAddressFormValues] = emailAddressForm.withError(
-    key = emailAddressUseAsaDataKey,
-    message = messages(s"$legacyRegimePrefix.email-address.use-asa.error.required")
-  )
   private val formWithNewEmailAddressError: Form[EmailAddressFormValues] = emailAddressForm.withError(
     key = emailAddressNewKey,
-    message = messages(s"$legacyRegimePrefix.email-address.input.error.empty")
+    message = messages(s"$legacyRegimePrefix.custom-email-address.input.error.empty")
   )
 
   def render(form: Form[EmailAddressFormValues]): Document = Jsoup.parse(
@@ -62,9 +57,9 @@ extends ViewBaseSpec {
     ).body
   )
 
-  private val title: String = messages(s"$legacyRegimePrefix.email-address.title")
+  private val title: String = messages(s"$legacyRegimePrefix.custom-email-address.title")
 
-  "update_email_address" when {
+  "ctsa_custom_email_address" when {
 
     def testServiceStaticContent(doc: Document): Unit = {
 
@@ -83,7 +78,6 @@ extends ViewBaseSpec {
     }
 
     def testPageStaticContent(doc: Document): Unit = {
-
       "have the correct h1 heading and introduction" in {
         doc.select("h1").first.text() mustBe title
       }
@@ -105,79 +99,24 @@ extends ViewBaseSpec {
         doc.title() mustBe s"$title - Agent services account - GOV.UK"
       }
 
-      "display correct radio options" in {
-        val radios = doc.select(".govuk-radios__item")
-        radios.size() mustBe 2
-        radios.get(0).text() mustBe asaDetailsAgencyEmail
-        radios.get(0).select("input").attr("name") mustBe emailAddressUseAsaDataKey
-        radios.get(1).text() mustBe messages(s"$legacyRegimePrefix.email-address.use-asa.false")
-        radios.get(1).select("input").attr("name") mustBe emailAddressUseAsaDataKey
+      "display the agencyDetails emailAddress as inset text" in {
+        val insetText = doc.select(".govuk-inset-text")
+        insetText.first().text() mustBe asaDetailsAgencyEmail
       }
 
-      "hide the conditional new email address input" in {
-        val conditionalHidden = doc.select(".govuk-radios__conditional--hidden")
-        conditionalHidden.size() mustBe 1
-        conditionalHidden.text() mustBe messages(s"$legacyRegimePrefix.email-address.new-input.label") + " " + messages(
-          s"$legacyRegimePrefix.email-address.new-input.hint"
-        )
-        conditionalHidden.select(".govuk-input").attr("name") mustBe emailAddressNewKey
-      }
-    }
-
-    "when 'new email address' option is selected" should {
-
-      val filledForm: Form[EmailAddressFormValues] = emailAddressForm.fill(
-        EmailAddressFormValues(
-          useAsaData = false,
-          newEmailAddress = Some("hello@new.com")
-        )
-      )
-
-      val doc: Document = render(filledForm)
-
-      "show the conditional input section" in {
-        val conditional = doc.select(".govuk-radios__conditional").first()
-        conditional.hasClass("govuk-radios__conditional--hidden") mustBe false
+      "display the correct label" in {
+        val label = doc.select(".govuk-label")
+        label.first().text() mustBe messages(s"$legacyRegimePrefix.custom-email-address.input.label")
       }
 
-      "have the new email address input present" in {
-        doc.select("#emailAddressNew").size() mustBe 1
+      "display the correct hint" in {
+        val hint = doc.select(".govuk-hint")
+        hint.first().text() mustBe messages(s"$legacyRegimePrefix.custom-email-address.input.hint")
       }
 
-      "pre-fill the new email address input" in {
-        doc.select("#emailAddressNew").`val`() mustBe "hello@new.com"
-      }
-
-      "have the correct radio selected" in {
-        val radios = doc.select("input[name=emailAddressUseAsaData]")
-        radios.get(1).hasAttr("checked") mustBe true
-      }
-    }
-
-    "form is submitted with useAsa errors should" should {
-
-      val doc: Document = render(formWithUseAsaError)
-
-      testServiceStaticContent(doc)
-
-      testPageStaticContent(doc)
-
-      "display error prefix on page title" in {
-        doc.title() mustBe s"Error: $title - Agent services account - GOV.UK"
-      }
-
-      "display correct error summary link" in {
-        val errorLink: Element = doc.select(".govuk-error-summary__list a").first()
-        errorLink.text() mustBe messages(s"$legacyRegimePrefix.email-address.use-asa.error.required")
-        errorLink.attr("href") mustBe s"#$emailAddressUseAsaDataKey"
-      }
-
-      "display error styling on form" in {
-        doc.select(".govuk-form-group--error").size() mustBe 1
-      }
-
-      "display error message on form" in {
-        doc.select(".govuk-error-message").text() mustBe s"Error: ${messages(s"$legacyRegimePrefix.email-address.use-asa.error.required")}"
+      "display the contact name input" in {
+        val input = doc.select(".govuk-input")
+        input.first().attr("name") mustBe emailAddressNewKey
       }
     }
 
@@ -195,7 +134,7 @@ extends ViewBaseSpec {
 
       "display correct error summary link" in {
         val errorLink: Element = doc.select(".govuk-error-summary__list a").first()
-        errorLink.text() mustBe messages(s"$legacyRegimePrefix.email-address.input.error.empty")
+        errorLink.text() mustBe messages(s"$legacyRegimePrefix.custom-email-address.input.error.empty")
         errorLink.attr("href") mustBe s"#$emailAddressNewKey"
       }
 
@@ -204,7 +143,7 @@ extends ViewBaseSpec {
       }
 
       "display error message on form" in {
-        doc.select(".govuk-error-message").text() mustBe s"Error: ${messages(s"$legacyRegimePrefix.email-address.input.error.empty")}"
+        doc.select(".govuk-error-message").text() mustBe s"Error: ${messages(s"$legacyRegimePrefix.custom-email-address.input.error.empty")}"
       }
     }
   }

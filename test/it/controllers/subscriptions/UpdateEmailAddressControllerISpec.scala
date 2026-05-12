@@ -16,6 +16,7 @@
 
 package it.controllers.subscriptions
 
+import play.api.test.Helpers
 import play.api.test.Helpers._
 import stubs.AgentServicesAccountStubs.givenGetAgentRecord
 import stubs.AgentServicesAccountStubs.stubASAGetResponseError
@@ -24,8 +25,10 @@ import stubs.EmailVerificationStubs.givenVerifyEmailSuccess
 import support.ComponentBaseISpec
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.emailPendingVerificationKey
+import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators.CT_SA_EMAIL_MAX_LENGTH
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionEmailAddressForm.emailAddressNewKey
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionEmailAddressForm.emailAddressUseAsaDataKey
+import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.CompletedEmail
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.VerificationStatusResponse
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
@@ -33,6 +36,8 @@ import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
+
+import scala.util.Random
 
 class UpdateEmailAddressControllerISpec
 extends ComponentBaseISpec {
@@ -70,6 +75,30 @@ extends ComponentBaseISpec {
         (subscriptionBaseJourney, "address"),
         (subscriptionFullJourney(legacyRegime), "check-your-answers")
       )
+
+      if (legacyRegime != PAYE) {
+        "update journey and redirect to email-address-too-long when using ASA email address that is too long" in {
+          givenAuthorisedAsAgentWith(arn.value)
+          givenGetAgentRecord(agentRecord)
+          stubASAGetResponseError(arn, NOT_FOUND)
+
+          val tooLongEmailAddress: String =
+            Iterator.continually(Random.nextPrintableChar()).filter(_.isLetter).take(CT_SA_EMAIL_MAX_LENGTH).mkString + "@email.com"
+          val newAsaDetails = subscriptionAgencyDetails.copy(agencyEmail = Some(tooLongEmailAddress))
+          val subscriptionJourney = subscriptionBaseJourney.copy(asaDetails = newAsaDetails)
+
+          repo.putSession(subscriptionJourneyKey(legacyRegime), subscriptionJourney).futureValue
+
+          val result =
+            post(updateEmailAddressPath)(body =
+              Map(
+                emailAddressUseAsaDataKey -> Seq("true")
+              )
+            )
+          result.status shouldBe SEE_OTHER
+          result.header(LOCATION) shouldBe Some(s"$subscriptionStartPath/$legacyRegime/email-address-too-long")
+        }
+      }
 
       journeyWithRedirectLocations.foreach(journeyWithRedirectLocation => {
         s"update journey and redirect to ${journeyWithRedirectLocation._2} when using ASA email address " +
@@ -135,5 +164,80 @@ extends ComponentBaseISpec {
     }
 
   })
+
+  List(CT, SA).foreach(legacyRegime => {
+    val customEmailAddressPath = s"$subscriptionStartPath/$legacyRegime/email-address-too-long"
+
+    s"GET $customEmailAddressPath" should {
+      "display the custom email address page" in {
+
+        givenAuthorisedAsAgentWith(arn.value)
+        givenGetAgentRecord(agentRecord)
+        stubASAGetResponseError(arn, NOT_FOUND)
+
+        val result = get(customEmailAddressPath)
+
+        result.status shouldBe OK
+        val expectedTitle: String = "Your agent services account email address is too long"
+        assertPageHasTitle(expectedTitle)(result)
+      }
+    }
+
+    s"POST $customEmailAddressPath" should {
+
+      "(if the email is unverified) redirect to the verify-email external journey" in {
+
+        givenFullAuthorisedAsAgentWith(
+          arn = arn.value,
+          providerId = "cred-id",
+          email = "abc@abc.com"
+        )
+        givenGetAgentRecord(agentRecord)
+        stubASAGetResponseError(arn, NOT_FOUND)
+        givenCheckEmailSuccess(
+          "cred-id",
+          VerificationStatusResponse(emails =
+            List(CompletedEmail(
+              "abc@abc.com",
+              verified = true,
+              locked = false
+            ))
+          )
+        )
+        givenVerifyEmailSuccess("/continue-url")
+
+        await(repo.putSession(emailPendingVerificationKey, "new@abc.com"))
+
+        val result =
+          post(customEmailAddressPath)(body =
+            Map(
+              emailAddressUseAsaDataKey -> Seq("false"),
+              emailAddressNewKey -> Seq("jane@bloggs.com")
+            )
+          )
+
+        result.status shouldBe SEE_OTHER
+
+        result.header("Location").get shouldBe "http://localhost:9890/continue-url"
+      }
+    }
+
+  })
+
+  val customEmailAddressPathFromPaye = s"$subscriptionStartPath/PAYE/email-address-too-long"
+
+  s"GET $customEmailAddressPathFromPaye" should {
+    "redirect to /subscription/PAYE/email-address" in {
+
+      givenAuthorisedAsAgentWith(arn.value)
+      givenGetAgentRecord(agentRecord)
+      stubASAGetResponseError(arn, NOT_FOUND)
+
+      val result = get(customEmailAddressPathFromPaye)
+
+      result.status shouldBe SEE_OTHER
+      result.header(LOCATION) shouldBe Some(s"$subscriptionStartPath/PAYE/email-address")
+    }
+  }
 
 }
