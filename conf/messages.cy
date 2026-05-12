@@ -163,7 +163,7 @@ asa.trusts-section.col2.h3=Rheoli ymddiriedolaeth eich cleient
 asa.trusts-section.col2.register-trust-link.text=Defnyddiwch y gwasanaeth hwn i ddiweddaru manylion ymddiriedolaeth neu ystâd eich cleient neu i ddatgan dim newidiadau ar y gofrestr ymddiriedolaethau
 asa.trusts-section.h2=Ymddiriedolaethau ac ystadau
 
-# TODO: WELSH TRANSLATIONS NEEDED FOR ALL BELOW THIS LINE
+# Legacy Subscriptions
 
 asa.apply-to-act-for.multi-service.section=Gwneud cais i weithredu fel asiant ar gyfer y gwasanaethau treth hyn
 asa.apply-to-act-for.single-service.section=Gwneud cais i weithredu fel asiant ar gyfer y gwasanaeth treth hwn
@@ -470,8 +470,6 @@ asa.legacy.sa.check-your-answers.phone-number=Rhif ffôn
 asa.legacy.sa.check-your-answers.email=Cyfeiriad e-bost
 asa.legacy.sa.check-your-answers.address=Cyfeiriad
 asa.legacy.sa.check-your-answers.submit-button=Ymrestru ar gyfer Hunanasesiad
-
-# TODO: WELSH TRANSLATIONS NEEDED FOR ALL ABOVE THIS LINE
 
 # Custom UR banner
 banner.heading=Helpwch i wella CThEF

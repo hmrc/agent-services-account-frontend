@@ -163,7 +163,7 @@ asa.trusts-section.col2.h3=Manage your client’s trust
 asa.trusts-section.col2.register-trust-link.text=Use this service to update the details of your client’s trust or declare no changes on the trust register
 asa.trusts-section.h2=Trusts and estates
 
-# TODO: WELSH TRANSLATIONS NEEDED FOR ALL BELOW THIS LINE
+# Legacy Subscriptions
 
 asa.apply-to-act-for.multi-service.section=Apply to act as an agent for these tax services
 asa.apply-to-act-for.single-service.section=Apply to act as an agent for this tax service
@@ -470,8 +470,6 @@ asa.legacy.sa.check-your-answers.phone-number=Telephone number
 asa.legacy.sa.check-your-answers.email=Email address
 asa.legacy.sa.check-your-answers.address=Address
 asa.legacy.sa.check-your-answers.submit-button=Enrol for Self Assessment
-
-# TODO: WELSH TRANSLATIONS NEEDED FOR ALL ABOVE THIS LINE
 
 # Custom UR banner
 banner.heading=Help improve HMRC services
