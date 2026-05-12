@@ -282,75 +282,67 @@ asa.legacy.ct.check-your-answers.address=Cyfeiriad
 asa.legacy.ct.check-your-answers.submit-button=Ymrestru ar gyfer Treth Gorfforaeth
 
 # PAYE/CIS
-asa.legacy.paye.h2=Pay as you earn (PAYE)/Construction Industry Scheme (CIS)
-asa.legacy.paye.col1.h3=Test Content
-asa.legacy.paye.col1.p1=Status: {0}
+asa.legacy.paye.h2=Talu wrth ennill (TWE)/Cynllun y Diwydiant Adeiladu (CIS)
 asa.legacy.paye.link=Cais am danysgrifiad TWE
-asa.legacy.paye.not-subscribed.before-start.h4=Before you start
-asa.legacy.paye.not-subscribed.before-start.p1=If you have already enrolled for PAYE, you can continue managing your clients by <a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">signing into your HMRC online services for agents account.</a>
-asa.legacy.paye.not-subscribed.before-start.link1.href=https://www.gov.uk/guidance/how-to-enrol-a-tax-service-onto-your-hmrc-online-services-account
-asa.legacy.paye.not-subscribed.before-start.p2=This will sign you out of your agent services account.
-asa.legacy.paye.not-subscribed.enrol-for.h4=If you want to enrol for PAYE
-asa.legacy.paye.not-subscribed.enrol-for.p1=You can <a class="govuk-link" href="{0}" rel="noreferrer noopener">use your agent services account to enrol</a> and manage your clients.
-asa.legacy.paye.in-progress.p1=We are still processing the application you did on {0}.
-asa.legacy.paye.in-progress.p2=Processing can take up to 5 days.
-asa.legacy.paye.subscribed.p1=Your agent code is: {0}
-asa.legacy.paye.subscribed.p2=Get permission from new clients
-asa.legacy.paye.subscribed.p3=<a class="govuk-link" href="{0}" rel="noreferrer noopener">Ask a client to authorise you</a>
-asa.legacy.paye.subscribed.p4=Manage your client’s PAYE/CIS
-asa.legacy.paye.subscribed.p5=<a class="govuk-link" href="{0}{1}" rel="noreferrer noopener">View and manage your client list for PAYE</a>
-asa.legacy.paye.subscribed.p6=<a class="govuk-link" href="{0}{1}" rel="noreferrer noopener">View and manage your client list for CIS</a>
+asa.legacy.paye.in-progress.p1=Rydym yn dal i brosesu’r cofrestriad a wnaethoch ar {0}.
+asa.legacy.paye.in-progress.p2=Gall prosesu gymryd hyd at 5 diwrnod.
+asa.legacy.paye.subscribed.p1=Eich cod asiant yw: {0}
+asa.legacy.paye.subscribed.p2=Cael caniatâd gan gleientiaid newydd
+asa.legacy.paye.subscribed.p3=<a class="govuk-link" href="{0}" rel="noreferrer noopener">Gofynnwch i gleient eich awdurdodi</a>
+asa.legacy.paye.subscribed.p4=Rheoli TWE/CIS eich cleient
+asa.legacy.paye.subscribed.p5=<a class="govuk-link" href="{0}{1}" rel="noreferrer noopener">Bwrw golwg dros a rheoli’ch rhestr o gleientiaid ar gyfer TWE</a>
+asa.legacy.paye.subscribed.p6=<a class="govuk-link" href="{0}{1}" rel="noreferrer noopener">Bwrw golwg dros a rheoli’ch rhestr o gleientiaid ar gyfer CIS</a>
 
-asa.legacy.paye.do-you-already-manage.title=Does {0} already manage PAYE clients?
-asa.legacy.paye.do-you-already-manage.existing.false=No, this is their first time managing PAYE clients
-asa.legacy.paye.do-you-already-manage.error.required=Select yes if {0} already manages PAYE/CIS clients
+asa.legacy.paye.do-you-already-manage.title=Ydy {0} eisoes yn rheoli cleientiaid TWE?
+asa.legacy.paye.do-you-already-manage.existing.false=Na, dyma’r tro cyntaf iddo reoli cleientiaid TWE
+asa.legacy.paye.do-you-already-manage.error.required=Select yes if {0} already manages PAYE/CIS clients #TODO
 
-asa.legacy.paye.you-may-not-need-to-apply.title=You may not need to apply for PAYE
-asa.legacy.paye.you-may-not-need-to-apply.p2=You can continue to manage your existing PAYE clients through your HMRC Online Services for Agents account.
-asa.legacy.paye.you-may-not-need-to-apply.error.required=Select yes if you still want to apply
+asa.legacy.paye.you-may-not-need-to-apply.title=You may not need to apply for PAYE #TODO
+asa.legacy.paye.you-may-not-need-to-apply.p2=You can continue to manage your existing PAYE clients through your HMRC Online Services for Agents account. #TODO
+asa.legacy.paye.you-may-not-need-to-apply.error.required=Select yes if you still want to apply #TODO
 
-asa.legacy.paye.contact-name.title=Who should we contact about PAYE?
-asa.legacy.paye.contact-name.input.heading=Who at {0} should we contact about PAYE?
-asa.legacy.paye.contact-name.input.hint=Enter their full name
+asa.legacy.paye.contact-name.title=Pwy ddylem gysylltu â nhw ynglŷn â TWE?
+asa.legacy.paye.contact-name.input.heading=Pwy yn {0} ddylem gysylltu â nhw ynglŷn â TWE?
+asa.legacy.paye.contact-name.input.hint=Nodwch ei enw llawn
 asa.legacy.paye.contact-name.input.error.empty=Enter the full name of the person we should contact about PAYE
 asa.legacy.paye.contact-name.input.error.invalid=The name of the person can only contain letters, hyphens and apostrophes
 
-asa.legacy.paye.phone-number.title=What phone number should we use to call you about PAYE?
-asa.legacy.paye.phone-number.use-asa.false=I want to use a different phone number for PAYE
-asa.legacy.paye.phone-number.new-input.label=Enter a phone number
-asa.legacy.paye.phone-number.new-input.hint=For international numbers include the country code.
-asa.legacy.paye.phone-number.use-asa.error.required=Enter the phone number we should use to call {0} about PAYE
-asa.legacy.paye.phone-number.new-input.error.empty=Enter a UK phone number
-asa.legacy.paye.phone-number.new-input.error.invalid=Enter a UK phone number, like 07700 900 982 or +44 808 157 0192
+asa.legacy.paye.phone-number.title=Pa rif ffôn ddylem ei ddefnyddio i ffonio chi ynglŷn â Thalu Wrth Ennill?
+asa.legacy.paye.phone-number.use-asa.false=Rwyf am ddefnyddio rhif ffôn gwahanol ar gyfer TWE
+asa.legacy.paye.phone-number.new-input.label=Nodwch rif ffôn
+asa.legacy.paye.phone-number.new-input.hint=Ar gyfer rhifau rhyngwladol, dylech gynnwys cod y wlad.
+asa.legacy.paye.phone-number.use-asa.error.required=Enter the phone number we should use to call {0} about PAYE #TODO
+asa.legacy.paye.phone-number.new-input.error.empty=Enter a UK phone number #TODO
+asa.legacy.paye.phone-number.new-input.error.invalid=Enter a UK phone number, like 07700 900 982 or +44 808 157 0192 #TODO
 
-asa.legacy.paye.email-address.title=What email address should we use to contact you about PAYE?
-asa.legacy.paye.email-address.use-asa.false=I want to use a different email address for PAYE
-asa.legacy.paye.email-address.new-input.label=Enter an email address
-asa.legacy.paye.email-address.new-input.hint=We’ll send a code to this email address to confirm it
-asa.legacy.paye.email-address.use-asa.error.required=Select the email address we should use to contact {0} about PAYE
-asa.legacy.paye.email-address.input.error.empty=Enter an email address
-asa.legacy.paye.email-address.input.error.length=Enter an email address that is 129 characters or less.
-asa.legacy.paye.email-address.input.error.invalid=Enter an email address in the correct format, for example name@example.com
+asa.legacy.paye.email-address.title=Pa gyfeiriad e-bost ddylem ei ddefnyddio i gysylltu â chi ynglŷn â TWE?
+asa.legacy.paye.email-address.use-asa.false=Hoffwn ddefnyddio cyfeiriad e-bost gwahanol ar gyfer TWE
+asa.legacy.paye.email-address.new-input.label=Nodwch gyfeiriad e-bost
+asa.legacy.paye.email-address.new-input.hint=Byddwn yn anfon cod i’r cyfeiriad e-bost hwn i’w gadarnhau
+asa.legacy.paye.email-address.use-asa.error.required=Select the email address we should use to contact {0} about PAYE #TODO
+asa.legacy.paye.email-address.input.error.empty=Nodwch gyfeiriad e-bost
+asa.legacy.paye.email-address.input.error.length=Enter an email address that is 129 characters or less. #TODO
+asa.legacy.paye.email-address.input.error.invalid=Enter an email address in the correct format, for example name@example.com #TODO
 
-asa.legacy.paye.address.title=What address should we use to send letters about PAYE?
-asa.legacy.paye.address.use-asa.true.hint=This is the address on your agent services account.
-asa.legacy.paye.address.use-asa.false=I want to use a different address for PAYE
-asa.legacy.paye.address.use-asa.error.required=Select the address we should use to send letters about PAYE
+asa.legacy.paye.address.title=Pa gyfeiriad ddylem ei ddefnyddio i anfon llythyrau ynglŷn â TWE?
+asa.legacy.paye.address.use-asa.true.hint=Dyma’r cyfeiriad ar eich cyfrif gwasanaethau asiant.
+asa.legacy.paye.address.use-asa.false=Rwyf am ddefnyddio cyfeiriad gwahanol ar gyfer TWE
+asa.legacy.paye.address.use-asa.error.required=Select the address we should use to send letters about PAYE #TODO
 
-asa.legacy.paye.alf.country-picker.title=Select the country - Agent services account - GOV.UK
-asa.legacy.paye.alf.country-picker.heading=What is the country where the business is based?
-asa.legacy.paye.alf.lookup.title=Find the address - Agent services account - GOV.UK
-asa.legacy.paye.alf.lookup.heading=Find your address
+asa.legacy.paye.alf.country-picker.title=Dewiswch y wlad - Cyfrif gwasanaethau asiant - GOV.UK
+asa.legacy.paye.alf.country-picker.heading=Beth yw’r wlad lle mae’r busnes wedi’i leoli?
+asa.legacy.paye.alf.lookup.title=Dod o hyd i’r cyfeiriad - Cyfrif gwasanaethau asiant - GOV.UK
+asa.legacy.paye.alf.lookup.heading=Dod o hyd i’ch cyfeiriad
 asa.legacy.paye.alf.lookup.postcode.label=Cod post
-asa.legacy.paye.alf.select.title=Select the address - Agent services account - GOV.UK
-asa.legacy.paye.alf.edit.title=Enter the address - Agent services account - GOV.UK
-asa.legacy.paye.alf.edit.heading=Enter the address
+asa.legacy.paye.alf.select.title=Dewiswch y cyfeiriad - Cyfrif gwasanaethau asiant - GOV.UK
+asa.legacy.paye.alf.edit.title=Nodwch y cyfeiriad - Cyfrif gwasanaethau asiant - GOV.UK
+asa.legacy.paye.alf.edit.heading=Nodwch y cyfeiriad
 asa.legacy.paye.alf.edit.townLabel=Cyfeiriad – llinell 4
-asa.legacy.paye.alf.confirm.title=Review and confirm - Agent services account - GOV.UK
+asa.legacy.paye.alf.confirm.title=Adolygu a chadarnhau - Cyfrif gwasanaethau asiant - GOV.UK
 
-asa.legacy.paye.change-address.title=Change your address
-asa.legacy.paye.change-address.title.invalid=Change the address lines that are too long
-asa.legacy.paye.change-address.inset.invalid=Our system can only accept a limited amount of characters in each address line.
+asa.legacy.paye.change-address.title=Change your address #TODO
+asa.legacy.paye.change-address.title.invalid=Change the address lines that are too long #TODO
+asa.legacy.paye.change-address.inset.invalid=Our system can only accept a limited amount of characters in each address line. #TODO
 asa.legacy.paye.change-address.line1.label=Cyfeiriad – llinell 1
 asa.legacy.paye.change-address.line2.label=Cyfeiriad – llinell 2
 asa.legacy.paye.change-address.line3.label=Cyfeiriad – llinell 3
@@ -360,26 +352,26 @@ asa.legacy.paye.change-address.postcode.label=Cod post
 asa.legacy.paye.change-address.country.label=Gwlad
 asa.legacy.paye.error.addressLine1.required=Nodwch gyfeiriad – llinell 1
 asa.legacy.paye.error.addressLine1.length=Mae angen i linell 1 y cyfeiriad fod yn 35 o gymeriadau neu lai
-asa.legacy.paye.error.addressLine1.invalid=Enter an address line 1 that only contains letters, numbers, spaces and the characters . , ( ) ! @ -
+asa.legacy.paye.error.addressLine1.invalid=Enter an address line 1 that only contains letters, numbers, spaces and the characters . , ( ) ! @ - #TODO
 asa.legacy.paye.error.addressLine2.required=Nodwch gyfeiriad – llinell 2
 asa.legacy.paye.error.addressLine2.length=Mae angen i linell 2 y cyfeiriad fod yn 35 o gymeriadau neu lai
-asa.legacy.paye.error.addressLine2.invalid=Enter an address line 2 that only contains letters, numbers, spaces and the characters . , ( ) ! @ -
+asa.legacy.paye.error.addressLine2.invalid=Enter an address line 2 that only contains letters, numbers, spaces and the characters . , ( ) ! @ - #TODO
 asa.legacy.paye.error.addressLine3.required=Nodwch gyfeiriad – llinell 3
 asa.legacy.paye.error.addressLine3.length=Mae angen i linell 3 y cyfeiriad fod yn 35 o gymeriadau neu lai
-asa.legacy.paye.error.addressLine3.invalid=Enter an address line 3 that only contains letters, numbers, spaces and the characters . , ( ) ! @ -
+asa.legacy.paye.error.addressLine3.invalid=Enter an address line 3 that only contains letters, numbers, spaces and the characters . , ( ) ! @ - #TODO
 asa.legacy.paye.error.addressLine4.required=Nodwch gyfeiriad – llinell 4
 asa.legacy.paye.error.addressLine4.length=Mae angen i linell 4 y cyfeiriad fod yn 35 o gymeriadau neu lai
-asa.legacy.paye.error.addressLine4.invalid=Enter an address line 4 that only contains letters, numbers, spaces and the characters . , ( ) ! @ -
+asa.legacy.paye.error.addressLine4.invalid=Enter an address line 4 that only contains letters, numbers, spaces and the characters . , ( ) ! @ - #TODO
 asa.legacy.paye.error.postcode.required=Nodwch god post
-asa.legacy.paye.error.postcode.invalid=Enter a postcode in the correct format
-asa.legacy.paye.error.country.required=Select a country
+asa.legacy.paye.error.postcode.invalid=Enter a postcode in the correct format #TODO
+asa.legacy.paye.error.country.required=Select a country #TODO
 
-asa.legacy.paye.check-your-answers.h1=Check your answers
-asa.legacy.paye.check-your-answers.contact-name=Contact name
-asa.legacy.paye.check-your-answers.phone-number=Telephone number
-asa.legacy.paye.check-your-answers.email=Email address
-asa.legacy.paye.check-your-answers.address=Address
-asa.legacy.paye.check-your-answers.submit-button=Enrol for PAYE
+asa.legacy.paye.check-your-answers.h1=Gwiriwch eich atebion
+asa.legacy.paye.check-your-answers.contact-name=Enw cyswllt
+asa.legacy.paye.check-your-answers.phone-number=Rhif ffôn
+asa.legacy.paye.check-your-answers.email=Cyfeiriad e-bost
+asa.legacy.paye.check-your-answers.address=Cyfeiriad
+asa.legacy.paye.check-your-answers.submit-button=Ymrestru ar gyfer TWE
 
 # SA
 asa.legacy.sa.h2=Self Assessment

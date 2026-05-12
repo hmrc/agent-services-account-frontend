@@ -283,15 +283,7 @@ asa.legacy.ct.check-your-answers.submit-button=Enrol for Corporation Tax
 
 # PAYE/CIS
 asa.legacy.paye.h2=Pay as you earn (PAYE)/Construction Industry Scheme (CIS)
-asa.legacy.paye.h3=Test Content
-asa.legacy.paye.p1=Status: {0}
 asa.legacy.paye.link=Request a PAYE subscription
-asa.legacy.paye.not-subscribed.before-start.h4=Before you start
-asa.legacy.paye.not-subscribed.before-start.p1=If you have already enrolled for PAYE, you can continue managing your clients by <a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">signing into your HMRC online services for agents account.</a>
-asa.legacy.paye.not-subscribed.before-start.link1.href=https://www.gov.uk/guidance/how-to-enrol-a-tax-service-onto-your-hmrc-online-services-account
-asa.legacy.paye.not-subscribed.before-start.p2=This will sign you out of your agent services account.
-asa.legacy.paye.not-subscribed.enrol-for.h4=If you want to enrol for PAYE
-asa.legacy.paye.not-subscribed.enrol-for.p1=You can <a class="govuk-link" href="{0}" rel="noreferrer noopener">use your agent services account to enrol</a> and manage your clients.
 asa.legacy.paye.in-progress.p1=We are still processing the application you did on {0}.
 asa.legacy.paye.in-progress.p2=Processing can take up to 5 days.
 asa.legacy.paye.subscribed.p1=Your agent code is: {0}
@@ -318,7 +310,7 @@ asa.legacy.paye.contact-name.input.error.invalid=The name of the person can only
 asa.legacy.paye.phone-number.title=What phone number should we use to call you about PAYE?
 asa.legacy.paye.phone-number.use-asa.false=I want to use a different phone number for PAYE
 asa.legacy.paye.phone-number.new-input.label=Enter a phone number
-asa.legacy.paye.phone-number.new-input.hint=For international numbers include the country code.
+asa.legacy.paye.phone-number.new-input.hint=For international numbers, include the country code.
 asa.legacy.paye.phone-number.use-asa.error.required=Enter the phone number we should use to call {0} about PAYE
 asa.legacy.paye.phone-number.new-input.error.empty=Enter a UK phone number
 asa.legacy.paye.phone-number.new-input.error.invalid=Enter a UK phone number, like 07700 900 982 or +44 808 157 0192
