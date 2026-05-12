@@ -196,16 +196,16 @@ asa.legacy.ct.subscribed.p5=<a class="govuk-link" href="{0}{1}" rel="noreferrer 
 
 asa.legacy.ct.do-you-already-manage.title=Ydy {0} eisoes yn rheoli cleientiaid Treth Gorfforaeth?
 asa.legacy.ct.do-you-already-manage.existing.false=Na, dyma’r tro cyntaf iddo reoli cleientiaid Treth Gorfforaeth
-asa.legacy.ct.do-you-already-manage.error.required=Select yes if {0} already manages Corporation Tax clients #TODO
+asa.legacy.ct.do-you-already-manage.error.required=Dewiswch ‘Iawn’ os yw {0} eisoes yn rheoli cleientiaid Treth Gorfforaeth
 
 asa.legacy.ct.you-may-not-need-to-apply.title=You may not need to apply for Corporation Tax #TODO
 asa.legacy.ct.you-may-not-need-to-apply.p2=You can continue to manage your existing Corporation Tax clients through your HMRC Online Services for Agents account. #TODO
-asa.legacy.ct.you-may-not-need-to-apply.error.required=Select yes if you still want to apply #TODO
+asa.legacy.ct.you-may-not-need-to-apply.error.required=Dewiswch ‘Iawn’ os ydych dal am wneud cais
 
 asa.legacy.ct.business-name.title=Pa enw busnes ddylem ni ei ddangos i’ch cleientiaid Treth Gorfforaeth?
 asa.legacy.ct.business-name.use-asa.false=Rwyf am ddefnyddio enw busnes gwahanol ar gyfer Treth Gorfforaeth
 asa.legacy.ct.business-name.new-input.label=Nodwch enw busnes
-asa.legacy.ct.business-name.use-asa.error.required=Select the business name we should show to your Corporation Tax clients #TODO
+asa.legacy.ct.business-name.use-asa.error.required=Dewiswch yr enw busnes y dylem ei ddangos i’ch cleientiaid Treth Gorfforaeth
 asa.legacy.ct.business-name.new-input.error.empty=Nodwch enw busnes
 asa.legacy.ct.business-name.new-input.error.invalid=Enter a business name that only contains letters, numbers, spaces and the characters . , ( ) & - ‘ / #TODO
 
@@ -213,18 +213,18 @@ asa.legacy.ct.phone-number.title=Pa rif ffôn ddylem ei ddefnyddio i ffonio chi 
 asa.legacy.ct.phone-number.use-asa.false=Rwyf am ddefnyddio rhif ffôn gwahanol ar gyfer Treth Gorfforaeth
 asa.legacy.ct.phone-number.new-input.label=Nodwch rif ffôn
 asa.legacy.ct.phone-number.new-input.hint=Ar gyfer rhifau rhyngwladol, dylech gynnwys cod y wlad.
-asa.legacy.ct.phone-number.use-asa.error.required=Enter the phone number we should use to call {0} about Corporation Tax #TODO
+asa.legacy.ct.phone-number.use-asa.error.required=Nodwch y rhif ffôn y dylem ei ddefnyddio i ffonio {0} ynglŷn â Threth Gorfforaeth
 asa.legacy.ct.phone-number.new-input.error.empty=Nodwch rif ffôn
-asa.legacy.ct.phone-number.new-input.error.invalid=The phone number must only include numbers #TODO
+asa.legacy.ct.phone-number.new-input.error.invalid=Dim ond rhifau y dylai’r rhif ffôn eu cynnwys
 
 asa.legacy.ct.email-address.title=Pa gyfeiriad e-bost ddylem ei ddefnyddio i gysylltu â chi ynglŷn â Threth Gorfforaeth?
 asa.legacy.ct.email-address.use-asa.false=Rwyf am ddefnyddio cyfeiriad e-bost gwahanol ar gyfer Treth Gorfforaeth
 asa.legacy.ct.email-address.new-input.label=Nodwch gyfeiriad e-bost
 asa.legacy.ct.email-address.new-input.hint=Byddwn yn anfon cod i’r cyfeiriad e-bost hwn i’w gadarnhau
-asa.legacy.ct.email-address.use-asa.error.required=Select the email address we should use to contact {0} about Corporation Tax #TODO
+asa.legacy.ct.email-address.use-asa.error.required=Dewiswch y cyfeiriad e-bost y dylem ei ddefnyddio i gysylltu â {0} ynglŷn â Threth Gorfforaeth
 asa.legacy.ct.email-address.input.error.empty=Nodwch gyfeiriad e-bost
-asa.legacy.ct.email-address.input.error.length=Enter an email address that is 50 characters or less. #TODO
-asa.legacy.ct.email-address.input.error.invalid=Enter an email address in the correct format, for example name@example.com #TODO
+asa.legacy.ct.email-address.input.error.length=Nodwch gyfeiriad e-bost sy’n 50 o gymeriadau neu lai.
+asa.legacy.ct.email-address.input.error.invalid=Nodwch gyfeiriad e-bost yn y fformat cywir, er enghraifft name@example.com
 
 asa.legacy.ct.custom-email-address.title=Your agent services account email address is too long #TODO
 asa.legacy.ct.custom-email-address.p1=We currently have this email address connected to your agent services account: #TODO
@@ -235,7 +235,7 @@ asa.legacy.ct.custom-email-address.input.hint=Byddwn yn anfon cod i’r cyfeiria
 asa.legacy.ct.address.title=Pa gyfeiriad ddylem ei ddefnyddio i anfon llythyrau ynglŷn â Threth Gorfforaeth?
 asa.legacy.ct.address.use-asa.true.hint=Dyma’r cyfeiriad ar eich cyfrif gwasanaethau asiant.
 asa.legacy.ct.address.use-asa.false=Rwyf am ddefnyddio cyfeiriad gwahanol ar gyfer Treth Gorfforaeth
-asa.legacy.ct.address.use-asa.error.required=Select the address we should use to send letters about Corporation Tax #TODO
+asa.legacy.ct.address.use-asa.error.required=Dewiswch y cyfeiriad y dylem ei ddefnyddio i anfon llythyrau ynglŷn â Threth Gorfforaeth
 
 asa.legacy.ct.alf.country-picker.title=Dewiswch y wlad - Cyfrif gwasanaethau asiant - GOV.UK
 asa.legacy.ct.alf.country-picker.heading=Beth yw’r wlad lle mae’r busnes wedi’i leoli?
@@ -295,39 +295,39 @@ asa.legacy.paye.subscribed.p6=<a class="govuk-link" href="{0}{1}" rel="noreferre
 
 asa.legacy.paye.do-you-already-manage.title=Ydy {0} eisoes yn rheoli cleientiaid TWE?
 asa.legacy.paye.do-you-already-manage.existing.false=Na, dyma’r tro cyntaf iddo reoli cleientiaid TWE
-asa.legacy.paye.do-you-already-manage.error.required=Select yes if {0} already manages PAYE/CIS clients #TODO
+asa.legacy.paye.do-you-already-manage.error.required=Dewiswch ‘Iawn’ os yw {0} eisoes yn rheoli cleientiaid TWE/CIS
 
 asa.legacy.paye.you-may-not-need-to-apply.title=You may not need to apply for PAYE #TODO
 asa.legacy.paye.you-may-not-need-to-apply.p2=You can continue to manage your existing PAYE clients through your HMRC Online Services for Agents account. #TODO
-asa.legacy.paye.you-may-not-need-to-apply.error.required=Select yes if you still want to apply #TODO
+asa.legacy.paye.you-may-not-need-to-apply.error.required=Dewiswch ‘Iawn’ os ydych dal am wneud cais
 
 asa.legacy.paye.contact-name.title=Pwy ddylem gysylltu â nhw ynglŷn â TWE?
 asa.legacy.paye.contact-name.input.heading=Pwy yn {0} ddylem gysylltu â nhw ynglŷn â TWE?
 asa.legacy.paye.contact-name.input.hint=Nodwch ei enw llawn
-asa.legacy.paye.contact-name.input.error.empty=Enter the full name of the person we should contact about PAYE
-asa.legacy.paye.contact-name.input.error.invalid=The name of the person can only contain letters, hyphens and apostrophes
+asa.legacy.paye.contact-name.input.error.empty=Nodwch enw llawn y person y dylem gysylltu ag ef ynglŷn â TWE
+asa.legacy.paye.contact-name.input.error.invalid=The name of the person can only contain letters, hyphens and apostrophes #TODO
 
 asa.legacy.paye.phone-number.title=Pa rif ffôn ddylem ei ddefnyddio i ffonio chi ynglŷn â Thalu Wrth Ennill?
 asa.legacy.paye.phone-number.use-asa.false=Rwyf am ddefnyddio rhif ffôn gwahanol ar gyfer TWE
 asa.legacy.paye.phone-number.new-input.label=Nodwch rif ffôn
 asa.legacy.paye.phone-number.new-input.hint=Ar gyfer rhifau rhyngwladol, dylech gynnwys cod y wlad.
-asa.legacy.paye.phone-number.use-asa.error.required=Enter the phone number we should use to call {0} about PAYE #TODO
-asa.legacy.paye.phone-number.new-input.error.empty=Enter a UK phone number #TODO
-asa.legacy.paye.phone-number.new-input.error.invalid=Enter a UK phone number, like 07700 900 982 or +44 808 157 0192 #TODO
+asa.legacy.paye.phone-number.use-asa.error.required=Nodwch y rhif ffôn y dylem ei ddefnyddio i ffonio {0} ynglŷn â TWE
+asa.legacy.paye.phone-number.new-input.error.empty=Nodwch rif ffôn yn y DU
+asa.legacy.paye.phone-number.new-input.error.invalid=Nodwch rif ffôn yn y DU, megis 07700 900 982 neu +44 808 157 0192
 
 asa.legacy.paye.email-address.title=Pa gyfeiriad e-bost ddylem ei ddefnyddio i gysylltu â chi ynglŷn â TWE?
 asa.legacy.paye.email-address.use-asa.false=Hoffwn ddefnyddio cyfeiriad e-bost gwahanol ar gyfer TWE
 asa.legacy.paye.email-address.new-input.label=Nodwch gyfeiriad e-bost
 asa.legacy.paye.email-address.new-input.hint=Byddwn yn anfon cod i’r cyfeiriad e-bost hwn i’w gadarnhau
-asa.legacy.paye.email-address.use-asa.error.required=Select the email address we should use to contact {0} about PAYE #TODO
+asa.legacy.paye.email-address.use-asa.error.required=Dewiswch y cyfeiriad e-bost y dylem ei ddefnyddio i gysylltu â {0} ynglŷn â TWE
 asa.legacy.paye.email-address.input.error.empty=Nodwch gyfeiriad e-bost
-asa.legacy.paye.email-address.input.error.length=Enter an email address that is 129 characters or less. #TODO
-asa.legacy.paye.email-address.input.error.invalid=Enter an email address in the correct format, for example name@example.com #TODO
+asa.legacy.paye.email-address.input.error.length=Nodwch gyfeiriad e-bost sy’n 129 o gymeriadau neu lai.
+asa.legacy.paye.email-address.input.error.invalid=Nodwch gyfeiriad e-bost yn y fformat cywir, er enghraifft name@example.com
 
 asa.legacy.paye.address.title=Pa gyfeiriad ddylem ei ddefnyddio i anfon llythyrau ynglŷn â TWE?
 asa.legacy.paye.address.use-asa.true.hint=Dyma’r cyfeiriad ar eich cyfrif gwasanaethau asiant.
 asa.legacy.paye.address.use-asa.false=Rwyf am ddefnyddio cyfeiriad gwahanol ar gyfer TWE
-asa.legacy.paye.address.use-asa.error.required=Select the address we should use to send letters about PAYE #TODO
+asa.legacy.paye.address.use-asa.error.required=Dewiswch y cyfeiriad y dylem ei ddefnyddio i anfon llythyrau ynglŷn â TWE
 
 asa.legacy.paye.alf.country-picker.title=Dewiswch y wlad - Cyfrif gwasanaethau asiant - GOV.UK
 asa.legacy.paye.alf.country-picker.heading=Beth yw’r wlad lle mae’r busnes wedi’i leoli?
@@ -386,16 +386,16 @@ asa.legacy.sa.subscribed.p5=<a class="govuk-link" href="{0}{1}" rel="noreferrer 
 
 asa.legacy.sa.do-you-already-manage.title=Ydy {0} eisoes yn rheoli cleientiaid Hunanasesiad?
 asa.legacy.sa.do-you-already-manage.existing.false=Na, dyma’r tro cyntaf iddo reoli cleientiaid Hunanasesiad
-asa.legacy.sa.do-you-already-manage.error.required=Select yes if {0} already manages Self Assessment clients #TODO
+asa.legacy.sa.do-you-already-manage.error.required=Dewiswch ‘Iawn’ os yw {business name} eisoes yn rheoli cleientiaid Hunanasesiad
 
 asa.legacy.sa.you-may-not-need-to-apply.title=You may not need to apply for Self Assessment #TODO
 asa.legacy.sa.you-may-not-need-to-apply.p2=You can continue to manage your existing Self Assessment clients through your HMRC Online Services for Agents account. #TODO
-asa.legacy.sa.you-may-not-need-to-apply.error.required=Select yes if you still want to apply #TODO
+asa.legacy.sa.you-may-not-need-to-apply.error.required=Dewiswch ‘Iawn’ os ydych dal am wneud cais
 
 asa.legacy.sa.business-name.title=Pa enw busnes ddylem ei ddangos i’ch cleientiaid Hunanasesiad?
 asa.legacy.sa.business-name.use-asa.false=Rwyf am ddefnyddio enw busnes gwahanol ar gyfer Hunanasesiad
 asa.legacy.sa.business-name.new-input.label=Nodwch enw busnes
-asa.legacy.sa.business-name.use-asa.error.required=Select the business name we should show to your Self Assessment clients #TODO
+asa.legacy.sa.business-name.use-asa.error.required=Dewiswch yr enw busnes y dylem ei ddangos i’ch cleientiaid Hunanasesiad
 asa.legacy.sa.business-name.new-input.error.empty=Nodwch enw busnes
 asa.legacy.sa.business-name.new-input.error.invalid=Enter a business name that only contains letters, numbers, spaces and the characters . , ( ) & - ‘ / #TODO
 
@@ -403,18 +403,18 @@ asa.legacy.sa.phone-number.title=Pa rif ffôn ddylem ei ddefnyddio i ffonio chi 
 asa.legacy.sa.phone-number.use-asa.false=Rwyf am ddefnyddio rhif ffôn gwahanol ar gyfer Hunanasesiad
 asa.legacy.sa.phone-number.new-input.label=Nodwch rif ffôn
 asa.legacy.sa.phone-number.new-input.hint=Ar gyfer rhifau rhyngwladol, dylech gynnwys cod y wlad.
-asa.legacy.sa.phone-number.use-asa.error.required=Enter the phone number we should use to call {0} about Self Assessment #TODO
+asa.legacy.sa.phone-number.use-asa.error.required=Nodwch y rhif ffôn y dylem ei ddefnyddio i ffonio {0} ynglŷn â Hunanasesiad
 asa.legacy.sa.phone-number.new-input.error.empty=Nodwch rif ffôn
-asa.legacy.sa.phone-number.new-input.error.invalid=The phone number must only include numbers #TODO
+asa.legacy.sa.phone-number.new-input.error.invalid=Dim ond rhifau y dylai’r rhif ffôn eu cynnwys
 
 asa.legacy.sa.email-address.title=Pa gyfeiriad e-bost ddylem ei ddefnyddio i gysylltu â chi ynglŷn â Hunanasesiad?
 asa.legacy.sa.email-address.use-asa.false=Rwyf am ddefnyddio cyfeiriad e-bost gwahanol ar gyfer Hunanasesiad
 asa.legacy.sa.email-address.new-input.label=Nodwch gyfeiriad e-bost
 asa.legacy.sa.email-address.new-input.hint=Byddwn yn anfon cod i’r cyfeiriad e-bost hwn i’w gadarnhau
-asa.legacy.sa.email-address.use-asa.error.required=Select the email address we should use to contact {0} about Self Assessment #TODO
+asa.legacy.sa.email-address.use-asa.error.required=Dewiswch y cyfeiriad e-bost y dylem ei ddefnyddio i gysylltu â {business name} ynglŷn â Hunanasesiad
 asa.legacy.sa.email-address.input.error.empty=Nodwch gyfeiriad e-bost
-asa.legacy.sa.email-address.input.error.length=Enter an email address that is 50 characters or less. #TODO
-asa.legacy.sa.email-address.input.error.invalid=Enter an email address in the correct format, for example name@example.com #TODO
+asa.legacy.sa.email-address.input.error.length=Nodwch gyfeiriad e-bost sy’n 50 o gymeriadau neu lai.
+asa.legacy.sa.email-address.input.error.invalid=Nodwch gyfeiriad e-bost yn y fformat cywir, er enghraifft name@example.com
 
 asa.legacy.sa.custom-email-address.title=Your agent services account email address is too long #TODO
 asa.legacy.sa.custom-email-address.p1=We currently have this email address connected to your agent services account: #TODO
@@ -425,7 +425,7 @@ asa.legacy.sa.custom-email-address.input.hint=Byddwn yn anfon cod i’r cyfeiria
 asa.legacy.sa.address.title=Pa gyfeiriad ddylem ei ddefnyddio i anfon llythyrau ynglŷn â Hunanasesiad?
 asa.legacy.sa.address.use-asa.true.hint=Dyma’r cyfeiriad ar eich cyfrif gwasanaethau asiant.
 asa.legacy.sa.address.use-asa.false=Rwyf am ddefnyddio cyfeiriad gwahanol ar gyfer Hunanasesiad
-asa.legacy.sa.address.use-asa.error.required=Select the address we should use to send letters about Self Assessment #TODO
+asa.legacy.sa.address.use-asa.error.required=Dewiswch y cyfeiriad y dylem ei ddefnyddio i anfon llythyrau ynglŷn â Hunanasesiad
 
 asa.legacy.sa.alf.country-picker.title=Dewiswch y wlad - Cyfrif gwasanaethau asiant - GOV.UK
 asa.legacy.sa.alf.country-picker.heading=Beth yw’r wlad lle mae’r busnes wedi’i leoli?
