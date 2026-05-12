@@ -1,18 +1,19 @@
 @*
-* Copyright 2024 HM Revenue & Customs
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-* http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*@
+ * Copyright 2024 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
 @import uk.gov.hmrc.agentservicesaccount.actions.AuthRequestWithAgentInfo
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.{routes => subscriptionRoutes}
@@ -158,6 +159,17 @@
 
 @otherTaxesItem = {
 @govukWarningText(WarningText(content = HtmlContent(span("asa.other.p1"))))
+}
+@otherTaxesSubscribedItem = {
+@p(msgs("asa.other.subscribed.p1", "/home/services"))
+}
+@otherTaxesMappedItem = {
+@p(msgs("asa.other.mapped.p1", "https://www.gov.uk/government/collections/hmrc-online-services-for-agents#hmrc-online-services-for-agents-account"))
+@p(msgs("asa.other.mapped.p2"))
+}
+@otherTaxesUnknownItem = {
+@p(msgs("asa.other.unknown.p1", "https://www.gov.uk/government/collections/hmrc-online-services-for-agents#hmrc-online-services-for-agents-account"))
+@p(msgs("asa.other.unknown.p2"))
 }
 
 @payeItemInProgress(info: SubscriptionInfo) = {
@@ -316,7 +328,12 @@
     items.append(
         Section(
             headingContent = Text(msgs("asa.other.heading")),
-            content = HtmlContent(otherTaxesItem)
+            content = HtmlContent(
+                if(!appConfig.enableLegacySubscriptionLink) otherTaxesItem
+                else if(request.agentInfo.hasOtherEnrolments) otherTaxesSubscribedItem
+                else if(subscriptionInfo.exists(info => info.subscriptionStatus == SubscriptionStatus.SubscriptionMapped)) otherTaxesMappedItem
+                else otherTaxesUnknownItem
+            )
         )
     )
     items

@@ -207,15 +207,17 @@ extends BaseISpec {
         html.select("#tax-services-h2").text() shouldBe "Tax services you can access through this account"
         val accordion = html.select("#tax-services-accordion")
         accordion.select("#tax-services-accordion-heading-1").text() shouldBe "Making Tax Digital for Income Tax"
-        accordion.select("#tax-services-accordion-heading-2").text() shouldBe "View a client’s Income record"
-        accordion.select("#tax-services-accordion-heading-3").text() shouldBe "VAT"
-        accordion.select("#tax-services-accordion-heading-4").text() shouldBe "Corporation Tax"
-        accordion.select("#tax-services-accordion-heading-5").text() shouldBe "Trusts and estates"
-        accordion.select("#tax-services-accordion-heading-6").text() shouldBe "Capital Gains Tax on UK property"
-        accordion.select("#tax-services-accordion-heading-7").text() shouldBe "Country-by-country reports"
-        accordion.select("#tax-services-accordion-heading-8").text() shouldBe "Plastic Packaging Tax"
-        accordion.select("#tax-services-accordion-heading-9").text() shouldBe "Report Pillar 2 top-up taxes"
-        accordion.select("#tax-services-accordion-heading-10").text() shouldBe "Other tax services"
+        accordion.select("#tax-services-accordion-heading-2").text() shouldBe "Self Assessment"
+        accordion.select("#tax-services-accordion-heading-3").text() shouldBe "View a client’s Income record"
+        accordion.select("#tax-services-accordion-heading-4").text() shouldBe "VAT"
+        accordion.select("#tax-services-accordion-heading-5").text() shouldBe "Corporation Tax"
+        accordion.select("#tax-services-accordion-heading-6").text() shouldBe "Pay as you earn (PAYE)/Construction Industry Scheme (CIS)"
+        accordion.select("#tax-services-accordion-heading-7").text() shouldBe "Trusts and estates"
+        accordion.select("#tax-services-accordion-heading-8").text() shouldBe "Capital Gains Tax on UK property"
+        accordion.select("#tax-services-accordion-heading-9").text() shouldBe "Country-by-country reports"
+        accordion.select("#tax-services-accordion-heading-10").text() shouldBe "Plastic Packaging Tax"
+        accordion.select("#tax-services-accordion-heading-11").text() shouldBe "Report Pillar 2 top-up taxes"
+        accordion.select("#tax-services-accordion-heading-12").text() shouldBe "Other tax services"
 
         // Income Tax
         val one = accordion.select("#tax-services-accordion-content-1")
@@ -237,121 +239,135 @@ extends BaseISpec {
         one.select("a").get(4).text() shouldBe "Manage Self Assessment details for clients that are already signed up"
         one.select("a").get(4).attr("href") shouldBe "http://localhost:9081/report-quarterly/income-and-expenses/view/agents"
 
-        // Income Record Viewer
+        // Self Assessment
         val two = accordion.select("#tax-services-accordion-content-2")
-        two.select("p").get(0).text shouldBe "Access a client’s Income record to help you complete their Self Assessment tax return."
-        two.select("p").get(1).text shouldBe "View a client’s Income record"
-        two.select("p").get(1).select("a").text() shouldBe "View a client’s Income record"
-        two.select("p").get(1).select("a").attr("href") shouldBe "http://localhost:9996/tax-history/select-client"
+
+        val twoPs = two.select("p")
+        twoPs.get(0).text shouldBe "We are still processing the application you did on ."
+        twoPs.get(1).text shouldBe "Processing can take up to 5 days."
+
+        // Income Record Viewer
+        val three = accordion.select("#tax-services-accordion-content-3")
+        three.select("p").get(0).text shouldBe "Access a client’s Income record to help you complete their Self Assessment tax return."
+        three.select("p").get(1).text shouldBe "View a client’s Income record"
+        three.select("p").get(1).select("a").text() shouldBe "View a client’s Income record"
+        three.select("p").get(1).select("a").attr("href") shouldBe "http://localhost:9996/tax-history/select-client"
 
         // VAT
-        val three = accordion.select("#tax-services-accordion-content-3")
-        three.select("h4").get(0).text() shouldBe "Before you start"
-        three.select("h4").get(1).text() shouldBe "Manage your client’s VAT"
-        three.select("p").get(0).text shouldBe "You must first get an authorisation from your client."
-        three.select("p").get(0).select("a").text shouldBe "You must first get an authorisation from your client."
-        three.select("p").get(0).select("a").attr("href") shouldBe "http://localhost:9435/agent-client-relationships/authorisation-request"
+        val four = accordion.select("#tax-services-accordion-content-4")
+        four.select("h4").get(0).text() shouldBe "Before you start"
+        four.select("h4").get(1).text() shouldBe "Manage your client’s VAT"
+        four.select("p").get(0).text shouldBe "You must first get an authorisation from your client."
+        four.select("p").get(0).select("a").text shouldBe "You must first get an authorisation from your client."
+        four.select("p").get(0).select("a").attr("href") shouldBe "http://localhost:9435/agent-client-relationships/authorisation-request"
 
-        three.select("a").get(1).text shouldBe "Register your client for VAT (opens in a new tab)"
-        three.select("a").get(1).attr("href") shouldBe "https://www.tax.service.gov.uk/register-for-vat"
-        three.select("a").get(2).text shouldBe "Manage, submit and view your client’s VAT details (opens in a new tab)"
-        three.select("a").get(2).attr("href") shouldBe "http://localhost:9149/vat-through-software/representative/client-vat-number"
+        four.select("a").get(1).text shouldBe "Register your client for VAT (opens in a new tab)"
+        four.select("a").get(1).attr("href") shouldBe "https://www.tax.service.gov.uk/register-for-vat"
+        four.select("a").get(2).text shouldBe "Manage, submit and view your client’s VAT details (opens in a new tab)"
+        four.select("a").get(2).attr("href") shouldBe "http://localhost:9149/vat-through-software/representative/client-vat-number"
 
         // Corporation Tax
-        val four = accordion.select("#tax-services-accordion-content-4")
-
-        val fourPs = four.select("p")
-        fourPs.get(0).text shouldBe "We are still processing the application you did on ."
-        fourPs.get(1).text shouldBe "Processing can take up to 5 days."
-
-        // Trusts
         val five = accordion.select("#tax-services-accordion-content-5")
-        five.select("h4").get(0).text() shouldBe "Before you start"
-        five.select("h4").get(1).text() shouldBe "Manage your client’s trust"
 
         val fivePs = five.select("p")
-        fivePs.get(0).text shouldBe "Before you ask your client to authorise you, you or your client must have registered the trust (opens in a new tab) or estate (opens in a new tab)."
-        fivePs.get(0).select("a").get(0).attr("href") shouldBe "http://localhost:9435/agent-client-relationships/authorisation-request"
-        fivePs.get(0).select("a").get(0).text shouldBe "ask your client to authorise you"
-        fivePs.get(0).select("a").get(1).attr("href") shouldBe "https://www.gov.uk/guidance/register-your-clients-trust"
-        fivePs.get(0).select("a").get(1).text shouldBe "registered the trust (opens in a new tab)"
-        fivePs.get(0).select("a").get(2).attr("href") shouldBe "https://www.gov.uk/guidance/register-your-clients-estate"
-        fivePs.get(0).select("a").get(2).text shouldBe "estate (opens in a new tab)"
-        fivePs.get(1).text shouldBe "Your client will need to claim the trust or estate."
-        fivePs.get(1).select("a").text shouldBe "claim the trust"
-        fivePs.get(1).select("a").attr("href") shouldBe "https://www.gov.uk/guidance/manage-your-trusts-registration-service#how-to-use-the-online-service"
+        fivePs.get(0).text shouldBe "We are still processing the application you did on ."
+        fivePs.get(1).text shouldBe "Processing can take up to 5 days."
 
-        fivePs.get(2).text shouldBe "Use this service to update the details of your client’s trust or declare no changes on the trust register ."
-        fivePs.get(
+        // PAYE/CIS
+        val six = accordion.select("#tax-services-accordion-content-6")
+
+        val sixPs = six.select("p")
+        sixPs.get(0).text shouldBe "We are still processing the application you did on ."
+        sixPs.get(1).text shouldBe "Processing can take up to 5 days."
+
+        // Trusts
+        val seven = accordion.select("#tax-services-accordion-content-7")
+        seven.select("h4").get(0).text() shouldBe "Before you start"
+        seven.select("h4").get(1).text() shouldBe "Manage your client’s trust"
+
+        val sevenPs = seven.select("p")
+        sevenPs.get(0).text shouldBe "Before you ask your client to authorise you, you or your client must have registered the trust (opens in a new tab) or estate (opens in a new tab)."
+        sevenPs.get(0).select("a").get(0).attr("href") shouldBe "http://localhost:9435/agent-client-relationships/authorisation-request"
+        sevenPs.get(0).select("a").get(0).text shouldBe "ask your client to authorise you"
+        sevenPs.get(0).select("a").get(1).attr("href") shouldBe "https://www.gov.uk/guidance/register-your-clients-trust"
+        sevenPs.get(0).select("a").get(1).text shouldBe "registered the trust (opens in a new tab)"
+        sevenPs.get(0).select("a").get(2).attr("href") shouldBe "https://www.gov.uk/guidance/register-your-clients-estate"
+        sevenPs.get(0).select("a").get(2).text shouldBe "estate (opens in a new tab)"
+        sevenPs.get(1).text shouldBe "Your client will need to claim the trust or estate."
+        sevenPs.get(1).select("a").text shouldBe "claim the trust"
+        sevenPs.get(1).select("a").attr("href") shouldBe "https://www.gov.uk/guidance/manage-your-trusts-registration-service#how-to-use-the-online-service"
+
+        sevenPs.get(2).text shouldBe "Use this service to update the details of your client’s trust or declare no changes on the trust register ."
+        sevenPs.get(
           2
         ).select("a").get(0).text shouldBe "Use this service to update the details of your client’s trust or declare no changes on the trust register"
-        fivePs.get(2).select("a").get(0).attr("href") shouldBe "https://www.gov.uk/guidance/manage-your-trusts-registration-service"
+        sevenPs.get(2).select("a").get(0).attr("href") shouldBe "https://www.gov.uk/guidance/manage-your-trusts-registration-service"
 
         // Capital Gains Tax on UK property
-        val six = accordion.select("#tax-services-accordion-content-6")
-        six.select("h4").get(0).text() shouldBe "Before you start"
-        six.select("h4").get(1).text() shouldBe "Manage a client’s Capital Gains Tax on UK property"
-        val sixPs = six.select("p")
-        sixPs.get(0).text shouldBe "Your client must first set up a Capital Gains Tax on UK property account (opens in a new tab)"
-        sixPs.get(0).select("a").get(0).text shouldBe "set up a Capital Gains Tax on UK property account (opens in a new tab)"
-        sixPs.get(0).select("a").get(0).attr("href")
+        val eight = accordion.select("#tax-services-accordion-content-8")
+        eight.select("h4").get(0).text() shouldBe "Before you start"
+        eight.select("h4").get(1).text() shouldBe "Manage a client’s Capital Gains Tax on UK property"
+        val eightPs = eight.select("p")
+        eightPs.get(0).text shouldBe "Your client must first set up a Capital Gains Tax on UK property account (opens in a new tab)"
+        eightPs.get(0).select("a").get(0).text shouldBe "set up a Capital Gains Tax on UK property account (opens in a new tab)"
+        eightPs.get(0).select("a").get(0).attr("href")
           .shouldBe("https://www.gov.uk/guidance/managing-your-clients-capital-gains-tax-on-uk-property-account#before-you-start")
-        sixPs.get(1).text shouldBe "They must then authorise you to act on their behalf (opens in a new tab)"
-        sixPs.get(1).select("a").get(0).text shouldBe "authorise you to act on their behalf (opens in a new tab)"
-        sixPs.get(1).select(
+        eightPs.get(1).text shouldBe "They must then authorise you to act on their behalf (opens in a new tab)"
+        eightPs.get(1).select("a").get(0).text shouldBe "authorise you to act on their behalf (opens in a new tab)"
+        eightPs.get(1).select(
           "a"
         ).get(0).attr("href") shouldBe "https://www.gov.uk/guidance/managing-your-clients-capital-gains-tax-on-uk-property-account#get-authorisation"
 
-        sixPs.get(2).text shouldBe "Report your client’s Capital Gains Tax on UK property and view payments and penalties"
-        sixPs.get(2).select("a").get(0).text shouldBe "Report your client’s Capital Gains Tax on UK property and view payments and penalties"
-        sixPs.get(2).select("a").get(0).attr("href") shouldBe "https://www.tax.service.gov.uk/capital-gains-tax-uk-property/start"
+        eightPs.get(2).text shouldBe "Report your client’s Capital Gains Tax on UK property and view payments and penalties"
+        eightPs.get(2).select("a").get(0).text shouldBe "Report your client’s Capital Gains Tax on UK property and view payments and penalties"
+        eightPs.get(2).select("a").get(0).attr("href") shouldBe "https://www.tax.service.gov.uk/capital-gains-tax-uk-property/start"
 
         // Country by country
-        val seven = accordion.select("#tax-services-accordion-content-7")
-        seven.select("h4").get(0).text() shouldBe "Before you start"
-        seven.select("h4").get(1).text() shouldBe "Manage country-by-country reports"
-
-        val sevenPs = seven.select("p")
-        sevenPs.get(0).text shouldBe "You must first get an authorisation from your client. You can do this by requesting an authorisation"
-        sevenPs.get(0).select("a").get(0).text shouldBe "requesting an authorisation"
-        sevenPs.get(0).select("a").get(0).attr("href") shouldBe "http://localhost:9435/agent-client-relationships/authorisation-request"
-
-        sevenPs.get(1).text shouldBe "Manage your clients’ country-by-country reports and your country-by-country agent contact details"
-        sevenPs.get(1).select("a").get(0).attr("href") shouldBe "https://www.tax.service.gov.uk/send-a-country-by-country-report"
-
-        // Plastic Packaging Tax
-        val eight = accordion.select("#tax-services-accordion-content-8")
-        eight.select("h4").get(0).text() shouldBe "Before you start"
-        eight.select("h4").get(1).text() shouldBe "Manage your client’s Plastic Packaging Tax"
-
-        val eightPs = eight.select("p")
-        eightPs.get(0).text shouldBe "Your client must first register for Plastic Packaging Tax (opens in a new tab)"
-        eightPs.get(0).select("a").get(0).text shouldBe "register for Plastic Packaging Tax (opens in a new tab)"
-        eightPs.get(0).select("a").get(0).attr("href") shouldBe "https://www.gov.uk/guidance/register-for-plastic-packaging-tax"
-
-        eightPs.get(1).text shouldBe "They must then authorise you to act on their behalf"
-        eightPs.get(1).select("a").get(0).text shouldBe "authorise you to act on their behalf"
-        eightPs.get(1).select("a").get(0).attr("href") shouldBe "http://localhost:9435/agent-client-relationships/authorisation-request"
-        eightPs.get(2).text shouldBe "Report your client’s Plastic Packaging Tax and view payments, returns and penalties"
-        eightPs.get(2).select("a").get(0).text shouldBe "Report your client’s Plastic Packaging Tax and view payments, returns and penalties"
-        eightPs.get(2).select("a").get(0).attr("href") shouldBe "https://www.tax.service.gov.uk/plastic-packaging-tax/account"
-
-        // Pillar2 Tax
         val nine = accordion.select("#tax-services-accordion-content-9")
         nine.select("h4").get(0).text() shouldBe "Before you start"
-        nine.select("h4").get(1).text() shouldBe "Manage your client’s Pillar 2 top-up taxes"
+        nine.select("h4").get(1).text() shouldBe "Manage country-by-country reports"
 
         val ninePs = nine.select("p")
-        ninePs.get(0).text shouldBe "Your client must first register to Report Pillar 2 top-up taxes."
-        ninePs.get(0).select("a").get(0).text shouldBe "register to Report Pillar 2 top-up taxes."
-        ninePs.get(0).select("a").get(0).attr("href") shouldBe "https://www.gov.uk/guidance/report-pillar-2-top-up-taxes"
+        ninePs.get(0).text shouldBe "You must first get an authorisation from your client. You can do this by requesting an authorisation"
+        ninePs.get(0).select("a").get(0).text shouldBe "requesting an authorisation"
+        ninePs.get(0).select("a").get(0).attr("href") shouldBe "http://localhost:9435/agent-client-relationships/authorisation-request"
 
-        ninePs.get(1).text shouldBe "You must first get authorisation from your client. You can do this by requesting an authorisation."
-        ninePs.get(1).select("a").get(0).text shouldBe "requesting an authorisation."
-        ninePs.get(1).select("a").get(0).attr("href") shouldBe "http://localhost:9435/agent-client-relationships/authorisation-request"
-        ninePs.get(2).text shouldBe "Report and manage your client’s Pillar 2 top-up taxes"
-        ninePs.get(2).select("a").get(0).text shouldBe "Report and manage your client’s Pillar 2 top-up taxes"
-        ninePs.get(2).select("a").get(0).attr("href") shouldBe "http://localhost:10053/report-pillar2-top-up-taxes/asa/input-pillar-2-id"
+        ninePs.get(1).text shouldBe "Manage your clients’ country-by-country reports and your country-by-country agent contact details"
+        ninePs.get(1).select("a").get(0).attr("href") shouldBe "https://www.tax.service.gov.uk/send-a-country-by-country-report"
+
+        // Plastic Packaging Tax
+        val ten = accordion.select("#tax-services-accordion-content-10")
+        ten.select("h4").get(0).text() shouldBe "Before you start"
+        ten.select("h4").get(1).text() shouldBe "Manage your client’s Plastic Packaging Tax"
+
+        val tenPs = ten.select("p")
+        tenPs.get(0).text shouldBe "Your client must first register for Plastic Packaging Tax (opens in a new tab)"
+        tenPs.get(0).select("a").get(0).text shouldBe "register for Plastic Packaging Tax (opens in a new tab)"
+        tenPs.get(0).select("a").get(0).attr("href") shouldBe "https://www.gov.uk/guidance/register-for-plastic-packaging-tax"
+
+        tenPs.get(1).text shouldBe "They must then authorise you to act on their behalf"
+        tenPs.get(1).select("a").get(0).text shouldBe "authorise you to act on their behalf"
+        tenPs.get(1).select("a").get(0).attr("href") shouldBe "http://localhost:9435/agent-client-relationships/authorisation-request"
+        tenPs.get(2).text shouldBe "Report your client’s Plastic Packaging Tax and view payments, returns and penalties"
+        tenPs.get(2).select("a").get(0).text shouldBe "Report your client’s Plastic Packaging Tax and view payments, returns and penalties"
+        tenPs.get(2).select("a").get(0).attr("href") shouldBe "https://www.tax.service.gov.uk/plastic-packaging-tax/account"
+
+        // Pillar2 Tax
+        val eleven = accordion.select("#tax-services-accordion-content-11")
+        eleven.select("h4").get(0).text() shouldBe "Before you start"
+        eleven.select("h4").get(1).text() shouldBe "Manage your client’s Pillar 2 top-up taxes"
+
+        val elevenPs = eleven.select("p")
+        elevenPs.get(0).text shouldBe "Your client must first register to Report Pillar 2 top-up taxes."
+        elevenPs.get(0).select("a").get(0).text shouldBe "register to Report Pillar 2 top-up taxes."
+        elevenPs.get(0).select("a").get(0).attr("href") shouldBe "https://www.gov.uk/guidance/report-pillar-2-top-up-taxes"
+
+        elevenPs.get(1).text shouldBe "You must first get authorisation from your client. You can do this by requesting an authorisation."
+        elevenPs.get(1).select("a").get(0).text shouldBe "requesting an authorisation."
+        elevenPs.get(1).select("a").get(0).attr("href") shouldBe "http://localhost:9435/agent-client-relationships/authorisation-request"
+        elevenPs.get(2).text shouldBe "Report and manage your client’s Pillar 2 top-up taxes"
+        elevenPs.get(2).select("a").get(0).text shouldBe "Report and manage your client’s Pillar 2 top-up taxes"
+        elevenPs.get(2).select("a").get(0).attr("href") shouldBe "http://localhost:10053/report-pillar2-top-up-taxes/asa/input-pillar-2-id"
       }
 
       "agent with showFeatureInvite being false" in {

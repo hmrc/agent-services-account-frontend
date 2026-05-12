@@ -59,6 +59,11 @@ asa.inset=Ni allwch fwrw golwg dros eich rhestrau o gleientiaid drwy’ch cyfrif
 asa.other.heading=Gwasanaethau treth eraill
 asa.other.p1=Y cyfrif gwasanaethau asiant yw cartref gwasanaethau treth CThEM a lansiwyd o 2019 ymlaen.<br/>Ar gyfer unrhyw wasanaethau treth sydd heb eu rhestru yma, allgofnodwch o’r cyfrif hwn a <a class="govuk-link" href="https://www.gov.uk/government/collections/hmrc-online-services-for-agents#hmrc-online-services-for-agents-account" target="_blank" rel="noreferrer noopener">mewngofnodwch i’ch cyfrif gwasanaethau ar-lein CThEM ar gyfer asiantau (yn agor tab newydd)</a>.
 asa.other.warning=Rhybudd
+asa.other.subscribed.p1=To manage clients on tax services not listed here, you can <a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">continue on the 'Services you can use' section in your HMRC online services for agents account (opens in a new tab)</a>.
+asa.other.mapped.p1=To manage clients on tax services not listed here, you must <a class="govuk-link" href="{0}" rel="noreferrer noopener">sign in to your HMRC online services for agents account</a>.
+asa.other.mapped.p2=You will be signed out of this agent services account.
+asa.other.unknown.p1=If you manage clients on tax services not listed here, you must <a class="govuk-link" href="{0}" rel="noreferrer noopener">sign in to your HMRC online services for agents account</a>.
+asa.other.unknown.p2=You will be signed out of this agent services account.
 asa.p.agent-services=Mynediad at wasanaethau ar gyfer cleientiaid sydd eisoes wedi eich awdurdodi i weithredu ar eu rhan.
 asa.p.client-authorisations=Dechrau cais am awdurdodiad newydd neu gysylltu’ch cleientiaid cyfredol â’ch cyfrif.
 asa.p.manage=Caniatáu i ddefnyddwyr eraill yn eich sefydliad gael mynediad at y cyfrif gwasanaethau asiant hwn, neu gyfyngu ar eu mynediad.
