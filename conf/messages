@@ -186,8 +186,6 @@ asa.legacy.confirmation.return-home=Return to your agent services account homepa
 
 # CT
 asa.legacy.ct.h2=Corporation Tax
-asa.legacy.ct.p1=Status: {0}
-asa.legacy.ct.not-subscribed.before-start.link1.href=https://www.gov.uk/guidance/how-to-enrol-a-tax-service-onto-your-hmrc-online-services-account
 asa.legacy.ct.in-progress.p1=We are still processing the application you did on {0}.
 asa.legacy.ct.in-progress.p2=Processing can take up to 5 days.
 asa.legacy.ct.subscribed.p1=Your agent code is: {0}
@@ -214,7 +212,7 @@ asa.legacy.ct.business-name.new-input.error.invalid=Enter a business name that o
 asa.legacy.ct.phone-number.title=What phone number should we use to call you about Corporation Tax?
 asa.legacy.ct.phone-number.use-asa.false=I want to use a different phone number for Corporation Tax
 asa.legacy.ct.phone-number.new-input.label=Enter a phone number
-asa.legacy.ct.phone-number.new-input.hint=For international numbers include the country code.
+asa.legacy.ct.phone-number.new-input.hint=For international numbers, include the country code.
 asa.legacy.ct.phone-number.use-asa.error.required=Enter the phone number we should use to call {0} about Corporation Tax
 asa.legacy.ct.phone-number.new-input.error.empty=Enter a phone number
 asa.legacy.ct.phone-number.new-input.error.invalid=The phone number must only include numbers

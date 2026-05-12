@@ -165,94 +165,92 @@ asa.trusts-section.h2=Ymddiriedolaethau ac ystadau
 
 # TODO: WELSH TRANSLATIONS NEEDED FOR ALL BELOW THIS LINE
 
-asa.apply-to-act-for.multi-service.section=Apply to act as an agent for these tax services
-asa.apply-to-act-for.single-service.section=Apply to act as an agent for this tax service
-asa.apply-to-act-for.p1=Once you apply, you'll get a new agent code within 5 days. You can use it to manage your clients.
-asa.apply-to-act-for.paye=Pay as you earn (PAYE)/Construction Industry Scheme (CIS)
-asa.apply-to-act-for.sa=Self Assessment
-asa.apply-to-act-for.ct=Corporation Tax
+asa.apply-to-act-for.multi-service.section=Gwneud cais i weithredu fel asiant ar gyfer y gwasanaethau treth hyn
+asa.apply-to-act-for.single-service.section=Gwneud cais i weithredu fel asiant ar gyfer y gwasanaeth treth hwn
+asa.apply-to-act-for.p1=Unwaith i chi wneud cais, byddwch yn cael cod asiant newydd cyn pen 5 diwrnod. Gallwch ei ddefnyddio i reoli’ch cleientiaid.
+asa.apply-to-act-for.paye=Talu wrth ennill (TWE)/Cynllun y Diwydiant Adeiladu (CIS)
+asa.apply-to-act-for.sa=Hunanasesiad
+asa.apply-to-act-for.ct=Treth Gorfforaeth
 
-asa.legacy.do-you-already-manage.existing.true=Yes, through their existing HMRC online services account
+asa.legacy.do-you-already-manage.existing.true=Iawn, drwy eu cyfrif gwasanaethau ar-lein CThEF presennol
 
-asa.legacy.you-may-not-need-to-apply.p1=You only need to apply and get a new agent code if you want to manage your clients between different team members or office locations.
-asa.legacy.you-may-not-need-to-apply.h1=Do you still want to apply?
+asa.legacy.you-may-not-need-to-apply.p1=You only need to apply and get a new agent code if you want to manage your clients between different team members or office locations. #TODO
+asa.legacy.you-may-not-need-to-apply.h1=Do you still want to apply? #TODO
 
-asa.legacy.confirmation.title=We’re processing your application
-asa.legacy.confirmation.panel.body=You’ll get an agent code within 5 days
-asa.legacy.confirmation.p1=You’ll receive an email once your agent code is ready. You can then use it to ask for authorisation from your clients.
-asa.legacy.confirmation.p2=We’ll also send you a letter with your agent code for your records.
-asa.legacy.confirmation.p3=This code must be kept private. Only share it with people who genuinely need to know it.
-asa.legacy.confirmation.return-home=Return to your agent services account homepage
+asa.legacy.confirmation.title=Rydym yn prosesu’ch cais
+asa.legacy.confirmation.panel.body=Byddwch yn cael cod asiant cyn pen 5 diwrnod
+asa.legacy.confirmation.p1=Byddwch yn cael e-bost unwaith y bydd eich cod asiant yn barod. Gallwch wedyn ei ddefnyddio i ofyn am awdurdodiad gan eich cleientiaid.
+asa.legacy.confirmation.p2=Byddwn hefyd yn anfon llythyr atoch gyda’ch cod asiant ar gyfer eich cofnodion.
+asa.legacy.confirmation.p3=Mae’n rhaid cadw’r cod hwn yn breifat. Rhannwch y cod gyda phobl sydd wir angen ei wybod yn unig.
+asa.legacy.confirmation.return-home=Ewch yn ôl i hafan eich cyfrif gwasanaethau asiant
 
 # CT
-asa.legacy.ct.h2=Corporation Tax
-asa.legacy.ct.p1=Status: {0}
-asa.legacy.ct.not-subscribed.before-start.link1.href=https://www.gov.uk/guidance/how-to-enrol-a-tax-service-onto-your-hmrc-online-services-account
-asa.legacy.ct.in-progress.p1=We are still processing the application you did on {0}.
-asa.legacy.ct.in-progress.p2=Processing can take up to 5 days.
-asa.legacy.ct.subscribed.p1=Your agent code is: {0}
-asa.legacy.ct.subscribed.p2=Get permission from new clients
-asa.legacy.ct.subscribed.p3=<a class="govuk-link" href="{0}{1}" rel="noreferrer noopener">Ask a client to authorise you</a>
-asa.legacy.ct.subscribed.p4=Manage your client’s Corporation Tax
-asa.legacy.ct.subscribed.p5=<a class="govuk-link" href="{0}{1}" rel="noreferrer noopener">View and manage your client list for Corporation Tax</a>
+asa.legacy.ct.h2=Treth Gorfforaeth
+asa.legacy.ct.in-progress.p1=Rydym yn dal i brosesu’r cais a wnaethoch ar {0}.
+asa.legacy.ct.in-progress.p2=Gall prosesu gymryd hyd at 5 diwrnod.
+asa.legacy.ct.subscribed.p1=Eich cod asiant yw: {0}
+asa.legacy.ct.subscribed.p2=Cael caniatâd gan gleientiaid newydd
+asa.legacy.ct.subscribed.p3=<a class="govuk-link" href="{0}{1}" rel="noreferrer noopener">Gofynnwch i gleient eich awdurdodi</a>
+asa.legacy.ct.subscribed.p4=Rheoli Treth Gorfforaeth eich cleient
+asa.legacy.ct.subscribed.p5=<a class="govuk-link" href="{0}{1}" rel="noreferrer noopener">Bwrw golwg dros a rheoli’ch rhestr o gleientiaid ar gyfer Treth Gorfforaeth</a>
 
-asa.legacy.ct.do-you-already-manage.title=Does {0} already manage Corporation Tax clients?
-asa.legacy.ct.do-you-already-manage.existing.false=No, this is their first time managing Corporation Tax clients
-asa.legacy.ct.do-you-already-manage.error.required=Select yes if {0} already manages Corporation Tax clients
+asa.legacy.ct.do-you-already-manage.title=Ydy {0} eisoes yn rheoli cleientiaid Treth Gorfforaeth?
+asa.legacy.ct.do-you-already-manage.existing.false=Na, dyma’r tro cyntaf iddo reoli cleientiaid Treth Gorfforaeth
+asa.legacy.ct.do-you-already-manage.error.required=Select yes if {0} already manages Corporation Tax clients #TODO
 
-asa.legacy.ct.you-may-not-need-to-apply.title=You may not need to apply for Corporation Tax
-asa.legacy.ct.you-may-not-need-to-apply.p2=You can continue to manage your existing Corporation Tax clients through your HMRC Online Services for Agents account.
-asa.legacy.ct.you-may-not-need-to-apply.error.required=Select yes if you still want to apply
+asa.legacy.ct.you-may-not-need-to-apply.title=You may not need to apply for Corporation Tax #TODO
+asa.legacy.ct.you-may-not-need-to-apply.p2=You can continue to manage your existing Corporation Tax clients through your HMRC Online Services for Agents account. #TODO
+asa.legacy.ct.you-may-not-need-to-apply.error.required=Select yes if you still want to apply #TODO
 
-asa.legacy.ct.business-name.title=What business name should we show to your Corporation Tax clients?
-asa.legacy.ct.business-name.use-asa.false=I want to use a different business name for Corporation Tax
-asa.legacy.ct.business-name.new-input.label=Enter a business name
-asa.legacy.ct.business-name.use-asa.error.required=Select the business name we should show to your Corporation Tax clients
-asa.legacy.ct.business-name.new-input.error.empty=Enter a business name
-asa.legacy.ct.business-name.new-input.error.invalid=Enter a business name that only contains letters, numbers, spaces and the characters . , ( ) & - ‘ /
+asa.legacy.ct.business-name.title=Pa enw busnes ddylem ni ei ddangos i’ch cleientiaid Treth Gorfforaeth?
+asa.legacy.ct.business-name.use-asa.false=Rwyf am ddefnyddio enw busnes gwahanol ar gyfer Treth Gorfforaeth
+asa.legacy.ct.business-name.new-input.label=Nodwch enw busnes
+asa.legacy.ct.business-name.use-asa.error.required=Select the business name we should show to your Corporation Tax clients #TODO
+asa.legacy.ct.business-name.new-input.error.empty=Nodwch enw busnes
+asa.legacy.ct.business-name.new-input.error.invalid=Enter a business name that only contains letters, numbers, spaces and the characters . , ( ) & - ‘ / #TODO
 
-asa.legacy.ct.phone-number.title=What phone number should we use to call you about Corporation Tax?
-asa.legacy.ct.phone-number.use-asa.false=I want to use a different phone number for Corporation Tax
-asa.legacy.ct.phone-number.new-input.label=Enter a phone number
-asa.legacy.ct.phone-number.new-input.hint=For international numbers include the country code.
-asa.legacy.ct.phone-number.use-asa.error.required=Enter the phone number we should use to call {0} about Corporation Tax
-asa.legacy.ct.phone-number.new-input.error.empty=Enter a phone number
-asa.legacy.ct.phone-number.new-input.error.invalid=The phone number must only include numbers
+asa.legacy.ct.phone-number.title=Pa rif ffôn ddylem ei ddefnyddio i ffonio chi ynglŷn â Threth Gorfforaeth?
+asa.legacy.ct.phone-number.use-asa.false=Rwyf am ddefnyddio rhif ffôn gwahanol ar gyfer Treth Gorfforaeth
+asa.legacy.ct.phone-number.new-input.label=Nodwch rif ffôn
+asa.legacy.ct.phone-number.new-input.hint=Ar gyfer rhifau rhyngwladol, dylech gynnwys cod y wlad.
+asa.legacy.ct.phone-number.use-asa.error.required=Enter the phone number we should use to call {0} about Corporation Tax #TODO
+asa.legacy.ct.phone-number.new-input.error.empty=Nodwch rif ffôn
+asa.legacy.ct.phone-number.new-input.error.invalid=The phone number must only include numbers #TODO
 
-asa.legacy.ct.email-address.title=What email address should we use to contact you about Corporation Tax?
-asa.legacy.ct.email-address.use-asa.false=I want to use a different email address for Corporation Tax
-asa.legacy.ct.email-address.new-input.label=Enter an email address
-asa.legacy.ct.email-address.new-input.hint=We’ll send a code to this email address to confirm it
-asa.legacy.ct.email-address.use-asa.error.required=Select the email address we should use to contact {0} about Corporation Tax
-asa.legacy.ct.email-address.input.error.empty=Enter an email address
-asa.legacy.ct.email-address.input.error.length=Enter an email address that is 50 characters or less.
-asa.legacy.ct.email-address.input.error.invalid=Enter an email address in the correct format, for example name@example.com
+asa.legacy.ct.email-address.title=Pa gyfeiriad e-bost ddylem ei ddefnyddio i gysylltu â chi ynglŷn â Threth Gorfforaeth?
+asa.legacy.ct.email-address.use-asa.false=Rwyf am ddefnyddio cyfeiriad e-bost gwahanol ar gyfer Treth Gorfforaeth
+asa.legacy.ct.email-address.new-input.label=Nodwch gyfeiriad e-bost
+asa.legacy.ct.email-address.new-input.hint=Byddwn yn anfon cod i’r cyfeiriad e-bost hwn i’w gadarnhau
+asa.legacy.ct.email-address.use-asa.error.required=Select the email address we should use to contact {0} about Corporation Tax #TODO
+asa.legacy.ct.email-address.input.error.empty=Nodwch gyfeiriad e-bost
+asa.legacy.ct.email-address.input.error.length=Enter an email address that is 50 characters or less. #TODO
+asa.legacy.ct.email-address.input.error.invalid=Enter an email address in the correct format, for example name@example.com #TODO
 
-asa.legacy.ct.custom-email-address.title=Your agent services account email address is too long
-asa.legacy.ct.custom-email-address.p1=We currently have this email address connected to your agent services account:
-asa.legacy.ct.custom-email-address.p2=For Corporation Tax, the email address must be 50 characters or less.
-asa.legacy.ct.custom-email-address.input.label=Enter a shorter email address
-asa.legacy.ct.custom-email-address.input.hint=We’ll send a code to this email address to confirm it
+asa.legacy.ct.custom-email-address.title=Your agent services account email address is too long #TODO
+asa.legacy.ct.custom-email-address.p1=We currently have this email address connected to your agent services account: #TODO
+asa.legacy.ct.custom-email-address.p2=For Corporation Tax, the email address must be 50 characters or less. #TODO
+asa.legacy.ct.custom-email-address.input.label=Enter a shorter email address #TODO
+asa.legacy.ct.custom-email-address.input.hint=Byddwn yn anfon cod i’r cyfeiriad e-bost hwn i’w gadarnhau
 
-asa.legacy.ct.address.title=What address should we use to send letters about Corporation Tax?
-asa.legacy.ct.address.use-asa.true.hint=This is the address on your agent services account.
-asa.legacy.ct.address.use-asa.false=I want to use a different address for Corporation Tax
-asa.legacy.ct.address.use-asa.error.required=Select the address we should use to send letters about Corporation Tax
+asa.legacy.ct.address.title=Pa gyfeiriad ddylem ei ddefnyddio i anfon llythyrau ynglŷn â Threth Gorfforaeth?
+asa.legacy.ct.address.use-asa.true.hint=Dyma’r cyfeiriad ar eich cyfrif gwasanaethau asiant.
+asa.legacy.ct.address.use-asa.false=Rwyf am ddefnyddio cyfeiriad gwahanol ar gyfer Treth Gorfforaeth
+asa.legacy.ct.address.use-asa.error.required=Select the address we should use to send letters about Corporation Tax #TODO
 
-asa.legacy.ct.alf.country-picker.title=Select the country - Agent services account - GOV.UK
-asa.legacy.ct.alf.country-picker.heading=What is the country where the business is based?
-asa.legacy.ct.alf.lookup.title=Find the address - Agent services account - GOV.UK
-asa.legacy.ct.alf.lookup.heading=Find your address
+asa.legacy.ct.alf.country-picker.title=Dewiswch y wlad - Cyfrif gwasanaethau asiant - GOV.UK
+asa.legacy.ct.alf.country-picker.heading=Beth yw’r wlad lle mae’r busnes wedi’i leoli?
+asa.legacy.ct.alf.lookup.title=Dod o hyd i’r cyfeiriad - Cyfrif gwasanaethau asiant - GOV.UK
+asa.legacy.ct.alf.lookup.heading=Dod o hyd i’ch cyfeiriad
 asa.legacy.ct.alf.lookup.postcode.label=Cod post
-asa.legacy.ct.alf.select.title=Select the address - Agent services account - GOV.UK
-asa.legacy.ct.alf.edit.title=Enter the address - Agent services account - GOV.UK
-asa.legacy.ct.alf.edit.heading=Enter the address
+asa.legacy.ct.alf.select.title=Dewiswch y cyfeiriad - Cyfrif gwasanaethau asiant - GOV.UK
+asa.legacy.ct.alf.edit.title=Nodwch y cyfeiriad - Cyfrif gwasanaethau asiant - GOV.UK
+asa.legacy.ct.alf.edit.heading=Nodwch y cyfeiriad
 asa.legacy.ct.alf.edit.townLabel=Cyfeiriad – llinell 4
-asa.legacy.ct.alf.confirm.title=Review and confirm - Agent services account - GOV.UK
+asa.legacy.ct.alf.confirm.title=Adolygu a chadarnhau - Cyfrif gwasanaethau asiant - GOV.UK
 
-asa.legacy.ct.change-address.title=Change your address
-asa.legacy.ct.change-address.title.invalid=Change the address lines that are too long
-asa.legacy.ct.change-address.inset.invalid=Our system can only accept a limited amount of characters in each address line.
+asa.legacy.ct.change-address.title=Change your address #TODO
+asa.legacy.ct.change-address.title.invalid=Change the address lines that are too long #TODO
+asa.legacy.ct.change-address.inset.invalid=Our system can only accept a limited amount of characters in each address line. #TODO
 asa.legacy.ct.change-address.line1.label=Cyfeiriad – llinell 1
 asa.legacy.ct.change-address.line2.label=Cyfeiriad – llinell 2
 asa.legacy.ct.change-address.line3.label=Cyfeiriad – llinell 3
@@ -262,26 +260,26 @@ asa.legacy.ct.change-address.postcode.label=Cod post
 asa.legacy.ct.change-address.country.label=Gwlad
 asa.legacy.ct.error.addressLine1.required=Nodwch gyfeiriad – llinell 1
 asa.legacy.ct.error.addressLine1.length=Mae angen i linell 1 y cyfeiriad fod yn 28 o gymeriadau neu lai
-asa.legacy.ct.error.addressLine1.invalid=Enter an address line 1 that only contains letters, numbers, spaces and the characters . , ( ) & - ‘ /
+asa.legacy.ct.error.addressLine1.invalid=Enter an address line 1 that only contains letters, numbers, spaces and the characters . , ( ) & - ‘ / #TODO
 asa.legacy.ct.error.addressLine2.required=Nodwch gyfeiriad – llinell 2
 asa.legacy.ct.error.addressLine2.length=Mae angen i linell 2 y cyfeiriad fod yn 28 o gymeriadau neu lai
-asa.legacy.ct.error.addressLine2.invalid=Enter an address line 2 that only contains letters, numbers, spaces and the characters . , ( ) & - ‘ /
+asa.legacy.ct.error.addressLine2.invalid=Enter an address line 2 that only contains letters, numbers, spaces and the characters . , ( ) & - ‘ / #TODO
 asa.legacy.ct.error.addressLine3.required=Nodwch gyfeiriad – llinell 3
 asa.legacy.ct.error.addressLine3.length=Mae angen i linell 3 y cyfeiriad fod yn 28 o gymeriadau neu lai
-asa.legacy.ct.error.addressLine3.invalid=Enter an address line 3 that only contains letters, numbers, spaces and the characters . , ( ) & - ‘ /
+asa.legacy.ct.error.addressLine3.invalid=Enter an address line 3 that only contains letters, numbers, spaces and the characters . , ( ) & - ‘ / #TODO
 asa.legacy.ct.error.addressLine4.required=Nodwch gyfeiriad – llinell 4
 asa.legacy.ct.error.addressLine4.length=Mae angen i linell 4 y cyfeiriad fod yn 18 o gymeriadau neu lai
-asa.legacy.ct.error.addressLine4.invalid=Enter an address line 4 that only contains letters, numbers, spaces and the characters . , ( ) & - ‘ /
+asa.legacy.ct.error.addressLine4.invalid=Enter an address line 4 that only contains letters, numbers, spaces and the characters . , ( ) & - ‘ / #TODO
 asa.legacy.ct.error.postcode.required=Nodwch god post
-asa.legacy.ct.error.postcode.invalid=Enter a postcode in the correct format
-asa.legacy.ct.error.country.required=Select a country
+asa.legacy.ct.error.postcode.invalid=Enter a postcode in the correct format #TODO
+asa.legacy.ct.error.country.required=Select a country #TODO
 
-asa.legacy.ct.check-your-answers.h1=Check your answers
-asa.legacy.ct.check-your-answers.business-name=Business name
-asa.legacy.ct.check-your-answers.phone-number=Telephone number
-asa.legacy.ct.check-your-answers.email=Email address
-asa.legacy.ct.check-your-answers.address=Address
-asa.legacy.ct.check-your-answers.submit-button=Enrol for Corporation Tax
+asa.legacy.ct.check-your-answers.h1=Gwiriwch eich atebion
+asa.legacy.ct.check-your-answers.business-name=Enw’r busnes
+asa.legacy.ct.check-your-answers.phone-number=Rhif ffôn
+asa.legacy.ct.check-your-answers.email=Cyfeiriad e-bost
+asa.legacy.ct.check-your-answers.address=Cyfeiriad
+asa.legacy.ct.check-your-answers.submit-button=Ymrestru ar gyfer Treth Gorfforaeth
 
 # PAYE/CIS
 asa.legacy.paye.h2=Pay as you earn (PAYE)/Construction Industry Scheme (CIS)
