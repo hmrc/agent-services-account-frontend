@@ -63,7 +63,9 @@ case class AgencyDetails(
   agencyEmail: Option[String],
   agencyTelephone: Option[String],
   agencyAddress: Option[BusinessAddress]
-)
+) {
+  def isAbroad: Boolean = !agencyAddress.exists(_.countryCode.equalsIgnoreCase("GB"))
+}
 
 object AgencyDetails {
 

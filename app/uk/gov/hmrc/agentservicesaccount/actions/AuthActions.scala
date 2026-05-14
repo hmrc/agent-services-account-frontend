@@ -21,6 +21,7 @@ import play.api.Logging
 import play.api.mvc.Results._
 import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
 import uk.gov.hmrc.agentservicesaccount.models.Arn
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
@@ -46,6 +47,12 @@ class SubscriptionJourneyRequest[A](
   val request: Request[A]
 )
 extends WrappedRequest[A](request)
+
+case class AuthRequestWithAgentProfile[A](
+  authRequestWithAgentInfo: AuthRequestWithAgentInfo[A],
+  agentDetailsDesResponse: AgentDetailsDesResponse
+)
+extends WrappedRequest(authRequestWithAgentInfo.request)
 
 class AuthRequestWithAgentInfo[A](
   val agentInfo: AgentInfo,

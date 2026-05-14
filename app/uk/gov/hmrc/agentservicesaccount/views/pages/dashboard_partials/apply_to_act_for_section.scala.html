@@ -17,30 +17,31 @@
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.{routes => subscriptionRoutes}
 @import uk.gov.hmrc.agentservicesaccount.models.subscriptions.{LegacyRegime, SubscriptionInfo, SubscriptionStatus}
-@import uk.gov.hmrc.agentservicesaccount.actions.AuthRequestWithAgentInfo
+@import uk.gov.hmrc.agentservicesaccount.actions.AuthRequestWithAgentProfile
 
 @this(p: p, h2: h2, a: a, ul_html: ul_html)
 
 @(
-        subscriptionInfo: Seq[SubscriptionInfo],
-        isAbroad: Boolean
+        subscriptionInfo: Seq[SubscriptionInfo]
 )(implicit
         msgs: Messages,
-        request: AuthRequestWithAgentInfo[AnyContent],
+        request: AuthRequestWithAgentProfile[AnyContent],
         appConfig: AppConfig
 )
 
 @defining({
     def isUnsubscribed(regime: LegacyRegime): Boolean =
         subscriptionInfo.exists(s =>
-            s.regime == regime &&
-                    (s.subscriptionStatus == SubscriptionStatus.NotSubscribed ||
-                            s.subscriptionStatus == SubscriptionStatus.SubscriptionFailed)
+            s.regime == regime && Seq(
+                SubscriptionStatus.NotSubscribed,
+                SubscriptionStatus.SubscriptionFailed,
+                SubscriptionStatus.SubscriptionMapped
+            ).contains(s.subscriptionStatus)
         )
 
     val regimes =
         Seq(
-            if (!isAbroad) Some(LegacyRegime.PAYE).filter(isUnsubscribed) else None,
+            if(!request.agentDetailsDesResponse.agencyDetails.exists(_.isAbroad)) Some(LegacyRegime.PAYE).filter(isUnsubscribed) else None,
             Some(LegacyRegime.CT).filter(isUnsubscribed),
             Some(LegacyRegime.SA).filter(isUnsubscribed)
         ).flatten
