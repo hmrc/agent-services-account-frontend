@@ -197,9 +197,9 @@ asa.legacy.ct.in-progress.p1=We are still processing the application you did on 
 asa.legacy.ct.in-progress.p2=Processing can take up to 5 days.
 asa.legacy.ct.subscribed.p1=Your agent code is: {0}
 asa.legacy.ct.subscribed.p2=Get permission from new clients
-asa.legacy.ct.subscribed.p3=<a class="govuk-link" href="{0}{1}" rel="noreferrer noopener">Ask a client to authorise you</a>
+asa.legacy.ct.subscribed.p3=<a class="govuk-link" href="/account/authorise-client/agent/{0}" target="_blank" rel="noreferrer noopener">Ask a client to authorise you (opens in a new tab)</a>
 asa.legacy.ct.subscribed.p4=Manage your client’s Corporation Tax
-asa.legacy.ct.subscribed.p5=<a class="govuk-link" href="{0}{1}" rel="noreferrer noopener">View and manage your client list for Corporation Tax</a>
+asa.legacy.ct.subscribed.p5=<a class="govuk-link" href="/corporation-tax/agent/{0}" target="_blank" rel="noreferrer noopener">View and manage your client list for Corporation Tax (opens in a new tab)</a>
 
 asa.legacy.ct.do-you-already-manage.title=Does {0} already manage Corporation Tax clients?
 asa.legacy.ct.do-you-already-manage.existing.false=No, this is their first time managing Corporation Tax clients
@@ -303,10 +303,10 @@ asa.legacy.paye.in-progress.p1=We are still processing the application you did o
 asa.legacy.paye.in-progress.p2=Processing can take up to 5 days.
 asa.legacy.paye.subscribed.p1=Your agent code is: {0}
 asa.legacy.paye.subscribed.p2=Get permission from new clients
-asa.legacy.paye.subscribed.p3=<a class="govuk-link" href="{0}" rel="noreferrer noopener">Ask a client to authorise you</a>
+asa.legacy.paye.subscribed.p3=<a class="govuk-link" href="/account/authorise-client/agent/{0}" target="_blank" rel="noreferrer noopener">Ask a client to authorise you (opens in a new tab)</a>
 asa.legacy.paye.subscribed.p4=Manage your client’s PAYE/CIS
-asa.legacy.paye.subscribed.p5=<a class="govuk-link" href="{0}{1}" rel="noreferrer noopener">View and manage your client list for PAYE</a>
-asa.legacy.paye.subscribed.p6=<a class="govuk-link" href="{0}{1}" rel="noreferrer noopener">View and manage your client list for CIS</a>
+asa.legacy.paye.subscribed.p5=<a class="govuk-link" href="/agent/remember-to-remove" target="_blank" rel="noreferrer noopener">View and manage your client list for PAYE (opens in a new tab)</a>
+asa.legacy.paye.subscribed.p6=<a class="govuk-link" href="/construction-ind-scheme/agent/{0}" target="_blank" rel="noreferrer noopener">View and manage your client list for CIS (opens in a new tab)</a>
 
 asa.legacy.paye.do-you-already-manage.title=Does {0} already manage PAYE clients?
 asa.legacy.paye.do-you-already-manage.existing.false=No, this is their first time managing PAYE clients
@@ -396,9 +396,9 @@ asa.legacy.sa.in-progress.p1=We are still processing the application you did on 
 asa.legacy.sa.in-progress.p2=Processing can take up to 5 days.
 asa.legacy.sa.subscribed.p1=Your agent code is: {0}
 asa.legacy.sa.subscribed.p2=Get permission from new clients
-asa.legacy.sa.subscribed.p3=<a class="govuk-link" href="{0}{1}" rel="noreferrer noopener">Ask a client to authorise you</a>
+asa.legacy.sa.subscribed.p3=<a class="govuk-link" href="/account/authorise-client/agent/{0}" target="_blank" rel="noreferrer noopener">Ask a client to authorise you (opens in a new tab)</a>
 asa.legacy.sa.subscribed.p4=Manage your client’s Self Assessment
-asa.legacy.sa.subscribed.p5=<a class="govuk-link" href="{0}{1}" rel="noreferrer noopener">View and manage your client list for Self Assessment</a>
+asa.legacy.sa.subscribed.p5=<a class="govuk-link" href="/self-assessment/agent/{0}" target="_blank" rel="noreferrer noopener">View and manage your client list for Self Assessment (opens in a new tab)</a>
 
 asa.legacy.sa.do-you-already-manage.title=Does {0} already manage Self Assessment clients?
 asa.legacy.sa.do-you-already-manage.existing.false=No, this is their first time managing Self Assessment clients
