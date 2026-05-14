@@ -225,7 +225,14 @@
     if(appConfig.enableLegacySubscriptionLink) {
         subscriptionInfo.find(_.regime == LegacyRegime.SA).map { info =>
             info.subscriptionStatus match {
-                case _ =>
+                case SubscriptionStatus.SubscriptionInProgress if request.agentInfo.isAdmin =>
+                    items.append(
+                        Section(
+                            headingContent = Text(msgs("asa.legacy.sa.h2")),
+                            content = HtmlContent(saItemInProgress(info))
+                        )
+                    )
+                case SubscriptionStatus.Subscribed =>
                     items.append(
                         Section(
                             headingContent = Text(msgs("asa.legacy.sa.h2")),
@@ -252,7 +259,14 @@
         subscriptionInfo.find(_.regime == LegacyRegime.CT).map { info =>
 
             info.subscriptionStatus match {
-                case _ =>
+                case SubscriptionStatus.SubscriptionInProgress if request.agentInfo.isAdmin =>
+                    items.append(
+                        Section(
+                            headingContent = Text(msgs("asa.legacy.ct.h2")),
+                            content = HtmlContent(ctItemInProgress(info))
+                        )
+                    )
+                case SubscriptionStatus.Subscribed =>
                     items.append(
                         Section(
                             headingContent = Text(msgs("asa.legacy.ct.h2")),
@@ -264,7 +278,14 @@
         }
         subscriptionInfo.find(_.regime == LegacyRegime.PAYE).map { info =>
             info.subscriptionStatus match {
-                case _ =>
+                case SubscriptionStatus.SubscriptionInProgress if request.agentInfo.isAdmin =>
+                    items.append(
+                        Section(
+                            headingContent = Text(msgs("asa.legacy.paye.h2")),
+                            content = HtmlContent(payeItemInProgress(info))
+                        )
+                    )
+                case SubscriptionStatus.Subscribed =>
                     items.append(
                         Section(
                             headingContent = Text(msgs("asa.legacy.paye.h2")),
