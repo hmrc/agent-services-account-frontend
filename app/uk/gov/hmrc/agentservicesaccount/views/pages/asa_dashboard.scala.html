@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.agentservicesaccount.actions.AuthRequestWithAgentInfo
+@import uk.gov.hmrc.agentservicesaccount.actions.AuthRequestWithAgentProfile
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionInfo
 @import uk.gov.hmrc.agentservicesaccount.views.html.components._
@@ -35,9 +35,8 @@
     arn: String,
     isShownRecruitmentBanner: Boolean = false,
     isAdmin: Boolean = false,
-    isAbroad: Boolean = false,
     subscriptionInfo: Seq[SubscriptionInfo] = Seq.empty
-)(implicit request: AuthRequestWithAgentInfo[AnyContent], msgs: Messages, appConfig: AppConfig)
+)(implicit request: AuthRequestWithAgentProfile[AnyContent], msgs: Messages, appConfig: AppConfig)
 
 @main(
     pageTitle = msgs("asa.heading"),
@@ -62,7 +61,7 @@
 
     @if(isAdmin) {
         @manage_section()
-        @apply_to_act_for_section(subscriptionInfo, isAbroad)
+        @apply_to_act_for_section(subscriptionInfo)
     }
 
     <hr class="govuk-section-break hr-thick govuk-!-margin-bottom-6 govuk-!-margin-top-8">

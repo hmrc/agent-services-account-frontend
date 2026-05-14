@@ -24,7 +24,11 @@ import play.api.mvc.AnyContent
 import play.api.test.FakeRequest
 import uk.gov.hmrc.agentservicesaccount.actions.AgentInfo
 import uk.gov.hmrc.agentservicesaccount.actions.AuthRequestWithAgentInfo
+import uk.gov.hmrc.agentservicesaccount.actions.AuthRequestWithAgentProfile
+import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
+import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
 import uk.gov.hmrc.agentservicesaccount.models.Arn
+import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionInfo
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionStatus
@@ -40,7 +44,7 @@ extends ViewBaseSpec {
   private implicit val langs: Seq[Lang] = Seq(Lang("en"))
   private val view = app.injector.instanceOf[apply_to_act_for_section]
 
-  private def fakeRequestWithAgentInfo: AuthRequestWithAgentInfo[AnyContent] = {
+  private def fakeRequestWithAgentProfile(isAbroad: Boolean): AuthRequestWithAgentProfile[AnyContent] = {
     val fakeRequest = FakeRequest("GET", "/")
 
     val testAgentInformation = AgentInformation(
@@ -59,15 +63,37 @@ extends ViewBaseSpec {
       agentInformation = testAgentInformation
     )
 
-    new AuthRequestWithAgentInfo(agentInfo, fakeRequest)
+    AuthRequestWithAgentProfile(
+      new AuthRequestWithAgentInfo(agentInfo, fakeRequest),
+      AgentDetailsDesResponse(
+        None,
+        Some(AgencyDetails(
+          None,
+          None,
+          None,
+          Some(BusinessAddress(
+            "line 1",
+            None,
+            None,
+            None,
+            None,
+            if (isAbroad)
+              "EE"
+            else
+              "GB"
+          ))
+        )),
+        None
+      )
+    )
   }
   private def doc(
     subs: Seq[SubscriptionInfo],
     isAbroad: Boolean
   ): Document = Jsoup.parse(
-    view(subs, isAbroad)(
+    view(subs)(
       messages,
-      fakeRequestWithAgentInfo,
+      fakeRequestWithAgentProfile(isAbroad),
       appConfig
     ).body
   )

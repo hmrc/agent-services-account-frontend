@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.agentservicesaccount.actions.AuthRequestWithAgentInfo
+@import uk.gov.hmrc.agentservicesaccount.actions.AuthRequestWithAgentProfile
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.models.subscriptions.{LegacyRegime, SubscriptionInfo, SubscriptionStatus}
 @import uk.gov.hmrc.govukfrontend.views.html.components.{GovukAccordion, GovukWarningText}
@@ -31,7 +31,9 @@
     govukWarningText: GovukWarningText,
 )
 
-@(subscriptionInfo: Seq[SubscriptionInfo])(implicit msgs: Messages, request: AuthRequestWithAgentInfo[AnyContent], appConfig: AppConfig)
+@(subscriptionInfo: Seq[SubscriptionInfo])(implicit msgs: Messages, request: AuthRequestWithAgentProfile[AnyContent], appConfig: AppConfig)
+
+@agentInfo = @{request.authRequestWithAgentInfo.agentInfo}
 
 @itsaAccordionItemLegacy = {
     @h4("asa.sectionITSA.col1.h4")
@@ -180,11 +182,11 @@
 }
 
 @saItemComplete = {
-    @inset_text(msgs("asa.legacy.sa.subscribed.p1", request.agentInfo.saAgentCode.getOrElse("")))
+    @inset_text(msgs("asa.legacy.sa.subscribed.p1", agentInfo.saAgentCode.getOrElse("")))
     @h4(msgs("asa.legacy.sa.subscribed.p2"))
-    @p(msgs("asa.legacy.sa.subscribed.p3", request.agentInfo.agentInformation.agentCode.getOrElse("")))
+    @p(msgs("asa.legacy.sa.subscribed.p3", agentInfo.agentInformation.agentCode.getOrElse("")))
     @h4(msgs("asa.legacy.sa.subscribed.p4"))
-    @p(msgs("asa.legacy.sa.subscribed.p5", request.agentInfo.saAgentCode.getOrElse("")))
+    @p(msgs("asa.legacy.sa.subscribed.p5", agentInfo.saAgentCode.getOrElse("")))
 }
 
 @ctItemInProgress(info: SubscriptionInfo) = {
@@ -193,11 +195,11 @@
 }
 
 @ctItemComplete = {
-    @inset_text(msgs("asa.legacy.ct.subscribed.p1", request.agentInfo.ctAgentCode.getOrElse("")))
+    @inset_text(msgs("asa.legacy.ct.subscribed.p1", agentInfo.ctAgentCode.getOrElse("")))
     @h4(msgs("asa.legacy.ct.subscribed.p2"))
-    @p(msgs("asa.legacy.ct.subscribed.p3", request.agentInfo.agentInformation.agentCode.getOrElse("")))
+    @p(msgs("asa.legacy.ct.subscribed.p3", agentInfo.agentInformation.agentCode.getOrElse("")))
     @h4(msgs("asa.legacy.ct.subscribed.p4"))
-    @p(msgs("asa.legacy.ct.subscribed.p5", request.agentInfo.ctAgentCode.getOrElse("")))
+    @p(msgs("asa.legacy.ct.subscribed.p5", agentInfo.ctAgentCode.getOrElse("")))
 }
 
 @payeItemInProgress(info: SubscriptionInfo) = {
@@ -206,12 +208,12 @@
 }
 
 @payeItemComplete = {
-    @inset_text(msgs("asa.legacy.paye.subscribed.p1", request.agentInfo.payeAgentCode.getOrElse("")))
+    @inset_text(msgs("asa.legacy.paye.subscribed.p1", agentInfo.payeAgentCode.getOrElse("")))
     @h4(msgs("asa.legacy.paye.subscribed.p2"))
-    @p(msgs("asa.legacy.paye.subscribed.p3", request.agentInfo.agentInformation.agentCode.getOrElse("")))
+    @p(msgs("asa.legacy.paye.subscribed.p3", agentInfo.agentInformation.agentCode.getOrElse("")))
     @h4(msgs("asa.legacy.paye.subscribed.p4"))
     @p(msgs("asa.legacy.paye.subscribed.p5"))
-    @p(msgs("asa.legacy.paye.subscribed.p6", request.agentInfo.payeAgentCode.getOrElse("")))
+    @p(msgs("asa.legacy.paye.subscribed.p6", agentInfo.payeAgentCode.getOrElse("")))
 }
 
 @accordionItems = @{
@@ -225,7 +227,7 @@
     if(appConfig.enableLegacySubscriptionLink) {
         subscriptionInfo.find(_.regime == LegacyRegime.SA).map { info =>
             info.subscriptionStatus match {
-                case SubscriptionStatus.SubscriptionInProgress if request.agentInfo.isAdmin =>
+                case SubscriptionStatus.SubscriptionInProgress if agentInfo.isAdmin =>
                     items.append(
                         Section(
                             headingContent = Text(msgs("asa.legacy.sa.h2")),
@@ -259,7 +261,7 @@
         subscriptionInfo.find(_.regime == LegacyRegime.CT).map { info =>
 
             info.subscriptionStatus match {
-                case SubscriptionStatus.SubscriptionInProgress if request.agentInfo.isAdmin =>
+                case SubscriptionStatus.SubscriptionInProgress if agentInfo.isAdmin =>
                     items.append(
                         Section(
                             headingContent = Text(msgs("asa.legacy.ct.h2")),
@@ -278,7 +280,7 @@
         }
         subscriptionInfo.find(_.regime == LegacyRegime.PAYE).map { info =>
             info.subscriptionStatus match {
-                case SubscriptionStatus.SubscriptionInProgress if request.agentInfo.isAdmin =>
+                case SubscriptionStatus.SubscriptionInProgress if agentInfo.isAdmin =>
                     items.append(
                         Section(
                             headingContent = Text(msgs("asa.legacy.paye.h2")),
@@ -332,7 +334,7 @@
             headingContent = Text(msgs("asa.other.heading")),
             content = HtmlContent(
                 if(!appConfig.enableLegacySubscriptionLink) otherTaxesItem
-                else if(request.agentInfo.hasOtherEnrolments) otherTaxesSubscribedItem
+                else if(agentInfo.hasOtherEnrolments) otherTaxesSubscribedItem
                 else if(subscriptionInfo.exists(info => info.subscriptionStatus == SubscriptionStatus.SubscriptionMapped)) otherTaxesMappedItem
                 else otherTaxesUnknownItem
             )

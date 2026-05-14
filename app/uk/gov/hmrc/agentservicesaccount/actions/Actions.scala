@@ -26,7 +26,6 @@ import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.routes
 import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
-import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
 import uk.gov.hmrc.agentservicesaccount.models.AmlsDetails
 import uk.gov.hmrc.agentservicesaccount.models.Arn
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
@@ -83,12 +82,6 @@ class Actions @Inject() (
     else
       Future.successful(Forbidden)
   }
-
-  case class AuthRequestWithAgentProfile[A](
-    authRequestWithAgentInfo: AuthRequestWithAgentInfo[A],
-    agentDetailsDesResponse: AgentDetailsDesResponse
-  )
-  extends WrappedRequest(authRequestWithAgentInfo.request)
 
   def withCurrentAmlsDetails(arn: Arn)(action: AmlsDetails => Future[Result])(implicit rh: RequestHeader): Future[Result] = {
     agentAssuranceConnector.getAMLSDetails(arn.value)

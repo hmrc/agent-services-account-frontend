@@ -73,8 +73,8 @@ with Logging {
     Redirect(routes.AgentServicesController.showAgentServicesAccount())
   }
 
-  val showAgentServicesAccount: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
-    val agentInfo = request.agentInfo
+  val showAgentServicesAccount: Action[AnyContent] = actions.authActionWithSuspensionCheckWithAgentRecord.async { implicit request =>
+    val agentInfo = request.authRequestWithAgentInfo.agentInfo
     /* TODO remove call to withShowFeatureInvite if okay with 28 day duration on UR banner
      *      showFeatureInvite is unused at the mo
      * */
@@ -88,28 +88,14 @@ with Logging {
         else
           Future.successful(Seq.empty)
 
-      val isAbroadF: Future[Boolean] =
-        if (appConfig.enableLegacySubscriptionLink)
-          agentRecordService.getAgentRecord.map { record =>
-            val countryCodeOpt = record.agencyDetails
-              .flatMap(_.agencyAddress)
-              .map(_.countryCode)
-
-            countryCodeOpt.exists(_ != "GB")
-          }
-        else
-          Future.successful(false)
-
       for {
         subscriptionInfo <- subscriptionInfoF
-        isAbroad <- isAbroadF
       } yield {
         Ok(
           asaDashboard(
             arn = formatArn(agentInfo.arn),
             isShownRecruitmentBanner = showFeatureInvite && agentInfo.isAdmin,
             isAdmin = agentInfo.isAdmin,
-            isAbroad = isAbroad,
             subscriptionInfo = subscriptionInfo
           )
         ).addingToSession(aossOriginCookie())
