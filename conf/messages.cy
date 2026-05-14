@@ -197,9 +197,9 @@ asa.legacy.ct.in-progress.p1=We are still processing the application you did on 
 asa.legacy.ct.in-progress.p2=Processing can take up to 5 days.
 asa.legacy.ct.subscribed.p1=Your agent code is: {0}
 asa.legacy.ct.subscribed.p2=Get permission from new clients
-asa.legacy.ct.subscribed.p3=<a class="govuk-link" href="{0}{1}" target="_blank" rel="noreferrer noopener">Ask a client to authorise you (opens in a new tab)</a>
+asa.legacy.ct.subscribed.p3=<a class="govuk-link" href="/account/authorise-client/agent/{0}" target="_blank" rel="noreferrer noopener">Ask a client to authorise you (opens in a new tab)</a>
 asa.legacy.ct.subscribed.p4=Manage your client’s Corporation Tax
-asa.legacy.ct.subscribed.p5=<a class="govuk-link" href="{0}{1}" target="_blank" rel="noreferrer noopener">View and manage your client list for Corporation Tax (opens in a new tab)</a>
+asa.legacy.ct.subscribed.p5=<a class="govuk-link" href="/corporation-tax/agent/{0}" target="_blank" rel="noreferrer noopener">View and manage your client list for Corporation Tax (opens in a new tab)</a>
 
 asa.legacy.ct.do-you-already-manage.title=Does {0} already manage Corporation Tax clients?
 asa.legacy.ct.do-you-already-manage.existing.false=No, this is their first time managing Corporation Tax clients

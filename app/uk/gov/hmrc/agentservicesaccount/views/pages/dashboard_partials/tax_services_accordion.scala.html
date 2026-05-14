@@ -195,9 +195,9 @@
 @ctItemComplete = {
     @inset_text(msgs("asa.legacy.ct.subscribed.p1", request.agentInfo.ctAgentCode.getOrElse("DUMMY")))
     @h4(msgs("asa.legacy.ct.subscribed.p2"))
-    @p(msgs("asa.legacy.ct.subscribed.p3", "/account/authorise-client/agent/", request.agentInfo.agentInformation.agentCode.getOrElse("")))
+    @p(msgs("asa.legacy.ct.subscribed.p3", request.agentInfo.agentInformation.agentCode.getOrElse("")))
     @h4(msgs("asa.legacy.ct.subscribed.p4"))
-    @p(msgs("asa.legacy.ct.subscribed.p5", "/corporation-tax/agent/", request.agentInfo.ctAgentCode.getOrElse("")))
+    @p(msgs("asa.legacy.ct.subscribed.p5", request.agentInfo.ctAgentCode.getOrElse("")))
 }
 
 @payeItemInProgress(info: SubscriptionInfo) = {
