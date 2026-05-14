@@ -303,10 +303,10 @@ asa.legacy.paye.in-progress.p1=We are still processing the application you did o
 asa.legacy.paye.in-progress.p2=Processing can take up to 5 days.
 asa.legacy.paye.subscribed.p1=Your agent code is: {0}
 asa.legacy.paye.subscribed.p2=Get permission from new clients
-asa.legacy.paye.subscribed.p3=<a class="govuk-link" href="{0}{1}" target="_blank" rel="noreferrer noopener">Ask a client to authorise you (opens in a new tab)</a>
+asa.legacy.paye.subscribed.p3=<a class="govuk-link" href="/account/authorise-client/agent/{0}" target="_blank" rel="noreferrer noopener">Ask a client to authorise you (opens in a new tab)</a>
 asa.legacy.paye.subscribed.p4=Manage your client’s PAYE/CIS
-asa.legacy.paye.subscribed.p5=<a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">View and manage your client list for PAYE (opens in a new tab)</a>
-asa.legacy.paye.subscribed.p6=<a class="govuk-link" href="{0}{1}" target="_blank" rel="noreferrer noopener">View and manage your client list for CIS (opens in a new tab)</a>
+asa.legacy.paye.subscribed.p5=<a class="govuk-link" href="/agent/remember-to-remove" target="_blank" rel="noreferrer noopener">View and manage your client list for PAYE (opens in a new tab)</a>
+asa.legacy.paye.subscribed.p6=<a class="govuk-link" href="/construction-ind-scheme/agent/{0}" target="_blank" rel="noreferrer noopener">View and manage your client list for CIS (opens in a new tab)</a>
 
 asa.legacy.paye.do-you-already-manage.title=Does {0} already manage PAYE clients?
 asa.legacy.paye.do-you-already-manage.existing.false=No, this is their first time managing PAYE clients

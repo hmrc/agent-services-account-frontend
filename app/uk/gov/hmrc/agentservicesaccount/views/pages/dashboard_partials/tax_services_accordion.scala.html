@@ -208,10 +208,10 @@
 @payeItemComplete = {
     @inset_text(msgs("asa.legacy.paye.subscribed.p1", request.agentInfo.payeAgentCode.getOrElse("DUMMY")))
     @h4(msgs("asa.legacy.paye.subscribed.p2"))
-    @p(msgs("asa.legacy.paye.subscribed.p3", "/account/authorise-client/agent/", request.agentInfo.agentInformation.agentCode.getOrElse("")))
+    @p(msgs("asa.legacy.paye.subscribed.p3", request.agentInfo.agentInformation.agentCode.getOrElse("")))
     @h4(msgs("asa.legacy.paye.subscribed.p4"))
-    @p(msgs("asa.legacy.paye.subscribed.p5", "/agent/remember-to-remove"))
-    @p(msgs("asa.legacy.paye.subscribed.p6", "/construction-ind-scheme/agent/", request.agentInfo.payeAgentCode.getOrElse("")))
+    @p(msgs("asa.legacy.paye.subscribed.p5"))
+    @p(msgs("asa.legacy.paye.subscribed.p6", request.agentInfo.payeAgentCode.getOrElse("")))
 }
 
 @accordionItems = @{
