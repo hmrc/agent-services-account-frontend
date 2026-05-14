@@ -182,9 +182,9 @@
 @saItemComplete = {
     @inset_text(msgs("asa.legacy.sa.subscribed.p1", request.agentInfo.saAgentCode.getOrElse("DUMMY")))
     @h4(msgs("asa.legacy.sa.subscribed.p2"))
-    @p(msgs("asa.legacy.sa.subscribed.p3", "/account/authorise-client/agent/", request.agentInfo.agentInformation.agentCode.getOrElse("")))
+    @p(msgs("asa.legacy.sa.subscribed.p3", request.agentInfo.agentInformation.agentCode.getOrElse("")))
     @h4(msgs("asa.legacy.sa.subscribed.p4"))
-    @p(msgs("asa.legacy.sa.subscribed.p5", "/self-assessment/agent/", request.agentInfo.saAgentCode.getOrElse("")))
+    @p(msgs("asa.legacy.sa.subscribed.p5", request.agentInfo.saAgentCode.getOrElse("")))
 }
 
 @ctItemInProgress(info: SubscriptionInfo) = {

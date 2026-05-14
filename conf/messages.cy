@@ -396,9 +396,9 @@ asa.legacy.sa.in-progress.p1=We are still processing the application you did on 
 asa.legacy.sa.in-progress.p2=Processing can take up to 5 days.
 asa.legacy.sa.subscribed.p1=Your agent code is: {0}
 asa.legacy.sa.subscribed.p2=Get permission from new clients
-asa.legacy.sa.subscribed.p3=<a class="govuk-link" href="{0}{1}" target="_blank" rel="noreferrer noopener">Ask a client to authorise you (opens in a new tab)</a>
+asa.legacy.sa.subscribed.p3=<a class="govuk-link" href="/account/authorise-client/agent/{0}" target="_blank" rel="noreferrer noopener">Ask a client to authorise you (opens in a new tab)</a>
 asa.legacy.sa.subscribed.p4=Manage your client’s Self Assessment
-asa.legacy.sa.subscribed.p5=<a class="govuk-link" href="{0}{1}" target="_blank" rel="noreferrer noopener">View and manage your client list for Self Assessment (opens in a new tab)</a>
+asa.legacy.sa.subscribed.p5=<a class="govuk-link" href="/self-assessment/agent/{0}" target="_blank" rel="noreferrer noopener">View and manage your client list for Self Assessment (opens in a new tab)</a>
 
 asa.legacy.sa.do-you-already-manage.title=Does {0} already manage Self Assessment clients?
 asa.legacy.sa.do-you-already-manage.existing.false=No, this is their first time managing Self Assessment clients
