@@ -380,7 +380,6 @@ asa.legacy.paye.check-your-answers.submit-button=Ymrestru ar gyfer TWE
 
 # SA
 asa.legacy.sa.h2=Hunanasesiad
-
 asa.legacy.sa.in-progress.p1=Rydym yn dal i brosesu’r cofrestriad a wnaethoch ar {0}.
 asa.legacy.sa.in-progress.p2=Gall prosesu gymryd hyd at 5 diwrnod.
 asa.legacy.sa.subscribed.p1=Eich cod asiant yw: {0}

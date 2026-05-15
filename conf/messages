@@ -380,7 +380,6 @@ asa.legacy.paye.check-your-answers.submit-button=Enrol for PAYE
 
 # SA
 asa.legacy.sa.h2=Self Assessment
-
 asa.legacy.sa.in-progress.p1=We are still processing the application you did on {0}.
 asa.legacy.sa.in-progress.p2=Processing can take up to 5 days.
 asa.legacy.sa.subscribed.p1=Your agent code is: {0}
