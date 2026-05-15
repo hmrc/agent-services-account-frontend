@@ -73,6 +73,15 @@ case class AgentInfo(
   private val hasPayeSubscription: Boolean = enrolments.getEnrolment("IR-PAYE-AGENT").exists(_.isActivated)
   private val hasCtSubscription: Boolean = enrolments.getEnrolment("IR-CT-AGENT").exists(_.isActivated)
   private val hasSaSubscription: Boolean = enrolments.getEnrolment("IR-SA-AGENT").exists(_.isActivated)
+  val hasOtherEnrolments: Boolean = Seq(
+    "HMCE-VAT-AGNT",
+    "HMRC-AGENT-AGENT",
+    "HMRC-CHAR-AGENT",
+    "HMRC-GTS-AGNT",
+    "HMRC-MGD-AGNT",
+    "HMRC-NOVRN-AGNT",
+    "IR-SDLT-AGENT"
+  ).exists(enrolments.getEnrolment(_).exists(_.isActivated))
 
   def existingSubscriptionInfo: Seq[SubscriptionInfo] =
     Seq(

@@ -30,6 +30,7 @@ import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageS
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup._
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
@@ -113,7 +114,8 @@ with Logging {
     val alfJourneyConfig = JourneyConfigV2(
       options = JourneyOptions(
         continueUrl = continueUrl,
-        manualAddressEntryConfig = Some(manualAddressEntryConfig)
+        manualAddressEntryConfig = Some(manualAddressEntryConfig),
+        ukMode = Some(legacyRegime == PAYE)
       ),
       version = 2,
       labels = Some(JourneyLabels(

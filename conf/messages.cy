@@ -59,6 +59,11 @@ asa.inset=Ni allwch fwrw golwg dros eich rhestrau o gleientiaid drwy’ch cyfrif
 asa.other.heading=Gwasanaethau treth eraill
 asa.other.p1=Y cyfrif gwasanaethau asiant yw cartref gwasanaethau treth CThEM a lansiwyd o 2019 ymlaen.<br/>Ar gyfer unrhyw wasanaethau treth sydd heb eu rhestru yma, allgofnodwch o’r cyfrif hwn a <a class="govuk-link" href="https://www.gov.uk/government/collections/hmrc-online-services-for-agents#hmrc-online-services-for-agents-account" target="_blank" rel="noreferrer noopener">mewngofnodwch i’ch cyfrif gwasanaethau ar-lein CThEM ar gyfer asiantau (yn agor tab newydd)</a>.
 asa.other.warning=Rhybudd
+asa.other.subscribed.p1=To manage clients on tax services not listed here, you can <a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">continue on the 'Services you can use' section in your HMRC online services for agents account (opens in a new tab)</a>.
+asa.other.mapped.p1=To manage clients on tax services not listed here, you must <a class="govuk-link" href="{0}" rel="noreferrer noopener">sign in to your HMRC online services for agents account</a>.
+asa.other.mapped.p2=You will be signed out of this agent services account.
+asa.other.unknown.p1=If you manage clients on tax services not listed here, you must <a class="govuk-link" href="{0}" rel="noreferrer noopener">sign in to your HMRC online services for agents account</a>.
+asa.other.unknown.p2=You will be signed out of this agent services account.
 asa.p.agent-services=Mynediad at wasanaethau ar gyfer cleientiaid sydd eisoes wedi eich awdurdodi i weithredu ar eu rhan.
 asa.p.client-authorisations=Dechrau cais am awdurdodiad newydd neu gysylltu’ch cleientiaid cyfredol â’ch cyfrif.
 asa.p.manage=Caniatáu i ddefnyddwyr eraill yn eich sefydliad gael mynediad at y cyfrif gwasanaethau asiant hwn, neu gyfyngu ar eu mynediad.
@@ -190,9 +195,9 @@ asa.legacy.ct.in-progress.p1=Rydym yn dal i brosesu’r cais a wnaethoch ar {0}.
 asa.legacy.ct.in-progress.p2=Gall prosesu gymryd hyd at 5 diwrnod.
 asa.legacy.ct.subscribed.p1=Eich cod asiant yw: {0}
 asa.legacy.ct.subscribed.p2=Cael caniatâd gan gleientiaid newydd
-asa.legacy.ct.subscribed.p3=<a class="govuk-link" href="{0}{1}" rel="noreferrer noopener">Gofynnwch i gleient eich awdurdodi</a>
+asa.legacy.ct.subscribed.p3=<a class="govuk-link" href="/account/authorise-client/agent/{0}" target="_blank" rel="noreferrer noopener">Gofynnwch i gleient eich awdurdodi (yn agor tab newydd)</a>
 asa.legacy.ct.subscribed.p4=Rheoli Treth Gorfforaeth eich cleient
-asa.legacy.ct.subscribed.p5=<a class="govuk-link" href="{0}{1}" rel="noreferrer noopener">Bwrw golwg dros a rheoli’ch rhestr o gleientiaid ar gyfer Treth Gorfforaeth</a>
+asa.legacy.ct.subscribed.p5=<a class="govuk-link" href="/corporation-tax/agent/{0}" target="_blank" rel="noreferrer noopener">Bwrw golwg dros a rheoli’ch rhestr o gleientiaid ar gyfer Treth Gorfforaeth (yn agor tab newydd)</a>
 
 asa.legacy.ct.do-you-already-manage.title=Ydy {0} eisoes yn rheoli cleientiaid Treth Gorfforaeth?
 asa.legacy.ct.do-you-already-manage.existing.false=Na, dyma’r tro cyntaf iddo reoli cleientiaid Treth Gorfforaeth
@@ -288,10 +293,10 @@ asa.legacy.paye.in-progress.p1=Rydym yn dal i brosesu’r cofrestriad a wnaethoc
 asa.legacy.paye.in-progress.p2=Gall prosesu gymryd hyd at 5 diwrnod.
 asa.legacy.paye.subscribed.p1=Eich cod asiant yw: {0}
 asa.legacy.paye.subscribed.p2=Cael caniatâd gan gleientiaid newydd
-asa.legacy.paye.subscribed.p3=<a class="govuk-link" href="{0}" rel="noreferrer noopener">Gofynnwch i gleient eich awdurdodi</a>
+asa.legacy.paye.subscribed.p3=<a class="govuk-link" href="/account/authorise-client/agent/{0}" target="_blank" rel="noreferrer noopener">Gofynnwch i gleient eich awdurdodi (yn agor tab newydd)</a>
 asa.legacy.paye.subscribed.p4=Rheoli TWE/CIS eich cleient
-asa.legacy.paye.subscribed.p5=<a class="govuk-link" href="{0}{1}" rel="noreferrer noopener">Bwrw golwg dros a rheoli’ch rhestr o gleientiaid ar gyfer TWE</a>
-asa.legacy.paye.subscribed.p6=<a class="govuk-link" href="{0}{1}" rel="noreferrer noopener">Bwrw golwg dros a rheoli’ch rhestr o gleientiaid ar gyfer CIS</a>
+asa.legacy.paye.subscribed.p5=<a class="govuk-link" href="/agent/remember-to-remove" target="_blank" rel="noreferrer noopener">Bwrw golwg dros a rheoli’ch rhestr o gleientiaid ar gyfer TWE (yn agor tab newydd)</a>
+asa.legacy.paye.subscribed.p6=<a class="govuk-link" href="/construction-ind-scheme/agent/{0}" target="_blank" rel="noreferrer noopener">Bwrw golwg dros a rheoli’ch rhestr o gleientiaid ar gyfer CIS (yn agor tab newydd)</a>
 
 asa.legacy.paye.do-you-already-manage.title=Ydy {0} eisoes yn rheoli cleientiaid TWE?
 asa.legacy.paye.do-you-already-manage.existing.false=Na, dyma’r tro cyntaf iddo reoli cleientiaid TWE
@@ -380,9 +385,9 @@ asa.legacy.sa.in-progress.p1=Rydym yn dal i brosesu’r cofrestriad a wnaethoch 
 asa.legacy.sa.in-progress.p2=Gall prosesu gymryd hyd at 5 diwrnod.
 asa.legacy.sa.subscribed.p1=Eich cod asiant yw: {0}
 asa.legacy.sa.subscribed.p2=Cael caniatâd gan gleientiaid newydd
-asa.legacy.sa.subscribed.p3=<a class="govuk-link" href="{0}{1}" rel="noreferrer noopener">Gofynnwch i gleient eich awdurdodi</a>
+asa.legacy.sa.subscribed.p3=<a class="govuk-link" href="/account/authorise-client/agent/{0}" target="_blank" rel="noreferrer noopener">Gofynnwch i gleient eich awdurdodi (yn agor tab newydd)</a>
 asa.legacy.sa.subscribed.p4=Rheoli Hunanasesiad eich cleient
-asa.legacy.sa.subscribed.p5=<a class="govuk-link" href="{0}{1}" rel="noreferrer noopener">Bwrw golwg dros a rheoli’ch rhestr o gleientiaid ar gyfer Hunanasesiad</a>
+asa.legacy.sa.subscribed.p5=<a class="govuk-link" href="/self-assessment/agent/{0}" target="_blank" rel="noreferrer noopener">Bwrw golwg dros a rheoli’ch rhestr o gleientiaid ar gyfer Hunanasesiad (yn agor tab newydd)</a>
 
 asa.legacy.sa.do-you-already-manage.title=Ydy {0} eisoes yn rheoli cleientiaid Hunanasesiad?
 asa.legacy.sa.do-you-already-manage.existing.false=Na, dyma’r tro cyntaf iddo reoli cleientiaid Hunanasesiad

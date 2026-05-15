@@ -63,6 +63,11 @@ with Matchers {
         result.get.contactName shouldBe exampleGBCyaData.name
       }
 
+      "strip non-numeric characters from phone number" in {
+        val result = exampleGBCyaData.copy(phoneNumber = "(+44) 101 7654321").toSubscriptionRequest(legacyRegime, "")
+        result.get.phoneNumber shouldBe Some("441017654321")
+      }
+
       "use addressLine4 when country is GB" in {
         val result = exampleGBCyaData.toSubscriptionRequest(legacyRegime, "Portugal")
         result.get.address.line4 shouldBe Some("Line 4")
@@ -245,6 +250,17 @@ with Matchers {
     "return None when ASA agencyName is None" in {
       val result = exampleGBCyaData.toSubscriptionRequest(PAYE, "", None)
       result shouldBe None
+    }
+
+    "strip non-numeric characters from phone number" in {
+      val result = exampleGBCyaData
+        .copy(phoneNumber = "(+44) 101 7654321")
+        .toSubscriptionRequest(
+          PAYE,
+          "",
+          Some(asaAgencyName)
+        )
+      result.get.phoneNumber shouldBe Some("441017654321")
     }
 
     "use addressLine4 when country is GB" in {

@@ -28,6 +28,8 @@ case class SubscriptionCyaData(
   address: BusinessAddress
 ) {
 
+  private val subscriptionRequestPhoneNumber = phoneNumber.replaceAll("[^0-9]", "")
+
   private def toSubscriptionAddress(
     address: BusinessAddress,
     countryName: Option[String] = None
@@ -51,7 +53,7 @@ case class SubscriptionCyaData(
     CtSubscriptionRequest(
       agentName = name,
       contactName = name,
-      phoneNumber = Some(phoneNumber),
+      phoneNumber = Some(subscriptionRequestPhoneNumber),
       emailAddress = Some(email),
       address = toSubscriptionAddress(address, Some(countryName)),
       countryCode = address.countryCode
@@ -62,7 +64,7 @@ case class SubscriptionCyaData(
     PayeSubscriptionRequest(
       agentName = asaAgentName,
       contactName = name,
-      phoneNumber = Some(phoneNumber),
+      phoneNumber = Some(subscriptionRequestPhoneNumber),
       emailAddress = Some(email),
       address = toSubscriptionAddress(address)
     )
@@ -72,7 +74,7 @@ case class SubscriptionCyaData(
     SaSubscriptionRequest(
       agentName = name,
       contactName = name,
-      phoneNumber = Some(phoneNumber),
+      phoneNumber = Some(subscriptionRequestPhoneNumber),
       emailAddress = Some(email),
       address = toSubscriptionAddress(address, Some(countryName)),
       countryCode = address.countryCode
