@@ -390,7 +390,7 @@ asa.legacy.sa.subscribed.p5=<a class="govuk-link" href="/self-assessment/agent/{
 
 asa.legacy.sa.do-you-already-manage.title=Ydy {0} eisoes yn rheoli cleientiaid Hunanasesiad?
 asa.legacy.sa.do-you-already-manage.existing.false=Na, dyma’r tro cyntaf iddo reoli cleientiaid Hunanasesiad
-asa.legacy.sa.do-you-already-manage.error.required=Dewiswch ‘Iawn’ os yw {business name} eisoes yn rheoli cleientiaid Hunanasesiad
+asa.legacy.sa.do-you-already-manage.error.required=Dewiswch ‘Iawn’ os yw {0} eisoes yn rheoli cleientiaid Hunanasesiad
 
 asa.legacy.sa.you-may-not-need-to-apply.title=You may not need to apply for Self Assessment
 asa.legacy.sa.you-may-not-need-to-apply.p2=You can continue to manage your existing Self Assessment clients through your HMRC Online Services for Agents account.
@@ -415,7 +415,7 @@ asa.legacy.sa.email-address.title=Pa gyfeiriad e-bost ddylem ei ddefnyddio i gys
 asa.legacy.sa.email-address.use-asa.false=Rwyf am ddefnyddio cyfeiriad e-bost gwahanol ar gyfer Hunanasesiad
 asa.legacy.sa.email-address.new-input.label=Nodwch gyfeiriad e-bost
 asa.legacy.sa.email-address.new-input.hint=Byddwn yn anfon cod i’r cyfeiriad e-bost hwn i’w gadarnhau
-asa.legacy.sa.email-address.use-asa.error.required=Dewiswch y cyfeiriad e-bost y dylem ei ddefnyddio i gysylltu â {business name} ynglŷn â Hunanasesiad
+asa.legacy.sa.email-address.use-asa.error.required=Dewiswch y cyfeiriad e-bost y dylem ei ddefnyddio i gysylltu â {0} ynglŷn â Hunanasesiad
 asa.legacy.sa.email-address.input.error.empty=Nodwch gyfeiriad e-bost
 asa.legacy.sa.email-address.input.error.length=Nodwch gyfeiriad e-bost sy’n 50 o gymeriadau neu lai.
 asa.legacy.sa.email-address.input.error.invalid=Nodwch gyfeiriad e-bost yn y fformat cywir, er enghraifft name@example.com
