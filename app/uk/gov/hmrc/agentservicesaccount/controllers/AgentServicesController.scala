@@ -80,7 +80,7 @@ with Logging {
      * */
     withShowFeatureInvite(agentInfo.arn) { showFeatureInvite: Boolean =>
       val subscriptionInfoF: Future[Seq[SubscriptionInfo]] =
-        if (appConfig.enableLegacySubscriptionLink)
+        if (appConfig.showLegacySubscriptions || appConfig.enableLegacySubscriptionLink)
           subscriptionService.getSubscriptionInfo(
             agentInfo.missingSubscriptions,
             agentInfo.existingSubscriptionInfo

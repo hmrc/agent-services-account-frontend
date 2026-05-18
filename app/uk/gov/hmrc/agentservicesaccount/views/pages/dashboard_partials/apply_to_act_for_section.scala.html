@@ -48,7 +48,7 @@
 
     regimes
 }) { regimes =>
-    @if(regimes.nonEmpty) {
+    @if(regimes.nonEmpty && appConfig.enableLegacySubscriptionLink) {
         <hr class="govuk-section-break hr-thick govuk-!-margin-bottom-6 govuk-!-margin-top-8">
         @h2(
             if(regimes.size == 1)
