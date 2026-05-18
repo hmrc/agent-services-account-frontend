@@ -224,7 +224,7 @@
             content = HtmlContent(itsaAccordionItem)
         )
     )
-    if(appConfig.enableLegacySubscriptionLink) {
+    if(appConfig.showLegacySubscriptions) {
         subscriptionInfo.find(_.regime == LegacyRegime.SA).map { info =>
             info.subscriptionStatus match {
                 case SubscriptionStatus.SubscriptionInProgress if agentInfo.isAdmin =>
@@ -257,7 +257,7 @@
             content = HtmlContent(mtdForVatAccordionItem)
         )
     )
-    if(appConfig.enableLegacySubscriptionLink) {
+    if(appConfig.showLegacySubscriptions) {
         subscriptionInfo.find(_.regime == LegacyRegime.CT).map { info =>
 
             info.subscriptionStatus match {
@@ -333,7 +333,7 @@
         Section(
             headingContent = Text(msgs("asa.other.heading")),
             content = HtmlContent(
-                if(!appConfig.enableLegacySubscriptionLink) otherTaxesItem
+                if(!appConfig.showLegacySubscriptions) otherTaxesItem
                 else if(agentInfo.hasOtherEnrolments) otherTaxesSubscribedItem
                 else if(subscriptionInfo.exists(info => info.subscriptionStatus == SubscriptionStatus.SubscriptionMapped)) otherTaxesMappedItem
                 else otherTaxesUnknownItem
