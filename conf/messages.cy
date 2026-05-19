@@ -179,8 +179,8 @@ asa.apply-to-act-for.ct=Treth Gorfforaeth
 
 asa.legacy.do-you-already-manage.existing.true=Iawn, drwy eu cyfrif gwasanaethau ar-lein CThEF presennol
 
-asa.legacy.you-may-not-need-to-apply.p1=You only need to apply and get a new agent code if you want to manage your clients between different team members or office locations.
-asa.legacy.you-may-not-need-to-apply.h1=Do you still want to apply?
+asa.legacy.you-may-not-need-to-apply.p1=Dim ond os ydych am rannu neu drosglwyddo eich cleientiaid ymhlith aelodau o’r tîm neu reoli cleientiaid o leoliadau swyddfa gwahanol y mae angen i chi wneud cais am a chael cod asiant newydd.
+asa.legacy.you-may-not-need-to-apply.h1=A ydych am wneud cais o hyd?
 
 asa.legacy.confirmation.title=Rydym yn prosesu’ch cais
 asa.legacy.confirmation.panel.body=Byddwch yn cael cod asiant cyn pen 5 diwrnod
@@ -203,8 +203,8 @@ asa.legacy.ct.do-you-already-manage.title=Ydy {0} eisoes yn rheoli cleientiaid T
 asa.legacy.ct.do-you-already-manage.existing.false=Na, dyma’r tro cyntaf iddo reoli cleientiaid Treth Gorfforaeth
 asa.legacy.ct.do-you-already-manage.error.required=Dewiswch ‘Iawn’ os yw {0} eisoes yn rheoli cleientiaid Treth Gorfforaeth
 
-asa.legacy.ct.you-may-not-need-to-apply.title=You may not need to apply for Corporation Tax
-asa.legacy.ct.you-may-not-need-to-apply.p2=You can continue to manage your existing Corporation Tax clients through your HMRC Online Services for Agents account.
+asa.legacy.ct.you-may-not-need-to-apply.title=Efallai na fydd angen i chi wneud cais am Dreth Gorfforaeth
+asa.legacy.ct.you-may-not-need-to-apply.p2=Gallwch barhau i reoli eich cleientiaid presennol ar gyfer Treth Gorfforaeth drwy eich cyfrif Gwasanaethau Ar-lein CThEF i Asiantau.
 asa.legacy.ct.you-may-not-need-to-apply.error.required=Dewiswch ‘Iawn’ os ydych dal am wneud cais
 
 asa.legacy.ct.business-name.title=Pa enw busnes ddylem ni ei ddangos i’ch cleientiaid Treth Gorfforaeth?
@@ -212,7 +212,7 @@ asa.legacy.ct.business-name.use-asa.false=Rwyf am ddefnyddio enw busnes gwahanol
 asa.legacy.ct.business-name.new-input.label=Nodwch enw busnes
 asa.legacy.ct.business-name.use-asa.error.required=Dewiswch yr enw busnes y dylem ei ddangos i’ch cleientiaid Treth Gorfforaeth
 asa.legacy.ct.business-name.new-input.error.empty=Nodwch enw busnes
-asa.legacy.ct.business-name.new-input.error.invalid=Enter a business name that only contains letters, numbers, spaces and the characters . , ( ) & - ‘ /
+asa.legacy.ct.business-name.new-input.error.invalid=Nodwch enw busnes sy’n cynnwys llythrennau, rhifau, bylchau a’r cymeriadau canlynol yn unig . , ( ) & - ‘ /
 
 asa.legacy.ct.phone-number.title=Pa rif ffôn ddylem ei ddefnyddio i ffonio chi ynglŷn â Threth Gorfforaeth?
 asa.legacy.ct.phone-number.use-asa.false=Rwyf am ddefnyddio rhif ffôn gwahanol ar gyfer Treth Gorfforaeth
@@ -231,10 +231,10 @@ asa.legacy.ct.email-address.input.error.empty=Nodwch gyfeiriad e-bost
 asa.legacy.ct.email-address.input.error.length=Nodwch gyfeiriad e-bost sy’n 50 o gymeriadau neu lai.
 asa.legacy.ct.email-address.input.error.invalid=Nodwch gyfeiriad e-bost yn y fformat cywir, er enghraifft name@example.com
 
-asa.legacy.ct.custom-email-address.title=Your agent services account email address is too long
-asa.legacy.ct.custom-email-address.p1=We currently have this email address connected to your agent services account:
-asa.legacy.ct.custom-email-address.p2=For Corporation Tax, the email address must be 50 characters or less.
-asa.legacy.ct.custom-email-address.input.label=Enter a shorter email address
+asa.legacy.ct.custom-email-address.title=Mae cyfeiriad e-bost eich cyfrif gwasanaethau asiant yn rhy hir
+asa.legacy.ct.custom-email-address.p1=Ar hyn o bryd mae gennym y cyfeiriad e-bost hwn ar gyfer eich cyfrif gwasanaethau asiant:
+asa.legacy.ct.custom-email-address.p2=Ar gyfer Treth Gorfforaeth, mae’n rhaid i’r cyfeiriad e-bost fod yn 50 o gymeriadau neu lai.
+asa.legacy.ct.custom-email-address.input.label=Nodwch gyfeiriad e-bost byrrach
 asa.legacy.ct.custom-email-address.input.hint=Byddwn yn anfon cod i’r cyfeiriad e-bost hwn i’w gadarnhau
 
 asa.legacy.ct.address.title=Pa gyfeiriad ddylem ei ddefnyddio i anfon llythyrau ynglŷn â Threth Gorfforaeth?
@@ -253,9 +253,9 @@ asa.legacy.ct.alf.edit.heading=Nodwch y cyfeiriad
 asa.legacy.ct.alf.edit.townLabel=Cyfeiriad – llinell 4
 asa.legacy.ct.alf.confirm.title=Adolygu a chadarnhau - Cyfrif gwasanaethau asiant - GOV.UK
 
-asa.legacy.ct.change-address.title=Change your address
-asa.legacy.ct.change-address.title.invalid=Change the address lines that are too long
-asa.legacy.ct.change-address.inset.invalid=Our system can only accept a limited amount of characters in each address line.
+asa.legacy.ct.change-address.title=Newid eich cyfeiriad
+asa.legacy.ct.change-address.title.invalid=Newid y llinellau cyfeiriad sy’n rhy hir
+asa.legacy.ct.change-address.inset.invalid=Dim ond nifer cyfyngedig o gymeriadau ar gyfer pob llinell cyfeiriad y gall ein system dderbyn.
 asa.legacy.ct.change-address.line1.label=Cyfeiriad – llinell 1
 asa.legacy.ct.change-address.line2.label=Cyfeiriad – llinell 2
 asa.legacy.ct.change-address.line3.label=Cyfeiriad – llinell 3
@@ -265,19 +265,19 @@ asa.legacy.ct.change-address.postcode.label=Cod post
 asa.legacy.ct.change-address.country.label=Gwlad
 asa.legacy.ct.error.addressLine1.required=Nodwch gyfeiriad – llinell 1
 asa.legacy.ct.error.addressLine1.length=Mae angen i linell 1 y cyfeiriad fod yn 28 o gymeriadau neu lai
-asa.legacy.ct.error.addressLine1.invalid=Enter an address line 1 that only contains letters, numbers, spaces and the characters . , ( ) & - ‘ /
+asa.legacy.ct.error.addressLine1.invalid=Nodwch gyfeiriad – llinell 1, sy’n cynnwys llythrennau, rhifau, bylchau a’r cymeriadau canlynol yn unig . , ( ) & - ‘ /
 asa.legacy.ct.error.addressLine2.required=Nodwch gyfeiriad – llinell 2
 asa.legacy.ct.error.addressLine2.length=Mae angen i linell 2 y cyfeiriad fod yn 28 o gymeriadau neu lai
-asa.legacy.ct.error.addressLine2.invalid=Enter an address line 2 that only contains letters, numbers, spaces and the characters . , ( ) & - ‘ /
+asa.legacy.ct.error.addressLine2.invalid=Nodwch gyfeiriad – llinell 2, sy’n cynnwys llythrennau, rhifau, bylchau a’r cymeriadau canlynol yn unig . , ( ) & - ‘ /
 asa.legacy.ct.error.addressLine3.required=Nodwch gyfeiriad – llinell 3
 asa.legacy.ct.error.addressLine3.length=Mae angen i linell 3 y cyfeiriad fod yn 28 o gymeriadau neu lai
-asa.legacy.ct.error.addressLine3.invalid=Enter an address line 3 that only contains letters, numbers, spaces and the characters . , ( ) & - ‘ /
+asa.legacy.ct.error.addressLine3.invalid=Nodwch gyfeiriad – llinell 3, sy’n cynnwys llythrennau, rhifau, bylchau a’r cymeriadau canlynol yn unig . , ( ) & - ‘ /
 asa.legacy.ct.error.addressLine4.required=Nodwch gyfeiriad – llinell 4
 asa.legacy.ct.error.addressLine4.length=Mae angen i linell 4 y cyfeiriad fod yn 18 o gymeriadau neu lai
-asa.legacy.ct.error.addressLine4.invalid=Enter an address line 4 that only contains letters, numbers, spaces and the characters . , ( ) & - ‘ /
+asa.legacy.ct.error.addressLine4.invalid=Nodwch gyfeiriad – llinell 4, sy’n cynnwys llythrennau, rhifau, bylchau a’r cymeriadau canlynol yn unig . , ( ) & - ‘ /
 asa.legacy.ct.error.postcode.required=Nodwch god post
-asa.legacy.ct.error.postcode.invalid=Enter a postcode in the correct format
-asa.legacy.ct.error.country.required=Select a country
+asa.legacy.ct.error.postcode.invalid=Nodwch god post yn y fformat cywir
+asa.legacy.ct.error.country.required=Dewis gwlad
 
 asa.legacy.ct.check-your-answers.h1=Gwiriwch eich atebion
 asa.legacy.ct.check-your-answers.business-name=Enw’r busnes
@@ -310,7 +310,7 @@ asa.legacy.paye.contact-name.title=Pwy ddylem gysylltu â nhw ynglŷn â TWE?
 asa.legacy.paye.contact-name.input.heading=Pwy yn {0} ddylem gysylltu â nhw ynglŷn â TWE?
 asa.legacy.paye.contact-name.input.hint=Nodwch ei enw llawn
 asa.legacy.paye.contact-name.input.error.empty=Nodwch enw llawn y person y dylem gysylltu ag ef ynglŷn â TWE
-asa.legacy.paye.contact-name.input.error.invalid=The name of the person can only contain letters, hyphens and apostrophes
+asa.legacy.paye.contact-name.input.error.invalid=Gall enw’r person gynnwys llythrennau, cysylltnodau a chollnodau yn unig
 
 asa.legacy.paye.phone-number.title=Pa rif ffôn ddylem ei ddefnyddio i ffonio chi ynglŷn â Thalu Wrth Ennill?
 asa.legacy.paye.phone-number.use-asa.false=Rwyf am ddefnyddio rhif ffôn gwahanol ar gyfer TWE
