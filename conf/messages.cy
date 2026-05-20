@@ -420,10 +420,10 @@ asa.legacy.sa.email-address.input.error.empty=Nodwch gyfeiriad e-bost
 asa.legacy.sa.email-address.input.error.length=Nodwch gyfeiriad e-bost sy’n 50 o gymeriadau neu lai.
 asa.legacy.sa.email-address.input.error.invalid=Nodwch gyfeiriad e-bost yn y fformat cywir, er enghraifft name@example.com
 
-asa.legacy.sa.custom-email-address.title=Your agent services account email address is too long
-asa.legacy.sa.custom-email-address.p1=We currently have this email address connected to your agent services account:
-asa.legacy.sa.custom-email-address.p2=For Self Assessment, the email address must be 50 characters or less.
-asa.legacy.sa.custom-email-address.input.label=Enter a shorter email address
+asa.legacy.sa.custom-email-address.title=Mae cyfeiriad e-bost eich cyfrif gwasanaethau asiant yn rhy hir
+asa.legacy.sa.custom-email-address.p1=Ar hyn o bryd mae gennym y cyfeiriad e-bost hwn ar gyfer eich cyfrif gwasanaethau asiant:
+asa.legacy.sa.custom-email-address.p2=Ar gyfer Hunanasesiad, mae’n rhaid i’r cyfeiriad e-bost fod yn 50 o gymeriadau neu lai.
+asa.legacy.sa.custom-email-address.input.label=Nodwch gyfeiriad e-bost byrrach
 asa.legacy.sa.custom-email-address.input.hint=Byddwn yn anfon cod i’r cyfeiriad e-bost hwn i’w gadarnhau
 
 asa.legacy.sa.address.title=Pa gyfeiriad ddylem ei ddefnyddio i anfon llythyrau ynglŷn â Hunanasesiad?
