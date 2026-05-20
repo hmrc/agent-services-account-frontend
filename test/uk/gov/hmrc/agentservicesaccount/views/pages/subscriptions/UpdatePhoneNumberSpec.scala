@@ -34,6 +34,7 @@ class UpdatePhoneNumberSpec
 extends ViewBaseSpec {
 
   private val view: update_phone_number = inject[update_phone_number]
+  private val asaDetailsAgencyName = "ABC-No.1 Accountants"
   private val asaDetailsAgencyTelephone = "07700 900123"
 
   private val legacyRegime = LegacyRegime.PAYE
@@ -48,6 +49,7 @@ extends ViewBaseSpec {
   ): Document = Jsoup.parse(
     view(
       form,
+      asaDetailsAgencyName,
       subPhoneNumberOpt,
       legacyRegime
     )(

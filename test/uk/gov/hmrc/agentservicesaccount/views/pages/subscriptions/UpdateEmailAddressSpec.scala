@@ -33,6 +33,7 @@ class UpdateEmailAddressSpec
 extends ViewBaseSpec {
 
   private val view: update_email_address = inject[update_email_address]
+  private val asaDetailsAgencyName = "ABC-No.1 Accountants"
   private val asaDetailsAgencyEmail = "joe@bloggs.com"
 
   private val legacyRegime = LegacyRegime.PAYE
@@ -53,6 +54,7 @@ extends ViewBaseSpec {
   def render(form: Form[EmailAddressFormValues]): Document = Jsoup.parse(
     view(
       form,
+      asaDetailsAgencyName,
       asaDetailsAgencyEmail,
       legacyRegime
     )(
