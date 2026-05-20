@@ -214,7 +214,7 @@ asa.legacy.ct.business-name.use-asa.error.required=Dewiswch yr enw busnes y dyle
 asa.legacy.ct.business-name.new-input.error.empty=Nodwch enw busnes
 asa.legacy.ct.business-name.new-input.error.invalid=Nodwch enw busnes sy’n cynnwys llythrennau, rhifau, bylchau a’r cymeriadau canlynol yn unig . , ( ) & - ‘ /
 
-asa.legacy.ct.phone-number.title=Pa rif ffôn ddylem ei ddefnyddio i ffonio chi ynglŷn â Threth Gorfforaeth?
+asa.legacy.ct.phone-number.title=What phone number should we use to call {0} about Corporation Tax?
 asa.legacy.ct.phone-number.use-asa.false=Rwyf am ddefnyddio rhif ffôn gwahanol ar gyfer Treth Gorfforaeth
 asa.legacy.ct.phone-number.new-input.label=Nodwch rif ffôn
 asa.legacy.ct.phone-number.new-input.hint=Ar gyfer rhifau rhyngwladol, dylech gynnwys cod y wlad.
@@ -312,7 +312,7 @@ asa.legacy.paye.contact-name.input.hint=Nodwch ei enw llawn
 asa.legacy.paye.contact-name.input.error.empty=Nodwch enw llawn y person y dylem gysylltu ag ef ynglŷn â TWE
 asa.legacy.paye.contact-name.input.error.invalid=Gall enw’r person gynnwys llythrennau, cysylltnodau a chollnodau yn unig
 
-asa.legacy.paye.phone-number.title=Pa rif ffôn ddylem ei ddefnyddio i ffonio chi ynglŷn â Thalu Wrth Ennill?
+asa.legacy.paye.phone-number.title=What phone number should we use to call {0} about PAYE?
 asa.legacy.paye.phone-number.use-asa.false=Rwyf am ddefnyddio rhif ffôn gwahanol ar gyfer TWE
 asa.legacy.paye.phone-number.new-input.label=Nodwch rif ffôn
 asa.legacy.paye.phone-number.new-input.hint=Ar gyfer rhifau rhyngwladol, dylech gynnwys cod y wlad.
@@ -403,7 +403,7 @@ asa.legacy.sa.business-name.use-asa.error.required=Dewiswch yr enw busnes y dyle
 asa.legacy.sa.business-name.new-input.error.empty=Nodwch enw busnes
 asa.legacy.sa.business-name.new-input.error.invalid=Nodwch enw busnes sy’n cynnwys llythrennau, rhifau, bylchau a’r cymeriadau canlynol yn unig . , ( ) & - ‘ /
 
-asa.legacy.sa.phone-number.title=Pa rif ffôn ddylem ei ddefnyddio i ffonio chi ynglŷn â Hunanasesiad?
+asa.legacy.sa.phone-number.title=What phone number should we use to call {0} about Self Assessment?
 asa.legacy.sa.phone-number.use-asa.false=Rwyf am ddefnyddio rhif ffôn gwahanol ar gyfer Hunanasesiad
 asa.legacy.sa.phone-number.new-input.label=Nodwch rif ffôn
 asa.legacy.sa.phone-number.new-input.hint=Ar gyfer rhifau rhyngwladol, dylech gynnwys cod y wlad.
