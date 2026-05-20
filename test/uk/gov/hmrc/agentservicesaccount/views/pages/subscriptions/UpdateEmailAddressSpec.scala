@@ -86,6 +86,7 @@ extends ViewBaseSpec {
 
     def testPageStaticContent(doc: Document): Unit = {
 
+      // TODO: 11476 FIX
       "have the correct h1 heading and introduction" in {
         doc.select("h1").first.text() mustBe title
       }
@@ -103,6 +104,7 @@ extends ViewBaseSpec {
 
       testPageStaticContent(doc)
 
+      // TODO: 11476 FIX
       "display the correct page title" in {
         doc.title() mustBe s"$title - Agent services account - GOV.UK"
       }
@@ -164,6 +166,7 @@ extends ViewBaseSpec {
 
       testPageStaticContent(doc)
 
+      // TODO: 11476 FIX
       "display error prefix on page title" in {
         doc.title() mustBe s"Error: $title - Agent services account - GOV.UK"
       }
@@ -191,6 +194,7 @@ extends ViewBaseSpec {
 
       testPageStaticContent(doc)
 
+      // TODO: 11476 FIX
       "display error prefix on page title" in {
         doc.title() mustBe s"Error: $title - Agent services account - GOV.UK"
       }

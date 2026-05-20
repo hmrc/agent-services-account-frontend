@@ -170,6 +170,7 @@ with TestConstants {
     s"GET /subscription/$legacyRegime/phone-number" should {
 
       List(true, false).foreach(hasSubscriptionPhoneNumber => {
+        // TODO: 11476 FIX
         "render empty form on first visit " +
           s"when subscription has phone number $hasSubscriptionPhoneNumber" in new TestSetup(legacyRegime, hasSubscriptionPhoneNumber) {
             cacheJourney(subscriptionBaseJourney.copy(asaDetails = agencyDetails(hasSubscriptionPhoneNumber)))
@@ -192,6 +193,7 @@ with TestConstants {
             }
           }
 
+        // TODO: 11476 FIX
         "render pre-filled form when journey has existing answers " +
           s"and subscription has phone number $hasSubscriptionPhoneNumber" in new TestSetup(legacyRegime, hasSubscriptionPhoneNumber) {
             private val journey = subscriptionBaseJourney.copy(
