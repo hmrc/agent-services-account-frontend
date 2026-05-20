@@ -45,9 +45,7 @@
 
 @legacyRegimePrefix = @{ legacyRegime.msgPrefix }
 
-@pageTitle = @{
-    msgs(s"$legacyRegimePrefix.you-may-not-need-to-apply.title")
-}
+@pageTitle = @{ msgs(s"$legacyRegimePrefix.you-may-not-need-to-apply.title") }
 
 @main(
     pageTitle = withErrorPrefix(form.hasErrors, pageTitle),

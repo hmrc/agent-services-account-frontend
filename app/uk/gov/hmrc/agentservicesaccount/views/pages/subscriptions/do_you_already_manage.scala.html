@@ -44,9 +44,7 @@
 
 @legacyRegimePrefix = @{ legacyRegime.msgPrefix }
 
-@pageTitle = @{
-    msgs(s"asa.legacy.${legacyRegime.toString.toLowerCase}.do-you-already-manage.title", asaDetailsAgencyName)
-}
+@pageTitle = @{ msgs(s"$legacyRegimePrefix.do-you-already-manage.title", asaDetailsAgencyName) }
 
 @main(
     pageTitle = withErrorPrefix(form.hasErrors, pageTitle),
