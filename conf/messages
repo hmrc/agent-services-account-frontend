@@ -222,7 +222,7 @@ asa.legacy.ct.phone-number.use-asa.error.required=Enter the phone number we shou
 asa.legacy.ct.phone-number.new-input.error.empty=Enter a phone number
 asa.legacy.ct.phone-number.new-input.error.invalid=The phone number must only include numbers
 
-asa.legacy.ct.email-address.title=What email address should we use to contact you about Corporation Tax?
+asa.legacy.ct.email-address.title=What email address should we use to contact {0} about Corporation Tax?
 asa.legacy.ct.email-address.use-asa.false=I want to use a different email address for Corporation Tax
 asa.legacy.ct.email-address.new-input.label=Enter an email address
 asa.legacy.ct.email-address.new-input.hint=We’ll send a code to this email address to confirm it
@@ -320,7 +320,7 @@ asa.legacy.paye.phone-number.use-asa.error.required=Enter the phone number we sh
 asa.legacy.paye.phone-number.new-input.error.empty=Enter a UK phone number
 asa.legacy.paye.phone-number.new-input.error.invalid=Enter a UK phone number, like 07700 900 982 or +44 808 157 0192
 
-asa.legacy.paye.email-address.title=What email address should we use to contact you about PAYE?
+asa.legacy.paye.email-address.title=What email address should we use to contact {0} about PAYE?
 asa.legacy.paye.email-address.use-asa.false=I want to use a different email address for PAYE
 asa.legacy.paye.email-address.new-input.label=Enter an email address
 asa.legacy.paye.email-address.new-input.hint=We’ll send a code to this email address to confirm it
@@ -411,7 +411,7 @@ asa.legacy.sa.phone-number.use-asa.error.required=Enter the phone number we shou
 asa.legacy.sa.phone-number.new-input.error.empty=Enter a phone number
 asa.legacy.sa.phone-number.new-input.error.invalid=The phone number must only include numbers
 
-asa.legacy.sa.email-address.title=What email address should we use to contact you about Self Assessment?
+asa.legacy.sa.email-address.title=What email address should we use to contact {0} about Self Assessment?
 asa.legacy.sa.email-address.use-asa.false=I want to use a different email address for Self Assessment
 asa.legacy.sa.email-address.new-input.label=Enter an email address
 asa.legacy.sa.email-address.new-input.hint=We’ll send a code to this email address to confirm it
