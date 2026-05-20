@@ -34,9 +34,11 @@
     govukErrorSummary: GovukErrorSummary
 )
 
-@(form: Form[EmailAddressFormValues], asaDetailsAgencyEmail: String, legacyRegime: LegacyRegime)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
+@(form: Form[EmailAddressFormValues], asaDetailsAgencyName: String, asaDetailsAgencyEmail: String, legacyRegime: LegacyRegime)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
 
 @legacyRegimePrefix = @{ legacyRegime.msgPrefix }
+
+@pageTitle = @{ msgs(s"$legacyRegimePrefix.email-address.title", asaDetailsAgencyName) }
 
 @newEmailAddressInput = {
     @govukInput(Input(
@@ -49,7 +51,7 @@
 }
 
 @main(
-    pageTitle = withErrorPrefix(form.hasErrors, msgs(s"$legacyRegimePrefix.email-address.title")),
+    pageTitle = withErrorPrefix(form.hasErrors, pageTitle),
     mimicBrowserBackLink = true,
     showSecondaryNav = false
 ) {
@@ -62,7 +64,7 @@
         @govukRadios(Radios(
             fieldset = Some(Fieldset(
                 legend = Some(Legend(
-                    content = Text(msgs(s"$legacyRegimePrefix.email-address.title")),
+                    content = Text(pageTitle),
                     classes = "govuk-fieldset__legend--l",
                     isPageHeading = true
                 ))

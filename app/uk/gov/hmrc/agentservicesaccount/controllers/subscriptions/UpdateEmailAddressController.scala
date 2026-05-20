@@ -79,6 +79,7 @@ with Logging {
     Future.successful(
       Ok(update_email_address(
         form,
+        asaDetailsAgencyName,
         asaDetailsAgencyEmail,
         legacyRegime
       ))
@@ -96,6 +97,7 @@ with Logging {
         Future.successful(
           BadRequest(update_email_address(
             formWithErrors,
+            asaDetailsAgencyName,
             asaDetailsAgencyEmail,
             legacyRegime
           ))

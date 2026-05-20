@@ -73,6 +73,7 @@ with Logging {
     Future.successful(
       Ok(update_phone_number(
         form,
+        asaDetailsAgencyName,
         asaDetailsAgencyTelephone,
         legacyRegime
       ))
@@ -90,6 +91,7 @@ with Logging {
         Future.successful(
           BadRequest(update_phone_number(
             formWithErrors,
+            asaDetailsAgencyName,
             asaDetailsAgencyTelephone,
             legacyRegime
           ))

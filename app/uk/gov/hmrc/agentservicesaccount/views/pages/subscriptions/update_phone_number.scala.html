@@ -34,9 +34,11 @@
     govukErrorSummary: GovukErrorSummary
 )
 
-@(form: Form[PhoneNumberFormValues], asaDetailsAgencyTelephoneOpt: Option[String], legacyRegime: LegacyRegime)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
+@(form: Form[PhoneNumberFormValues], asaDetailsAgencyName: String, asaDetailsAgencyTelephoneOpt: Option[String], legacyRegime: LegacyRegime)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
 
 @legacyRegimePrefix = @{ legacyRegime.msgPrefix }
+
+@pageTitle = @{ msgs(s"$legacyRegimePrefix.phone-number.title", asaDetailsAgencyName) }
 
 @newPhoneNumberInput = {
     @govukInput(Input(
@@ -52,7 +54,7 @@
     @govukRadios(Radios(
         fieldset = Some(Fieldset(
             legend = Some(Legend(
-                content = Text(msgs(s"$legacyRegimePrefix.phone-number.title")),
+                content = Text(pageTitle),
                 classes = "govuk-fieldset__legend--l",
                 isPageHeading = true
             ))
@@ -76,7 +78,7 @@
     <input type="hidden" name="phoneNumberUseAsaData" value="false">
     @govukInput(Input(
         label = Label(
-            content = HtmlContent(msgs(s"$legacyRegimePrefix.phone-number.title")),
+            content = HtmlContent(pageTitle),
             classes = "govuk-label--l",
             isPageHeading = true
         ),
@@ -85,7 +87,7 @@
 }
 
 @main(
-    pageTitle = withErrorPrefix(form.hasErrors, msgs(s"$legacyRegimePrefix.phone-number.title")),
+    pageTitle = withErrorPrefix(form.hasErrors, pageTitle),
     mimicBrowserBackLink = true,
     showSecondaryNav = false
 ) {
