@@ -214,7 +214,7 @@ asa.legacy.ct.business-name.use-asa.error.required=Dewiswch yr enw busnes y dyle
 asa.legacy.ct.business-name.new-input.error.empty=Nodwch enw busnes
 asa.legacy.ct.business-name.new-input.error.invalid=Nodwch enw busnes sy’n cynnwys llythrennau, rhifau, bylchau a’r cymeriadau canlynol yn unig . , ( ) & - ‘ /
 
-asa.legacy.ct.phone-number.title=What phone number should we use to call {0} about Corporation Tax?
+asa.legacy.ct.phone-number.title=Pa rif ffôn ddylem ei ddefnyddio i ffonio {0} ynglŷn â Threth Gorfforaeth?
 asa.legacy.ct.phone-number.use-asa.false=Rwyf am ddefnyddio rhif ffôn gwahanol ar gyfer Treth Gorfforaeth
 asa.legacy.ct.phone-number.new-input.label=Nodwch rif ffôn
 asa.legacy.ct.phone-number.new-input.hint=Ar gyfer rhifau rhyngwladol, dylech gynnwys cod y wlad.
@@ -222,7 +222,7 @@ asa.legacy.ct.phone-number.use-asa.error.required=Nodwch y rhif ffôn y dylem ei
 asa.legacy.ct.phone-number.new-input.error.empty=Nodwch rif ffôn
 asa.legacy.ct.phone-number.new-input.error.invalid=Dim ond rhifau y dylai’r rhif ffôn eu cynnwys
 
-asa.legacy.ct.email-address.title=What email address should we use to contact {0} about Corporation Tax?
+asa.legacy.ct.email-address.title=Pa gyfeiriad e-bost ddylem ei ddefnyddio i gysylltu â {0} ynglŷn â Threth Gorfforaeth?
 asa.legacy.ct.email-address.use-asa.false=Rwyf am ddefnyddio cyfeiriad e-bost gwahanol ar gyfer Treth Gorfforaeth
 asa.legacy.ct.email-address.new-input.label=Nodwch gyfeiriad e-bost
 asa.legacy.ct.email-address.new-input.hint=Byddwn yn anfon cod i’r cyfeiriad e-bost hwn i’w gadarnhau
@@ -312,7 +312,7 @@ asa.legacy.paye.contact-name.input.hint=Nodwch ei enw llawn
 asa.legacy.paye.contact-name.input.error.empty=Nodwch enw llawn y person y dylem gysylltu ag ef ynglŷn â TWE
 asa.legacy.paye.contact-name.input.error.invalid=Gall enw’r person gynnwys llythrennau, cysylltnodau a chollnodau yn unig
 
-asa.legacy.paye.phone-number.title=What phone number should we use to call {0} about PAYE?
+asa.legacy.paye.phone-number.title=Pa rif ffôn ddylem ei ddefnyddio i ffonio {0} ynglŷn â TWE?
 asa.legacy.paye.phone-number.use-asa.false=Rwyf am ddefnyddio rhif ffôn gwahanol ar gyfer TWE
 asa.legacy.paye.phone-number.new-input.label=Nodwch rif ffôn
 asa.legacy.paye.phone-number.new-input.hint=Ar gyfer rhifau rhyngwladol, dylech gynnwys cod y wlad.
@@ -320,7 +320,7 @@ asa.legacy.paye.phone-number.use-asa.error.required=Nodwch y rhif ffôn y dylem 
 asa.legacy.paye.phone-number.new-input.error.empty=Nodwch rif ffôn yn y DU
 asa.legacy.paye.phone-number.new-input.error.invalid=Nodwch rif ffôn yn y DU, megis 07700 900 982 neu +44 808 157 0192
 
-asa.legacy.paye.email-address.title=What email address should we use to contact {0} about PAYE?
+asa.legacy.paye.email-address.title=Pa gyfeiriad e-bost ddylem ei ddefnyddio i gysylltu â {0} ynglŷn â TWE?
 asa.legacy.paye.email-address.use-asa.false=Hoffwn ddefnyddio cyfeiriad e-bost gwahanol ar gyfer TWE
 asa.legacy.paye.email-address.new-input.label=Nodwch gyfeiriad e-bost
 asa.legacy.paye.email-address.new-input.hint=Byddwn yn anfon cod i’r cyfeiriad e-bost hwn i’w gadarnhau
@@ -403,7 +403,7 @@ asa.legacy.sa.business-name.use-asa.error.required=Dewiswch yr enw busnes y dyle
 asa.legacy.sa.business-name.new-input.error.empty=Nodwch enw busnes
 asa.legacy.sa.business-name.new-input.error.invalid=Nodwch enw busnes sy’n cynnwys llythrennau, rhifau, bylchau a’r cymeriadau canlynol yn unig . , ( ) & - ‘ /
 
-asa.legacy.sa.phone-number.title=What phone number should we use to call {0} about Self Assessment?
+asa.legacy.sa.phone-number.title=Pa rif ffôn ddylem ei ddefnyddio i ffonio {0} ynglŷn â Hunanasesiad?
 asa.legacy.sa.phone-number.use-asa.false=Rwyf am ddefnyddio rhif ffôn gwahanol ar gyfer Hunanasesiad
 asa.legacy.sa.phone-number.new-input.label=Nodwch rif ffôn
 asa.legacy.sa.phone-number.new-input.hint=Ar gyfer rhifau rhyngwladol, dylech gynnwys cod y wlad.
@@ -411,7 +411,7 @@ asa.legacy.sa.phone-number.use-asa.error.required=Nodwch y rhif ffôn y dylem ei
 asa.legacy.sa.phone-number.new-input.error.empty=Nodwch rif ffôn
 asa.legacy.sa.phone-number.new-input.error.invalid=Dim ond rhifau y dylai’r rhif ffôn eu cynnwys
 
-asa.legacy.sa.email-address.title=What email address should we use to contact {0} about Self Assessment?
+asa.legacy.sa.email-address.title=Pa gyfeiriad e-bost ddylem ei ddefnyddio i gysylltu â {0} ynglŷn â Hunanasesiad?
 asa.legacy.sa.email-address.use-asa.false=Rwyf am ddefnyddio cyfeiriad e-bost gwahanol ar gyfer Hunanasesiad
 asa.legacy.sa.email-address.new-input.label=Nodwch gyfeiriad e-bost
 asa.legacy.sa.email-address.new-input.hint=Byddwn yn anfon cod i’r cyfeiriad e-bost hwn i’w gadarnhau
