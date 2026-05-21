@@ -68,7 +68,7 @@ with TestConstants {
   private val legacyRegimes = List(CT, PAYE, SA)
 
   private def agencyDetails(hasSubscriptionPhoneNumber: Boolean) = uk.gov.hmrc.agentservicesaccount.models.AgencyDetails(
-    agencyName = None,
+    agencyName = Some("My Agency"),
     agencyEmail = None,
     agencyTelephone =
       if (hasSubscriptionPhoneNumber)
@@ -170,16 +170,16 @@ with TestConstants {
     s"GET /subscription/$legacyRegime/phone-number" should {
 
       List(true, false).foreach(hasSubscriptionPhoneNumber => {
-        // TODO: 11476 FIX
         "render empty form on first visit " +
           s"when subscription has phone number $hasSubscriptionPhoneNumber" in new TestSetup(legacyRegime, hasSubscriptionPhoneNumber) {
-            cacheJourney(subscriptionBaseJourney.copy(asaDetails = agencyDetails(hasSubscriptionPhoneNumber)))
+            private val journeyAgencyDetails = agencyDetails(hasSubscriptionPhoneNumber)
+            cacheJourney(subscriptionBaseJourney.copy(asaDetails = journeyAgencyDetails))
 
             private val result = controller.showPage(legacyRegime)(FakeRequest()).futureValue
 
             status(result) shouldBe OK
             private val content = contentAsString(result)
-            content should include(messages(s"${legacyRegime.msgPrefix}.phone-number.title"))
+            content should include(messages(s"${legacyRegime.msgPrefix}.phone-number.title", journeyAgencyDetails.agencyName.getOrElse("")))
             content should include(messages(s"${legacyRegime.msgPrefix}.phone-number.new-input.hint"))
             if (hasSubscriptionPhoneNumber) {
               content should include(messages(s"${legacyRegime.msgPrefix}.phone-number.new-input.label"))
@@ -193,11 +193,11 @@ with TestConstants {
             }
           }
 
-        // TODO: 11476 FIX
         "render pre-filled form when journey has existing answers " +
           s"and subscription has phone number $hasSubscriptionPhoneNumber" in new TestSetup(legacyRegime, hasSubscriptionPhoneNumber) {
+          private val journeyAgencyDetails = agencyDetails(hasSubscriptionPhoneNumber)
             private val journey = subscriptionBaseJourney.copy(
-              asaDetails = agencyDetails(hasSubscriptionPhoneNumber),
+              asaDetails = journeyAgencyDetails,
               useCustomPhoneNumber = Some(true),
               phoneNumberAnswer = Some("1234567890")
             )
@@ -208,7 +208,7 @@ with TestConstants {
 
             status(result) shouldBe OK
             private val content = contentAsString(result)
-            content should include(messages(s"${legacyRegime.msgPrefix}.phone-number.title"))
+            content should include(messages(s"${legacyRegime.msgPrefix}.phone-number.title", journeyAgencyDetails.agencyName.getOrElse("")))
             content should include(messages(s"${legacyRegime.msgPrefix}.phone-number.new-input.hint"))
             if (hasSubscriptionPhoneNumber) {
               content should include(messages(s"${legacyRegime.msgPrefix}.phone-number.new-input.label"))
