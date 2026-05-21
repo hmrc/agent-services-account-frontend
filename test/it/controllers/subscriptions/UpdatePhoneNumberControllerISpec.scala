@@ -195,7 +195,7 @@ with TestConstants {
 
         "render pre-filled form when journey has existing answers " +
           s"and subscription has phone number $hasSubscriptionPhoneNumber" in new TestSetup(legacyRegime, hasSubscriptionPhoneNumber) {
-          private val journeyAgencyDetails = agencyDetails(hasSubscriptionPhoneNumber)
+            private val journeyAgencyDetails = agencyDetails(hasSubscriptionPhoneNumber)
             private val journey = subscriptionBaseJourney.copy(
               asaDetails = journeyAgencyDetails,
               useCustomPhoneNumber = Some(true),

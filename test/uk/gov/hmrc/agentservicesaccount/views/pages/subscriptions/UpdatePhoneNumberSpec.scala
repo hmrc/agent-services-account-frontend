@@ -59,7 +59,8 @@ extends ViewBaseSpec {
     ).body
   )
 
-  private val title = messages(s"${legacyRegime.msgPrefix}.phone-number.title", asaDetailsAgencyName)
+  private val title = messages(s"${legacyRegime.msgPrefix}.phone-number.title")
+  private val heading = messages(s"${legacyRegime.msgPrefix}.phone-number.heading", asaDetailsAgencyName)
 
   def testServiceStaticContent(doc: Document): Unit = {
 
@@ -82,7 +83,7 @@ extends ViewBaseSpec {
   def testPageStaticContent(doc: Document): Unit = {
 
     "have the correct heading" in {
-      doc.select("h1").text() mustBe title
+      doc.select("h1").text() mustBe heading
     }
 
     "have two radio options" in {

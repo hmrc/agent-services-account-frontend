@@ -64,7 +64,8 @@ extends ViewBaseSpec {
     ).body
   )
 
-  private val title: String = messages(s"$legacyRegimePrefix.email-address.title", asaDetailsAgencyName)
+  private val title: String = messages(s"$legacyRegimePrefix.email-address.title")
+  private val heading: String = messages(s"$legacyRegimePrefix.email-address.heading", asaDetailsAgencyName)
 
   "update_email_address" when {
 
@@ -86,8 +87,8 @@ extends ViewBaseSpec {
 
     def testPageStaticContent(doc: Document): Unit = {
 
-      "have the correct h1 heading and introduction" in {
-        doc.select("h1").first.text() mustBe title
+      "have the correct h1 heading" in {
+        doc.select("h1").first.text() mustBe heading
       }
 
       "have the correct continue button" in {
