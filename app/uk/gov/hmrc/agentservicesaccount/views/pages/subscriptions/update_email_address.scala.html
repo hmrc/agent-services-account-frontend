@@ -38,8 +38,6 @@
 
 @legacyRegimePrefix = @{ legacyRegime.msgPrefix }
 
-@pageTitle = @{ msgs(s"$legacyRegimePrefix.email-address.title", asaDetailsAgencyName) }
-
 @newEmailAddressInput = {
     @govukInput(Input(
         label = Label(
@@ -51,7 +49,7 @@
 }
 
 @main(
-    pageTitle = withErrorPrefix(form.hasErrors, pageTitle),
+    pageTitle = withErrorPrefix(form.hasErrors, msgs(s"$legacyRegimePrefix.email-address.title")),
     mimicBrowserBackLink = true,
     showSecondaryNav = false
 ) {
@@ -64,7 +62,7 @@
         @govukRadios(Radios(
             fieldset = Some(Fieldset(
                 legend = Some(Legend(
-                    content = Text(pageTitle),
+                    content = Text(msgs(s"$legacyRegimePrefix.email-address.heading", asaDetailsAgencyName)),
                     classes = "govuk-fieldset__legend--l",
                     isPageHeading = true
                 ))

@@ -38,7 +38,7 @@
 
 @legacyRegimePrefix = @{ legacyRegime.msgPrefix }
 
-@pageTitle = @{ msgs(s"$legacyRegimePrefix.phone-number.title", asaDetailsAgencyName) }
+@pageHeading = @{ msgs(s"$legacyRegimePrefix.phone-number.heading", asaDetailsAgencyName) }
 
 @newPhoneNumberInput = {
     @govukInput(Input(
@@ -54,7 +54,7 @@
     @govukRadios(Radios(
         fieldset = Some(Fieldset(
             legend = Some(Legend(
-                content = Text(pageTitle),
+                content = Text(pageHeading),
                 classes = "govuk-fieldset__legend--l",
                 isPageHeading = true
             ))
@@ -78,7 +78,7 @@
     <input type="hidden" name="phoneNumberUseAsaData" value="false">
     @govukInput(Input(
         label = Label(
-            content = HtmlContent(pageTitle),
+            content = HtmlContent(pageHeading),
             classes = "govuk-label--l",
             isPageHeading = true
         ),
@@ -87,7 +87,7 @@
 }
 
 @main(
-    pageTitle = withErrorPrefix(form.hasErrors, pageTitle),
+    pageTitle = withErrorPrefix(form.hasErrors, msgs(s"$legacyRegimePrefix.phone-number.title")),
     mimicBrowserBackLink = true,
     showSecondaryNav = false
 ) {
