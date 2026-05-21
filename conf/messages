@@ -416,7 +416,7 @@ asa.legacy.sa.phone-number.use-asa.error.required=Enter the phone number we shou
 asa.legacy.sa.phone-number.new-input.error.empty=Enter a phone number
 asa.legacy.sa.phone-number.new-input.error.invalid=The phone number must only include numbers
 
-asa.legacy.sa.email-address.title=What email address should we use to contact you about Self Assessment
+asa.legacy.sa.email-address.title=What email address should we use to contact you about Self Assessment?
 asa.legacy.sa.email-address.heading=What email address should we use to contact {0} about Self Assessment?
 asa.legacy.sa.email-address.use-asa.false=I want to use a different email address for Self Assessment
 asa.legacy.sa.email-address.new-input.label=Enter an email address

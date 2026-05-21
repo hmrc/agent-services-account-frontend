@@ -58,12 +58,11 @@ extends ComponentBaseISpec {
         val result = get(updateEmailAddressPath)
 
         result.status shouldBe OK
-        val asaDetailsAgencyName: String = agentRecord.agencyDetails.flatMap(_.agencyName).getOrElse("")
         val expectedTitle: String =
           (legacyRegime: LegacyRegime) match {
-            case CT => s"What email address should we use to contact $asaDetailsAgencyName about Corporation Tax?"
-            case PAYE => s"What email address should we use to contact $asaDetailsAgencyName about PAYE?"
-            case SA => s"What email address should we use to contact $asaDetailsAgencyName about Self Assessment?"
+            case CT => "What email address should we use to contact you about Corporation Tax?"
+            case PAYE => "What email address should we use to contact you about PAYE?"
+            case SA => "What email address should we use to contact you about Self Assessment?"
           }
         assertPageHasTitle(expectedTitle)(result)
       }
