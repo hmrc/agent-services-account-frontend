@@ -34,6 +34,7 @@ class UpdatePhoneNumberSpec
 extends ViewBaseSpec {
 
   private val view: update_phone_number = inject[update_phone_number]
+  private val asaDetailsAgencyName = "ABC-No.1 Accountants"
   private val asaDetailsAgencyTelephone = "07700 900123"
 
   private val legacyRegime = LegacyRegime.PAYE
@@ -48,6 +49,7 @@ extends ViewBaseSpec {
   ): Document = Jsoup.parse(
     view(
       form,
+      asaDetailsAgencyName,
       subPhoneNumberOpt,
       legacyRegime
     )(
@@ -58,6 +60,7 @@ extends ViewBaseSpec {
   )
 
   private val title = messages(s"${legacyRegime.msgPrefix}.phone-number.title")
+  private val heading = messages(s"${legacyRegime.msgPrefix}.phone-number.heading", asaDetailsAgencyName)
 
   def testServiceStaticContent(doc: Document): Unit = {
 
@@ -80,7 +83,7 @@ extends ViewBaseSpec {
   def testPageStaticContent(doc: Document): Unit = {
 
     "have the correct heading" in {
-      doc.select("h1").text() mustBe title
+      doc.select("h1").text() mustBe heading
     }
 
     "have two radio options" in {

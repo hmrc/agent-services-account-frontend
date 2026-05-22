@@ -215,6 +215,7 @@ asa.legacy.ct.business-name.new-input.error.empty=Enter a business name
 asa.legacy.ct.business-name.new-input.error.invalid=Enter a business name that only contains letters, numbers, spaces and the characters . , ( ) & - ‘ /
 
 asa.legacy.ct.phone-number.title=What phone number should we use to call you about Corporation Tax?
+asa.legacy.ct.phone-number.heading=What phone number should we use to call {0} about Corporation Tax?
 asa.legacy.ct.phone-number.use-asa.false=I want to use a different phone number for Corporation Tax
 asa.legacy.ct.phone-number.new-input.label=Enter a phone number
 asa.legacy.ct.phone-number.new-input.hint=For international numbers, include the country code.
@@ -223,6 +224,7 @@ asa.legacy.ct.phone-number.new-input.error.empty=Enter a phone number
 asa.legacy.ct.phone-number.new-input.error.invalid=The phone number must only include numbers
 
 asa.legacy.ct.email-address.title=What email address should we use to contact you about Corporation Tax?
+asa.legacy.ct.email-address.heading=What email address should we use to contact {0} about Corporation Tax?
 asa.legacy.ct.email-address.use-asa.false=I want to use a different email address for Corporation Tax
 asa.legacy.ct.email-address.new-input.label=Enter an email address
 asa.legacy.ct.email-address.new-input.hint=We’ll send a code to this email address to confirm it
@@ -313,6 +315,7 @@ asa.legacy.paye.contact-name.input.error.empty=Enter the full name of the person
 asa.legacy.paye.contact-name.input.error.invalid=The name of the person can only contain letters, hyphens and apostrophes
 
 asa.legacy.paye.phone-number.title=What phone number should we use to call you about PAYE?
+asa.legacy.paye.phone-number.heading=What phone number should we use to call {0} about PAYE?
 asa.legacy.paye.phone-number.use-asa.false=I want to use a different phone number for PAYE
 asa.legacy.paye.phone-number.new-input.label=Enter a phone number
 asa.legacy.paye.phone-number.new-input.hint=For international numbers, include the country code.
@@ -321,6 +324,7 @@ asa.legacy.paye.phone-number.new-input.error.empty=Enter a UK phone number
 asa.legacy.paye.phone-number.new-input.error.invalid=Enter a UK phone number, like 07700 900 982 or +44 808 157 0192
 
 asa.legacy.paye.email-address.title=What email address should we use to contact you about PAYE?
+asa.legacy.paye.email-address.heading=What email address should we use to contact {0} about PAYE?
 asa.legacy.paye.email-address.use-asa.false=I want to use a different email address for PAYE
 asa.legacy.paye.email-address.new-input.label=Enter an email address
 asa.legacy.paye.email-address.new-input.hint=We’ll send a code to this email address to confirm it
@@ -404,6 +408,7 @@ asa.legacy.sa.business-name.new-input.error.empty=Enter a business name
 asa.legacy.sa.business-name.new-input.error.invalid=Enter a business name that only contains letters, numbers, spaces and the characters . , ( ) & - ‘ /
 
 asa.legacy.sa.phone-number.title=What phone number should we use to call you about Self Assessment?
+asa.legacy.sa.phone-number.heading=What phone number should we use to call {0} about Self Assessment?
 asa.legacy.sa.phone-number.use-asa.false=I want to use a different phone number for Self Assessment
 asa.legacy.sa.phone-number.new-input.label=Enter a phone number
 asa.legacy.sa.phone-number.new-input.hint=For international numbers, include the country code.
@@ -412,6 +417,7 @@ asa.legacy.sa.phone-number.new-input.error.empty=Enter a phone number
 asa.legacy.sa.phone-number.new-input.error.invalid=The phone number must only include numbers
 
 asa.legacy.sa.email-address.title=What email address should we use to contact you about Self Assessment?
+asa.legacy.sa.email-address.heading=What email address should we use to contact {0} about Self Assessment?
 asa.legacy.sa.email-address.use-asa.false=I want to use a different email address for Self Assessment
 asa.legacy.sa.email-address.new-input.label=Enter an email address
 asa.legacy.sa.email-address.new-input.hint=We’ll send a code to this email address to confirm it

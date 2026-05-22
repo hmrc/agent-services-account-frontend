@@ -33,6 +33,7 @@ class UpdateEmailAddressSpec
 extends ViewBaseSpec {
 
   private val view: update_email_address = inject[update_email_address]
+  private val asaDetailsAgencyName = "ABC-No.1 Accountants"
   private val asaDetailsAgencyEmail = "joe@bloggs.com"
 
   private val legacyRegime = LegacyRegime.PAYE
@@ -53,6 +54,7 @@ extends ViewBaseSpec {
   def render(form: Form[EmailAddressFormValues]): Document = Jsoup.parse(
     view(
       form,
+      asaDetailsAgencyName,
       asaDetailsAgencyEmail,
       legacyRegime
     )(
@@ -63,6 +65,7 @@ extends ViewBaseSpec {
   )
 
   private val title: String = messages(s"$legacyRegimePrefix.email-address.title")
+  private val heading: String = messages(s"$legacyRegimePrefix.email-address.heading", asaDetailsAgencyName)
 
   "update_email_address" when {
 
@@ -84,8 +87,8 @@ extends ViewBaseSpec {
 
     def testPageStaticContent(doc: Document): Unit = {
 
-      "have the correct h1 heading and introduction" in {
-        doc.select("h1").first.text() mustBe title
+      "have the correct h1 heading" in {
+        doc.select("h1").first.text() mustBe heading
       }
 
       "have the correct continue button" in {
