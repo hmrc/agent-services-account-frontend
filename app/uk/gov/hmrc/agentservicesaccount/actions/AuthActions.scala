@@ -77,9 +77,9 @@ case class AgentInfo(
       case _ => false
     }
 
-  private val hasPayeSubscription: Boolean = enrolments.getEnrolment("IR-PAYE-AGENT").exists(_.isActivated)
-  private val hasCtSubscription: Boolean = enrolments.getEnrolment("IR-CT-AGENT").exists(_.isActivated)
-  private val hasSaSubscription: Boolean = enrolments.getEnrolment("IR-SA-AGENT").exists(_.isActivated)
+  private val optPayeSubscription = enrolments.getEnrolment("IR-PAYE-AGENT")
+  private val optCtSubscription = enrolments.getEnrolment("IR-CT-AGENT")
+  private val optSaSubscription = enrolments.getEnrolment("IR-SA-AGENT")
   val hasOtherEnrolments: Boolean = Seq(
     "HMCE-VAT-AGNT",
     "HMRC-AGENT-AGENT",
@@ -88,44 +88,50 @@ case class AgentInfo(
     "HMRC-MGD-AGNT",
     "HMRC-NOVRN-AGNT",
     "IR-SDLT-AGENT"
-  ).exists(enrolments.getEnrolment(_).exists(_.isActivated))
+  ).exists(enrolments.getEnrolment(_).isDefined)
 
   def existingSubscriptionInfo: Seq[SubscriptionInfo] =
     Seq(
-      if (hasPayeSubscription)
-        Some(SubscriptionInfo(
+      optPayeSubscription.map(sub =>
+        SubscriptionInfo(
           LegacyRegime.PAYE,
-          SubscriptionStatus.Subscribed
-        ))
-      else
-        None,
-      if (hasCtSubscription)
-        Some(SubscriptionInfo(
+          if (sub.isActivated)
+            SubscriptionStatus.Subscribed
+          else
+            SubscriptionStatus.Inactive
+        )
+      ),
+      optCtSubscription.map(sub =>
+        SubscriptionInfo(
           LegacyRegime.CT,
-          SubscriptionStatus.Subscribed
-        ))
-      else
-        None,
-      if (hasSaSubscription)
-        Some(SubscriptionInfo(
+          if (sub.isActivated)
+            SubscriptionStatus.Subscribed
+          else
+            SubscriptionStatus.Inactive
+        )
+      ),
+      optSaSubscription.map(sub =>
+        SubscriptionInfo(
           LegacyRegime.SA,
-          SubscriptionStatus.Subscribed
-        ))
-      else
-        None
+          if (sub.isActivated)
+            SubscriptionStatus.Subscribed
+          else
+            SubscriptionStatus.Inactive
+        )
+      )
     ).flatten
 
   def missingSubscriptions: Seq[LegacyRegime] =
     Seq(
-      if (!hasPayeSubscription)
+      if (optPayeSubscription.isEmpty)
         Some(LegacyRegime.PAYE)
       else
         None,
-      if (!hasCtSubscription)
+      if (optCtSubscription.isEmpty)
         Some(LegacyRegime.CT)
       else
         None,
-      if (!hasSaSubscription)
+      if (optSaSubscription.isEmpty)
         Some(LegacyRegime.SA)
       else
         None

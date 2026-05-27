@@ -30,6 +30,8 @@ object SubscriptionStatus {
 
   case object Subscribed
   extends SubscriptionStatus
+  case object Inactive
+  extends SubscriptionStatus
   case object SubscriptionInProgress
   extends SubscriptionStatus
   case object SubscriptionFailed
@@ -47,6 +49,7 @@ object SubscriptionStatus {
     Reads { json =>
       json.as[String] match {
         case "Subscribed" => JsSuccess(Subscribed)
+        case "Inactive" => JsSuccess(Inactive)
         case "SubscriptionInProgress" => JsSuccess(SubscriptionInProgress)
         case "SubscriptionFailed" => JsSuccess(SubscriptionFailed)
         case "SubscriptionMapped" => JsSuccess(SubscriptionMapped)
