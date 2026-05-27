@@ -36,10 +36,14 @@ class UpscanCallbackController @Inject() (
 extends FrontendController(cc)
 with Logging {
 
+//  TODO: 11449 Can I determine this if JS is enabled or not?? routes.EvidenceUploadController.showUploadResult(Some(details.reference)
   def callback: Action[UpscanDetails] =
     Action.async(parse.json[UpscanDetails](UpscanDetails.callbackReads)) { implicit request =>
       upscanRepository.findByReference(request.body.reference).flatMap {
         case Some(details) if details.reference == request.body.reference =>
+//          TODO: 11449 Local workaround for JS disabled flow allowing access to amls_evidence_upload_progress template
+          println("CALLBACK")
+          Thread.sleep(5000)
           upscanRepository
             .saveUpscanDetails(request.body)
             .map(_ => NoContent)

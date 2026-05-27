@@ -37,6 +37,7 @@
 @key = @{
     "amls.evidence-upload-progress"
 }
+@* TODO: 11449 Remove UpscanFailure case *@
 @pageTitle = @{
     upscanDetails match {
         case _: UpscanInProgress => messages(s"$key.title")
@@ -54,6 +55,7 @@
     <h1 class="govuk-heading-l">@pageTitle</h1>
 
     <p class="govuk-body">
+    @* TODO: 11449 Remove UpscanFailure case *@
     @upscanDetails match {
         case _: UpscanInProgress => {
             @messages(s"$key.inProgress")
@@ -71,6 +73,7 @@
     </p>
 
     <p class="govuk-body">
+    @* TODO: 11449 Remove UpscanFailure case *@
     @upscanDetails match {
         case s: UpscanInProgress => {
             @govukButton(Button(
