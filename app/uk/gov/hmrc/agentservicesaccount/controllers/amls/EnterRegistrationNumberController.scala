@@ -89,7 +89,7 @@ with I18nSupport {
       if (journey.isHmrc)
         routes.CheckYourAnswersController.showPage.url
       else
-        routes.EvidenceUploadController.showPage.url
+        routes.EvidenceUploadController.showPage().url
     }
     else {
       if (cya || !journey.isUkAgent)
