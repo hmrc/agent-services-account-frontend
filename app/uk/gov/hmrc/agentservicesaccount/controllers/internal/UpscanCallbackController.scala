@@ -36,7 +36,6 @@ class UpscanCallbackController @Inject() (
 extends FrontendController(cc)
 with Logging {
 
-//  TODO: 11449 Can I determine this if JS is enabled or not?? routes.EvidenceUploadController.showUploadResult(Some(details.reference)
   def callback: Action[UpscanDetails] =
     Action.async(parse.json[UpscanDetails](UpscanDetails.callbackReads)) { implicit request =>
       upscanRepository.findByReference(request.body.reference).flatMap {
