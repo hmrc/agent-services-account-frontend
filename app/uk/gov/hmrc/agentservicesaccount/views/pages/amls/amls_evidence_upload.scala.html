@@ -60,6 +60,14 @@
         <li>@messages(s"$key.fileTypes.bullet5")</li>
     </ul>
 }
+@fileUploadErrorMessage = @{
+    if(true) {
+        val errorMessage = ErrorMessage(content=Text("HELLO"))
+        Some(errorMessage)
+    } else {
+        None
+    }
+}
 
 @main(
     pageTitle = title,
@@ -68,6 +76,18 @@
     additionalScripts = Some(templateScripts),
     additionalCss = Some(templateStyles)
 ) {
+
+    @if(true) {
+        @govukErrorSummary(ErrorSummary(
+            title = Text(messages("error.summary.title")),
+                errorList = Seq(ErrorLink(
+                href = Some("#fileToUpload"),
+                content = Text(messages(s"$key.error.virus"))
+            )),
+            attributes = Map("id" -> "error-summary-display", "tabindex" -> "-1")
+        ))
+    }
+
     <h1 class="govuk-heading-l">@title</h1>
     <p class="govuk-body">@messages(s"$key.p1", supervisoryBodyName)</p>
     <p class="govuk-body">@messages(s"$key.p2")</p>
@@ -95,7 +115,8 @@
             attributes = Map(
                 "accept" -> appConfig.UpscanAmls.acceptMimeTypes,
                 "required" -> "true"
-            )
+            ),
+            errorMessage = fileUploadErrorMessage
         ))
 
         <div id="upload-handling">
