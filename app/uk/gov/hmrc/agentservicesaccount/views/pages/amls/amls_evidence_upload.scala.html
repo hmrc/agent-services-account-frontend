@@ -31,7 +31,8 @@
 
 @(
         upscanInitiateResponse: UpscanInitiateResponse,
-        supervisoryBodyName: String
+        supervisoryBodyName: String,
+        failureReason: Option[String] = None
 )(implicit
         request: RequestHeader,
         messages: Messages
@@ -77,6 +78,8 @@
         summary = Text(messages(s"$key.details.summary")),
         content = HtmlContent(detailsHtml)
     ))
+
+    <p>@{failureReason.getOrElse("ALL FINE")}</p>
 
     <form id="fileUploadForm" action="@upscanInitiateResponse.uploadRequest.href" method="post" enctype="multipart/form-data">
         @for(field <- upscanInitiateResponse.uploadRequest.fields) {

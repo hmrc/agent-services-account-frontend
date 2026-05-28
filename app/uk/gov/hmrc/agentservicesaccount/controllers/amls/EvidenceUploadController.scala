@@ -64,7 +64,7 @@ extends FrontendController(cc)
 with AmlsJourneySupport
 with I18nSupport {
 
-  def showPage(): Action[AnyContent] = actions.authActionCheckSuspend.async {
+  def showPage(failureReason: Option[String] = None): Action[AnyContent] = actions.authActionCheckSuspend.async {
     implicit request =>
       withUpdateAmlsJourney {
         case amlsJourney if amlsJourney.newAmlsBody.isEmpty => Future.successful(Redirect(routes.AmlsNewSupervisoryBodyController.showPage()))
@@ -80,7 +80,8 @@ with I18nSupport {
             _ <- upscanRepository.saveUpscanDetails(UpscanInProgress(initiateResponse.reference, Instant.now()))
           } yield Ok(amlsEvidenceUploadPage(
             upscanInitiateResponse = initiateResponse,
-            supervisoryBodyName = amlsJourney.newAmlsBody.get
+            supervisoryBodyName = amlsJourney.newAmlsBody.get,
+            failureReason = failureReason
           ))
       }
   }
@@ -101,10 +102,11 @@ with I18nSupport {
                 Redirect(routes.CheckYourAnswersController.showPage)
               }
 //              TODO: 11449: This is called in JS disabled flow to display UpscanFailure and UpscanInProgress details - UpscanFailure should now display in amlsEvidenceUploadPage
-            case Some(details) => Future.successful(Ok(amlsEvidenceUploadProgressPage(details)))
-            case None => Future.successful(Redirect(routes.EvidenceUploadController.showPage.url))
+            case Some(details: UpscanInProgress) => Future.successful(Ok(amlsEvidenceUploadProgressPage(details)))
+            case Some(details: UpscanFailure) => Future.successful(Redirect(routes.EvidenceUploadController.showPage(Some(details.failureReason)).url))
+            case None => Future.successful(Redirect(routes.EvidenceUploadController.showPage().url))
           }
-        case None => Future.successful(Redirect(routes.EvidenceUploadController.showPage.url))
+        case None => Future.successful(Redirect(routes.EvidenceUploadController.showPage().url))
       }
     }
   }
@@ -123,7 +125,7 @@ with I18nSupport {
   ): Action[AnyContent] = actions.authActionCheckSuspend { implicit request =>
     errorCode.flatMap(UpscanErrorCode.fromString) match {
       case Some(code) => Ok(amlsEvidenceUploadErrorPage(code))
-      case None => Redirect(routes.EvidenceUploadController.showPage.url)
+      case None => Redirect(routes.EvidenceUploadController.showPage().url)
     }
   }
 
