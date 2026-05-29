@@ -54,13 +54,16 @@
     </ul>
 }
 
-@fileUploadErrorMessage = @{
-    if(true) {
-        val errorMessage = ErrorMessage(content=Text("HELLO"))
-        Some(errorMessage)
-    } else {
-        None
+@fileUploadErrorMessageContent = @{
+    failureReason match {
+        case Some("QUARANTINE") => Some("QUARANTINE")
+        case Some(_) => Some("OTHER")
+        case None => None
     }
+}
+
+@fileUploadErrorMessage = @{
+    fileUploadErrorMessageContent.map(content => ErrorMessage(content=Text(content)))
 }
 
 @main(
@@ -71,15 +74,17 @@
     additionalCss = Some(templateStyles)
 ) {
 
-    @if(true) {
-        @govukErrorSummary(ErrorSummary(
-            title = Text(messages("error.summary.title")),
+    @{
+        fileUploadErrorMessageContent.map(content => {
+            govukErrorSummary(ErrorSummary(
+                title = Text(messages("error.summary.title")),
                 errorList = Seq(ErrorLink(
-                href = Some("#fileToUpload"),
-                content = Text(messages(s"$key.error.virus"))
-            )),
-            attributes = Map("id" -> "error-summary-display", "tabindex" -> "-1")
-        ))
+                    href = Some("#fileToUpload"),
+                    content = Text(content)
+                )),
+                attributes = Map("id" -> "error-summary-display", "tabindex" -> "-1")
+            ))
+        })
     }
 
     <h1 class="govuk-heading-l">@title</h1>
@@ -92,8 +97,6 @@
         summary = Text(messages(s"$key.details.summary")),
         content = HtmlContent(detailsHtml)
     ))
-
-    <p>@{failureReason.getOrElse("ALL FINE")}</p>
 
     <form id="fileUploadForm" action="@upscanInitiateResponse.uploadRequest.href" method="post" enctype="multipart/form-data">
         @for(field <- upscanInitiateResponse.uploadRequest.fields) {
