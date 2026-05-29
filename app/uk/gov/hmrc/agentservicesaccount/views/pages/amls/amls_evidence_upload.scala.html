@@ -54,16 +54,12 @@
     </ul>
 }
 
-@fileUploadErrorMessageContent = @{
+@fileUploadErrorMessage = @{
     failureReason match {
         case Some("QUARANTINE") => Some(messages(s"$key.error.virus"))
         case Some(_) => Some(messages(s"$key.error.generic"))
         case None => None
     }
-}
-
-@fileUploadErrorMessage = @{
-    fileUploadErrorMessageContent.map(content => ErrorMessage(content=Text(content)))
 }
 
 @main(
@@ -75,12 +71,12 @@
 ) {
 
     @{
-        fileUploadErrorMessageContent.map(content => {
+        fileUploadErrorMessage.map(errorMessage => {
             govukErrorSummary(ErrorSummary(
                 title = Text(messages("error.summary.title")),
                 errorList = Seq(ErrorLink(
                     href = Some("#fileToUpload"),
-                    content = Text(content)
+                    content = Text(errorMessage)
                 )),
                 attributes = Map("id" -> "error-summary-display", "tabindex" -> "-1")
             ))
@@ -113,7 +109,7 @@
                 "accept" -> appConfig.UpscanAmls.acceptMimeTypes,
                 "required" -> "true"
             ),
-            errorMessage = fileUploadErrorMessage
+            errorMessage = fileUploadErrorMessage.map(errorMessage => ErrorMessage(content=Text(errorMessage)))
         ))
 
         <div id="upload-handling">
