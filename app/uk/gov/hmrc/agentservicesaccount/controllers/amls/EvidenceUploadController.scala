@@ -101,7 +101,6 @@ with I18nSupport {
               } yield {
                 Redirect(routes.CheckYourAnswersController.showPage)
               }
-//              TODO: 11449: This is called in JS disabled flow to display UpscanFailure and UpscanInProgress details - UpscanFailure should now display in amlsEvidenceUploadPage
             case Some(details: UpscanInProgress) => Future.successful(Ok(amlsEvidenceUploadProgressPage(details)))
             case Some(details: UpscanFailure) => Future.successful(Redirect(routes.EvidenceUploadController.showPage(Some(details.failureReason)).url))
             case None => Future.successful(Redirect(routes.EvidenceUploadController.showPage().url))
@@ -139,13 +138,11 @@ with I18nSupport {
       )
     }
     upscanRepository.findByReference(FileUploadReference(reference)).map {
-//      TODO: 11449 Local workaround for checking JS enabled flow - need to modify in DB for JS disabled
-      case _ => Conflict.withCorsHeaders
-//      case Some(_: UpscanSuccess) => Accepted.withCorsHeaders
-//      case Some(_: UpscanInProgress) => NoContent.withCorsHeaders
-//      case Some(failure: UpscanFailure) if failure.failureReason == "QUARANTINE" => Conflict.withCorsHeaders
-//      case Some(_: UpscanFailure) => BadRequest.withCorsHeaders // generic error as reason for file rejection is not known here, we do know it's not file type or file size as we are using JS validation - file could be corrupted for example
-//      case None => NotFound.withCorsHeaders
+      case Some(_: UpscanSuccess) => Accepted.withCorsHeaders
+      case Some(_: UpscanInProgress) => NoContent.withCorsHeaders
+      case Some(failure: UpscanFailure) if failure.failureReason == "QUARANTINE" => Conflict.withCorsHeaders
+      case Some(_: UpscanFailure) => BadRequest.withCorsHeaders // generic error as reason for file rejection is not known here, we do know it's not file type or file size as we are using JS validation - file could be corrupted for example
+      case None => NotFound.withCorsHeaders
     }
   }
 
