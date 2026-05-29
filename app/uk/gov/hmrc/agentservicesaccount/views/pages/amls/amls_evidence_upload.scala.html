@@ -56,8 +56,8 @@
 
 @fileUploadErrorMessageContent = @{
     failureReason match {
-        case Some("QUARANTINE") => Some("QUARANTINE")
-        case Some(_) => Some("OTHER")
+        case Some("QUARANTINE") => Some(messages(s"$key.error.virus"))
+        case Some(_) => Some(messages(s"$key.error.generic"))
         case None => None
     }
 }
