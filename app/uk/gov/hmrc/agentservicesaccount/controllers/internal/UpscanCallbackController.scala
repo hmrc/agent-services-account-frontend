@@ -40,9 +40,6 @@ with Logging {
     Action.async(parse.json[UpscanDetails](UpscanDetails.callbackReads)) { implicit request =>
       upscanRepository.findByReference(request.body.reference).flatMap {
         case Some(details) if details.reference == request.body.reference =>
-//          TODO: 11449 Local workaround for JS disabled flow allowing access to amls_evidence_upload_progress template
-          println("CALLBACK")
-          Thread.sleep(5000)
           upscanRepository
             .saveUpscanDetails(request.body)
             .map(_ => NoContent)
