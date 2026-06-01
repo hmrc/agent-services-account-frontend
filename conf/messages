@@ -848,7 +848,6 @@ update-contact-details.address.confirm.title=Review and confirm - Agent services
 update-contact-details.your-details.heading=Your details
 update-contact-details.your-details.body.p=We’ll use these if we need to speak to you about changes you’ve made.
 update-contact-details.your-details.name.label=Full name
-update-contact-details.your-details.name.error.empty = Enter your full name
 update-contact-details.your-details.telephone.label=Telephone number
 update-contact-details.your-details.telephone.hint=For international numbers include the country code.
 update-contact-details.your-details.telephone.error.empty=Enter your telephone number
