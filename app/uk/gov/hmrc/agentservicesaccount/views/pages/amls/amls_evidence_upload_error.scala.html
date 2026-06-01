@@ -54,7 +54,7 @@
     }</p>
     <p class="govuk-body">
     @govukButton(Button(
-        href = Some(routes.EvidenceUploadController.showPage.url),
+        href = Some(routes.EvidenceUploadController.showPage().url),
         content = Text(messages("common.tryAgain"))
     ))
     </p>
