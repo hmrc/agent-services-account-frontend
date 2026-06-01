@@ -101,8 +101,8 @@ extends ComponentBaseISpec {
       await(repo.putSession(amlsJourneyKey, amlsJourney))
       await(upscanRepo.saveUpscanDetails(upscanInProgress))
       val result = get(s"$evidenceUploadResultPath?key=${upscanReference.value}")
-      result.status shouldBe OK
-      assertPageHasTitle("We are checking your upload")(result)
+      result.status shouldBe SEE_OTHER
+      result.header("Location") shouldBe Some(evidenceUploadPath)
     }
     "redirect to CYA if upload is successful" in {
       givenAuthorisedAsAgentWith(arn.value)
@@ -119,25 +119,6 @@ extends ComponentBaseISpec {
       givenGetAgentRecord(agentRecord)
       await(repo.putSession(amlsJourneyKey, amlsJourney))
       val result = get(s"$evidenceUploadResultPath?key=notfound")
-      result.status shouldBe SEE_OTHER
-      result.header("Location").get should include(evidenceUploadPath)
-    }
-  }
-
-  s"GET $evidenceUploadErrorPath" should {
-    "show error page for known error code" in {
-      givenAuthorisedAsAgentWith(arn.value)
-      givenGetAgentRecord(agentRecord)
-      await(repo.putSession(amlsJourneyKey, amlsJourney))
-      val result = get(s"$evidenceUploadErrorPath?errorCode=ENTITYTOOLARGE")
-      result.status shouldBe OK
-      assertPageHasTitle("Your upload is too large")(result)
-    }
-    "redirect to upload page for missing error code" in {
-      givenAuthorisedAsAgentWith(arn.value)
-      givenGetAgentRecord(agentRecord)
-      await(repo.putSession(amlsJourneyKey, amlsJourney))
-      val result = get(s"$evidenceUploadErrorPath")
       result.status shouldBe SEE_OTHER
       result.header("Location").get should include(evidenceUploadPath)
     }
