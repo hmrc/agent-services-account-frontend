@@ -11,7 +11,7 @@
 
     function refreshUploadPageWithError(errorType) {
         sessionStorage.setItem("uploadErrorType", errorType)
-        window.location.reload()
+        window.location.reload() //calls showPage() that to get latest FileUploadReference
     }
 
     function checkUploadStatus(config, count) {
@@ -90,7 +90,6 @@
         const previousError = sessionStorage.getItem("uploadErrorType")
         if(previousError) {
             sessionStorage.removeItem("uploadErrorType")
-
             window.setTimeout(function() {
                 renderFormError(previousError)
             }, 0)
