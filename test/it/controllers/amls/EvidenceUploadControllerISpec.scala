@@ -124,25 +124,6 @@ extends ComponentBaseISpec {
     }
   }
 
-  s"GET $evidenceUploadErrorPath" should {
-    "show error page for known error code" in {
-      givenAuthorisedAsAgentWith(arn.value)
-      givenGetAgentRecord(agentRecord)
-      await(repo.putSession(amlsJourneyKey, amlsJourney))
-      val result = get(s"$evidenceUploadErrorPath?errorCode=ENTITYTOOLARGE")
-      result.status shouldBe OK
-      assertPageHasTitle("Your upload is too large")(result)
-    }
-    "redirect to upload page for missing error code" in {
-      givenAuthorisedAsAgentWith(arn.value)
-      givenGetAgentRecord(agentRecord)
-      await(repo.putSession(amlsJourneyKey, amlsJourney))
-      val result = get(s"$evidenceUploadErrorPath")
-      result.status shouldBe SEE_OTHER
-      result.header("Location").get should include(evidenceUploadPath)
-    }
-  }
-
   s"GET $evidenceUploadStatusCheckPath" should {
     "return 202 Accepted if upload is successful" in {
       givenAuthorisedAsAgentWith(arn.value)

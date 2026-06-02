@@ -25,7 +25,6 @@ import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.UpscanInitiateConnector
 import uk.gov.hmrc.agentservicesaccount.models.upscan.FileUploadReference
-import uk.gov.hmrc.agentservicesaccount.models.upscan.UpscanErrorCode
 import uk.gov.hmrc.agentservicesaccount.models.upscan.UpscanFailure
 import uk.gov.hmrc.agentservicesaccount.models.upscan.UpscanInProgress
 import uk.gov.hmrc.agentservicesaccount.models.upscan.UpscanInitiateRequest
@@ -35,7 +34,6 @@ import uk.gov.hmrc.agentservicesaccount.services.ObjectStoreService
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.amls_evidence_upload
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.amls_evidence_upload_progress
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.amls_evidence_upload_error
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.agentservicesaccount.controllers.internal.{routes => internalRoutes}
 
@@ -54,7 +52,6 @@ class EvidenceUploadController @Inject() (
   val sessionCacheService: SessionCacheService,
   amlsEvidenceUploadPage: amls_evidence_upload,
   amlsEvidenceUploadProgressPage: amls_evidence_upload_progress,
-  amlsEvidenceUploadErrorPage: amls_evidence_upload_error,
   cc: MessagesControllerComponents
 )(implicit
   appConfig: AppConfig,
@@ -72,7 +69,7 @@ with I18nSupport {
           val initiateRequest = UpscanInitiateRequest(
             callbackUrl = s"${appConfig.asaFrontendBaseUrl}${internalRoutes.UpscanCallbackController.callback().url}",
             successRedirect = Some(s"${appConfig.asaFrontendExternalUrl}${routes.EvidenceUploadController.showUploadResult(None).url}"), // Key param will be populated by upscan itself
-            errorRedirect = Some(s"${appConfig.asaFrontendExternalUrl}${routes.EvidenceUploadController.showUploadError().url}"),
+            errorRedirect = Some(s"${appConfig.asaFrontendExternalUrl}${routes.EvidenceUploadController.showPage.url}"),
             maximumFileSize = Some(appConfig.UpscanAmls.maxFileSize.toBytes)
           )
           for {
@@ -105,24 +102,6 @@ with I18nSupport {
           }
         case None => Future.successful(Redirect(routes.EvidenceUploadController.showPage.url))
       }
-    }
-  }
-
-  /** Handles file upload errors from Upscan.
-    *
-    * This endpoint is called when a file transfer to Upscan service fails. It is not the endpoint for reporting file scanning failures, that happens in
-    * showResult which reads the upload status from the application. Upscan will redirect to this endpoint and append error information as query parameters to
-    * the redirect URL.
-    */
-  def showUploadError(
-    errorCode: Option[String],
-    errorMessage: Option[String],
-    errorRequestId: Option[String],
-    key: Option[String]
-  ): Action[AnyContent] = actions.authActionCheckSuspend { implicit request =>
-    errorCode.flatMap(UpscanErrorCode.fromString) match {
-      case Some(code) => Ok(amlsEvidenceUploadErrorPage(code))
-      case None => Redirect(routes.EvidenceUploadController.showPage.url)
     }
   }
 
