@@ -101,8 +101,8 @@ extends ComponentBaseISpec {
       await(repo.putSession(amlsJourneyKey, amlsJourney))
       await(upscanRepo.saveUpscanDetails(upscanInProgress))
       val result = get(s"$evidenceUploadResultPath?key=${upscanReference.value}")
-      result.status shouldBe SEE_OTHER
-      result.header("Location") shouldBe Some(evidenceUploadPath)
+      result.status shouldBe OK
+      assertPageHasTitle("We are checking your upload")(result)
     }
     "redirect to CYA if upload is successful" in {
       givenAuthorisedAsAgentWith(arn.value)

@@ -8,7 +8,10 @@
     const fileUploadForm = document.getElementById('fileUploadForm')
     const uploadInput = document.getElementById('fileToUpload')
     const progressIndicator = document.getElementById('file-upload-progress')
-
+    if (sessionStorage.getItem("uploadVirusDetected")) {
+        sessionStorage.removeItem("uploadVirusDetected")
+        renderFormError("virus")
+    }
     function checkUploadStatus(config, count) {
         const checkUploadStatusMaxAttempts = Number(config['checkUploadStatusMaxAttempts'])
         if(count > checkUploadStatusMaxAttempts) {
@@ -23,7 +26,8 @@
                     if (status === 202) {
                         window.location.href = config.success
                     } else if (status === 409) {
-                        renderFormError("virus")
+                        sessionStorage.setItem("uploadVirusDetected", "true")
+                        window.location.reload()
                     } else if (!response.ok) {
                         renderFormError("generic")
                     } else {

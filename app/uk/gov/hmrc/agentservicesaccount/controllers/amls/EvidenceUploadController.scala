@@ -33,6 +33,7 @@ import uk.gov.hmrc.agentservicesaccount.repository.UpscanRepository
 import uk.gov.hmrc.agentservicesaccount.services.ObjectStoreService
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.amls_evidence_upload
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.amls_evidence_upload_progress
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.agentservicesaccount.controllers.internal.{routes => internalRoutes}
 
@@ -50,6 +51,7 @@ class EvidenceUploadController @Inject() (
   upscanRepository: UpscanRepository,
   val sessionCacheService: SessionCacheService,
   amlsEvidenceUploadPage: amls_evidence_upload,
+  amlsEvidenceUploadProgressPage: amls_evidence_upload_progress,
   cc: MessagesControllerComponents
 )(implicit
   appConfig: AppConfig,
@@ -95,7 +97,8 @@ with I18nSupport {
               } yield {
                 Redirect(routes.CheckYourAnswersController.showPage)
               }
-            case _ => Future.successful(Redirect(routes.EvidenceUploadController.showPage.url))
+            case Some(details) => Future.successful(Ok(amlsEvidenceUploadProgressPage(details)))
+            case None => Future.successful(Redirect(routes.EvidenceUploadController.showPage.url))
           }
         case None => Future.successful(Redirect(routes.EvidenceUploadController.showPage.url))
       }
