@@ -9,10 +9,15 @@
     const uploadInput = document.getElementById('fileToUpload')
     const progressIndicator = document.getElementById('file-upload-progress')
 
+    function refreshUploadPageWithError(errorType) {
+        sessionStorage.setItem("uploadErrorType", errorType)
+        window.location.reload() //calls showPage() that to get latest FileUploadReference
+    }
+
     function checkUploadStatus(config, count) {
         const checkUploadStatusMaxAttempts = Number(config['checkUploadStatusMaxAttempts'])
         if(count > checkUploadStatusMaxAttempts) {
-            renderFormError("generic")
+            refreshUploadPageWithError("generic")
         } else {
             window.fetch(config['checkUploadStatusUrl'], {
                 credentials: 'include',
@@ -23,9 +28,9 @@
                     if (status === 202) {
                         window.location.href = config.success
                     } else if (status === 409) {
-                        renderFormError("virus")
+                        refreshUploadPageWithError("virus")
                     } else if (!response.ok) {
-                        renderFormError("generic")
+                        refreshUploadPageWithError("generic")
                     } else {
                         setTimeout(function () {
                             checkUploadStatus(config, count+1)
@@ -34,7 +39,7 @@
                 })
                 .catch(function(e) {
                     console.error('Failed to reach the file upload path for checking status of upload', e.message)
-                    renderFormError("generic")
+                    refreshUploadPageWithError("generic")
                 })
         }
     }
@@ -82,6 +87,13 @@
 
     if(fileUploadForm && uploadInput && progressIndicator) {
         const config = progressIndicator.dataset
+        const previousError = sessionStorage.getItem("uploadErrorType")
+        if(previousError) {
+            sessionStorage.removeItem("uploadErrorType")
+            window.setTimeout(function() {
+                renderFormError(previousError)
+            }, 0)
+        }
         uploadInput.removeAttribute('required')
         fileUploadForm.setAttribute('novalidate', 'novalidate')
         fileUploadForm.addEventListener('submit', function(event) {
@@ -122,13 +134,13 @@
                                 mode: 'no-cors'
                             })
                         if(r.status > 399) {
-                            renderFormError("generic")
+                            refreshUploadPageWithError("generic")
                         } else {
                             checkUploadStatus(config, 1)
                         }
                     } catch (error) {
                         console.error("No response from upscan when uploading file", error);
-                        renderFormError("generic")
+                        refreshUploadPageWithError("generic")
                     }
                 }, Number(config['millisecondsBeforePoll']))
             }
