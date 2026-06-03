@@ -122,8 +122,8 @@ with I18nSupport {
     errorRequestId: Option[String],
     key: Option[String]
   ): Action[AnyContent] = actions.authActionCheckSuspend { implicit request =>
-    errorCode.flatMap(UpscanErrorCode.toFailureReason) match {
-      case Some(failureReason) => Redirect(routes.EvidenceUploadController.showPage(Some(failureReason)).url)
+    errorCode.flatMap(UpscanErrorCode.fromString) match {
+      case Some(code: UpscanErrorCode) => Redirect(routes.EvidenceUploadController.showPage(Some(code.failureReason)).url)
       case None => Redirect(routes.EvidenceUploadController.showPage().url)
     }
   }
