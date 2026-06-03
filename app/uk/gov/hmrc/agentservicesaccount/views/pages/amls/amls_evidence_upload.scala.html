@@ -57,6 +57,7 @@
 @fileUploadErrorMessage = @{
     failureReason match {
         case Some("QUARANTINE") => Some(messages(s"$key.error.virus"))
+        case Some("ENTITY_TOO_LARGE") => Some(messages(s"$key.error.file-too-large"))
         case Some(_) => Some(messages(s"$key.error.generic"))
         case None => None
     }
