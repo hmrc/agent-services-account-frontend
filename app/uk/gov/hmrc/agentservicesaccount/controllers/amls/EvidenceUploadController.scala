@@ -35,7 +35,6 @@ import uk.gov.hmrc.agentservicesaccount.services.ObjectStoreService
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.amls_evidence_upload
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.amls_evidence_upload_progress
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.amls_evidence_upload_error
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.agentservicesaccount.controllers.internal.{routes => internalRoutes}
 
@@ -54,7 +53,6 @@ class EvidenceUploadController @Inject() (
   val sessionCacheService: SessionCacheService,
   amlsEvidenceUploadPage: amls_evidence_upload,
   amlsEvidenceUploadProgressPage: amls_evidence_upload_progress,
-  amlsEvidenceUploadErrorPage: amls_evidence_upload_error,
   cc: MessagesControllerComponents
 )(implicit
   appConfig: AppConfig,
