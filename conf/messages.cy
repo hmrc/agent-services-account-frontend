@@ -1022,11 +1022,6 @@ amls.evidence-upload-progress.complete=Your file {0} has been uploaded successfu
 amls.evidence-upload-progress.failed=Your file upload has failed scanning. Try uploading another file.
 amls.evidence-upload-progress.virus=A virus has been detected in your uploaded file, try uploading another file.
 
-amls.evidence-upload-error.EntityTooLarge.title = Your upload is too large
-amls.evidence-upload-error.EntityTooLarge.message = The file you are trying to upload is too large. The maximum file size is 6MB. Try uploading a smaller file.
-amls.evidence-upload-error.Unknown.title = Your upload has failed
-amls.evidence-upload-error.Unknown.message = Your file upload has failed scanning. Try uploading another file.
-
 #AMLS Errors
 update-money-laundering-supervisory.error.date=Enter your next registration renewal date TBC
 update-money-laundering-supervisory.error.day=Your next registration renewal date must include a day TBC

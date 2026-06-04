@@ -35,7 +35,6 @@ import uk.gov.hmrc.agentservicesaccount.services.ObjectStoreService
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.amls_evidence_upload
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.amls_evidence_upload_progress
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.amls_evidence_upload_error
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.agentservicesaccount.controllers.internal.{routes => internalRoutes}
 
@@ -54,7 +53,6 @@ class EvidenceUploadController @Inject() (
   val sessionCacheService: SessionCacheService,
   amlsEvidenceUploadPage: amls_evidence_upload,
   amlsEvidenceUploadProgressPage: amls_evidence_upload_progress,
-  amlsEvidenceUploadErrorPage: amls_evidence_upload_error,
   cc: MessagesControllerComponents
 )(implicit
   appConfig: AppConfig,
@@ -64,7 +62,7 @@ extends FrontendController(cc)
 with AmlsJourneySupport
 with I18nSupport {
 
-  def showPage(): Action[AnyContent] = actions.authActionCheckSuspend.async {
+  def showPage(failureReason: Option[String] = None): Action[AnyContent] = actions.authActionCheckSuspend.async {
     implicit request =>
       withUpdateAmlsJourney {
         case amlsJourney if amlsJourney.newAmlsBody.isEmpty => Future.successful(Redirect(routes.AmlsNewSupervisoryBodyController.showPage()))
@@ -80,7 +78,8 @@ with I18nSupport {
             _ <- upscanRepository.saveUpscanDetails(UpscanInProgress(initiateResponse.reference, Instant.now()))
           } yield Ok(amlsEvidenceUploadPage(
             upscanInitiateResponse = initiateResponse,
-            supervisoryBodyName = amlsJourney.newAmlsBody.get
+            supervisoryBodyName = amlsJourney.newAmlsBody.get,
+            failureReason = failureReason
           ))
       }
   }
@@ -100,10 +99,11 @@ with I18nSupport {
               } yield {
                 Redirect(routes.CheckYourAnswersController.showPage)
               }
-            case Some(details) => Future.successful(Ok(amlsEvidenceUploadProgressPage(details)))
-            case None => Future.successful(Redirect(routes.EvidenceUploadController.showPage.url))
+            case Some(details: UpscanInProgress) => Future.successful(Ok(amlsEvidenceUploadProgressPage(details)))
+            case Some(details: UpscanFailure) => Future.successful(Redirect(routes.EvidenceUploadController.showPage(Some(details.failureReason)).url))
+            case None => Future.successful(Redirect(routes.EvidenceUploadController.showPage().url))
           }
-        case None => Future.successful(Redirect(routes.EvidenceUploadController.showPage.url))
+        case None => Future.successful(Redirect(routes.EvidenceUploadController.showPage().url))
       }
     }
   }
@@ -121,8 +121,8 @@ with I18nSupport {
     key: Option[String]
   ): Action[AnyContent] = actions.authActionCheckSuspend { implicit request =>
     errorCode.flatMap(UpscanErrorCode.fromString) match {
-      case Some(code) => Ok(amlsEvidenceUploadErrorPage(code))
-      case None => Redirect(routes.EvidenceUploadController.showPage.url)
+      case Some(code: UpscanErrorCode) => Redirect(routes.EvidenceUploadController.showPage(Some(code.failureReason)).url)
+      case None => Redirect(routes.EvidenceUploadController.showPage().url)
     }
   }
 

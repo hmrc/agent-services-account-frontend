@@ -86,7 +86,7 @@
         }
         case _: UpscanFailure => {
             @govukButton(Button(
-                href = Some(routes.EvidenceUploadController.showPage.url),
+                href = Some(routes.EvidenceUploadController.showPage().url),
                 content = Text(messages("common.tryAgain"))
             ))
         }

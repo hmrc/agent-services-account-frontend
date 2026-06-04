@@ -15,40 +15,34 @@
  *@
 
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+@import uk.gov.hmrc.agentservicesaccount.controllers.amls.routes
 @import uk.gov.hmrc.agentservicesaccount.models.upscan.UpscanInitiateResponse
 @import uk.gov.hmrc.agentservicesaccount.views.html._
 @import views.html.helper.CSPNonce
-@import uk.gov.hmrc.agentservicesaccount.controllers.amls.routes
 
 @this(
-        main: main,
-        govukFileUpload: GovukFileUpload,
-        govukButton: GovukButton,
-        govukErrorSummary: GovukErrorSummary,
-        govukDetails: GovukDetails,
-        appConfig: AppConfig
+    main: main,
+    govukButton: GovukButton,
+    govukDetails: GovukDetails,
+    govukErrorSummary: GovukErrorSummary,
+    govukFileUpload: GovukFileUpload,
+    appConfig: AppConfig
 )
 
 @(
-        upscanInitiateResponse: UpscanInitiateResponse,
-        supervisoryBodyName: String
+    upscanInitiateResponse: UpscanInitiateResponse,
+    supervisoryBodyName: String,
+    failureReason: Option[String] = None
 )(implicit
-        request: RequestHeader,
-        messages: Messages
+    request: RequestHeader,
+    messages: Messages
 )
 
-@key = @{
-    "amls.evidence-upload"
-}
-@title = @{
-    messages(s"$key.title")
-}
-@templateScripts = {
-    <script src="@controllers.routes.Assets.at("javascripts/check-upload-status.js")" @CSPNonce.attr></script>
-}
-@templateStyles = {
-    <link rel="stylesheet" href="@controllers.routes.Assets.at("stylesheets/file-upload-styles.css")">
-}
+@key = @{ "amls.evidence-upload" }
+@title = @{ messages(s"$key.title") }
+@templateScripts = { <script src="@controllers.routes.Assets.at("javascripts/check-upload-status.js")" @CSPNonce.attr></script> }
+@templateStyles = { <link rel="stylesheet" href="@controllers.routes.Assets.at("stylesheets/file-upload-styles.css")"> }
+
 @detailsHtml = {
     <p class="govuk-body">@messages(s"$key.fileTypes.p1")</p>
     <ul class="govuk-list govuk-list--bullet">
@@ -60,6 +54,15 @@
     </ul>
 }
 
+@fileUploadErrorMessage = @{
+    failureReason match {
+        case Some("QUARANTINE") => Some(messages(s"$key.error.virus"))
+        case Some("ENTITY_TOO_LARGE") => Some(messages(s"$key.error.file-too-large"))
+        case Some(_) => Some(messages(s"$key.error.generic"))
+        case None => None
+    }
+}
+
 @main(
     pageTitle = title,
     mimicBrowserBackLink = true,
@@ -67,6 +70,20 @@
     additionalScripts = Some(templateScripts),
     additionalCss = Some(templateStyles)
 ) {
+
+    @{
+        fileUploadErrorMessage.map(errorMessage => {
+            govukErrorSummary(ErrorSummary(
+                title = Text(messages("error.summary.title")),
+                errorList = Seq(ErrorLink(
+                    href = Some("#fileToUpload"),
+                    content = Text(errorMessage)
+                )),
+                attributes = Map("id" -> "error-summary-display", "tabindex" -> "-1")
+            ))
+        })
+    }
+
     <h1 class="govuk-heading-l">@title</h1>
     <p class="govuk-body">@messages(s"$key.p1", supervisoryBodyName)</p>
     <p class="govuk-body">@messages(s"$key.p2")</p>
@@ -92,7 +109,8 @@
             attributes = Map(
                 "accept" -> appConfig.UpscanAmls.acceptMimeTypes,
                 "required" -> "true"
-            )
+            ),
+            errorMessage = fileUploadErrorMessage.map(errorMessage => ErrorMessage(content=Text(errorMessage)))
         ))
 
         <div id="upload-handling">

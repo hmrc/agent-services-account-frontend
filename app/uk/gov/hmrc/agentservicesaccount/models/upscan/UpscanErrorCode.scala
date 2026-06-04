@@ -17,17 +17,27 @@
 package uk.gov.hmrc.agentservicesaccount.models.upscan;
 
 // TODO rewrite as enum when switching to scala 3
-sealed trait UpscanErrorCode
+sealed trait UpscanErrorCode {
+  def failureReason: String
+}
+
 object UpscanErrorCode {
+
   def fromString(string: String): Option[UpscanErrorCode] =
     string.toLowerCase match {
       case "unknown" => Some(Unknown)
       case "entitytoolarge" => Some(EntityTooLarge)
       case _ => None
     }
+
 }
 
-case object Unknown
-extends UpscanErrorCode
-case object EntityTooLarge
-extends UpscanErrorCode
+object Unknown
+extends UpscanErrorCode {
+  override def failureReason: String = "UNKNOWN"
+}
+
+object EntityTooLarge
+extends UpscanErrorCode {
+  override def failureReason: String = "ENTITY_TOO_LARGE"
+}

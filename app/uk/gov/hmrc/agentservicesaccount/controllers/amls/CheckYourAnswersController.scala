@@ -83,12 +83,12 @@ with I18nSupport {
                   mandatoryItems :+ SummaryListData(
                     key = "amls.check-your-answers.evidence",
                     value = details.fileName,
-                    link = Some(amls.routes.EvidenceUploadController.showPage)
+                    link = Some(amls.routes.EvidenceUploadController.showPage())
                   )
                 ))
-              case _ => Redirect(amls.routes.EvidenceUploadController.showPage)
+              case _ => Redirect(amls.routes.EvidenceUploadController.showPage())
             }
-          case _ => Redirect(amls.routes.EvidenceUploadController.showPage).toFuture
+          case _ => Redirect(amls.routes.EvidenceUploadController.showPage()).toFuture
         }
       }
       else {

@@ -125,13 +125,13 @@ extends ComponentBaseISpec {
   }
 
   s"GET $evidenceUploadErrorPath" should {
-    "show error page for known error code" in {
+    "redirect to upload page for known error code" in {
       givenAuthorisedAsAgentWith(arn.value)
       givenGetAgentRecord(agentRecord)
       await(repo.putSession(amlsJourneyKey, amlsJourney))
       val result = get(s"$evidenceUploadErrorPath?errorCode=ENTITYTOOLARGE")
-      result.status shouldBe OK
-      assertPageHasTitle("Your upload is too large")(result)
+      result.status shouldBe SEE_OTHER
+      result.header("Location").get should include(s"$evidenceUploadPath?failureReason=ENTITY_TOO_LARGE")
     }
     "redirect to upload page for missing error code" in {
       givenAuthorisedAsAgentWith(arn.value)
