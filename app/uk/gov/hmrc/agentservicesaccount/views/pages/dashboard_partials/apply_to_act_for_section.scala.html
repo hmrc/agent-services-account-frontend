@@ -1,19 +1,18 @@
 @*
- * Copyright 2026 HM Revenue & Customs
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *@
-
+* Copyright 2026 HM Revenue & Customs
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*@
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.{routes => subscriptionRoutes}
 @import uk.gov.hmrc.agentservicesaccount.models.subscriptions.{LegacyRegime, SubscriptionInfo, SubscriptionStatus}
@@ -41,14 +40,14 @@
 
     val regimes =
         Seq(
-            if(!request.agentDetailsDesResponse.agencyDetails.exists(_.isAbroad)) Some(LegacyRegime.PAYE).filter(isUnsubscribed) else None,
-            Some(LegacyRegime.CT).filter(isUnsubscribed),
-            Some(LegacyRegime.SA).filter(isUnsubscribed)
+            if(!request.agentDetailsDesResponse.agencyDetails.exists(_.isAbroad)) Some(LegacyRegime.PAYE).filter(isUnsubscribed(_) && appConfig.enableLegacySubscriptionLink) else None,
+            Some(LegacyRegime.CT).filter(isUnsubscribed(_) && appConfig.enableLegacySubscriptionLinkRobotics),
+            Some(LegacyRegime.SA).filter(isUnsubscribed(_) && appConfig.enableLegacySubscriptionLinkRobotics)
         ).flatten
 
     regimes
 }) { regimes =>
-    @if(regimes.nonEmpty && appConfig.enableLegacySubscriptionLink) {
+    @if(regimes.nonEmpty) {
         <hr class="govuk-section-break hr-thick govuk-!-margin-bottom-6 govuk-!-margin-top-8">
         @h2(
             if(regimes.size == 1)

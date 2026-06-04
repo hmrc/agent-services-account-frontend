@@ -30,6 +30,9 @@ import uk.gov.hmrc.agentservicesaccount.models.AmlsDetails
 import uk.gov.hmrc.agentservicesaccount.models.Arn
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
 import uk.gov.hmrc.agentservicesaccount.services.AgentRecordService
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 
@@ -131,7 +134,12 @@ class Actions @Inject() (
             request = request.request
           )
         def subscriptionJourney(asaDetails: AgencyDetails) = SubscriptionJourney(asaDetails = asaDetails)
-        if (appConfig.enableLegacySubscriptionLink) {
+        if (
+          (appConfig.enableLegacySubscriptionLink && legacyRegime == PAYE) || (appConfig.enableLegacySubscriptionLinkRobotics && Seq(
+            CT,
+            SA
+          ).contains(legacyRegime))
+        ) {
           sessionCacheService.get[SubscriptionJourney](subscriptionJourneyKey(legacyRegime)).flatMap {
             case Some(journey) => Future.successful(Right(buildRequest(journey)))
             case None =>
