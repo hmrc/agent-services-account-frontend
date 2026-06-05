@@ -312,7 +312,7 @@ asa.legacy.paye.contact-name.title=Pwy ddylem gysylltu â nhw ynglŷn â TWE?
 asa.legacy.paye.contact-name.input.heading=Pwy yn {0} ddylem gysylltu â nhw ynglŷn â TWE?
 asa.legacy.paye.contact-name.input.hint=Nodwch ei enw llawn
 asa.legacy.paye.contact-name.input.error.empty=Nodwch enw llawn y person y dylem gysylltu ag ef ynglŷn â TWE
-asa.legacy.paye.contact-name.input.error.invalid=Gall enw’r person gynnwys llythrennau, cysylltnodau a chollnodau yn unig
+asa.legacy.paye.contact-name.input.error.invalid=Gall enw’r person gynnwys llythrennau a cysylltnodau yn unig
 
 asa.legacy.paye.phone-number.title=Pa rif ffôn ddylem ei ddefnyddio i ffonio chi ynglŷn â TWE?
 asa.legacy.paye.phone-number.heading=Pa rif ffôn ddylem ei ddefnyddio i ffonio {0} ynglŷn â TWE?
