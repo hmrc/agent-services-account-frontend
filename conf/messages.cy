@@ -895,11 +895,11 @@ update-contact-details.ct-code.error.empty=Nodwch god yr asiant yr ydych yn ei d
 update-contact-details.ct-code.error.invalid=Nodwch god asiant sy’n 6 chymeriad o hyd.
 
 #Cannot verify email
-cannotVerifyEmail.locked.title=We could not confirm your identity TBC
-cannotVerifyEmail.locked.p1=We cannot check your identity because you entered an incorrect verification code too many times. TBC
-cannotVerifyEmail.locked.p2=The verification code was emailed to you. TBC
-cannotVerifyEmail.locked.h2=What to do next TBC
-cannotVerifyEmail.locked.p3=You can try again in 24 hours. TBC
+cannotVerifyEmail.locked.title=Nid oedd modd i ni gadarnhau pwy ydych
+cannotVerifyEmail.locked.p1=Ni allwn wirio pwy ydych oherwydd rydych wedi nodi cod dilysu anghywir gormod o weithiau.
+cannotVerifyEmail.locked.p2=Cafodd y cod dilysu ei e-bostio atoch.
+cannotVerifyEmail.locked.h2=Yr hyn i’w wneud nesaf
+cannotVerifyEmail.locked.p3=Gallwch roi cynnig arall arni ymhen 24 awr.
 cannotVerifyEmail.locked.p4=Os hoffech drio eto gyda chyfeiriad e-bost gwahanol <a href="{0}">gallwch newid y cyfeiriad e-bost a nodwyd gennych</a>.
 
 #Admin access for access groups
