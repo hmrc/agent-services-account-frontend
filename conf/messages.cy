@@ -61,9 +61,9 @@ asa.other.p1=Y cyfrif gwasanaethau asiant yw cartref gwasanaethau treth CThEM a 
 asa.other.warning=Rhybudd
 asa.other.subscribed.p1=Er mwyn rheoli cleientiaid ar wasanaethau treth sydd heb eu rhestru yma, gallwch <a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">barhau ar yr adran ‘Gwasanaethau y gallwch eu defnyddio’ yn eich cyfrif gwasanaethau ar-lein CThEF ar gyfer asiantau (yn agor tab newydd)</a>.
 asa.other.mapped.p1=Er mwyn rheoli cleientiaid ar wasanaethau treth sydd heb eu rhestru yma, mae’n rhaid i chi <a class="govuk-link" href="{0}" rel="noreferrer noopener">fewngofnodi i’ch cyfrif gwasanaethau ar-lein CThEF ar gyfer asiantau</a>.
-asa.other.mapped.p2=You will be signed out of this agent services account.
+asa.other.mapped.p2=Byddwch yn cael eich allgofnodi o’r cyfrif gwasanaethau asiant hwn.
 asa.other.unknown.p1=Os ydych chi’n rheoli cleientiaid ar wasanaethau treth sydd heb eu rhestru yma, mae’n rhaid i chi <a class="govuk-link" href="{0}" rel="noreferrer noopener">fewngofnodi i’ch cyfrif gwasanaethau ar-lein CThEF ar gyfer asiantau</a>.
-asa.other.unknown.p2=You will be signed out of this agent services account.
+asa.other.unknown.p2=Byddwch yn cael eich allgofnodi o’r cyfrif gwasanaethau asiant hwn.
 asa.p.agent-services=Mynediad at wasanaethau ar gyfer cleientiaid sydd eisoes wedi eich awdurdodi i weithredu ar eu rhan.
 asa.p.client-authorisations=Dechrau cais am awdurdodiad newydd neu gysylltu’ch cleientiaid cyfredol â’ch cyfrif.
 asa.p.manage=Caniatáu i ddefnyddwyr eraill yn eich sefydliad gael mynediad at y cyfrif gwasanaethau asiant hwn, neu gyfyngu ar eu mynediad.
