@@ -59,10 +59,10 @@ asa.inset=Ni allwch fwrw golwg dros eich rhestrau o gleientiaid drwy’ch cyfrif
 asa.other.heading=Gwasanaethau treth eraill
 asa.other.p1=Y cyfrif gwasanaethau asiant yw cartref gwasanaethau treth CThEM a lansiwyd o 2019 ymlaen.<br/>Ar gyfer unrhyw wasanaethau treth sydd heb eu rhestru yma, allgofnodwch o’r cyfrif hwn a <a class="govuk-link" href="https://www.gov.uk/government/collections/hmrc-online-services-for-agents#hmrc-online-services-for-agents-account" target="_blank" rel="noreferrer noopener">mewngofnodwch i’ch cyfrif gwasanaethau ar-lein CThEM ar gyfer asiantau (yn agor tab newydd)</a>.
 asa.other.warning=Rhybudd
-asa.other.subscribed.p1=To manage clients on tax services not listed here, you can <a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">continue on the 'Services you can use' section in your HMRC online services for agents account (opens in a new tab)</a>.
-asa.other.mapped.p1=To manage clients on tax services not listed here, you must <a class="govuk-link" href="{0}" rel="noreferrer noopener">sign in to your HMRC online services for agents account</a>.
+asa.other.subscribed.p1=Er mwyn rheoli cleientiaid ar wasanaethau treth sydd heb eu rhestru yma, gallwch <a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">barhau ar yr adran ‘Gwasanaethau y gallwch eu defnyddio’ yn eich cyfrif gwasanaethau ar-lein CThEF ar gyfer asiantau (yn agor tab newydd)</a>.
+asa.other.mapped.p1=Er mwyn rheoli cleientiaid ar wasanaethau treth sydd heb eu rhestru yma, mae’n rhaid i chi <a class="govuk-link" href="{0}" rel="noreferrer noopener">fewngofnodi i’ch cyfrif gwasanaethau ar-lein CThEF ar gyfer asiantau</a>.
 asa.other.mapped.p2=You will be signed out of this agent services account.
-asa.other.unknown.p1=If you manage clients on tax services not listed here, you must <a class="govuk-link" href="{0}" rel="noreferrer noopener">sign in to your HMRC online services for agents account</a>.
+asa.other.unknown.p1=Os ydych chi’n rheoli cleientiaid ar wasanaethau treth sydd heb eu rhestru yma, mae’n rhaid i chi <a class="govuk-link" href="{0}" rel="noreferrer noopener">fewngofnodi i’ch cyfrif gwasanaethau ar-lein CThEF ar gyfer asiantau</a>.
 asa.other.unknown.p2=You will be signed out of this agent services account.
 asa.p.agent-services=Mynediad at wasanaethau ar gyfer cleientiaid sydd eisoes wedi eich awdurdodi i weithredu ar eu rhan.
 asa.p.client-authorisations=Dechrau cais am awdurdodiad newydd neu gysylltu’ch cleientiaid cyfredol â’ch cyfrif.
@@ -88,7 +88,7 @@ asa.ppt.col2.link1=<a class="govuk-link" href="{0}" rel="noreferrer noopener">Rh
 # CBC
 asa.cbc.col1.h2=Manage country-by-country reports TBC
 asa.cbc.col1.h3=Country-by-country reports TBC
-asa.cbc-section.col1.link1.p=You must first get an authorisation from your client. You can do this by <a class="govuk-link" href="{0}"> requesting an authorisation</a> TBC
+asa.cbc-section.col1.link1.p=Yn gyntaf mae’n rhaid i chi gael awdurdodiad gan eich cleient. Gallwch wneud hynny <a class="govuk-link" href="{0}">drwy wneud cais am awdurdodiad</a>
 asa.cbc-section.col1.link2.p=Manage your clients’ country-by-country reports and your country-by-country agent contact details TBC
 
 # Pillar2
@@ -900,7 +900,7 @@ cannotVerifyEmail.locked.p1=We cannot check your identity because you entered an
 cannotVerifyEmail.locked.p2=The verification code was emailed to you. TBC
 cannotVerifyEmail.locked.h2=What to do next TBC
 cannotVerifyEmail.locked.p3=You can try again in 24 hours. TBC
-cannotVerifyEmail.locked.p4=If you want to try again with a different email address <a href="{0}">you can change the email address you entered</a>. TBC
+cannotVerifyEmail.locked.p4=Os hoffech drio eto gyda chyfeiriad e-bost gwahanol <a href="{0}">gallwch newid y cyfeiriad e-bost a nodwyd gennych</a>.
 
 #Admin access for access groups
 admin-access.h1=Mae gennych fynediad gweinyddol
