@@ -86,10 +86,10 @@ asa.ppt.col2.link1.href=https://www.tax.service.gov.uk/plastic-packaging-tax/acc
 asa.ppt.col2.link1=<a class="govuk-link" href="{0}" rel="noreferrer noopener">Rhoi gwybod am Dreth Deunydd Pacio Plastig eich cleient a bwrw golwg dros daliadau, ffurflenni a chosbau.</a>
 
 # CBC
-asa.cbc.col1.h2=Manage country-by-country reports TBC
-asa.cbc.col1.h3=Country-by-country reports TBC
+asa.cbc.col1.h2=Rheoli adroddiadau gwlad wrth wlad
+asa.cbc.col1.h3=Adroddiadau gwlad wrth wlad
 asa.cbc-section.col1.link1.p=Yn gyntaf mae’n rhaid i chi gael awdurdodiad gan eich cleient. Gallwch wneud hynny <a class="govuk-link" href="{0}">drwy wneud cais am awdurdodiad</a>
-asa.cbc-section.col1.link2.p=Manage your clients’ country-by-country reports and your country-by-country agent contact details TBC
+asa.cbc-section.col1.link2.p=Rheoli adroddiadau gwlad wrth wlad wrth eich cleientiaid a manylion cyswllt asiantau gwlad wrth wlad
 
 # Pillar2
 asa.pillar2.col1.h2=Rhoi gwybod am drethi atodol Colofn 2
