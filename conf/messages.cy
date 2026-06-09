@@ -1023,22 +1023,22 @@ amls.evidence-upload-progress.failed=Mae’ch ffeil i’w huwchlwytho wedi methu
 amls.evidence-upload-progress.virus=Mae feirws wedi’i ganfod yn y ffeil rydych wedi’i huwchlwytho. Rhowch gynnig ar uwchlwytho ffeil arall.
 
 #AMLS Errors
-update-money-laundering-supervisory.error.date=Enter your next registration renewal date TBC
-update-money-laundering-supervisory.error.day=Your next registration renewal date must include a day TBC
-update-money-laundering-supervisory.error.month=Your next registration renewal date must include a month TBC
-update-money-laundering-supervisory.error.year=Your next registration renewal date must include a year TBC
-update-money-laundering-supervisory.error.day-and-month=Your next registration renewal date must include a day and a month TBC
-update-money-laundering-supervisory.error.day-and-year=Your next registration renewal date must include a day and a year TBC
-update-money-laundering-supervisory.error.month-and-year=Your next registration renewal date must include a month and a year TBC
+update-money-laundering-supervisory.error.date=Nodwch y dyddiad nesaf ar gyfer adnewyddu eich cofrestriad
+update-money-laundering-supervisory.error.day=Mae’n rhaid i’r dyddiad nesaf ar gyfer adnewyddu’ch cofrestriad gynnwys diwrnod
+update-money-laundering-supervisory.error.month=Mae’n rhaid i’r dyddiad nesaf ar gyfer adnewyddu’ch cofrestriad gynnwys mis
+update-money-laundering-supervisory.error.year=Mae’n rhaid i’r dyddiad nesaf ar gyfer adnewyddu’ch cofrestriad gynnwys blwyddyn
+update-money-laundering-supervisory.error.day-and-month=Mae’n rhaid i’r dyddiad nesaf ar gyfer adnewyddu’ch cofrestriad gynnwys diwrnod a mis
+update-money-laundering-supervisory.error.day-and-year=Mae’n rhaid i’r dyddiad nesaf ar gyfer adnewyddu’ch cofrestriad gynnwys diwrnod a blwyddyn
+update-money-laundering-supervisory.error.month-and-year=Mae’n rhaid i’r dyddiad nesaf ar gyfer adnewyddu’ch cofrestriad gynnwys mis a blwyddyn
 
-update-money-laundering-supervisory.error.date.invalid=Enter a real date TBC
-update-money-laundering-supervisory.error.date.past=Your next registration renewal date must be in the future TBC
-update-money-laundering-supervisory.error.date.before=Your next registration renewal date must be within 13 months of today TBC
+update-money-laundering-supervisory.error.date.invalid=Nodwch ddyddiad go iawn
+update-money-laundering-supervisory.error.date.past=Mae’n rhaid i’r dyddiad nesaf ar gyfer adnewyddu’ch cofrestriad fod yn y dyfodol
+update-money-laundering-supervisory.error.date.before=Mae’n rhaid i’r dyddiad nesaf ar gyfer adnewyddu’ch cofrestriad fod cyn pen 13 mis o heddiw
 
-update-money-laundering-supervisory.reg-number.error.invalid=Registration number must be a number TBC
-update-money-laundering-supervisory.reg-number.error.empty=Enter your money laundering supervision registration number TBC
-update-money-laundering-supervisory.body-codes.error.invalid=Money laundering supervisory body must be on the list TBC
-update-money-laundering-supervisory.body-codes.error.empty=Enter your money laundering supervisory body TBC
+update-money-laundering-supervisory.reg-number.error.invalid=Mae’n rhaid i’r rhif cofrestru fod yn rhif
+update-money-laundering-supervisory.reg-number.error.empty=Nodwch eich rhif cofrestru ar gyfer goruchwyliaeth gwyngalchu arian
+update-money-laundering-supervisory.body-codes.error.invalid=Mae’n rhaid i’r corff goruchwylio gwyngalchu arian fod ar y rhestr
+update-money-laundering-supervisory.body-codes.error.empty=Nodwch eich corff goruchwylio gwyngalchu arian
 
 #Administrators
 administrators.link-text=Bwrw golwg dros y gweinyddwyr
