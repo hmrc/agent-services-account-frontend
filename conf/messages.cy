@@ -1012,15 +1012,15 @@ amls.evidence-upload.error.file-empty=Mae’r ffeil yn wag. Dewiswch ffeil gwaha
 amls.evidence-upload.error.virus=Mae feirws yn y ffeil. Dewiswch ffeil gwahanol.
 amls.evidence-upload.error.generic=Nid oedd modd uwchlwytho’r ffeil. Rhowch gynnig arall arni
 
-amls.evidence-upload-progress.title=We are checking your upload
-amls.evidence-upload-progress.complete.title=Your upload is complete
-amls.evidence-upload-progress.failed.title=Your upload has failed scanning
-amls.evidence-upload-progress.virus.title=Your upload has a virus
-amls.evidence-upload-progress.message=Checking file
-amls.evidence-upload-progress.inProgress=Wait a few seconds and then select ‘Continue’.
-amls.evidence-upload-progress.complete=Your file {0} has been uploaded successfully.
-amls.evidence-upload-progress.failed=Your file upload has failed scanning. Try uploading another file.
-amls.evidence-upload-progress.virus=A virus has been detected in your uploaded file, try uploading another file.
+amls.evidence-upload-progress.title=Rydym yn gwirio’r ffeil rydych wedi’i huwchlwytho
+amls.evidence-upload-progress.complete.title=Mae’ch ffeil wedi’i huwchlwytho
+amls.evidence-upload-progress.failed.title=Mae’ch ffeil wedi’i huwchlwytho wedi methu â sganio
+amls.evidence-upload-progress.virus.title=Mae feirws ar y ffeil rydych wedi’i huwchlwytho
+amls.evidence-upload-progress.message=Wrthi’n gwirio’r ffeil
+amls.evidence-upload-progress.inProgress=Arhoswch ychydig o eiliadau ac yna dewiswch ‘Parhau’.
+amls.evidence-upload-progress.complete=Mae’ch ffeil {0} wedi’i huwchlwytho’n llwyddiannus.
+amls.evidence-upload-progress.failed=Mae’ch ffeil i’w huwchlwytho wedi methu â sganio. Rhowch gynnig ar uwchlwytho ffeil arall.
+amls.evidence-upload-progress.virus=Mae feirws wedi’i ganfod yn y ffeil rydych wedi’i huwchlwytho. Rhowch gynnig ar uwchlwytho ffeil arall.
 
 #AMLS Errors
 update-money-laundering-supervisory.error.date=Enter your next registration renewal date TBC
