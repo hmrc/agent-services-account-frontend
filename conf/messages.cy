@@ -837,13 +837,13 @@ update-contact-details.email.hint=Byddwn yn defnyddio’r cyfeiriad e-bost hwn i
 update-contact-details.email.error.empty=Nodwch y cyfeiriad e-bost newydd
 update-contact-details.email.error.invalid=Nodwch gyfeiriad e-bost ag enw, y symbol @ ac enw parth, megis enw@enghraifft.com
 
-update-contact-details.address.country-picker.title=Select your country - Agent services account - GOV.UK TBC
-update-contact-details.address.country-picker=What is the country where your business is based? TBC
-update-contact-details.address.lookup.title=Find your address - Agent services account - GOV.UK TBC
-update-contact-details.address.lookup=What is your correspondence address? TBC
-update-contact-details.address.select.title=Select your address - Agent services account - GOV.UK TBC
-update-contact-details.address.edit.title=Enter your address - Agent services account - GOV.UK TBC
-update-contact-details.address.confirm.title=Review and confirm - Agent services account - GOV.UK TBC
+update-contact-details.address.country-picker.title=Dewiswch eich gwlad - Cyfrif gwasanaethau asiant - GOV.UK
+update-contact-details.address.country-picker=Beth yw’r wlad lle mae’ch busnes wedi’i leoli?
+update-contact-details.address.lookup.title=Dod o hyd i’ch cyfeiriad - Cyfrif gwasanaethau asiant - GOV.UK
+update-contact-details.address.lookup=Beth yw’ch cyfeiriad gohebu?
+update-contact-details.address.select.title=Dewiswch eich cyfeiriad - Cyfrif gwasanaethau asiant - GOV.UK
+update-contact-details.address.edit.title=Nodwch eich cyfeiriad - Cyfrif gwasanaethau asiant - GOV.UK
+update-contact-details.address.confirm.title=Adolygu a chadarnhau - Cyfrif gwasanaethau asiant - GOV.UK
 
 update-contact-details.your-details.heading=Eich manylion
 update-contact-details.your-details.body.p=Byddwn yn defnyddio’r rhain os oes angen i ni siarad â chi am y newidiadau yr ydych wedi’u gwneud.
