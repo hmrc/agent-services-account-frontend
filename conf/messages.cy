@@ -853,11 +853,6 @@ update-contact-details.your-details.telephone.hint=Ar gyfer rhifau rhyngwladol, 
 update-contact-details.your-details.telephone.error.empty=Nodwch eich rhif ffôn
 update-contact-details.your-details.telephone.error.invalid=Nodwch rif ffôn, megis 01632 960 001, 07700 900 982 neu +33 808 157 0192
 
-update-contact-details.review.title=Gwiriwch eich manylion cyswllt newydd
-update-contact-details.review.p1=Gwiriwch eich bod wedi gwneud yr holl newidiadau angenrheidiol. Ni fyddwch yn gallu cyflwyno unrhyw newidiadau eraill am 28 diwrnod.
-update-contact-details.review.p2=Trwy gyflwyno’r newid hwn, rydych chi’n cadarnhau bod gennych un o’r rolau canlynol yn y busnes hwn:
-update-contact-details.review.submit-change-of-details=Cyflwyno newid manylion
-
 update-contact-details.check-your-answers.title=Gwirio’ch atebion
 update-contact-details.check-your-answers.inset=Mae’n cymryd 4 wythnos i CThEF i roi’r newidiadau hyn i’ch cyfrif gwasanaethau asiant ar waith. Yn ystod y cyfnod hwnnw, ni allwch ddiwygio’r manylion cyswllt eto.
 update-contact-details.check-your-answers.declaration.p1=Fe’m hawdurdodir i wneud y newidiadau hyn i fanylion cyswllt y busnes.
