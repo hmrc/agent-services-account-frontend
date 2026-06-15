@@ -39,7 +39,7 @@ object RequestSupport {
     */
   private object HcProvider
   extends FrontendHeaderCarrierProvider {
-    def headerCarrier(implicit request: RequestHeader): HeaderCarrier = hc(request)
+    def headerCarrier(implicit request: RequestHeader): HeaderCarrier = super.hc(request)
   }
 
 }

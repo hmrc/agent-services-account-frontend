@@ -60,7 +60,7 @@ trait DesiDetailsJourneySupport {
   }
 
   def ifChangeContactFeatureEnabledAndNoPendingChanges(action: => Future[Result])(implicit
-    request: AuthRequestWithAgentInfo[_],
+    request: AuthRequestWithAgentInfo[?],
     appConfig: AppConfig,
     pcodRepository: PendingChangeRequestRepository
   ): Future[Result] = ifChangeContactDetailsFeatureEnabled {
@@ -72,7 +72,7 @@ trait DesiDetailsJourneySupport {
     }
   }
 
-  def contactChangesNeeded()(implicit request: AuthRequestWithAgentInfo[_]): Future[Option[Set[String]]] = {
+  def contactChangesNeeded()(implicit request: AuthRequestWithAgentInfo[?]): Future[Option[Set[String]]] = {
     for {
       selectChanges <- sessionCacheService.get[Set[String]](currentSelectedChangesKey)
       desiDetailsData <- sessionCacheService.get[DesignatoryDetails](draftNewContactDetailsKey)
@@ -94,7 +94,7 @@ trait DesiDetailsJourneySupport {
   }
 
   def isContactPageRequestValid(currentPage: String)(
-    implicit request: AuthRequestWithAgentInfo[_]
+    implicit request: AuthRequestWithAgentInfo[?]
   ): Future[Boolean] = {
     sessionCacheService.get[Set[String]](currentSelectedChangesKey).map { selectChanges =>
       selectChanges.fold(false)(changes => changes.contains(currentPage))
@@ -102,7 +102,7 @@ trait DesiDetailsJourneySupport {
   }
 
   def isOtherServicesPageRequestValid()(
-    implicit request: AuthRequestWithAgentInfo[_]
+    implicit request: AuthRequestWithAgentInfo[?]
   ): Future[Boolean] = {
     for {
       selectChanges <- sessionCacheService.get[Set[String]](currentSelectedChangesKey)
@@ -111,7 +111,7 @@ trait DesiDetailsJourneySupport {
   }
 
   def isJourneyComplete()(
-    implicit request: AuthRequestWithAgentInfo[_]
+    implicit request: AuthRequestWithAgentInfo[?]
   ): Future[DesiDetailsJourney] = {
     for {
       submittedBy <- sessionCacheService.get[YourDetails](draftSubmittedByKey)

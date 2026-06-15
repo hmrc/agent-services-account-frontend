@@ -48,7 +48,7 @@ object NextPageSelector {
         case Some("address") => Redirect(desiDetails.routes.ContactDetailsController.startAddressLookup)
         case Some("email") => Redirect(desiDetails.routes.UpdateEmailAddressController.showChangeEmailAddress)
         case Some("telephone") => Redirect(desiDetails.routes.UpdateTelephoneController.showPage)
-        case None => Redirect(desiDetails.routes.ApplySACodeChangesController.showPage)
+        case _ => Redirect(desiDetails.routes.ApplySACodeChangesController.showPage)
       }
     }
   }

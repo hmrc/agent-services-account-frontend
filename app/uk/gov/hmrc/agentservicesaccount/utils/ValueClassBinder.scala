@@ -20,9 +20,6 @@ import play.api.libs.json._
 import play.api.mvc.PathBindable
 import play.api.mvc.QueryStringBindable
 
-import scala.reflect.runtime.universe.TypeTag
-import scala.reflect.runtime.universe.typeOf
-
 object ValueClassBinder {
 
   def valueClassBinder[A: Reads](fromAtoString: A => String)(implicit stringBinder: PathBindable[String]): PathBindable[A] = {
@@ -46,15 +43,15 @@ object ValueClassBinder {
     }
   }
 
-  def queryStringValueBinder[A: TypeTag: Reads](fromAtoString: A => String): QueryStringBindable[A] = {
+  def queryStringValueBinder[A: Reads](fromAtoString: A => String): QueryStringBindable[A] = {
     new QueryStringBindable.Parsing[A](
       parse = JsString(_).as[A],
       fromAtoString,
       {
         case (key: String, e: JsResultException) =>
-          s"Cannot parse param $key as ${typeOf[A].typeSymbol.name.toString}. " +
+          s"Cannot parse param $key. " +
             s"${e.errors.headOption.flatMap(_._2.headOption.map(_.message)).getOrElse("")}"
-        case (key: String, e) => s"Cannot parse param $key as ${typeOf[A].typeSymbol.name.toString}. ${e.toString}"
+        case (key: String, e) => s"Cannot parse param $key. ${e.toString}"
       }
     )
   }

@@ -45,7 +45,7 @@ govukButton: GovukButton
         )
     }
 
-    @formWithCSRF(action = desiDetails.routes.SelectDetailsController.onSubmit, 'id -> "input") {
+    @formWithCSRF(action = desiDetails.routes.SelectDetailsController.onSubmit, Symbol("id") -> "input") {
         @govukCheckboxes(Checkboxes(
             fieldset = Some(Fieldset(
                legend = Some(Legend(

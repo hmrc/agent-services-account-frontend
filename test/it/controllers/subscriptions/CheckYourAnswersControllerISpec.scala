@@ -137,7 +137,7 @@ with MockFactory {
 
     val session: Map[String, String] = Map("sessionId" -> "test-session")
 
-    def fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest().withSession(session.toSeq: _*)
+    def fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest().withSession(session.toSeq*)
 
     def cacheJourney(journey: SubscriptionJourney): Unit = {
       implicit val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequest
@@ -221,7 +221,7 @@ with MockFactory {
 
       "redirect when submission succeeds" in new TestSetup(legacyRegime) {
         private val request = FakeRequest(POST, "/")
-          .withSession(session.toSeq: _*)
+          .withSession(session.toSeq*)
           .withFormUrlEncodedBody()
 
         cacheJourney(subscriptionFullJourney(legacyRegime))

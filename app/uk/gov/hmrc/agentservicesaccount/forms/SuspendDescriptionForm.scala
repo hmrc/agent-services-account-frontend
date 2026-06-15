@@ -25,13 +25,14 @@ import play.api.data.validation.ValidationError
 
 object SuspendDescriptionForm {
 
-  private def suspendDescriptionConstraint: Constraint[String] = Constraint[String] { input: String =>
-    if (input.trim.isEmpty)
-      Invalid(ValidationError("error.suspended-description.empty"))
-    else if (input.trim.length > 250)
-      Invalid(ValidationError("error.suspended-description.max-length"))
-    else
-      Valid
+  private def suspendDescriptionConstraint: Constraint[String] = Constraint[String] {
+    (input: String) =>
+      if (input.trim.isEmpty)
+        Invalid(ValidationError("error.suspended-description.empty"))
+      else if (input.trim.length > 250)
+        Invalid(ValidationError("error.suspended-description.max-length"))
+      else
+        Valid
   }
   private val suspendDescriptionMapping: Mapping[String] = text.verifying(suspendDescriptionConstraint)
 

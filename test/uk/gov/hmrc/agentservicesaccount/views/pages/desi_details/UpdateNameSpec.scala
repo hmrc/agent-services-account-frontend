@@ -18,7 +18,7 @@ package uk.gov.hmrc.agentservicesaccount.views.pages.desi_details
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+import org.scalatest.matchers.must.Matchers.*
 import play.api.data.Form
 import play.api.i18n.Lang
 import play.api.i18n.Messages

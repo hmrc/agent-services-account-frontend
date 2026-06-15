@@ -20,6 +20,8 @@ import play.api.http.Status.BAD_REQUEST
 import play.api.http.Status.CREATED
 import play.api.http.Status.OK
 import play.api.libs.json.Json
+import play.api.libs.ws.DefaultBodyWritables.writeableOf_String
+import play.api.libs.ws.JsonBodyWritables.writeableOf_JsValue
 import play.api.mvc.RequestHeader
 import uk.gov.hmrc.agentservicesaccount.models.Arn
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
@@ -72,7 +74,7 @@ class AgentAssuranceConnector @Inject() (httpV2: HttpClientV2)(implicit
       .map {
         response =>
           response.status match {
-            case CREATED => Future.successful(())
+            case CREATED => ()
             case BAD_REQUEST => throw UpstreamErrorResponse(s"Error $BAD_REQUEST invalid request", BAD_REQUEST)
             case e => throw UpstreamErrorResponse(s"Error $e unable to post amls details", e)
           }
@@ -88,7 +90,7 @@ class AgentAssuranceConnector @Inject() (httpV2: HttpClientV2)(implicit
       .map {
         response =>
           response.status match {
-            case CREATED => Future.successful(())
+            case CREATED => ()
             case e => throw UpstreamErrorResponse(s"Error $e unable to post designatory details", e)
           }
       }

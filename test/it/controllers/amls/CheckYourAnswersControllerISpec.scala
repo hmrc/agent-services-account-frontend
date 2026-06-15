@@ -47,7 +47,6 @@ import uk.gov.hmrc.agentservicesaccount.models.upscan.FileUploadReference
 import uk.gov.hmrc.agentservicesaccount.models.upscan.UpscanSuccess
 
 import java.time.Instant
-import java.time.LocalDate
 
 class CheckYourAnswersControllerISpec
 extends ComponentBaseISpec {

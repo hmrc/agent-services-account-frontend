@@ -16,6 +16,7 @@
 
 package it.repository
 
+import org.mongodb.scala.SingleObservableFuture
 import org.scalatest.concurrent.Eventually.eventually
 import org.scalatest.concurrent.PatienceConfiguration.Interval
 import org.scalatest.concurrent.PatienceConfiguration.Timeout
