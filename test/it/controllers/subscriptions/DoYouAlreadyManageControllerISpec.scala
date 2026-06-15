@@ -149,7 +149,7 @@ with TestConstants {
 
     val session: Map[String, String] = Map("sessionId" -> "test-session")
 
-    def fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest().withSession(session.toSeq: _*)
+    def fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest().withSession(session.toSeq*)
 
     def cacheJourney(journey: SubscriptionJourney): Unit = {
       implicit val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequest
@@ -192,7 +192,7 @@ with TestConstants {
         cacheJourney(subscriptionBaseJourney)
 
         val request = FakeRequest(POST, "/")
-          .withSession(session.toSeq: _*)
+          .withSession(session.toSeq*)
           .withFormUrlEncodedBody(
             doYouAlreadyManageKey -> ""
           )
@@ -206,7 +206,7 @@ with TestConstants {
         cacheJourney(subscriptionBaseJourney)
 
         val request = FakeRequest(POST, "/")
-          .withSession(session.toSeq: _*)
+          .withSession(session.toSeq*)
           .withFormUrlEncodedBody(
             doYouAlreadyManageKey -> "true"
           )
@@ -228,7 +228,7 @@ with TestConstants {
         cacheJourney(subscriptionBaseJourney)
 
         val request = FakeRequest(POST, "/")
-          .withSession(session.toSeq: _*)
+          .withSession(session.toSeq*)
           .withFormUrlEncodedBody(
             doYouAlreadyManageKey -> "false"
           )
@@ -250,7 +250,7 @@ with TestConstants {
         cacheJourney(subscriptionBaseJourney)
 
         val request = FakeRequest(POST, "/")
-          .withSession(session.toSeq: _*)
+          .withSession(session.toSeq*)
           .withFormUrlEncodedBody(
             doYouAlreadyManageKey -> "false"
           )

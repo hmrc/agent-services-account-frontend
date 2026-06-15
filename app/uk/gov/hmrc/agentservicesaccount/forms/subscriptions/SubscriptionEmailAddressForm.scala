@@ -61,7 +61,7 @@ object SubscriptionEmailAddressForm {
       mapping(
         emailAddressUseAsaDataKey -> emailAddressUseAsaDataMapping(legacyRegime, asaDetailsAgencyName),
         emailAddressNewKey -> mandatoryIfFalse(emailAddressUseAsaDataKey, emailAddressNewOptionalMapping(legacyRegime))
-      )(EmailAddressFormValues.apply)(o => Some(o.useAsaData, o.newEmailAddress))
+      )(EmailAddressFormValues.apply)(o => Some((o.useAsaData, o.newEmailAddress)))
     )
   }
 

@@ -17,7 +17,6 @@
 package uk.gov.hmrc.agentservicesaccount.models
 
 import play.api.libs.functional.syntax.toFunctionalBuilderOps
-import play.api.libs.functional.syntax.unlift
 import play.api.libs.json.Format
 import play.api.libs.json.Json
 import play.api.libs.json.OFormat
@@ -45,7 +44,7 @@ object BusinessAddress {
 
   def databaseFormat(implicit
     crypto: Encrypter
-      with Decrypter
+      & Decrypter
   ): Format[BusinessAddress] =
     (
       (__ \ "addressLine1").format[String](stringEncrypterDecrypter) and
@@ -54,7 +53,18 @@ object BusinessAddress {
         (__ \ "addressLine4").formatNullable[String](stringEncrypterDecrypter) and
         (__ \ "postalCode").formatNullable[String](stringEncrypterDecrypter) and
         (__ \ "countryCode").format[String](stringEncrypterDecrypter)
-    )(BusinessAddress.apply, unlift(BusinessAddress.unapply))
+    )(
+      BusinessAddress.apply,
+      address =>
+        (
+          address.addressLine1,
+          address.addressLine2,
+          address.addressLine3,
+          address.addressLine4,
+          address.postalCode,
+          address.countryCode
+        )
+    )
 
 }
 
@@ -73,13 +83,13 @@ object AgencyDetails {
 
   def databaseFormat(implicit
     crypto: Encrypter
-      with Decrypter
+      & Decrypter
   ): Format[AgencyDetails] =
     (
       (__ \ "agencyName").formatNullable[String](stringEncrypterDecrypter) and
         (__ \ "agencyEmail").formatNullable[String](stringEncrypterDecrypter) and
         (__ \ "agencyTelephone").formatNullable[String](stringEncrypterDecrypter) and
         (__ \ "agencyAddress").formatNullable[BusinessAddress](BusinessAddress.databaseFormat)
-    )(AgencyDetails.apply, unlift(AgencyDetails.unapply))
+    )(AgencyDetails.apply, details => (details.agencyName, details.agencyEmail, details.agencyTelephone, details.agencyAddress))
 
 }

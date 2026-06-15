@@ -32,12 +32,13 @@ import uk.gov.hmrc.agentservicesaccount.views.html.pages.suspend._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject.Inject
+import scala.annotation.unused
 import scala.concurrent.ExecutionContext
 
 class SuspendedJourneyController @Inject() (
   actions: Actions,
   emailService: EmailService,
-  agentAssuranceConnector: AgentAssuranceConnector,
+  @unused agentAssuranceConnector: AgentAssuranceConnector,
   suspensionWarningView: suspension_warning,
   contactDetailsView: contact_details,
   recoveryDescriptionView: recovery_description,

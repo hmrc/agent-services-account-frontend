@@ -37,7 +37,7 @@
 
 @main(
     pageTitle = withErrorPrefix(form.hasErrors, msgs("beta.invite.yes-no.heading")),
-    backLinkHref = Some(routes.AgentServicesController.showAgentServicesAccount.url),
+    backLinkHref = Some(routes.AgentServicesController.showAgentServicesAccount().url),
     showSecondaryNav = false
 ) {
 

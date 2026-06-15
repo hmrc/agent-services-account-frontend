@@ -24,12 +24,11 @@ import play.api.data.validation._
 object NewRegistrationNumberForm {
 
   // remove all spaces from input before matching to ensure correct digit count
-  private val trimmedText = text.transform[String](x => x.trim, x => x)
   private val supervisoryNumberRegexNonHmrc = """^[A-Za-z0-9\,\.\'\-\/\ ]{0,100}$""".r
   private val supervisoryNumberRegexHmrc = "X[A-Z]ML00000[0-9]{6}".r
 
   private def registrationNumberConstraint(isHmrc: Boolean): Constraint[String] = Constraint[String] {
-    fieldValue: String =>
+    (fieldValue: String) =>
       if (fieldValue.isEmpty)
         Invalid(ValidationError("amls.enter-registration-number.error.empty"))
       else if (isHmrc && !supervisoryNumberRegexHmrc.matches(fieldValue))
@@ -42,7 +41,7 @@ object NewRegistrationNumberForm {
 
   def form(isHmrc: Boolean): Form[String] = Form(
     single(
-      "number" -> text.verifying(registrationNumberConstraint(isHmrc))
+      "number" -> text.transform[String](x => x.trim, x => x).verifying(registrationNumberConstraint(isHmrc))
     )
   )
 

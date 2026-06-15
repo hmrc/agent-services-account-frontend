@@ -71,7 +71,7 @@ object UpscanDetails {
         (__ \ "uploadDetails" \ "fileMimeType").read[String] and
         (__ \ "uploadDetails" \ "checksum").read[String] and
         (__ \ "uploadDetails" \ "size").read[Long]
-    )(UpscanSuccess.apply _)
+    )(UpscanSuccess.apply)
 
   private val notificationFailureReads: Reads[UpscanFailure] =
     (
@@ -79,7 +79,7 @@ object UpscanDetails {
         Reads.pure[Instant](Instant.now()) and
         (__ \ "failureDetails" \ "failureReason").read[String] and
         (__ \ "failureDetails" \ "message").read[String]
-    )(UpscanFailure.apply _)
+    )(UpscanFailure.apply)
 
   val callbackReads: Reads[UpscanDetails] = Reads { json =>
     (json \ "fileStatus").validate[String] match {

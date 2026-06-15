@@ -33,17 +33,19 @@ object BetaInviteContactDetailsForm {
 
   def form: Form[BetaInviteContactDetails] = Form(
     mapping(
-      "name" -> text
-        .verifying("error.required.name", _.trim.nonEmpty)
-        .verifying("error.max-length.name", _.trim.length < 81),
-      "email" -> text
-        .verifying("error.required.email", _.trim.nonEmpty)
-        .verifying("error.max-length.email", _.trim.length < 255)
-        .verifying("error.invalid.email", x => x.trim.matches(emailRegex) || x.trim.isEmpty),
+      "name" ->
+        text
+          .verifying("error.required.name", _.trim.nonEmpty)
+          .verifying("error.max-length.name", _.trim.length < 81),
+      "email" ->
+        text
+          .verifying("error.required.email", _.trim.nonEmpty)
+          .verifying("error.max-length.email", _.trim.length < 255)
+          .verifying("error.invalid.email", x => x.trim.matches(emailRegex) || x.trim.isEmpty),
       "phone" -> optional(text
         .verifying("error.max-length.phone", x => x.trim.length < 21 || x.trim.isEmpty)
         .verifying("error.invalid.phone", x => x.trim.matches(phoneRegex) || x.trim.isEmpty))
-    )(BetaInviteContactDetails.apply)(BetaInviteContactDetails.unapply)
+    )(BetaInviteContactDetails.apply)(details => Some((details.name, details.email, details.phone)))
   )
 
 }
@@ -54,37 +56,40 @@ object ContactDetailsSuspendForm {
   private val emailRegex = """^.{1,252}@.{1,256}\..{1,256}$"""
   private val phoneRegex = """^[0-9 +()]{0,25}$"""
 
-  private def suspendedDetailsNameConstraint: Constraint[String] = Constraint[String] { input: String =>
-    if (input.trim.isEmpty)
-      Invalid(ValidationError("error.suspended-details.required.name"))
-    else if (input.trim.length > 80)
-      Invalid(ValidationError("error.max-length.name"))
-    else if (input.contains('>') || input.contains('<'))
-      Invalid(ValidationError("error.suspended-details.invalid-chars.name"))
-    else
-      Valid
+  private def suspendedDetailsNameConstraint: Constraint[String] = Constraint[String] {
+    (input: String) =>
+      if (input.trim.isEmpty)
+        Invalid(ValidationError("error.suspended-details.required.name"))
+      else if (input.trim.length > 80)
+        Invalid(ValidationError("error.max-length.name"))
+      else if (input.contains('>') || input.contains('<'))
+        Invalid(ValidationError("error.suspended-details.invalid-chars.name"))
+      else
+        Valid
   }
 
-  private def suspendedDetailsEmailConstraint: Constraint[String] = Constraint[String] { input: String =>
-    if (input.trim.isEmpty)
-      Invalid(ValidationError("error.suspended-details.required.email"))
-    else if (input.trim.length > 254)
-      Invalid(ValidationError("error.max-length.email"))
-    else if (!input.trim.matches(emailRegex))
-      Invalid(ValidationError("error.suspended-details.required.email"))
-    else
-      Valid
+  private def suspendedDetailsEmailConstraint: Constraint[String] = Constraint[String] {
+    (input: String) =>
+      if (input.trim.isEmpty)
+        Invalid(ValidationError("error.suspended-details.required.email"))
+      else if (input.trim.length > 254)
+        Invalid(ValidationError("error.max-length.email"))
+      else if (!input.trim.matches(emailRegex))
+        Invalid(ValidationError("error.suspended-details.required.email"))
+      else
+        Valid
   }
 
-  private def suspendedDetailsTelephoneConstraint: Constraint[String] = Constraint[String] { input: String =>
-    if (input.trim.isEmpty)
-      Invalid(ValidationError("error.suspended-details.required.telephone"))
-    else if (input.trim.length > 20)
-      Invalid(ValidationError("error.suspended-details.max-length.telephone"))
-    else if (!input.trim.matches(phoneRegex))
-      Invalid(ValidationError("error.suspended-details.invalid.telephone"))
-    else
-      Valid
+  private def suspendedDetailsTelephoneConstraint: Constraint[String] = Constraint[String] {
+    (input: String) =>
+      if (input.trim.isEmpty)
+        Invalid(ValidationError("error.suspended-details.required.telephone"))
+      else if (input.trim.length > 20)
+        Invalid(ValidationError("error.suspended-details.max-length.telephone"))
+      else if (!input.trim.matches(phoneRegex))
+        Invalid(ValidationError("error.suspended-details.invalid.telephone"))
+      else
+        Valid
   }
 
   def form: Form[SuspendContactDetails] = Form(
@@ -92,7 +97,7 @@ object ContactDetailsSuspendForm {
       "name" -> text.verifying(suspendedDetailsNameConstraint),
       "email" -> text.verifying(suspendedDetailsEmailConstraint),
       "phone" -> text.verifying(suspendedDetailsTelephoneConstraint)
-    )(SuspendContactDetails.apply)(SuspendContactDetails.unapply)
+    )(SuspendContactDetails.apply)(details => Some((details.name, details.email, details.phone)))
   )
 
 }

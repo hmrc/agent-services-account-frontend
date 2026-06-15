@@ -312,7 +312,7 @@ asa.legacy.paye.contact-name.title=Who should we contact about PAYE?
 asa.legacy.paye.contact-name.input.heading=Who at {0} should we contact about PAYE?
 asa.legacy.paye.contact-name.input.hint=Enter their full name
 asa.legacy.paye.contact-name.input.error.empty=Enter the full name of the person we should contact about PAYE
-asa.legacy.paye.contact-name.input.error.invalid=The name of the person can only contain letters and hyphens
+asa.legacy.paye.contact-name.input.error.invalid=The name of the person can only contain letters, hyphens and apostrophes
 
 asa.legacy.paye.phone-number.title=What phone number should we use to call you about PAYE?
 asa.legacy.paye.phone-number.heading=What phone number should we use to call {0} about PAYE?
@@ -853,6 +853,11 @@ update-contact-details.your-details.telephone.hint=For international numbers inc
 update-contact-details.your-details.telephone.error.empty=Enter your telephone number
 update-contact-details.your-details.telephone.error.invalid=Enter a telephone number, like 01632 960 001, 07700 900 982 or +33 808 157 0192
 
+update-contact-details.review.title=Check your new contact details
+update-contact-details.review.p1=Check you have made all the necessary changes. You will not be able to submit any more changes for 28 days.
+update-contact-details.review.p2=By submitting this change, you confirm you have one of the following roles in this business:
+update-contact-details.review.submit-change-of-details=Submit change of details
+
 update-contact-details.check-your-answers.title=Check your answers
 update-contact-details.check-your-answers.inset=It takes 4 weeks for HMRC to apply these changes to your agent services account. During that time, you cannot amend the contact details again.
 update-contact-details.check-your-answers.declaration.p1=I am authorised to make changes to the business contact details.
@@ -986,7 +991,7 @@ amls.check-your-answers.evidence=Evidence
 amls.check-your-answers.submit-button=Submit your details
 
 ## AMLS Evidence upload
-amls.evidence-upload.title=Upload evidence
+amls.evidence-upload.title = Upload evidence
 amls.evidence-upload.p1=Upload evidence to show that {0} is your current anti-money laundering supervisor.
 amls.evidence-upload.p2=You can choose what evidence to upload.
 amls.evidence-upload.p3=Suitable evidence might be a letter, email or payment receipt from your supervisory body, confirming you’re covered.
@@ -999,13 +1004,13 @@ amls.evidence-upload.fileTypes.bullet3=email (.txt)
 amls.evidence-upload.fileTypes.bullet4=Microsoft (Word, Excel or PowerPoint)
 amls.evidence-upload.fileTypes.bullet5=Open Document Format (ODF)
 amls.evidence-upload.label=Choose your file
-amls.evidence-upload.fileUploadProgress.message=Checking file
-amls.evidence-upload.error.required=Select a file
-amls.evidence-upload.error.wrong-file-type=The selected file must be a JPG, JPEG, PNG, TIFF, PDF, TXT, DOC, DOCX, XLS, XLSX, PPT, PPTX, ODT, ODS or ODP file
-amls.evidence-upload.error.file-too-large=The file must be smaller than 6MB. Choose a different file.
-amls.evidence-upload.error.file-empty=The file is empty. Choose a different file.
-amls.evidence-upload.error.virus=The file contains a virus. Choose a different file.
-amls.evidence-upload.error.generic=The file could not be uploaded. Try again
+amls.evidence-upload.fileUploadProgress.message = Checking file
+amls.evidence-upload.error.required = Select a file
+amls.evidence-upload.error.wrong-file-type = The selected file must be a JPG, JPEG, PNG, TIFF, PDF, TXT, DOC, DOCX, XLS, XLSX, PPT, PPTX, ODT, ODS or ODP file
+amls.evidence-upload.error.file-too-large = The file must be smaller than 6MB. Choose a different file.
+amls.evidence-upload.error.file-empty = The file is empty. Choose a different file.
+amls.evidence-upload.error.virus = The file contains a virus. Choose a different file.
+amls.evidence-upload.error.generic = The file could not be uploaded. Try again
 
 amls.evidence-upload-progress.title=We are checking your upload
 amls.evidence-upload-progress.complete.title=Your upload is complete

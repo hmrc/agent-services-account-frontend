@@ -143,7 +143,7 @@ with TestConstants {
 
     val session: Map[String, String] = Map("sessionId" -> "test-session")
 
-    def fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest().withSession(session.toSeq: _*)
+    def fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest().withSession(session.toSeq*)
 
     def cacheJourney(journey: SubscriptionJourney): Unit = {
       implicit val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequest
@@ -185,7 +185,7 @@ with TestConstants {
     "return BAD_REQUEST when form is invalid" in new TestSetup {
       cacheJourney(subscriptionBaseJourney)
 
-      private val request = FakeRequest().withSession(session.toSeq: _*).withFormUrlEncodedBody(
+      private val request = FakeRequest().withSession(session.toSeq*).withFormUrlEncodedBody(
         contactNameKey -> ""
       )
 
@@ -203,7 +203,7 @@ with TestConstants {
       s"update journey and redirect to ${journeyWithRedirectLocation._2}" +
         s"when journey ${completeString(journeyWithRedirectLocation._1, PAYE)}}" in new TestSetup {
           private val request = FakeRequest(POST, "/")
-            .withSession(session.toSeq: _*)
+            .withSession(session.toSeq*)
             .withFormUrlEncodedBody(
               contactNameKey -> "New Name"
             )

@@ -18,7 +18,7 @@ package uk.gov.hmrc.agentservicesaccount.views.pages.desi_details
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+import org.scalatest.matchers.must.Matchers.*
 import play.api.i18n.Lang
 import play.api.i18n.Messages
 import play.api.i18n.MessagesImpl
@@ -144,11 +144,11 @@ extends ViewBaseSpec {
 
             val bulletPoint = doc.select(".govuk-list govuk-list--bullet").asScala.toList
 
-            bulletPoint.head mustBe MessageLookup.English.bulletPoint1
-            bulletPoint(1) mustBe MessageLookup.English.bulletPoint2
-            bulletPoint(2) mustBe MessageLookup.English.bulletPoint3
-            bulletPoint(3) mustBe MessageLookup.English.bulletPoint4
-            bulletPoint(4) mustBe MessageLookup.English.bulletPoint5
+            bulletPoint.head.text() mustBe MessageLookup.English.bulletPoint1
+            bulletPoint(1).text() mustBe MessageLookup.English.bulletPoint2
+            bulletPoint(2).text() mustBe MessageLookup.English.bulletPoint3
+            bulletPoint(3).text() mustBe MessageLookup.English.bulletPoint4
+            bulletPoint(4).text() mustBe MessageLookup.English.bulletPoint5
 
             val button = doc.select(".govuk-button").asScala.toList
 
@@ -176,11 +176,11 @@ extends ViewBaseSpec {
 
             val bulletPoint = doc.select(".govuk-list govuk-list--bullet").asScala.toList
 
-            bulletPoint.head mustBe MessageLookup.English.bulletPoint1
-            bulletPoint(1) mustBe MessageLookup.English.bulletPoint2
-            bulletPoint(2) mustBe MessageLookup.English.bulletPoint3
-            bulletPoint(3) mustBe MessageLookup.English.bulletPoint4
-            bulletPoint(4) mustBe MessageLookup.English.bulletPoint5
+            bulletPoint.head.text() mustBe MessageLookup.English.bulletPoint1
+            bulletPoint(1).text() mustBe MessageLookup.English.bulletPoint2
+            bulletPoint(2).text() mustBe MessageLookup.English.bulletPoint3
+            bulletPoint(3).text() mustBe MessageLookup.English.bulletPoint4
+            bulletPoint(4).text() mustBe MessageLookup.English.bulletPoint5
 
             val button = doc.select(".govuk-button").asScala.toList
 
@@ -223,11 +223,11 @@ extends ViewBaseSpec {
 
             val bulletPoint = doc.select(".govuk-list govuk-list--bullet").asScala.toList
 
-            bulletPoint.head mustBe MessageLookup.Welsh.bulletPoint1
-            bulletPoint(1) mustBe MessageLookup.Welsh.bulletPoint2
-            bulletPoint(2) mustBe MessageLookup.Welsh.bulletPoint3
-            bulletPoint(3) mustBe MessageLookup.Welsh.bulletPoint4
-            bulletPoint(4) mustBe MessageLookup.Welsh.bulletPoint5
+            bulletPoint.head.text() mustBe MessageLookup.Welsh.bulletPoint1
+            bulletPoint(1).text() mustBe MessageLookup.Welsh.bulletPoint2
+            bulletPoint(2).text() mustBe MessageLookup.Welsh.bulletPoint3
+            bulletPoint(3).text() mustBe MessageLookup.Welsh.bulletPoint4
+            bulletPoint(4).text() mustBe MessageLookup.Welsh.bulletPoint5
 
             val button = doc.select(".govuk-button").asScala.toList
 
@@ -255,11 +255,11 @@ extends ViewBaseSpec {
 
             val bulletPoint = doc.select(".govuk-list govuk-list--bullet").asScala.toList
 
-            bulletPoint.head mustBe MessageLookup.Welsh.bulletPoint1
-            bulletPoint(1) mustBe MessageLookup.Welsh.bulletPoint2
-            bulletPoint(2) mustBe MessageLookup.Welsh.bulletPoint3
-            bulletPoint(3) mustBe MessageLookup.Welsh.bulletPoint4
-            bulletPoint(4) mustBe MessageLookup.Welsh.bulletPoint5
+            bulletPoint.head.text() mustBe MessageLookup.Welsh.bulletPoint1
+            bulletPoint(1).text() mustBe MessageLookup.Welsh.bulletPoint2
+            bulletPoint(2).text() mustBe MessageLookup.Welsh.bulletPoint3
+            bulletPoint(3).text() mustBe MessageLookup.Welsh.bulletPoint4
+            bulletPoint(4).text() mustBe MessageLookup.Welsh.bulletPoint5
 
             val button = doc.select(".govuk-button").asScala.toList
 

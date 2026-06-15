@@ -41,7 +41,7 @@ object PendingChangeRequest {
     (
       (JsPath \ "arn").read[Arn] and
         (JsPath \ "timeSubmitted").read[String].map(Instant.parse)
-    )(PendingChangeRequest.apply _)
+    )(PendingChangeRequest.apply)
 
   val connectorWrites: Writes[PendingChangeRequest] =
     (

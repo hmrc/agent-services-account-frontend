@@ -3,21 +3,17 @@ import uk.gov.hmrc.DefaultBuildSettings
 
 
 val scalaCOptions = Seq(
-  //"-Werror", TODO (APB-9550) find a replacement for the deprecated 'name' retrieval
-  "-Wdead-code",
+  "-Werror",
+  "-Wconf:msg=Flag.*repeatedly:s", // silence warnings about compiler options being invoked repeatedly
   "-feature",
-  "-language:implicitConversions",
-  "-Xlint",
-  "-Xlint:-byname-implicit",
   "-Wconf:src=target/.*:s", // silence warnings from compiled files
-  "-Wconf:src=*html:w", // silence html warnings as they are wrong
-  "-Wconf:cat=unused-privates:s",
-  "-Wconf:msg=match may not be exhaustive:is", // summarize warnings about non-exhaustive pattern matching
-  "-Ywarn-unused:imports",
+  "-Wconf:src=routes/.*:s", // silence warnings from routes files
+  "-Wconf:msg=Implicit parameters should be provided with a `using` clause:s",
+  "-Wconf:msg=Alphanumeric method .* is not declared infix:s",
 )
 
 ThisBuild / majorVersion := 2
-ThisBuild / scalaVersion := "2.13.18"
+ThisBuild / scalaVersion := "3.7.4"
 
 TwirlKeys.templateImports ++= Seq(
   "uk.gov.hmrc.agentservicesaccount.views.html.components._",

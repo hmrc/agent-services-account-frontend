@@ -18,6 +18,7 @@ package support
 
 import org.jsoup.Jsoup
 import org.mongodb.scala.MongoDatabase
+import org.mongodb.scala.SingleObservableFuture
 import org.scalatest.Assertion
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.BeforeAndAfterEach
@@ -25,7 +26,11 @@ import org.scalatest.concurrent.IntegrationPatience
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.libs.ws.BodyReadable
+import play.api.libs.ws.BodyWritable
+import play.api.libs.ws.DefaultBodyWritables.writeableOf_urlEncodedForm
 import play.api.libs.ws.DefaultWSCookie
+import play.api.libs.ws.WSBodyReadables
 import play.api.libs.ws.WSClient
 import play.api.libs.ws.WSCookie
 import play.api.libs.ws.WSRequest
@@ -114,6 +119,8 @@ with IntegrationPatience {
 
   implicit val ws: WSClient = app.injector.instanceOf[WSClient]
   implicit val executionContext: ExecutionContext = app.injector.instanceOf[ExecutionContext]
+  implicit val wsBodyReadableAsString: BodyReadable[String] = WSBodyReadables.readableAsString
+  implicit val wsFormBodyWritable: BodyWritable[Map[String, Seq[String]]] = writeableOf_urlEncodedForm
   val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
 
   protected val amlsStartPath: String = "/agent-services-account/manage-account/money-laundering-supervision"
@@ -145,7 +152,7 @@ with IntegrationPatience {
   def postQ(uri: String)(body: Map[String, Seq[String]])(queryParam: Seq[(String, String)]): WSResponse = await(
     buildClient(uri)
       .withHttpHeaders("Csrf-Token" -> "nocheck")
-      .withQueryStringParameters(queryParam: _*)
+      .withQueryStringParameters(queryParam*)
       .post(body)
   )
 
@@ -170,7 +177,7 @@ with IntegrationPatience {
     SessionKeys.sessionId -> "mock-sessionid"
   )
 
-  implicit val request: Request[AnyContentAsFormUrlEncoded] = FakeRequest().withSession(sessionHeaders.toSeq: _*).withFormUrlEncodedBody()
+  implicit val request: Request[AnyContentAsFormUrlEncoded] = FakeRequest().withSession(sessionHeaders.toSeq*).withFormUrlEncodedBody()
 
   def mockSessionCookie: WSCookie = {
 

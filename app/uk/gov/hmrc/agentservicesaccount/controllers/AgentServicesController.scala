@@ -40,18 +40,19 @@ import uk.gov.hmrc.agentservicesaccount.views.html.pages.assistant.your_account
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject._
+import scala.annotation.unused
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
 @Singleton
 class AgentServicesController @Inject() (
-  authActions: AuthActions,
+  @unused authActions: AuthActions,
   actions: Actions,
   agentAssuranceConnector: AgentAssuranceConnector,
   agentPermissionsConnector: AgentPermissionsConnector,
   agentUserClientDetailsConnector: AgentUserClientDetailsConnector,
   subscriptionService: SubscriptionService,
-  agentRecordService: AgentRecordService,
+  @unused agentRecordService: AgentRecordService,
   asaDashboard: asa_dashboard,
   manage_account: manage_account,
   your_account: your_account,
@@ -67,8 +68,6 @@ extends FrontendController(cc)
 with I18nSupport
 with Logging {
 
-  import authActions._
-
   val root: Action[AnyContent] = actions.authActionCheckSuspend {
     Redirect(routes.AgentServicesController.showAgentServicesAccount())
   }
@@ -78,28 +77,29 @@ with Logging {
     /* TODO remove call to withShowFeatureInvite if okay with 28 day duration on UR banner
      *      showFeatureInvite is unused at the mo
      * */
-    withShowFeatureInvite(agentInfo.arn) { showFeatureInvite: Boolean =>
-      val subscriptionInfoF: Future[Seq[SubscriptionInfo]] =
-        if (appConfig.showLegacySubscriptions || appConfig.enableLegacySubscriptionLink || appConfig.enableLegacySubscriptionLinkRobotics)
-          subscriptionService.getSubscriptionInfo(
-            agentInfo.missingSubscriptions,
-            agentInfo.existingSubscriptionInfo
-          )
-        else
-          Future.successful(Seq.empty)
+    withShowFeatureInvite(agentInfo.arn) {
+      (showFeatureInvite: Boolean) =>
+        val subscriptionInfoF: Future[Seq[SubscriptionInfo]] =
+          if (appConfig.showLegacySubscriptions || appConfig.enableLegacySubscriptionLink || appConfig.enableLegacySubscriptionLinkRobotics)
+            subscriptionService.getSubscriptionInfo(
+              agentInfo.missingSubscriptions,
+              agentInfo.existingSubscriptionInfo
+            )
+          else
+            Future.successful(Seq.empty)
 
-      for {
-        subscriptionInfo <- subscriptionInfoF
-      } yield {
-        Ok(
-          asaDashboard(
-            arn = formatArn(agentInfo.arn),
-            isShownRecruitmentBanner = showFeatureInvite && agentInfo.isAdmin,
-            isAdmin = agentInfo.isAdmin,
-            subscriptionInfo = subscriptionInfo
-          )
-        ).addingToSession(aossOriginCookie())
-      }
+        for {
+          subscriptionInfo <- subscriptionInfoF
+        } yield {
+          Ok(
+            asaDashboard(
+              arn = formatArn(agentInfo.arn),
+              isShownRecruitmentBanner = showFeatureInvite && agentInfo.isAdmin,
+              isAdmin = agentInfo.isAdmin,
+              subscriptionInfo = subscriptionInfo
+            )
+          ).addingToSession(aossOriginCookie())
+        }
     }
   }
 
@@ -230,7 +230,7 @@ with Logging {
     s"${arnStr.take(4)} ${arnStr.slice(4, 7)} ${arnStr.drop(7)}"
   }
 
-  private def withShowFeatureInvite(arn: Arn)(f: Boolean => Future[Result])(implicit request: RequestHeader): Future[Result] = {
+  private def withShowFeatureInvite(@unused arn: Arn)(f: Boolean => Future[Result])(implicit request: RequestHeader): Future[Result] = {
     agentPermissionsConnector.isShownPrivateBetaInvite.flatMap(f)
   }
 
