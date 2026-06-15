@@ -37,6 +37,7 @@ This service is tested by the following automated test repositories:
 
 ### Running the app locally
 
+Baseline build check branch.
 
 #### BE services needed to view ASA dashboard
 
