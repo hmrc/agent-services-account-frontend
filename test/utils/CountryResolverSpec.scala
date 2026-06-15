@@ -16,7 +16,7 @@
 
 package utils
 
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+import org.scalatest.matchers.must.Matchers.*
 import uk.gov.hmrc.agentservicesaccount.utils.CountryResolver
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 

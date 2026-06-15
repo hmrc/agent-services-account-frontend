@@ -59,11 +59,11 @@ asa.inset=Ni allwch fwrw golwg dros eich rhestrau o gleientiaid drwy’ch cyfrif
 asa.other.heading=Gwasanaethau treth eraill
 asa.other.p1=Y cyfrif gwasanaethau asiant yw cartref gwasanaethau treth CThEM a lansiwyd o 2019 ymlaen.<br/>Ar gyfer unrhyw wasanaethau treth sydd heb eu rhestru yma, allgofnodwch o’r cyfrif hwn a <a class="govuk-link" href="https://www.gov.uk/government/collections/hmrc-online-services-for-agents#hmrc-online-services-for-agents-account" target="_blank" rel="noreferrer noopener">mewngofnodwch i’ch cyfrif gwasanaethau ar-lein CThEM ar gyfer asiantau (yn agor tab newydd)</a>.
 asa.other.warning=Rhybudd
-asa.other.subscribed.p1=Er mwyn rheoli cleientiaid ar wasanaethau treth sydd heb eu rhestru yma, gallwch <a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">barhau ar yr adran ‘Gwasanaethau y gallwch eu defnyddio’ yn eich cyfrif gwasanaethau ar-lein CThEF ar gyfer asiantau (yn agor tab newydd)</a>.
-asa.other.mapped.p1=Er mwyn rheoli cleientiaid ar wasanaethau treth sydd heb eu rhestru yma, mae’n rhaid i chi <a class="govuk-link" href="{0}" rel="noreferrer noopener">fewngofnodi i’ch cyfrif gwasanaethau ar-lein CThEF ar gyfer asiantau</a>.
-asa.other.mapped.p2=Byddwch yn cael eich allgofnodi o’r cyfrif gwasanaethau asiant hwn.
-asa.other.unknown.p1=Os ydych chi’n rheoli cleientiaid ar wasanaethau treth sydd heb eu rhestru yma, mae’n rhaid i chi <a class="govuk-link" href="{0}" rel="noreferrer noopener">fewngofnodi i’ch cyfrif gwasanaethau ar-lein CThEF ar gyfer asiantau</a>.
-asa.other.unknown.p2=Byddwch yn cael eich allgofnodi o’r cyfrif gwasanaethau asiant hwn.
+asa.other.subscribed.p1=To manage clients on tax services not listed here, you can <a class="govuk-link" href="{0}" target="_blank" rel="noreferrer noopener">continue on the 'Services you can use' section in your HMRC online services for agents account (opens in a new tab)</a>.
+asa.other.mapped.p1=To manage clients on tax services not listed here, you must <a class="govuk-link" href="{0}" rel="noreferrer noopener">sign in to your HMRC online services for agents account</a>.
+asa.other.mapped.p2=You will be signed out of this agent services account.
+asa.other.unknown.p1=If you manage clients on tax services not listed here, you must <a class="govuk-link" href="{0}" rel="noreferrer noopener">sign in to your HMRC online services for agents account</a>.
+asa.other.unknown.p2=You will be signed out of this agent services account.
 asa.p.agent-services=Mynediad at wasanaethau ar gyfer cleientiaid sydd eisoes wedi eich awdurdodi i weithredu ar eu rhan.
 asa.p.client-authorisations=Dechrau cais am awdurdodiad newydd neu gysylltu’ch cleientiaid cyfredol â’ch cyfrif.
 asa.p.manage=Caniatáu i ddefnyddwyr eraill yn eich sefydliad gael mynediad at y cyfrif gwasanaethau asiant hwn, neu gyfyngu ar eu mynediad.
@@ -86,10 +86,10 @@ asa.ppt.col2.link1.href=https://www.tax.service.gov.uk/plastic-packaging-tax/acc
 asa.ppt.col2.link1=<a class="govuk-link" href="{0}" rel="noreferrer noopener">Rhoi gwybod am Dreth Deunydd Pacio Plastig eich cleient a bwrw golwg dros daliadau, ffurflenni a chosbau.</a>
 
 # CBC
-asa.cbc.col1.h2=Rheoli adroddiadau gwlad wrth wlad
-asa.cbc.col1.h3=Adroddiadau gwlad wrth wlad
-asa.cbc-section.col1.link1.p=Yn gyntaf mae’n rhaid i chi gael awdurdodiad gan eich cleient. Gallwch wneud hynny <a class="govuk-link" href="{0}">drwy wneud cais am awdurdodiad</a>
-asa.cbc-section.col1.link2.p=Rheoli adroddiadau gwlad wrth wlad wrth eich cleientiaid a manylion cyswllt asiantau gwlad wrth wlad
+asa.cbc.col1.h2=Manage country-by-country reports TBC
+asa.cbc.col1.h3=Country-by-country reports TBC
+asa.cbc-section.col1.link1.p=You must first get an authorisation from your client. You can do this by <a class="govuk-link" href="{0}"> requesting an authorisation</a> TBC
+asa.cbc-section.col1.link2.p=Manage your clients’ country-by-country reports and your country-by-country agent contact details TBC
 
 # Pillar2
 asa.pillar2.col1.h2=Rhoi gwybod am drethi atodol Colofn 2
@@ -312,7 +312,7 @@ asa.legacy.paye.contact-name.title=Pwy ddylem gysylltu â nhw ynglŷn â TWE?
 asa.legacy.paye.contact-name.input.heading=Pwy yn {0} ddylem gysylltu â nhw ynglŷn â TWE?
 asa.legacy.paye.contact-name.input.hint=Nodwch ei enw llawn
 asa.legacy.paye.contact-name.input.error.empty=Nodwch enw llawn y person y dylem gysylltu ag ef ynglŷn â TWE
-asa.legacy.paye.contact-name.input.error.invalid=Gall enw’r person gynnwys llythrennau a cysylltnodau yn unig
+asa.legacy.paye.contact-name.input.error.invalid=Gall enw’r person gynnwys llythrennau, cysylltnodau a chollnodau yn unig
 
 asa.legacy.paye.phone-number.title=Pa rif ffôn ddylem ei ddefnyddio i ffonio chi ynglŷn â TWE?
 asa.legacy.paye.phone-number.heading=Pa rif ffôn ddylem ei ddefnyddio i ffonio {0} ynglŷn â TWE?
@@ -837,13 +837,13 @@ update-contact-details.email.hint=Byddwn yn defnyddio’r cyfeiriad e-bost hwn i
 update-contact-details.email.error.empty=Nodwch y cyfeiriad e-bost newydd
 update-contact-details.email.error.invalid=Nodwch gyfeiriad e-bost ag enw, y symbol @ ac enw parth, megis enw@enghraifft.com
 
-update-contact-details.address.country-picker.title=Dewiswch eich gwlad - Cyfrif gwasanaethau asiant - GOV.UK
-update-contact-details.address.country-picker=Beth yw’r wlad lle mae’ch busnes wedi’i leoli?
-update-contact-details.address.lookup.title=Dod o hyd i’ch cyfeiriad - Cyfrif gwasanaethau asiant - GOV.UK
-update-contact-details.address.lookup=Beth yw’ch cyfeiriad gohebu?
-update-contact-details.address.select.title=Dewiswch eich cyfeiriad - Cyfrif gwasanaethau asiant - GOV.UK
-update-contact-details.address.edit.title=Nodwch eich cyfeiriad - Cyfrif gwasanaethau asiant - GOV.UK
-update-contact-details.address.confirm.title=Adolygu a chadarnhau - Cyfrif gwasanaethau asiant - GOV.UK
+update-contact-details.address.country-picker.title=Select your country - Agent services account - GOV.UK TBC
+update-contact-details.address.country-picker=What is the country where your business is based? TBC
+update-contact-details.address.lookup.title=Find your address - Agent services account - GOV.UK TBC
+update-contact-details.address.lookup=What is your correspondence address? TBC
+update-contact-details.address.select.title=Select your address - Agent services account - GOV.UK TBC
+update-contact-details.address.edit.title=Enter your address - Agent services account - GOV.UK TBC
+update-contact-details.address.confirm.title=Review and confirm - Agent services account - GOV.UK TBC
 
 update-contact-details.your-details.heading=Eich manylion
 update-contact-details.your-details.body.p=Byddwn yn defnyddio’r rhain os oes angen i ni siarad â chi am y newidiadau yr ydych wedi’u gwneud.
@@ -852,6 +852,11 @@ update-contact-details.your-details.telephone.label=Rhif ffôn
 update-contact-details.your-details.telephone.hint=Ar gyfer rhifau rhyngwladol, cofiwch gynnwys cod y wlad.
 update-contact-details.your-details.telephone.error.empty=Nodwch eich rhif ffôn
 update-contact-details.your-details.telephone.error.invalid=Nodwch rif ffôn, megis 01632 960 001, 07700 900 982 neu +33 808 157 0192
+
+update-contact-details.review.title=Check your new contact details TBC
+update-contact-details.review.p1=Check you have made all the necessary changes. You will not be able to submit any more changes for 28 days. TBC
+update-contact-details.review.p2=By submitting this change, you confirm you have one of the following roles in this business: TBC
+update-contact-details.review.submit-change-of-details=Submit change of details TBC
 
 update-contact-details.check-your-answers.title=Gwirio’ch atebion
 update-contact-details.check-your-answers.inset=Mae’n cymryd 4 wythnos i CThEF i roi’r newidiadau hyn i’ch cyfrif gwasanaethau asiant ar waith. Yn ystod y cyfnod hwnnw, ni allwch ddiwygio’r manylion cyswllt eto.
@@ -890,12 +895,12 @@ update-contact-details.ct-code.error.empty=Nodwch god yr asiant yr ydych yn ei d
 update-contact-details.ct-code.error.invalid=Nodwch god asiant sy’n 6 chymeriad o hyd.
 
 #Cannot verify email
-cannotVerifyEmail.locked.title=Nid oedd modd i ni gadarnhau pwy ydych
-cannotVerifyEmail.locked.p1=Ni allwn wirio pwy ydych oherwydd rydych wedi nodi cod dilysu anghywir gormod o weithiau.
-cannotVerifyEmail.locked.p2=Cafodd y cod dilysu ei e-bostio atoch.
-cannotVerifyEmail.locked.h2=Yr hyn i’w wneud nesaf
-cannotVerifyEmail.locked.p3=Gallwch roi cynnig arall arni ymhen 24 awr.
-cannotVerifyEmail.locked.p4=Os hoffech drio eto gyda chyfeiriad e-bost gwahanol <a href="{0}">gallwch newid y cyfeiriad e-bost a nodwyd gennych</a>.
+cannotVerifyEmail.locked.title=We could not confirm your identity TBC
+cannotVerifyEmail.locked.p1=We cannot check your identity because you entered an incorrect verification code too many times. TBC
+cannotVerifyEmail.locked.p2=The verification code was emailed to you. TBC
+cannotVerifyEmail.locked.h2=What to do next TBC
+cannotVerifyEmail.locked.p3=You can try again in 24 hours. TBC
+cannotVerifyEmail.locked.p4=If you want to try again with a different email address <a href="{0}">you can change the email address you entered</a>. TBC
 
 #Admin access for access groups
 admin-access.h1=Mae gennych fynediad gweinyddol
@@ -913,12 +918,12 @@ add.amls.confirmation.h1=Rydych wedi ychwanegu eich manylion o ran goruchwyliaet
 amls.confirmation.h1=Rydych wedi newid eich manylion o ran goruchwyliaeth
 amls.confirmation.p1=Byddwn yn diweddaru eich manylion ynghylch goruchwyliaeth gwrth-wyngalchu arian ar eich cyfrif gwasanaethau asiant.
 amls.confirmation.link=Dychwelyd i ‘Rheoli’r cyfrif’
-amls.enter-renewal-update.title=Beth yw manylion eich cofrestriad ar gyfer goruchwyliaeth gwyngalchu arian?
-amls.enter-renewal.h1=Beth yw manylion eich cofrestriad ar gyfer goruchwyliaeth gwyngalchu arian?
-amls.enter-renewal-body.hint=Dechreuwch deipio ac yna dewiswch eich corff goruchwylio o’r rhestr.
-amls.enter-renewal-date.form.title=Y dyddiad nesaf ar gyfer adnewyddu’ch cofrestriad
-amls.enter-renewal-registration.number.h1=Eich rhif cofrestru
-amls.enter-renewal-body.h1=Enw’r corff goruchwylio gwyngalchu arian
+amls.enter-renewal-update.title=What are your money laundering supervision registration details? TBC
+amls.enter-renewal.h1=What are your money laundering supervision registration details? TBC
+amls.enter-renewal-body.hint=Start typing and select your supervisory body from the list. TBC
+amls.enter-renewal-date.form.title=Your next registration renewal date TBC
+amls.enter-renewal-registration.number.h1=Your registration number TBC
+amls.enter-renewal-body.h1=Name of money laundering supervisory body TBC
 
 amls.view-details.h1=Manylion ynghylch goruchwyliaeth gwrth-wyngalchu arian
 amls.view-details.supervisory-name=Corff goruchwylio
@@ -986,54 +991,54 @@ amls.check-your-answers.evidence=Tystiolaeth
 amls.check-your-answers.submit-button=Cyflwyno’ch manylion
 
 ## AMLS Evidence upload
-amls.evidence-upload.title=Uwchlwythwch dystiolaeth
-amls.evidence-upload.p1=Uwchlwythwch dystiolaeth i ddangos mai {0} yw eich goruchwyliaeth gwrth-wyngalchu arian presennol.
-amls.evidence-upload.p2=Gallwch ddewis pa dystiolaeth i’w huwchlwytho.
-amls.evidence-upload.p3=Gall tystiolaeth addas fod yn lythyr, e-bost neu’n dderbynneb o daliad oddi wrth eich corff goruchwylio, sy’n cadarnhau eich bod wedi’ch cofrestru.
-amls.evidence-upload.p4=Mae’n rhaid i’r ffeil fod yn llai na 6 MB.
-amls.evidence-upload.details.summary=Mathau o ffeiliau y gallwn eu derbyn
-amls.evidence-upload.fileTypes.p1=Caniateir y mathau hyn o ffeiliau:
-amls.evidence-upload.fileTypes.bullet1=delwedd (.jpg, .jpeg, .png neu .tiff)
-amls.evidence-upload.fileTypes.bullet2=PDF (.pdf)
-amls.evidence-upload.fileTypes.bullet3=e-bost (.txt neu .msg)
-amls.evidence-upload.fileTypes.bullet4=Microsoft (Word, Excel neu PowerPoint)
-amls.evidence-upload.fileTypes.bullet5=Fformat Dogfen Agored (ODF)
-amls.evidence-upload.label=Dewiswch eich ffeil
-amls.evidence-upload.fileUploadProgress.message=Wrthi’n gwirio’r ffeil
-amls.evidence-upload.error.required=Dewiswch ffeil
-amls.evidence-upload.error.wrong-file-type=Mae’n rhaid i’r ffeil dan sylw fod yn JPG, JPEG, PNG, TIFF, PDF, TXT, MSG, DOC, DOCX, XLS, XLSX, PPT, PPTX, ODT, ODS neu ODP
-amls.evidence-upload.error.file-too-large=Mae’n rhaid i bob ffeil fod yn llai na 6MB. Dewiswch ffeil gwahanol.
-amls.evidence-upload.error.file-empty=Mae’r ffeil yn wag. Dewiswch ffeil gwahanol.
-amls.evidence-upload.error.virus=Mae feirws yn y ffeil. Dewiswch ffeil gwahanol.
-amls.evidence-upload.error.generic=Nid oedd modd uwchlwytho’r ffeil. Rhowch gynnig arall arni
+amls.evidence-upload.title = Uwchlwythwch dystiolaeth
+amls.evidence-upload.p1 = Uwchlwythwch dystiolaeth i ddangos mai {0} yw eich goruchwyliaeth gwrth-wyngalchu arian presennol.
+amls.evidence-upload.p2 = Gallwch ddewis pa dystiolaeth i’w huwchlwytho.
+amls.evidence-upload.p3 = Gall tystiolaeth addas fod yn lythyr, e-bost neu’n dderbynneb o daliad oddi wrth eich corff goruchwylio, sy’n cadarnhau eich bod wedi’ch cofrestru.
+amls.evidence-upload.p4 = Mae’n rhaid i’r ffeil fod yn llai na 6 MB.
+amls.evidence-upload.details.summary = Mathau o ffeiliau y gallwn eu derbyn
+amls.evidence-upload.fileTypes.p1 = Caniateir y mathau hyn o ffeiliau:
+amls.evidence-upload.fileTypes.bullet1 = delwedd (.jpg, .jpeg, .png neu .tiff)
+amls.evidence-upload.fileTypes.bullet2 = PDF (.pdf)
+amls.evidence-upload.fileTypes.bullet3 = e-bost (.txt neu .msg)
+amls.evidence-upload.fileTypes.bullet4 = Microsoft (Word, Excel neu PowerPoint)
+amls.evidence-upload.fileTypes.bullet5 = Fformat Dogfen Agored (ODF)
+amls.evidence-upload.label = Dewiswch eich ffeil
+amls.evidence-upload.fileUploadProgress.message = Checking file
+amls.evidence-upload.error.required = Dewiswch ffeil
+amls.evidence-upload.error.wrong-file-type = Mae’n rhaid i’r ffeil dan sylw fod yn JPG, JPEG, PNG, TIFF, PDF, TXT, MSG, DOC, DOCX, XLS, XLSX, PPT, PPTX, ODT, ODS neu ODP
+amls.evidence-upload.error.file-too-large = Mae’n rhaid i bob ffeil fod yn llai na 6MB. Dewiswch ffeil gwahanol.
+amls.evidence-upload.error.file-empty = Mae’r ffeil yn wag. Dewiswch ffeil gwahanol.
+amls.evidence-upload.error.virus = Mae feirws yn y ffeil. Dewiswch ffeil gwahanol.
+amls.evidence-upload.error.generic = Nid oedd modd uwchlwytho’r ffeil. Rhowch gynnig arall arni
 
-amls.evidence-upload-progress.title=Rydym yn gwirio’r ffeil rydych wedi’i huwchlwytho
-amls.evidence-upload-progress.complete.title=Mae’ch ffeil wedi’i huwchlwytho
-amls.evidence-upload-progress.failed.title=Mae’ch ffeil wedi’i huwchlwytho wedi methu â sganio
-amls.evidence-upload-progress.virus.title=Mae feirws ar y ffeil rydych wedi’i huwchlwytho
-amls.evidence-upload-progress.message=Wrthi’n gwirio’r ffeil
-amls.evidence-upload-progress.inProgress=Arhoswch ychydig o eiliadau ac yna dewiswch ‘Parhau’.
-amls.evidence-upload-progress.complete=Mae’ch ffeil {0} wedi’i huwchlwytho’n llwyddiannus.
-amls.evidence-upload-progress.failed=Mae’ch ffeil i’w huwchlwytho wedi methu â sganio. Rhowch gynnig ar uwchlwytho ffeil arall.
-amls.evidence-upload-progress.virus=Mae feirws wedi’i ganfod yn y ffeil rydych wedi’i huwchlwytho. Rhowch gynnig ar uwchlwytho ffeil arall.
+amls.evidence-upload-progress.title=We are checking your upload
+amls.evidence-upload-progress.complete.title=Your upload is complete
+amls.evidence-upload-progress.failed.title=Your upload has failed scanning
+amls.evidence-upload-progress.virus.title=Your upload has a virus
+amls.evidence-upload-progress.message=Checking file
+amls.evidence-upload-progress.inProgress=Wait a few seconds and then select ‘Continue’.
+amls.evidence-upload-progress.complete=Your file {0} has been uploaded successfully.
+amls.evidence-upload-progress.failed=Your file upload has failed scanning. Try uploading another file.
+amls.evidence-upload-progress.virus=A virus has been detected in your uploaded file, try uploading another file.
 
 #AMLS Errors
-update-money-laundering-supervisory.error.date=Nodwch y dyddiad nesaf ar gyfer adnewyddu eich cofrestriad
-update-money-laundering-supervisory.error.day=Mae’n rhaid i’r dyddiad nesaf ar gyfer adnewyddu’ch cofrestriad gynnwys diwrnod
-update-money-laundering-supervisory.error.month=Mae’n rhaid i’r dyddiad nesaf ar gyfer adnewyddu’ch cofrestriad gynnwys mis
-update-money-laundering-supervisory.error.year=Mae’n rhaid i’r dyddiad nesaf ar gyfer adnewyddu’ch cofrestriad gynnwys blwyddyn
-update-money-laundering-supervisory.error.day-and-month=Mae’n rhaid i’r dyddiad nesaf ar gyfer adnewyddu’ch cofrestriad gynnwys diwrnod a mis
-update-money-laundering-supervisory.error.day-and-year=Mae’n rhaid i’r dyddiad nesaf ar gyfer adnewyddu’ch cofrestriad gynnwys diwrnod a blwyddyn
-update-money-laundering-supervisory.error.month-and-year=Mae’n rhaid i’r dyddiad nesaf ar gyfer adnewyddu’ch cofrestriad gynnwys mis a blwyddyn
+update-money-laundering-supervisory.error.date=Enter your next registration renewal date TBC
+update-money-laundering-supervisory.error.day=Your next registration renewal date must include a day TBC
+update-money-laundering-supervisory.error.month=Your next registration renewal date must include a month TBC
+update-money-laundering-supervisory.error.year=Your next registration renewal date must include a year TBC
+update-money-laundering-supervisory.error.day-and-month=Your next registration renewal date must include a day and a month TBC
+update-money-laundering-supervisory.error.day-and-year=Your next registration renewal date must include a day and a year TBC
+update-money-laundering-supervisory.error.month-and-year=Your next registration renewal date must include a month and a year TBC
 
-update-money-laundering-supervisory.error.date.invalid=Nodwch ddyddiad go iawn
-update-money-laundering-supervisory.error.date.past=Mae’n rhaid i’r dyddiad nesaf ar gyfer adnewyddu’ch cofrestriad fod yn y dyfodol
-update-money-laundering-supervisory.error.date.before=Mae’n rhaid i’r dyddiad nesaf ar gyfer adnewyddu’ch cofrestriad fod cyn pen 13 mis o heddiw
+update-money-laundering-supervisory.error.date.invalid=Enter a real date TBC
+update-money-laundering-supervisory.error.date.past=Your next registration renewal date must be in the future TBC
+update-money-laundering-supervisory.error.date.before=Your next registration renewal date must be within 13 months of today TBC
 
-update-money-laundering-supervisory.reg-number.error.invalid=Mae’n rhaid i’r rhif cofrestru fod yn rhif
-update-money-laundering-supervisory.reg-number.error.empty=Nodwch eich rhif cofrestru ar gyfer goruchwyliaeth gwyngalchu arian
-update-money-laundering-supervisory.body-codes.error.invalid=Mae’n rhaid i’r corff goruchwylio gwyngalchu arian fod ar y rhestr
-update-money-laundering-supervisory.body-codes.error.empty=Nodwch eich corff goruchwylio gwyngalchu arian
+update-money-laundering-supervisory.reg-number.error.invalid=Registration number must be a number TBC
+update-money-laundering-supervisory.reg-number.error.empty=Enter your money laundering supervision registration number TBC
+update-money-laundering-supervisory.body-codes.error.invalid=Money laundering supervisory body must be on the list TBC
+update-money-laundering-supervisory.body-codes.error.empty=Enter your money laundering supervisory body TBC
 
 #Administrators
 administrators.link-text=Bwrw golwg dros y gweinyddwyr

@@ -52,7 +52,7 @@ with Injecting {
   implicit val lang: Lang = Lang("en")
 
   implicit val messages: Messages = MessagesImpl(lang, messagesApi)
-  implicit val fakeRequest: FakeRequest[_] = FakeRequest().withSession("authToken" -> "session-123")
+  implicit val fakeRequest: FakeRequest[?] = FakeRequest().withSession("authToken" -> "session-123")
 
   def asDocument(html: Html): Document = Jsoup.parse(html.toString())
 

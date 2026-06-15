@@ -18,7 +18,7 @@ package uk.gov.hmrc.agentservicesaccount.views.pages.amls
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+import org.scalatest.matchers.must.Matchers.*
 import uk.gov.hmrc.agentservicesaccount.models.AmlsDetails
 import uk.gov.hmrc.agentservicesaccount.models.AmlsStatuses
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec

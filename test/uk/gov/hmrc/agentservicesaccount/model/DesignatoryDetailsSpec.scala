@@ -35,7 +35,7 @@ class DesignatoryDetailsSpec
 extends UnitSpec {
 
   implicit val crypto: Encrypter
-    with Decrypter = SymmetricCryptoFactory.aesCrypto("edkOOwt7uvzw1TXnFIN6aRVHkfWcgiOrbBvkEQvO65g=")
+    & Decrypter = SymmetricCryptoFactory.aesCrypto("edkOOwt7uvzw1TXnFIN6aRVHkfWcgiOrbBvkEQvO65g=")
 
   val testDesignatoryDetails: DesignatoryDetails = DesignatoryDetails(
     AgencyDetails(

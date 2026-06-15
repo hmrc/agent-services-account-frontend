@@ -59,10 +59,9 @@
     }
     @a(
         key = "nav.help",
-        href = routes.AgentServicesController.showHelp.url,
-        classes = Some("hmrc-account-menu__link " + pathSelectedClass(currentPath, routes.AgentServicesController.showHelp.url)),
+        href = routes.AgentServicesController.showHelp().url,
+        classes = Some("hmrc-account-menu__link " + pathSelectedClass(currentPath, routes.AgentServicesController.showHelp().url)),
         addStandardClasses = false
     )
 </nav>
-
 

@@ -93,7 +93,7 @@ object AgentSize {
           case value => JsSuccess(value)
         }
 
-      override def writes(o: AgentSize): JsValue = unapply(o).map(JsString).getOrElse(throw new IllegalArgumentException)
+      override def writes(o: AgentSize): JsValue = unapply(o).map(JsString.apply).getOrElse(throw new IllegalArgumentException)
     }
 
 }

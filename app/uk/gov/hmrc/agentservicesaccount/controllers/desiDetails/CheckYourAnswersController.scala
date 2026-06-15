@@ -116,13 +116,13 @@ with Logging {
               if (appConfig.enableAgentRecordHipUpdates)
                 agentServicesAccountConnector.updateAgentRecord(agentRecordUpdateRequest)
               else
-                Future.successful()
+                Future.unit
             _ <-
               if (details.otherServices.ctOrSaApplied || !appConfig.enableAgentRecordHipUpdates) {
                 agentAssuranceConnector.postDesignatoryDetails(arn, java.util.Base64.getEncoder.encodeToString(htmlForPdf.getBytes()))
               }
               else
-                Future.successful()
+                Future.unit
             _ <- pcodRepository.insert(PendingChangeRequest(arn, pendingChange.timeSubmitted))
             _ <- sessionCacheService.delete(draftNewContactDetailsKey)
             _ <- sessionCacheService.delete(draftSubmittedByKey)

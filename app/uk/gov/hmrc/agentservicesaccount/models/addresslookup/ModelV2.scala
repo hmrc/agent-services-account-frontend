@@ -105,7 +105,7 @@ object JourneyConfigV2 {
       (JsPath \ "timeoutAmount").format[Int](min(120)) and
         (JsPath \ "timeoutUrl").format[String] and
         (JsPath \ "timeoutKeepAliveUrl").formatNullable[String]
-    )(TimeoutConfig.apply, unlift(TimeoutConfig.unapply))
+    )(TimeoutConfig.apply, config => (config.timeoutAmount, config.timeoutUrl, config.timeoutKeepAliveUrl))
   implicit val optionsFormat: Format[JourneyOptions] = Json.format[JourneyOptions]
   implicit val format: Format[JourneyConfigV2] = Json.format[JourneyConfigV2]
 

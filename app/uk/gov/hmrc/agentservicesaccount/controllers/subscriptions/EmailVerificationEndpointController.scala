@@ -28,6 +28,8 @@ import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageS
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.emailPendingVerificationKey
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.EmailIsAlreadyVerified
+import uk.gov.hmrc.agentservicesaccount.models.emailverification.EmailHasNotChanged
+import uk.gov.hmrc.agentservicesaccount.models.emailverification.EmailIsLocked
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.EmailNeedsVerifying
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.services.EmailVerificationService
@@ -36,6 +38,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject.Inject
 import javax.inject.Singleton
+import scala.annotation.unused
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
@@ -45,7 +48,7 @@ class EmailVerificationEndpointController @Inject() (
   val sessionCacheService: SessionCacheService,
   cc: MessagesControllerComponents
 )(implicit
-  appConfig: AppConfig,
+  @unused appConfig: AppConfig,
   val ec: ExecutionContext,
   ev: EmailVerificationService
 )
@@ -88,6 +91,7 @@ with Logging {
                   routes.UpdateEmailAddressController.showPage(legacyRegime)
                 )
               } yield Redirect(redirectUri)
+            case EmailHasNotChanged | EmailIsLocked => Future.successful(Redirect(routes.UpdateEmailAddressController.showPage(legacyRegime)))
           }
         case None => Future.successful(Redirect(routes.UpdateEmailAddressController.showPage(legacyRegime)))
       }

@@ -35,7 +35,7 @@ final case class PayeCyaData(
   address: PayeAddress
 ) {
 
-  implicit def toSubscriptionAddress(address: PayeAddress): SubscriptionAddress = {
+  private def toSubscriptionAddress(address: PayeAddress): SubscriptionAddress = {
     val asaDetailsAgencyAddress = SubscriptionAddress(
       line1 = address.line1,
       line2 = address.line2,
@@ -52,7 +52,7 @@ final case class PayeCyaData(
       contactName = contactName,
       phoneNumber = telephoneNumber,
       emailAddress = emailAddress,
-      address = address: SubscriptionAddress
+      address = toSubscriptionAddress(address)
     )
   }
 

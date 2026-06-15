@@ -52,7 +52,7 @@ class EmailVerificationService @Inject() (
         case _ if isUnchanged => EmailHasNotChanged
         case Some(completedEmailVerification) if completedEmailVerification.locked => EmailIsLocked
         case Some(completedEmailVerification) if completedEmailVerification.verified => EmailIsAlreadyVerified
-        case None => EmailNeedsVerifying
+        case _ => EmailNeedsVerifying
       }
     }
 

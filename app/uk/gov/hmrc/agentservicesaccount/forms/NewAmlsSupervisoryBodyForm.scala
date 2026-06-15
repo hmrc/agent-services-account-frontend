@@ -31,31 +31,34 @@ object NewAmlsSupervisoryBodyForm {
   def amlsSupervisoryBodyUKConstraint(
     bodies: Set[String],
     agentName: String
-  ): Constraint[String] = Constraint[String] { fieldValue: String =>
-    Constraints.nonEmpty.apply(fieldValue) match {
-      case _: Invalid => Invalid(ValidationError("amls.new-supervisory-body.error", agentName))
-      case _ if !bodies.contains(fieldValue) => Invalid(ValidationError("amls.new-supervisory-body.error"))
-      case _ => Valid
-    }
+  ): Constraint[String] = Constraint[String] {
+    (fieldValue: String) =>
+      Constraints.nonEmpty.apply(fieldValue) match {
+        case _: Invalid => Invalid(ValidationError("amls.new-supervisory-body.error", agentName))
+        case _ if !bodies.contains(fieldValue) => Invalid(ValidationError("amls.new-supervisory-body.error"))
+        case _ => Valid
+      }
   }
 
-  def amlsSupervisoryBodyOSConstraint(agentName: String): Constraint[String] = Constraint[String] { fieldValue: String =>
-    Constraints.nonEmpty.apply(fieldValue) match {
-      case _: Invalid => Invalid(ValidationError("amls.new-supervisory-body.error", agentName))
-      case _ if !fieldValue.matches(amlsBodyRegex) => Invalid(ValidationError("amls.new-supervisory-body.error.os.regex"))
-      case _ if fieldValue.length > amlsBodyMaxLength => Invalid(ValidationError("amls.new-supervisory-body.error.os.max-length"))
-      case _ => Valid
-    }
+  def amlsSupervisoryBodyOSConstraint(agentName: String): Constraint[String] = Constraint[String] {
+    (fieldValue: String) =>
+      Constraints.nonEmpty.apply(fieldValue) match {
+        case _: Invalid => Invalid(ValidationError("amls.new-supervisory-body.error", agentName))
+        case _ if !fieldValue.matches(amlsBodyRegex) => Invalid(ValidationError("amls.new-supervisory-body.error.os.regex"))
+        case _ if fieldValue.length > amlsBodyMaxLength => Invalid(ValidationError("amls.new-supervisory-body.error.os.max-length"))
+        case _ => Valid
+      }
   }
   private def amlsSupervisoryBodyMapping(
     bodies: Set[String],
     isUkAgent: Boolean,
     agentName: String
   ): Mapping[String] =
-    trimmedText verifying (if (isUkAgent)
-                             amlsSupervisoryBodyUKConstraint(bodies, agentName)
-                           else
-                             amlsSupervisoryBodyOSConstraint(agentName))
+    trimmedText verifying
+      (if (isUkAgent)
+         amlsSupervisoryBodyUKConstraint(bodies, agentName)
+       else
+         amlsSupervisoryBodyOSConstraint(agentName))
 
   def form(amlsBodies: Map[String, String])(
     isUk: Boolean,

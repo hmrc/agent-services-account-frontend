@@ -104,7 +104,7 @@ case class OptinRecord(
   lazy val status: OptinEventType =
     history match {
       case Nil => OptedOut
-      case events => events.sortWith(_.eventDateTime isAfter _.eventDateTime).head.optinEventType
+      case events => events.sortWith((left, right) => left.eventDateTime.isAfter(right.eventDateTime)).head.optinEventType
     }
 }
 

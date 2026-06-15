@@ -135,7 +135,8 @@ class Actions @Inject() (
           )
         def subscriptionJourney(asaDetails: AgencyDetails) = SubscriptionJourney(asaDetails = asaDetails)
         if (
-          (appConfig.enableLegacySubscriptionLink && legacyRegime == PAYE) || (appConfig.enableLegacySubscriptionLinkRobotics && Seq(
+          (appConfig.enableLegacySubscriptionLink && legacyRegime == PAYE) ||
+          (appConfig.enableLegacySubscriptionLinkRobotics && Seq(
             CT,
             SA
           ).contains(legacyRegime))

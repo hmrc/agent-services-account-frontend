@@ -60,7 +60,7 @@ object SubscriptionPhoneNumberForm {
       mapping(
         phoneNumberUseAsaDataKey -> phoneNumberUseAsaDataMapping(legacyRegime, asaDetailsAgencyName),
         phoneNumberNewKey -> mandatoryIfFalse(phoneNumberUseAsaDataKey, phoneNumberNewOptionalMapping(legacyRegime))
-      )(PhoneNumberFormValues.apply)(o => Some(o.useAsaData, o.newPhoneNumber))
+      )(PhoneNumberFormValues.apply)(o => Some((o.useAsaData, o.newPhoneNumber)))
     )
   }
 

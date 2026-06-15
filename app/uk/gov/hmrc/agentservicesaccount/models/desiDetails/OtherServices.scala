@@ -17,7 +17,6 @@
 package uk.gov.hmrc.agentservicesaccount.models.desiDetails
 
 import play.api.libs.functional.syntax.toFunctionalBuilderOps
-import play.api.libs.functional.syntax.unlift
 import play.api.libs.json.Format
 import play.api.libs.json.Json
 import play.api.libs.json.OFormat
@@ -39,7 +38,7 @@ object CtChanges {
 
   def databaseFormat(implicit
     crypto: Encrypter
-      with Decrypter
+      & Decrypter
   ): Format[CtChanges] =
     (
       (__ \ "applyChanges").format[Boolean] and
@@ -48,7 +47,7 @@ object CtChanges {
             _.map(CtUtr(_)),
             _.map(_.utr)
           )
-    )(CtChanges.apply, unlift(CtChanges.unapply))
+    )(CtChanges.apply, changes => (changes.applyChanges, changes.ctAgentReference))
 
 }
 
@@ -63,7 +62,7 @@ object SaChanges {
 
   def databaseFormat(implicit
     crypto: Encrypter
-      with Decrypter
+      & Decrypter
   ): Format[SaChanges] =
     (
       (__ \ "applyChanges").format[Boolean] and
@@ -72,7 +71,7 @@ object SaChanges {
             _.map(SaUtr(_)),
             _.map(_.utr)
           )
-    )(SaChanges.apply, unlift(SaChanges.unapply))
+    )(SaChanges.apply, changes => (changes.applyChanges, changes.saAgentReference))
 
 }
 
@@ -89,11 +88,11 @@ object OtherServices {
 
   def databaseFormat(implicit
     crypto: Encrypter
-      with Decrypter
+      & Decrypter
   ): Format[OtherServices] =
     (
       (__ \ "saChanges").format[SaChanges](SaChanges.databaseFormat) and
         (__ \ "ctChanges").format[CtChanges](CtChanges.databaseFormat)
-    )(OtherServices.apply, unlift(OtherServices.unapply))
+    )(OtherServices.apply, services => (services.saChanges, services.ctChanges))
 
 }

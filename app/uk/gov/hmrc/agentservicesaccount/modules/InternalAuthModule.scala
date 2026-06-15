@@ -23,8 +23,10 @@ import uk.gov.hmrc.agentservicesaccount.config.InternalAuthTokenInitialiser
 import uk.gov.hmrc.agentservicesaccount.config.InternalAuthTokenInitialiserImpl
 import uk.gov.hmrc.agentservicesaccount.config.NoOpInternalAuthTokenInitialiser
 
+import scala.annotation.unused
+
 class InternalAuthModule(
-  environment: Environment,
+  @unused environment: Environment,
   configuration: Configuration
 )
 extends AbstractModule {

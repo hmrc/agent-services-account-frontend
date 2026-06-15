@@ -26,7 +26,7 @@ import java.net.URLEncoder
 object CallOps {
 
   implicit class CallOps(call: Call) {
-    def toURLWithParams(params: (String, Option[String])*): String = addParamsToUrl(call.url, params: _*)
+    def toURLWithParams(params: (String, Option[String])*): String = addParamsToUrl(call.url, params*)
   }
 
   def addParamsToUrl(

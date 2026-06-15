@@ -18,7 +18,6 @@ package uk.gov.hmrc.agentservicesaccount.views.pages.subscriptions
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.confirmation
 

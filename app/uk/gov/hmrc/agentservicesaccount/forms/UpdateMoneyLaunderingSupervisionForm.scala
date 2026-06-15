@@ -261,14 +261,16 @@ object UpdateMoneyLaunderingSupervisionForm {
 
   def form(amlsBodies: Map[String, String]): Form[UpdateMoneyLaunderingSupervisionDetails] = Form(
     mapping(
-      "body" -> trimmedText
-        .verifying("update-money-laundering-supervisory.body-codes.error.empty", _.nonEmpty)
-        .verifying("update-money-laundering-supervisory.body-codes.error.invalid", x => amlsBodies.keys.exists(_ == x) || x.isEmpty),
-      "number" -> trimmedText
-        .verifying("update-money-laundering-supervisory.reg-number.error.empty", _.nonEmpty)
-        .verifying("update-money-laundering-supervisory.reg-number.error.invalid", x => supervisoryNumberRegex.matches(x.replace(" ", ""))),
+      "body" ->
+        trimmedText
+          .verifying("update-money-laundering-supervisory.body-codes.error.empty", _.nonEmpty)
+          .verifying("update-money-laundering-supervisory.body-codes.error.invalid", x => amlsBodies.keys.exists(_ == x) || x.isEmpty),
+      "number" ->
+        trimmedText
+          .verifying("update-money-laundering-supervisory.reg-number.error.empty", _.nonEmpty)
+          .verifying("update-money-laundering-supervisory.reg-number.error.invalid", x => supervisoryNumberRegex.matches(x.replace(" ", ""))),
       "endDate" -> of[LocalDate]
-    )(UpdateMoneyLaunderingSupervisionDetails.apply)(UpdateMoneyLaunderingSupervisionDetails.unapply)
+    )(UpdateMoneyLaunderingSupervisionDetails.apply)(details => Some((details.body, details.number, details.endDate)))
   )
 
 }

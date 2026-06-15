@@ -45,14 +45,14 @@ with I18nSupport {
   }
 
   def submitSurvey: Action[AnyContent] = Action.async { implicit request =>
-    val errorFunction = { formWithErrors: Form[String] =>
+    val errorFunction = { (formWithErrors: Form[String]) =>
       Future successful BadRequest(surveyView(formWithErrors))
     }
 
-    val successFunction = { key: String =>
+    val successFunction = { (key: String) =>
       key match {
         case "ACCESSINGSERVICE" if appConfig.feedbackSurveyServiceSelect => Future successful Redirect(routes.SurveyController.showWhichService())
-        case k => Future successful Redirect(appConfig.signOutUrlWithSurvey(key))
+        case _ => Future successful Redirect(appConfig.signOutUrlWithSurvey(key))
 
       }
     }
@@ -73,7 +73,7 @@ with I18nSupport {
   }
 
   def submitWhichService: Action[AnyContent] = Action.async { implicit request =>
-    val errorFunction = { formWithErrors: Form[String] =>
+    val errorFunction = { (formWithErrors: Form[String]) =>
       Future successful BadRequest(whichServiceView(formWithErrors))
     }
 
@@ -87,7 +87,7 @@ with I18nSupport {
       "OTHER" -> "AGENTHOME"
     )
 
-    val successFunction = { key: String =>
+    val successFunction = { (key: String) =>
       Future successful Redirect(appConfig.signOutUrlWithSurvey(feedbackKeyMapping.apply(key)))
     }
 

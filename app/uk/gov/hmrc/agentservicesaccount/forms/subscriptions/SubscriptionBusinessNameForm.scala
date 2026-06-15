@@ -45,7 +45,7 @@ object SubscriptionBusinessNameForm {
       mapping(
         businessNameUseAsaDataKey -> businessNameUseAsaDataMapping(legacyRegime),
         businessNameNewKey -> mandatoryIfFalse(businessNameUseAsaDataKey, businessNameNewOptionalMapping(legacyRegime))
-      )(BusinessNameFormValues.apply)(o => Some(o.useAsaData, o.newBusinessName))
+      )(BusinessNameFormValues.apply)(o => Some((o.useAsaData, o.newBusinessName)))
     )
   }
 

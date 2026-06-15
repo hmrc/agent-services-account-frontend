@@ -15,14 +15,13 @@ object AppDependencies {
     "uk.gov.hmrc"       %% s"domain-$playVersion"                        % "11.0.0",
     "uk.gov.hmrc.objectstore" %% s"object-store-client-$playVersion" % "2.5.0",
     "com.beachape"      %% "enumeratum-play"                             % "1.9.0",
-    "org.julienrf"      %% "play-json-derived-codecs"                    % "11.0.0",
     "org.apache.commons" % "commons-text"                                % "1.15.0"
   )
 
   val test: Seq[ModuleID] = Seq(
     "uk.gov.hmrc.mongo" %% s"hmrc-mongo-test-$playVersion" % mongoVersion,
     "uk.gov.hmrc"       %% s"bootstrap-test-$playVersion"  % bootstrapVersion,
-    "org.mockito"       %% "mockito-scala-scalatest"       % "2.0.0",
+    "org.mockito"       %% "mockito-scala-scalatest"       % "2.2.1",
     "org.scalamock"     %% "scalamock"                     % "7.5.5"
   ).map(_ % Test)
 
