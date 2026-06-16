@@ -89,10 +89,10 @@
     @additionalCss.getOrElse(Html(""))
     @autocompleteCss()
 
-    @if(isSignedIn) {
+        @if(isSignedIn) {
         @hmrcTimeoutDialogHelper(
-            signOutUrl = routes.SignOutController.signOut.url,
-            timeoutUrl = Some(routes.SignOutController.timeOut.url)
+            signOutUrl = routes.SignOutController.signOut().url,
+            timeoutUrl = Some(routes.SignOutController.timeOut().url)
         )
     }
 }
@@ -103,7 +103,7 @@
 @hmrcStandardPage(HmrcStandardPageParams(
     serviceURLs = ServiceURLs(
         serviceUrl = Some(routes.AgentServicesController.root().url),
-        signOutUrl = if(isSignedIn) Some(routes.SignOutController.signOut.url) else None
+        signOutUrl = if(isSignedIn) Some(routes.SignOutController.signOut().url) else None
     ),
     banners = Banners(
         additionalBannersBlock = additionalBanner

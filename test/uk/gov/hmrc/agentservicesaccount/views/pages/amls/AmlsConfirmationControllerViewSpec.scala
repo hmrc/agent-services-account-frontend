@@ -18,7 +18,6 @@ package uk.gov.hmrc.agentservicesaccount.views.pages.amls
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.update_confirmation_received
 

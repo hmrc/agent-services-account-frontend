@@ -78,7 +78,7 @@ with Logging {
     /* TODO remove call to withShowFeatureInvite if okay with 28 day duration on UR banner
      *      showFeatureInvite is unused at the mo
      * */
-    withShowFeatureInvite(agentInfo.arn) { showFeatureInvite: Boolean =>
+    withShowFeatureInvite(agentInfo.arn) { showFeatureInvite =>
       val subscriptionInfoF: Future[Seq[SubscriptionInfo]] =
         if (appConfig.showLegacySubscriptions || appConfig.enableLegacySubscriptionLink || appConfig.enableLegacySubscriptionLinkRobotics)
           subscriptionService.getSubscriptionInfo(

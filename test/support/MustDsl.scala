@@ -14,26 +14,19 @@
  * limitations under the License.
  */
 
-package utils
+package support
 
-import uk.gov.hmrc.agentservicesaccount.utils.CountryResolver
-import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
+import org.scalatest.Assertion
+import org.scalatest.matchers.Matcher
+import org.scalatest.matchers.should.Matchers
 
-class CountryResolverSpec
-extends ViewBaseSpec {
+trait MustDsl { this: Matchers =>
 
-  val countryResolver = new CountryResolver(appConfig)
+  implicit class MustOps[A](private val actual: A) {
 
-  "CountryResolver.countryName" should {
+    def must(matcher: Matcher[A]): Assertion = actual should matcher
+    def mustBe(expected: A): Assertion = actual shouldBe expected
 
-    "return country name when code exists in map" in {
-      countryResolver.countryName("PT") mustBe "Portugal"
-      countryResolver.countryName("PW") mustBe "Palau"
-    }
-
-    "return input code when country code is not found" in {
-      countryResolver.countryName("XX") mustBe "XX"
-    }
   }
 
 }

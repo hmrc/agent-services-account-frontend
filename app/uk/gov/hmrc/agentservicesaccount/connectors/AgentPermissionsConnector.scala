@@ -21,6 +21,7 @@ import play.api.Logging
 import play.api.http.Status._
 import play.api.libs.json.Json
 import play.api.libs.json.OFormat
+import play.api.libs.ws.JsonBodyWritables.writeableOf_JsValue
 import play.api.mvc.RequestHeader
 import uk.gov.hmrc.agentservicesaccount.models.Arn
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
@@ -111,7 +112,7 @@ extends Logging {
   def isOptedIn(
     arn: Arn
   )(implicit rh: RequestHeader): Future[Boolean] = http.get(url"$baseUrl/agent-permissions/arn/${arn.value}/optin-record-exists").execute[HttpResponse].map {
-    response: HttpResponse =>
+    response =>
       response.status match {
         case NO_CONTENT => true
         case NOT_FOUND => false

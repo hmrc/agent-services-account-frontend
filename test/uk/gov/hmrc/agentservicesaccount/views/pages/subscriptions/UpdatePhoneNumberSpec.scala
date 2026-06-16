@@ -19,7 +19,6 @@ package uk.gov.hmrc.agentservicesaccount.views.pages.subscriptions
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.data.Form
 import play.api.i18n.Messages
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionPhoneNumberForm
@@ -91,11 +90,11 @@ extends ViewBaseSpec {
     }
 
     "have correct first radio (existing number)" in {
-      doc.select(".govuk-radios__item").get(0).text() must include(asaDetailsAgencyTelephone)
+      doc.select(".govuk-radios__item").get(0).text() should include(asaDetailsAgencyTelephone)
     }
 
     "have correct second radio (new number option)" in {
-      doc.select(".govuk-radios__item").get(1).text() must include(messages(s"${legacyRegime.msgPrefix}.phone-number.use-asa.false"))
+      doc.select(".govuk-radios__item").get(1).text() should include(messages(s"${legacyRegime.msgPrefix}.phone-number.use-asa.false"))
     }
 
     "have continue button" in {

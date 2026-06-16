@@ -18,7 +18,6 @@ package uk.gov.hmrc.agentservicesaccount.views.pages.subscriptions
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.i18n.Lang
 import play.api.i18n.Messages
 import play.api.i18n.MessagesImpl
@@ -103,11 +102,11 @@ extends ViewBaseSpec {
         val keys = doc.select(".govuk-summary-list__key").asScala.map(_.text()).toList
         if (legacyRegime == PAYE) {
           keys must contain("Contact name")
-          keys must not contain ("Business name")
+          keys should not contain ("Business name")
         }
         else {
           keys must contain("Business name")
-          keys must not contain ("Contact name")
+          keys should not contain ("Contact name")
         }
         keys must contain("Telephone number")
         keys must contain("Email address")
@@ -116,11 +115,11 @@ extends ViewBaseSpec {
         val values = doc.select(".govuk-summary-list__value").asScala.map(_.text()).toList
         if (legacyRegime == PAYE) {
           values must contain("Manager Employee")
-          values must not contain ("Test Agency")
+          values should not contain ("Test Agency")
         }
         else {
           values must contain("Test Agency")
-          values must not contain ("Manager Employee")
+          values should not contain ("Manager Employee")
         }
         values must contain("1234567890")
         values must contain("test@test.com")

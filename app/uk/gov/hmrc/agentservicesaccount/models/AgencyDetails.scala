@@ -17,10 +17,12 @@
 package uk.gov.hmrc.agentservicesaccount.models
 
 import play.api.libs.functional.syntax.toFunctionalBuilderOps
-import play.api.libs.functional.syntax.unlift
 import play.api.libs.json.Format
 import play.api.libs.json.Json
+import play.api.libs.json.JsNull
 import play.api.libs.json.OFormat
+import play.api.libs.json.OWrites
+import play.api.libs.json.Reads
 import play.api.libs.json.__
 import uk.gov.hmrc.crypto.json.JsonEncryption.stringEncrypterDecrypter
 import uk.gov.hmrc.crypto.Decrypter
@@ -44,17 +46,36 @@ object BusinessAddress {
   implicit val format: OFormat[BusinessAddress] = Json.format
 
   def databaseFormat(implicit
-    crypto: Encrypter
-      with Decrypter
-  ): Format[BusinessAddress] =
-    (
-      (__ \ "addressLine1").format[String](stringEncrypterDecrypter) and
-        (__ \ "addressLine2").formatNullable[String](stringEncrypterDecrypter) and
-        (__ \ "addressLine3").formatNullable[String](stringEncrypterDecrypter) and
-        (__ \ "addressLine4").formatNullable[String](stringEncrypterDecrypter) and
-        (__ \ "postalCode").formatNullable[String](stringEncrypterDecrypter) and
-        (__ \ "countryCode").format[String](stringEncrypterDecrypter)
-    )(BusinessAddress.apply, unlift(BusinessAddress.unapply))
+    crypto: Encrypter & Decrypter
+  ): Format[BusinessAddress] = Format(
+    Reads { json =>
+      for {
+        addressLine1 <- (json \ "addressLine1").validate[String](stringEncrypterDecrypter)
+        addressLine2 <- (json \ "addressLine2").validateOpt[String](stringEncrypterDecrypter)
+        addressLine3 <- (json \ "addressLine3").validateOpt[String](stringEncrypterDecrypter)
+        addressLine4 <- (json \ "addressLine4").validateOpt[String](stringEncrypterDecrypter)
+        postalCode <- (json \ "postalCode").validateOpt[String](stringEncrypterDecrypter)
+        countryCode <- (json \ "countryCode").validate[String](stringEncrypterDecrypter)
+      } yield BusinessAddress(
+        addressLine1,
+        addressLine2,
+        addressLine3,
+        addressLine4,
+        postalCode,
+        countryCode
+      )
+    },
+    OWrites[BusinessAddress] { businessAddress =>
+      Json.obj(
+        "addressLine1" -> Json.toJson(businessAddress.addressLine1)(stringEncrypterDecrypter),
+        "addressLine2" -> businessAddress.addressLine2.map(v => Json.toJson(v)(stringEncrypterDecrypter)).getOrElse(JsNull),
+        "addressLine3" -> businessAddress.addressLine3.map(v => Json.toJson(v)(stringEncrypterDecrypter)).getOrElse(JsNull),
+        "addressLine4" -> businessAddress.addressLine4.map(v => Json.toJson(v)(stringEncrypterDecrypter)).getOrElse(JsNull),
+        "postalCode" -> businessAddress.postalCode.map(v => Json.toJson(v)(stringEncrypterDecrypter)).getOrElse(JsNull),
+        "countryCode" -> Json.toJson(businessAddress.countryCode)(stringEncrypterDecrypter)
+      )
+    }
+  )
 
 }
 
@@ -72,14 +93,29 @@ object AgencyDetails {
   implicit val format: OFormat[AgencyDetails] = Json.format
 
   def databaseFormat(implicit
-    crypto: Encrypter
-      with Decrypter
-  ): Format[AgencyDetails] =
-    (
-      (__ \ "agencyName").formatNullable[String](stringEncrypterDecrypter) and
-        (__ \ "agencyEmail").formatNullable[String](stringEncrypterDecrypter) and
-        (__ \ "agencyTelephone").formatNullable[String](stringEncrypterDecrypter) and
-        (__ \ "agencyAddress").formatNullable[BusinessAddress](BusinessAddress.databaseFormat)
-    )(AgencyDetails.apply, unlift(AgencyDetails.unapply))
+    crypto: Encrypter & Decrypter
+  ): Format[AgencyDetails] = Format(
+    Reads { json =>
+      for {
+        agencyName <- (json \ "agencyName").validateOpt[String](stringEncrypterDecrypter)
+        agencyEmail <- (json \ "agencyEmail").validateOpt[String](stringEncrypterDecrypter)
+        agencyTelephone <- (json \ "agencyTelephone").validateOpt[String](stringEncrypterDecrypter)
+        agencyAddress <- (json \ "agencyAddress").validateOpt[BusinessAddress](BusinessAddress.databaseFormat)
+      } yield AgencyDetails(
+        agencyName,
+        agencyEmail,
+        agencyTelephone,
+        agencyAddress
+      )
+    },
+    OWrites[AgencyDetails] { agencyDetails =>
+      Json.obj(
+        "agencyName" -> agencyDetails.agencyName.map(v => Json.toJson(v)(stringEncrypterDecrypter)).getOrElse(JsNull),
+        "agencyEmail" -> agencyDetails.agencyEmail.map(v => Json.toJson(v)(stringEncrypterDecrypter)).getOrElse(JsNull),
+        "agencyTelephone" -> agencyDetails.agencyTelephone.map(v => Json.toJson(v)(stringEncrypterDecrypter)).getOrElse(JsNull),
+        "agencyAddress" -> agencyDetails.agencyAddress.map(addr => Json.toJson(addr)(BusinessAddress.databaseFormat)).getOrElse(JsNull)
+      )
+    }
+  )
 
 }

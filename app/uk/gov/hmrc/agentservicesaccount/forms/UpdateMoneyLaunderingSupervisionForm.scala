@@ -268,7 +268,7 @@ object UpdateMoneyLaunderingSupervisionForm {
         .verifying("update-money-laundering-supervisory.reg-number.error.empty", _.nonEmpty)
         .verifying("update-money-laundering-supervisory.reg-number.error.invalid", x => supervisoryNumberRegex.matches(x.replace(" ", ""))),
       "endDate" -> of[LocalDate]
-    )(UpdateMoneyLaunderingSupervisionDetails.apply)(UpdateMoneyLaunderingSupervisionDetails.unapply)
+    )(UpdateMoneyLaunderingSupervisionDetails.apply)(o => Some((o.body, o.number, o.endDate)))
   )
 
 }

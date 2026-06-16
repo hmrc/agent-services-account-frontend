@@ -34,7 +34,7 @@ object YouMayNotNeedToApplyForm {
   def form(legacyRegime: LegacyRegime): Form[YouMayNotNeedToApplyFormValues] = Form(
     mapping(
       doYouStillWantToApplyKey -> doYouStillWantToApplyMapping(legacyRegime)
-    )(YouMayNotNeedToApplyFormValues.apply)(YouMayNotNeedToApplyFormValues.unapply)
+    )(YouMayNotNeedToApplyFormValues.apply)(o => Some(o.doYouStillWantToApply))
   )
 
 }

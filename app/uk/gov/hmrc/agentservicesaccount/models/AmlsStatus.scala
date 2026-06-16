@@ -21,7 +21,6 @@ import enumeratum.EnumEntry
 import play.api.libs.json.Format
 import play.api.mvc.QueryStringBindable
 import uk.gov.hmrc.agentservicesaccount.utils.EnumFormat
-import uk.gov.hmrc.agentservicesaccount.utils.ValueClassBinder
 
 sealed trait AmlsStatus
 extends Product
@@ -31,7 +30,25 @@ with EnumEntry
 object AmlsStatus {
 
   implicit val format: Format[AmlsStatus] = EnumFormat(AmlsStatuses)
-  implicit val queryBindable: QueryStringBindable[AmlsStatus] = ValueClassBinder.queryStringValueBinder[AmlsStatus](_.entryName)
+  implicit val queryBindable: QueryStringBindable[AmlsStatus] =
+    new QueryStringBindable[AmlsStatus] {
+      override def bind(
+        key: String,
+        params: Map[String, Seq[String]]
+      ): Option[Either[String, AmlsStatus]] = QueryStringBindable.bindableString.bind(key, params).map {
+        case Right(value) =>
+          AmlsStatuses.withNameOption(value) match {
+            case Some(status) => Right(status)
+            case None => Left(s"Cannot parse param $key as AmlsStatus")
+          }
+        case Left(error) => Left(error)
+      }
+
+      override def unbind(
+        key: String,
+        value: AmlsStatus
+      ): String = QueryStringBindable.bindableString.unbind(key, value.entryName)
+    }
 
 }
 

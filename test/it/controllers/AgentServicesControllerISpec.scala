@@ -71,7 +71,7 @@ extends BaseISpec {
       givenAuthorisedAsAgentWith(arn.value)
       givenGetAgentRecord(agentRecord)
 
-      val response = controller.root()(fakeRequest())
+      val response = controller.root.apply(fakeRequest())
 
       status(response) shouldBe SEE_OTHER
       Helpers.redirectLocation(response) shouldBe Some(routes.AgentServicesController.showAgentServicesAccount().url)
@@ -80,10 +80,12 @@ extends BaseISpec {
     "redirect to suspended warning when user is suspended" in {
       givenAuthorisedAsAgentWith(arn.value)
       givenGetAgentRecord(
-        agentRecord.copy(suspensionDetails = Some(SuspensionDetails(suspensionStatus = true, regimes = Some(Set("ALL")))))
+        agentRecord.copy(
+          suspensionDetails = Some(SuspensionDetails(suspensionStatus = true, regimes = Some(Set("ALL"))))
+        )
       )
 
-      val response = controller.root()(fakeRequest())
+      val response = controller.root.apply(fakeRequest())
 
       status(response) shouldBe SEE_OTHER
       Helpers.redirectLocation(response) shouldBe Some(routes.SuspendedJourneyController.showSuspendedWarning().url)
@@ -92,10 +94,12 @@ extends BaseISpec {
     "redirect to suspended warning when user is suspended for AGSV" in {
       givenAuthorisedAsAgentWith(arn.value)
       givenGetAgentRecord(
-        agentRecord.copy(suspensionDetails = Some(SuspensionDetails(suspensionStatus = true, regimes = Some(Set("AGSV")))))
+        agentRecord.copy(
+          suspensionDetails = Some(SuspensionDetails(suspensionStatus = true, regimes = Some(Set("AGSV"))))
+        )
       )
 
-      val response = controller.root()(fakeRequest())
+      val response = controller.root.apply(fakeRequest())
 
       status(response) shouldBe SEE_OTHER
       Helpers.redirectLocation(response) shouldBe Some(routes.SuspendedJourneyController.showSuspendedWarning().url)
@@ -104,10 +108,12 @@ extends BaseISpec {
     "redirect to suspended warning when user is suspended for ALL" in {
       givenAuthorisedAsAgentWith(arn.value)
       givenGetAgentRecord(
-        agentRecord.copy(suspensionDetails = Some(SuspensionDetails(suspensionStatus = true, regimes = Some(Set("ALL")))))
+        agentRecord.copy(
+          suspensionDetails = Some(SuspensionDetails(suspensionStatus = true, regimes = Some(Set("ALL"))))
+        )
       )
 
-      val response = controller.root()(fakeRequest())
+      val response = controller.root.apply(fakeRequest())
 
       status(response) shouldBe SEE_OTHER
       Helpers.redirectLocation(response) shouldBe Some(routes.SuspendedJourneyController.showSuspendedWarning().url)
@@ -118,7 +124,7 @@ extends BaseISpec {
       givenGetAgentRecordErrorResponse(404)
 
       intercept[UpstreamErrorResponse] {
-        await(controller.root()(fakeRequest()))
+        await(controller.root.apply(fakeRequest()))
       }
     }
   }
@@ -136,19 +142,21 @@ extends BaseISpec {
         givenHidePrivateBetaInviteNotFound()
         givenSubscriptionInfoResponse()
 
-        val result = controller.showAgentServicesAccount(fakeRequest())
+        val result = controller.showAgentServicesAccount.apply(fakeRequest())
         status(result) shouldBe OK
       }
 
       "Agent is suspended should be redirected" in {
         givenGetAgentRecord(
-          agentRecord.copy(suspensionDetails = Some(SuspensionDetails(suspensionStatus = true, regimes = Some(Set("ALL")))))
+          agentRecord.copy(
+            suspensionDetails = Some(SuspensionDetails(suspensionStatus = true, regimes = Some(Set("ALL"))))
+          )
         )
 
         givenAuthorisedAsAgentWith(arn.value)
         givenHidePrivateBetaInviteNotFound()
 
-        val response = controller.showAgentServicesAccount()(fakeRequest("GET", "/home"))
+        val response = controller.showAgentServicesAccount.apply(fakeRequest("GET", "/home"))
         status(response) shouldBe SEE_OTHER
       }
 
@@ -193,7 +201,7 @@ extends BaseISpec {
         givenHidePrivateBetaInviteNotFound()
         givenSubscriptionInfoResponse()
 
-        val response = await(controller.showAgentServicesAccount()(fakeRequest("GET", "/home")))
+        val response = await(controller.showAgentServicesAccount.apply(fakeRequest("GET", "/home")))
         val html = Jsoup.parse(contentAsString(response))
 
         expectedTitle(html, "Welcome to your agent services account - Agent services account - GOV.UK")
@@ -379,7 +387,7 @@ extends BaseISpec {
 
         val controller = appBuilder().build().injector.instanceOf[AgentServicesController]
 
-        val response = await(controller.showAgentServicesAccount()(fakeRequest("GET", "/home")))
+        val response = await(controller.showAgentServicesAccount.apply(fakeRequest("GET", "/home")))
         val html = Jsoup.parse(contentAsString(response))
 
         expectedHomeBannerContent(html)
@@ -484,7 +492,7 @@ extends BaseISpec {
       givenAuthorisedAsAgentWith(arn.value)
       givenGetAgentRecord(agentRecord)
       givenAMLSDetailsForArn(AmlsDetailsResponse(AmlsStatuses.NoAmlsDetailsUK, None), arn.value)
-      val response = await(controllerWithGranPermsDisabled.manageAccount().apply(fakeRequest("GET", "/manage-account")))
+      val response = await(controllerWithGranPermsDisabled.manageAccount.apply(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe OK
 
@@ -505,7 +513,7 @@ extends BaseISpec {
       givenOptinStatusFailedForArn(arn)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq.empty))
       givenAMLSDetailsForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), arn.value)
-      val response = await(controller.manageAccount().apply(fakeRequest("GET", "/manage-account")))
+      val response = await(controller.manageAccount.apply(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe OK
 
@@ -527,7 +535,7 @@ extends BaseISpec {
       givenOptinStatusSuccessReturnsForArn(arn, accessgroups.OptedInReady)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq.empty))
       givenAMLSDetailsForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), arn.value)
-      val response = await(controller.manageAccount().apply(fakeRequest("GET", "/manage-account")))
+      val response = await(controller.manageAccount.apply(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe OK
 
@@ -549,7 +557,7 @@ extends BaseISpec {
       givenOptinStatusSuccessReturnsForArn(arn, accessgroups.OptedInReady)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq.empty)) // no access groups yet
       givenAMLSDetailsForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), arn.value)
-      val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
+      val response = await(controller.manageAccount.apply(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
 
@@ -591,7 +599,7 @@ extends BaseISpec {
       givenOptinStatusSuccessReturnsForArn(arn, accessgroups.OptedInReady)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq(customSummary))) // there is already an access group
       givenAMLSDetailsForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), arn.value)
-      val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
+      val response = await(controller.manageAccount.apply(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
 
@@ -630,7 +638,7 @@ extends BaseISpec {
       givenOptinStatusSuccessReturnsForArn(arn, accessgroups.OptedInNotReady)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq.empty))
       givenAMLSDetailsForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), arn.value)
-      val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
+      val response = await(controller.manageAccount.apply(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
 
@@ -661,7 +669,7 @@ extends BaseISpec {
       givenOptinStatusSuccessReturnsForArn(arn, accessgroups.OptedInSingleUser)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq.empty))
       givenAMLSDetailsForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), arn.value)
-      val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
+      val response = await(controller.manageAccount.apply(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
 
@@ -693,7 +701,7 @@ extends BaseISpec {
       givenOptinStatusSuccessReturnsForArn(arn, accessgroups.OptedOutWrongClientCount)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq.empty))
       givenAMLSDetailsForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), arn.value)
-      val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
+      val response = await(controller.manageAccount.apply(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
 
@@ -722,7 +730,7 @@ extends BaseISpec {
       givenOptinStatusSuccessReturnsForArn(arn, accessgroups.OptedOutSingleUser)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq.empty))
       givenAMLSDetailsForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), arn.value)
-      val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
+      val response = await(controller.manageAccount.apply(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
 
@@ -752,7 +760,7 @@ extends BaseISpec {
       givenOptinStatusSuccessReturnsForArn(arn, accessgroups.OptedOutEligible)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq.empty))
       givenAMLSDetailsForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), arn.value)
-      val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
+      val response = await(controller.manageAccount.apply(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
 
@@ -774,7 +782,7 @@ extends BaseISpec {
       givenOptinStatusSuccessReturnsForArn(arn, accessgroups.OptedInNotReady)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq.empty))
       givenAMLSDetailsForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), arn.value)
-      val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
+      val response = await(controller.manageAccount.apply(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
 
@@ -794,7 +802,7 @@ extends BaseISpec {
       givenOptinStatusSuccessReturnsForArn(arn, accessgroups.OptedInNotReady)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq.empty))
       givenAMLSDetailsForArn(AmlsDetailsResponse(AmlsStatuses.NoAmlsDetailsNonUK, None), arn.value)
-      val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
+      val response = await(controller.manageAccount.apply(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
 
@@ -814,7 +822,7 @@ extends BaseISpec {
       givenOptinStatusSuccessReturnsForArn(arn, accessgroups.OptedInNotReady)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq.empty))
       givenAMLSDetailsForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsNonUK, None), arn.value)
-      val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
+      val response = await(controller.manageAccount.apply(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
 
@@ -834,7 +842,7 @@ extends BaseISpec {
       givenOptinStatusSuccessReturnsForArn(arn, accessgroups.OptedInNotReady)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq.empty))
       givenAMLSDetailsForArn(AmlsDetailsResponse(AmlsStatuses.PendingAmlsDetails, None), arn.value)
-      val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
+      val response = await(controller.manageAccount.apply(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
 
@@ -854,7 +862,7 @@ extends BaseISpec {
       givenOptinStatusSuccessReturnsForArn(arn, accessgroups.OptedInNotReady)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq.empty))
       givenAMLSDetailsForArn(AmlsDetailsResponse(AmlsStatuses.NoAmlsDetailsUK, None), arn.value)
-      val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
+      val response = await(controller.manageAccount.apply(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
 
@@ -874,7 +882,7 @@ extends BaseISpec {
       givenOptinStatusSuccessReturnsForArn(arn, accessgroups.OptedInNotReady)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq.empty))
       givenAMLSDetailsForArn(AmlsDetailsResponse(AmlsStatuses.PendingAmlsDetailsRejected, None), arn.value)
-      val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
+      val response = await(controller.manageAccount.apply(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
 
@@ -894,7 +902,7 @@ extends BaseISpec {
       givenOptinStatusSuccessReturnsForArn(arn, accessgroups.OptedInNotReady)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq.empty))
       givenAMLSDetailsForArn(AmlsDetailsResponse(AmlsStatuses.ExpiredAmlsDetailsUK, None), arn.value)
-      val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
+      val response = await(controller.manageAccount.apply(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
 
@@ -915,7 +923,7 @@ extends BaseISpec {
         givenAuthorisedAsAgentWith(arn.value)
         givenGetAgentRecord(agentRecord)
 
-        val response = await(controller.accountDetails().apply(fakeRequest("GET", "/account-details")))
+        val response = await(controller.accountDetails.apply(fakeRequest("GET", "/account-details")))
         status(response) shouldBe OK
       }
 
@@ -923,7 +931,7 @@ extends BaseISpec {
         givenAuthorisedAsAgentWith(arn.value, isAdmin = false)
         givenGetAgentRecord(agentRecord)
 
-        val response = await(controller.accountDetails().apply(fakeRequest("GET", "/account-details")))
+        val response = await(controller.accountDetails.apply(fakeRequest("GET", "/account-details")))
         status(response) shouldBe OK
       }
     }
@@ -931,23 +939,29 @@ extends BaseISpec {
     "display correct content" when {
       "agent is admin and details found" in {
         givenAuthorisedAsAgentWith(arn.value)
-        givenGetAgentRecord(agentRecord.copy(agencyDetails =
-          Some(AgencyDetails(
-            Some("My Agency"),
-            Some("abc@abc.com"),
-            Some("07345678901"),
-            Some(BusinessAddress(
-              "25 Any Street",
-              Some("Any Town"),
-              None,
-              None,
-              Some("TF3 4TR"),
-              "GB"
-            ))
-          ))
-        ))
+        givenGetAgentRecord(
+          agentRecord.copy(
+            agencyDetails = Some(
+              AgencyDetails(
+                Some("My Agency"),
+                Some("abc@abc.com"),
+                Some("07345678901"),
+                Some(
+                  BusinessAddress(
+                    "25 Any Street",
+                    Some("Any Town"),
+                    None,
+                    None,
+                    Some("TF3 4TR"),
+                    "GB"
+                  )
+                )
+              )
+            )
+          )
+        )
 
-        val response = await(controller.accountDetails().apply(fakeRequest("GET", "/account-details")))
+        val response = await(controller.accountDetails.apply(fakeRequest("GET", "/account-details")))
         val html = Jsoup.parse(contentAsString(response))
 
         html.title() shouldBe "Account details - Agent services account - GOV.UK"
@@ -975,23 +989,29 @@ extends BaseISpec {
 
       "the agent is not Admin" in {
         givenAuthorisedAsAgentWith(arn.value, isAdmin = false)
-        givenGetAgentRecord(agentRecord.copy(agencyDetails =
-          Some(AgencyDetails(
-            Some("My Agency"),
-            Some("abc@abc.com"),
-            Some("07345678901"),
-            Some(BusinessAddress(
-              "25 Any Street",
-              Some("Any Town"),
-              None,
-              None,
-              Some("TF3 4TR"),
-              "GB"
-            ))
-          ))
-        ))
+        givenGetAgentRecord(
+          agentRecord.copy(
+            agencyDetails = Some(
+              AgencyDetails(
+                Some("My Agency"),
+                Some("abc@abc.com"),
+                Some("07345678901"),
+                Some(
+                  BusinessAddress(
+                    "25 Any Street",
+                    Some("Any Town"),
+                    None,
+                    None,
+                    Some("TF3 4TR"),
+                    "GB"
+                  )
+                )
+              )
+            )
+          )
+        )
 
-        val response = await(controller.accountDetails().apply(fakeRequest("GET", "/account-details")))
+        val response = await(controller.accountDetails.apply(fakeRequest("GET", "/account-details")))
         val html = Jsoup.parse(contentAsString(response))
 
         html.title() shouldBe "Account details - Agent services account - GOV.UK"
@@ -1033,7 +1053,7 @@ extends BaseISpec {
         providerId,
         Seq.empty
       )
-      val response = await(controller.yourAccount()(fakeRequest("GET", yourAccountUrl)))
+      val response = await(controller.yourAccount.apply(fakeRequest("GET", yourAccountUrl)))
 
       status(response) shouldBe 200
 
@@ -1080,7 +1100,7 @@ extends BaseISpec {
         providerId,
         Seq.empty
       )
-      val response = await(controller.yourAccount()(fakeRequest("GET", yourAccountUrl)))
+      val response = await(controller.yourAccount.apply(fakeRequest("GET", yourAccountUrl)))
 
       status(response) shouldBe 200
 
@@ -1131,7 +1151,7 @@ extends BaseISpec {
         providerId,
         groupSummaries
       )
-      val response = await(controller.yourAccount()(fakeRequest("GET", yourAccountUrl)))
+      val response = await(controller.yourAccount.apply(fakeRequest("GET", yourAccountUrl)))
 
       status(response) shouldBe 200
 
@@ -1202,7 +1222,7 @@ extends BaseISpec {
         UserDetails(credentialRole = Some("Assistant"), name = Some("irrelevant"))
       )
       stubGetTeamMembersForArn(arn, teamMembers)
-      val response = await(controller.administrators()(fakeRequest("GET", adminUrl)))
+      val response = await(controller.administrators.apply(fakeRequest("GET", adminUrl)))
 
       status(response) shouldBe 200
 
@@ -1255,7 +1275,7 @@ extends BaseISpec {
       stubGetTeamMembersForArn(arn, teamMembers)
       givenOptinStatusSuccessReturnsForArn(arn, accessgroups.OptedInReady)
 
-      val response = await(controller.administrators()(fakeRequest("GET", adminUrl)))
+      val response = await(controller.administrators.apply(fakeRequest("GET", adminUrl)))
 
       status(response) shouldBe 200
       val html = Jsoup.parse(contentAsString(response))
@@ -1268,14 +1288,14 @@ extends BaseISpec {
     "return Status: OK" in {
       givenAuthorisedAsAgentWith(arn.value)
       givenGetAgentRecord(agentRecord)
-      val response = await(controller.showHelp().apply(fakeRequest("GET", "/help")))
+      val response = await(controller.showHelp.apply(fakeRequest("GET", "/help")))
       status(response) shouldBe OK
     }
 
     "contain matching heading in page title" in {
       givenAuthorisedAsAgentWith(arn.value)
       givenGetAgentRecord(agentRecord)
-      val response = await(controller.showHelp().apply(fakeRequest("GET", "/help")))
+      val response = await(controller.showHelp.apply(fakeRequest("GET", "/help")))
       val html = Jsoup.parse(contentAsString(response))
       html.title() shouldBe "Help and guidance - Agent services account - GOV.UK"
       html.select(H1).get(0).text shouldBe "Help and guidance"
@@ -1284,7 +1304,7 @@ extends BaseISpec {
     "contain body with correct content" in {
       givenAuthorisedAsAgentWith(arn.value)
       givenGetAgentRecord(agentRecord)
-      val response = await(controller.showHelp().apply(fakeRequest("GET", "/help")))
+      val response = await(controller.showHelp.apply(fakeRequest("GET", "/help")))
       val html = Jsoup.parse(contentAsString(response))
       val h2 = html.select(H2)
       val h3 = html.select(H3)

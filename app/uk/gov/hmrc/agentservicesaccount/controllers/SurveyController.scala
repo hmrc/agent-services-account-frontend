@@ -45,17 +45,17 @@ with I18nSupport {
   }
 
   def submitSurvey: Action[AnyContent] = Action.async { implicit request =>
-    val errorFunction = { formWithErrors: Form[String] =>
-      Future successful BadRequest(surveyView(formWithErrors))
-    }
+    val errorFunction =
+      (formWithErrors: Form[String]) =>
+        Future successful BadRequest(surveyView(formWithErrors))
 
-    val successFunction = { key: String =>
-      key match {
-        case "ACCESSINGSERVICE" if appConfig.feedbackSurveyServiceSelect => Future successful Redirect(routes.SurveyController.showWhichService())
-        case k => Future successful Redirect(appConfig.signOutUrlWithSurvey(key))
+    val successFunction =
+      (key: String) =>
+        key match {
+          case "ACCESSINGSERVICE" if appConfig.feedbackSurveyServiceSelect => Future successful Redirect(routes.SurveyController.showWhichService())
+          case k => Future successful Redirect(appConfig.signOutUrlWithSurvey(key))
 
-      }
-    }
+        }
 
     SignOutForm.form
       .bindFromRequest()
@@ -73,9 +73,9 @@ with I18nSupport {
   }
 
   def submitWhichService: Action[AnyContent] = Action.async { implicit request =>
-    val errorFunction = { formWithErrors: Form[String] =>
-      Future successful BadRequest(whichServiceView(formWithErrors))
-    }
+    val errorFunction =
+      (formWithErrors: Form[String]) =>
+        Future successful BadRequest(whichServiceView(formWithErrors))
 
     // APB-5437
     val feedbackKeyMapping = Map(
@@ -87,9 +87,9 @@ with I18nSupport {
       "OTHER" -> "AGENTHOME"
     )
 
-    val successFunction = { key: String =>
-      Future successful Redirect(appConfig.signOutUrlWithSurvey(feedbackKeyMapping.apply(key)))
-    }
+    val successFunction =
+      (key: String) =>
+        Future successful Redirect(appConfig.signOutUrlWithSurvey(feedbackKeyMapping.apply(key)))
 
     if (appConfig.feedbackSurveyServiceSelect) {
       FeedbackWhichServiceForm.form

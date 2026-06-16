@@ -17,10 +17,12 @@
 package uk.gov.hmrc.agentservicesaccount.models.desiDetails
 
 import play.api.libs.functional.syntax.toFunctionalBuilderOps
-import play.api.libs.functional.syntax.unlift
 import play.api.libs.json.Format
 import play.api.libs.json.Json
+import play.api.libs.json.JsNull
 import play.api.libs.json.OFormat
+import play.api.libs.json.OWrites
+import play.api.libs.json.Reads
 import play.api.libs.json.__
 import uk.gov.hmrc.crypto.json.JsonEncryption.stringEncrypterDecrypter
 import uk.gov.hmrc.crypto.Decrypter
@@ -38,17 +40,21 @@ object CtChanges {
   implicit val ctChangesFormat: OFormat[CtChanges] = Json.format[CtChanges]
 
   def databaseFormat(implicit
-    crypto: Encrypter
-      with Decrypter
-  ): Format[CtChanges] =
-    (
-      (__ \ "applyChanges").format[Boolean] and
-        (__ \ "ctAgentReference").formatNullable[String](stringEncrypterDecrypter)
-          .bimap[Option[CtUtr]](
-            _.map(CtUtr(_)),
-            _.map(_.utr)
-          )
-    )(CtChanges.apply, unlift(CtChanges.unapply))
+    crypto: Encrypter & Decrypter
+  ): Format[CtChanges] = Format(
+    Reads { json =>
+      for {
+        applyChanges <- (json \ "applyChanges").validate[Boolean]
+        ctAgentReference <- (json \ "ctAgentReference").validateOpt[String](stringEncrypterDecrypter).map(_.map(CtUtr(_)))
+      } yield CtChanges(applyChanges, ctAgentReference)
+    },
+    OWrites[CtChanges] { ctChanges =>
+      Json.obj(
+        "applyChanges" -> ctChanges.applyChanges,
+        "ctAgentReference" -> ctChanges.ctAgentReference.map(utr => Json.toJson(utr.utr)(stringEncrypterDecrypter)).getOrElse(JsNull)
+      )
+    }
+  )
 
 }
 
@@ -62,17 +68,21 @@ object SaChanges {
   implicit val saCodeChangesFormat: OFormat[SaChanges] = Json.format[SaChanges]
 
   def databaseFormat(implicit
-    crypto: Encrypter
-      with Decrypter
-  ): Format[SaChanges] =
-    (
-      (__ \ "applyChanges").format[Boolean] and
-        (__ \ "saAgentReference").formatNullable[String](stringEncrypterDecrypter)
-          .bimap[Option[SaUtr]](
-            _.map(SaUtr(_)),
-            _.map(_.utr)
-          )
-    )(SaChanges.apply, unlift(SaChanges.unapply))
+    crypto: Encrypter & Decrypter
+  ): Format[SaChanges] = Format(
+    Reads { json =>
+      for {
+        applyChanges <- (json \ "applyChanges").validate[Boolean]
+        saAgentReference <- (json \ "saAgentReference").validateOpt[String](stringEncrypterDecrypter).map(_.map(SaUtr(_)))
+      } yield SaChanges(applyChanges, saAgentReference)
+    },
+    OWrites[SaChanges] { saChanges =>
+      Json.obj(
+        "applyChanges" -> saChanges.applyChanges,
+        "saAgentReference" -> saChanges.saAgentReference.map(utr => Json.toJson(utr.utr)(stringEncrypterDecrypter)).getOrElse(JsNull)
+      )
+    }
+  )
 
 }
 
@@ -88,12 +98,20 @@ object OtherServices {
   implicit val otherServicesFormat: OFormat[OtherServices] = Json.format[OtherServices]
 
   def databaseFormat(implicit
-    crypto: Encrypter
-      with Decrypter
-  ): Format[OtherServices] =
-    (
-      (__ \ "saChanges").format[SaChanges](SaChanges.databaseFormat) and
-        (__ \ "ctChanges").format[CtChanges](CtChanges.databaseFormat)
-    )(OtherServices.apply, unlift(OtherServices.unapply))
+    crypto: Encrypter & Decrypter
+  ): Format[OtherServices] = Format(
+    Reads { json =>
+      for {
+        saChanges <- (json \ "saChanges").validate[SaChanges](SaChanges.databaseFormat)
+        ctChanges <- (json \ "ctChanges").validate[CtChanges](CtChanges.databaseFormat)
+      } yield OtherServices(saChanges, ctChanges)
+    },
+    OWrites[OtherServices] { otherServices =>
+      Json.obj(
+        "saChanges" -> Json.toJson(otherServices.saChanges)(SaChanges.databaseFormat),
+        "ctChanges" -> Json.toJson(otherServices.ctChanges)(CtChanges.databaseFormat)
+      )
+    }
+  )
 
 }

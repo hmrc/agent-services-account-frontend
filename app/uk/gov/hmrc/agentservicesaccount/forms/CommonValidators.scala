@@ -37,7 +37,7 @@ object CommonValidators {
     .verifying(errorKey, _.isDefined)
     .transform(_.get, Some(_))
 
-  def checkOneAtATime[A](constraints: Seq[Constraint[A]]): Constraint[A] = Constraint[A] { fieldValue: A =>
+  def checkOneAtATime[A](constraints: Seq[Constraint[A]]): Constraint[A] = Constraint[A] { fieldValue =>
     @tailrec
     def loop(c: List[Constraint[A]]): ValidationResult =
       c match {

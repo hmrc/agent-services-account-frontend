@@ -38,10 +38,12 @@ import support.Css.H1
 import support.Css.H2
 import support.Css.H3
 import support.Css.H4
+import support.MustDsl
 
 trait ViewBaseSpec
 extends AnyWordSpecLike
 with Matchers
+with MustDsl
 with OptionValues
 with ScalaFutures
 with GuiceOneAppPerSuite

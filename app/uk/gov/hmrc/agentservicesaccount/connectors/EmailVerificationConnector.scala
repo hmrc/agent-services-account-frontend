@@ -18,6 +18,7 @@ package uk.gov.hmrc.agentservicesaccount.connectors
 
 import play.api.Logging
 import play.api.libs.json.Json
+import play.api.libs.ws.JsonBodyWritables.writeableOf_JsValue
 import play.api.mvc.RequestHeader
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models.emailverification._

@@ -29,7 +29,7 @@ object SelectChangesForm {
         "address" -> optional(nonEmptyText).verifying(value => value.isEmpty || value.get == "address"),
         "email" -> optional(nonEmptyText).verifying(value => value.isEmpty || value.get == "email"),
         "telephone" -> optional(nonEmptyText).verifying(value => value.isEmpty || value.get == "telephone")
-      )(SelectChanges.apply)(SelectChanges.unapply)
+      )(SelectChanges.apply)(o => Some((o.businessName, o.address, o.email, o.telephone)))
         .verifying("update-contact-details.select-changes.error", _.atLeastOneSelected)
     )
   }

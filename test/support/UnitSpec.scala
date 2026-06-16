@@ -17,10 +17,14 @@
 package support
 
 import org.scalatest.OptionValues
+import org.scalatest.Assertion
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpecLike
+import org.mongodb.scala.SingleObservableFuture
 import play.api.libs.json.JsValue
+import play.api.libs.ws.BodyReadable
+import play.api.libs.ws.WSBodyReadables.readableAsString
 import play.api.mvc.RequestHeader
 import play.api.mvc.Result
 import play.api.test.Helpers.defaultAwaitTimeout
@@ -33,8 +37,11 @@ import scala.concurrent.Future
 trait UnitSpec
 extends AnyWordSpecLike
 with Matchers
+with MustDsl
 with OptionValues
 with ScalaFutures {
+
+  implicit val stringBodyReadable: BodyReadable[String] = readableAsString
 
   // the following is a collection of useful methods that should minimise
   // the changes required when migrating away from hmrctest, which is now deprecated.

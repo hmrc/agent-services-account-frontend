@@ -19,6 +19,8 @@ package uk.gov.hmrc.agentservicesaccount.models.addresslookup
 import play.api.libs.functional.syntax._
 import play.api.libs.json.Reads.min
 import play.api.libs.json._
+import play.api.libs.json.OWrites
+import play.api.libs.json.Reads
 
 case class JourneyConfigV2(
   version: Int,
@@ -100,12 +102,26 @@ object JourneyConfigV2 {
   implicit val confirmConfigFormat: Format[ConfirmPageConfig] = Json.format[ConfirmPageConfig]
   implicit val mandatoryFieldsConfigFormat: Format[MandatoryFieldsConfig] = Json.format[MandatoryFieldsConfig]
   implicit val manualAddressEntryConfigFormat: Format[ManualAddressEntryConfig] = Json.format[ManualAddressEntryConfig]
-  implicit val timeoutFormat: Format[TimeoutConfig] =
-    (
-      (JsPath \ "timeoutAmount").format[Int](min(120)) and
-        (JsPath \ "timeoutUrl").format[String] and
-        (JsPath \ "timeoutKeepAliveUrl").formatNullable[String]
-    )(TimeoutConfig.apply, unlift(TimeoutConfig.unapply))
+  implicit val timeoutFormat: Format[TimeoutConfig] = Format(
+    Reads { json =>
+      for {
+        timeoutAmount <- (json \ "timeoutAmount").validate[Int](min(120))
+        timeoutUrl <- (json \ "timeoutUrl").validate[String]
+        timeoutKeepAliveUrl <- (json \ "timeoutKeepAliveUrl").validateOpt[String]
+      } yield TimeoutConfig(
+        timeoutAmount,
+        timeoutUrl,
+        timeoutKeepAliveUrl
+      )
+    },
+    OWrites[TimeoutConfig] { timeoutConfig =>
+      Json.obj(
+        "timeoutAmount" -> timeoutConfig.timeoutAmount,
+        "timeoutUrl" -> timeoutConfig.timeoutUrl,
+        "timeoutKeepAliveUrl" -> timeoutConfig.timeoutKeepAliveUrl
+      )
+    }
+  )
   implicit val optionsFormat: Format[JourneyOptions] = Json.format[JourneyOptions]
   implicit val format: Format[JourneyConfigV2] = Json.format[JourneyConfigV2]
 

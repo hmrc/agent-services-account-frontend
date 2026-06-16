@@ -45,8 +45,7 @@ class SessionCacheRepository @Inject() (
   timestampSupport: TimestampSupport
 )(implicit
   ec: ExecutionContext,
-  @Named("aes") val crypto: Encrypter
-    with Decrypter
+  @Named("aes") val crypto: Encrypter & Decrypter
 )
 extends CacheRepository(
   mongoComponent = mongoComponent,
@@ -85,14 +84,12 @@ object SensitiveWrapper {
 
   implicit def reads[T](implicit
     reads: Reads[T],
-    crypto: Encrypter
-      with Decrypter
+    crypto: Encrypter & Decrypter
   ): Reads[SensitiveWrapper[T]] = sensitiveDecrypter(SensitiveWrapper[T])
 
   implicit def writes[T](implicit
     writes: Writes[T],
-    crypto: Encrypter
-      with Decrypter
+    crypto: Encrypter & Decrypter
   ): Writes[SensitiveWrapper[T]] = sensitiveEncrypter
 
 }

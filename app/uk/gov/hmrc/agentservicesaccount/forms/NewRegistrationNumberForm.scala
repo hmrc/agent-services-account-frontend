@@ -29,7 +29,7 @@ object NewRegistrationNumberForm {
   private val supervisoryNumberRegexHmrc = "X[A-Z]ML00000[0-9]{6}".r
 
   private def registrationNumberConstraint(isHmrc: Boolean): Constraint[String] = Constraint[String] {
-    fieldValue: String =>
+    fieldValue =>
       if (fieldValue.isEmpty)
         Invalid(ValidationError("amls.enter-registration-number.error.empty"))
       else if (isHmrc && !supervisoryNumberRegexHmrc.matches(fieldValue))

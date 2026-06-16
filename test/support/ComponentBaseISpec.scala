@@ -18,6 +18,7 @@ package support
 
 import org.jsoup.Jsoup
 import org.mongodb.scala.MongoDatabase
+import org.mongodb.scala.SingleObservableFuture
 import org.scalatest.Assertion
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.BeforeAndAfterEach
@@ -26,6 +27,7 @@ import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.ws.DefaultWSCookie
+import play.api.libs.ws.WSBodyWritables.writeableOf_urlEncodedForm
 import play.api.libs.ws.WSClient
 import play.api.libs.ws.WSCookie
 import play.api.libs.ws.WSRequest

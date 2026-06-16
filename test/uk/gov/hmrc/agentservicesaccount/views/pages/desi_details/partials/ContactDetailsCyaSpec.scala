@@ -18,7 +18,6 @@ package uk.gov.hmrc.agentservicesaccount.views.pages.desi_details.partials
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.test.FakeRequest
 import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress

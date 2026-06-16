@@ -31,7 +31,7 @@ object NewAmlsSupervisoryBodyForm {
   def amlsSupervisoryBodyUKConstraint(
     bodies: Set[String],
     agentName: String
-  ): Constraint[String] = Constraint[String] { fieldValue: String =>
+  ): Constraint[String] = Constraint[String] { fieldValue =>
     Constraints.nonEmpty.apply(fieldValue) match {
       case _: Invalid => Invalid(ValidationError("amls.new-supervisory-body.error", agentName))
       case _ if !bodies.contains(fieldValue) => Invalid(ValidationError("amls.new-supervisory-body.error"))
@@ -39,7 +39,7 @@ object NewAmlsSupervisoryBodyForm {
     }
   }
 
-  def amlsSupervisoryBodyOSConstraint(agentName: String): Constraint[String] = Constraint[String] { fieldValue: String =>
+  def amlsSupervisoryBodyOSConstraint(agentName: String): Constraint[String] = Constraint[String] { fieldValue =>
     Constraints.nonEmpty.apply(fieldValue) match {
       case _: Invalid => Invalid(ValidationError("amls.new-supervisory-body.error", agentName))
       case _ if !fieldValue.matches(amlsBodyRegex) => Invalid(ValidationError("amls.new-supervisory-body.error.os.regex"))

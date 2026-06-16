@@ -43,7 +43,7 @@ object BetaInviteContactDetailsForm {
       "phone" -> optional(text
         .verifying("error.max-length.phone", x => x.trim.length < 21 || x.trim.isEmpty)
         .verifying("error.invalid.phone", x => x.trim.matches(phoneRegex) || x.trim.isEmpty))
-    )(BetaInviteContactDetails.apply)(BetaInviteContactDetails.unapply)
+    )(BetaInviteContactDetails.apply)(o => Some((o.name, o.email, o.phone)))
   )
 
 }
@@ -54,7 +54,7 @@ object ContactDetailsSuspendForm {
   private val emailRegex = """^.{1,252}@.{1,256}\..{1,256}$"""
   private val phoneRegex = """^[0-9 +()]{0,25}$"""
 
-  private def suspendedDetailsNameConstraint: Constraint[String] = Constraint[String] { input: String =>
+  private def suspendedDetailsNameConstraint: Constraint[String] = Constraint[String] { input =>
     if (input.trim.isEmpty)
       Invalid(ValidationError("error.suspended-details.required.name"))
     else if (input.trim.length > 80)
@@ -65,7 +65,7 @@ object ContactDetailsSuspendForm {
       Valid
   }
 
-  private def suspendedDetailsEmailConstraint: Constraint[String] = Constraint[String] { input: String =>
+  private def suspendedDetailsEmailConstraint: Constraint[String] = Constraint[String] { input =>
     if (input.trim.isEmpty)
       Invalid(ValidationError("error.suspended-details.required.email"))
     else if (input.trim.length > 254)
@@ -76,7 +76,7 @@ object ContactDetailsSuspendForm {
       Valid
   }
 
-  private def suspendedDetailsTelephoneConstraint: Constraint[String] = Constraint[String] { input: String =>
+  private def suspendedDetailsTelephoneConstraint: Constraint[String] = Constraint[String] { input =>
     if (input.trim.isEmpty)
       Invalid(ValidationError("error.suspended-details.required.telephone"))
     else if (input.trim.length > 20)
@@ -92,7 +92,7 @@ object ContactDetailsSuspendForm {
       "name" -> text.verifying(suspendedDetailsNameConstraint),
       "email" -> text.verifying(suspendedDetailsEmailConstraint),
       "phone" -> text.verifying(suspendedDetailsTelephoneConstraint)
-    )(SuspendContactDetails.apply)(SuspendContactDetails.unapply)
+    )(SuspendContactDetails.apply)(o => Some((o.name, o.email, o.phone)))
   )
 
 }

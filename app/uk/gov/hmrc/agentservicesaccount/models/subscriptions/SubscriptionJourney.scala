@@ -42,7 +42,7 @@ case class SubscriptionJourney(
 
   private def answerComplete(
     booleanField: Option[Boolean],
-    newAnswerField: Option[_]
+    newAnswerField: Option[Any]
   ): Boolean = {
     (booleanField, newAnswerField) match {
       case (Some(false), _) => true

@@ -27,8 +27,7 @@ import uk.gov.hmrc.crypto.SymmetricCryptoFactory
 class YourDetailsSpec
 extends UnitSpec {
 
-  implicit val crypto: Encrypter
-    with Decrypter = SymmetricCryptoFactory.aesCrypto("edkOOwt7uvzw1TXnFIN6aRVHkfWcgiOrbBvkEQvO65g=")
+  implicit val crypto: Encrypter & Decrypter = SymmetricCryptoFactory.aesCrypto("edkOOwt7uvzw1TXnFIN6aRVHkfWcgiOrbBvkEQvO65g=")
 
   val testYourDetails: YourDetails = YourDetails(
     "testName",

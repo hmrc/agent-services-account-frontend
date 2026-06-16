@@ -18,7 +18,6 @@ package uk.gov.hmrc.agentservicesaccount.views.pages.dashboard_partials
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.i18n.Lang
 import play.api.mvc.AnyContent
 import play.api.test.FakeRequest
@@ -140,9 +139,9 @@ extends ViewBaseSpec {
 
       val links = document.select("a").eachText()
 
-      links must not contain "Pay as you earn (PAYE)/Construction Industry Scheme (CIS)"
-      links must contain("Corporation Tax")
-      links must contain("Self Assessment")
+      links should not contain "Pay as you earn (PAYE)/Construction Industry Scheme (CIS)"
+      links should contain("Corporation Tax")
+      links should contain("Self Assessment")
     }
 
     "show only remaining unsubscribed services" in {
@@ -157,9 +156,9 @@ extends ViewBaseSpec {
 
       val links = document.select("a").eachText()
 
-      links must not contain "Pay as you earn (PAYE)/Construction Industry Scheme (CIS)"
-      links must contain("Corporation Tax")
-      links must contain("Self Assessment")
+      links should not contain "Pay as you earn (PAYE)/Construction Industry Scheme (CIS)"
+      links should contain("Corporation Tax")
+      links should contain("Self Assessment")
     }
 
     "show single-service heading when only one service available" in {
@@ -175,7 +174,7 @@ extends ViewBaseSpec {
       document.select("h2").text() mustBe messages("asa.apply-to-act-for.single-service.section")
 
       val links = document.select("a").eachText()
-      links must contain only "Self Assessment"
+      links should contain only "Self Assessment"
     }
 
     "not render section when all services subscribed" in {

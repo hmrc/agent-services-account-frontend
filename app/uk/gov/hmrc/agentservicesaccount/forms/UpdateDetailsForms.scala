@@ -55,7 +55,7 @@ object UpdateDetailsForms {
       "applyChanges" -> optional(boolean)
         .verifying("update-contact-details.apply-sa-code-changes.error.empty", _.isDefined)
         .transform(_.get, (b: Boolean) => Some(b))
-    )(ApplySaCodeChanges.apply)(ApplySaCodeChanges.unapply)
+    )(ApplySaCodeChanges.apply)(o => Some(o.apply))
   )
 
   val saCodeForm: Form[String] = Form(
@@ -73,7 +73,7 @@ object UpdateDetailsForms {
       "telephone" -> trimmedText
         .verifying("update-contact-details.your-details.telephone.error.empty", _.nonEmpty)
         .verifying("update-contact-details.your-details.telephone.error.invalid", x => x.isEmpty || InternationalTelephoneRegex.matches(x.replace(" ", "")))
-    )(YourDetails.apply)(YourDetails.unapply)
+    )(YourDetails.apply)(o => Some((o.fullName, o.telephone)))
   )
 
   val applyCtCodeChangesForm: Form[ApplyCtCodeChanges] = Form(
@@ -81,7 +81,7 @@ object UpdateDetailsForms {
       "applyChanges" -> optional(boolean)
         .verifying("update-contact-details.apply-ct-code-changes.error.empty", _.isDefined)
         .transform(_.get, (b: Boolean) => Some(b))
-    )(ApplyCtCodeChanges.apply)(ApplyCtCodeChanges.unapply)
+    )(ApplyCtCodeChanges.apply)(o => Some(o.apply))
   )
 
   val ctCodeForm: Form[String] = Form(

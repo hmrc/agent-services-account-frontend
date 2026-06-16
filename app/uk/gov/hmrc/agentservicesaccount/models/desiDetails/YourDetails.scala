@@ -17,9 +17,10 @@
 package uk.gov.hmrc.agentservicesaccount.models.desiDetails
 
 import play.api.libs.functional.syntax.toFunctionalBuilderOps
-import play.api.libs.functional.syntax.unlift
 import play.api.libs.json.Format
 import play.api.libs.json.Json
+import play.api.libs.json.OWrites
+import play.api.libs.json.Reads
 import play.api.libs.json.__
 import uk.gov.hmrc.crypto.json.JsonEncryption.stringEncrypterDecrypter
 import uk.gov.hmrc.crypto.Decrypter
@@ -35,12 +36,20 @@ object YourDetails {
   implicit val format: Format[YourDetails] = Json.format[YourDetails]
 
   def databaseFormat(implicit
-    crypto: Encrypter
-      with Decrypter
-  ): Format[YourDetails] =
-    (
-      (__ \ "fullName").format[String](stringEncrypterDecrypter) and
-        (__ \ "telephone").format[String](stringEncrypterDecrypter)
-    )(YourDetails.apply, unlift(YourDetails.unapply))
+    crypto: Encrypter & Decrypter
+  ): Format[YourDetails] = Format(
+    Reads { json =>
+      for {
+        fullName <- (json \ "fullName").validate[String](stringEncrypterDecrypter)
+        telephone <- (json \ "telephone").validate[String](stringEncrypterDecrypter)
+      } yield YourDetails(fullName, telephone)
+    },
+    OWrites[YourDetails] { yourDetails =>
+      Json.obj(
+        "fullName" -> Json.toJson(yourDetails.fullName)(stringEncrypterDecrypter),
+        "telephone" -> Json.toJson(yourDetails.telephone)(stringEncrypterDecrypter)
+      )
+    }
+  )
 
 }
