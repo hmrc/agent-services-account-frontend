@@ -25,7 +25,6 @@ import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest.connectorRea
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest.connectorWrites
 
 import java.time.Instant
-import scala.annotation.nowarn
 
 class PendingChangeRequestSpec
 extends UnitSpec {
@@ -38,7 +37,6 @@ extends UnitSpec {
     timeSubmitted = Instant.parse(date)
   )
 
-  @nowarn("msg=possible missing interpolator")
   val pcrMongoJson: JsObject = Json.obj(
     "arn" -> arn,
     "timeSubmitted" -> Json.obj("$date" -> Json.obj("$numberLong" -> "1704070923000"))

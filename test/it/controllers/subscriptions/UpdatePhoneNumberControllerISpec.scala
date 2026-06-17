@@ -156,7 +156,7 @@ with TestConstants {
 
     val session: Map[String, String] = Map("sessionId" -> "test-session")
 
-    def fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest().withSession(session.toSeq: _*)
+    def fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest().withSession(session.toSeq*)
 
     def cacheJourney(journey: SubscriptionJourney): Unit = {
       implicit val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequest
@@ -230,7 +230,7 @@ with TestConstants {
       "return BAD_REQUEST when form is invalid" in new TestSetup(legacyRegime) {
         cacheJourney(subscriptionBaseJourney)
 
-        private val request = FakeRequest().withSession(session.toSeq: _*).withFormUrlEncodedBody(
+        private val request = FakeRequest().withSession(session.toSeq*).withFormUrlEncodedBody(
           "useAsaData" -> ""
         )
 
@@ -248,7 +248,7 @@ with TestConstants {
         s"update journey and redirect to ${journeyWithRedirectLocation._2} when using ASA phone number " +
           s"and journey ${completeString(journeyWithRedirectLocation._1, legacyRegime)}}" in new TestSetup(legacyRegime) {
             private val request = FakeRequest(POST, "/")
-              .withSession(session.toSeq: _*)
+              .withSession(session.toSeq*)
               .withFormUrlEncodedBody(
                 phoneNumberUseAsaDataKey -> "true"
               )
@@ -271,7 +271,7 @@ with TestConstants {
         s"update journey and redirect to ${journeyWithRedirectLocation._2} when using custom phone number " +
           s"and journey ${completeString(journeyWithRedirectLocation._1, legacyRegime)}}" in new TestSetup(legacyRegime) {
             private val request = FakeRequest(POST, "/")
-              .withSession(session.toSeq: _*)
+              .withSession(session.toSeq*)
               .withFormUrlEncodedBody(
                 phoneNumberUseAsaDataKey -> "false",
                 phoneNumberNewKey -> "0987654321"

@@ -41,6 +41,7 @@ import uk.gov.hmrc.agentservicesaccount.controllers.internal.{routes => internal
 import java.time.Instant
 import javax.inject.Inject
 import javax.inject.Singleton
+import scala.annotation.unused
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
@@ -116,10 +117,10 @@ with I18nSupport {
     */
   def showUploadError(
     errorCode: Option[String],
-    errorMessage: Option[String],
-    errorRequestId: Option[String],
-    key: Option[String]
-  ): Action[AnyContent] = actions.authActionCheckSuspend { implicit request =>
+    @unused errorMessage: Option[String],
+    @unused errorRequestId: Option[String],
+    @unused key: Option[String]
+  ): Action[AnyContent] = actions.authActionCheckSuspend { _ =>
     errorCode.flatMap(UpscanErrorCode.fromString) match {
       case Some(code: UpscanErrorCode) => Redirect(routes.EvidenceUploadController.showPage(Some(code.failureReason)).url)
       case None => Redirect(routes.EvidenceUploadController.showPage().url)
@@ -127,7 +128,7 @@ with I18nSupport {
   }
 
   // This endpoint is called via JavaScript in a poll loop to check the status of the file upload. The upload status is encoded in the HTTP status response:
-  def checkUploadStatus(reference: String): Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
+  def checkUploadStatus(reference: String): Action[AnyContent] = actions.authActionCheckSuspend.async { _ =>
     implicit class ResultOps(result: Result) {
       def withCorsHeaders: Result = result.withHeaders(
         "Access-Control-Allow-Origin" -> appConfig.asaFrontendExternalUrl,

@@ -40,19 +40,19 @@ extends Enum[AmlsStatus] {
 
   val values: IndexedSeq[AmlsStatus] = findValues
 
-  final case object NoAmlsDetailsNonUK
+  case object NoAmlsDetailsNonUK
   extends AmlsStatus
-  final case object ValidAmlsNonUK
+  case object ValidAmlsNonUK
   extends AmlsStatus
-  final case object NoAmlsDetailsUK
+  case object NoAmlsDetailsUK
   extends AmlsStatus
-  final case object ValidAmlsDetailsUK
+  case object ValidAmlsDetailsUK
   extends AmlsStatus
-  final case object ExpiredAmlsDetailsUK
+  case object ExpiredAmlsDetailsUK
   extends AmlsStatus
-  final case object PendingAmlsDetails
+  case object PendingAmlsDetails
   extends AmlsStatus
-  final case object PendingAmlsDetailsRejected
+  case object PendingAmlsDetailsRejected
   extends AmlsStatus
 
 }

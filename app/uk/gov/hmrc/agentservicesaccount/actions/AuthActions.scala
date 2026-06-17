@@ -38,6 +38,7 @@ import uk.gov.hmrc.auth.core.retrieve.~
 
 import javax.inject.Inject
 import javax.inject.Singleton
+import scala.annotation.nowarn
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
@@ -157,8 +158,11 @@ with Logging {
       override protected def refine[A](request: Request[A]): Future[Either[Result, AuthRequestWithAgentInfo[A]]] = {
         implicit val r: Request[A] = request
 
+        @nowarn("msg=value name in trait Retrievals is deprecated")
+        val retrievals = allEnrolments and credentials and email and name and credentialRole and agentInformation
+
         authorised(AuthProviders(GovernmentGateway) and AffinityGroup.Agent)
-          .retrieve(allEnrolments and credentials and email and name and credentialRole and agentInformation) {
+          .retrieve(retrievals) {
             case enrols ~ creds ~ email ~ name ~ credRole ~ agentInformation =>
               getArn(enrols) match {
                 case Some(arn) =>

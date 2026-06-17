@@ -64,7 +64,6 @@ with TestConstants {
   private val mockAgentRecordService = mock[AgentRecordService]
   private val mockSessionCacheService = mock[SessionCacheService]
   private val mockAgentServicesAccountConnector = mock[AgentServicesAccountConnector]
-  private val mockAppConfig: AppConfig = mock[AppConfig]
 
   private def authResponseAgent(
     credentialRole: CredentialRole

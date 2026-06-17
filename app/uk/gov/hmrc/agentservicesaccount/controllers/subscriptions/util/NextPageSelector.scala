@@ -17,12 +17,9 @@
 package uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util
 
 import play.api.mvc.Call
-import uk.gov.hmrc.agentservicesaccount.controllers.arnKey
-import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
 import uk.gov.hmrc.agentservicesaccount.controllers.{routes => homeRoutes}
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
 import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators.CT_SA_EMAIL_MAX_LENGTH
-import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.ChangeSubscriptionAddressForm
-import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
@@ -72,6 +69,7 @@ object NextPageSelector {
         case _ => subscriptions.routes.UpdateAddressController.showPage(regime)
       }
     case (`changeAddressPage`, _, regime) => subscriptions.routes.CheckYourAnswersController.showPage(regime)
+    case (_, _, _) => homeRoutes.AgentServicesController.root()
   }
 
   def getNextPage(

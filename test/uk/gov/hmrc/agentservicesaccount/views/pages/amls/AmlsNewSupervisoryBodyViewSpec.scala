@@ -19,7 +19,7 @@ package uk.gov.hmrc.agentservicesaccount.views.pages.amls
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+import org.scalatest.matchers.must.Matchers.*
 import play.api.data.Form
 import uk.gov.hmrc.agentservicesaccount.forms.NewAmlsSupervisoryBodyForm
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec

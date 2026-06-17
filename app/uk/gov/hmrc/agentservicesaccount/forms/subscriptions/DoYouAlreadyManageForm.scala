@@ -41,7 +41,7 @@ object DoYouAlreadyManageForm {
   )(implicit msgs: Messages): Form[DoYouAlreadyManageFormValues] = Form(
     mapping(
       doYouAlreadyManageKey -> doYouAlreadyManageMapping(legacyRegime, asaDetailsAgencyName)
-    )(DoYouAlreadyManageFormValues.apply)(DoYouAlreadyManageFormValues.unapply)
+    )(DoYouAlreadyManageFormValues.apply)(values => Some(values.doYouAlreadyManage))
   )
 
 }

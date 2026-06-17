@@ -118,7 +118,7 @@ object Port {
       }
     }
     catch {
-      case t: Throwable => false
+      case _: Throwable => false
     }
     finally {
       if (socket != null)

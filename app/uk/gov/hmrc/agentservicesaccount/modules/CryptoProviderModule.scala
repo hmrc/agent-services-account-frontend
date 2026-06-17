@@ -35,7 +35,7 @@ class CryptoProviderModule
 extends Module {
 
   def aesCryptoInstance(configuration: Configuration): Encrypter
-    with Decrypter =
+    & Decrypter =
     if (configuration.underlying.getBoolean("fieldLevelEncryption.enable"))
       SymmetricCryptoFactory.aesCryptoFromConfig("fieldLevelEncryption", configuration.underlying)
     else
@@ -44,9 +44,9 @@ extends Module {
   override def bindings(
     environment: Environment,
     configuration: Configuration
-  ): Seq[Binding[_]] = Seq(
+  ): Seq[Binding[?]] = Seq(
     bind[Encrypter
-      with Decrypter].qualifiedWith("aes").toInstance(aesCryptoInstance(configuration))
+      & Decrypter].qualifiedWith("aes").toInstance(aesCryptoInstance(configuration))
   )
 
 }

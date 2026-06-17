@@ -36,7 +36,7 @@ with BeforeAndAfterEach {
 
   override protected def beforeEach(): Unit = {
     super.beforeEach()
-    Mockito.reset(mocksToReset: _*)
+    Mockito.reset(mocksToReset*)
   }
 
 }

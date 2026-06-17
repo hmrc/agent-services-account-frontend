@@ -101,19 +101,19 @@
     @p(html = Some(Html(
         a(href = "https://www.gov.uk/guidance/manage-your-trusts-registration-service",
             key = "asa.trusts-section.col2.register-trust-link.text"
-        ) + "."
+        ).toString + "."
     )))
 }
 
 @capitalGainsAccordionItem = {
     @h4("asa.section3.col1.h3")
     @p(html = Some(Html(
-        span("asa.section3.col1.text1") + "" +
-                span(msgs("asa.section3.col1.link1", msgs("asa.section3.col1.link1.href")))
+        span("asa.section3.col1.text1").toString + "" +
+                span(msgs("asa.section3.col1.link1", msgs("asa.section3.col1.link1.href"))).toString
     )))
     @p(html = Some(Html(
-        span("asa.section3.col1.text2") + " " +
-                span(key = msgs("asa.section3.col1.link2", msgs("asa.section3.col1.link2.href")))
+        span("asa.section3.col1.text2").toString + " " +
+                span(key = msgs("asa.section3.col1.link2", msgs("asa.section3.col1.link2.href"))).toString
     )))
     @h4("asa.section3.col2.h3")
     @p(key = msgs("asa.section3.col2.link1", msgs("asa.section3.col2.link1.href")))
@@ -131,14 +131,14 @@
 @plasticPackagingItem = {
     @h4("asa.ppt.col1.h3")
     @p(html = Some(Html(
-        span("asa.ppt.col1.text1") + "" +
+        span("asa.ppt.col1.text1").toString + "" +
                 span(msgs("asa.ppt.col1.link1",
                     msgs("asa.ppt.col1.link1.href")
-                ))
+                )).toString
     )))
     @p(html = Some(Html(
-        span("asa.ppt.col1.text2") + " " +
-                span(key = msgs("asa.ppt.col1.link2", appConfig.agentClientRelationshipsFrontendInvitationsUrl))
+        span("asa.ppt.col1.text2").toString + " " +
+                span(key = msgs("asa.ppt.col1.link2", appConfig.agentClientRelationshipsFrontendInvitationsUrl)).toString
     )))
     @h4("asa.ppt.col2.h3")
     @p(msgs("asa.ppt.col2.link1", msgs("asa.ppt.col2.link1.href")))
@@ -147,12 +147,12 @@
 @pillar2Item = {
     @h4("asa.pillar2.col1.h3")
     @p(html = Some(Html(
-        span("asa.pillar2.col1.text1") + "" +
-                span(msgs("asa.pillar2.col1.link1", appConfig.pillar2GuidanceUrl))
+        span("asa.pillar2.col1.text1").toString + "" +
+                span(msgs("asa.pillar2.col1.link1", appConfig.pillar2GuidanceUrl)).toString
     )))
     @p(html = Some(Html(
-        span("asa.pillar2.col1.text2") + " " +
-                span(key = msgs("asa.pillar2.col1.link2", appConfig.agentClientRelationshipsFrontendInvitationsUrl))
+        span("asa.pillar2.col1.text2").toString + " " +
+                span(key = msgs("asa.pillar2.col1.link2", appConfig.agentClientRelationshipsFrontendInvitationsUrl)).toString
     )))
     @h4("asa.pillar2.col2.h3")
     @p(msgs("asa.pillar2.col2.link1", appConfig.pillar2StartUrl))

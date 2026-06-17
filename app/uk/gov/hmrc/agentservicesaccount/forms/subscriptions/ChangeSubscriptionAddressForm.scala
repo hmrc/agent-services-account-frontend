@@ -100,13 +100,13 @@ object ChangeSubscriptionAddressForm {
         countryCode = "GB"
       )
   )(address =>
-    Some(
+    Some((
       address.addressLine1,
       address.addressLine2.getOrElse(""),
       address.addressLine3,
       address.addressLine4,
       address.postalCode.getOrElse("")
-    )
+    ))
   ))
 
   // To use when ALF returns a non-UK address that will not pass robotics validation, or when the user chooses to edit a non-UK address from CYA
@@ -131,12 +131,12 @@ object ChangeSubscriptionAddressForm {
         countryCode
       )
   )(address =>
-    Some(
+    Some((
       address.addressLine1,
       address.addressLine2.getOrElse(""),
       address.addressLine3.getOrElse(""),
       address.countryCode
-    )
+    ))
   ))
 
 }

@@ -18,7 +18,7 @@ package uk.gov.hmrc.agentservicesaccount.views.pages.desi_details
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+import org.scalatest.matchers.must.Matchers.*
 import play.api.i18n.Lang
 import play.api.i18n.Messages
 import play.api.i18n.MessagesImpl
@@ -27,7 +27,6 @@ import uk.gov.hmrc.agentservicesaccount.controllers.routes
 import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest
-import uk.gov.hmrc.agentservicesaccount.models.desiDetails.YourDetails
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details.view_contact_details
 
@@ -63,11 +62,6 @@ with TestConstants {
     None,
     None,
     None
-  )
-
-  private val submittedByDetails = YourDetails(
-    fullName = "John Tester",
-    telephone = "01903 209919"
   )
 
   private val pendingChangeOfDetails = PendingChangeRequest(

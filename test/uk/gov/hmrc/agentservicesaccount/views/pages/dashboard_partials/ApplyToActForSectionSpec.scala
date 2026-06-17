@@ -18,8 +18,7 @@ package uk.gov.hmrc.agentservicesaccount.views.pages.dashboard_partials
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
-import play.api.i18n.Lang
+import org.scalatest.matchers.must.Matchers.*
 import play.api.mvc.AnyContent
 import play.api.test.FakeRequest
 import uk.gov.hmrc.agentservicesaccount.actions.AgentInfo
@@ -34,14 +33,13 @@ import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionInfo
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionStatus
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.dashboard_partials.apply_to_act_for_section
-import uk.gov.hmrc.auth.core.Admin
 import uk.gov.hmrc.auth.core.Enrolments
+import uk.gov.hmrc.auth.core.User
 import uk.gov.hmrc.auth.core.retrieve.AgentInformation
 
 class ApplyToActForSectionSpec
 extends ViewBaseSpec {
 
-  private implicit val langs: Seq[Lang] = Seq(Lang("en"))
   private val view = app.injector.instanceOf[apply_to_act_for_section]
 
   private def fakeRequestWithAgentProfile(isAbroad: Boolean): AuthRequestWithAgentProfile[AnyContent] = {
@@ -56,7 +54,7 @@ extends ViewBaseSpec {
     val agentInfo = AgentInfo(
       arn = Arn("TARN0000001"),
       enrolments = Enrolments(Set.empty),
-      credentialRole = Some(Admin),
+      credentialRole = Some(User),
       email = Some("test@test.com"),
       name = None,
       credentials = None,

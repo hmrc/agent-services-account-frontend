@@ -176,7 +176,8 @@ extends BaseISpec {
       ): Assertion = {
         val clientAuthSection = html.select("#client-authorisation-section")
         clientAuthSection.select("h2").text() shouldBe "Client authorisations"
-        clientAuthSection.select("> p").text shouldBe "You must ask your client to authorise you through your agent services account before you can access any services. Copy across an old authorisation or create a new one."
+        clientAuthSection.select("> p").text shouldBe
+          "You must ask your client to authorise you through your agent services account before you can access any services. Copy across an old authorisation or create a new one."
         val links = clientAuthSection.select("ul li a")
         links.get(0).text() shouldBe "Ask a client to authorise you"
         links.get(0).attr("href") shouldBe "http://localhost:9435/agent-client-relationships/authorisation-request"
@@ -286,7 +287,8 @@ extends BaseISpec {
         seven.select("h4").get(1).text() shouldBe "Manage your client’s trust"
 
         val sevenPs = seven.select("p")
-        sevenPs.get(0).text shouldBe "Before you ask your client to authorise you, you or your client must have registered the trust (opens in a new tab) or estate (opens in a new tab)."
+        sevenPs.get(0).text shouldBe
+          "Before you ask your client to authorise you, you or your client must have registered the trust (opens in a new tab) or estate (opens in a new tab)."
         sevenPs.get(0).select("a").get(0).attr("href") shouldBe "http://localhost:9435/agent-client-relationships/authorisation-request"
         sevenPs.get(0).select("a").get(0).text shouldBe "ask your client to authorise you"
         sevenPs.get(0).select("a").get(1).attr("href") shouldBe "https://www.gov.uk/guidance/register-your-clients-trust"
@@ -426,7 +428,8 @@ extends BaseISpec {
     val section = html.select("#how-to-manage-team-members-section")
     section.select("h2").text shouldBe "Manage team members on your agent services account"
     section.select(detailsSummary).text() shouldBe "How team members access the agent services account"
-    section.select(detailsText).text() shouldBe "When you add a team member, you get a temporary password to give to them. We also email them with a new Government Gateway user ID. The new user ID allows the team member to access this agent services account. An administrator can decide what level of access the team member gets to client details, taxes and schemes."
+    section.select(detailsText).text() shouldBe
+      "When you add a team member, you get a temporary password to give to them. We also email them with a new Government Gateway user ID. The new user ID allows the team member to access this agent services account. An administrator can decide what level of access the team member gets to client details, taxes and schemes."
 
     val list = section.select("ol.govuk-list--number li")
     list.get(0).select("a").text shouldBe "Add, remove and manage team members"
@@ -484,7 +487,7 @@ extends BaseISpec {
       givenAuthorisedAsAgentWith(arn.value)
       givenGetAgentRecord(agentRecord)
       givenAMLSDetailsForArn(AmlsDetailsResponse(AmlsStatuses.NoAmlsDetailsUK, None), arn.value)
-      val response = await(controllerWithGranPermsDisabled.manageAccount().apply(fakeRequest("GET", "/manage-account")))
+      val response = await(controllerWithGranPermsDisabled.manageAccount.apply(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe OK
 
@@ -505,7 +508,7 @@ extends BaseISpec {
       givenOptinStatusFailedForArn(arn)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq.empty))
       givenAMLSDetailsForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), arn.value)
-      val response = await(controller.manageAccount().apply(fakeRequest("GET", "/manage-account")))
+      val response = await(controller.manageAccount.apply(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe OK
 
@@ -527,7 +530,7 @@ extends BaseISpec {
       givenOptinStatusSuccessReturnsForArn(arn, accessgroups.OptedInReady)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq.empty))
       givenAMLSDetailsForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), arn.value)
-      val response = await(controller.manageAccount().apply(fakeRequest("GET", "/manage-account")))
+      val response = await(controller.manageAccount.apply(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe OK
 
@@ -549,7 +552,7 @@ extends BaseISpec {
       givenOptinStatusSuccessReturnsForArn(arn, accessgroups.OptedInReady)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq.empty)) // no access groups yet
       givenAMLSDetailsForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), arn.value)
-      val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
+      val response = await(controller.manageAccount(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
 
@@ -591,7 +594,7 @@ extends BaseISpec {
       givenOptinStatusSuccessReturnsForArn(arn, accessgroups.OptedInReady)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq(customSummary))) // there is already an access group
       givenAMLSDetailsForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), arn.value)
-      val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
+      val response = await(controller.manageAccount(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
 
@@ -630,7 +633,7 @@ extends BaseISpec {
       givenOptinStatusSuccessReturnsForArn(arn, accessgroups.OptedInNotReady)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq.empty))
       givenAMLSDetailsForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), arn.value)
-      val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
+      val response = await(controller.manageAccount(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
 
@@ -661,7 +664,7 @@ extends BaseISpec {
       givenOptinStatusSuccessReturnsForArn(arn, accessgroups.OptedInSingleUser)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq.empty))
       givenAMLSDetailsForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), arn.value)
-      val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
+      val response = await(controller.manageAccount(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
 
@@ -693,7 +696,7 @@ extends BaseISpec {
       givenOptinStatusSuccessReturnsForArn(arn, accessgroups.OptedOutWrongClientCount)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq.empty))
       givenAMLSDetailsForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), arn.value)
-      val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
+      val response = await(controller.manageAccount(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
 
@@ -722,7 +725,7 @@ extends BaseISpec {
       givenOptinStatusSuccessReturnsForArn(arn, accessgroups.OptedOutSingleUser)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq.empty))
       givenAMLSDetailsForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), arn.value)
-      val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
+      val response = await(controller.manageAccount(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
 
@@ -752,7 +755,7 @@ extends BaseISpec {
       givenOptinStatusSuccessReturnsForArn(arn, accessgroups.OptedOutEligible)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq.empty))
       givenAMLSDetailsForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), arn.value)
-      val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
+      val response = await(controller.manageAccount(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
 
@@ -774,7 +777,7 @@ extends BaseISpec {
       givenOptinStatusSuccessReturnsForArn(arn, accessgroups.OptedInNotReady)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq.empty))
       givenAMLSDetailsForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsDetailsUK, None), arn.value)
-      val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
+      val response = await(controller.manageAccount(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
 
@@ -794,7 +797,7 @@ extends BaseISpec {
       givenOptinStatusSuccessReturnsForArn(arn, accessgroups.OptedInNotReady)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq.empty))
       givenAMLSDetailsForArn(AmlsDetailsResponse(AmlsStatuses.NoAmlsDetailsNonUK, None), arn.value)
-      val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
+      val response = await(controller.manageAccount(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
 
@@ -814,7 +817,7 @@ extends BaseISpec {
       givenOptinStatusSuccessReturnsForArn(arn, accessgroups.OptedInNotReady)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq.empty))
       givenAMLSDetailsForArn(AmlsDetailsResponse(AmlsStatuses.ValidAmlsNonUK, None), arn.value)
-      val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
+      val response = await(controller.manageAccount(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
 
@@ -834,7 +837,7 @@ extends BaseISpec {
       givenOptinStatusSuccessReturnsForArn(arn, accessgroups.OptedInNotReady)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq.empty))
       givenAMLSDetailsForArn(AmlsDetailsResponse(AmlsStatuses.PendingAmlsDetails, None), arn.value)
-      val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
+      val response = await(controller.manageAccount(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
 
@@ -854,7 +857,7 @@ extends BaseISpec {
       givenOptinStatusSuccessReturnsForArn(arn, accessgroups.OptedInNotReady)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq.empty))
       givenAMLSDetailsForArn(AmlsDetailsResponse(AmlsStatuses.NoAmlsDetailsUK, None), arn.value)
-      val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
+      val response = await(controller.manageAccount(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
 
@@ -874,7 +877,7 @@ extends BaseISpec {
       givenOptinStatusSuccessReturnsForArn(arn, accessgroups.OptedInNotReady)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq.empty))
       givenAMLSDetailsForArn(AmlsDetailsResponse(AmlsStatuses.PendingAmlsDetailsRejected, None), arn.value)
-      val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
+      val response = await(controller.manageAccount(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
 
@@ -894,7 +897,7 @@ extends BaseISpec {
       givenOptinStatusSuccessReturnsForArn(arn, accessgroups.OptedInNotReady)
       givenAccessGroupsForArn(arn, AccessGroupSummaries(Seq.empty))
       givenAMLSDetailsForArn(AmlsDetailsResponse(AmlsStatuses.ExpiredAmlsDetailsUK, None), arn.value)
-      val response = await(controller.manageAccount()(fakeRequest("GET", "/manage-account")))
+      val response = await(controller.manageAccount(fakeRequest("GET", "/manage-account")))
 
       status(response) shouldBe 200
 
@@ -915,7 +918,7 @@ extends BaseISpec {
         givenAuthorisedAsAgentWith(arn.value)
         givenGetAgentRecord(agentRecord)
 
-        val response = await(controller.accountDetails().apply(fakeRequest("GET", "/account-details")))
+        val response = await(controller.accountDetails.apply(fakeRequest("GET", "/account-details")))
         status(response) shouldBe OK
       }
 
@@ -923,7 +926,7 @@ extends BaseISpec {
         givenAuthorisedAsAgentWith(arn.value, isAdmin = false)
         givenGetAgentRecord(agentRecord)
 
-        val response = await(controller.accountDetails().apply(fakeRequest("GET", "/account-details")))
+        val response = await(controller.accountDetails.apply(fakeRequest("GET", "/account-details")))
         status(response) shouldBe OK
       }
     }
@@ -947,7 +950,7 @@ extends BaseISpec {
           ))
         ))
 
-        val response = await(controller.accountDetails().apply(fakeRequest("GET", "/account-details")))
+        val response = await(controller.accountDetails.apply(fakeRequest("GET", "/account-details")))
         val html = Jsoup.parse(contentAsString(response))
 
         html.title() shouldBe "Account details - Agent services account - GOV.UK"
@@ -958,7 +961,8 @@ extends BaseISpec {
 
         html.select(H2).get(0).text shouldBe "Agent services account details"
 
-        html.select(insetText).text() shouldBe "To change these details you will need to write to us. Find out more by reading the guidance (opens in a new tab). You can only change your details if you are a director, company secretary, sole trader, proprietor or partner."
+        html.select(insetText).text() shouldBe
+          "To change these details you will need to write to us. Find out more by reading the guidance (opens in a new tab). You can only change your details if you are a director, company secretary, sole trader, proprietor or partner."
         html.select(
           link
         ).get(0).attr("href").shouldBe("https://www.gov.uk/guidance/change-or-remove-your-authorisations-as-a-tax-agent#changes-you-can-make-in-writing")
@@ -991,7 +995,7 @@ extends BaseISpec {
           ))
         ))
 
-        val response = await(controller.accountDetails().apply(fakeRequest("GET", "/account-details")))
+        val response = await(controller.accountDetails.apply(fakeRequest("GET", "/account-details")))
         val html = Jsoup.parse(contentAsString(response))
 
         html.title() shouldBe "Account details - Agent services account - GOV.UK"
@@ -1003,7 +1007,8 @@ extends BaseISpec {
         html.select(backLink).get(0).attr("href") shouldBe "/agent-services-account/manage-account"
 
         html.select(H2).get(0).text shouldBe "Agent services account details"
-        html.select(insetText).text() shouldBe "To change these details you will need to write to us. Find out more by reading the guidance (opens in a new tab). You can only change your details if you are a director, company secretary, sole trader, proprietor or partner."
+        html.select(insetText).text() shouldBe
+          "To change these details you will need to write to us. Find out more by reading the guidance (opens in a new tab). You can only change your details if you are a director, company secretary, sole trader, proprietor or partner."
 
         html.select(summaryListKeys).get(0).text shouldBe "Email"
         html.select(summaryListValues).get(0).text shouldBe "abc@abc.com"
@@ -1268,14 +1273,14 @@ extends BaseISpec {
     "return Status: OK" in {
       givenAuthorisedAsAgentWith(arn.value)
       givenGetAgentRecord(agentRecord)
-      val response = await(controller.showHelp().apply(fakeRequest("GET", "/help")))
+      val response = await(controller.showHelp.apply(fakeRequest("GET", "/help")))
       status(response) shouldBe OK
     }
 
     "contain matching heading in page title" in {
       givenAuthorisedAsAgentWith(arn.value)
       givenGetAgentRecord(agentRecord)
-      val response = await(controller.showHelp().apply(fakeRequest("GET", "/help")))
+      val response = await(controller.showHelp.apply(fakeRequest("GET", "/help")))
       val html = Jsoup.parse(contentAsString(response))
       html.title() shouldBe "Help and guidance - Agent services account - GOV.UK"
       html.select(H1).get(0).text shouldBe "Help and guidance"
@@ -1284,7 +1289,7 @@ extends BaseISpec {
     "contain body with correct content" in {
       givenAuthorisedAsAgentWith(arn.value)
       givenGetAgentRecord(agentRecord)
-      val response = await(controller.showHelp().apply(fakeRequest("GET", "/help")))
+      val response = await(controller.showHelp.apply(fakeRequest("GET", "/help")))
       val html = Jsoup.parse(contentAsString(response))
       val h2 = html.select(H2)
       val h3 = html.select(H3)
@@ -1308,9 +1313,12 @@ extends BaseISpec {
 
       // Accordion tab2
       h2.get(1).text shouldBe "About your agent services account"
-      p.get(3).text shouldBe "You can only have one agent services account, but you can add several team members to this account. They will need to have Government Gateway user IDs for you to add them."
-      p.get(4).text shouldBe "The ‘Account home’ screen includes links for managing client authorisations and certain tax services. For other tax services, you will need to log into your online services for agents account."
-      p.get(5).text shouldBe "The ‘Manage account’ screen will vary, depending on whether you have administrator or standard user access. Administrators can choose to manage access permissions using the new feature ‘access groups’. When access groups are turned on, standard users can only manage the clients they have been assigned to."
+      p.get(3).text shouldBe
+        "You can only have one agent services account, but you can add several team members to this account. They will need to have Government Gateway user IDs for you to add them."
+      p.get(4).text shouldBe
+        "The ‘Account home’ screen includes links for managing client authorisations and certain tax services. For other tax services, you will need to log into your online services for agents account."
+      p.get(5).text shouldBe
+        "The ‘Manage account’ screen will vary, depending on whether you have administrator or standard user access. Administrators can choose to manage access permissions using the new feature ‘access groups’. When access groups are turned on, standard users can only manage the clients they have been assigned to."
 
       // Accordion tab3
       h2.get(2).text shouldBe "Account home: client authorisations"
@@ -1378,7 +1386,8 @@ extends BaseISpec {
 
       // Accordion tab5
       h2.get(4).text shouldBe "Manage account: standard users"
-      p.get(10).text shouldBe "Standard users cannot make any changes to access groups. If access groups are turned off, they can manage the tax of all their organisation’s clients. When access groups are turned on, they can only:"
+      p.get(10).text shouldBe
+        "Standard users cannot make any changes to access groups. If access groups are turned off, they can manage the tax of all their organisation’s clients. When access groups are turned on, they can only:"
       li.get(25).text shouldBe "view the access groups they are assigned to"
       li.get(26).text shouldBe "view and manage clients they are assigned to through these access groups"
       p.get(11).text shouldBe "Whether access groups are on or off, they can also:"
@@ -1397,18 +1406,24 @@ extends BaseISpec {
       li.get(34).text shouldBe "view the details we hold about their organisation"
       h3.get(6).text shouldBe "Manage access permissions with access groups new"
       p.get(14).text shouldBe "Access groups allow you to manage access permissions for your team members within your agent services account."
-      p.get(15).text shouldBe "By default, all your team members can manage all your clients’ tax affairs. You may want to limit who can manage a specific client’s tax. If so, turn on access groups."
-      p.get(16).text shouldBe "Access groups include team members and clients. If a client is in access groups, only the team members in those groups can manage their tax. You can change the clients and team members in a group at any time"
-      p.get(17).text shouldBe "You do not need to assign all your clients to groups. If you do not add a client to any access groups, any staff member can manage their tax."
+      p.get(15).text shouldBe
+        "By default, all your team members can manage all your clients’ tax affairs. You may want to limit who can manage a specific client’s tax. If so, turn on access groups."
+      p.get(16).text shouldBe
+        "Access groups include team members and clients. If a client is in access groups, only the team members in those groups can manage their tax. You can change the clients and team members in a group at any time"
+      p.get(17).text shouldBe
+        "You do not need to assign all your clients to groups. If you do not add a client to any access groups, any staff member can manage their tax."
       p.get(18).text shouldBe "To use access groups your agent services account needs to include:"
       li.get(35).text shouldBe "more than one team member"
       li.get(36).text shouldBe "between 2 and 1,000 clients (inclusive)"
       p.get(19).text shouldBe "HMRC are looking into making access groups available to larger agent firms."
-      p.get(20).text shouldBe "When you turn access groups on, it may take some time for our service to gather all your client details. If this happens then you will receive an email when the processing is done."
-      p.get(21).text shouldBe "If you turn access groups off then all your team members will be able to manage all your clients’ tax again. The service will remember your groups, so you can restore them by turning access groups on again."
+      p.get(20).text shouldBe
+        "When you turn access groups on, it may take some time for our service to gather all your client details. If this happens then you will receive an email when the processing is done."
+      p.get(21).text shouldBe
+        "If you turn access groups off then all your team members will be able to manage all your clients’ tax again. The service will remember your groups, so you can restore them by turning access groups on again."
       p.get(22).text shouldBe "Access groups do not work with Income Record Viewer at present. HMRC is looking into this."
       h3.get(7).text shouldBe "Manage team members"
-      p.get(23).text shouldBe "You cannot add team members to your account within this service. If you select ‘Add or remove team members’ then the required service will open in a new tab."
+      p.get(23).text shouldBe
+        "You cannot add team members to your account within this service. If you select ‘Add or remove team members’ then the required service will open in a new tab."
       h3.get(8).text shouldBe "Manage clients"
       p.get(
         24
