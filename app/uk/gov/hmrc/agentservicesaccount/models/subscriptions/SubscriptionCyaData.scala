@@ -49,48 +49,61 @@ case class SubscriptionCyaData(
     asaDetailsAgencyAddress
   }
 
-  private def toCtSubscriptionRequest(countryName: String): CtSubscriptionRequest = {
+  private def toCtSubscriptionRequest(
+    countryName: String,
+    isWelsh: Boolean
+  ): CtSubscriptionRequest = {
     CtSubscriptionRequest(
       agentName = name,
       contactName = name,
       phoneNumber = Some(subscriptionRequestPhoneNumber),
       emailAddress = Some(email),
       address = toSubscriptionAddress(address, Some(countryName)),
-      countryCode = address.countryCode
+      countryCode = address.countryCode,
+      isWelsh = isWelsh
     )
   }
 
-  private def toPayeSubscriptionRequest(asaAgentName: String): PayeSubscriptionRequest = {
+  private def toPayeSubscriptionRequest(
+    asaAgentName: String,
+    isWelsh: Boolean
+  ): PayeSubscriptionRequest = {
     PayeSubscriptionRequest(
       agentName = asaAgentName,
       contactName = name,
       phoneNumber = Some(subscriptionRequestPhoneNumber),
       emailAddress = Some(email),
-      address = toSubscriptionAddress(address)
+      address = toSubscriptionAddress(address),
+      isWelsh = isWelsh
     )
   }
 
-  private def toSaSubscriptionRequest(countryName: String): SaSubscriptionRequest = {
+  private def toSaSubscriptionRequest(
+    countryName: String,
+    isWelsh: Boolean
+  ): SaSubscriptionRequest = {
     SaSubscriptionRequest(
       agentName = name,
       contactName = name,
       phoneNumber = Some(subscriptionRequestPhoneNumber),
       emailAddress = Some(email),
       address = toSubscriptionAddress(address, Some(countryName)),
-      countryCode = address.countryCode
+      countryCode = address.countryCode,
+      isWelsh = isWelsh
     )
   }
 
   def toSubscriptionRequest(
     legacyRegime: LegacyRegime,
     countryName: String,
+    isWelsh: Boolean,
     asaAgentNameOpt: Option[String] = None
   ): Option[SubscriptionRequest] = {
     (legacyRegime, address.countryCode != "GB", asaAgentNameOpt) match {
-      case (PAYE, false, Some(asaAgentName)) => Some(toPayeSubscriptionRequest(asaAgentName))
+      case (PAYE, false, Some(asaAgentName)) => Some(toPayeSubscriptionRequest(asaAgentName, isWelsh))
       case (PAYE, _, _) => None
-      case (CT, _, _) => Some(toCtSubscriptionRequest(countryName))
-      case (SA, _, _) => Some(toSaSubscriptionRequest(countryName))
+      case (CT, _, _) => Some(toCtSubscriptionRequest(countryName, isWelsh))
+      case (SA, _, _) => Some(toSaSubscriptionRequest(countryName, isWelsh))
     }
   }
 

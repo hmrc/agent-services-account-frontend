@@ -54,32 +54,56 @@ with Matchers {
     s"SubscriptionCyaData.toSubscriptionRequest - $legacyRegime" should {
 
       "use businessName as agentName" in {
-        val result = exampleGBCyaData.toSubscriptionRequest(legacyRegime, "")
+        val result = exampleGBCyaData.toSubscriptionRequest(
+          legacyRegime,
+          "",
+          false
+        )
         result.get.agentName shouldBe exampleGBCyaData.name
       }
 
       "use businessName as contactName" in {
-        val result = exampleGBCyaData.toSubscriptionRequest(legacyRegime, "")
+        val result = exampleGBCyaData.toSubscriptionRequest(
+          legacyRegime,
+          "",
+          false
+        )
         result.get.contactName shouldBe exampleGBCyaData.name
       }
 
       "strip non-numeric characters from phone number" in {
-        val result = exampleGBCyaData.copy(phoneNumber = "(+44) 101 7654321").toSubscriptionRequest(legacyRegime, "")
+        val result = exampleGBCyaData.copy(phoneNumber = "(+44) 101 7654321").toSubscriptionRequest(
+          legacyRegime,
+          "",
+          false
+        )
         result.get.phoneNumber shouldBe Some("441017654321")
       }
 
       "use addressLine4 when country is GB" in {
-        val result = exampleGBCyaData.toSubscriptionRequest(legacyRegime, "Portugal")
+        val result = exampleGBCyaData.toSubscriptionRequest(
+          legacyRegime,
+          "Portugal",
+          false
+        )
         result.get.address.line4 shouldBe Some("Line 4")
       }
 
       "use countryName when country is not GB" in {
-        val result = exampleNonGBCyaData.toSubscriptionRequest(legacyRegime, "Portugal")
+        val result = exampleNonGBCyaData.toSubscriptionRequest(
+          legacyRegime,
+          "Portugal",
+          false
+        )
         result.get.address.line4 shouldBe Some("Portugal")
       }
 
       "fallback to existing addressLine4 if non-GB and countryName is empty string" in {
-        val result = exampleNonGBCyaData.toSubscriptionRequest(legacyRegime, "")
+        val result = exampleNonGBCyaData.toSubscriptionRequest(
+          legacyRegime,
+          "",
+          false
+        )
         result.get.address.line4 shouldBe Some("")
       }
 
@@ -100,7 +124,11 @@ with Matchers {
           address
         )
 
-        val result = cya.toSubscriptionRequest(legacyRegime, "Portugal")
+        val result = cya.toSubscriptionRequest(
+          legacyRegime,
+          "Portugal",
+          false
+        )
 
         result.get.address.line2 shouldBe ""
       }
@@ -233,6 +261,7 @@ with Matchers {
       val result = exampleGBCyaData.toSubscriptionRequest(
         PAYE,
         "",
+        false,
         Some(asaAgencyName)
       )
       result.get.agentName shouldBe asaAgencyName
@@ -242,13 +271,19 @@ with Matchers {
       val result = exampleGBCyaData.toSubscriptionRequest(
         PAYE,
         "",
+        false,
         Some(asaAgencyName)
       )
       result.get.contactName shouldBe exampleGBCyaData.name
     }
 
     "return None when ASA agencyName is None" in {
-      val result = exampleGBCyaData.toSubscriptionRequest(PAYE, "", None)
+      val result = exampleGBCyaData.toSubscriptionRequest(
+        PAYE,
+        "",
+        false,
+        None
+      )
       result shouldBe None
     }
 
@@ -258,6 +293,7 @@ with Matchers {
         .toSubscriptionRequest(
           PAYE,
           "",
+          false,
           Some(asaAgencyName)
         )
       result.get.phoneNumber shouldBe Some("441017654321")
@@ -267,6 +303,7 @@ with Matchers {
       val result = exampleGBCyaData.toSubscriptionRequest(
         PAYE,
         "Portugal",
+        false,
         Some(asaAgencyName)
       )
       result.get.address.line4 shouldBe Some("Line 4")
@@ -276,6 +313,7 @@ with Matchers {
       val result = exampleNonGBCyaData.toSubscriptionRequest(
         PAYE,
         "Portugal",
+        false,
         Some(asaAgencyName)
       )
       result shouldBe None
@@ -301,6 +339,7 @@ with Matchers {
       val result = cya.toSubscriptionRequest(
         PAYE,
         "Portugal",
+        false,
         Some(asaAgencyName)
       )
 
