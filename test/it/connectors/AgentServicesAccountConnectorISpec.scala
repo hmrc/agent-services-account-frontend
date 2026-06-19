@@ -198,7 +198,8 @@ with Injecting {
       phoneNumber = Some(examplePhoneNumber),
       emailAddress = Some(exampleEmailAddress),
       address = exampleSubscriptionAddress,
-      countryCode = "GB"
+      countryCode = "GB",
+      isWelsh = false
     )
 
     val exampleSaRequest = SaSubscriptionRequest(
@@ -207,7 +208,8 @@ with Injecting {
       phoneNumber = Some(examplePhoneNumber),
       emailAddress = Some(exampleEmailAddress),
       address = exampleSubscriptionAddress,
-      countryCode = "GB"
+      countryCode = "GB",
+      isWelsh = false
     )
 
     val examplePayeRequest = PayeSubscriptionRequest(
@@ -215,7 +217,8 @@ with Injecting {
       contactName = exampleContactName,
       phoneNumber = Some(examplePhoneNumber),
       emailAddress = Some(exampleEmailAddress),
-      address = exampleSubscriptionAddress
+      address = exampleSubscriptionAddress,
+      isWelsh = false
     )
 
     val getSubscriptionRequestForLegacyRegime: Map[LegacyRegime, SubscriptionRequest] = Map(

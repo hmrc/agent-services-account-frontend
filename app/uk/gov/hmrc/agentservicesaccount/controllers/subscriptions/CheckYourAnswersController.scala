@@ -76,17 +76,23 @@ with Logging {
   }
 
   def onSubmit(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
+    val isWelsh = messagesApi.preferred(request).lang.code == "cy"
     withSubscriptionCyaData(request.subscriptionJourney, legacyRegime) { data =>
       val requestModelOpt =
         if (legacyRegime == PAYE) {
           data.toSubscriptionRequest(
             legacyRegime,
             countryResolver.countryName(data.address.countryCode),
+            isWelsh,
             request.subscriptionJourney.asaDetails.agencyName
           )
         }
         else {
-          data.toSubscriptionRequest(legacyRegime, countryResolver.countryName(data.address.countryCode))
+          data.toSubscriptionRequest(
+            legacyRegime,
+            countryResolver.countryName(data.address.countryCode),
+            isWelsh
+          )
         }
 
       requestModelOpt.map(requestModel => {

@@ -26,6 +26,7 @@ sealed trait SubscriptionRequest {
   val phoneNumber: Option[String]
   val emailAddress: Option[String]
   val address: SubscriptionAddress
+  val isWelsh: Boolean
   def isAbroad: Boolean
 
 }
@@ -41,7 +42,8 @@ case class PayeSubscriptionRequest(
   contactName: String,
   phoneNumber: Option[String],
   emailAddress: Option[String],
-  address: SubscriptionAddress
+  address: SubscriptionAddress,
+  isWelsh: Boolean
 )
 extends SubscriptionRequest {
   val isAbroad: Boolean = false // Unused value for PAYE as postcode is always required
@@ -54,7 +56,8 @@ object PayeSubscriptionRequest {
       "contactName" -> request.contactName,
       "phoneNumber" -> request.phoneNumber,
       "emailAddress" -> request.emailAddress,
-      "address" -> request.address
+      "address" -> request.address,
+      "isWelsh" -> request.isWelsh
     )
   }
 }
@@ -65,7 +68,8 @@ case class CtSubscriptionRequest(
   phoneNumber: Option[String],
   emailAddress: Option[String],
   address: SubscriptionAddress,
-  countryCode: String
+  countryCode: String,
+  isWelsh: Boolean
 )
 extends SubscriptionRequest {
   override def isAbroad: Boolean = !countryCode.equalsIgnoreCase("GB")
@@ -79,7 +83,8 @@ object CtSubscriptionRequest {
       "phoneNumber" -> request.phoneNumber,
       "emailAddress" -> request.emailAddress,
       "address" -> request.address,
-      "isAbroad" -> request.isAbroad
+      "isAbroad" -> request.isAbroad,
+      "isWelsh" -> request.isWelsh
     )
   }
 }
@@ -90,7 +95,8 @@ case class SaSubscriptionRequest(
   phoneNumber: Option[String],
   emailAddress: Option[String],
   address: SubscriptionAddress,
-  countryCode: String
+  countryCode: String,
+  isWelsh: Boolean
 )
 extends SubscriptionRequest {
   override def isAbroad: Boolean = !countryCode.equalsIgnoreCase("GB")
@@ -104,7 +110,8 @@ object SaSubscriptionRequest {
       "phoneNumber" -> request.phoneNumber,
       "emailAddress" -> request.emailAddress,
       "address" -> request.address,
-      "isAbroad" -> request.isAbroad
+      "isAbroad" -> request.isAbroad,
+      "isWelsh" -> request.isWelsh
     )
   }
 }
