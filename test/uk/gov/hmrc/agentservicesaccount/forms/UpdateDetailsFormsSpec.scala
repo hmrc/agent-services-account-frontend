@@ -19,7 +19,8 @@ class UpdateDetailsFormsSpec extends AnyWordSpec
       ("Description", "Input"),
       (s"valid $businessField", "Test Business Ltd"),
       (s"valid $businessField with permitted special characters", "Test , . ' - / Business Ltd"),
-      (s"valid shortest length $businessField", "A")
+      (s"valid shortest length possible $businessField", "A"),
+      (s"valid longest length possible $businessField", "XXXXXX Business Has 40 Chars Ltd XXXXXXX")
     )
 
     forAll(valid) { (description, input) =>
@@ -121,7 +122,8 @@ class UpdateDetailsFormsSpec extends AnyWordSpec
   val valid = Table(
     ("Description", "Input"),
     (s"valid $emailField", "test@test.com"),
-    (s"valid shortest possible $emailField", "x@x.x")
+    (s"valid shortest possible $emailField", "x@x.x"),
+    (s"valid longest possible $emailField", s"${"x" * 100}@${"y" * 27}.com")
   )
 
   forAll(valid) { (description, input) =>
