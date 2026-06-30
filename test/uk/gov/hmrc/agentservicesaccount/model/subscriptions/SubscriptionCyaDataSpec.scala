@@ -56,8 +56,8 @@ with Matchers {
       "use businessName as agentName" in {
         val result = exampleGBCyaData.toSubscriptionRequest(
           legacyRegime,
-          "",
-          false
+          false,
+          countryNameOpt = Some("")
         )
         result.get.agentName shouldBe exampleGBCyaData.name
       }
@@ -65,8 +65,8 @@ with Matchers {
       "use businessName as contactName" in {
         val result = exampleGBCyaData.toSubscriptionRequest(
           legacyRegime,
-          "",
-          false
+          false,
+          countryNameOpt = Some("")
         )
         result.get.contactName shouldBe exampleGBCyaData.name
       }
@@ -74,8 +74,8 @@ with Matchers {
       "strip non-numeric characters from phone number" in {
         val result = exampleGBCyaData.copy(phoneNumber = "(+44) 101 7654321").toSubscriptionRequest(
           legacyRegime,
-          "",
-          false
+          false,
+          countryNameOpt = Some("")
         )
         result.get.phoneNumber shouldBe Some("441017654321")
       }
@@ -83,8 +83,8 @@ with Matchers {
       "use addressLine4 when country is GB" in {
         val result = exampleGBCyaData.toSubscriptionRequest(
           legacyRegime,
-          "Portugal",
-          false
+          false,
+          countryNameOpt = Some("Portugal")
         )
         result.get.address.line4 shouldBe Some("Line 4")
       }
@@ -92,8 +92,8 @@ with Matchers {
       "use countryName when country is not GB" in {
         val result = exampleNonGBCyaData.toSubscriptionRequest(
           legacyRegime,
-          "Portugal",
-          false
+          false,
+          countryNameOpt = Some("Portugal")
         )
         result.get.address.line4 shouldBe Some("Portugal")
       }
@@ -101,8 +101,8 @@ with Matchers {
       "fallback to existing addressLine4 if non-GB and countryName is empty string" in {
         val result = exampleNonGBCyaData.toSubscriptionRequest(
           legacyRegime,
-          "",
-          false
+          false,
+          countryNameOpt = Some("")
         )
         result.get.address.line4 shouldBe Some("")
       }
@@ -126,8 +126,8 @@ with Matchers {
 
         val result = cya.toSubscriptionRequest(
           legacyRegime,
-          "Portugal",
-          false
+          false,
+          countryNameOpt = Some("Portugal")
         )
 
         result.get.address.line2 shouldBe ""
@@ -260,9 +260,8 @@ with Matchers {
     "use ASA agencyName as agentName" in {
       val result = exampleGBCyaData.toSubscriptionRequest(
         PAYE,
-        "",
         false,
-        Some(asaAgencyName)
+        asaAgentNameOpt = Some(asaAgencyName)
       )
       result.get.agentName shouldBe asaAgencyName
     }
@@ -270,9 +269,8 @@ with Matchers {
     "use payeContactName as contactName" in {
       val result = exampleGBCyaData.toSubscriptionRequest(
         PAYE,
-        "",
         false,
-        Some(asaAgencyName)
+        asaAgentNameOpt = Some(asaAgencyName)
       )
       result.get.contactName shouldBe exampleGBCyaData.name
     }
@@ -280,9 +278,8 @@ with Matchers {
     "return None when ASA agencyName is None" in {
       val result = exampleGBCyaData.toSubscriptionRequest(
         PAYE,
-        "",
         false,
-        None
+        asaAgentNameOpt = None
       )
       result shouldBe None
     }
@@ -292,9 +289,8 @@ with Matchers {
         .copy(phoneNumber = "(+44) 101 7654321")
         .toSubscriptionRequest(
           PAYE,
-          "",
           false,
-          Some(asaAgencyName)
+          asaAgentNameOpt = Some(asaAgencyName)
         )
       result.get.phoneNumber shouldBe Some("441017654321")
     }
@@ -302,9 +298,8 @@ with Matchers {
     "use addressLine4 when country is GB" in {
       val result = exampleGBCyaData.toSubscriptionRequest(
         PAYE,
-        "Portugal",
         false,
-        Some(asaAgencyName)
+        asaAgentNameOpt = Some(asaAgencyName)
       )
       result.get.address.line4 shouldBe Some("Line 4")
     }
@@ -312,9 +307,8 @@ with Matchers {
     "return None when country is not GB" in {
       val result = exampleNonGBCyaData.toSubscriptionRequest(
         PAYE,
-        "Portugal",
         false,
-        Some(asaAgencyName)
+        asaAgentNameOpt = Some(asaAgencyName)
       )
       result shouldBe None
     }
@@ -338,9 +332,8 @@ with Matchers {
 
       val result = cya.toSubscriptionRequest(
         PAYE,
-        "Portugal",
         false,
-        Some(asaAgencyName)
+        asaAgentNameOpt = Some(asaAgencyName)
       )
 
       result.get.address.line2 shouldBe ""
