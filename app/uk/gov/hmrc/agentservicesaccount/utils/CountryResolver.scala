@@ -25,7 +25,6 @@ class CountryResolver @Inject() (appConfig: AppConfig) {
 
   private val countryMap = appConfig.countryCodeMap
 
-//  TODO: 11619: CountryResolver fix for test case > 18 characters (_short)
   def countryName(
     code: String,
     checkLengthForSubmission: Boolean = false
