@@ -29,6 +29,12 @@ class CountryResolver @Inject() (appConfig: AppConfig) {
   def countryName(
     code: String,
     checkLengthForSubmission: Boolean = false
-  ): String = countryMap.getOrElse(code, code)
+  ): String = {
+    (countryMap.get(code), checkLengthForSubmission) match {
+      case (Some(countryName), true) if countryName.length > 18 => countryMap.getOrElse(s"${code}_short", code)
+      case (Some(countryName), _) => countryName
+      case (None, _) => code
+    }
+  }
 
 }
