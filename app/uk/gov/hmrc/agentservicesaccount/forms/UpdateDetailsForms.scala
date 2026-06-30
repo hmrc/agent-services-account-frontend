@@ -24,11 +24,11 @@ import uk.gov.hmrc.agentservicesaccount.models.ApplySaCodeChanges
 
 object UpdateDetailsForms {
 
-  private val BusinessNameRegex = """^[A-Za-z0-9\,\.\'\-\/\ ]{2,200}$""".r
-  private val EmailAddressRegex = """^.{1,252}@.{1,256}\..{1,256}$""".r
+  private val BusinessNameRegex = """^[A-Za-z0-9\,\.\'\-\/\ ]{1,40}$""".r
+  private val EmailAddressRegex = """^(?=.{1,132}$).+@.+\..+$""".r // Check total length first, then check pattern
   private val SaCodeRegex = """^[A-Za-z0-9\,\.\'\-\/\ ]{6}$""".r
   private val CtCodeRegex = """^[A-Za-z0-9\,\.\'\-\/\ ]{6}$""".r
-  private val InternationalTelephoneRegex = """^[0-9 +()]{0,25}$""".r
+  private val InternationalTelephoneRegex = """^[0-9 +()]{1,24}$""".r
   private val NameRegex = "^[A-Za-z0-9 \\-,.&'\\/]*$".r
 
   private val trimmedText = text.transform[String](x => x.trim, x => x)
