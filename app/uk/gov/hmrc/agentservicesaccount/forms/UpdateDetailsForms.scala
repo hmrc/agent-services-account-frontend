@@ -28,7 +28,7 @@ object UpdateDetailsForms {
   private val EmailAddressRegex = """^(?=.{1,132}$).+@.+\..+$""".r // Check total length first, then check pattern
   private val SaCodeRegex = """^[A-Za-z0-9\,\.\'\-\/\ ]{6}$""".r
   private val CtCodeRegex = """^[A-Za-z0-9\,\.\'\-\/\ ]{6}$""".r
-  private val InternationalTelephoneRegex = """^[0-9 +()]{0,24}$""".r
+  private val InternationalTelephoneRegex = """^[0-9 +()]{1,24}$""".r
   private val NameRegex = "^[A-Za-z0-9 \\-,.&'\\/]*$".r
 
   private val trimmedText = text.transform[String](x => x.trim, x => x)
