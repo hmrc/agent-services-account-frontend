@@ -25,6 +25,7 @@ class CountryResolver @Inject() (appConfig: AppConfig) {
 
   private val countryMap = appConfig.countryCodeMap
 
+//  TODO: 11619: CountryResolver checkShortened/checkLengthForSubmission/forSubmission
   def countryName(code: String): String = countryMap.getOrElse(code, code)
 
 }

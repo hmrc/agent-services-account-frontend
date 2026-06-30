@@ -25,6 +25,7 @@ extends ViewBaseSpec {
 
   val countryResolver = new CountryResolver(appConfig)
 
+  //  TODO: 11619: CountryResolver checkShortened/checkLengthForSubmission/forSubmission - need to test this set up test cases
   "CountryResolver.countryName" should {
 
     "return country name when code exists in map" in {
