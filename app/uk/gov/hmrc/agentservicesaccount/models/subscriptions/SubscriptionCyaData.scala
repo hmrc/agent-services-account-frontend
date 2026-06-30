@@ -95,15 +95,15 @@ case class SubscriptionCyaData(
 
   def toSubscriptionRequest(
     legacyRegime: LegacyRegime,
-    countryName: String,
     isWelsh: Boolean,
+    countryNameOpt: Option[String] = None,
     asaAgentNameOpt: Option[String] = None
   ): Option[SubscriptionRequest] = {
-    (legacyRegime, address.countryCode != "GB", asaAgentNameOpt) match {
-      case (PAYE, false, Some(asaAgentName)) => Some(toPayeSubscriptionRequest(asaAgentName, isWelsh))
-      case (PAYE, _, _) => None
-      case (CT, _, _) => Some(toCtSubscriptionRequest(countryName, isWelsh))
-      case (SA, _, _) => Some(toSaSubscriptionRequest(countryName, isWelsh))
+    (legacyRegime, address.countryCode != "GB", countryNameOpt, asaAgentNameOpt) match {
+      case (PAYE, false, None, Some(asaAgentName)) => Some(toPayeSubscriptionRequest(asaAgentName, isWelsh))
+      case (CT, _, Some(countryName), None) => Some(toCtSubscriptionRequest(countryName, isWelsh))
+      case (SA, _, Some(countryName), None) => Some(toSaSubscriptionRequest(countryName, isWelsh))
+      case (_, _, _, _) => None
     }
   }
 

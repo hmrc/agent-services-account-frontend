@@ -82,16 +82,15 @@ with Logging {
         if (legacyRegime == PAYE) {
           data.toSubscriptionRequest(
             legacyRegime,
-            countryResolver.countryName(data.address.countryCode),
             isWelsh,
-            request.subscriptionJourney.asaDetails.agencyName
+            asaAgentNameOpt = request.subscriptionJourney.asaDetails.agencyName
           )
         }
         else {
           data.toSubscriptionRequest(
             legacyRegime,
-            countryResolver.countryName(data.address.countryCode),
-            isWelsh
+            isWelsh,
+            countryNameOpt = Some(countryResolver.countryName(data.address.countryCode))
           )
         }
 
