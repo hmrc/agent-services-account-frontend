@@ -90,7 +90,7 @@ with Logging {
           data.toSubscriptionRequest(
             legacyRegime,
             isWelsh,
-            countryNameOpt = Some(countryResolver.countryName(data.address.countryCode))
+            countryNameOpt = Some(countryResolver.countryName(data.address.countryCode, checkLengthForSubmission = true))
           )
         }
 
