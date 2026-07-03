@@ -24,13 +24,14 @@ import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 class CountryResolver @Inject() (appConfig: AppConfig) {
 
   private val countryMap = appConfig.countryCodeMap
+  private val countryShortMap = appConfig.countryCodeShortMap
 
   def countryName(
     code: String,
     checkLengthForSubmission: Boolean = false
   ): String = {
     (countryMap.get(code), checkLengthForSubmission) match {
-      case (Some(countryName), true) if countryName.length > 18 => countryMap.getOrElse(s"${code}_short", code)
+      case (Some(countryName), true) if countryName.length > 18 => countryShortMap.getOrElse(code, code)
       case (Some(countryName), _) => countryName
       case (None, _) => code
     }

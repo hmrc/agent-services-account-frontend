@@ -118,7 +118,7 @@
                 items = Seq(SelectItem(
                     value = Some(""),
                     text = "")).++(
-                    appConfig.countryCodeMap.filter((key, _) => !key.endsWith("_short")).flatMap {
+                    appConfig.countryCodeMap.flatMap {
                         case (code, name) => Seq(
                             if(form(countryCodeKey).value.getOrElse("").equals(name)) {
                                 SelectItem(
