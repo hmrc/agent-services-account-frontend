@@ -71,6 +71,13 @@ with Matchers {
         result.get.contactName shouldBe exampleGBCyaData.name
       }
 
+//      TODO: 11803 Implement
+      "sanitise if required businessName as agentName and contactName" in {
+        //    val ctSaNameRegex = """^[A-Za-z0-9 .,()/&\-'‘’]{1,54}$""".r
+        //  ASA agencyName can be any string up to 40 chars
+        true shouldBe false
+      }
+
       "strip non-numeric characters from phone number" in {
         val result = exampleGBCyaData.copy(phoneNumber = "(+44) 101 7654321").toSubscriptionRequest(
           legacyRegime,
@@ -265,6 +272,13 @@ with Matchers {
         Some(asaAgencyName)
       )
       result.get.agentName shouldBe asaAgencyName
+    }
+
+    //      TODO: 11803 Implement
+    "sanitise if required ASA agencyName as agentName" in {
+      //    val payeAgentNameRegex = """^[A-Za-z0-9 .,()@!-]{1,56}$""".r
+      //  ASA agencyName can be any string up to 40 chars
+      true shouldBe false
     }
 
     "use payeContactName as contactName" in {
