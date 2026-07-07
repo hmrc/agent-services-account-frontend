@@ -19,6 +19,9 @@ package uk.gov.hmrc.agentservicesaccount.utils
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.*
 
+//TODO: 11803 Will want to return removedCharacters for logging purposes aswell
+case class SanitisedLegacySubscriptionName(sanitisedName: String, removedCharacters: String)
+
 object SanitiseLegacySubscriptionName {
 
   def sanitise(name: String, legacyRegime: LegacyRegime): String = legacyRegime match {

@@ -78,6 +78,9 @@ with Logging {
   def onSubmit(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
     val isWelsh = messagesApi.preferred(request).lang.code == "cy"
     withSubscriptionCyaData(request.subscriptionJourney, legacyRegime) { data =>
+//      TODO: 11803 Emit a warn log with a list of invalid characters and the ARN of the agent (possibly log legacyRegime as well)
+//      val arn = request.agentInfo.arn
+//      TODO: 11803 Sanitise here due to not having to pass in ARN
       val requestModelOpt =
         if (legacyRegime == PAYE) {
           data.toSubscriptionRequest(

@@ -99,7 +99,6 @@ case class SubscriptionCyaData(
     isWelsh: Boolean,
     asaAgentNameOpt: Option[String] = None
   ): Option[SubscriptionRequest] = {
-    //      TODO: 11803 Implement sanitising of required fields in this file - will decide on best place later
     (legacyRegime, address.countryCode != "GB", asaAgentNameOpt) match {
       case (PAYE, false, Some(asaAgentName)) => Some(toPayeSubscriptionRequest(asaAgentName, isWelsh))
       case (PAYE, _, _) => None
