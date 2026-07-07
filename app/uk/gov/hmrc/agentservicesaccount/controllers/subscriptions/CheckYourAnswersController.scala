@@ -80,17 +80,18 @@ with Logging {
     withSubscriptionCyaData(request.subscriptionJourney, legacyRegime) { data =>
       val requestModelOpt =
         if (legacyRegime == PAYE) {
-//          TODO: 11803 - Use map rather than get here
-          val sanitised = SanitiseLegacySubscriptionName.sanitise(request.subscriptionJourney.asaDetails.agencyName.get, legacyRegime)
-          if (sanitised.removedCharacters.nonEmpty) {
-            logger.warn(s"[subscriptions][CheckYourAnswersController][onSubmit] - Remove invalid characters ${sanitised.removedCharacters.mkString} from ASA agency name for ARN ${request.agentInfo.arn}")
-          }
-          data.toSubscriptionRequest(
-            legacyRegime,
-            countryResolver.countryName(data.address.countryCode),
-            isWelsh,
-            Some(sanitised.sanitisedName)
-          )
+          request.subscriptionJourney.asaDetails.agencyName.flatMap(asaAgencyName => {
+            val sanitised = SanitiseLegacySubscriptionName.sanitise(asaAgencyName, legacyRegime)
+            if (sanitised.removedCharacters.nonEmpty) {
+              logger.warn(s"[subscriptions][CheckYourAnswersController][onSubmit] - Remove invalid characters ${sanitised.removedCharacters.mkString} from ASA agency name for ARN ${request.agentInfo.arn}")
+            }
+            data.toSubscriptionRequest(
+              legacyRegime,
+              countryResolver.countryName(data.address.countryCode),
+              isWelsh,
+              Some(sanitised.sanitisedName)
+            )
+          })
         }
         else {
           val sanitised = SanitiseLegacySubscriptionName.sanitise(data.name, legacyRegime)
