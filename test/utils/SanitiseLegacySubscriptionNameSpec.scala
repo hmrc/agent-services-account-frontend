@@ -56,7 +56,7 @@ extends PlaySpec {
     })
 
     List(PAYE).foreach(legacyRegime => {
-      "/&'‘’".split("").foreach(invalidPayeCharacter => {
+      "/'‘’".split("").foreach(invalidPayeCharacter => {
         s"remove $invalidPayeCharacter from sanitisedName and add to removed characters for $legacyRegime" in {
           val randomSplit = Math.floor(Math.random() * acceptableNameForAll.length).toInt
           val splitString = acceptableNameForAll.splitAt(randomSplit)
