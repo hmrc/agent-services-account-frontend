@@ -99,7 +99,12 @@ extends PlaySpec {
         val nameToSanitise = "Fish&Chips&Beans & Peas & Gravy"
         val sanitisedLegacySubscriptionName = sanitise(nameToSanitise, legacyRegime)
         sanitisedLegacySubscriptionName.sanitisedName mustBe "Fish and Chips and Beans and Peas and Gravy"
-        sanitisedLegacySubscriptionName.removedCharacters mustBe List("&", "&", "&", "&")
+        sanitisedLegacySubscriptionName.removedCharacters mustBe List(
+          "&",
+          "&",
+          "&",
+          "&"
+        )
       }
     })
   }

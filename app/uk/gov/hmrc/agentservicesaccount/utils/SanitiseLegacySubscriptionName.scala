@@ -19,14 +19,21 @@ package uk.gov.hmrc.agentservicesaccount.utils
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.*
 
-case class SanitisedLegacySubscriptionName(sanitisedName: String, removedCharacters: List[String])
+case class SanitisedLegacySubscriptionName(
+  sanitisedName: String,
+  removedCharacters: List[String]
+)
 
 object SanitiseLegacySubscriptionName {
 
-  def sanitise(name: String, legacyRegime: LegacyRegime): SanitisedLegacySubscriptionName = legacyRegime match {
-    case CT | SA => sanitiseForCtSa(name)
-    case PAYE => sanitiseForPaye(name)
-  }
+  def sanitise(
+    name: String,
+    legacyRegime: LegacyRegime
+  ): SanitisedLegacySubscriptionName =
+    legacyRegime match {
+      case CT | SA => sanitiseForCtSa(name)
+      case PAYE => sanitiseForPaye(name)
+    }
 
   private def sanitiseForCtSa(name: String): SanitisedLegacySubscriptionName = {
     val allowedCharacterForCtSa = """^[A-Za-z0-9 .,()/&\-'‘’]$""".r
@@ -38,7 +45,7 @@ object SanitiseLegacySubscriptionName {
 
   private def sanitiseForPaye(name: String): SanitisedLegacySubscriptionName = {
     val nameWithAmpersandReplaced = name.replaceAll(" & ", " and ").replaceAll("&", " and ")
-    val allowedCharacterForPaye= """^[A-Za-z0-9 .,()@!-]$""".r
+    val allowedCharacterForPaye = """^[A-Za-z0-9 .,()@!-]$""".r
     val nameSplitByAllowedCharacters: Map[Boolean, List[String]] = nameWithAmpersandReplaced.split("").toList.groupBy(allowedCharacterForPaye.matches)
     val sanitisedName = nameSplitByAllowedCharacters.getOrElse(true, List.empty).mkString
     val removedCharacters = name.filter(_ == '&').map(_.toString).toList ++ nameSplitByAllowedCharacters.getOrElse(false, List.empty)
