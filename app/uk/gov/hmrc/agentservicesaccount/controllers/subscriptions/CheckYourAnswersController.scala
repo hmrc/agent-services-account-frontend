@@ -18,15 +18,15 @@ package uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
 
 import play.api.Logging
 import play.api.i18n.I18nSupport
-import play.api.mvc._
+import play.api.mvc.*
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.checkYourAnswersPage
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.getNextPage
-import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.{routes => subscriptionRoutes}
-import uk.gov.hmrc.agentservicesaccount.controllers.{routes => asaRoutes}
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.routes as subscriptionRoutes
+import uk.gov.hmrc.agentservicesaccount.controllers.routes as asaRoutes
 import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators.CT_SA_EMAIL_MAX_LENGTH
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionCyaData
@@ -37,7 +37,7 @@ import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionCyaData.subscriptionJourneyToCyaData
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
-import uk.gov.hmrc.agentservicesaccount.utils.CountryResolver
+import uk.gov.hmrc.agentservicesaccount.utils.{CountryResolver, SanitiseLegacySubscriptionName}
 import uk.gov.hmrc.agentservicesaccount.views.components.models.SummaryListData
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.check_your_answers
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -78,22 +78,29 @@ with Logging {
   def onSubmit(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
     val isWelsh = messagesApi.preferred(request).lang.code == "cy"
     withSubscriptionCyaData(request.subscriptionJourney, legacyRegime) { data =>
-//      TODO: 11803 Emit a warn log with a list of invalid characters and the ARN of the agent (possibly log legacyRegime as well)
-//      val arn = request.agentInfo.arn
-//      TODO: 11803 Sanitise here due to not having to pass in ARN
       val requestModelOpt =
         if (legacyRegime == PAYE) {
+//          TODO: 11803 - Use map rather than get here
+          val sanitised = SanitiseLegacySubscriptionName.sanitise(request.subscriptionJourney.asaDetails.agencyName.get, legacyRegime)
+          if (sanitised.removedCharacters.nonEmpty) {
+            logger.warn(s"[subscriptions][CheckYourAnswersController][onSubmit] - Remove invalid characters ${sanitised.removedCharacters.mkString} from ASA agency name for ARN ${request.agentInfo.arn}")
+          }
           data.toSubscriptionRequest(
             legacyRegime,
             countryResolver.countryName(data.address.countryCode),
             isWelsh,
-            request.subscriptionJourney.asaDetails.agencyName
+            Some(sanitised.sanitisedName)
           )
         }
         else {
-          data.toSubscriptionRequest(
+          val sanitised = SanitiseLegacySubscriptionName.sanitise(data.name, legacyRegime)
+          if (sanitised.removedCharacters.nonEmpty) {
+            logger.warn(s"[subscriptions][CheckYourAnswersController][onSubmit] - Remove invalid characters ${sanitised.removedCharacters.mkString} from ASA agency name for ARN ${request.agentInfo.arn}")
+          }
+          val dataWithSanitisedName = data.copy(name = sanitised.sanitisedName)
+          dataWithSanitisedName.toSubscriptionRequest(
             legacyRegime,
-            countryResolver.countryName(data.address.countryCode),
+            countryResolver.countryName(dataWithSanitisedName.address.countryCode),
             isWelsh
           )
         }
