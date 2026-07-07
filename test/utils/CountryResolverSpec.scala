@@ -35,6 +35,26 @@ extends ViewBaseSpec {
     "return input code when country code is not found" in {
       countryResolver.countryName("XX") mustBe "XX"
     }
+
+    "return standard version of long country name for submission when checkLengthForSubmission is set to false" in {
+      countryResolver.countryName("AG", checkLengthForSubmission = false) mustBe "Antigua and Barbuda"
+      countryResolver.countryName("BA", checkLengthForSubmission = false) mustBe "Bosnia and Herzegovina"
+      countryResolver.countryName("CF", checkLengthForSubmission = false) mustBe "Central African Republic"
+      countryResolver.countryName("CD", checkLengthForSubmission = false) mustBe "Congo (Democratic Republic)"
+      countryResolver.countryName("ST", checkLengthForSubmission = false) mustBe "Sao Tome and Principe"
+      countryResolver.countryName("TT", checkLengthForSubmission = false) mustBe "Trinidad and Tobago"
+      countryResolver.countryName("AE", checkLengthForSubmission = false) mustBe "United Arab Emirates"
+    }
+
+    "return shortened version of long country name for submission when checkLengthForSubmission is set to true" in {
+      countryResolver.countryName("AG", checkLengthForSubmission = true) mustBe "Antigua & Barbuda"
+      countryResolver.countryName("BA", checkLengthForSubmission = true) mustBe "Bosnia-Herzegov."
+      countryResolver.countryName("CF", checkLengthForSubmission = true) mustBe "Central African R."
+      countryResolver.countryName("CD", checkLengthForSubmission = true) mustBe "DR Congo"
+      countryResolver.countryName("ST", checkLengthForSubmission = true) mustBe "Sao Tome & Princ."
+      countryResolver.countryName("TT", checkLengthForSubmission = true) mustBe "Trinidad & Tobago"
+      countryResolver.countryName("AE", checkLengthForSubmission = true) mustBe "UAE"
+    }
   }
 
 }

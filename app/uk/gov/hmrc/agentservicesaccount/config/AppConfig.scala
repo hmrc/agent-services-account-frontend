@@ -228,6 +228,17 @@ extends Logging {
     json.as[Map[String, String]]
   }
 
+  lazy val countryCodeShortMap: Map[String, String] = {
+    val stream = env.resourceAsStream(servicesConfig.getString("country.listShort.location"))
+      .getOrElse(throw new RuntimeException("country list (short) not found"))
+
+    val json =
+      try Json.parse(stream)
+      finally stream.close()
+
+    json.as[Map[String, String]]
+  }
+
   object UpscanAmls {
 
     val maxFileSize: ConfigMemorySize = config.underlying.getMemorySize("upscan.amls.max-file-size")

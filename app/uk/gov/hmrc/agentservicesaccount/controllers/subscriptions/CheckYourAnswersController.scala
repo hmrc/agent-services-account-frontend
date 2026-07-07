@@ -87,9 +87,8 @@ with Logging {
             }
             data.toSubscriptionRequest(
               legacyRegime,
-              countryResolver.countryName(data.address.countryCode),
               isWelsh,
-              Some(sanitised.sanitisedName)
+              asaAgentNameOpt = Some(sanitised.sanitisedName)
             )
           })
         }
@@ -101,8 +100,8 @@ with Logging {
           val dataWithSanitisedName = data.copy(name = sanitised.sanitisedName)
           dataWithSanitisedName.toSubscriptionRequest(
             legacyRegime,
-            countryResolver.countryName(dataWithSanitisedName.address.countryCode),
-            isWelsh
+            isWelsh,
+            countryNameOpt = Some(countryResolver.countryName(dataWithSanitisedName.address.countryCode, checkLengthForSubmission = true))
           )
         }
 
