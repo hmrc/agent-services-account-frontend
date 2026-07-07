@@ -23,7 +23,7 @@ import uk.gov.hmrc.agentservicesaccount.utils.SanitiseLegacySubscriptionName.san
 class SanitiseLegacySubscriptionNameSpec
 extends PlaySpec {
 
-  private val acceptableNameForAll = "ACCEPTABLE NAME .,()-"
+  private val acceptableNameForAll = "A. Person, Acceptable-Co. (BA)"
   private val invalidCharactersForAll = "£$%^*=+[]{};:<>?~"
 
   "SanitiseLegacySubscriptionName.sanitise" should {
