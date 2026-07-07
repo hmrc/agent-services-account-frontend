@@ -37,11 +37,11 @@ object SanitiseLegacySubscriptionName {
   }
 
   private def sanitiseForPaye(name: String): SanitisedLegacySubscriptionName = {
-    val nameWithAmpersandReplaced = name.replace(" & ", " and ").replace("&", " and ")
+    val nameWithAmpersandReplaced = name.replaceAll(" & ", " and ").replaceAll("&", " and ")
     val allowedCharacterForPaye= """^[A-Za-z0-9 .,()@!-]$""".r
     val nameSplitByAllowedCharacters: Map[Boolean, List[String]] = nameWithAmpersandReplaced.split("").toList.groupBy(allowedCharacterForPaye.matches)
     val sanitisedName = nameSplitByAllowedCharacters.getOrElse(true, List.empty).mkString
-    val removedCharacters = (if (nameWithAmpersandReplaced != name) List("&") else List.empty) ++ nameSplitByAllowedCharacters.getOrElse(false, List.empty)
+    val removedCharacters = name.filter(_ == '&').map(_.toString).toList ++ nameSplitByAllowedCharacters.getOrElse(false, List.empty)
     SanitisedLegacySubscriptionName(sanitisedName, removedCharacters)
   }
 

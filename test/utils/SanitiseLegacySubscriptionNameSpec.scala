@@ -67,18 +67,39 @@ extends PlaySpec {
         }
       })
 
-      s"replace ' & ' with ' and ' for $legacyRegime" in {
+      s"replace ' & ' with ' and ' for $legacyRegime - one &" in {
         val nameToSanitise = "Fish & Chips"
         val sanitisedLegacySubscriptionName = sanitise(nameToSanitise, legacyRegime)
         sanitisedLegacySubscriptionName.sanitisedName mustBe "Fish and Chips"
         sanitisedLegacySubscriptionName.removedCharacters mustBe List("&")
       }
 
-      s"replace '&' with ' and ' for $legacyRegime" in {
+      s"replace '&' with ' and ' for $legacyRegime - one &" in {
         val nameToSanitise = "Fish&Chips"
         val sanitisedLegacySubscriptionName = sanitise(nameToSanitise, legacyRegime)
         sanitisedLegacySubscriptionName.sanitisedName mustBe "Fish and Chips"
         sanitisedLegacySubscriptionName.removedCharacters mustBe List("&")
+      }
+
+      s"replace ' & ' with ' and ' for $legacyRegime - multiple &" in {
+        val nameToSanitise = "Fish & Chips & Beans & Peas"
+        val sanitisedLegacySubscriptionName = sanitise(nameToSanitise, legacyRegime)
+        sanitisedLegacySubscriptionName.sanitisedName mustBe "Fish and Chips and Beans and Peas"
+        sanitisedLegacySubscriptionName.removedCharacters mustBe List("&", "&", "&")
+      }
+
+      s"replace '&' with ' and ' for $legacyRegime - multiple &" in {
+        val nameToSanitise = "Fish&Chips&Beans&Peas"
+        val sanitisedLegacySubscriptionName = sanitise(nameToSanitise, legacyRegime)
+        sanitisedLegacySubscriptionName.sanitisedName mustBe "Fish and Chips and Beans and Peas"
+        sanitisedLegacySubscriptionName.removedCharacters mustBe List("&", "&", "&")
+      }
+
+      s"replace ' & ' with ' and ' and '&' with ' and ' for $legacyRegime" in {
+        val nameToSanitise = "Fish&Chips&Beans & Peas & Gravy"
+        val sanitisedLegacySubscriptionName = sanitise(nameToSanitise, legacyRegime)
+        sanitisedLegacySubscriptionName.sanitisedName mustBe "Fish and Chips and Beans and Peas and Gravy"
+        sanitisedLegacySubscriptionName.removedCharacters mustBe List("&", "&", "&", "&")
       }
     })
   }
