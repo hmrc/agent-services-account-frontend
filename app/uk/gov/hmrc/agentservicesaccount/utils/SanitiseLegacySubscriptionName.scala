@@ -20,26 +20,26 @@ import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.*
 
 //TODO: 11803 Will want to return removedCharacters for logging purposes aswell
-case class SanitisedLegacySubscriptionName(sanitisedName: String, removedCharacters: String)
+case class SanitisedLegacySubscriptionName(sanitisedName: String, removedCharacters: List[String])
 
 object SanitiseLegacySubscriptionName {
 
-  def sanitise(name: String, legacyRegime: LegacyRegime): String = legacyRegime match {
+  def sanitise(name: String, legacyRegime: LegacyRegime): SanitisedLegacySubscriptionName = legacyRegime match {
     //  ASA agencyName can be any string up to 40 chars
     case CT | SA => sanitiseForCtSa(name)
     case PAYE => sanitiseForPaye(name)
   }
 
   //      TODO: 11803 Implement
-  private def sanitiseForCtSa(name: String): String = {
+  private def sanitiseForCtSa(name: String): SanitisedLegacySubscriptionName = {
 //    val ctSaNameRegex = """^[A-Za-z0-9 .,()/&\-'‘’]{1,54}$""".r
-    name
+    SanitisedLegacySubscriptionName(name, List.empty)
   }
 
   //      TODO: 11803 Implement
-  private def sanitiseForPaye(name: String): String = {
+  private def sanitiseForPaye(name: String): SanitisedLegacySubscriptionName = {
 //    val payeAgentNameRegex = """^[A-Za-z0-9 .,()@!-]{1,56}$""".r
-    name
+    SanitisedLegacySubscriptionName(name, List.empty)
   }
 
 }
