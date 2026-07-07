@@ -19,27 +19,30 @@ package uk.gov.hmrc.agentservicesaccount.utils
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.*
 
-//TODO: 11803 Will want to return removedCharacters for logging purposes aswell
 case class SanitisedLegacySubscriptionName(sanitisedName: String, removedCharacters: List[String])
 
 object SanitiseLegacySubscriptionName {
 
   def sanitise(name: String, legacyRegime: LegacyRegime): SanitisedLegacySubscriptionName = legacyRegime match {
-    //  ASA agencyName can be any string up to 40 chars
     case CT | SA => sanitiseForCtSa(name)
     case PAYE => sanitiseForPaye(name)
   }
 
-  //      TODO: 11803 Implement
   private def sanitiseForCtSa(name: String): SanitisedLegacySubscriptionName = {
-//    val ctSaNameRegex = """^[A-Za-z0-9 .,()/&\-'‘’]{1,54}$""".r
-    SanitisedLegacySubscriptionName(name, List.empty)
+    val allowedCharacterForCtSa = """^[A-Za-z0-9 .,()/&\-'‘’]$""".r
+    val nameSplitByAllowedCharacters: Map[Boolean, List[String]] = name.split("").toList.groupBy(allowedCharacterForCtSa.matches)
+    val sanitisedName = nameSplitByAllowedCharacters.getOrElse(true, List.empty).mkString
+    val removedCharacters = nameSplitByAllowedCharacters.getOrElse(false, List.empty)
+    SanitisedLegacySubscriptionName(sanitisedName, removedCharacters)
   }
 
-  //      TODO: 11803 Implement
+  //      TODO: 11803 Implement & replacement for PAYE
   private def sanitiseForPaye(name: String): SanitisedLegacySubscriptionName = {
-//    val payeAgentNameRegex = """^[A-Za-z0-9 .,()@!-]{1,56}$""".r
-    SanitisedLegacySubscriptionName(name, List.empty)
+    val allowedCharacterForPaye= """^[A-Za-z0-9 .,()@!-]$""".r
+    val nameSplitByAllowedCharacters: Map[Boolean, List[String]] = name.split("").toList.groupBy(allowedCharacterForPaye.matches)
+    val sanitisedName = nameSplitByAllowedCharacters.getOrElse(true, List.empty).mkString
+    val removedCharacters = nameSplitByAllowedCharacters.getOrElse(false, List.empty)
+    SanitisedLegacySubscriptionName(sanitisedName, removedCharacters)
   }
 
 }
