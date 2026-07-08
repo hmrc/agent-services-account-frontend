@@ -40,6 +40,28 @@ extends PlaySpec {
         sanitisedLegacySubscriptionName.sanitisedName mustBe acceptableNameForAll
         sanitisedLegacySubscriptionName.removedCharacters mustBe invalidCharactersForAll.split("").toList
       }
+
+      s"strip diacritics from sanitisedName and add to removed characters for $legacyRegime" in {
+        val resume = "résumé"
+        val sanitisedResume = sanitise(resume, legacyRegime)
+        sanitisedResume.sanitisedName mustBe "resume"
+        sanitisedResume.removedCharacters mustBe List("é", "é")
+
+        val pinata = "piñata"
+        val sanitisedPinata = sanitise(pinata, legacyRegime)
+        sanitisedPinata.sanitisedName mustBe "pinata"
+        sanitisedPinata.removedCharacters mustBe List("ñ")
+
+        val facade = "façade"
+        val sanitisedFacade = sanitise(facade, legacyRegime)
+        sanitisedFacade.sanitisedName mustBe "facade"
+        sanitisedFacade.removedCharacters mustBe List("ç")
+
+        val naive = "naïve"
+        val sanitisedNaive = sanitise(naive, legacyRegime)
+        sanitisedNaive.sanitisedName mustBe "naive"
+        sanitisedNaive.removedCharacters mustBe List("ï")
+      }
     })
 
     List(CT, SA).foreach(legacyRegime => {
