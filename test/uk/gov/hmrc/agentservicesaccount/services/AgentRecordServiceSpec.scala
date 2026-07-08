@@ -24,7 +24,6 @@ import org.scalatestplus.play.PlaySpec
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.RequestHeader
 import play.api.test.FakeRequest
-import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
 import uk.gov.hmrc.agentservicesaccount.models._
 
@@ -60,29 +59,8 @@ with ArgumentMatchersSugar {
   )
 
   "getAgentRecord" should {
-    "get the agent record from agent assurance when the feature switch is false" in {
 
-      val mockAgentAssuranceConnector: AgentAssuranceConnector = mock[AgentAssuranceConnector]
-
-      val overrides =
-        new AbstractModule() {
-          override def configure(): Unit = {
-            bind(classOf[AgentAssuranceConnector]).toInstance(mockAgentAssuranceConnector)
-          }
-        }
-      val app = new GuiceApplicationBuilder().configure("features.enable-agent-record-via-asa" -> false)
-        .overrides(overrides).build()
-
-      val service: AgentRecordService = app.injector.instanceOf[AgentRecordService]
-
-      (mockAgentAssuranceConnector.getAgentRecord(*[RequestHeader]).returns(Future.successful(agentRecord)))
-
-      val result = service.getAgentRecord.futureValue
-
-      result mustBe agentRecord
-    }
-
-    "get the agent record from agent services account when the feature switch is true" in {
+    "get the agent record from agent services account" in {
 
       val mockAgentServicesAccountConnector: AgentServicesAccountConnector = mock[AgentServicesAccountConnector]
 
@@ -92,8 +70,7 @@ with ArgumentMatchersSugar {
             bind(classOf[AgentServicesAccountConnector]).toInstance(mockAgentServicesAccountConnector)
           }
         }
-      val app = new GuiceApplicationBuilder().configure("features.enable-agent-record-via-asa" -> true)
-        .overrides(overrides).build()
+      val app = new GuiceApplicationBuilder().overrides(overrides).build()
 
       val service: AgentRecordService = app.injector.instanceOf[AgentRecordService]
 
