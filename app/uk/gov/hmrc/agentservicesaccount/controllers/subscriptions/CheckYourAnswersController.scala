@@ -18,15 +18,15 @@ package uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
 
 import play.api.Logging
 import play.api.i18n.I18nSupport
-import play.api.mvc._
+import play.api.mvc.*
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.checkYourAnswersPage
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.getNextPage
-import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.{routes => subscriptionRoutes}
-import uk.gov.hmrc.agentservicesaccount.controllers.{routes => asaRoutes}
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.routes as subscriptionRoutes
+import uk.gov.hmrc.agentservicesaccount.controllers.routes as asaRoutes
 import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators.CT_SA_EMAIL_MAX_LENGTH
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionCyaData
@@ -38,6 +38,7 @@ import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionCyaData.subscriptionJourneyToCyaData
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.utils.CountryResolver
+import uk.gov.hmrc.agentservicesaccount.utils.SanitiseLegacySubscriptionName
 import uk.gov.hmrc.agentservicesaccount.views.components.models.SummaryListData
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.check_your_answers
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -80,17 +81,28 @@ with Logging {
     withSubscriptionCyaData(request.subscriptionJourney, legacyRegime) { data =>
       val requestModelOpt =
         if (legacyRegime == PAYE) {
-          data.toSubscriptionRequest(
-            legacyRegime,
-            isWelsh,
-            asaAgentNameOpt = request.subscriptionJourney.asaDetails.agencyName
-          )
+          request.subscriptionJourney.asaDetails.agencyName.flatMap(asaAgencyName => {
+            val sanitised = SanitiseLegacySubscriptionName.sanitise(asaAgencyName, legacyRegime)
+            if (sanitised.removedCharacters.nonEmpty) {
+              logger.warn(s"[subscriptions][CheckYourAnswersController][onSubmit] - Remove invalid characters ${sanitised.removedCharacters.mkString} from ASA agency name for ARN ${request.agentInfo.arn.value} and legacy regime $legacyRegime")
+            }
+            data.toSubscriptionRequest(
+              legacyRegime,
+              isWelsh,
+              asaAgentNameOpt = Some(sanitised.sanitisedName)
+            )
+          })
         }
         else {
-          data.toSubscriptionRequest(
+          val sanitised = SanitiseLegacySubscriptionName.sanitise(data.name, legacyRegime)
+          if (sanitised.removedCharacters.nonEmpty) {
+            logger.warn(s"[subscriptions][CheckYourAnswersController][onSubmit] - Remove invalid characters ${sanitised.removedCharacters.mkString} from ASA agency name for ARN ${request.agentInfo.arn.value} and legacy regime $legacyRegime")
+          }
+          val dataWithSanitisedName = data.copy(name = sanitised.sanitisedName)
+          dataWithSanitisedName.toSubscriptionRequest(
             legacyRegime,
             isWelsh,
-            countryNameOpt = Some(countryResolver.countryName(data.address.countryCode, checkLengthForSubmission = true))
+            countryNameOpt = Some(countryResolver.countryName(dataWithSanitisedName.address.countryCode, checkLengthForSubmission = true))
           )
         }
 
