@@ -21,22 +21,26 @@ import org.jsoup.nodes.Document
 import org.scalatest.Assertion
 import play.api.i18n.Messages
 import play.api.test.Helpers
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import play.twirl.api.HtmlFormat
 import support.BaseISpec
-import support.Css._
-import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.{routes => desiDetailsRoutes}
+import support.Css.*
+import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.routes as desiDetailsRoutes
 import uk.gov.hmrc.agentservicesaccount.controllers.AgentServicesController
 import uk.gov.hmrc.agentservicesaccount.controllers.routes
-import uk.gov.hmrc.agentservicesaccount.models._
+import uk.gov.hmrc.agentservicesaccount.models.*
 import uk.gov.hmrc.agentservicesaccount.models.accessgroups.GroupSummary
 import uk.gov.hmrc.agentservicesaccount.models.accessgroups.UserDetails
 import stubs.AgentAssuranceStubs.givenAMLSDetailsForArn
-import stubs.AgentPermissionsStubs._
-import stubs.AgentUserClientDetailsStubs._
-import stubs.AgentServicesAccountStubs._
+import stubs.AgentPermissionsStubs.*
+import stubs.AgentUserClientDetailsStubs.*
+import stubs.AgentServicesAccountStubs.*
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionInfo
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionStatus
 import uk.gov.hmrc.http.UpstreamErrorResponse
 
+import java.time.Instant
 import java.util.UUID
 import scala.util.Random
 
@@ -395,6 +399,41 @@ extends BaseISpec {
 
       }
 
+    }
+    "show inactive enrolment without action link" in {
+
+      givenAuthorisedAsAgentWithInactiveCt(arn.value)
+      givenGetAgentRecord(agentRecord)
+      givenHidePrivateBetaInviteNotFound()
+      val enrolmentDate = Instant.now
+      givenSubscriptionInfoResponse(
+        Seq(
+          SubscriptionInfo(
+            regime = LegacyRegime.PAYE,
+            subscriptionStatus = SubscriptionStatus.NotSubscribed
+          ),
+          SubscriptionInfo(
+            regime = LegacyRegime.CT,
+            subscriptionStatus = SubscriptionStatus.InactiveEnrolment,
+            creationDate = Some(enrolmentDate)
+          ),
+          SubscriptionInfo(
+            regime = LegacyRegime.SA,
+            subscriptionStatus = SubscriptionStatus.NotSubscribed
+          )
+        )
+      )
+
+      val response = await(controller.showAgentServicesAccount()(fakeRequest()))
+      val html = Jsoup.parse(contentAsString(response))
+
+      html.text should include("already applied")
+      html.select("a[href='/agent-services-account/subscription/CT/do-you-already-manage']")
+        .isEmpty shouldBe true
+      html.select("a[href='/agent-services-account/subscription/PAYE/do-you-already-manage']")
+        .size shouldBe 1
+      html.select("a[href='/agent-services-account/subscription/SA/do-you-already-manage']")
+        .size shouldBe 1
     }
   }
 

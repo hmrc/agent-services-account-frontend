@@ -67,22 +67,25 @@ with TestConstants {
 
   private def authResponseAgent(
     credentialRole: CredentialRole
-  ): Future[Enrolments ~ Some[Credentials] ~ Some[Email] ~ Some[Name] ~ Some[CredentialRole] ~ AgentInformation] = Future.successful(
+  ): Future[Enrolments ~ Some[Credentials] ~ Some[Email] ~ Some[Name] ~ Some[CredentialRole] ~ AgentInformation ~ Some[String]] = Future.successful(
     new ~(
       new ~(
         new ~(
           new ~(
             new ~(
-              Enrolments(agentEnrolment),
-              Some(ggCredentials)
+              new ~(
+                Enrolments(agentEnrolment),
+                Some(ggCredentials)
+              ),
+              Some(Email("test@email.com"))
             ),
-            Some(Email("test@email.com"))
+            Some(Name(Some("Troy"), Some("Barnes")))
           ),
-          Some(Name(Some("Troy"), Some("Barnes")))
+          Some(credentialRole)
         ),
-        Some(credentialRole)
+        testAgentInformation
       ),
-      testAgentInformation
+      Some("testGroupIdentifier")
     )
   )
 

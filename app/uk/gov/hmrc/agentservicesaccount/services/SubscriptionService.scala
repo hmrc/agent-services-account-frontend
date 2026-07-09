@@ -18,9 +18,12 @@ package uk.gov.hmrc.agentservicesaccount.services
 
 import play.api.Logging
 import play.api.mvc.RequestHeader
+import uk.gov.hmrc.agentservicesaccount.actions.AgentInfo
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.connectors.EnrolmentStoreProxyConnector
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionInfo
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionStatus
+import uk.gov.hmrc.http.HeaderCarrier
 
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -29,20 +32,61 @@ import scala.concurrent.Future
 
 @Singleton
 class SubscriptionService @Inject() (
-  agentServicesAccountConnector: AgentServicesAccountConnector
+  agentServicesAccountConnector: AgentServicesAccountConnector,
+  enrolmentStoreProxyConnector: EnrolmentStoreProxyConnector
 )(implicit ec: ExecutionContext)
 extends Logging {
 
   def getSubscriptionInfo(
-    missingSubscriptions: Seq[LegacyRegime],
-    existingSubscriptionInfo: Seq[SubscriptionInfo]
-  )(implicit rh: RequestHeader): Future[Seq[SubscriptionInfo]] = {
-    for {
-      missingSubscriptionInfo <-
-        if (missingSubscriptions.nonEmpty)
-          agentServicesAccountConnector.getSubscriptionInfo(missingSubscriptions)
-        else
-          Future.successful(Nil)
-    } yield existingSubscriptionInfo ++ missingSubscriptionInfo
+    agentInfo: AgentInfo
+  )(using
+    HeaderCarrier,
+    RequestHeader
+  ): Future[Seq[SubscriptionInfo]] = {
+
+    val originalMissingSubscriptions = agentInfo.missingSubscriptions
+
+    agentServicesAccountConnector
+      .getSubscriptionInfo(originalMissingSubscriptions.map(_.regime))
+      .flatMap { connectorSubscriptions =>
+        val mergedSubscriptions =
+          connectorSubscriptions.map { connectorSubscription =>
+            originalMissingSubscriptions
+              .find(_.regime == connectorSubscription.regime)
+              .filter(_.subscriptionStatus == SubscriptionStatus.InactiveEnrolment)
+              .map { _ =>
+                connectorSubscription.copy(
+                  subscriptionStatus = SubscriptionStatus.InactiveEnrolment
+                )
+              }
+              .getOrElse(connectorSubscription)
+          }
+        Future.traverse(mergedSubscriptions) { subInfo =>
+          if (subInfo.subscriptionStatus != SubscriptionStatus.InactiveEnrolment) {
+            Future.successful(subInfo)
+          }
+          else {
+            enrolmentStoreProxyConnector
+              .getGroupAllocatedEnrolment(
+                agentInfo.groupId,
+                s"HMRC-${subInfo.regime}-AGENT"
+              )
+              .map {
+                case Some(es5Response) =>
+                  subInfo.copy(
+                    creationDate = es5Response.enrolmentDate
+                  )
+                case None => subInfo
+              }
+              .recover {
+                case ex =>
+                  logger.warn(
+                    s"[SubscriptionService] ES5 enrichment failed for ${subInfo.regime}: ${ex.getMessage}"
+                  )
+                  subInfo
+              }
+          }
+        }
+      }
   }
 }

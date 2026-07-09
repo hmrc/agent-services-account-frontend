@@ -40,11 +40,59 @@ trait AuthStubs {
                |  "agentInformation": {
                |    "agentCode": "ABC123"
                |  },
+               |  "groupIdentifier": "testGroupId",
                |  "allEnrolments": [{
                |    "key": "HMRC-AS-AGENT",
                |    "identifiers": [{ "key": "AgentReferenceNumber", "value": "$arn" }]
                |  }]
                |
+               |}""".stripMargin
+          )
+      ))
+  }
+
+  def givenAuthorisedAsAgentWithInactiveCt(
+    arn: String,
+    isAdmin: Boolean = true
+  ) = {
+    val credRole =
+      if (isAdmin)
+        "Admin"
+      else
+        "Assistant"
+    stubFor(post(urlEqualTo("/auth/authorise"))
+      .willReturn(
+        aResponse()
+          .withStatus(200).withBody(
+            s"""{
+               |  "internalId": "some-id",
+               |  "affinityGroup": "Agent",
+               |  "credentialRole": "$credRole",
+               |  "agentInformation": {
+               |    "agentCode": "ABC123"
+               |  },
+               |  "groupIdentifier": "testGroupId",
+               |  "allEnrolments": [
+               |    {
+               |      "key": "HMRC-AS-AGENT",
+               |      "identifiers": [
+               |        {
+               |          "key": "AgentReferenceNumber",
+               |          "value": "$arn"
+               |        }
+               |      ]
+               |    },
+               |    {
+               |      "key": "IR-CT-AGENT",
+               |      "state": "Inactive",
+               |      "identifiers": [
+               |        {
+               |          "key": "IRAgentReference",
+               |          "value": "C123456"
+               |        }
+               |      ]
+               |    }
+               |  ]
                |}""".stripMargin
           )
       ))
@@ -73,6 +121,7 @@ trait AuthStubs {
                |  "agentInformation": {
                |    "agentCode": "ABC123"
                |  },
+               |  "groupIdentifier": "testGroupId",
                |  "optionalCredentials": {
                |    "providerId": "$providerId",
                |    "providerType": "whatever"

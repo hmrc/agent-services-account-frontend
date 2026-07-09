@@ -30,7 +30,7 @@
 )
 
 @defining({
-    def isUnsubscribed(regime: LegacyRegime): Boolean =
+    def canStartSubscriptionJourney(regime: LegacyRegime): Boolean =
         subscriptionInfo.exists(s =>
             s.regime == regime && Seq(
                 SubscriptionStatus.NotSubscribed,
@@ -41,9 +41,9 @@
 
     val regimes =
         Seq(
-            if(!request.agentDetailsDesResponse.agencyDetails.exists(_.isAbroad)) Some(LegacyRegime.PAYE).filter(isUnsubscribed(_) && appConfig.enableLegacySubscriptionLink) else None,
-            Some(LegacyRegime.CT).filter(isUnsubscribed(_) && appConfig.enableLegacySubscriptionLinkRobotics),
-            Some(LegacyRegime.SA).filter(isUnsubscribed(_) && appConfig.enableLegacySubscriptionLinkRobotics)
+            if(!request.agentDetailsDesResponse.agencyDetails.exists(_.isAbroad)) Some(LegacyRegime.PAYE).filter(canStartSubscriptionJourney(_) && appConfig.enableLegacySubscriptionLink) else None,
+            Some(LegacyRegime.CT).filter(canStartSubscriptionJourney(_) && appConfig.enableLegacySubscriptionLinkRobotics),
+            Some(LegacyRegime.SA).filter(canStartSubscriptionJourney(_) && appConfig.enableLegacySubscriptionLinkRobotics)
         ).flatten
 
     regimes

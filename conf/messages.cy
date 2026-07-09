@@ -193,6 +193,9 @@ asa.legacy.confirmation.return-home=Ewch yn ôl i hafan eich cyfrif gwasanaethau
 asa.legacy.ct.h2=Treth Gorfforaeth
 asa.legacy.ct.in-progress.p1=Rydym yn dal i brosesu’r cais a wnaethoch ar {0}.
 asa.legacy.ct.in-progress.p2=Gall prosesu gymryd hyd at 5 diwrnod.
+asa.legacy.ct.inactive.p1 = Rydych chi eisoes wedi gwneud cais i weithredu fel asiant ar gyfer Treth Gorfforaeth ar {0}.
+asa.legacy.ct.inactive.p2 = Anfonwyd llythyr atoch gyda chod cychwyn pan wnaethoch gais.
+asa.legacy.ct.inactive.p3 = Mae’n rhaid i chi <a class="govuk-link" href="/enrolment-management-frontend/IR-CT-AGENT/get-access-tax-scheme?continue=/agent-services-account/home" target="_blank" rel="noreferrer noopener">ddefnyddio’r cod cychwyn i gael mynediad at y gwasanaeth hwn</a>.
 asa.legacy.ct.subscribed.p1=Eich cod asiant yw: {0}
 asa.legacy.ct.subscribed.p2=Cael caniatâd gan gleientiaid newydd
 asa.legacy.ct.subscribed.p3=<a class="govuk-link" href="/account/authorise-client/agent/{0}" target="_blank" rel="noreferrer noopener">Gofynnwch i gleient eich awdurdodi (yn agor tab newydd)</a>
@@ -293,6 +296,9 @@ asa.legacy.paye.h2=Talu wrth ennill (TWE)/Cynllun y Diwydiant Adeiladu (CIS)
 asa.legacy.paye.link=Cais am danysgrifiad TWE
 asa.legacy.paye.in-progress.p1=Rydym yn dal i brosesu’r cofrestriad a wnaethoch ar {0}.
 asa.legacy.paye.in-progress.p2=Gall prosesu gymryd hyd at 5 diwrnod.
+asa.legacy.paye.inactive.p1 = Rydych chi eisoes wedi gwneud cais i weithredu fel asiant ar gyfer TWE/CIS ar {0}.
+asa.legacy.paye.inactive.p2 = Anfonwyd llythyr atoch gyda chod cychwyn pan wnaethoch gais.
+asa.legacy.paye.inactive.p3 = Mae’n rhaid i chi <a class="govuk-link" href="/enrolment-management-frontend/IR-PAYE-AGENT/get-access-tax-scheme?continue=/agent-services-account/home" target="_blank" rel="noreferrer noopener">ddefnyddio’r cod cychwyn i gael mynediad at y gwasanaeth hwn</a>.
 asa.legacy.paye.subscribed.p1=Eich cod asiant yw: {0}
 asa.legacy.paye.subscribed.p2=Cael caniatâd gan gleientiaid newydd
 asa.legacy.paye.subscribed.p3=<a class="govuk-link" href="/account/authorise-client/agent/{0}" target="_blank" rel="noreferrer noopener">Gofynnwch i gleient eich awdurdodi (yn agor tab newydd)</a>
@@ -386,6 +392,9 @@ asa.legacy.paye.check-your-answers.submit-button=Ymrestru ar gyfer TWE
 asa.legacy.sa.h2=Hunanasesiad
 asa.legacy.sa.in-progress.p1=Rydym yn dal i brosesu’r cofrestriad a wnaethoch ar {0}.
 asa.legacy.sa.in-progress.p2=Gall prosesu gymryd hyd at 5 diwrnod.
+asa.legacy.sa.inactive.p1 = Rydych chi eisoes wedi gwneud cais i weithredu fel asiant ar gyfer Hunanasesiad ar {0}.
+asa.legacy.sa.inactive.p2 = Anfonwyd llythyr atoch gyda chod cychwyn pan wnaethoch gais.
+asa.legacy.sa.inactive.p3 = Mae’n rhaid i chi <a class="govuk-link" href="/enrolment-management-frontend/IR-SA-AGENT/get-access-tax-scheme?continue=/agent-services-account/home" target="_blank" rel="noreferrer noopener">ddefnyddio’r cod cychwyn i gael mynediad at y gwasanaeth hwn</a>.
 asa.legacy.sa.subscribed.p1=Eich cod asiant yw: {0}
 asa.legacy.sa.subscribed.p2=Cael caniatâd gan gleientiaid newydd
 asa.legacy.sa.subscribed.p3=<a class="govuk-link" href="/account/authorise-client/agent/{0}" target="_blank" rel="noreferrer noopener">Gofynnwch i gleient eich awdurdodi (yn agor tab newydd)</a>

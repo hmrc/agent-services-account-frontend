@@ -30,7 +30,7 @@ import uk.gov.hmrc.agentservicesaccount.models.AgentRecordUpdateRequest
 import uk.gov.hmrc.agentservicesaccount.models.AgentRecordUpdateResponse
 import uk.gov.hmrc.agentservicesaccount.models.Arn
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest
-import stubs.AgentServicesAccountStubs._
+import stubs.AgentServicesAccountStubs.*
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
