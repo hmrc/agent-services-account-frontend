@@ -49,7 +49,7 @@ extends Logging {
     agentServicesAccountConnector
       .getSubscriptionInfo(originalMissingSubscriptions.map(_.regime))
       .flatMap { connectorSubscriptions =>
-        val mergedSubscriptions =
+        val subscriptionsWithResolvedStatus =
           connectorSubscriptions.map { connectorSubscription =>
             originalMissingSubscriptions
               .find(_.regime == connectorSubscription.regime)
@@ -61,32 +61,40 @@ extends Logging {
               }
               .getOrElse(connectorSubscription)
           }
-        Future.traverse(mergedSubscriptions) { subInfo =>
-          if (subInfo.subscriptionStatus != SubscriptionStatus.InactiveEnrolment) {
-            Future.successful(subInfo)
-          }
-          else {
-            enrolmentStoreProxyConnector
-              .getGroupAllocatedEnrolment(
-                agentInfo.groupId,
-                s"HMRC-${subInfo.regime}-AGENT"
-              )
-              .map {
-                case Some(es5Response) =>
-                  subInfo.copy(
-                    creationDate = es5Response.enrolmentDate
-                  )
-                case None => subInfo
-              }
-              .recover {
-                case ex =>
-                  logger.warn(
-                    s"[SubscriptionService] ES5 enrichment failed for ${subInfo.regime}: ${ex.getMessage}"
-                  )
-                  subInfo
-              }
-          }
+        Future.traverse(subscriptionsWithResolvedStatus) { subInfo =>
+          enrichInactiveSubscriptionWithEnrolmentDate(subInfo, agentInfo.groupId)
         }
       }
   }
+
+  private def enrichInactiveSubscriptionWithEnrolmentDate(
+    subInfo: SubscriptionInfo,
+    groupId: String
+  )(using HeaderCarrier): Future[SubscriptionInfo] = {
+    if (subInfo.subscriptionStatus != SubscriptionStatus.InactiveEnrolment) {
+      Future.successful(subInfo)
+    }
+    else {
+      enrolmentStoreProxyConnector
+        .getLegacyAgentEnrolment(
+          groupId,
+          subInfo.regime
+        )
+        .map {
+          case Some(es5Response) =>
+            subInfo.copy(
+              creationDate = es5Response.enrolmentDate
+            )
+          case None => subInfo
+        }
+        .recover {
+          case ex =>
+            logger.warn(
+              s"[SubscriptionService] ES5 enrichment failed for ${subInfo.regime}: ${ex.getMessage}"
+            )
+            subInfo
+        }
+    }
+  }
+
 }

@@ -20,6 +20,7 @@ import play.api.Logging
 import play.api.http.Status.*
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models.Es5GroupAllocatedEnrolment
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.http.HttpReads.Implicits.*
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.HeaderCarrier
@@ -60,6 +61,16 @@ extends Logging {
             throw UpstreamErrorResponse(response.body, other)
         }
       }
+  }
+
+  def getLegacyAgentEnrolment(
+    groupId: String,
+    regime: LegacyRegime
+  )(implicit hc: HeaderCarrier): Future[Option[Es5GroupAllocatedEnrolment]] = {
+
+    val enrolmentKey = s"HMRC-${regime.toString}-AGENT"
+
+    getGroupAllocatedEnrolment(groupId, enrolmentKey)
   }
 
 }
