@@ -78,16 +78,12 @@ case class AgentInfo(
       case Some(_) => true
       case _ => false
     }
-
   private def subscriptionStatusFor(key: String): SubscriptionStatus =
     enrolments.getEnrolment(key) match {
       case Some(enrolment) if enrolment.isActivated => SubscriptionStatus.Subscribed
       case Some(_) => SubscriptionStatus.InactiveEnrolment
       case None => SubscriptionStatus.NotSubscribed
     }
-  private val hasPayeSubscription: Boolean = enrolments.getEnrolment("IR-PAYE-AGENT").exists(_.isActivated)
-  private val hasCtSubscription: Boolean = enrolments.getEnrolment("IR-CT-AGENT").exists(_.isActivated)
-  private val hasSaSubscription: Boolean = enrolments.getEnrolment("IR-SA-AGENT").exists(_.isActivated)
   val hasOtherEnrolments: Boolean = Seq(
     "HMCE-VAT-AGNT",
     "HMRC-AGENT-AGENT",
@@ -98,55 +94,21 @@ case class AgentInfo(
     "IR-SDLT-AGENT"
   ).exists(enrolments.getEnrolment(_).exists(_.isActivated))
 
-  def existingSubscriptionInfo: Seq[SubscriptionInfo] =
+  def subscriptions: Seq[SubscriptionInfo] =
     Seq(
-      if (hasPayeSubscription)
-        Some(SubscriptionInfo(
-          LegacyRegime.PAYE,
-          SubscriptionStatus.Subscribed
-        ))
-      else
-        None,
-      if (hasCtSubscription)
-        Some(SubscriptionInfo(
-          LegacyRegime.CT,
-          SubscriptionStatus.Subscribed
-        ))
-      else
-        None,
-      if (hasSaSubscription)
-        Some(SubscriptionInfo(
-          LegacyRegime.SA,
-          SubscriptionStatus.Subscribed
-        ))
-      else
-        None
-    ).flatten
-
-  def missingSubscriptions: Seq[SubscriptionInfo] =
-    Seq(
-      if (!hasPayeSubscription)
-        Some(SubscriptionInfo(
-          regime = LegacyRegime.PAYE,
-          subscriptionStatus = subscriptionStatusFor("IR-PAYE-AGENT")
-        ))
-      else
-        None,
-      if (!hasCtSubscription)
-        Some(SubscriptionInfo(
-          regime = LegacyRegime.CT,
-          subscriptionStatus = subscriptionStatusFor("IR-CT-AGENT")
-        ))
-      else
-        None,
-      if (!hasSaSubscription)
-        Some(SubscriptionInfo(
-          regime = LegacyRegime.SA,
-          subscriptionStatus = subscriptionStatusFor("IR-SA-AGENT")
-        ))
-      else
-        None
-    ).flatten
+      SubscriptionInfo(
+        LegacyRegime.PAYE,
+        subscriptionStatusFor("IR-PAYE-AGENT")
+      ),
+      SubscriptionInfo(
+        LegacyRegime.CT,
+        subscriptionStatusFor("IR-CT-AGENT")
+      ),
+      SubscriptionInfo(
+        LegacyRegime.SA,
+        subscriptionStatusFor("IR-SA-AGENT")
+      )
+    )
 
   def getAgentCodeFor(key: String): Option[String] = enrolments
     .getEnrolment(key)

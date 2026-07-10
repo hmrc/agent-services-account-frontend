@@ -71,8 +71,7 @@ with BeforeAndAfterEach {
     "not call ES5 when subscription is not inactive" in new Setup {
 
       val agentInfo = mock[AgentInfo]
-      agentInfo.missingSubscriptions returns Seq(SubscriptionInfo(regime, Subscribed))
-      agentInfo.existingSubscriptionInfo returns Seq()
+      agentInfo.subscriptions returns Seq(SubscriptionInfo(regime, Subscribed))
       mockASAConnector.getSubscriptionInfo(*).returns(Future.successful(Seq(activeSubInfo)))
 
       val result = service.getSubscriptionInfo(agentInfo).futureValue
@@ -84,8 +83,7 @@ with BeforeAndAfterEach {
     "enrich inactive enrolment with ES5 date when available" in new Setup {
 
       val agentInfo = mock[AgentInfo]
-      agentInfo.missingSubscriptions returns Seq(SubscriptionInfo(regime, InactiveEnrolment))
-      agentInfo.existingSubscriptionInfo returns Seq()
+      agentInfo.subscriptions returns Seq(SubscriptionInfo(regime, InactiveEnrolment))
       mockASAConnector.getSubscriptionInfo(*).returns(Future.successful(Seq(inactiveSubInfo)))
       val enrolmentDate = Instant.now
       mockES5Connector.getLegacyAgentEnrolment(*, *)
@@ -106,8 +104,7 @@ with BeforeAndAfterEach {
     "leave inactive enrolment unchanged when ES5 returns None" in new Setup {
 
       val agentInfo = mock[AgentInfo]
-      agentInfo.missingSubscriptions returns Seq(SubscriptionInfo(regime, InactiveEnrolment))
-      agentInfo.existingSubscriptionInfo returns Seq()
+      agentInfo.subscriptions returns Seq(SubscriptionInfo(regime, InactiveEnrolment))
       mockASAConnector.getSubscriptionInfo(*).returns(Future.successful(Seq(inactiveSubInfo)))
       mockES5Connector.getLegacyAgentEnrolment(*, *).returns(Future.successful(None))
 
@@ -119,8 +116,7 @@ with BeforeAndAfterEach {
     "recover from ES5 failure without failing request" in new Setup {
 
       val agentInfo = mock[AgentInfo]
-      agentInfo.missingSubscriptions returns Seq(SubscriptionInfo(regime, InactiveEnrolment))
-      agentInfo.existingSubscriptionInfo returns Seq()
+      agentInfo.subscriptions returns Seq(SubscriptionInfo(regime, InactiveEnrolment))
       mockASAConnector.getSubscriptionInfo(*).returns(Future.successful(Seq(inactiveSubInfo)))
       mockES5Connector.getLegacyAgentEnrolment(*, *).returns(Future.failed(new RuntimeException("ES5 down")))
 

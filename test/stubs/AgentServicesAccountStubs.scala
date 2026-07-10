@@ -76,8 +76,7 @@ object AgentServicesAccountStubs {
       subscriptionStatus = SubscriptionInProgress
     )
   )): StubMapping = {
-    val params = subscriptionInfo.map(info => s"regimes=${info.regime}").mkString("&")
-    stubFor(get(urlEqualTo(s"/agent-services-account/legacy-subscription-info?$params"))
+    stubFor(get(urlPathEqualTo(s"/agent-services-account/legacy-subscription-info"))
       .willReturn(
         aResponse()
           .withStatus(OK)

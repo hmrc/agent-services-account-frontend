@@ -48,7 +48,7 @@ extends Logging {
   )(using hc: HeaderCarrier): Future[Option[Es5GroupAllocatedEnrolment]] = {
 
     http
-      .get(url"$baseUrl/enrolment-store/groups/$groupId/enrolments/$enrolmentKey")
+      .get(url"$baseUrl/enrolment-store-proxy/enrolment-store/groups/$groupId/enrolments/$enrolmentKey")
       .execute[HttpResponse]
       .map { response =>
         response.status match {

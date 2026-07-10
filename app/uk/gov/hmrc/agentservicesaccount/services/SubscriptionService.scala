@@ -43,28 +43,24 @@ extends Logging {
     HeaderCarrier,
     RequestHeader
   ): Future[Seq[SubscriptionInfo]] = {
-
-    val originalMissingSubscriptions = agentInfo.missingSubscriptions
-
-    agentServicesAccountConnector
-      .getSubscriptionInfo(originalMissingSubscriptions.map(_.regime))
-      .flatMap { connectorSubscriptions =>
-        val subscriptionsWithResolvedStatus =
-          connectorSubscriptions.map { connectorSubscription =>
-            originalMissingSubscriptions
-              .find(_.regime == connectorSubscription.regime)
-              .filter(_.subscriptionStatus == SubscriptionStatus.InactiveEnrolment)
-              .map { _ =>
-                connectorSubscription.copy(
-                  subscriptionStatus = SubscriptionStatus.InactiveEnrolment
-                )
-              }
-              .getOrElse(connectorSubscription)
-          }
-        Future.traverse(subscriptionsWithResolvedStatus) { subInfo =>
-          enrichInactiveSubscriptionWithEnrolmentDate(subInfo, agentInfo.groupId)
+    val subscriptions = agentInfo.subscriptions
+    val subscribed = subscriptions.filter(_.subscriptionStatus == SubscriptionStatus.Subscribed)
+    val inactive = subscriptions.filter(_.subscriptionStatus == SubscriptionStatus.InactiveEnrolment)
+    val notSubscribed = subscriptions.filter(_.subscriptionStatus == SubscriptionStatus.NotSubscribed)
+    for {
+      enrichedInactive <-
+        Future.traverse(inactive) { sub =>
+          enrichInactiveSubscriptionWithEnrolmentDate(sub, agentInfo.groupId)
         }
-      }
+      backendSubscriptions <-
+        if (notSubscribed.nonEmpty)
+          agentServicesAccountConnector.getSubscriptionInfo(
+            notSubscribed.map(_.regime)
+          )
+        else
+          Future.successful(Seq.empty)
+
+    } yield subscribed ++ enrichedInactive ++ backendSubscriptions
   }
 
   private def enrichInactiveSubscriptionWithEnrolmentDate(
