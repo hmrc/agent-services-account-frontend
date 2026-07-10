@@ -18,19 +18,22 @@ package uk.gov.hmrc.agentservicesaccount.actions
 
 import play.api.Environment
 import play.api.Logging
-import play.api.mvc.Results._
-import play.api.mvc._
+import play.api.mvc.Results.*
+import play.api.mvc.*
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
 import uk.gov.hmrc.agentservicesaccount.models.Arn
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionInfo
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionStatus
-import uk.gov.hmrc.agentservicesaccount.utils.RequestSupport._
+import uk.gov.hmrc.agentservicesaccount.utils.RequestSupport.*
 import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
-import uk.gov.hmrc.auth.core._
-import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals._
+import uk.gov.hmrc.auth.core.*
+import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals.*
 import uk.gov.hmrc.auth.core.retrieve.AgentInformation
 import uk.gov.hmrc.auth.core.retrieve.Credentials
 import uk.gov.hmrc.auth.core.retrieve.Name
@@ -114,20 +117,15 @@ case class AgentInfo(
       )
     )
 
-  def getAgentCodeFor(key: String): Option[String] = enrolments
-    .getEnrolment(key)
-    .flatMap(_.identifiers.headOption)
-    .map(_.value)
-
   def getAgentReferenceFor(regime: LegacyRegime): Option[String] =
     enrolments
       .getEnrolment(regime.enrolmentKey)
       .flatMap(_.identifiers.find(_.key == regime.agentReferenceKey))
       .map(_.value)
 
-  def ctAgentCode: Option[String] = getAgentCodeFor(ctEnrolment)
-  def saAgentCode: Option[String] = getAgentCodeFor(saEnrolment)
-  def payeAgentCode: Option[String] = getAgentCodeFor(payeEnrolment)
+  def ctAgentCode: Option[String] = getAgentReferenceFor(CT)
+  def saAgentCode: Option[String] = getAgentReferenceFor(SA)
+  def payeAgentCode: Option[String] = getAgentReferenceFor(PAYE)
 
 }
 
