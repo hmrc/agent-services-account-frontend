@@ -175,7 +175,6 @@ extends Logging {
   val enableLegacySubscriptionLinkRobotics: Boolean = getBoolean("features.enable-legacy-subscription-link-robotics")
   val enrolmentStoreProxyBaseUrl: String = baseUrl("enrolment-store-proxy")
   val showLegacySubscriptions: Boolean = getBoolean("features.show-legacy-subscriptions")
-  val enableAgentRecordViaAsa: Boolean = getBoolean("features.enable-agent-record-via-asa")
   val enableAgentRecordHipUpdates: Boolean = getBoolean("features.enable-agent-record-hip-updates")
 
   // Gran Perms

@@ -19,8 +19,6 @@ package uk.gov.hmrc.agentservicesaccount.services
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import play.api.mvc.RequestHeader
-import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
 import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
 
@@ -28,16 +26,10 @@ import scala.concurrent.Future
 
 @Singleton
 class AgentRecordService @Inject() (
-  agentAssuranceConnector: AgentAssuranceConnector,
   agentServicesAccountConnector: AgentServicesAccountConnector
-)(
-  implicit appConfig: AppConfig
 ) {
 
   def getAgentRecord(implicit rh: RequestHeader): Future[AgentDetailsDesResponse] =
-    if (appConfig.enableAgentRecordViaAsa)
-      agentServicesAccountConnector.getAgentRecord
-    else
-      agentAssuranceConnector.getAgentRecord
+    agentServicesAccountConnector.getAgentRecord
 
 }
