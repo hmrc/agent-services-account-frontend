@@ -76,7 +76,7 @@ with BeforeAndAfterEach {
 
       val result = service.getSubscriptionInfo(agentInfo).futureValue
 
-      mockES5Connector.getGroupAllocatedEnrolment(*, *) wasNever called
+      mockES5Connector.getGroupAllocatedEnrolment(*, *, *) wasNever called
       result.head.subscriptionStatus mustBe SubscriptionStatus.Subscribed
     }
 
@@ -84,9 +84,10 @@ with BeforeAndAfterEach {
 
       val agentInfo = mock[AgentInfo]
       agentInfo.subscriptions returns Seq(SubscriptionInfo(regime, InactiveEnrolment))
+      agentInfo.getAgentReferenceFor(regime).returns(Some("test-agent-reference"))
       mockASAConnector.getSubscriptionInfo(*).returns(Future.successful(Seq(inactiveSubInfo)))
       val enrolmentDate = Instant.now
-      mockES5Connector.getLegacyAgentEnrolment(*, *)
+      mockES5Connector.getGroupAllocatedEnrolment(*, *, *)
         .returns(Future.successful(Some(
           Es5GroupAllocatedEnrolment(
             service = "testService",
@@ -105,8 +106,9 @@ with BeforeAndAfterEach {
 
       val agentInfo = mock[AgentInfo]
       agentInfo.subscriptions returns Seq(SubscriptionInfo(regime, InactiveEnrolment))
+      agentInfo.getAgentReferenceFor(regime).returns(Some("test-agent-reference"))
       mockASAConnector.getSubscriptionInfo(*).returns(Future.successful(Seq(inactiveSubInfo)))
-      mockES5Connector.getLegacyAgentEnrolment(*, *).returns(Future.successful(None))
+      mockES5Connector.getGroupAllocatedEnrolment(*, *, *).returns(Future.successful(None))
 
       val result = service.getSubscriptionInfo(agentInfo).futureValue
 
@@ -117,8 +119,9 @@ with BeforeAndAfterEach {
 
       val agentInfo = mock[AgentInfo]
       agentInfo.subscriptions returns Seq(SubscriptionInfo(regime, InactiveEnrolment))
+      agentInfo.getAgentReferenceFor(regime).returns(Some("test-agent-reference"))
       mockASAConnector.getSubscriptionInfo(*).returns(Future.successful(Seq(inactiveSubInfo)))
-      mockES5Connector.getLegacyAgentEnrolment(*, *).returns(Future.failed(new RuntimeException("ES5 down")))
+      mockES5Connector.getGroupAllocatedEnrolment(*, *, *).returns(Future.failed(new RuntimeException("ES5 down")))
 
       val result = service.getSubscriptionInfo(agentInfo).futureValue
 

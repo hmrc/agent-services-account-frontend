@@ -47,10 +47,15 @@ extends Logging {
     val subscribed = subscriptions.filter(_.subscriptionStatus == SubscriptionStatus.Subscribed)
     val inactive = subscriptions.filter(_.subscriptionStatus == SubscriptionStatus.InactiveEnrolment)
     val notSubscribed = subscriptions.filter(_.subscriptionStatus == SubscriptionStatus.NotSubscribed)
+    val inactiveWithAgentReference = inactive.flatMap { sub => agentInfo.getAgentReferenceFor(sub.regime).map(sub -> _) }
     for {
       enrichedInactive <-
-        Future.traverse(inactive) { sub =>
-          enrichInactiveSubscriptionWithEnrolmentDate(sub, agentInfo.groupId)
+        Future.traverse(inactiveWithAgentReference) { case (sub, agentReference) =>
+          enrichInactiveSubscriptionWithEnrolmentDate(
+            sub,
+            agentInfo.groupId,
+            agentReference
+          )
         }
       backendSubscriptions <-
         if (notSubscribed.nonEmpty)
@@ -65,16 +70,18 @@ extends Logging {
 
   private def enrichInactiveSubscriptionWithEnrolmentDate(
     subInfo: SubscriptionInfo,
-    groupId: String
+    groupId: String,
+    agentReference: String
   )(using HeaderCarrier): Future[SubscriptionInfo] = {
     if (subInfo.subscriptionStatus != SubscriptionStatus.InactiveEnrolment) {
       Future.successful(subInfo)
     }
     else {
       enrolmentStoreProxyConnector
-        .getLegacyAgentEnrolment(
+        .getGroupAllocatedEnrolment(
           groupId,
-          subInfo.regime
+          subInfo.regime,
+          agentReference
         )
         .map {
           case Some(es5Response) =>

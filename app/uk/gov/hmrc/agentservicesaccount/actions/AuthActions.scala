@@ -42,6 +42,10 @@ import scala.annotation.nowarn
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
+private val payeEnrolment = "IR-PAYE-AGENT"
+private val saEnrolment = "IR-SA-AGENT"
+private val ctEnrolment = "IR-CT-AGENT"
+
 class SubscriptionJourneyRequest[A](
   val subscriptionJourney: SubscriptionJourney,
   val agentInfo: AgentInfo,
@@ -98,15 +102,15 @@ case class AgentInfo(
     Seq(
       SubscriptionInfo(
         LegacyRegime.PAYE,
-        subscriptionStatusFor("IR-PAYE-AGENT")
+        subscriptionStatusFor(payeEnrolment)
       ),
       SubscriptionInfo(
         LegacyRegime.CT,
-        subscriptionStatusFor("IR-CT-AGENT")
+        subscriptionStatusFor(ctEnrolment)
       ),
       SubscriptionInfo(
         LegacyRegime.SA,
-        subscriptionStatusFor("IR-SA-AGENT")
+        subscriptionStatusFor(saEnrolment)
       )
     )
 
@@ -115,9 +119,15 @@ case class AgentInfo(
     .flatMap(_.identifiers.headOption)
     .map(_.value)
 
-  def ctAgentCode: Option[String] = getAgentCodeFor("IR-CT-AGENT")
-  def saAgentCode: Option[String] = getAgentCodeFor("IR-SA-AGENT")
-  def payeAgentCode: Option[String] = getAgentCodeFor("IR-PAYE-AGENT")
+  def getAgentReferenceFor(regime: LegacyRegime): Option[String] =
+    enrolments
+      .getEnrolment(regime.enrolmentKey)
+      .flatMap(_.identifiers.find(_.key == regime.agentReferenceKey))
+      .map(_.value)
+
+  def ctAgentCode: Option[String] = getAgentCodeFor(ctEnrolment)
+  def saAgentCode: Option[String] = getAgentCodeFor(saEnrolment)
+  def payeAgentCode: Option[String] = getAgentCodeFor(payeEnrolment)
 
 }
 
@@ -162,8 +172,9 @@ with Logging {
                   Future.successful(Left(Redirect(appConfig.agentSubscriptionFrontendUrl)))
               }
             case _ =>
-              logger.warn("No HMRC-AS-AGENT enrolment found -- redirecting to /agent-subscription/start.")
-              Future.successful(Left(Redirect(appConfig.agentSubscriptionFrontendUrl)))
+              val message = "Unexpected response from auth: missing required agent information (enrolments, credentials, agent information or groupId)"
+              logger.error(message)
+              Future.failed(new RuntimeException(message))
           }
           .recover(handleFailureRefiner)
       }

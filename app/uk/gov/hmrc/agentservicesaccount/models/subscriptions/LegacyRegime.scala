@@ -25,7 +25,23 @@ import play.api.mvc.PathBindable
 
 // TODO when migrating to scala 3, replace this with the backend model from agent-services-account
 sealed trait LegacyRegime {
+
   def msgPrefix: String
+
+  def enrolmentKey: String =
+    this match {
+      case LegacyRegime.PAYE => "IR-PAYE-AGENT"
+      case LegacyRegime.SA => "IR-SA-AGENT"
+      case LegacyRegime.CT => "IR-CT-AGENT"
+    }
+
+  def agentReferenceKey: String =
+    this match {
+      case LegacyRegime.PAYE => "IRAgentReference"
+      case LegacyRegime.SA => "IRAgentReference"
+      case LegacyRegime.CT => "IRAgentReference"
+    }
+
 }
 
 object LegacyRegime {

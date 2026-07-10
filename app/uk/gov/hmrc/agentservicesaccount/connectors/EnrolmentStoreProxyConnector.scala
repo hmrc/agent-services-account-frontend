@@ -44,8 +44,11 @@ extends Logging {
 
   def getGroupAllocatedEnrolment(
     groupId: String,
-    enrolmentKey: String
+    regime: LegacyRegime,
+    agentReference: String
   )(using hc: HeaderCarrier): Future[Option[Es5GroupAllocatedEnrolment]] = {
+
+    val enrolmentKey = s"${regime.enrolmentKey}~${regime.agentReferenceKey}~$agentReference"
 
     http
       .get(url"$baseUrl/enrolment-store-proxy/enrolment-store/groups/$groupId/enrolments/$enrolmentKey")
@@ -61,16 +64,6 @@ extends Logging {
             throw UpstreamErrorResponse(response.body, other)
         }
       }
-  }
-
-  def getLegacyAgentEnrolment(
-    groupId: String,
-    regime: LegacyRegime
-  )(implicit hc: HeaderCarrier): Future[Option[Es5GroupAllocatedEnrolment]] = {
-
-    val enrolmentKey = s"HMRC-${regime.toString}-AGENT"
-
-    getGroupAllocatedEnrolment(groupId, enrolmentKey)
   }
 
 }
