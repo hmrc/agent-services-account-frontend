@@ -18,19 +18,22 @@ package uk.gov.hmrc.agentservicesaccount.actions
 
 import play.api.Environment
 import play.api.Logging
-import play.api.mvc.Results._
-import play.api.mvc._
+import play.api.mvc.Results.*
+import play.api.mvc.*
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
 import uk.gov.hmrc.agentservicesaccount.models.Arn
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionInfo
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionStatus
-import uk.gov.hmrc.agentservicesaccount.utils.RequestSupport._
+import uk.gov.hmrc.agentservicesaccount.utils.RequestSupport.*
 import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
-import uk.gov.hmrc.auth.core._
-import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals._
+import uk.gov.hmrc.auth.core.*
+import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals.*
 import uk.gov.hmrc.auth.core.retrieve.AgentInformation
 import uk.gov.hmrc.auth.core.retrieve.Credentials
 import uk.gov.hmrc.auth.core.retrieve.Name
@@ -41,6 +44,10 @@ import javax.inject.Singleton
 import scala.annotation.nowarn
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
+
+private val payeEnrolment = "IR-PAYE-AGENT"
+private val saEnrolment = "IR-SA-AGENT"
+private val ctEnrolment = "IR-CT-AGENT"
 
 class SubscriptionJourneyRequest[A](
   val subscriptionJourney: SubscriptionJourney,
@@ -68,7 +75,8 @@ case class AgentInfo(
   email: Option[String] = None,
   name: Option[Name] = None,
   credentials: Option[Credentials] = None,
-  agentInformation: AgentInformation
+  agentInformation: AgentInformation,
+  groupId: String
 ) {
 
   val isAdmin: Boolean =
@@ -77,10 +85,12 @@ case class AgentInfo(
       case Some(_) => true
       case _ => false
     }
-
-  private val hasPayeSubscription: Boolean = enrolments.getEnrolment("IR-PAYE-AGENT").exists(_.isActivated)
-  private val hasCtSubscription: Boolean = enrolments.getEnrolment("IR-CT-AGENT").exists(_.isActivated)
-  private val hasSaSubscription: Boolean = enrolments.getEnrolment("IR-SA-AGENT").exists(_.isActivated)
+  private def subscriptionStatusFor(key: String): SubscriptionStatus =
+    enrolments.getEnrolment(key) match {
+      case Some(enrolment) if enrolment.isActivated => SubscriptionStatus.Subscribed
+      case Some(_) => SubscriptionStatus.InactiveEnrolment
+      case None => SubscriptionStatus.NotSubscribed
+    }
   val hasOtherEnrolments: Boolean = Seq(
     "HMCE-VAT-AGNT",
     "HMRC-AGENT-AGENT",
@@ -91,55 +101,31 @@ case class AgentInfo(
     "IR-SDLT-AGENT"
   ).exists(enrolments.getEnrolment(_).exists(_.isActivated))
 
-  def existingSubscriptionInfo: Seq[SubscriptionInfo] =
+  def subscriptions: Seq[SubscriptionInfo] =
     Seq(
-      if (hasPayeSubscription)
-        Some(SubscriptionInfo(
-          LegacyRegime.PAYE,
-          SubscriptionStatus.Subscribed
-        ))
-      else
-        None,
-      if (hasCtSubscription)
-        Some(SubscriptionInfo(
-          LegacyRegime.CT,
-          SubscriptionStatus.Subscribed
-        ))
-      else
-        None,
-      if (hasSaSubscription)
-        Some(SubscriptionInfo(
-          LegacyRegime.SA,
-          SubscriptionStatus.Subscribed
-        ))
-      else
-        None
-    ).flatten
+      SubscriptionInfo(
+        LegacyRegime.PAYE,
+        subscriptionStatusFor(payeEnrolment)
+      ),
+      SubscriptionInfo(
+        LegacyRegime.CT,
+        subscriptionStatusFor(ctEnrolment)
+      ),
+      SubscriptionInfo(
+        LegacyRegime.SA,
+        subscriptionStatusFor(saEnrolment)
+      )
+    )
 
-  def missingSubscriptions: Seq[LegacyRegime] =
-    Seq(
-      if (!hasPayeSubscription)
-        Some(LegacyRegime.PAYE)
-      else
-        None,
-      if (!hasCtSubscription)
-        Some(LegacyRegime.CT)
-      else
-        None,
-      if (!hasSaSubscription)
-        Some(LegacyRegime.SA)
-      else
-        None
-    ).flatten
+  def getAgentReferenceFor(regime: LegacyRegime): Option[String] =
+    enrolments
+      .getEnrolment(regime.enrolmentKey)
+      .flatMap(_.identifiers.find(_.key == regime.agentReferenceKey))
+      .map(_.value)
 
-  def getAgentCodeFor(key: String): Option[String] = enrolments
-    .getEnrolment(key)
-    .flatMap(_.identifiers.headOption)
-    .map(_.value)
-
-  def ctAgentCode: Option[String] = getAgentCodeFor("IR-CT-AGENT")
-  def saAgentCode: Option[String] = getAgentCodeFor("IR-SA-AGENT")
-  def payeAgentCode: Option[String] = getAgentCodeFor("IR-PAYE-AGENT")
+  def ctAgentCode: Option[String] = getAgentReferenceFor(CT)
+  def saAgentCode: Option[String] = getAgentReferenceFor(SA)
+  def payeAgentCode: Option[String] = getAgentReferenceFor(PAYE)
 
 }
 
@@ -159,11 +145,11 @@ with Logging {
         implicit val r: Request[A] = request
 
         @nowarn("msg=value name in trait Retrievals is deprecated")
-        val retrievals = allEnrolments and credentials and email and name and credentialRole and agentInformation
+        val retrievals = allEnrolments and credentials and email and name and credentialRole and agentInformation and groupIdentifier
 
         authorised(AuthProviders(GovernmentGateway) and AffinityGroup.Agent)
           .retrieve(retrievals) {
-            case enrols ~ creds ~ email ~ name ~ credRole ~ agentInformation =>
+            case enrols ~ creds ~ email ~ name ~ credRole ~ agentInformation ~ Some(groupId) =>
               getArn(enrols) match {
                 case Some(arn) =>
                   Future.successful(Right(new AuthRequestWithAgentInfo(
@@ -174,16 +160,21 @@ with Logging {
                       email = email,
                       name = name,
                       credentials = creds,
-                      agentInformation = agentInformation
+                      agentInformation = agentInformation,
+                      groupId = groupId
                     ),
                     r
                   )))
                 case None =>
                   logger.warn("No HMRC-AS-AGENT enrolment found -- redirecting to /agent-subscription/start.")
-                  Future successful Left(Redirect(appConfig.agentSubscriptionFrontendUrl))
+                  Future.successful(Left(Redirect(appConfig.agentSubscriptionFrontendUrl)))
               }
-          }.recover(handleFailureRefiner)
-
+            case _ =>
+              val message = "Unexpected response from auth: missing required agent information (enrolments, credentials, agent information or groupId)"
+              logger.error(message)
+              Future.failed(new RuntimeException(message))
+          }
+          .recover(handleFailureRefiner)
       }
 
       override protected def executionContext: ExecutionContext = ec

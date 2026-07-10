@@ -73,6 +73,7 @@ with MockFactory {
           "agentInformation" -> Json.obj(
             "agentCode" -> "ABC123"
           ),
+          "groupIdentifier" -> "testGroupId",
           "allEnrolments" -> Json.arr(
             Json.obj(
               "key" -> "HMRC-AS-AGENT",

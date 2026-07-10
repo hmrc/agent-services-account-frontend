@@ -181,6 +181,12 @@
     @p(msgs("asa.legacy.sa.in-progress.p2"))
 }
 
+@saItemInactive(info: SubscriptionInfo) = {
+    @p(msgs("asa.legacy.sa.inactive.p1", info.localCreationDate.map(_.format(DateTimeFormatter.ofPattern("d MMMM yyyy"))).getOrElse("")))
+    @p(msgs("asa.legacy.sa.inactive.p2"))
+    @p(msgs("asa.legacy.sa.inactive.p3"))
+}
+
 @saItemComplete = {
     @inset_text(msgs("asa.legacy.sa.subscribed.p1", agentInfo.saAgentCode.getOrElse("")))
     @h4(msgs("asa.legacy.sa.subscribed.p2"))
@@ -194,6 +200,12 @@
     @p(msgs("asa.legacy.ct.in-progress.p2"))
 }
 
+@ctItemInactive(info: SubscriptionInfo) = {
+    @p(msgs("asa.legacy.ct.inactive.p1", info.localCreationDate.map(_.format(DateTimeFormatter.ofPattern("d MMMM yyyy"))).getOrElse("")))
+    @p(msgs("asa.legacy.ct.inactive.p2"))
+    @p(msgs("asa.legacy.ct.inactive.p3"))
+}
+
 @ctItemComplete = {
     @inset_text(msgs("asa.legacy.ct.subscribed.p1", agentInfo.ctAgentCode.getOrElse("")))
     @h4(msgs("asa.legacy.ct.subscribed.p2"))
@@ -205,6 +217,12 @@
 @payeItemInProgress(info: SubscriptionInfo) = {
     @p(msgs("asa.legacy.paye.in-progress.p1", info.localCreationDate.map(_.format(DateTimeFormatter.ofPattern("d MMMM yyyy"))).getOrElse("")))
     @p(msgs("asa.legacy.paye.in-progress.p2"))
+}
+
+@payeItemInactive(info: SubscriptionInfo) = {
+    @p(msgs("asa.legacy.paye.inactive.p1", info.localCreationDate.map(_.format(DateTimeFormatter.ofPattern("d MMMM yyyy"))).getOrElse("")))
+    @p(msgs("asa.legacy.paye.inactive.p2"))
+    @p(msgs("asa.legacy.paye.inactive.p3"))
 }
 
 @payeItemComplete = {
@@ -232,6 +250,13 @@
                         Section(
                             headingContent = Text(msgs("asa.legacy.sa.h2")),
                             content = HtmlContent(saItemInProgress(info))
+                        )
+                    )
+                case SubscriptionStatus.InactiveEnrolment if agentInfo.isAdmin =>
+                    items.append(
+                        Section(
+                            headingContent = Text(msgs("asa.legacy.sa.h2")),
+                            content = HtmlContent(saItemInactive(info))
                         )
                     )
                 case SubscriptionStatus.Subscribed =>
@@ -268,6 +293,13 @@
                             content = HtmlContent(ctItemInProgress(info))
                         )
                     )
+                case SubscriptionStatus.InactiveEnrolment if agentInfo.isAdmin =>
+                    items.append(
+                        Section(
+                            headingContent = Text(msgs("asa.legacy.ct.h2")),
+                            content = HtmlContent(ctItemInactive(info))
+                        )
+                    )
                 case SubscriptionStatus.Subscribed =>
                     items.append(
                         Section(
@@ -285,6 +317,13 @@
                         Section(
                             headingContent = Text(msgs("asa.legacy.paye.h2")),
                             content = HtmlContent(payeItemInProgress(info))
+                        )
+                    )
+                case SubscriptionStatus.InactiveEnrolment if agentInfo.isAdmin =>
+                    items.append(
+                        Section(
+                            headingContent = Text(msgs("asa.legacy.paye.h2")),
+                            content = HtmlContent(payeItemInactive(info))
                         )
                     )
                 case SubscriptionStatus.Subscribed =>

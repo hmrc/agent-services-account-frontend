@@ -42,6 +42,8 @@ object SubscriptionStatus {
   extends SubscriptionStatus
   case object InvalidStatus
   extends SubscriptionStatus
+  case object InactiveEnrolment
+  extends SubscriptionStatus
 
   implicit val format: Format[SubscriptionStatus] = Format(
     Reads { json =>
@@ -53,6 +55,7 @@ object SubscriptionStatus {
         case "SubscriptionOnAgency" => JsSuccess(SubscriptionOnAgency)
         case "NotSubscribed" => JsSuccess(NotSubscribed)
         case "InvalidStatus" => JsSuccess(InvalidStatus)
+        case "InactiveEnrolment" => JsSuccess(InactiveEnrolment)
         case _ => throw new RuntimeException(s"Unknown subscription status: ${json.as[String]}")
       }
     },

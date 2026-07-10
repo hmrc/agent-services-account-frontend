@@ -58,7 +58,8 @@ extends ViewBaseSpec {
       email = Some("test@test.com"),
       name = None,
       credentials = None,
-      agentInformation = testAgentInformation
+      agentInformation = testAgentInformation,
+      groupId = "testGroupId"
     )
 
     AuthRequestWithAgentProfile(

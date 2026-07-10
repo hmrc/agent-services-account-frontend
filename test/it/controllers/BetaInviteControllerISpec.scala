@@ -151,6 +151,7 @@ extends BaseISpec {
                  |    "agentInformation": {
                  |    "agentCode": "ABC123"
                  |  },
+                 |    "groupIdentifier": "testGroupId",
                  |  "allEnrolments": []
                  |}""".stripMargin
             )
