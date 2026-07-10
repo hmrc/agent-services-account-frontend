@@ -96,13 +96,4 @@ class AgentAssuranceConnector @Inject() (httpV2: HttpClientV2)(implicit
       }
   }
 
-  def getAgentRecord(implicit rh: RequestHeader): Future[AgentDetailsDesResponse] = httpV2
-    .get(new URL(s"$baseUrl/agent-assurance/agent-record-with-checks"))
-    .execute[HttpResponse].map(response =>
-      response.status match {
-        case OK => Json.parse(response.body).as[AgentDetailsDesResponse]
-        case other => throw UpstreamErrorResponse(s"agent record unavailable: des response code: $other", 500)
-      }
-    )
-
 }
