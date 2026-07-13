@@ -19,12 +19,10 @@ package uk.gov.hmrc.agentservicesaccount.models
 import play.api.libs.json.Json
 import play.api.libs.json.OFormat
 
-import java.time.Instant
-
 case class Es5GroupAllocatedEnrolment(
   service: String,
   status: Option[String],
-  enrolmentDate: Option[Instant]
+  enrolmentDate: Option[String]
 )
 
 object Es5GroupAllocatedEnrolment:

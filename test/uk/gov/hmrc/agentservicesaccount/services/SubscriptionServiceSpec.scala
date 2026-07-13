@@ -33,7 +33,10 @@ import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionStatus.
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionStatus.Subscribed
 import uk.gov.hmrc.http.HeaderCarrier
 
+import java.time.format.DateTimeFormatter
 import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
@@ -86,7 +89,12 @@ with BeforeAndAfterEach {
       agentInfo.subscriptions returns Seq(SubscriptionInfo(regime, InactiveEnrolment))
       agentInfo.getAgentReferenceFor(regime).returns(Some("test-agent-reference"))
       mockASAConnector.getSubscriptionInfo(*).returns(Future.successful(Seq(inactiveSubInfo)))
-      val enrolmentDate = Instant.now
+
+      val enrolmentDate = "2018-10-05 14:48:00.000"
+      val expectedInstant =
+        LocalDateTime.parse(enrolmentDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"))
+          .atZone(ZoneId.of("Europe/London")).toInstant
+
       mockES5Connector.getGroupAllocatedEnrolment(*, *, *)
         .returns(Future.successful(Some(
           Es5GroupAllocatedEnrolment(
@@ -98,7 +106,7 @@ with BeforeAndAfterEach {
 
       val result = service.getSubscriptionInfo(agentInfo).futureValue
 
-      result.head.creationDate mustBe Some(enrolmentDate)
+      result.head.creationDate mustBe Some(expectedInstant)
       result.head.subscriptionStatus mustBe SubscriptionStatus.InactiveEnrolment
     }
 

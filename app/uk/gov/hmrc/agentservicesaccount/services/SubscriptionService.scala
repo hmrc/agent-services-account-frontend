@@ -25,6 +25,10 @@ import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionInfo
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionStatus
 import uk.gov.hmrc.http.HeaderCarrier
 
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 import javax.inject.Singleton
 import scala.concurrent.ExecutionContext
@@ -68,6 +72,12 @@ extends Logging {
     } yield subscribed ++ enrichedInactive ++ backendSubscriptions
   }
 
+  private val es5DateFormatter =
+    DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
+
+  private def convertEs5DateToInstant(date: String): Instant =
+    LocalDateTime.parse(date, es5DateFormatter).atZone(ZoneId.of("Europe/London")).toInstant
+
   private def enrichInactiveSubscriptionWithEnrolmentDate(
     subInfo: SubscriptionInfo,
     groupId: String,
@@ -86,7 +96,7 @@ extends Logging {
         .map {
           case Some(es5Response) =>
             subInfo.copy(
-              creationDate = es5Response.enrolmentDate
+              creationDate = es5Response.enrolmentDate.map(convertEs5DateToInstant)
             )
           case None => subInfo
         }
