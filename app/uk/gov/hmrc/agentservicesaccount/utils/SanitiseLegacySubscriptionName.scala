@@ -19,6 +19,8 @@ package uk.gov.hmrc.agentservicesaccount.utils
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.*
 
+import org.apache.commons.lang3.StringUtils.stripAccents
+
 case class SanitisedLegacySubscriptionName(
   sanitisedName: String,
   removedCharacters: List[String]
@@ -36,19 +38,21 @@ object SanitiseLegacySubscriptionName {
     }
 
   private def sanitiseForCtSa(name: String): SanitisedLegacySubscriptionName = {
+    val nameWithAccentsStripped = stripAccents(name)
     val allowedCharacterForCtSa = """^[A-Za-z0-9 .,()/&\-'‘’]$""".r
-    val nameSplitByAllowedCharacters: Map[Boolean, List[String]] = name.split("").toList.groupBy(allowedCharacterForCtSa.matches)
+    val nameSplitByAllowedCharacters: Map[Boolean, List[String]] = nameWithAccentsStripped.split("").toList.groupBy(allowedCharacterForCtSa.matches)
     val sanitisedName = nameSplitByAllowedCharacters.getOrElse(true, List.empty).mkString
-    val removedCharacters = nameSplitByAllowedCharacters.getOrElse(false, List.empty)
+    val removedCharacters = (name diff nameWithAccentsStripped).map(_.toString).toList ++ nameSplitByAllowedCharacters.getOrElse(false, List.empty)
     SanitisedLegacySubscriptionName(sanitisedName, removedCharacters)
   }
 
   private def sanitiseForPaye(name: String): SanitisedLegacySubscriptionName = {
-    val nameWithAmpersandReplaced = name.replaceAll(" & ", " and ").replaceAll("&", " and ")
+    val nameWithAccentsStripped = stripAccents(name)
+    val nameWithAccentsStrippedAndAmpersandReplaced = nameWithAccentsStripped.replaceAll(" & ", " and ").replaceAll("&", " and ")
     val allowedCharacterForPaye = """^[A-Za-z0-9 .,()@!-]$""".r
-    val nameSplitByAllowedCharacters: Map[Boolean, List[String]] = nameWithAmpersandReplaced.split("").toList.groupBy(allowedCharacterForPaye.matches)
+    val nameSplitByAllowedCharacters: Map[Boolean, List[String]] = nameWithAccentsStrippedAndAmpersandReplaced.split("").toList.groupBy(allowedCharacterForPaye.matches)
     val sanitisedName = nameSplitByAllowedCharacters.getOrElse(true, List.empty).mkString
-    val removedCharacters = name.filter(_ == '&').map(_.toString).toList ++ nameSplitByAllowedCharacters.getOrElse(false, List.empty)
+    val removedCharacters = (name diff nameWithAccentsStripped).map(_.toString).toList ++ name.filter(_ == '&').map(_.toString).toList ++ nameSplitByAllowedCharacters.getOrElse(false, List.empty)
     SanitisedLegacySubscriptionName(sanitisedName, removedCharacters)
   }
 
