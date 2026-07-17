@@ -16,7 +16,8 @@
 
 package uk.gov.hmrc.agentservicesaccount.models.desiDetails
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.Json
+import play.api.libs.json.OFormat
 import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
 
 case class DesignatoryDetails(

@@ -17,9 +17,10 @@
 package uk.gov.hmrc.agentservicesaccount.forms.subscriptions
 
 import play.api.data.Form
-import play.api.data.Forms._
+import play.api.data.Forms.*
 import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators.trimmedText
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
+import uk.gov.hmrc.agentservicesaccount.models.PostCode
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 
 object ChangeSubscriptionAddressForm {
@@ -36,8 +37,6 @@ object ChangeSubscriptionAddressForm {
       "^[a-zA-Z0-9 .,()!@-]*$"
     else
       "^[a-zA-Z0-9 ()&‘/,.-]*$"
-
-  val postcodeRegex = "^[A-Z]{1,2}[0-9][0-9A-Z]?\\s?[0-9][A-Z]{2}$|BFPO\\s?[0-9]{1,5}$"
 
   def maxLen(
     legacyRegime: LegacyRegime,
@@ -60,16 +59,6 @@ object ChangeSubscriptionAddressForm {
       .verifying(s"${legacyRegime.msgPrefix}.error.addressLine$row.invalid", _.matches(lineRegex(legacyRegime)))
   }
 
-  private def postcodeMapping(legacyRegime: LegacyRegime) = {
-    trimmedText
-      .verifying(s"${legacyRegime.msgPrefix}.error.postcode.required", _.nonEmpty)
-      .verifying(
-        s"${legacyRegime.msgPrefix}.error.postcode.invalid",
-        address =>
-          address.toUpperCase.matches(postcodeRegex)
-      )
-  }
-
   private def countryCodeMapping(legacyRegime: LegacyRegime) = {
     trimmedText
       .verifying(s"${legacyRegime.msgPrefix}.error.country.required", _.nonEmpty)
@@ -82,7 +71,7 @@ object ChangeSubscriptionAddressForm {
     line2Key -> lineMapping(legacyRegime, 2),
     line3Key -> optional(lineMapping(legacyRegime, 3)),
     line4Key -> optional(lineMapping(legacyRegime, 4)),
-    postcodeKey -> postcodeMapping(legacyRegime)
+    postcodeKey -> PostCode.mapping(legacyRegime)
   )(
     (
       l1,

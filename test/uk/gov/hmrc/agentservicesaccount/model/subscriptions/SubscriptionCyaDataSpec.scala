@@ -16,18 +16,21 @@
 
 package uk.gov.hmrc.agentservicesaccount.model.subscriptions
 
+import org.scalatest.OptionValues
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
-import uk.gov.hmrc.agentservicesaccount.models._
+import uk.gov.hmrc.agentservicesaccount.models.*
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionCyaData
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
 
 class SubscriptionCyaDataSpec
 extends AnyWordSpec
-with Matchers {
+with Matchers
+with OptionValues {
 
   private def businessAddress(
     countryCode: String,
@@ -52,6 +55,17 @@ with Matchers {
 
   List(CT, SA).foreach(legacyRegime => {
     s"SubscriptionCyaData.toSubscriptionRequest - $legacyRegime" should {
+
+      "normalise postcode in address when converting to subscription request" in {
+        val cyaData = exampleGBCyaData.copy(address = businessAddress("GB").copy(postalCode = Some("sw1a2aa")))
+        val result = cyaData.toSubscriptionRequest(
+          legacyRegime,
+          isWelsh = false,
+          countryNameOpt = Some("")
+        )
+
+        result.value.address.postCode.value shouldBe "SW1A 2AA"
+      }
 
       "use businessName as agentName" in {
         val result = exampleGBCyaData.toSubscriptionRequest(
@@ -256,6 +270,17 @@ with Matchers {
 
   "SubscriptionCyaData.toSubscriptionRequest - PAYE" should {
     val asaAgencyName = "Agency Name"
+
+    "normalise postcode in address when converting to subscription request" in {
+      val cyaData = exampleGBCyaData.copy(address = businessAddress("GB").copy(postalCode = Some("sw1a2aa")))
+      val result = cyaData.toSubscriptionRequest(
+        LegacyRegime.PAYE,
+        isWelsh = false,
+        asaAgentNameOpt = Some(asaAgencyName)
+      )
+
+      result.value.address.postCode.value shouldBe "SW1A 2AA"
+    }
 
     "use ASA agencyName as agentName" in {
       val result = exampleGBCyaData.toSubscriptionRequest(

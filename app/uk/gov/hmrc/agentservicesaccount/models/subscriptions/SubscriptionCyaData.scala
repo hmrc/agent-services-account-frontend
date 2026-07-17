@@ -17,6 +17,7 @@
 package uk.gov.hmrc.agentservicesaccount.models.subscriptions
 
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
+import uk.gov.hmrc.agentservicesaccount.models.PostCode
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
@@ -44,7 +45,7 @@ case class SubscriptionCyaData(
       line2 = address.addressLine2.getOrElse(""),
       line3 = address.addressLine3,
       line4 = line4,
-      postCode = address.postalCode
+      postCode = address.postalCode.map(PostCode.normalise)
     )
     asaDetailsAgencyAddress
   }

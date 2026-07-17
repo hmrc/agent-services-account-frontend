@@ -50,9 +50,13 @@ object SanitiseLegacySubscriptionName {
     val nameWithAccentsStripped = stripAccents(name)
     val nameWithAccentsStrippedAndAmpersandReplaced = nameWithAccentsStripped.replaceAll(" & ", " and ").replaceAll("&", " and ")
     val allowedCharacterForPaye = """^[A-Za-z0-9 .,()@!-]$""".r
-    val nameSplitByAllowedCharacters: Map[Boolean, List[String]] = nameWithAccentsStrippedAndAmpersandReplaced.split("").toList.groupBy(allowedCharacterForPaye.matches)
+    val nameSplitByAllowedCharacters: Map[
+      Boolean,
+      List[String]
+    ] = nameWithAccentsStrippedAndAmpersandReplaced.split("").toList.groupBy(allowedCharacterForPaye.matches)
     val sanitisedName = nameSplitByAllowedCharacters.getOrElse(true, List.empty).mkString
-    val removedCharacters = (name diff nameWithAccentsStripped).map(_.toString).toList ++ name.filter(_ == '&').map(_.toString).toList ++ nameSplitByAllowedCharacters.getOrElse(false, List.empty)
+    val removedCharacters = (name diff nameWithAccentsStripped).map(_.toString).toList ++ name.filter(_ == '&').map(_.toString).toList ++
+      nameSplitByAllowedCharacters.getOrElse(false, List.empty)
     SanitisedLegacySubscriptionName(sanitisedName, removedCharacters)
   }
 

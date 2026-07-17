@@ -16,26 +16,8 @@
 
 package uk.gov.hmrc.agentservicesaccount.models
 
-import play.api.libs.json.{Json, OFormat}
-
-case class BusinessAddress(
-  addressLine1: String,
-  addressLine2: Option[String],
-  addressLine3: Option[String] = None,
-  addressLine4: Option[String] = None,
-  postalCode: Option[String],
-  countryCode: String
-) {
-
-  def isUk: Boolean = countryCode == "GB"
-
-}
-
-object BusinessAddress {
-
-  implicit val format: OFormat[BusinessAddress] = Json.format
-
-}
+import play.api.libs.json.Json
+import play.api.libs.json.OFormat
 
 case class AgencyDetails(
   agencyName: Option[String],
