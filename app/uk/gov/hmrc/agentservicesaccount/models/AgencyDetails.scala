@@ -16,14 +16,7 @@
 
 package uk.gov.hmrc.agentservicesaccount.models
 
-import play.api.libs.functional.syntax.toFunctionalBuilderOps
-import play.api.libs.json.Format
-import play.api.libs.json.Json
-import play.api.libs.json.OFormat
-import play.api.libs.json.__
-import uk.gov.hmrc.crypto.json.JsonEncryption.stringEncrypterDecrypter
-import uk.gov.hmrc.crypto.Decrypter
-import uk.gov.hmrc.crypto.Encrypter
+import play.api.libs.json.{Json, OFormat}
 
 case class BusinessAddress(
   addressLine1: String,
@@ -42,30 +35,6 @@ object BusinessAddress {
 
   implicit val format: OFormat[BusinessAddress] = Json.format
 
-  def databaseFormat(implicit
-    crypto: Encrypter
-      & Decrypter
-  ): Format[BusinessAddress] =
-    (
-      (__ \ "addressLine1").format[String](stringEncrypterDecrypter) and
-        (__ \ "addressLine2").formatNullable[String](stringEncrypterDecrypter) and
-        (__ \ "addressLine3").formatNullable[String](stringEncrypterDecrypter) and
-        (__ \ "addressLine4").formatNullable[String](stringEncrypterDecrypter) and
-        (__ \ "postalCode").formatNullable[String](stringEncrypterDecrypter) and
-        (__ \ "countryCode").format[String](stringEncrypterDecrypter)
-    )(
-      BusinessAddress.apply,
-      address =>
-        (
-          address.addressLine1,
-          address.addressLine2,
-          address.addressLine3,
-          address.addressLine4,
-          address.postalCode,
-          address.countryCode
-        )
-    )
-
 }
 
 case class AgencyDetails(
@@ -80,16 +49,5 @@ case class AgencyDetails(
 object AgencyDetails {
 
   implicit val format: OFormat[AgencyDetails] = Json.format
-
-  def databaseFormat(implicit
-    crypto: Encrypter
-      & Decrypter
-  ): Format[AgencyDetails] =
-    (
-      (__ \ "agencyName").formatNullable[String](stringEncrypterDecrypter) and
-        (__ \ "agencyEmail").formatNullable[String](stringEncrypterDecrypter) and
-        (__ \ "agencyTelephone").formatNullable[String](stringEncrypterDecrypter) and
-        (__ \ "agencyAddress").formatNullable[BusinessAddress](BusinessAddress.databaseFormat)
-    )(AgencyDetails.apply, details => (details.agencyName, details.agencyEmail, details.agencyTelephone, details.agencyAddress))
 
 }
