@@ -18,7 +18,7 @@ package uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
 
 import play.api.Logging
 import play.api.i18n.I18nSupport
-import play.api.mvc._
+import play.api.mvc.*
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
@@ -26,6 +26,7 @@ import uk.gov.hmrc.agentservicesaccount.controllers.emailPendingVerificationKey
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.updateEmailAddressPage
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionEmailAddressForm
+import uk.gov.hmrc.agentservicesaccount.models.emailverification.EmailIsAlreadyVerified
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.EmailAddressFormValues
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
@@ -35,7 +36,7 @@ import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.ctsa_cust
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.update_email_address
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
-import javax.inject._
+import javax.inject.*
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
@@ -60,6 +61,18 @@ with Logging {
 
     val asaDetailsAgencyName = journey.asaDetails.agencyName.getOrElse("")
     val asaDetailsAgencyEmail = journey.asaDetails.agencyEmail.getOrElse("")
+//    TODO: 11839 getEmailVerificationStatus of agencyEmail if EmailIsAlreadyVerified display in question, otherwise simple input box
+//    val credId = request.agentInfo.credentials.map(_.providerId).getOrElse(throw new RuntimeException("no available cred id"))
+//    val verifiedEmail: Future[Boolean] = emailVerificationService.getEmailVerificationStatus(asaDetailsAgencyEmail, credId).map {
+//      case EmailIsAlreadyVerified =>
+//        val journey = request.subscriptionJourney
+//        val updatedJourney = journey.copy(
+//          useCustomEmail = Some(true),
+//          emailAnswer = Some(asaDetailsAgencyEmail)
+//        )
+//        true
+//      case _ => false
+//    }
 
     val initialForm = SubscriptionEmailAddressForm.form(legacyRegime, asaDetailsAgencyName)
     val form =
