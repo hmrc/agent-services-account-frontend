@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,20 +16,23 @@
 
 package uk.gov.hmrc.agentservicesaccount.models
 
-import play.api.libs.json.Json
-import play.api.libs.json.OFormat
+import play.api.libs.json.*
 
-case class AgencyDetails(
-  agencyName: Option[String],
-  agencyEmail: Option[String],
-  agencyTelephone: Option[String],
-  agencyAddress: Option[BusinessAddress]
+case class BusinessAddress(
+  addressLine1: String,
+  addressLine2: Option[String],
+  addressLine3: Option[String] = None,
+  addressLine4: Option[String] = None,
+  postalCode: Option[String],
+  countryCode: String
 ) {
-  def isAbroad: Boolean = !agencyAddress.exists(_.countryCode.equalsIgnoreCase("GB"))
+
+  def isUk: Boolean = countryCode == "GB"
+
 }
 
-object AgencyDetails {
+object BusinessAddress {
 
-  implicit val format: OFormat[AgencyDetails] = Json.format
+  given OFormat[BusinessAddress] = Json.format
 
 }
