@@ -109,19 +109,15 @@ with Logging {
 
     SubscriptionEmailAddressForm.form(legacyRegime, asaDetailsAgencyName).bindFromRequest().fold(
       formWithErrors => {
-        val asaDetailsAgencyEmail = journey.asaDetails.agencyEmail.getOrElse("")
-        //    TODO: 11839 getEmailVerificationStatus of agencyEmail if EmailIsAlreadyVerified display in question, otherwise simple input box
         val credId = request.agentInfo.credentials.map(_.providerId).getOrElse(throw new RuntimeException("no available cred id"))
-        val agencyEmailIsVerified: Future[Boolean] = isAgencyEmailVerified(journey.asaDetails.agencyEmail, credId)
-        Future.successful(
+        isAgencyEmailVerified(journey.asaDetails.agencyEmail, credId) map { isEmailVerified =>
           BadRequest(update_email_address(
             formWithErrors,
             asaDetailsAgencyName,
-//        TODO: 11839 Correct this in line with above
-            Some(asaDetailsAgencyEmail),
+            if (isEmailVerified) journey.asaDetails.agencyEmail else None,
             legacyRegime
           ))
-        )
+        }
       },
       data => {
         if (data.useAsaData) {
