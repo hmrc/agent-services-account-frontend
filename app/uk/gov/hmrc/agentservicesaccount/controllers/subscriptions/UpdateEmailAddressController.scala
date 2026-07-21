@@ -63,7 +63,6 @@ with Logging {
   )(implicit request: SubscriptionJourneyRequest[AnyContent]): Future[Boolean] = {
     asaDetailsAgencyEmailOpt match {
       case Some(asaDetailsAgencyEmail) =>
-        //        TODO: 11839 getEmailVerificationStatus of agencyEmail if EmailIsAlreadyVerified display in question, otherwise simple input box
         emailVerificationService.getEmailVerificationStatus(asaDetailsAgencyEmail, credId).map {
           case EmailIsAlreadyVerified => true
           case _ => false
@@ -76,10 +75,6 @@ with Logging {
     val journey = request.subscriptionJourney
 
     val asaDetailsAgencyName = journey.asaDetails.agencyName.getOrElse("")
-    val asaDetailsAgencyEmail = journey.asaDetails.agencyEmail.getOrElse("")
-//    TODO: 11839 getEmailVerificationStatus of agencyEmail if EmailIsAlreadyVerified display in question, otherwise simple input box
-    val credId = request.agentInfo.credentials.map(_.providerId).getOrElse(throw new RuntimeException("no available cred id"))
-    val agencyEmailIsVerified: Future[Boolean] = isAgencyEmailVerified(journey.asaDetails.agencyEmail, credId)
 
     val initialForm = SubscriptionEmailAddressForm.form(legacyRegime, asaDetailsAgencyName)
     val form =
@@ -96,15 +91,15 @@ with Logging {
         case None => initialForm
       }
 
-    Future.successful(
+    val credId = request.agentInfo.credentials.map(_.providerId).getOrElse(throw new RuntimeException("no available cred id"))
+    isAgencyEmailVerified(journey.asaDetails.agencyEmail, credId) map { isEmailVerified =>
       Ok(update_email_address(
         form,
         asaDetailsAgencyName,
-//        TODO: 11839 Correct this in line with above
-        Some(asaDetailsAgencyEmail),
+        if (isEmailVerified) journey.asaDetails.agencyEmail else None,
         legacyRegime
       ))
-    )
+    }
   }
 
   def onSubmit(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
