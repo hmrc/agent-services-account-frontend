@@ -93,7 +93,8 @@ with Logging {
       Ok(update_email_address(
         form,
         asaDetailsAgencyName,
-        asaDetailsAgencyEmail,
+//        TODO: 11839 Correct this in line with above
+        Some(asaDetailsAgencyEmail),
         legacyRegime
       ))
     )
@@ -111,7 +112,8 @@ with Logging {
           BadRequest(update_email_address(
             formWithErrors,
             asaDetailsAgencyName,
-            asaDetailsAgencyEmail,
+//        TODO: 11839 Correct this in line with above
+            Some(asaDetailsAgencyEmail),
             legacyRegime
           ))
         )

@@ -34,9 +34,11 @@
     govukErrorSummary: GovukErrorSummary
 )
 
-@(form: Form[EmailAddressFormValues], asaDetailsAgencyName: String, asaDetailsAgencyEmail: String, legacyRegime: LegacyRegime)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
+@(form: Form[EmailAddressFormValues], asaDetailsAgencyName: String, verifiedAsaDetailsAgencyEmailOpt: Option[String], legacyRegime: LegacyRegime)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
 
 @legacyRegimePrefix = @{ legacyRegime.msgPrefix }
+
+@pageHeading = @{ msgs(s"$legacyRegimePrefix.email-address.heading", asaDetailsAgencyName) }
 
 @newEmailAddressInput = {
     @govukInput(Input(
@@ -48,40 +50,56 @@
     ).withFormField(form(emailAddressNewKey)))
 }
 
+@radiosAndConditionalInputForm(verifiedAsaDetailsAgencyEmail: String) = {
+    @govukRadios(Radios(
+        fieldset = Some(Fieldset(
+            legend = Some(Legend(
+                content = Text(pageHeading),
+                classes = "govuk-fieldset__legend--l",
+                isPageHeading = true
+            ))
+        )),
+        name = emailAddressUseAsaDataKey,
+        items = Seq(
+            RadioItem(
+                content = Text(verifiedAsaDetailsAgencyEmail),
+                value = Some("true")
+            ),
+            RadioItem(
+                content = Text(msgs(s"$legacyRegimePrefix.email-address.use-asa.false")),
+                value = Some("false"),
+                conditionalHtml = Some(newEmailAddressInput)
+            )
+        )
+    ).withFormField(form(emailAddressUseAsaDataKey)))
+}
+
+@simpleInputForm = {
+    <input type="hidden" name="phoneNumberUseAsaData" value="false">
+    @govukInput(Input(
+        label = Label(
+            content = HtmlContent(pageHeading),
+            classes = "govuk-label--l",
+            isPageHeading = true
+        ),
+        hint = Some(Hint(content = Text(msgs(s"$legacyRegimePrefix.email-address.new-input.hint"))))
+    ).withFormField(form(emailAddressNewKey)))
+}
+
 @main(
     pageTitle = withErrorPrefix(form.hasErrors, msgs(s"$legacyRegimePrefix.email-address.title")),
     mimicBrowserBackLink = true,
     showSecondaryNav = false
 ) {
 
-@* TODO: 11839 Use update_phone_number conditional to do similar in this templete for ASA Agency Email not verified *@
-
     @if(form.hasErrors) {
         @govukErrorSummary(ErrorSummary().withFormErrorsAsText(form))
     }
 
     @formWithCSRF(action = subscriptions.routes.UpdateEmailAddressController.onSubmit(legacyRegime)) {
-        @govukRadios(Radios(
-            fieldset = Some(Fieldset(
-                legend = Some(Legend(
-                    content = Text(msgs(s"$legacyRegimePrefix.email-address.heading", asaDetailsAgencyName)),
-                    classes = "govuk-fieldset__legend--l",
-                    isPageHeading = true
-                ))
-            )),
-            name = emailAddressUseAsaDataKey,
-            items = Seq(
-                RadioItem(
-                    content = Text(asaDetailsAgencyEmail),
-                    value = Some("true")
-                ),
-                RadioItem(
-                    content = Text(msgs(s"$legacyRegimePrefix.email-address.use-asa.false")),
-                    value = Some("false"),
-                    conditionalHtml = Some(newEmailAddressInput)
-                )
-            )
-        ).withFormField(form(emailAddressUseAsaDataKey)))
+        @{
+            verifiedAsaDetailsAgencyEmailOpt.map(radiosAndConditionalInputForm).getOrElse(simpleInputForm)
+        }
 
         @govukButton(Button(content = Text(msgs("common.continue"))))
     }
