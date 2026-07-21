@@ -94,7 +94,20 @@ with Logging {
     val alfJourneyConfig = JourneyConfigV2(
       options = JourneyOptions(
         continueUrl = continueUrl,
-        manualAddressEntryConfig = Some(ManualAddressEntryConfig(showOrganisationName = Some(false)))
+        manualAddressEntryConfig = Some(ManualAddressEntryConfig(
+          line1MaxLength = Some(35),
+          line2MaxLength = Some(35),
+          line3MaxLength = Some(35),
+          townMaxLength = Some(35),
+          mandatoryFields = Some(MandatoryFieldsConfig(
+            addressLine1 = Some(true),
+            addressLine2 = Some(false),
+            addressLine3 = Some(false),
+            town = Some(false),
+            postcode = Some(false)
+          )),
+          showOrganisationName = Some(false)
+        ))
       ),
       version = 2,
       labels = Some(JourneyLabels(
