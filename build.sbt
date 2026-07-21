@@ -47,10 +47,3 @@ lazy val root = (project in file("."))
     Test / scalafmtOnCompile := true,
   )
 
-
-lazy val it = project
-  .enablePlugins(PlayScala)
-  .dependsOn(root % "test->test") // the "test->test" allows reusing test code and test dependencies
-  .settings(DefaultBuildSettings.itSettings())
-  .settings(libraryDependencies ++= AppDependencies.test)
-  .settings(Test / logBuffered := false)
