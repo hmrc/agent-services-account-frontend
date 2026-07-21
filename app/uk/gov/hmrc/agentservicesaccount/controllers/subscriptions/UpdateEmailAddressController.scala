@@ -19,7 +19,8 @@ package uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
 import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc.*
-import uk.gov.hmrc.agentservicesaccount.actions.{Actions, SubscriptionJourneyRequest}
+import uk.gov.hmrc.agentservicesaccount.actions.Actions
+import uk.gov.hmrc.agentservicesaccount.actions.SubscriptionJourneyRequest
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.emailPendingVerificationKey
@@ -56,7 +57,10 @@ extends FrontendController(cc)
 with I18nSupport
 with Logging {
 
-  private def isAgencyEmailVerified(asaDetailsAgencyEmailOpt: Option[String], credId: String)(implicit request: SubscriptionJourneyRequest[AnyContent]): Future[Boolean] = {
+  private def isAgencyEmailVerified(
+    asaDetailsAgencyEmailOpt: Option[String],
+    credId: String
+  )(implicit request: SubscriptionJourneyRequest[AnyContent]): Future[Boolean] = {
     asaDetailsAgencyEmailOpt match {
       case Some(asaDetailsAgencyEmail) =>
         //        TODO: 11839 getEmailVerificationStatus of agencyEmail if EmailIsAlreadyVerified display in question, otherwise simple input box
