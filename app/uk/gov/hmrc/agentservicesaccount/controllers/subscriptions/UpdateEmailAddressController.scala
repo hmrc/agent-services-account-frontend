@@ -19,7 +19,7 @@ package uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
 import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc.*
-import uk.gov.hmrc.agentservicesaccount.actions.Actions
+import uk.gov.hmrc.agentservicesaccount.actions.{Actions, SubscriptionJourneyRequest}
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.emailPendingVerificationKey
@@ -56,23 +56,26 @@ extends FrontendController(cc)
 with I18nSupport
 with Logging {
 
+  private def isAgencyEmailVerified(asaDetailsAgencyEmailOpt: Option[String], credId: String)(implicit request: SubscriptionJourneyRequest[AnyContent]): Future[Boolean] = {
+    asaDetailsAgencyEmailOpt match {
+      case Some(asaDetailsAgencyEmail) =>
+        //        TODO: 11839 getEmailVerificationStatus of agencyEmail if EmailIsAlreadyVerified display in question, otherwise simple input box
+        emailVerificationService.getEmailVerificationStatus(asaDetailsAgencyEmail, credId).map {
+          case EmailIsAlreadyVerified => true
+          case _ => false
+        }
+      case _ => Future.successful(false)
+    }
+  }
+
   def showPage(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
     val journey = request.subscriptionJourney
 
     val asaDetailsAgencyName = journey.asaDetails.agencyName.getOrElse("")
     val asaDetailsAgencyEmail = journey.asaDetails.agencyEmail.getOrElse("")
 //    TODO: 11839 getEmailVerificationStatus of agencyEmail if EmailIsAlreadyVerified display in question, otherwise simple input box
-//    val credId = request.agentInfo.credentials.map(_.providerId).getOrElse(throw new RuntimeException("no available cred id"))
-//    val verifiedEmail: Future[Boolean] = emailVerificationService.getEmailVerificationStatus(asaDetailsAgencyEmail, credId).map {
-//      case EmailIsAlreadyVerified =>
-//        val journey = request.subscriptionJourney
-//        val updatedJourney = journey.copy(
-//          useCustomEmail = Some(true),
-//          emailAnswer = Some(asaDetailsAgencyEmail)
-//        )
-//        true
-//      case _ => false
-//    }
+    val credId = request.agentInfo.credentials.map(_.providerId).getOrElse(throw new RuntimeException("no available cred id"))
+    val agencyEmailIsVerified: Future[Boolean] = isAgencyEmailVerified(journey.asaDetails.agencyEmail, credId)
 
     val initialForm = SubscriptionEmailAddressForm.form(legacyRegime, asaDetailsAgencyName)
     val form =
@@ -108,6 +111,9 @@ with Logging {
     SubscriptionEmailAddressForm.form(legacyRegime, asaDetailsAgencyName).bindFromRequest().fold(
       formWithErrors => {
         val asaDetailsAgencyEmail = journey.asaDetails.agencyEmail.getOrElse("")
+        //    TODO: 11839 getEmailVerificationStatus of agencyEmail if EmailIsAlreadyVerified display in question, otherwise simple input box
+        val credId = request.agentInfo.credentials.map(_.providerId).getOrElse(throw new RuntimeException("no available cred id"))
+        val agencyEmailIsVerified: Future[Boolean] = isAgencyEmailVerified(journey.asaDetails.agencyEmail, credId)
         Future.successful(
           BadRequest(update_email_address(
             formWithErrors,
