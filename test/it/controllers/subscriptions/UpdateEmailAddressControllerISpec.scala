@@ -47,8 +47,8 @@ extends ComponentBaseISpec {
   legacyRegimes.foreach(legacyRegime => {
     val updateEmailAddressPath = s"$subscriptionStartPath/$legacyRegime/email-address"
 
-//    TODO: 11839 Add tests relating to isEmailVerified true/false
     s"GET $updateEmailAddressPath" should {
+//      TODO: 11839 FIX
       "display the enter email address page" in {
 
         givenAuthorisedAsAgentWith(arn.value)
@@ -70,12 +70,26 @@ extends ComponentBaseISpec {
 
     s"POST $updateEmailAddressPath" should {
 
+//      TODO: 11839 FIX
+      "return BAD_REQUEST when form is invalid" in {
+        givenAuthorisedAsAgentWith(arn.value)
+        givenGetAgentRecord(agentRecord)
+        stubASAGetResponseError(arn, NOT_FOUND)
+
+        val result =
+          post(updateEmailAddressPath)(body =
+            Map(
+              emailAddressUseAsaDataKey -> Seq("")
+            )
+          )
+
+        result.status shouldBe BAD_REQUEST
+      }
+
       val journeyWithRedirectLocations = List(
         (subscriptionBaseJourney, "address"),
         (subscriptionFullJourney(legacyRegime), "check-your-answers")
       )
-
-//      TODO: 11389 Should add test cases for return BAD_REQUEST when form is invalid
 
       if (legacyRegime != PAYE) {
         "update journey and redirect to email-address-too-long when using ASA email address that is too long" in {
