@@ -16,11 +16,11 @@
 
 package it.controllers.subscriptions
 
-import play.api.test.Helpers._
+import org.jsoup.Jsoup
+import play.api.test.Helpers.*
 import stubs.AgentServicesAccountStubs.givenGetAgentRecord
 import stubs.AgentServicesAccountStubs.stubASAGetResponseError
-import stubs.EmailVerificationStubs.givenCheckEmailSuccess
-import stubs.EmailVerificationStubs.givenVerifyEmailSuccess
+import stubs.EmailVerificationStubs.{givenCheckEmailNotOK, givenCheckEmailSuccess, givenVerifyEmailSuccess}
 import support.ComponentBaseISpec
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.emailPendingVerificationKey
@@ -49,7 +49,7 @@ extends ComponentBaseISpec {
 
     s"GET $updateEmailAddressPath" should {
 //      TODO: 11839 Implement for givenCheckEmailNotOK
-      "display the enter email address page" in {
+      "display the enter email address page with option to select ASA Agency email address when ASA Agency email address is verified" in {
         givenFullAuthorisedAsAgentWith(
           arn.value,
           "cred-id",
@@ -69,13 +69,47 @@ extends ComponentBaseISpec {
             case SA => "What email address should we use to contact you about Self Assessment?"
           }
         assertPageHasTitle(expectedTitle)(result)
+//        TODO: 11839 Assert radios correctly
+//        Jsoup.parse(result.body).select("title").first().text() shouldBe s"$pageTitle - Agent services account - GOV.UK"
+        val doc = Jsoup.parse(result.body)
+//        Assert two radios
+//        Assert first radio is ASA Agency Email
+//        Assert second is other text
+//        Assert one input box is hidden initially
+      }
+
+      "display the enter email address page with single input box when ASA Agency email address is not verified" in {
+        givenFullAuthorisedAsAgentWith(
+          arn.value,
+          "cred-id",
+          isAdmin = true
+        )
+        givenGetAgentRecord(agentRecord)
+        stubASAGetResponseError(arn, NOT_FOUND)
+        givenCheckEmailNotOK(credId = "cred-id", status = 400)
+
+        val result = get(updateEmailAddressPath)
+
+        result.status shouldBe OK
+        val expectedTitle: String =
+          (legacyRegime: LegacyRegime) match {
+            case CT => "What email address should we use to contact you about Corporation Tax?"
+            case PAYE => "What email address should we use to contact you about PAYE?"
+            case SA => "What email address should we use to contact you about Self Assessment?"
+          }
+        assertPageHasTitle(expectedTitle)(result)
+//        TODO: 11839 Assert simple input box correctly
+  //      Jsoup.parse(result.body).select("title").first().text() shouldBe s"$pageTitle - Agent services account - GOV.UK"
+          val doc = Jsoup.parse(result.body)
+//        Assert no radios
+//        Assert hidden input
+//        Assert one input box is not hidden
       }
     }
 
     s"POST $updateEmailAddressPath" should {
 
-//      TODO: 11839 Implement for givenCheckEmailNotOK
-      "return BAD_REQUEST when form is invalid" in {
+      "return BAD_REQUEST when form is invalid - ASA Agency email address is verified" in {
         givenFullAuthorisedAsAgentWith(
           arn.value,
           "cred-id",
@@ -84,6 +118,26 @@ extends ComponentBaseISpec {
         givenGetAgentRecord(agentRecord)
         stubASAGetResponseError(arn, NOT_FOUND)
         givenCheckEmailSuccess(credId = "cred-id", verificationStatusResponse = VerificationStatusResponse(emails = List.empty[CompletedEmail]))
+
+        val result =
+          post(updateEmailAddressPath)(body =
+            Map(
+              emailAddressUseAsaDataKey -> Seq("")
+            )
+          )
+
+        result.status shouldBe BAD_REQUEST
+      }
+
+      "return BAD_REQUEST when form is invalid - ASA Agency email address is not verified" in {
+        givenFullAuthorisedAsAgentWith(
+          arn.value,
+          "cred-id",
+          isAdmin = true
+        )
+        givenGetAgentRecord(agentRecord)
+        stubASAGetResponseError(arn, NOT_FOUND)
+        givenCheckEmailNotOK(credId = "cred-id", status = 400)
 
         val result =
           post(updateEmailAddressPath)(body =
