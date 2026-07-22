@@ -96,7 +96,10 @@ with Logging {
       Ok(update_email_address(
         form,
         asaDetailsAgencyName,
-        if (isEmailVerified) journey.asaDetails.agencyEmail else None,
+        if (isEmailVerified)
+          journey.asaDetails.agencyEmail
+        else
+          None,
         legacyRegime
       ))
     }
@@ -114,7 +117,10 @@ with Logging {
           BadRequest(update_email_address(
             formWithErrors,
             asaDetailsAgencyName,
-            if (isEmailVerified) journey.asaDetails.agencyEmail else None,
+            if (isEmailVerified)
+              journey.asaDetails.agencyEmail
+            else
+              None,
             legacyRegime
           ))
         }

@@ -52,12 +52,14 @@ extends ViewBaseSpec {
     message = messages(s"$legacyRegimePrefix.email-address.input.error.empty")
   )
 
-  def render(form: Form[EmailAddressFormValues]): Document = Jsoup.parse(
+  def render(
+    form: Form[EmailAddressFormValues],
+    verifiedEmailAddressOpt: Option[String] = Some(asaDetailsAgencyEmail)
+  ): Document = Jsoup.parse(
     view(
       form,
       asaDetailsAgencyName,
-      //    TODO: 11839 Some added to allow tests to compile initially
-      Some(asaDetailsAgencyEmail),
+      verifiedEmailAddressOpt,
       legacyRegime
     )(
       messages,
@@ -210,6 +212,32 @@ extends ViewBaseSpec {
 
       "display error message on form" in {
         doc.select(".govuk-error-message").text() mustBe s"Error: ${messages(s"$legacyRegimePrefix.email-address.input.error.empty")}"
+      }
+    }
+
+    "when subscription phone number empty" should {
+
+      val filledForm: Form[EmailAddressFormValues] = emailAddressForm.fill(
+        EmailAddressFormValues(
+          useAsaData = false,
+          newEmailAddress = Some("hello@new.com")
+        )
+      )
+
+      val doc: Document = render(filledForm, verifiedEmailAddressOpt = None)
+
+      "show no radios and include the hidden input set to false" in {
+        val radios = doc.select(".govuk-radios")
+        radios.size() mustBe 0
+        doc.html() should include(s"<input type=\"hidden\" name=\"$emailAddressUseAsaDataKey\" value=\"false\">")
+      }
+
+      "have the single email address input present" in {
+        doc.select("#emailAddressNew").size() mustBe 1
+      }
+
+      "pre-fill the single email address input" in {
+        doc.select("#emailAddressNew").`val`() mustBe "hello@new.com"
       }
     }
   }
