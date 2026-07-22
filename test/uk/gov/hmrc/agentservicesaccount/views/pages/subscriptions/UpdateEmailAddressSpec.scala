@@ -29,7 +29,6 @@ import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.update_email_address
 
-//    TODO: 11839 Fix tests initially
 //    TODO: 11839 Add tests relating to isEmailVerified true/false
 class UpdateEmailAddressSpec
 extends ViewBaseSpec {
@@ -57,7 +56,8 @@ extends ViewBaseSpec {
     view(
       form,
       asaDetailsAgencyName,
-      asaDetailsAgencyEmail,
+      //    TODO: 11839 Some added to allow tests to compile initially
+      Some(asaDetailsAgencyEmail),
       legacyRegime
     )(
       messages,
