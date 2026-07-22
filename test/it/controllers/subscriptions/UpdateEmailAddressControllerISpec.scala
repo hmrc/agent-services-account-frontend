@@ -75,6 +75,8 @@ extends ComponentBaseISpec {
         (subscriptionFullJourney(legacyRegime), "check-your-answers")
       )
 
+//      TODO: 11389 Should add test cases for return BAD_REQUEST when form is invalid
+
       if (legacyRegime != PAYE) {
         "update journey and redirect to email-address-too-long when using ASA email address that is too long" in {
           givenAuthorisedAsAgentWith(arn.value)
