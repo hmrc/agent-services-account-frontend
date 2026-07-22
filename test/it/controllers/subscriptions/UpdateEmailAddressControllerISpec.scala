@@ -47,6 +47,7 @@ extends ComponentBaseISpec {
   legacyRegimes.foreach(legacyRegime => {
     val updateEmailAddressPath = s"$subscriptionStartPath/$legacyRegime/email-address"
 
+//    TODO: 11839 Add tests relating to isEmailVerified true/false
     s"GET $updateEmailAddressPath" should {
       "display the enter email address page" in {
 
