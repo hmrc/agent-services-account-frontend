@@ -48,12 +48,16 @@ extends ComponentBaseISpec {
     val updateEmailAddressPath = s"$subscriptionStartPath/$legacyRegime/email-address"
 
     s"GET $updateEmailAddressPath" should {
-//      TODO: 11839 FIX
+//      TODO: 11839 Implement for givenCheckEmailNotOK
       "display the enter email address page" in {
-
-        givenAuthorisedAsAgentWith(arn.value)
+        givenFullAuthorisedAsAgentWith(
+          arn.value,
+          "cred-id",
+          isAdmin = true
+        )
         givenGetAgentRecord(agentRecord)
         stubASAGetResponseError(arn, NOT_FOUND)
+        givenCheckEmailSuccess(credId = "cred-id", verificationStatusResponse = VerificationStatusResponse(emails = List.empty[CompletedEmail]))
 
         val result = get(updateEmailAddressPath)
 
@@ -70,11 +74,16 @@ extends ComponentBaseISpec {
 
     s"POST $updateEmailAddressPath" should {
 
-//      TODO: 11839 FIX
+//      TODO: 11839 Implement for givenCheckEmailNotOK
       "return BAD_REQUEST when form is invalid" in {
-        givenAuthorisedAsAgentWith(arn.value)
+        givenFullAuthorisedAsAgentWith(
+          arn.value,
+          "cred-id",
+          isAdmin = true
+        )
         givenGetAgentRecord(agentRecord)
         stubASAGetResponseError(arn, NOT_FOUND)
+        givenCheckEmailSuccess(credId = "cred-id", verificationStatusResponse = VerificationStatusResponse(emails = List.empty[CompletedEmail]))
 
         val result =
           post(updateEmailAddressPath)(body =
