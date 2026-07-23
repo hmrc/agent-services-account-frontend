@@ -49,9 +49,9 @@ class EmailVerificationService @Inject() (
       previouslyCompletedEmailVerification = checkVerifications.flatMap(_.emails.find(completedEmail => completedEmail.equalsTrimmed(newEmail)))
     } yield {
       previouslyCompletedEmailVerification match {
-//        TODO: 11839 Is reorder acceptable solution?
-        case Some(completedEmailVerification) if completedEmailVerification.verified => EmailIsAlreadyVerified
+//        TODO: 11839 Is reorder fix enough? Look into refactor of use of EmailHasNotChanged
         case Some(completedEmailVerification) if completedEmailVerification.locked => EmailIsLocked
+        case Some(completedEmailVerification) if completedEmailVerification.verified => EmailIsAlreadyVerified
         case _ if isUnchanged => EmailHasNotChanged
         case _ => EmailNeedsVerifying
       }
