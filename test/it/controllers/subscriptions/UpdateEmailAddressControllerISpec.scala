@@ -50,7 +50,6 @@ extends ComponentBaseISpec {
     val updateEmailAddressPath = s"$subscriptionStartPath/$legacyRegime/email-address"
 
     s"GET $updateEmailAddressPath" should {
-//      TODO: 11839 FIX
       "display the enter email address page with option to select ASA Agency email address when ASA Agency email address is verified" in {
         givenFullAuthorisedAsAgentWith(
           arn.value,
@@ -74,22 +73,16 @@ extends ComponentBaseISpec {
             case SA => "What email address should we use to contact you about Self Assessment?"
           }
         assertPageHasTitle(expectedTitle)(result)
-//        TODO: 11839 Assert radios correctly
-//        Jsoup.parse(result.body).select("title").first().text() shouldBe s"$pageTitle - Agent services account - GOV.UK"
         val doc = Jsoup.parse(result.body)
-//        Assert two radios
         doc.select(".govuk-radios__item").size() shouldBe 2
-//        Assert first radio is ASA Agency Email
         doc.select(".govuk-radios__item").get(0).text() shouldBe asaAgencyEmail
-//        Assert second is other text
         val expectedFalseText: String =
           (legacyRegime: LegacyRegime) match {
-            case CT => "I want to use a different email address for Corporation Tax?"
-            case PAYE => "I want to use a different email address for PAYE?"
-            case SA => "I want to use a different email address for Self Assessment?"
+            case CT => "I want to use a different email address for Corporation Tax"
+            case PAYE => "I want to use a different email address for PAYE"
+            case SA => "I want to use a different email address for Self Assessment"
           }
         doc.select(".govuk-radios__item").get(1).text() shouldBe expectedFalseText
-//        Assert one input box is hidden initially
         val conditional = doc.select(".govuk-radios__conditional").first()
         conditional.hasClass("govuk-radios__conditional--hidden") shouldBe true
       }
