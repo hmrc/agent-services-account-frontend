@@ -49,10 +49,10 @@ class EmailVerificationService @Inject() (
       previouslyCompletedEmailVerification = checkVerifications.flatMap(_.emails.find(completedEmail => completedEmail.equalsTrimmed(newEmail)))
     } yield {
       previouslyCompletedEmailVerification match {
-//        TODO: 11839 Commented out to test UpdateEmailAddressControllerISpec in subscriptions, need to pass in a checkUnchanged boolean for compatibility with all flows
-//        case _ if isUnchanged => EmailHasNotChanged
-        case Some(completedEmailVerification) if completedEmailVerification.locked => EmailIsLocked
+//        TODO: 11839 Is reorder acceptable solution?
         case Some(completedEmailVerification) if completedEmailVerification.verified => EmailIsAlreadyVerified
+        case Some(completedEmailVerification) if completedEmailVerification.locked => EmailIsLocked
+        case _ if isUnchanged => EmailHasNotChanged
         case _ => EmailNeedsVerifying
       }
     }
