@@ -20,7 +20,9 @@ import org.jsoup.Jsoup
 import play.api.test.Helpers.*
 import stubs.AgentServicesAccountStubs.givenGetAgentRecord
 import stubs.AgentServicesAccountStubs.stubASAGetResponseError
-import stubs.EmailVerificationStubs.{givenCheckEmailNotOK, givenCheckEmailSuccess, givenVerifyEmailSuccess}
+import stubs.EmailVerificationStubs.givenCheckEmailNotOK
+import stubs.EmailVerificationStubs.givenCheckEmailSuccess
+import stubs.EmailVerificationStubs.givenVerifyEmailSuccess
 import support.ComponentBaseISpec
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.emailPendingVerificationKey
@@ -48,7 +50,7 @@ extends ComponentBaseISpec {
     val updateEmailAddressPath = s"$subscriptionStartPath/$legacyRegime/email-address"
 
     s"GET $updateEmailAddressPath" should {
-//      TODO: 11839 Implement for givenCheckEmailNotOK
+//      TODO: 11839 FIX
       "display the enter email address page with option to select ASA Agency email address when ASA Agency email address is verified" in {
         givenFullAuthorisedAsAgentWith(
           arn.value,
@@ -57,7 +59,10 @@ extends ComponentBaseISpec {
         )
         givenGetAgentRecord(agentRecord)
         stubASAGetResponseError(arn, NOT_FOUND)
-        givenCheckEmailSuccess(credId = "cred-id", verificationStatusResponse = VerificationStatusResponse(emails = List.empty[CompletedEmail]))
+
+        val asaAgencyEmail = agentRecord.agencyDetails.flatMap(_.agencyEmail).getOrElse("")
+        val completedEmail = CompletedEmail(asaAgencyEmail, verified = true, locked = false)
+        givenCheckEmailSuccess(credId = "cred-id", verificationStatusResponse = VerificationStatusResponse(emails = List(completedEmail)))
 
         val result = get(updateEmailAddressPath)
 
@@ -73,9 +78,20 @@ extends ComponentBaseISpec {
 //        Jsoup.parse(result.body).select("title").first().text() shouldBe s"$pageTitle - Agent services account - GOV.UK"
         val doc = Jsoup.parse(result.body)
 //        Assert two radios
+        doc.select(".govuk-radios__item").size() shouldBe 2
 //        Assert first radio is ASA Agency Email
+        doc.select(".govuk-radios__item").get(0).text() shouldBe asaAgencyEmail
 //        Assert second is other text
+        val expectedFalseText: String =
+          (legacyRegime: LegacyRegime) match {
+            case CT => "I want to use a different email address for Corporation Tax?"
+            case PAYE => "I want to use a different email address for PAYE?"
+            case SA => "I want to use a different email address for Self Assessment?"
+          }
+        doc.select(".govuk-radios__item").get(1).text() shouldBe expectedFalseText
 //        Assert one input box is hidden initially
+        val conditional = doc.select(".govuk-radios__conditional").first()
+        conditional.hasClass("govuk-radios__conditional--hidden") shouldBe true
       }
 
       "display the enter email address page with single input box when ASA Agency email address is not verified" in {
@@ -86,7 +102,7 @@ extends ComponentBaseISpec {
         )
         givenGetAgentRecord(agentRecord)
         stubASAGetResponseError(arn, NOT_FOUND)
-        givenCheckEmailNotOK(credId = "cred-id", status = 400)
+        givenCheckEmailNotOK(credId = "cred-id", status = 404)
 
         val result = get(updateEmailAddressPath)
 
@@ -98,12 +114,10 @@ extends ComponentBaseISpec {
             case SA => "What email address should we use to contact you about Self Assessment?"
           }
         assertPageHasTitle(expectedTitle)(result)
-//        TODO: 11839 Assert simple input box correctly
-  //      Jsoup.parse(result.body).select("title").first().text() shouldBe s"$pageTitle - Agent services account - GOV.UK"
-          val doc = Jsoup.parse(result.body)
-//        Assert no radios
-//        Assert hidden input
-//        Assert one input box is not hidden
+        val doc = Jsoup.parse(result.body)
+        doc.select(".govuk-radios__item").size() shouldBe 0
+        doc.html() should include(s"<input type=\"hidden\" name=\"$emailAddressUseAsaDataKey\" value=\"false\">")
+        doc.select("#emailAddressNew").size() shouldBe 1
       }
     }
 
@@ -137,7 +151,7 @@ extends ComponentBaseISpec {
         )
         givenGetAgentRecord(agentRecord)
         stubASAGetResponseError(arn, NOT_FOUND)
-        givenCheckEmailNotOK(credId = "cred-id", status = 400)
+        givenCheckEmailNotOK(credId = "cred-id", status = 404)
 
         val result =
           post(updateEmailAddressPath)(body =
