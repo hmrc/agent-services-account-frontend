@@ -58,7 +58,7 @@ extends FrontendController(cc)
 with I18nSupport
 with Logging {
 
-  private def isAgencyEmailValid(asaDetailsAgencyEmailOpt: Option[String]): Future[Boolean] = {
+  private def isAgencyEmailValid(asaDetailsAgencyEmailOpt: Option[String]): Boolean = {
 //    TODO: 11839 Replace with call to EpayeRegistrationEmailAddressValidation.isValid
     asaDetailsAgencyEmailOpt match {
       case Some(asaDetailsAgencyEmail) =>
@@ -66,9 +66,8 @@ with Logging {
 //          case EmailIsAlreadyVerified => true
 //          case _ => false
 //        }
-        val isValid = EpayeRegistrationEmailAddressValidation().isValid(asaDetailsAgencyEmail)
-        Future.successful(isValid)
-      case _ => Future.successful(false)
+        EpayeRegistrationEmailAddressValidation().isValid(asaDetailsAgencyEmail)
+      case _ => false
     }
   }
 
@@ -92,17 +91,17 @@ with Logging {
         case None => initialForm
       }
 
-    isAgencyEmailValid(journey.asaDetails.agencyEmail) map { isEmailValid =>
+    Future.successful(
       Ok(update_email_address(
         form,
         asaDetailsAgencyName,
-        if (isEmailValid)
+        if (isAgencyEmailValid(journey.asaDetails.agencyEmail))
           journey.asaDetails.agencyEmail
         else
           None,
         legacyRegime
       ))
-    }
+    )
   }
 
   def onSubmit(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
@@ -112,17 +111,17 @@ with Logging {
 
     SubscriptionEmailAddressForm.form(legacyRegime, asaDetailsAgencyName).bindFromRequest().fold(
       formWithErrors => {
-        isAgencyEmailValid(journey.asaDetails.agencyEmail) map { isEmailValid =>
+        Future.successful(
           BadRequest(update_email_address(
             formWithErrors,
             asaDetailsAgencyName,
-            if (isEmailValid)
+            if (isAgencyEmailValid(journey.asaDetails.agencyEmail))
               journey.asaDetails.agencyEmail
             else
               None,
             legacyRegime
           ))
-        }
+        )
       },
       data => {
         if (data.useAsaData) {
