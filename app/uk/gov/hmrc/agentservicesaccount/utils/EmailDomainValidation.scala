@@ -24,11 +24,11 @@ import scala.util.matching.Regex
 import scala.util.Success
 import scala.util.Try
 
-class EpayeRegistrationEmailAddressValidation {
+class EmailDomainValidation {
 
   def isValid(email: String): Boolean =
     email match {
-      case EpayeRegistrationEmailAddressValidation.validEmail(_, domain) => isHostMailServer(domain)
+      case EmailDomainValidation.validEmail(_, domain) => isHostMailServer(domain)
       case _ => false
     }
 
@@ -48,12 +48,12 @@ class EpayeRegistrationEmailAddressValidation {
     attribute: String
   ): Try[List[Attribute]] =
     Try {
-      EpayeRegistrationEmailAddressValidation.ictx.getAttributes(domain, Array(attribute)).getAll.asScala.toList
+      EmailDomainValidation.ictx.getAttributes(domain, Array(attribute)).getAll.asScala.toList
     }
 
 }
 
-object EpayeRegistrationEmailAddressValidation {
+object EmailDomainValidation {
 
   private val validEmail: Regex = """^([a-zA-Z0-9.!#$%&’'*+/=?^_`{|}~-]+)@([a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*)$""".r
 

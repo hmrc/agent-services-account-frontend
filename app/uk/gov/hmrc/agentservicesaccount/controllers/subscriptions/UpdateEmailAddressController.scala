@@ -33,7 +33,7 @@ import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
 import uk.gov.hmrc.agentservicesaccount.services.EmailVerificationService
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
-import uk.gov.hmrc.agentservicesaccount.utils.EpayeRegistrationEmailAddressValidation
+import uk.gov.hmrc.agentservicesaccount.utils.EmailDomainValidation
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.ctsa_custom_email_address
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.update_email_address
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -60,7 +60,7 @@ with Logging {
 
   private def isAgencyEmailValid(asaDetailsAgencyEmailOpt: Option[String]): Boolean = {
     asaDetailsAgencyEmailOpt match {
-      case Some(asaDetailsAgencyEmail) => EpayeRegistrationEmailAddressValidation().isValid(asaDetailsAgencyEmail)
+      case Some(asaDetailsAgencyEmail) => EmailDomainValidation().isValid(asaDetailsAgencyEmail)
       case _ => false
     }
   }

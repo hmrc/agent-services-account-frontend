@@ -17,14 +17,14 @@
 package utils
 
 import org.scalatestplus.play.PlaySpec
-import uk.gov.hmrc.agentservicesaccount.utils.EpayeRegistrationEmailAddressValidation
+import uk.gov.hmrc.agentservicesaccount.utils.EmailDomainValidation
 
-class EpayeRegistrationEmailAddressValidationSpec
+class EmailDomainValidationSpec
 extends PlaySpec {
 
-  private val emailValidation = EpayeRegistrationEmailAddressValidation()
+  private val emailValidation = EmailDomainValidation()
 
-  "emailValidation.isValid" should {
+  "EmailDomainValidation.isValid" should {
     "allow a simple email address" in {
       emailValidation.isValid("a@domain.com") mustBe true
     }
