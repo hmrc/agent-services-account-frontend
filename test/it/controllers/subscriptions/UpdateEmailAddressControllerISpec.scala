@@ -50,7 +50,7 @@ extends ComponentBaseISpec {
     val updateEmailAddressPath = s"$subscriptionStartPath/$legacyRegime/email-address"
 
     s"GET $updateEmailAddressPath" should {
-      "display the enter email address page with option to select ASA Agency email address when ASA Agency email address is verified" in {
+      "display the enter email address page with option to select ASA Agency email address when ASA Agency email address is valid" in {
         givenFullAuthorisedAsAgentWith(
           arn.value,
           "cred-id",
@@ -60,12 +60,6 @@ extends ComponentBaseISpec {
         stubASAGetResponseError(arn, NOT_FOUND)
 
         val asaAgencyEmail = agentRecord.agencyDetails.flatMap(_.agencyEmail).getOrElse("")
-        val completedEmail = CompletedEmail(
-          asaAgencyEmail,
-          verified = true,
-          locked = false
-        )
-        givenCheckEmailSuccess(credId = "cred-id", verificationStatusResponse = VerificationStatusResponse(emails = List(completedEmail)))
 
         val result = get(updateEmailAddressPath)
 
@@ -91,15 +85,16 @@ extends ComponentBaseISpec {
         conditional.hasClass("govuk-radios__conditional--hidden") shouldBe true
       }
 
-      "display the enter email address page with single input box when ASA Agency email address is not verified" in {
+      "display the enter email address page with single input box when ASA Agency email address is not valid" in {
+        val agencyDetails = agentRecord.agencyDetails.get.copy(agencyEmail = Some("@b.com"))
+        val agentRecordWithInvalidEmail = agentRecord.copy(agencyDetails = Some(agencyDetails))
         givenFullAuthorisedAsAgentWith(
           arn.value,
           "cred-id",
           isAdmin = true
         )
-        givenGetAgentRecord(agentRecord)
+        givenGetAgentRecord(agentRecordWithInvalidEmail)
         stubASAGetResponseError(arn, NOT_FOUND)
-        givenCheckEmailNotOK(credId = "cred-id", status = 404)
 
         val result = get(updateEmailAddressPath)
 
@@ -120,7 +115,7 @@ extends ComponentBaseISpec {
 
     s"POST $updateEmailAddressPath" should {
 
-      "return BAD_REQUEST when form is invalid - ASA Agency email address is verified" in {
+      "return BAD_REQUEST when form is invalid - ASA Agency email address is valid" in {
         givenFullAuthorisedAsAgentWith(
           arn.value,
           "cred-id",
@@ -128,7 +123,6 @@ extends ComponentBaseISpec {
         )
         givenGetAgentRecord(agentRecord)
         stubASAGetResponseError(arn, NOT_FOUND)
-        givenCheckEmailSuccess(credId = "cred-id", verificationStatusResponse = VerificationStatusResponse(emails = List.empty[CompletedEmail]))
 
         val result =
           post(updateEmailAddressPath)(body =
@@ -140,15 +134,16 @@ extends ComponentBaseISpec {
         result.status shouldBe BAD_REQUEST
       }
 
-      "return BAD_REQUEST when form is invalid - ASA Agency email address is not verified" in {
+      "return BAD_REQUEST when form is invalid - ASA Agency email address is not valid" in {
+        val agencyDetails = agentRecord.agencyDetails.get.copy(agencyEmail = Some("@b.com"))
+        val agentRecordWithInvalidEmail = agentRecord.copy(agencyDetails = Some(agencyDetails))
         givenFullAuthorisedAsAgentWith(
           arn.value,
           "cred-id",
           isAdmin = true
         )
-        givenGetAgentRecord(agentRecord)
+        givenGetAgentRecord(agentRecordWithInvalidEmail)
         stubASAGetResponseError(arn, NOT_FOUND)
-        givenCheckEmailNotOK(credId = "cred-id", status = 404)
 
         val result =
           post(updateEmailAddressPath)(body =
