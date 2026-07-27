@@ -38,6 +38,8 @@ extends UnitSpec,
         val mapping = PostCode.mapping(legacyRegime)
 
         "handle valid postcodes" in {
+          mapping.bind(Map("" -> "G1 1XQ")).value shouldBe "G1 1XQ"
+          mapping.bind(Map("" -> "W12 7FW")).value shouldBe "W12 7FW"
           mapping.bind(Map("" -> "SW1A 2AA")).value shouldBe "SW1A 2AA"
           mapping.bind(Map("" -> "TF4 3TR")).value shouldBe "TF4 3TR"
           mapping.bind(Map("" -> "EC1A 1BB")).value shouldBe "EC1A 1BB"
@@ -58,14 +60,20 @@ extends UnitSpec,
 
     "normalise valid but non-standard postcodes" in {
       // missing space
+      PostCode.normalise("G11XQ") shouldBe "G1 1XQ"
+      PostCode.normalise("W127FW") shouldBe "W12 7FW"
       PostCode.normalise("SW1A2AA") shouldBe "SW1A 2AA"
       PostCode.normalise("TF43TR") shouldBe "TF4 3TR"
       PostCode.normalise("W1A0AX") shouldBe "W1A 0AX"
       // extra spaces
+      PostCode.normalise("G1  1XQ") shouldBe "G1 1XQ"
+      PostCode.normalise("W12  7FW") shouldBe "W12 7FW"
       PostCode.normalise("SW1A  2AA") shouldBe "SW1A 2AA"
     }
 
     "uppercase valid but non-standard postcodes" in {
+      PostCode.normalise("g1 1xq") shouldBe "G1 1XQ"
+      PostCode.normalise("w12 7fw") shouldBe "W12 7FW"
       PostCode.normalise("sw1a 2aa") shouldBe "SW1A 2AA"
       PostCode.normalise("tf4 3tr") shouldBe "TF4 3TR"
       PostCode.normalise("Tf43tR") shouldBe "TF4 3TR"
