@@ -60,7 +60,11 @@ extends ComponentBaseISpec {
         stubASAGetResponseError(arn, NOT_FOUND)
 
         val asaAgencyEmail = agentRecord.agencyDetails.flatMap(_.agencyEmail).getOrElse("")
-        val completedEmail = CompletedEmail(asaAgencyEmail, verified = true, locked = false)
+        val completedEmail = CompletedEmail(
+          asaAgencyEmail,
+          verified = true,
+          locked = false
+        )
         givenCheckEmailSuccess(credId = "cred-id", verificationStatusResponse = VerificationStatusResponse(emails = List(completedEmail)))
 
         val result = get(updateEmailAddressPath)
