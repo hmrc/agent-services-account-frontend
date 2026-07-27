@@ -18,24 +18,27 @@ package uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
 
 import play.api.Logging
 import play.api.i18n.I18nSupport
-import play.api.mvc._
+import play.api.mvc.*
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
+import uk.gov.hmrc.agentservicesaccount.actions.SubscriptionJourneyRequest
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.emailPendingVerificationKey
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.updateEmailAddressPage
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionEmailAddressForm
+import uk.gov.hmrc.agentservicesaccount.models.emailverification.EmailIsAlreadyVerified
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.EmailAddressFormValues
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
 import uk.gov.hmrc.agentservicesaccount.services.EmailVerificationService
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
+import uk.gov.hmrc.agentservicesaccount.utils.EmailDomainValidation
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.ctsa_custom_email_address
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.update_email_address
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
-import javax.inject._
+import javax.inject.*
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
@@ -55,11 +58,17 @@ extends FrontendController(cc)
 with I18nSupport
 with Logging {
 
+  private def isAgencyEmailValid(asaDetailsAgencyEmailOpt: Option[String]): Boolean = {
+    asaDetailsAgencyEmailOpt match {
+      case Some(asaDetailsAgencyEmail) => EmailDomainValidation().isValid(asaDetailsAgencyEmail)
+      case _ => false
+    }
+  }
+
   def showPage(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
     val journey = request.subscriptionJourney
 
     val asaDetailsAgencyName = journey.asaDetails.agencyName.getOrElse("")
-    val asaDetailsAgencyEmail = journey.asaDetails.agencyEmail.getOrElse("")
 
     val initialForm = SubscriptionEmailAddressForm.form(legacyRegime, asaDetailsAgencyName)
     val form =
@@ -80,7 +89,10 @@ with Logging {
       Ok(update_email_address(
         form,
         asaDetailsAgencyName,
-        asaDetailsAgencyEmail,
+        if (isAgencyEmailValid(journey.asaDetails.agencyEmail))
+          journey.asaDetails.agencyEmail
+        else
+          None,
         legacyRegime
       ))
     )
@@ -93,12 +105,14 @@ with Logging {
 
     SubscriptionEmailAddressForm.form(legacyRegime, asaDetailsAgencyName).bindFromRequest().fold(
       formWithErrors => {
-        val asaDetailsAgencyEmail = journey.asaDetails.agencyEmail.getOrElse("")
         Future.successful(
           BadRequest(update_email_address(
             formWithErrors,
             asaDetailsAgencyName,
-            asaDetailsAgencyEmail,
+            if (isAgencyEmailValid(journey.asaDetails.agencyEmail))
+              journey.asaDetails.agencyEmail
+            else
+              None,
             legacyRegime
           ))
         )

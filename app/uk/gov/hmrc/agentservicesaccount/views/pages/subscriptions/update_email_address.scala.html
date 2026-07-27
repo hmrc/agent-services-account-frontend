@@ -34,15 +34,53 @@
     govukErrorSummary: GovukErrorSummary
 )
 
-@(form: Form[EmailAddressFormValues], asaDetailsAgencyName: String, asaDetailsAgencyEmail: String, legacyRegime: LegacyRegime)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
+@(form: Form[EmailAddressFormValues], asaDetailsAgencyName: String, validAsaDetailsAgencyEmailOpt: Option[String], legacyRegime: LegacyRegime)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
 
 @legacyRegimePrefix = @{ legacyRegime.msgPrefix }
+
+@pageHeading = @{ msgs(s"$legacyRegimePrefix.email-address.heading", asaDetailsAgencyName) }
 
 @newEmailAddressInput = {
     @govukInput(Input(
         label = Label(
             content = HtmlContent(msgs(s"$legacyRegimePrefix.email-address.new-input.label")),
             classes = "govuk-label"
+        ),
+        hint = Some(Hint(content = Text(msgs(s"$legacyRegimePrefix.email-address.new-input.hint"))))
+    ).withFormField(form(emailAddressNewKey)))
+}
+
+@radiosAndConditionalInputForm(verifiedAsaDetailsAgencyEmail: String) = {
+    @govukRadios(Radios(
+        fieldset = Some(Fieldset(
+            legend = Some(Legend(
+                content = Text(pageHeading),
+                classes = "govuk-fieldset__legend--l",
+                isPageHeading = true
+            ))
+        )),
+        name = emailAddressUseAsaDataKey,
+        items = Seq(
+            RadioItem(
+                content = Text(verifiedAsaDetailsAgencyEmail),
+                value = Some("true")
+            ),
+            RadioItem(
+                content = Text(msgs(s"$legacyRegimePrefix.email-address.use-asa.false")),
+                value = Some("false"),
+                conditionalHtml = Some(newEmailAddressInput)
+            )
+        )
+    ).withFormField(form(emailAddressUseAsaDataKey)))
+}
+
+@simpleInputForm = {
+    <input type="hidden" name="emailAddressUseAsaData" value="false">
+    @govukInput(Input(
+        label = Label(
+            content = HtmlContent(pageHeading),
+            classes = "govuk-label--l",
+            isPageHeading = true
         ),
         hint = Some(Hint(content = Text(msgs(s"$legacyRegimePrefix.email-address.new-input.hint"))))
     ).withFormField(form(emailAddressNewKey)))
@@ -59,27 +97,9 @@
     }
 
     @formWithCSRF(action = subscriptions.routes.UpdateEmailAddressController.onSubmit(legacyRegime)) {
-        @govukRadios(Radios(
-            fieldset = Some(Fieldset(
-                legend = Some(Legend(
-                    content = Text(msgs(s"$legacyRegimePrefix.email-address.heading", asaDetailsAgencyName)),
-                    classes = "govuk-fieldset__legend--l",
-                    isPageHeading = true
-                ))
-            )),
-            name = emailAddressUseAsaDataKey,
-            items = Seq(
-                RadioItem(
-                    content = Text(asaDetailsAgencyEmail),
-                    value = Some("true")
-                ),
-                RadioItem(
-                    content = Text(msgs(s"$legacyRegimePrefix.email-address.use-asa.false")),
-                    value = Some("false"),
-                    conditionalHtml = Some(newEmailAddressInput)
-                )
-            )
-        ).withFormField(form(emailAddressUseAsaDataKey)))
+        @{
+            validAsaDetailsAgencyEmailOpt.map(radiosAndConditionalInputForm).getOrElse(simpleInputForm)
+        }
 
         @govukButton(Button(content = Text(msgs("common.continue"))))
     }

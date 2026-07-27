@@ -49,9 +49,9 @@ class EmailVerificationService @Inject() (
       previouslyCompletedEmailVerification = checkVerifications.flatMap(_.emails.find(completedEmail => completedEmail.equalsTrimmed(newEmail)))
     } yield {
       previouslyCompletedEmailVerification match {
-        case _ if isUnchanged => EmailHasNotChanged
         case Some(completedEmailVerification) if completedEmailVerification.locked => EmailIsLocked
         case Some(completedEmailVerification) if completedEmailVerification.verified => EmailIsAlreadyVerified
+        case _ if isUnchanged => EmailHasNotChanged
         case _ => EmailNeedsVerifying
       }
     }

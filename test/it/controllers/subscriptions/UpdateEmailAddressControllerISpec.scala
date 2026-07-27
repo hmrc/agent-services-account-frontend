@@ -16,9 +16,11 @@
 
 package it.controllers.subscriptions
 
-import play.api.test.Helpers._
+import org.jsoup.Jsoup
+import play.api.test.Helpers.*
 import stubs.AgentServicesAccountStubs.givenGetAgentRecord
 import stubs.AgentServicesAccountStubs.stubASAGetResponseError
+import stubs.EmailVerificationStubs.givenCheckEmailNotOK
 import stubs.EmailVerificationStubs.givenCheckEmailSuccess
 import stubs.EmailVerificationStubs.givenVerifyEmailSuccess
 import support.ComponentBaseISpec
@@ -48,10 +50,50 @@ extends ComponentBaseISpec {
     val updateEmailAddressPath = s"$subscriptionStartPath/$legacyRegime/email-address"
 
     s"GET $updateEmailAddressPath" should {
-      "display the enter email address page" in {
-
-        givenAuthorisedAsAgentWith(arn.value)
+      "display the enter email address page with option to select ASA Agency email address when ASA Agency email address is valid" in {
+        givenFullAuthorisedAsAgentWith(
+          arn.value,
+          "cred-id",
+          isAdmin = true
+        )
         givenGetAgentRecord(agentRecord)
+        stubASAGetResponseError(arn, NOT_FOUND)
+
+        val asaAgencyEmail = agentRecord.agencyDetails.flatMap(_.agencyEmail).getOrElse("")
+
+        val result = get(updateEmailAddressPath)
+
+        result.status shouldBe OK
+        val expectedTitle: String =
+          (legacyRegime: LegacyRegime) match {
+            case CT => "What email address should we use to contact you about Corporation Tax?"
+            case PAYE => "What email address should we use to contact you about PAYE?"
+            case SA => "What email address should we use to contact you about Self Assessment?"
+          }
+        assertPageHasTitle(expectedTitle)(result)
+        val doc = Jsoup.parse(result.body)
+        doc.select(".govuk-radios__item").size() shouldBe 2
+        doc.select(".govuk-radios__item").get(0).text() shouldBe asaAgencyEmail
+        val expectedFalseText: String =
+          (legacyRegime: LegacyRegime) match {
+            case CT => "I want to use a different email address for Corporation Tax"
+            case PAYE => "I want to use a different email address for PAYE"
+            case SA => "I want to use a different email address for Self Assessment"
+          }
+        doc.select(".govuk-radios__item").get(1).text() shouldBe expectedFalseText
+        val conditional = doc.select(".govuk-radios__conditional").first()
+        conditional.hasClass("govuk-radios__conditional--hidden") shouldBe true
+      }
+
+      "display the enter email address page with single input box when ASA Agency email address is not valid" in {
+        val agencyDetails = agentRecord.agencyDetails.get.copy(agencyEmail = Some("@b.com"))
+        val agentRecordWithInvalidEmail = agentRecord.copy(agencyDetails = Some(agencyDetails))
+        givenFullAuthorisedAsAgentWith(
+          arn.value,
+          "cred-id",
+          isAdmin = true
+        )
+        givenGetAgentRecord(agentRecordWithInvalidEmail)
         stubASAGetResponseError(arn, NOT_FOUND)
 
         val result = get(updateEmailAddressPath)
@@ -64,10 +106,54 @@ extends ComponentBaseISpec {
             case SA => "What email address should we use to contact you about Self Assessment?"
           }
         assertPageHasTitle(expectedTitle)(result)
+        val doc = Jsoup.parse(result.body)
+        doc.select(".govuk-radios__item").size() shouldBe 0
+        doc.html() should include(s"<input type=\"hidden\" name=\"$emailAddressUseAsaDataKey\" value=\"false\">")
+        doc.select("#emailAddressNew").size() shouldBe 1
       }
     }
 
     s"POST $updateEmailAddressPath" should {
+
+      "return BAD_REQUEST when form is invalid - ASA Agency email address is valid" in {
+        givenFullAuthorisedAsAgentWith(
+          arn.value,
+          "cred-id",
+          isAdmin = true
+        )
+        givenGetAgentRecord(agentRecord)
+        stubASAGetResponseError(arn, NOT_FOUND)
+
+        val result =
+          post(updateEmailAddressPath)(body =
+            Map(
+              emailAddressUseAsaDataKey -> Seq("")
+            )
+          )
+
+        result.status shouldBe BAD_REQUEST
+      }
+
+      "return BAD_REQUEST when form is invalid - ASA Agency email address is not valid" in {
+        val agencyDetails = agentRecord.agencyDetails.get.copy(agencyEmail = Some("@b.com"))
+        val agentRecordWithInvalidEmail = agentRecord.copy(agencyDetails = Some(agencyDetails))
+        givenFullAuthorisedAsAgentWith(
+          arn.value,
+          "cred-id",
+          isAdmin = true
+        )
+        givenGetAgentRecord(agentRecordWithInvalidEmail)
+        stubASAGetResponseError(arn, NOT_FOUND)
+
+        val result =
+          post(updateEmailAddressPath)(body =
+            Map(
+              emailAddressUseAsaDataKey -> Seq("")
+            )
+          )
+
+        result.status shouldBe BAD_REQUEST
+      }
 
       val journeyWithRedirectLocations = List(
         (subscriptionBaseJourney, "address"),
