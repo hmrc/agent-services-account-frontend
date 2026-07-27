@@ -53,12 +53,12 @@ extends ViewBaseSpec {
 
   def render(
     form: Form[EmailAddressFormValues],
-    verifiedEmailAddressOpt: Option[String] = Some(asaDetailsAgencyEmail)
+    validEmailAddressOpt: Option[String] = Some(asaDetailsAgencyEmail)
   ): Document = Jsoup.parse(
     view(
       form,
       asaDetailsAgencyName,
-      verifiedEmailAddressOpt,
+      validEmailAddressOpt,
       legacyRegime
     )(
       messages,
@@ -223,7 +223,7 @@ extends ViewBaseSpec {
         )
       )
 
-      val doc: Document = render(filledForm, verifiedEmailAddressOpt = None)
+      val doc: Document = render(filledForm, validEmailAddressOpt = None)
 
       "show no radios and include the hidden input set to false" in {
         val radios = doc.select(".govuk-radios")
