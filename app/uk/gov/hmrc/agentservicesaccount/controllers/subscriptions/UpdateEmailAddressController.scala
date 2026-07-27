@@ -58,10 +58,7 @@ extends FrontendController(cc)
 with I18nSupport
 with Logging {
 
-  private def isAgencyEmailValid(
-    asaDetailsAgencyEmailOpt: Option[String],
-    credId: String
-  )(implicit request: SubscriptionJourneyRequest[AnyContent]): Future[Boolean] = {
+  private def isAgencyEmailValid(asaDetailsAgencyEmailOpt: Option[String]): Future[Boolean] = {
 //    TODO: 11839 Replace with call to EpayeRegistrationEmailAddressValidation.isValid
     asaDetailsAgencyEmailOpt match {
       case Some(asaDetailsAgencyEmail) =>
@@ -95,12 +92,11 @@ with Logging {
         case None => initialForm
       }
 
-    val credId = request.agentInfo.credentials.map(_.providerId).getOrElse(throw new RuntimeException("no available cred id"))
-    isAgencyEmailValid(journey.asaDetails.agencyEmail, credId) map { isEmailVerified =>
+    isAgencyEmailValid(journey.asaDetails.agencyEmail) map { isEmailValid =>
       Ok(update_email_address(
         form,
         asaDetailsAgencyName,
-        if (isEmailVerified)
+        if (isEmailValid)
           journey.asaDetails.agencyEmail
         else
           None,
@@ -116,12 +112,11 @@ with Logging {
 
     SubscriptionEmailAddressForm.form(legacyRegime, asaDetailsAgencyName).bindFromRequest().fold(
       formWithErrors => {
-        val credId = request.agentInfo.credentials.map(_.providerId).getOrElse(throw new RuntimeException("no available cred id"))
-        isAgencyEmailValid(journey.asaDetails.agencyEmail, credId) map { isEmailVerified =>
+        isAgencyEmailValid(journey.asaDetails.agencyEmail) map { isEmailValid =>
           BadRequest(update_email_address(
             formWithErrors,
             asaDetailsAgencyName,
-            if (isEmailVerified)
+            if (isEmailValid)
               journey.asaDetails.agencyEmail
             else
               None,
