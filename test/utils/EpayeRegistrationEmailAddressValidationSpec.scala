@@ -21,7 +21,7 @@ import uk.gov.hmrc.agentservicesaccount.utils.EpayeRegistrationEmailAddressValid
 
 class EpayeRegistrationEmailAddressValidationSpec
 extends PlaySpec {
-  
+
   private val emailValidation = EpayeRegistrationEmailAddressValidation()
 
   "emailValidation.isValid" should {

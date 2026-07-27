@@ -17,31 +17,36 @@
 package uk.gov.hmrc.agentservicesaccount.utils
 
 import javax.naming.Context.INITIAL_CONTEXT_FACTORY as ICF
-import javax.naming.directory.{Attribute, InitialDirContext}
+import javax.naming.directory.Attribute
+import javax.naming.directory.InitialDirContext
 import scala.jdk.CollectionConverters.*
 import scala.util.matching.Regex
-import scala.util.{Success, Try}
+import scala.util.Success
+import scala.util.Try
 
 class EpayeRegistrationEmailAddressValidation {
 
   def isValid(email: String): Boolean =
     email match {
       case EpayeRegistrationEmailAddressValidation.validEmail(_, domain) => isHostMailServer(domain)
-      case _                     => false
+      case _ => false
     }
 
   private def isHostMailServer(domain: String): Boolean = {
     val attributeMX = getAttributeValue(domain, "MX")
-    val attributeA  = getAttributeValue(domain, "A")
+    val attributeA = getAttributeValue(domain, "A")
 
     (attributeMX, attributeA) match {
       case (Success(value), _) if value.nonEmpty => true
-      case (_, Success(value))                   => value.nonEmpty
-      case _                                     => false
+      case (_, Success(value)) => value.nonEmpty
+      case _ => false
     }
   }
 
-  private def getAttributeValue(domain: String, attribute: String): Try[List[Attribute]] =
+  private def getAttributeValue(
+    domain: String,
+    attribute: String
+  ): Try[List[Attribute]] =
     Try {
       EpayeRegistrationEmailAddressValidation.ictx.getAttributes(domain, Array(attribute)).getAll.asScala.toList
     }
@@ -49,11 +54,12 @@ class EpayeRegistrationEmailAddressValidation {
 }
 
 object EpayeRegistrationEmailAddressValidation {
+
   private val validEmail: Regex = """^([a-zA-Z0-9.!#$%&’'*+/=?^_`{|}~-]+)@([a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*)$""".r
 
   private lazy val ictx = {
     val DNS_CONTEXT_FACTORY = "com.sun.jndi.dns.DnsContextFactory"
-    val env                 = new java.util.Hashtable[String, String]()
+    val env = new java.util.Hashtable[String, String]()
     env.put(ICF, DNS_CONTEXT_FACTORY)
 
     new InitialDirContext(env)
