@@ -34,7 +34,7 @@
     govukErrorSummary: GovukErrorSummary
 )
 
-@(form: Form[EmailAddressFormValues], asaDetailsAgencyName: String, verifiedAsaDetailsAgencyEmailOpt: Option[String], legacyRegime: LegacyRegime)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
+@(form: Form[EmailAddressFormValues], asaDetailsAgencyName: String, validAsaDetailsAgencyEmailOpt: Option[String], legacyRegime: LegacyRegime)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
 
 @legacyRegimePrefix = @{ legacyRegime.msgPrefix }
 
@@ -98,7 +98,7 @@
 
     @formWithCSRF(action = subscriptions.routes.UpdateEmailAddressController.onSubmit(legacyRegime)) {
         @{
-            verifiedAsaDetailsAgencyEmailOpt.map(radiosAndConditionalInputForm).getOrElse(simpleInputForm)
+            validAsaDetailsAgencyEmailOpt.map(radiosAndConditionalInputForm).getOrElse(simpleInputForm)
         }
 
         @govukButton(Button(content = Text(msgs("common.continue"))))
