@@ -59,14 +59,8 @@ with I18nSupport
 with Logging {
 
   private def isAgencyEmailValid(asaDetailsAgencyEmailOpt: Option[String]): Boolean = {
-//    TODO: 11839 Replace with call to EpayeRegistrationEmailAddressValidation.isValid
     asaDetailsAgencyEmailOpt match {
-      case Some(asaDetailsAgencyEmail) =>
-//        emailVerificationService.getEmailVerificationStatus(asaDetailsAgencyEmail, credId).map {
-//          case EmailIsAlreadyVerified => true
-//          case _ => false
-//        }
-        EpayeRegistrationEmailAddressValidation().isValid(asaDetailsAgencyEmail)
+      case Some(asaDetailsAgencyEmail) => EpayeRegistrationEmailAddressValidation().isValid(asaDetailsAgencyEmail)
       case _ => false
     }
   }
