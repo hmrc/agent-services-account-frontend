@@ -26,7 +26,35 @@ extends PlaySpec {
 
   "EmailDomainValidation.isValid" should {
     "allow a simple email address" in {
+      emailValidation.isValid("a@imail.com") mustBe true
+      emailValidation.isValid("a@post.com") mustBe true
+      emailValidation.isValid("a@send.com") mustBe true
+      emailValidation.isValid("a@inbox.com") mustBe true
       emailValidation.isValid("a@domain.com") mustBe true
+
+      emailValidation.isValid("a@imail.co.uk") mustBe true
+      emailValidation.isValid("a@post.co.uk") mustBe true
+      emailValidation.isValid("a@send.co.uk") mustBe true
+      emailValidation.isValid("a@inbox.co.uk") mustBe true
+      emailValidation.isValid("a@domain.co.uk") mustBe true
+
+      emailValidation.isValid("a@imail.uk") mustBe true
+      emailValidation.isValid("a@post.uk") mustBe true
+      emailValidation.isValid("a@send.uk") mustBe true
+      emailValidation.isValid("a@inbox.uk") mustBe true
+      emailValidation.isValid("a@domain.uk") mustBe true
+
+      emailValidation.isValid("a@imail.eu") mustBe true
+      emailValidation.isValid("a@post.eu") mustBe true
+      emailValidation.isValid("a@send.eu") mustBe true
+      emailValidation.isValid("a@inbox.eu") mustBe true
+      emailValidation.isValid("a@domain.eu") mustBe true
+
+      emailValidation.isValid("a@imail.me") mustBe true
+      emailValidation.isValid("a@post.me") mustBe true
+      emailValidation.isValid("a@send.me") mustBe true
+      emailValidation.isValid("a@inbox.me") mustBe true
+      emailValidation.isValid("a@domain.me") mustBe true
     }
 
     "allow email addresses with a hyphen, period, numbers, plus, underscore, exclamation, number sign or question mark" in {
