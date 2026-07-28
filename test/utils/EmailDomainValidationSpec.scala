@@ -26,7 +26,13 @@ extends PlaySpec {
 
   "EmailDomainValidation.isValid" should {
     "allow a simple email address" in {
-      emailValidation.isValid("a@domain.com") mustBe true
+      val domains = List(".com", ".co.uk", ".uk", ".eu", ".me")
+      val hosts = List("imail", "post", "send", "inbox", "domain")
+      domains.foreach(domain => {
+        hosts.foreach(host => {
+          emailValidation.isValid(s"a@$host$domain") mustBe true
+        })
+      })
     }
 
     "allow email addresses with a hyphen, period, numbers, plus, underscore, exclamation, number sign or question mark" in {
