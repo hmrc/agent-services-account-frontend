@@ -46,7 +46,11 @@ object PostCode {
     */
   def normalise(value: String): String =
     val withoutSpaces = value.replaceAll("\\s+", "").toUpperCase
-    val midpoint = if withoutSpaces.sizeIs == 6 then 3 else 4
+    val midpoint = withoutSpaces.sizeIs match {
+      case 5 => 2
+      case 6 => 3
+      case _ => 4
+    }
     val (incode, outcode) = withoutSpaces.splitAt(midpoint)
 
     s"$incode $outcode"
