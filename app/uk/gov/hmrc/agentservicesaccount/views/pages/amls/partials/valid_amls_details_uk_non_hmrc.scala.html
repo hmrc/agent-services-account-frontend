@@ -32,14 +32,14 @@
 @amls_details_summary_list(amlsDetails)
 
 @h2(msgs("amls.view-details.common.h2"))
-
+@* //  TODO: 11705 Remove all traces of below feature flag *@
 @if(appConfig.enableAgentRecordHipUpdates) {
     @p(msgs("amls.view-details.validAMLSDetailsUK.hmrc.p"))
 } else {
     @p(msgs("amls.view-details.validAMLSDetailsUK.non-hmrc.p"))
     @ul(items = (1 to 2).map(i => msgs(s"amls.view-details.validAMLSDetailsUK.non-hmrc.list.item$i")))
 }
-
+@* //  TODO: 11705 Remove all traces of below feature flag *@
 @p(html = Some(
     a(
         key = msgs("amls.view-details.common.start-journey"),

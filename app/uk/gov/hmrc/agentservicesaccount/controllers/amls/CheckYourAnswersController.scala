@@ -72,7 +72,7 @@ with I18nSupport {
           link = Some(amls.routes.EnterRegistrationNumberController.showPage(true))
         )
       )
-
+      //  TODO: 11705 Remove all traces of below feature flag
       if (appConfig.enableAgentRecordHipUpdates) {
         (journeyData.isHmrc, journeyData.newEvidenceObjectReference) match {
           case (true, _) => Ok(checkYourAnswers(mandatoryItems)).toFuture
@@ -117,10 +117,12 @@ with I18nSupport {
             journeyData.isUkAgent,
             newAmlsBody,
             newRegistrationNumber,
+            //  TODO: 11705 Remove all traces of below feature flag
             if (appConfig.enableAgentRecordHipUpdates)
               None
             else
               journeyData.newExpirationDate,
+            //  TODO: 11705 Remove all traces of below feature flag
             if (appConfig.enableAgentRecordHipUpdates && !journeyData.isHmrc)
               journeyData.newEvidenceObjectReference
             else

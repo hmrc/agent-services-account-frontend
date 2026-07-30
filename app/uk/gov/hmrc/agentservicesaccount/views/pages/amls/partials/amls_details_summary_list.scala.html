@@ -37,7 +37,7 @@
         key = Key(content = Text(msgs("amls.view-details.registration-number"))),
         value = Value(content = Text(num))))
 }
-
+@* //  TODO: 11705 Remove all traces of below feature flag *@
 @mRenewalDate = @{
     if(appConfig.enableAgentRecordHipUpdates) {
         None

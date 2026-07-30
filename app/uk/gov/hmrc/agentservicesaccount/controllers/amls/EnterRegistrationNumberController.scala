@@ -85,6 +85,7 @@ with I18nSupport {
     cya: Boolean,
     journey: UpdateAmlsJourney
   ): String =
+    //  TODO: 11705 Remove all traces of below feature flag
     if (appConfig.enableAgentRecordHipUpdates) {
       if (journey.isHmrc)
         routes.CheckYourAnswersController.showPage.url

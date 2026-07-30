@@ -113,11 +113,13 @@ with Logging {
             ).toString()
             _ = auditService.auditUpdateContactDetailsRequest(optUtr, pendingChange)
             _ <-
+              //  TODO: 11705 Remove all traces of below feature flag
               if (appConfig.enableAgentRecordHipUpdates)
                 agentServicesAccountConnector.updateAgentRecord(agentRecordUpdateRequest)
               else
                 Future.unit
             _ <-
+              //  TODO: 11705 Remove all traces of below feature flag
               if (details.otherServices.ctOrSaApplied || !appConfig.enableAgentRecordHipUpdates) {
                 agentAssuranceConnector.postDesignatoryDetails(arn, java.util.Base64.getEncoder.encodeToString(htmlForPdf.getBytes()))
               }
