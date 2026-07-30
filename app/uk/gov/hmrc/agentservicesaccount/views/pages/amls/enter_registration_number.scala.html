@@ -14,7 +14,6 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.controllers.amls.routes
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 @import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
@@ -26,7 +25,6 @@
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.input.Input
 @import uk.gov.hmrc.hmrcfrontend.views.Implicits.RichErrorSummary
 
-
 @this(
         main: main,
         h1: h1, p: p,
@@ -34,25 +32,20 @@
         govukInput: GovukInput,
         govukButton: GovukButton,
         govukFieldset: GovukFieldset,
-        govukErrorSummary: GovukErrorSummary,
+        govukErrorSummary: GovukErrorSummary
 )
 
-
-@(form: Form[String], cya: Boolean)(implicit request: RequestHeader, msgs: Messages, appConfig: AppConfig)
-
+@(form: Form[String], cya: Boolean)(implicit request: RequestHeader, msgs: Messages)
 
 @fieldsetHtml = {
-
- @govukInput(Input(
-        spellcheck = Some(false)).withFormField(form("number")))
-
+    @govukInput(Input(spellcheck = Some(false)).withFormField(form("number")))
 }
-
 
 @main(
     pageTitle = withErrorPrefix(form.hasErrors, msgs("amls.enter-registration-number.h1")),
     mimicBrowserBackLink = true,
-    showSecondaryNav = false){
+    showSecondaryNav = false
+){
 
     @if(form.hasErrors) {
         @govukErrorSummary(ErrorSummary().withFormErrorsAsText(form))

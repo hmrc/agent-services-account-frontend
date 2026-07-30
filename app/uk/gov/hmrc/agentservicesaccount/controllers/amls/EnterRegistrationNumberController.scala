@@ -40,7 +40,6 @@ class EnterRegistrationNumberController @Inject() (
   enterRegistrationNumber: enter_registration_number,
   cc: MessagesControllerComponents
 )(implicit
-  appConfig: AppConfig,
   val ec: ExecutionContext
 )
 extends FrontendController(cc)
@@ -75,28 +74,15 @@ with I18nSupport {
                     inputEqualsRegNum = amlsJourney.newRegistrationNumber.contains(data)
                   } yield hasSameRegNum && inputEqualsRegNum
               )).map(_ =>
-                Redirect(nextPage(cya, amlsJourney))
+                val nextPage =
+                  if (amlsJourney.isHmrc)
+                    routes.CheckYourAnswersController.showPage.url
+                  else
+                    routes.EvidenceUploadController.showPage().url
+                Redirect(nextPage)
               )
           )
       }
   }
-
-  private def nextPage(
-    cya: Boolean,
-    journey: UpdateAmlsJourney
-  ): String =
-    //  TODO: 11705 Remove all traces of below feature flag
-    if (appConfig.enableAgentRecordHipUpdates) {
-      if (journey.isHmrc)
-        routes.CheckYourAnswersController.showPage.url
-      else
-        routes.EvidenceUploadController.showPage().url
-    }
-    else {
-      if (cya || !journey.isUkAgent)
-        routes.CheckYourAnswersController.showPage.url
-      else
-        routes.EnterRenewalDateController.showPage.url
-    }
 
 }
