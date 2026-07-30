@@ -932,7 +932,6 @@ amls.enter-renewal-body.h1=Name of money laundering supervisory body
 amls.view-details.h1=Anti-money laundering supervision details
 amls.view-details.supervisory-name=Supervisory body
 amls.view-details.registration-number=Registration number
-amls.view-details.renewal-date=Next renewal date
 amls.view-details.pending-status=Registration status
 amls.view-details.pending-status-Pending=Pending
 amls.view-details.pending-status-Rejected=Rejected

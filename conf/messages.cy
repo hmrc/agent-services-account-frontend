@@ -937,7 +937,6 @@ amls.enter-renewal-body.h1=Name of money laundering supervisory body TBC
 amls.view-details.h1=Manylion ynghylch goruchwyliaeth gwrth-wyngalchu arian
 amls.view-details.supervisory-name=Corff goruchwylio
 amls.view-details.registration-number=Rhif cofrestru
-amls.view-details.renewal-date=Dyddiad nesaf ar gyfer adnewyddu
 amls.view-details.pending-status=Statws cofrestru
 amls.view-details.pending-status-Pending=Ar y gweill
 amls.view-details.pending-status-Rejected=Wedi’i wrthod
