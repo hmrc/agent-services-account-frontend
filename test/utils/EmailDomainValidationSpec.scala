@@ -26,8 +26,20 @@ extends PlaySpec {
 
   "EmailDomainValidation.isValid" should {
     "allow a simple email address" in {
-      val domains = List(".com", ".co.uk", ".uk", ".eu", ".me")
-      val hosts = List("imail", "post", "send", "inbox", "domain")
+      val domains = List(
+        ".com",
+        ".co.uk",
+        ".uk",
+        ".eu",
+        ".me"
+      )
+      val hosts = List(
+        "imail",
+        "post",
+        "send",
+        "inbox",
+        "domain"
+      )
       domains.foreach(domain => {
         hosts.foreach(host => {
           emailValidation.isValid(s"a@$host$domain") mustBe true
