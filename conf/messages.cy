@@ -862,11 +862,6 @@ update-contact-details.your-details.telephone.hint=Ar gyfer rhifau rhyngwladol, 
 update-contact-details.your-details.telephone.error.empty=Nodwch eich rhif ffôn
 update-contact-details.your-details.telephone.error.invalid=Nodwch rif ffôn, megis 01632 960 001, 07700 900 982 neu +33 808 157 0192
 
-update-contact-details.review.title=Check your new contact details TBC
-update-contact-details.review.p1=Check you have made all the necessary changes. You will not be able to submit any more changes for 28 days. TBC
-update-contact-details.review.p2=By submitting this change, you confirm you have one of the following roles in this business: TBC
-update-contact-details.review.submit-change-of-details=Submit change of details TBC
-
 update-contact-details.check-your-answers.title=Gwirio’ch atebion
 update-contact-details.check-your-answers.inset=Mae’n cymryd 4 wythnos i CThEF i roi’r newidiadau hyn i’ch cyfrif gwasanaethau asiant ar waith. Yn ystod y cyfnod hwnnw, ni allwch ddiwygio’r manylion cyswllt eto.
 update-contact-details.check-your-answers.declaration.p1=Fe’m hawdurdodir i wneud y newidiadau hyn i fanylion cyswllt y busnes.
@@ -885,11 +880,11 @@ update-contact-details.submitted.p1=Mae’n cymryd 4 wythnos i CThEF i roi’r n
 update-contact-details.submitted.p2=Yn y cyfamser, bydd yr hen fanylion yn ymddangos ar eich cyfrif o hyd.
 update-contact-details.submitted.link=Dychwelyd i ‘Rheoli’r cyfrif’
 
-update-contact-details.apply-sa-code-changes.heading=A ydych chi am roi’r newidiadau hyn i’ch cod asiant ar gyfer Hunanasesiad ar waith?
-update-contact-details.apply-sa-code-changes.error.empty=Dewiswch ‘Iawn’ os ydych am roi’r newidiadau hyn i’ch cod asiant ar gyfer Hunanasesiad ar waith.
-
 update-contact-details.apply-ct-code-changes.heading=A ydych chi am wneud y newidiadau hyn i’ch cod asiant ar gyfer Treth Gorfforaeth?
 update-contact-details.apply-ct-code-changes.error.empty=Dewiswch ‘Iawn’ os ydych am roi’r newidiadau hyn i’ch cod asiant ar gyfer Treth Gorfforaeth ar waith.
+
+update-contact-details.apply-sa-code-changes.heading=A ydych chi am roi’r newidiadau hyn i’ch cod asiant ar gyfer Hunanasesiad ar waith?
+update-contact-details.apply-sa-code-changes.error.empty=Dewiswch ‘Iawn’ os ydych am roi’r newidiadau hyn i’ch cod asiant ar gyfer Hunanasesiad ar waith.
 
 update-contact-details.sa-code.heading=Beth yw’r cod asiant yr ydych yn ei ddefnyddio ar gyfer Hunanasesiad?
 update-contact-details.sa-code.hint=Cod 6 cymeriad yw hwn, sy’n cynnwys rhifau a llythrennau. Er enghraifft, A1234B neu 5678CD.
