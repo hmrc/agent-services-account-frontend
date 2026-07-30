@@ -985,7 +985,6 @@ amls.check-your-answers.h1=Gwirio’ch atebion
 amls.check-your-answers.p=Manylion ynghylch goruchwyliaeth gwrth-wyngalchu arian
 amls.check-your-answers.supervisory-body=Corff goruchwylio
 amls.check-your-answers.registration-number=Rhif cofrestru
-amls.check-your-answers.renewal-date=Dyddiad nesaf ar gyfer adnewyddu
 amls.check-your-answers.evidence=Tystiolaeth
 amls.check-your-answers.submit-button=Cyflwyno’ch manylion
 
