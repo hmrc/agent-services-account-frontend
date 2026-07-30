@@ -21,29 +21,27 @@
         p:p,
         a: a,
         ul: ul,
-        link_as_button: link_as_button,
-        appConfig: AppConfig
+        link_as_button: link_as_button
 )
 @()(implicit msgs: Messages)
 
-    @p(msgs("amls.view-details.noAMLSDetailsUK.p1"))
+@p(msgs("amls.view-details.noAMLSDetailsUK.p1"))
 
-    @p(msgs("amls.view-details.noAMLSDetailsUK.p2"))
-@* //  TODO: 11705 Remove all traces of below feature flag *@
-    @ul(items = Seq(
-        "amls.view-details.noAMLSDetails.list.item1",
-        "amls.view-details.noAMLSDetails.list.item2",
-        s"amls.view-details.noAMLSDetails.list.item${if (appConfig.enableAgentRecordHipUpdates) "4" else "3"}"
-    ))
+@p(msgs("amls.view-details.noAMLSDetailsUK.p2"))
 
+@ul(items = Seq(
+    "amls.view-details.noAMLSDetails.list.item1",
+    "amls.view-details.noAMLSDetails.list.item2",
+    "amls.view-details.noAMLSDetails.list.item3"
+))
 
-    @link_as_button(href = routes.AmlsNewSupervisoryBodyController.showPage().url, key = msgs("amls.view-details.common.add-details"))
+@link_as_button(href = routes.AmlsNewSupervisoryBodyController.showPage().url, key = msgs("amls.view-details.common.add-details"))
 
-
-    @p(html = Some(
-    a(  key = msgs("amls.view-details.noAMLSDetails.link"),
+@p(html = Some(
+    a(
+        key = msgs("amls.view-details.noAMLSDetails.link"),
         id = Some("registration-info"),
         href = "https://www.gov.uk/guidance/money-laundering-regulations-accountancy-service-provider-registration",
-        openInNewWindow = true)
-    ))
-
+        openInNewWindow = true
+    )
+))
