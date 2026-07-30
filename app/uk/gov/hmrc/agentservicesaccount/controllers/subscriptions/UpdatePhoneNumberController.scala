@@ -53,7 +53,7 @@ with Logging {
     val journey = request.subscriptionJourney
 
     val asaDetailsAgencyName = journey.asaDetails.agencyName.getOrElse("")
-    val asaDetailsAgencyTelephone: Option[String] = journey.asaDetails.agencyTelephone
+    val asaDetailsAgencyTelephone: Option[String] = journey.asaDetails.agencyTelephone.filter(SubscriptionPhoneNumberForm.isPhoneNumberValid)
 
     val initialForm = SubscriptionPhoneNumberForm.form(legacyRegime, asaDetailsAgencyName)
     val form =

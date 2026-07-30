@@ -43,7 +43,7 @@ object SubscriptionPhoneNumberForm {
     msgs(s"${legacyRegime.msgPrefix}.phone-number.use-asa.error.required", asaDetailsAgencyName)
   )
 
-  private def isPhoneNumberValid(x: String): Boolean = {
+  def isPhoneNumberValid(x: String): Boolean = {
     val digits = x.replaceAll("[^0-9]", "")
     phoneNumberRegex.matches(x) && digits.length <= 20
   }
