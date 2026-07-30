@@ -35,6 +35,7 @@ import javax.inject.Singleton
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
+//TODO: 11705 Can this be removed as a result of feature flag removal???
 @Singleton
 class ConfirmRegistrationNumberController @Inject() (
   actions: Actions,
