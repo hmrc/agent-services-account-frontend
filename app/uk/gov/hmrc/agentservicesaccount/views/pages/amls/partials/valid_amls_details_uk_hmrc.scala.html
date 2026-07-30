@@ -23,8 +23,7 @@
         p: p,
         h2: h2,
         a: a,
-        amls_details_summary_list: amls_details_summary_list,
-        appConfig: AppConfig
+        amls_details_summary_list: amls_details_summary_list
 )
 
 @(amlsDetails: AmlsDetails)(implicit msgs: Messages)
@@ -34,11 +33,11 @@
 @h2(msgs("amls.view-details.common.h2"))
 
 @p(msgs("amls.view-details.validAMLSDetailsUK.hmrc.p"))
-@* //  TODO: 11705 Remove all traces of below feature flag *@
+
 @p(html = Some(
     a(
         key = msgs("amls.view-details.common.start-journey"),
         id = Some("start-journey"),
-        href = if(appConfig.enableAgentRecordHipUpdates) routes.AmlsNewSupervisoryBodyController.showPage().url else routes.ConfirmSupervisoryBodyController.showPage.url
+        href = routes.AmlsNewSupervisoryBodyController.showPage().url
     )
 ))
