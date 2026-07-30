@@ -942,9 +942,6 @@ amls.view-details.noAMLSDetailsUK.p2=Tell us your supervision details, including
 amls.view-details.noAMLSDetailsNonUK.p1=If you are registered, tell us your anti-money laundering supervision details, including:
 amls.view-details.expiredAMLSDetailsUK.inset=This registration has expired.
 
-amls.view-details.validAMLSDetailsUK.non-hmrc.p=You need to confirm your anti-money laundering supervisions details with us:
-amls.view-details.validAMLSDetailsUK.non-hmrc.list.item1=once a year, after you renew your registration with the same provider
-amls.view-details.validAMLSDetailsUK.non-hmrc.list.item2=whenever you change to a new supervision provider
 amls.view-details.validAMLSDetailsUK.hmrc.p=You need to confirm your anti-money laundering supervisions details with us whenever you change to a new provider.
 
 amls.view-details.validAMLSDetailsNonUK.p=You need to confirm your anti-money laundering supervisions details with us whenever you change them.

@@ -947,9 +947,6 @@ amls.view-details.noAMLSDetailsUK.p2=Rhowch wybod i ni am eich manylion o ran go
 amls.view-details.noAMLSDetailsNonUK.p1=Os ydych wedi’ch cofrestru, rhowch wybod i ni am eich manylion ynghylch goruchwyliaeth gwrth-wyngalchu arian, gan gynnwys:
 amls.view-details.expiredAMLSDetailsUK.inset=Mae’r cofrestriad hwn wedi dod i ben.
 
-amls.view-details.validAMLSDetailsUK.non-hmrc.p=Mae angen i chi gadarnhau’ch manylion ynghylch goruchwyliaeth gwrth-wyngalchu arian gyda ni:
-amls.view-details.validAMLSDetailsUK.non-hmrc.list.item1=unwaith y flwyddyn, ar ôl i chi adnewyddu’ch cofrestriad â’r un darparwr
-amls.view-details.validAMLSDetailsUK.non-hmrc.list.item2=pa bryd bynnag rydych yn newid i ddarparwr newydd o ran goruchwyliaeth
 amls.view-details.validAMLSDetailsUK.hmrc.p=Mae angen i chi gadarnhau’ch manylion ynghylch goruchwyliaeth gwrth-wyngalchu arian gyda ni bob tro yr ydych yn newid i ddarparwr newydd.
 
 amls.view-details.validAMLSDetailsNonUK.p=Mae angen i chi gadarnhau eich manylion ynghylch goruchwyliaeth gwrth-wyngalchu arian gyda ni bob tro yr ydych yn eu newid.
