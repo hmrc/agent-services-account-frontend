@@ -181,8 +181,7 @@ extends ViewBaseSpec {
         selectChanges = selectChanges1
       )(
         messages,
-        fakeRequest,
-        appConfig
+        fakeRequest
       ).body)
 
       testServiceStaticContent(doc)
@@ -223,8 +222,7 @@ extends ViewBaseSpec {
         selectChanges = selectChanges2
       )(
         messages,
-        fakeRequest,
-        appConfig
+        fakeRequest
       ).body)
 
       testServiceStaticContent(doc)
@@ -269,8 +267,7 @@ extends ViewBaseSpec {
       selectChanges = selectChangesAll
     )(
       messages,
-      fakeRequest,
-      appConfig
+      fakeRequest
     ).body)
 
     testServiceStaticContent(doc)
