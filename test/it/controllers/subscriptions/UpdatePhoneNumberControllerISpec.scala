@@ -184,7 +184,7 @@ with TestConstants {
 
       List(
         ("no phone number", None),
-        ("invalid phone number", Some("invalid"))
+        ("invalid phone number", Some("invalid_number"))
       ).foreach { case (scenario, agencyTelephone) =>
         s"render empty form on first visit when subscription has $scenario" in new TestSetup(legacyRegime, agencyTelephone) {
           private val journeyAgencyDetails = agencyDetails(agencyTelephone)
@@ -228,7 +228,7 @@ with TestConstants {
 
       List(
         ("no phone number", None),
-        ("invalid phone number", Some("invalid"))
+        ("invalid phone number", Some("invalid_number"))
       ).foreach { case (scenario, agencyTelephone) =>
         s"render pre-filled form when journey has existing answers and subscription has $scenario" in
           new TestSetup(legacyRegime, agencyTelephone) {
@@ -270,6 +270,23 @@ with TestConstants {
 
         status(result) shouldBe BAD_REQUEST
       }
+
+      "return BAD_REQUEST and simple form when submission invalid and existing asa phone number also invalid" in
+        new TestSetup(legacyRegime, agencyTelephone = Some("invalid_number")) {
+          cacheJourney(subscriptionBaseJourney.copy(asaDetails = agencyDetails(Some("invalid_number"))))
+
+          private val request = FakeRequest()
+            .withSession(session.toSeq*)
+            .withFormUrlEncodedBody(
+              phoneNumberUseAsaDataKey -> "false",
+              phoneNumberNewKey -> "invalid_number2"
+            )
+          private val result = controller.onSubmit(legacyRegime)(request).futureValue
+
+          status(result) shouldBe BAD_REQUEST
+          private val content = contentAsString(result)
+          content should not include "govuk-radios__item"
+        }
 
       val journeyWithRedirectLocations = List(
         (subscriptionBaseJourney, "email-address"),
