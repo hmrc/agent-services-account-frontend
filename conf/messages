@@ -955,8 +955,7 @@ amls.view-details.pendingAMLSDetailsRejected.inset.p2=When you’ve found an org
 
 amls.view-details.noAMLSDetails.list.item1=the name of your supervisory body
 amls.view-details.noAMLSDetails.list.item2=your registration number
-amls.view-details.noAMLSDetails.list.item3=the renewal date of your registration
-amls.view-details.noAMLSDetails.list.item4=evidence of your registration
+amls.view-details.noAMLSDetails.list.item3=evidence of your registration
 
 amls.view-details.noAMLSDetails.link=Read more about registration (opens in a new tab)
 

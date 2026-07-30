@@ -955,8 +955,7 @@ amls.view-details.pendingAMLSDetailsRejected.inset.p2=Pan fyddwch wedi dod o hyd
 
 amls.view-details.noAMLSDetails.list.item1=enw’r corff goruchwylio
 amls.view-details.noAMLSDetails.list.item2=eich rhif cofrestru
-amls.view-details.noAMLSDetails.list.item3=dyddiad adnewyddu eich cofrestriad
-amls.view-details.noAMLSDetails.list.item4=tystiolaeth o’ch cofrestriad
+amls.view-details.noAMLSDetails.list.item3=tystiolaeth o’ch cofrestriad
 
 amls.view-details.noAMLSDetails.link=Darllenwch ragor am gofrestru (yn agor tab newydd)
 
