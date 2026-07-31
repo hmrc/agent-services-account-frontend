@@ -120,11 +120,11 @@ with I18nSupport {
         routes.EnterRegistrationNumberController.showPage(cya).url
       else
         routes.CheckYourAnswersController.showPage.url
-    }
-    else if (updatedJourney.isUkAgent & updatedJourney.isAmlsBodyStillTheSame.contains(true))
-      routes.ConfirmRegistrationNumberController.showPage.url
-    else
-      routes.EnterRegistrationNumberController.showPage().url
+    } else routes.EnterRegistrationNumberController.showPage().url
+//    else if (updatedJourney.isUkAgent & updatedJourney.isAmlsBodyStillTheSame.contains(true))
+//      routes.ConfirmRegistrationNumberController.showPage.url
+//    else
+//      routes.EnterRegistrationNumberController.showPage().url
   }
 
 }
