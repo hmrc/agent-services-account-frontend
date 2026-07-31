@@ -1,7 +1,7 @@
 import sbt.*
 
 object AppDependencies {
-  private val mongoVersion: String = "2.12.0"
+  private val mongoVersion: String = "2.13.0"
   private val bootstrapVersion: String = "10.7.0"
   private val playVersion: String = "play-30"
 
@@ -13,7 +13,7 @@ object AppDependencies {
     "uk.gov.hmrc"       %% s"play-conditional-form-mapping-$playVersion" % "3.5.0",
     "uk.gov.hmrc"       %% s"crypto-json-$playVersion"                   % "8.4.0",
     "uk.gov.hmrc"       %% s"domain-$playVersion"                        % "11.0.0",
-    "uk.gov.hmrc.objectstore" %% s"object-store-client-$playVersion" % "2.5.0",
+    "uk.gov.hmrc.objectstore" %% s"object-store-client-$playVersion" % "2.6.0",
     "com.beachape"      %% "enumeratum-play"                             % "1.9.0",
     "org.apache.commons" % "commons-text"                                % "1.15.0"
   )
