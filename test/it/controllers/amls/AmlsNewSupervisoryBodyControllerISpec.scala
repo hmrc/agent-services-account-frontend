@@ -39,15 +39,13 @@ extends ComponentBaseISpec {
 
   private val ukAmlsJourney = UpdateAmlsJourney(
     status = AmlsStatuses.ValidAmlsDetailsUK,
-    isAmlsBodyStillTheSame = Some(true),
     newAmlsBody = Some("ACCA")
   )
 
   private val overseasAmlsJourney = UpdateAmlsJourney(
     status = AmlsStatuses.ValidAmlsNonUK,
     newAmlsBody = Some("OS AMLS"),
-    newRegistrationNumber = Some("AMLS123"),
-    newExpirationDate = Some(LocalDate.parse("2024-10-10"))
+    newRegistrationNumber = Some("AMLS123")
   )
 
   s"GET $newSupervisoryBodyPath" should {

@@ -67,7 +67,6 @@ extends ComponentBaseISpec {
       else
         Some("ABC"),
     newRegistrationNumber = Some("1234567890"),
-    newExpirationDate = None,
     newEvidenceObjectReference =
       if (isHmrc)
         None
@@ -178,8 +177,7 @@ extends ComponentBaseISpec {
           UpdateAmlsJourney(
             status = ValidAmlsNonUK,
             newAmlsBody = None,
-            newRegistrationNumber = None,
-            newExpirationDate = None
+            newRegistrationNumber = None
           )
         ))
 
