@@ -64,14 +64,7 @@ with I18nSupport {
           .fold(
             formWithError => BadRequest(enterRegistrationNumber(formWithError, cya)).toFuture,
             data =>
-              saveAmlsJourney(amlsJourney.copy(
-                newRegistrationNumber = Option(data),
-                isRegistrationNumberStillTheSame =
-                  for {
-                    hasSameRegNum <- amlsJourney.isRegistrationNumberStillTheSame
-                    inputEqualsRegNum = amlsJourney.newRegistrationNumber.contains(data)
-                  } yield hasSameRegNum && inputEqualsRegNum
-              )).map(_ =>
+              saveAmlsJourney(amlsJourney.copy(newRegistrationNumber = Option(data))).map(_ =>
                 val nextPage =
                   if (amlsJourney.isHmrc)
                     routes.CheckYourAnswersController.showPage.url
