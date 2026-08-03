@@ -27,7 +27,6 @@ case class UpdateAmlsJourney(
   newAmlsBody: Option[String] = None,
   isRegistrationNumberStillTheSame: Option[Boolean] = None,
   newRegistrationNumber: Option[String] = None,
-  newExpirationDate: Option[LocalDate] = None,
   newEvidenceObjectReference: Option[String] = None
 ) {
 
