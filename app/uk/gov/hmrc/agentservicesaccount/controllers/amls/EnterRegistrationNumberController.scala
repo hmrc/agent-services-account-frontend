@@ -21,10 +21,8 @@ import play.api.mvc.Action
 import play.api.mvc.AnyContent
 import play.api.mvc.MessagesControllerComponents
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
-import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.ToFuture
 import uk.gov.hmrc.agentservicesaccount.forms.NewRegistrationNumberForm.{form => registrationNumberForm}
-import uk.gov.hmrc.agentservicesaccount.models.UpdateAmlsJourney
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.enter_registration_number
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -40,7 +38,6 @@ class EnterRegistrationNumberController @Inject() (
   enterRegistrationNumber: enter_registration_number,
   cc: MessagesControllerComponents
 )(implicit
-  appConfig: AppConfig,
   val ec: ExecutionContext
 )
 extends FrontendController(cc)
@@ -67,35 +64,16 @@ with I18nSupport {
           .fold(
             formWithError => BadRequest(enterRegistrationNumber(formWithError, cya)).toFuture,
             data =>
-              saveAmlsJourney(amlsJourney.copy(
-                newRegistrationNumber = Option(data),
-                isRegistrationNumberStillTheSame =
-                  for {
-                    hasSameRegNum <- amlsJourney.isRegistrationNumberStillTheSame
-                    inputEqualsRegNum = amlsJourney.newRegistrationNumber.contains(data)
-                  } yield hasSameRegNum && inputEqualsRegNum
-              )).map(_ =>
-                Redirect(nextPage(cya, amlsJourney))
+              saveAmlsJourney(amlsJourney.copy(newRegistrationNumber = Option(data))).map(_ =>
+                val nextPage =
+                  if (amlsJourney.isHmrc)
+                    routes.CheckYourAnswersController.showPage.url
+                  else
+                    routes.EvidenceUploadController.showPage().url
+                Redirect(nextPage)
               )
           )
       }
   }
-
-  private def nextPage(
-    cya: Boolean,
-    journey: UpdateAmlsJourney
-  ): String =
-    if (appConfig.enableAgentRecordHipUpdates) {
-      if (journey.isHmrc)
-        routes.CheckYourAnswersController.showPage.url
-      else
-        routes.EvidenceUploadController.showPage().url
-    }
-    else {
-      if (cya || !journey.isUkAgent)
-        routes.CheckYourAnswersController.showPage.url
-      else
-        routes.EnterRenewalDateController.showPage.url
-    }
 
 }

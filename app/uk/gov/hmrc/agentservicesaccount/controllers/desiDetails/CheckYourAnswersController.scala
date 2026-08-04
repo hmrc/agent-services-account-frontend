@@ -112,15 +112,10 @@ with Logging {
               selectChanges.getOrElse(throw new RuntimeException("Cannot submit without select changes details"))
             ).toString()
             _ = auditService.auditUpdateContactDetailsRequest(optUtr, pendingChange)
+            _ <- agentServicesAccountConnector.updateAgentRecord(agentRecordUpdateRequest)
             _ <-
-              if (appConfig.enableAgentRecordHipUpdates)
-                agentServicesAccountConnector.updateAgentRecord(agentRecordUpdateRequest)
-              else
-                Future.unit
-            _ <-
-              if (details.otherServices.ctOrSaApplied || !appConfig.enableAgentRecordHipUpdates) {
+              if details.otherServices.ctOrSaApplied then
                 agentAssuranceConnector.postDesignatoryDetails(arn, java.util.Base64.getEncoder.encodeToString(htmlForPdf.getBytes()))
-              }
               else
                 Future.unit
             _ <- pcodRepository.insert(PendingChangeRequest(arn, pendingChange.timeSubmitted))

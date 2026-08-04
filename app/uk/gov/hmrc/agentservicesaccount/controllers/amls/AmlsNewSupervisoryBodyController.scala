@@ -86,8 +86,7 @@ with I18nSupport {
                 if (journey.isUkAgent)
                   Some(amlsBodies(data))
                 else
-                  Some(data),
-              isAmlsBodyStillTheSame = maybeChangePreviousAnswer(data, journey)
+                  Some(data)
             )
             saveAmlsJourney(updatedJourney).map(_ =>
               Redirect(nextPage(
@@ -101,15 +100,6 @@ with I18nSupport {
     }
   }
 
-  private def maybeChangePreviousAnswer(
-    answer: String,
-    journey: UpdateAmlsJourney
-  ): Option[Boolean] =
-    for {
-      x <- journey.isAmlsBodyStillTheSame
-      y = journey.newAmlsBody.contains(answer)
-    } yield x && y
-
   private def nextPage(
     cya: Boolean,
     updatedJourney: UpdateAmlsJourney,
@@ -121,8 +111,6 @@ with I18nSupport {
       else
         routes.CheckYourAnswersController.showPage.url
     }
-    else if (updatedJourney.isUkAgent & updatedJourney.isAmlsBodyStillTheSame.contains(true))
-      routes.ConfirmRegistrationNumberController.showPage.url
     else
       routes.EnterRegistrationNumberController.showPage().url
   }

@@ -158,8 +158,7 @@ with TestConstants {
         selectChanges = selectChanges1
       )(
         messages,
-        fakeRequest,
-        appConfig
+        fakeRequest
       ).body)
 
       "display the correct page title" in {
@@ -194,8 +193,7 @@ with TestConstants {
         selectChanges = selectChanges1
       )(
         messages,
-        fakeRequest,
-        appConfig
+        fakeRequest
       ).body)
 
       "businessName is the only selected update" in {
@@ -231,8 +229,7 @@ with TestConstants {
         selectChanges = selectChanges2
       )(
         messages,
-        fakeRequest,
-        appConfig
+        fakeRequest
       ).body)
 
       "email and telephone are the only selected changes" in {
@@ -274,8 +271,7 @@ with TestConstants {
       selectChanges = selectChangesAll
     )(
       messages,
-      fakeRequest,
-      appConfig
+      fakeRequest
     ).body)
 
     "all contact details and agent codes have been selected" in {

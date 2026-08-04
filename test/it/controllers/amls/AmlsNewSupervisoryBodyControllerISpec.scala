@@ -39,15 +39,13 @@ extends ComponentBaseISpec {
 
   private val ukAmlsJourney = UpdateAmlsJourney(
     status = AmlsStatuses.ValidAmlsDetailsUK,
-    isAmlsBodyStillTheSame = Some(true),
     newAmlsBody = Some("ACCA")
   )
 
   private val overseasAmlsJourney = UpdateAmlsJourney(
     status = AmlsStatuses.ValidAmlsNonUK,
     newAmlsBody = Some("OS AMLS"),
-    newRegistrationNumber = Some("AMLS123"),
-    newExpirationDate = Some(LocalDate.parse("2024-10-10"))
+    newRegistrationNumber = Some("AMLS123")
   )
 
   s"GET $newSupervisoryBodyPath" should {
@@ -81,7 +79,7 @@ extends ComponentBaseISpec {
 
   s"POST $newSupervisoryBodyPath" should {
 
-    s"return 303 SEE_OTHER and redirect to $confirmRegistrationNumberPath" in {
+    s"return 303 SEE_OTHER and redirect to $newRegistrationNumberPath" in {
 
       givenAuthorisedAsAgentWith(arn.value)
       givenGetAgentRecord(agentRecord)
@@ -92,7 +90,7 @@ extends ComponentBaseISpec {
 
       result.status shouldBe SEE_OTHER
 
-      result.header("Location").get shouldBe confirmRegistrationNumberPath
+      result.header("Location").get shouldBe newRegistrationNumberPath
     }
 
     s"return 303 SEE_OTHER for CYA and redirect to $checkYourAnswersPath" in {

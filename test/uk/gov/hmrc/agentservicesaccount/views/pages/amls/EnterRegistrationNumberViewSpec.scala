@@ -68,8 +68,7 @@ extends ViewBaseSpec {
 
       val doc: Document = Jsoup.parse(view.apply(form, cya = false)(
         fakeRequest,
-        messages,
-        appConfig
+        messages
       ).body)
 
       testServiceStaticContent(doc)
@@ -85,8 +84,7 @@ extends ViewBaseSpec {
 
       val doc: Document = Jsoup.parse(view.apply(formWithErrors, cya = false)(
         fakeRequest,
-        messages,
-        appConfig
+        messages
       ).body)
 
       testServiceStaticContent(doc)

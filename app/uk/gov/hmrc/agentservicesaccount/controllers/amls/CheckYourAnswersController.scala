@@ -19,7 +19,6 @@ package uk.gov.hmrc.agentservicesaccount.controllers.amls
 import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
-import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.controllers._
 import uk.gov.hmrc.agentservicesaccount.models.AmlsRequest
@@ -33,7 +32,6 @@ import uk.gov.hmrc.agentservicesaccount.views.components.models.SummaryListData
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.check_your_answers
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
-import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 import javax.inject.Singleton
 import scala.concurrent.ExecutionContext
@@ -51,7 +49,6 @@ class CheckYourAnswersController @Inject() (
   auditService: AuditService,
   upscanRepository: UpscanRepository
 )(implicit
-  appConfig: AppConfig,
   val ec: ExecutionContext
 )
 extends FrontendController(cc)
@@ -72,39 +69,21 @@ with I18nSupport {
           link = Some(amls.routes.EnterRegistrationNumberController.showPage(true))
         )
       )
-
-      if (appConfig.enableAgentRecordHipUpdates) {
-        (journeyData.isHmrc, journeyData.newEvidenceObjectReference) match {
-          case (true, _) => Ok(checkYourAnswers(mandatoryItems)).toFuture
-          case (false, Some(reference)) =>
-            upscanRepository.findByReference(FileUploadReference(reference)).map {
-              case Some(details: UpscanSuccess) =>
-                Ok(checkYourAnswers(
-                  mandatoryItems :+ SummaryListData(
-                    key = "amls.check-your-answers.evidence",
-                    value = details.fileName,
-                    link = Some(amls.routes.EvidenceUploadController.showPage())
-                  )
-                ))
-              case _ => Redirect(amls.routes.EvidenceUploadController.showPage())
-            }
-          case _ => Redirect(amls.routes.EvidenceUploadController.showPage()).toFuture
-        }
-      }
-      else {
-        (journeyData.isUkAgent, journeyData.newExpirationDate) match {
-          case (false, _) => Ok(checkYourAnswers(mandatoryItems)).toFuture
-          case (true, Some(date)) =>
-            val formatter = DateTimeFormatter.ofPattern("d MMMM yyyy", request.messages.lang.locale)
-            Ok(checkYourAnswers(
-              mandatoryItems :+ SummaryListData(
-                key = "amls.check-your-answers.renewal-date",
-                value = date.format(formatter),
-                link = Some(amls.routes.EnterRenewalDateController.showPage)
-              )
-            )).toFuture
-          case _ => Redirect(amls.routes.EnterRenewalDateController.showPage).toFuture
-        }
+      (journeyData.isHmrc, journeyData.newEvidenceObjectReference) match {
+        case (true, _) => Ok(checkYourAnswers(mandatoryItems)).toFuture
+        case (false, Some(reference)) =>
+          upscanRepository.findByReference(FileUploadReference(reference)).map {
+            case Some(details: UpscanSuccess) =>
+              Ok(checkYourAnswers(
+                mandatoryItems :+ SummaryListData(
+                  key = "amls.check-your-answers.evidence",
+                  value = details.fileName,
+                  link = Some(amls.routes.EvidenceUploadController.showPage())
+                )
+              ))
+            case _ => Redirect(amls.routes.EvidenceUploadController.showPage())
+          }
+        case _ => Redirect(amls.routes.EvidenceUploadController.showPage()).toFuture
       }
     }
   }
@@ -117,11 +96,8 @@ with I18nSupport {
             journeyData.isUkAgent,
             newAmlsBody,
             newRegistrationNumber,
-            if (appConfig.enableAgentRecordHipUpdates)
-              None
-            else
-              journeyData.newExpirationDate,
-            if (appConfig.enableAgentRecordHipUpdates && !journeyData.isHmrc)
+            None,
+            if (!journeyData.isHmrc)
               journeyData.newEvidenceObjectReference
             else
               None

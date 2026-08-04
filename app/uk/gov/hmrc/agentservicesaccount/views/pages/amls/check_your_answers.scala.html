@@ -14,7 +14,6 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.controllers._
 @import uk.gov.hmrc.agentservicesaccount.views.components.models.SummaryListData
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
@@ -30,7 +29,7 @@
         formWithCSRF: FormWithCSRF
 )
 
-@(model: Seq[SummaryListData])(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
+@(model: Seq[SummaryListData])(implicit msgs: Messages, request: RequestHeader)
 
 @main(
     pageTitle = msgs("amls.check-your-answers.h1"),

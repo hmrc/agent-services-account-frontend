@@ -20,7 +20,6 @@ import org.jsoup.Jsoup
 import play.api.test.Helpers.*
 import stubs.AgentServicesAccountStubs.givenGetAgentRecord
 import stubs.AgentServicesAccountStubs.stubASAGetResponseError
-import stubs.EmailVerificationStubs.givenCheckEmailNotOK
 import stubs.EmailVerificationStubs.givenCheckEmailSuccess
 import stubs.EmailVerificationStubs.givenVerifyEmailSuccess
 import support.ComponentBaseISpec

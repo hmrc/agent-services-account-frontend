@@ -33,10 +33,7 @@ extends ComponentBaseISpec {
   private def amlsJourney(newRegistrationNumber: Option[String]) = UpdateAmlsJourney(
     status = ValidAmlsDetailsUK,
     newAmlsBody = Some("ABC"),
-    newRegistrationNumber = newRegistrationNumber,
-    isAmlsBodyStillTheSame = Some(true),
-    newExpirationDate = Some(LocalDate.now()),
-    isRegistrationNumberStillTheSame = Some(true)
+    newRegistrationNumber = newRegistrationNumber
   )
 
   private val repo = inject[SessionCacheRepository]
@@ -90,7 +87,6 @@ extends ComponentBaseISpec {
       val updatedSession = await(repo.getFromSession(amlsJourneyKey)).get
 
       updatedSession.newRegistrationNumber shouldBe Some("ABC123")
-      updatedSession.isRegistrationNumberStillTheSame shouldBe Some(true)
 
     }
 
@@ -110,7 +106,6 @@ extends ComponentBaseISpec {
       val updatedSession = await(repo.getFromSession(amlsJourneyKey)).get
 
       updatedSession.newRegistrationNumber shouldBe Some("ABC123")
-      updatedSession.isRegistrationNumberStillTheSame shouldBe Some(true)
     }
 
     "redirect to CYA and store data for agent with HMRC AMLS" in {
@@ -129,7 +124,6 @@ extends ComponentBaseISpec {
       val updatedSession = await(repo.getFromSession(amlsJourneyKey)).get
 
       updatedSession.newRegistrationNumber shouldBe Some("XAML00000123456")
-      updatedSession.isRegistrationNumberStillTheSame shouldBe Some(false)
     }
 
     "return BadRequest when invalid form submission" in {

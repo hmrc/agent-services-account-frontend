@@ -14,7 +14,6 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
 @import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
 @import uk.gov.hmrc.agentservicesaccount.models.desiDetails._
@@ -38,7 +37,7 @@
         otherServices: OtherServices,
         submittedBy: YourDetails,
         selectChanges: Set[String]
-)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
+)(implicit msgs: Messages, request: RequestHeader)
 
 @main(
     pageTitle = msgs("update-contact-details.check-your-answers.title"),

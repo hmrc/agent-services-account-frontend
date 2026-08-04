@@ -862,11 +862,6 @@ update-contact-details.your-details.telephone.hint=Ar gyfer rhifau rhyngwladol, 
 update-contact-details.your-details.telephone.error.empty=Nodwch eich rhif ffôn
 update-contact-details.your-details.telephone.error.invalid=Nodwch rif ffôn, megis 01632 960 001, 07700 900 982 neu +33 808 157 0192
 
-update-contact-details.review.title=Check your new contact details TBC
-update-contact-details.review.p1=Check you have made all the necessary changes. You will not be able to submit any more changes for 28 days. TBC
-update-contact-details.review.p2=By submitting this change, you confirm you have one of the following roles in this business: TBC
-update-contact-details.review.submit-change-of-details=Submit change of details TBC
-
 update-contact-details.check-your-answers.title=Gwirio’ch atebion
 update-contact-details.check-your-answers.inset=Mae’n cymryd 4 wythnos i CThEF i roi’r newidiadau hyn i’ch cyfrif gwasanaethau asiant ar waith. Yn ystod y cyfnod hwnnw, ni allwch ddiwygio’r manylion cyswllt eto.
 update-contact-details.check-your-answers.declaration.p1=Fe’m hawdurdodir i wneud y newidiadau hyn i fanylion cyswllt y busnes.
@@ -885,11 +880,11 @@ update-contact-details.submitted.p1=Mae’n cymryd 4 wythnos i CThEF i roi’r n
 update-contact-details.submitted.p2=Yn y cyfamser, bydd yr hen fanylion yn ymddangos ar eich cyfrif o hyd.
 update-contact-details.submitted.link=Dychwelyd i ‘Rheoli’r cyfrif’
 
-update-contact-details.apply-sa-code-changes.heading=A ydych chi am roi’r newidiadau hyn i’ch cod asiant ar gyfer Hunanasesiad ar waith?
-update-contact-details.apply-sa-code-changes.error.empty=Dewiswch ‘Iawn’ os ydych am roi’r newidiadau hyn i’ch cod asiant ar gyfer Hunanasesiad ar waith.
-
 update-contact-details.apply-ct-code-changes.heading=A ydych chi am wneud y newidiadau hyn i’ch cod asiant ar gyfer Treth Gorfforaeth?
 update-contact-details.apply-ct-code-changes.error.empty=Dewiswch ‘Iawn’ os ydych am roi’r newidiadau hyn i’ch cod asiant ar gyfer Treth Gorfforaeth ar waith.
+
+update-contact-details.apply-sa-code-changes.heading=A ydych chi am roi’r newidiadau hyn i’ch cod asiant ar gyfer Hunanasesiad ar waith?
+update-contact-details.apply-sa-code-changes.error.empty=Dewiswch ‘Iawn’ os ydych am roi’r newidiadau hyn i’ch cod asiant ar gyfer Hunanasesiad ar waith.
 
 update-contact-details.sa-code.heading=Beth yw’r cod asiant yr ydych yn ei ddefnyddio ar gyfer Hunanasesiad?
 update-contact-details.sa-code.hint=Cod 6 cymeriad yw hwn, sy’n cynnwys rhifau a llythrennau. Er enghraifft, A1234B neu 5678CD.
@@ -937,7 +932,6 @@ amls.enter-renewal-body.h1=Name of money laundering supervisory body TBC
 amls.view-details.h1=Manylion ynghylch goruchwyliaeth gwrth-wyngalchu arian
 amls.view-details.supervisory-name=Corff goruchwylio
 amls.view-details.registration-number=Rhif cofrestru
-amls.view-details.renewal-date=Dyddiad nesaf ar gyfer adnewyddu
 amls.view-details.pending-status=Statws cofrestru
 amls.view-details.pending-status-Pending=Ar y gweill
 amls.view-details.pending-status-Rejected=Wedi’i wrthod
@@ -947,9 +941,6 @@ amls.view-details.noAMLSDetailsUK.p2=Rhowch wybod i ni am eich manylion o ran go
 amls.view-details.noAMLSDetailsNonUK.p1=Os ydych wedi’ch cofrestru, rhowch wybod i ni am eich manylion ynghylch goruchwyliaeth gwrth-wyngalchu arian, gan gynnwys:
 amls.view-details.expiredAMLSDetailsUK.inset=Mae’r cofrestriad hwn wedi dod i ben.
 
-amls.view-details.validAMLSDetailsUK.non-hmrc.p=Mae angen i chi gadarnhau’ch manylion ynghylch goruchwyliaeth gwrth-wyngalchu arian gyda ni:
-amls.view-details.validAMLSDetailsUK.non-hmrc.list.item1=unwaith y flwyddyn, ar ôl i chi adnewyddu’ch cofrestriad â’r un darparwr
-amls.view-details.validAMLSDetailsUK.non-hmrc.list.item2=pa bryd bynnag rydych yn newid i ddarparwr newydd o ran goruchwyliaeth
 amls.view-details.validAMLSDetailsUK.hmrc.p=Mae angen i chi gadarnhau’ch manylion ynghylch goruchwyliaeth gwrth-wyngalchu arian gyda ni bob tro yr ydych yn newid i ddarparwr newydd.
 
 amls.view-details.validAMLSDetailsNonUK.p=Mae angen i chi gadarnhau eich manylion ynghylch goruchwyliaeth gwrth-wyngalchu arian gyda ni bob tro yr ydych yn eu newid.
@@ -964,8 +955,7 @@ amls.view-details.pendingAMLSDetailsRejected.inset.p2=Pan fyddwch wedi dod o hyd
 
 amls.view-details.noAMLSDetails.list.item1=enw’r corff goruchwylio
 amls.view-details.noAMLSDetails.list.item2=eich rhif cofrestru
-amls.view-details.noAMLSDetails.list.item3=dyddiad adnewyddu eich cofrestriad
-amls.view-details.noAMLSDetails.list.item4=tystiolaeth o’ch cofrestriad
+amls.view-details.noAMLSDetails.list.item3=tystiolaeth o’ch cofrestriad
 
 amls.view-details.noAMLSDetails.link=Darllenwch ragor am gofrestru (yn agor tab newydd)
 
@@ -981,12 +971,6 @@ amls.new-supervisory-body.hint=Dechreuwch nodi enw, ac yna dewiswch eich goruchw
 amls.new-supervisory-body.error=Nodwch enw’r corff goruchwylio ar gyfer {0}
 amls.new-supervisory-body.error.os.max-length=Mae’n rhaid i enw’r corff goruchwylio fod yn 100 o gymeriadau neu lai
 amls.new-supervisory-body.error.os.regex=Mae’n rhaid i enw’r corff goruchwylio gynnwys y llythrennau a i z, rhifau, collnodau, comas, ampersandau (&), cromfachau crwn,  blaenslaesys, atalnodau llawn, cysylltnodau a bylchau yn unig
-amls.confirm-supervisory-body.h1=A ydych wedi’ch cofrestru â {0} o hyd?
-amls.confirm-supervisory-body.error=Dewiswch ‘Iawn’ os ydych wedi’ch cofrestru â {0} o hyd
-amls.confirm-registration-number.h1=Ai {0} yw’ch rhif cofrestru o hyd?
-amls.confirm-registration-number.error=Dewiswch ‘Iawn’ os mai {0} yw’ch rhif cofrestru o hyd
-amls.enter-renewal-date.h1=Pryd y mae angen i chi adnewyddu’ch cofrestriad?
-amls.enter-renewal-date.hint=Er enghraifft, 31 3 2025
 amls.enter-registration-number.h1=Beth yw’r rhif cofrestru?
 amls.enter-registration-number.error.empty=Nodwch y rhif cofrestru
 amls.enter-registration-number.error.not-hmrc.invalid=Mae’n rhaid i’r rhif cofrestru gynnwys llythrennau a rhifau yn unig
@@ -995,7 +979,6 @@ amls.check-your-answers.h1=Gwirio’ch atebion
 amls.check-your-answers.p=Manylion ynghylch goruchwyliaeth gwrth-wyngalchu arian
 amls.check-your-answers.supervisory-body=Corff goruchwylio
 amls.check-your-answers.registration-number=Rhif cofrestru
-amls.check-your-answers.renewal-date=Dyddiad nesaf ar gyfer adnewyddu
 amls.check-your-answers.evidence=Tystiolaeth
 amls.check-your-answers.submit-button=Cyflwyno’ch manylion
 

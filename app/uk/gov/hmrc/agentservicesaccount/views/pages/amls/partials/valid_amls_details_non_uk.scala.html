@@ -17,14 +17,12 @@
 @import uk.gov.hmrc.agentservicesaccount.controllers.amls.routes
 @import uk.gov.hmrc.agentservicesaccount.models.AmlsDetails
 @import uk.gov.hmrc.agentservicesaccount.views.html.pages.amls.partials._
-@import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 
 @this(
         p: p,
         h2: h2,
         a: a,
-        amls_details_summary_list: amls_details_summary_list,
-        appConfig: AppConfig
+        amls_details_summary_list: amls_details_summary_list
 )
 @(amlsDetails: AmlsDetails)(implicit msgs: Messages)
 
@@ -38,6 +36,6 @@
     a(
         key = msgs("amls.view-details.common.start-journey"),
         id = Some("start-journey"),
-        href = if(appConfig.enableAgentRecordHipUpdates) routes.AmlsNewSupervisoryBodyController.showPage().url else routes.ConfirmSupervisoryBodyController.showPage.url
+        href = routes.AmlsNewSupervisoryBodyController.showPage().url
     )
 ))

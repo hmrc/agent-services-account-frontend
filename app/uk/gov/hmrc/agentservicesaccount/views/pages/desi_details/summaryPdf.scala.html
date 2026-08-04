@@ -15,7 +15,6 @@
  *@
 
 @import uk.gov.hmrc.agentservicesaccount.models.Utr
-@import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.models.PendingChangeOfDetails
 @import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details.partials._
 
@@ -30,7 +29,7 @@
         utr: Option[Utr],
         pendingChangeOfDetails:PendingChangeOfDetails,
         selectChanges: Set[String]
-)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
+)(implicit msgs: Messages, request: RequestHeader)
 
 <!DOCTYPE html PUBLIC "-//OPENHTMLTOPDF//DOC XHTML Character Entities Only 1.0//EN" "">
 <html>

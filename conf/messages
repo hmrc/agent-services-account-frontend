@@ -932,7 +932,6 @@ amls.enter-renewal-body.h1=Name of money laundering supervisory body
 amls.view-details.h1=Anti-money laundering supervision details
 amls.view-details.supervisory-name=Supervisory body
 amls.view-details.registration-number=Registration number
-amls.view-details.renewal-date=Next renewal date
 amls.view-details.pending-status=Registration status
 amls.view-details.pending-status-Pending=Pending
 amls.view-details.pending-status-Rejected=Rejected
@@ -942,9 +941,6 @@ amls.view-details.noAMLSDetailsUK.p2=Tell us your supervision details, including
 amls.view-details.noAMLSDetailsNonUK.p1=If you are registered, tell us your anti-money laundering supervision details, including:
 amls.view-details.expiredAMLSDetailsUK.inset=This registration has expired.
 
-amls.view-details.validAMLSDetailsUK.non-hmrc.p=You need to confirm your anti-money laundering supervisions details with us:
-amls.view-details.validAMLSDetailsUK.non-hmrc.list.item1=once a year, after you renew your registration with the same provider
-amls.view-details.validAMLSDetailsUK.non-hmrc.list.item2=whenever you change to a new supervision provider
 amls.view-details.validAMLSDetailsUK.hmrc.p=You need to confirm your anti-money laundering supervisions details with us whenever you change to a new provider.
 
 amls.view-details.validAMLSDetailsNonUK.p=You need to confirm your anti-money laundering supervisions details with us whenever you change them.
@@ -959,8 +955,7 @@ amls.view-details.pendingAMLSDetailsRejected.inset.p2=When you’ve found an org
 
 amls.view-details.noAMLSDetails.list.item1=the name of your supervisory body
 amls.view-details.noAMLSDetails.list.item2=your registration number
-amls.view-details.noAMLSDetails.list.item3=the renewal date of your registration
-amls.view-details.noAMLSDetails.list.item4=evidence of your registration
+amls.view-details.noAMLSDetails.list.item3=evidence of your registration
 
 amls.view-details.noAMLSDetails.link=Read more about registration (opens in a new tab)
 
@@ -976,12 +971,6 @@ amls.new-supervisory-body.hint=Start to enter a name and choose your supervisor 
 amls.new-supervisory-body.error=Enter the name of the supervisory body for {0}
 amls.new-supervisory-body.error.os.max-length=Name of supervisory body must be 100 characters or less
 amls.new-supervisory-body.error.os.regex=Name of supervisory body must only include letters a to z, numbers, apostrophes, commas, ampersands (&), round brackets, forward slashes, full stops, hyphens and spaces
-amls.confirm-supervisory-body.h1=Are you still registered with {0}?
-amls.confirm-supervisory-body.error=Select yes if you are still registered with {0}
-amls.confirm-registration-number.h1=Is your registration number still {0}?
-amls.confirm-registration-number.error=Select yes if your registration number is still {0}
-amls.enter-renewal-date.h1=When do you need to renew your registration?
-amls.enter-renewal-date.hint=For example, 31 3 2025
 amls.enter-registration-number.h1=What is the registration number?
 amls.enter-registration-number.error.empty=Enter the registration number
 amls.enter-registration-number.error.not-hmrc.invalid=Registration number must include only letters and numbers
@@ -990,7 +979,6 @@ amls.check-your-answers.h1=Check your answers
 amls.check-your-answers.p=Anti-money laundering supervision details
 amls.check-your-answers.supervisory-body=Supervisory body
 amls.check-your-answers.registration-number=Registration number
-amls.check-your-answers.renewal-date=Next renewal date
 amls.check-your-answers.evidence=Evidence
 amls.check-your-answers.submit-button=Submit your details
 

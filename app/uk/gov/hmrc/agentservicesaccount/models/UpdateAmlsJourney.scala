@@ -23,11 +23,8 @@ import java.time.LocalDate
 
 case class UpdateAmlsJourney(
   status: AmlsStatus,
-  isAmlsBodyStillTheSame: Option[Boolean] = None,
   newAmlsBody: Option[String] = None,
-  isRegistrationNumberStillTheSame: Option[Boolean] = None,
   newRegistrationNumber: Option[String] = None,
-  newExpirationDate: Option[LocalDate] = None,
   newEvidenceObjectReference: Option[String] = None
 ) {
 
