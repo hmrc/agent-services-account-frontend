@@ -113,11 +113,6 @@ with I18nSupport {
     }
     else
       routes.EnterRegistrationNumberController.showPage().url
-//      TODO: 11705 Remove commented code
-//    else if (updatedJourney.isUkAgent & updatedJourney.isAmlsBodyStillTheSame.contains(true))
-//      routes.ConfirmRegistrationNumberController.showPage.url
-//    else
-//      routes.EnterRegistrationNumberController.showPage().url
   }
 
 }
