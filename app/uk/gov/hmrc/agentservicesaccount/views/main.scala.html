@@ -75,41 +75,28 @@
             ServiceNavigationItem(
                 content = Text(msgs("nav.home")),
                 href = routes.AgentServicesController.root().url,
-                active = false,
-                current = false,
+                current = currentPath == routes.AgentServicesController.root().url + "/home",
                 classes = s"$rootUrlClass"
             ),
             ServiceNavigationItem(
                 content = Text(msgs("nav.manage.account")),
                 href = routes.AgentServicesController.manageAccount.url,
-                active = false,
-                current = false,
+                current = currentPath == routes.AgentServicesController.manageAccount.url,
                 classes = "hmrc-account-menu__link " + pathSelectedClass(currentPath, routes.AgentServicesController.manageAccount.url)
             ),
             ServiceNavigationItem(
                 content = Text(msgs("nav.your.account")),
                 href = routes.AgentServicesController.yourAccount.url,
-                active = false,
-                current = false,
+                current = currentPath == routes.AgentServicesController.yourAccount.url,
                 classes = "hmrc-account-menu__link " + pathSelectedClass(currentPath, routes.AgentServicesController.yourAccount.url)
             ),
             ServiceNavigationItem(
                 content = Text(msgs("nav.help")),
                 href = routes.AgentServicesController.showHelp().url,
-                active = false,
-                current = false,
+                current = currentPath == routes.AgentServicesController.showHelp().url,
                 classes = "hmrc-account-menu__link " + pathSelectedClass(currentPath, routes.AgentServicesController.showHelp().url)
             )
-        ),
-        navigationClasses = "",
-        navigationId = "navigation",
-        navigationLabel = None,
-        classes = "",
-        attributes = Map.empty,
-        ariaLabel = None,
-        menuButtonText = None,
-        menuButtonLabel = None,
-        slots = Some(ServiceNavigationSlot())
+        )
     )
 }
 
