@@ -9,7 +9,7 @@ object AppDependencies {
     "uk.gov.hmrc"             %% s"bootstrap-frontend-$playVersion"            % bootstrapVersion,
     "uk.gov.hmrc.mongo"       %% s"hmrc-mongo-$playVersion"                    % mongoVersion,
     "uk.gov.hmrc"             %% s"play-partials-$playVersion"                 % "10.2.0",
-    "uk.gov.hmrc"             %% s"play-frontend-hmrc-$playVersion"            % "12.32.0",
+    "uk.gov.hmrc"             %% s"play-frontend-hmrc-$playVersion"            % "13.1.0",
     "uk.gov.hmrc"             %% s"play-conditional-form-mapping-$playVersion" % "3.5.0",
     "uk.gov.hmrc"             %% s"crypto-json-$playVersion"                   % "8.4.0",
     "uk.gov.hmrc"             %% s"domain-$playVersion"                        % "11.0.0",
