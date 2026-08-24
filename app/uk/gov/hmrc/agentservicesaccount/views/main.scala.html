@@ -53,19 +53,7 @@
 
 @currentPath = @{ request.path }
 
-@pathSelectedClass(currentPath: String, href:String) = @{
-    if (currentPath == href) "hmrc-account-menu__link--active" else ""
-}
-
-@rootUrlClass = @{
-    Seq(
-        "hmrc-account-menu__link",
-        "hmrc-account-menu__link--home",
-        pathSelectedClass(currentPath, routes.AgentServicesController.root().url + "/home")
-    ).mkString(" ")
-}
-
-@* TODO: 12601 Really rough definition of serviceNavigation in order to check rendering - currently not rendering *@
+@* TODO: 12601 if/else for manage/your *@
 
 @serviceNavigation = @{
     ServiceNavigation(
@@ -75,26 +63,22 @@
             ServiceNavigationItem(
                 content = Text(msgs("nav.home")),
                 href = routes.AgentServicesController.root().url,
-                current = currentPath == routes.AgentServicesController.root().url + "/home",
-                classes = s"$rootUrlClass"
+                current = currentPath == routes.AgentServicesController.root().url + "/home"
             ),
             ServiceNavigationItem(
                 content = Text(msgs("nav.manage.account")),
                 href = routes.AgentServicesController.manageAccount.url,
-                current = currentPath == routes.AgentServicesController.manageAccount.url,
-                classes = "hmrc-account-menu__link " + pathSelectedClass(currentPath, routes.AgentServicesController.manageAccount.url)
+                current = currentPath == routes.AgentServicesController.manageAccount.url
             ),
             ServiceNavigationItem(
                 content = Text(msgs("nav.your.account")),
                 href = routes.AgentServicesController.yourAccount.url,
-                current = currentPath == routes.AgentServicesController.yourAccount.url,
-                classes = "hmrc-account-menu__link " + pathSelectedClass(currentPath, routes.AgentServicesController.yourAccount.url)
+                current = currentPath == routes.AgentServicesController.yourAccount.url
             ),
             ServiceNavigationItem(
                 content = Text(msgs("nav.help")),
                 href = routes.AgentServicesController.showHelp().url,
-                current = currentPath == routes.AgentServicesController.showHelp().url,
-                classes = "hmrc-account-menu__link " + pathSelectedClass(currentPath, routes.AgentServicesController.showHelp().url)
+                current = currentPath == routes.AgentServicesController.showHelp().url
             )
         )
     )
@@ -148,7 +132,6 @@
 }
 @hmrcStandardPage(HmrcStandardPageParams(
     serviceURLs = ServiceURLs(
-        serviceUrl = Some(routes.AgentServicesController.root().url),
         signOutUrl = if(isSignedIn) Some(routes.SignOutController.signOut().url) else None
     ),
     banners = Banners(
@@ -161,7 +144,6 @@
         mainContentLayout = if(fullWidth) Some(fullWidthMainContent(_)) else Some(twoThirdsLayout(_))
     ),
     isWelshTranslationAvailable = true,
-    serviceName = Some(msgs("service.name")),
     serviceNavigation = Some(serviceNavigation.withLanguageToggle()),
     pageTitle = Some(msgs("generic.title", pageTitle, msgs("service.name")))
 ))(bespokeContentBlock)
