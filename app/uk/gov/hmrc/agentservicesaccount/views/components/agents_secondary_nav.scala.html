@@ -16,8 +16,9 @@
 
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.controllers.routes
+@import uk.gov.hmrc.hmrcfrontend.views.html.components._
 
-@this(a:a,h1: h1, p: p, span: span)
+@this(a:a,h1: h1, p: p, span: span, govukServiceNavigation: GovukServiceNavigation)
 
 @(currentPath: String, isAdmin: Boolean)(implicit msgs: Messages)
 
@@ -40,6 +41,7 @@
     ).mkString(" ")
 }
 
+@old = {
 <nav id="secondary-nav" class="hmrc-account-menu" aria-label='@msgs("nav.aria.account-menu")'>
     <a href="@routes.AgentServicesController.root().url"
         class="@rootUrlClass">
@@ -64,4 +66,54 @@
         addStandardClasses = false
     )
 </nav>
+
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        @govukServiceNavigation(ServiceNavigation(
+        serviceName = Some(msgs("service.name")),
+        serviceUrl = Some(routes.AgentServicesController.root().url),
+        navigation = Seq(
+            ServiceNavigationItem(
+                content = Text(msgs("nav.home")),
+                href = routes.AgentServicesController.root().url,
+                active = false,
+                current = false,
+                classes = s"$rootUrlClass"
+            ),
+            ServiceNavigationItem(
+                content = Text(msgs("nav.manage.account")),
+                href = routes.AgentServicesController.manageAccount.url,
+                active = false,
+                current = false,
+                classes = "hmrc-account-menu__link " + pathSelectedClass(currentPath, routes.AgentServicesController.manageAccount.url)
+            ),
+            ServiceNavigationItem(
+                content = Text(msgs("nav.your.account")),
+                href = routes.AgentServicesController.yourAccount.url,
+                active = false,
+                current = false,
+                classes = "hmrc-account-menu__link " + pathSelectedClass(currentPath, routes.AgentServicesController.yourAccount.url)
+            ),
+            ServiceNavigationItem(
+                content = Text(msgs("nav.help")),
+                href = routes.AgentServicesController.showHelp().url,
+                active = false,
+                current = false,
+                classes = "hmrc-account-menu__link " + pathSelectedClass(currentPath, routes.AgentServicesController.showHelp().url)
+            )
+        ),
+        navigationClasses = "",
+        navigationId = "navigation",
+        navigationLabel = None,
+        classes = "",
+        attributes = Map.empty,
+        ariaLabel = None,
+        menuButtonText = None,
+        menuButtonLabel = None,
+        slots = Some(ServiceNavigationSlot())
+        ))
+    </div>
+</div>
 

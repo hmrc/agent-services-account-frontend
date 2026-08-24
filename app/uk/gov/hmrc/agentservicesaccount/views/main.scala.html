@@ -23,6 +23,8 @@
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.hmrcstandardpage.TemplateOverrides
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.hmrcstandardpage.Banners
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.hmrcstandardpage.ServiceURLs
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.servicenavigation.ServiceNavigation
+@import uk.gov.hmrc.govukfrontend.views.html.components.implicits.RichServiceNavigation
 
 @this(
         hmrcStandardPage: HmrcStandardPage,
@@ -50,6 +52,68 @@
     additionalScripts: Option[Html] = None
 )(contentBlock: Html)(implicit request: RequestHeader, msgs: Messages)
 
+@currentPath = @{ request.path }
+
+@pathSelectedClass(currentPath: String, href:String) = @{
+    if (currentPath == href) "hmrc-account-menu__link--active" else ""
+}
+
+@rootUrlClass = @{
+    Seq(
+        "hmrc-account-menu__link",
+        "hmrc-account-menu__link--home",
+        pathSelectedClass(currentPath, routes.AgentServicesController.root().url + "/home")
+    ).mkString(" ")
+}
+
+@* TODO: 12601 Really rough definition of serviceNavigation in order to check rendering - currently not rendering *@
+
+@serviceNavigation = @{
+    ServiceNavigation(
+        serviceName = Some(msgs("service.name")),
+        serviceUrl = Some(routes.AgentServicesController.root().url),
+        navigation = Seq(
+            ServiceNavigationItem(
+                content = Text(msgs("nav.home")),
+                href = routes.AgentServicesController.root().url,
+                active = false,
+                current = false,
+                classes = s"$rootUrlClass"
+            ),
+            ServiceNavigationItem(
+                content = Text(msgs("nav.manage.account")),
+                href = routes.AgentServicesController.manageAccount.url,
+                active = false,
+                current = false,
+                classes = "hmrc-account-menu__link " + pathSelectedClass(currentPath, routes.AgentServicesController.manageAccount.url)
+            ),
+            ServiceNavigationItem(
+                content = Text(msgs("nav.your.account")),
+                href = routes.AgentServicesController.yourAccount.url,
+                active = false,
+                current = false,
+                classes = "hmrc-account-menu__link " + pathSelectedClass(currentPath, routes.AgentServicesController.yourAccount.url)
+            ),
+            ServiceNavigationItem(
+                content = Text(msgs("nav.help")),
+                href = routes.AgentServicesController.showHelp().url,
+                active = false,
+                current = false,
+                classes = "hmrc-account-menu__link " + pathSelectedClass(currentPath, routes.AgentServicesController.showHelp().url)
+            )
+        ),
+        navigationClasses = "",
+        navigationId = "navigation",
+        navigationLabel = None,
+        classes = "",
+        attributes = Map.empty,
+        ariaLabel = None,
+        menuButtonText = None,
+        menuButtonLabel = None,
+        slots = Some(ServiceNavigationSlot())
+    )
+}
+
 @isSignedIn = @{
     try {
         request.session.get("authToken").isDefined
@@ -67,10 +131,8 @@
         Some(BackLink.mimicsBrowserBackButtonViaJavaScript(msgs))
     } else None
 }
+
 @beforeContent = {
-    @if(showSecondaryNav && isSignedIn){
-        @secondary_nav(currentPath = request.path, isAdmin = isAdmin)
-    }
     @backLink.map(link => govukBackLink(link))
 }
 
@@ -114,5 +176,6 @@
     ),
     isWelshTranslationAvailable = true,
     serviceName = Some(msgs("service.name")),
+    serviceNavigation = Some(serviceNavigation.withLanguageToggle()),
     pageTitle = Some(msgs("generic.title", pageTitle, msgs("service.name")))
 ))(bespokeContentBlock)
