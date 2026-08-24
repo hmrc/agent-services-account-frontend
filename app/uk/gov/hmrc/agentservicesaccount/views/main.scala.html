@@ -53,8 +53,6 @@
 
 @currentPath = @{ request.path }
 
-@* TODO: 12601 if/else for manage/your *@
-
 @serviceNavigation = @{
     ServiceNavigation(
         serviceName = Some(msgs("service.name")),
@@ -65,16 +63,19 @@
                 href = routes.AgentServicesController.root().url,
                 current = currentPath == routes.AgentServicesController.root().url + "/home"
             ),
-            ServiceNavigationItem(
-                content = Text(msgs("nav.manage.account")),
-                href = routes.AgentServicesController.manageAccount.url,
-                current = currentPath == routes.AgentServicesController.manageAccount.url
-            ),
-            ServiceNavigationItem(
-                content = Text(msgs("nav.your.account")),
-                href = routes.AgentServicesController.yourAccount.url,
-                current = currentPath == routes.AgentServicesController.yourAccount.url
-            ),
+            if (isAdmin) {
+                ServiceNavigationItem(
+                    content = Text(msgs("nav.manage.account")),
+                    href = routes.AgentServicesController.manageAccount.url,
+                    current = currentPath == routes.AgentServicesController.manageAccount.url
+                )
+            } else {
+                ServiceNavigationItem(
+                    content = Text(msgs("nav.your.account")),
+                    href = routes.AgentServicesController.yourAccount.url,
+                    current = currentPath == routes.AgentServicesController.yourAccount.url
+                )
+            },
             ServiceNavigationItem(
                 content = Text(msgs("nav.help")),
                 href = routes.AgentServicesController.showHelp().url,
@@ -113,6 +114,7 @@
         @hmrcReportTechnicalIssueHelper()
     </div>
 }
+
 @head = {
     <meta name="format-detection" content="telephone=no">
     <link rel="stylesheet" href="@controllers.routes.Assets.at("stylesheets/asa.css")" >
@@ -126,10 +128,12 @@
         )
     }
 }
+
 @scripts = {
     @autocompleteJavascript()
     @additionalScripts.getOrElse(Html(""))
 }
+
 @hmrcStandardPage(HmrcStandardPageParams(
     serviceURLs = ServiceURLs(
         signOutUrl = if(isSignedIn) Some(routes.SignOutController.signOut().url) else None
