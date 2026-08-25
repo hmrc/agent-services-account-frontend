@@ -1,6 +1,4 @@
 import play.sbt.routes.RoutesKeys
-import uk.gov.hmrc.DefaultBuildSettings
-
 
 val scalaCOptions = Seq(
   "-Wconf:msg=Flag.*repeatedly:s", // silence warnings about compiler options being invoked repeatedly
