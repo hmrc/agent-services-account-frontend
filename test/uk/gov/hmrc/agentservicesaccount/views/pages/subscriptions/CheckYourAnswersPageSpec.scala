@@ -129,7 +129,7 @@ extends ViewBaseSpec {
         val form = doc.select("form")
         form.attr("action") mustBe routes.CheckYourAnswersController.onSubmit(legacyRegime).url
 
-        val button = doc.select("button")
+        val button = doc.select(".govuk-button")
         button.text() mustBe messages(s"${legacyRegime.msgPrefix}.check-your-answers.submit-button")
       }
     }
