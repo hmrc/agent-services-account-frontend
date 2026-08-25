@@ -34,8 +34,8 @@ extends ViewBaseSpec {
         messages,
         appConfig
       ).body)
-      doc.select(".govuk-header__service-name").first.text() mustBe "Agent services account"
-      doc.select(".govuk-header__service-name").first.attr("href") mustBe "/agent-services-account"
+      doc.select(".govuk-service-navigation__link").first.text() mustBe "Agent services account"
+      doc.select(".govuk-service-navigation__link").first.attr("href") mustBe "/agent-services-account"
 
       doc.select(".govuk-panel__title").first().text() mustBe "You’ve changed your supervision details" // title
       doc.select(".govuk-heading-m").first().text() mustBe "What happens next" // h2
@@ -51,8 +51,8 @@ extends ViewBaseSpec {
         messages,
         appConfig
       ).body)
-      doc.select(".govuk-header__service-name").first.text() mustBe "Agent services account"
-      doc.select(".govuk-header__service-name").first.attr("href") mustBe "/agent-services-account"
+      doc.select(".govuk-service-navigation__link").first.text() mustBe "Agent services account"
+      doc.select(".govuk-service-navigation__link").first.attr("href") mustBe "/agent-services-account"
 
       doc.select(".govuk-panel__title").first().text() mustBe "You’ve added your supervision details" // title
       doc.select(".govuk-heading-m").first().text() mustBe "What happens next" // h2
