@@ -41,8 +41,8 @@ extends ViewBaseSpec {
 
     val doc: Document = renderPage(form)
 
-    "have the correct service name link" in {
-      doc.select(".govuk-service-navigation__link").first.text() shouldBe "Agent services account"
+    "have the correct service name text" in {
+      doc.select(".govuk-service-navigation__text").first.text() shouldBe "Agent services account"
       doc.select(".govuk-service-navigation__link").first.attr("href") shouldBe "/agent-services-account"
     }
 

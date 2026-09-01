@@ -34,9 +34,8 @@ extends ViewBaseSpec {
       appConfig
     ).body)
 
-    "have the correct service name link" in {
-      doc.select(".govuk-service-navigation__link").first.text() mustBe "Agent services account"
-      doc.select(".govuk-service-navigation__link").first.attr("href") mustBe "/agent-services-account"
+    "have the correct service name text" in {
+      doc.select(".govuk-service-navigation__text").first.text() mustBe "Agent services account"
     }
 
     "have the correct sign out link" in {
