@@ -39,9 +39,9 @@ extends ViewBaseSpec {
   "recovery_description" should {
     val doc: Document = renderPage(form)
 
-    "have the correct service name link" in {
-      doc.select(".govuk-header__service-name").first.text() shouldBe "Agent services account"
-      doc.select(".govuk-header__service-name").first.attr("href") shouldBe "/agent-services-account"
+    "have the correct service name text" in {
+      doc.select(".govuk-service-navigation__text").first.text() shouldBe "Agent services account"
+      doc.select(".govuk-service-navigation__link").first.attr("href") shouldBe "/agent-services-account"
     }
 
     "have the correct sign out link" in {

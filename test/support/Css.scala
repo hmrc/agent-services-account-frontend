@@ -45,7 +45,7 @@ object Css {
   val alternateLanguage = ".hmrc-language-select__list .hmrc-language-select__list-item a.govuk-link"
   val getHelpWithThisPageLink = "main a.govuk-link.hmrc-report-technical-issue"
   val backLink = "a.govuk-back-link"
-  val secondaryNavLinks = "#secondary-nav a"
+  val secondaryNavLinks = ".govuk-service-navigation__wrapper a"
   val signoutLink = "a.govuk-link.govuk-body"
 
 }

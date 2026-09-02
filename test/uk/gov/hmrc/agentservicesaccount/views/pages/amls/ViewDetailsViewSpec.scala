@@ -35,9 +35,8 @@ extends ViewBaseSpec {
 
     def testServiceStaticContent(doc: Document): Unit = {
 
-      "have the correct service name link" in {
-        doc.select(".govuk-header__service-name").first.text() mustBe "Agent services account"
-        doc.select(".govuk-header__service-name").first.attr("href") mustBe "/agent-services-account"
+      "have the correct service name text" in {
+        doc.select(".govuk-service-navigation__text").first.text() mustBe "Agent services account"
       }
       "have the correct sign out link" in {
         doc.select(".hmrc-sign-out-nav__link").first.text() mustBe "Sign out"

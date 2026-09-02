@@ -19,8 +19,6 @@ package uk.gov.hmrc.agentservicesaccount.models
 import play.api.libs.json.Json
 import play.api.libs.json.OFormat
 
-import java.time.LocalDate
-
 case class UpdateAmlsJourney(
   status: AmlsStatus,
   newAmlsBody: Option[String] = None,

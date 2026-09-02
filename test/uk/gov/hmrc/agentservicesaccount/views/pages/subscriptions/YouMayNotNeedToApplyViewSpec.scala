@@ -61,7 +61,7 @@ with Matchers {
 
         doc.select("input[type=radio]").size() shouldBe 2
 
-        doc.select("button").text() shouldBe messages("common.continue")
+        doc.select(".govuk-button").text() shouldBe messages("common.continue")
       }
 
       "render error summary when form has errors" in {
