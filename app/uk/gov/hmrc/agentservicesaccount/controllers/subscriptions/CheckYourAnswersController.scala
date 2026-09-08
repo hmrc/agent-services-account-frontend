@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
 
-import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc.*
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
@@ -38,6 +37,7 @@ import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionCyaData.subscriptionJourneyToCyaData
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.utils.CountryResolver
+import uk.gov.hmrc.agentservicesaccount.utils.RequestAwareLogging
 import uk.gov.hmrc.agentservicesaccount.utils.SanitiseLegacySubscriptionName
 import uk.gov.hmrc.agentservicesaccount.views.components.models.SummaryListData
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.check_your_answers
@@ -62,7 +62,7 @@ class CheckYourAnswersController @Inject() (
 )
 extends FrontendController(cc)
 with I18nSupport
-with Logging {
+with RequestAwareLogging {
 
   def showPage(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
     withSubscriptionCyaData(request.subscriptionJourney, legacyRegime) { data =>

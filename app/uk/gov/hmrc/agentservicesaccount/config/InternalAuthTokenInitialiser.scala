@@ -17,7 +17,6 @@
 package uk.gov.hmrc.agentservicesaccount.config
 
 import org.apache.pekko.Done
-import play.api.Logging
 import play.api.http.Status.CREATED
 import play.api.libs.json.Json
 import play.api.libs.ws.JsonBodyWritables._
@@ -25,6 +24,7 @@ import uk.gov.hmrc.http.HttpReads.Implicits.readRaw
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.StringContextOps
 import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.agentservicesaccount.utils.RequestAwareLogging
 
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -49,7 +49,7 @@ class InternalAuthTokenInitialiserImpl @Inject() (
   httpClient: HttpClientV2
 )(implicit ec: ExecutionContext)
 extends InternalAuthTokenInitialiser
-with Logging {
+with RequestAwareLogging {
 
   override val initialised: Future[Done] =
     for {

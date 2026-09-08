@@ -16,11 +16,11 @@
 
 package uk.gov.hmrc.agentservicesaccount.controllers.internal
 
-import play.api.Logging
 import play.api.mvc.Action
 import play.api.mvc.MessagesControllerComponents
 import uk.gov.hmrc.agentservicesaccount.models.upscan.UpscanDetails
 import uk.gov.hmrc.agentservicesaccount.repository.UpscanRepository
+import uk.gov.hmrc.agentservicesaccount.utils.RequestAwareLogging
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject.Inject
@@ -34,7 +34,7 @@ class UpscanCallbackController @Inject() (
   cc: MessagesControllerComponents
 )(implicit ec: ExecutionContext)
 extends FrontendController(cc)
-with Logging {
+with RequestAwareLogging {
 
   def callback: Action[UpscanDetails] =
     Action.async(parse.json[UpscanDetails](UpscanDetails.callbackReads)) { implicit request =>

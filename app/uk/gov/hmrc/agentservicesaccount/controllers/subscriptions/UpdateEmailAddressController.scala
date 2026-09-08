@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
 
-import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc.*
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
@@ -32,6 +31,7 @@ import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
 import uk.gov.hmrc.agentservicesaccount.services.EmailVerificationService
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.utils.EmailDomainValidation
+import uk.gov.hmrc.agentservicesaccount.utils.RequestAwareLogging
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.ctsa_custom_email_address
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.update_email_address
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -54,7 +54,7 @@ class UpdateEmailAddressController @Inject() (
 )
 extends FrontendController(cc)
 with I18nSupport
-with Logging {
+with RequestAwareLogging {
 
   private def isAgencyEmailValid(asaDetailsAgencyEmailOpt: Option[String]): Boolean = {
     asaDetailsAgencyEmailOpt match {

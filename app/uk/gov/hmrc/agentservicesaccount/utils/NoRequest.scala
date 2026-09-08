@@ -17,12 +17,15 @@
 package uk.gov.hmrc.agentservicesaccount.utils
 
 import play.api.libs.typedmap.TypedMap
-import play.api.mvc.{Headers, Request}
-import play.api.mvc.request.{RemoteConnection, RequestTarget}
+import play.api.mvc.Headers
+import play.api.mvc.Request
+import play.api.mvc.request.RemoteConnection
+import play.api.mvc.request.RequestTarget
 
 import java.net.URI
 
-object NoRequest extends Request[Any] {
+object NoRequest
+extends Request[Any] {
 
   override def body: Any = ""
   override def method: String = ""

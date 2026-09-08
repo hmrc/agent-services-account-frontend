@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
 
-import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.i18n.Lang
 import play.api.libs.json._
@@ -33,6 +32,7 @@ import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepositor
 import uk.gov.hmrc.agentservicesaccount.services.DraftDetailsService
 import uk.gov.hmrc.agentservicesaccount.services.AgentRecordService
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
+import uk.gov.hmrc.agentservicesaccount.utils.RequestAwareLogging
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.desi_details._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
@@ -58,7 +58,7 @@ class ContactDetailsController @Inject() (
 extends FrontendController(cc)
 with DesiDetailsJourneySupport
 with I18nSupport
-with Logging {
+with RequestAwareLogging {
 
   val startAddressLookup: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     val continueUrl: String = {

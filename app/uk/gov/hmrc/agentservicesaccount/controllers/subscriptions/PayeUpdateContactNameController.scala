@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
 
-import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
@@ -28,6 +27,7 @@ import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.PayeSubscriptionCont
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.PayeContactNameFormValues
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
+import uk.gov.hmrc.agentservicesaccount.utils.RequestAwareLogging
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.paye_update_contact_name
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
@@ -47,7 +47,7 @@ class PayeUpdateContactNameController @Inject() (
 )
 extends FrontendController(cc)
 with I18nSupport
-with Logging {
+with RequestAwareLogging {
 
   def showPage: Action[AnyContent] = actions.authActionWithSubscriptionJourney(PAYE).async { implicit request =>
     val journey = request.subscriptionJourney

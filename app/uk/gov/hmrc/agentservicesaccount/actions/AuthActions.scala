@@ -17,7 +17,6 @@
 package uk.gov.hmrc.agentservicesaccount.actions
 
 import play.api.Environment
-import play.api.Logging
 import play.api.mvc.Results.*
 import play.api.mvc.*
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
@@ -31,6 +30,7 @@ import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionInfo
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionStatus
 import uk.gov.hmrc.agentservicesaccount.utils.RequestSupport.*
+import uk.gov.hmrc.agentservicesaccount.utils.RequestAwareLogging
 import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
 import uk.gov.hmrc.auth.core.*
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals.*
@@ -136,7 +136,7 @@ class AuthActions @Inject() (
   val env: Environment
 )(implicit ec: ExecutionContext)
 extends AuthorisedFunctions
-with Logging {
+with RequestAwareLogging {
 
   def authActionRefiner: ActionRefiner[Request, AuthRequestWithAgentInfo] =
     new ActionRefiner[Request, AuthRequestWithAgentInfo] {
