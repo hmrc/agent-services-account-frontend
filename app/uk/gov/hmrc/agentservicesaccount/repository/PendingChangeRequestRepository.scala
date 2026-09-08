@@ -22,12 +22,12 @@ import org.mongodb.scala.model.IndexModel
 import org.mongodb.scala.model.IndexOptions
 import org.mongodb.scala.model.Indexes
 import org.mongodb.scala.model.ReplaceOptions
-import play.api.Logging
 import play.api.mvc.RequestHeader
 import uk.gov.hmrc.agentservicesaccount.models.Arn
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest
+import uk.gov.hmrc.agentservicesaccount.utils.RequestAwareLogging
 import uk.gov.hmrc.mongo.MongoComponent
 import uk.gov.hmrc.mongo.play.json.PlayMongoRepository
 
@@ -66,7 +66,7 @@ extends PlayMongoRepository[PendingChangeRequest](
   replaceIndexes = true
 )
 with PendingChangeRequestRepository
-with Logging {
+with RequestAwareLogging {
 
   def find(arn: Arn)(implicit rh: RequestHeader): Future[Option[PendingChangeRequest]] = {
 

@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
 
-import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc.*
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
@@ -38,6 +37,8 @@ import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionCyaData.subscriptionJourneyToCyaData
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.utils.CountryResolver
+import uk.gov.hmrc.agentservicesaccount.utils.NoRequest
+import uk.gov.hmrc.agentservicesaccount.utils.RequestAwareLogging
 import uk.gov.hmrc.agentservicesaccount.utils.SanitiseLegacySubscriptionName
 import uk.gov.hmrc.agentservicesaccount.views.components.models.SummaryListData
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.check_your_answers
@@ -62,7 +63,7 @@ class CheckYourAnswersController @Inject() (
 )
 extends FrontendController(cc)
 with I18nSupport
-with Logging {
+with RequestAwareLogging {
 
   def showPage(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
     withSubscriptionCyaData(request.subscriptionJourney, legacyRegime) { data =>
@@ -84,7 +85,9 @@ with Logging {
           request.subscriptionJourney.asaDetails.agencyName.flatMap(asaAgencyName => {
             val sanitised = SanitiseLegacySubscriptionName.sanitise(asaAgencyName, legacyRegime)
             if (sanitised.removedCharacters.nonEmpty) {
-              logger.warn(s"[subscriptions][CheckYourAnswersController][onSubmit] - Remove invalid characters ${sanitised.removedCharacters.mkString} from ASA agency name for ARN ${request.agentInfo.arn.value} and legacy regime $legacyRegime")
+              logger.warn(s"[subscriptions][CheckYourAnswersController][onSubmit] - Remove invalid characters ${sanitised.removedCharacters.mkString} from ASA agency name for ARN ${request.agentInfo.arn.value} and legacy regime $legacyRegime")(
+                using NoRequest
+              )
             }
             data.toSubscriptionRequest(
               legacyRegime,
@@ -96,7 +99,9 @@ with Logging {
         else {
           val sanitised = SanitiseLegacySubscriptionName.sanitise(data.name, legacyRegime)
           if (sanitised.removedCharacters.nonEmpty) {
-            logger.warn(s"[subscriptions][CheckYourAnswersController][onSubmit] - Remove invalid characters ${sanitised.removedCharacters.mkString} from ASA agency name for ARN ${request.agentInfo.arn.value} and legacy regime $legacyRegime")
+            logger.warn(s"[subscriptions][CheckYourAnswersController][onSubmit] - Remove invalid characters ${sanitised.removedCharacters.mkString} from ASA agency name for ARN ${request.agentInfo.arn.value} and legacy regime $legacyRegime")(
+              using NoRequest
+            )
           }
           val dataWithSanitisedName = data.copy(name = sanitised.sanitisedName)
           dataWithSanitisedName.toSubscriptionRequest(
@@ -191,7 +196,7 @@ with Logging {
       case Some(data) if !journey.isSubmitted => f(data)
       case _ if journey.isSubmitted => Future.successful(Redirect(subscriptionRoutes.ConfirmationController.showConfirmationPage(legacyRegime)))
       case _ =>
-        logger.warn("[CheckYourAnswersController] missing Legacy Subscription CYA data")
+        logger.warn("[CheckYourAnswersController] missing Legacy Subscription CYA data")(using NoRequest)
         Future.successful(Redirect(asaRoutes.AgentServicesController.showAgentServicesAccount()))
     }
   }

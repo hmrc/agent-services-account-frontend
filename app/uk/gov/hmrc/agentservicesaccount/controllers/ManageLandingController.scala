@@ -16,13 +16,13 @@
 
 package uk.gov.hmrc.agentservicesaccount.controllers
 
-import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentPermissionsConnector
 import uk.gov.hmrc.agentservicesaccount.models.accessgroups.OptedInReady
+import uk.gov.hmrc.agentservicesaccount.utils.RequestAwareLogging
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.EACD._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
@@ -41,7 +41,7 @@ class ManageLandingController @Inject() (
 )
 extends FrontendController(cc)
 with I18nSupport
-with Logging {
+with RequestAwareLogging {
 
   val showAccessGroupSummaryForASA: Action[AnyContent] = actions.authActionCheckSuspend.async { implicit request =>
     // auth step will confirm user is authorised, with correct GG affinity type and HMRC-AS-AGENT enrolment

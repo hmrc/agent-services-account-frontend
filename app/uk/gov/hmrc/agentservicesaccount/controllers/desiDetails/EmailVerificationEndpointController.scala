@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.agentservicesaccount.controllers.desiDetails
 
-import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc.Action
 import play.api.mvc.AnyContent
@@ -35,6 +34,7 @@ import uk.gov.hmrc.agentservicesaccount.repository.PendingChangeRequestRepositor
 import uk.gov.hmrc.agentservicesaccount.services.DraftDetailsService
 import uk.gov.hmrc.agentservicesaccount.services.EmailVerificationService
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
+import uk.gov.hmrc.agentservicesaccount.utils.RequestAwareLogging
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject.Inject
@@ -57,7 +57,7 @@ class EmailVerificationEndpointController @Inject() (
 extends FrontendController(cc)
 with DesiDetailsJourneySupport
 with I18nSupport
-with Logging {
+with RequestAwareLogging {
 
   /* This is the callback endpoint (return url) from the email-verification service and not for use of our own frontend. */
   val finishEmailVerification: Action[AnyContent] = actions.authActionCheckSuspend.async {

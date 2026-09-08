@@ -17,14 +17,15 @@
 package uk.gov.hmrc.agentservicesaccount.config
 
 import org.apache.pekko.Done
-import play.api.Logging
 import play.api.http.Status.CREATED
 import play.api.libs.json.Json
-import play.api.libs.ws.JsonBodyWritables._
+import play.api.libs.ws.JsonBodyWritables.*
 import uk.gov.hmrc.http.HttpReads.Implicits.readRaw
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.StringContextOps
 import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.agentservicesaccount.utils.NoRequest
+import uk.gov.hmrc.agentservicesaccount.utils.RequestAwareLogging
 
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -49,7 +50,7 @@ class InternalAuthTokenInitialiserImpl @Inject() (
   httpClient: HttpClientV2
 )(implicit ec: ExecutionContext)
 extends InternalAuthTokenInitialiser
-with Logging {
+with RequestAwareLogging {
 
   override val initialised: Future[Done] =
     for {
@@ -60,7 +61,7 @@ with Logging {
 
   private def ensureAuthToken(): Future[Done] = authTokenIsValid.flatMap { isValid =>
     if (isValid) {
-      logger.info("Auth token is already valid")
+      logger.info("Auth token is already valid")(using NoRequest)
       Future.successful(Done)
     }
     else {
@@ -69,7 +70,7 @@ with Logging {
   }
 
   private def createClientAuthToken(): Future[Done] = {
-    logger.info("Initialising auth token")
+    logger.info("Initialising auth token")(using NoRequest)
     httpClient
       .post(url"${appConfig.internalAuthBaseUrl}/test-only/token")(HeaderCarrier())
       .withBody(
@@ -93,11 +94,11 @@ with Logging {
       .execute
       .flatMap { response =>
         if (response.status == CREATED) {
-          logger.info("Auth token initialised")
+          logger.info("Auth token initialised")(using NoRequest)
           Future.successful(Done)
         }
         else {
-          logger.warn("Unable to initialise internal-auth token")
+          logger.warn("Unable to initialise internal-auth token")(using NoRequest)
           Future.failed(new RuntimeException("Unable to initialise internal-auth token"))
         }
       }
@@ -105,7 +106,7 @@ with Logging {
   }
 
   private def authTokenIsValid: Future[Boolean] = {
-    logger.info("Checking auth token")
+    logger.info("Checking auth token")(using NoRequest)
     httpClient
       .get(url"${appConfig.internalAuthBaseUrl}/test-only/token")(HeaderCarrier())
       .setHeader("Authorization" -> appConfig.internalAuthToken)

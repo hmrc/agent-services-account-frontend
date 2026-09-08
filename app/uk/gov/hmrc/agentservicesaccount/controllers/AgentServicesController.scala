@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.agentservicesaccount.controllers
 
-import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
@@ -34,6 +33,7 @@ import uk.gov.hmrc.agentservicesaccount.models.AmlsStatus
 import uk.gov.hmrc.agentservicesaccount.models.Arn
 import uk.gov.hmrc.agentservicesaccount.services.AgentRecordService
 import uk.gov.hmrc.agentservicesaccount.services.SubscriptionService
+import uk.gov.hmrc.agentservicesaccount.utils.RequestAwareLogging
 import uk.gov.hmrc.agentservicesaccount.views.html.pages._
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.assistant.administrators
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.assistant.your_account
@@ -66,7 +66,7 @@ class AgentServicesController @Inject() (
 )
 extends FrontendController(cc)
 with I18nSupport
-with Logging {
+with RequestAwareLogging {
 
   val root: Action[AnyContent] = actions.authActionCheckSuspend {
     Redirect(routes.AgentServicesController.showAgentServicesAccount())
