@@ -20,6 +20,7 @@ import play.api.Logger
 import play.api.http.HeaderNames
 import play.api.mvc.RequestHeader
 import uk.gov.hmrc.agentservicesaccount.utils.RequestSupport.given
+import uk.gov.hmrc.agentservicesaccount.utils.RequestSupport.hc
 
 /** A logger which is aware of the request. It will append to the message extra information such as session ID, request ID, user agent, referer, and device ID
   * etc.

@@ -60,7 +60,7 @@ with RequestAwareLogging {
 
   private def ensureAuthToken(): Future[Done] = authTokenIsValid.flatMap { isValid =>
     if (isValid) {
-      logger.info("Auth token is already valid")
+      baseLogger.info("Auth token is already valid")
       Future.successful(Done)
     }
     else {
@@ -69,7 +69,7 @@ with RequestAwareLogging {
   }
 
   private def createClientAuthToken(): Future[Done] = {
-    logger.info("Initialising auth token")
+    baseLogger.info("Initialising auth token")
     httpClient
       .post(url"${appConfig.internalAuthBaseUrl}/test-only/token")(HeaderCarrier())
       .withBody(
@@ -93,11 +93,11 @@ with RequestAwareLogging {
       .execute
       .flatMap { response =>
         if (response.status == CREATED) {
-          logger.info("Auth token initialised")
+          baseLogger.info("Auth token initialised")
           Future.successful(Done)
         }
         else {
-          logger.warn("Unable to initialise internal-auth token")
+          baseLogger.warn("Unable to initialise internal-auth token")
           Future.failed(new RuntimeException("Unable to initialise internal-auth token"))
         }
       }
@@ -105,7 +105,7 @@ with RequestAwareLogging {
   }
 
   private def authTokenIsValid: Future[Boolean] = {
-    logger.info("Checking auth token")
+    baseLogger.info("Checking auth token")
     httpClient
       .get(url"${appConfig.internalAuthBaseUrl}/test-only/token")(HeaderCarrier())
       .setHeader("Authorization" -> appConfig.internalAuthToken)
