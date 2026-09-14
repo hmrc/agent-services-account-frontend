@@ -19,7 +19,8 @@ package uk.gov.hmrc.agentservicesaccount.utils
 import play.api.Logger
 
 trait RequestAwareLogging:
+  val baseLogger = Logger(getClass)
   val logger: RequestAwareLogger =
     new RequestAwareLogger(
-      delegateLogger = Logger(getClass)
+      delegateLogger = baseLogger
     )
