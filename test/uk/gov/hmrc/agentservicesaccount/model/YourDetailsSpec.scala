@@ -28,7 +28,7 @@ class YourDetailsSpec
 extends UnitSpec {
 
   implicit val crypto: Encrypter
-    & Decrypter = SymmetricCryptoFactory.aesCrypto("edkOOwt7uvzw1TXnFIN6aRVHkfWcgiOrbBvkEQvO65g=")
+    & Decrypter = SymmetricCryptoFactory.aesGcmCrypto("edkOOwt7uvzw1TXnFIN6aRVHkfWcgiOrbBvkEQvO65g=")
 
   val testYourDetails: YourDetails = YourDetails(
     "testName",
@@ -37,10 +37,6 @@ extends UnitSpec {
   val testJson: JsObject = Json.obj(
     "fullName" -> "testName",
     "telephone" -> "testPhone"
-  )
-  val testEncryptedJson: JsObject = Json.obj(
-    "fullName" -> "7g352kI4Rfh0Af6Jm7Bl1g==",
-    "telephone" -> "2NFf8EgEOaFuVowl+Zotcw=="
   )
   "YourDetails" when {
     "using default format" should {
@@ -52,11 +48,16 @@ extends UnitSpec {
       }
     }
     "using crypto format" should {
-      "serialise to encrypted Json correctly" in {
-        Json.toJson(testYourDetails)(YourDetails.databaseFormat) shouldBe testEncryptedJson
+      "serialise to encrypted Json without exposing plaintext values" in {
+        val encryptedJson = Json.toJson(testYourDetails)(YourDetails.databaseFormat)
+
+        (encryptedJson \ "fullName").as[String] should not be testYourDetails.fullName
+        (encryptedJson \ "telephone").as[String] should not be testYourDetails.telephone
       }
-      "deserialise from encrypted Json correctly" in {
-        testEncryptedJson.as[YourDetails](YourDetails.databaseFormat) shouldBe testYourDetails
+      "round trip encrypted Json correctly" in {
+        val encryptedJson = Json.toJson(testYourDetails)(YourDetails.databaseFormat)
+
+        encryptedJson.as[YourDetails](YourDetails.databaseFormat) shouldBe testYourDetails
       }
     }
   }
