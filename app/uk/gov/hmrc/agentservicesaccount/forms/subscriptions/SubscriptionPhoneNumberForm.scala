@@ -37,8 +37,8 @@ object SubscriptionPhoneNumberForm {
   private val phoneNumberRegex = """^(?=.*\d)[0-9 +()]+$""".r
 
   private def phoneNumberUseAsaDataMapping(
-                                            agentRegime: AgentRegime,
-                                            asaDetailsAgencyName: String
+    agentRegime: AgentRegime,
+    asaDetailsAgencyName: String
   )(implicit msgs: Messages): Mapping[Boolean] = useAsaDataMapping(
     msgs(s"${agentRegime.msgPrefix}.phone-number.use-asa.error.required", asaDetailsAgencyName)
   )
@@ -53,8 +53,8 @@ object SubscriptionPhoneNumberForm {
     .verifying(s"${agentRegime.msgPrefix}.phone-number.new-input.error.invalid", x => x.isEmpty || isPhoneNumberValid(x))
 
   def form(
-            agentRegime: AgentRegime,
-            asaDetailsAgencyName: String
+    agentRegime: AgentRegime,
+    asaDetailsAgencyName: String
   )(implicit msgs: Messages): Form[PhoneNumberFormValues] = {
     Form(
       mapping(

@@ -48,8 +48,8 @@ with Matchers {
   )
 
   private def tooLong(
-                       regime: AgentRegime,
-                       row: Int
+    regime: AgentRegime,
+    row: Int
   ): String = RandomStringUtils.insecure().nextAlphanumeric(maxLen(regime, row) + 1)
 
   private def assertFieldErrors(

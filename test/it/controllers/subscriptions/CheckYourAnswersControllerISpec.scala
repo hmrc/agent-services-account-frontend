@@ -111,8 +111,8 @@ with MockFactory {
         )
 
         override def submitSubscriptionRequest(
-                                                subscriptionRequest: SubscriptionRequest,
-                                                agentRegime: AgentRegime
+          subscriptionRequest: SubscriptionRequest,
+          agentRegime: AgentRegime
         )(implicit hc: HeaderCarrier): Future[Unit] = Future.successful(())
       }
 

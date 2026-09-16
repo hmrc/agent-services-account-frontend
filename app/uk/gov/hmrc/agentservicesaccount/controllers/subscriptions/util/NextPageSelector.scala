@@ -73,9 +73,9 @@ object NextPageSelector {
   }
 
   def getNextPage(
-                   currentPage: String,
-                   journey: Option[SubscriptionJourney] = None,
-                   agentRegime: AgentRegime
+    currentPage: String,
+    journey: Option[SubscriptionJourney] = None,
+    agentRegime: AgentRegime
   ): Call = {
     nextPage(
       currentPage,

@@ -133,10 +133,10 @@ with RequestAwareLogging {
     .mkString("<br/>")
 
   private[subscriptions] def buildSummaryListItems(
-                                                    data: SubscriptionCyaData,
-                                                    agentRegime: AgentRegime,
-                                                    agencyDetailsEmailLength: Option[Int],
-                                                    useCustomAddress: Option[Boolean]
+    data: SubscriptionCyaData,
+    agentRegime: AgentRegime,
+    agencyDetailsEmailLength: Option[Int],
+    useCustomAddress: Option[Boolean]
   ): Seq[SummaryListData] = {
     val nameRowKeyDescriptor =
       if (agentRegime == PAYE)
@@ -153,8 +153,7 @@ with RequestAwareLogging {
       }
     val emailAddressLink =
       (agentRegime, agencyDetailsEmailLength) match {
-        case (CT | SA, Some(length)) if length > CT_SA_EMAIL_MAX_LENGTH =>
-          Some(subscriptionRoutes.UpdateEmailAddressController.showSaCtCustomPage(agentRegime))
+        case (CT | SA, Some(length)) if length > CT_SA_EMAIL_MAX_LENGTH => Some(subscriptionRoutes.UpdateEmailAddressController.showSaCtCustomPage(agentRegime))
         case _ => Some(subscriptionRoutes.UpdateEmailAddressController.showPage(agentRegime))
       }
     Seq(

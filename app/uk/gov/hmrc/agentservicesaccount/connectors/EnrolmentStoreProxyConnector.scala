@@ -43,9 +43,9 @@ extends Logging {
   private val baseUrl = appConfig.enrolmentStoreProxyBaseUrl
 
   def getGroupAllocatedEnrolment(
-                                  groupId: String,
-                                  regime: AgentRegime,
-                                  agentReference: String
+    groupId: String,
+    regime: AgentRegime,
+    agentReference: String
   )(using hc: HeaderCarrier): Future[Option[Es5GroupAllocatedEnrolment]] = {
 
     val enrolmentKey = s"${regime.enrolmentKey}~${regime.agentReferenceKey}~$agentReference"

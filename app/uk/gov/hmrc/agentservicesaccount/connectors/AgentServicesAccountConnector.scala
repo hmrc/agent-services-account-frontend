@@ -124,8 +124,8 @@ extends Logging {
     )
 
   def submitSubscriptionRequest(
-                                 subscriptionRequest: SubscriptionRequest,
-                                 agentRegime: AgentRegime
+    subscriptionRequest: SubscriptionRequest,
+    agentRegime: AgentRegime
   )(implicit hc: HeaderCarrier): Future[Unit] = {
     http
       .post(url"$url/legacy-subscription-request/$agentRegime").withBody(Json.toJson(subscriptionRequest)).execute[HttpResponse]

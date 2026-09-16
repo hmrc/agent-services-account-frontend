@@ -29,15 +29,15 @@ object DoYouAlreadyManageForm {
   val doYouAlreadyManageKey = "doYouAlreadyManage"
 
   private def doYouAlreadyManageMapping(
-                                         agentRegime: AgentRegime,
-                                         asaDetailsAgencyName: String
+    agentRegime: AgentRegime,
+    asaDetailsAgencyName: String
   )(implicit msgs: Messages): Mapping[Boolean] = useAsaDataMapping(
     msgs(s"${agentRegime.msgPrefix}.do-you-already-manage.error.required", asaDetailsAgencyName)
   )
 
   def form(
-            agentRegime: AgentRegime,
-            asaDetailsAgencyName: String
+    agentRegime: AgentRegime,
+    asaDetailsAgencyName: String
   )(implicit msgs: Messages): Form[DoYouAlreadyManageFormValues] = Form(
     mapping(
       doYouAlreadyManageKey -> doYouAlreadyManageMapping(agentRegime, asaDetailsAgencyName)

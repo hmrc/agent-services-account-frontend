@@ -134,8 +134,8 @@ with RequestAwareLogging {
   }
 
   def showChange(
-                  agentRegime: AgentRegime,
-                  isInvalid: Boolean
+    agentRegime: AgentRegime,
+    isInvalid: Boolean
   ): Action[AnyContent] = actions.authActionWithSubscriptionJourney(agentRegime).async { implicit request =>
     val journey = request.subscriptionJourney
 
@@ -168,8 +168,8 @@ with RequestAwareLogging {
   }
 
   def onSubmitChange(
-                      agentRegime: AgentRegime,
-                      isInvalid: Boolean
+    agentRegime: AgentRegime,
+    isInvalid: Boolean
   ): Action[AnyContent] = actions.authActionWithSubscriptionJourney(agentRegime).async { implicit request =>
     val journey = request.subscriptionJourney
 

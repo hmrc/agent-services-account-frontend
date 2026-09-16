@@ -24,9 +24,9 @@ import java.time.LocalDate
 import java.time.ZoneId
 
 case class SubscriptionInfo(
-                             regime: AgentRegime,
-                             subscriptionStatus: SubscriptionStatus,
-                             creationDate: Option[Instant] = None
+  regime: AgentRegime,
+  subscriptionStatus: SubscriptionStatus,
+  creationDate: Option[Instant] = None
 ) {
   def localCreationDate: Option[LocalDate] = creationDate.map(_.atZone(ZoneId.of("Europe/London")).toLocalDate)
 }

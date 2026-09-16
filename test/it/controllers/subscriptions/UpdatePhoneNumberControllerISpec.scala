@@ -75,8 +75,8 @@ with TestConstants {
   )
 
   class TestSetup(
-                   agentRegime: AgentRegime,
-                   agencyTelephone: Option[String] = Some("1234554321")
+    agentRegime: AgentRegime,
+    agencyTelephone: Option[String] = Some("1234554321")
   ) {
 
     private val testArn = "TARN0000001"

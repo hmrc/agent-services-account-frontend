@@ -95,10 +95,10 @@ case class SubscriptionCyaData(
   }
 
   def toSubscriptionRequest(
-                             agentRegime: AgentRegime,
-                             isWelsh: Boolean,
-                             countryNameOpt: Option[String] = None,
-                             asaAgentNameOpt: Option[String] = None
+    agentRegime: AgentRegime,
+    isWelsh: Boolean,
+    countryNameOpt: Option[String] = None,
+    asaAgentNameOpt: Option[String] = None
   ): Option[SubscriptionRequest] = {
     (agentRegime, address.countryCode != "GB", countryNameOpt, asaAgentNameOpt) match {
       case (PAYE, false, None, Some(asaAgentName)) => Some(toPayeSubscriptionRequest(asaAgentName, isWelsh))
@@ -112,8 +112,8 @@ case class SubscriptionCyaData(
 
 object SubscriptionCyaData {
   def subscriptionJourneyToCyaData(
-                                    journey: SubscriptionJourney,
-                                    agentRegime: AgentRegime
+    journey: SubscriptionJourney,
+    agentRegime: AgentRegime
   ): Option[SubscriptionCyaData] = {
     def getCustomAnswerOrAsaDetailsDefault[A](
       useCustom: Option[Boolean],

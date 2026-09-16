@@ -39,8 +39,8 @@ object ChangeSubscriptionAddressForm {
       "^[a-zA-Z0-9 ()&‘/,.-]*$"
 
   def maxLen(
-              agentRegime: AgentRegime,
-              row: Int
+    agentRegime: AgentRegime,
+    row: Int
   ): Int =
     if (agentRegime == AgentRegime.PAYE)
       35
@@ -50,8 +50,8 @@ object ChangeSubscriptionAddressForm {
       28
 
   private def lineMapping(
-                           agentRegime: AgentRegime,
-                           row: Int
+    agentRegime: AgentRegime,
+    row: Int
   ) = {
     trimmedText
       .verifying(s"${agentRegime.msgPrefix}.error.addressLine$row.required", _.nonEmpty)

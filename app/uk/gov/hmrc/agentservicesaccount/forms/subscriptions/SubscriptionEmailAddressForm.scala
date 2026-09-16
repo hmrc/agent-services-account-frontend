@@ -35,8 +35,8 @@ object SubscriptionEmailAddressForm {
   val emailAddressNewKey = "emailAddressNew"
 
   private def emailAddressUseAsaDataMapping(
-                                             agentRegime: AgentRegime,
-                                             asaDetailsAgencyName: String
+    agentRegime: AgentRegime,
+    asaDetailsAgencyName: String
   )(implicit msgs: Messages): Mapping[Boolean] = useAsaDataMapping(
     msgs(s"${agentRegime.msgPrefix}.email-address.use-asa.error.required", asaDetailsAgencyName)
   )
@@ -54,8 +54,8 @@ object SubscriptionEmailAddressForm {
   }
 
   def form(
-            agentRegime: AgentRegime,
-            asaDetailsAgencyName: String
+    agentRegime: AgentRegime,
+    asaDetailsAgencyName: String
   )(implicit msgs: Messages): Form[EmailAddressFormValues] = {
     Form(
       mapping(

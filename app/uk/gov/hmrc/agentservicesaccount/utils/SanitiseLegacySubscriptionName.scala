@@ -29,8 +29,8 @@ case class SanitisedLegacySubscriptionName(
 object SanitiseLegacySubscriptionName {
 
   def sanitise(
-                name: String,
-                agentRegime: AgentRegime
+    name: String,
+    agentRegime: AgentRegime
   ): SanitisedLegacySubscriptionName =
     agentRegime match {
       case CT | SA => sanitiseForCtSa(name)

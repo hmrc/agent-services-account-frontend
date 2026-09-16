@@ -130,8 +130,8 @@ with RequestAwareLogging {
   }
 
   def finishAddressLookup(
-                           id: Option[String],
-                           agentRegime: AgentRegime
+    id: Option[String],
+    agentRegime: AgentRegime
   ): Action[AnyContent] = actions.authActionWithSubscriptionJourney(agentRegime).async { implicit request =>
     val journey = request.subscriptionJourney
 

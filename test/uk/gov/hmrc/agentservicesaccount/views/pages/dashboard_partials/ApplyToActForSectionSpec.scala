@@ -98,8 +98,8 @@ extends ViewBaseSpec {
   )
 
   private def sub(
-                   regime: AgentRegime,
-                   status: SubscriptionStatus
+    regime: AgentRegime,
+    status: SubscriptionStatus
   ) = SubscriptionInfo(
     regime = regime,
     subscriptionStatus = status,

@@ -209,8 +209,8 @@ trait TestConstants {
     }
 
   def completeString(
-                      journey: SubscriptionJourney,
-                      agentRegime: AgentRegime
+    journey: SubscriptionJourney,
+    agentRegime: AgentRegime
   ): String =
     if (journey.isComplete(agentRegime))
       "complete"
