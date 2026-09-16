@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.agentservicesaccount.model
 
-import play.api.libs.json.JsObject
 import play.api.libs.json.Json
 import support.UnitSpec
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.CtChanges
@@ -25,17 +24,11 @@ import uk.gov.hmrc.agentservicesaccount.models.desiDetails.OtherServices
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.SaChanges
 import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
-import uk.gov.hmrc.crypto.Decrypter
-import uk.gov.hmrc.crypto.Encrypter
-import uk.gov.hmrc.crypto.SymmetricCryptoFactory
 import uk.gov.hmrc.domain.CtUtr
 import uk.gov.hmrc.domain.SaUtr
 
 class DesignatoryDetailsSpec
 extends UnitSpec {
-
-  implicit val crypto: Encrypter
-    & Decrypter = SymmetricCryptoFactory.aesCrypto("edkOOwt7uvzw1TXnFIN6aRVHkfWcgiOrbBvkEQvO65g=")
 
   val testDesignatoryDetails: DesignatoryDetails = DesignatoryDetails(
     AgencyDetails(
@@ -62,7 +55,7 @@ extends UnitSpec {
       )
     )
   )
-  val testJson: JsObject = Json.obj(
+  val testJson = Json.obj(
     "agencyDetails" -> Json.obj(
       "agencyName" -> "testName",
       "agencyEmail" -> "testEmail",
@@ -87,31 +80,7 @@ extends UnitSpec {
       )
     )
   )
-  val testEncryptedJson: JsObject = Json.obj(
-    "agencyDetails" -> Json.obj(
-      "agencyName" -> "7g352kI4Rfh0Af6Jm7Bl1g==",
-      "agencyEmail" -> "BVfLzY//sJgIMS+Frv7dHQ==",
-      "agencyTelephone" -> "2NFf8EgEOaFuVowl+Zotcw==",
-      "agencyAddress" -> Json.obj(
-        "addressLine1" -> "u3kG4I/2HMwvbg6DgKW2NA==",
-        "addressLine2" -> "wv13MNc1x64H4C2I7pK/9g==",
-        "addressLine3" -> "6hEc2+5vL10UZ5wxTijhdA==",
-        "addressLine4" -> "vIlbrtn9c/iM4Xg6+QxdXw==",
-        "postalCode" -> "14YJ/1yyIF7SptIAKKJJ6Q==",
-        "countryCode" -> "Q80Jvd8jhZzman3gH6Gh0A=="
-      )
-    ),
-    "otherServices" -> Json.obj(
-      "saChanges" -> Json.obj(
-        "applyChanges" -> true,
-        "saAgentReference" -> "r6af9+6cwYaHzCIsbO1VDw=="
-      ),
-      "ctChanges" -> Json.obj(
-        "applyChanges" -> true,
-        "ctAgentReference" -> "jHBh7aHi6yaOzzXrUP0+6g=="
-      )
-    )
-  )
+
   "DesignatoryDetails" when {
     "using default format" should {
       "serialise to Json correctly" in {

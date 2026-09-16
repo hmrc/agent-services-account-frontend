@@ -25,8 +25,6 @@ import uk.gov.hmrc.agentservicesaccount.models.UpdateAmlsJourney
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
 import stubs.AgentServicesAccountStubs.givenGetAgentRecord
 
-import java.time.LocalDate
-
 class EnterRegistrationNumberControllerISpec
 extends ComponentBaseISpec {
 
