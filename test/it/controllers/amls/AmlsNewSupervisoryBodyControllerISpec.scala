@@ -25,8 +25,6 @@ import uk.gov.hmrc.agentservicesaccount.models.UpdateAmlsJourney
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
 import stubs.AgentServicesAccountStubs.givenGetAgentRecord
 
-import java.time.LocalDate
-
 class AmlsNewSupervisoryBodyControllerISpec
 extends ComponentBaseISpec {
 
@@ -35,7 +33,6 @@ extends ComponentBaseISpec {
   private val newSupervisoryBodyPath = s"$amlsStartPath/new-supervisory-body"
   private val checkYourAnswersPath = s"$amlsStartPath/check-your-answers"
   private val newRegistrationNumberPath = s"$amlsStartPath/new-registration-number"
-  private val confirmRegistrationNumberPath = s"$amlsStartPath/confirm-registration-number"
 
   private val ukAmlsJourney = UpdateAmlsJourney(
     status = AmlsStatuses.ValidAmlsDetailsUK,
