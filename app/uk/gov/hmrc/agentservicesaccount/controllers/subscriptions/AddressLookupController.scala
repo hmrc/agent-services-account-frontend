@@ -53,32 +53,32 @@ with I18nSupport
 with RequestAwareLogging {
 
   private def alfJourneyLanguageLabels(agentRegime: AgentRegime)(implicit lang: Lang): JsObject = {
-    val legacyRegimePrefix = agentRegime.msgPrefix
+    val agentRegimePrefix = agentRegime.msgPrefix
     val editPageLabels = Json.obj(
-      "title" -> messagesApi(s"$legacyRegimePrefix.alf.edit.title"),
-      "heading" -> messagesApi(s"$legacyRegimePrefix.alf.edit.heading"),
-      "townLabel" -> messagesApi(s"$legacyRegimePrefix.alf.edit.townLabel")
+      "title" -> messagesApi(s"$agentRegimePrefix.alf.edit.title"),
+      "heading" -> messagesApi(s"$agentRegimePrefix.alf.edit.heading"),
+      "townLabel" -> messagesApi(s"$agentRegimePrefix.alf.edit.townLabel")
     )
     Json.obj(
       "countryPickerLabels" -> Json.obj(
-        "title" -> messagesApi(s"$legacyRegimePrefix.alf.country-picker.title"),
-        "heading" -> messagesApi(s"$legacyRegimePrefix.alf.country-picker.heading"),
+        "title" -> messagesApi(s"$agentRegimePrefix.alf.country-picker.title"),
+        "heading" -> messagesApi(s"$agentRegimePrefix.alf.country-picker.heading"),
         "countryLabel" -> ""
       ),
       "lookupPageLabels" -> Json.obj(
-        "title" -> messagesApi(s"$legacyRegimePrefix.alf.lookup.title"),
-        "heading" -> messagesApi(s"$legacyRegimePrefix.alf.lookup.heading"),
-        "postcodeLabel" -> messagesApi(s"$legacyRegimePrefix.alf.lookup.postcode.label")
+        "title" -> messagesApi(s"$agentRegimePrefix.alf.lookup.title"),
+        "heading" -> messagesApi(s"$agentRegimePrefix.alf.lookup.heading"),
+        "postcodeLabel" -> messagesApi(s"$agentRegimePrefix.alf.lookup.postcode.label")
       ),
       "selectPageLabels" -> Json.obj(
-        "title" -> messagesApi(s"$legacyRegimePrefix.alf.select.title")
+        "title" -> messagesApi(s"$agentRegimePrefix.alf.select.title")
       ),
       "editPageLabels" -> editPageLabels,
       "international" -> Json.obj(
         "editPageLabels" -> editPageLabels
       ),
       "confirmPageLabels" -> Json.obj(
-        "title" -> messagesApi(s"$legacyRegimePrefix.alf.confirm.title")
+        "title" -> messagesApi(s"$agentRegimePrefix.alf.confirm.title")
       )
     )
   }

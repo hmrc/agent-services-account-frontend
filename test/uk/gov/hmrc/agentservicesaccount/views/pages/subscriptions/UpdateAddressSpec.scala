@@ -36,7 +36,7 @@ extends ViewBaseSpec {
 
   private val legacyRegime = AgentRegime.PAYE
 
-  private val legacyRegimePrefix = legacyRegime.msgPrefix
+  private val agentRegimePrefix = legacyRegime.msgPrefix
 
   private def formatAddress(address: BusinessAddress): String = List(
     Some(address.addressLine1),
@@ -64,7 +64,7 @@ extends ViewBaseSpec {
 
   private val formWithUseAsaError: Form[AddressFormValues] = addressForm.withError(
     key = addressUseAsaDataKey,
-    message = messages(s"$legacyRegimePrefix.address.use-asa.error.required")
+    message = messages(s"$agentRegimePrefix.address.use-asa.error.required")
   )
 
   def render(form: Form[AddressFormValues]): Document = Jsoup.parse(
@@ -79,7 +79,7 @@ extends ViewBaseSpec {
     ).body
   )
 
-  private val title: String = messages(s"$legacyRegimePrefix.address.title")
+  private val title: String = messages(s"$agentRegimePrefix.address.title")
 
   "update_address" when {
 
@@ -124,9 +124,9 @@ extends ViewBaseSpec {
       "display correct radio options" in {
         val radios = doc.select(".govuk-radios__item")
         radios.size() mustBe 2
-        radios.get(0).text() mustBe asaDetailsAgencyAddress + " " + messages(s"$legacyRegimePrefix.address.use-asa.true.hint")
+        radios.get(0).text() mustBe asaDetailsAgencyAddress + " " + messages(s"$agentRegimePrefix.address.use-asa.true.hint")
         radios.get(0).select("input").attr("name") mustBe addressUseAsaDataKey
-        radios.get(1).text() mustBe messages(s"$legacyRegimePrefix.address.use-asa.false")
+        radios.get(1).text() mustBe messages(s"$agentRegimePrefix.address.use-asa.false")
         radios.get(1).select("input").attr("name") mustBe addressUseAsaDataKey
       }
     }
@@ -145,7 +145,7 @@ extends ViewBaseSpec {
 
       "display correct error summary link" in {
         val errorLink: Element = doc.select(".govuk-error-summary__list a").first()
-        errorLink.text() mustBe messages(s"$legacyRegimePrefix.address.use-asa.error.required")
+        errorLink.text() mustBe messages(s"$agentRegimePrefix.address.use-asa.error.required")
         errorLink.attr("href") mustBe s"#$addressUseAsaDataKey"
       }
 
@@ -154,7 +154,7 @@ extends ViewBaseSpec {
       }
 
       "display error message on form" in {
-        doc.select(".govuk-error-message").text() mustBe s"Error: ${messages(s"$legacyRegimePrefix.address.use-asa.error.required")}"
+        doc.select(".govuk-error-message").text() mustBe s"Error: ${messages(s"$agentRegimePrefix.address.use-asa.error.required")}"
       }
     }
 

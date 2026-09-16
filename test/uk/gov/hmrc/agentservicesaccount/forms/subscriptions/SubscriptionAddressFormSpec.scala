@@ -30,7 +30,7 @@ with Matchers {
 
   private val legacyRegime = AgentRegime.PAYE
 
-  private val legacyRegimePrefix = legacyRegime.msgPrefix
+  private val agentRegimePrefix = legacyRegime.msgPrefix
 
   private val initForm = form(legacyRegime)
 
@@ -58,7 +58,7 @@ with Matchers {
 
       val validatedForm = initForm.bind(params)
       validatedForm.hasErrors shouldBe true
-      validatedForm.error(addressUseAsaDataKey).get.message shouldBe s"$legacyRegimePrefix.address.use-asa.error.required"
+      validatedForm.error(addressUseAsaDataKey).get.message shouldBe s"$agentRegimePrefix.address.use-asa.error.required"
       validatedForm.errors.length shouldBe 1
     }
 

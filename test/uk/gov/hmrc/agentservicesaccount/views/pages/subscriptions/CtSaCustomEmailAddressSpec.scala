@@ -36,13 +36,13 @@ extends ViewBaseSpec {
 
   private val legacyRegime = AgentRegime.PAYE
 
-  private val legacyRegimePrefix = legacyRegime.msgPrefix
+  private val agentRegimePrefix = legacyRegime.msgPrefix
 
   private val emailAddressForm: Form[EmailAddressFormValues] = SubscriptionEmailAddressForm.form(legacyRegime, "Agency Name")
 
   private val formWithNewEmailAddressError: Form[EmailAddressFormValues] = emailAddressForm.withError(
     key = emailAddressNewKey,
-    message = messages(s"$legacyRegimePrefix.custom-email-address.input.error.empty")
+    message = messages(s"$agentRegimePrefix.custom-email-address.input.error.empty")
   )
 
   def render(form: Form[EmailAddressFormValues]): Document = Jsoup.parse(
@@ -57,7 +57,7 @@ extends ViewBaseSpec {
     ).body
   )
 
-  private val title: String = messages(s"$legacyRegimePrefix.custom-email-address.title")
+  private val title: String = messages(s"$agentRegimePrefix.custom-email-address.title")
 
   "ctsa_custom_email_address" when {
 
@@ -105,12 +105,12 @@ extends ViewBaseSpec {
 
       "display the correct label" in {
         val label = doc.select(".govuk-label")
-        label.first().text() mustBe messages(s"$legacyRegimePrefix.custom-email-address.input.label")
+        label.first().text() mustBe messages(s"$agentRegimePrefix.custom-email-address.input.label")
       }
 
       "display the correct hint" in {
         val hint = doc.select(".govuk-hint")
-        hint.first().text() mustBe messages(s"$legacyRegimePrefix.custom-email-address.input.hint")
+        hint.first().text() mustBe messages(s"$agentRegimePrefix.custom-email-address.input.hint")
       }
 
       "display the contact name input" in {
@@ -133,7 +133,7 @@ extends ViewBaseSpec {
 
       "display correct error summary link" in {
         val errorLink: Element = doc.select(".govuk-error-summary__list a").first()
-        errorLink.text() mustBe messages(s"$legacyRegimePrefix.custom-email-address.input.error.empty")
+        errorLink.text() mustBe messages(s"$agentRegimePrefix.custom-email-address.input.error.empty")
         errorLink.attr("href") mustBe s"#$emailAddressNewKey"
       }
 
@@ -142,7 +142,7 @@ extends ViewBaseSpec {
       }
 
       "display error message on form" in {
-        doc.select(".govuk-error-message").text() mustBe s"Error: ${messages(s"$legacyRegimePrefix.custom-email-address.input.error.empty")}"
+        doc.select(".govuk-error-message").text() mustBe s"Error: ${messages(s"$agentRegimePrefix.custom-email-address.input.error.empty")}"
       }
     }
   }

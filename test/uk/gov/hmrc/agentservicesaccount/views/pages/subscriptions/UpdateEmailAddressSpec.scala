@@ -38,17 +38,17 @@ extends ViewBaseSpec {
 
   private val legacyRegime = AgentRegime.PAYE
 
-  private val legacyRegimePrefix = legacyRegime.msgPrefix
+  private val agentRegimePrefix = legacyRegime.msgPrefix
 
   private val emailAddressForm: Form[EmailAddressFormValues] = SubscriptionEmailAddressForm.form(legacyRegime, "Agency Name")
 
   private val formWithUseAsaError: Form[EmailAddressFormValues] = emailAddressForm.withError(
     key = emailAddressUseAsaDataKey,
-    message = messages(s"$legacyRegimePrefix.email-address.use-asa.error.required")
+    message = messages(s"$agentRegimePrefix.email-address.use-asa.error.required")
   )
   private val formWithNewEmailAddressError: Form[EmailAddressFormValues] = emailAddressForm.withError(
     key = emailAddressNewKey,
-    message = messages(s"$legacyRegimePrefix.email-address.input.error.empty")
+    message = messages(s"$agentRegimePrefix.email-address.input.error.empty")
   )
 
   def render(
@@ -67,8 +67,8 @@ extends ViewBaseSpec {
     ).body
   )
 
-  private val title: String = messages(s"$legacyRegimePrefix.email-address.title")
-  private val heading: String = messages(s"$legacyRegimePrefix.email-address.heading", asaDetailsAgencyName)
+  private val title: String = messages(s"$agentRegimePrefix.email-address.title")
+  private val heading: String = messages(s"$agentRegimePrefix.email-address.heading", asaDetailsAgencyName)
 
   "update_email_address" when {
 
@@ -115,15 +115,15 @@ extends ViewBaseSpec {
         radios.size() mustBe 2
         radios.get(0).text() mustBe asaDetailsAgencyEmail
         radios.get(0).select("input").attr("name") mustBe emailAddressUseAsaDataKey
-        radios.get(1).text() mustBe messages(s"$legacyRegimePrefix.email-address.use-asa.false")
+        radios.get(1).text() mustBe messages(s"$agentRegimePrefix.email-address.use-asa.false")
         radios.get(1).select("input").attr("name") mustBe emailAddressUseAsaDataKey
       }
 
       "hide the conditional new email address input" in {
         val conditionalHidden = doc.select(".govuk-radios__conditional--hidden")
         conditionalHidden.size() mustBe 1
-        conditionalHidden.text() mustBe messages(s"$legacyRegimePrefix.email-address.new-input.label") + " " + messages(
-          s"$legacyRegimePrefix.email-address.new-input.hint"
+        conditionalHidden.text() mustBe messages(s"$agentRegimePrefix.email-address.new-input.label") + " " + messages(
+          s"$agentRegimePrefix.email-address.new-input.hint"
         )
         conditionalHidden.select(".govuk-input").attr("name") mustBe emailAddressNewKey
       }
@@ -173,7 +173,7 @@ extends ViewBaseSpec {
 
       "display correct error summary link" in {
         val errorLink: Element = doc.select(".govuk-error-summary__list a").first()
-        errorLink.text() mustBe messages(s"$legacyRegimePrefix.email-address.use-asa.error.required")
+        errorLink.text() mustBe messages(s"$agentRegimePrefix.email-address.use-asa.error.required")
         errorLink.attr("href") mustBe s"#$emailAddressUseAsaDataKey"
       }
 
@@ -182,7 +182,7 @@ extends ViewBaseSpec {
       }
 
       "display error message on form" in {
-        doc.select(".govuk-error-message").text() mustBe s"Error: ${messages(s"$legacyRegimePrefix.email-address.use-asa.error.required")}"
+        doc.select(".govuk-error-message").text() mustBe s"Error: ${messages(s"$agentRegimePrefix.email-address.use-asa.error.required")}"
       }
     }
 
@@ -200,7 +200,7 @@ extends ViewBaseSpec {
 
       "display correct error summary link" in {
         val errorLink: Element = doc.select(".govuk-error-summary__list a").first()
-        errorLink.text() mustBe messages(s"$legacyRegimePrefix.email-address.input.error.empty")
+        errorLink.text() mustBe messages(s"$agentRegimePrefix.email-address.input.error.empty")
         errorLink.attr("href") mustBe s"#$emailAddressNewKey"
       }
 
@@ -209,7 +209,7 @@ extends ViewBaseSpec {
       }
 
       "display error message on form" in {
-        doc.select(".govuk-error-message").text() mustBe s"Error: ${messages(s"$legacyRegimePrefix.email-address.input.error.empty")}"
+        doc.select(".govuk-error-message").text() mustBe s"Error: ${messages(s"$agentRegimePrefix.email-address.input.error.empty")}"
       }
     }
 

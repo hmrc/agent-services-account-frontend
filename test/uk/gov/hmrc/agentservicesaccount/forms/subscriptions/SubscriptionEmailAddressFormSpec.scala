@@ -37,7 +37,7 @@ with Matchers {
 
   private val legacyRegime = AgentRegime.CT
 
-  private val legacyRegimePrefix = legacyRegime.msgPrefix
+  private val agentRegimePrefix = legacyRegime.msgPrefix
 
   implicit val messages: Messages = Helpers.stubMessages()
   private val initForm = form(legacyRegime, "Agency Name")
@@ -79,7 +79,7 @@ with Matchers {
 
       val validatedForm = initForm.bind(params)
       validatedForm.hasErrors shouldBe true
-      validatedForm.error(emailAddressUseAsaDataKey).get.message shouldBe s"$legacyRegimePrefix.email-address.use-asa.error.required"
+      validatedForm.error(emailAddressUseAsaDataKey).get.message shouldBe s"$agentRegimePrefix.email-address.use-asa.error.required"
       validatedForm.errors.length shouldBe 1
     }
 
@@ -91,7 +91,7 @@ with Matchers {
 
       val validatedForm = initForm.bind(params)
       validatedForm.hasErrors shouldBe true
-      validatedForm.error(emailAddressNewKey).get.message shouldBe s"$legacyRegimePrefix.email-address.input.error.empty"
+      validatedForm.error(emailAddressNewKey).get.message shouldBe s"$agentRegimePrefix.email-address.input.error.empty"
       validatedForm.errors.length shouldBe 1
     }
 
@@ -104,7 +104,7 @@ with Matchers {
 
       val validatedForm = initForm.bind(params)
       validatedForm.hasErrors shouldBe true
-      validatedForm.error(emailAddressNewKey).get.message shouldBe s"$legacyRegimePrefix.email-address.input.error.length"
+      validatedForm.error(emailAddressNewKey).get.message shouldBe s"$agentRegimePrefix.email-address.input.error.length"
       validatedForm.errors.length shouldBe 1
     }
 
@@ -116,7 +116,7 @@ with Matchers {
 
       val validatedForm = initForm.bind(params)
       validatedForm.hasErrors shouldBe true
-      validatedForm.error(emailAddressNewKey).get.message shouldBe s"$legacyRegimePrefix.email-address.input.error.invalid"
+      validatedForm.error(emailAddressNewKey).get.message shouldBe s"$agentRegimePrefix.email-address.input.error.invalid"
       validatedForm.errors.length shouldBe 1
     }
 

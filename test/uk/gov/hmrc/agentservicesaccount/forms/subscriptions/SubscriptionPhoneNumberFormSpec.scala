@@ -36,7 +36,7 @@ with Matchers {
 
   private val legacyRegime = AgentRegime.PAYE
 
-  private val legacyRegimePrefix = legacyRegime.msgPrefix
+  private val agentRegimePrefix = legacyRegime.msgPrefix
   implicit val messages: Messages = Helpers.stubMessages()
   private val initForm = form(legacyRegime, "Agency Name")
 
@@ -77,7 +77,7 @@ with Matchers {
 
       val validatedForm = initForm.bind(params)
       validatedForm.hasErrors shouldBe true
-      validatedForm.error(phoneNumberUseAsaDataKey).get.message shouldBe s"$legacyRegimePrefix.phone-number.use-asa.error.required"
+      validatedForm.error(phoneNumberUseAsaDataKey).get.message shouldBe s"$agentRegimePrefix.phone-number.use-asa.error.required"
       validatedForm.errors.length shouldBe 1
     }
 
@@ -89,7 +89,7 @@ with Matchers {
 
       val validatedForm = initForm.bind(params)
       validatedForm.hasErrors shouldBe true
-      validatedForm.error(phoneNumberNewKey).get.message shouldBe s"$legacyRegimePrefix.phone-number.new-input.error.empty"
+      validatedForm.error(phoneNumberNewKey).get.message shouldBe s"$agentRegimePrefix.phone-number.new-input.error.empty"
       validatedForm.errors.length shouldBe 1
     }
 
@@ -101,7 +101,7 @@ with Matchers {
 
       val validatedForm = initForm.bind(params)
       validatedForm.hasErrors shouldBe true
-      validatedForm.error(phoneNumberNewKey).get.message shouldBe s"$legacyRegimePrefix.phone-number.new-input.error.invalid"
+      validatedForm.error(phoneNumberNewKey).get.message shouldBe s"$agentRegimePrefix.phone-number.new-input.error.invalid"
       validatedForm.errors.length shouldBe 1
     }
 
