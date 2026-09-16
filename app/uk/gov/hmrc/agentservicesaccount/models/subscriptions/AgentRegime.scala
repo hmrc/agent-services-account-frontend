@@ -24,42 +24,42 @@ import play.api.libs.json.Writes
 import play.api.mvc.PathBindable
 
 // TODO when migrating to scala 3, replace this with the backend model from agent-services-account
-sealed trait LegacyRegime {
+sealed trait AgentRegime {
 
   def msgPrefix: String
 
   def enrolmentKey: String =
     this match {
-      case LegacyRegime.PAYE => "IR-PAYE-AGENT"
-      case LegacyRegime.SA => "IR-SA-AGENT"
-      case LegacyRegime.CT => "IR-CT-AGENT"
+      case AgentRegime.PAYE => "IR-PAYE-AGENT"
+      case AgentRegime.SA => "IR-SA-AGENT"
+      case AgentRegime.CT => "IR-CT-AGENT"
     }
 
   def agentReferenceKey: String =
     this match {
-      case LegacyRegime.PAYE => "IRAgentReference"
-      case LegacyRegime.SA => "IRAgentReference"
-      case LegacyRegime.CT => "IRAgentReference"
+      case AgentRegime.PAYE => "IRAgentReference"
+      case AgentRegime.SA => "IRAgentReference"
+      case AgentRegime.CT => "IRAgentReference"
     }
 
 }
 
-object LegacyRegime {
+object AgentRegime {
 
   case object PAYE
-  extends LegacyRegime {
+  extends AgentRegime {
     override def msgPrefix: String = s"asa.legacy.${PAYE.toString.toLowerCase}"
   }
   case object SA
-  extends LegacyRegime {
+  extends AgentRegime {
     override def msgPrefix: String = s"asa.legacy.${SA.toString.toLowerCase}"
   }
   case object CT
-  extends LegacyRegime {
+  extends AgentRegime {
     override def msgPrefix: String = s"asa.legacy.${CT.toString.toLowerCase}"
   }
 
-  implicit val format: Format[LegacyRegime] = Format(
+  implicit val format: Format[AgentRegime] = Format(
     Reads { json =>
       json.as[String] match {
         case "PAYE" => JsSuccess(PAYE)
@@ -73,21 +73,21 @@ object LegacyRegime {
     }
   )
 
-  implicit val legacyRegimeBinder: PathBindable[LegacyRegime] =
-    new PathBindable[LegacyRegime] {
+  implicit val agentRegimeBinder: PathBindable[AgentRegime] =
+    new PathBindable[AgentRegime] {
 
       override def bind(
         key: String,
         value: String
-      ): Either[String, LegacyRegime] = fromString(value).toRight(s"Unknown regime: $value")
+      ): Either[String, AgentRegime] = fromString(value).toRight(s"Unknown regime: $value")
 
       override def unbind(
         key: String,
-        value: LegacyRegime
+        value: AgentRegime
       ): String = value.toString
     }
 
-  def fromString(value: String): Option[LegacyRegime] =
+  def fromString(value: String): Option[AgentRegime] =
     value match {
       case "PAYE" => Some(PAYE)
       case "SA" => Some(SA)

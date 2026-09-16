@@ -28,7 +28,7 @@ import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.ChangeSubscriptionAd
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionAddressForm
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AddressFormValues
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.utils.CountryResolver
 import uk.gov.hmrc.agentservicesaccount.utils.RequestAwareLogging
@@ -67,12 +67,12 @@ with RequestAwareLogging {
     .map(_.body)
     .mkString(", ")
 
-  def showPage(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
+  def showPage(agentRegime: AgentRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(agentRegime).async { implicit request =>
     val journey = request.subscriptionJourney
 
     val asaDetailsAgencyAddress = journey.asaDetails.agencyAddress.map(formatAddress).getOrElse("")
 
-    val initialForm = SubscriptionAddressForm.form(legacyRegime)
+    val initialForm = SubscriptionAddressForm.form(agentRegime)
     val form =
       journey.useCustomAddress match {
 
@@ -90,22 +90,22 @@ with RequestAwareLogging {
       Ok(update_address(
         form,
         asaDetailsAgencyAddress,
-        legacyRegime
+        agentRegime
       ))
     )
   }
 
-  def onSubmit(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
+  def onSubmit(agentRegime: AgentRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(agentRegime).async { implicit request =>
     val journey = request.subscriptionJourney
 
-    SubscriptionAddressForm.form(legacyRegime).bindFromRequest().fold(
+    SubscriptionAddressForm.form(agentRegime).bindFromRequest().fold(
       formWithErrors => {
         val asaDetailsAgencyAddress = journey.asaDetails.agencyAddress.map(formatAddress).getOrElse("")
         Future.successful(
           BadRequest(update_address(
             formWithErrors,
             asaDetailsAgencyAddress,
-            legacyRegime
+            agentRegime
           ))
         )
       },
@@ -117,26 +117,26 @@ with RequestAwareLogging {
           )
 
           sessionCacheService
-            .put(subscriptionJourneyKey(legacyRegime), updatedJourney)
+            .put(subscriptionJourneyKey(agentRegime), updatedJourney)
             .map(_ =>
               Redirect(getNextPage(
                 updateAddressPage,
                 Some(updatedJourney),
-                legacyRegime
+                agentRegime
               ))
             )
         }
         else {
-          Future.successful(Redirect(routes.AddressLookupController.startAddressLookup(legacyRegime)))
+          Future.successful(Redirect(routes.AddressLookupController.startAddressLookup(agentRegime)))
         }
       }
     )
   }
 
   def showChange(
-    legacyRegime: LegacyRegime,
-    isInvalid: Boolean
-  ): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
+                  agentRegime: AgentRegime,
+                  isInvalid: Boolean
+  ): Action[AnyContent] = actions.authActionWithSubscriptionJourney(agentRegime).async { implicit request =>
     val journey = request.subscriptionJourney
 
     val address =
@@ -147,19 +147,19 @@ with RequestAwareLogging {
       }
 
     address match {
-      case None => Future.successful(Redirect(routes.UpdateAddressController.showPage(legacyRegime)))
+      case None => Future.successful(Redirect(routes.UpdateAddressController.showPage(agentRegime)))
       case Some(address) =>
         val form =
           if (address.isUk) {
-            ChangeSubscriptionAddressForm.ukForm(legacyRegime).fill(address)
+            ChangeSubscriptionAddressForm.ukForm(agentRegime).fill(address)
           }
           else {
-            ChangeSubscriptionAddressForm.nonUkForm(legacyRegime).fill(address)
+            ChangeSubscriptionAddressForm.nonUkForm(agentRegime).fill(address)
           }
         Future.successful(
           Ok(change_address(
             form,
-            legacyRegime,
+            agentRegime,
             address.isUk,
             isInvalid
           ))
@@ -168,9 +168,9 @@ with RequestAwareLogging {
   }
 
   def onSubmitChange(
-    legacyRegime: LegacyRegime,
-    isInvalid: Boolean
-  ): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
+                      agentRegime: AgentRegime,
+                      isInvalid: Boolean
+  ): Action[AnyContent] = actions.authActionWithSubscriptionJourney(agentRegime).async { implicit request =>
     val journey = request.subscriptionJourney
 
     val address =
@@ -181,20 +181,20 @@ with RequestAwareLogging {
       }
 
     address match {
-      case None => Future.successful(Redirect(routes.UpdateAddressController.showPage(legacyRegime)))
+      case None => Future.successful(Redirect(routes.UpdateAddressController.showPage(agentRegime)))
       case Some(address) =>
         val form =
           if (address.isUk) {
-            ChangeSubscriptionAddressForm.ukForm(legacyRegime)
+            ChangeSubscriptionAddressForm.ukForm(agentRegime)
           }
           else {
-            ChangeSubscriptionAddressForm.nonUkForm(legacyRegime)
+            ChangeSubscriptionAddressForm.nonUkForm(agentRegime)
           }
         form.bindFromRequest().fold(
           formWithErrors =>
             Future.successful(BadRequest(change_address(
               formWithErrors,
-              legacyRegime,
+              agentRegime,
               address.isUk,
               isInvalid
             ))),
@@ -205,12 +205,12 @@ with RequestAwareLogging {
             )
 
             sessionCacheService
-              .put(subscriptionJourneyKey(legacyRegime), updatedJourney)
+              .put(subscriptionJourneyKey(agentRegime), updatedJourney)
               .map(_ =>
                 Redirect(getNextPage(
                   changeAddressPage,
                   Some(updatedJourney),
-                  legacyRegime
+                  agentRegime
                 ))
               )
           }

@@ -21,7 +21,7 @@ import org.scalatest.wordspec.AnyWordSpec
 import play.api.i18n.Messages
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionEmailAddressForm._
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.EmailAddressFormValues
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 import play.api.test.Helpers
 import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators.CT_SA_EMAIL_MAX_LENGTH
 
@@ -35,7 +35,7 @@ with Matchers {
   val validNewEmailAddress = "joe@bloggs.com"
   val invalidNewEmailAddress = "{][.',"
 
-  private val legacyRegime = LegacyRegime.CT
+  private val legacyRegime = AgentRegime.CT
 
   private val legacyRegimePrefix = legacyRegime.msgPrefix
 

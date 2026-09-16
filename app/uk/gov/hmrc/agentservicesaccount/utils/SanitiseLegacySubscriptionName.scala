@@ -16,8 +16,8 @@
 
 package uk.gov.hmrc.agentservicesaccount.utils
 
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.*
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.*
 
 import org.apache.commons.lang3.StringUtils.stripAccents
 
@@ -29,10 +29,10 @@ case class SanitisedLegacySubscriptionName(
 object SanitiseLegacySubscriptionName {
 
   def sanitise(
-    name: String,
-    legacyRegime: LegacyRegime
+                name: String,
+                agentRegime: AgentRegime
   ): SanitisedLegacySubscriptionName =
-    legacyRegime match {
+    agentRegime match {
       case CT | SA => sanitiseForCtSa(name)
       case PAYE => sanitiseForPaye(name)
     }

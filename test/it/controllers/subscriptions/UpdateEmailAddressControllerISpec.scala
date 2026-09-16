@@ -30,10 +30,10 @@ import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionEmailAdd
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionEmailAddressForm.emailAddressUseAsaDataKey
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.CompletedEmail
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.VerificationStatusResponse
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.CT
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.SA
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
 
 import scala.util.Random
@@ -64,7 +64,7 @@ extends ComponentBaseISpec {
 
         result.status shouldBe OK
         val expectedTitle: String =
-          (legacyRegime: LegacyRegime) match {
+          (legacyRegime: AgentRegime) match {
             case CT => "What email address should we use to contact you about Corporation Tax?"
             case PAYE => "What email address should we use to contact you about PAYE?"
             case SA => "What email address should we use to contact you about Self Assessment?"
@@ -74,7 +74,7 @@ extends ComponentBaseISpec {
         doc.select(".govuk-radios__item").size() shouldBe 2
         doc.select(".govuk-radios__item").get(0).text() shouldBe asaAgencyEmail
         val expectedFalseText: String =
-          (legacyRegime: LegacyRegime) match {
+          (legacyRegime: AgentRegime) match {
             case CT => "I want to use a different email address for Corporation Tax"
             case PAYE => "I want to use a different email address for PAYE"
             case SA => "I want to use a different email address for Self Assessment"
@@ -99,7 +99,7 @@ extends ComponentBaseISpec {
 
         result.status shouldBe OK
         val expectedTitle: String =
-          (legacyRegime: LegacyRegime) match {
+          (legacyRegime: AgentRegime) match {
             case CT => "What email address should we use to contact you about Corporation Tax?"
             case PAYE => "What email address should we use to contact you about PAYE?"
             case SA => "What email address should we use to contact you about Self Assessment?"

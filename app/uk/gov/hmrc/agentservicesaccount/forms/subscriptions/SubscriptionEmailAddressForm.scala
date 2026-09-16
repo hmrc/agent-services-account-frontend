@@ -25,8 +25,8 @@ import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators.PAYE_EMAIL_MAX_LE
 import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators.trimmedText
 import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators.useAsaDataMapping
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.EmailAddressFormValues
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
 import uk.gov.voa.play.form.ConditionalMappings.mandatoryIfFalse
 
 object SubscriptionEmailAddressForm {
@@ -35,32 +35,32 @@ object SubscriptionEmailAddressForm {
   val emailAddressNewKey = "emailAddressNew"
 
   private def emailAddressUseAsaDataMapping(
-    legacyRegime: LegacyRegime,
-    asaDetailsAgencyName: String
+                                             agentRegime: AgentRegime,
+                                             asaDetailsAgencyName: String
   )(implicit msgs: Messages): Mapping[Boolean] = useAsaDataMapping(
-    msgs(s"${legacyRegime.msgPrefix}.email-address.use-asa.error.required", asaDetailsAgencyName)
+    msgs(s"${agentRegime.msgPrefix}.email-address.use-asa.error.required", asaDetailsAgencyName)
   )
 
-  private def emailAddressNewOptionalMapping(legacyRegime: LegacyRegime): Mapping[String] = {
+  private def emailAddressNewOptionalMapping(agentRegime: AgentRegime): Mapping[String] = {
     val maxLength =
-      if (legacyRegime == PAYE)
+      if (agentRegime == PAYE)
         PAYE_EMAIL_MAX_LENGTH
       else
         CT_SA_EMAIL_MAX_LENGTH
     trimmedText
-      .verifying(s"${legacyRegime.msgPrefix}.email-address.input.error.empty", _.nonEmpty)
-      .verifying(s"${legacyRegime.msgPrefix}.email-address.input.error.length", x => x.isEmpty || x.length <= maxLength)
-      .verifying(s"${legacyRegime.msgPrefix}.email-address.input.error.invalid", x => x.isEmpty || x.contains("@"))
+      .verifying(s"${agentRegime.msgPrefix}.email-address.input.error.empty", _.nonEmpty)
+      .verifying(s"${agentRegime.msgPrefix}.email-address.input.error.length", x => x.isEmpty || x.length <= maxLength)
+      .verifying(s"${agentRegime.msgPrefix}.email-address.input.error.invalid", x => x.isEmpty || x.contains("@"))
   }
 
   def form(
-    legacyRegime: LegacyRegime,
-    asaDetailsAgencyName: String
+            agentRegime: AgentRegime,
+            asaDetailsAgencyName: String
   )(implicit msgs: Messages): Form[EmailAddressFormValues] = {
     Form(
       mapping(
-        emailAddressUseAsaDataKey -> emailAddressUseAsaDataMapping(legacyRegime, asaDetailsAgencyName),
-        emailAddressNewKey -> mandatoryIfFalse(emailAddressUseAsaDataKey, emailAddressNewOptionalMapping(legacyRegime))
+        emailAddressUseAsaDataKey -> emailAddressUseAsaDataMapping(agentRegime, asaDetailsAgencyName),
+        emailAddressNewKey -> mandatoryIfFalse(emailAddressUseAsaDataKey, emailAddressNewOptionalMapping(agentRegime))
       )(EmailAddressFormValues.apply)(o => Some((o.useAsaData, o.newEmailAddress)))
     )
   }

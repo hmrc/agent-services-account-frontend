@@ -40,11 +40,11 @@ import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdatePhoneNum
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionPhoneNumberForm.phoneNumberNewKey
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionPhoneNumberForm.phoneNumberUseAsaDataKey
 import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.CT
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.SA
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.authorise.Predicate
@@ -75,8 +75,8 @@ with TestConstants {
   )
 
   class TestSetup(
-    legacyRegime: LegacyRegime,
-    agencyTelephone: Option[String] = Some("1234554321")
+                   agentRegime: AgentRegime,
+                   agencyTelephone: Option[String] = Some("1234554321")
   ) {
 
     private val testArn = "TARN0000001"
@@ -158,7 +158,7 @@ with TestConstants {
     def cacheJourney(journey: SubscriptionJourney): Unit = {
       implicit val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequest
       implicit val writes: OWrites[SubscriptionJourney] = Json.writes[SubscriptionJourney]
-      sessionCache.put(subscriptionJourneyKey(legacyRegime), journey).futureValue
+      sessionCache.put(subscriptionJourneyKey(agentRegime), journey).futureValue
     }
 
   }

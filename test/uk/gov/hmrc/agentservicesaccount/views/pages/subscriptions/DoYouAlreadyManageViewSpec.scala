@@ -23,7 +23,7 @@ import play.api.data.Form
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.DoYouAlreadyManageForm
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.DoYouAlreadyManageForm.doYouAlreadyManageKey
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.DoYouAlreadyManageFormValues
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.do_you_already_manage
 
@@ -35,9 +35,9 @@ extends ViewBaseSpec {
   private val asaDetailsAgencyName = "Test Agency"
 
   private val regimes = Seq(
-    LegacyRegime.SA,
-    LegacyRegime.CT,
-    LegacyRegime.PAYE
+    AgentRegime.SA,
+    AgentRegime.CT,
+    AgentRegime.PAYE
   )
 
   regimes.foreach { regime =>

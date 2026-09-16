@@ -21,10 +21,10 @@ import uk.gov.hmrc.agentservicesaccount.controllers.{routes => homeRoutes}
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
 import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators.CT_SA_EMAIL_MAX_LENGTH
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.CT
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.SA
 
 object NextPageSelector {
 
@@ -41,7 +41,7 @@ object NextPageSelector {
   private val nextPage: (
     String,
     Option[SubscriptionJourney],
-    LegacyRegime
+    AgentRegime
   ) => Call = {
     case (_, Some(journey), regime) if journey.isSubmitted => subscriptions.routes.ConfirmationController.showConfirmationPage(regime)
     case (_, Some(journey), regime) if journey.isComplete(regime) => subscriptions.routes.CheckYourAnswersController.showPage(regime)
@@ -73,14 +73,14 @@ object NextPageSelector {
   }
 
   def getNextPage(
-    currentPage: String,
-    journey: Option[SubscriptionJourney] = None,
-    legacyRegime: LegacyRegime
+                   currentPage: String,
+                   journey: Option[SubscriptionJourney] = None,
+                   agentRegime: AgentRegime
   ): Call = {
     nextPage(
       currentPage,
       journey,
-      legacyRegime
+      agentRegime
     )
   }
 

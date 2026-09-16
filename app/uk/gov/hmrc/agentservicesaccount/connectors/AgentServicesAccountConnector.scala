@@ -27,7 +27,7 @@ import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models._
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest.connectorReads
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest.connectorWrites
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionInfo
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionRequest
 import uk.gov.hmrc.agentservicesaccount.utils.RequestSupport.hc
@@ -95,7 +95,7 @@ extends Logging {
     }
 
   def getSubscriptionInfo(
-    regimes: Seq[LegacyRegime]
+    regimes: Seq[AgentRegime]
   )(implicit rh: RequestHeader): Future[Seq[SubscriptionInfo]] = http
     .get(url"$url/legacy-subscription-info?regimes=${regimes.map(_.toString)}")
     .execute[Seq[SubscriptionInfo]]
@@ -124,18 +124,18 @@ extends Logging {
     )
 
   def submitSubscriptionRequest(
-    subscriptionRequest: SubscriptionRequest,
-    legacyRegime: LegacyRegime
+                                 subscriptionRequest: SubscriptionRequest,
+                                 agentRegime: AgentRegime
   )(implicit hc: HeaderCarrier): Future[Unit] = {
     http
-      .post(url"$url/legacy-subscription-request/$legacyRegime").withBody(Json.toJson(subscriptionRequest)).execute[HttpResponse]
+      .post(url"$url/legacy-subscription-request/$agentRegime").withBody(Json.toJson(subscriptionRequest)).execute[HttpResponse]
       .map {
         response =>
           response.status match {
             case OK => ()
             case e =>
               throw UpstreamErrorResponse(
-                s"[AgentServicesAccountConnector][submitSubscriptionRequest] Error $e unable to post $legacyRegime subscription request.\nResponse = ${response.body}",
+                s"[AgentServicesAccountConnector][submitSubscriptionRequest] Error $e unable to post $agentRegime subscription request.\nResponse = ${response.body}",
                 e
               )
           }

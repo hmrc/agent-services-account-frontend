@@ -25,7 +25,7 @@ import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionAddressF
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionAddressForm.addressUseAsaDataKey
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AddressFormValues
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.update_address
 
@@ -34,7 +34,7 @@ extends ViewBaseSpec {
 
   private val view: update_address = inject[update_address]
 
-  private val legacyRegime = LegacyRegime.PAYE
+  private val legacyRegime = AgentRegime.PAYE
 
   private val legacyRegimePrefix = legacyRegime.msgPrefix
 

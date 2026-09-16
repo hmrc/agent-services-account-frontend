@@ -25,7 +25,7 @@ import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageS
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionPhoneNumberForm
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.PhoneNumberFormValues
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.utils.RequestAwareLogging
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.update_phone_number
@@ -49,13 +49,13 @@ extends FrontendController(cc)
 with I18nSupport
 with RequestAwareLogging {
 
-  def showPage(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
+  def showPage(agentRegime: AgentRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(agentRegime).async { implicit request =>
     val journey = request.subscriptionJourney
 
     val asaDetailsAgencyName = journey.asaDetails.agencyName.getOrElse("")
     val asaDetailsAgencyTelephone: Option[String] = journey.asaDetails.agencyTelephone.filter(SubscriptionPhoneNumberForm.isPhoneNumberValid)
 
-    val initialForm = SubscriptionPhoneNumberForm.form(legacyRegime, asaDetailsAgencyName)
+    val initialForm = SubscriptionPhoneNumberForm.form(agentRegime, asaDetailsAgencyName)
     val form =
       journey.useCustomPhoneNumber match {
 
@@ -75,17 +75,17 @@ with RequestAwareLogging {
         form,
         asaDetailsAgencyName,
         asaDetailsAgencyTelephone,
-        legacyRegime
+        agentRegime
       ))
     )
   }
 
-  def onSubmit(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
+  def onSubmit(agentRegime: AgentRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(agentRegime).async { implicit request =>
     val journey = request.subscriptionJourney
 
     val asaDetailsAgencyName = journey.asaDetails.agencyName.getOrElse("")
 
-    SubscriptionPhoneNumberForm.form(legacyRegime, asaDetailsAgencyName).bindFromRequest().fold(
+    SubscriptionPhoneNumberForm.form(agentRegime, asaDetailsAgencyName).bindFromRequest().fold(
       formWithErrors => {
         val asaDetailsAgencyTelephone: Option[String] = journey.asaDetails.agencyTelephone.filter(SubscriptionPhoneNumberForm.isPhoneNumberValid)
         Future.successful(
@@ -93,7 +93,7 @@ with RequestAwareLogging {
             formWithErrors,
             asaDetailsAgencyName,
             asaDetailsAgencyTelephone,
-            legacyRegime
+            agentRegime
           ))
         )
       },
@@ -108,12 +108,12 @@ with RequestAwareLogging {
         )
 
         sessionCacheService
-          .put(subscriptionJourneyKey(legacyRegime), updatedJourney)
+          .put(subscriptionJourneyKey(agentRegime), updatedJourney)
           .map(_ =>
             Redirect(getNextPage(
               updatePhoneNumberPage,
               Some(updatedJourney),
-              legacyRegime
+              agentRegime
             ))
           )
       }

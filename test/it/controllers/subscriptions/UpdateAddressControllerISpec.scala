@@ -28,10 +28,10 @@ import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.ChangeSubscriptionAd
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.ChangeSubscriptionAddressForm.postcodeKey
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionAddressForm.addressUseAsaDataKey
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.CT
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.SA
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
 
 class UpdateAddressControllerISpec
@@ -78,7 +78,7 @@ extends ComponentBaseISpec {
 
         result.status shouldBe OK
         val expectedTitle: String =
-          (legacyRegime: LegacyRegime) match {
+          (legacyRegime: AgentRegime) match {
             case CT => "What address should we use to send letters about Corporation Tax?"
             case PAYE => "What address should we use to send letters about PAYE?"
             case SA => "What address should we use to send letters about Self Assessment?"

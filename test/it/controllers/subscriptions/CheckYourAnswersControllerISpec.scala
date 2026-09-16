@@ -36,10 +36,10 @@ import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CheckYourAnswersController
 import uk.gov.hmrc.agentservicesaccount.models._
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.CT
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.SA
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionRequest
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
@@ -63,7 +63,7 @@ with MockFactory {
 
   private val legacyRegimes = List(CT, PAYE, SA)
 
-  class TestSetup(legacyRegime: LegacyRegime) {
+  class TestSetup(agentRegime: AgentRegime) {
 
     private val testArn = "TARN0000001"
 
@@ -111,8 +111,8 @@ with MockFactory {
         )
 
         override def submitSubscriptionRequest(
-          subscriptionRequest: SubscriptionRequest,
-          legacyRegime: LegacyRegime
+                                                subscriptionRequest: SubscriptionRequest,
+                                                agentRegime: AgentRegime
         )(implicit hc: HeaderCarrier): Future[Unit] = Future.successful(())
       }
 
@@ -144,7 +144,7 @@ with MockFactory {
       implicit val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequest
       implicit val writes: OWrites[SubscriptionJourney] = Json.writes[SubscriptionJourney]
 
-      sessionCache.put(subscriptionJourneyKey(legacyRegime), journey).futureValue
+      sessionCache.put(subscriptionJourneyKey(agentRegime), journey).futureValue
     }
 
   }

@@ -24,7 +24,7 @@ import play.api.data.Form
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionEmailAddressForm
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionEmailAddressForm.emailAddressNewKey
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.EmailAddressFormValues
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.ctsa_custom_email_address
 
@@ -34,7 +34,7 @@ extends ViewBaseSpec {
   private val view: ctsa_custom_email_address = inject[ctsa_custom_email_address]
   private val asaDetailsAgencyEmail = "joe@bloggs.com"
 
-  private val legacyRegime = LegacyRegime.PAYE
+  private val legacyRegime = AgentRegime.PAYE
 
   private val legacyRegimePrefix = legacyRegime.msgPrefix
 

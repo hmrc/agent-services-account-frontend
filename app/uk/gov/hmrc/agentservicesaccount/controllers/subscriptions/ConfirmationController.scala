@@ -24,7 +24,7 @@ import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.ToFuture
 import uk.gov.hmrc.agentservicesaccount.controllers.routes
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.confirmation
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
@@ -41,7 +41,7 @@ class ConfirmationController @Inject() (implicit
 )
 extends FrontendController(cc)
 with I18nSupport {
-  def showConfirmationPage(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
+  def showConfirmationPage(agentRegime: AgentRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(agentRegime).async { implicit request =>
     val journey = request.subscriptionJourney
     if (journey.isSubmitted) {
       Ok(confirmation()).toFuture

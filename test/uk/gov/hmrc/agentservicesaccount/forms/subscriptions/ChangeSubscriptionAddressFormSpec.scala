@@ -22,9 +22,9 @@ import org.scalatest.wordspec.AnyWordSpec
 import play.api.data.Form
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.ChangeSubscriptionAddressForm._
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.SA
 
 class ChangeSubscriptionAddressFormSpec
 extends AnyWordSpec
@@ -48,8 +48,8 @@ with Matchers {
   )
 
   private def tooLong(
-    regime: LegacyRegime,
-    row: Int
+                       regime: AgentRegime,
+                       row: Int
   ): String = RandomStringUtils.insecure().nextAlphanumeric(maxLen(regime, row) + 1)
 
   private def assertFieldErrors(

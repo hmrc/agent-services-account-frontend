@@ -25,7 +25,7 @@ import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionEmailAdd
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionEmailAddressForm.emailAddressNewKey
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionEmailAddressForm.emailAddressUseAsaDataKey
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.EmailAddressFormValues
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.update_email_address
 
@@ -36,7 +36,7 @@ extends ViewBaseSpec {
   private val asaDetailsAgencyName = "ABC-No.1 Accountants"
   private val asaDetailsAgencyEmail = "joe@bloggs.com"
 
-  private val legacyRegime = LegacyRegime.PAYE
+  private val legacyRegime = AgentRegime.PAYE
 
   private val legacyRegimePrefix = legacyRegime.msgPrefix
 

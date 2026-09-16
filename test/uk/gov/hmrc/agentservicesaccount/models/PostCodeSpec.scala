@@ -19,7 +19,7 @@ package uk.gov.hmrc.agentservicesaccount.models
 import org.scalatest.EitherValues
 import org.scalatest.Inspectors
 import support.UnitSpec
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 
 class PostCodeSpec
 extends UnitSpec,
@@ -27,9 +27,9 @@ extends UnitSpec,
   Inspectors {
 
   private val LegacyRegimes = Seq(
-    LegacyRegime.PAYE,
-    LegacyRegime.SA,
-    LegacyRegime.CT
+    AgentRegime.PAYE,
+    AgentRegime.SA,
+    AgentRegime.CT
   )
 
   "Parsing a post code" can {

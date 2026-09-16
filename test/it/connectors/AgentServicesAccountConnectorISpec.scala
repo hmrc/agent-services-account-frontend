@@ -31,11 +31,11 @@ import uk.gov.hmrc.agentservicesaccount.models.AgentRecordUpdateResponse
 import uk.gov.hmrc.agentservicesaccount.models.Arn
 import uk.gov.hmrc.agentservicesaccount.models.PendingChangeRequest
 import stubs.AgentServicesAccountStubs.*
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.CT
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.SA
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.CtSubscriptionRequest
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.PayeSubscriptionRequest
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SaSubscriptionRequest
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionInfo
@@ -221,7 +221,7 @@ with Injecting {
       isWelsh = false
     )
 
-    val getSubscriptionRequestForLegacyRegime: Map[LegacyRegime, SubscriptionRequest] = Map(
+    val getSubscriptionRequestForAgentRegime: Map[AgentRegime, SubscriptionRequest] = Map(
       (CT, exampleCtRequest),
       (PAYE, examplePayeRequest),
       (SA, exampleSaRequest)
@@ -231,7 +231,7 @@ with Injecting {
       s"return nothing when a OK (200) response is returned by agent-services-account for $legacyRegime" in {
         givenStartLegacySubscriptionResponse(legacyRegime, OK)
 
-        val request = getSubscriptionRequestForLegacyRegime(legacyRegime)
+        val request = getSubscriptionRequestForAgentRegime(legacyRegime)
         val result = connector.submitSubscriptionRequest(request, legacyRegime)
         await(result) shouldBe ()
       }
@@ -239,7 +239,7 @@ with Injecting {
       s"throw an UpstreamErrorResponse exception when an unexpected status is returned by agent-services-account for $legacyRegime" in {
         givenStartLegacySubscriptionResponse(legacyRegime, INTERNAL_SERVER_ERROR)
 
-        val request = getSubscriptionRequestForLegacyRegime(legacyRegime)
+        val request = getSubscriptionRequestForAgentRegime(legacyRegime)
         intercept[UpstreamErrorResponse](await(connector.submitSubscriptionRequest(request, legacyRegime)))
       }
     })

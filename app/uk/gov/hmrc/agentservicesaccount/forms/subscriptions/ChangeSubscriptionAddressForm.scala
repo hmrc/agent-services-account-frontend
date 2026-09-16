@@ -21,7 +21,7 @@ import play.api.data.Forms.*
 import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators.trimmedText
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.PostCode
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 
 object ChangeSubscriptionAddressForm {
 
@@ -32,17 +32,17 @@ object ChangeSubscriptionAddressForm {
   val postcodeKey = "postcode"
   val countryCodeKey = "countryCode"
 
-  def lineRegex(legacyRegime: LegacyRegime): String =
-    if (legacyRegime == LegacyRegime.PAYE)
+  def lineRegex(agentRegime: AgentRegime): String =
+    if (agentRegime == AgentRegime.PAYE)
       "^[a-zA-Z0-9 .,()!@-]*$"
     else
       "^[a-zA-Z0-9 ()&‘/,.-]*$"
 
   def maxLen(
-    legacyRegime: LegacyRegime,
-    row: Int
+              agentRegime: AgentRegime,
+              row: Int
   ): Int =
-    if (legacyRegime == LegacyRegime.PAYE)
+    if (agentRegime == AgentRegime.PAYE)
       35
     else if (row == 4)
       18
@@ -50,28 +50,28 @@ object ChangeSubscriptionAddressForm {
       28
 
   private def lineMapping(
-    legacyRegime: LegacyRegime,
-    row: Int
+                           agentRegime: AgentRegime,
+                           row: Int
   ) = {
     trimmedText
-      .verifying(s"${legacyRegime.msgPrefix}.error.addressLine$row.required", _.nonEmpty)
-      .verifying(s"${legacyRegime.msgPrefix}.error.addressLine$row.length", _.length <= maxLen(legacyRegime, row))
-      .verifying(s"${legacyRegime.msgPrefix}.error.addressLine$row.invalid", _.matches(lineRegex(legacyRegime)))
+      .verifying(s"${agentRegime.msgPrefix}.error.addressLine$row.required", _.nonEmpty)
+      .verifying(s"${agentRegime.msgPrefix}.error.addressLine$row.length", _.length <= maxLen(agentRegime, row))
+      .verifying(s"${agentRegime.msgPrefix}.error.addressLine$row.invalid", _.matches(lineRegex(agentRegime)))
   }
 
-  private def countryCodeMapping(legacyRegime: LegacyRegime) = {
+  private def countryCodeMapping(agentRegime: AgentRegime) = {
     trimmedText
-      .verifying(s"${legacyRegime.msgPrefix}.error.country.required", _.nonEmpty)
-      .verifying(s"${legacyRegime.msgPrefix}.error.country.required", _.length == 2)
+      .verifying(s"${agentRegime.msgPrefix}.error.country.required", _.nonEmpty)
+      .verifying(s"${agentRegime.msgPrefix}.error.country.required", _.length == 2)
   }
 
   // To use when ALF returns a UK address that will not pass robotics validation
-  def ukForm(legacyRegime: LegacyRegime): Form[BusinessAddress] = Form(mapping(
-    line1Key -> lineMapping(legacyRegime, 1),
-    line2Key -> lineMapping(legacyRegime, 2),
-    line3Key -> optional(lineMapping(legacyRegime, 3)),
-    line4Key -> optional(lineMapping(legacyRegime, 4)),
-    postcodeKey -> PostCode.mapping(legacyRegime)
+  def ukForm(agentRegime: AgentRegime): Form[BusinessAddress] = Form(mapping(
+    line1Key -> lineMapping(agentRegime, 1),
+    line2Key -> lineMapping(agentRegime, 2),
+    line3Key -> optional(lineMapping(agentRegime, 3)),
+    line4Key -> optional(lineMapping(agentRegime, 4)),
+    postcodeKey -> PostCode.mapping(agentRegime)
   )(
     (
       l1,
@@ -99,11 +99,11 @@ object ChangeSubscriptionAddressForm {
   ))
 
   // To use when ALF returns a non-UK address that will not pass robotics validation, or when the user chooses to edit a non-UK address from CYA
-  def nonUkForm(legacyRegime: LegacyRegime): Form[BusinessAddress] = Form(mapping(
-    line1Key -> lineMapping(legacyRegime, 1),
-    line2Key -> lineMapping(legacyRegime, 2),
-    line3Key -> lineMapping(legacyRegime, 3),
-    countryCodeKey -> countryCodeMapping(legacyRegime)
+  def nonUkForm(agentRegime: AgentRegime): Form[BusinessAddress] = Form(mapping(
+    line1Key -> lineMapping(agentRegime, 1),
+    line2Key -> lineMapping(agentRegime, 2),
+    line3Key -> lineMapping(agentRegime, 3),
+    countryCodeKey -> countryCodeMapping(agentRegime)
   )(
     (
       l1,

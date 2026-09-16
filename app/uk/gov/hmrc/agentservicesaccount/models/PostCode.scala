@@ -18,7 +18,7 @@ package uk.gov.hmrc.agentservicesaccount.models
 
 import play.api.data.Mapping
 import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators.trimmedText
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 
 object PostCode {
 
@@ -26,13 +26,13 @@ object PostCode {
 
   /** Validation for forms using a [[PostCode]]
     *
-    * @param legacyRegime
+    * @param agentRegime
     *   the legacy tax regime (PAYE, SA, or CT), used to scope the error message keys (e.g. `asa.legacy.paye.error.postcode`)
     * @return
     *   a valid postcode
     */
-  def mapping(legacyRegime: LegacyRegime): Mapping[String] =
-    val postCodeKey = s"${legacyRegime.msgPrefix}.error.postcode"
+  def mapping(agentRegime: AgentRegime): Mapping[String] =
+    val postCodeKey = s"${agentRegime.msgPrefix}.error.postcode"
     trimmedText
       .verifying(s"$postCodeKey.required", _.nonEmpty)
       .verifying(s"$postCodeKey.invalid", ValidPostcodeRegex.matches)

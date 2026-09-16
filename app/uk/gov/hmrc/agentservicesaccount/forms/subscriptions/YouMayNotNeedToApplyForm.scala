@@ -21,19 +21,19 @@ import play.api.data.Form
 import play.api.data.Mapping
 import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators.useAsaDataMapping
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.YouMayNotNeedToApplyFormValues
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 
 object YouMayNotNeedToApplyForm {
 
   val doYouStillWantToApplyKey = "doYouStillWantToApply"
 
-  private def doYouStillWantToApplyMapping(legacyRegime: LegacyRegime): Mapping[Boolean] = useAsaDataMapping(
-    s"${legacyRegime.msgPrefix}.you-may-not-need-to-apply.error.required"
+  private def doYouStillWantToApplyMapping(agentRegime: AgentRegime): Mapping[Boolean] = useAsaDataMapping(
+    s"${agentRegime.msgPrefix}.you-may-not-need-to-apply.error.required"
   )
 
-  def form(legacyRegime: LegacyRegime): Form[YouMayNotNeedToApplyFormValues] = Form(
+  def form(agentRegime: AgentRegime): Form[YouMayNotNeedToApplyFormValues] = Form(
     mapping(
-      doYouStillWantToApplyKey -> doYouStillWantToApplyMapping(legacyRegime)
+      doYouStillWantToApplyKey -> doYouStillWantToApplyMapping(agentRegime)
     )(YouMayNotNeedToApplyFormValues.apply)(values => Some(values.doYouStillWantToApply))
   )
 

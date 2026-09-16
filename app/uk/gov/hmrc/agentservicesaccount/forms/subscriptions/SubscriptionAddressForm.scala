@@ -21,20 +21,20 @@ import play.api.data.Form
 import play.api.data.Mapping
 import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators.useAsaDataMapping
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AddressFormValues
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 
 object SubscriptionAddressForm {
 
   val addressUseAsaDataKey = "addressUseAsaData"
 
-  private def addressUseAsaDataMapping(legacyRegime: LegacyRegime): Mapping[Boolean] = useAsaDataMapping(
-    s"${legacyRegime.msgPrefix}.address.use-asa.error.required"
+  private def addressUseAsaDataMapping(agentRegime: AgentRegime): Mapping[Boolean] = useAsaDataMapping(
+    s"${agentRegime.msgPrefix}.address.use-asa.error.required"
   )
 
-  def form(legacyRegime: LegacyRegime): Form[AddressFormValues] = {
+  def form(agentRegime: AgentRegime): Form[AddressFormValues] = {
     Form(
       mapping(
-        addressUseAsaDataKey -> addressUseAsaDataMapping(legacyRegime)
+        addressUseAsaDataKey -> addressUseAsaDataMapping(agentRegime)
       )(AddressFormValues.apply)(o => Some(o.useAsaData))
     )
   }

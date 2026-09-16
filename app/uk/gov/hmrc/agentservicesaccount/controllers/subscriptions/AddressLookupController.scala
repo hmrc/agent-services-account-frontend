@@ -28,8 +28,8 @@ import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageS
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup._
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.utils.RequestAwareLogging
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -52,8 +52,8 @@ extends FrontendController(cc)
 with I18nSupport
 with RequestAwareLogging {
 
-  private def alfJourneyLanguageLabels(legacyRegime: LegacyRegime)(implicit lang: Lang): JsObject = {
-    val legacyRegimePrefix = legacyRegime.msgPrefix
+  private def alfJourneyLanguageLabels(agentRegime: AgentRegime)(implicit lang: Lang): JsObject = {
+    val legacyRegimePrefix = agentRegime.msgPrefix
     val editPageLabels = Json.obj(
       "title" -> messagesApi(s"$legacyRegimePrefix.alf.edit.title"),
       "heading" -> messagesApi(s"$legacyRegimePrefix.alf.edit.heading"),
@@ -83,10 +83,10 @@ with RequestAwareLogging {
     )
   }
 
-  def startAddressLookup(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
+  def startAddressLookup(agentRegime: AgentRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(agentRegime).async { implicit request =>
     val continueUrl: String = {
       val useAbsoluteUrls = appConfig.addressLookupBaseUrl.contains("localhost")
-      val call = subscriptions.routes.AddressLookupController.finishAddressLookup(None, legacyRegime)
+      val call = subscriptions.routes.AddressLookupController.finishAddressLookup(None, agentRegime)
       if (useAbsoluteUrls)
         call.absoluteURL()
       else
@@ -115,12 +115,12 @@ with RequestAwareLogging {
       options = JourneyOptions(
         continueUrl = continueUrl,
         manualAddressEntryConfig = Some(manualAddressEntryConfig),
-        ukMode = Some(legacyRegime == PAYE)
+        ukMode = Some(agentRegime == PAYE)
       ),
       version = 2,
       labels = Some(JourneyLabels(
-        en = Some(alfJourneyLanguageLabels(legacyRegime)(Lang("en"))),
-        cy = Some(alfJourneyLanguageLabels(legacyRegime)(Lang("cy")))
+        en = Some(alfJourneyLanguageLabels(agentRegime)(Lang("en"))),
+        cy = Some(alfJourneyLanguageLabels(agentRegime)(Lang("cy")))
       ))
     )
 
@@ -130,9 +130,9 @@ with RequestAwareLogging {
   }
 
   def finishAddressLookup(
-    id: Option[String],
-    legacyRegime: LegacyRegime
-  ): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
+                           id: Option[String],
+                           agentRegime: AgentRegime
+  ): Action[AnyContent] = actions.authActionWithSubscriptionJourney(agentRegime).async { implicit request =>
     val journey = request.subscriptionJourney
 
     id match {
@@ -152,12 +152,12 @@ with RequestAwareLogging {
             useCustomAddress = Some(true),
             addressAnswer = Some(newBusinessAddress)
           )
-          _ <- sessionCacheService.put(subscriptionJourneyKey(legacyRegime), updatedJourney)
+          _ <- sessionCacheService.put(subscriptionJourneyKey(agentRegime), updatedJourney)
         } yield {
           Redirect(getNextPage(
             addressLookupFinish,
             Some(updatedJourney),
-            legacyRegime
+            agentRegime
           ))
         }
     }

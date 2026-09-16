@@ -20,7 +20,7 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import play.api.i18n.Messages
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionPhoneNumberForm._
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.PhoneNumberFormValues
 import play.api.test.Helpers
 
@@ -34,7 +34,7 @@ with Matchers {
   private val validNewPhoneNumber = "1234567890"
   private val invalidNewPhoneNumber = "skdjfhjs"
 
-  private val legacyRegime = LegacyRegime.PAYE
+  private val legacyRegime = AgentRegime.PAYE
 
   private val legacyRegimePrefix = legacyRegime.msgPrefix
   implicit val messages: Messages = Helpers.stubMessages()

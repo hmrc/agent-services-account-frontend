@@ -30,7 +30,7 @@ import uk.gov.hmrc.agentservicesaccount.models.emailverification.EmailIsAlreadyV
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.EmailHasNotChanged
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.EmailIsLocked
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.EmailNeedsVerifying
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 import uk.gov.hmrc.agentservicesaccount.services.EmailVerificationService
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.utils.RequestAwareLogging
@@ -57,7 +57,7 @@ with I18nSupport
 with RequestAwareLogging {
 
   /* This is the callback endpoint (return url) from the email-verification service and not for use of our own frontend. */
-  def finishEmailVerification(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async {
+  def finishEmailVerification(agentRegime: AgentRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(agentRegime).async {
     implicit request =>
       sessionCacheService.get(emailPendingVerificationKey).flatMap {
         case Some(email) =>
@@ -71,12 +71,12 @@ with RequestAwareLogging {
               )
 
               sessionCacheService
-                .put(subscriptionJourneyKey(legacyRegime), updatedJourney)
+                .put(subscriptionJourneyKey(agentRegime), updatedJourney)
                 .map(_ =>
                   Redirect(getNextPage(
                     emailVerificationFinish,
                     Some(updatedJourney),
-                    legacyRegime
+                    agentRegime
                   ))
                 )
 
@@ -87,13 +87,13 @@ with RequestAwareLogging {
                   credId,
                   email,
                   messagesApi.preferred(request).lang,
-                  routes.EmailVerificationEndpointController.finishEmailVerification(legacyRegime),
-                  routes.UpdateEmailAddressController.showPage(legacyRegime)
+                  routes.EmailVerificationEndpointController.finishEmailVerification(agentRegime),
+                  routes.UpdateEmailAddressController.showPage(agentRegime)
                 )
               } yield Redirect(redirectUri)
-            case EmailHasNotChanged | EmailIsLocked => Future.successful(Redirect(routes.UpdateEmailAddressController.showPage(legacyRegime)))
+            case EmailHasNotChanged | EmailIsLocked => Future.successful(Redirect(routes.UpdateEmailAddressController.showPage(agentRegime)))
           }
-        case None => Future.successful(Redirect(routes.UpdateEmailAddressController.showPage(legacyRegime)))
+        case None => Future.successful(Redirect(routes.UpdateEmailAddressController.showPage(agentRegime)))
       }
   }
 }

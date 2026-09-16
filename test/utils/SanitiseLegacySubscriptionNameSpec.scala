@@ -17,7 +17,7 @@
 package utils
 
 import org.scalatestplus.play.PlaySpec
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.*
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.*
 import uk.gov.hmrc.agentservicesaccount.utils.SanitiseLegacySubscriptionName.sanitise
 
 class SanitiseLegacySubscriptionNameSpec

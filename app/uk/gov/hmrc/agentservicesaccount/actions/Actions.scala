@@ -29,10 +29,10 @@ import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
 import uk.gov.hmrc.agentservicesaccount.models.AmlsDetails
 import uk.gov.hmrc.agentservicesaccount.models.Arn
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.CT
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.SA
 import uk.gov.hmrc.agentservicesaccount.services.AgentRecordService
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 
@@ -114,13 +114,13 @@ class Actions @Inject() (
   def authActionWithSuspensionCheckWithAgentRecord: ActionBuilder[AuthRequestWithAgentProfile, AnyContent] =
     actionBuilder andThen authActions.authActionRefiner andThen withAgentRecord(false)
 
-  def authActionWithSubscriptionJourney(legacyRegime: LegacyRegime): ActionBuilder[SubscriptionJourneyRequest, AnyContent] =
+  def authActionWithSubscriptionJourney(agentRegime: AgentRegime): ActionBuilder[SubscriptionJourneyRequest, AnyContent] =
     actionBuilder andThen
       authActions.authActionRefiner andThen
       filterSuspendedAgent(false) andThen
-      withSubscriptionJourney(legacyRegime)
+      withSubscriptionJourney(agentRegime)
 
-  private def withSubscriptionJourney(legacyRegime: LegacyRegime): ActionRefiner[AuthRequestWithAgentInfo, SubscriptionJourneyRequest] =
+  private def withSubscriptionJourney(agentRegime: AgentRegime): ActionRefiner[AuthRequestWithAgentInfo, SubscriptionJourneyRequest] =
     new ActionRefiner[AuthRequestWithAgentInfo, SubscriptionJourneyRequest] {
       override protected def executionContext: ExecutionContext = ec
       override protected def refine[A](
@@ -135,13 +135,13 @@ class Actions @Inject() (
           )
         def subscriptionJourney(asaDetails: AgencyDetails) = SubscriptionJourney(asaDetails = asaDetails)
         if (
-          (appConfig.enableLegacySubscriptionLink && legacyRegime == PAYE) ||
+          (appConfig.enableLegacySubscriptionLink && agentRegime == PAYE) ||
           (appConfig.enableLegacySubscriptionLinkRobotics && Seq(
             CT,
             SA
-          ).contains(legacyRegime))
+          ).contains(agentRegime))
         ) {
-          sessionCacheService.get[SubscriptionJourney](subscriptionJourneyKey(legacyRegime)).flatMap {
+          sessionCacheService.get[SubscriptionJourney](subscriptionJourneyKey(agentRegime)).flatMap {
             case Some(journey) => Future.successful(Right(buildRequest(journey)))
             case None =>
               agentServicesAccountConnector.getAgentRecord.flatMap { response =>
@@ -151,7 +151,7 @@ class Actions @Inject() (
                   None,
                   None
                 )))
-                sessionCacheService.put(subscriptionJourneyKey(legacyRegime), journey).map { _ => Right(buildRequest(journey)) }
+                sessionCacheService.put(subscriptionJourneyKey(agentRegime), journey).map { _ => Right(buildRequest(journey)) }
               }
           }
         }

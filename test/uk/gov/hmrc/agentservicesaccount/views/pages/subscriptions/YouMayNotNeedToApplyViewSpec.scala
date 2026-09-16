@@ -19,7 +19,7 @@ package uk.gov.hmrc.agentservicesaccount.views.pages.subscriptions
 import org.jsoup.Jsoup
 import org.scalatest.matchers.should.Matchers
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.YouMayNotNeedToApplyForm
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.YouMayNotNeedToApplyFormValues
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.you_may_not_need_to_apply
@@ -31,9 +31,9 @@ with Matchers {
   val view: you_may_not_need_to_apply = app.injector.instanceOf[you_may_not_need_to_apply]
 
   val regimes = Seq(
-    LegacyRegime.SA,
-    LegacyRegime.CT,
-    LegacyRegime.PAYE
+    AgentRegime.SA,
+    AgentRegime.CT,
+    AgentRegime.PAYE
   )
 
   regimes.foreach { regime =>

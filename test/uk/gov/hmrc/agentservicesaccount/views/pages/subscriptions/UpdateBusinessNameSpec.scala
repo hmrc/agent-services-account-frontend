@@ -25,7 +25,7 @@ import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionBusiness
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionBusinessNameForm.businessNameNewKey
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionBusinessNameForm.businessNameUseAsaDataKey
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.BusinessNameFormValues
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.update_business_name
 
@@ -35,7 +35,7 @@ extends ViewBaseSpec {
   private val view: update_business_name = inject[update_business_name]
   private val asaDetailsAgencyName = "ABC-No.1 Accountants"
 
-  private val legacyRegime = LegacyRegime.SA
+  private val legacyRegime = AgentRegime.SA
 
   private val legacyRegimePrefix = legacyRegime.msgPrefix
 

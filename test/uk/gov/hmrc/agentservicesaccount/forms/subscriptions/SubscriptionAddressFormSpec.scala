@@ -20,7 +20,7 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionAddressForm._
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AddressFormValues
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 
 class SubscriptionAddressFormSpec
 extends AnyWordSpec
@@ -28,7 +28,7 @@ with Matchers {
 
   val emptyValue = ""
 
-  private val legacyRegime = LegacyRegime.PAYE
+  private val legacyRegime = AgentRegime.PAYE
 
   private val legacyRegimePrefix = legacyRegime.msgPrefix
 

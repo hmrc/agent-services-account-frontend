@@ -26,7 +26,7 @@ import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionPhoneNum
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionPhoneNumberForm.phoneNumberNewKey
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionPhoneNumberForm.phoneNumberUseAsaDataKey
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.PhoneNumberFormValues
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.update_phone_number
 
@@ -37,7 +37,7 @@ extends ViewBaseSpec {
   private val asaDetailsAgencyName = "ABC-No.1 Accountants"
   private val asaDetailsAgencyTelephone = "07700 900123"
 
-  private val legacyRegime = LegacyRegime.PAYE
+  private val legacyRegime = AgentRegime.PAYE
 
   private val phoneNumberForm: Form[PhoneNumberFormValues] = SubscriptionPhoneNumberForm.form(legacyRegime, "Agency Name")
 
