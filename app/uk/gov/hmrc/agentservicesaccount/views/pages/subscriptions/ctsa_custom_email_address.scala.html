@@ -34,12 +34,12 @@
     govukErrorSummary: GovukErrorSummary
 )
 
-@(form: Form[EmailAddressFormValues], asaDetailsAgencyEmail: String, legacyRegime: AgentRegime)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
+@(form: Form[EmailAddressFormValues], asaDetailsAgencyEmail: String, agentRegime: AgentRegime)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
 
-@legacyRegimePrefix = @{ legacyRegime.msgPrefix }
+@agentRegimePrefix = @{ agentRegime.msgPrefix }
 
 @main(
-    pageTitle = withErrorPrefix(form.hasErrors, msgs(s"$legacyRegimePrefix.custom-email-address.title")),
+    pageTitle = withErrorPrefix(form.hasErrors, msgs(s"$agentRegimePrefix.custom-email-address.title")),
     mimicBrowserBackLink = true,
     showSecondaryNav = false
 ) {
@@ -48,22 +48,22 @@
         @govukErrorSummary(ErrorSummary().withFormErrorsAsText(form))
     }
 
-    @h1(s"$legacyRegimePrefix.custom-email-address.title")
+    @h1(s"$agentRegimePrefix.custom-email-address.title")
 
-    @p(s"$legacyRegimePrefix.custom-email-address.p1")
+    @p(s"$agentRegimePrefix.custom-email-address.p1")
 
     @inset_text(asaDetailsAgencyEmail)
 
-    @p(s"$legacyRegimePrefix.custom-email-address.p2")
+    @p(s"$agentRegimePrefix.custom-email-address.p2")
 
-    @formWithCSRF(action = subscriptions.routes.UpdateEmailAddressController.onSaCtCustomSubmit(legacyRegime)) {
+    @formWithCSRF(action = subscriptions.routes.UpdateEmailAddressController.onSaCtCustomSubmit(agentRegime)) {
         <input type="hidden" name="emailAddressUseAsaData" value="false">
         @govukInput(Input(
             label = Label(
-                content = HtmlContent(msgs(s"$legacyRegimePrefix.custom-email-address.input.label")),
+                content = HtmlContent(msgs(s"$agentRegimePrefix.custom-email-address.input.label")),
                 classes = "govuk-label--m"
             ),
-            hint = Some(Hint(content = Text(msgs(s"$legacyRegimePrefix.custom-email-address.input.hint"))))
+            hint = Some(Hint(content = Text(msgs(s"$agentRegimePrefix.custom-email-address.input.hint"))))
         ).withFormField(form(emailAddressNewKey)))
 
         @govukButton(Button(content = Text(msgs("common.continue"))))

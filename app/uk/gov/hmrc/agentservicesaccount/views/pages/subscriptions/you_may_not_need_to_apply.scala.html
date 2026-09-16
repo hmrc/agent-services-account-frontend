@@ -37,15 +37,15 @@
 )
 
 
-@(form: Form[YouMayNotNeedToApplyFormValues], legacyRegime: AgentRegime)(
+@(form: Form[YouMayNotNeedToApplyFormValues], agentRegime: AgentRegime)(
         implicit msgs: Messages,
         request: RequestHeader,
         appConfig: AppConfig
 )
 
-@legacyRegimePrefix = @{ legacyRegime.msgPrefix }
+@agentRegimePrefix = @{ agentRegime.msgPrefix }
 
-@pageTitle = @{ msgs(s"$legacyRegimePrefix.you-may-not-need-to-apply.title") }
+@pageTitle = @{ msgs(s"$agentRegimePrefix.you-may-not-need-to-apply.title") }
 
 @main(
     pageTitle = withErrorPrefix(form.hasErrors, pageTitle),
@@ -61,9 +61,9 @@
 
     @p("asa.legacy.you-may-not-need-to-apply.p1")
 
-    @p(s"$legacyRegimePrefix.you-may-not-need-to-apply.p2")
+    @p(s"$agentRegimePrefix.you-may-not-need-to-apply.p2")
 
-    @formWithCSRF(action = subscriptions.routes.YouMayNotNeedToApplyController.onSubmit(legacyRegime)) {
+    @formWithCSRF(action = subscriptions.routes.YouMayNotNeedToApplyController.onSubmit(agentRegime)) {
 
         @govukRadios(Radios(
             name = doYouStillWantToApplyKey,

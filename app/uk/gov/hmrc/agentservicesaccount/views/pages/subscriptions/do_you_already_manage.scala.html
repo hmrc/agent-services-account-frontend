@@ -36,15 +36,15 @@
 )
 
 
-@(form: Form[DoYouAlreadyManageFormValues], legacyRegime: AgentRegime, asaDetailsAgencyName: String)(
+@(form: Form[DoYouAlreadyManageFormValues], agentRegime: AgentRegime, asaDetailsAgencyName: String)(
         implicit msgs: Messages,
         request: RequestHeader,
         appConfig: AppConfig
 )
 
-@legacyRegimePrefix = @{ legacyRegime.msgPrefix }
+@agentRegimePrefix = @{ agentRegime.msgPrefix }
 
-@pageTitle = @{ msgs(s"$legacyRegimePrefix.do-you-already-manage.title", asaDetailsAgencyName) }
+@pageTitle = @{ msgs(s"$agentRegimePrefix.do-you-already-manage.title", asaDetailsAgencyName) }
 
 @main(
     pageTitle = withErrorPrefix(form.hasErrors, pageTitle),
@@ -56,7 +56,7 @@
         @govukErrorSummary(ErrorSummary().withFormErrorsAsText(form))
     }
 
-    @formWithCSRF(action = subscriptions.routes.DoYouAlreadyManageController.onSubmit(legacyRegime)) {
+    @formWithCSRF(action = subscriptions.routes.DoYouAlreadyManageController.onSubmit(agentRegime)) {
 
         @govukRadios(Radios(
             name = doYouAlreadyManageKey,
@@ -73,7 +73,7 @@
                     value = Some("true")
                 ),
                 RadioItem(
-                    content = Text(msgs(s"asa.legacy.${legacyRegime.toString.toLowerCase}.do-you-already-manage.existing.false")),
+                    content = Text(msgs(s"asa.legacy.${agentRegime.toString.toLowerCase}.do-you-already-manage.existing.false")),
                     value = Some("false")
                 )
             )

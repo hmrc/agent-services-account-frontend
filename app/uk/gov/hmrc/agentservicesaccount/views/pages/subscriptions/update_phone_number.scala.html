@@ -34,19 +34,19 @@
     govukErrorSummary: GovukErrorSummary
 )
 
-@(form: Form[PhoneNumberFormValues], asaDetailsAgencyName: String, asaDetailsAgencyTelephoneOpt: Option[String], legacyRegime: AgentRegime)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
+@(form: Form[PhoneNumberFormValues], asaDetailsAgencyName: String, asaDetailsAgencyTelephoneOpt: Option[String], agentRegime: AgentRegime)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
 
-@legacyRegimePrefix = @{ legacyRegime.msgPrefix }
+@agentRegimePrefix = @{ agentRegime.msgPrefix }
 
-@pageHeading = @{ msgs(s"$legacyRegimePrefix.phone-number.heading", asaDetailsAgencyName) }
+@pageHeading = @{ msgs(s"$agentRegimePrefix.phone-number.heading", asaDetailsAgencyName) }
 
 @newPhoneNumberInput = {
     @govukInput(Input(
         label = Label(
-            content = HtmlContent(msgs(s"$legacyRegimePrefix.phone-number.new-input.label")),
+            content = HtmlContent(msgs(s"$agentRegimePrefix.phone-number.new-input.label")),
             classes = "govuk-label"
         ),
-        hint = Some(Hint(content = Text(msgs(s"$legacyRegimePrefix.phone-number.new-input.hint"))))
+        hint = Some(Hint(content = Text(msgs(s"$agentRegimePrefix.phone-number.new-input.hint"))))
     ).withFormField(form(phoneNumberNewKey)))
 }
 
@@ -66,7 +66,7 @@
                 value = Some("true")
             ),
             RadioItem(
-                content = Text(msgs(s"$legacyRegimePrefix.phone-number.use-asa.false")),
+                content = Text(msgs(s"$agentRegimePrefix.phone-number.use-asa.false")),
                 value = Some("false"),
                 conditionalHtml = Some(newPhoneNumberInput)
             )
@@ -82,12 +82,12 @@
             classes = "govuk-label--l",
             isPageHeading = true
         ),
-        hint = Some(Hint(content = Text(msgs(s"$legacyRegimePrefix.phone-number.new-input.hint"))))
+        hint = Some(Hint(content = Text(msgs(s"$agentRegimePrefix.phone-number.new-input.hint"))))
     ).withFormField(form(phoneNumberNewKey)))
 }
 
 @main(
-    pageTitle = withErrorPrefix(form.hasErrors, msgs(s"$legacyRegimePrefix.phone-number.title")),
+    pageTitle = withErrorPrefix(form.hasErrors, msgs(s"$agentRegimePrefix.phone-number.title")),
     mimicBrowserBackLink = true,
     showSecondaryNav = false
 ) {
@@ -96,7 +96,7 @@
         @govukErrorSummary(ErrorSummary().withFormErrorsAsText(form))
     }
 
-    @formWithCSRF(action = subscriptions.routes.UpdatePhoneNumberController.onSubmit(legacyRegime)) {
+    @formWithCSRF(action = subscriptions.routes.UpdatePhoneNumberController.onSubmit(agentRegime)) {
         @{
             asaDetailsAgencyTelephoneOpt.map(radiosAndConditionalInputForm).getOrElse(simpleInputForm)
         }
