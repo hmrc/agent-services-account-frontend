@@ -232,7 +232,7 @@ with Injecting {
         givenStartLegacySubscriptionResponse(legacyRegime, OK)
 
         val request = getSubscriptionRequestForLegacyRegime(legacyRegime)
-        val result = connector.submitLegacySubscriptionRequest(request, legacyRegime)
+        val result = connector.submitSubscriptionRequest(request, legacyRegime)
         await(result) shouldBe ()
       }
 
@@ -240,7 +240,7 @@ with Injecting {
         givenStartLegacySubscriptionResponse(legacyRegime, INTERNAL_SERVER_ERROR)
 
         val request = getSubscriptionRequestForLegacyRegime(legacyRegime)
-        intercept[UpstreamErrorResponse](await(connector.submitLegacySubscriptionRequest(request, legacyRegime)))
+        intercept[UpstreamErrorResponse](await(connector.submitSubscriptionRequest(request, legacyRegime)))
       }
     })
   }

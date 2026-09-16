@@ -110,7 +110,7 @@ with MockFactory {
           )
         )
 
-        override def submitLegacySubscriptionRequest(
+        override def submitSubscriptionRequest(
           subscriptionRequest: SubscriptionRequest,
           legacyRegime: LegacyRegime
         )(implicit hc: HeaderCarrier): Future[Unit] = Future.successful(())

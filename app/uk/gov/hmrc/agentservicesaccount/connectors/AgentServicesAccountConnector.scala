@@ -123,7 +123,7 @@ extends Logging {
       }
     )
 
-  def submitLegacySubscriptionRequest(
+  def submitSubscriptionRequest(
     subscriptionRequest: SubscriptionRequest,
     legacyRegime: LegacyRegime
   )(implicit hc: HeaderCarrier): Future[Unit] = {
@@ -135,7 +135,7 @@ extends Logging {
             case OK => ()
             case e =>
               throw UpstreamErrorResponse(
-                s"[AgentServicesAccountConnector][submitLegacySubscriptionRequest] Error $e unable to post $legacyRegime legacy subscription request.\nResponse = ${response.body}",
+                s"[AgentServicesAccountConnector][submitSubscriptionRequest] Error $e unable to post $legacyRegime subscription request.\nResponse = ${response.body}",
                 e
               )
           }

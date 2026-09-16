@@ -109,7 +109,7 @@ with RequestAwareLogging {
 
       requestModelOpt.map(requestModel => {
         for {
-          _ <- agentServicesAccountConnector.submitLegacySubscriptionRequest(requestModel, legacyRegime)
+          _ <- agentServicesAccountConnector.submitSubscriptionRequest(requestModel, legacyRegime)
           updatedJourney = request.subscriptionJourney.copy(isSubmitted = true)
           _ <- sessionCacheService.put(subscriptionJourneyKey(legacyRegime), updatedJourney)
         } yield Redirect(getNextPage(
