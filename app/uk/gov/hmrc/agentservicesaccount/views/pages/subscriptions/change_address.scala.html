@@ -17,7 +17,7 @@
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.routes
 @import uk.gov.hmrc.govukfrontend.views.html.components.{CharacterCount => CharCount}
-@import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+@import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 @import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
 @import uk.gov.hmrc.govukfrontend.views.html.components._
@@ -39,7 +39,7 @@
         govukInsetText: GovukInsetText
 )
 
-@(form: Form[BusinessAddress], legacyRegime: LegacyRegime, isUk: Boolean, isInvalid: Boolean)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
+@(form: Form[BusinessAddress], legacyRegime: AgentRegime, isUk: Boolean, isInvalid: Boolean)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
 
 @legacyRegimePrefix = @{
     legacyRegime.msgPrefix

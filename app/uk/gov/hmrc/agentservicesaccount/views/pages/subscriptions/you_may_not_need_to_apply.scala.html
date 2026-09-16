@@ -19,7 +19,7 @@
 @import play.api.mvc.RequestHeader
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
-@import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+@import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 @import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
@@ -37,7 +37,7 @@
 )
 
 
-@(form: Form[YouMayNotNeedToApplyFormValues], legacyRegime: LegacyRegime)(
+@(form: Form[YouMayNotNeedToApplyFormValues], legacyRegime: AgentRegime)(
         implicit msgs: Messages,
         request: RequestHeader,
         appConfig: AppConfig

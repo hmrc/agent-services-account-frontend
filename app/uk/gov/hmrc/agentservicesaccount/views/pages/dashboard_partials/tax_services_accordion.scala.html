@@ -16,7 +16,7 @@
 
 @import uk.gov.hmrc.agentservicesaccount.actions.AuthRequestWithAgentProfile
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-@import uk.gov.hmrc.agentservicesaccount.models.subscriptions.{LegacyRegime, SubscriptionInfo, SubscriptionStatus}
+@import uk.gov.hmrc.agentservicesaccount.models.subscriptions.{AgentRegime, SubscriptionInfo, SubscriptionStatus}
 @import uk.gov.hmrc.govukfrontend.views.html.components.{GovukAccordion, GovukWarningText}
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.accordion.Section
 
@@ -243,7 +243,7 @@
         )
     )
     if(appConfig.showLegacySubscriptions) {
-        subscriptionInfo.find(_.regime == LegacyRegime.SA).map { info =>
+        subscriptionInfo.find(_.regime == AgentRegime.SA).map { info =>
             info.subscriptionStatus match {
                 case SubscriptionStatus.SubscriptionInProgress if agentInfo.isAdmin =>
                     items.append(
@@ -283,7 +283,7 @@
         )
     )
     if(appConfig.showLegacySubscriptions) {
-        subscriptionInfo.find(_.regime == LegacyRegime.CT).map { info =>
+        subscriptionInfo.find(_.regime == AgentRegime.CT).map { info =>
 
             info.subscriptionStatus match {
                 case SubscriptionStatus.SubscriptionInProgress if agentInfo.isAdmin =>
@@ -310,7 +310,7 @@
                 case _ =>
             }
         }
-        subscriptionInfo.find(_.regime == LegacyRegime.PAYE).map { info =>
+        subscriptionInfo.find(_.regime == AgentRegime.PAYE).map { info =>
             info.subscriptionStatus match {
                 case SubscriptionStatus.SubscriptionInProgress if agentInfo.isAdmin =>
                     items.append(

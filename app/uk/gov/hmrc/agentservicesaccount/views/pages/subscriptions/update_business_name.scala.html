@@ -19,7 +19,7 @@
 @import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionBusinessNameForm.businessNameNewKey
 @import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionBusinessNameForm.businessNameUseAsaDataKey
 @import uk.gov.hmrc.agentservicesaccount.models.subscriptions.BusinessNameFormValues
-@import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+@import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 @import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
 @import uk.gov.hmrc.govukfrontend.views.html.components._
@@ -34,7 +34,7 @@
     govukErrorSummary: GovukErrorSummary
 )
 
-@(form: Form[BusinessNameFormValues], asaDetailsAgencyName: String, legacyRegime: LegacyRegime)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
+@(form: Form[BusinessNameFormValues], asaDetailsAgencyName: String, legacyRegime: AgentRegime)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
 
 @legacyRegimePrefix = @{ legacyRegime.msgPrefix }
 

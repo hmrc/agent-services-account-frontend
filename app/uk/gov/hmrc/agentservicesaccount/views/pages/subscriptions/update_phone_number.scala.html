@@ -19,7 +19,7 @@
 @import uk.gov.hmrc.agentservicesaccount.models.subscriptions.PhoneNumberFormValues
 @import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionPhoneNumberForm.phoneNumberNewKey
 @import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionPhoneNumberForm.phoneNumberUseAsaDataKey
-@import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+@import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 @import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
 @import uk.gov.hmrc.govukfrontend.views.html.components._
@@ -34,7 +34,7 @@
     govukErrorSummary: GovukErrorSummary
 )
 
-@(form: Form[PhoneNumberFormValues], asaDetailsAgencyName: String, asaDetailsAgencyTelephoneOpt: Option[String], legacyRegime: LegacyRegime)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
+@(form: Form[PhoneNumberFormValues], asaDetailsAgencyName: String, asaDetailsAgencyTelephoneOpt: Option[String], legacyRegime: AgentRegime)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
 
 @legacyRegimePrefix = @{ legacyRegime.msgPrefix }
 
