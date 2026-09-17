@@ -42,13 +42,13 @@ extends UnitSpec {
       crypto.decrypt(secondEncrypted).value shouldBe "user-answer"
     }
 
-    "decrypt old AES values using the same field level encryption key as fallback" in {
+    "fail to decrypt old AES values once the temporary fallback is removed" in {
       val oldAesCrypto = SymmetricCryptoFactory.aesCrypto(fieldLevelEncryptionKey)
       val oldAesEncrypted = oldAesCrypto.encrypt(PlainText("pre-migration-answer"))
 
       val crypto = module.aesCryptoInstance(configuration(fieldLevelEncryptionEnabled = true))
 
-      crypto.decrypt(oldAesEncrypted).value shouldBe "pre-migration-answer"
+      intercept[Exception](crypto.decrypt(oldAesEncrypted))
     }
 
     "leave values unencrypted when field level encryption is disabled" in {
