@@ -36,7 +36,7 @@ extends ComponentBaseISpec {
 
   private val repo = inject[SessionCacheRepository]
 
-  private val legacyRegimes = List(CT, PAYE, SA)
+  private val agentRegimes = List(CT, PAYE, SA)
 
   private val confirmedAddressResponse = ConfirmedResponseAddress(
     auditRef = "foo",
@@ -70,9 +70,9 @@ extends ComponentBaseISpec {
     countryCode = "GB"
   )
 
-  legacyRegimes.foreach(legacyRegime => {
-    val startAddressLookupPath = s"$subscriptionStartPath/$legacyRegime/address-lookup-start"
-    val finishAddressLookupPath = s"$subscriptionStartPath/$legacyRegime/address-lookup-finish"
+  agentRegimes.foreach(agentRegime => {
+    val startAddressLookupPath = s"$subscriptionStartPath/$agentRegime/address-lookup-start"
+    val finishAddressLookupPath = s"$subscriptionStartPath/$agentRegime/address-lookup-finish"
 
     s"GET $startAddressLookupPath" should {
       "redirect to the external service to look up an address" in {
@@ -94,25 +94,25 @@ extends ComponentBaseISpec {
 
       val journeyWithRedirectLocations = List(
         (subscriptionBaseJourney, "check-your-answers"),
-        (subscriptionFullJourney(legacyRegime), "check-your-answers")
+        (subscriptionFullJourney(agentRegime), "check-your-answers")
       )
 
       journeyWithRedirectLocations.foreach(journeyWithRedirectLocation => {
         s"update journey with new address and redirect to ${journeyWithRedirectLocation._2} " +
-          s"when journey ${completeString(journeyWithRedirectLocation._1, legacyRegime)}" in {
+          s"when journey ${completeString(journeyWithRedirectLocation._1, agentRegime)}" in {
 
             givenAuthorisedAsAgentWith(arn.value)
             givenGetAgentRecord(agentRecord)
             stubASAGetResponseError(arn, NOT_FOUND)
             givenGetAddressSuccess("bar", confirmedAddressResponse)
 
-            await(repo.putSession(subscriptionJourneyKey(legacyRegime), journeyWithRedirectLocation._1))
+            await(repo.putSession(subscriptionJourneyKey(agentRegime), journeyWithRedirectLocation._1))
 
             val result = get(s"$finishAddressLookupPath?id=bar")
             result.status shouldBe SEE_OTHER
-            result.header(LOCATION) shouldBe Some(s"$subscriptionStartPath/$legacyRegime/${journeyWithRedirectLocation._2}")
+            result.header(LOCATION) shouldBe Some(s"$subscriptionStartPath/$agentRegime/${journeyWithRedirectLocation._2}")
 
-            val updatedJourney = await(repo.getFromSession(subscriptionJourneyKey(legacyRegime)))
+            val updatedJourney = await(repo.getFromSession(subscriptionJourneyKey(agentRegime)))
             updatedJourney shouldBe defined
             updatedJourney.get.useCustomAddress shouldBe Some(true)
             updatedJourney.get.addressAnswer shouldBe Some(address)
@@ -130,13 +130,13 @@ extends ComponentBaseISpec {
           )
         )
 
-        await(repo.putSession(subscriptionJourneyKey(legacyRegime), subscriptionBaseJourney))
+        await(repo.putSession(subscriptionJourneyKey(agentRegime), subscriptionBaseJourney))
 
         val result = get(s"$finishAddressLookupPath?id=bar")
         result.status shouldBe SEE_OTHER
-        result.header(LOCATION) shouldBe Some(s"$subscriptionStartPath/$legacyRegime/address-fix")
+        result.header(LOCATION) shouldBe Some(s"$subscriptionStartPath/$agentRegime/address-fix")
 
-        val updatedJourney = await(repo.getFromSession(subscriptionJourneyKey(legacyRegime)))
+        val updatedJourney = await(repo.getFromSession(subscriptionJourneyKey(agentRegime)))
         updatedJourney shouldBe defined
         updatedJourney.get.useCustomAddress shouldBe Some(true)
         updatedJourney.get.addressAnswer shouldBe Some(invalidAddress)

@@ -27,99 +27,99 @@ extends PlaySpec {
   private val invalidCharactersForAll = "£$%^*=+[]{};:<>?~"
 
   "SanitiseLegacySubscriptionName.sanitise" should {
-    List(CT, SA, PAYE).foreach(legacyRegime => {
-      s"return the original name with removed characters empty for an acceptable name for $legacyRegime" in {
-        val sanitisedLegacySubscriptionName = sanitise(acceptableNameForAll, legacyRegime)
+    List(CT, SA, PAYE).foreach(agentRegime => {
+      s"return the original name with removed characters empty for an acceptable name for $agentRegime" in {
+        val sanitisedLegacySubscriptionName = sanitise(acceptableNameForAll, agentRegime)
         sanitisedLegacySubscriptionName.sanitisedName mustBe acceptableNameForAll
         sanitisedLegacySubscriptionName.removedCharacters mustBe List.empty
       }
 
-      s"remove invalid characters for all from sanitisedName and add to removed characters for $legacyRegime" in {
+      s"remove invalid characters for all from sanitisedName and add to removed characters for $agentRegime" in {
         val nameToSanitise = acceptableNameForAll + invalidCharactersForAll
-        val sanitisedLegacySubscriptionName = sanitise(nameToSanitise, legacyRegime)
+        val sanitisedLegacySubscriptionName = sanitise(nameToSanitise, agentRegime)
         sanitisedLegacySubscriptionName.sanitisedName mustBe acceptableNameForAll
         sanitisedLegacySubscriptionName.removedCharacters mustBe invalidCharactersForAll.split("").toList
       }
 
-      s"strip diacritics from sanitisedName and add to removed characters for $legacyRegime" in {
+      s"strip diacritics from sanitisedName and add to removed characters for $agentRegime" in {
         val resume = "résumé"
-        val sanitisedResume = sanitise(resume, legacyRegime)
+        val sanitisedResume = sanitise(resume, agentRegime)
         sanitisedResume.sanitisedName mustBe "resume"
         sanitisedResume.removedCharacters mustBe List("é", "é")
 
         val pinata = "piñata"
-        val sanitisedPinata = sanitise(pinata, legacyRegime)
+        val sanitisedPinata = sanitise(pinata, agentRegime)
         sanitisedPinata.sanitisedName mustBe "pinata"
         sanitisedPinata.removedCharacters mustBe List("ñ")
 
         val facade = "façade"
-        val sanitisedFacade = sanitise(facade, legacyRegime)
+        val sanitisedFacade = sanitise(facade, agentRegime)
         sanitisedFacade.sanitisedName mustBe "facade"
         sanitisedFacade.removedCharacters mustBe List("ç")
 
         val naive = "naïve"
-        val sanitisedNaive = sanitise(naive, legacyRegime)
+        val sanitisedNaive = sanitise(naive, agentRegime)
         sanitisedNaive.sanitisedName mustBe "naive"
         sanitisedNaive.removedCharacters mustBe List("ï")
       }
     })
 
-    List(CT, SA).foreach(legacyRegime => {
+    List(CT, SA).foreach(agentRegime => {
       "@!".split("").foreach(invalidCtSaCharacter => {
-        s"remove $invalidCtSaCharacter from sanitisedName and add to removed characters for $legacyRegime" in {
+        s"remove $invalidCtSaCharacter from sanitisedName and add to removed characters for $agentRegime" in {
           val randomSplit = Math.floor(Math.random() * acceptableNameForAll.length).toInt
           val splitString = acceptableNameForAll.splitAt(randomSplit)
           val nameToSanitise = s"${splitString._1}$invalidCtSaCharacter${splitString._2}"
-          val sanitisedLegacySubscriptionName = sanitise(nameToSanitise, legacyRegime)
+          val sanitisedLegacySubscriptionName = sanitise(nameToSanitise, agentRegime)
           sanitisedLegacySubscriptionName.sanitisedName mustBe acceptableNameForAll
           sanitisedLegacySubscriptionName.removedCharacters mustBe List(invalidCtSaCharacter)
         }
       })
     })
 
-    List(PAYE).foreach(legacyRegime => {
+    List(PAYE).foreach(agentRegime => {
       "/'‘’".split("").foreach(invalidPayeCharacter => {
-        s"remove $invalidPayeCharacter from sanitisedName and add to removed characters for $legacyRegime" in {
+        s"remove $invalidPayeCharacter from sanitisedName and add to removed characters for $agentRegime" in {
           val randomSplit = Math.floor(Math.random() * acceptableNameForAll.length).toInt
           val splitString = acceptableNameForAll.splitAt(randomSplit)
           val nameToSanitise = s"${splitString._1}$invalidPayeCharacter${splitString._2}"
-          val sanitisedLegacySubscriptionName = sanitise(nameToSanitise, legacyRegime)
+          val sanitisedLegacySubscriptionName = sanitise(nameToSanitise, agentRegime)
           sanitisedLegacySubscriptionName.sanitisedName mustBe acceptableNameForAll
           sanitisedLegacySubscriptionName.removedCharacters mustBe List(invalidPayeCharacter)
         }
       })
 
-      s"replace ' & ' with ' and ' for $legacyRegime - one &" in {
+      s"replace ' & ' with ' and ' for $agentRegime - one &" in {
         val nameToSanitise = "Fish & Chips"
-        val sanitisedLegacySubscriptionName = sanitise(nameToSanitise, legacyRegime)
+        val sanitisedLegacySubscriptionName = sanitise(nameToSanitise, agentRegime)
         sanitisedLegacySubscriptionName.sanitisedName mustBe "Fish and Chips"
         sanitisedLegacySubscriptionName.removedCharacters mustBe List("&")
       }
 
-      s"replace '&' with ' and ' for $legacyRegime - one &" in {
+      s"replace '&' with ' and ' for $agentRegime - one &" in {
         val nameToSanitise = "Fish&Chips"
-        val sanitisedLegacySubscriptionName = sanitise(nameToSanitise, legacyRegime)
+        val sanitisedLegacySubscriptionName = sanitise(nameToSanitise, agentRegime)
         sanitisedLegacySubscriptionName.sanitisedName mustBe "Fish and Chips"
         sanitisedLegacySubscriptionName.removedCharacters mustBe List("&")
       }
 
-      s"replace ' & ' with ' and ' for $legacyRegime - multiple &" in {
+      s"replace ' & ' with ' and ' for $agentRegime - multiple &" in {
         val nameToSanitise = "Fish & Chips & Beans & Peas"
-        val sanitisedLegacySubscriptionName = sanitise(nameToSanitise, legacyRegime)
+        val sanitisedLegacySubscriptionName = sanitise(nameToSanitise, agentRegime)
         sanitisedLegacySubscriptionName.sanitisedName mustBe "Fish and Chips and Beans and Peas"
         sanitisedLegacySubscriptionName.removedCharacters mustBe List("&", "&", "&")
       }
 
-      s"replace '&' with ' and ' for $legacyRegime - multiple &" in {
+      s"replace '&' with ' and ' for $agentRegime - multiple &" in {
         val nameToSanitise = "Fish&Chips&Beans&Peas"
-        val sanitisedLegacySubscriptionName = sanitise(nameToSanitise, legacyRegime)
+        val sanitisedLegacySubscriptionName = sanitise(nameToSanitise, agentRegime)
         sanitisedLegacySubscriptionName.sanitisedName mustBe "Fish and Chips and Beans and Peas"
         sanitisedLegacySubscriptionName.removedCharacters mustBe List("&", "&", "&")
       }
 
-      s"replace ' & ' with ' and ' and '&' with ' and ' for $legacyRegime" in {
+      s"replace ' & ' with ' and ' and '&' with ' and ' for $agentRegime" in {
         val nameToSanitise = "Fish&Chips&Beans & Peas & Gravy"
-        val sanitisedLegacySubscriptionName = sanitise(nameToSanitise, legacyRegime)
+        val sanitisedLegacySubscriptionName = sanitise(nameToSanitise, agentRegime)
         sanitisedLegacySubscriptionName.sanitisedName mustBe "Fish and Chips and Beans and Peas and Gravy"
         sanitisedLegacySubscriptionName.removedCharacters mustBe List(
           "&",

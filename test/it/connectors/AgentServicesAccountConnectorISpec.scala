@@ -227,20 +227,20 @@ with Injecting {
       (SA, exampleSaRequest)
     )
 
-    List(CT, PAYE, SA).foreach(legacyRegime => {
-      s"return nothing when a OK (200) response is returned by agent-services-account for $legacyRegime" in {
-        givenStartLegacySubscriptionResponse(legacyRegime, OK)
+    List(CT, PAYE, SA).foreach(agentRegime => {
+      s"return nothing when a OK (200) response is returned by agent-services-account for $agentRegime" in {
+        givenStartSubscriptionResponse(agentRegime, OK)
 
-        val request = getSubscriptionRequestForAgentRegime(legacyRegime)
-        val result = connector.submitSubscriptionRequest(request, legacyRegime)
+        val request = getSubscriptionRequestForAgentRegime(agentRegime)
+        val result = connector.submitSubscriptionRequest(request, agentRegime)
         await(result) shouldBe ()
       }
 
-      s"throw an UpstreamErrorResponse exception when an unexpected status is returned by agent-services-account for $legacyRegime" in {
-        givenStartLegacySubscriptionResponse(legacyRegime, INTERNAL_SERVER_ERROR)
+      s"throw an UpstreamErrorResponse exception when an unexpected status is returned by agent-services-account for $agentRegime" in {
+        givenStartSubscriptionResponse(agentRegime, INTERNAL_SERVER_ERROR)
 
-        val request = getSubscriptionRequestForAgentRegime(legacyRegime)
-        intercept[UpstreamErrorResponse](await(connector.submitSubscriptionRequest(request, legacyRegime)))
+        val request = getSubscriptionRequestForAgentRegime(agentRegime)
+        intercept[UpstreamErrorResponse](await(connector.submitSubscriptionRequest(request, agentRegime)))
       }
     })
   }

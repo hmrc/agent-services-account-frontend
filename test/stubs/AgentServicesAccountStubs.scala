@@ -84,7 +84,7 @@ object AgentServicesAccountStubs {
       ))
   }
 
-  def givenStartLegacySubscriptionResponse(
+  def givenStartSubscriptionResponse(
     agentRegime: AgentRegime,
     status: Int
   ): StubMapping = {

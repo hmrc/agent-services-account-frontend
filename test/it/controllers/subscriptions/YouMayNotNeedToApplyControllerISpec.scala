@@ -65,7 +65,7 @@ with IntegrationPatience
 with MockFactory
 with TestConstants {
 
-  private val legacyRegimes = List(CT, SA, PAYE)
+  private val agentRegimes = List(CT, SA, PAYE)
   val regime = SA
 
   class TestSetup(agentRegime: AgentRegime) {
@@ -161,7 +161,7 @@ with TestConstants {
 
   }
 
-  legacyRegimes.foreach { regime =>
+  agentRegimes.foreach { regime =>
     s"GET /subscription/$regime/you-may-not-need-to-apply" should {
 
       "render page" in new TestSetup(regime) {
@@ -187,7 +187,7 @@ with TestConstants {
       }
     }
   }
-  legacyRegimes.foreach { regime =>
+  agentRegimes.foreach { regime =>
     s"POST /subscription/$regime/you-may-not-need-to-apply" should {
 
       "return BAD_REQUEST when no option selected" in new TestSetup(regime) {

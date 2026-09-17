@@ -36,10 +36,10 @@ extends ComponentBaseISpec {
 
   private val repo = inject[SessionCacheRepository]
 
-  private val legacyRegimes = List(CT, PAYE, SA)
+  private val agentRegimes = List(CT, PAYE, SA)
 
-  legacyRegimes.foreach(legacyRegime => {
-    val finishEmailVerificationPath = s"$subscriptionStartPath/$legacyRegime/email-verification-finish"
+  agentRegimes.foreach(agentRegime => {
+    val finishEmailVerificationPath = s"$subscriptionStartPath/$agentRegime/email-verification-finish"
 
     s"GET $finishEmailVerificationPath" should {
       "store the new email address in session and redirect to the continue url" in {
@@ -103,7 +103,7 @@ extends ComponentBaseISpec {
 
         result.status shouldBe SEE_OTHER
 
-        result.header("Location").get shouldBe s"${subscriptions.routes.UpdateAddressController.showPage(legacyRegime)}"
+        result.header("Location").get shouldBe s"${subscriptions.routes.UpdateAddressController.showPage(agentRegime)}"
       }
     }
   })

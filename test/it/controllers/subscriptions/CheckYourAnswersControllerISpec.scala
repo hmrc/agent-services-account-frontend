@@ -61,7 +61,7 @@ with ScalaFutures
 with IntegrationPatience
 with MockFactory {
 
-  private val legacyRegimes = List(CT, PAYE, SA)
+  private val agentRegimes = List(CT, PAYE, SA)
 
   class TestSetup(agentRegime: AgentRegime) {
 
@@ -149,20 +149,20 @@ with MockFactory {
 
   }
 
-  legacyRegimes.foreach(legacyRegime => {
+  agentRegimes.foreach(agentRegime => {
 
-    s"GET /subscription/$legacyRegime/check-your-answers" should {
+    s"GET /subscription/$agentRegime/check-your-answers" should {
 
-      "return OK and render page when valid data present" in new TestSetup(legacyRegime) {
-        cacheJourney(subscriptionFullJourney(legacyRegime))
+      "return OK and render page when valid data present" in new TestSetup(agentRegime) {
+        cacheJourney(subscriptionFullJourney(agentRegime))
 
-        val result = controller.showPage(legacyRegime)(fakeRequest).futureValue
+        val result = controller.showPage(agentRegime)(fakeRequest).futureValue
 
         status(result) shouldBe OK
 
         val body = contentAsString(result)
 
-        if (legacyRegime == PAYE) {
+        if (agentRegime == PAYE) {
           body should include("Contact name")
           body should include("My Name")
           body should not include ("Business name")
@@ -182,7 +182,7 @@ with MockFactory {
         body should include("25 Any Street")
       }
 
-      "redirect to homepage when journey data missing" in new TestSetup(legacyRegime) {
+      "redirect to homepage when journey data missing" in new TestSetup(agentRegime) {
         val invalidJourney = SubscriptionJourney(
           asaDetails = AgencyDetails(
             agencyName = None,
@@ -203,58 +203,58 @@ with MockFactory {
 
         cacheJourney(invalidJourney)
 
-        val result = controller.showPage(legacyRegime)(fakeRequest).futureValue
+        val result = controller.showPage(agentRegime)(fakeRequest).futureValue
 
         status(result) shouldBe SEE_OTHER
         redirectLocation(result).value shouldBe "/agent-services-account/home"
       }
-      "redirect to confirmation page when journey complete" in new TestSetup(legacyRegime) {
-        cacheJourney(subscriptionFullJourney(legacyRegime).copy(isSubmitted = true))
+      "redirect to confirmation page when journey complete" in new TestSetup(agentRegime) {
+        cacheJourney(subscriptionFullJourney(agentRegime).copy(isSubmitted = true))
 
-        val result = controller.showPage(legacyRegime)(fakeRequest).futureValue
+        val result = controller.showPage(agentRegime)(fakeRequest).futureValue
 
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result).value shouldBe s"/agent-services-account/subscription/$legacyRegime/confirmation"
+        redirectLocation(result).value shouldBe s"/agent-services-account/subscription/$agentRegime/confirmation"
       }
     }
 
-    s"POST /subscription/$legacyRegime/check-your-answers" should {
+    s"POST /subscription/$agentRegime/check-your-answers" should {
 
-      "redirect when submission succeeds" in new TestSetup(legacyRegime) {
+      "redirect when submission succeeds" in new TestSetup(agentRegime) {
         private val request = FakeRequest(POST, "/")
           .withSession(session.toSeq*)
           .withFormUrlEncodedBody()
 
-        cacheJourney(subscriptionFullJourney(legacyRegime))
-        givenStartLegacySubscriptionResponse(legacyRegime, OK)
+        cacheJourney(subscriptionFullJourney(agentRegime))
+        givenStartSubscriptionResponse(agentRegime, OK)
 
         implicit val implicitRequest: FakeRequest[AnyContentAsFormUrlEncoded] = request
 
-        val result = controller.onSubmit(legacyRegime)(fakeRequest).futureValue
+        val result = controller.onSubmit(agentRegime)(fakeRequest).futureValue
 
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result).value should include(s"/agent-services-account/subscription/$legacyRegime/confirmation")
-        val updated: Option[SubscriptionJourney] = sessionCache.get[SubscriptionJourney](subscriptionJourneyKey(legacyRegime)).futureValue
+        redirectLocation(result).value should include(s"/agent-services-account/subscription/$agentRegime/confirmation")
+        val updated: Option[SubscriptionJourney] = sessionCache.get[SubscriptionJourney](subscriptionJourneyKey(agentRegime)).futureValue
         updated shouldBe defined
         updated.value.isSubmitted shouldBe true
       }
 
-      "redirect to homepage when journey data missing" in new TestSetup(legacyRegime) {
+      "redirect to homepage when journey data missing" in new TestSetup(agentRegime) {
         cacheJourney(subscriptionBaseJourney)
 
-        val result = controller.onSubmit(legacyRegime)(fakeRequest).futureValue
+        val result = controller.onSubmit(agentRegime)(fakeRequest).futureValue
 
         status(result) shouldBe SEE_OTHER
         redirectLocation(result).value shouldBe "/agent-services-account/home"
       }
 
-      "redirect to confirmation page when journey complete" in new TestSetup(legacyRegime) {
-        cacheJourney(subscriptionFullJourney(legacyRegime).copy(isSubmitted = true))
+      "redirect to confirmation page when journey complete" in new TestSetup(agentRegime) {
+        cacheJourney(subscriptionFullJourney(agentRegime).copy(isSubmitted = true))
 
-        val result = controller.onSubmit(legacyRegime)(fakeRequest).futureValue
+        val result = controller.onSubmit(agentRegime)(fakeRequest).futureValue
 
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result).value shouldBe s"/agent-services-account/subscription/$legacyRegime/confirmation"
+        redirectLocation(result).value shouldBe s"/agent-services-account/subscription/$agentRegime/confirmation"
       }
     }
 

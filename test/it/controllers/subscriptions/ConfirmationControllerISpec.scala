@@ -32,11 +32,11 @@ extends ComponentBaseISpec {
 
   private val repo = inject[SessionCacheRepository]
 
-  private val legacyRegimes = List(CT, PAYE, SA)
+  private val agentRegimes = List(CT, PAYE, SA)
 
-  legacyRegimes.foreach(legacyRegime => {
+  agentRegimes.foreach(agentRegime => {
 
-    val path = routes.ConfirmationController.showConfirmationPage(legacyRegime).url
+    val path = routes.ConfirmationController.showConfirmationPage(agentRegime).url
 
     s"GET $path" should {
 
@@ -45,7 +45,7 @@ extends ComponentBaseISpec {
         givenAuthorisedAsAgentWith(arn.value)
         givenGetAgentRecord(agentRecord)
 
-        repo.putSession(subscriptionJourneyKey(legacyRegime), subscriptionFullJourney(legacyRegime).copy(isSubmitted = true)).futureValue
+        repo.putSession(subscriptionJourneyKey(agentRegime), subscriptionFullJourney(agentRegime).copy(isSubmitted = true)).futureValue
 
         val result = get(path)
 
@@ -60,7 +60,7 @@ extends ComponentBaseISpec {
         givenAuthorisedAsAgentWith(arn.value)
         givenGetAgentRecord(agentRecord)
 
-        repo.putSession(subscriptionJourneyKey(legacyRegime), subscriptionBaseJourney).futureValue
+        repo.putSession(subscriptionJourneyKey(agentRegime), subscriptionBaseJourney).futureValue
 
         val result = get(path)
 

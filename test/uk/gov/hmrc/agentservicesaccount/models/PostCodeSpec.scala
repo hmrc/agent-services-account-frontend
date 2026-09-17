@@ -26,16 +26,16 @@ extends UnitSpec,
   EitherValues,
   Inspectors {
 
-  private val LegacyRegimes = Seq(
+  private val agentRegimes = Seq(
     AgentRegime.PAYE,
     AgentRegime.SA,
     AgentRegime.CT
   )
 
   "Parsing a post code" can {
-    forAll(LegacyRegimes) { legacyRegime =>
-      s"mapping a $legacyRegime post code" should {
-        val mapping = PostCode.mapping(legacyRegime)
+    forAll(agentRegimes) { agentRegime =>
+      s"mapping a $agentRegime post code" should {
+        val mapping = PostCode.mapping(agentRegime)
 
         "handle valid postcodes" in {
           mapping.bind(Map("" -> "G1 1XQ")).value shouldBe "G1 1XQ"

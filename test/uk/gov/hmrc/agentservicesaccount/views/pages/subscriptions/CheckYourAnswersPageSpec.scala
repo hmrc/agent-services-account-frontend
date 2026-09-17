@@ -40,7 +40,7 @@ extends ViewBaseSpec {
 
   private val view: check_your_answers = app.injector.instanceOf[check_your_answers]
 
-  private val legacyRegimes = List(CT, PAYE, SA)
+  private val agentRegimes = List(CT, PAYE, SA)
 
   private def heading(agentRegime: AgentRegime) = messages(s"${agentRegime.msgPrefix}.check-your-answers.h1")
   private def title(agentRegime: AgentRegime) = s"${heading(agentRegime)} - Agent services account - GOV.UK"
@@ -81,27 +81,27 @@ extends ViewBaseSpec {
     nameRow +: commonRows
   }
 
-  legacyRegimes.foreach(legacyRegime => {
-    s"check_your_answers view for $legacyRegime" should {
+  agentRegimes.foreach(agentRegime => {
+    s"check_your_answers view for $agentRegime" should {
 
       "render page with heading, summary list and submit button" in {
 
         val messages: Messages = MessagesImpl(langs.head, messagesApi)
 
         val doc: Document = Jsoup.parse(
-          view(model(legacyRegime), legacyRegime)(
+          view(model(agentRegime), agentRegime)(
             messages,
             fakeRequest,
             appConfig
           ).body
         )
 
-        doc.title() mustBe title(legacyRegime)
+        doc.title() mustBe title(agentRegime)
 
-        doc.select("h1").text() mustBe heading(legacyRegime)
+        doc.select("h1").text() mustBe heading(agentRegime)
 
         val keys = doc.select(".govuk-summary-list__key").asScala.map(_.text()).toList
-        if (legacyRegime == PAYE) {
+        if (agentRegime == PAYE) {
           keys must contain("Contact name")
           keys must not contain ("Business name")
         }
@@ -114,7 +114,7 @@ extends ViewBaseSpec {
         keys must contain("Address")
 
         val values = doc.select(".govuk-summary-list__value").asScala.map(_.text()).toList
-        if (legacyRegime == PAYE) {
+        if (agentRegime == PAYE) {
           values must contain("Manager Employee")
           values must not contain ("Test Agency")
         }
@@ -127,10 +127,10 @@ extends ViewBaseSpec {
         values.exists(_.contains("Line 1")) mustBe true
 
         val form = doc.select("form")
-        form.attr("action") mustBe routes.CheckYourAnswersController.onSubmit(legacyRegime).url
+        form.attr("action") mustBe routes.CheckYourAnswersController.onSubmit(agentRegime).url
 
         val button = doc.select(".govuk-button")
-        button.text() mustBe messages(s"${legacyRegime.msgPrefix}.check-your-answers.submit-button")
+        button.text() mustBe messages(s"${agentRegime.msgPrefix}.check-your-answers.submit-button")
       }
     }
   })
