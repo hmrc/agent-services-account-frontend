@@ -35,11 +35,11 @@ extends ViewBaseSpec {
   private val view: update_business_name = inject[update_business_name]
   private val asaDetailsAgencyName = "ABC-No.1 Accountants"
 
-  private val legacyRegime = AgentRegime.SA
+  private val agentRegime = AgentRegime.SA
 
-  private val agentRegimePrefix = legacyRegime.msgPrefix
+  private val agentRegimePrefix = agentRegime.msgPrefix
 
-  private val businessNameForm: Form[BusinessNameFormValues] = SubscriptionBusinessNameForm.form(legacyRegime)
+  private val businessNameForm: Form[BusinessNameFormValues] = SubscriptionBusinessNameForm.form(agentRegime)
 
   private val formWithUseAsaError: Form[BusinessNameFormValues] = businessNameForm.withError(
     key = businessNameUseAsaDataKey,
@@ -54,7 +54,7 @@ extends ViewBaseSpec {
     view(
       form,
       asaDetailsAgencyName,
-      legacyRegime
+      agentRegime
     )(
       messages,
       fakeRequest,

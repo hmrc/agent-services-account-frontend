@@ -32,11 +32,11 @@ with Matchers {
   val validNewBusinessName = "ABC-No.1 Accountants"
   val invalidNewBusinessName = "{][.',"
 
-  private val legacyRegime = AgentRegime.SA
+  private val agentRegime = AgentRegime.SA
 
-  private val agentRegimePrefix = legacyRegime.msgPrefix
+  private val agentRegimePrefix = agentRegime.msgPrefix
 
-  private val initForm = form(legacyRegime)
+  private val initForm = form(agentRegime)
 
   "form binding" should {
     s"be successful when $businessNameUseAsaDataKey true" in {

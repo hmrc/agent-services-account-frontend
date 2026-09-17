@@ -34,9 +34,9 @@ extends ViewBaseSpec {
 
   private val view: update_address = inject[update_address]
 
-  private val legacyRegime = AgentRegime.PAYE
+  private val agentRegime = AgentRegime.PAYE
 
-  private val agentRegimePrefix = legacyRegime.msgPrefix
+  private val agentRegimePrefix = agentRegime.msgPrefix
 
   private def formatAddress(address: BusinessAddress): String = List(
     Some(address.addressLine1),
@@ -60,7 +60,7 @@ extends ViewBaseSpec {
 
   private val asaDetailsAgencyAddress = formatAddress(subscriptionBusinessAddress)
 
-  private val addressForm: Form[AddressFormValues] = SubscriptionAddressForm.form(legacyRegime)
+  private val addressForm: Form[AddressFormValues] = SubscriptionAddressForm.form(agentRegime)
 
   private val formWithUseAsaError: Form[AddressFormValues] = addressForm.withError(
     key = addressUseAsaDataKey,
@@ -71,7 +71,7 @@ extends ViewBaseSpec {
     view(
       form,
       asaDetailsAgencyAddress,
-      legacyRegime
+      agentRegime
     )(
       messages,
       fakeRequest,

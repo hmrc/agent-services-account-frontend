@@ -37,9 +37,9 @@ extends ViewBaseSpec {
   private val asaDetailsAgencyName = "ABC-No.1 Accountants"
   private val asaDetailsAgencyTelephone = "07700 900123"
 
-  private val legacyRegime = AgentRegime.PAYE
+  private val agentRegime = AgentRegime.PAYE
 
-  private val phoneNumberForm: Form[PhoneNumberFormValues] = SubscriptionPhoneNumberForm.form(legacyRegime, "Agency Name")
+  private val phoneNumberForm: Form[PhoneNumberFormValues] = SubscriptionPhoneNumberForm.form(agentRegime, "Agency Name")
 
   private val formWithInputErrors: Form[PhoneNumberFormValues] = phoneNumberForm.withError(phoneNumberNewKey, Messages("error.required"))
 
@@ -51,7 +51,7 @@ extends ViewBaseSpec {
       form,
       asaDetailsAgencyName,
       subPhoneNumberOpt,
-      legacyRegime
+      agentRegime
     )(
       messages,
       fakeRequest,
@@ -59,8 +59,8 @@ extends ViewBaseSpec {
     ).body
   )
 
-  private val title = messages(s"${legacyRegime.msgPrefix}.phone-number.title")
-  private val heading = messages(s"${legacyRegime.msgPrefix}.phone-number.heading", asaDetailsAgencyName)
+  private val title = messages(s"${agentRegime.msgPrefix}.phone-number.title")
+  private val heading = messages(s"${agentRegime.msgPrefix}.phone-number.heading", asaDetailsAgencyName)
 
   def testServiceStaticContent(doc: Document): Unit = {
 
@@ -94,7 +94,7 @@ extends ViewBaseSpec {
     }
 
     "have correct second radio (new number option)" in {
-      doc.select(".govuk-radios__item").get(1).text() must include(messages(s"${legacyRegime.msgPrefix}.phone-number.use-asa.false"))
+      doc.select(".govuk-radios__item").get(1).text() must include(messages(s"${agentRegime.msgPrefix}.phone-number.use-asa.false"))
     }
 
     "have continue button" in {

@@ -36,11 +36,11 @@ extends ViewBaseSpec {
   private val asaDetailsAgencyName = "ABC-No.1 Accountants"
   private val asaDetailsAgencyEmail = "joe@bloggs.com"
 
-  private val legacyRegime = AgentRegime.PAYE
+  private val agentRegime = AgentRegime.PAYE
 
-  private val agentRegimePrefix = legacyRegime.msgPrefix
+  private val agentRegimePrefix = agentRegime.msgPrefix
 
-  private val emailAddressForm: Form[EmailAddressFormValues] = SubscriptionEmailAddressForm.form(legacyRegime, "Agency Name")
+  private val emailAddressForm: Form[EmailAddressFormValues] = SubscriptionEmailAddressForm.form(agentRegime, "Agency Name")
 
   private val formWithUseAsaError: Form[EmailAddressFormValues] = emailAddressForm.withError(
     key = emailAddressUseAsaDataKey,
@@ -59,7 +59,7 @@ extends ViewBaseSpec {
       form,
       asaDetailsAgencyName,
       validEmailAddressOpt,
-      legacyRegime
+      agentRegime
     )(
       messages,
       fakeRequest,

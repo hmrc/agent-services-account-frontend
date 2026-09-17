@@ -35,12 +35,12 @@ with Matchers {
   val validNewEmailAddress = "joe@bloggs.com"
   val invalidNewEmailAddress = "{][.',"
 
-  private val legacyRegime = AgentRegime.CT
+  private val agentRegime = AgentRegime.CT
 
-  private val agentRegimePrefix = legacyRegime.msgPrefix
+  private val agentRegimePrefix = agentRegime.msgPrefix
 
   implicit val messages: Messages = Helpers.stubMessages()
-  private val initForm = form(legacyRegime, "Agency Name")
+  private val initForm = form(agentRegime, "Agency Name")
 
   "form binding" should {
     s"be successful when $emailAddressUseAsaDataKey true" in {

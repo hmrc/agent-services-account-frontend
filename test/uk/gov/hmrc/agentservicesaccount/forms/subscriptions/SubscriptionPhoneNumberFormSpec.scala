@@ -34,11 +34,11 @@ with Matchers {
   private val validNewPhoneNumber = "1234567890"
   private val invalidNewPhoneNumber = "skdjfhjs"
 
-  private val legacyRegime = AgentRegime.PAYE
+  private val agentRegime = AgentRegime.PAYE
 
-  private val agentRegimePrefix = legacyRegime.msgPrefix
+  private val agentRegimePrefix = agentRegime.msgPrefix
   implicit val messages: Messages = Helpers.stubMessages()
-  private val initForm = form(legacyRegime, "Agency Name")
+  private val initForm = form(agentRegime, "Agency Name")
 
   "form binding" should {
     s"be successful when $phoneNumberUseAsaDataKey true" in {

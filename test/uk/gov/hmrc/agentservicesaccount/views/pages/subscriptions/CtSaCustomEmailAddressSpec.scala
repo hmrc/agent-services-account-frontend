@@ -34,11 +34,11 @@ extends ViewBaseSpec {
   private val view: ctsa_custom_email_address = inject[ctsa_custom_email_address]
   private val asaDetailsAgencyEmail = "joe@bloggs.com"
 
-  private val legacyRegime = AgentRegime.PAYE
+  private val agentRegime = AgentRegime.PAYE
 
-  private val agentRegimePrefix = legacyRegime.msgPrefix
+  private val agentRegimePrefix = agentRegime.msgPrefix
 
-  private val emailAddressForm: Form[EmailAddressFormValues] = SubscriptionEmailAddressForm.form(legacyRegime, "Agency Name")
+  private val emailAddressForm: Form[EmailAddressFormValues] = SubscriptionEmailAddressForm.form(agentRegime, "Agency Name")
 
   private val formWithNewEmailAddressError: Form[EmailAddressFormValues] = emailAddressForm.withError(
     key = emailAddressNewKey,
@@ -49,7 +49,7 @@ extends ViewBaseSpec {
     view(
       form,
       asaDetailsAgencyEmail,
-      legacyRegime
+      agentRegime
     )(
       messages,
       fakeRequest,
