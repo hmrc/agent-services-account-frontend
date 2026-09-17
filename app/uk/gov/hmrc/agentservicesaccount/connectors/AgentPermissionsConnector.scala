@@ -28,7 +28,7 @@ import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models.AccessGroupSummaries
 import uk.gov.hmrc.agentservicesaccount.models.accessgroups.GroupSummary
 import uk.gov.hmrc.agentservicesaccount.models.accessgroups.OptinStatus
-import uk.gov.hmrc.agentservicesaccount.utils.RequestSupport._
+import uk.gov.hmrc.agentservicesaccount.utils.RequestSupport.hc
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.http.StringContextOps

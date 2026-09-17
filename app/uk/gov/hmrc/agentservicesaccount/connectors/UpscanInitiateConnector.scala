@@ -26,7 +26,7 @@ import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.http.StringContextOps
 import uk.gov.hmrc.http.UpstreamErrorResponse
 import uk.gov.hmrc.http.client.HttpClientV2
-import uk.gov.hmrc.agentservicesaccount.utils.RequestSupport._
+import uk.gov.hmrc.agentservicesaccount.utils.RequestSupport.hc
 import uk.gov.hmrc.http.HttpErrorFunctions.is2xx
 import uk.gov.hmrc.http.HttpReads.Implicits._
 

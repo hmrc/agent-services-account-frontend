@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.agentservicesaccount.controllers
 
-import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
@@ -30,6 +29,7 @@ import uk.gov.hmrc.agentservicesaccount.models.BetaInviteContactDetails
 import uk.gov.hmrc.agentservicesaccount.models.BetaInviteDetailsForEmail
 import uk.gov.hmrc.agentservicesaccount.services.EmailService
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
+import uk.gov.hmrc.agentservicesaccount.utils.RequestAwareLogging
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.beta_invite._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
@@ -54,7 +54,7 @@ class BetaInviteController @Inject() (
 )
 extends FrontendController(cc)
 with I18nSupport
-with Logging {
+with RequestAwareLogging {
 
   private val controller: ReverseBetaInviteController = routes.BetaInviteController
 

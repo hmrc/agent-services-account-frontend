@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.agentservicesaccount.controllers
 
-import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
@@ -28,6 +27,7 @@ import uk.gov.hmrc.agentservicesaccount.models.AccountRecoverySummary
 import uk.gov.hmrc.agentservicesaccount.models.SuspendContactDetails
 import uk.gov.hmrc.agentservicesaccount.services.EmailService
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
+import uk.gov.hmrc.agentservicesaccount.utils.RequestAwareLogging
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.suspend._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
@@ -52,7 +52,7 @@ class SuspendedJourneyController @Inject() (
 )
 extends FrontendController(cc)
 with I18nSupport
-with Logging {
+with RequestAwareLogging {
 
   def showSuspendedWarning: Action[AnyContent] = actions.authActionOnlyForSuspended { implicit request =>
     Ok(suspensionWarningView())

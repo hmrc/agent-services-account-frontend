@@ -24,7 +24,7 @@ import uk.gov.hmrc.objectstore.client.Path
 import uk.gov.hmrc.objectstore.client.RetentionPeriod
 import uk.gov.hmrc.objectstore.client.Sha256Checksum
 import uk.gov.hmrc.objectstore.client.play.PlayObjectStoreClient
-import uk.gov.hmrc.agentservicesaccount.utils.RequestSupport._
+import uk.gov.hmrc.agentservicesaccount.utils.RequestSupport.hc
 import uk.gov.hmrc.http.StringContextOps
 
 import javax.inject.Inject

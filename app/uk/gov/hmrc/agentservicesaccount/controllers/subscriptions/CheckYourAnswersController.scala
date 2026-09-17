@@ -16,10 +16,10 @@
 
 package uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
 
-import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc.*
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
+import uk.gov.hmrc.agentservicesaccount.actions.SubscriptionJourneyRequest
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
@@ -38,6 +38,7 @@ import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionCyaData.subscriptionJourneyToCyaData
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.utils.CountryResolver
+import uk.gov.hmrc.agentservicesaccount.utils.RequestAwareLogging
 import uk.gov.hmrc.agentservicesaccount.utils.SanitiseLegacySubscriptionName
 import uk.gov.hmrc.agentservicesaccount.views.components.models.SummaryListData
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.check_your_answers
@@ -62,10 +63,10 @@ class CheckYourAnswersController @Inject() (
 )
 extends FrontendController(cc)
 with I18nSupport
-with Logging {
+with RequestAwareLogging {
 
   def showPage(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
-    withSubscriptionCyaData(request.subscriptionJourney, legacyRegime) { data =>
+    withSubscriptionCyaData(request, legacyRegime) { data =>
       val summaryItems = buildSummaryListItems(
         data,
         legacyRegime,
@@ -78,7 +79,7 @@ with Logging {
 
   def onSubmit(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
     val isWelsh = messagesApi.preferred(request).lang.code == "cy"
-    withSubscriptionCyaData(request.subscriptionJourney, legacyRegime) { data =>
+    withSubscriptionCyaData(request, legacyRegime) { data =>
       val requestModelOpt =
         if (legacyRegime == PAYE) {
           request.subscriptionJourney.asaDetails.agencyName.flatMap(asaAgencyName => {
@@ -184,14 +185,15 @@ with Logging {
   }
 
   private def withSubscriptionCyaData(
-    journey: SubscriptionJourney,
+    request: SubscriptionJourneyRequest[AnyContent],
     legacyRegime: LegacyRegime
   )(f: SubscriptionCyaData => Future[Result]): Future[Result] = {
+    val journey = request.subscriptionJourney
     (subscriptionJourneyToCyaData(journey, legacyRegime): Option[SubscriptionCyaData]) match {
       case Some(data) if !journey.isSubmitted => f(data)
       case _ if journey.isSubmitted => Future.successful(Redirect(subscriptionRoutes.ConfirmationController.showConfirmationPage(legacyRegime)))
       case _ =>
-        logger.warn("[CheckYourAnswersController] missing Legacy Subscription CYA data")
+        logger.warn("[CheckYourAnswersController] missing Legacy Subscription CYA data")(using request)
         Future.successful(Redirect(asaRoutes.AgentServicesController.showAgentServicesAccount()))
     }
   }
