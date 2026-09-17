@@ -27,7 +27,7 @@ object PostCode {
   /** Validation for forms using a [[PostCode]]
     *
     * @param agentRegime
-    *   the legacy tax regime (PAYE, SA, or CT), used to scope the error message keys (e.g. `asa.legacy.paye.error.postcode`)
+    *   the agent tax regime (PAYE, SA, or CT), used to scope the error message keys (e.g. `asa.legacy.paye.error.postcode`)
     * @return
     *   a valid postcode
     */
