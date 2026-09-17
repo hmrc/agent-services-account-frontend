@@ -63,7 +63,7 @@ case class SubscriptionJourney(
     nameComplete && pnComplete && eaComplete && addressComplete
   }
 
-  // This is needed because address validation rules differ between ALF, ASA and the 3 legacy regimes,
+  // This is needed because address validation rules differ between ALF, ASA and the 3 agent regimes,
   // so any selection of address (custom or ALF) must be validated against the regime-specific rules
   def addressValidForRegime(agentRegime: AgentRegime): Boolean = {
     val optAddress =

@@ -85,7 +85,7 @@ with RequestAwareLogging {
           request.subscriptionJourney.asaDetails.agencyName.flatMap(asaAgencyName => {
             val sanitised = SanitiseLegacySubscriptionName.sanitise(asaAgencyName, agentRegime)
             if (sanitised.removedCharacters.nonEmpty) {
-              logger.warn(s"[subscriptions][CheckYourAnswersController][onSubmit] - Remove invalid characters ${sanitised.removedCharacters.mkString} from ASA agency name for ARN ${request.agentInfo.arn.value} and legacy regime $agentRegime")
+              logger.warn(s"[subscriptions][CheckYourAnswersController][onSubmit] - Remove invalid characters ${sanitised.removedCharacters.mkString} from ASA agency name for ARN ${request.agentInfo.arn.value} and agent regime $agentRegime")
             }
             data.toSubscriptionRequest(
               agentRegime,
@@ -97,7 +97,7 @@ with RequestAwareLogging {
         else {
           val sanitised = SanitiseLegacySubscriptionName.sanitise(data.name, agentRegime)
           if (sanitised.removedCharacters.nonEmpty) {
-            logger.warn(s"[subscriptions][CheckYourAnswersController][onSubmit] - Remove invalid characters ${sanitised.removedCharacters.mkString} from ASA agency name for ARN ${request.agentInfo.arn.value} and legacy regime $agentRegime")
+            logger.warn(s"[subscriptions][CheckYourAnswersController][onSubmit] - Remove invalid characters ${sanitised.removedCharacters.mkString} from ASA agency name for ARN ${request.agentInfo.arn.value} and agent regime $agentRegime")
           }
           val dataWithSanitisedName = data.copy(name = sanitised.sanitisedName)
           dataWithSanitisedName.toSubscriptionRequest(
