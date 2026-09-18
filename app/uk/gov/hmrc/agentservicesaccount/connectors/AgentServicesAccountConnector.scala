@@ -97,7 +97,7 @@ extends Logging {
   def getSubscriptionInfo(
     regimes: Seq[AgentRegime]
   )(implicit rh: RequestHeader): Future[Seq[SubscriptionInfo]] = http
-    .get(url"$url/legacy-subscription-info?regimes=${regimes.map(_.toString)}")
+    .get(url"$url/subscription-info?regimes=${regimes.map(_.toString)}")
     .execute[Seq[SubscriptionInfo]]
 
   def getAgentRecord(implicit rh: RequestHeader): Future[AgentDetailsDesResponse] = http
@@ -128,7 +128,7 @@ extends Logging {
     agentRegime: AgentRegime
   )(implicit hc: HeaderCarrier): Future[Unit] = {
     http
-      .post(url"$url/legacy-subscription-request/$agentRegime").withBody(Json.toJson(subscriptionRequest)).execute[HttpResponse]
+      .post(url"$url/subscription-request/$agentRegime").withBody(Json.toJson(subscriptionRequest)).execute[HttpResponse]
       .map {
         response =>
           response.status match {

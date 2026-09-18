@@ -76,7 +76,7 @@ object AgentServicesAccountStubs {
       subscriptionStatus = SubscriptionInProgress
     )
   )): StubMapping = {
-    stubFor(get(urlPathEqualTo(s"/agent-services-account/legacy-subscription-info"))
+    stubFor(get(urlPathEqualTo(s"/agent-services-account/subscription-info"))
       .willReturn(
         aResponse()
           .withStatus(OK)
@@ -88,7 +88,7 @@ object AgentServicesAccountStubs {
     agentRegime: AgentRegime,
     status: Int
   ): StubMapping = {
-    stubFor(post(urlEqualTo(s"/agent-services-account/legacy-subscription-request/$agentRegime"))
+    stubFor(post(urlEqualTo(s"/agent-services-account/subscription-request/$agentRegime"))
       .willReturn(
         aResponse()
           .withStatus(status)
