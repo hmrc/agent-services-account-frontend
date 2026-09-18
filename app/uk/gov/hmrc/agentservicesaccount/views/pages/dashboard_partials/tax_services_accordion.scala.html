@@ -177,61 +177,61 @@
 }
 
 @saItemInProgress(info: SubscriptionInfo) = {
-    @p(msgs("asa.legacy.sa.in-progress.p1", info.localCreationDate.map(_.format(DateTimeFormatter.ofPattern("d MMMM yyyy"))).getOrElse("")))
-    @p(msgs("asa.legacy.sa.in-progress.p2"))
+    @p(msgs("asa.agent-regime.sa.in-progress.p1", info.localCreationDate.map(_.format(DateTimeFormatter.ofPattern("d MMMM yyyy"))).getOrElse("")))
+    @p(msgs("asa.agent-regime.sa.in-progress.p2"))
 }
 
 @saItemInactive(info: SubscriptionInfo) = {
-    @p(msgs("asa.legacy.sa.inactive.p1", info.localCreationDate.map(_.format(DateTimeFormatter.ofPattern("d MMMM yyyy"))).getOrElse("")))
-    @p(msgs("asa.legacy.sa.inactive.p2"))
-    @p(msgs("asa.legacy.sa.inactive.p3"))
+    @p(msgs("asa.agent-regime.sa.inactive.p1", info.localCreationDate.map(_.format(DateTimeFormatter.ofPattern("d MMMM yyyy"))).getOrElse("")))
+    @p(msgs("asa.agent-regime.sa.inactive.p2"))
+    @p(msgs("asa.agent-regime.sa.inactive.p3"))
 }
 
 @saItemComplete = {
-    @inset_text(msgs("asa.legacy.sa.subscribed.p1", agentInfo.saAgentCode.getOrElse("")))
-    @h4(msgs("asa.legacy.sa.subscribed.p2"))
-    @p(msgs("asa.legacy.sa.subscribed.p3", agentInfo.agentInformation.agentCode.getOrElse("")))
-    @h4(msgs("asa.legacy.sa.subscribed.p4"))
-    @p(msgs("asa.legacy.sa.subscribed.p5", agentInfo.saAgentCode.getOrElse("")))
+    @inset_text(msgs("asa.agent-regime.sa.subscribed.p1", agentInfo.saAgentCode.getOrElse("")))
+    @h4(msgs("asa.agent-regime.sa.subscribed.p2"))
+    @p(msgs("asa.agent-regime.sa.subscribed.p3", agentInfo.agentInformation.agentCode.getOrElse("")))
+    @h4(msgs("asa.agent-regime.sa.subscribed.p4"))
+    @p(msgs("asa.agent-regime.sa.subscribed.p5", agentInfo.saAgentCode.getOrElse("")))
 }
 
 @ctItemInProgress(info: SubscriptionInfo) = {
-    @p(msgs("asa.legacy.ct.in-progress.p1", info.localCreationDate.map(_.format(DateTimeFormatter.ofPattern("d MMMM yyyy"))).getOrElse("")))
-    @p(msgs("asa.legacy.ct.in-progress.p2"))
+    @p(msgs("asa.agent-regime.ct.in-progress.p1", info.localCreationDate.map(_.format(DateTimeFormatter.ofPattern("d MMMM yyyy"))).getOrElse("")))
+    @p(msgs("asa.agent-regime.ct.in-progress.p2"))
 }
 
 @ctItemInactive(info: SubscriptionInfo) = {
-    @p(msgs("asa.legacy.ct.inactive.p1", info.localCreationDate.map(_.format(DateTimeFormatter.ofPattern("d MMMM yyyy"))).getOrElse("")))
-    @p(msgs("asa.legacy.ct.inactive.p2"))
-    @p(msgs("asa.legacy.ct.inactive.p3"))
+    @p(msgs("asa.agent-regime.ct.inactive.p1", info.localCreationDate.map(_.format(DateTimeFormatter.ofPattern("d MMMM yyyy"))).getOrElse("")))
+    @p(msgs("asa.agent-regime.ct.inactive.p2"))
+    @p(msgs("asa.agent-regime.ct.inactive.p3"))
 }
 
 @ctItemComplete = {
-    @inset_text(msgs("asa.legacy.ct.subscribed.p1", agentInfo.ctAgentCode.getOrElse("")))
-    @h4(msgs("asa.legacy.ct.subscribed.p2"))
-    @p(msgs("asa.legacy.ct.subscribed.p3", agentInfo.agentInformation.agentCode.getOrElse("")))
-    @h4(msgs("asa.legacy.ct.subscribed.p4"))
-    @p(msgs("asa.legacy.ct.subscribed.p5", agentInfo.ctAgentCode.getOrElse("")))
+    @inset_text(msgs("asa.agent-regime.ct.subscribed.p1", agentInfo.ctAgentCode.getOrElse("")))
+    @h4(msgs("asa.agent-regime.ct.subscribed.p2"))
+    @p(msgs("asa.agent-regime.ct.subscribed.p3", agentInfo.agentInformation.agentCode.getOrElse("")))
+    @h4(msgs("asa.agent-regime.ct.subscribed.p4"))
+    @p(msgs("asa.agent-regime.ct.subscribed.p5", agentInfo.ctAgentCode.getOrElse("")))
 }
 
 @payeItemInProgress(info: SubscriptionInfo) = {
-    @p(msgs("asa.legacy.paye.in-progress.p1", info.localCreationDate.map(_.format(DateTimeFormatter.ofPattern("d MMMM yyyy"))).getOrElse("")))
-    @p(msgs("asa.legacy.paye.in-progress.p2"))
+    @p(msgs("asa.agent-regime.paye.in-progress.p1", info.localCreationDate.map(_.format(DateTimeFormatter.ofPattern("d MMMM yyyy"))).getOrElse("")))
+    @p(msgs("asa.agent-regime.paye.in-progress.p2"))
 }
 
 @payeItemInactive(info: SubscriptionInfo) = {
-    @p(msgs("asa.legacy.paye.inactive.p1", info.localCreationDate.map(_.format(DateTimeFormatter.ofPattern("d MMMM yyyy"))).getOrElse("")))
-    @p(msgs("asa.legacy.paye.inactive.p2"))
-    @p(msgs("asa.legacy.paye.inactive.p3"))
+    @p(msgs("asa.agent-regime.paye.inactive.p1", info.localCreationDate.map(_.format(DateTimeFormatter.ofPattern("d MMMM yyyy"))).getOrElse("")))
+    @p(msgs("asa.agent-regime.paye.inactive.p2"))
+    @p(msgs("asa.agent-regime.paye.inactive.p3"))
 }
 
 @payeItemComplete = {
-    @inset_text(msgs("asa.legacy.paye.subscribed.p1", agentInfo.payeAgentCode.getOrElse("")))
-    @h4(msgs("asa.legacy.paye.subscribed.p2"))
-    @p(msgs("asa.legacy.paye.subscribed.p3", agentInfo.agentInformation.agentCode.getOrElse("")))
-    @h4(msgs("asa.legacy.paye.subscribed.p4"))
-    @p(msgs("asa.legacy.paye.subscribed.p5"))
-    @p(msgs("asa.legacy.paye.subscribed.p6", agentInfo.payeAgentCode.getOrElse("")))
+    @inset_text(msgs("asa.agent-regime.paye.subscribed.p1", agentInfo.payeAgentCode.getOrElse("")))
+    @h4(msgs("asa.agent-regime.paye.subscribed.p2"))
+    @p(msgs("asa.agent-regime.paye.subscribed.p3", agentInfo.agentInformation.agentCode.getOrElse("")))
+    @h4(msgs("asa.agent-regime.paye.subscribed.p4"))
+    @p(msgs("asa.agent-regime.paye.subscribed.p5"))
+    @p(msgs("asa.agent-regime.paye.subscribed.p6", agentInfo.payeAgentCode.getOrElse("")))
 }
 
 @accordionItems = @{
@@ -248,21 +248,21 @@
                 case SubscriptionStatus.SubscriptionInProgress if agentInfo.isAdmin =>
                     items.append(
                         Section(
-                            headingContent = Text(msgs("asa.legacy.sa.h2")),
+                            headingContent = Text(msgs("asa.agent-regime.sa.h2")),
                             content = HtmlContent(saItemInProgress(info))
                         )
                     )
                 case SubscriptionStatus.InactiveEnrolment if agentInfo.isAdmin =>
                     items.append(
                         Section(
-                            headingContent = Text(msgs("asa.legacy.sa.h2")),
+                            headingContent = Text(msgs("asa.agent-regime.sa.h2")),
                             content = HtmlContent(saItemInactive(info))
                         )
                     )
                 case SubscriptionStatus.Subscribed =>
                     items.append(
                         Section(
-                            headingContent = Text(msgs("asa.legacy.sa.h2")),
+                            headingContent = Text(msgs("asa.agent-regime.sa.h2")),
                             content = HtmlContent(saItemComplete)
                         )
                     )
@@ -289,21 +289,21 @@
                 case SubscriptionStatus.SubscriptionInProgress if agentInfo.isAdmin =>
                     items.append(
                         Section(
-                            headingContent = Text(msgs("asa.legacy.ct.h2")),
+                            headingContent = Text(msgs("asa.agent-regime.ct.h2")),
                             content = HtmlContent(ctItemInProgress(info))
                         )
                     )
                 case SubscriptionStatus.InactiveEnrolment if agentInfo.isAdmin =>
                     items.append(
                         Section(
-                            headingContent = Text(msgs("asa.legacy.ct.h2")),
+                            headingContent = Text(msgs("asa.agent-regime.ct.h2")),
                             content = HtmlContent(ctItemInactive(info))
                         )
                     )
                 case SubscriptionStatus.Subscribed =>
                     items.append(
                         Section(
-                            headingContent = Text(msgs("asa.legacy.ct.h2")),
+                            headingContent = Text(msgs("asa.agent-regime.ct.h2")),
                             content = HtmlContent(ctItemComplete)
                         )
                     )
@@ -315,21 +315,21 @@
                 case SubscriptionStatus.SubscriptionInProgress if agentInfo.isAdmin =>
                     items.append(
                         Section(
-                            headingContent = Text(msgs("asa.legacy.paye.h2")),
+                            headingContent = Text(msgs("asa.agent-regime.paye.h2")),
                             content = HtmlContent(payeItemInProgress(info))
                         )
                     )
                 case SubscriptionStatus.InactiveEnrolment if agentInfo.isAdmin =>
                     items.append(
                         Section(
-                            headingContent = Text(msgs("asa.legacy.paye.h2")),
+                            headingContent = Text(msgs("asa.agent-regime.paye.h2")),
                             content = HtmlContent(payeItemInactive(info))
                         )
                     )
                 case SubscriptionStatus.Subscribed =>
                     items.append(
                         Section(
-                            headingContent = Text(msgs("asa.legacy.paye.h2")),
+                            headingContent = Text(msgs("asa.agent-regime.paye.h2")),
                             content = HtmlContent(payeItemComplete))
                     )
                 case _ =>

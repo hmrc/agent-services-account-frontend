@@ -57,7 +57,7 @@ with Matchers {
         h1s.get(0).text() shouldBe title
 
         doc.select(".govuk-fieldset__legend").text() shouldBe
-          messages("asa.legacy.you-may-not-need-to-apply.h1")
+          messages("asa.agent-regime.you-may-not-need-to-apply.h1")
 
         doc.select("input[type=radio]").size() shouldBe 2
 

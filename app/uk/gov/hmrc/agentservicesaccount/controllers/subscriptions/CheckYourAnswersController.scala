@@ -64,7 +64,7 @@ class CheckYourAnswersController @Inject() (
 extends FrontendController(cc)
 with I18nSupport
 with RequestAwareLogging {
-  
+
   def showPage(agentRegime: AgentRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(agentRegime).async { implicit request =>
     withSubscriptionCyaData(request, agentRegime) { data =>
       val summaryItems = buildSummaryListItems(
