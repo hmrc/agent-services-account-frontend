@@ -71,8 +71,7 @@ with RequestAwareLogging {
   def find(arn: Arn)(implicit rh: RequestHeader): Future[Option[PendingChangeRequest]] = {
 
     lazy val frontendDatabaseResult = collection
-      .find(equal("arn", arn.value))
-      .headOption()
+      .find(equal("arn", arn.value)).toFuture().map(_.headOption)
 
     if (appConfig.enableBackendPCRDatabase) {
       asaConnector.findChangeRequest(arn).flatMap {

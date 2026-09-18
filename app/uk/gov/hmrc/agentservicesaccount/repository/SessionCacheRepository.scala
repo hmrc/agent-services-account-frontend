@@ -30,7 +30,6 @@ import uk.gov.hmrc.mongo.TimestampSupport
 import uk.gov.hmrc.mongo.cache.DataKey
 import uk.gov.hmrc.mongo.cache.{SessionCacheRepository => CacheRepository}
 import SensitiveWrapper._
-import uk.gov.hmrc.mdc.Mdc
 
 import javax.inject.Inject
 import javax.inject.Named
@@ -60,21 +59,17 @@ extends CacheRepository(
   override def putSession[T: Writes](
     dataKey: DataKey[T],
     data: T
-  )(implicit request: RequestHeader): Future[(String, String)] = Mdc.preservingMdc {
-    super.putSession(DataKey[SensitiveWrapper[T]](dataKey.unwrap), SensitiveWrapper(data))
-  }
+  )(implicit request: RequestHeader): Future[(String, String)] = super.putSession(DataKey[SensitiveWrapper[T]](dataKey.unwrap), SensitiveWrapper(data))
 
   override def getFromSession[T: Reads](
     dataKey: DataKey[T]
-  )(implicit request: RequestHeader): Future[Option[T]] = Mdc.preservingMdc {
+  )(implicit request: RequestHeader): Future[Option[T]] =
     super.getFromSession(DataKey[SensitiveWrapper[T]](dataKey.unwrap)).map(_.map(_.decryptedValue))
-  }
 
   override def deleteFromSession[T](
     dataKey: DataKey[T]
-  )(implicit request: RequestHeader): Future[Unit] = Mdc.preservingMdc {
+  )(implicit request: RequestHeader): Future[Unit] =
     super.deleteFromSession(DataKey[SensitiveWrapper[T]](dataKey.unwrap))
-  }
 
 }
 

@@ -1,10 +1,21 @@
 # agent-services-account-frontend
 
-[ ![Download](https://api.bintray.com/packages/hmrc/releases/agent-services-account-frontend/images/download.svg) ](https://bintray.com/hmrc/releases/agent-services-account-frontend/_latestVersion)
+
 ## What the service does
 
-This is the frontend for the Agent Services account page. It is available to agents who have the HMRC-AS-AGENT enrolment, 
-allowing them to access to a range of HMRC digital services.
+This is the frontend for the Agent Services account page. It is available to agents who have the HMRC-AS-AGENT enrolment. The service provides the following functionality:
+- Provides links to other HMRC services for agents, such as:
+  - MTD Value Added Tax (VAT)
+  - Plastic Packaging Tax (PPT)
+  - Capital Gains Tax for Property Disposal (CGT-PD)
+  - Making Tax Digital for Income Tax (MTD ITSA)
+  - Income Record Viewer (IRV)
+  - Trusts and Estates (TRS)
+  - Country-by-Country Reporting (CBC)
+  - Pillar2 (PLR)
+- Provides a way for agents to update their anti-money laundering supervision (AMLS) details. 
+- Provides a way for agents to update their designatory details.
+- Provides a way to turn on Access Groups (if the eligibility criteria are met) and manage them.
 
 ### Manage account vs Your account
 ASA accounts typically hold `credentialRole: "User"`. An agency has at least one admin - historically this login has been shared in smaller agencies.
@@ -40,12 +51,10 @@ This service is tested by the following automated test repositories:
 
 #### BE services needed to view ASA dashboard
 
-| **Microservice**           | **Purpose**                                                            | 
-|----------------------------|------------------------------------------------------------------------|
-| agent-client-authorisation | suspension check                                                       | 
-| agent-permissions          | private beta invite check, also granular permissions in manage account | 
-
-agent-assurance is not needed for dashboard, but required for the update AMLS details feature via manage account
+| **Microservice**       | **Purpose**                                                            | 
+|------------------------|------------------------------------------------------------------------|
+| agent-services-account | suspension check and agent details                                     | 
+| agent-permissions      | private beta invite check, also granular permissions in manage account | 
 
 
     sm2 --start AGENT_GRAN_PERMS -r
