@@ -19,7 +19,7 @@
 @import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionEmailAddressForm.emailAddressNewKey
 @import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionEmailAddressForm.emailAddressUseAsaDataKey
 @import uk.gov.hmrc.agentservicesaccount.models.subscriptions.EmailAddressFormValues
-@import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+@import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 @import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
 @import uk.gov.hmrc.govukfrontend.views.html.components._
@@ -34,19 +34,19 @@
     govukErrorSummary: GovukErrorSummary
 )
 
-@(form: Form[EmailAddressFormValues], asaDetailsAgencyName: String, validAsaDetailsAgencyEmailOpt: Option[String], legacyRegime: LegacyRegime)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
+@(form: Form[EmailAddressFormValues], asaDetailsAgencyName: String, validAsaDetailsAgencyEmailOpt: Option[String], agentRegime: AgentRegime)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
 
-@legacyRegimePrefix = @{ legacyRegime.msgPrefix }
+@agentRegimePrefix = @{ agentRegime.msgPrefix }
 
-@pageHeading = @{ msgs(s"$legacyRegimePrefix.email-address.heading", asaDetailsAgencyName) }
+@pageHeading = @{ msgs(s"$agentRegimePrefix.email-address.heading", asaDetailsAgencyName) }
 
 @newEmailAddressInput = {
     @govukInput(Input(
         label = Label(
-            content = HtmlContent(msgs(s"$legacyRegimePrefix.email-address.new-input.label")),
+            content = HtmlContent(msgs(s"$agentRegimePrefix.email-address.new-input.label")),
             classes = "govuk-label"
         ),
-        hint = Some(Hint(content = Text(msgs(s"$legacyRegimePrefix.email-address.new-input.hint"))))
+        hint = Some(Hint(content = Text(msgs(s"$agentRegimePrefix.email-address.new-input.hint"))))
     ).withFormField(form(emailAddressNewKey)))
 }
 
@@ -66,7 +66,7 @@
                 value = Some("true")
             ),
             RadioItem(
-                content = Text(msgs(s"$legacyRegimePrefix.email-address.use-asa.false")),
+                content = Text(msgs(s"$agentRegimePrefix.email-address.use-asa.false")),
                 value = Some("false"),
                 conditionalHtml = Some(newEmailAddressInput)
             )
@@ -82,12 +82,12 @@
             classes = "govuk-label--l",
             isPageHeading = true
         ),
-        hint = Some(Hint(content = Text(msgs(s"$legacyRegimePrefix.email-address.new-input.hint"))))
+        hint = Some(Hint(content = Text(msgs(s"$agentRegimePrefix.email-address.new-input.hint"))))
     ).withFormField(form(emailAddressNewKey)))
 }
 
 @main(
-    pageTitle = withErrorPrefix(form.hasErrors, msgs(s"$legacyRegimePrefix.email-address.title")),
+    pageTitle = withErrorPrefix(form.hasErrors, msgs(s"$agentRegimePrefix.email-address.title")),
     mimicBrowserBackLink = true,
     showSecondaryNav = false
 ) {
@@ -96,7 +96,7 @@
         @govukErrorSummary(ErrorSummary().withFormErrorsAsText(form))
     }
 
-    @formWithCSRF(action = subscriptions.routes.UpdateEmailAddressController.onSubmit(legacyRegime)) {
+    @formWithCSRF(action = subscriptions.routes.UpdateEmailAddressController.onSubmit(agentRegime)) {
         @{
             validAsaDetailsAgencyEmailOpt.map(radiosAndConditionalInputForm).getOrElse(simpleInputForm)
         }

@@ -20,7 +20,7 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionAddressForm._
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AddressFormValues
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 
 class SubscriptionAddressFormSpec
 extends AnyWordSpec
@@ -28,11 +28,11 @@ with Matchers {
 
   val emptyValue = ""
 
-  private val legacyRegime = LegacyRegime.PAYE
+  private val agentRegime = AgentRegime.PAYE
 
-  private val legacyRegimePrefix = legacyRegime.msgPrefix
+  private val agentRegimePrefix = agentRegime.msgPrefix
 
-  private val initForm = form(legacyRegime)
+  private val initForm = form(agentRegime)
 
   "form binding" should {
     s"be successful when $addressUseAsaDataKey true" in {
@@ -58,7 +58,7 @@ with Matchers {
 
       val validatedForm = initForm.bind(params)
       validatedForm.hasErrors shouldBe true
-      validatedForm.error(addressUseAsaDataKey).get.message shouldBe s"$legacyRegimePrefix.address.use-asa.error.required"
+      validatedForm.error(addressUseAsaDataKey).get.message shouldBe s"$agentRegimePrefix.address.use-asa.error.required"
       validatedForm.errors.length shouldBe 1
     }
 

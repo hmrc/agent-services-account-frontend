@@ -34,7 +34,7 @@
 @(form: Form[PayeContactNameFormValues], asaDetailsAgencyName: String)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
 
 @main(
-    pageTitle = withErrorPrefix(form.hasErrors, msgs("asa.legacy.paye.contact-name.title")),
+    pageTitle = withErrorPrefix(form.hasErrors, msgs("asa.agent-regime.paye.contact-name.title")),
     mimicBrowserBackLink = true,
     showSecondaryNav = false
 ) {
@@ -47,10 +47,10 @@
         @govukInput(Input(
             label = Label(
                 classes = "govuk-label--l",
-                content = HtmlContent(msgs("asa.legacy.paye.contact-name.input.heading", asaDetailsAgencyName)),
+                content = HtmlContent(msgs("asa.agent-regime.paye.contact-name.input.heading", asaDetailsAgencyName)),
                 isPageHeading = true
             ),
-            hint = Some(Hint(content = Text(msgs("asa.legacy.paye.contact-name.input.hint"))))
+            hint = Some(Hint(content = Text(msgs("asa.agent-regime.paye.contact-name.input.hint"))))
         ).withFormField(form(contactNameKey)))
 
         @govukButton(Button(content = Text(msgs("common.continue"))))

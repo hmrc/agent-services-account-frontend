@@ -23,16 +23,16 @@
 
 @()(implicit request: RequestHeader, msgs: Messages, appConfig: AppConfig)
 
-@main(pageTitle = msgs("asa.legacy.confirmation.title"), showSecondaryNav = false) {
+@main(pageTitle = msgs("asa.agent-regime.confirmation.title"), showSecondaryNav = false) {
     @govukPanel(
         Panel(
-            title = Text(msgs("asa.legacy.confirmation.title")),
-            content = Text(msgs("asa.legacy.confirmation.panel.body"))
+            title = Text(msgs("asa.agent-regime.confirmation.title")),
+            content = Text(msgs("asa.agent-regime.confirmation.panel.body"))
         )
     )
     @h2("common.what.happens.next")
-    @p("asa.legacy.confirmation.p1")
-    @p("asa.legacy.confirmation.p2")
-    @p("asa.legacy.confirmation.p3")
-    @a(key = "asa.legacy.confirmation.return-home", href = s"${routes.AgentServicesController.root().url}")
+    @p("asa.agent-regime.confirmation.p1")
+    @p("asa.agent-regime.confirmation.p2")
+    @p("asa.agent-regime.confirmation.p3")
+    @a(key = "asa.agent-regime.confirmation.return-home", href = s"${routes.AgentServicesController.root().url}")
 }

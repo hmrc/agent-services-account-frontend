@@ -31,10 +31,10 @@ import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators.CT_SA_EMAIL_MAX_L
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionCyaData
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.CT
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.SA
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionCyaData.subscriptionJourneyToCyaData
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.utils.CountryResolver
@@ -65,43 +65,43 @@ extends FrontendController(cc)
 with I18nSupport
 with RequestAwareLogging {
 
-  def showPage(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
-    withSubscriptionCyaData(request, legacyRegime) { data =>
+  def showPage(agentRegime: AgentRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(agentRegime).async { implicit request =>
+    withSubscriptionCyaData(request, agentRegime) { data =>
       val summaryItems = buildSummaryListItems(
         data,
-        legacyRegime,
+        agentRegime,
         request.subscriptionJourney.asaDetails.agencyEmail.map(_.length),
         request.subscriptionJourney.useCustomAddress
       )
-      Future.successful(Ok(checkYourAnswers(summaryItems, legacyRegime)))
+      Future.successful(Ok(checkYourAnswers(summaryItems, agentRegime)))
     }
   }
 
-  def onSubmit(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
+  def onSubmit(agentRegime: AgentRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(agentRegime).async { implicit request =>
     val isWelsh = messagesApi.preferred(request).lang.code == "cy"
-    withSubscriptionCyaData(request, legacyRegime) { data =>
+    withSubscriptionCyaData(request, agentRegime) { data =>
       val requestModelOpt =
-        if (legacyRegime == PAYE) {
+        if (agentRegime == PAYE) {
           request.subscriptionJourney.asaDetails.agencyName.flatMap(asaAgencyName => {
-            val sanitised = SanitiseLegacySubscriptionName.sanitise(asaAgencyName, legacyRegime)
+            val sanitised = SanitiseLegacySubscriptionName.sanitise(asaAgencyName, agentRegime)
             if (sanitised.removedCharacters.nonEmpty) {
-              logger.warn(s"[subscriptions][CheckYourAnswersController][onSubmit] - Remove invalid characters ${sanitised.removedCharacters.mkString} from ASA agency name for ARN ${request.agentInfo.arn.value} and legacy regime $legacyRegime")
+              logger.warn(s"[subscriptions][CheckYourAnswersController][onSubmit] - Remove invalid characters ${sanitised.removedCharacters.mkString} from ASA agency name for ARN ${request.agentInfo.arn.value} and agent regime $agentRegime")
             }
             data.toSubscriptionRequest(
-              legacyRegime,
+              agentRegime,
               isWelsh,
               asaAgentNameOpt = Some(sanitised.sanitisedName)
             )
           })
         }
         else {
-          val sanitised = SanitiseLegacySubscriptionName.sanitise(data.name, legacyRegime)
+          val sanitised = SanitiseLegacySubscriptionName.sanitise(data.name, agentRegime)
           if (sanitised.removedCharacters.nonEmpty) {
-            logger.warn(s"[subscriptions][CheckYourAnswersController][onSubmit] - Remove invalid characters ${sanitised.removedCharacters.mkString} from ASA agency name for ARN ${request.agentInfo.arn.value} and legacy regime $legacyRegime")
+            logger.warn(s"[subscriptions][CheckYourAnswersController][onSubmit] - Remove invalid characters ${sanitised.removedCharacters.mkString} from ASA agency name for ARN ${request.agentInfo.arn.value} and agent regime $agentRegime")
           }
           val dataWithSanitisedName = data.copy(name = sanitised.sanitisedName)
           dataWithSanitisedName.toSubscriptionRequest(
-            legacyRegime,
+            agentRegime,
             isWelsh,
             countryNameOpt = Some(countryResolver.countryName(dataWithSanitisedName.address.countryCode, checkLengthForSubmission = true))
           )
@@ -109,15 +109,15 @@ with RequestAwareLogging {
 
       requestModelOpt.map(requestModel => {
         for {
-          _ <- agentServicesAccountConnector.submitLegacySubscriptionRequest(requestModel, legacyRegime)
+          _ <- agentServicesAccountConnector.submitSubscriptionRequest(requestModel, agentRegime)
           updatedJourney = request.subscriptionJourney.copy(isSubmitted = true)
-          _ <- sessionCacheService.put(subscriptionJourneyKey(legacyRegime), updatedJourney)
+          _ <- sessionCacheService.put(subscriptionJourneyKey(agentRegime), updatedJourney)
         } yield Redirect(getNextPage(
           checkYourAnswersPage,
           Some(updatedJourney),
-          legacyRegime
+          agentRegime
         ))
-      }).getOrElse(Future.successful(Redirect(routes.CheckYourAnswersController.showPage(legacyRegime))))
+      }).getOrElse(Future.successful(Redirect(routes.CheckYourAnswersController.showPage(agentRegime))))
     }
   }
 
@@ -134,28 +134,27 @@ with RequestAwareLogging {
 
   private[subscriptions] def buildSummaryListItems(
     data: SubscriptionCyaData,
-    legacyRegime: LegacyRegime,
+    agentRegime: AgentRegime,
     agencyDetailsEmailLength: Option[Int],
     useCustomAddress: Option[Boolean]
   ): Seq[SummaryListData] = {
     val nameRowKeyDescriptor =
-      if (legacyRegime == PAYE)
+      if (agentRegime == PAYE)
         "contact"
       else
         "business"
-    val nameRowKey = s"${legacyRegime.msgPrefix}.check-your-answers.$nameRowKeyDescriptor-name"
+    val nameRowKey = s"${agentRegime.msgPrefix}.check-your-answers.$nameRowKeyDescriptor-name"
     val nameRowLink =
-      if (legacyRegime == PAYE) {
+      if (agentRegime == PAYE) {
         Some(subscriptionRoutes.PayeUpdateContactNameController.showPage)
       }
       else {
-        Some(subscriptionRoutes.UpdateBusinessNameController.showPage(legacyRegime))
+        Some(subscriptionRoutes.UpdateBusinessNameController.showPage(agentRegime))
       }
     val emailAddressLink =
-      (legacyRegime, agencyDetailsEmailLength) match {
-        case (CT | SA, Some(length)) if length > CT_SA_EMAIL_MAX_LENGTH =>
-          Some(subscriptionRoutes.UpdateEmailAddressController.showSaCtCustomPage(legacyRegime))
-        case _ => Some(subscriptionRoutes.UpdateEmailAddressController.showPage(legacyRegime))
+      (agentRegime, agencyDetailsEmailLength) match {
+        case (CT | SA, Some(length)) if length > CT_SA_EMAIL_MAX_LENGTH => Some(subscriptionRoutes.UpdateEmailAddressController.showSaCtCustomPage(agentRegime))
+        case _ => Some(subscriptionRoutes.UpdateEmailAddressController.showPage(agentRegime))
       }
     Seq(
       SummaryListData(
@@ -164,34 +163,34 @@ with RequestAwareLogging {
         link = nameRowLink
       ),
       SummaryListData(
-        key = s"${legacyRegime.msgPrefix}.check-your-answers.phone-number",
+        key = s"${agentRegime.msgPrefix}.check-your-answers.phone-number",
         value = data.phoneNumber,
-        link = Some(subscriptionRoutes.UpdatePhoneNumberController.showPage(legacyRegime))
+        link = Some(subscriptionRoutes.UpdatePhoneNumberController.showPage(agentRegime))
       ),
       SummaryListData(
-        key = s"${legacyRegime.msgPrefix}.check-your-answers.email",
+        key = s"${agentRegime.msgPrefix}.check-your-answers.email",
         value = data.email,
         link = emailAddressLink
       ),
       SummaryListData(
-        key = s"${legacyRegime.msgPrefix}.check-your-answers.address",
+        key = s"${agentRegime.msgPrefix}.check-your-answers.address",
         value = formatAddress(data.address),
         link = Some(if (useCustomAddress.contains(true))
-          subscriptionRoutes.UpdateAddressController.showChange(legacyRegime, isInvalid = false)
+          subscriptionRoutes.UpdateAddressController.showChange(agentRegime, isInvalid = false)
         else
-          subscriptionRoutes.UpdateAddressController.showPage(legacyRegime))
+          subscriptionRoutes.UpdateAddressController.showPage(agentRegime))
       )
     )
   }
 
   private def withSubscriptionCyaData(
     request: SubscriptionJourneyRequest[AnyContent],
-    legacyRegime: LegacyRegime
+    agentRegime: AgentRegime
   )(f: SubscriptionCyaData => Future[Result]): Future[Result] = {
     val journey = request.subscriptionJourney
-    (subscriptionJourneyToCyaData(journey, legacyRegime): Option[SubscriptionCyaData]) match {
+    (subscriptionJourneyToCyaData(journey, agentRegime): Option[SubscriptionCyaData]) match {
       case Some(data) if !journey.isSubmitted => f(data)
-      case _ if journey.isSubmitted => Future.successful(Redirect(subscriptionRoutes.ConfirmationController.showConfirmationPage(legacyRegime)))
+      case _ if journey.isSubmitted => Future.successful(Redirect(subscriptionRoutes.ConfirmationController.showConfirmationPage(agentRegime)))
       case _ =>
         logger.warn("[CheckYourAnswersController] missing Legacy Subscription CYA data")(using request)
         Future.successful(Redirect(asaRoutes.AgentServicesController.showAgentServicesAccount()))

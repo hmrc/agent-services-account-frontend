@@ -16,7 +16,7 @@
 
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.controllers._
-@import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+@import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 @import uk.gov.hmrc.agentservicesaccount.views.components.models.SummaryListData
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 @import uk.gov.hmrc.govukfrontend.views.html.components.{FormWithCSRF, GovukButton}
@@ -29,20 +29,20 @@
         formWithCSRF: FormWithCSRF
 )
 
-@(model: Seq[SummaryListData], legacyRegime: LegacyRegime)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
+@(model: Seq[SummaryListData], agentRegime: AgentRegime)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
 
-@legacyRegimePrefix = @{ legacyRegime.msgPrefix }
+@agentRegimePrefix = @{ agentRegime.msgPrefix }
 
 @main(
-  pageTitle = msgs(s"$legacyRegimePrefix.check-your-answers.h1"),
+  pageTitle = msgs(s"$agentRegimePrefix.check-your-answers.h1"),
   mimicBrowserBackLink = true,
   showSecondaryNav = false
 ) {
 
-    @h1(s"$legacyRegimePrefix.check-your-answers.h1")
+    @h1(s"$agentRegimePrefix.check-your-answers.h1")
 
-    @formWithCSRF(action = subscriptions.routes.CheckYourAnswersController.onSubmit(legacyRegime)) {
+    @formWithCSRF(action = subscriptions.routes.CheckYourAnswersController.onSubmit(agentRegime)) {
         @summary_list(model)
-        @govukButton(Button(content = Text(msgs(s"$legacyRegimePrefix.check-your-answers.submit-button"))))
+        @govukButton(Button(content = Text(msgs(s"$agentRegimePrefix.check-your-answers.submit-button"))))
     }
 }

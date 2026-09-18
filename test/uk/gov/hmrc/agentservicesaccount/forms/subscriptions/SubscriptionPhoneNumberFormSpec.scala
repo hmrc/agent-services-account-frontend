@@ -20,7 +20,7 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import play.api.i18n.Messages
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionPhoneNumberForm._
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.PhoneNumberFormValues
 import play.api.test.Helpers
 
@@ -34,11 +34,11 @@ with Matchers {
   private val validNewPhoneNumber = "1234567890"
   private val invalidNewPhoneNumber = "skdjfhjs"
 
-  private val legacyRegime = LegacyRegime.PAYE
+  private val agentRegime = AgentRegime.PAYE
 
-  private val legacyRegimePrefix = legacyRegime.msgPrefix
+  private val agentRegimePrefix = agentRegime.msgPrefix
   implicit val messages: Messages = Helpers.stubMessages()
-  private val initForm = form(legacyRegime, "Agency Name")
+  private val initForm = form(agentRegime, "Agency Name")
 
   "form binding" should {
     s"be successful when $phoneNumberUseAsaDataKey true" in {
@@ -77,7 +77,7 @@ with Matchers {
 
       val validatedForm = initForm.bind(params)
       validatedForm.hasErrors shouldBe true
-      validatedForm.error(phoneNumberUseAsaDataKey).get.message shouldBe s"$legacyRegimePrefix.phone-number.use-asa.error.required"
+      validatedForm.error(phoneNumberUseAsaDataKey).get.message shouldBe s"$agentRegimePrefix.phone-number.use-asa.error.required"
       validatedForm.errors.length shouldBe 1
     }
 
@@ -89,7 +89,7 @@ with Matchers {
 
       val validatedForm = initForm.bind(params)
       validatedForm.hasErrors shouldBe true
-      validatedForm.error(phoneNumberNewKey).get.message shouldBe s"$legacyRegimePrefix.phone-number.new-input.error.empty"
+      validatedForm.error(phoneNumberNewKey).get.message shouldBe s"$agentRegimePrefix.phone-number.new-input.error.empty"
       validatedForm.errors.length shouldBe 1
     }
 
@@ -101,7 +101,7 @@ with Matchers {
 
       val validatedForm = initForm.bind(params)
       validatedForm.hasErrors shouldBe true
-      validatedForm.error(phoneNumberNewKey).get.message shouldBe s"$legacyRegimePrefix.phone-number.new-input.error.invalid"
+      validatedForm.error(phoneNumberNewKey).get.message shouldBe s"$agentRegimePrefix.phone-number.new-input.error.invalid"
       validatedForm.errors.length shouldBe 1
     }
 

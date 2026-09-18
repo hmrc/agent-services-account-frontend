@@ -18,9 +18,9 @@ package uk.gov.hmrc.agentservicesaccount.models.subscriptions
 
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.PostCode
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.CT
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.SA
 
 case class SubscriptionCyaData(
   name: String,
@@ -95,12 +95,12 @@ case class SubscriptionCyaData(
   }
 
   def toSubscriptionRequest(
-    legacyRegime: LegacyRegime,
+    agentRegime: AgentRegime,
     isWelsh: Boolean,
     countryNameOpt: Option[String] = None,
     asaAgentNameOpt: Option[String] = None
   ): Option[SubscriptionRequest] = {
-    (legacyRegime, address.countryCode != "GB", countryNameOpt, asaAgentNameOpt) match {
+    (agentRegime, address.countryCode != "GB", countryNameOpt, asaAgentNameOpt) match {
       case (PAYE, false, None, Some(asaAgentName)) => Some(toPayeSubscriptionRequest(asaAgentName, isWelsh))
       case (CT, _, Some(countryName), None) => Some(toCtSubscriptionRequest(countryName, isWelsh))
       case (SA, _, Some(countryName), None) => Some(toSaSubscriptionRequest(countryName, isWelsh))
@@ -113,7 +113,7 @@ case class SubscriptionCyaData(
 object SubscriptionCyaData {
   def subscriptionJourneyToCyaData(
     journey: SubscriptionJourney,
-    legacyRegime: LegacyRegime
+    agentRegime: AgentRegime
   ): Option[SubscriptionCyaData] = {
     def getCustomAnswerOrAsaDetailsDefault[A](
       useCustom: Option[Boolean],
@@ -128,7 +128,7 @@ object SubscriptionCyaData {
     }
     for {
       name <-
-        if (legacyRegime == PAYE) {
+        if (agentRegime == PAYE) {
           journey.payeContactName
         }
         else {

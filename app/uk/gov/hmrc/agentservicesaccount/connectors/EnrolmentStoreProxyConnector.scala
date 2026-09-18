@@ -20,7 +20,7 @@ import play.api.Logging
 import play.api.http.Status.*
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models.Es5GroupAllocatedEnrolment
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 import uk.gov.hmrc.http.HttpReads.Implicits.*
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.HeaderCarrier
@@ -44,7 +44,7 @@ extends Logging {
 
   def getGroupAllocatedEnrolment(
     groupId: String,
-    regime: LegacyRegime,
+    regime: AgentRegime,
     agentReference: String
   )(using hc: HeaderCarrier): Future[Option[Es5GroupAllocatedEnrolment]] = {
 

@@ -19,7 +19,7 @@ package uk.gov.hmrc.agentservicesaccount.forms.subscriptions
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.YouMayNotNeedToApplyForm._
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.YouMayNotNeedToApplyFormValues
 
 class YouMayNotNeedToApplyFormSpec
@@ -27,9 +27,9 @@ extends AnyWordSpec
 with Matchers {
 
   private val regimes = Seq(
-    LegacyRegime.SA,
-    LegacyRegime.CT,
-    LegacyRegime.PAYE
+    AgentRegime.SA,
+    AgentRegime.CT,
+    AgentRegime.PAYE
   )
 
   regimes.foreach { regime =>

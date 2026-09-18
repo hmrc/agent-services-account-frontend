@@ -19,11 +19,11 @@ package uk.gov.hmrc.agentservicesaccount
 import uk.gov.hmrc.agentservicesaccount.models.UpdateAmlsJourney
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.DesignatoryDetails
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.YourDetails
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.CT
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.SA
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 import uk.gov.hmrc.mongo.cache.DataKey
 
 import scala.concurrent.Future
@@ -53,7 +53,7 @@ package object controllers {
 
   val amlsJourneyKey: DataKey[UpdateAmlsJourney] = DataKey[UpdateAmlsJourney]("amlsJourney")
 
-  def subscriptionJourneyKey(regime: LegacyRegime): DataKey[SubscriptionJourney] =
+  def subscriptionJourneyKey(regime: AgentRegime): DataKey[SubscriptionJourney] =
     regime match {
       case CT => DataKey[SubscriptionJourney]("ctJourney")
       case PAYE => DataKey[SubscriptionJourney]("payeJourney")

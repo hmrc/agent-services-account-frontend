@@ -21,7 +21,7 @@ import org.scalatest.wordspec.AnyWordSpec
 import play.api.i18n.Messages
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.DoYouAlreadyManageForm._
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.DoYouAlreadyManageFormValues
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 import play.api.test.Helpers
 
 class DoYouAlreadyManageFormSpec
@@ -29,9 +29,9 @@ extends AnyWordSpec
 with Matchers {
 
   private val regimes = Seq(
-    LegacyRegime.SA,
-    LegacyRegime.CT,
-    LegacyRegime.PAYE
+    AgentRegime.SA,
+    AgentRegime.CT,
+    AgentRegime.PAYE
   )
 
   private val asaDetailsAgencyName = "Test Agency"

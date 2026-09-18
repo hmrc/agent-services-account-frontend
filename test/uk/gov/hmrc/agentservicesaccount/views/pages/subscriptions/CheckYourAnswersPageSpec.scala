@@ -23,10 +23,10 @@ import play.api.i18n.Lang
 import play.api.i18n.Messages
 import play.api.i18n.MessagesImpl
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.routes
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.CT
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.SA
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 import uk.gov.hmrc.agentservicesaccount.views.components.models.SummaryListData
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.check_your_answers
@@ -40,40 +40,40 @@ extends ViewBaseSpec {
 
   private val view: check_your_answers = app.injector.instanceOf[check_your_answers]
 
-  private val legacyRegimes = List(CT, PAYE, SA)
+  private val agentRegimes = List(CT, PAYE, SA)
 
-  private def heading(legacyRegime: LegacyRegime) = messages(s"${legacyRegime.msgPrefix}.check-your-answers.h1")
-  private def title(legacyRegime: LegacyRegime) = s"${heading(legacyRegime)} - Agent services account - GOV.UK"
+  private def heading(agentRegime: AgentRegime) = messages(s"${agentRegime.msgPrefix}.check-your-answers.h1")
+  private def title(agentRegime: AgentRegime) = s"${heading(agentRegime)} - Agent services account - GOV.UK"
 
-  private def model(legacyRegime: LegacyRegime) = {
+  private def model(agentRegime: AgentRegime) = {
     val nameRow =
-      if (legacyRegime == PAYE) {
+      if (agentRegime == PAYE) {
         SummaryListData(
-          key = s"${legacyRegime.msgPrefix}.check-your-answers.contact-name",
+          key = s"${agentRegime.msgPrefix}.check-your-answers.contact-name",
           value = "Manager Employee",
           link = None
         )
       }
       else {
         SummaryListData(
-          key = s"${legacyRegime.msgPrefix}.check-your-answers.business-name",
+          key = s"${agentRegime.msgPrefix}.check-your-answers.business-name",
           value = "Test Agency",
           link = None
         )
       }
     val commonRows = Seq(
       SummaryListData(
-        key = s"${legacyRegime.msgPrefix}.check-your-answers.phone-number",
+        key = s"${agentRegime.msgPrefix}.check-your-answers.phone-number",
         value = "1234567890",
         link = None
       ),
       SummaryListData(
-        key = s"${legacyRegime.msgPrefix}.check-your-answers.email",
+        key = s"${agentRegime.msgPrefix}.check-your-answers.email",
         value = "test@test.com",
         link = None
       ),
       SummaryListData(
-        key = s"${legacyRegime.msgPrefix}.check-your-answers.address",
+        key = s"${agentRegime.msgPrefix}.check-your-answers.address",
         value = "Line 1<br/>Line 2",
         link = None
       )
@@ -81,27 +81,27 @@ extends ViewBaseSpec {
     nameRow +: commonRows
   }
 
-  legacyRegimes.foreach(legacyRegime => {
-    s"check_your_answers view for $legacyRegime" should {
+  agentRegimes.foreach(agentRegime => {
+    s"check_your_answers view for $agentRegime" should {
 
       "render page with heading, summary list and submit button" in {
 
         val messages: Messages = MessagesImpl(langs.head, messagesApi)
 
         val doc: Document = Jsoup.parse(
-          view(model(legacyRegime), legacyRegime)(
+          view(model(agentRegime), agentRegime)(
             messages,
             fakeRequest,
             appConfig
           ).body
         )
 
-        doc.title() mustBe title(legacyRegime)
+        doc.title() mustBe title(agentRegime)
 
-        doc.select("h1").text() mustBe heading(legacyRegime)
+        doc.select("h1").text() mustBe heading(agentRegime)
 
         val keys = doc.select(".govuk-summary-list__key").asScala.map(_.text()).toList
-        if (legacyRegime == PAYE) {
+        if (agentRegime == PAYE) {
           keys must contain("Contact name")
           keys must not contain ("Business name")
         }
@@ -114,7 +114,7 @@ extends ViewBaseSpec {
         keys must contain("Address")
 
         val values = doc.select(".govuk-summary-list__value").asScala.map(_.text()).toList
-        if (legacyRegime == PAYE) {
+        if (agentRegime == PAYE) {
           values must contain("Manager Employee")
           values must not contain ("Test Agency")
         }
@@ -127,10 +127,10 @@ extends ViewBaseSpec {
         values.exists(_.contains("Line 1")) mustBe true
 
         val form = doc.select("form")
-        form.attr("action") mustBe routes.CheckYourAnswersController.onSubmit(legacyRegime).url
+        form.attr("action") mustBe routes.CheckYourAnswersController.onSubmit(agentRegime).url
 
         val button = doc.select(".govuk-button")
-        button.text() mustBe messages(s"${legacyRegime.msgPrefix}.check-your-answers.submit-button")
+        button.text() mustBe messages(s"${agentRegime.msgPrefix}.check-your-answers.submit-button")
       }
     }
   })

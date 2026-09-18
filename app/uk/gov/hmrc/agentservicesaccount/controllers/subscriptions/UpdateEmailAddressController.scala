@@ -26,8 +26,8 @@ import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageS
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionEmailAddressForm
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.EmailAddressFormValues
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
 import uk.gov.hmrc.agentservicesaccount.services.EmailVerificationService
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.utils.EmailDomainValidation
@@ -63,12 +63,12 @@ with RequestAwareLogging {
     }
   }
 
-  def showPage(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
+  def showPage(agentRegime: AgentRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(agentRegime).async { implicit request =>
     val journey = request.subscriptionJourney
 
     val asaDetailsAgencyName = journey.asaDetails.agencyName.getOrElse("")
 
-    val initialForm = SubscriptionEmailAddressForm.form(legacyRegime, asaDetailsAgencyName)
+    val initialForm = SubscriptionEmailAddressForm.form(agentRegime, asaDetailsAgencyName)
     val form =
       journey.useCustomEmail match {
 
@@ -91,17 +91,17 @@ with RequestAwareLogging {
           journey.asaDetails.agencyEmail
         else
           None,
-        legacyRegime
+        agentRegime
       ))
     )
   }
 
-  def onSubmit(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
+  def onSubmit(agentRegime: AgentRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(agentRegime).async { implicit request =>
     val journey = request.subscriptionJourney
 
     val asaDetailsAgencyName = journey.asaDetails.agencyName.getOrElse("")
 
-    SubscriptionEmailAddressForm.form(legacyRegime, asaDetailsAgencyName).bindFromRequest().fold(
+    SubscriptionEmailAddressForm.form(agentRegime, asaDetailsAgencyName).bindFromRequest().fold(
       formWithErrors => {
         Future.successful(
           BadRequest(update_email_address(
@@ -111,7 +111,7 @@ with RequestAwareLogging {
               journey.asaDetails.agencyEmail
             else
               None,
-            legacyRegime
+            agentRegime
           ))
         )
       },
@@ -123,12 +123,12 @@ with RequestAwareLogging {
           )
 
           sessionCacheService
-            .put(subscriptionJourneyKey(legacyRegime), updatedJourney)
+            .put(subscriptionJourneyKey(agentRegime), updatedJourney)
             .map(_ =>
               Redirect(getNextPage(
                 updateEmailAddressPage,
                 Some(updatedJourney),
-                legacyRegime
+                agentRegime
               ))
             )
         }
@@ -141,47 +141,47 @@ with RequestAwareLogging {
                 credId,
                 newEmail,
                 messagesApi.preferred(request).lang,
-                routes.EmailVerificationEndpointController.finishEmailVerification(legacyRegime),
-                routes.UpdateEmailAddressController.showPage(legacyRegime)
+                routes.EmailVerificationEndpointController.finishEmailVerification(agentRegime),
+                routes.UpdateEmailAddressController.showPage(agentRegime)
               )
             } yield Redirect(redirectUri)
-          }).getOrElse(Future.successful(Redirect(routes.UpdateEmailAddressController.showPage(legacyRegime))))
+          }).getOrElse(Future.successful(Redirect(routes.UpdateEmailAddressController.showPage(agentRegime))))
         }
       }
     )
   }
 
-  def showSaCtCustomPage(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
-    legacyRegime match {
+  def showSaCtCustomPage(agentRegime: AgentRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(agentRegime).async { implicit request =>
+    agentRegime match {
       case PAYE => Future.successful(Redirect(routes.UpdateEmailAddressController.showPage(PAYE)))
       case _ =>
         val journey = request.subscriptionJourney
 
         val asaDetailsAgencyEmail = journey.asaDetails.agencyEmail.getOrElse("")
 
-        val form = SubscriptionEmailAddressForm.form(legacyRegime, journey.asaDetails.agencyName.getOrElse(""))
+        val form = SubscriptionEmailAddressForm.form(agentRegime, journey.asaDetails.agencyName.getOrElse(""))
 
         Future.successful(
           Ok(ctsa_custom_email_address(
             form,
             asaDetailsAgencyEmail,
-            legacyRegime
+            agentRegime
           ))
         )
     }
   }
 
-  def onSaCtCustomSubmit(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
+  def onSaCtCustomSubmit(agentRegime: AgentRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(agentRegime).async { implicit request =>
     val journey = request.subscriptionJourney
 
-    SubscriptionEmailAddressForm.form(legacyRegime, journey.asaDetails.agencyName.getOrElse("")).bindFromRequest().fold(
+    SubscriptionEmailAddressForm.form(agentRegime, journey.asaDetails.agencyName.getOrElse("")).bindFromRequest().fold(
       formWithErrors => {
         val asaDetailsAgencyEmail = journey.asaDetails.agencyEmail.getOrElse("")
         Future.successful(
           BadRequest(ctsa_custom_email_address(
             formWithErrors,
             asaDetailsAgencyEmail,
-            legacyRegime
+            agentRegime
           ))
         )
       },
@@ -194,11 +194,11 @@ with RequestAwareLogging {
               credId,
               newEmail,
               messagesApi.preferred(request).lang,
-              routes.EmailVerificationEndpointController.finishEmailVerification(legacyRegime),
-              routes.UpdateEmailAddressController.showSaCtCustomPage(legacyRegime)
+              routes.EmailVerificationEndpointController.finishEmailVerification(agentRegime),
+              routes.UpdateEmailAddressController.showSaCtCustomPage(agentRegime)
             )
           } yield Redirect(redirectUri)
-        }).getOrElse(Future.successful(Redirect(routes.UpdateEmailAddressController.showSaCtCustomPage(legacyRegime))))
+        }).getOrElse(Future.successful(Redirect(routes.UpdateEmailAddressController.showSaCtCustomPage(agentRegime))))
       }
     )
   }

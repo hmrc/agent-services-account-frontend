@@ -17,7 +17,7 @@
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.routes
 @import uk.gov.hmrc.govukfrontend.views.html.components.{CharacterCount => CharCount}
-@import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+@import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 @import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
 @import uk.gov.hmrc.govukfrontend.views.html.components._
@@ -39,14 +39,14 @@
         govukInsetText: GovukInsetText
 )
 
-@(form: Form[BusinessAddress], legacyRegime: LegacyRegime, isUk: Boolean, isInvalid: Boolean)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
+@(form: Form[BusinessAddress], agentRegime: AgentRegime, isUk: Boolean, isInvalid: Boolean)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
 
-@legacyRegimePrefix = @{
-    legacyRegime.msgPrefix
+@agentRegimePrefix = @{
+    agentRegime.msgPrefix
 }
 
 @title = @{
-    msgs(s"$legacyRegimePrefix.change-address.title${if(isInvalid) ".invalid" else ""}")
+    msgs(s"$agentRegimePrefix.change-address.title${if(isInvalid) ".invalid" else ""}")
 }
 
 @main(
@@ -62,33 +62,33 @@
     @h1(title)
 
     @if(isInvalid) {
-        @govukInsetText(InsetText(content = HtmlContent(msgs(s"$legacyRegimePrefix.change-address.inset.invalid"))))
+        @govukInsetText(InsetText(content = HtmlContent(msgs(s"$agentRegimePrefix.change-address.inset.invalid"))))
     }
 
-    @formWithCSRF(action = routes.UpdateAddressController.onSubmitChange(legacyRegime, isInvalid)) {
+    @formWithCSRF(action = routes.UpdateAddressController.onSubmitChange(agentRegime, isInvalid)) {
         @govukCharacterCount(CharCount(
             rows = 1,
-            maxLength = Some(maxLen(legacyRegime, 1)),
+            maxLength = Some(maxLen(agentRegime, 1)),
             label = Label(
-                content = HtmlContent(msgs(s"$legacyRegimePrefix.change-address.line1.label")),
+                content = HtmlContent(msgs(s"$agentRegimePrefix.change-address.line1.label")),
                 classes = "govuk-label"
             )
         ).withFormField(form(line1Key)))
 
         @govukCharacterCount(CharCount(
             rows = 1,
-            maxLength = Some(maxLen(legacyRegime, 2)),
+            maxLength = Some(maxLen(agentRegime, 2)),
             label = Label(
-                content = HtmlContent(msgs(s"$legacyRegimePrefix.change-address.line2.label")),
+                content = HtmlContent(msgs(s"$agentRegimePrefix.change-address.line2.label")),
                 classes = "govuk-label"
             )
         ).withFormField(form(line2Key)))
 
         @govukCharacterCount(CharCount(
             rows = 1,
-            maxLength = Some(maxLen(legacyRegime, 3)),
+            maxLength = Some(maxLen(agentRegime, 3)),
             label = Label(
-                content = HtmlContent(msgs(s"$legacyRegimePrefix.change-address.line3.label${if(isUk) ".optional" else ""}")),
+                content = HtmlContent(msgs(s"$agentRegimePrefix.change-address.line3.label${if(isUk) ".optional" else ""}")),
                 classes = "govuk-label"
             )
         ).withFormField(form(line3Key)))
@@ -96,9 +96,9 @@
         @if(isUk) {
             @govukCharacterCount(CharCount(
                 rows = 1,
-                maxLength = Some(maxLen(legacyRegime, 4)),
+                maxLength = Some(maxLen(agentRegime, 4)),
                 label = Label(
-                    content = HtmlContent(msgs(s"$legacyRegimePrefix.change-address.line4.label.optional")),
+                    content = HtmlContent(msgs(s"$agentRegimePrefix.change-address.line4.label.optional")),
                     classes = "govuk-label"
                 )
             ).withFormField(form(line4Key)))
@@ -107,7 +107,7 @@
         @if(isUk) {
             @govukInput(Input(
                 label = Label(
-                    content = HtmlContent(msgs(s"$legacyRegimePrefix.change-address.postcode.label")),
+                    content = HtmlContent(msgs(s"$agentRegimePrefix.change-address.postcode.label")),
                     classes = "govuk-label"
                 )
             ).withFormField(form(postcodeKey)))
@@ -137,7 +137,7 @@
                     }
                 ),
                 label = Label(
-                    content = HtmlContent(msgs(s"$legacyRegimePrefix.change-address.country.label")),
+                    content = HtmlContent(msgs(s"$agentRegimePrefix.change-address.country.label")),
                     classes = "govuk-label"
                 )
             ).asAccessibleAutocomplete(Some(

@@ -28,7 +28,7 @@ import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
 import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
 import uk.gov.hmrc.agentservicesaccount.models.Arn
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionInfo
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionStatus
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
@@ -98,7 +98,7 @@ extends ViewBaseSpec {
   )
 
   private def sub(
-    regime: LegacyRegime,
+    regime: AgentRegime,
     status: SubscriptionStatus
   ) = SubscriptionInfo(
     regime = regime,
@@ -111,9 +111,9 @@ extends ViewBaseSpec {
     "show all 3 services for UK agent when none subscribed" in {
       val document = doc(
         Seq(
-          sub(LegacyRegime.PAYE, SubscriptionStatus.NotSubscribed),
-          sub(LegacyRegime.CT, SubscriptionStatus.NotSubscribed),
-          sub(LegacyRegime.SA, SubscriptionStatus.NotSubscribed)
+          sub(AgentRegime.PAYE, SubscriptionStatus.NotSubscribed),
+          sub(AgentRegime.CT, SubscriptionStatus.NotSubscribed),
+          sub(AgentRegime.SA, SubscriptionStatus.NotSubscribed)
         ),
         isAbroad = false
       )
@@ -130,9 +130,9 @@ extends ViewBaseSpec {
     "exclude PAYE for overseas agent" in {
       val document = doc(
         Seq(
-          sub(LegacyRegime.PAYE, SubscriptionStatus.NotSubscribed),
-          sub(LegacyRegime.CT, SubscriptionStatus.NotSubscribed),
-          sub(LegacyRegime.SA, SubscriptionStatus.NotSubscribed)
+          sub(AgentRegime.PAYE, SubscriptionStatus.NotSubscribed),
+          sub(AgentRegime.CT, SubscriptionStatus.NotSubscribed),
+          sub(AgentRegime.SA, SubscriptionStatus.NotSubscribed)
         ),
         isAbroad = true
       )
@@ -147,9 +147,9 @@ extends ViewBaseSpec {
     "show only remaining unsubscribed services" in {
       val document = doc(
         Seq(
-          sub(LegacyRegime.PAYE, SubscriptionStatus.Subscribed),
-          sub(LegacyRegime.CT, SubscriptionStatus.NotSubscribed),
-          sub(LegacyRegime.SA, SubscriptionStatus.NotSubscribed)
+          sub(AgentRegime.PAYE, SubscriptionStatus.Subscribed),
+          sub(AgentRegime.CT, SubscriptionStatus.NotSubscribed),
+          sub(AgentRegime.SA, SubscriptionStatus.NotSubscribed)
         ),
         isAbroad = false
       )
@@ -164,9 +164,9 @@ extends ViewBaseSpec {
     "show single-service heading when only one service available" in {
       val document = doc(
         Seq(
-          sub(LegacyRegime.PAYE, SubscriptionStatus.Subscribed),
-          sub(LegacyRegime.CT, SubscriptionStatus.Subscribed),
-          sub(LegacyRegime.SA, SubscriptionStatus.NotSubscribed)
+          sub(AgentRegime.PAYE, SubscriptionStatus.Subscribed),
+          sub(AgentRegime.CT, SubscriptionStatus.Subscribed),
+          sub(AgentRegime.SA, SubscriptionStatus.NotSubscribed)
         ),
         isAbroad = false
       )
@@ -180,9 +180,9 @@ extends ViewBaseSpec {
     "not render section when all services subscribed" in {
       val document = doc(
         Seq(
-          sub(LegacyRegime.PAYE, SubscriptionStatus.Subscribed),
-          sub(LegacyRegime.CT, SubscriptionStatus.Subscribed),
-          sub(LegacyRegime.SA, SubscriptionStatus.Subscribed)
+          sub(AgentRegime.PAYE, SubscriptionStatus.Subscribed),
+          sub(AgentRegime.CT, SubscriptionStatus.Subscribed),
+          sub(AgentRegime.SA, SubscriptionStatus.Subscribed)
         ),
         isAbroad = false
       )

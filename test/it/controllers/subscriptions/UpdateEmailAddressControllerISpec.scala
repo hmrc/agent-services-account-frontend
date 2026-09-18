@@ -30,10 +30,10 @@ import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionEmailAdd
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionEmailAddressForm.emailAddressUseAsaDataKey
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.CompletedEmail
 import uk.gov.hmrc.agentservicesaccount.models.emailverification.VerificationStatusResponse
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.CT
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.SA
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
 
 import scala.util.Random
@@ -43,10 +43,10 @@ extends ComponentBaseISpec {
 
   private val repo = inject[SessionCacheRepository]
 
-  private val legacyRegimes = List(CT, PAYE, SA)
+  private val agentRegimes = List(CT, PAYE, SA)
 
-  legacyRegimes.foreach(legacyRegime => {
-    val updateEmailAddressPath = s"$subscriptionStartPath/$legacyRegime/email-address"
+  agentRegimes.foreach(agentRegime => {
+    val updateEmailAddressPath = s"$subscriptionStartPath/$agentRegime/email-address"
 
     s"GET $updateEmailAddressPath" should {
       "display the enter email address page with option to select ASA Agency email address when ASA Agency email address is valid" in {
@@ -64,7 +64,7 @@ extends ComponentBaseISpec {
 
         result.status shouldBe OK
         val expectedTitle: String =
-          (legacyRegime: LegacyRegime) match {
+          (agentRegime: AgentRegime) match {
             case CT => "What email address should we use to contact you about Corporation Tax?"
             case PAYE => "What email address should we use to contact you about PAYE?"
             case SA => "What email address should we use to contact you about Self Assessment?"
@@ -74,7 +74,7 @@ extends ComponentBaseISpec {
         doc.select(".govuk-radios__item").size() shouldBe 2
         doc.select(".govuk-radios__item").get(0).text() shouldBe asaAgencyEmail
         val expectedFalseText: String =
-          (legacyRegime: LegacyRegime) match {
+          (agentRegime: AgentRegime) match {
             case CT => "I want to use a different email address for Corporation Tax"
             case PAYE => "I want to use a different email address for PAYE"
             case SA => "I want to use a different email address for Self Assessment"
@@ -99,7 +99,7 @@ extends ComponentBaseISpec {
 
         result.status shouldBe OK
         val expectedTitle: String =
-          (legacyRegime: LegacyRegime) match {
+          (agentRegime: AgentRegime) match {
             case CT => "What email address should we use to contact you about Corporation Tax?"
             case PAYE => "What email address should we use to contact you about PAYE?"
             case SA => "What email address should we use to contact you about Self Assessment?"
@@ -156,10 +156,10 @@ extends ComponentBaseISpec {
 
       val journeyWithRedirectLocations = List(
         (subscriptionBaseJourney, "address"),
-        (subscriptionFullJourney(legacyRegime), "check-your-answers")
+        (subscriptionFullJourney(agentRegime), "check-your-answers")
       )
 
-      if (legacyRegime != PAYE) {
+      if (agentRegime != PAYE) {
         "update journey and redirect to email-address-too-long when using ASA email address that is too long" in {
           givenAuthorisedAsAgentWith(arn.value)
           givenGetAgentRecord(agentRecord)
@@ -170,7 +170,7 @@ extends ComponentBaseISpec {
           val newAsaDetails = subscriptionAgencyDetails.copy(agencyEmail = Some(tooLongEmailAddress))
           val subscriptionJourney = subscriptionBaseJourney.copy(asaDetails = newAsaDetails)
 
-          repo.putSession(subscriptionJourneyKey(legacyRegime), subscriptionJourney).futureValue
+          repo.putSession(subscriptionJourneyKey(agentRegime), subscriptionJourney).futureValue
 
           val result =
             post(updateEmailAddressPath)(body =
@@ -179,18 +179,18 @@ extends ComponentBaseISpec {
               )
             )
           result.status shouldBe SEE_OTHER
-          result.header(LOCATION) shouldBe Some(s"$subscriptionStartPath/$legacyRegime/email-address-too-long")
+          result.header(LOCATION) shouldBe Some(s"$subscriptionStartPath/$agentRegime/email-address-too-long")
         }
       }
 
       journeyWithRedirectLocations.foreach(journeyWithRedirectLocation => {
         s"update journey and redirect to ${journeyWithRedirectLocation._2} when using ASA email address " +
-          s"and journey ${completeString(journeyWithRedirectLocation._1, legacyRegime)}}" in {
+          s"and journey ${completeString(journeyWithRedirectLocation._1, agentRegime)}}" in {
             givenAuthorisedAsAgentWith(arn.value)
             givenGetAgentRecord(agentRecord)
             stubASAGetResponseError(arn, NOT_FOUND)
 
-            repo.putSession(subscriptionJourneyKey(legacyRegime), journeyWithRedirectLocation._1).futureValue
+            repo.putSession(subscriptionJourneyKey(agentRegime), journeyWithRedirectLocation._1).futureValue
 
             val result =
               post(updateEmailAddressPath)(body =
@@ -199,9 +199,9 @@ extends ComponentBaseISpec {
                 )
               )
             result.status shouldBe SEE_OTHER
-            result.header(LOCATION) shouldBe Some(s"$subscriptionStartPath/$legacyRegime/${journeyWithRedirectLocation._2}")
+            result.header(LOCATION) shouldBe Some(s"$subscriptionStartPath/$agentRegime/${journeyWithRedirectLocation._2}")
 
-            val updated = await(repo.getFromSession(subscriptionJourneyKey(legacyRegime)))
+            val updated = await(repo.getFromSession(subscriptionJourneyKey(agentRegime)))
             updated shouldBe defined
             updated.get.useCustomEmail shouldBe Some(false)
             updated.value.emailAnswer shouldBe None
@@ -248,8 +248,8 @@ extends ComponentBaseISpec {
 
   })
 
-  List(CT, SA).foreach(legacyRegime => {
-    val customEmailAddressPath = s"$subscriptionStartPath/$legacyRegime/email-address-too-long"
+  List(CT, SA).foreach(agentRegime => {
+    val customEmailAddressPath = s"$subscriptionStartPath/$agentRegime/email-address-too-long"
 
     s"GET $customEmailAddressPath" should {
       "display the custom email address page" in {

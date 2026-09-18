@@ -59,7 +59,7 @@ with BeforeAndAfterEach {
 
   }
 
-  private val regime = LegacyRegime.SA
+  private val regime = AgentRegime.SA
   private val inactiveSubInfo = SubscriptionInfo(
     regime = regime,
     subscriptionStatus = SubscriptionStatus.InactiveEnrolment,

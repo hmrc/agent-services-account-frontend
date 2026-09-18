@@ -24,7 +24,7 @@ import play.api.data.Form
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionEmailAddressForm
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionEmailAddressForm.emailAddressNewKey
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.EmailAddressFormValues
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.ctsa_custom_email_address
 
@@ -34,22 +34,22 @@ extends ViewBaseSpec {
   private val view: ctsa_custom_email_address = inject[ctsa_custom_email_address]
   private val asaDetailsAgencyEmail = "joe@bloggs.com"
 
-  private val legacyRegime = LegacyRegime.PAYE
+  private val agentRegime = AgentRegime.PAYE
 
-  private val legacyRegimePrefix = legacyRegime.msgPrefix
+  private val agentRegimePrefix = agentRegime.msgPrefix
 
-  private val emailAddressForm: Form[EmailAddressFormValues] = SubscriptionEmailAddressForm.form(legacyRegime, "Agency Name")
+  private val emailAddressForm: Form[EmailAddressFormValues] = SubscriptionEmailAddressForm.form(agentRegime, "Agency Name")
 
   private val formWithNewEmailAddressError: Form[EmailAddressFormValues] = emailAddressForm.withError(
     key = emailAddressNewKey,
-    message = messages(s"$legacyRegimePrefix.custom-email-address.input.error.empty")
+    message = messages(s"$agentRegimePrefix.custom-email-address.input.error.empty")
   )
 
   def render(form: Form[EmailAddressFormValues]): Document = Jsoup.parse(
     view(
       form,
       asaDetailsAgencyEmail,
-      legacyRegime
+      agentRegime
     )(
       messages,
       fakeRequest,
@@ -57,7 +57,7 @@ extends ViewBaseSpec {
     ).body
   )
 
-  private val title: String = messages(s"$legacyRegimePrefix.custom-email-address.title")
+  private val title: String = messages(s"$agentRegimePrefix.custom-email-address.title")
 
   "ctsa_custom_email_address" when {
 
@@ -105,12 +105,12 @@ extends ViewBaseSpec {
 
       "display the correct label" in {
         val label = doc.select(".govuk-label")
-        label.first().text() mustBe messages(s"$legacyRegimePrefix.custom-email-address.input.label")
+        label.first().text() mustBe messages(s"$agentRegimePrefix.custom-email-address.input.label")
       }
 
       "display the correct hint" in {
         val hint = doc.select(".govuk-hint")
-        hint.first().text() mustBe messages(s"$legacyRegimePrefix.custom-email-address.input.hint")
+        hint.first().text() mustBe messages(s"$agentRegimePrefix.custom-email-address.input.hint")
       }
 
       "display the contact name input" in {
@@ -133,7 +133,7 @@ extends ViewBaseSpec {
 
       "display correct error summary link" in {
         val errorLink: Element = doc.select(".govuk-error-summary__list a").first()
-        errorLink.text() mustBe messages(s"$legacyRegimePrefix.custom-email-address.input.error.empty")
+        errorLink.text() mustBe messages(s"$agentRegimePrefix.custom-email-address.input.error.empty")
         errorLink.attr("href") mustBe s"#$emailAddressNewKey"
       }
 
@@ -142,7 +142,7 @@ extends ViewBaseSpec {
       }
 
       "display error message on form" in {
-        doc.select(".govuk-error-message").text() mustBe s"Error: ${messages(s"$legacyRegimePrefix.custom-email-address.input.error.empty")}"
+        doc.select(".govuk-error-message").text() mustBe s"Error: ${messages(s"$agentRegimePrefix.custom-email-address.input.error.empty")}"
       }
     }
   }

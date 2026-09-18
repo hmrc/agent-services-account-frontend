@@ -35,7 +35,7 @@ import stubs.AgentAssuranceStubs.givenAMLSDetailsForArn
 import stubs.AgentPermissionsStubs.*
 import stubs.AgentUserClientDetailsStubs.*
 import stubs.AgentServicesAccountStubs.*
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionInfo
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionStatus
 import uk.gov.hmrc.http.UpstreamErrorResponse
@@ -409,16 +409,16 @@ extends BaseISpec {
       givenSubscriptionInfoResponse(
         Seq(
           SubscriptionInfo(
-            regime = LegacyRegime.PAYE,
+            regime = AgentRegime.PAYE,
             subscriptionStatus = SubscriptionStatus.NotSubscribed
           ),
           SubscriptionInfo(
-            regime = LegacyRegime.CT,
+            regime = AgentRegime.CT,
             subscriptionStatus = SubscriptionStatus.InactiveEnrolment,
             creationDate = Some(enrolmentDate)
           ),
           SubscriptionInfo(
-            regime = LegacyRegime.SA,
+            regime = AgentRegime.SA,
             subscriptionStatus = SubscriptionStatus.NotSubscribed
           )
         )

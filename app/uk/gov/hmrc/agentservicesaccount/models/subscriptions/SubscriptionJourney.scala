@@ -21,8 +21,8 @@ import play.api.libs.json.OFormat
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.ChangeSubscriptionAddressForm
 import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.CT
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.SA
 
 case class SubscriptionJourney(
   asaDetails: AgencyDetails,
@@ -51,29 +51,29 @@ case class SubscriptionJourney(
     }
   }
 
-  def isComplete(legacyRegime: LegacyRegime): Boolean = {
+  def isComplete(agentRegime: AgentRegime): Boolean = {
     val nameComplete =
-      legacyRegime match {
-        case LegacyRegime.PAYE => payeContactName.isDefined
+      agentRegime match {
+        case AgentRegime.PAYE => payeContactName.isDefined
         case _ => answerComplete(useCustomBusinessName, businessNameAnswer)
       }
     val pnComplete = answerComplete(useCustomPhoneNumber, phoneNumberAnswer)
     val eaComplete = answerComplete(useCustomEmail, emailAnswer)
-    val addressComplete = answerComplete(useCustomAddress, addressAnswer) && addressValidForRegime(legacyRegime)
+    val addressComplete = answerComplete(useCustomAddress, addressAnswer) && addressValidForRegime(agentRegime)
     nameComplete && pnComplete && eaComplete && addressComplete
   }
 
-  // This is needed because address validation rules differ between ALF, ASA and the 3 legacy regimes,
+  // This is needed because address validation rules differ between ALF, ASA and the 3 agent regimes,
   // so any selection of address (custom or ALF) must be validated against the regime-specific rules
-  def addressValidForRegime(legacyRegime: LegacyRegime): Boolean = {
+  def addressValidForRegime(agentRegime: AgentRegime): Boolean = {
     val optAddress =
       if (useCustomAddress.contains(true))
         addressAnswer
       else
         asaDetails.agencyAddress
-    (legacyRegime, optAddress) match {
+    (agentRegime, optAddress) match {
       case (_, Some(address)) if address.isUk =>
-        ChangeSubscriptionAddressForm.ukForm(legacyRegime).bind(
+        ChangeSubscriptionAddressForm.ukForm(agentRegime).bind(
           Map(
             ChangeSubscriptionAddressForm.line1Key -> address.addressLine1,
             ChangeSubscriptionAddressForm.line2Key -> address.addressLine2.getOrElse(""),
@@ -86,7 +86,7 @@ case class SubscriptionJourney(
           _ => true
         )
       case (CT | SA, Some(address)) if !address.isUk =>
-        ChangeSubscriptionAddressForm.nonUkForm(legacyRegime).bind(
+        ChangeSubscriptionAddressForm.nonUkForm(agentRegime).bind(
           Map(
             ChangeSubscriptionAddressForm.line1Key -> address.addressLine1,
             ChangeSubscriptionAddressForm.line2Key -> address.addressLine2.getOrElse(""),

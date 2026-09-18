@@ -92,41 +92,41 @@ GET        /manage-account/contact-details/check-your-answers             @uk.go
 POST       /manage-account/contact-details/check-your-answers             @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.CheckYourAnswersController.onSubmit
 GET        /manage-account/contact-details/confirmation                   @uk.gov.hmrc.agentservicesaccount.controllers.desiDetails.ContactDetailsController.showChangeSubmitted
 
-GET        /subscription/:regime/do-you-already-manage                    @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.DoYouAlreadyManageController.showPage(regime: LegacyRegime)
-POST       /subscription/:regime/do-you-already-manage                    @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.DoYouAlreadyManageController.onSubmit(regime: LegacyRegime)
+GET        /subscription/:regime/do-you-already-manage                    @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.DoYouAlreadyManageController.showPage(regime: AgentRegime)
+POST       /subscription/:regime/do-you-already-manage                    @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.DoYouAlreadyManageController.onSubmit(regime: AgentRegime)
 
-GET        /subscription/:regime/you-may-not-need-to-apply                @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.YouMayNotNeedToApplyController.showPage(regime: LegacyRegime)
-POST       /subscription/:regime/you-may-not-need-to-apply                @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.YouMayNotNeedToApplyController.onSubmit(regime: LegacyRegime)
+GET        /subscription/:regime/you-may-not-need-to-apply                @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.YouMayNotNeedToApplyController.showPage(regime: AgentRegime)
+POST       /subscription/:regime/you-may-not-need-to-apply                @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.YouMayNotNeedToApplyController.onSubmit(regime: AgentRegime)
 
 GET        /subscription/PAYE/contact-name                                @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.PayeUpdateContactNameController.showPage
 POST       /subscription/PAYE/contact-name                                @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.PayeUpdateContactNameController.onSubmit
 
-GET        /subscription/:regime/business-name                            @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdateBusinessNameController.showPage(regime: LegacyRegime)
-POST       /subscription/:regime/business-name                            @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdateBusinessNameController.onSubmit(regime: LegacyRegime)
+GET        /subscription/:regime/business-name                            @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdateBusinessNameController.showPage(regime: AgentRegime)
+POST       /subscription/:regime/business-name                            @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdateBusinessNameController.onSubmit(regime: AgentRegime)
 
-GET        /subscription/:regime/phone-number                             @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdatePhoneNumberController.showPage(regime: LegacyRegime)
-POST       /subscription/:regime/phone-number                             @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdatePhoneNumberController.onSubmit(regime: LegacyRegime)
+GET        /subscription/:regime/phone-number                             @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdatePhoneNumberController.showPage(regime: AgentRegime)
+POST       /subscription/:regime/phone-number                             @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdatePhoneNumberController.onSubmit(regime: AgentRegime)
 
-GET        /subscription/:regime/email-address                            @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdateEmailAddressController.showPage(regime: LegacyRegime)
-POST       /subscription/:regime/email-address                            @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdateEmailAddressController.onSubmit(regime: LegacyRegime)
-GET        /subscription/:regime/email-address-too-long                   @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdateEmailAddressController.showSaCtCustomPage(regime: LegacyRegime)
-POST       /subscription/:regime/email-address-too-long                   @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdateEmailAddressController.onSaCtCustomSubmit(regime: LegacyRegime)
-GET        /subscription/:regime/email-verification-finish                @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.EmailVerificationEndpointController.finishEmailVerification(regime: LegacyRegime)
+GET        /subscription/:regime/email-address                            @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdateEmailAddressController.showPage(regime: AgentRegime)
+POST       /subscription/:regime/email-address                            @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdateEmailAddressController.onSubmit(regime: AgentRegime)
+GET        /subscription/:regime/email-address-too-long                   @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdateEmailAddressController.showSaCtCustomPage(regime: AgentRegime)
+POST       /subscription/:regime/email-address-too-long                   @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdateEmailAddressController.onSaCtCustomSubmit(regime: AgentRegime)
+GET        /subscription/:regime/email-verification-finish                @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.EmailVerificationEndpointController.finishEmailVerification(regime: AgentRegime)
 
-GET        /subscription/:regime/address                                  @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdateAddressController.showPage(regime: LegacyRegime)
-POST       /subscription/:regime/address                                  @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdateAddressController.onSubmit(regime: LegacyRegime)
-GET        /subscription/:regime/address-change                           @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdateAddressController.showChange(regime: LegacyRegime, isInvalid: Boolean = false)
-POST       /subscription/:regime/address-change                           @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdateAddressController.onSubmitChange(regime: LegacyRegime, isInvalid: Boolean = false)
-GET        /subscription/:regime/address-fix                              @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdateAddressController.showChange(regime: LegacyRegime, isInvalid: Boolean = true)
-POST       /subscription/:regime/address-fix                              @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdateAddressController.onSubmitChange(regime: LegacyRegime, isInvalid: Boolean = true)
+GET        /subscription/:regime/address                                  @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdateAddressController.showPage(regime: AgentRegime)
+POST       /subscription/:regime/address                                  @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdateAddressController.onSubmit(regime: AgentRegime)
+GET        /subscription/:regime/address-change                           @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdateAddressController.showChange(regime: AgentRegime, isInvalid: Boolean = false)
+POST       /subscription/:regime/address-change                           @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdateAddressController.onSubmitChange(regime: AgentRegime, isInvalid: Boolean = false)
+GET        /subscription/:regime/address-fix                              @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdateAddressController.showChange(regime: AgentRegime, isInvalid: Boolean = true)
+POST       /subscription/:regime/address-fix                              @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdateAddressController.onSubmitChange(regime: AgentRegime, isInvalid: Boolean = true)
 
-GET        /subscription/:regime/address-lookup-start                     @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.AddressLookupController.startAddressLookup(regime: LegacyRegime)
-GET        /subscription/:regime/address-lookup-finish                    @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.AddressLookupController.finishAddressLookup(id: Option[String], regime: LegacyRegime)
+GET        /subscription/:regime/address-lookup-start                     @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.AddressLookupController.startAddressLookup(regime: AgentRegime)
+GET        /subscription/:regime/address-lookup-finish                    @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.AddressLookupController.finishAddressLookup(id: Option[String], regime: AgentRegime)
 
-GET        /subscription/:regime/check-your-answers                       @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CheckYourAnswersController.showPage(regime: LegacyRegime)
-POST       /subscription/:regime/check-your-answers                       @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CheckYourAnswersController.onSubmit(regime: LegacyRegime)
+GET        /subscription/:regime/check-your-answers                       @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CheckYourAnswersController.showPage(regime: AgentRegime)
+POST       /subscription/:regime/check-your-answers                       @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CheckYourAnswersController.onSubmit(regime: AgentRegime)
 
-GET        /subscription/:regime/confirmation                             @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.ConfirmationController.showConfirmationPage(regime: LegacyRegime)
+GET        /subscription/:regime/confirmation                             @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.ConfirmationController.showConfirmationPage(regime: AgentRegime)
 
 # AMLS
 GET        /manage-account/money-laundering-supervision/view-details                     @uk.gov.hmrc.agentservicesaccount.controllers.amls.ViewDetailsController.showPage

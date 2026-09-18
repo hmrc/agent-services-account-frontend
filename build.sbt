@@ -29,7 +29,7 @@ lazy val root = (project in file("."))
     PlayKeys.playDefaultPort := 9401,
     RoutesKeys.routesImport ++= Seq(
       "uk.gov.hmrc.agentservicesaccount.models.AmlsStatus",
-      "uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime"
+      "uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime"
     ),
     libraryDependencies ++= AppDependencies.compile ++ AppDependencies.test,
     resolvers ++= Seq(Resolver.typesafeRepo("releases")),
