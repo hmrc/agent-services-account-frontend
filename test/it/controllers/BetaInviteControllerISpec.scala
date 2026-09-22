@@ -159,7 +159,7 @@ extends BaseISpec {
       givenGetAgentRecord(agentRecord)
       val result = await(controller.showInviteDetails.apply(getRequest("/your-account"))) // authActionCheckSuspend is used by the /your-account route
       status(result) shouldBe SEE_OTHER // 303
-      redirectLocation(result) shouldBe Some("http://localhost:22201/agent-registration/start")
+      redirectLocation(result) shouldBe Some("http://localhost:22201/agent-registration/apply")
     }
   }
 

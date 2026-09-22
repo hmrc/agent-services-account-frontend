@@ -97,7 +97,7 @@ extends Logging {
 
   val agentRegistrationFrontendExternalUrl: String = getConfString("agent-registration-frontend.external-url")
 
-  val agentRegistrationFrontendUrl: String = s"$agentRegistrationFrontendExternalUrl/agent-registration/start"
+  val agentRegistrationFrontendUrl: String = s"$agentRegistrationFrontendExternalUrl/agent-registration/apply"
 
   val agentClientRelationshipsFrontendExternalUrl: String = getConfString("agent-client-relationships-frontend.external-url")
   private val agentClientRelationshipsFrontendTrackPath: String = getConfString("agent-client-relationships-frontend.track.path")

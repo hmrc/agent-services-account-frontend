@@ -166,7 +166,7 @@ with RequestAwareLogging {
                     r
                   )))
                 case None =>
-                  logger.warn("No HMRC-AS-AGENT enrolment found -- redirecting to /agent-registration/start.")
+                  logger.warn("No HMRC-AS-AGENT enrolment found -- redirecting to /agent-registration/apply.")
                   Future.successful(Left(Redirect(appConfig.agentRegistrationFrontendUrl)))
               }
             case _ =>
