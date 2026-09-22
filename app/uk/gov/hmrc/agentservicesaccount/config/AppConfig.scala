@@ -95,9 +95,9 @@ extends Logging {
 
   val agentMappingUrl: String = s"$agentMappingFrontendExternalUrl/agent-mapping/start"
 
-  val agentSubscriptionFrontendExternalUrl: String = getConfString("agent-subscription-frontend.external-url")
+  val agentRegistrationFrontendExternalUrl: String = getConfString("agent-registration-frontend.external-url")
 
-  val agentSubscriptionFrontendUrl: String = s"$agentSubscriptionFrontendExternalUrl/agent-subscription/start"
+  val agentRegistrationFrontendUrl: String = s"$agentRegistrationFrontendExternalUrl/agent-registration/start"
 
   val agentClientRelationshipsFrontendExternalUrl: String = getConfString("agent-client-relationships-frontend.external-url")
   private val agentClientRelationshipsFrontendTrackPath: String = getConfString("agent-client-relationships-frontend.track.path")
