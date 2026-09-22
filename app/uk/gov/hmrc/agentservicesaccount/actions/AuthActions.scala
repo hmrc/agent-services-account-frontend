@@ -166,8 +166,8 @@ with RequestAwareLogging {
                     r
                   )))
                 case None =>
-                  logger.warn("No HMRC-AS-AGENT enrolment found -- redirecting to /agent-subscription/start.")
-                  Future.successful(Left(Redirect(appConfig.agentSubscriptionFrontendUrl)))
+                  logger.warn("No HMRC-AS-AGENT enrolment found -- redirecting to /agent-registration/apply.")
+                  Future.successful(Left(Redirect(appConfig.agentRegistrationFrontendUrl)))
               }
             case _ =>
               val message = "Unexpected response from auth: missing required agent information (enrolments, credentials, agent information or groupId)"
