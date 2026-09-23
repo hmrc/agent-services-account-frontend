@@ -22,25 +22,25 @@ import play.api.data.Mapping
 import play.api.i18n.Messages
 import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators.useAsaDataMapping
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.DoYouAlreadyManageFormValues
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 
 object DoYouAlreadyManageForm {
 
   val doYouAlreadyManageKey = "doYouAlreadyManage"
 
   private def doYouAlreadyManageMapping(
-    legacyRegime: LegacyRegime,
+    agentRegime: AgentRegime,
     asaDetailsAgencyName: String
   )(implicit msgs: Messages): Mapping[Boolean] = useAsaDataMapping(
-    msgs(s"${legacyRegime.msgPrefix}.do-you-already-manage.error.required", asaDetailsAgencyName)
+    msgs(s"${agentRegime.msgPrefix}.do-you-already-manage.error.required", asaDetailsAgencyName)
   )
 
   def form(
-    legacyRegime: LegacyRegime,
+    agentRegime: AgentRegime,
     asaDetailsAgencyName: String
   )(implicit msgs: Messages): Form[DoYouAlreadyManageFormValues] = Form(
     mapping(
-      doYouAlreadyManageKey -> doYouAlreadyManageMapping(legacyRegime, asaDetailsAgencyName)
+      doYouAlreadyManageKey -> doYouAlreadyManageMapping(agentRegime, asaDetailsAgencyName)
     )(DoYouAlreadyManageFormValues.apply)(values => Some(values.doYouAlreadyManage))
   )
 

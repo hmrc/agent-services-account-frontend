@@ -19,7 +19,7 @@
 @import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionBusinessNameForm.businessNameNewKey
 @import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionBusinessNameForm.businessNameUseAsaDataKey
 @import uk.gov.hmrc.agentservicesaccount.models.subscriptions.BusinessNameFormValues
-@import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+@import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 @import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
 @import uk.gov.hmrc.govukfrontend.views.html.components._
@@ -34,21 +34,21 @@
     govukErrorSummary: GovukErrorSummary
 )
 
-@(form: Form[BusinessNameFormValues], asaDetailsAgencyName: String, legacyRegime: LegacyRegime)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
+@(form: Form[BusinessNameFormValues], asaDetailsAgencyName: String, agentRegime: AgentRegime)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
 
-@legacyRegimePrefix = @{ legacyRegime.msgPrefix }
+@agentRegimePrefix = @{ agentRegime.msgPrefix }
 
 @newBusinessNameInput = {
     @govukInput(Input(
         label = Label(
-            content = HtmlContent(msgs(s"$legacyRegimePrefix.business-name.new-input.label")),
+            content = HtmlContent(msgs(s"$agentRegimePrefix.business-name.new-input.label")),
             classes = "govuk-label"
         )
     ).withFormField(form(businessNameNewKey)))
 }
 
 @main(
-    pageTitle = withErrorPrefix(form.hasErrors, msgs(s"$legacyRegimePrefix.business-name.title")),
+    pageTitle = withErrorPrefix(form.hasErrors, msgs(s"$agentRegimePrefix.business-name.title")),
     mimicBrowserBackLink = true,
     showSecondaryNav = false
 ) {
@@ -57,11 +57,11 @@
         @govukErrorSummary(ErrorSummary().withFormErrorsAsText(form))
     }
 
-    @formWithCSRF(action = subscriptions.routes.UpdateBusinessNameController.onSubmit(legacyRegime)) {
+    @formWithCSRF(action = subscriptions.routes.UpdateBusinessNameController.onSubmit(agentRegime)) {
         @govukRadios(Radios(
             fieldset = Some(Fieldset(
                 legend = Some(Legend(
-                    content = Text(msgs(s"$legacyRegimePrefix.business-name.title")),
+                    content = Text(msgs(s"$agentRegimePrefix.business-name.title")),
                     classes = "govuk-fieldset__legend--l",
                     isPageHeading = true
                 ))
@@ -73,7 +73,7 @@
                     value = Some("true")
                 ),
                 RadioItem(
-                    content = Text(msgs(s"$legacyRegimePrefix.business-name.use-asa.false")),
+                    content = Text(msgs(s"$agentRegimePrefix.business-name.use-asa.false")),
                     value = Some("false"),
                     conditionalHtml = Some(newBusinessNameInput)
                 )

@@ -24,8 +24,8 @@ import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.{routes => homeRoutes}
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.YouMayNotNeedToApplyForm
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.YouMayNotNeedToApplyFormValues
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.you_may_not_need_to_apply
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -47,29 +47,29 @@ class YouMayNotNeedToApplyController @Inject() (
 extends FrontendController(cc)
 with I18nSupport {
 
-  def showPage(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
+  def showPage(agentRegime: AgentRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(agentRegime).async { implicit request =>
     val journey = request.subscriptionJourney
 
     val form =
       journey.youMayNotNeedToApply match {
-        case Some(value) => YouMayNotNeedToApplyForm.form(legacyRegime).fill(YouMayNotNeedToApplyFormValues(value))
-        case None => YouMayNotNeedToApplyForm.form(legacyRegime)
+        case Some(value) => YouMayNotNeedToApplyForm.form(agentRegime).fill(YouMayNotNeedToApplyFormValues(value))
+        case None => YouMayNotNeedToApplyForm.form(agentRegime)
       }
 
     Future.successful(Ok(you_may_not_need_to_apply(
       form,
-      legacyRegime
+      agentRegime
     )))
   }
 
-  def onSubmit(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
+  def onSubmit(agentRegime: AgentRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(agentRegime).async { implicit request =>
     val journey = request.subscriptionJourney
 
-    YouMayNotNeedToApplyForm.form(legacyRegime).bindFromRequest().fold(
+    YouMayNotNeedToApplyForm.form(agentRegime).bindFromRequest().fold(
       formWithErrors =>
         Future.successful(BadRequest(you_may_not_need_to_apply(
           formWithErrors,
-          legacyRegime
+          agentRegime
         ))),
       answer => {
         val updatedJourney = journey.copy(
@@ -78,16 +78,16 @@ with I18nSupport {
 
         val nextPage =
           if (answer.doYouStillWantToApply)
-            legacyRegime match {
+            agentRegime match {
               case PAYE => routes.PayeUpdateContactNameController.showPage
-              case _ => routes.UpdateBusinessNameController.showPage(legacyRegime)
+              case _ => routes.UpdateBusinessNameController.showPage(agentRegime)
             }
           else {
             homeRoutes.AgentServicesController.root()
           }
 
         sessionCacheService
-          .put(subscriptionJourneyKey(legacyRegime), updatedJourney)
+          .put(subscriptionJourneyKey(agentRegime), updatedJourney)
           .map(_ => Redirect(nextPage))
       }
     )

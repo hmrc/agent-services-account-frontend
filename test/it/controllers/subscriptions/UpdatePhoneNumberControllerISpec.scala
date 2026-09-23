@@ -40,11 +40,11 @@ import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdatePhoneNum
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionPhoneNumberForm.phoneNumberNewKey
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionPhoneNumberForm.phoneNumberUseAsaDataKey
 import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.CT
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.SA
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.authorise.Predicate
@@ -65,7 +65,7 @@ with IntegrationPatience
 with MockFactory
 with TestConstants {
 
-  private val legacyRegimes = List(CT, PAYE, SA)
+  private val agentRegimes = List(CT, PAYE, SA)
 
   private def agencyDetails(agencyTelephone: Option[String]) = uk.gov.hmrc.agentservicesaccount.models.AgencyDetails(
     agencyName = Some("My Agency"),
@@ -75,7 +75,7 @@ with TestConstants {
   )
 
   class TestSetup(
-    legacyRegime: LegacyRegime,
+    agentRegime: AgentRegime,
     agencyTelephone: Option[String] = Some("1234554321")
   ) {
 
@@ -158,26 +158,26 @@ with TestConstants {
     def cacheJourney(journey: SubscriptionJourney): Unit = {
       implicit val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequest
       implicit val writes: OWrites[SubscriptionJourney] = Json.writes[SubscriptionJourney]
-      sessionCache.put(subscriptionJourneyKey(legacyRegime), journey).futureValue
+      sessionCache.put(subscriptionJourneyKey(agentRegime), journey).futureValue
     }
 
   }
 
-  legacyRegimes.foreach(legacyRegime => {
-    s"GET /subscription/$legacyRegime/phone-number" should {
+  agentRegimes.foreach(agentRegime => {
+    s"GET /subscription/$agentRegime/phone-number" should {
 
-      "render empty form on first visit when subscription has phone number" in new TestSetup(legacyRegime, agencyTelephone = Some("1234554321")) {
+      "render empty form on first visit when subscription has phone number" in new TestSetup(agentRegime, agencyTelephone = Some("1234554321")) {
         private val journeyAgencyDetails = agencyDetails(agencyTelephone = Some("1234554321"))
         cacheJourney(subscriptionBaseJourney.copy(asaDetails = journeyAgencyDetails))
 
-        private val result = controller.showPage(legacyRegime)(FakeRequest()).futureValue
+        private val result = controller.showPage(agentRegime)(FakeRequest()).futureValue
 
         status(result) shouldBe OK
         private val content = contentAsString(result)
-        content should include(messages(s"${legacyRegime.msgPrefix}.phone-number.title", journeyAgencyDetails.agencyName.getOrElse("")))
-        content should include(messages(s"${legacyRegime.msgPrefix}.phone-number.new-input.hint"))
-        content should include(messages(s"${legacyRegime.msgPrefix}.phone-number.new-input.label"))
-        content should include(messages(s"${legacyRegime.msgPrefix}.phone-number.use-asa.false"))
+        content should include(messages(s"${agentRegime.msgPrefix}.phone-number.title", journeyAgencyDetails.agencyName.getOrElse("")))
+        content should include(messages(s"${agentRegime.msgPrefix}.phone-number.new-input.hint"))
+        content should include(messages(s"${agentRegime.msgPrefix}.phone-number.new-input.label"))
+        content should include(messages(s"${agentRegime.msgPrefix}.phone-number.use-asa.false"))
         content should include("1234554321")
 
       }
@@ -186,24 +186,24 @@ with TestConstants {
         ("no phone number", None),
         ("invalid phone number", Some("invalid_number"))
       ).foreach { case (scenario, agencyTelephone) =>
-        s"render empty form on first visit when subscription has $scenario" in new TestSetup(legacyRegime, agencyTelephone) {
+        s"render empty form on first visit when subscription has $scenario" in new TestSetup(agentRegime, agencyTelephone) {
           private val journeyAgencyDetails = agencyDetails(agencyTelephone)
           cacheJourney(subscriptionBaseJourney.copy(asaDetails = journeyAgencyDetails))
 
-          private val result = controller.showPage(legacyRegime)(FakeRequest()).futureValue
+          private val result = controller.showPage(agentRegime)(FakeRequest()).futureValue
 
           status(result) shouldBe OK
           private val content = contentAsString(result)
-          content should include(messages(s"${legacyRegime.msgPrefix}.phone-number.title", journeyAgencyDetails.agencyName.getOrElse("")))
-          content should include(messages(s"${legacyRegime.msgPrefix}.phone-number.new-input.hint"))
-          content should not include messages(s"${legacyRegime.msgPrefix}.phone-number.new-input.label")
-          content should not include messages(s"${legacyRegime.msgPrefix}.phone-number.use-asa.false")
+          content should include(messages(s"${agentRegime.msgPrefix}.phone-number.title", journeyAgencyDetails.agencyName.getOrElse("")))
+          content should include(messages(s"${agentRegime.msgPrefix}.phone-number.new-input.hint"))
+          content should not include messages(s"${agentRegime.msgPrefix}.phone-number.new-input.label")
+          content should not include messages(s"${agentRegime.msgPrefix}.phone-number.use-asa.false")
           content should not include "govuk-radios__item"
         }
       }
 
       "render pre-filled form when journey has existing answers and subscription has phone number" in
-        new TestSetup(legacyRegime, agencyTelephone = Some("1234554321")) {
+        new TestSetup(agentRegime, agencyTelephone = Some("1234554321")) {
           private val journeyAgencyDetails = agencyDetails(agencyTelephone = Some("1234554321"))
           private val journey = subscriptionBaseJourney.copy(
             asaDetails = journeyAgencyDetails,
@@ -213,14 +213,14 @@ with TestConstants {
 
           cacheJourney(journey)
 
-          private val result = controller.showPage(legacyRegime)(fakeRequest).futureValue
+          private val result = controller.showPage(agentRegime)(fakeRequest).futureValue
 
           status(result) shouldBe OK
           private val content = contentAsString(result)
-          content should include(messages(s"${legacyRegime.msgPrefix}.phone-number.title", journeyAgencyDetails.agencyName.getOrElse("")))
-          content should include(messages(s"${legacyRegime.msgPrefix}.phone-number.new-input.hint"))
-          content should include(messages(s"${legacyRegime.msgPrefix}.phone-number.new-input.label"))
-          content should include(messages(s"${legacyRegime.msgPrefix}.phone-number.use-asa.false"))
+          content should include(messages(s"${agentRegime.msgPrefix}.phone-number.title", journeyAgencyDetails.agencyName.getOrElse("")))
+          content should include(messages(s"${agentRegime.msgPrefix}.phone-number.new-input.hint"))
+          content should include(messages(s"${agentRegime.msgPrefix}.phone-number.new-input.label"))
+          content should include(messages(s"${agentRegime.msgPrefix}.phone-number.use-asa.false"))
           content should include("""value="false"""")
           content should include(phoneNumberNewKey)
           content should include("1234567890")
@@ -231,7 +231,7 @@ with TestConstants {
         ("invalid phone number", Some("invalid_number"))
       ).foreach { case (scenario, agencyTelephone) =>
         s"render pre-filled form when journey has existing answers and subscription has $scenario" in
-          new TestSetup(legacyRegime, agencyTelephone) {
+          new TestSetup(agentRegime, agencyTelephone) {
             private val journeyAgencyDetails = agencyDetails(agencyTelephone)
             private val journey = subscriptionBaseJourney.copy(
               asaDetails = journeyAgencyDetails,
@@ -241,14 +241,14 @@ with TestConstants {
 
             cacheJourney(journey)
 
-            private val result = controller.showPage(legacyRegime)(fakeRequest).futureValue
+            private val result = controller.showPage(agentRegime)(fakeRequest).futureValue
 
             status(result) shouldBe OK
             private val content = contentAsString(result)
-            content should include(messages(s"${legacyRegime.msgPrefix}.phone-number.title", journeyAgencyDetails.agencyName.getOrElse("")))
-            content should include(messages(s"${legacyRegime.msgPrefix}.phone-number.new-input.hint"))
-            content should not include messages(s"${legacyRegime.msgPrefix}.phone-number.new-input.label")
-            content should not include messages(s"${legacyRegime.msgPrefix}.phone-number.use-asa.false")
+            content should include(messages(s"${agentRegime.msgPrefix}.phone-number.title", journeyAgencyDetails.agencyName.getOrElse("")))
+            content should include(messages(s"${agentRegime.msgPrefix}.phone-number.new-input.hint"))
+            content should not include messages(s"${agentRegime.msgPrefix}.phone-number.new-input.label")
+            content should not include messages(s"${agentRegime.msgPrefix}.phone-number.use-asa.false")
             content should include("""value="false"""")
             content should include(phoneNumberNewKey)
             content should include("1234567890")
@@ -257,22 +257,22 @@ with TestConstants {
       }
     }
 
-    s"POST /subscription/$legacyRegime/phone-number" should {
+    s"POST /subscription/$agentRegime/phone-number" should {
 
-      "return BAD_REQUEST when form is invalid" in new TestSetup(legacyRegime) {
+      "return BAD_REQUEST when form is invalid" in new TestSetup(agentRegime) {
         cacheJourney(subscriptionBaseJourney)
 
         private val request = FakeRequest().withSession(session.toSeq*).withFormUrlEncodedBody(
           "useAsaData" -> ""
         )
 
-        private val result = controller.onSubmit(legacyRegime)(request).futureValue
+        private val result = controller.onSubmit(agentRegime)(request).futureValue
 
         status(result) shouldBe BAD_REQUEST
       }
 
       "return BAD_REQUEST and simple form when submission invalid and existing asa phone number also invalid" in
-        new TestSetup(legacyRegime, agencyTelephone = Some("invalid_number")) {
+        new TestSetup(agentRegime, agencyTelephone = Some("invalid_number")) {
           cacheJourney(subscriptionBaseJourney.copy(asaDetails = agencyDetails(Some("invalid_number"))))
 
           private val request = FakeRequest()
@@ -281,7 +281,7 @@ with TestConstants {
               phoneNumberUseAsaDataKey -> "false",
               phoneNumberNewKey -> "invalid_number2"
             )
-          private val result = controller.onSubmit(legacyRegime)(request).futureValue
+          private val result = controller.onSubmit(agentRegime)(request).futureValue
 
           status(result) shouldBe BAD_REQUEST
           private val content = contentAsString(result)
@@ -290,12 +290,12 @@ with TestConstants {
 
       val journeyWithRedirectLocations = List(
         (subscriptionBaseJourney, "email-address"),
-        (subscriptionFullJourney(legacyRegime), "check-your-answers")
+        (subscriptionFullJourney(agentRegime), "check-your-answers")
       )
 
       journeyWithRedirectLocations.foreach(journeyWithRedirectLocation => {
         s"update journey and redirect to ${journeyWithRedirectLocation._2} when using ASA phone number " +
-          s"and journey ${completeString(journeyWithRedirectLocation._1, legacyRegime)}}" in new TestSetup(legacyRegime) {
+          s"and journey ${completeString(journeyWithRedirectLocation._1, agentRegime)}}" in new TestSetup(agentRegime) {
             private val request = FakeRequest(POST, "/")
               .withSession(session.toSeq*)
               .withFormUrlEncodedBody(
@@ -306,19 +306,19 @@ with TestConstants {
 
             cacheJourney(journeyWithRedirectLocation._1)
 
-            private val result = controller.onSubmit(legacyRegime)(request).futureValue
+            private val result = controller.onSubmit(agentRegime)(request).futureValue
             status(result) shouldBe SEE_OTHER
             redirectLocation(result) shouldBe
-              Some(s"/agent-services-account/subscription/$legacyRegime/${journeyWithRedirectLocation._2}")
+              Some(s"/agent-services-account/subscription/$agentRegime/${journeyWithRedirectLocation._2}")
 
-            val updated: Option[SubscriptionJourney] = sessionCache.get[SubscriptionJourney](subscriptionJourneyKey(legacyRegime)).futureValue
+            val updated: Option[SubscriptionJourney] = sessionCache.get[SubscriptionJourney](subscriptionJourneyKey(agentRegime)).futureValue
             updated shouldBe defined
             updated.get.useCustomPhoneNumber shouldBe Some(false)
             updated.value.phoneNumberAnswer shouldBe None
           }
 
         s"update journey and redirect to ${journeyWithRedirectLocation._2} when using custom phone number " +
-          s"and journey ${completeString(journeyWithRedirectLocation._1, legacyRegime)}}" in new TestSetup(legacyRegime) {
+          s"and journey ${completeString(journeyWithRedirectLocation._1, agentRegime)}}" in new TestSetup(agentRegime) {
             private val request = FakeRequest(POST, "/")
               .withSession(session.toSeq*)
               .withFormUrlEncodedBody(
@@ -330,12 +330,12 @@ with TestConstants {
 
             cacheJourney(journeyWithRedirectLocation._1)
 
-            private val result = controller.onSubmit(legacyRegime)(request).futureValue
+            private val result = controller.onSubmit(agentRegime)(request).futureValue
             status(result) shouldBe SEE_OTHER
             redirectLocation(result) shouldBe
-              Some(s"/agent-services-account/subscription/$legacyRegime/${journeyWithRedirectLocation._2}")
+              Some(s"/agent-services-account/subscription/$agentRegime/${journeyWithRedirectLocation._2}")
 
-            val updated: Option[SubscriptionJourney] = sessionCache.get[SubscriptionJourney](subscriptionJourneyKey(legacyRegime)).futureValue
+            val updated: Option[SubscriptionJourney] = sessionCache.get[SubscriptionJourney](subscriptionJourneyKey(agentRegime)).futureValue
             updated.value.useCustomPhoneNumber shouldBe Some(true)
             updated.value.phoneNumberAnswer shouldBe Some("0987654321")
           }

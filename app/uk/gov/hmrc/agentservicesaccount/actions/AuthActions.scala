@@ -23,10 +23,10 @@ import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
 import uk.gov.hmrc.agentservicesaccount.models.Arn
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.CT
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.SA
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionInfo
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionStatus
 import uk.gov.hmrc.agentservicesaccount.utils.RequestSupport.hc
@@ -104,20 +104,20 @@ case class AgentInfo(
   def subscriptions: Seq[SubscriptionInfo] =
     Seq(
       SubscriptionInfo(
-        LegacyRegime.PAYE,
+        AgentRegime.PAYE,
         subscriptionStatusFor(payeEnrolment)
       ),
       SubscriptionInfo(
-        LegacyRegime.CT,
+        AgentRegime.CT,
         subscriptionStatusFor(ctEnrolment)
       ),
       SubscriptionInfo(
-        LegacyRegime.SA,
+        AgentRegime.SA,
         subscriptionStatusFor(saEnrolment)
       )
     )
 
-  def getAgentReferenceFor(regime: LegacyRegime): Option[String] =
+  def getAgentReferenceFor(regime: AgentRegime): Option[String] =
     enrolments
       .getEnrolment(regime.enrolmentKey)
       .flatMap(_.identifiers.find(_.key == regime.agentReferenceKey))

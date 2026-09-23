@@ -37,7 +37,7 @@ extends ViewBaseSpec {
 
   private val formWithContactNameError: Form[PayeContactNameFormValues] = payeContactNameForm.withError(
     key = contactNameKey,
-    message = messages("asa.legacy.paye.contact-name.input.error.empty")
+    message = messages("asa.agent-regime.paye.contact-name.input.error.empty")
   )
 
   def render(form: Form[PayeContactNameFormValues]): Document = Jsoup.parse(
@@ -51,8 +51,8 @@ extends ViewBaseSpec {
     ).body
   )
 
-  private val title: String = messages("asa.legacy.paye.contact-name.title")
-  private val heading: String = messages("asa.legacy.paye.contact-name.input.heading", asaDetailsAgencyName)
+  private val title: String = messages("asa.agent-regime.paye.contact-name.title")
+  private val heading: String = messages("asa.agent-regime.paye.contact-name.input.heading", asaDetailsAgencyName)
 
   "paye_update_contact_name" when {
 
@@ -96,7 +96,7 @@ extends ViewBaseSpec {
 
       "display the correct hint" in {
         val hint = doc.select(".govuk-hint")
-        hint.first().text() mustBe messages("asa.legacy.paye.contact-name.input.hint")
+        hint.first().text() mustBe messages("asa.agent-regime.paye.contact-name.input.hint")
       }
 
       "display the contact name input" in {
@@ -119,7 +119,7 @@ extends ViewBaseSpec {
 
       "display correct error summary link" in {
         val errorLink: Element = doc.select(".govuk-error-summary__list a").first()
-        errorLink.text() mustBe messages("asa.legacy.paye.contact-name.input.error.empty")
+        errorLink.text() mustBe messages("asa.agent-regime.paye.contact-name.input.error.empty")
         errorLink.attr("href") mustBe s"#$contactNameKey"
       }
 
@@ -128,7 +128,7 @@ extends ViewBaseSpec {
       }
 
       "display error message on form" in {
-        doc.select(".govuk-error-message").text() mustBe s"Error: ${messages("asa.legacy.paye.contact-name.input.error.empty")}"
+        doc.select(".govuk-error-message").text() mustBe s"Error: ${messages("asa.agent-regime.paye.contact-name.input.error.empty")}"
       }
     }
   }

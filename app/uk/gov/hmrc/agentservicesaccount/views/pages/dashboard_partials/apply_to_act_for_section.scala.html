@@ -16,7 +16,7 @@
 
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.{routes => subscriptionRoutes}
-@import uk.gov.hmrc.agentservicesaccount.models.subscriptions.{LegacyRegime, SubscriptionInfo, SubscriptionStatus}
+@import uk.gov.hmrc.agentservicesaccount.models.subscriptions.{AgentRegime, SubscriptionInfo, SubscriptionStatus}
 @import uk.gov.hmrc.agentservicesaccount.actions.AuthRequestWithAgentProfile
 
 @this(p: p, h2: h2, a: a, ul_html: ul_html)
@@ -30,7 +30,7 @@
 )
 
 @defining({
-    def canStartSubscriptionJourney(regime: LegacyRegime): Boolean =
+    def canStartSubscriptionJourney(regime: AgentRegime): Boolean =
         subscriptionInfo.exists(s =>
             s.regime == regime && Seq(
                 SubscriptionStatus.NotSubscribed,
@@ -41,9 +41,9 @@
 
     val regimes =
         Seq(
-            if(!request.agentDetailsDesResponse.agencyDetails.exists(_.isAbroad)) Some(LegacyRegime.PAYE).filter(canStartSubscriptionJourney(_) && appConfig.enableLegacySubscriptionLink) else None,
-            Some(LegacyRegime.CT).filter(canStartSubscriptionJourney(_) && appConfig.enableLegacySubscriptionLinkRobotics),
-            Some(LegacyRegime.SA).filter(canStartSubscriptionJourney(_) && appConfig.enableLegacySubscriptionLinkRobotics)
+            if(!request.agentDetailsDesResponse.agencyDetails.exists(_.isAbroad)) Some(AgentRegime.PAYE).filter(canStartSubscriptionJourney(_) && appConfig.enableLegacySubscriptionLink) else None,
+            Some(AgentRegime.CT).filter(canStartSubscriptionJourney(_) && appConfig.enableLegacySubscriptionLinkRobotics),
+            Some(AgentRegime.SA).filter(canStartSubscriptionJourney(_) && appConfig.enableLegacySubscriptionLinkRobotics)
         ).flatten
 
     regimes

@@ -177,318 +177,318 @@ asa.apply-to-act-for.paye=Talu wrth ennill (TWE)/Cynllun y Diwydiant Adeiladu (C
 asa.apply-to-act-for.sa=Hunanasesiad
 asa.apply-to-act-for.ct=Treth Gorfforaeth
 
-asa.legacy.do-you-already-manage.existing.true=Iawn, drwy eu cyfrif gwasanaethau ar-lein CThEF presennol
+asa.agent-regime.do-you-already-manage.existing.true=Iawn, drwy eu cyfrif gwasanaethau ar-lein CThEF presennol
 
-asa.legacy.you-may-not-need-to-apply.p1=Dim ond os ydych am rannu neu drosglwyddo eich cleientiaid ymhlith aelodau o’r tîm neu reoli cleientiaid o leoliadau swyddfa gwahanol y mae angen i chi wneud cais am a chael cod asiant newydd.
-asa.legacy.you-may-not-need-to-apply.h1=A ydych am wneud cais o hyd?
+asa.agent-regime.you-may-not-need-to-apply.p1=Dim ond os ydych am rannu neu drosglwyddo eich cleientiaid ymhlith aelodau o’r tîm neu reoli cleientiaid o leoliadau swyddfa gwahanol y mae angen i chi wneud cais am a chael cod asiant newydd.
+asa.agent-regime.you-may-not-need-to-apply.h1=A ydych am wneud cais o hyd?
 
-asa.legacy.confirmation.title=Rydym yn prosesu’ch cais
-asa.legacy.confirmation.panel.body=Byddwch yn cael cod asiant cyn pen 5 diwrnod
-asa.legacy.confirmation.p1=Byddwch yn cael e-bost unwaith y bydd eich cod asiant yn barod. Gallwch wedyn ei ddefnyddio i ofyn am awdurdodiad gan eich cleientiaid.
-asa.legacy.confirmation.p2=Byddwn hefyd yn anfon llythyr atoch gyda’ch cod asiant ar gyfer eich cofnodion.
-asa.legacy.confirmation.p3=Mae’n rhaid cadw’r cod hwn yn breifat. Rhannwch y cod gyda phobl sydd wir angen ei wybod yn unig.
-asa.legacy.confirmation.return-home=Ewch yn ôl i hafan eich cyfrif gwasanaethau asiant
+asa.agent-regime.confirmation.title=Rydym yn prosesu’ch cais
+asa.agent-regime.confirmation.panel.body=Byddwch yn cael cod asiant cyn pen 5 diwrnod
+asa.agent-regime.confirmation.p1=Byddwch yn cael e-bost unwaith y bydd eich cod asiant yn barod. Gallwch wedyn ei ddefnyddio i ofyn am awdurdodiad gan eich cleientiaid.
+asa.agent-regime.confirmation.p2=Byddwn hefyd yn anfon llythyr atoch gyda’ch cod asiant ar gyfer eich cofnodion.
+asa.agent-regime.confirmation.p3=Mae’n rhaid cadw’r cod hwn yn breifat. Rhannwch y cod gyda phobl sydd wir angen ei wybod yn unig.
+asa.agent-regime.confirmation.return-home=Ewch yn ôl i hafan eich cyfrif gwasanaethau asiant
 
 # CT
-asa.legacy.ct.h2=Treth Gorfforaeth
-asa.legacy.ct.in-progress.p1=Rydym yn dal i brosesu’r cais a wnaethoch ar {0}.
-asa.legacy.ct.in-progress.p2=Gall prosesu gymryd hyd at 5 diwrnod.
-asa.legacy.ct.inactive.p1 = Rydych chi eisoes wedi gwneud cais i weithredu fel asiant ar gyfer Treth Gorfforaeth ar {0}.
-asa.legacy.ct.inactive.p2 = Anfonwyd llythyr atoch gyda chod cychwyn pan wnaethoch gais.
-asa.legacy.ct.inactive.p3 = Mae’n rhaid i chi <a class="govuk-link" href="/enrolment-management-frontend/IR-CT-AGENT/get-access-tax-scheme?continue=/agent-services-account/home" target="_blank" rel="noreferrer noopener">ddefnyddio’r cod cychwyn i gael mynediad at y gwasanaeth hwn</a>.
-asa.legacy.ct.subscribed.p1=Eich cod asiant yw: {0}
-asa.legacy.ct.subscribed.p2=Cael caniatâd gan gleientiaid newydd
-asa.legacy.ct.subscribed.p3=<a class="govuk-link" href="/account/authorise-client/agent/{0}" target="_blank" rel="noreferrer noopener">Gofynnwch i gleient eich awdurdodi (yn agor tab newydd)</a>
-asa.legacy.ct.subscribed.p4=Rheoli Treth Gorfforaeth eich cleient
-asa.legacy.ct.subscribed.p5=<a class="govuk-link" href="/corporation-tax/agent/{0}" target="_blank" rel="noreferrer noopener">Bwrw golwg dros a rheoli’ch rhestr o gleientiaid ar gyfer Treth Gorfforaeth (yn agor tab newydd)</a>
+asa.agent-regime.ct.h2=Treth Gorfforaeth
+asa.agent-regime.ct.in-progress.p1=Rydym yn dal i brosesu’r cais a wnaethoch ar {0}.
+asa.agent-regime.ct.in-progress.p2=Gall prosesu gymryd hyd at 5 diwrnod.
+asa.agent-regime.ct.inactive.p1 = Rydych chi eisoes wedi gwneud cais i weithredu fel asiant ar gyfer Treth Gorfforaeth ar {0}.
+asa.agent-regime.ct.inactive.p2 = Anfonwyd llythyr atoch gyda chod cychwyn pan wnaethoch gais.
+asa.agent-regime.ct.inactive.p3 = Mae’n rhaid i chi <a class="govuk-link" href="/enrolment-management-frontend/IR-CT-AGENT/get-access-tax-scheme?continue=/agent-services-account/home" target="_blank" rel="noreferrer noopener">ddefnyddio’r cod cychwyn i gael mynediad at y gwasanaeth hwn</a>.
+asa.agent-regime.ct.subscribed.p1=Eich cod asiant yw: {0}
+asa.agent-regime.ct.subscribed.p2=Cael caniatâd gan gleientiaid newydd
+asa.agent-regime.ct.subscribed.p3=<a class="govuk-link" href="/account/authorise-client/agent/{0}" target="_blank" rel="noreferrer noopener">Gofynnwch i gleient eich awdurdodi (yn agor tab newydd)</a>
+asa.agent-regime.ct.subscribed.p4=Rheoli Treth Gorfforaeth eich cleient
+asa.agent-regime.ct.subscribed.p5=<a class="govuk-link" href="/corporation-tax/agent/{0}" target="_blank" rel="noreferrer noopener">Bwrw golwg dros a rheoli’ch rhestr o gleientiaid ar gyfer Treth Gorfforaeth (yn agor tab newydd)</a>
 
-asa.legacy.ct.do-you-already-manage.title=Ydy {0} eisoes yn rheoli cleientiaid Treth Gorfforaeth?
-asa.legacy.ct.do-you-already-manage.existing.false=Na, dyma’r tro cyntaf iddo reoli cleientiaid Treth Gorfforaeth
-asa.legacy.ct.do-you-already-manage.error.required=Dewiswch ‘Iawn’ os yw {0} eisoes yn rheoli cleientiaid Treth Gorfforaeth
+asa.agent-regime.ct.do-you-already-manage.title=Ydy {0} eisoes yn rheoli cleientiaid Treth Gorfforaeth?
+asa.agent-regime.ct.do-you-already-manage.existing.false=Na, dyma’r tro cyntaf iddo reoli cleientiaid Treth Gorfforaeth
+asa.agent-regime.ct.do-you-already-manage.error.required=Dewiswch ‘Iawn’ os yw {0} eisoes yn rheoli cleientiaid Treth Gorfforaeth
 
-asa.legacy.ct.you-may-not-need-to-apply.title=Efallai na fydd angen i chi wneud cais am Dreth Gorfforaeth
-asa.legacy.ct.you-may-not-need-to-apply.p2=Gallwch barhau i reoli eich cleientiaid presennol ar gyfer Treth Gorfforaeth drwy eich cyfrif Gwasanaethau Ar-lein CThEF i Asiantau.
-asa.legacy.ct.you-may-not-need-to-apply.error.required=Dewiswch ‘Iawn’ os ydych dal am wneud cais
+asa.agent-regime.ct.you-may-not-need-to-apply.title=Efallai na fydd angen i chi wneud cais am Dreth Gorfforaeth
+asa.agent-regime.ct.you-may-not-need-to-apply.p2=Gallwch barhau i reoli eich cleientiaid presennol ar gyfer Treth Gorfforaeth drwy eich cyfrif Gwasanaethau Ar-lein CThEF i Asiantau.
+asa.agent-regime.ct.you-may-not-need-to-apply.error.required=Dewiswch ‘Iawn’ os ydych dal am wneud cais
 
-asa.legacy.ct.business-name.title=Pa enw busnes ddylem ni ei ddangos i’ch cleientiaid Treth Gorfforaeth?
-asa.legacy.ct.business-name.use-asa.false=Rwyf am ddefnyddio enw busnes gwahanol ar gyfer Treth Gorfforaeth
-asa.legacy.ct.business-name.new-input.label=Nodwch enw busnes
-asa.legacy.ct.business-name.use-asa.error.required=Dewiswch yr enw busnes y dylem ei ddangos i’ch cleientiaid Treth Gorfforaeth
-asa.legacy.ct.business-name.new-input.error.empty=Nodwch enw busnes
-asa.legacy.ct.business-name.new-input.error.invalid=Nodwch enw busnes sy’n cynnwys llythrennau, rhifau, bylchau a’r cymeriadau canlynol yn unig . , ( ) & - ‘ /
+asa.agent-regime.ct.business-name.title=Pa enw busnes ddylem ni ei ddangos i’ch cleientiaid Treth Gorfforaeth?
+asa.agent-regime.ct.business-name.use-asa.false=Rwyf am ddefnyddio enw busnes gwahanol ar gyfer Treth Gorfforaeth
+asa.agent-regime.ct.business-name.new-input.label=Nodwch enw busnes
+asa.agent-regime.ct.business-name.use-asa.error.required=Dewiswch yr enw busnes y dylem ei ddangos i’ch cleientiaid Treth Gorfforaeth
+asa.agent-regime.ct.business-name.new-input.error.empty=Nodwch enw busnes
+asa.agent-regime.ct.business-name.new-input.error.invalid=Nodwch enw busnes sy’n cynnwys llythrennau, rhifau, bylchau a’r cymeriadau canlynol yn unig . , ( ) & - ‘ /
 
-asa.legacy.ct.phone-number.title=Pa rif ffôn ddylem ei ddefnyddio i ffonio chi ynglŷn â Threth Gorfforaeth?
-asa.legacy.ct.phone-number.heading=Pa rif ffôn ddylem ei ddefnyddio i ffonio {0} ynglŷn â Threth Gorfforaeth?
-asa.legacy.ct.phone-number.use-asa.false=Rwyf am ddefnyddio rhif ffôn gwahanol ar gyfer Treth Gorfforaeth
-asa.legacy.ct.phone-number.new-input.label=Nodwch rif ffôn
-asa.legacy.ct.phone-number.new-input.hint=Ar gyfer rhifau rhyngwladol, dylech gynnwys cod y wlad.
-asa.legacy.ct.phone-number.use-asa.error.required=Nodwch y rhif ffôn y dylem ei ddefnyddio i ffonio {0} ynglŷn â Threth Gorfforaeth
-asa.legacy.ct.phone-number.new-input.error.empty=Nodwch rif ffôn
-asa.legacy.ct.phone-number.new-input.error.invalid=Dim ond rhifau y dylai’r rhif ffôn eu cynnwys
+asa.agent-regime.ct.phone-number.title=Pa rif ffôn ddylem ei ddefnyddio i ffonio chi ynglŷn â Threth Gorfforaeth?
+asa.agent-regime.ct.phone-number.heading=Pa rif ffôn ddylem ei ddefnyddio i ffonio {0} ynglŷn â Threth Gorfforaeth?
+asa.agent-regime.ct.phone-number.use-asa.false=Rwyf am ddefnyddio rhif ffôn gwahanol ar gyfer Treth Gorfforaeth
+asa.agent-regime.ct.phone-number.new-input.label=Nodwch rif ffôn
+asa.agent-regime.ct.phone-number.new-input.hint=Ar gyfer rhifau rhyngwladol, dylech gynnwys cod y wlad.
+asa.agent-regime.ct.phone-number.use-asa.error.required=Nodwch y rhif ffôn y dylem ei ddefnyddio i ffonio {0} ynglŷn â Threth Gorfforaeth
+asa.agent-regime.ct.phone-number.new-input.error.empty=Nodwch rif ffôn
+asa.agent-regime.ct.phone-number.new-input.error.invalid=Dim ond rhifau y dylai’r rhif ffôn eu cynnwys
 
-asa.legacy.ct.email-address.title=Pa gyfeiriad e-bost ddylem ei ddefnyddio i gysylltu â chi ynglŷn â Threth Gorfforaeth?
-asa.legacy.ct.email-address.heading=Pa gyfeiriad e-bost ddylem ei ddefnyddio i gysylltu â {0} ynglŷn â Threth Gorfforaeth?
-asa.legacy.ct.email-address.use-asa.false=Rwyf am ddefnyddio cyfeiriad e-bost gwahanol ar gyfer Treth Gorfforaeth
-asa.legacy.ct.email-address.new-input.label=Nodwch gyfeiriad e-bost
-asa.legacy.ct.email-address.new-input.hint=Byddwn yn anfon cod i’r cyfeiriad e-bost hwn i’w gadarnhau
-asa.legacy.ct.email-address.use-asa.error.required=Dewiswch y cyfeiriad e-bost y dylem ei ddefnyddio i gysylltu â {0} ynglŷn â Threth Gorfforaeth
-asa.legacy.ct.email-address.input.error.empty=Nodwch gyfeiriad e-bost
-asa.legacy.ct.email-address.input.error.length=Nodwch gyfeiriad e-bost sy’n 50 o gymeriadau neu lai.
-asa.legacy.ct.email-address.input.error.invalid=Nodwch gyfeiriad e-bost yn y fformat cywir, er enghraifft name@example.com
+asa.agent-regime.ct.email-address.title=Pa gyfeiriad e-bost ddylem ei ddefnyddio i gysylltu â chi ynglŷn â Threth Gorfforaeth?
+asa.agent-regime.ct.email-address.heading=Pa gyfeiriad e-bost ddylem ei ddefnyddio i gysylltu â {0} ynglŷn â Threth Gorfforaeth?
+asa.agent-regime.ct.email-address.use-asa.false=Rwyf am ddefnyddio cyfeiriad e-bost gwahanol ar gyfer Treth Gorfforaeth
+asa.agent-regime.ct.email-address.new-input.label=Nodwch gyfeiriad e-bost
+asa.agent-regime.ct.email-address.new-input.hint=Byddwn yn anfon cod i’r cyfeiriad e-bost hwn i’w gadarnhau
+asa.agent-regime.ct.email-address.use-asa.error.required=Dewiswch y cyfeiriad e-bost y dylem ei ddefnyddio i gysylltu â {0} ynglŷn â Threth Gorfforaeth
+asa.agent-regime.ct.email-address.input.error.empty=Nodwch gyfeiriad e-bost
+asa.agent-regime.ct.email-address.input.error.length=Nodwch gyfeiriad e-bost sy’n 50 o gymeriadau neu lai.
+asa.agent-regime.ct.email-address.input.error.invalid=Nodwch gyfeiriad e-bost yn y fformat cywir, er enghraifft name@example.com
 
-asa.legacy.ct.custom-email-address.title=Mae cyfeiriad e-bost eich cyfrif gwasanaethau asiant yn rhy hir
-asa.legacy.ct.custom-email-address.p1=Ar hyn o bryd mae gennym y cyfeiriad e-bost hwn ar gyfer eich cyfrif gwasanaethau asiant:
-asa.legacy.ct.custom-email-address.p2=Ar gyfer Treth Gorfforaeth, mae’n rhaid i’r cyfeiriad e-bost fod yn 50 o gymeriadau neu lai.
-asa.legacy.ct.custom-email-address.input.label=Nodwch gyfeiriad e-bost byrrach
-asa.legacy.ct.custom-email-address.input.hint=Byddwn yn anfon cod i’r cyfeiriad e-bost hwn i’w gadarnhau
+asa.agent-regime.ct.custom-email-address.title=Mae cyfeiriad e-bost eich cyfrif gwasanaethau asiant yn rhy hir
+asa.agent-regime.ct.custom-email-address.p1=Ar hyn o bryd mae gennym y cyfeiriad e-bost hwn ar gyfer eich cyfrif gwasanaethau asiant:
+asa.agent-regime.ct.custom-email-address.p2=Ar gyfer Treth Gorfforaeth, mae’n rhaid i’r cyfeiriad e-bost fod yn 50 o gymeriadau neu lai.
+asa.agent-regime.ct.custom-email-address.input.label=Nodwch gyfeiriad e-bost byrrach
+asa.agent-regime.ct.custom-email-address.input.hint=Byddwn yn anfon cod i’r cyfeiriad e-bost hwn i’w gadarnhau
 
-asa.legacy.ct.address.title=Pa gyfeiriad ddylem ei ddefnyddio i anfon llythyrau ynglŷn â Threth Gorfforaeth?
-asa.legacy.ct.address.use-asa.true.hint=Dyma’r cyfeiriad ar eich cyfrif gwasanaethau asiant.
-asa.legacy.ct.address.use-asa.false=Rwyf am ddefnyddio cyfeiriad gwahanol ar gyfer Treth Gorfforaeth
-asa.legacy.ct.address.use-asa.error.required=Dewiswch y cyfeiriad y dylem ei ddefnyddio i anfon llythyrau ynglŷn â Threth Gorfforaeth
+asa.agent-regime.ct.address.title=Pa gyfeiriad ddylem ei ddefnyddio i anfon llythyrau ynglŷn â Threth Gorfforaeth?
+asa.agent-regime.ct.address.use-asa.true.hint=Dyma’r cyfeiriad ar eich cyfrif gwasanaethau asiant.
+asa.agent-regime.ct.address.use-asa.false=Rwyf am ddefnyddio cyfeiriad gwahanol ar gyfer Treth Gorfforaeth
+asa.agent-regime.ct.address.use-asa.error.required=Dewiswch y cyfeiriad y dylem ei ddefnyddio i anfon llythyrau ynglŷn â Threth Gorfforaeth
 
-asa.legacy.ct.alf.country-picker.title=Dewiswch y wlad - Cyfrif gwasanaethau asiant - GOV.UK
-asa.legacy.ct.alf.country-picker.heading=Beth yw’r wlad lle mae’r busnes wedi’i leoli?
-asa.legacy.ct.alf.lookup.title=Dod o hyd i’r cyfeiriad - Cyfrif gwasanaethau asiant - GOV.UK
-asa.legacy.ct.alf.lookup.heading=Dod o hyd i’ch cyfeiriad
-asa.legacy.ct.alf.lookup.postcode.label=Cod post
-asa.legacy.ct.alf.select.title=Dewiswch y cyfeiriad - Cyfrif gwasanaethau asiant - GOV.UK
-asa.legacy.ct.alf.edit.title=Nodwch y cyfeiriad - Cyfrif gwasanaethau asiant - GOV.UK
-asa.legacy.ct.alf.edit.heading=Nodwch y cyfeiriad
-asa.legacy.ct.alf.edit.townLabel=Cyfeiriad – llinell 4
-asa.legacy.ct.alf.confirm.title=Adolygu a chadarnhau - Cyfrif gwasanaethau asiant - GOV.UK
+asa.agent-regime.ct.alf.country-picker.title=Dewiswch y wlad - Cyfrif gwasanaethau asiant - GOV.UK
+asa.agent-regime.ct.alf.country-picker.heading=Beth yw’r wlad lle mae’r busnes wedi’i leoli?
+asa.agent-regime.ct.alf.lookup.title=Dod o hyd i’r cyfeiriad - Cyfrif gwasanaethau asiant - GOV.UK
+asa.agent-regime.ct.alf.lookup.heading=Dod o hyd i’ch cyfeiriad
+asa.agent-regime.ct.alf.lookup.postcode.label=Cod post
+asa.agent-regime.ct.alf.select.title=Dewiswch y cyfeiriad - Cyfrif gwasanaethau asiant - GOV.UK
+asa.agent-regime.ct.alf.edit.title=Nodwch y cyfeiriad - Cyfrif gwasanaethau asiant - GOV.UK
+asa.agent-regime.ct.alf.edit.heading=Nodwch y cyfeiriad
+asa.agent-regime.ct.alf.edit.townLabel=Cyfeiriad – llinell 4
+asa.agent-regime.ct.alf.confirm.title=Adolygu a chadarnhau - Cyfrif gwasanaethau asiant - GOV.UK
 
-asa.legacy.ct.change-address.title=Newid eich cyfeiriad
-asa.legacy.ct.change-address.title.invalid=Newid y llinellau cyfeiriad sy’n rhy hir
-asa.legacy.ct.change-address.inset.invalid=Dim ond nifer cyfyngedig o gymeriadau ar gyfer pob llinell cyfeiriad y gall ein system dderbyn.
-asa.legacy.ct.change-address.line1.label=Cyfeiriad – llinell 1
-asa.legacy.ct.change-address.line2.label=Cyfeiriad – llinell 2
-asa.legacy.ct.change-address.line3.label=Cyfeiriad – llinell 3
-asa.legacy.ct.change-address.line3.label.optional=Cyfeiriad – llinell 3 (dewisol)
-asa.legacy.ct.change-address.line4.label.optional=Cyfeiriad – llinell 4 (dewisol)
-asa.legacy.ct.change-address.postcode.label=Cod post
-asa.legacy.ct.change-address.country.label=Gwlad
-asa.legacy.ct.error.addressLine1.required=Nodwch gyfeiriad – llinell 1
-asa.legacy.ct.error.addressLine1.length=Mae angen i linell 1 y cyfeiriad fod yn 28 o gymeriadau neu lai
-asa.legacy.ct.error.addressLine1.invalid=Nodwch gyfeiriad – llinell 1, sy’n cynnwys llythrennau, rhifau, bylchau a’r cymeriadau canlynol yn unig . , ( ) & - ‘ /
-asa.legacy.ct.error.addressLine2.required=Nodwch gyfeiriad – llinell 2
-asa.legacy.ct.error.addressLine2.length=Mae angen i linell 2 y cyfeiriad fod yn 28 o gymeriadau neu lai
-asa.legacy.ct.error.addressLine2.invalid=Nodwch gyfeiriad – llinell 2, sy’n cynnwys llythrennau, rhifau, bylchau a’r cymeriadau canlynol yn unig . , ( ) & - ‘ /
-asa.legacy.ct.error.addressLine3.required=Nodwch gyfeiriad – llinell 3
-asa.legacy.ct.error.addressLine3.length=Mae angen i linell 3 y cyfeiriad fod yn 28 o gymeriadau neu lai
-asa.legacy.ct.error.addressLine3.invalid=Nodwch gyfeiriad – llinell 3, sy’n cynnwys llythrennau, rhifau, bylchau a’r cymeriadau canlynol yn unig . , ( ) & - ‘ /
-asa.legacy.ct.error.addressLine4.required=Nodwch gyfeiriad – llinell 4
-asa.legacy.ct.error.addressLine4.length=Mae angen i linell 4 y cyfeiriad fod yn 18 o gymeriadau neu lai
-asa.legacy.ct.error.addressLine4.invalid=Nodwch gyfeiriad – llinell 4, sy’n cynnwys llythrennau, rhifau, bylchau a’r cymeriadau canlynol yn unig . , ( ) & - ‘ /
-asa.legacy.ct.error.postcode.required=Nodwch god post
-asa.legacy.ct.error.postcode.invalid=Nodwch god post yn y fformat cywir
-asa.legacy.ct.error.country.required=Dewis gwlad
+asa.agent-regime.ct.change-address.title=Newid eich cyfeiriad
+asa.agent-regime.ct.change-address.title.invalid=Newid y llinellau cyfeiriad sy’n rhy hir
+asa.agent-regime.ct.change-address.inset.invalid=Dim ond nifer cyfyngedig o gymeriadau ar gyfer pob llinell cyfeiriad y gall ein system dderbyn.
+asa.agent-regime.ct.change-address.line1.label=Cyfeiriad – llinell 1
+asa.agent-regime.ct.change-address.line2.label=Cyfeiriad – llinell 2
+asa.agent-regime.ct.change-address.line3.label=Cyfeiriad – llinell 3
+asa.agent-regime.ct.change-address.line3.label.optional=Cyfeiriad – llinell 3 (dewisol)
+asa.agent-regime.ct.change-address.line4.label.optional=Cyfeiriad – llinell 4 (dewisol)
+asa.agent-regime.ct.change-address.postcode.label=Cod post
+asa.agent-regime.ct.change-address.country.label=Gwlad
+asa.agent-regime.ct.error.addressLine1.required=Nodwch gyfeiriad – llinell 1
+asa.agent-regime.ct.error.addressLine1.length=Mae angen i linell 1 y cyfeiriad fod yn 28 o gymeriadau neu lai
+asa.agent-regime.ct.error.addressLine1.invalid=Nodwch gyfeiriad – llinell 1, sy’n cynnwys llythrennau, rhifau, bylchau a’r cymeriadau canlynol yn unig . , ( ) & - ‘ /
+asa.agent-regime.ct.error.addressLine2.required=Nodwch gyfeiriad – llinell 2
+asa.agent-regime.ct.error.addressLine2.length=Mae angen i linell 2 y cyfeiriad fod yn 28 o gymeriadau neu lai
+asa.agent-regime.ct.error.addressLine2.invalid=Nodwch gyfeiriad – llinell 2, sy’n cynnwys llythrennau, rhifau, bylchau a’r cymeriadau canlynol yn unig . , ( ) & - ‘ /
+asa.agent-regime.ct.error.addressLine3.required=Nodwch gyfeiriad – llinell 3
+asa.agent-regime.ct.error.addressLine3.length=Mae angen i linell 3 y cyfeiriad fod yn 28 o gymeriadau neu lai
+asa.agent-regime.ct.error.addressLine3.invalid=Nodwch gyfeiriad – llinell 3, sy’n cynnwys llythrennau, rhifau, bylchau a’r cymeriadau canlynol yn unig . , ( ) & - ‘ /
+asa.agent-regime.ct.error.addressLine4.required=Nodwch gyfeiriad – llinell 4
+asa.agent-regime.ct.error.addressLine4.length=Mae angen i linell 4 y cyfeiriad fod yn 18 o gymeriadau neu lai
+asa.agent-regime.ct.error.addressLine4.invalid=Nodwch gyfeiriad – llinell 4, sy’n cynnwys llythrennau, rhifau, bylchau a’r cymeriadau canlynol yn unig . , ( ) & - ‘ /
+asa.agent-regime.ct.error.postcode.required=Nodwch god post
+asa.agent-regime.ct.error.postcode.invalid=Nodwch god post yn y fformat cywir
+asa.agent-regime.ct.error.country.required=Dewis gwlad
 
-asa.legacy.ct.check-your-answers.h1=Gwiriwch eich atebion
-asa.legacy.ct.check-your-answers.business-name=Enw’r busnes
-asa.legacy.ct.check-your-answers.phone-number=Rhif ffôn
-asa.legacy.ct.check-your-answers.email=Cyfeiriad e-bost
-asa.legacy.ct.check-your-answers.address=Cyfeiriad
-asa.legacy.ct.check-your-answers.submit-button=Ymrestru ar gyfer Treth Gorfforaeth
+asa.agent-regime.ct.check-your-answers.h1=Gwiriwch eich atebion
+asa.agent-regime.ct.check-your-answers.business-name=Enw’r busnes
+asa.agent-regime.ct.check-your-answers.phone-number=Rhif ffôn
+asa.agent-regime.ct.check-your-answers.email=Cyfeiriad e-bost
+asa.agent-regime.ct.check-your-answers.address=Cyfeiriad
+asa.agent-regime.ct.check-your-answers.submit-button=Ymrestru ar gyfer Treth Gorfforaeth
 
 # PAYE/CIS
-asa.legacy.paye.h2=Talu wrth ennill (TWE)/Cynllun y Diwydiant Adeiladu (CIS)
-asa.legacy.paye.link=Cais am danysgrifiad TWE
-asa.legacy.paye.in-progress.p1=Rydym yn dal i brosesu’r cofrestriad a wnaethoch ar {0}.
-asa.legacy.paye.in-progress.p2=Gall prosesu gymryd hyd at 5 diwrnod.
-asa.legacy.paye.inactive.p1 = Rydych chi eisoes wedi gwneud cais i weithredu fel asiant ar gyfer TWE/CIS ar {0}.
-asa.legacy.paye.inactive.p2 = Anfonwyd llythyr atoch gyda chod cychwyn pan wnaethoch gais.
-asa.legacy.paye.inactive.p3 = Mae’n rhaid i chi <a class="govuk-link" href="/enrolment-management-frontend/IR-PAYE-AGENT/get-access-tax-scheme?continue=/agent-services-account/home" target="_blank" rel="noreferrer noopener">ddefnyddio’r cod cychwyn i gael mynediad at y gwasanaeth hwn</a>.
-asa.legacy.paye.subscribed.p1=Eich cod asiant yw: {0}
-asa.legacy.paye.subscribed.p2=Cael caniatâd gan gleientiaid newydd
-asa.legacy.paye.subscribed.p3=<a class="govuk-link" href="/account/authorise-client/agent/{0}" target="_blank" rel="noreferrer noopener">Gofynnwch i gleient eich awdurdodi (yn agor tab newydd)</a>
-asa.legacy.paye.subscribed.p4=Rheoli TWE/CIS eich cleient
-asa.legacy.paye.subscribed.p5=<a class="govuk-link" href="/agent/remember-to-remove" target="_blank" rel="noreferrer noopener">Bwrw golwg dros a rheoli’ch rhestr o gleientiaid ar gyfer TWE (yn agor tab newydd)</a>
-asa.legacy.paye.subscribed.p6=<a class="govuk-link" href="/construction-ind-scheme/agent/{0}" target="_blank" rel="noreferrer noopener">Bwrw golwg dros a rheoli’ch rhestr o gleientiaid ar gyfer CIS (yn agor tab newydd)</a>
+asa.agent-regime.paye.h2=Talu wrth ennill (TWE)/Cynllun y Diwydiant Adeiladu (CIS)
+asa.agent-regime.paye.link=Cais am danysgrifiad TWE
+asa.agent-regime.paye.in-progress.p1=Rydym yn dal i brosesu’r cofrestriad a wnaethoch ar {0}.
+asa.agent-regime.paye.in-progress.p2=Gall prosesu gymryd hyd at 5 diwrnod.
+asa.agent-regime.paye.inactive.p1 = Rydych chi eisoes wedi gwneud cais i weithredu fel asiant ar gyfer TWE/CIS ar {0}.
+asa.agent-regime.paye.inactive.p2 = Anfonwyd llythyr atoch gyda chod cychwyn pan wnaethoch gais.
+asa.agent-regime.paye.inactive.p3 = Mae’n rhaid i chi <a class="govuk-link" href="/enrolment-management-frontend/IR-PAYE-AGENT/get-access-tax-scheme?continue=/agent-services-account/home" target="_blank" rel="noreferrer noopener">ddefnyddio’r cod cychwyn i gael mynediad at y gwasanaeth hwn</a>.
+asa.agent-regime.paye.subscribed.p1=Eich cod asiant yw: {0}
+asa.agent-regime.paye.subscribed.p2=Cael caniatâd gan gleientiaid newydd
+asa.agent-regime.paye.subscribed.p3=<a class="govuk-link" href="/account/authorise-client/agent/{0}" target="_blank" rel="noreferrer noopener">Gofynnwch i gleient eich awdurdodi (yn agor tab newydd)</a>
+asa.agent-regime.paye.subscribed.p4=Rheoli TWE/CIS eich cleient
+asa.agent-regime.paye.subscribed.p5=<a class="govuk-link" href="/agent/remember-to-remove" target="_blank" rel="noreferrer noopener">Bwrw golwg dros a rheoli’ch rhestr o gleientiaid ar gyfer TWE (yn agor tab newydd)</a>
+asa.agent-regime.paye.subscribed.p6=<a class="govuk-link" href="/construction-ind-scheme/agent/{0}" target="_blank" rel="noreferrer noopener">Bwrw golwg dros a rheoli’ch rhestr o gleientiaid ar gyfer CIS (yn agor tab newydd)</a>
 
-asa.legacy.paye.do-you-already-manage.title=Ydy {0} eisoes yn rheoli cleientiaid TWE?
-asa.legacy.paye.do-you-already-manage.existing.false=Na, dyma’r tro cyntaf iddo reoli cleientiaid TWE
-asa.legacy.paye.do-you-already-manage.error.required=Dewiswch ‘Iawn’ os yw {0} eisoes yn rheoli cleientiaid TWE/CIS
+asa.agent-regime.paye.do-you-already-manage.title=Ydy {0} eisoes yn rheoli cleientiaid TWE?
+asa.agent-regime.paye.do-you-already-manage.existing.false=Na, dyma’r tro cyntaf iddo reoli cleientiaid TWE
+asa.agent-regime.paye.do-you-already-manage.error.required=Dewiswch ‘Iawn’ os yw {0} eisoes yn rheoli cleientiaid TWE/CIS
 
-asa.legacy.paye.you-may-not-need-to-apply.title=Efallai na fydd angen i chi wneud cais am TWE
-asa.legacy.paye.you-may-not-need-to-apply.p2=Gallwch barhau i reoli eich cleientiaid presennol ar gyfer TWE drwy eich cyfrif Gwasanaethau Ar-lein CThEF i Asiantau.
-asa.legacy.paye.you-may-not-need-to-apply.error.required=Dewiswch ‘Iawn’ os ydych dal am wneud cais
+asa.agent-regime.paye.you-may-not-need-to-apply.title=Efallai na fydd angen i chi wneud cais am TWE
+asa.agent-regime.paye.you-may-not-need-to-apply.p2=Gallwch barhau i reoli eich cleientiaid presennol ar gyfer TWE drwy eich cyfrif Gwasanaethau Ar-lein CThEF i Asiantau.
+asa.agent-regime.paye.you-may-not-need-to-apply.error.required=Dewiswch ‘Iawn’ os ydych dal am wneud cais
 
-asa.legacy.paye.contact-name.title=Pwy ddylem gysylltu â nhw ynglŷn â TWE?
-asa.legacy.paye.contact-name.input.heading=Pwy yn {0} ddylem gysylltu â nhw ynglŷn â TWE?
-asa.legacy.paye.contact-name.input.hint=Nodwch ei enw llawn
-asa.legacy.paye.contact-name.input.error.empty=Nodwch enw llawn y person y dylem gysylltu ag ef ynglŷn â TWE
-asa.legacy.paye.contact-name.input.error.invalid=Gall enw’r person gynnwys llythrennau, cysylltnodau a chollnodau yn unig
+asa.agent-regime.paye.contact-name.title=Pwy ddylem gysylltu â nhw ynglŷn â TWE?
+asa.agent-regime.paye.contact-name.input.heading=Pwy yn {0} ddylem gysylltu â nhw ynglŷn â TWE?
+asa.agent-regime.paye.contact-name.input.hint=Nodwch ei enw llawn
+asa.agent-regime.paye.contact-name.input.error.empty=Nodwch enw llawn y person y dylem gysylltu ag ef ynglŷn â TWE
+asa.agent-regime.paye.contact-name.input.error.invalid=Gall enw’r person gynnwys llythrennau, cysylltnodau a chollnodau yn unig
 
-asa.legacy.paye.phone-number.title=Pa rif ffôn ddylem ei ddefnyddio i ffonio chi ynglŷn â TWE?
-asa.legacy.paye.phone-number.heading=Pa rif ffôn ddylem ei ddefnyddio i ffonio {0} ynglŷn â TWE?
-asa.legacy.paye.phone-number.use-asa.false=Rwyf am ddefnyddio rhif ffôn gwahanol ar gyfer TWE
-asa.legacy.paye.phone-number.new-input.label=Nodwch rif ffôn
-asa.legacy.paye.phone-number.new-input.hint=Ar gyfer rhifau rhyngwladol, dylech gynnwys cod y wlad.
-asa.legacy.paye.phone-number.use-asa.error.required=Nodwch y rhif ffôn y dylem ei ddefnyddio i ffonio {0} ynglŷn â TWE
-asa.legacy.paye.phone-number.new-input.error.empty=Nodwch rif ffôn yn y DU
-asa.legacy.paye.phone-number.new-input.error.invalid=Nodwch rif ffôn yn y DU, megis 07700 900 982 neu +44 808 157 0192
+asa.agent-regime.paye.phone-number.title=Pa rif ffôn ddylem ei ddefnyddio i ffonio chi ynglŷn â TWE?
+asa.agent-regime.paye.phone-number.heading=Pa rif ffôn ddylem ei ddefnyddio i ffonio {0} ynglŷn â TWE?
+asa.agent-regime.paye.phone-number.use-asa.false=Rwyf am ddefnyddio rhif ffôn gwahanol ar gyfer TWE
+asa.agent-regime.paye.phone-number.new-input.label=Nodwch rif ffôn
+asa.agent-regime.paye.phone-number.new-input.hint=Ar gyfer rhifau rhyngwladol, dylech gynnwys cod y wlad.
+asa.agent-regime.paye.phone-number.use-asa.error.required=Nodwch y rhif ffôn y dylem ei ddefnyddio i ffonio {0} ynglŷn â TWE
+asa.agent-regime.paye.phone-number.new-input.error.empty=Nodwch rif ffôn yn y DU
+asa.agent-regime.paye.phone-number.new-input.error.invalid=Nodwch rif ffôn yn y DU, megis 07700 900 982 neu +44 808 157 0192
 
-asa.legacy.paye.email-address.title=Pa gyfeiriad e-bost ddylem ei ddefnyddio i gysylltu â chi ynglŷn â TWE?
-asa.legacy.paye.email-address.heading=Pa gyfeiriad e-bost ddylem ei ddefnyddio i gysylltu â {0} ynglŷn â TWE?
-asa.legacy.paye.email-address.use-asa.false=Hoffwn ddefnyddio cyfeiriad e-bost gwahanol ar gyfer TWE
-asa.legacy.paye.email-address.new-input.label=Nodwch gyfeiriad e-bost
-asa.legacy.paye.email-address.new-input.hint=Byddwn yn anfon cod i’r cyfeiriad e-bost hwn i’w gadarnhau
-asa.legacy.paye.email-address.use-asa.error.required=Dewiswch y cyfeiriad e-bost y dylem ei ddefnyddio i gysylltu â {0} ynglŷn â TWE
-asa.legacy.paye.email-address.input.error.empty=Nodwch gyfeiriad e-bost
-asa.legacy.paye.email-address.input.error.length=Nodwch gyfeiriad e-bost sy’n 129 o gymeriadau neu lai.
-asa.legacy.paye.email-address.input.error.invalid=Nodwch gyfeiriad e-bost yn y fformat cywir, er enghraifft name@example.com
+asa.agent-regime.paye.email-address.title=Pa gyfeiriad e-bost ddylem ei ddefnyddio i gysylltu â chi ynglŷn â TWE?
+asa.agent-regime.paye.email-address.heading=Pa gyfeiriad e-bost ddylem ei ddefnyddio i gysylltu â {0} ynglŷn â TWE?
+asa.agent-regime.paye.email-address.use-asa.false=Hoffwn ddefnyddio cyfeiriad e-bost gwahanol ar gyfer TWE
+asa.agent-regime.paye.email-address.new-input.label=Nodwch gyfeiriad e-bost
+asa.agent-regime.paye.email-address.new-input.hint=Byddwn yn anfon cod i’r cyfeiriad e-bost hwn i’w gadarnhau
+asa.agent-regime.paye.email-address.use-asa.error.required=Dewiswch y cyfeiriad e-bost y dylem ei ddefnyddio i gysylltu â {0} ynglŷn â TWE
+asa.agent-regime.paye.email-address.input.error.empty=Nodwch gyfeiriad e-bost
+asa.agent-regime.paye.email-address.input.error.length=Nodwch gyfeiriad e-bost sy’n 129 o gymeriadau neu lai.
+asa.agent-regime.paye.email-address.input.error.invalid=Nodwch gyfeiriad e-bost yn y fformat cywir, er enghraifft name@example.com
 
-asa.legacy.paye.address.title=Pa gyfeiriad ddylem ei ddefnyddio i anfon llythyrau ynglŷn â TWE?
-asa.legacy.paye.address.use-asa.true.hint=Dyma’r cyfeiriad ar eich cyfrif gwasanaethau asiant.
-asa.legacy.paye.address.use-asa.false=Rwyf am ddefnyddio cyfeiriad gwahanol ar gyfer TWE
-asa.legacy.paye.address.use-asa.error.required=Dewiswch y cyfeiriad y dylem ei ddefnyddio i anfon llythyrau ynglŷn â TWE
+asa.agent-regime.paye.address.title=Pa gyfeiriad ddylem ei ddefnyddio i anfon llythyrau ynglŷn â TWE?
+asa.agent-regime.paye.address.use-asa.true.hint=Dyma’r cyfeiriad ar eich cyfrif gwasanaethau asiant.
+asa.agent-regime.paye.address.use-asa.false=Rwyf am ddefnyddio cyfeiriad gwahanol ar gyfer TWE
+asa.agent-regime.paye.address.use-asa.error.required=Dewiswch y cyfeiriad y dylem ei ddefnyddio i anfon llythyrau ynglŷn â TWE
 
-asa.legacy.paye.alf.country-picker.title=Dewiswch y wlad - Cyfrif gwasanaethau asiant - GOV.UK
-asa.legacy.paye.alf.country-picker.heading=Beth yw’r wlad lle mae’r busnes wedi’i leoli?
-asa.legacy.paye.alf.lookup.title=Dod o hyd i’r cyfeiriad - Cyfrif gwasanaethau asiant - GOV.UK
-asa.legacy.paye.alf.lookup.heading=Dod o hyd i’ch cyfeiriad
-asa.legacy.paye.alf.lookup.postcode.label=Cod post
-asa.legacy.paye.alf.select.title=Dewiswch y cyfeiriad - Cyfrif gwasanaethau asiant - GOV.UK
-asa.legacy.paye.alf.edit.title=Nodwch y cyfeiriad - Cyfrif gwasanaethau asiant - GOV.UK
-asa.legacy.paye.alf.edit.heading=Nodwch y cyfeiriad
-asa.legacy.paye.alf.edit.townLabel=Cyfeiriad – llinell 4
-asa.legacy.paye.alf.confirm.title=Adolygu a chadarnhau - Cyfrif gwasanaethau asiant - GOV.UK
+asa.agent-regime.paye.alf.country-picker.title=Dewiswch y wlad - Cyfrif gwasanaethau asiant - GOV.UK
+asa.agent-regime.paye.alf.country-picker.heading=Beth yw’r wlad lle mae’r busnes wedi’i leoli?
+asa.agent-regime.paye.alf.lookup.title=Dod o hyd i’r cyfeiriad - Cyfrif gwasanaethau asiant - GOV.UK
+asa.agent-regime.paye.alf.lookup.heading=Dod o hyd i’ch cyfeiriad
+asa.agent-regime.paye.alf.lookup.postcode.label=Cod post
+asa.agent-regime.paye.alf.select.title=Dewiswch y cyfeiriad - Cyfrif gwasanaethau asiant - GOV.UK
+asa.agent-regime.paye.alf.edit.title=Nodwch y cyfeiriad - Cyfrif gwasanaethau asiant - GOV.UK
+asa.agent-regime.paye.alf.edit.heading=Nodwch y cyfeiriad
+asa.agent-regime.paye.alf.edit.townLabel=Cyfeiriad – llinell 4
+asa.agent-regime.paye.alf.confirm.title=Adolygu a chadarnhau - Cyfrif gwasanaethau asiant - GOV.UK
 
-asa.legacy.paye.change-address.title=Newid eich cyfeiriad
-asa.legacy.paye.change-address.title.invalid=Newid y llinellau cyfeiriad sy’n rhy hir
-asa.legacy.paye.change-address.inset.invalid=Dim ond nifer cyfyngedig o gymeriadau ar gyfer pob llinell cyfeiriad y gall ein system dderbyn.
-asa.legacy.paye.change-address.line1.label=Cyfeiriad – llinell 1
-asa.legacy.paye.change-address.line2.label=Cyfeiriad – llinell 2
-asa.legacy.paye.change-address.line3.label=Cyfeiriad – llinell 3
-asa.legacy.paye.change-address.line3.label.optional=Cyfeiriad – llinell 3 (dewisol)
-asa.legacy.paye.change-address.line4.label.optional=Cyfeiriad – llinell 4 (dewisol)
-asa.legacy.paye.change-address.postcode.label=Cod post
-asa.legacy.paye.change-address.country.label=Gwlad
-asa.legacy.paye.error.addressLine1.required=Nodwch gyfeiriad – llinell 1
-asa.legacy.paye.error.addressLine1.length=Mae angen i linell 1 y cyfeiriad fod yn 35 o gymeriadau neu lai
-asa.legacy.paye.error.addressLine1.invalid=Nodwch gyfeiriad – llinell 1, sy’n cynnwys llythrennau, rhifau, bylchau a’r cymeriadau canlynol yn unig . , ( ) ! @ -
-asa.legacy.paye.error.addressLine2.required=Nodwch gyfeiriad – llinell 2
-asa.legacy.paye.error.addressLine2.length=Mae angen i linell 2 y cyfeiriad fod yn 35 o gymeriadau neu lai
-asa.legacy.paye.error.addressLine2.invalid=Nodwch gyfeiriad – llinell 2, sy’n cynnwys llythrennau, rhifau, bylchau a’r cymeriadau canlynol yn unig . , ( ) ! @ -
-asa.legacy.paye.error.addressLine3.required=Nodwch gyfeiriad – llinell 3
-asa.legacy.paye.error.addressLine3.length=Mae angen i linell 3 y cyfeiriad fod yn 35 o gymeriadau neu lai
-asa.legacy.paye.error.addressLine3.invalid=Nodwch gyfeiriad – llinell 3, sy’n cynnwys llythrennau, rhifau, bylchau a’r cymeriadau canlynol yn unig . , ( ) ! @ -
-asa.legacy.paye.error.addressLine4.required=Nodwch gyfeiriad – llinell 4
-asa.legacy.paye.error.addressLine4.length=Mae angen i linell 4 y cyfeiriad fod yn 35 o gymeriadau neu lai
-asa.legacy.paye.error.addressLine4.invalid=Nodwch gyfeiriad – llinell 4, sy’n cynnwys llythrennau, rhifau, bylchau a’r cymeriadau canlynol yn unig . , ( ) ! @ -
-asa.legacy.paye.error.postcode.required=Nodwch god post
-asa.legacy.paye.error.postcode.invalid=Nodwch god post yn y fformat cywir
-asa.legacy.paye.error.country.required=Dewis gwlad
+asa.agent-regime.paye.change-address.title=Newid eich cyfeiriad
+asa.agent-regime.paye.change-address.title.invalid=Newid y llinellau cyfeiriad sy’n rhy hir
+asa.agent-regime.paye.change-address.inset.invalid=Dim ond nifer cyfyngedig o gymeriadau ar gyfer pob llinell cyfeiriad y gall ein system dderbyn.
+asa.agent-regime.paye.change-address.line1.label=Cyfeiriad – llinell 1
+asa.agent-regime.paye.change-address.line2.label=Cyfeiriad – llinell 2
+asa.agent-regime.paye.change-address.line3.label=Cyfeiriad – llinell 3
+asa.agent-regime.paye.change-address.line3.label.optional=Cyfeiriad – llinell 3 (dewisol)
+asa.agent-regime.paye.change-address.line4.label.optional=Cyfeiriad – llinell 4 (dewisol)
+asa.agent-regime.paye.change-address.postcode.label=Cod post
+asa.agent-regime.paye.change-address.country.label=Gwlad
+asa.agent-regime.paye.error.addressLine1.required=Nodwch gyfeiriad – llinell 1
+asa.agent-regime.paye.error.addressLine1.length=Mae angen i linell 1 y cyfeiriad fod yn 35 o gymeriadau neu lai
+asa.agent-regime.paye.error.addressLine1.invalid=Nodwch gyfeiriad – llinell 1, sy’n cynnwys llythrennau, rhifau, bylchau a’r cymeriadau canlynol yn unig . , ( ) ! @ -
+asa.agent-regime.paye.error.addressLine2.required=Nodwch gyfeiriad – llinell 2
+asa.agent-regime.paye.error.addressLine2.length=Mae angen i linell 2 y cyfeiriad fod yn 35 o gymeriadau neu lai
+asa.agent-regime.paye.error.addressLine2.invalid=Nodwch gyfeiriad – llinell 2, sy’n cynnwys llythrennau, rhifau, bylchau a’r cymeriadau canlynol yn unig . , ( ) ! @ -
+asa.agent-regime.paye.error.addressLine3.required=Nodwch gyfeiriad – llinell 3
+asa.agent-regime.paye.error.addressLine3.length=Mae angen i linell 3 y cyfeiriad fod yn 35 o gymeriadau neu lai
+asa.agent-regime.paye.error.addressLine3.invalid=Nodwch gyfeiriad – llinell 3, sy’n cynnwys llythrennau, rhifau, bylchau a’r cymeriadau canlynol yn unig . , ( ) ! @ -
+asa.agent-regime.paye.error.addressLine4.required=Nodwch gyfeiriad – llinell 4
+asa.agent-regime.paye.error.addressLine4.length=Mae angen i linell 4 y cyfeiriad fod yn 35 o gymeriadau neu lai
+asa.agent-regime.paye.error.addressLine4.invalid=Nodwch gyfeiriad – llinell 4, sy’n cynnwys llythrennau, rhifau, bylchau a’r cymeriadau canlynol yn unig . , ( ) ! @ -
+asa.agent-regime.paye.error.postcode.required=Nodwch god post
+asa.agent-regime.paye.error.postcode.invalid=Nodwch god post yn y fformat cywir
+asa.agent-regime.paye.error.country.required=Dewis gwlad
 
-asa.legacy.paye.check-your-answers.h1=Gwiriwch eich atebion
-asa.legacy.paye.check-your-answers.contact-name=Enw cyswllt
-asa.legacy.paye.check-your-answers.phone-number=Rhif ffôn
-asa.legacy.paye.check-your-answers.email=Cyfeiriad e-bost
-asa.legacy.paye.check-your-answers.address=Cyfeiriad
-asa.legacy.paye.check-your-answers.submit-button=Ymrestru ar gyfer TWE
+asa.agent-regime.paye.check-your-answers.h1=Gwiriwch eich atebion
+asa.agent-regime.paye.check-your-answers.contact-name=Enw cyswllt
+asa.agent-regime.paye.check-your-answers.phone-number=Rhif ffôn
+asa.agent-regime.paye.check-your-answers.email=Cyfeiriad e-bost
+asa.agent-regime.paye.check-your-answers.address=Cyfeiriad
+asa.agent-regime.paye.check-your-answers.submit-button=Ymrestru ar gyfer TWE
 
 # SA
-asa.legacy.sa.h2=Hunanasesiad
-asa.legacy.sa.in-progress.p1=Rydym yn dal i brosesu’r cofrestriad a wnaethoch ar {0}.
-asa.legacy.sa.in-progress.p2=Gall prosesu gymryd hyd at 5 diwrnod.
-asa.legacy.sa.inactive.p1 = Rydych chi eisoes wedi gwneud cais i weithredu fel asiant ar gyfer Hunanasesiad ar {0}.
-asa.legacy.sa.inactive.p2 = Anfonwyd llythyr atoch gyda chod cychwyn pan wnaethoch gais.
-asa.legacy.sa.inactive.p3 = Mae’n rhaid i chi <a class="govuk-link" href="/enrolment-management-frontend/IR-SA-AGENT/get-access-tax-scheme?continue=/agent-services-account/home" target="_blank" rel="noreferrer noopener">ddefnyddio’r cod cychwyn i gael mynediad at y gwasanaeth hwn</a>.
-asa.legacy.sa.subscribed.p1=Eich cod asiant yw: {0}
-asa.legacy.sa.subscribed.p2=Cael caniatâd gan gleientiaid newydd
-asa.legacy.sa.subscribed.p3=<a class="govuk-link" href="/account/authorise-client/agent/{0}" target="_blank" rel="noreferrer noopener">Gofynnwch i gleient eich awdurdodi (yn agor tab newydd)</a>
-asa.legacy.sa.subscribed.p4=Rheoli Hunanasesiad eich cleient
-asa.legacy.sa.subscribed.p5=<a class="govuk-link" href="/self-assessment/agent/{0}" target="_blank" rel="noreferrer noopener">Bwrw golwg dros a rheoli’ch rhestr o gleientiaid ar gyfer Hunanasesiad (yn agor tab newydd)</a>
+asa.agent-regime.sa.h2=Hunanasesiad
+asa.agent-regime.sa.in-progress.p1=Rydym yn dal i brosesu’r cofrestriad a wnaethoch ar {0}.
+asa.agent-regime.sa.in-progress.p2=Gall prosesu gymryd hyd at 5 diwrnod.
+asa.agent-regime.sa.inactive.p1 = Rydych chi eisoes wedi gwneud cais i weithredu fel asiant ar gyfer Hunanasesiad ar {0}.
+asa.agent-regime.sa.inactive.p2 = Anfonwyd llythyr atoch gyda chod cychwyn pan wnaethoch gais.
+asa.agent-regime.sa.inactive.p3 = Mae’n rhaid i chi <a class="govuk-link" href="/enrolment-management-frontend/IR-SA-AGENT/get-access-tax-scheme?continue=/agent-services-account/home" target="_blank" rel="noreferrer noopener">ddefnyddio’r cod cychwyn i gael mynediad at y gwasanaeth hwn</a>.
+asa.agent-regime.sa.subscribed.p1=Eich cod asiant yw: {0}
+asa.agent-regime.sa.subscribed.p2=Cael caniatâd gan gleientiaid newydd
+asa.agent-regime.sa.subscribed.p3=<a class="govuk-link" href="/account/authorise-client/agent/{0}" target="_blank" rel="noreferrer noopener">Gofynnwch i gleient eich awdurdodi (yn agor tab newydd)</a>
+asa.agent-regime.sa.subscribed.p4=Rheoli Hunanasesiad eich cleient
+asa.agent-regime.sa.subscribed.p5=<a class="govuk-link" href="/self-assessment/agent/{0}" target="_blank" rel="noreferrer noopener">Bwrw golwg dros a rheoli’ch rhestr o gleientiaid ar gyfer Hunanasesiad (yn agor tab newydd)</a>
 
-asa.legacy.sa.do-you-already-manage.title=Ydy {0} eisoes yn rheoli cleientiaid Hunanasesiad?
-asa.legacy.sa.do-you-already-manage.existing.false=Na, dyma’r tro cyntaf iddo reoli cleientiaid Hunanasesiad
-asa.legacy.sa.do-you-already-manage.error.required=Dewiswch ‘Iawn’ os yw {0} eisoes yn rheoli cleientiaid Hunanasesiad
+asa.agent-regime.sa.do-you-already-manage.title=Ydy {0} eisoes yn rheoli cleientiaid Hunanasesiad?
+asa.agent-regime.sa.do-you-already-manage.existing.false=Na, dyma’r tro cyntaf iddo reoli cleientiaid Hunanasesiad
+asa.agent-regime.sa.do-you-already-manage.error.required=Dewiswch ‘Iawn’ os yw {0} eisoes yn rheoli cleientiaid Hunanasesiad
 
-asa.legacy.sa.you-may-not-need-to-apply.title=Efallai na fydd angen i chi wneud cais am Hunanasesiad
-asa.legacy.sa.you-may-not-need-to-apply.p2=Gallwch barhau i reoli eich cleientiaid presennol ar gyfer Hunanasesiad drwy eich cyfrif Gwasanaethau Ar-lein CThEF i Asiantau.
-asa.legacy.sa.you-may-not-need-to-apply.error.required=Dewiswch ‘Iawn’ os ydych dal am wneud cais
+asa.agent-regime.sa.you-may-not-need-to-apply.title=Efallai na fydd angen i chi wneud cais am Hunanasesiad
+asa.agent-regime.sa.you-may-not-need-to-apply.p2=Gallwch barhau i reoli eich cleientiaid presennol ar gyfer Hunanasesiad drwy eich cyfrif Gwasanaethau Ar-lein CThEF i Asiantau.
+asa.agent-regime.sa.you-may-not-need-to-apply.error.required=Dewiswch ‘Iawn’ os ydych dal am wneud cais
 
-asa.legacy.sa.business-name.title=Pa enw busnes ddylem ei ddangos i’ch cleientiaid Hunanasesiad?
-asa.legacy.sa.business-name.use-asa.false=Rwyf am ddefnyddio enw busnes gwahanol ar gyfer Hunanasesiad
-asa.legacy.sa.business-name.new-input.label=Nodwch enw busnes
-asa.legacy.sa.business-name.use-asa.error.required=Dewiswch yr enw busnes y dylem ei ddangos i’ch cleientiaid Hunanasesiad
-asa.legacy.sa.business-name.new-input.error.empty=Nodwch enw busnes
-asa.legacy.sa.business-name.new-input.error.invalid=Nodwch enw busnes sy’n cynnwys llythrennau, rhifau, bylchau a’r cymeriadau canlynol yn unig . , ( ) & - ‘ /
+asa.agent-regime.sa.business-name.title=Pa enw busnes ddylem ei ddangos i’ch cleientiaid Hunanasesiad?
+asa.agent-regime.sa.business-name.use-asa.false=Rwyf am ddefnyddio enw busnes gwahanol ar gyfer Hunanasesiad
+asa.agent-regime.sa.business-name.new-input.label=Nodwch enw busnes
+asa.agent-regime.sa.business-name.use-asa.error.required=Dewiswch yr enw busnes y dylem ei ddangos i’ch cleientiaid Hunanasesiad
+asa.agent-regime.sa.business-name.new-input.error.empty=Nodwch enw busnes
+asa.agent-regime.sa.business-name.new-input.error.invalid=Nodwch enw busnes sy’n cynnwys llythrennau, rhifau, bylchau a’r cymeriadau canlynol yn unig . , ( ) & - ‘ /
 
-asa.legacy.sa.phone-number.title=Pa rif ffôn ddylem ei ddefnyddio i ffonio chi ynglŷn â Hunanasesiad?
-asa.legacy.sa.phone-number.heading=Pa rif ffôn ddylem ei ddefnyddio i ffonio {0} ynglŷn â Hunanasesiad?
-asa.legacy.sa.phone-number.use-asa.false=Rwyf am ddefnyddio rhif ffôn gwahanol ar gyfer Hunanasesiad
-asa.legacy.sa.phone-number.new-input.label=Nodwch rif ffôn
-asa.legacy.sa.phone-number.new-input.hint=Ar gyfer rhifau rhyngwladol, dylech gynnwys cod y wlad.
-asa.legacy.sa.phone-number.use-asa.error.required=Nodwch y rhif ffôn y dylem ei ddefnyddio i ffonio {0} ynglŷn â Hunanasesiad
-asa.legacy.sa.phone-number.new-input.error.empty=Nodwch rif ffôn
-asa.legacy.sa.phone-number.new-input.error.invalid=Dim ond rhifau y dylai’r rhif ffôn eu cynnwys
+asa.agent-regime.sa.phone-number.title=Pa rif ffôn ddylem ei ddefnyddio i ffonio chi ynglŷn â Hunanasesiad?
+asa.agent-regime.sa.phone-number.heading=Pa rif ffôn ddylem ei ddefnyddio i ffonio {0} ynglŷn â Hunanasesiad?
+asa.agent-regime.sa.phone-number.use-asa.false=Rwyf am ddefnyddio rhif ffôn gwahanol ar gyfer Hunanasesiad
+asa.agent-regime.sa.phone-number.new-input.label=Nodwch rif ffôn
+asa.agent-regime.sa.phone-number.new-input.hint=Ar gyfer rhifau rhyngwladol, dylech gynnwys cod y wlad.
+asa.agent-regime.sa.phone-number.use-asa.error.required=Nodwch y rhif ffôn y dylem ei ddefnyddio i ffonio {0} ynglŷn â Hunanasesiad
+asa.agent-regime.sa.phone-number.new-input.error.empty=Nodwch rif ffôn
+asa.agent-regime.sa.phone-number.new-input.error.invalid=Dim ond rhifau y dylai’r rhif ffôn eu cynnwys
 
-asa.legacy.sa.email-address.title=Pa gyfeiriad e-bost ddylem ei ddefnyddio i gysylltu â chi ynglŷn â Hunanasesiad?
-asa.legacy.sa.email-address.heading=Pa gyfeiriad e-bost ddylem ei ddefnyddio i gysylltu â {0} ynglŷn â Hunanasesiad?
-asa.legacy.sa.email-address.use-asa.false=Rwyf am ddefnyddio cyfeiriad e-bost gwahanol ar gyfer Hunanasesiad
-asa.legacy.sa.email-address.new-input.label=Nodwch gyfeiriad e-bost
-asa.legacy.sa.email-address.new-input.hint=Byddwn yn anfon cod i’r cyfeiriad e-bost hwn i’w gadarnhau
-asa.legacy.sa.email-address.use-asa.error.required=Dewiswch y cyfeiriad e-bost y dylem ei ddefnyddio i gysylltu â {0} ynglŷn â Hunanasesiad
-asa.legacy.sa.email-address.input.error.empty=Nodwch gyfeiriad e-bost
-asa.legacy.sa.email-address.input.error.length=Nodwch gyfeiriad e-bost sy’n 50 o gymeriadau neu lai.
-asa.legacy.sa.email-address.input.error.invalid=Nodwch gyfeiriad e-bost yn y fformat cywir, er enghraifft name@example.com
+asa.agent-regime.sa.email-address.title=Pa gyfeiriad e-bost ddylem ei ddefnyddio i gysylltu â chi ynglŷn â Hunanasesiad?
+asa.agent-regime.sa.email-address.heading=Pa gyfeiriad e-bost ddylem ei ddefnyddio i gysylltu â {0} ynglŷn â Hunanasesiad?
+asa.agent-regime.sa.email-address.use-asa.false=Rwyf am ddefnyddio cyfeiriad e-bost gwahanol ar gyfer Hunanasesiad
+asa.agent-regime.sa.email-address.new-input.label=Nodwch gyfeiriad e-bost
+asa.agent-regime.sa.email-address.new-input.hint=Byddwn yn anfon cod i’r cyfeiriad e-bost hwn i’w gadarnhau
+asa.agent-regime.sa.email-address.use-asa.error.required=Dewiswch y cyfeiriad e-bost y dylem ei ddefnyddio i gysylltu â {0} ynglŷn â Hunanasesiad
+asa.agent-regime.sa.email-address.input.error.empty=Nodwch gyfeiriad e-bost
+asa.agent-regime.sa.email-address.input.error.length=Nodwch gyfeiriad e-bost sy’n 50 o gymeriadau neu lai.
+asa.agent-regime.sa.email-address.input.error.invalid=Nodwch gyfeiriad e-bost yn y fformat cywir, er enghraifft name@example.com
 
-asa.legacy.sa.custom-email-address.title=Mae cyfeiriad e-bost eich cyfrif gwasanaethau asiant yn rhy hir
-asa.legacy.sa.custom-email-address.p1=Ar hyn o bryd mae gennym y cyfeiriad e-bost hwn ar gyfer eich cyfrif gwasanaethau asiant:
-asa.legacy.sa.custom-email-address.p2=Ar gyfer Hunanasesiad, mae’n rhaid i’r cyfeiriad e-bost fod yn 50 o gymeriadau neu lai.
-asa.legacy.sa.custom-email-address.input.label=Nodwch gyfeiriad e-bost byrrach
-asa.legacy.sa.custom-email-address.input.hint=Byddwn yn anfon cod i’r cyfeiriad e-bost hwn i’w gadarnhau
+asa.agent-regime.sa.custom-email-address.title=Mae cyfeiriad e-bost eich cyfrif gwasanaethau asiant yn rhy hir
+asa.agent-regime.sa.custom-email-address.p1=Ar hyn o bryd mae gennym y cyfeiriad e-bost hwn ar gyfer eich cyfrif gwasanaethau asiant:
+asa.agent-regime.sa.custom-email-address.p2=Ar gyfer Hunanasesiad, mae’n rhaid i’r cyfeiriad e-bost fod yn 50 o gymeriadau neu lai.
+asa.agent-regime.sa.custom-email-address.input.label=Nodwch gyfeiriad e-bost byrrach
+asa.agent-regime.sa.custom-email-address.input.hint=Byddwn yn anfon cod i’r cyfeiriad e-bost hwn i’w gadarnhau
 
-asa.legacy.sa.address.title=Pa gyfeiriad ddylem ei ddefnyddio i anfon llythyrau ynglŷn â Hunanasesiad?
-asa.legacy.sa.address.use-asa.true.hint=Dyma’r cyfeiriad ar eich cyfrif gwasanaethau asiant.
-asa.legacy.sa.address.use-asa.false=Rwyf am ddefnyddio cyfeiriad gwahanol ar gyfer Hunanasesiad
-asa.legacy.sa.address.use-asa.error.required=Dewiswch y cyfeiriad y dylem ei ddefnyddio i anfon llythyrau ynglŷn â Hunanasesiad
+asa.agent-regime.sa.address.title=Pa gyfeiriad ddylem ei ddefnyddio i anfon llythyrau ynglŷn â Hunanasesiad?
+asa.agent-regime.sa.address.use-asa.true.hint=Dyma’r cyfeiriad ar eich cyfrif gwasanaethau asiant.
+asa.agent-regime.sa.address.use-asa.false=Rwyf am ddefnyddio cyfeiriad gwahanol ar gyfer Hunanasesiad
+asa.agent-regime.sa.address.use-asa.error.required=Dewiswch y cyfeiriad y dylem ei ddefnyddio i anfon llythyrau ynglŷn â Hunanasesiad
 
-asa.legacy.sa.alf.country-picker.title=Dewiswch y wlad - Cyfrif gwasanaethau asiant - GOV.UK
-asa.legacy.sa.alf.country-picker.heading=Beth yw’r wlad lle mae’r busnes wedi’i leoli?
-asa.legacy.sa.alf.lookup.title=Dod o hyd i’r cyfeiriad - Cyfrif gwasanaethau asiant - GOV.UK
-asa.legacy.sa.alf.lookup.heading=Dod o hyd i’ch cyfeiriad
-asa.legacy.sa.alf.lookup.postcode.label=Cod post
-asa.legacy.sa.alf.select.title=Dewiswch y cyfeiriad - Cyfrif gwasanaethau asiant - GOV.UK
-asa.legacy.sa.alf.edit.title=Nodwch y cyfeiriad - Cyfrif gwasanaethau asiant - GOV.UK
-asa.legacy.sa.alf.edit.heading=Nodwch y cyfeiriad
-asa.legacy.sa.alf.edit.townLabel=Cyfeiriad – llinell 4
-asa.legacy.sa.alf.confirm.title=Adolygu a chadarnhau - Cyfrif gwasanaethau asiant - GOV.UK
+asa.agent-regime.sa.alf.country-picker.title=Dewiswch y wlad - Cyfrif gwasanaethau asiant - GOV.UK
+asa.agent-regime.sa.alf.country-picker.heading=Beth yw’r wlad lle mae’r busnes wedi’i leoli?
+asa.agent-regime.sa.alf.lookup.title=Dod o hyd i’r cyfeiriad - Cyfrif gwasanaethau asiant - GOV.UK
+asa.agent-regime.sa.alf.lookup.heading=Dod o hyd i’ch cyfeiriad
+asa.agent-regime.sa.alf.lookup.postcode.label=Cod post
+asa.agent-regime.sa.alf.select.title=Dewiswch y cyfeiriad - Cyfrif gwasanaethau asiant - GOV.UK
+asa.agent-regime.sa.alf.edit.title=Nodwch y cyfeiriad - Cyfrif gwasanaethau asiant - GOV.UK
+asa.agent-regime.sa.alf.edit.heading=Nodwch y cyfeiriad
+asa.agent-regime.sa.alf.edit.townLabel=Cyfeiriad – llinell 4
+asa.agent-regime.sa.alf.confirm.title=Adolygu a chadarnhau - Cyfrif gwasanaethau asiant - GOV.UK
 
-asa.legacy.sa.change-address.title=Newid eich cyfeiriad
-asa.legacy.sa.change-address.title.invalid=Newid y llinellau cyfeiriad sy’n rhy hir
-asa.legacy.sa.change-address.inset.invalid=Dim ond nifer cyfyngedig o gymeriadau ar gyfer pob llinell cyfeiriad y gall ein system dderbyn.
-asa.legacy.sa.change-address.line1.label=Cyfeiriad – llinell 1
-asa.legacy.sa.change-address.line2.label=Cyfeiriad – llinell 2
-asa.legacy.sa.change-address.line3.label=Cyfeiriad – llinell 3
-asa.legacy.sa.change-address.line3.label.optional=Cyfeiriad – llinell 3 (dewisol)
-asa.legacy.sa.change-address.line4.label.optional=Cyfeiriad – llinell 4 (dewisol)
-asa.legacy.sa.change-address.postcode.label=Cod post
-asa.legacy.sa.change-address.country.label=Gwlad
-asa.legacy.sa.error.addressLine1.required=Nodwch gyfeiriad – llinell 1
-asa.legacy.sa.error.addressLine1.length=Mae angen i linell 1 y cyfeiriad fod yn 28 o gymeriadau neu lai
-asa.legacy.sa.error.addressLine1.invalid=Nodwch gyfeiriad – llinell 1, sy’n cynnwys llythrennau, rhifau, bylchau a’r cymeriadau canlynol yn unig . , ( ) & - ‘ /
-asa.legacy.sa.error.addressLine2.required=Nodwch gyfeiriad – llinell 2
-asa.legacy.sa.error.addressLine2.length=Mae angen i linell 2 y cyfeiriad fod yn 28 o gymeriadau neu lai
-asa.legacy.sa.error.addressLine2.invalid=Nodwch gyfeiriad – llinell 2, sy’n cynnwys llythrennau, rhifau, bylchau a’r cymeriadau canlynol yn unig . , ( ) & - ‘ /
-asa.legacy.sa.error.addressLine3.required=Nodwch gyfeiriad – llinell 3
-asa.legacy.sa.error.addressLine3.length=Mae angen i linell 3 y cyfeiriad fod yn 28 o gymeriadau neu lai
-asa.legacy.sa.error.addressLine3.invalid=Nodwch gyfeiriad – llinell 3, sy’n cynnwys llythrennau, rhifau, bylchau a’r cymeriadau canlynol yn unig . , ( ) & - ‘ /
-asa.legacy.sa.error.addressLine4.required=Nodwch gyfeiriad – llinell 4
-asa.legacy.sa.error.addressLine4.length=Mae angen i linell 4 y cyfeiriad fod yn 18 o gymeriadau neu lai
-asa.legacy.sa.error.addressLine4.invalid=Nodwch gyfeiriad – llinell 4, sy’n cynnwys llythrennau, rhifau, bylchau a’r cymeriadau canlynol yn unig . , ( ) & - ‘ /
-asa.legacy.sa.error.postcode.required=Nodwch god post
-asa.legacy.sa.error.postcode.invalid=Nodwch god post yn y fformat cywir
-asa.legacy.sa.error.country.required=Dewis gwlad
+asa.agent-regime.sa.change-address.title=Newid eich cyfeiriad
+asa.agent-regime.sa.change-address.title.invalid=Newid y llinellau cyfeiriad sy’n rhy hir
+asa.agent-regime.sa.change-address.inset.invalid=Dim ond nifer cyfyngedig o gymeriadau ar gyfer pob llinell cyfeiriad y gall ein system dderbyn.
+asa.agent-regime.sa.change-address.line1.label=Cyfeiriad – llinell 1
+asa.agent-regime.sa.change-address.line2.label=Cyfeiriad – llinell 2
+asa.agent-regime.sa.change-address.line3.label=Cyfeiriad – llinell 3
+asa.agent-regime.sa.change-address.line3.label.optional=Cyfeiriad – llinell 3 (dewisol)
+asa.agent-regime.sa.change-address.line4.label.optional=Cyfeiriad – llinell 4 (dewisol)
+asa.agent-regime.sa.change-address.postcode.label=Cod post
+asa.agent-regime.sa.change-address.country.label=Gwlad
+asa.agent-regime.sa.error.addressLine1.required=Nodwch gyfeiriad – llinell 1
+asa.agent-regime.sa.error.addressLine1.length=Mae angen i linell 1 y cyfeiriad fod yn 28 o gymeriadau neu lai
+asa.agent-regime.sa.error.addressLine1.invalid=Nodwch gyfeiriad – llinell 1, sy’n cynnwys llythrennau, rhifau, bylchau a’r cymeriadau canlynol yn unig . , ( ) & - ‘ /
+asa.agent-regime.sa.error.addressLine2.required=Nodwch gyfeiriad – llinell 2
+asa.agent-regime.sa.error.addressLine2.length=Mae angen i linell 2 y cyfeiriad fod yn 28 o gymeriadau neu lai
+asa.agent-regime.sa.error.addressLine2.invalid=Nodwch gyfeiriad – llinell 2, sy’n cynnwys llythrennau, rhifau, bylchau a’r cymeriadau canlynol yn unig . , ( ) & - ‘ /
+asa.agent-regime.sa.error.addressLine3.required=Nodwch gyfeiriad – llinell 3
+asa.agent-regime.sa.error.addressLine3.length=Mae angen i linell 3 y cyfeiriad fod yn 28 o gymeriadau neu lai
+asa.agent-regime.sa.error.addressLine3.invalid=Nodwch gyfeiriad – llinell 3, sy’n cynnwys llythrennau, rhifau, bylchau a’r cymeriadau canlynol yn unig . , ( ) & - ‘ /
+asa.agent-regime.sa.error.addressLine4.required=Nodwch gyfeiriad – llinell 4
+asa.agent-regime.sa.error.addressLine4.length=Mae angen i linell 4 y cyfeiriad fod yn 18 o gymeriadau neu lai
+asa.agent-regime.sa.error.addressLine4.invalid=Nodwch gyfeiriad – llinell 4, sy’n cynnwys llythrennau, rhifau, bylchau a’r cymeriadau canlynol yn unig . , ( ) & - ‘ /
+asa.agent-regime.sa.error.postcode.required=Nodwch god post
+asa.agent-regime.sa.error.postcode.invalid=Nodwch god post yn y fformat cywir
+asa.agent-regime.sa.error.country.required=Dewis gwlad
 
-asa.legacy.sa.check-your-answers.h1=Gwiriwch eich atebion
-asa.legacy.sa.check-your-answers.business-name=Enw’r busnes
-asa.legacy.sa.check-your-answers.phone-number=Rhif ffôn
-asa.legacy.sa.check-your-answers.email=Cyfeiriad e-bost
-asa.legacy.sa.check-your-answers.address=Cyfeiriad
-asa.legacy.sa.check-your-answers.submit-button=Ymrestru ar gyfer Hunanasesiad
+asa.agent-regime.sa.check-your-answers.h1=Gwiriwch eich atebion
+asa.agent-regime.sa.check-your-answers.business-name=Enw’r busnes
+asa.agent-regime.sa.check-your-answers.phone-number=Rhif ffôn
+asa.agent-regime.sa.check-your-answers.email=Cyfeiriad e-bost
+asa.agent-regime.sa.check-your-answers.address=Cyfeiriad
+asa.agent-regime.sa.check-your-answers.submit-button=Ymrestru ar gyfer Hunanasesiad
 
 # Custom UR banner
 banner.heading=Helpwch i wella CThEF

@@ -25,8 +25,8 @@ import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageS
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionBusinessNameForm
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.BusinessNameFormValues
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.utils.RequestAwareLogging
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.update_business_name
@@ -50,15 +50,15 @@ extends FrontendController(cc)
 with I18nSupport
 with RequestAwareLogging {
 
-  def showPage(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
-    legacyRegime match {
+  def showPage(agentRegime: AgentRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(agentRegime).async { implicit request =>
+    agentRegime match {
       case PAYE => Future.successful(Redirect(routes.PayeUpdateContactNameController.showPage))
       case _ =>
         val journey = request.subscriptionJourney
 
         val asaDetailsAgencyName = journey.asaDetails.agencyName.getOrElse("")
 
-        val initialForm = SubscriptionBusinessNameForm.form(legacyRegime)
+        val initialForm = SubscriptionBusinessNameForm.form(agentRegime)
         val form =
           journey.useCustomBusinessName match {
 
@@ -77,23 +77,23 @@ with RequestAwareLogging {
           Ok(update_business_name(
             form,
             asaDetailsAgencyName,
-            legacyRegime
+            agentRegime
           ))
         )
     }
   }
 
-  def onSubmit(legacyRegime: LegacyRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(legacyRegime).async { implicit request =>
+  def onSubmit(agentRegime: AgentRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(agentRegime).async { implicit request =>
     val journey = request.subscriptionJourney
 
-    SubscriptionBusinessNameForm.form(legacyRegime).bindFromRequest().fold(
+    SubscriptionBusinessNameForm.form(agentRegime).bindFromRequest().fold(
       formWithErrors => {
         val asaDetailsAgencyName = journey.asaDetails.agencyName.getOrElse("")
         Future.successful(
           BadRequest(update_business_name(
             formWithErrors,
             asaDetailsAgencyName,
-            legacyRegime
+            agentRegime
           ))
         )
       },
@@ -108,12 +108,12 @@ with RequestAwareLogging {
         )
 
         sessionCacheService
-          .put(subscriptionJourneyKey(legacyRegime), updatedJourney)
+          .put(subscriptionJourneyKey(agentRegime), updatedJourney)
           .map(_ =>
             Redirect(getNextPage(
               updateBusinessNamePage,
               Some(updatedJourney),
-              legacyRegime
+              agentRegime
             ))
           )
       }

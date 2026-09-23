@@ -28,10 +28,10 @@ import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.ChangeSubscriptionAd
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.ChangeSubscriptionAddressForm.postcodeKey
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionAddressForm.addressUseAsaDataKey
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.CT
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.SA
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
 
 class UpdateAddressControllerISpec
@@ -39,7 +39,7 @@ extends ComponentBaseISpec {
 
   private val repo = inject[SessionCacheRepository]
 
-  private val legacyRegimes = List(CT, PAYE, SA)
+  private val agentRegimes = List(CT, PAYE, SA)
 
   private val changeRouteCases = List(
     ("address-change", "Change your address"),
@@ -64,8 +64,8 @@ extends ComponentBaseISpec {
     countryCode = "GB"
   )
 
-  legacyRegimes.foreach(legacyRegime => {
-    val updateAddressPath = s"$subscriptionStartPath/$legacyRegime/address"
+  agentRegimes.foreach(agentRegime => {
+    val updateAddressPath = s"$subscriptionStartPath/$agentRegime/address"
 
     s"GET $updateAddressPath" should {
       "display the enter address page" in {
@@ -78,7 +78,7 @@ extends ComponentBaseISpec {
 
         result.status shouldBe OK
         val expectedTitle: String =
-          (legacyRegime: LegacyRegime) match {
+          (agentRegime: AgentRegime) match {
             case CT => "What address should we use to send letters about Corporation Tax?"
             case PAYE => "What address should we use to send letters about PAYE?"
             case SA => "What address should we use to send letters about Self Assessment?"
@@ -91,18 +91,18 @@ extends ComponentBaseISpec {
 
       val journeyWithRedirectLocations = List(
         (subscriptionBaseJourney, "check-your-answers"),
-        (subscriptionFullJourney(legacyRegime), "check-your-answers"),
-        (subscriptionFullJourney(legacyRegime).copy(asaDetails = subscriptionAgencyDetails.copy(agencyAddress = Some(invalidAddress))), "address-fix")
+        (subscriptionFullJourney(agentRegime), "check-your-answers"),
+        (subscriptionFullJourney(agentRegime).copy(asaDetails = subscriptionAgencyDetails.copy(agencyAddress = Some(invalidAddress))), "address-fix")
       )
 
       journeyWithRedirectLocations.foreach(journeyWithRedirectLocation => {
         s"update journey and redirect to ${journeyWithRedirectLocation._2} when using ASA address " +
-          s"and journey ${completeString(journeyWithRedirectLocation._1, legacyRegime)}" in {
+          s"and journey ${completeString(journeyWithRedirectLocation._1, agentRegime)}" in {
             givenAuthorisedAsAgentWith(arn.value)
             givenGetAgentRecord(agentRecord)
             stubASAGetResponseError(arn, NOT_FOUND)
 
-            repo.putSession(subscriptionJourneyKey(legacyRegime), journeyWithRedirectLocation._1).futureValue
+            repo.putSession(subscriptionJourneyKey(agentRegime), journeyWithRedirectLocation._1).futureValue
 
             val result =
               post(updateAddressPath)(body =
@@ -111,9 +111,9 @@ extends ComponentBaseISpec {
                 )
               )
             result.status shouldBe SEE_OTHER
-            result.header(LOCATION) shouldBe Some(s"$subscriptionStartPath/$legacyRegime/${journeyWithRedirectLocation._2}")
+            result.header(LOCATION) shouldBe Some(s"$subscriptionStartPath/$agentRegime/${journeyWithRedirectLocation._2}")
 
-            val updated = await(repo.getFromSession(subscriptionJourneyKey(legacyRegime)))
+            val updated = await(repo.getFromSession(subscriptionJourneyKey(agentRegime)))
             updated shouldBe defined
             updated.get.useCustomAddress shouldBe Some(false)
             updated.value.addressAnswer shouldBe None
@@ -139,12 +139,12 @@ extends ComponentBaseISpec {
 
         result.status shouldBe SEE_OTHER
 
-        result.header("Location").get shouldBe s"${subscriptions.routes.AddressLookupController.startAddressLookup(legacyRegime)}"
+        result.header("Location").get shouldBe s"${subscriptions.routes.AddressLookupController.startAddressLookup(agentRegime)}"
       }
     }
 
     changeRouteCases.foreach { case (routeSuffix, expectedTitle) =>
-      val changeAddressPath = s"$subscriptionStartPath/$legacyRegime/$routeSuffix"
+      val changeAddressPath = s"$subscriptionStartPath/$agentRegime/$routeSuffix"
 
       s"GET $changeAddressPath" should {
         s"display the change address page with title '$expectedTitle'" in {
@@ -153,7 +153,7 @@ extends ComponentBaseISpec {
           givenGetAgentRecord(agentRecord)
           stubASAGetResponseError(arn, NOT_FOUND)
 
-          repo.putSession(subscriptionJourneyKey(legacyRegime), subscriptionBaseJourney.copy(useCustomAddress = Some(false))).futureValue
+          repo.putSession(subscriptionJourneyKey(agentRegime), subscriptionBaseJourney.copy(useCustomAddress = Some(false))).futureValue
 
           val result = get(changeAddressPath)
 
@@ -167,12 +167,12 @@ extends ComponentBaseISpec {
           givenGetAgentRecord(agentRecord)
           stubASAGetResponseError(arn, NOT_FOUND)
 
-          repo.putSession(subscriptionJourneyKey(legacyRegime), subscriptionBaseJourney).futureValue
+          repo.putSession(subscriptionJourneyKey(agentRegime), subscriptionBaseJourney).futureValue
 
           val result = get(changeAddressPath)
 
           result.status shouldBe SEE_OTHER
-          result.header(LOCATION) shouldBe Some(s"$subscriptionStartPath/$legacyRegime/address")
+          result.header(LOCATION) shouldBe Some(s"$subscriptionStartPath/$agentRegime/address")
         }
       }
 
@@ -183,7 +183,7 @@ extends ComponentBaseISpec {
           givenGetAgentRecord(agentRecord)
           stubASAGetResponseError(arn, NOT_FOUND)
 
-          repo.putSession(subscriptionJourneyKey(legacyRegime), subscriptionBaseJourney.copy(useCustomAddress = Some(false))).futureValue
+          repo.putSession(subscriptionJourneyKey(agentRegime), subscriptionBaseJourney.copy(useCustomAddress = Some(false))).futureValue
 
           val result =
             post(changeAddressPath)(body =
@@ -196,9 +196,9 @@ extends ComponentBaseISpec {
             )
 
           result.status shouldBe SEE_OTHER
-          result.header(LOCATION) shouldBe Some(s"$subscriptionStartPath/$legacyRegime/check-your-answers")
+          result.header(LOCATION) shouldBe Some(s"$subscriptionStartPath/$agentRegime/check-your-answers")
 
-          val updated = await(repo.getFromSession(subscriptionJourneyKey(legacyRegime)))
+          val updated = await(repo.getFromSession(subscriptionJourneyKey(agentRegime)))
           updated shouldBe defined
           updated.get.useCustomAddress shouldBe Some(true)
           updated.value.addressAnswer shouldBe Some(changedAddress)
@@ -210,7 +210,7 @@ extends ComponentBaseISpec {
           givenGetAgentRecord(agentRecord)
           stubASAGetResponseError(arn, NOT_FOUND)
 
-          repo.putSession(subscriptionJourneyKey(legacyRegime), subscriptionBaseJourney.copy(useCustomAddress = Some(false))).futureValue
+          repo.putSession(subscriptionJourneyKey(agentRegime), subscriptionBaseJourney.copy(useCustomAddress = Some(false))).futureValue
 
           val result = post(changeAddressPath)(body = Map.empty)
 
@@ -224,7 +224,7 @@ extends ComponentBaseISpec {
           givenGetAgentRecord(agentRecord)
           stubASAGetResponseError(arn, NOT_FOUND)
 
-          repo.putSession(subscriptionJourneyKey(legacyRegime), subscriptionBaseJourney).futureValue
+          repo.putSession(subscriptionJourneyKey(agentRegime), subscriptionBaseJourney).futureValue
 
           val result =
             post(changeAddressPath)(body =
@@ -237,7 +237,7 @@ extends ComponentBaseISpec {
             )
 
           result.status shouldBe SEE_OTHER
-          result.header(LOCATION) shouldBe Some(s"$subscriptionStartPath/$legacyRegime/address")
+          result.header(LOCATION) shouldBe Some(s"$subscriptionStartPath/$agentRegime/address")
         }
       }
     }

@@ -21,7 +21,7 @@ import org.scalatest.wordspec.AnyWordSpec
 import play.api.i18n.Messages
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionEmailAddressForm._
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.EmailAddressFormValues
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 import play.api.test.Helpers
 import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators.CT_SA_EMAIL_MAX_LENGTH
 
@@ -35,12 +35,12 @@ with Matchers {
   val validNewEmailAddress = "joe@bloggs.com"
   val invalidNewEmailAddress = "{][.',"
 
-  private val legacyRegime = LegacyRegime.CT
+  private val agentRegime = AgentRegime.CT
 
-  private val legacyRegimePrefix = legacyRegime.msgPrefix
+  private val agentRegimePrefix = agentRegime.msgPrefix
 
   implicit val messages: Messages = Helpers.stubMessages()
-  private val initForm = form(legacyRegime, "Agency Name")
+  private val initForm = form(agentRegime, "Agency Name")
 
   "form binding" should {
     s"be successful when $emailAddressUseAsaDataKey true" in {
@@ -79,7 +79,7 @@ with Matchers {
 
       val validatedForm = initForm.bind(params)
       validatedForm.hasErrors shouldBe true
-      validatedForm.error(emailAddressUseAsaDataKey).get.message shouldBe s"$legacyRegimePrefix.email-address.use-asa.error.required"
+      validatedForm.error(emailAddressUseAsaDataKey).get.message shouldBe s"$agentRegimePrefix.email-address.use-asa.error.required"
       validatedForm.errors.length shouldBe 1
     }
 
@@ -91,7 +91,7 @@ with Matchers {
 
       val validatedForm = initForm.bind(params)
       validatedForm.hasErrors shouldBe true
-      validatedForm.error(emailAddressNewKey).get.message shouldBe s"$legacyRegimePrefix.email-address.input.error.empty"
+      validatedForm.error(emailAddressNewKey).get.message shouldBe s"$agentRegimePrefix.email-address.input.error.empty"
       validatedForm.errors.length shouldBe 1
     }
 
@@ -104,7 +104,7 @@ with Matchers {
 
       val validatedForm = initForm.bind(params)
       validatedForm.hasErrors shouldBe true
-      validatedForm.error(emailAddressNewKey).get.message shouldBe s"$legacyRegimePrefix.email-address.input.error.length"
+      validatedForm.error(emailAddressNewKey).get.message shouldBe s"$agentRegimePrefix.email-address.input.error.length"
       validatedForm.errors.length shouldBe 1
     }
 
@@ -116,7 +116,7 @@ with Matchers {
 
       val validatedForm = initForm.bind(params)
       validatedForm.hasErrors shouldBe true
-      validatedForm.error(emailAddressNewKey).get.message shouldBe s"$legacyRegimePrefix.email-address.input.error.invalid"
+      validatedForm.error(emailAddressNewKey).get.message shouldBe s"$agentRegimePrefix.email-address.input.error.invalid"
       validatedForm.errors.length shouldBe 1
     }
 

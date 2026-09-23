@@ -22,7 +22,7 @@ import play.api.data.Mapping
 import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators.trimmedAndNormalisedText
 import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators.useAsaDataMapping
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.BusinessNameFormValues
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 import uk.gov.voa.play.form.ConditionalMappings.mandatoryIfFalse
 
 object SubscriptionBusinessNameForm {
@@ -32,19 +32,19 @@ object SubscriptionBusinessNameForm {
 
   private val businessNameRegex = """^[A-Za-z0-9 .,()/&\-'‘’]{1,54}$""".r
 
-  private def businessNameUseAsaDataMapping(legacyRegime: LegacyRegime): Mapping[Boolean] = useAsaDataMapping(
-    s"${legacyRegime.msgPrefix}.business-name.use-asa.error.required"
+  private def businessNameUseAsaDataMapping(agentRegime: AgentRegime): Mapping[Boolean] = useAsaDataMapping(
+    s"${agentRegime.msgPrefix}.business-name.use-asa.error.required"
   )
 
-  private def businessNameNewOptionalMapping(legacyRegime: LegacyRegime): Mapping[String] = trimmedAndNormalisedText
-    .verifying(s"${legacyRegime.msgPrefix}.business-name.new-input.error.empty", _.nonEmpty)
-    .verifying(s"${legacyRegime.msgPrefix}.business-name.new-input.error.invalid", x => x.isEmpty || businessNameRegex.matches(x))
+  private def businessNameNewOptionalMapping(agentRegime: AgentRegime): Mapping[String] = trimmedAndNormalisedText
+    .verifying(s"${agentRegime.msgPrefix}.business-name.new-input.error.empty", _.nonEmpty)
+    .verifying(s"${agentRegime.msgPrefix}.business-name.new-input.error.invalid", x => x.isEmpty || businessNameRegex.matches(x))
 
-  def form(legacyRegime: LegacyRegime): Form[BusinessNameFormValues] = {
+  def form(agentRegime: AgentRegime): Form[BusinessNameFormValues] = {
     Form(
       mapping(
-        businessNameUseAsaDataKey -> businessNameUseAsaDataMapping(legacyRegime),
-        businessNameNewKey -> mandatoryIfFalse(businessNameUseAsaDataKey, businessNameNewOptionalMapping(legacyRegime))
+        businessNameUseAsaDataKey -> businessNameUseAsaDataMapping(agentRegime),
+        businessNameNewKey -> mandatoryIfFalse(businessNameUseAsaDataKey, businessNameNewOptionalMapping(agentRegime))
       )(BusinessNameFormValues.apply)(o => Some((o.useAsaData, o.newBusinessName)))
     )
   }

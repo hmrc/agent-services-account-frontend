@@ -23,7 +23,7 @@ import play.api.i18n.Messages
 import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators.trimmedText
 import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators.useAsaDataMapping
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.PhoneNumberFormValues
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 import uk.gov.voa.play.form.ConditionalMappings.mandatoryIfFalse
 
 object SubscriptionPhoneNumberForm {
@@ -37,10 +37,10 @@ object SubscriptionPhoneNumberForm {
   private val phoneNumberRegex = """^(?=.*\d)[0-9 +()]+$""".r
 
   private def phoneNumberUseAsaDataMapping(
-    legacyRegime: LegacyRegime,
+    agentRegime: AgentRegime,
     asaDetailsAgencyName: String
   )(implicit msgs: Messages): Mapping[Boolean] = useAsaDataMapping(
-    msgs(s"${legacyRegime.msgPrefix}.phone-number.use-asa.error.required", asaDetailsAgencyName)
+    msgs(s"${agentRegime.msgPrefix}.phone-number.use-asa.error.required", asaDetailsAgencyName)
   )
 
   def isPhoneNumberValid(x: String): Boolean = {
@@ -48,18 +48,18 @@ object SubscriptionPhoneNumberForm {
     phoneNumberRegex.matches(x) && digits.length <= 20
   }
 
-  private def phoneNumberNewOptionalMapping(legacyRegime: LegacyRegime): Mapping[String] = trimmedText
-    .verifying(s"${legacyRegime.msgPrefix}.phone-number.new-input.error.empty", _.nonEmpty)
-    .verifying(s"${legacyRegime.msgPrefix}.phone-number.new-input.error.invalid", x => x.isEmpty || isPhoneNumberValid(x))
+  private def phoneNumberNewOptionalMapping(agentRegime: AgentRegime): Mapping[String] = trimmedText
+    .verifying(s"${agentRegime.msgPrefix}.phone-number.new-input.error.empty", _.nonEmpty)
+    .verifying(s"${agentRegime.msgPrefix}.phone-number.new-input.error.invalid", x => x.isEmpty || isPhoneNumberValid(x))
 
   def form(
-    legacyRegime: LegacyRegime,
+    agentRegime: AgentRegime,
     asaDetailsAgencyName: String
   )(implicit msgs: Messages): Form[PhoneNumberFormValues] = {
     Form(
       mapping(
-        phoneNumberUseAsaDataKey -> phoneNumberUseAsaDataMapping(legacyRegime, asaDetailsAgencyName),
-        phoneNumberNewKey -> mandatoryIfFalse(phoneNumberUseAsaDataKey, phoneNumberNewOptionalMapping(legacyRegime))
+        phoneNumberUseAsaDataKey -> phoneNumberUseAsaDataMapping(agentRegime, asaDetailsAgencyName),
+        phoneNumberNewKey -> mandatoryIfFalse(phoneNumberUseAsaDataKey, phoneNumberNewOptionalMapping(agentRegime))
       )(PhoneNumberFormValues.apply)(o => Some((o.useAsaData, o.newPhoneNumber)))
     )
   }

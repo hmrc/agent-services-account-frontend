@@ -20,7 +20,7 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionBusinessNameForm._
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.BusinessNameFormValues
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 
 import scala.util.Random
 
@@ -32,11 +32,11 @@ with Matchers {
   val validNewBusinessName = "ABC-No.1 Accountants"
   val invalidNewBusinessName = "{][.',"
 
-  private val legacyRegime = LegacyRegime.SA
+  private val agentRegime = AgentRegime.SA
 
-  private val legacyRegimePrefix = legacyRegime.msgPrefix
+  private val agentRegimePrefix = agentRegime.msgPrefix
 
-  private val initForm = form(legacyRegime)
+  private val initForm = form(agentRegime)
 
   "form binding" should {
     s"be successful when $businessNameUseAsaDataKey true" in {
@@ -75,7 +75,7 @@ with Matchers {
 
       val validatedForm = initForm.bind(params)
       validatedForm.hasErrors shouldBe true
-      validatedForm.error(businessNameUseAsaDataKey).get.message shouldBe s"$legacyRegimePrefix.business-name.use-asa.error.required"
+      validatedForm.error(businessNameUseAsaDataKey).get.message shouldBe s"$agentRegimePrefix.business-name.use-asa.error.required"
       validatedForm.errors.length shouldBe 1
     }
 
@@ -87,7 +87,7 @@ with Matchers {
 
       val validatedForm = initForm.bind(params)
       validatedForm.hasErrors shouldBe true
-      validatedForm.error(businessNameNewKey).get.message shouldBe s"$legacyRegimePrefix.business-name.new-input.error.empty"
+      validatedForm.error(businessNameNewKey).get.message shouldBe s"$agentRegimePrefix.business-name.new-input.error.empty"
       validatedForm.errors.length shouldBe 1
     }
 
@@ -99,7 +99,7 @@ with Matchers {
 
       val validatedForm = initForm.bind(params)
       validatedForm.hasErrors shouldBe true
-      validatedForm.error(businessNameNewKey).get.message shouldBe s"$legacyRegimePrefix.business-name.new-input.error.invalid"
+      validatedForm.error(businessNameNewKey).get.message shouldBe s"$agentRegimePrefix.business-name.new-input.error.invalid"
       validatedForm.errors.length shouldBe 1
     }
 

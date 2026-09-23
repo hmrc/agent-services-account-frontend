@@ -26,7 +26,7 @@ extends ViewBaseSpec {
 
   private val view: confirmation = inject[confirmation]
 
-  private val heading = messages("asa.legacy.confirmation.title")
+  private val heading = messages("asa.agent-regime.confirmation.title")
   private val title = s"$heading - Agent services account - GOV.UK"
 
   "confirmation view" should {

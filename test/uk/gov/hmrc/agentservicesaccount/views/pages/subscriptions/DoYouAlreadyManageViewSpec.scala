@@ -23,7 +23,7 @@ import play.api.data.Form
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.DoYouAlreadyManageForm
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.DoYouAlreadyManageForm.doYouAlreadyManageKey
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.DoYouAlreadyManageFormValues
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.do_you_already_manage
 
@@ -35,9 +35,9 @@ extends ViewBaseSpec {
   private val asaDetailsAgencyName = "Test Agency"
 
   private val regimes = Seq(
-    LegacyRegime.SA,
-    LegacyRegime.CT,
-    LegacyRegime.PAYE
+    AgentRegime.SA,
+    AgentRegime.CT,
+    AgentRegime.PAYE
   )
 
   regimes.foreach { regime =>
@@ -63,7 +63,7 @@ extends ViewBaseSpec {
       )
 
       val title: String = messages(
-        s"asa.legacy.${regime.toString.toLowerCase}.do-you-already-manage.title",
+        s"asa.agent-regime.${regime.toString.toLowerCase}.do-you-already-manage.title",
         asaDetailsAgencyName
       )
 
@@ -109,11 +109,11 @@ extends ViewBaseSpec {
 
           radios.size() mustBe 2
 
-          radios.get(0).text() mustBe messages("asa.legacy.do-you-already-manage.existing.true")
+          radios.get(0).text() mustBe messages("asa.agent-regime.do-you-already-manage.existing.true")
           radios.get(0).select("input").attr("value") mustBe "true"
 
           radios.get(1).text() mustBe
-            messages(s"asa.legacy.${regime.toString.toLowerCase}.do-you-already-manage.existing.false")
+            messages(s"asa.agent-regime.${regime.toString.toLowerCase}.do-you-already-manage.existing.false")
           radios.get(1).select("input").attr("value") mustBe "false"
         }
       }

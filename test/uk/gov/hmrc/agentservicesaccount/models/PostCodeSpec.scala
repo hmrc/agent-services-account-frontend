@@ -19,23 +19,23 @@ package uk.gov.hmrc.agentservicesaccount.models
 import org.scalatest.EitherValues
 import org.scalatest.Inspectors
 import support.UnitSpec
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 
 class PostCodeSpec
 extends UnitSpec,
   EitherValues,
   Inspectors {
 
-  private val LegacyRegimes = Seq(
-    LegacyRegime.PAYE,
-    LegacyRegime.SA,
-    LegacyRegime.CT
+  private val agentRegimes = Seq(
+    AgentRegime.PAYE,
+    AgentRegime.SA,
+    AgentRegime.CT
   )
 
   "Parsing a post code" can {
-    forAll(LegacyRegimes) { legacyRegime =>
-      s"mapping a $legacyRegime post code" should {
-        val mapping = PostCode.mapping(legacyRegime)
+    forAll(agentRegimes) { agentRegime =>
+      s"mapping a $agentRegime post code" should {
+        val mapping = PostCode.mapping(agentRegime)
 
         "handle valid postcodes" in {
           mapping.bind(Map("" -> "G1 1XQ")).value shouldBe "G1 1XQ"

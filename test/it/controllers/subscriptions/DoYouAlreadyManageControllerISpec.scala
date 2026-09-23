@@ -40,10 +40,10 @@ import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.DoYouAlreadyMa
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.{routes => subscriptionRoutes}
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.DoYouAlreadyManageForm.doYouAlreadyManageKey
 import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.CT
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.SA
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.auth.core.AuthConnector
@@ -65,9 +65,9 @@ with IntegrationPatience
 with MockFactory
 with TestConstants {
 
-  private val legacyRegimes = List(CT, SA, PAYE)
+  private val agentRegimes = List(CT, SA, PAYE)
 
-  class TestSetup(legacyRegime: LegacyRegime) {
+  class TestSetup(agentRegime: AgentRegime) {
 
     private val testArn = "TARN0000001"
 
@@ -155,12 +155,12 @@ with TestConstants {
     def cacheJourney(journey: SubscriptionJourney): Unit = {
       implicit val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequest
       implicit val writes: OWrites[SubscriptionJourney] = Json.writes[SubscriptionJourney]
-      sessionCache.put(subscriptionJourneyKey(legacyRegime), journey).futureValue
+      sessionCache.put(subscriptionJourneyKey(agentRegime), journey).futureValue
     }
 
   }
 
-  legacyRegimes.foreach { regime =>
+  agentRegimes.foreach { regime =>
     s"GET /subscription/$regime/do-you-already-manage" should {
 
       "render page with empty form" in new TestSetup(regime) {
@@ -186,7 +186,7 @@ with TestConstants {
     }
   }
 
-  legacyRegimes.foreach { regime =>
+  agentRegimes.foreach { regime =>
     s"POST /subscription/$regime/do-you-already-manage" should {
 
       "return BAD_REQUEST when no option selected" in new TestSetup(regime) {

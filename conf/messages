@@ -177,318 +177,318 @@ asa.apply-to-act-for.paye=Pay as you earn (PAYE)/Construction Industry Scheme (C
 asa.apply-to-act-for.sa=Self Assessment
 asa.apply-to-act-for.ct=Corporation Tax
 
-asa.legacy.do-you-already-manage.existing.true=Yes, through their existing HMRC online services account
+asa.agent-regime.do-you-already-manage.existing.true=Yes, through their existing HMRC online services account
 
-asa.legacy.you-may-not-need-to-apply.p1=You only need to apply and get a new agent code if you want to manage your clients between different team members or office locations.
-asa.legacy.you-may-not-need-to-apply.h1=Do you still want to apply?
+asa.agent-regime.you-may-not-need-to-apply.p1=You only need to apply and get a new agent code if you want to manage your clients between different team members or office locations.
+asa.agent-regime.you-may-not-need-to-apply.h1=Do you still want to apply?
 
-asa.legacy.confirmation.title=We’re processing your application
-asa.legacy.confirmation.panel.body=You’ll get an agent code within 5 days
-asa.legacy.confirmation.p1=You’ll receive an email once your agent code is ready. You can then use it to ask for authorisation from your clients.
-asa.legacy.confirmation.p2=We’ll also send you a letter with your agent code for your records.
-asa.legacy.confirmation.p3=This code must be kept private. Only share it with people who genuinely need to know it.
-asa.legacy.confirmation.return-home=Return to your agent services account homepage
+asa.agent-regime.confirmation.title=We’re processing your application
+asa.agent-regime.confirmation.panel.body=You’ll get an agent code within 5 days
+asa.agent-regime.confirmation.p1=You’ll receive an email once your agent code is ready. You can then use it to ask for authorisation from your clients.
+asa.agent-regime.confirmation.p2=We’ll also send you a letter with your agent code for your records.
+asa.agent-regime.confirmation.p3=This code must be kept private. Only share it with people who genuinely need to know it.
+asa.agent-regime.confirmation.return-home=Return to your agent services account homepage
 
 # CT
-asa.legacy.ct.h2=Corporation Tax
-asa.legacy.ct.in-progress.p1=We are still processing the application you did on {0}.
-asa.legacy.ct.in-progress.p2=Processing can take up to 5 days.
-asa.legacy.ct.inactive.p1 = You’ve already applied to act as an agent for Corporation Tax on {0}.
-asa.legacy.ct.inactive.p2 = We’ve sent you a letter with an activation code when you applied.
-asa.legacy.ct.inactive.p3 = You must <a class="govuk-link" href="/enrolment-management-frontend/IR-CT-AGENT/get-access-tax-scheme?continue=/agent-services-account/home" target="_blank" rel="noreferrer noopener">use the activation code to get access to this service</a>.
-asa.legacy.ct.subscribed.p1=Your agent code is: {0}
-asa.legacy.ct.subscribed.p2=Get permission from new clients
-asa.legacy.ct.subscribed.p3=<a class="govuk-link" href="/account/authorise-client/agent/{0}" target="_blank" rel="noreferrer noopener">Ask a client to authorise you (opens in a new tab)</a>
-asa.legacy.ct.subscribed.p4=Manage your client’s Corporation Tax
-asa.legacy.ct.subscribed.p5=<a class="govuk-link" href="/corporation-tax/agent/{0}" target="_blank" rel="noreferrer noopener">View and manage your client list for Corporation Tax (opens in a new tab)</a>
+asa.agent-regime.ct.h2=Corporation Tax
+asa.agent-regime.ct.in-progress.p1=We are still processing the application you did on {0}.
+asa.agent-regime.ct.in-progress.p2=Processing can take up to 5 days.
+asa.agent-regime.ct.inactive.p1 = You’ve already applied to act as an agent for Corporation Tax on {0}.
+asa.agent-regime.ct.inactive.p2 = We’ve sent you a letter with an activation code when you applied.
+asa.agent-regime.ct.inactive.p3 = You must <a class="govuk-link" href="/enrolment-management-frontend/IR-CT-AGENT/get-access-tax-scheme?continue=/agent-services-account/home" target="_blank" rel="noreferrer noopener">use the activation code to get access to this service</a>.
+asa.agent-regime.ct.subscribed.p1=Your agent code is: {0}
+asa.agent-regime.ct.subscribed.p2=Get permission from new clients
+asa.agent-regime.ct.subscribed.p3=<a class="govuk-link" href="/account/authorise-client/agent/{0}" target="_blank" rel="noreferrer noopener">Ask a client to authorise you (opens in a new tab)</a>
+asa.agent-regime.ct.subscribed.p4=Manage your client’s Corporation Tax
+asa.agent-regime.ct.subscribed.p5=<a class="govuk-link" href="/corporation-tax/agent/{0}" target="_blank" rel="noreferrer noopener">View and manage your client list for Corporation Tax (opens in a new tab)</a>
 
-asa.legacy.ct.do-you-already-manage.title=Does {0} already manage Corporation Tax clients?
-asa.legacy.ct.do-you-already-manage.existing.false=No, this is their first time managing Corporation Tax clients
-asa.legacy.ct.do-you-already-manage.error.required=Select yes if {0} already manages Corporation Tax clients
+asa.agent-regime.ct.do-you-already-manage.title=Does {0} already manage Corporation Tax clients?
+asa.agent-regime.ct.do-you-already-manage.existing.false=No, this is their first time managing Corporation Tax clients
+asa.agent-regime.ct.do-you-already-manage.error.required=Select yes if {0} already manages Corporation Tax clients
 
-asa.legacy.ct.you-may-not-need-to-apply.title=You may not need to apply for Corporation Tax
-asa.legacy.ct.you-may-not-need-to-apply.p2=You can continue to manage your existing Corporation Tax clients through your HMRC Online Services for Agents account.
-asa.legacy.ct.you-may-not-need-to-apply.error.required=Select yes if you still want to apply
+asa.agent-regime.ct.you-may-not-need-to-apply.title=You may not need to apply for Corporation Tax
+asa.agent-regime.ct.you-may-not-need-to-apply.p2=You can continue to manage your existing Corporation Tax clients through your HMRC Online Services for Agents account.
+asa.agent-regime.ct.you-may-not-need-to-apply.error.required=Select yes if you still want to apply
 
-asa.legacy.ct.business-name.title=What business name should we show to your Corporation Tax clients?
-asa.legacy.ct.business-name.use-asa.false=I want to use a different business name for Corporation Tax
-asa.legacy.ct.business-name.new-input.label=Enter a business name
-asa.legacy.ct.business-name.use-asa.error.required=Select the business name we should show to your Corporation Tax clients
-asa.legacy.ct.business-name.new-input.error.empty=Enter a business name
-asa.legacy.ct.business-name.new-input.error.invalid=Enter a business name that only contains letters, numbers, spaces and the characters . , ( ) & - ‘ /
+asa.agent-regime.ct.business-name.title=What business name should we show to your Corporation Tax clients?
+asa.agent-regime.ct.business-name.use-asa.false=I want to use a different business name for Corporation Tax
+asa.agent-regime.ct.business-name.new-input.label=Enter a business name
+asa.agent-regime.ct.business-name.use-asa.error.required=Select the business name we should show to your Corporation Tax clients
+asa.agent-regime.ct.business-name.new-input.error.empty=Enter a business name
+asa.agent-regime.ct.business-name.new-input.error.invalid=Enter a business name that only contains letters, numbers, spaces and the characters . , ( ) & - ‘ /
 
-asa.legacy.ct.phone-number.title=What phone number should we use to call you about Corporation Tax?
-asa.legacy.ct.phone-number.heading=What phone number should we use to call {0} about Corporation Tax?
-asa.legacy.ct.phone-number.use-asa.false=I want to use a different phone number for Corporation Tax
-asa.legacy.ct.phone-number.new-input.label=Enter a phone number
-asa.legacy.ct.phone-number.new-input.hint=For international numbers, include the country code.
-asa.legacy.ct.phone-number.use-asa.error.required=Enter the phone number we should use to call {0} about Corporation Tax
-asa.legacy.ct.phone-number.new-input.error.empty=Enter a phone number
-asa.legacy.ct.phone-number.new-input.error.invalid=The phone number must only include numbers
+asa.agent-regime.ct.phone-number.title=What phone number should we use to call you about Corporation Tax?
+asa.agent-regime.ct.phone-number.heading=What phone number should we use to call {0} about Corporation Tax?
+asa.agent-regime.ct.phone-number.use-asa.false=I want to use a different phone number for Corporation Tax
+asa.agent-regime.ct.phone-number.new-input.label=Enter a phone number
+asa.agent-regime.ct.phone-number.new-input.hint=For international numbers, include the country code.
+asa.agent-regime.ct.phone-number.use-asa.error.required=Enter the phone number we should use to call {0} about Corporation Tax
+asa.agent-regime.ct.phone-number.new-input.error.empty=Enter a phone number
+asa.agent-regime.ct.phone-number.new-input.error.invalid=The phone number must only include numbers
 
-asa.legacy.ct.email-address.title=What email address should we use to contact you about Corporation Tax?
-asa.legacy.ct.email-address.heading=What email address should we use to contact {0} about Corporation Tax?
-asa.legacy.ct.email-address.use-asa.false=I want to use a different email address for Corporation Tax
-asa.legacy.ct.email-address.new-input.label=Enter an email address
-asa.legacy.ct.email-address.new-input.hint=We’ll send a code to this email address to confirm it
-asa.legacy.ct.email-address.use-asa.error.required=Select the email address we should use to contact {0} about Corporation Tax
-asa.legacy.ct.email-address.input.error.empty=Enter an email address
-asa.legacy.ct.email-address.input.error.length=Enter an email address that is 50 characters or less.
-asa.legacy.ct.email-address.input.error.invalid=Enter an email address in the correct format, for example name@example.com
+asa.agent-regime.ct.email-address.title=What email address should we use to contact you about Corporation Tax?
+asa.agent-regime.ct.email-address.heading=What email address should we use to contact {0} about Corporation Tax?
+asa.agent-regime.ct.email-address.use-asa.false=I want to use a different email address for Corporation Tax
+asa.agent-regime.ct.email-address.new-input.label=Enter an email address
+asa.agent-regime.ct.email-address.new-input.hint=We’ll send a code to this email address to confirm it
+asa.agent-regime.ct.email-address.use-asa.error.required=Select the email address we should use to contact {0} about Corporation Tax
+asa.agent-regime.ct.email-address.input.error.empty=Enter an email address
+asa.agent-regime.ct.email-address.input.error.length=Enter an email address that is 50 characters or less.
+asa.agent-regime.ct.email-address.input.error.invalid=Enter an email address in the correct format, for example name@example.com
 
-asa.legacy.ct.custom-email-address.title=Your agent services account email address is too long
-asa.legacy.ct.custom-email-address.p1=We currently have this email address connected to your agent services account:
-asa.legacy.ct.custom-email-address.p2=For Corporation Tax, the email address must be 50 characters or less.
-asa.legacy.ct.custom-email-address.input.label=Enter a shorter email address
-asa.legacy.ct.custom-email-address.input.hint=We’ll send a code to this email address to confirm it
+asa.agent-regime.ct.custom-email-address.title=Your agent services account email address is too long
+asa.agent-regime.ct.custom-email-address.p1=We currently have this email address connected to your agent services account:
+asa.agent-regime.ct.custom-email-address.p2=For Corporation Tax, the email address must be 50 characters or less.
+asa.agent-regime.ct.custom-email-address.input.label=Enter a shorter email address
+asa.agent-regime.ct.custom-email-address.input.hint=We’ll send a code to this email address to confirm it
 
-asa.legacy.ct.address.title=What address should we use to send letters about Corporation Tax?
-asa.legacy.ct.address.use-asa.true.hint=This is the address on your agent services account.
-asa.legacy.ct.address.use-asa.false=I want to use a different address for Corporation Tax
-asa.legacy.ct.address.use-asa.error.required=Select the address we should use to send letters about Corporation Tax
+asa.agent-regime.ct.address.title=What address should we use to send letters about Corporation Tax?
+asa.agent-regime.ct.address.use-asa.true.hint=This is the address on your agent services account.
+asa.agent-regime.ct.address.use-asa.false=I want to use a different address for Corporation Tax
+asa.agent-regime.ct.address.use-asa.error.required=Select the address we should use to send letters about Corporation Tax
 
-asa.legacy.ct.alf.country-picker.title=Select the country - Agent services account - GOV.UK
-asa.legacy.ct.alf.country-picker.heading=What is the country where the business is based?
-asa.legacy.ct.alf.lookup.title=Find the address - Agent services account - GOV.UK
-asa.legacy.ct.alf.lookup.heading=Find your address
-asa.legacy.ct.alf.lookup.postcode.label=Postcode
-asa.legacy.ct.alf.select.title=Select the address - Agent services account - GOV.UK
-asa.legacy.ct.alf.edit.title=Enter the address - Agent services account - GOV.UK
-asa.legacy.ct.alf.edit.heading=Enter the address
-asa.legacy.ct.alf.edit.townLabel=Address line 4
-asa.legacy.ct.alf.confirm.title=Review and confirm - Agent services account - GOV.UK
+asa.agent-regime.ct.alf.country-picker.title=Select the country - Agent services account - GOV.UK
+asa.agent-regime.ct.alf.country-picker.heading=What is the country where the business is based?
+asa.agent-regime.ct.alf.lookup.title=Find the address - Agent services account - GOV.UK
+asa.agent-regime.ct.alf.lookup.heading=Find your address
+asa.agent-regime.ct.alf.lookup.postcode.label=Postcode
+asa.agent-regime.ct.alf.select.title=Select the address - Agent services account - GOV.UK
+asa.agent-regime.ct.alf.edit.title=Enter the address - Agent services account - GOV.UK
+asa.agent-regime.ct.alf.edit.heading=Enter the address
+asa.agent-regime.ct.alf.edit.townLabel=Address line 4
+asa.agent-regime.ct.alf.confirm.title=Review and confirm - Agent services account - GOV.UK
 
-asa.legacy.ct.change-address.title=Change your address
-asa.legacy.ct.change-address.title.invalid=Change the address lines that are too long
-asa.legacy.ct.change-address.inset.invalid=Our system can only accept a limited amount of characters in each address line.
-asa.legacy.ct.change-address.line1.label=Address line 1
-asa.legacy.ct.change-address.line2.label=Address line 2
-asa.legacy.ct.change-address.line3.label=Address line 3
-asa.legacy.ct.change-address.line3.label.optional=Address line 3 (optional)
-asa.legacy.ct.change-address.line4.label.optional=Address line 4 (optional)
-asa.legacy.ct.change-address.postcode.label=Postcode
-asa.legacy.ct.change-address.country.label=Country
-asa.legacy.ct.error.addressLine1.required=Enter address line 1
-asa.legacy.ct.error.addressLine1.length=Address line 1 must be 28 characters or less
-asa.legacy.ct.error.addressLine1.invalid=Enter an address line 1 that only contains letters, numbers, spaces and the characters . , ( ) & - ‘ /
-asa.legacy.ct.error.addressLine2.required=Enter address line 2
-asa.legacy.ct.error.addressLine2.length=Address line 2 must be 28 characters or less
-asa.legacy.ct.error.addressLine2.invalid=Enter an address line 2 that only contains letters, numbers, spaces and the characters . , ( ) & - ‘ /
-asa.legacy.ct.error.addressLine3.required=Enter address line 3
-asa.legacy.ct.error.addressLine3.length=Address line 3 must be 28 characters or less
-asa.legacy.ct.error.addressLine3.invalid=Enter an address line 3 that only contains letters, numbers, spaces and the characters . , ( ) & - ‘ /
-asa.legacy.ct.error.addressLine4.required=Enter address line 4
-asa.legacy.ct.error.addressLine4.length=Address line 4 must be 18 characters or less
-asa.legacy.ct.error.addressLine4.invalid=Enter an address line 4 that only contains letters, numbers, spaces and the characters . , ( ) & - ‘ /
-asa.legacy.ct.error.postcode.required=Enter a postcode
-asa.legacy.ct.error.postcode.invalid=Enter a postcode in the correct format
-asa.legacy.ct.error.country.required=Select a country
+asa.agent-regime.ct.change-address.title=Change your address
+asa.agent-regime.ct.change-address.title.invalid=Change the address lines that are too long
+asa.agent-regime.ct.change-address.inset.invalid=Our system can only accept a limited amount of characters in each address line.
+asa.agent-regime.ct.change-address.line1.label=Address line 1
+asa.agent-regime.ct.change-address.line2.label=Address line 2
+asa.agent-regime.ct.change-address.line3.label=Address line 3
+asa.agent-regime.ct.change-address.line3.label.optional=Address line 3 (optional)
+asa.agent-regime.ct.change-address.line4.label.optional=Address line 4 (optional)
+asa.agent-regime.ct.change-address.postcode.label=Postcode
+asa.agent-regime.ct.change-address.country.label=Country
+asa.agent-regime.ct.error.addressLine1.required=Enter address line 1
+asa.agent-regime.ct.error.addressLine1.length=Address line 1 must be 28 characters or less
+asa.agent-regime.ct.error.addressLine1.invalid=Enter an address line 1 that only contains letters, numbers, spaces and the characters . , ( ) & - ‘ /
+asa.agent-regime.ct.error.addressLine2.required=Enter address line 2
+asa.agent-regime.ct.error.addressLine2.length=Address line 2 must be 28 characters or less
+asa.agent-regime.ct.error.addressLine2.invalid=Enter an address line 2 that only contains letters, numbers, spaces and the characters . , ( ) & - ‘ /
+asa.agent-regime.ct.error.addressLine3.required=Enter address line 3
+asa.agent-regime.ct.error.addressLine3.length=Address line 3 must be 28 characters or less
+asa.agent-regime.ct.error.addressLine3.invalid=Enter an address line 3 that only contains letters, numbers, spaces and the characters . , ( ) & - ‘ /
+asa.agent-regime.ct.error.addressLine4.required=Enter address line 4
+asa.agent-regime.ct.error.addressLine4.length=Address line 4 must be 18 characters or less
+asa.agent-regime.ct.error.addressLine4.invalid=Enter an address line 4 that only contains letters, numbers, spaces and the characters . , ( ) & - ‘ /
+asa.agent-regime.ct.error.postcode.required=Enter a postcode
+asa.agent-regime.ct.error.postcode.invalid=Enter a postcode in the correct format
+asa.agent-regime.ct.error.country.required=Select a country
 
-asa.legacy.ct.check-your-answers.h1=Check your answers
-asa.legacy.ct.check-your-answers.business-name=Business name
-asa.legacy.ct.check-your-answers.phone-number=Telephone number
-asa.legacy.ct.check-your-answers.email=Email address
-asa.legacy.ct.check-your-answers.address=Address
-asa.legacy.ct.check-your-answers.submit-button=Enrol for Corporation Tax
+asa.agent-regime.ct.check-your-answers.h1=Check your answers
+asa.agent-regime.ct.check-your-answers.business-name=Business name
+asa.agent-regime.ct.check-your-answers.phone-number=Telephone number
+asa.agent-regime.ct.check-your-answers.email=Email address
+asa.agent-regime.ct.check-your-answers.address=Address
+asa.agent-regime.ct.check-your-answers.submit-button=Enrol for Corporation Tax
 
 # PAYE/CIS
-asa.legacy.paye.h2=Pay as you earn (PAYE)/Construction Industry Scheme (CIS)
-asa.legacy.paye.link=Request a PAYE subscription
-asa.legacy.paye.inactive.p1 = You’ve already applied to act as an agent for PAYE for Employers on {0}.
-asa.legacy.paye.inactive.p2 = We’ve sent you a letter with an activation code when you applied.
-asa.legacy.paye.inactive.p3 = You must <a class="govuk-link" href="/enrolment-management-frontend/IR-SA-AGENT/get-access-tax-scheme?continue=/agent-services-account/home" target="_blank" rel="noreferrer noopener">use the activation code to get access to this service</a>.
-asa.legacy.paye.in-progress.p1=We are still processing the application you did on {0}.
-asa.legacy.paye.in-progress.p2=Processing can take up to 5 days.
-asa.legacy.paye.subscribed.p1=Your agent code is: {0}
-asa.legacy.paye.subscribed.p2=Get permission from new clients
-asa.legacy.paye.subscribed.p3=<a class="govuk-link" href="/account/authorise-client/agent/{0}" target="_blank" rel="noreferrer noopener">Ask a client to authorise you (opens in a new tab)</a>
-asa.legacy.paye.subscribed.p4=Manage your client’s PAYE/CIS
-asa.legacy.paye.subscribed.p5=<a class="govuk-link" href="/agent/remember-to-remove" target="_blank" rel="noreferrer noopener">View and manage your client list for PAYE (opens in a new tab)</a>
-asa.legacy.paye.subscribed.p6=<a class="govuk-link" href="/construction-ind-scheme/agent/{0}" target="_blank" rel="noreferrer noopener">View and manage your client list for CIS (opens in a new tab)</a>
+asa.agent-regime.paye.h2=Pay as you earn (PAYE)/Construction Industry Scheme (CIS)
+asa.agent-regime.paye.link=Request a PAYE subscription
+asa.agent-regime.paye.inactive.p1 = You’ve already applied to act as an agent for PAYE for Employers on {0}.
+asa.agent-regime.paye.inactive.p2 = We’ve sent you a letter with an activation code when you applied.
+asa.agent-regime.paye.inactive.p3 = You must <a class="govuk-link" href="/enrolment-management-frontend/IR-SA-AGENT/get-access-tax-scheme?continue=/agent-services-account/home" target="_blank" rel="noreferrer noopener">use the activation code to get access to this service</a>.
+asa.agent-regime.paye.in-progress.p1=We are still processing the application you did on {0}.
+asa.agent-regime.paye.in-progress.p2=Processing can take up to 5 days.
+asa.agent-regime.paye.subscribed.p1=Your agent code is: {0}
+asa.agent-regime.paye.subscribed.p2=Get permission from new clients
+asa.agent-regime.paye.subscribed.p3=<a class="govuk-link" href="/account/authorise-client/agent/{0}" target="_blank" rel="noreferrer noopener">Ask a client to authorise you (opens in a new tab)</a>
+asa.agent-regime.paye.subscribed.p4=Manage your client’s PAYE/CIS
+asa.agent-regime.paye.subscribed.p5=<a class="govuk-link" href="/agent/remember-to-remove" target="_blank" rel="noreferrer noopener">View and manage your client list for PAYE (opens in a new tab)</a>
+asa.agent-regime.paye.subscribed.p6=<a class="govuk-link" href="/construction-ind-scheme/agent/{0}" target="_blank" rel="noreferrer noopener">View and manage your client list for CIS (opens in a new tab)</a>
 
-asa.legacy.paye.do-you-already-manage.title=Does {0} already manage PAYE clients?
-asa.legacy.paye.do-you-already-manage.existing.false=No, this is their first time managing PAYE clients
-asa.legacy.paye.do-you-already-manage.error.required=Select yes if {0} already manages PAYE/CIS clients
+asa.agent-regime.paye.do-you-already-manage.title=Does {0} already manage PAYE clients?
+asa.agent-regime.paye.do-you-already-manage.existing.false=No, this is their first time managing PAYE clients
+asa.agent-regime.paye.do-you-already-manage.error.required=Select yes if {0} already manages PAYE/CIS clients
 
-asa.legacy.paye.you-may-not-need-to-apply.title=You may not need to apply for PAYE
-asa.legacy.paye.you-may-not-need-to-apply.p2=You can continue to manage your existing PAYE clients through your HMRC Online Services for Agents account.
-asa.legacy.paye.you-may-not-need-to-apply.error.required=Select yes if you still want to apply
+asa.agent-regime.paye.you-may-not-need-to-apply.title=You may not need to apply for PAYE
+asa.agent-regime.paye.you-may-not-need-to-apply.p2=You can continue to manage your existing PAYE clients through your HMRC Online Services for Agents account.
+asa.agent-regime.paye.you-may-not-need-to-apply.error.required=Select yes if you still want to apply
 
-asa.legacy.paye.contact-name.title=Who should we contact about PAYE?
-asa.legacy.paye.contact-name.input.heading=Who at {0} should we contact about PAYE?
-asa.legacy.paye.contact-name.input.hint=Enter their full name
-asa.legacy.paye.contact-name.input.error.empty=Enter the full name of the person we should contact about PAYE
-asa.legacy.paye.contact-name.input.error.invalid=The name of the person can only contain letters and hyphens
+asa.agent-regime.paye.contact-name.title=Who should we contact about PAYE?
+asa.agent-regime.paye.contact-name.input.heading=Who at {0} should we contact about PAYE?
+asa.agent-regime.paye.contact-name.input.hint=Enter their full name
+asa.agent-regime.paye.contact-name.input.error.empty=Enter the full name of the person we should contact about PAYE
+asa.agent-regime.paye.contact-name.input.error.invalid=The name of the person can only contain letters and hyphens
 
-asa.legacy.paye.phone-number.title=What phone number should we use to call you about PAYE?
-asa.legacy.paye.phone-number.heading=What phone number should we use to call {0} about PAYE?
-asa.legacy.paye.phone-number.use-asa.false=I want to use a different phone number for PAYE
-asa.legacy.paye.phone-number.new-input.label=Enter a phone number
-asa.legacy.paye.phone-number.new-input.hint=For international numbers, include the country code.
-asa.legacy.paye.phone-number.use-asa.error.required=Enter the phone number we should use to call {0} about PAYE
-asa.legacy.paye.phone-number.new-input.error.empty=Enter a UK phone number
-asa.legacy.paye.phone-number.new-input.error.invalid=Enter a UK phone number, like 07700 900 982 or +44 808 157 0192
+asa.agent-regime.paye.phone-number.title=What phone number should we use to call you about PAYE?
+asa.agent-regime.paye.phone-number.heading=What phone number should we use to call {0} about PAYE?
+asa.agent-regime.paye.phone-number.use-asa.false=I want to use a different phone number for PAYE
+asa.agent-regime.paye.phone-number.new-input.label=Enter a phone number
+asa.agent-regime.paye.phone-number.new-input.hint=For international numbers, include the country code.
+asa.agent-regime.paye.phone-number.use-asa.error.required=Enter the phone number we should use to call {0} about PAYE
+asa.agent-regime.paye.phone-number.new-input.error.empty=Enter a UK phone number
+asa.agent-regime.paye.phone-number.new-input.error.invalid=Enter a UK phone number, like 07700 900 982 or +44 808 157 0192
 
-asa.legacy.paye.email-address.title=What email address should we use to contact you about PAYE?
-asa.legacy.paye.email-address.heading=What email address should we use to contact {0} about PAYE?
-asa.legacy.paye.email-address.use-asa.false=I want to use a different email address for PAYE
-asa.legacy.paye.email-address.new-input.label=Enter an email address
-asa.legacy.paye.email-address.new-input.hint=We’ll send a code to this email address to confirm it
-asa.legacy.paye.email-address.use-asa.error.required=Select the email address we should use to contact {0} about PAYE
-asa.legacy.paye.email-address.input.error.empty=Enter an email address
-asa.legacy.paye.email-address.input.error.length=Enter an email address that is 129 characters or less.
-asa.legacy.paye.email-address.input.error.invalid=Enter an email address in the correct format, for example name@example.com
+asa.agent-regime.paye.email-address.title=What email address should we use to contact you about PAYE?
+asa.agent-regime.paye.email-address.heading=What email address should we use to contact {0} about PAYE?
+asa.agent-regime.paye.email-address.use-asa.false=I want to use a different email address for PAYE
+asa.agent-regime.paye.email-address.new-input.label=Enter an email address
+asa.agent-regime.paye.email-address.new-input.hint=We’ll send a code to this email address to confirm it
+asa.agent-regime.paye.email-address.use-asa.error.required=Select the email address we should use to contact {0} about PAYE
+asa.agent-regime.paye.email-address.input.error.empty=Enter an email address
+asa.agent-regime.paye.email-address.input.error.length=Enter an email address that is 129 characters or less.
+asa.agent-regime.paye.email-address.input.error.invalid=Enter an email address in the correct format, for example name@example.com
 
-asa.legacy.paye.address.title=What address should we use to send letters about PAYE?
-asa.legacy.paye.address.use-asa.true.hint=This is the address on your agent services account.
-asa.legacy.paye.address.use-asa.false=I want to use a different address for PAYE
-asa.legacy.paye.address.use-asa.error.required=Select the address we should use to send letters about PAYE
+asa.agent-regime.paye.address.title=What address should we use to send letters about PAYE?
+asa.agent-regime.paye.address.use-asa.true.hint=This is the address on your agent services account.
+asa.agent-regime.paye.address.use-asa.false=I want to use a different address for PAYE
+asa.agent-regime.paye.address.use-asa.error.required=Select the address we should use to send letters about PAYE
 
-asa.legacy.paye.alf.country-picker.title=Select the country - Agent services account - GOV.UK
-asa.legacy.paye.alf.country-picker.heading=What is the country where the business is based?
-asa.legacy.paye.alf.lookup.title=Find the address - Agent services account - GOV.UK
-asa.legacy.paye.alf.lookup.heading=Find your address
-asa.legacy.paye.alf.lookup.postcode.label=Postcode
-asa.legacy.paye.alf.select.title=Select the address - Agent services account - GOV.UK
-asa.legacy.paye.alf.edit.title=Enter the address - Agent services account - GOV.UK
-asa.legacy.paye.alf.edit.heading=Enter the address
-asa.legacy.paye.alf.edit.townLabel=Address line 4
-asa.legacy.paye.alf.confirm.title=Review and confirm - Agent services account - GOV.UK
+asa.agent-regime.paye.alf.country-picker.title=Select the country - Agent services account - GOV.UK
+asa.agent-regime.paye.alf.country-picker.heading=What is the country where the business is based?
+asa.agent-regime.paye.alf.lookup.title=Find the address - Agent services account - GOV.UK
+asa.agent-regime.paye.alf.lookup.heading=Find your address
+asa.agent-regime.paye.alf.lookup.postcode.label=Postcode
+asa.agent-regime.paye.alf.select.title=Select the address - Agent services account - GOV.UK
+asa.agent-regime.paye.alf.edit.title=Enter the address - Agent services account - GOV.UK
+asa.agent-regime.paye.alf.edit.heading=Enter the address
+asa.agent-regime.paye.alf.edit.townLabel=Address line 4
+asa.agent-regime.paye.alf.confirm.title=Review and confirm - Agent services account - GOV.UK
 
-asa.legacy.paye.change-address.title=Change your address
-asa.legacy.paye.change-address.title.invalid=Change the address lines that are too long
-asa.legacy.paye.change-address.inset.invalid=Our system can only accept a limited amount of characters in each address line.
-asa.legacy.paye.change-address.line1.label=Address line 1
-asa.legacy.paye.change-address.line2.label=Address line 2
-asa.legacy.paye.change-address.line3.label=Address line 3
-asa.legacy.paye.change-address.line3.label.optional=Address line 3 (optional)
-asa.legacy.paye.change-address.line4.label.optional=Address line 4 (optional)
-asa.legacy.paye.change-address.postcode.label=Postcode
-asa.legacy.paye.change-address.country.label=Country
-asa.legacy.paye.error.addressLine1.required=Enter address line 1
-asa.legacy.paye.error.addressLine1.length=Address line 1 must be 35 characters or less
-asa.legacy.paye.error.addressLine1.invalid=Enter an address line 1 that only contains letters, numbers, spaces and the characters . , ( ) ! @ -
-asa.legacy.paye.error.addressLine2.required=Enter address line 2
-asa.legacy.paye.error.addressLine2.length=Address line 2 must be 35 characters or less
-asa.legacy.paye.error.addressLine2.invalid=Enter an address line 2 that only contains letters, numbers, spaces and the characters . , ( ) ! @ -
-asa.legacy.paye.error.addressLine3.required=Enter address line 3
-asa.legacy.paye.error.addressLine3.length=Address line 3 must be 35 characters or less
-asa.legacy.paye.error.addressLine3.invalid=Enter an address line 3 that only contains letters, numbers, spaces and the characters . , ( ) ! @ -
-asa.legacy.paye.error.addressLine4.required=Enter address line 4
-asa.legacy.paye.error.addressLine4.length=Address line 4 must be 35 characters or less
-asa.legacy.paye.error.addressLine4.invalid=Enter an address line 4 that only contains letters, numbers, spaces and the characters . , ( ) ! @ -
-asa.legacy.paye.error.postcode.required=Enter a postcode
-asa.legacy.paye.error.postcode.invalid=Enter a postcode in the correct format
-asa.legacy.paye.error.country.required=Select a country
+asa.agent-regime.paye.change-address.title=Change your address
+asa.agent-regime.paye.change-address.title.invalid=Change the address lines that are too long
+asa.agent-regime.paye.change-address.inset.invalid=Our system can only accept a limited amount of characters in each address line.
+asa.agent-regime.paye.change-address.line1.label=Address line 1
+asa.agent-regime.paye.change-address.line2.label=Address line 2
+asa.agent-regime.paye.change-address.line3.label=Address line 3
+asa.agent-regime.paye.change-address.line3.label.optional=Address line 3 (optional)
+asa.agent-regime.paye.change-address.line4.label.optional=Address line 4 (optional)
+asa.agent-regime.paye.change-address.postcode.label=Postcode
+asa.agent-regime.paye.change-address.country.label=Country
+asa.agent-regime.paye.error.addressLine1.required=Enter address line 1
+asa.agent-regime.paye.error.addressLine1.length=Address line 1 must be 35 characters or less
+asa.agent-regime.paye.error.addressLine1.invalid=Enter an address line 1 that only contains letters, numbers, spaces and the characters . , ( ) ! @ -
+asa.agent-regime.paye.error.addressLine2.required=Enter address line 2
+asa.agent-regime.paye.error.addressLine2.length=Address line 2 must be 35 characters or less
+asa.agent-regime.paye.error.addressLine2.invalid=Enter an address line 2 that only contains letters, numbers, spaces and the characters . , ( ) ! @ -
+asa.agent-regime.paye.error.addressLine3.required=Enter address line 3
+asa.agent-regime.paye.error.addressLine3.length=Address line 3 must be 35 characters or less
+asa.agent-regime.paye.error.addressLine3.invalid=Enter an address line 3 that only contains letters, numbers, spaces and the characters . , ( ) ! @ -
+asa.agent-regime.paye.error.addressLine4.required=Enter address line 4
+asa.agent-regime.paye.error.addressLine4.length=Address line 4 must be 35 characters or less
+asa.agent-regime.paye.error.addressLine4.invalid=Enter an address line 4 that only contains letters, numbers, spaces and the characters . , ( ) ! @ -
+asa.agent-regime.paye.error.postcode.required=Enter a postcode
+asa.agent-regime.paye.error.postcode.invalid=Enter a postcode in the correct format
+asa.agent-regime.paye.error.country.required=Select a country
 
-asa.legacy.paye.check-your-answers.h1=Check your answers
-asa.legacy.paye.check-your-answers.contact-name=Contact name
-asa.legacy.paye.check-your-answers.phone-number=Telephone number
-asa.legacy.paye.check-your-answers.email=Email address
-asa.legacy.paye.check-your-answers.address=Address
-asa.legacy.paye.check-your-answers.submit-button=Enrol for PAYE
+asa.agent-regime.paye.check-your-answers.h1=Check your answers
+asa.agent-regime.paye.check-your-answers.contact-name=Contact name
+asa.agent-regime.paye.check-your-answers.phone-number=Telephone number
+asa.agent-regime.paye.check-your-answers.email=Email address
+asa.agent-regime.paye.check-your-answers.address=Address
+asa.agent-regime.paye.check-your-answers.submit-button=Enrol for PAYE
 
 # SA
-asa.legacy.sa.h2=Self Assessment
-asa.legacy.sa.in-progress.p1=We are still processing the application you did on {0}.
-asa.legacy.sa.in-progress.p2=Processing can take up to 5 days.
-asa.legacy.sa.inactive.p1 = You’ve already applied to act as an agent for Self Assessment on {0}.
-asa.legacy.sa.inactive.p2 = We’ve sent you a letter with an activation code when you applied.
-asa.legacy.sa.inactive.p3 = You must <a class="govuk-link" href="/enrolment-management-frontend/IR-PAYE-AGENT/get-access-tax-scheme?continue=/agent-services-account/home" target="_blank" rel="noreferrer noopener">use the activation code to get access to this service</a>.
-asa.legacy.sa.subscribed.p1=Your agent code is: {0}
-asa.legacy.sa.subscribed.p2=Get permission from new clients
-asa.legacy.sa.subscribed.p3=<a class="govuk-link" href="/account/authorise-client/agent/{0}" target="_blank" rel="noreferrer noopener">Ask a client to authorise you (opens in a new tab)</a>
-asa.legacy.sa.subscribed.p4=Manage your client’s Self Assessment
-asa.legacy.sa.subscribed.p5=<a class="govuk-link" href="/self-assessment/agent/{0}" target="_blank" rel="noreferrer noopener">View and manage your client list for Self Assessment (opens in a new tab)</a>
+asa.agent-regime.sa.h2=Self Assessment
+asa.agent-regime.sa.in-progress.p1=We are still processing the application you did on {0}.
+asa.agent-regime.sa.in-progress.p2=Processing can take up to 5 days.
+asa.agent-regime.sa.inactive.p1 = You’ve already applied to act as an agent for Self Assessment on {0}.
+asa.agent-regime.sa.inactive.p2 = We’ve sent you a letter with an activation code when you applied.
+asa.agent-regime.sa.inactive.p3 = You must <a class="govuk-link" href="/enrolment-management-frontend/IR-PAYE-AGENT/get-access-tax-scheme?continue=/agent-services-account/home" target="_blank" rel="noreferrer noopener">use the activation code to get access to this service</a>.
+asa.agent-regime.sa.subscribed.p1=Your agent code is: {0}
+asa.agent-regime.sa.subscribed.p2=Get permission from new clients
+asa.agent-regime.sa.subscribed.p3=<a class="govuk-link" href="/account/authorise-client/agent/{0}" target="_blank" rel="noreferrer noopener">Ask a client to authorise you (opens in a new tab)</a>
+asa.agent-regime.sa.subscribed.p4=Manage your client’s Self Assessment
+asa.agent-regime.sa.subscribed.p5=<a class="govuk-link" href="/self-assessment/agent/{0}" target="_blank" rel="noreferrer noopener">View and manage your client list for Self Assessment (opens in a new tab)</a>
 
-asa.legacy.sa.do-you-already-manage.title=Does {0} already manage Self Assessment clients?
-asa.legacy.sa.do-you-already-manage.existing.false=No, this is their first time managing Self Assessment clients
-asa.legacy.sa.do-you-already-manage.error.required=Select yes if {0} already manages Self Assessment clients
+asa.agent-regime.sa.do-you-already-manage.title=Does {0} already manage Self Assessment clients?
+asa.agent-regime.sa.do-you-already-manage.existing.false=No, this is their first time managing Self Assessment clients
+asa.agent-regime.sa.do-you-already-manage.error.required=Select yes if {0} already manages Self Assessment clients
 
-asa.legacy.sa.you-may-not-need-to-apply.title=You may not need to apply for Self Assessment
-asa.legacy.sa.you-may-not-need-to-apply.p2=You can continue to manage your existing Self Assessment clients through your HMRC Online Services for Agents account.
-asa.legacy.sa.you-may-not-need-to-apply.error.required=Select yes if you still want to apply
+asa.agent-regime.sa.you-may-not-need-to-apply.title=You may not need to apply for Self Assessment
+asa.agent-regime.sa.you-may-not-need-to-apply.p2=You can continue to manage your existing Self Assessment clients through your HMRC Online Services for Agents account.
+asa.agent-regime.sa.you-may-not-need-to-apply.error.required=Select yes if you still want to apply
 
-asa.legacy.sa.business-name.title=What business name should we show to your Self Assessment clients?
-asa.legacy.sa.business-name.use-asa.false=I want to use a different business name for Self Assessment
-asa.legacy.sa.business-name.new-input.label=Enter a business name
-asa.legacy.sa.business-name.use-asa.error.required=Select the business name we should show to your Self Assessment clients
-asa.legacy.sa.business-name.new-input.error.empty=Enter a business name
-asa.legacy.sa.business-name.new-input.error.invalid=Enter a business name that only contains letters, numbers, spaces and the characters . , ( ) & - ‘ /
+asa.agent-regime.sa.business-name.title=What business name should we show to your Self Assessment clients?
+asa.agent-regime.sa.business-name.use-asa.false=I want to use a different business name for Self Assessment
+asa.agent-regime.sa.business-name.new-input.label=Enter a business name
+asa.agent-regime.sa.business-name.use-asa.error.required=Select the business name we should show to your Self Assessment clients
+asa.agent-regime.sa.business-name.new-input.error.empty=Enter a business name
+asa.agent-regime.sa.business-name.new-input.error.invalid=Enter a business name that only contains letters, numbers, spaces and the characters . , ( ) & - ‘ /
 
-asa.legacy.sa.phone-number.title=What phone number should we use to call you about Self Assessment?
-asa.legacy.sa.phone-number.heading=What phone number should we use to call {0} about Self Assessment?
-asa.legacy.sa.phone-number.use-asa.false=I want to use a different phone number for Self Assessment
-asa.legacy.sa.phone-number.new-input.label=Enter a phone number
-asa.legacy.sa.phone-number.new-input.hint=For international numbers, include the country code.
-asa.legacy.sa.phone-number.use-asa.error.required=Enter the phone number we should use to call {0} about Self Assessment
-asa.legacy.sa.phone-number.new-input.error.empty=Enter a phone number
-asa.legacy.sa.phone-number.new-input.error.invalid=The phone number must only include numbers
+asa.agent-regime.sa.phone-number.title=What phone number should we use to call you about Self Assessment?
+asa.agent-regime.sa.phone-number.heading=What phone number should we use to call {0} about Self Assessment?
+asa.agent-regime.sa.phone-number.use-asa.false=I want to use a different phone number for Self Assessment
+asa.agent-regime.sa.phone-number.new-input.label=Enter a phone number
+asa.agent-regime.sa.phone-number.new-input.hint=For international numbers, include the country code.
+asa.agent-regime.sa.phone-number.use-asa.error.required=Enter the phone number we should use to call {0} about Self Assessment
+asa.agent-regime.sa.phone-number.new-input.error.empty=Enter a phone number
+asa.agent-regime.sa.phone-number.new-input.error.invalid=The phone number must only include numbers
 
-asa.legacy.sa.email-address.title=What email address should we use to contact you about Self Assessment?
-asa.legacy.sa.email-address.heading=What email address should we use to contact {0} about Self Assessment?
-asa.legacy.sa.email-address.use-asa.false=I want to use a different email address for Self Assessment
-asa.legacy.sa.email-address.new-input.label=Enter an email address
-asa.legacy.sa.email-address.new-input.hint=We’ll send a code to this email address to confirm it
-asa.legacy.sa.email-address.use-asa.error.required=Select the email address we should use to contact {0} about Self Assessment
-asa.legacy.sa.email-address.input.error.empty=Enter an email address
-asa.legacy.sa.email-address.input.error.length=Enter an email address that is 50 characters or less.
-asa.legacy.sa.email-address.input.error.invalid=Enter an email address in the correct format, for example name@example.com
+asa.agent-regime.sa.email-address.title=What email address should we use to contact you about Self Assessment?
+asa.agent-regime.sa.email-address.heading=What email address should we use to contact {0} about Self Assessment?
+asa.agent-regime.sa.email-address.use-asa.false=I want to use a different email address for Self Assessment
+asa.agent-regime.sa.email-address.new-input.label=Enter an email address
+asa.agent-regime.sa.email-address.new-input.hint=We’ll send a code to this email address to confirm it
+asa.agent-regime.sa.email-address.use-asa.error.required=Select the email address we should use to contact {0} about Self Assessment
+asa.agent-regime.sa.email-address.input.error.empty=Enter an email address
+asa.agent-regime.sa.email-address.input.error.length=Enter an email address that is 50 characters or less.
+asa.agent-regime.sa.email-address.input.error.invalid=Enter an email address in the correct format, for example name@example.com
 
-asa.legacy.sa.custom-email-address.title=Your agent services account email address is too long
-asa.legacy.sa.custom-email-address.p1=We currently have this email address connected to your agent services account:
-asa.legacy.sa.custom-email-address.p2=For Self Assessment, the email address must be 50 characters or less.
-asa.legacy.sa.custom-email-address.input.label=Enter a shorter email address
-asa.legacy.sa.custom-email-address.input.hint=We’ll send a code to this email address to confirm it
+asa.agent-regime.sa.custom-email-address.title=Your agent services account email address is too long
+asa.agent-regime.sa.custom-email-address.p1=We currently have this email address connected to your agent services account:
+asa.agent-regime.sa.custom-email-address.p2=For Self Assessment, the email address must be 50 characters or less.
+asa.agent-regime.sa.custom-email-address.input.label=Enter a shorter email address
+asa.agent-regime.sa.custom-email-address.input.hint=We’ll send a code to this email address to confirm it
 
-asa.legacy.sa.address.title=What address should we use to send letters about Self Assessment?
-asa.legacy.sa.address.use-asa.true.hint=This is the address on your agent services account.
-asa.legacy.sa.address.use-asa.false=I want to use a different address for Self Assessment
-asa.legacy.sa.address.use-asa.error.required=Select the address we should use to send letters about Self Assessment
+asa.agent-regime.sa.address.title=What address should we use to send letters about Self Assessment?
+asa.agent-regime.sa.address.use-asa.true.hint=This is the address on your agent services account.
+asa.agent-regime.sa.address.use-asa.false=I want to use a different address for Self Assessment
+asa.agent-regime.sa.address.use-asa.error.required=Select the address we should use to send letters about Self Assessment
 
-asa.legacy.sa.alf.country-picker.title=Select the country - Agent services account - GOV.UK
-asa.legacy.sa.alf.country-picker.heading=What is the country where the business is based?
-asa.legacy.sa.alf.lookup.title=Find the address - Agent services account - GOV.UK
-asa.legacy.sa.alf.lookup.heading=Find your address
-asa.legacy.sa.alf.lookup.postcode.label=Postcode
-asa.legacy.sa.alf.select.title=Select the address - Agent services account - GOV.UK
-asa.legacy.sa.alf.edit.title=Enter the address - Agent services account - GOV.UK
-asa.legacy.sa.alf.edit.heading=Enter the address
-asa.legacy.sa.alf.edit.townLabel=Address line 4
-asa.legacy.sa.alf.confirm.title=Review and confirm - Agent services account - GOV.UK
+asa.agent-regime.sa.alf.country-picker.title=Select the country - Agent services account - GOV.UK
+asa.agent-regime.sa.alf.country-picker.heading=What is the country where the business is based?
+asa.agent-regime.sa.alf.lookup.title=Find the address - Agent services account - GOV.UK
+asa.agent-regime.sa.alf.lookup.heading=Find your address
+asa.agent-regime.sa.alf.lookup.postcode.label=Postcode
+asa.agent-regime.sa.alf.select.title=Select the address - Agent services account - GOV.UK
+asa.agent-regime.sa.alf.edit.title=Enter the address - Agent services account - GOV.UK
+asa.agent-regime.sa.alf.edit.heading=Enter the address
+asa.agent-regime.sa.alf.edit.townLabel=Address line 4
+asa.agent-regime.sa.alf.confirm.title=Review and confirm - Agent services account - GOV.UK
 
-asa.legacy.sa.change-address.title=Change your address
-asa.legacy.sa.change-address.title.invalid=Change the address lines that are too long
-asa.legacy.sa.change-address.inset.invalid=Our system can only accept a limited amount of characters in each address line.
-asa.legacy.sa.change-address.line1.label=Address line 1
-asa.legacy.sa.change-address.line2.label=Address line 2
-asa.legacy.sa.change-address.line3.label=Address line 3
-asa.legacy.sa.change-address.line3.label.optional=Address line 3 (optional)
-asa.legacy.sa.change-address.line4.label.optional=Address line 4 (optional)
-asa.legacy.sa.change-address.postcode.label=Postcode
-asa.legacy.sa.change-address.country.label=Country
-asa.legacy.sa.error.addressLine1.required=Enter address line 1
-asa.legacy.sa.error.addressLine1.length=Address line 1 must be 28 characters or less
-asa.legacy.sa.error.addressLine1.invalid=Enter an address line 1 that only contains letters, numbers, spaces and the characters . , ( ) & - ‘ /
-asa.legacy.sa.error.addressLine2.required=Enter address line 2
-asa.legacy.sa.error.addressLine2.length=Address line 2 must be 28 characters or less
-asa.legacy.sa.error.addressLine2.invalid=Enter an address line 2 that only contains letters, numbers, spaces and the characters . , ( ) & - ‘ /
-asa.legacy.sa.error.addressLine3.required=Enter address line 3
-asa.legacy.sa.error.addressLine3.length=Address line 3 must be 28 characters or less
-asa.legacy.sa.error.addressLine3.invalid=Enter an address line 3 that only contains letters, numbers, spaces and the characters . , ( ) & - ‘ /
-asa.legacy.sa.error.addressLine4.required=Enter address line 4
-asa.legacy.sa.error.addressLine4.length=Address line 4 must be 18 characters or less
-asa.legacy.sa.error.addressLine4.invalid=Enter an address line 4 that only contains letters, numbers, spaces and the characters . , ( ) & - ‘ /
-asa.legacy.sa.error.postcode.required=Enter a postcode
-asa.legacy.sa.error.postcode.invalid=Enter a postcode in the correct format
-asa.legacy.sa.error.country.required=Select a country
+asa.agent-regime.sa.change-address.title=Change your address
+asa.agent-regime.sa.change-address.title.invalid=Change the address lines that are too long
+asa.agent-regime.sa.change-address.inset.invalid=Our system can only accept a limited amount of characters in each address line.
+asa.agent-regime.sa.change-address.line1.label=Address line 1
+asa.agent-regime.sa.change-address.line2.label=Address line 2
+asa.agent-regime.sa.change-address.line3.label=Address line 3
+asa.agent-regime.sa.change-address.line3.label.optional=Address line 3 (optional)
+asa.agent-regime.sa.change-address.line4.label.optional=Address line 4 (optional)
+asa.agent-regime.sa.change-address.postcode.label=Postcode
+asa.agent-regime.sa.change-address.country.label=Country
+asa.agent-regime.sa.error.addressLine1.required=Enter address line 1
+asa.agent-regime.sa.error.addressLine1.length=Address line 1 must be 28 characters or less
+asa.agent-regime.sa.error.addressLine1.invalid=Enter an address line 1 that only contains letters, numbers, spaces and the characters . , ( ) & - ‘ /
+asa.agent-regime.sa.error.addressLine2.required=Enter address line 2
+asa.agent-regime.sa.error.addressLine2.length=Address line 2 must be 28 characters or less
+asa.agent-regime.sa.error.addressLine2.invalid=Enter an address line 2 that only contains letters, numbers, spaces and the characters . , ( ) & - ‘ /
+asa.agent-regime.sa.error.addressLine3.required=Enter address line 3
+asa.agent-regime.sa.error.addressLine3.length=Address line 3 must be 28 characters or less
+asa.agent-regime.sa.error.addressLine3.invalid=Enter an address line 3 that only contains letters, numbers, spaces and the characters . , ( ) & - ‘ /
+asa.agent-regime.sa.error.addressLine4.required=Enter address line 4
+asa.agent-regime.sa.error.addressLine4.length=Address line 4 must be 18 characters or less
+asa.agent-regime.sa.error.addressLine4.invalid=Enter an address line 4 that only contains letters, numbers, spaces and the characters . , ( ) & - ‘ /
+asa.agent-regime.sa.error.postcode.required=Enter a postcode
+asa.agent-regime.sa.error.postcode.invalid=Enter a postcode in the correct format
+asa.agent-regime.sa.error.country.required=Select a country
 
-asa.legacy.sa.check-your-answers.h1=Check your answers
-asa.legacy.sa.check-your-answers.business-name=Business name
-asa.legacy.sa.check-your-answers.phone-number=Telephone number
-asa.legacy.sa.check-your-answers.email=Email address
-asa.legacy.sa.check-your-answers.address=Address
-asa.legacy.sa.check-your-answers.submit-button=Enrol for Self Assessment
+asa.agent-regime.sa.check-your-answers.h1=Check your answers
+asa.agent-regime.sa.check-your-answers.business-name=Business name
+asa.agent-regime.sa.check-your-answers.phone-number=Telephone number
+asa.agent-regime.sa.check-your-answers.email=Email address
+asa.agent-regime.sa.check-your-answers.address=Address
+asa.agent-regime.sa.check-your-answers.submit-button=Enrol for Self Assessment
 
 # Custom UR banner
 banner.heading=Help improve HMRC services

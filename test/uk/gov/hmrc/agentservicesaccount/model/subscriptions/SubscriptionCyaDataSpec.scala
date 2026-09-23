@@ -20,10 +20,10 @@ import org.scalatest.OptionValues
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import uk.gov.hmrc.agentservicesaccount.models.*
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.CT
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.SA
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionCyaData
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
 
@@ -53,13 +53,13 @@ with OptionValues {
 
   private val exampleNonGBCyaData = exampleGBCyaData.copy(address = businessAddress("PT", Some("Line 4")))
 
-  List(CT, SA).foreach(legacyRegime => {
-    s"SubscriptionCyaData.toSubscriptionRequest - $legacyRegime" should {
+  List(CT, SA).foreach(agentRegime => {
+    s"SubscriptionCyaData.toSubscriptionRequest - $agentRegime" should {
 
       "normalise postcode in address when converting to subscription request" in {
         val cyaData = exampleGBCyaData.copy(address = businessAddress("GB").copy(postalCode = Some("sw1a2aa")))
         val result = cyaData.toSubscriptionRequest(
-          legacyRegime,
+          agentRegime,
           isWelsh = false,
           countryNameOpt = Some("")
         )
@@ -69,7 +69,7 @@ with OptionValues {
 
       "use businessName as agentName" in {
         val result = exampleGBCyaData.toSubscriptionRequest(
-          legacyRegime,
+          agentRegime,
           false,
           countryNameOpt = Some("")
         )
@@ -78,7 +78,7 @@ with OptionValues {
 
       "use businessName as contactName" in {
         val result = exampleGBCyaData.toSubscriptionRequest(
-          legacyRegime,
+          agentRegime,
           false,
           countryNameOpt = Some("")
         )
@@ -87,7 +87,7 @@ with OptionValues {
 
       "strip non-numeric characters from phone number" in {
         val result = exampleGBCyaData.copy(phoneNumber = "(+44) 101 7654321").toSubscriptionRequest(
-          legacyRegime,
+          agentRegime,
           false,
           countryNameOpt = Some("")
         )
@@ -96,7 +96,7 @@ with OptionValues {
 
       "use addressLine4 when country is GB" in {
         val result = exampleGBCyaData.toSubscriptionRequest(
-          legacyRegime,
+          agentRegime,
           false,
           countryNameOpt = Some("Portugal")
         )
@@ -105,7 +105,7 @@ with OptionValues {
 
       "use countryName when country is not GB" in {
         val result = exampleNonGBCyaData.toSubscriptionRequest(
-          legacyRegime,
+          agentRegime,
           false,
           countryNameOpt = Some("Portugal")
         )
@@ -114,7 +114,7 @@ with OptionValues {
 
       "fallback to existing addressLine4 if non-GB and countryName is empty string" in {
         val result = exampleNonGBCyaData.toSubscriptionRequest(
-          legacyRegime,
+          agentRegime,
           false,
           countryNameOpt = Some("")
         )
@@ -139,7 +139,7 @@ with OptionValues {
         )
 
         val result = cya.toSubscriptionRequest(
-          legacyRegime,
+          agentRegime,
           false,
           countryNameOpt = Some("Portugal")
         )
@@ -148,7 +148,7 @@ with OptionValues {
       }
     }
 
-    s"SubscriptionCyaData.subscriptionJourneyToCyaData - $legacyRegime" should {
+    s"SubscriptionCyaData.subscriptionJourneyToCyaData - $agentRegime" should {
 
       "use custom values when flags are true" in {
         val address = businessAddress("GB")
@@ -172,7 +172,7 @@ with OptionValues {
           addressAnswer = Some(address)
         )
 
-        val result = SubscriptionCyaData.subscriptionJourneyToCyaData(journey, legacyRegime)
+        val result = SubscriptionCyaData.subscriptionJourneyToCyaData(journey, agentRegime)
 
         result shouldBe Some(
           SubscriptionCyaData(
@@ -206,7 +206,7 @@ with OptionValues {
           addressAnswer = None
         )
 
-        val result = SubscriptionCyaData.subscriptionJourneyToCyaData(journey, legacyRegime)
+        val result = SubscriptionCyaData.subscriptionJourneyToCyaData(journey, agentRegime)
 
         result shouldBe Some(
           SubscriptionCyaData(
@@ -238,7 +238,7 @@ with OptionValues {
           addressAnswer = None
         )
 
-        val result = SubscriptionCyaData.subscriptionJourneyToCyaData(journey, legacyRegime)
+        val result = SubscriptionCyaData.subscriptionJourneyToCyaData(journey, agentRegime)
 
         result shouldBe None
       }
@@ -274,7 +274,7 @@ with OptionValues {
     "normalise postcode in address when converting to subscription request" in {
       val cyaData = exampleGBCyaData.copy(address = businessAddress("GB").copy(postalCode = Some("sw1a2aa")))
       val result = cyaData.toSubscriptionRequest(
-        LegacyRegime.PAYE,
+        AgentRegime.PAYE,
         isWelsh = false,
         asaAgentNameOpt = Some(asaAgencyName)
       )

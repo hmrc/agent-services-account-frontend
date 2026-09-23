@@ -19,7 +19,7 @@
 @import play.api.mvc.RequestHeader
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
-@import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime
+@import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 @import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
@@ -37,15 +37,15 @@
 )
 
 
-@(form: Form[YouMayNotNeedToApplyFormValues], legacyRegime: LegacyRegime)(
+@(form: Form[YouMayNotNeedToApplyFormValues], agentRegime: AgentRegime)(
         implicit msgs: Messages,
         request: RequestHeader,
         appConfig: AppConfig
 )
 
-@legacyRegimePrefix = @{ legacyRegime.msgPrefix }
+@agentRegimePrefix = @{ agentRegime.msgPrefix }
 
-@pageTitle = @{ msgs(s"$legacyRegimePrefix.you-may-not-need-to-apply.title") }
+@pageTitle = @{ msgs(s"$agentRegimePrefix.you-may-not-need-to-apply.title") }
 
 @main(
     pageTitle = withErrorPrefix(form.hasErrors, pageTitle),
@@ -59,17 +59,17 @@
 
     @h1(pageTitle)
 
-    @p("asa.legacy.you-may-not-need-to-apply.p1")
+    @p("asa.agent-regime.you-may-not-need-to-apply.p1")
 
-    @p(s"$legacyRegimePrefix.you-may-not-need-to-apply.p2")
+    @p(s"$agentRegimePrefix.you-may-not-need-to-apply.p2")
 
-    @formWithCSRF(action = subscriptions.routes.YouMayNotNeedToApplyController.onSubmit(legacyRegime)) {
+    @formWithCSRF(action = subscriptions.routes.YouMayNotNeedToApplyController.onSubmit(agentRegime)) {
 
         @govukRadios(Radios(
             name = doYouStillWantToApplyKey,
             fieldset = Some(Fieldset(
                 legend = Some(Legend(
-                    content = Text(msgs("asa.legacy.you-may-not-need-to-apply.h1")),
+                    content = Text(msgs("asa.agent-regime.you-may-not-need-to-apply.h1")),
                     classes = "govuk-fieldset__legend--m",
                     isPageHeading = false
                 ))

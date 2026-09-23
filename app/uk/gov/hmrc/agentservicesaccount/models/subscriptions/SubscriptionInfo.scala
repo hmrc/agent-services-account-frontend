@@ -24,7 +24,7 @@ import java.time.LocalDate
 import java.time.ZoneId
 
 case class SubscriptionInfo(
-  regime: LegacyRegime,
+  regime: AgentRegime,
   subscriptionStatus: SubscriptionStatus,
   creationDate: Option[Instant] = None
 ) {

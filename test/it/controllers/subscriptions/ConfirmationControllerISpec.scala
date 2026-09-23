@@ -22,9 +22,9 @@ import uk.gov.hmrc.agentservicesaccount.controllers.{routes => homeRoutes}
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.routes
 import stubs.AgentServicesAccountStubs.givenGetAgentRecord
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.CT
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.PAYE
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.LegacyRegime.SA
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.CT
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.SA
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
 
 class ConfirmationControllerISpec
@@ -32,11 +32,11 @@ extends ComponentBaseISpec {
 
   private val repo = inject[SessionCacheRepository]
 
-  private val legacyRegimes = List(CT, PAYE, SA)
+  private val agentRegimes = List(CT, PAYE, SA)
 
-  legacyRegimes.foreach(legacyRegime => {
+  agentRegimes.foreach(agentRegime => {
 
-    val path = routes.ConfirmationController.showConfirmationPage(legacyRegime).url
+    val path = routes.ConfirmationController.showConfirmationPage(agentRegime).url
 
     s"GET $path" should {
 
@@ -45,7 +45,7 @@ extends ComponentBaseISpec {
         givenAuthorisedAsAgentWith(arn.value)
         givenGetAgentRecord(agentRecord)
 
-        repo.putSession(subscriptionJourneyKey(legacyRegime), subscriptionFullJourney(legacyRegime).copy(isSubmitted = true)).futureValue
+        repo.putSession(subscriptionJourneyKey(agentRegime), subscriptionFullJourney(agentRegime).copy(isSubmitted = true)).futureValue
 
         val result = get(path)
 
@@ -60,7 +60,7 @@ extends ComponentBaseISpec {
         givenAuthorisedAsAgentWith(arn.value)
         givenGetAgentRecord(agentRecord)
 
-        repo.putSession(subscriptionJourneyKey(legacyRegime), subscriptionBaseJourney).futureValue
+        repo.putSession(subscriptionJourneyKey(agentRegime), subscriptionBaseJourney).futureValue
 
         val result = get(path)
 
