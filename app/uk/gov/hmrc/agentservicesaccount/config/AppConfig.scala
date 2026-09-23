@@ -109,7 +109,7 @@ extends Logging {
 
   val incomeTaxSubscriptionAgentFrontendExternalUrl: String = getConfString("income-tax-subscription-frontend.external-url")
 
-  val incomeTaxSubscriptionAgentFrontendUrl: String = s"$incomeTaxSubscriptionAgentFrontendExternalUrl/report-quarterly/income-and-expenses/view/agents"
+  val incomeTaxSubscriptionAgentFrontendUrl: String = s"$incomeTaxSubscriptionAgentFrontendExternalUrl/manage-self-assessment/agents/client-income-tax"
 
   val incomeTaxSubscriptionSignupClientUrl: String = s"$incomeTaxSubscriptionAgentFrontendExternalUrl/report-quarterly/income-and-expenses/sign-up/client/"
 
