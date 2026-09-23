@@ -242,7 +242,7 @@ extends BaseISpec {
 
         one.select("h4").get(3).text() shouldBe "Manage your client’s details"
         one.select("a").get(4).text() shouldBe "Manage Self Assessment details for clients that are already signed up"
-        one.select("a").get(4).attr("href") shouldBe "http://localhost:9081/report-quarterly/income-and-expenses/view/agents"
+        one.select("a").get(4).attr("href") shouldBe "http://localhost:9081/manage-self-assessment/agents/client-income-tax"
 
         // Self Assessment
         val two = accordion.select("#tax-services-accordion-content-2")
