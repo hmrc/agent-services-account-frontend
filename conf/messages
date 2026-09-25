@@ -296,7 +296,7 @@ asa.agent-regime.paye.h2=Pay as you earn (PAYE)/Construction Industry Scheme (CI
 asa.agent-regime.paye.link=Request a PAYE subscription
 asa.agent-regime.paye.inactive.p1 = You’ve already applied to act as an agent for PAYE for Employers on {0}.
 asa.agent-regime.paye.inactive.p2 = We’ve sent you a letter with an activation code when you applied.
-asa.agent-regime.paye.inactive.p3 = You must <a class="govuk-link" href="/enrolment-management-frontend/IR-SA-AGENT/get-access-tax-scheme?continue=/agent-services-account/home" target="_blank" rel="noreferrer noopener">use the activation code to get access to this service</a>.
+asa.agent-regime.paye.inactive.p3 = You must <a class="govuk-link" href="/enrolment-management-frontend/IR-PAYE-AGENT/get-access-tax-scheme?continue=/agent-services-account/home" target="_blank" rel="noreferrer noopener">use the activation code to get access to this service</a>.
 asa.agent-regime.paye.in-progress.p1=We are still processing the application you did on {0}.
 asa.agent-regime.paye.in-progress.p2=Processing can take up to 5 days.
 asa.agent-regime.paye.subscribed.p1=Your agent code is: {0}
@@ -394,7 +394,7 @@ asa.agent-regime.sa.in-progress.p1=We are still processing the application you d
 asa.agent-regime.sa.in-progress.p2=Processing can take up to 5 days.
 asa.agent-regime.sa.inactive.p1 = You’ve already applied to act as an agent for Self Assessment on {0}.
 asa.agent-regime.sa.inactive.p2 = We’ve sent you a letter with an activation code when you applied.
-asa.agent-regime.sa.inactive.p3 = You must <a class="govuk-link" href="/enrolment-management-frontend/IR-PAYE-AGENT/get-access-tax-scheme?continue=/agent-services-account/home" target="_blank" rel="noreferrer noopener">use the activation code to get access to this service</a>.
+asa.agent-regime.sa.inactive.p3 = You must <a class="govuk-link" href="/enrolment-management-frontend/IR-SA-AGENT/get-access-tax-scheme?continue=/agent-services-account/home" target="_blank" rel="noreferrer noopener">use the activation code to get access to this service</a>.
 asa.agent-regime.sa.subscribed.p1=Your agent code is: {0}
 asa.agent-regime.sa.subscribed.p2=Get permission from new clients
 asa.agent-regime.sa.subscribed.p3=<a class="govuk-link" href="/account/authorise-client/agent/{0}" target="_blank" rel="noreferrer noopener">Ask a client to authorise you (opens in a new tab)</a>
