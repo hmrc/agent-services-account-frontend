@@ -147,6 +147,6 @@
         mainContentLayout = if(fullWidth) Some(fullWidthMainContent(_)) else Some(twoThirdsLayout(_))
     ),
     isWelshTranslationAvailable = true,
-    serviceNavigation = Some(serviceNavigation.withLanguageToggle()),
+    serviceNavigation = if(showSecondaryNav) Some(serviceNavigation.withLanguageToggle()) else None,
     pageTitle = Some(msgs("generic.title", pageTitle, msgs("service.name")))
 ))(bespokeContentBlock)
