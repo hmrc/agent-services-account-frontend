@@ -922,12 +922,6 @@ add.amls.confirmation.h1=Rydych wedi ychwanegu eich manylion o ran goruchwyliaet
 amls.confirmation.h1=Rydych wedi newid eich manylion o ran goruchwyliaeth
 amls.confirmation.p1=Byddwn yn diweddaru eich manylion ynghylch goruchwyliaeth gwrth-wyngalchu arian ar eich cyfrif gwasanaethau asiant.
 amls.confirmation.link=Dychwelyd i ‘Rheoli’r cyfrif’
-amls.enter-renewal-update.title=Beth yw manylion eich cofrestriad ar gyfer goruchwyliaeth gwyngalchu arian?
-amls.enter-renewal.h1=Beth yw manylion eich cofrestriad ar gyfer goruchwyliaeth gwyngalchu arian?
-amls.enter-renewal-body.hint=Dechreuwch deipio ac yna dewiswch eich corff goruchwylio o’r rhestr.
-amls.enter-renewal-date.form.title=Y dyddiad nesaf ar gyfer adnewyddu’ch cofrestriad
-amls.enter-renewal-registration.number.h1=Eich rhif cofrestru
-amls.enter-renewal-body.h1=Enw’r corff goruchwylio gwyngalchu arian
 
 amls.view-details.h1=Manylion ynghylch goruchwyliaeth gwrth-wyngalchu arian
 amls.view-details.supervisory-name=Corff goruchwylio
