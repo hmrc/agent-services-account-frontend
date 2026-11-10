@@ -173,6 +173,7 @@ extends Logging {
   val enableBackendPCRDatabase: Boolean = getBoolean("features.enable-backend-pcr-database")
   val enableLegacySubscriptionLink: Boolean = getBoolean("features.enable-legacy-subscription-link")
   val enableLegacySubscriptionLinkRobotics: Boolean = getBoolean("features.enable-legacy-subscription-link-robotics")
+  val enableSttSubscriptionLink: Boolean = getBoolean("features.enable-stt-subscription-link")
   val enrolmentStoreProxyBaseUrl: String = baseUrl("enrolment-store-proxy")
   val showLegacySubscriptions: Boolean = getBoolean("features.show-legacy-subscriptions")
 
