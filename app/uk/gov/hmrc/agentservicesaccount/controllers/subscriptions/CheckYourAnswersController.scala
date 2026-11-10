@@ -39,7 +39,7 @@ import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionCyaData
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.utils.CountryResolver
 import uk.gov.hmrc.agentservicesaccount.utils.RequestAwareLogging
-import uk.gov.hmrc.agentservicesaccount.utils.SanitiseLegacySubscriptionName
+import uk.gov.hmrc.agentservicesaccount.utils.SanitiseSubscriptionName
 import uk.gov.hmrc.agentservicesaccount.views.components.models.SummaryListData
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.check_your_answers
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -83,7 +83,7 @@ with RequestAwareLogging {
       val requestModelOpt =
         if (agentRegime == PAYE) {
           request.subscriptionJourney.asaDetails.agencyName.flatMap(asaAgencyName => {
-            val sanitised = SanitiseLegacySubscriptionName.sanitise(asaAgencyName, agentRegime)
+            val sanitised = SanitiseSubscriptionName.sanitise(asaAgencyName, agentRegime)
             if (sanitised.removedCharacters.nonEmpty) {
               logger.warn(s"[subscriptions][CheckYourAnswersController][onSubmit] - Remove invalid characters ${sanitised.removedCharacters.mkString} from ASA agency name for ARN ${request.agentInfo.arn.value} and agent regime $agentRegime")
             }
@@ -95,7 +95,7 @@ with RequestAwareLogging {
           })
         }
         else {
-          val sanitised = SanitiseLegacySubscriptionName.sanitise(data.name, agentRegime)
+          val sanitised = SanitiseSubscriptionName.sanitise(data.name, agentRegime)
           if (sanitised.removedCharacters.nonEmpty) {
             logger.warn(s"[subscriptions][CheckYourAnswersController][onSubmit] - Remove invalid characters ${sanitised.removedCharacters.mkString} from ASA agency name for ARN ${request.agentInfo.arn.value} and agent regime $agentRegime")
           }
@@ -192,7 +192,7 @@ with RequestAwareLogging {
       case Some(data) if !journey.isSubmitted => f(data)
       case _ if journey.isSubmitted => Future.successful(Redirect(subscriptionRoutes.ConfirmationController.showConfirmationPage(agentRegime)))
       case _ =>
-        logger.warn("[CheckYourAnswersController] missing Legacy Subscription CYA data")(using request)
+        logger.warn("[CheckYourAnswersController] missing Subscription CYA data")(using request)
         Future.successful(Redirect(asaRoutes.AgentServicesController.showAgentServicesAccount()))
     }
   }

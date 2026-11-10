@@ -179,7 +179,7 @@ with Injecting {
     }
   }
 
-  ".submitLegacySubscriptionRequest" should {
+  ".submitSubscriptionRequest" should {
     val exampleAgentName = "Example Agent Ltd"
     val exampleContactName = "Jane Agent"
     val examplePhoneNumber = "01632 960 001"
