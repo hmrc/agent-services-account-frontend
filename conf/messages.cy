@@ -168,7 +168,7 @@ asa.trusts-section.col2.h3=Rheoli ymddiriedolaeth eich cleient
 asa.trusts-section.col2.register-trust-link.text=Defnyddiwch y gwasanaeth hwn i ddiweddaru manylion ymddiriedolaeth neu ystâd eich cleient neu i ddatgan dim newidiadau ar y gofrestr ymddiriedolaethau
 asa.trusts-section.h2=Ymddiriedolaethau ac ystadau
 
-# Legacy Subscriptions
+# Subscriptions
 
 asa.apply-to-act-for.multi-service.section=Gwneud cais i weithredu fel asiant ar gyfer y gwasanaethau treth hyn
 asa.apply-to-act-for.single-service.section=Gwneud cais i weithredu fel asiant ar gyfer y gwasanaeth treth hwn
