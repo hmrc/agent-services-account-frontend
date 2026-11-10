@@ -18,27 +18,27 @@ package utils
 
 import org.scalatestplus.play.PlaySpec
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.*
-import uk.gov.hmrc.agentservicesaccount.utils.SanitiseLegacySubscriptionName.sanitise
+import uk.gov.hmrc.agentservicesaccount.utils.SanitiseSubscriptionName.sanitise
 
-class SanitiseLegacySubscriptionNameSpec
+class SanitiseSubscriptionNameSpec
 extends PlaySpec {
 
   private val acceptableNameForAll = "A. Person, Acceptable-Co. (BA)"
   private val invalidCharactersForAll = "£$%^*=+[]{};:<>?~"
 
-  "SanitiseLegacySubscriptionName.sanitise" should {
+  "SanitiseSubscriptionName.sanitise" should {
     List(CT, SA, PAYE).foreach(agentRegime => {
       s"return the original name with removed characters empty for an acceptable name for $agentRegime" in {
-        val sanitisedLegacySubscriptionName = sanitise(acceptableNameForAll, agentRegime)
-        sanitisedLegacySubscriptionName.sanitisedName mustBe acceptableNameForAll
-        sanitisedLegacySubscriptionName.removedCharacters mustBe List.empty
+        val sanitisedSubscriptionName = sanitise(acceptableNameForAll, agentRegime)
+        sanitisedSubscriptionName.sanitisedName mustBe acceptableNameForAll
+        sanitisedSubscriptionName.removedCharacters mustBe List.empty
       }
 
       s"remove invalid characters for all from sanitisedName and add to removed characters for $agentRegime" in {
         val nameToSanitise = acceptableNameForAll + invalidCharactersForAll
-        val sanitisedLegacySubscriptionName = sanitise(nameToSanitise, agentRegime)
-        sanitisedLegacySubscriptionName.sanitisedName mustBe acceptableNameForAll
-        sanitisedLegacySubscriptionName.removedCharacters mustBe invalidCharactersForAll.split("").toList
+        val sanitisedSubscriptionName = sanitise(nameToSanitise, agentRegime)
+        sanitisedSubscriptionName.sanitisedName mustBe acceptableNameForAll
+        sanitisedSubscriptionName.removedCharacters mustBe invalidCharactersForAll.split("").toList
       }
 
       s"strip diacritics from sanitisedName and add to removed characters for $agentRegime" in {
@@ -70,9 +70,9 @@ extends PlaySpec {
           val randomSplit = Math.floor(Math.random() * acceptableNameForAll.length).toInt
           val splitString = acceptableNameForAll.splitAt(randomSplit)
           val nameToSanitise = s"${splitString._1}$invalidCtSaCharacter${splitString._2}"
-          val sanitisedLegacySubscriptionName = sanitise(nameToSanitise, agentRegime)
-          sanitisedLegacySubscriptionName.sanitisedName mustBe acceptableNameForAll
-          sanitisedLegacySubscriptionName.removedCharacters mustBe List(invalidCtSaCharacter)
+          val sanitisedSubscriptionName = sanitise(nameToSanitise, agentRegime)
+          sanitisedSubscriptionName.sanitisedName mustBe acceptableNameForAll
+          sanitisedSubscriptionName.removedCharacters mustBe List(invalidCtSaCharacter)
         }
       })
     })
@@ -83,45 +83,45 @@ extends PlaySpec {
           val randomSplit = Math.floor(Math.random() * acceptableNameForAll.length).toInt
           val splitString = acceptableNameForAll.splitAt(randomSplit)
           val nameToSanitise = s"${splitString._1}$invalidPayeCharacter${splitString._2}"
-          val sanitisedLegacySubscriptionName = sanitise(nameToSanitise, agentRegime)
-          sanitisedLegacySubscriptionName.sanitisedName mustBe acceptableNameForAll
-          sanitisedLegacySubscriptionName.removedCharacters mustBe List(invalidPayeCharacter)
+          val sanitisedSubscriptionName = sanitise(nameToSanitise, agentRegime)
+          sanitisedSubscriptionName.sanitisedName mustBe acceptableNameForAll
+          sanitisedSubscriptionName.removedCharacters mustBe List(invalidPayeCharacter)
         }
       })
 
       s"replace ' & ' with ' and ' for $agentRegime - one &" in {
         val nameToSanitise = "Fish & Chips"
-        val sanitisedLegacySubscriptionName = sanitise(nameToSanitise, agentRegime)
-        sanitisedLegacySubscriptionName.sanitisedName mustBe "Fish and Chips"
-        sanitisedLegacySubscriptionName.removedCharacters mustBe List("&")
+        val sanitisedSubscriptionName = sanitise(nameToSanitise, agentRegime)
+        sanitisedSubscriptionName.sanitisedName mustBe "Fish and Chips"
+        sanitisedSubscriptionName.removedCharacters mustBe List("&")
       }
 
       s"replace '&' with ' and ' for $agentRegime - one &" in {
         val nameToSanitise = "Fish&Chips"
-        val sanitisedLegacySubscriptionName = sanitise(nameToSanitise, agentRegime)
-        sanitisedLegacySubscriptionName.sanitisedName mustBe "Fish and Chips"
-        sanitisedLegacySubscriptionName.removedCharacters mustBe List("&")
+        val sanitisedSubscriptionName = sanitise(nameToSanitise, agentRegime)
+        sanitisedSubscriptionName.sanitisedName mustBe "Fish and Chips"
+        sanitisedSubscriptionName.removedCharacters mustBe List("&")
       }
 
       s"replace ' & ' with ' and ' for $agentRegime - multiple &" in {
         val nameToSanitise = "Fish & Chips & Beans & Peas"
-        val sanitisedLegacySubscriptionName = sanitise(nameToSanitise, agentRegime)
-        sanitisedLegacySubscriptionName.sanitisedName mustBe "Fish and Chips and Beans and Peas"
-        sanitisedLegacySubscriptionName.removedCharacters mustBe List("&", "&", "&")
+        val sanitisedSubscriptionName = sanitise(nameToSanitise, agentRegime)
+        sanitisedSubscriptionName.sanitisedName mustBe "Fish and Chips and Beans and Peas"
+        sanitisedSubscriptionName.removedCharacters mustBe List("&", "&", "&")
       }
 
       s"replace '&' with ' and ' for $agentRegime - multiple &" in {
         val nameToSanitise = "Fish&Chips&Beans&Peas"
-        val sanitisedLegacySubscriptionName = sanitise(nameToSanitise, agentRegime)
-        sanitisedLegacySubscriptionName.sanitisedName mustBe "Fish and Chips and Beans and Peas"
-        sanitisedLegacySubscriptionName.removedCharacters mustBe List("&", "&", "&")
+        val sanitisedSubscriptionName = sanitise(nameToSanitise, agentRegime)
+        sanitisedSubscriptionName.sanitisedName mustBe "Fish and Chips and Beans and Peas"
+        sanitisedSubscriptionName.removedCharacters mustBe List("&", "&", "&")
       }
 
       s"replace ' & ' with ' and ' and '&' with ' and ' for $agentRegime" in {
         val nameToSanitise = "Fish&Chips&Beans & Peas & Gravy"
-        val sanitisedLegacySubscriptionName = sanitise(nameToSanitise, agentRegime)
-        sanitisedLegacySubscriptionName.sanitisedName mustBe "Fish and Chips and Beans and Peas and Gravy"
-        sanitisedLegacySubscriptionName.removedCharacters mustBe List(
+        val sanitisedSubscriptionName = sanitise(nameToSanitise, agentRegime)
+        sanitisedSubscriptionName.sanitisedName mustBe "Fish and Chips and Beans and Peas and Gravy"
+        sanitisedSubscriptionName.removedCharacters mustBe List(
           "&",
           "&",
           "&",

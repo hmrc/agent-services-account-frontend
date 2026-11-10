@@ -21,32 +21,32 @@ import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.*
 
 import org.apache.commons.lang3.StringUtils.stripAccents
 
-case class SanitisedLegacySubscriptionName(
+case class SanitisedSubscriptionName(
   sanitisedName: String,
   removedCharacters: List[String]
 )
 
-object SanitiseLegacySubscriptionName {
+object SanitiseSubscriptionName {
 
   def sanitise(
     name: String,
     agentRegime: AgentRegime
-  ): SanitisedLegacySubscriptionName =
+  ): SanitisedSubscriptionName =
     agentRegime match {
       case CT | SA => sanitiseForCtSa(name)
       case PAYE => sanitiseForPaye(name)
     }
 
-  private def sanitiseForCtSa(name: String): SanitisedLegacySubscriptionName = {
+  private def sanitiseForCtSa(name: String): SanitisedSubscriptionName = {
     val nameWithAccentsStripped = stripAccents(name)
     val allowedCharacterForCtSa = """^[A-Za-z0-9 .,()/&\-'‘’]$""".r
     val nameSplitByAllowedCharacters: Map[Boolean, List[String]] = nameWithAccentsStripped.split("").toList.groupBy(allowedCharacterForCtSa.matches)
     val sanitisedName = nameSplitByAllowedCharacters.getOrElse(true, List.empty).mkString
     val removedCharacters = (name diff nameWithAccentsStripped).map(_.toString).toList ++ nameSplitByAllowedCharacters.getOrElse(false, List.empty)
-    SanitisedLegacySubscriptionName(sanitisedName, removedCharacters)
+    SanitisedSubscriptionName(sanitisedName, removedCharacters)
   }
 
-  private def sanitiseForPaye(name: String): SanitisedLegacySubscriptionName = {
+  private def sanitiseForPaye(name: String): SanitisedSubscriptionName = {
     val nameWithAccentsStripped = stripAccents(name)
     val nameWithAccentsStrippedAndAmpersandReplaced = nameWithAccentsStripped.replaceAll(" & ", " and ").replaceAll("&", " and ")
     val allowedCharacterForPaye = """^[A-Za-z0-9 .,()@!-]$""".r
@@ -57,7 +57,7 @@ object SanitiseLegacySubscriptionName {
     val sanitisedName = nameSplitByAllowedCharacters.getOrElse(true, List.empty).mkString
     val removedCharacters = (name diff nameWithAccentsStripped).map(_.toString).toList ++ name.filter(_ == '&').map(_.toString).toList ++
       nameSplitByAllowedCharacters.getOrElse(false, List.empty)
-    SanitisedLegacySubscriptionName(sanitisedName, removedCharacters)
+    SanitisedSubscriptionName(sanitisedName, removedCharacters)
   }
 
 }
