@@ -179,9 +179,9 @@ extends Logging {
   val enableSttSubscriptionLink: Boolean = getBoolean("features.enable-stt-subscription-link")
   val enableGetSubscriptionInfo: Boolean =
     showLegacySubscriptions ||
-    enableLegacySubscriptionLink ||
-    enableLegacySubscriptionLinkRobotics ||
-    enableSttSubscriptionLink
+      enableLegacySubscriptionLink ||
+      enableLegacySubscriptionLinkRobotics ||
+      enableSttSubscriptionLink
 
   // Gran Perms
   val agentPermissionsBaseUrl: String = baseUrl("agent-permissions")

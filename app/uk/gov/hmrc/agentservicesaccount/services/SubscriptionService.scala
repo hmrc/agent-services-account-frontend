@@ -39,7 +39,10 @@ import scala.concurrent.Future
 class SubscriptionService @Inject() (
   agentServicesAccountConnector: AgentServicesAccountConnector,
   enrolmentStoreProxyConnector: EnrolmentStoreProxyConnector
-)(implicit appConfig: AppConfig, ec: ExecutionContext)
+)(implicit
+  appConfig: AppConfig,
+  ec: ExecutionContext
+)
 extends Logging {
 
   def getSubscriptionInfo(

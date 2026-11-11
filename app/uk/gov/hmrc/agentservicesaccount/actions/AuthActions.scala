@@ -24,7 +24,10 @@ import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
 import uk.gov.hmrc.agentservicesaccount.models.Arn
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.{CT, PAYE, SA, STT}
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.CT
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.SA
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.STT
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionInfo
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionStatus
 import uk.gov.hmrc.agentservicesaccount.utils.RequestSupport.hc
@@ -102,7 +105,10 @@ case class AgentInfo(
       Some(PAYE),
       Some(CT),
       Some(SA),
-      if (includeStt) Some(STT) else None
+      if (includeStt)
+        Some(STT)
+      else
+        None
     ).flatten.map(getSubscriptionInfo)
   }
 

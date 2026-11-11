@@ -71,7 +71,7 @@ object AgentRegime {
     override def msgPrefix: String = s"asa.agent-regime.${CT.toString.toLowerCase}"
   }
   case object STT
-    extends AgentRegime {
+  extends AgentRegime {
     override def msgPrefix: String = s"asa.agent-regime.${STT.toString.toLowerCase}"
   }
 
