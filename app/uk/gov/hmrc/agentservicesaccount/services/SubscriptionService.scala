@@ -51,7 +51,9 @@ extends Logging {
     HeaderCarrier,
     RequestHeader
   ): Future[Seq[SubscriptionInfo]] = {
-    val subscriptions = agentInfo.subscriptions(appConfig.enableSttSubscriptionLink)
+//    TODO: Setting includeStt to false until BE is set up correctly. Once set up, it should be replaced with the commented line
+    //    val subscriptions = agentInfo.subscriptions(includeStt = appConfig.enableSttSubscriptionLink)
+    val subscriptions = agentInfo.subscriptions(includeStt = false)
     val subscribed = subscriptions.filter(_.subscriptionStatus == SubscriptionStatus.Subscribed)
     val inactive = subscriptions.filter(_.subscriptionStatus == SubscriptionStatus.InactiveEnrolment)
     val notSubscribed = subscriptions.filter(_.subscriptionStatus == SubscriptionStatus.NotSubscribed)
