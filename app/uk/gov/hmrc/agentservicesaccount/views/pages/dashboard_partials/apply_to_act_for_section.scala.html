@@ -43,7 +43,8 @@
         Seq(
             if(!request.agentDetailsDesResponse.agencyDetails.exists(_.isAbroad)) Some(AgentRegime.PAYE).filter(canStartSubscriptionJourney(_) && appConfig.enableLegacySubscriptionLink) else None,
             Some(AgentRegime.CT).filter(canStartSubscriptionJourney(_) && appConfig.enableLegacySubscriptionLinkRobotics),
-            Some(AgentRegime.SA).filter(canStartSubscriptionJourney(_) && appConfig.enableLegacySubscriptionLinkRobotics)
+            Some(AgentRegime.SA).filter(canStartSubscriptionJourney(_) && appConfig.enableLegacySubscriptionLinkRobotics),
+            if(!request.agentDetailsDesResponse.agencyDetails.exists(_.isAbroad)) Some(AgentRegime.STT).filter(canStartSubscriptionJourney(_) && appConfig.enableSttSubscriptionLink) else None,
         ).flatten
 
     regimes
