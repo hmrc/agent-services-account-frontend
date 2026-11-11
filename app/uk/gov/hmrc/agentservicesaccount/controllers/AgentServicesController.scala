@@ -80,7 +80,7 @@ with RequestAwareLogging {
     withShowFeatureInvite(agentInfo.arn) {
       (showFeatureInvite: Boolean) =>
         val subscriptionInfoF: Future[Seq[SubscriptionInfo]] =
-          if (appConfig.showLegacySubscriptions || appConfig.enableLegacySubscriptionLink || appConfig.enableLegacySubscriptionLinkRobotics)
+          if (appConfig.enableGetSubscriptionInfo)
             subscriptionService.getSubscriptionInfo(agentInfo)
           else
             Future.successful(Seq.empty)
