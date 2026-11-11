@@ -33,6 +33,8 @@ sealed trait AgentRegime {
       case AgentRegime.PAYE => "IR-PAYE-AGENT"
       case AgentRegime.SA => "IR-SA-AGENT"
       case AgentRegime.CT => "IR-CT-AGENT"
+//      TODO: Add correct enrolment key for STT
+      case AgentRegime.STT => "stt-enrolment-key-placeholder"
     }
 
   def agentReferenceKey: String =
@@ -40,6 +42,8 @@ sealed trait AgentRegime {
       case AgentRegime.PAYE => "IRAgentReference"
       case AgentRegime.SA => "IRAgentReference"
       case AgentRegime.CT => "IRAgentReference"
+//      TODO: Add correct agent reference key for STT
+      case AgentRegime.STT => "stt-agent-reference-key-placeholder"
     }
 
   def dataKey: String =
@@ -47,6 +51,7 @@ sealed trait AgentRegime {
       case AgentRegime.PAYE => "payeJourney"
       case AgentRegime.SA => "saJourney"
       case AgentRegime.CT => "ctJourney"
+      case AgentRegime.STT => "sttJourney"
     }
 
 }
@@ -65,6 +70,10 @@ object AgentRegime {
   extends AgentRegime {
     override def msgPrefix: String = s"asa.agent-regime.${CT.toString.toLowerCase}"
   }
+  case object STT
+    extends AgentRegime {
+    override def msgPrefix: String = s"asa.agent-regime.${STT.toString.toLowerCase}"
+  }
 
   implicit val format: Format[AgentRegime] = Format(
     Reads { json =>
@@ -72,6 +81,7 @@ object AgentRegime {
         case "PAYE" => JsSuccess(PAYE)
         case "SA" => JsSuccess(SA)
         case "CT" => JsSuccess(CT)
+        case "STT" => JsSuccess(STT)
         case _ => throw new RuntimeException(s"Unknown regime: ${json.as[String]}")
       }
     },
@@ -99,6 +109,7 @@ object AgentRegime {
       case "PAYE" => Some(PAYE)
       case "SA" => Some(SA)
       case "CT" => Some(CT)
+      case "STT" => Some(STT)
       case _ => None
     }
 

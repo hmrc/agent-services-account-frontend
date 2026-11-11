@@ -24,9 +24,7 @@ import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
 import uk.gov.hmrc.agentservicesaccount.models.Arn
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.CT
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.SA
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.{CT, PAYE, SA, STT}
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionInfo
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionStatus
 import uk.gov.hmrc.agentservicesaccount.utils.RequestSupport.hc
@@ -97,10 +95,15 @@ case class AgentInfo(
     "IR-SDLT-AGENT"
   ).exists(enrolments.getEnrolment(_).exists(_.isActivated))
 
-  def subscriptions: Seq[SubscriptionInfo] = {
+  def subscriptions(includeStt: Boolean = false): Seq[SubscriptionInfo] = {
     def getSubscriptionInfo(regime: AgentRegime): SubscriptionInfo =
       SubscriptionInfo(regime, subscriptionStatusFor(regime.enrolmentKey))
-    Seq(PAYE, CT, SA).map(getSubscriptionInfo)
+    Seq(
+      Some(PAYE),
+      Some(CT),
+      Some(SA),
+      if (includeStt) Some(STT) else None
+    ).flatten.map(getSubscriptionInfo)
   }
 
   def getAgentReferenceFor(regime: AgentRegime): Option[String] =
@@ -109,9 +112,10 @@ case class AgentInfo(
       .flatMap(_.identifiers.find(_.key == regime.agentReferenceKey))
       .map(_.value)
 
+  def payeAgentCode: Option[String] = getAgentReferenceFor(PAYE)
   def ctAgentCode: Option[String] = getAgentReferenceFor(CT)
   def saAgentCode: Option[String] = getAgentReferenceFor(SA)
-  def payeAgentCode: Option[String] = getAgentReferenceFor(PAYE)
+  def sttAgentCode: Option[String] = getAgentReferenceFor(STT)
 
 }
 
