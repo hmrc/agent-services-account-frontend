@@ -53,12 +53,7 @@ package object controllers {
 
   val amlsJourneyKey: DataKey[UpdateAmlsJourney] = DataKey[UpdateAmlsJourney]("amlsJourney")
 
-  def subscriptionJourneyKey(regime: AgentRegime): DataKey[SubscriptionJourney] =
-    regime match {
-      case CT => DataKey[SubscriptionJourney]("ctJourney")
-      case PAYE => DataKey[SubscriptionJourney]("payeJourney")
-      case SA => DataKey[SubscriptionJourney]("saJourney")
-    }
+  def subscriptionJourneyKey(regime: AgentRegime): DataKey[SubscriptionJourney] = DataKey[SubscriptionJourney](regime.dataKey)
 
   val sessionKeys: List[DataKey[String]] = List(
     agentSizeKey,

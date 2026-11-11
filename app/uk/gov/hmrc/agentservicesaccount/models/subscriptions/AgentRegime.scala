@@ -42,6 +42,13 @@ sealed trait AgentRegime {
       case AgentRegime.CT => "IRAgentReference"
     }
 
+  def dataKey: String =
+    this match {
+      case AgentRegime.PAYE => "payeJourney"
+      case AgentRegime.SA => "saJourney"
+      case AgentRegime.CT => "ctJourney"
+    }
+
 }
 
 object AgentRegime {

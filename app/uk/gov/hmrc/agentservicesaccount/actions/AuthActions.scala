@@ -45,10 +45,6 @@ import scala.annotation.nowarn
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
-private val payeEnrolment = "IR-PAYE-AGENT"
-private val saEnrolment = "IR-SA-AGENT"
-private val ctEnrolment = "IR-CT-AGENT"
-
 class SubscriptionJourneyRequest[A](
   val subscriptionJourney: SubscriptionJourney,
   val agentInfo: AgentInfo,
@@ -101,21 +97,11 @@ case class AgentInfo(
     "IR-SDLT-AGENT"
   ).exists(enrolments.getEnrolment(_).exists(_.isActivated))
 
-  def subscriptions: Seq[SubscriptionInfo] =
-    Seq(
-      SubscriptionInfo(
-        AgentRegime.PAYE,
-        subscriptionStatusFor(payeEnrolment)
-      ),
-      SubscriptionInfo(
-        AgentRegime.CT,
-        subscriptionStatusFor(ctEnrolment)
-      ),
-      SubscriptionInfo(
-        AgentRegime.SA,
-        subscriptionStatusFor(saEnrolment)
-      )
-    )
+  def subscriptions: Seq[SubscriptionInfo] = {
+    def getSubscriptionInfo(regime: AgentRegime): SubscriptionInfo =
+      SubscriptionInfo(regime, subscriptionStatusFor(regime.enrolmentKey))
+    Seq(PAYE, CT, SA).map(getSubscriptionInfo)
+  }
 
   def getAgentReferenceFor(regime: AgentRegime): Option[String] =
     enrolments
