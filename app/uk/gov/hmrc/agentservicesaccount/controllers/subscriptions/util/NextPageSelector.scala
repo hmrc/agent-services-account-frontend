@@ -28,8 +28,11 @@ import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.SA
 
 object NextPageSelector {
 
-  val updateBusinessNamePage = "businessName"
+  val rootPage = "root"
+  val doYouAlreadyManagePage = "doYouAlreadyManage"
+  val youMayNotNeedToApplyPage = "youMayNotNeedToApply"
   val payeUpdateContactNamePage = "payeContactName"
+  val updateBusinessNamePage = "businessName"
   val updatePhoneNumberPage = "phoneNumber"
   val updateEmailAddressPage = "emailAddress"
   val emailVerificationFinish = "emailVerificationFinish"
@@ -45,6 +48,20 @@ object NextPageSelector {
   ) => Call = {
     case (_, Some(journey), regime) if journey.isSubmitted => subscriptions.routes.ConfirmationController.showConfirmationPage(regime)
     case (_, Some(journey), regime) if journey.isComplete(regime) => subscriptions.routes.CheckYourAnswersController.showPage(regime)
+    case (`doYouAlreadyManagePage`, Some(journey), regime) =>
+      (journey.doYouAlreadyManage, regime) match {
+        case (Some(true), _) => subscriptions.routes.YouMayNotNeedToApplyController.showPage(regime)
+        case (Some(false), PAYE) => subscriptions.routes.PayeUpdateContactNameController.showPage
+        case (Some(false), _) => subscriptions.routes.UpdateBusinessNameController.showPage(regime)
+        case _ => subscriptions.routes.DoYouAlreadyManageController.showPage(regime)
+      }
+    case (`youMayNotNeedToApplyPage`, Some(journey), regime) =>
+      (journey.youMayNotNeedToApply, regime) match {
+        case (Some(true), PAYE) => subscriptions.routes.PayeUpdateContactNameController.showPage
+        case (Some(true), regime) => subscriptions.routes.UpdateBusinessNameController.showPage(regime)
+        case (Some(false), _) => homeRoutes.AgentServicesController.root()
+        case _ => subscriptions.routes.YouMayNotNeedToApplyController.showPage(regime)
+      }
     case (`payeUpdateContactNamePage`, _, PAYE) => subscriptions.routes.UpdatePhoneNumberController.showPage(PAYE)
     case (`updateBusinessNamePage`, _, regime) => subscriptions.routes.UpdatePhoneNumberController.showPage(regime)
     case (`updatePhoneNumberPage`, _, regime) => subscriptions.routes.UpdateEmailAddressController.showPage(regime)
