@@ -176,6 +176,7 @@ asa.apply-to-act-for.p1=Unwaith i chi wneud cais, byddwch yn cael cod asiant new
 asa.apply-to-act-for.paye=Talu wrth ennill (TWE)/Cynllun y Diwydiant Adeiladu (CIS)
 asa.apply-to-act-for.sa=Hunanasesiad
 asa.apply-to-act-for.ct=Treth Gorfforaeth
+asa.apply-to-act-for.stt=Treth ar Drosglwyddo Gwarantau
 
 asa.agent-regime.do-you-already-manage.existing.true=Iawn, drwy eu cyfrif gwasanaethau ar-lein CThEF presennol
 
