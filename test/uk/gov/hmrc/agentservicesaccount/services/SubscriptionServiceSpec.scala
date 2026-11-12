@@ -77,7 +77,7 @@ with BeforeAndAfterEach {
     "not call ES5 when subscription is not inactive" in new Setup {
 
       val agentInfo = mock[AgentInfo]
-      agentInfo.subscriptions(mockAppConfig.enableSttSubscriptionLink) returns Seq(SubscriptionInfo(regime, Subscribed))
+      agentInfo.subscriptions(includeStt = false) returns Seq(SubscriptionInfo(regime, Subscribed))
       mockASAConnector.getSubscriptionInfo(*).returns(Future.successful(Seq(activeSubInfo)))
 
       val result = service.getSubscriptionInfo(agentInfo).futureValue
@@ -89,7 +89,7 @@ with BeforeAndAfterEach {
     "enrich inactive enrolment with ES5 date when available" in new Setup {
 
       val agentInfo = mock[AgentInfo]
-      agentInfo.subscriptions(mockAppConfig.enableSttSubscriptionLink) returns Seq(SubscriptionInfo(regime, InactiveEnrolment))
+      agentInfo.subscriptions(includeStt = false) returns Seq(SubscriptionInfo(regime, InactiveEnrolment))
       agentInfo.getAgentReferenceFor(regime).returns(Some("test-agent-reference"))
       mockASAConnector.getSubscriptionInfo(*).returns(Future.successful(Seq(inactiveSubInfo)))
 
@@ -116,7 +116,7 @@ with BeforeAndAfterEach {
     "leave inactive enrolment unchanged when ES5 returns None" in new Setup {
 
       val agentInfo = mock[AgentInfo]
-      agentInfo.subscriptions(mockAppConfig.enableSttSubscriptionLink) returns Seq(SubscriptionInfo(regime, InactiveEnrolment))
+      agentInfo.subscriptions(includeStt = false) returns Seq(SubscriptionInfo(regime, InactiveEnrolment))
       agentInfo.getAgentReferenceFor(regime).returns(Some("test-agent-reference"))
       mockASAConnector.getSubscriptionInfo(*).returns(Future.successful(Seq(inactiveSubInfo)))
       mockES5Connector.getGroupAllocatedEnrolment(*, *, *).returns(Future.successful(None))
@@ -129,7 +129,7 @@ with BeforeAndAfterEach {
     "recover from ES5 failure without failing request" in new Setup {
 
       val agentInfo = mock[AgentInfo]
-      agentInfo.subscriptions(mockAppConfig.enableSttSubscriptionLink) returns Seq(SubscriptionInfo(regime, InactiveEnrolment))
+      agentInfo.subscriptions(includeStt = false) returns Seq(SubscriptionInfo(regime, InactiveEnrolment))
       agentInfo.getAgentReferenceFor(regime).returns(Some("test-agent-reference"))
       mockASAConnector.getSubscriptionInfo(*).returns(Future.successful(Seq(inactiveSubInfo)))
       mockES5Connector.getGroupAllocatedEnrolment(*, *, *).returns(Future.failed(new RuntimeException("ES5 down")))
