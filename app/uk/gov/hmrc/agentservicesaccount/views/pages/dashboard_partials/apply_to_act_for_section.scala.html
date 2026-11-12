@@ -16,6 +16,7 @@
 
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.{routes => subscriptionRoutes}
+@import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.{rootPage, getNextPage}
 @import uk.gov.hmrc.agentservicesaccount.models.subscriptions.{AgentRegime, SubscriptionInfo, SubscriptionStatus}
 @import uk.gov.hmrc.agentservicesaccount.actions.AuthRequestWithAgentProfile
 
@@ -29,7 +30,7 @@
         appConfig: AppConfig
 )
 
-@* TODO: 12613 Add routing behaviour in nextPageSelector for STT - go to PayeUpdateContactName for now and add note to be fixed in 12614 *@
+@startPageUrl(agentRegime: AgentRegime) = @{ getNextPage(rootPage, None, agentRegime) }
 
 @defining({
     def canStartSubscriptionJourney(regime: AgentRegime): Boolean =
@@ -63,8 +64,7 @@
         @p(msgs("asa.apply-to-act-for.p1"))
         @ul_html(
             items = regimes.map { regime =>
-                val url = subscriptionRoutes.DoYouAlreadyManageController.showPage(regime).url
-                a(href = url, key = s"asa.apply-to-act-for.${regime.toString.toLowerCase}")
+                a(href = startPageUrl(regime).url, key = s"asa.apply-to-act-for.${regime.toString.toLowerCase}")
             }
         )
     }

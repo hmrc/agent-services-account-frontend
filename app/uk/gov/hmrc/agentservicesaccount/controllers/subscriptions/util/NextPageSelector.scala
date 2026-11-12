@@ -28,7 +28,7 @@ import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.SA
 
 object NextPageSelector {
 
-  val rootPage = "root"
+  val rootPage = "home"
   val doYouAlreadyManagePage = "doYouAlreadyManage"
   val youMayNotNeedToApplyPage = "youMayNotNeedToApply"
   val payeUpdateContactNamePage = "payeContactName"
@@ -48,6 +48,8 @@ object NextPageSelector {
   ) => Call = {
     case (_, Some(journey), regime) if journey.isSubmitted => subscriptions.routes.ConfirmationController.showConfirmationPage(regime)
     case (_, Some(journey), regime) if journey.isComplete(regime) => subscriptions.routes.CheckYourAnswersController.showPage(regime)
+//    TODO: 12613 Add routing behaviour in nextPageSelector for STT - go to PayeUpdateContactName for now and add note to be fixed in 12614
+    case (`rootPage`, _, regime) => subscriptions.routes.DoYouAlreadyManageController.showPage(regime)
     case (`doYouAlreadyManagePage`, Some(journey), regime) =>
       (journey.doYouAlreadyManage, regime) match {
         case (Some(true), _) => subscriptions.routes.YouMayNotNeedToApplyController.showPage(regime)

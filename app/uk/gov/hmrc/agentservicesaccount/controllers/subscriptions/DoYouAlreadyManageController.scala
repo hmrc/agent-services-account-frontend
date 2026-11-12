@@ -26,7 +26,6 @@ import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageS
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.DoYouAlreadyManageForm
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.DoYouAlreadyManageFormValues
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.do_you_already_manage
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
