@@ -106,6 +106,7 @@ extends ViewBaseSpec {
     None
   )
 
+//  TODO: 12613 Add unit tests here for inclusion of STT
   "apply_to_act_for_section" should {
 
     "show all 3 services for UK agent when none subscribed" in {
