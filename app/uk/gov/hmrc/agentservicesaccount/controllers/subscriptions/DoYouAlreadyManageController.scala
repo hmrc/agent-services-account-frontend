@@ -17,10 +17,12 @@
 package uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
 
 import play.api.i18n.I18nSupport
-import play.api.mvc._
+import play.api.mvc.*
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.doYouAlreadyManagePage
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.DoYouAlreadyManageForm
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.DoYouAlreadyManageFormValues
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
@@ -29,7 +31,7 @@ import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.do_you_already_manage
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
-import javax.inject._
+import javax.inject.*
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
@@ -79,20 +81,15 @@ with I18nSupport {
           doYouAlreadyManage = Some(answer.doYouAlreadyManage)
         )
 
-//        TODO: 12613 Move to nextPageSelector
-        val nextPage =
-          if (answer.doYouAlreadyManage)
-            routes.YouMayNotNeedToApplyController.showPage(agentRegime)
-          else {
-            agentRegime match {
-              case PAYE => routes.PayeUpdateContactNameController.showPage
-              case _ => routes.UpdateBusinessNameController.showPage(agentRegime)
-            }
-          }
-
         sessionCacheService
           .put(subscriptionJourneyKey(agentRegime), updatedJourney)
-          .map(_ => Redirect(nextPage))
+          .map(_ =>
+            Redirect(getNextPage(
+              doYouAlreadyManagePage,
+              Some(updatedJourney),
+              agentRegime
+            ))
+          )
       }
     )
   }
