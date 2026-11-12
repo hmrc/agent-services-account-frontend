@@ -106,15 +106,15 @@ extends ViewBaseSpec {
     None
   )
 
-//  TODO: 12613 Add unit tests here for inclusion of STT
   "apply_to_act_for_section" should {
 
-    "show all 3 services for UK agent when none subscribed" in {
+    "show PAYE, CT, SA, STT for UK agent when none subscribed" in {
       val document = doc(
         Seq(
           sub(AgentRegime.PAYE, SubscriptionStatus.NotSubscribed),
           sub(AgentRegime.CT, SubscriptionStatus.NotSubscribed),
-          sub(AgentRegime.SA, SubscriptionStatus.NotSubscribed)
+          sub(AgentRegime.SA, SubscriptionStatus.NotSubscribed),
+          sub(AgentRegime.STT, SubscriptionStatus.NotSubscribed)
         ),
         isAbroad = false
       )
@@ -124,16 +124,18 @@ extends ViewBaseSpec {
       links must contain("Pay as you earn (PAYE)/Construction Industry Scheme (CIS)")
       links must contain("Corporation Tax")
       links must contain("Self Assessment")
+      links must contain("Securities Transfer Tax")
 
       document.select("h2").text() mustBe messages("asa.apply-to-act-for.multi-service.section")
     }
 
-    "exclude PAYE for overseas agent" in {
+    "show CT, SA and exclude PAYE, STT for overseas agent" in {
       val document = doc(
         Seq(
           sub(AgentRegime.PAYE, SubscriptionStatus.NotSubscribed),
           sub(AgentRegime.CT, SubscriptionStatus.NotSubscribed),
-          sub(AgentRegime.SA, SubscriptionStatus.NotSubscribed)
+          sub(AgentRegime.SA, SubscriptionStatus.NotSubscribed),
+          sub(AgentRegime.STT, SubscriptionStatus.NotSubscribed)
         ),
         isAbroad = true
       )
@@ -143,6 +145,7 @@ extends ViewBaseSpec {
       links must not contain "Pay as you earn (PAYE)/Construction Industry Scheme (CIS)"
       links must contain("Corporation Tax")
       links must contain("Self Assessment")
+      links must not contain "Securities Transfer Tax"
     }
 
     "show only remaining unsubscribed services" in {
@@ -150,7 +153,8 @@ extends ViewBaseSpec {
         Seq(
           sub(AgentRegime.PAYE, SubscriptionStatus.Subscribed),
           sub(AgentRegime.CT, SubscriptionStatus.NotSubscribed),
-          sub(AgentRegime.SA, SubscriptionStatus.NotSubscribed)
+          sub(AgentRegime.SA, SubscriptionStatus.Subscribed),
+          sub(AgentRegime.STT, SubscriptionStatus.NotSubscribed)
         ),
         isAbroad = false
       )
@@ -159,7 +163,8 @@ extends ViewBaseSpec {
 
       links must not contain "Pay as you earn (PAYE)/Construction Industry Scheme (CIS)"
       links must contain("Corporation Tax")
-      links must contain("Self Assessment")
+      links must not contain "Self Assessment"
+      links must contain("Securities Transfer Tax")
     }
 
     "show single-service heading when only one service available" in {
@@ -167,7 +172,8 @@ extends ViewBaseSpec {
         Seq(
           sub(AgentRegime.PAYE, SubscriptionStatus.Subscribed),
           sub(AgentRegime.CT, SubscriptionStatus.Subscribed),
-          sub(AgentRegime.SA, SubscriptionStatus.NotSubscribed)
+          sub(AgentRegime.SA, SubscriptionStatus.NotSubscribed),
+          sub(AgentRegime.STT, SubscriptionStatus.Subscribed)
         ),
         isAbroad = false
       )
@@ -183,7 +189,8 @@ extends ViewBaseSpec {
         Seq(
           sub(AgentRegime.PAYE, SubscriptionStatus.Subscribed),
           sub(AgentRegime.CT, SubscriptionStatus.Subscribed),
-          sub(AgentRegime.SA, SubscriptionStatus.Subscribed)
+          sub(AgentRegime.SA, SubscriptionStatus.Subscribed),
+          sub(AgentRegime.STT, SubscriptionStatus.Subscribed)
         ),
         isAbroad = false
       )
