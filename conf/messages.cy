@@ -491,6 +491,14 @@ asa.agent-regime.sa.check-your-answers.email=Cyfeiriad e-bost
 asa.agent-regime.sa.check-your-answers.address=Cyfeiriad
 asa.agent-regime.sa.check-your-answers.submit-button=Ymrestru ar gyfer Hunanasesiad
 
+# STT
+
+asa.agent-regime.stt.contact-name.title=Pwy ddylem gysylltu â nhw ynglŷn â Treth ar Drosglwyddo Gwarantau?
+asa.agent-regime.stt.contact-name.input.heading=Pwy yn {0} ddylem gysylltu â nhw ynglŷn â Treth ar Drosglwyddo Gwarantau?
+asa.agent-regime.stt.contact-name.input.hint=Nodwch ei enw llawn
+asa.agent-regime.stt.contact-name.input.error.empty=Nodwch enw llawn y person y dylem gysylltu ag ef ynglŷn â Treth ar Drosglwyddo Gwarantau
+asa.agent-regime.stt.contact-name.input.error.invalid=Gall enw’r person gynnwys llythrennau a cysylltnodau yn unig
+
 # Custom UR banner
 banner.heading=Helpwch i wella CThEF
 banner.link1=Rhowch gynnig ar y nodwedd grwpiau mynediad

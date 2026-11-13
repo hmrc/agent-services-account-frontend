@@ -30,16 +30,16 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.mvc.RequestHeader
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import support.BaseISpec
 import support.TestConstants
 import support.UnitSpec
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
-import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.PayeUpdateContactNameController
-import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.PayeSubscriptionContactNameForm.contactNameKey
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.{UpdateContactNameController, routes as subscriptionRoutes}
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionContactNameForm.contactNameKey
 import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.{CT, PAYE, SA, STT}
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.{AgentRegime, SubscriptionJourney}
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.authorise.Predicate
@@ -50,7 +50,7 @@ import uk.gov.hmrc.http.client.HttpClientV2
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
-class PayeUpdateContactNameControllerISpec
+class UpdateContactNameControllerISpec
 extends BaseISpec
 with UnitSpec
 with Matchers
@@ -60,7 +60,10 @@ with IntegrationPatience
 with MockFactory
 with TestConstants {
 
-  class TestSetup {
+  private val agentRegimesRequiringContactName = List(PAYE, STT)
+  private val agentRegimesRequiringBusinessName = List(CT, SA)
+
+  class TestSetup(agentRegime: AgentRegime) {
 
     private val testArn = "TARN0000001"
 
@@ -137,7 +140,7 @@ with TestConstants {
       .overrides(overrides)
       .build()
 
-    val controller: PayeUpdateContactNameController = app.injector.instanceOf[PayeUpdateContactNameController]
+    val controller: UpdateContactNameController = app.injector.instanceOf[UpdateContactNameController]
 
     val sessionCache: SessionCacheService = app.injector.instanceOf[SessionCacheService]
 
@@ -148,62 +151,77 @@ with TestConstants {
     def cacheJourney(journey: SubscriptionJourney): Unit = {
       implicit val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequest
       implicit val writes: OWrites[SubscriptionJourney] = Json.writes[SubscriptionJourney]
-      sessionCache.put(PAYE.subscriptionJourneyKey, journey).futureValue
+      sessionCache.put(agentRegime.subscriptionJourneyKey, journey).futureValue
     }
 
   }
 
-  "GET /subscription/PAYE/contact-name" should {
+  agentRegimesRequiringBusinessName.foreach(agentRegime => {
+    s"GET /subscription/$agentRegime/business-name" should {
 
-    "render empty form on first visit" in new TestSetup {
-      cacheJourney(subscriptionBaseJourney)
+      s"redirect to /subscription/$agentRegime/contact-name" in new TestSetup(agentRegime) {
+        cacheJourney(subscriptionBaseJourney)
 
-      private val result = controller.showPage(FakeRequest()).futureValue
+        private val result = controller.showPage(agentRegime)(FakeRequest()).futureValue
 
-      status(result) shouldBe OK
-      contentAsString(result) should include("Test Agency")
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result) shouldBe Some(subscriptionRoutes.UpdateBusinessNameController.showPage(agentRegime).url)
+      }
+    }
+  })
+
+  agentRegimesRequiringContactName.foreach(agentRegime => {
+    s"GET /subscription/$agentRegime/contact-name" should {
+
+      "render empty form on first visit" in new TestSetup(agentRegime) {
+        cacheJourney(subscriptionBaseJourney)
+
+        private val result = controller.showPage(agentRegime)(FakeRequest()).futureValue
+
+        status(result) shouldBe OK
+        contentAsString(result) should include("Test Agency")
+      }
+
+      "render pre-filled form when journey has existing answers" in new TestSetup(agentRegime) {
+        private val journey = subscriptionBaseJourney.copy(
+          payeContactName = Some("My Name")
+        )
+
+        cacheJourney(journey)
+
+        private val result = controller.showPage(agentRegime)(FakeRequest()).futureValue
+
+        status(result) shouldBe OK
+        private val content = contentAsString(result)
+
+        content should include(contactNameKey)
+      }
     }
 
-    "render pre-filled form when journey has existing answers" in new TestSetup {
-      private val journey = subscriptionBaseJourney.copy(
-        payeContactName = Some("My Name")
+    s"POST /subscription/$agentRegime/contact-name" should {
+
+      "return BAD_REQUEST when form is invalid" in new TestSetup(agentRegime) {
+        cacheJourney(subscriptionBaseJourney)
+
+        private val request = FakeRequest().withSession(session.toSeq *).withFormUrlEncodedBody(
+          contactNameKey -> ""
+        )
+
+        private val result = controller.onSubmit(agentRegime)(request).futureValue
+
+        status(result) shouldBe BAD_REQUEST
+      }
+
+      val journeyWithRedirectLocations = List(
+        (subscriptionBaseJourney, "phone-number"),
+        (payeSubscriptionFullJourney, "check-your-answers")
       )
 
-      cacheJourney(journey)
-
-      private val result = controller.showPage(FakeRequest()).futureValue
-
-      status(result) shouldBe OK
-      private val content = contentAsString(result)
-
-      content should include(contactNameKey)
-    }
-  }
-
-  "POST /subscription/PAYE/contact-name" should {
-
-    "return BAD_REQUEST when form is invalid" in new TestSetup {
-      cacheJourney(subscriptionBaseJourney)
-
-      private val request = FakeRequest().withSession(session.toSeq*).withFormUrlEncodedBody(
-        contactNameKey -> ""
-      )
-
-      private val result = controller.onSubmit(request).futureValue
-
-      status(result) shouldBe BAD_REQUEST
-    }
-
-    val journeyWithRedirectLocations = List(
-      (subscriptionBaseJourney, "phone-number"),
-      (payeSubscriptionFullJourney, "check-your-answers")
-    )
-
-    journeyWithRedirectLocations.foreach(journeyWithRedirectLocation => {
-      s"update journey and redirect to ${journeyWithRedirectLocation._2}" +
-        s"when journey ${completeString(journeyWithRedirectLocation._1, PAYE)}}" in new TestSetup {
+      journeyWithRedirectLocations.foreach(journeyWithRedirectLocation => {
+        s"update journey and redirect to ${journeyWithRedirectLocation._2}" +
+          s"when journey ${completeString(journeyWithRedirectLocation._1, agentRegime)}}" in new TestSetup(agentRegime) {
           private val request = FakeRequest(POST, "/")
-            .withSession(session.toSeq*)
+            .withSession(session.toSeq *)
             .withFormUrlEncodedBody(
               contactNameKey -> "New Name"
             )
@@ -212,16 +230,16 @@ with TestConstants {
 
           cacheJourney(journeyWithRedirectLocation._1)
 
-          private val result = controller.onSubmit(request).futureValue
+          private val result = controller.onSubmit(agentRegime)(request).futureValue
           status(result) shouldBe SEE_OTHER
           redirectLocation(result) shouldBe
-            Some(s"/agent-services-account/subscription/PAYE/${journeyWithRedirectLocation._2}")
+            Some(s"/agent-services-account/subscription/$agentRegime/${journeyWithRedirectLocation._2}")
 
-          val updated: Option[SubscriptionJourney] = sessionCache.get[SubscriptionJourney](PAYE.subscriptionJourneyKey).futureValue
+          val updated: Option[SubscriptionJourney] = sessionCache.get[SubscriptionJourney](agentRegime.subscriptionJourneyKey).futureValue
           updated shouldBe defined
           updated.value.payeContactName shouldBe Some("New Name")
         }
-    })
-  }
-
+      })
+    }
+  })
 }

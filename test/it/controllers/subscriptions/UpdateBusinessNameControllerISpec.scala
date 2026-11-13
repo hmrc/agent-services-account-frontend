@@ -30,19 +30,17 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.mvc.RequestHeader
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import support.BaseISpec
 import support.TestConstants
 import support.UnitSpec
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdateBusinessNameController
-import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.{routes => subscriptionRoutes}
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.routes as subscriptionRoutes
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionBusinessNameForm.businessNameNewKey
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionBusinessNameForm.businessNameUseAsaDataKey
 import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.CT
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.SA
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.{CT, PAYE, SA, STT}
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
@@ -65,7 +63,8 @@ with IntegrationPatience
 with MockFactory
 with TestConstants {
 
-  private val agentRegimes = List(CT, SA)
+  private val agentRegimesRequiringBusinessName = List(CT, SA)
+  private val agentRegimesRequiringContactName = List(PAYE, STT)
 
   class TestSetup(agentRegime: AgentRegime) {
 
@@ -160,19 +159,21 @@ with TestConstants {
 
   }
 
-  "GET /subscription/PAYE/business-name" should {
+  agentRegimesRequiringContactName.foreach(agentRegime => {
+    s"GET /subscription/$agentRegime/business-name" should {
 
-    "redirect to /subscription/PAYE/contact-name" in new TestSetup(PAYE) {
-      cacheJourney(subscriptionBaseJourney)
+      s"redirect to /subscription/$agentRegime/contact-name" in new TestSetup(agentRegime) {
+        cacheJourney(subscriptionBaseJourney)
 
-      private val result = controller.showPage(PAYE)(FakeRequest()).futureValue
+        private val result = controller.showPage(agentRegime)(FakeRequest()).futureValue
 
-      status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some(subscriptionRoutes.PayeUpdateContactNameController.showPage.url)
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result) shouldBe Some(subscriptionRoutes.UpdateContactNameController.showPage(agentRegime).url)
+      }
     }
-  }
+  })
 
-  agentRegimes.foreach(agentRegime => {
+  agentRegimesRequiringBusinessName.foreach(agentRegime => {
     s"GET /subscription/$agentRegime/business-name" should {
 
       "render empty form on first visit" in new TestSetup(agentRegime) {

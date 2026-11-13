@@ -47,6 +47,7 @@ extends FrontendController(cc)
 with I18nSupport {
 
   def showPage(agentRegime: AgentRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(agentRegime).async { implicit request =>
+//    TODO: 12614 Add STT guard here and add tests
     val journey = request.subscriptionJourney
 
     val form =

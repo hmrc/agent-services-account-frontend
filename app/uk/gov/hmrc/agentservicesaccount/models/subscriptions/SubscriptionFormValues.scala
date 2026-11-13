@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.agentservicesaccount.models.subscriptions
 
-case class PayeContactNameFormValues(
+case class ContactNameFormValues(
   contactName: String
 )
 

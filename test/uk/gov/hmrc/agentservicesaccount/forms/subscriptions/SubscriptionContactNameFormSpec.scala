@@ -1,0 +1,103 @@
+/*
+ * Copyright 2023 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package uk.gov.hmrc.agentservicesaccount.forms.subscriptions
+
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionContactNameForm.*
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.ContactNameFormValues
+
+class SubscriptionContactNameFormSpec
+extends AnyWordSpec
+with Matchers {
+
+  val emptyValue = ""
+  val validNewContactName = "My Name"
+  val invalidNewContactName = "{][.',"
+
+// TODO: 12614 Change to STT
+  private val agentRegime = AgentRegime.PAYE
+
+  private val agentRegimePrefix = agentRegime.msgPrefix
+
+  private val initForm = form(agentRegime)
+
+  "form binding" should {
+    s"be successful when $contactNameKey valid" in {
+      val params = Map(
+        contactNameKey -> validNewContactName
+      )
+
+      initForm.bind(params).value shouldBe Some(ContactNameFormValues(validNewContactName))
+    }
+
+    s"error when $contactNameKey empty" in {
+      val params = Map(
+        contactNameKey -> emptyValue
+      )
+
+      val validatedForm = initForm.bind(params)
+      validatedForm.hasErrors shouldBe true
+      validatedForm.error(contactNameKey).get.message shouldBe s"$agentRegimePrefix.contact-name.input.error.empty"
+      validatedForm.errors.length shouldBe 1
+    }
+
+    s"error when $contactNameKey invalid" in {
+      val params = Map(
+        contactNameKey -> invalidNewContactName
+      )
+
+      val validatedForm = initForm.bind(params)
+      validatedForm.hasErrors shouldBe true
+      validatedForm.error(contactNameKey).get.message shouldBe s"$agentRegimePrefix.contact-name.input.error.invalid"
+      validatedForm.errors.length shouldBe 1
+    }
+
+    s"error when $contactNameKey too long - PAYE" in {
+      val params = Map(
+        contactNameKey -> "a".repeat(PAYE_CONTACT_NAME_MAX_LENGTH + 1)
+      )
+
+      val validatedForm = form(AgentRegime.PAYE).bind(params)
+      validatedForm.hasErrors shouldBe true
+      validatedForm.error(contactNameKey).get.message shouldBe s"$agentRegimePrefix.contact-name.input.error.invalid"
+      validatedForm.errors.length shouldBe 1
+    }
+
+    s"error when $contactNameKey too long - STT" in {
+      val params = Map(
+        contactNameKey -> "a".repeat(STT_CONTACT_NAME_MAX_LENGTH + 1)
+      )
+
+      val validatedForm = form(AgentRegime.STT).bind(params)
+      validatedForm.hasErrors shouldBe true
+      validatedForm.error(contactNameKey).get.message shouldBe s"$agentRegimePrefix.contact-name.input.error.invalid"
+      validatedForm.errors.length shouldBe 1
+    }
+
+    "unbind ContactNameFormValues" in {
+      val unboundForm = initForm.mapping.unbind(ContactNameFormValues(validNewContactName))
+
+      unboundForm shouldBe Map(
+        contactNameKey -> validNewContactName
+      )
+    }
+
+  }
+
+}

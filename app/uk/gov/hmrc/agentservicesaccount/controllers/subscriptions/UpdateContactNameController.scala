@@ -17,28 +17,28 @@
 package uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
 
 import play.api.i18n.I18nSupport
-import play.api.mvc._
+import play.api.mvc.*
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.getNextPage
-import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.payeUpdateContactNamePage
-import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.PayeSubscriptionContactNameForm
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.PayeContactNameFormValues
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.updateContactNamePage
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionContactNameForm
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.ContactNameFormValues
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.utils.RequestAwareLogging
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.paye_update_contact_name
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.update_contact_name
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
-import javax.inject._
+import javax.inject.*
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
 @Singleton
-class PayeUpdateContactNameController @Inject() (
+class UpdateContactNameController @Inject() (
   actions: Actions,
   val sessionCacheService: SessionCacheService,
-  paye_update_contact_name: paye_update_contact_name,
+  update_contact_name: update_contact_name,
   cc: MessagesControllerComponents
 )(implicit
   appConfig: AppConfig,
@@ -48,39 +48,42 @@ extends FrontendController(cc)
 with I18nSupport
 with RequestAwareLogging {
 
-  def showPage: Action[AnyContent] = actions.authActionWithSubscriptionJourney(PAYE).async { implicit request =>
+  def showPage(agentRegime: AgentRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(agentRegime).async { implicit request =>
+//    TODO: 12614 Guard against CA/ST here
     val journey = request.subscriptionJourney
 
     val asaDetailsAgencyName = journey.asaDetails.agencyName.getOrElse("")
 
-    val initialForm = PayeSubscriptionContactNameForm.form
+    val initialForm = SubscriptionContactNameForm.form(agentRegime)
     val form =
       journey.payeContactName match {
         case Some(contactName) =>
           initialForm.fill(
-            PayeContactNameFormValues(contactName = contactName)
+            ContactNameFormValues(contactName = contactName)
           )
         case None => initialForm
       }
 
     Future.successful(
-      Ok(paye_update_contact_name(
+      Ok(update_contact_name(
         form,
-        asaDetailsAgencyName
+        asaDetailsAgencyName,
+        agentRegime
       ))
     )
   }
 
-  def onSubmit: Action[AnyContent] = actions.authActionWithSubscriptionJourney(PAYE).async { implicit request =>
+  def onSubmit(agentRegime: AgentRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(agentRegime).async { implicit request =>
     val journey = request.subscriptionJourney
 
-    PayeSubscriptionContactNameForm.form.bindFromRequest().fold(
+    SubscriptionContactNameForm.form(agentRegime).bindFromRequest().fold(
       formWithErrors => {
         val asaDetailsAgencyName = journey.asaDetails.agencyName.getOrElse("")
         Future.successful(
-          BadRequest(paye_update_contact_name(
+          BadRequest(update_contact_name(
             formWithErrors,
-            asaDetailsAgencyName
+            asaDetailsAgencyName,
+            agentRegime
           ))
         )
       },
@@ -90,12 +93,12 @@ with RequestAwareLogging {
         )
 
         sessionCacheService
-          .put(PAYE.subscriptionJourneyKey, updatedJourney)
+          .put(agentRegime.subscriptionJourneyKey, updatedJourney)
           .map(_ =>
             Redirect(getNextPage(
-              payeUpdateContactNamePage,
+              updateContactNamePage,
               Some(updatedJourney),
-              PAYE
+              agentRegime
             ))
           )
       }

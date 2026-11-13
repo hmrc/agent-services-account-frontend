@@ -64,6 +64,7 @@ with IntegrationPatience
 with MockFactory
 with TestConstants {
 
+//  TODO: 12614 Add tests for STT guard
   private val agentRegimes = List(CT, SA, PAYE)
 
   class TestSetup(agentRegime: AgentRegime) {
@@ -239,7 +240,7 @@ with TestConstants {
 
         status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe
-          Some(subscriptionRoutes.PayeUpdateContactNameController.showPage.url)
+          Some(subscriptionRoutes.UpdateContactNameController.showPage(PAYE).url)
 
         val updated = sessionCache.get[SubscriptionJourney](PAYE.subscriptionJourneyKey).futureValue
         updated shouldBe defined

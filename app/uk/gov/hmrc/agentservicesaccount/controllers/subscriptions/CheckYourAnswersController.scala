@@ -145,7 +145,7 @@ with RequestAwareLogging {
     val nameRowKey = s"${agentRegime.msgPrefix}.check-your-answers.$nameRowKeyDescriptor-name"
     val nameRowLink =
       if (agentRegime == PAYE) {
-        Some(subscriptionRoutes.PayeUpdateContactNameController.showPage)
+        Some(subscriptionRoutes.UpdateContactNameController.showPage(agentRegime))
       }
       else {
         Some(subscriptionRoutes.UpdateBusinessNameController.showPage(agentRegime))

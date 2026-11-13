@@ -64,8 +64,8 @@ with IntegrationPatience
 with MockFactory
 with TestConstants {
 
+//  TODO: 12614 Add tests for STT guard
   private val agentRegimes = List(CT, SA, PAYE)
-  val regime = SA
 
   class TestSetup(agentRegime: AgentRegime) {
 
@@ -215,7 +215,7 @@ with TestConstants {
         status(result) shouldBe SEE_OTHER
         val expectedRedirect =
           regime match {
-            case AgentRegime.PAYE => routes.PayeUpdateContactNameController.showPage.url
+            case PAYE => routes.UpdateContactNameController.showPage(PAYE).url
             case _ => routes.UpdateBusinessNameController.showPage(regime).url
           }
 
