@@ -491,6 +491,14 @@ asa.agent-regime.sa.check-your-answers.email=Email address
 asa.agent-regime.sa.check-your-answers.address=Address
 asa.agent-regime.sa.check-your-answers.submit-button=Enrol for Self Assessment
 
+# STT
+
+asa.agent-regime.stt.contact-name.title=Who should we contact about Securities Transfer Tax?
+asa.agent-regime.stt.contact-name.input.heading=Who at {0} should we contact about Securities Transfer Tax?
+asa.agent-regime.stt.contact-name.input.hint=Enter their full name
+asa.agent-regime.stt.contact-name.input.error.empty=Enter the full name of the person we should contact about Securities Transfer Tax
+asa.agent-regime.stt.contact-name.input.error.invalid=The name of the person can only contain letters and hyphens
+
 # Custom UR banner
 banner.heading=Help improve HMRC services
 banner.link1=Try out our new access groups feature
