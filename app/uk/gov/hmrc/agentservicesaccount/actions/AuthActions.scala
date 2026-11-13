@@ -101,15 +101,7 @@ case class AgentInfo(
   def subscriptions(includeStt: Boolean = false): Seq[SubscriptionInfo] = {
     def getSubscriptionInfo(regime: AgentRegime): SubscriptionInfo =
       SubscriptionInfo(regime, subscriptionStatusFor(regime.enrolmentKey))
-    Seq(
-      Some(PAYE),
-      Some(CT),
-      Some(SA),
-      if (includeStt)
-        Some(STT)
-      else
-        None
-    ).flatten.map(getSubscriptionInfo)
+    (if includeStt then Seq(PAYE, CT, SA, STT) else Seq(PAYE, CT, SA)).map(getSubscriptionInfo)
   }
 
   def getAgentReferenceFor(regime: AgentRegime): Option[String] =

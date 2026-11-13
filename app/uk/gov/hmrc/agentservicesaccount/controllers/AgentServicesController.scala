@@ -90,7 +90,7 @@ with RequestAwareLogging {
         for {
           subscriptionInfo <- subscriptionInfoF
         } yield {
-//          TODO: Below two lines are to enable local testing of STT before we have call in SubscriptionService.getSubscriptionInfo set up correctly
+//          TODO: Below two values are to enable local testing of STT before we have call in SubscriptionService.getSubscriptionInfo set up correctly
 //          val sttSubscriptionInfoForLocalTesting = SubscriptionInfo(
 //            STT,
 //            NotSubscribed,

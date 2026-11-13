@@ -22,6 +22,7 @@ import play.api.libs.json.JsSuccess
 import play.api.libs.json.Reads
 import play.api.libs.json.Writes
 import play.api.mvc.PathBindable
+import uk.gov.hmrc.mongo.cache.DataKey
 
 // TODO when migrating to scala 3, replace this with the backend model from agent-services-account
 sealed trait AgentRegime {
@@ -53,6 +54,8 @@ sealed trait AgentRegime {
       case AgentRegime.CT => "ctJourney"
       case AgentRegime.STT => "sttJourney"
     }
+
+  def subscriptionJourneyKey: DataKey[SubscriptionJourney] = DataKey[SubscriptionJourney](this.dataKey)
 
 }
 

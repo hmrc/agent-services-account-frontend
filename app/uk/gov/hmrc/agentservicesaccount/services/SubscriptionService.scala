@@ -38,9 +38,9 @@ import scala.concurrent.Future
 @Singleton
 class SubscriptionService @Inject() (
   agentServicesAccountConnector: AgentServicesAccountConnector,
-  enrolmentStoreProxyConnector: EnrolmentStoreProxyConnector
+  enrolmentStoreProxyConnector: EnrolmentStoreProxyConnector,
+  appConfig: AppConfig
 )(implicit
-  appConfig: AppConfig,
   ec: ExecutionContext
 )
 extends Logging {
