@@ -160,6 +160,7 @@ with TestConstants {
 
   }
 
+//  TODO: 12614 Add STT test here
   "GET /subscription/PAYE/business-name" should {
 
     "redirect to /subscription/PAYE/contact-name" in new TestSetup(PAYE) {
@@ -168,7 +169,7 @@ with TestConstants {
       private val result = controller.showPage(PAYE)(FakeRequest()).futureValue
 
       status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some(subscriptionRoutes.PayeUpdateContactNameController.showPage.url)
+      redirectLocation(result) shouldBe Some(subscriptionRoutes.UpdateContactNameController.showPage(PAYE).url)
     }
   }
 

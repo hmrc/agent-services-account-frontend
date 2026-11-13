@@ -239,7 +239,7 @@ with TestConstants {
 
         status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe
-          Some(subscriptionRoutes.PayeUpdateContactNameController.showPage.url)
+          Some(subscriptionRoutes.UpdateContactNameController.showPage(PAYE).url)
 
         val updated = sessionCache.get[SubscriptionJourney](PAYE.subscriptionJourneyKey).futureValue
         updated shouldBe defined

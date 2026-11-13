@@ -18,8 +18,8 @@ package uk.gov.hmrc.agentservicesaccount.forms.subscriptions
 
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
-import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionContactNameForm._
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.ContactNameFormValues
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionContactNameForm.*
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.{AgentRegime, ContactNameFormValues}
 
 class SubscriptionContactNameFormSpec
 extends AnyWordSpec
@@ -29,7 +29,12 @@ with Matchers {
   val validNewContactName = "My Name"
   val invalidNewContactName = "{][.',"
 
-  private val initForm = form
+// TODO: 12614 Change to STT
+  private val agentRegime = AgentRegime.PAYE
+
+  private val agentRegimePrefix = agentRegime.msgPrefix
+
+  private val initForm = form(agentRegime)
 
   "form binding" should {
     s"be successful when $contactNameKey valid" in {
@@ -47,7 +52,7 @@ with Matchers {
 
       val validatedForm = initForm.bind(params)
       validatedForm.hasErrors shouldBe true
-      validatedForm.error(contactNameKey).get.message shouldBe "asa.agent-regime.paye.contact-name.input.error.empty"
+      validatedForm.error(contactNameKey).get.message shouldBe s"$agentRegimePrefix.contact-name.input.error.empty"
       validatedForm.errors.length shouldBe 1
     }
 
@@ -58,11 +63,11 @@ with Matchers {
 
       val validatedForm = initForm.bind(params)
       validatedForm.hasErrors shouldBe true
-      validatedForm.error(contactNameKey).get.message shouldBe "asa.agent-regime.paye.contact-name.input.error.invalid"
+      validatedForm.error(contactNameKey).get.message shouldBe s"$agentRegimePrefix.contact-name.input.error.invalid"
       validatedForm.errors.length shouldBe 1
     }
 
-    "unbind PayeContactNameFormValues" in {
+    "unbind ContactNameFormValues" in {
       val unboundForm = initForm.mapping.unbind(ContactNameFormValues(validNewContactName))
 
       unboundForm shouldBe Map(

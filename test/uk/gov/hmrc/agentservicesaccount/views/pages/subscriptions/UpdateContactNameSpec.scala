@@ -23,27 +23,33 @@ import org.scalatest.matchers.must.Matchers.*
 import play.api.data.Form
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionContactNameForm
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionContactNameForm.contactNameKey
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.ContactNameFormValues
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.{AgentRegime, ContactNameFormValues}
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.paye_update_contact_name
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.update_contact_name
 
 class UpdateContactNameSpec
 extends ViewBaseSpec {
 
-  private val view: paye_update_contact_name = inject[paye_update_contact_name]
+  private val view: update_contact_name = inject[update_contact_name]
   private val asaDetailsAgencyName = "ABC-No.1 Accountants"
 
-  private val payeContactNameForm: Form[ContactNameFormValues] = SubscriptionContactNameForm.form
+  // TODO: 12614 Change to STT
+  private val agentRegime = AgentRegime.PAYE
 
-  private val formWithContactNameError: Form[ContactNameFormValues] = payeContactNameForm.withError(
+  private val agentRegimePrefix = agentRegime.msgPrefix
+
+  private val contactNameForm: Form[ContactNameFormValues] = SubscriptionContactNameForm.form(agentRegime)
+
+  private val formWithContactNameError: Form[ContactNameFormValues] = contactNameForm.withError(
     key = contactNameKey,
-    message = messages("asa.agent-regime.paye.contact-name.input.error.empty")
+    message = messages("$agentRegimePrefix.contact-name.input.error.empty")
   )
 
   def render(form: Form[ContactNameFormValues]): Document = Jsoup.parse(
     view(
       form,
-      asaDetailsAgencyName
+      asaDetailsAgencyName,
+      agentRegime
     )(
       messages,
       fakeRequest,
@@ -51,10 +57,10 @@ extends ViewBaseSpec {
     ).body
   )
 
-  private val title: String = messages("asa.agent-regime.paye.contact-name.title")
-  private val heading: String = messages("asa.agent-regime.paye.contact-name.input.heading", asaDetailsAgencyName)
+  private val title: String = messages(s"$agentRegimePrefix.contact-name.title")
+  private val heading: String = messages(s"$agentRegimePrefix.contact-name.input.heading", asaDetailsAgencyName)
 
-  "paye_update_contact_name" when {
+  "update_contact_name" when {
 
     def testServiceStaticContent(doc: Document): Unit = {
 
@@ -84,7 +90,7 @@ extends ViewBaseSpec {
 
     "first viewing page" should {
 
-      val doc: Document = render(payeContactNameForm)
+      val doc: Document = render(contactNameForm)
 
       testServiceStaticContent(doc)
 
@@ -96,7 +102,7 @@ extends ViewBaseSpec {
 
       "display the correct hint" in {
         val hint = doc.select(".govuk-hint")
-        hint.first().text() mustBe messages("asa.agent-regime.paye.contact-name.input.hint")
+        hint.first().text() mustBe messages(s"$agentRegimePrefix.contact-name.input.hint")
       }
 
       "display the contact name input" in {
@@ -119,7 +125,7 @@ extends ViewBaseSpec {
 
       "display correct error summary link" in {
         val errorLink: Element = doc.select(".govuk-error-summary__list a").first()
-        errorLink.text() mustBe messages("asa.agent-regime.paye.contact-name.input.error.empty")
+        errorLink.text() mustBe messages(s"$agentRegimePrefix.contact-name.input.error.empty")
         errorLink.attr("href") mustBe s"#$contactNameKey"
       }
 
@@ -128,7 +134,7 @@ extends ViewBaseSpec {
       }
 
       "display error message on form" in {
-        doc.select(".govuk-error-message").text() mustBe s"Error: ${messages("asa.agent-regime.paye.contact-name.input.error.empty")}"
+        doc.select(".govuk-error-message").text() mustBe s"Error: ${messages(s"$agentRegimePrefix.contact-name.input.error.empty")}"
       }
     }
   }

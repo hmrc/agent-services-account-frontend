@@ -60,6 +60,7 @@ with IntegrationPatience
 with MockFactory
 with TestConstants {
 
+//  TODO: 12614 Add dependence on agentRegime here and STT tests
   class TestSetup {
 
     private val testArn = "TARN0000001"
@@ -158,7 +159,7 @@ with TestConstants {
     "render empty form on first visit" in new TestSetup {
       cacheJourney(subscriptionBaseJourney)
 
-      private val result = controller.showPage(FakeRequest()).futureValue
+      private val result = controller.showPage(PAYE)(FakeRequest()).futureValue
 
       status(result) shouldBe OK
       contentAsString(result) should include("Test Agency")
@@ -171,7 +172,7 @@ with TestConstants {
 
       cacheJourney(journey)
 
-      private val result = controller.showPage(FakeRequest()).futureValue
+      private val result = controller.showPage(PAYE)(FakeRequest()).futureValue
 
       status(result) shouldBe OK
       private val content = contentAsString(result)
@@ -189,7 +190,7 @@ with TestConstants {
         contactNameKey -> ""
       )
 
-      private val result = controller.onSubmit(request).futureValue
+      private val result = controller.onSubmit(PAYE)(request).futureValue
 
       status(result) shouldBe BAD_REQUEST
     }
@@ -212,7 +213,7 @@ with TestConstants {
 
           cacheJourney(journeyWithRedirectLocation._1)
 
-          private val result = controller.onSubmit(request).futureValue
+          private val result = controller.onSubmit(PAYE)(request).futureValue
           status(result) shouldBe SEE_OTHER
           redirectLocation(result) shouldBe
             Some(s"/agent-services-account/subscription/PAYE/${journeyWithRedirectLocation._2}")

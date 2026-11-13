@@ -215,7 +215,7 @@ with TestConstants {
         status(result) shouldBe SEE_OTHER
         val expectedRedirect =
           regime match {
-            case AgentRegime.PAYE => routes.PayeUpdateContactNameController.showPage.url
+            case PAYE => routes.UpdateContactNameController.showPage(PAYE).url
             case _ => routes.UpdateBusinessNameController.showPage(regime).url
           }
 
