@@ -17,20 +17,19 @@
 package uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
 
 import play.api.i18n.I18nSupport
-import play.api.mvc._
+import play.api.mvc.*
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
-import uk.gov.hmrc.agentservicesaccount.controllers.{routes => homeRoutes}
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.youMayNotNeedToApplyPage
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.YouMayNotNeedToApplyForm
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.YouMayNotNeedToApplyFormValues
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.you_may_not_need_to_apply
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
-import javax.inject._
+import javax.inject.*
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
@@ -76,19 +75,15 @@ with I18nSupport {
           youMayNotNeedToApply = Some(answer.doYouStillWantToApply)
         )
 
-        val nextPage =
-          if (answer.doYouStillWantToApply)
-            agentRegime match {
-              case PAYE => routes.PayeUpdateContactNameController.showPage
-              case _ => routes.UpdateBusinessNameController.showPage(agentRegime)
-            }
-          else {
-            homeRoutes.AgentServicesController.root()
-          }
-
         sessionCacheService
-          .put(subscriptionJourneyKey(agentRegime), updatedJourney)
-          .map(_ => Redirect(nextPage))
+          .put(agentRegime.subscriptionJourneyKey, updatedJourney)
+          .map(_ =>
+            Redirect(getNextPage(
+              youMayNotNeedToApplyPage,
+              Some(updatedJourney),
+              agentRegime
+            ))
+          )
       }
     )
   }

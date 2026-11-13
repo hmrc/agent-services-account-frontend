@@ -19,9 +19,6 @@ package uk.gov.hmrc.agentservicesaccount
 import uk.gov.hmrc.agentservicesaccount.models.UpdateAmlsJourney
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.DesignatoryDetails
 import uk.gov.hmrc.agentservicesaccount.models.desiDetails.YourDetails
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.CT
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.SA
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 import uk.gov.hmrc.mongo.cache.DataKey
@@ -52,13 +49,6 @@ package object controllers {
   val emailPendingVerificationKey: DataKey[String] = DataKey("emailPendingVerification")
 
   val amlsJourneyKey: DataKey[UpdateAmlsJourney] = DataKey[UpdateAmlsJourney]("amlsJourney")
-
-  def subscriptionJourneyKey(regime: AgentRegime): DataKey[SubscriptionJourney] =
-    regime match {
-      case CT => DataKey[SubscriptionJourney]("ctJourney")
-      case PAYE => DataKey[SubscriptionJourney]("payeJourney")
-      case SA => DataKey[SubscriptionJourney]("saJourney")
-    }
 
   val sessionKeys: List[DataKey[String]] = List(
     agentSizeKey,

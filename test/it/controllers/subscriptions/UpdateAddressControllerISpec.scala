@@ -20,7 +20,6 @@ import play.api.test.Helpers._
 import stubs.AgentServicesAccountStubs.givenGetAgentRecord
 import stubs.AgentServicesAccountStubs.stubASAGetResponseError
 import support.ComponentBaseISpec
-import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.ChangeSubscriptionAddressForm.line1Key
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.ChangeSubscriptionAddressForm.line2Key
@@ -102,7 +101,7 @@ extends ComponentBaseISpec {
             givenGetAgentRecord(agentRecord)
             stubASAGetResponseError(arn, NOT_FOUND)
 
-            repo.putSession(subscriptionJourneyKey(agentRegime), journeyWithRedirectLocation._1).futureValue
+            repo.putSession(agentRegime.subscriptionJourneyKey, journeyWithRedirectLocation._1).futureValue
 
             val result =
               post(updateAddressPath)(body =
@@ -113,7 +112,7 @@ extends ComponentBaseISpec {
             result.status shouldBe SEE_OTHER
             result.header(LOCATION) shouldBe Some(s"$subscriptionStartPath/$agentRegime/${journeyWithRedirectLocation._2}")
 
-            val updated = await(repo.getFromSession(subscriptionJourneyKey(agentRegime)))
+            val updated = await(repo.getFromSession(agentRegime.subscriptionJourneyKey))
             updated shouldBe defined
             updated.get.useCustomAddress shouldBe Some(false)
             updated.value.addressAnswer shouldBe None
@@ -153,7 +152,7 @@ extends ComponentBaseISpec {
           givenGetAgentRecord(agentRecord)
           stubASAGetResponseError(arn, NOT_FOUND)
 
-          repo.putSession(subscriptionJourneyKey(agentRegime), subscriptionBaseJourney.copy(useCustomAddress = Some(false))).futureValue
+          repo.putSession(agentRegime.subscriptionJourneyKey, subscriptionBaseJourney.copy(useCustomAddress = Some(false))).futureValue
 
           val result = get(changeAddressPath)
 
@@ -167,7 +166,7 @@ extends ComponentBaseISpec {
           givenGetAgentRecord(agentRecord)
           stubASAGetResponseError(arn, NOT_FOUND)
 
-          repo.putSession(subscriptionJourneyKey(agentRegime), subscriptionBaseJourney).futureValue
+          repo.putSession(agentRegime.subscriptionJourneyKey, subscriptionBaseJourney).futureValue
 
           val result = get(changeAddressPath)
 
@@ -183,7 +182,7 @@ extends ComponentBaseISpec {
           givenGetAgentRecord(agentRecord)
           stubASAGetResponseError(arn, NOT_FOUND)
 
-          repo.putSession(subscriptionJourneyKey(agentRegime), subscriptionBaseJourney.copy(useCustomAddress = Some(false))).futureValue
+          repo.putSession(agentRegime.subscriptionJourneyKey, subscriptionBaseJourney.copy(useCustomAddress = Some(false))).futureValue
 
           val result =
             post(changeAddressPath)(body =
@@ -198,7 +197,7 @@ extends ComponentBaseISpec {
           result.status shouldBe SEE_OTHER
           result.header(LOCATION) shouldBe Some(s"$subscriptionStartPath/$agentRegime/check-your-answers")
 
-          val updated = await(repo.getFromSession(subscriptionJourneyKey(agentRegime)))
+          val updated = await(repo.getFromSession(agentRegime.subscriptionJourneyKey))
           updated shouldBe defined
           updated.get.useCustomAddress shouldBe Some(true)
           updated.value.addressAnswer shouldBe Some(changedAddress)
@@ -210,7 +209,7 @@ extends ComponentBaseISpec {
           givenGetAgentRecord(agentRecord)
           stubASAGetResponseError(arn, NOT_FOUND)
 
-          repo.putSession(subscriptionJourneyKey(agentRegime), subscriptionBaseJourney.copy(useCustomAddress = Some(false))).futureValue
+          repo.putSession(agentRegime.subscriptionJourneyKey, subscriptionBaseJourney.copy(useCustomAddress = Some(false))).futureValue
 
           val result = post(changeAddressPath)(body = Map.empty)
 
@@ -224,7 +223,7 @@ extends ComponentBaseISpec {
           givenGetAgentRecord(agentRecord)
           stubASAGetResponseError(arn, NOT_FOUND)
 
-          repo.putSession(subscriptionJourneyKey(agentRegime), subscriptionBaseJourney).futureValue
+          repo.putSession(agentRegime.subscriptionJourneyKey, subscriptionBaseJourney).futureValue
 
           val result =
             post(changeAddressPath)(body =

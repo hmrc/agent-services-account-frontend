@@ -17,7 +17,7 @@
 package uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util
 
 import play.api.mvc.Call
-import uk.gov.hmrc.agentservicesaccount.controllers.{routes => homeRoutes}
+import uk.gov.hmrc.agentservicesaccount.controllers.routes as homeRoutes
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
 import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators.CT_SA_EMAIL_MAX_LENGTH
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
@@ -25,11 +25,15 @@ import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.CT
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.SA
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.STT
 
 object NextPageSelector {
 
-  val updateBusinessNamePage = "businessName"
+  val rootPage = "home"
+  val doYouAlreadyManagePage = "doYouAlreadyManage"
+  val youMayNotNeedToApplyPage = "youMayNotNeedToApply"
   val payeUpdateContactNamePage = "payeContactName"
+  val updateBusinessNamePage = "businessName"
   val updatePhoneNumberPage = "phoneNumber"
   val updateEmailAddressPage = "emailAddress"
   val emailVerificationFinish = "emailVerificationFinish"
@@ -45,6 +49,26 @@ object NextPageSelector {
   ) => Call = {
     case (_, Some(journey), regime) if journey.isSubmitted => subscriptions.routes.ConfirmationController.showConfirmationPage(regime)
     case (_, Some(journey), regime) if journey.isComplete(regime) => subscriptions.routes.CheckYourAnswersController.showPage(regime)
+    case (`rootPage`, _, regime) =>
+      regime match {
+//        TODO: 12614 After modifying PayeUpdateContactNameController to be non PAYE-specific, modify this route accordingly
+        case STT => subscriptions.routes.PayeUpdateContactNameController.showPage
+        case _ => subscriptions.routes.DoYouAlreadyManageController.showPage(regime)
+      }
+    case (`doYouAlreadyManagePage`, Some(journey), regime) =>
+      (journey.doYouAlreadyManage, regime) match {
+        case (Some(true), _) => subscriptions.routes.YouMayNotNeedToApplyController.showPage(regime)
+        case (Some(false), PAYE) => subscriptions.routes.PayeUpdateContactNameController.showPage
+        case (Some(false), _) => subscriptions.routes.UpdateBusinessNameController.showPage(regime)
+        case _ => subscriptions.routes.DoYouAlreadyManageController.showPage(regime)
+      }
+    case (`youMayNotNeedToApplyPage`, Some(journey), regime) =>
+      (journey.youMayNotNeedToApply, regime) match {
+        case (Some(true), PAYE) => subscriptions.routes.PayeUpdateContactNameController.showPage
+        case (Some(true), regime) => subscriptions.routes.UpdateBusinessNameController.showPage(regime)
+        case (Some(false), _) => homeRoutes.AgentServicesController.root()
+        case _ => subscriptions.routes.YouMayNotNeedToApplyController.showPage(regime)
+      }
     case (`payeUpdateContactNamePage`, _, PAYE) => subscriptions.routes.UpdatePhoneNumberController.showPage(PAYE)
     case (`updateBusinessNamePage`, _, regime) => subscriptions.routes.UpdatePhoneNumberController.showPage(regime)
     case (`updatePhoneNumberPage`, _, regime) => subscriptions.routes.UpdateEmailAddressController.showPage(regime)

@@ -17,29 +17,31 @@
 package uk.gov.hmrc.agentservicesaccount.controllers
 
 import play.api.i18n.I18nSupport
-import play.api.mvc._
+import play.api.mvc.*
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.actions.AuthActions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentPermissionsConnector
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentUserClientDetailsConnector
-import uk.gov.hmrc.agentservicesaccount.controllers.amls.{routes => amlsRoutes}
-import uk.gov.hmrc.agentservicesaccount.models.AmlsStatuses._
+import uk.gov.hmrc.agentservicesaccount.controllers.amls.routes as amlsRoutes
+import uk.gov.hmrc.agentservicesaccount.models.AmlsStatuses.*
 import uk.gov.hmrc.agentservicesaccount.models.accessgroups.OptedInReady
 import uk.gov.hmrc.agentservicesaccount.models.accessgroups.OptinStatus
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionInfo
 import uk.gov.hmrc.agentservicesaccount.models.AmlsStatus
 import uk.gov.hmrc.agentservicesaccount.models.Arn
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.STT
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionStatus.NotSubscribed
 import uk.gov.hmrc.agentservicesaccount.services.AgentRecordService
 import uk.gov.hmrc.agentservicesaccount.services.SubscriptionService
 import uk.gov.hmrc.agentservicesaccount.utils.RequestAwareLogging
-import uk.gov.hmrc.agentservicesaccount.views.html.pages._
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.*
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.assistant.administrators
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.assistant.your_account
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
-import javax.inject._
+import javax.inject.*
 import scala.annotation.unused
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
@@ -80,7 +82,7 @@ with RequestAwareLogging {
     withShowFeatureInvite(agentInfo.arn) {
       (showFeatureInvite: Boolean) =>
         val subscriptionInfoF: Future[Seq[SubscriptionInfo]] =
-          if (appConfig.showLegacySubscriptions || appConfig.enableLegacySubscriptionLink || appConfig.enableLegacySubscriptionLinkRobotics)
+          if (appConfig.enableGetSubscriptionInfo)
             subscriptionService.getSubscriptionInfo(agentInfo)
           else
             Future.successful(Seq.empty)
@@ -88,12 +90,20 @@ with RequestAwareLogging {
         for {
           subscriptionInfo <- subscriptionInfoF
         } yield {
+//          TODO: Below two values are to enable local testing of STT before we have call in SubscriptionService.getSubscriptionInfo set up correctly
+//          val sttSubscriptionInfoForLocalTesting = SubscriptionInfo(
+//            STT,
+//            NotSubscribed,
+//            None
+//          )
+//          val subscriptionInfoForSttLocalTesting = subscriptionInfo :+ sttSubscriptionInfoForLocalTesting
           Ok(
             asaDashboard(
               arn = formatArn(agentInfo.arn),
               isShownRecruitmentBanner = showFeatureInvite && agentInfo.isAdmin,
               isAdmin = agentInfo.isAdmin,
               subscriptionInfo = subscriptionInfo
+//              subscriptionInfo = subscriptionInfoForSttLocalTesting
             )
           ).addingToSession(aossOriginCookie())
         }

@@ -23,7 +23,6 @@ import stubs.AgentServicesAccountStubs.stubASAGetResponseError
 import stubs.EmailVerificationStubs.givenCheckEmailSuccess
 import stubs.EmailVerificationStubs.givenVerifyEmailSuccess
 import support.ComponentBaseISpec
-import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.emailPendingVerificationKey
 import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators.CT_SA_EMAIL_MAX_LENGTH
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionEmailAddressForm.emailAddressNewKey
@@ -170,7 +169,7 @@ extends ComponentBaseISpec {
           val newAsaDetails = subscriptionAgencyDetails.copy(agencyEmail = Some(tooLongEmailAddress))
           val subscriptionJourney = subscriptionBaseJourney.copy(asaDetails = newAsaDetails)
 
-          repo.putSession(subscriptionJourneyKey(agentRegime), subscriptionJourney).futureValue
+          repo.putSession(agentRegime.subscriptionJourneyKey, subscriptionJourney).futureValue
 
           val result =
             post(updateEmailAddressPath)(body =
@@ -190,7 +189,7 @@ extends ComponentBaseISpec {
             givenGetAgentRecord(agentRecord)
             stubASAGetResponseError(arn, NOT_FOUND)
 
-            repo.putSession(subscriptionJourneyKey(agentRegime), journeyWithRedirectLocation._1).futureValue
+            repo.putSession(agentRegime.subscriptionJourneyKey, journeyWithRedirectLocation._1).futureValue
 
             val result =
               post(updateEmailAddressPath)(body =
@@ -201,7 +200,7 @@ extends ComponentBaseISpec {
             result.status shouldBe SEE_OTHER
             result.header(LOCATION) shouldBe Some(s"$subscriptionStartPath/$agentRegime/${journeyWithRedirectLocation._2}")
 
-            val updated = await(repo.getFromSession(subscriptionJourneyKey(agentRegime)))
+            val updated = await(repo.getFromSession(agentRegime.subscriptionJourneyKey))
             updated shouldBe defined
             updated.get.useCustomEmail shouldBe Some(false)
             updated.value.emailAnswer shouldBe None

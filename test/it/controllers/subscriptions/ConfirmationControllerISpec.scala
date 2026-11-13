@@ -21,7 +21,6 @@ import support.ComponentBaseISpec
 import uk.gov.hmrc.agentservicesaccount.controllers.{routes => homeRoutes}
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.routes
 import stubs.AgentServicesAccountStubs.givenGetAgentRecord
-import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.CT
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.SA
@@ -45,7 +44,7 @@ extends ComponentBaseISpec {
         givenAuthorisedAsAgentWith(arn.value)
         givenGetAgentRecord(agentRecord)
 
-        repo.putSession(subscriptionJourneyKey(agentRegime), subscriptionFullJourney(agentRegime).copy(isSubmitted = true)).futureValue
+        repo.putSession(agentRegime.subscriptionJourneyKey, subscriptionFullJourney(agentRegime).copy(isSubmitted = true)).futureValue
 
         val result = get(path)
 
@@ -60,7 +59,7 @@ extends ComponentBaseISpec {
         givenAuthorisedAsAgentWith(arn.value)
         givenGetAgentRecord(agentRecord)
 
-        repo.putSession(subscriptionJourneyKey(agentRegime), subscriptionBaseJourney).futureValue
+        repo.putSession(agentRegime.subscriptionJourneyKey, subscriptionBaseJourney).futureValue
 
         val result = get(path)
 

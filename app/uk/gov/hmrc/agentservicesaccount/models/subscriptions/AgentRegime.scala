@@ -22,6 +22,7 @@ import play.api.libs.json.JsSuccess
 import play.api.libs.json.Reads
 import play.api.libs.json.Writes
 import play.api.mvc.PathBindable
+import uk.gov.hmrc.mongo.cache.DataKey
 
 // TODO when migrating to scala 3, replace this with the backend model from agent-services-account
 sealed trait AgentRegime {
@@ -33,6 +34,8 @@ sealed trait AgentRegime {
       case AgentRegime.PAYE => "IR-PAYE-AGENT"
       case AgentRegime.SA => "IR-SA-AGENT"
       case AgentRegime.CT => "IR-CT-AGENT"
+//      TODO: Add correct enrolment key for STT
+      case AgentRegime.STT => "stt-enrolment-key-placeholder"
     }
 
   def agentReferenceKey: String =
@@ -40,7 +43,19 @@ sealed trait AgentRegime {
       case AgentRegime.PAYE => "IRAgentReference"
       case AgentRegime.SA => "IRAgentReference"
       case AgentRegime.CT => "IRAgentReference"
+//      TODO: Add correct agent reference key for STT
+      case AgentRegime.STT => "stt-agent-reference-key-placeholder"
     }
+
+  private def dataKey: String =
+    this match {
+      case AgentRegime.PAYE => "payeJourney"
+      case AgentRegime.SA => "saJourney"
+      case AgentRegime.CT => "ctJourney"
+      case AgentRegime.STT => "sttJourney"
+    }
+
+  def subscriptionJourneyKey: DataKey[SubscriptionJourney] = DataKey[SubscriptionJourney](this.dataKey)
 
 }
 
@@ -58,6 +73,10 @@ object AgentRegime {
   extends AgentRegime {
     override def msgPrefix: String = s"asa.agent-regime.${CT.toString.toLowerCase}"
   }
+  case object STT
+  extends AgentRegime {
+    override def msgPrefix: String = s"asa.agent-regime.${STT.toString.toLowerCase}"
+  }
 
   implicit val format: Format[AgentRegime] = Format(
     Reads { json =>
@@ -65,6 +84,7 @@ object AgentRegime {
         case "PAYE" => JsSuccess(PAYE)
         case "SA" => JsSuccess(SA)
         case "CT" => JsSuccess(CT)
+        case "STT" => JsSuccess(STT)
         case _ => throw new RuntimeException(s"Unknown regime: ${json.as[String]}")
       }
     },
@@ -92,6 +112,7 @@ object AgentRegime {
       case "PAYE" => Some(PAYE)
       case "SA" => Some(SA)
       case "CT" => Some(CT)
+      case "STT" => Some(STT)
       case _ => None
     }
 

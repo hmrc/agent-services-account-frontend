@@ -35,7 +35,6 @@ import support.BaseISpec
 import support.TestConstants
 import support.UnitSpec
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
-import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.DoYouAlreadyManageController
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.{routes => subscriptionRoutes}
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.DoYouAlreadyManageForm.doYouAlreadyManageKey
@@ -155,7 +154,7 @@ with TestConstants {
     def cacheJourney(journey: SubscriptionJourney): Unit = {
       implicit val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequest
       implicit val writes: OWrites[SubscriptionJourney] = Json.writes[SubscriptionJourney]
-      sessionCache.put(subscriptionJourneyKey(agentRegime), journey).futureValue
+      sessionCache.put(agentRegime.subscriptionJourneyKey, journey).futureValue
     }
 
   }
@@ -220,7 +219,7 @@ with TestConstants {
         redirectLocation(result) shouldBe
           Some(subscriptionRoutes.YouMayNotNeedToApplyController.showPage(regime).url)
 
-        val updated = sessionCache.get[SubscriptionJourney](subscriptionJourneyKey(regime)).futureValue
+        val updated = sessionCache.get[SubscriptionJourney](regime.subscriptionJourneyKey).futureValue
         updated shouldBe defined
         updated.value.doYouAlreadyManage shouldBe Some(true)
       }
@@ -242,7 +241,7 @@ with TestConstants {
         redirectLocation(result) shouldBe
           Some(subscriptionRoutes.PayeUpdateContactNameController.showPage.url)
 
-        val updated = sessionCache.get[SubscriptionJourney](subscriptionJourneyKey(PAYE)).futureValue
+        val updated = sessionCache.get[SubscriptionJourney](PAYE.subscriptionJourneyKey).futureValue
         updated shouldBe defined
         updated.value.doYouAlreadyManage shouldBe Some(false)
       }

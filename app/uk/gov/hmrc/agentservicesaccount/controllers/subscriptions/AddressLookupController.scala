@@ -152,7 +152,7 @@ with RequestAwareLogging {
             useCustomAddress = Some(true),
             addressAnswer = Some(newBusinessAddress)
           )
-          _ <- sessionCacheService.put(subscriptionJourneyKey(agentRegime), updatedJourney)
+          _ <- sessionCacheService.put(agentRegime.subscriptionJourneyKey, updatedJourney)
         } yield {
           Redirect(getNextPage(
             addressLookupFinish,

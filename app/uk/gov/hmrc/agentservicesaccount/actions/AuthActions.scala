@@ -27,6 +27,7 @@ import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.CT
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.SA
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.STT
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionInfo
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionStatus
 import uk.gov.hmrc.agentservicesaccount.utils.RequestSupport.hc
@@ -44,10 +45,6 @@ import javax.inject.Singleton
 import scala.annotation.nowarn
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
-
-private val payeEnrolment = "IR-PAYE-AGENT"
-private val saEnrolment = "IR-SA-AGENT"
-private val ctEnrolment = "IR-CT-AGENT"
 
 class SubscriptionJourneyRequest[A](
   val subscriptionJourney: SubscriptionJourney,
@@ -101,21 +98,18 @@ case class AgentInfo(
     "IR-SDLT-AGENT"
   ).exists(enrolments.getEnrolment(_).exists(_.isActivated))
 
-  def subscriptions: Seq[SubscriptionInfo] =
-    Seq(
-      SubscriptionInfo(
-        AgentRegime.PAYE,
-        subscriptionStatusFor(payeEnrolment)
-      ),
-      SubscriptionInfo(
-        AgentRegime.CT,
-        subscriptionStatusFor(ctEnrolment)
-      ),
-      SubscriptionInfo(
-        AgentRegime.SA,
-        subscriptionStatusFor(saEnrolment)
-      )
-    )
+  def subscriptions(includeStt: Boolean = false): Seq[SubscriptionInfo] = {
+    def getSubscriptionInfo(regime: AgentRegime): SubscriptionInfo =
+      SubscriptionInfo(regime, subscriptionStatusFor(regime.enrolmentKey))
+    (if includeStt then
+       Seq(
+         PAYE,
+         CT,
+         SA,
+         STT
+       )
+     else Seq(PAYE, CT, SA)).map(getSubscriptionInfo)
+  }
 
   def getAgentReferenceFor(regime: AgentRegime): Option[String] =
     enrolments
@@ -123,9 +117,10 @@ case class AgentInfo(
       .flatMap(_.identifiers.find(_.key == regime.agentReferenceKey))
       .map(_.value)
 
+  def payeAgentCode: Option[String] = getAgentReferenceFor(PAYE)
   def ctAgentCode: Option[String] = getAgentReferenceFor(CT)
   def saAgentCode: Option[String] = getAgentReferenceFor(SA)
-  def payeAgentCode: Option[String] = getAgentReferenceFor(PAYE)
+  def sttAgentCode: Option[String] = getAgentReferenceFor(STT)
 
 }
 

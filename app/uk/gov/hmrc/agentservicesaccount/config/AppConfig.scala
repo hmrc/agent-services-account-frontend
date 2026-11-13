@@ -135,6 +135,8 @@ extends Logging {
   val vrsPath: String = getString("vat-registration-service.path")
   val vrsUrl = s"$vrsExternalUrl$vrsPath"
 
+  val enrolmentStoreProxyBaseUrl: String = baseUrl("enrolment-store-proxy")
+
   val timeoutDialogTimeout: Int = getInt("timeoutDialog.timeout")
   val timeoutDialogCountdown: Int = getInt("timeoutDialog.countdown")
 
@@ -171,10 +173,15 @@ extends Logging {
   val granPermsEnabled: Boolean = getBoolean("features.enable-gran-perms")
   val enableCbc: Boolean = getBoolean("features.enable-cbc")
   val enableBackendPCRDatabase: Boolean = getBoolean("features.enable-backend-pcr-database")
+  val showLegacySubscriptions: Boolean = getBoolean("features.show-legacy-subscriptions")
   val enableLegacySubscriptionLink: Boolean = getBoolean("features.enable-legacy-subscription-link")
   val enableLegacySubscriptionLinkRobotics: Boolean = getBoolean("features.enable-legacy-subscription-link-robotics")
-  val enrolmentStoreProxyBaseUrl: String = baseUrl("enrolment-store-proxy")
-  val showLegacySubscriptions: Boolean = getBoolean("features.show-legacy-subscriptions")
+  val enableSttSubscriptionLink: Boolean = getBoolean("features.enable-stt-subscription-link")
+  val enableGetSubscriptionInfo: Boolean =
+    showLegacySubscriptions ||
+      enableLegacySubscriptionLink ||
+      enableLegacySubscriptionLinkRobotics ||
+      enableSttSubscriptionLink
 
   // Gran Perms
   val agentPermissionsBaseUrl: String = baseUrl("agent-permissions")

@@ -35,7 +35,6 @@ import support.BaseISpec
 import support.TestConstants
 import support.UnitSpec
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
-import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.YouMayNotNeedToApplyController
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.routes
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.YouMayNotNeedToApplyForm.doYouStillWantToApplyKey
@@ -156,7 +155,7 @@ with TestConstants {
     def cacheJourney(journey: SubscriptionJourney): Unit = {
       implicit val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequest
       implicit val writes: OWrites[SubscriptionJourney] = Json.writes[SubscriptionJourney]
-      sessionCache.put(subscriptionJourneyKey(agentRegime), journey).futureValue
+      sessionCache.put(agentRegime.subscriptionJourneyKey, journey).futureValue
     }
 
   }
@@ -221,7 +220,7 @@ with TestConstants {
           }
 
         redirectLocation(result) shouldBe Some(expectedRedirect)
-        val updated = sessionCache.get[SubscriptionJourney](subscriptionJourneyKey(regime)).futureValue
+        val updated = sessionCache.get[SubscriptionJourney](regime.subscriptionJourneyKey).futureValue
         updated shouldBe defined
         updated.value.youMayNotNeedToApply shouldBe Some(true)
       }

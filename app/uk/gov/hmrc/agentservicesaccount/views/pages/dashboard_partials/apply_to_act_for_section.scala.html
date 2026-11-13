@@ -16,6 +16,7 @@
 
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.{routes => subscriptionRoutes}
+@import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.{rootPage, getNextPage}
 @import uk.gov.hmrc.agentservicesaccount.models.subscriptions.{AgentRegime, SubscriptionInfo, SubscriptionStatus}
 @import uk.gov.hmrc.agentservicesaccount.actions.AuthRequestWithAgentProfile
 
@@ -28,6 +29,8 @@
         request: AuthRequestWithAgentProfile[AnyContent],
         appConfig: AppConfig
 )
+
+@startPageUrl(agentRegime: AgentRegime) = @{ getNextPage(rootPage, None, agentRegime) }
 
 @defining({
     def canStartSubscriptionJourney(regime: AgentRegime): Boolean =
@@ -43,7 +46,8 @@
         Seq(
             if(!request.agentDetailsDesResponse.agencyDetails.exists(_.isAbroad)) Some(AgentRegime.PAYE).filter(canStartSubscriptionJourney(_) && appConfig.enableLegacySubscriptionLink) else None,
             Some(AgentRegime.CT).filter(canStartSubscriptionJourney(_) && appConfig.enableLegacySubscriptionLinkRobotics),
-            Some(AgentRegime.SA).filter(canStartSubscriptionJourney(_) && appConfig.enableLegacySubscriptionLinkRobotics)
+            Some(AgentRegime.SA).filter(canStartSubscriptionJourney(_) && appConfig.enableLegacySubscriptionLinkRobotics),
+            if(!request.agentDetailsDesResponse.agencyDetails.exists(_.isAbroad)) Some(AgentRegime.STT).filter(canStartSubscriptionJourney(_) && appConfig.enableSttSubscriptionLink) else None,
         ).flatten
 
     regimes
@@ -60,8 +64,7 @@
         @p(msgs("asa.apply-to-act-for.p1"))
         @ul_html(
             items = regimes.map { regime =>
-                val url = subscriptionRoutes.DoYouAlreadyManageController.showPage(regime).url
-                a(href = url, key = s"asa.apply-to-act-for.${regime.toString.toLowerCase}")
+                a(href = startPageUrl(regime).url, key = s"asa.apply-to-act-for.${regime.toString.toLowerCase}")
             }
         )
     }

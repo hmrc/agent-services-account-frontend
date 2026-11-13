@@ -33,7 +33,6 @@ import stubs.AgentServicesAccountStubs._
 import support.BaseISpec
 import support.UnitSpec
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
-import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CheckYourAnswersController
 import uk.gov.hmrc.agentservicesaccount.models._
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.CT
@@ -144,7 +143,7 @@ with MockFactory {
       implicit val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequest
       implicit val writes: OWrites[SubscriptionJourney] = Json.writes[SubscriptionJourney]
 
-      sessionCache.put(subscriptionJourneyKey(agentRegime), journey).futureValue
+      sessionCache.put(agentRegime.subscriptionJourneyKey, journey).futureValue
     }
 
   }
@@ -234,7 +233,7 @@ with MockFactory {
 
         status(result) shouldBe SEE_OTHER
         redirectLocation(result).value should include(s"/agent-services-account/subscription/$agentRegime/confirmation")
-        val updated: Option[SubscriptionJourney] = sessionCache.get[SubscriptionJourney](subscriptionJourneyKey(agentRegime)).futureValue
+        val updated: Option[SubscriptionJourney] = sessionCache.get[SubscriptionJourney](agentRegime.subscriptionJourneyKey).futureValue
         updated shouldBe defined
         updated.value.isSubmitted shouldBe true
       }

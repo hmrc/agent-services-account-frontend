@@ -19,6 +19,7 @@ package uk.gov.hmrc.agentservicesaccount.services
 import play.api.Logging
 import play.api.mvc.RequestHeader
 import uk.gov.hmrc.agentservicesaccount.actions.AgentInfo
+import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
 import uk.gov.hmrc.agentservicesaccount.connectors.EnrolmentStoreProxyConnector
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionInfo
@@ -37,8 +38,11 @@ import scala.concurrent.Future
 @Singleton
 class SubscriptionService @Inject() (
   agentServicesAccountConnector: AgentServicesAccountConnector,
-  enrolmentStoreProxyConnector: EnrolmentStoreProxyConnector
-)(implicit ec: ExecutionContext)
+  enrolmentStoreProxyConnector: EnrolmentStoreProxyConnector,
+  appConfig: AppConfig
+)(implicit
+  ec: ExecutionContext
+)
 extends Logging {
 
   def getSubscriptionInfo(
@@ -47,7 +51,9 @@ extends Logging {
     HeaderCarrier,
     RequestHeader
   ): Future[Seq[SubscriptionInfo]] = {
-    val subscriptions = agentInfo.subscriptions
+//    TODO: Setting includeStt to false until BE is set up correctly. Once set up, it should be replaced with the commented line
+    //    val subscriptions = agentInfo.subscriptions(includeStt = appConfig.enableSttSubscriptionLink)
+    val subscriptions = agentInfo.subscriptions(includeStt = false)
     val subscribed = subscriptions.filter(_.subscriptionStatus == SubscriptionStatus.Subscribed)
     val inactive = subscriptions.filter(_.subscriptionStatus == SubscriptionStatus.InactiveEnrolment)
     val notSubscribed = subscriptions.filter(_.subscriptionStatus == SubscriptionStatus.NotSubscribed)
