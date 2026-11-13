@@ -19,7 +19,7 @@ package uk.gov.hmrc.agentservicesaccount.actions
 import play.api.mvc.Results.Forbidden
 import play.api.mvc.Results.NotImplemented
 import play.api.mvc.Results.Redirect
-import play.api.mvc._
+import play.api.mvc.*
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
@@ -30,9 +30,7 @@ import uk.gov.hmrc.agentservicesaccount.models.AmlsDetails
 import uk.gov.hmrc.agentservicesaccount.models.Arn
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.CT
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.SA
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.{CT, PAYE, SA, STT}
 import uk.gov.hmrc.agentservicesaccount.services.AgentRecordService
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 
@@ -139,7 +137,10 @@ class Actions @Inject() (
           (appConfig.enableLegacySubscriptionLinkRobotics && Seq(
             CT,
             SA
-          ).contains(agentRegime))
+          ).contains(agentRegime)) ||
+//          TODO: Setting fetch of STT to false until BE is set up correctly. Once set up, it should be replaced with the commented line
+//          (appConfig.enableSttSubscriptionLink && agentRegime == STT)
+          (false && agentRegime == STT)
         ) {
           sessionCacheService.get[SubscriptionJourney](subscriptionJourneyKey(agentRegime)).flatMap {
             case Some(journey) => Future.successful(Right(buildRequest(journey)))
