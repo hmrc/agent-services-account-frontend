@@ -28,6 +28,7 @@ case class SubscriptionJourney(
   asaDetails: AgencyDetails,
   doYouAlreadyManage: Option[Boolean] = None,
   youMayNotNeedToApply: Option[Boolean] = None,
+//  TODO: 12614 Rename this
   payeContactName: Option[String] = None,
   useCustomBusinessName: Option[Boolean] = None,
   businessNameAnswer: Option[String] = None,

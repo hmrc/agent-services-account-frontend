@@ -51,7 +51,8 @@ with RequestAwareLogging {
 
   def showPage(agentRegime: AgentRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(agentRegime).async { implicit request =>
     agentRegime match {
-      case PAYE => Future.successful(Redirect(routes.PayeUpdateContactNameController.showPage))
+//      TODO: 12614 Add STT here
+      case PAYE => Future.successful(Redirect(routes.UpdateContactNameController.showPage(agentRegime)))
       case _ =>
         val journey = request.subscriptionJourney
 

@@ -35,7 +35,7 @@ import support.BaseISpec
 import support.TestConstants
 import support.UnitSpec
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
-import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.PayeUpdateContactNameController
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdateContactNameController
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionContactNameForm.contactNameKey
 import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
@@ -50,7 +50,7 @@ import uk.gov.hmrc.http.client.HttpClientV2
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
-class PayeUpdateContactNameControllerISpec
+class UpdateContactNameControllerISpec
 extends BaseISpec
 with UnitSpec
 with Matchers
@@ -137,7 +137,7 @@ with TestConstants {
       .overrides(overrides)
       .build()
 
-    val controller: PayeUpdateContactNameController = app.injector.instanceOf[PayeUpdateContactNameController]
+    val controller: UpdateContactNameController = app.injector.instanceOf[UpdateContactNameController]
 
     val sessionCache: SessionCacheService = app.injector.instanceOf[SessionCacheService]
 

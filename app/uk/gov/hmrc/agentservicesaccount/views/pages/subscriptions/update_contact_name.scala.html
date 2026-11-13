@@ -16,7 +16,7 @@
 
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
-@import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.PayeSubscriptionContactNameForm.contactNameKey
+@import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionContactNameForm.contactNameKey
 @import uk.gov.hmrc.agentservicesaccount.models.subscriptions.ContactNameFormValues
 @import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
@@ -46,7 +46,7 @@
         @govukErrorSummary(ErrorSummary().withFormErrorsAsText(form))
     }
 
-    @formWithCSRF(action = subscriptions.routes.PayeUpdateContactNameController.onSubmit) {
+    @formWithCSRF(action = subscriptions.routes.UpdateContactNameController.onSubmit(agentRegime)) {
         @govukInput(Input(
             label = Label(
                 classes = "govuk-label--l",
