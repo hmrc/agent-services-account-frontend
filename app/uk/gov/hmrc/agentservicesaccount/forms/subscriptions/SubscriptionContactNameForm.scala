@@ -27,7 +27,7 @@ object SubscriptionContactNameForm {
 
   val contactNameKey = "contactName"
 
-//  TODO: 12614 Check whether STT and PAYE have some contactNameRegex
+//  TODO: 12614 Check whether STT and PAYE have some contactNameRegex - is 40 for STT rather than 56
   private val contactNameRegex = """^[A-Za-z0-9 .,()@!-]{1,56}$""".r
 
   private def contactNameMapping(agentRegime: AgentRegime): Mapping[String] = trimmedAndNormalisedText
