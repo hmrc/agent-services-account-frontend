@@ -23,7 +23,7 @@ import org.scalatest.matchers.must.Matchers.*
 import play.api.data.Form
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.PayeSubscriptionContactNameForm
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.PayeSubscriptionContactNameForm.contactNameKey
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.PayeContactNameFormValues
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.ContactNameFormValues
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.paye_update_contact_name
 
@@ -33,14 +33,14 @@ extends ViewBaseSpec {
   private val view: paye_update_contact_name = inject[paye_update_contact_name]
   private val asaDetailsAgencyName = "ABC-No.1 Accountants"
 
-  private val payeContactNameForm: Form[PayeContactNameFormValues] = PayeSubscriptionContactNameForm.form
+  private val payeContactNameForm: Form[ContactNameFormValues] = PayeSubscriptionContactNameForm.form
 
-  private val formWithContactNameError: Form[PayeContactNameFormValues] = payeContactNameForm.withError(
+  private val formWithContactNameError: Form[ContactNameFormValues] = payeContactNameForm.withError(
     key = contactNameKey,
     message = messages("asa.agent-regime.paye.contact-name.input.error.empty")
   )
 
-  def render(form: Form[PayeContactNameFormValues]): Document = Jsoup.parse(
+  def render(form: Form[ContactNameFormValues]): Document = Jsoup.parse(
     view(
       form,
       asaDetailsAgencyName

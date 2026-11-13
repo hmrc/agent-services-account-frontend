@@ -20,7 +20,7 @@ import play.api.data.Forms._
 import play.api.data.Form
 import play.api.data.Mapping
 import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators.trimmedAndNormalisedText
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.PayeContactNameFormValues
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.ContactNameFormValues
 
 object PayeSubscriptionContactNameForm {
 
@@ -32,11 +32,11 @@ object PayeSubscriptionContactNameForm {
     .verifying("asa.agent-regime.paye.contact-name.input.error.empty", _.nonEmpty)
     .verifying("asa.agent-regime.paye.contact-name.input.error.invalid", x => x.isEmpty || contactNameRegex.matches(x))
 
-  def form: Form[PayeContactNameFormValues] = {
+  def form: Form[ContactNameFormValues] = {
     Form(
       mapping(
         contactNameKey -> contactNameMapping
-      )(PayeContactNameFormValues.apply)(o => Some(o.contactName))
+      )(ContactNameFormValues.apply)(o => Some(o.contactName))
     )
   }
 

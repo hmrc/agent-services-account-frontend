@@ -19,7 +19,7 @@ package uk.gov.hmrc.agentservicesaccount.forms.subscriptions
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.PayeSubscriptionContactNameForm._
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.PayeContactNameFormValues
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.ContactNameFormValues
 
 class PayeSubscriptionContactNameFormSpec
 extends AnyWordSpec
@@ -37,7 +37,7 @@ with Matchers {
         contactNameKey -> validNewContactName
       )
 
-      initForm.bind(params).value shouldBe Some(PayeContactNameFormValues(validNewContactName))
+      initForm.bind(params).value shouldBe Some(ContactNameFormValues(validNewContactName))
     }
 
     s"error when $contactNameKey empty" in {
@@ -63,7 +63,7 @@ with Matchers {
     }
 
     "unbind PayeContactNameFormValues" in {
-      val unboundForm = initForm.mapping.unbind(PayeContactNameFormValues(validNewContactName))
+      val unboundForm = initForm.mapping.unbind(ContactNameFormValues(validNewContactName))
 
       unboundForm shouldBe Map(
         contactNameKey -> validNewContactName
