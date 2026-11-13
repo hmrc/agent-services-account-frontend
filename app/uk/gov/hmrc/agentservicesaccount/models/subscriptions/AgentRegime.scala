@@ -47,7 +47,7 @@ sealed trait AgentRegime {
       case AgentRegime.STT => "stt-agent-reference-key-placeholder"
     }
 
-  def dataKey: String =
+  private def dataKey: String =
     this match {
       case AgentRegime.PAYE => "payeJourney"
       case AgentRegime.SA => "saJourney"

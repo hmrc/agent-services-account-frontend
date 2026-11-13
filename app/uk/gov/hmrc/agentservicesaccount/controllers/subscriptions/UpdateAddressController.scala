@@ -20,7 +20,6 @@ import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.changeAddressPage
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.updateAddressPage
@@ -117,7 +116,7 @@ with RequestAwareLogging {
           )
 
           sessionCacheService
-            .put(subscriptionJourneyKey(agentRegime), updatedJourney)
+            .put(agentRegime.subscriptionJourneyKey, updatedJourney)
             .map(_ =>
               Redirect(getNextPage(
                 updateAddressPage,
@@ -205,7 +204,7 @@ with RequestAwareLogging {
             )
 
             sessionCacheService
-              .put(subscriptionJourneyKey(agentRegime), updatedJourney)
+              .put(agentRegime.subscriptionJourneyKey, updatedJourney)
               .map(_ =>
                 Redirect(getNextPage(
                   changeAddressPage,

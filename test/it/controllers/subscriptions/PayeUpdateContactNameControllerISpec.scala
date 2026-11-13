@@ -35,7 +35,6 @@ import support.BaseISpec
 import support.TestConstants
 import support.UnitSpec
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
-import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.PayeUpdateContactNameController
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.PayeSubscriptionContactNameForm.contactNameKey
 import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
@@ -149,7 +148,7 @@ with TestConstants {
     def cacheJourney(journey: SubscriptionJourney): Unit = {
       implicit val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequest
       implicit val writes: OWrites[SubscriptionJourney] = Json.writes[SubscriptionJourney]
-      sessionCache.put(subscriptionJourneyKey(PAYE), journey).futureValue
+      sessionCache.put(PAYE.subscriptionJourneyKey, journey).futureValue
     }
 
   }
@@ -218,7 +217,7 @@ with TestConstants {
           redirectLocation(result) shouldBe
             Some(s"/agent-services-account/subscription/PAYE/${journeyWithRedirectLocation._2}")
 
-          val updated: Option[SubscriptionJourney] = sessionCache.get[SubscriptionJourney](subscriptionJourneyKey(PAYE)).futureValue
+          val updated: Option[SubscriptionJourney] = sessionCache.get[SubscriptionJourney](PAYE.subscriptionJourneyKey).futureValue
           updated shouldBe defined
           updated.value.payeContactName shouldBe Some("New Name")
         }

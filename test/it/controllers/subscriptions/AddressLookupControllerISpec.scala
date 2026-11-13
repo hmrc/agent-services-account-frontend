@@ -21,7 +21,6 @@ import stubs.AddressLookupStubs._
 import stubs.AgentServicesAccountStubs.givenGetAgentRecord
 import stubs.AgentServicesAccountStubs.stubASAGetResponseError
 import support.ComponentBaseISpec
-import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup.ConfirmedResponseAddress
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup.ConfirmedResponseAddressDetails
@@ -106,13 +105,13 @@ extends ComponentBaseISpec {
             stubASAGetResponseError(arn, NOT_FOUND)
             givenGetAddressSuccess("bar", confirmedAddressResponse)
 
-            await(repo.putSession(subscriptionJourneyKey(agentRegime), journeyWithRedirectLocation._1))
+            await(repo.putSession(agentRegime.subscriptionJourneyKey, journeyWithRedirectLocation._1))
 
             val result = get(s"$finishAddressLookupPath?id=bar")
             result.status shouldBe SEE_OTHER
             result.header(LOCATION) shouldBe Some(s"$subscriptionStartPath/$agentRegime/${journeyWithRedirectLocation._2}")
 
-            val updatedJourney = await(repo.getFromSession(subscriptionJourneyKey(agentRegime)))
+            val updatedJourney = await(repo.getFromSession(agentRegime.subscriptionJourneyKey))
             updatedJourney shouldBe defined
             updatedJourney.get.useCustomAddress shouldBe Some(true)
             updatedJourney.get.addressAnswer shouldBe Some(address)
@@ -130,13 +129,13 @@ extends ComponentBaseISpec {
           )
         )
 
-        await(repo.putSession(subscriptionJourneyKey(agentRegime), subscriptionBaseJourney))
+        await(repo.putSession(agentRegime.subscriptionJourneyKey, subscriptionBaseJourney))
 
         val result = get(s"$finishAddressLookupPath?id=bar")
         result.status shouldBe SEE_OTHER
         result.header(LOCATION) shouldBe Some(s"$subscriptionStartPath/$agentRegime/address-fix")
 
-        val updatedJourney = await(repo.getFromSession(subscriptionJourneyKey(agentRegime)))
+        val updatedJourney = await(repo.getFromSession(agentRegime.subscriptionJourneyKey))
         updatedJourney shouldBe defined
         updatedJourney.get.useCustomAddress shouldBe Some(true)
         updatedJourney.get.addressAnswer shouldBe Some(invalidAddress)

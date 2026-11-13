@@ -23,14 +23,16 @@ import play.api.mvc.*
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentAssuranceConnector
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
-import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.routes
 import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
 import uk.gov.hmrc.agentservicesaccount.models.AmlsDetails
 import uk.gov.hmrc.agentservicesaccount.models.Arn
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.{CT, PAYE, SA, STT}
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.CT
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.SA
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.STT
 import uk.gov.hmrc.agentservicesaccount.services.AgentRecordService
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 
@@ -142,7 +144,7 @@ class Actions @Inject() (
 //          (appConfig.enableSttSubscriptionLink && agentRegime == STT)
           (false && agentRegime == STT)
         ) {
-          sessionCacheService.get[SubscriptionJourney](subscriptionJourneyKey(agentRegime)).flatMap {
+          sessionCacheService.get[SubscriptionJourney](agentRegime.subscriptionJourneyKey).flatMap {
             case Some(journey) => Future.successful(Right(buildRequest(journey)))
             case None =>
               agentServicesAccountConnector.getAgentRecord.flatMap { response =>
@@ -152,7 +154,7 @@ class Actions @Inject() (
                   None,
                   None
                 )))
-                sessionCacheService.put(subscriptionJourneyKey(agentRegime), journey).map { _ => Right(buildRequest(journey)) }
+                sessionCacheService.put(agentRegime.subscriptionJourneyKey, journey).map { _ => Right(buildRequest(journey)) }
               }
           }
         }

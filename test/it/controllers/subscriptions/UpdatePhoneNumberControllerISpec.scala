@@ -35,7 +35,6 @@ import support.BaseISpec
 import support.TestConstants
 import support.UnitSpec
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
-import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdatePhoneNumberController
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionPhoneNumberForm.phoneNumberNewKey
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionPhoneNumberForm.phoneNumberUseAsaDataKey
@@ -158,7 +157,7 @@ with TestConstants {
     def cacheJourney(journey: SubscriptionJourney): Unit = {
       implicit val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequest
       implicit val writes: OWrites[SubscriptionJourney] = Json.writes[SubscriptionJourney]
-      sessionCache.put(subscriptionJourneyKey(agentRegime), journey).futureValue
+      sessionCache.put(agentRegime.subscriptionJourneyKey, journey).futureValue
     }
 
   }
@@ -311,7 +310,7 @@ with TestConstants {
             redirectLocation(result) shouldBe
               Some(s"/agent-services-account/subscription/$agentRegime/${journeyWithRedirectLocation._2}")
 
-            val updated: Option[SubscriptionJourney] = sessionCache.get[SubscriptionJourney](subscriptionJourneyKey(agentRegime)).futureValue
+            val updated: Option[SubscriptionJourney] = sessionCache.get[SubscriptionJourney](agentRegime.subscriptionJourneyKey).futureValue
             updated shouldBe defined
             updated.get.useCustomPhoneNumber shouldBe Some(false)
             updated.value.phoneNumberAnswer shouldBe None
@@ -335,7 +334,7 @@ with TestConstants {
             redirectLocation(result) shouldBe
               Some(s"/agent-services-account/subscription/$agentRegime/${journeyWithRedirectLocation._2}")
 
-            val updated: Option[SubscriptionJourney] = sessionCache.get[SubscriptionJourney](subscriptionJourneyKey(agentRegime)).futureValue
+            val updated: Option[SubscriptionJourney] = sessionCache.get[SubscriptionJourney](agentRegime.subscriptionJourneyKey).futureValue
             updated.value.useCustomPhoneNumber shouldBe Some(true)
             updated.value.phoneNumberAnswer shouldBe Some("0987654321")
           }

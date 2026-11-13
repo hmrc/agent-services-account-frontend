@@ -22,7 +22,6 @@ import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.actions.SubscriptionJourneyRequest
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
-import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.checkYourAnswersPage
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.routes as subscriptionRoutes
@@ -111,7 +110,7 @@ with RequestAwareLogging {
         for {
           _ <- agentServicesAccountConnector.submitSubscriptionRequest(requestModel, agentRegime)
           updatedJourney = request.subscriptionJourney.copy(isSubmitted = true)
-          _ <- sessionCacheService.put(subscriptionJourneyKey(agentRegime), updatedJourney)
+          _ <- sessionCacheService.put(agentRegime.subscriptionJourneyKey, updatedJourney)
         } yield Redirect(getNextPage(
           checkYourAnswersPage,
           Some(updatedJourney),

@@ -20,7 +20,6 @@ import play.api.i18n.I18nSupport
 import play.api.mvc.*
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
-import uk.gov.hmrc.agentservicesaccount.controllers.subscriptionJourneyKey
 import uk.gov.hmrc.agentservicesaccount.controllers.emailPendingVerificationKey
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.updateEmailAddressPage
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.getNextPage
@@ -123,7 +122,7 @@ with RequestAwareLogging {
           )
 
           sessionCacheService
-            .put(subscriptionJourneyKey(agentRegime), updatedJourney)
+            .put(agentRegime.subscriptionJourneyKey, updatedJourney)
             .map(_ =>
               Redirect(getNextPage(
                 updateEmailAddressPage,

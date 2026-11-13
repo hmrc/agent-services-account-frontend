@@ -58,7 +58,12 @@ with BeforeAndAfterEach {
     val mockES5Connector = mock[EnrolmentStoreProxyConnector]
     val mockAppConfig = mock[AppConfig]
     mockAppConfig.enableSttSubscriptionLink returns false
-    val service = new SubscriptionService(mockASAConnector, mockES5Connector, mockAppConfig)
+    val service =
+      new SubscriptionService(
+        mockASAConnector,
+        mockES5Connector,
+        mockAppConfig
+      )
 
   }
 
