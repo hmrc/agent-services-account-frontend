@@ -22,7 +22,7 @@ import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.getNextPage
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.payeUpdateContactNamePage
-import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.PayeSubscriptionContactNameForm
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionContactNameForm
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.ContactNameFormValues
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
@@ -53,7 +53,7 @@ with RequestAwareLogging {
 
     val asaDetailsAgencyName = journey.asaDetails.agencyName.getOrElse("")
 
-    val initialForm = PayeSubscriptionContactNameForm.form
+    val initialForm = SubscriptionContactNameForm.form(PAYE)
     val form =
       journey.payeContactName match {
         case Some(contactName) =>
@@ -75,7 +75,7 @@ with RequestAwareLogging {
   def onSubmit: Action[AnyContent] = actions.authActionWithSubscriptionJourney(PAYE).async { implicit request =>
     val journey = request.subscriptionJourney
 
-    PayeSubscriptionContactNameForm.form.bindFromRequest().fold(
+    SubscriptionContactNameForm.form(PAYE).bindFromRequest().fold(
       formWithErrors => {
         val asaDetailsAgencyName = journey.asaDetails.agencyName.getOrElse("")
         Future.successful(

@@ -18,10 +18,10 @@ package uk.gov.hmrc.agentservicesaccount.forms.subscriptions
 
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
-import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.PayeSubscriptionContactNameForm._
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionContactNameForm._
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.ContactNameFormValues
 
-class PayeSubscriptionContactNameFormSpec
+class SubscriptionContactNameFormSpec
 extends AnyWordSpec
 with Matchers {
 
