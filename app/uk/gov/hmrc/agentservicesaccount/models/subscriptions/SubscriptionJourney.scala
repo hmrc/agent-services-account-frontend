@@ -21,8 +21,7 @@ import play.api.libs.json.OFormat
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.ChangeSubscriptionAddressForm
 import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.CT
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.SA
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.{CT, PAYE, SA, STT}
 
 case class SubscriptionJourney(
   asaDetails: AgencyDetails,
@@ -55,8 +54,8 @@ case class SubscriptionJourney(
   def isComplete(agentRegime: AgentRegime): Boolean = {
     val nameComplete =
       agentRegime match {
-        case AgentRegime.PAYE => payeContactName.isDefined
-        case _ => answerComplete(useCustomBusinessName, businessNameAnswer)
+        case PAYE | STT => payeContactName.isDefined
+        case CT | SA => answerComplete(useCustomBusinessName, businessNameAnswer)
       }
     val pnComplete = answerComplete(useCustomPhoneNumber, phoneNumberAnswer)
     val eaComplete = answerComplete(useCustomEmail, emailAnswer)
