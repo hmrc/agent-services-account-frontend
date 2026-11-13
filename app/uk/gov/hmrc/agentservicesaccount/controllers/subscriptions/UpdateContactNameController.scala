@@ -21,7 +21,7 @@ import play.api.mvc.*
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.getNextPage
-import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.payeUpdateContactNamePage
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.updateContactNamePage
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionContactNameForm
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.ContactNameFormValues
@@ -49,6 +49,7 @@ with I18nSupport
 with RequestAwareLogging {
 
   def showPage(agentRegime: AgentRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(agentRegime).async { implicit request =>
+//    TODO: Guard against CA/ST here and add tests for this
     val journey = request.subscriptionJourney
 
     val asaDetailsAgencyName = journey.asaDetails.agencyName.getOrElse("")
@@ -95,7 +96,7 @@ with RequestAwareLogging {
           .put(agentRegime.subscriptionJourneyKey, updatedJourney)
           .map(_ =>
             Redirect(getNextPage(
-              payeUpdateContactNamePage,
+              updateContactNamePage,
               Some(updatedJourney),
               agentRegime
             ))
