@@ -27,7 +27,7 @@ import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.ContactNameFormValues
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.utils.RequestAwareLogging
-import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.paye_update_contact_name
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.update_contact_name
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject._
@@ -38,7 +38,7 @@ import scala.concurrent.Future
 class PayeUpdateContactNameController @Inject() (
   actions: Actions,
   val sessionCacheService: SessionCacheService,
-  paye_update_contact_name: paye_update_contact_name,
+  update_contact_name: update_contact_name,
   cc: MessagesControllerComponents
 )(implicit
   appConfig: AppConfig,
@@ -64,9 +64,10 @@ with RequestAwareLogging {
       }
 
     Future.successful(
-      Ok(paye_update_contact_name(
+      Ok(update_contact_name(
         form,
-        asaDetailsAgencyName
+        asaDetailsAgencyName,
+        PAYE
       ))
     )
   }
@@ -78,9 +79,10 @@ with RequestAwareLogging {
       formWithErrors => {
         val asaDetailsAgencyName = journey.asaDetails.agencyName.getOrElse("")
         Future.successful(
-          BadRequest(paye_update_contact_name(
+          BadRequest(update_contact_name(
             formWithErrors,
-            asaDetailsAgencyName
+            asaDetailsAgencyName,
+            PAYE
           ))
         )
       },
