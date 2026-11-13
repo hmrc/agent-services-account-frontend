@@ -19,7 +19,8 @@ package uk.gov.hmrc.agentservicesaccount.forms.subscriptions
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionContactNameForm.*
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.{AgentRegime, ContactNameFormValues}
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.ContactNameFormValues
 
 class SubscriptionContactNameFormSpec
 extends AnyWordSpec

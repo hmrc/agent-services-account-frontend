@@ -23,7 +23,8 @@ import org.scalatest.matchers.must.Matchers.*
 import play.api.data.Form
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionContactNameForm
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionContactNameForm.contactNameKey
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.{AgentRegime, ContactNameFormValues}
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.ContactNameFormValues
 import uk.gov.hmrc.agentservicesaccount.views.ViewBaseSpec
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.update_contact_name
 
@@ -42,7 +43,7 @@ extends ViewBaseSpec {
 
   private val formWithContactNameError: Form[ContactNameFormValues] = contactNameForm.withError(
     key = contactNameKey,
-    message = messages("$agentRegimePrefix.contact-name.input.error.empty")
+    message = messages(s"$agentRegimePrefix.contact-name.input.error.empty")
   )
 
   def render(form: Form[ContactNameFormValues]): Document = Jsoup.parse(
