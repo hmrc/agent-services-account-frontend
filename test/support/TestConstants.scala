@@ -204,6 +204,7 @@ trait TestConstants {
 
   def subscriptionFullJourney(agentRegime: AgentRegime): SubscriptionJourney =
     agentRegime match {
+//      TODO: 12614 Add for STT here
       case PAYE => payeSubscriptionFullJourney
       case _ => ctSaSubscriptionFullJourney
     }

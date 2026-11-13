@@ -64,6 +64,7 @@ with IntegrationPatience
 with MockFactory
 with TestConstants {
 
+//  TODO: 12614 Add tests for STT guard
   private val agentRegimes = List(CT, SA, PAYE)
 
   class TestSetup(agentRegime: AgentRegime) {

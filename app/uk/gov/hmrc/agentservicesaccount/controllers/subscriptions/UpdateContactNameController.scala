@@ -49,7 +49,7 @@ with I18nSupport
 with RequestAwareLogging {
 
   def showPage(agentRegime: AgentRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(agentRegime).async { implicit request =>
-//    TODO: 12614 Guard against CA/ST here and add tests for this
+//    TODO: 12614 Guard against CA/ST here
     val journey = request.subscriptionJourney
 
     val asaDetailsAgencyName = journey.asaDetails.agencyName.getOrElse("")
