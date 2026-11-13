@@ -34,7 +34,7 @@ sealed trait AgentRegime {
       case AgentRegime.PAYE => "IR-PAYE-AGENT"
       case AgentRegime.SA => "IR-SA-AGENT"
       case AgentRegime.CT => "IR-CT-AGENT"
-//      TODO: Add correct enrolment key for STT
+//      TODO: 12412 Add correct enrolment key for STT
       case AgentRegime.STT => "stt-enrolment-key-placeholder"
     }
 
@@ -43,7 +43,7 @@ sealed trait AgentRegime {
       case AgentRegime.PAYE => "IRAgentReference"
       case AgentRegime.SA => "IRAgentReference"
       case AgentRegime.CT => "IRAgentReference"
-//      TODO: Add correct agent reference key for STT
+//      TODO: 12412 Add correct agent reference key for STT
       case AgentRegime.STT => "stt-agent-reference-key-placeholder"
     }
 
