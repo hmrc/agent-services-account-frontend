@@ -219,7 +219,7 @@ with TestConstants {
 
       journeyWithRedirectLocations.foreach(journeyWithRedirectLocation => {
         s"update journey and redirect to ${journeyWithRedirectLocation._2}" +
-          s"when journey ${completeString(journeyWithRedirectLocation._1, PAYE)}}" in new TestSetup(agentRegime) {
+          s"when journey ${completeString(journeyWithRedirectLocation._1, agentRegime)}}" in new TestSetup(agentRegime) {
           private val request = FakeRequest(POST, "/")
             .withSession(session.toSeq *)
             .withFormUrlEncodedBody(
@@ -235,7 +235,7 @@ with TestConstants {
           redirectLocation(result) shouldBe
             Some(s"/agent-services-account/subscription/$agentRegime/${journeyWithRedirectLocation._2}")
 
-          val updated: Option[SubscriptionJourney] = sessionCache.get[SubscriptionJourney](PAYE.subscriptionJourneyKey).futureValue
+          val updated: Option[SubscriptionJourney] = sessionCache.get[SubscriptionJourney](agentRegime.subscriptionJourneyKey).futureValue
           updated shouldBe defined
           updated.value.payeContactName shouldBe Some("New Name")
         }
