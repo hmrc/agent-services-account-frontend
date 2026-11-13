@@ -68,6 +68,28 @@ with Matchers {
       validatedForm.errors.length shouldBe 1
     }
 
+    s"error when $contactNameKey too long - PAYE" in {
+      val params = Map(
+        contactNameKey -> "a".repeat(PAYE_CONTACT_NAME_MAX_LENGTH + 1)
+      )
+
+      val validatedForm = form(AgentRegime.PAYE).bind(params)
+      validatedForm.hasErrors shouldBe true
+      validatedForm.error(contactNameKey).get.message shouldBe s"$agentRegimePrefix.contact-name.input.error.invalid"
+      validatedForm.errors.length shouldBe 1
+    }
+
+    s"error when $contactNameKey too long - STT" in {
+      val params = Map(
+        contactNameKey -> "a".repeat(STT_CONTACT_NAME_MAX_LENGTH + 1)
+      )
+
+      val validatedForm = form(AgentRegime.STT).bind(params)
+      validatedForm.hasErrors shouldBe true
+      validatedForm.error(contactNameKey).get.message shouldBe s"$agentRegimePrefix.contact-name.input.error.invalid"
+      validatedForm.errors.length shouldBe 1
+    }
+
     "unbind ContactNameFormValues" in {
       val unboundForm = initForm.mapping.unbind(ContactNameFormValues(validNewContactName))
 
