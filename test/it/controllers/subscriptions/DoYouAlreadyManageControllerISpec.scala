@@ -184,6 +184,7 @@ with TestConstants {
         val result = controller.showPage(regime)(fakeRequest).futureValue
 
         status(result) shouldBe OK
+//        TODO: 12614 Test with messages
       }
 
       "render pre-filled form when journey has value" in new TestSetup(regime) {

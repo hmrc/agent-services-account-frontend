@@ -50,7 +50,7 @@ extends ComponentBaseISpec {
         val result = get(path)
 
         result.status shouldBe OK
-
+//TODO: 12614 Test with messages
         result.body should include("We’re processing your application")
         result.body should include("You’ll get an agent code within 5 days")
       }

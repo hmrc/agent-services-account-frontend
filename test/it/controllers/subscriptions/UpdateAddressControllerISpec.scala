@@ -87,7 +87,9 @@ extends ComponentBaseISpec {
             case SA => "What address should we use to send letters about Self Assessment?"
             case STT => "What address should we use to send letters about Securities Transfer Tax?"
           }
+//        val title = messages(s"${agentRegime.msgPrefix}.phone-number.title")
         assertPageHasTitle(expectedTitle)(result)
+
       }
     }
 

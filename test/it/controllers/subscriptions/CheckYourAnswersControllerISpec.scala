@@ -162,7 +162,7 @@ with MockFactory {
         status(result) shouldBe OK
 
         val body = contentAsString(result)
-
+//TODO: 12614 Test with messages
         if (List(PAYE, STT).contains(agentRegime)) {
           body should include("Contact name")
           body should include("My Name")

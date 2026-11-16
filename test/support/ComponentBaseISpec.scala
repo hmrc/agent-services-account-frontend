@@ -25,6 +25,7 @@ import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.IntegrationPatience
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.Application
+import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.ws.BodyReadable
 import play.api.libs.ws.BodyWritable
@@ -39,7 +40,7 @@ import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.mvc.Request
 import play.api.mvc.Session
 import play.api.mvc.SessionCookieBaker
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import play.api.test.FakeRequest
 import play.api.test.Injecting
 import stubs.AuthStubs
@@ -178,6 +179,11 @@ with IntegrationPatience {
   )
 
   implicit val request: Request[AnyContentAsFormUrlEncoded] = FakeRequest().withSession(sessionHeaders.toSeq*).withFormUrlEncodedBody()
+
+  implicit val messagesApi: MessagesApi = inject[MessagesApi]
+  implicit val lang: Lang = Lang("en")
+
+  implicit val messages: Messages = MessagesImpl(lang, messagesApi)
 
   def mockSessionCookie: WSCookie = {
 

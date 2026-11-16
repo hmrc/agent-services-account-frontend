@@ -185,6 +185,7 @@ with TestConstants {
         private val result = controller.showPage(agentRegime)(FakeRequest()).futureValue
 
         status(result) shouldBe OK
+//        TODO: 12614 Test with messages
         contentAsString(result) should include("Test Agency")
       }
 
