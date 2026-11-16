@@ -21,16 +21,18 @@ import play.api.data.Form
 import play.api.data.Mapping
 import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators.trimmedAndNormalisedText
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.{PAYE, STT}
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.STT
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.ContactNameFormValues
 
 object SubscriptionContactNameForm {
 
   val contactNameKey = "contactName"
-  
-  private def contactNameRegex(agentRegime: AgentRegime) = agentRegime match
-    case PAYE => """^[A-Za-z0-9 .,()@!-]{1,56}$""".r
-    case STT => """^[A-Za-z0-9 .,()@!-]{1,40}$""".r
+
+  private def contactNameRegex(agentRegime: AgentRegime) =
+    agentRegime match
+      case PAYE => """^[A-Za-z0-9 .,()@!-]{1,56}$""".r
+      case STT => """^[A-Za-z0-9 .,()@!-]{1,40}$""".r
 
   private def contactNameMapping(agentRegime: AgentRegime): Mapping[String] = trimmedAndNormalisedText
     .verifying(s"${agentRegime.msgPrefix}.contact-name.input.error.empty", _.nonEmpty)

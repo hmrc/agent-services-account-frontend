@@ -40,7 +40,10 @@ import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.routes as subs
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionBusinessNameForm.businessNameNewKey
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionBusinessNameForm.businessNameUseAsaDataKey
 import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.{CT, PAYE, SA, STT}
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.CT
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.SA
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.STT
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService

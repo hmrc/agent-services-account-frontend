@@ -35,11 +35,16 @@ import support.BaseISpec
 import support.TestConstants
 import support.UnitSpec
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
-import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.{UpdateContactNameController, routes as subscriptionRoutes}
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdateContactNameController
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.routes as subscriptionRoutes
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionContactNameForm.contactNameKey
 import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.{CT, PAYE, SA, STT}
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.{AgentRegime, SubscriptionJourney}
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.CT
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.SA
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.STT
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.authorise.Predicate
@@ -203,7 +208,7 @@ with TestConstants {
       "return BAD_REQUEST when form is invalid" in new TestSetup(agentRegime) {
         cacheJourney(subscriptionBaseJourney)
 
-        private val request = FakeRequest().withSession(session.toSeq *).withFormUrlEncodedBody(
+        private val request = FakeRequest().withSession(session.toSeq*).withFormUrlEncodedBody(
           contactNameKey -> ""
         )
 
@@ -220,26 +225,27 @@ with TestConstants {
       journeyWithRedirectLocations.foreach(journeyWithRedirectLocation => {
         s"update journey and redirect to ${journeyWithRedirectLocation._2}" +
           s"when journey ${completeString(journeyWithRedirectLocation._1, agentRegime)}}" in new TestSetup(agentRegime) {
-          private val request = FakeRequest(POST, "/")
-            .withSession(session.toSeq *)
-            .withFormUrlEncodedBody(
-              contactNameKey -> "New Name"
-            )
+            private val request = FakeRequest(POST, "/")
+              .withSession(session.toSeq*)
+              .withFormUrlEncodedBody(
+                contactNameKey -> "New Name"
+              )
 
-          implicit val implicitRequest: FakeRequest[AnyContentAsFormUrlEncoded] = request
+            implicit val implicitRequest: FakeRequest[AnyContentAsFormUrlEncoded] = request
 
-          cacheJourney(journeyWithRedirectLocation._1)
+            cacheJourney(journeyWithRedirectLocation._1)
 
-          private val result = controller.onSubmit(agentRegime)(request).futureValue
-          status(result) shouldBe SEE_OTHER
-          redirectLocation(result) shouldBe
-            Some(s"/agent-services-account/subscription/$agentRegime/${journeyWithRedirectLocation._2}")
+            private val result = controller.onSubmit(agentRegime)(request).futureValue
+            status(result) shouldBe SEE_OTHER
+            redirectLocation(result) shouldBe
+              Some(s"/agent-services-account/subscription/$agentRegime/${journeyWithRedirectLocation._2}")
 
-          val updated: Option[SubscriptionJourney] = sessionCache.get[SubscriptionJourney](agentRegime.subscriptionJourneyKey).futureValue
-          updated shouldBe defined
-          updated.value.payeContactName shouldBe Some("New Name")
-        }
+            val updated: Option[SubscriptionJourney] = sessionCache.get[SubscriptionJourney](agentRegime.subscriptionJourneyKey).futureValue
+            updated shouldBe defined
+            updated.value.payeContactName shouldBe Some("New Name")
+          }
       })
     }
   })
+
 }

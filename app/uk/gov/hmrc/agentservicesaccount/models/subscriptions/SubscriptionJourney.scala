@@ -21,7 +21,10 @@ import play.api.libs.json.OFormat
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.ChangeSubscriptionAddressForm
 import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.{CT, PAYE, SA, STT}
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.CT
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.SA
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.STT
 
 case class SubscriptionJourney(
   asaDetails: AgencyDetails,
