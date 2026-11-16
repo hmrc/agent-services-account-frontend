@@ -69,7 +69,7 @@ with Matchers {
 
     s"error when $contactNameKey too long - PAYE" in {
       val params = Map(
-        contactNameKey -> "a".repeat(57)
+        contactNameKey -> "a".repeat(PAYE_CONTACT_NAME_MAX_LENGTH + 1)
       )
 
       val agentRegime = AgentRegime.PAYE
@@ -81,7 +81,7 @@ with Matchers {
 
     s"error when $contactNameKey too long - STT" in {
       val params = Map(
-        contactNameKey -> "a".repeat(41)
+        contactNameKey -> "a".repeat(STT_CONTACT_NAME_MAX_LENGTH + 1)
       )
 
       val agentRegime = AgentRegime.STT

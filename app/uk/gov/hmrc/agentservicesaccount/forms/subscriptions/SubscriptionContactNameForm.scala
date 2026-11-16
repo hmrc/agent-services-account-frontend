@@ -29,10 +29,13 @@ object SubscriptionContactNameForm {
 
   val contactNameKey = "contactName"
 
+  private[subscriptions] val PAYE_CONTACT_NAME_MAX_LENGTH = 56
+  private[subscriptions] val STT_CONTACT_NAME_MAX_LENGTH = 40
+
   private def contactNameRegex(agentRegime: AgentRegime) =
     agentRegime match
-      case PAYE => """^[A-Za-z0-9 .,()@!-]{1,56}$""".r
-      case STT => """^[A-Za-z0-9 .,()@!-]{1,40}$""".r
+      case PAYE => s"^[A-Za-z0-9 .,()@!-]{1,$PAYE_CONTACT_NAME_MAX_LENGTH}$$".r
+      case STT => s"^[A-Za-z0-9 .,()@!-]{1,$STT_CONTACT_NAME_MAX_LENGTH}$$".r
 
   private def contactNameMapping(agentRegime: AgentRegime): Mapping[String] = trimmedAndNormalisedText
     .verifying(s"${agentRegime.msgPrefix}.contact-name.input.error.empty", _.nonEmpty)
