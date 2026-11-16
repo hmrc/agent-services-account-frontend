@@ -42,6 +42,7 @@ import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.CT
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.SA
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.STT
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
@@ -64,7 +65,7 @@ with IntegrationPatience
 with MockFactory
 with TestConstants {
 
-  private val agentRegimes = List(CT, PAYE, SA)
+  private val agentRegimes = List(CT, PAYE, SA, STT)
 
   private def agencyDetails(agencyTelephone: Option[String]) = uk.gov.hmrc.agentservicesaccount.models.AgencyDetails(
     agencyName = Some("My Agency"),

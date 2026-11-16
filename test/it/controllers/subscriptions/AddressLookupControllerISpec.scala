@@ -28,6 +28,7 @@ import uk.gov.hmrc.agentservicesaccount.models.addresslookup.Country
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.CT
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.SA
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.STT
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
 
 class AddressLookupControllerISpec
@@ -35,7 +36,7 @@ extends ComponentBaseISpec {
 
   private val repo = inject[SessionCacheRepository]
 
-  private val agentRegimes = List(CT, PAYE, SA)
+  private val agentRegimes = List(CT, PAYE, SA, STT)
 
   private val confirmedAddressResponse = ConfirmedResponseAddress(
     auditRef = "foo",
