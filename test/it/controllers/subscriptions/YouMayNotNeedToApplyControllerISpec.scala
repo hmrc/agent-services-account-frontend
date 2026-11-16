@@ -170,7 +170,7 @@ with TestConstants {
         private val result = controller.showPage(regimeWithRedirect.agentRegime)(FakeRequest()).futureValue
 
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result) should contain(s"/subscription/${regimeWithRedirect.agentRegime}/${regimeWithRedirect.redirectLocation}")
+        redirectLocation(result) shouldBe Some(s"/agent-services-account/subscription/${regimeWithRedirect.agentRegime}/${regimeWithRedirect.redirectLocation}")
       }
     }
   })
