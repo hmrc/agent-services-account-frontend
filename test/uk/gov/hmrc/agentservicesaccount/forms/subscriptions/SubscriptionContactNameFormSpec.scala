@@ -72,9 +72,10 @@ with Matchers {
         contactNameKey -> "a".repeat(57)
       )
 
-      val validatedForm = form(AgentRegime.PAYE).bind(params)
+      val agentRegime = AgentRegime.PAYE
+      val validatedForm = form(agentRegime).bind(params)
       validatedForm.hasErrors shouldBe true
-      validatedForm.error(contactNameKey).get.message shouldBe s"$agentRegimePrefix.contact-name.input.error.invalid"
+      validatedForm.error(contactNameKey).get.message shouldBe s"${agentRegime.msgPrefix}.contact-name.input.error.invalid"
       validatedForm.errors.length shouldBe 1
     }
 
@@ -83,9 +84,10 @@ with Matchers {
         contactNameKey -> "a".repeat(41)
       )
 
-      val validatedForm = form(AgentRegime.STT).bind(params)
+      val agentRegime = AgentRegime.STT
+      val validatedForm = form(agentRegime).bind(params)
       validatedForm.hasErrors shouldBe true
-      validatedForm.error(contactNameKey).get.message shouldBe s"$agentRegimePrefix.contact-name.input.error.invalid"
+      validatedForm.error(contactNameKey).get.message shouldBe s"${agentRegime.msgPrefix}.contact-name.input.error.invalid"
       validatedForm.errors.length shouldBe 1
     }
 

@@ -24,6 +24,8 @@ import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageS
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.updateContactNamePage
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionContactNameForm
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.CT
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.SA
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.ContactNameFormValues
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.utils.RequestAwareLogging
@@ -49,28 +51,31 @@ with I18nSupport
 with RequestAwareLogging {
 
   def showPage(agentRegime: AgentRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(agentRegime).async { implicit request =>
-//    TODO: 12614 Guard against CA/ST here
-    val journey = request.subscriptionJourney
+    agentRegime match {
+      case CT | SA => Future.successful(Redirect(routes.UpdateBusinessNameController.showPage(agentRegime)))
+      case _ =>
+        val journey = request.subscriptionJourney
 
-    val asaDetailsAgencyName = journey.asaDetails.agencyName.getOrElse("")
+        val asaDetailsAgencyName = journey.asaDetails.agencyName.getOrElse("")
 
-    val initialForm = SubscriptionContactNameForm.form(agentRegime)
-    val form =
-      journey.payeContactName match {
-        case Some(contactName) =>
-          initialForm.fill(
-            ContactNameFormValues(contactName = contactName)
-          )
-        case None => initialForm
-      }
+        val initialForm = SubscriptionContactNameForm.form(agentRegime)
+        val form =
+          journey.payeContactName match {
+            case Some(contactName) =>
+              initialForm.fill(
+                ContactNameFormValues(contactName = contactName)
+              )
+            case None => initialForm
+          }
 
-    Future.successful(
-      Ok(update_contact_name(
-        form,
-        asaDetailsAgencyName,
-        agentRegime
-      ))
-    )
+        Future.successful(
+          Ok(update_contact_name(
+            form,
+            asaDetailsAgencyName,
+            agentRegime
+          ))
+        )
+    }
   }
 
   def onSubmit(agentRegime: AgentRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(agentRegime).async { implicit request =>

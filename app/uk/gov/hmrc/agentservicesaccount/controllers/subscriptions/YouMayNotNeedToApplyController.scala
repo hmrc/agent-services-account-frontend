@@ -25,6 +25,7 @@ import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageS
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.YouMayNotNeedToApplyForm
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.YouMayNotNeedToApplyFormValues
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.STT
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.you_may_not_need_to_apply
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -47,19 +48,22 @@ extends FrontendController(cc)
 with I18nSupport {
 
   def showPage(agentRegime: AgentRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(agentRegime).async { implicit request =>
-//    TODO: 12614 Add STT guard here
-    val journey = request.subscriptionJourney
+    agentRegime match {
+      case STT => Future.successful(Redirect(routes.UpdateContactNameController.showPage(agentRegime)))
+      case _ =>
+        val journey = request.subscriptionJourney
 
-    val form =
-      journey.youMayNotNeedToApply match {
-        case Some(value) => YouMayNotNeedToApplyForm.form(agentRegime).fill(YouMayNotNeedToApplyFormValues(value))
-        case None => YouMayNotNeedToApplyForm.form(agentRegime)
-      }
+        val form =
+          journey.youMayNotNeedToApply match {
+            case Some(value) => YouMayNotNeedToApplyForm.form(agentRegime).fill(YouMayNotNeedToApplyFormValues(value))
+            case None => YouMayNotNeedToApplyForm.form(agentRegime)
+          }
 
-    Future.successful(Ok(you_may_not_need_to_apply(
-      form,
-      agentRegime
-    )))
+        Future.successful(Ok(you_may_not_need_to_apply(
+          form,
+          agentRegime
+        )))
+    }
   }
 
   def onSubmit(agentRegime: AgentRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(agentRegime).async { implicit request =>
