@@ -30,8 +30,7 @@ with Matchers {
   val validNewContactName = "My Name"
   val invalidNewContactName = "{][.',"
 
-// TODO: 12614 Change to STT
-  private val agentRegime = AgentRegime.PAYE
+  private val agentRegime = AgentRegime.STT
 
   private val agentRegimePrefix = agentRegime.msgPrefix
 

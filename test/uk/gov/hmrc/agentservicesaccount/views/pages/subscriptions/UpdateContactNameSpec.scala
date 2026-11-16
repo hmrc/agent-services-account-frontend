@@ -34,8 +34,7 @@ extends ViewBaseSpec {
   private val view: update_contact_name = inject[update_contact_name]
   private val asaDetailsAgencyName = "ABC-No.1 Accountants"
 
-  // TODO: 12614 Change to STT
-  private val agentRegime = AgentRegime.PAYE
+  private val agentRegime = AgentRegime.STT
 
   private val agentRegimePrefix = agentRegime.msgPrefix
 
