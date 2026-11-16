@@ -42,6 +42,7 @@ extends ComponentBaseISpec {
 //  TODO: 12412 Add STT when implemented
   private val agentRegimes = List(CT, PAYE, SA)
 
+//  TODO: 12614 Use msgs here
   private val changeRouteCases = List(
     ("address-change", "Change your address"),
     ("address-fix", "Change the address lines that are too long")
@@ -80,6 +81,7 @@ extends ComponentBaseISpec {
         result.status shouldBe OK
         val expectedTitle: String =
           (agentRegime: AgentRegime) match {
+//            TODO: 12614 Use msgs here
             case CT => "What address should we use to send letters about Corporation Tax?"
             case PAYE => "What address should we use to send letters about PAYE?"
             case SA => "What address should we use to send letters about Self Assessment?"

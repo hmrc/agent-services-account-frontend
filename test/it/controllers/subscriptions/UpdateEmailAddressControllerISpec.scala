@@ -44,7 +44,12 @@ extends ComponentBaseISpec {
   private val repo = inject[SessionCacheRepository]
 
 //  TODO: 12412 Add STT when implemented
-  private val agentRegimes = List(CT, PAYE, SA)
+  private val agentRegimes = List(
+    CT,
+    PAYE,
+    SA,
+    STT
+  )
 
   agentRegimes.foreach(agentRegime => {
     val updateEmailAddressPath = s"$subscriptionStartPath/$agentRegime/email-address"
@@ -66,9 +71,11 @@ extends ComponentBaseISpec {
         result.status shouldBe OK
         val expectedTitle: String =
           (agentRegime: AgentRegime) match {
+//            TODO: 12614 Use msgs here
             case CT => "What email address should we use to contact you about Corporation Tax?"
             case PAYE => "What email address should we use to contact you about PAYE?"
             case SA => "What email address should we use to contact you about Self Assessment?"
+            case STT => "What email address should we use to contact you about Securities Transfer Tax?"
           }
         assertPageHasTitle(expectedTitle)(result)
         val doc = Jsoup.parse(result.body)

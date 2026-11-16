@@ -66,20 +66,6 @@ case class SubscriptionCyaData(
     )
   }
 
-  private def toPayeSubscriptionRequest(
-    asaAgentName: String,
-    isWelsh: Boolean
-  ): PayeSubscriptionRequest = {
-    PayeSubscriptionRequest(
-      agentName = asaAgentName,
-      contactName = name,
-      phoneNumber = Some(subscriptionRequestPhoneNumber),
-      emailAddress = Some(email),
-      address = toSubscriptionAddress(address),
-      isWelsh = isWelsh
-    )
-  }
-
   private def toSaSubscriptionRequest(
     countryName: String,
     isWelsh: Boolean
@@ -95,6 +81,28 @@ case class SubscriptionCyaData(
     )
   }
 
+  private def toPayeSubscriptionRequest(
+    asaAgentName: String,
+    isWelsh: Boolean
+  ): PayeSubscriptionRequest = {
+    PayeSubscriptionRequest(
+      agentName = asaAgentName,
+      contactName = name,
+      phoneNumber = Some(subscriptionRequestPhoneNumber),
+      emailAddress = Some(email),
+      address = toSubscriptionAddress(address),
+      isWelsh = isWelsh
+    )
+  }
+
+  // TODO: 12412 Implement correctly for STT
+  private def toSttSubscriptionRequest(
+    asaAgentName: String,
+    isWelsh: Boolean
+  ): PayeSubscriptionRequest = {
+    toPayeSubscriptionRequest(asaAgentName, isWelsh)
+  }
+
   def toSubscriptionRequest(
     agentRegime: AgentRegime,
     isWelsh: Boolean,
@@ -102,8 +110,8 @@ case class SubscriptionCyaData(
     asaAgentNameOpt: Option[String] = None
   ): Option[SubscriptionRequest] = {
     (agentRegime, address.countryCode != "GB", countryNameOpt, asaAgentNameOpt) match {
-      // TODO: 12412 Implement for STT
       case (PAYE, false, None, Some(asaAgentName)) => Some(toPayeSubscriptionRequest(asaAgentName, isWelsh))
+      case (STT, false, None, Some(asaAgentName)) => Some(toSttSubscriptionRequest(asaAgentName, isWelsh))
       case (CT, _, Some(countryName), None) => Some(toCtSubscriptionRequest(countryName, isWelsh))
       case (SA, _, Some(countryName), None) => Some(toSaSubscriptionRequest(countryName, isWelsh))
       case (_, _, _, _) => None
