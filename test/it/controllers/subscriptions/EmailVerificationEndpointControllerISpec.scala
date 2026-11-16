@@ -37,7 +37,12 @@ extends ComponentBaseISpec {
 
   private val repo = inject[SessionCacheRepository]
 
-  private val agentRegimes = List(CT, PAYE, SA, STT)
+  private val agentRegimes = List(
+    CT,
+    PAYE,
+    SA,
+    STT
+  )
 
   agentRegimes.foreach(agentRegime => {
     val finishEmailVerificationPath = s"$subscriptionStartPath/$agentRegime/email-verification-finish"

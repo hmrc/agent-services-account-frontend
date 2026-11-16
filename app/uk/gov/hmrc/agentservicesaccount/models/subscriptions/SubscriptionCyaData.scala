@@ -21,8 +21,8 @@ import uk.gov.hmrc.agentservicesaccount.models.PostCode
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.CT
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.SA
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.STT
 
-//TODO: 12614 Add for STT
 case class SubscriptionCyaData(
   name: String,
   phoneNumber: String,
@@ -102,6 +102,7 @@ case class SubscriptionCyaData(
     asaAgentNameOpt: Option[String] = None
   ): Option[SubscriptionRequest] = {
     (agentRegime, address.countryCode != "GB", countryNameOpt, asaAgentNameOpt) match {
+      // TODO: 12412 Implement for STT
       case (PAYE, false, None, Some(asaAgentName)) => Some(toPayeSubscriptionRequest(asaAgentName, isWelsh))
       case (CT, _, Some(countryName), None) => Some(toCtSubscriptionRequest(countryName, isWelsh))
       case (SA, _, Some(countryName), None) => Some(toSaSubscriptionRequest(countryName, isWelsh))
@@ -129,15 +130,14 @@ object SubscriptionCyaData {
     }
     for {
       name <-
-        if (agentRegime == PAYE) {
-          journey.payeContactName
-        }
-        else {
-          getCustomAnswerOrAsaDetailsDefault(
-            journey.useCustomBusinessName,
-            journey.businessNameAnswer,
-            journey.asaDetails.agencyName
-          )
+        agentRegime match {
+          case PAYE | STT => journey.payeContactName
+          case CT | SA =>
+            getCustomAnswerOrAsaDetailsDefault(
+              journey.useCustomBusinessName,
+              journey.businessNameAnswer,
+              journey.asaDetails.agencyName
+            )
         }
       phoneNumber <- getCustomAnswerOrAsaDetailsDefault(
         journey.useCustomPhoneNumber,

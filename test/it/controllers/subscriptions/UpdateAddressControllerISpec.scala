@@ -39,7 +39,12 @@ extends ComponentBaseISpec {
 
   private val repo = inject[SessionCacheRepository]
 
-  private val agentRegimes = List(CT, PAYE, SA, STT)
+  private val agentRegimes = List(
+    CT,
+    PAYE,
+    SA,
+    STT
+  )
 
   private val changeRouteCases = List(
     ("address-change", "Change your address"),

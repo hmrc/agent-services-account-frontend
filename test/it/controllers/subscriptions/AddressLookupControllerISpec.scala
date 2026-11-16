@@ -36,7 +36,12 @@ extends ComponentBaseISpec {
 
   private val repo = inject[SessionCacheRepository]
 
-  private val agentRegimes = List(CT, PAYE, SA, STT)
+  private val agentRegimes = List(
+    CT,
+    PAYE,
+    SA,
+    STT
+  )
 
   private val confirmedAddressResponse = ConfirmedResponseAddress(
     auditRef = "foo",

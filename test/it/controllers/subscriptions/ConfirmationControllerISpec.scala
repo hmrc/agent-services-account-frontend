@@ -31,6 +31,7 @@ extends ComponentBaseISpec {
 
   private val repo = inject[SessionCacheRepository]
 
+//  TODO: 12412 Add STT when implemented
   private val agentRegimes = List(CT, PAYE, SA)
 
   agentRegimes.foreach(agentRegime => {

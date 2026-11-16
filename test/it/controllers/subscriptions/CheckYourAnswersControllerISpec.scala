@@ -60,6 +60,7 @@ with ScalaFutures
 with IntegrationPatience
 with MockFactory {
 
+//  TODO: 12412 Add STT when implemented
   private val agentRegimes = List(CT, PAYE, SA)
 
   class TestSetup(agentRegime: AgentRegime) {

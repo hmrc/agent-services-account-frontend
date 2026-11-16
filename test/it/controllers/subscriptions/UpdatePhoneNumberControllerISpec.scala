@@ -65,7 +65,12 @@ with IntegrationPatience
 with MockFactory
 with TestConstants {
 
-  private val agentRegimes = List(CT, PAYE, SA, STT)
+  private val agentRegimes = List(
+    CT,
+    PAYE,
+    SA,
+    STT
+  )
 
   private def agencyDetails(agencyTelephone: Option[String]) = uk.gov.hmrc.agentservicesaccount.models.AgencyDetails(
     agencyName = Some("My Agency"),
