@@ -207,7 +207,7 @@ trait TestConstants {
   val payeSttSubscriptionFullJourney: SubscriptionJourney = ctSaSubscriptionFullJourney.copy(
     useCustomBusinessName = None,
     businessNameAnswer = None,
-    payeContactName = Some("My Name")
+    contactName = Some("My Name")
   )
 
   def subscriptionFullJourney(agentRegime: AgentRegime): SubscriptionJourney =

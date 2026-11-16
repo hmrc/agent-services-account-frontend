@@ -131,7 +131,7 @@ object SubscriptionCyaData {
     for {
       name <-
         agentRegime match {
-          case PAYE | STT => journey.payeContactName
+          case PAYE | STT => journey.contactName
           case CT | SA =>
             getCustomAnswerOrAsaDetailsDefault(
               journey.useCustomBusinessName,

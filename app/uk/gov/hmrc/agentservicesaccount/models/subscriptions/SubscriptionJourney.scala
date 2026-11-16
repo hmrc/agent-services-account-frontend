@@ -30,8 +30,7 @@ case class SubscriptionJourney(
   asaDetails: AgencyDetails,
   doYouAlreadyManage: Option[Boolean] = None,
   youMayNotNeedToApply: Option[Boolean] = None,
-//  TODO: 12614 Rename this
-  payeContactName: Option[String] = None,
+  contactName: Option[String] = None,
   useCustomBusinessName: Option[Boolean] = None,
   businessNameAnswer: Option[String] = None,
   useCustomPhoneNumber: Option[Boolean] = None,
@@ -57,7 +56,7 @@ case class SubscriptionJourney(
   def isComplete(agentRegime: AgentRegime): Boolean = {
     val nameComplete =
       agentRegime match {
-        case PAYE | STT => payeContactName.isDefined
+        case PAYE | STT => contactName.isDefined
         case CT | SA => answerComplete(useCustomBusinessName, businessNameAnswer)
       }
     val pnComplete = answerComplete(useCustomPhoneNumber, phoneNumberAnswer)

@@ -189,7 +189,7 @@ with TestConstants {
 
       "render pre-filled form when journey has existing answers" in new TestSetup(agentRegime) {
         private val journey = subscriptionBaseJourney.copy(
-          payeContactName = Some("My Name")
+          contactName = Some("My Name")
         )
 
         cacheJourney(journey)
@@ -242,7 +242,7 @@ with TestConstants {
 
             val updated: Option[SubscriptionJourney] = sessionCache.get[SubscriptionJourney](agentRegime.subscriptionJourneyKey).futureValue
             updated shouldBe defined
-            updated.value.payeContactName shouldBe Some("New Name")
+            updated.value.contactName shouldBe Some("New Name")
           }
       })
     }

@@ -60,7 +60,7 @@ with RequestAwareLogging {
 
         val initialForm = SubscriptionContactNameForm.form(agentRegime)
         val form =
-          journey.payeContactName match {
+          journey.contactName match {
             case Some(contactName) =>
               initialForm.fill(
                 ContactNameFormValues(contactName = contactName)
@@ -94,7 +94,7 @@ with RequestAwareLogging {
       },
       data => {
         val updatedJourney = journey.copy(
-          payeContactName = Some(data.contactName)
+          contactName = Some(data.contactName)
         )
 
         sessionCacheService
