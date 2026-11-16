@@ -42,8 +42,7 @@ extends ComponentBaseISpec {
   private val agentRegimes = List(
     CT,
     PAYE,
-    SA,
-    STT
+    SA
   )
 
   private val changeRouteCases = List(
@@ -87,6 +86,7 @@ extends ComponentBaseISpec {
             case CT => "What address should we use to send letters about Corporation Tax?"
             case PAYE => "What address should we use to send letters about PAYE?"
             case SA => "What address should we use to send letters about Self Assessment?"
+            case STT => "What address should we use to send letters about Securities Transfer Tax?"
           }
         assertPageHasTitle(expectedTitle)(result)
       }

@@ -46,8 +46,7 @@ extends ComponentBaseISpec {
   private val agentRegimes = List(
     CT,
     PAYE,
-    SA,
-    STT
+    SA
   )
 
   agentRegimes.foreach(agentRegime => {
@@ -108,6 +107,7 @@ extends ComponentBaseISpec {
             case CT => "What email address should we use to contact you about Corporation Tax?"
             case PAYE => "What email address should we use to contact you about PAYE?"
             case SA => "What email address should we use to contact you about Self Assessment?"
+            case STT => "What email address should we use to contact you about Securities Transfer Tax?"
           }
         assertPageHasTitle(expectedTitle)(result)
         val doc = Jsoup.parse(result.body)
