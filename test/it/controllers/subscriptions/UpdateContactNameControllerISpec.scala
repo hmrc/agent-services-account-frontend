@@ -162,7 +162,7 @@ with TestConstants {
   }
 
   agentRegimesRequiringBusinessName.foreach(agentRegime => {
-    s"GET /subscription/$agentRegime/business-name" should {
+    s"GET /subscription/$agentRegime/contact-name" should {
 
       s"redirect to /subscription/$agentRegime/business-name" in new TestSetup(agentRegime) {
         cacheJourney(subscriptionBaseJourney)
