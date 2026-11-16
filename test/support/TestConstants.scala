@@ -26,7 +26,7 @@ import uk.gov.hmrc.agentservicesaccount.models.desiDetails.SaChanges
 import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
 import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.{CT, PAYE, SA, STT}
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
 import uk.gov.hmrc.auth.core.retrieve.AgentInformation
@@ -198,7 +198,7 @@ trait TestConstants {
     addressAnswer = None
   )
 
-  val payeSubscriptionFullJourney: SubscriptionJourney = ctSaSubscriptionFullJourney.copy(
+  val payeSttSubscriptionFullJourney: SubscriptionJourney = ctSaSubscriptionFullJourney.copy(
     useCustomBusinessName = None,
     businessNameAnswer = None,
     payeContactName = Some("My Name")
@@ -206,9 +206,8 @@ trait TestConstants {
 
   def subscriptionFullJourney(agentRegime: AgentRegime): SubscriptionJourney =
     agentRegime match {
-//      TODO: 12614 Add for STT here
-      case PAYE => payeSubscriptionFullJourney
-      case _ => ctSaSubscriptionFullJourney
+      case CT | SA => ctSaSubscriptionFullJourney
+      case PAYE | STT => payeSttSubscriptionFullJourney
     }
 
   def completeString(

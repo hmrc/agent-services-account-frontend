@@ -214,7 +214,7 @@ with TestConstants {
 
       val journeyWithRedirectLocations = List(
         (subscriptionBaseJourney, "phone-number"),
-        (payeSubscriptionFullJourney, "check-your-answers")
+        (payeSttSubscriptionFullJourney, "check-your-answers")
       )
 
       journeyWithRedirectLocations.foreach(journeyWithRedirectLocation => {
