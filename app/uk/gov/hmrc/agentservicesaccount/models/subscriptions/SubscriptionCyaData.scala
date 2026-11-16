@@ -22,6 +22,7 @@ import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.CT
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.SA
 
+//TODO: 12614 Add for STT
 case class SubscriptionCyaData(
   name: String,
   phoneNumber: String,

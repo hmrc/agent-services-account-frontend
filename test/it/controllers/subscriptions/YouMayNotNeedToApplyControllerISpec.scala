@@ -162,7 +162,7 @@ with TestConstants {
   }
 
   agentRegimesNotRequiringYouMayNotNeedToApply.foreach(regimeWithRedirect => {
-    s"GET /subscription/${regimeWithRedirect.agentRegime}/do-you-already-manage" should {
+    s"GET /subscription/${regimeWithRedirect.agentRegime}/you-may-not-need-to-apply" should {
 
       s"redirect to /subscription/${regimeWithRedirect.agentRegime}/${regimeWithRedirect.redirectLocation}" in new TestSetup(regimeWithRedirect.agentRegime) {
         cacheJourney(subscriptionBaseJourney)
