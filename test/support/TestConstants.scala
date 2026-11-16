@@ -180,6 +180,8 @@ trait TestConstants {
     ))
   )
 
+  case class RegimeWithRedirectLocation(agentRegime: AgentRegime, redirectLocation: String)
+
   val subscriptionBaseJourney: SubscriptionJourney = SubscriptionJourney(
     asaDetails = subscriptionAgencyDetails
   )

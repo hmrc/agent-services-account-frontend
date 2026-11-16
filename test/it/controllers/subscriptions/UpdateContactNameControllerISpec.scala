@@ -159,7 +159,7 @@ with TestConstants {
   agentRegimesRequiringBusinessName.foreach(agentRegime => {
     s"GET /subscription/$agentRegime/business-name" should {
 
-      s"redirect to /subscription/$agentRegime/contact-name" in new TestSetup(agentRegime) {
+      s"redirect to /subscription/$agentRegime/business-name" in new TestSetup(agentRegime) {
         cacheJourney(subscriptionBaseJourney)
 
         private val result = controller.showPage(agentRegime)(FakeRequest()).futureValue

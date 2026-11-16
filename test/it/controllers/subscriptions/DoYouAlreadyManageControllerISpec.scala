@@ -30,18 +30,16 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.mvc.RequestHeader
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import support.BaseISpec
 import support.TestConstants
 import support.UnitSpec
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.DoYouAlreadyManageController
-import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.{routes => subscriptionRoutes}
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.routes as subscriptionRoutes
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.DoYouAlreadyManageForm.doYouAlreadyManageKey
 import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.CT
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.SA
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.{CT, PAYE, SA, STT}
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
@@ -64,8 +62,8 @@ with IntegrationPatience
 with MockFactory
 with TestConstants {
 
-//  TODO: 12614 Add tests for STT guard
   private val agentRegimes = List(CT, SA, PAYE)
+  private val agentRegimesNotRequiringDoYouAlreadyManage = List(RegimeWithRedirectLocation(STT, "contact-name"))
 
   class TestSetup(agentRegime: AgentRegime) {
 
@@ -159,6 +157,20 @@ with TestConstants {
     }
 
   }
+
+  agentRegimesNotRequiringDoYouAlreadyManage.foreach(regimeWithRedirect => {
+    s"GET /subscription/${regimeWithRedirect.agentRegime}/do-you-already-manage" should {
+
+      s"redirect to /subscription/${regimeWithRedirect.agentRegime}/${regimeWithRedirect.redirectLocation}" in new TestSetup(regimeWithRedirect.agentRegime) {
+        cacheJourney(subscriptionBaseJourney)
+
+        private val result = controller.showPage(regimeWithRedirect.agentRegime)(FakeRequest()).futureValue
+
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result) should contain(s"/subscription/${regimeWithRedirect.agentRegime}/${regimeWithRedirect.redirectLocation}")
+      }
+    }
+  })
 
   agentRegimes.foreach { regime =>
     s"GET /subscription/$regime/do-you-already-manage" should {
