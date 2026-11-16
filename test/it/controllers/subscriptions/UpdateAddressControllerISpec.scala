@@ -39,11 +39,8 @@ extends ComponentBaseISpec {
 
   private val repo = inject[SessionCacheRepository]
 
-  private val agentRegimes = List(
-    CT,
-    PAYE,
-    SA
-  )
+//  TODO: 12412 Add STT when implemented
+  private val agentRegimes = List(CT, PAYE, SA)
 
   private val changeRouteCases = List(
     ("address-change", "Change your address"),

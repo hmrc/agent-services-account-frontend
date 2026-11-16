@@ -43,11 +43,8 @@ extends ComponentBaseISpec {
 
   private val repo = inject[SessionCacheRepository]
 
-  private val agentRegimes = List(
-    CT,
-    PAYE,
-    SA
-  )
+//  TODO: 12412 Add STT when implemented
+  private val agentRegimes = List(CT, PAYE, SA)
 
   agentRegimes.foreach(agentRegime => {
     val updateEmailAddressPath = s"$subscriptionStartPath/$agentRegime/email-address"
