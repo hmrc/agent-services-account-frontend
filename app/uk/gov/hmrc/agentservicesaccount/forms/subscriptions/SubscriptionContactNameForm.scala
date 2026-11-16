@@ -21,21 +21,20 @@ import play.api.data.Form
 import play.api.data.Mapping
 import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators.trimmedAndNormalisedText
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.{PAYE, STT}
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.ContactNameFormValues
 
 object SubscriptionContactNameForm {
 
   val contactNameKey = "contactName"
-
-//  TODO: 12614 Check whether STT and PAYE have some contactNameRegex - is 40 for STT rather than 56
-  private[subscriptions] val PAYE_CONTACT_NAME_MAX_LENGTH = 56
-  private[subscriptions] val STT_CONTACT_NAME_MAX_LENGTH = 40
   
-  private val contactNameRegex = """^[A-Za-z0-9 .,()@!-]{1,56}$""".r
+  private def contactNameRegex(agentRegime: AgentRegime) = agentRegime match
+    case PAYE => """^[A-Za-z0-9 .,()@!-]{1,56}$""".r
+    case STT => """^[A-Za-z0-9 .,()@!-]{1,40}$""".r
 
   private def contactNameMapping(agentRegime: AgentRegime): Mapping[String] = trimmedAndNormalisedText
     .verifying(s"${agentRegime.msgPrefix}.contact-name.input.error.empty", _.nonEmpty)
-    .verifying(s"${agentRegime.msgPrefix}.contact-name.input.error.invalid", x => x.isEmpty || contactNameRegex.matches(x))
+    .verifying(s"${agentRegime.msgPrefix}.contact-name.input.error.invalid", x => x.isEmpty || contactNameRegex(agentRegime).matches(x))
 
   def form(agentRegime: AgentRegime): Form[ContactNameFormValues] = {
     Form(
