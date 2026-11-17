@@ -137,9 +137,9 @@ extends ComponentBaseISpec {
       }
     }
 
-    changeRouteCases.foreach { case (routeSuffix, messageKey) =>
+    changeRouteCases.foreach { case (routeSuffix, titleKey) =>
       val changeAddressPath = s"$subscriptionStartPath/$agentRegime/$routeSuffix"
-      val expectedTitle = messages(s"${agentRegime.msgPrefix}.$messageKey")
+      val expectedTitle = messages(s"${agentRegime.msgPrefix}.$titleKey")
 
       s"GET $changeAddressPath" should {
         s"display the change address page with title '$expectedTitle'" in {
