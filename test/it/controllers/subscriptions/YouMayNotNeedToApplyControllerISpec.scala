@@ -184,8 +184,9 @@ with TestConstants {
         val result = controller.showPage(regime)(fakeRequest).futureValue
 
         status(result) shouldBe OK
-//        TODO: 12614 Test with messages
-        contentAsString(result) should include("You may not need to apply")
+        private val content = contentAsString(result)
+        content should include(messages(s"${regime.msgPrefix}.you-may-not-need-to-apply.title"))
+        content should include(messages(s"${regime.msgPrefix}.you-may-not-need-to-apply.p2"))
       }
 
       "render pre-filled form when journey has value" in new TestSetup(regime) {
@@ -198,7 +199,10 @@ with TestConstants {
         val result = controller.showPage(regime)(fakeRequest).futureValue
 
         status(result) shouldBe OK
-        contentAsString(result) should include("""value="true"""")
+        private val content = contentAsString(result)
+        content should include(messages(s"${regime.msgPrefix}.you-may-not-need-to-apply.title"))
+        content should include(messages(s"${regime.msgPrefix}.you-may-not-need-to-apply.p2"))
+        content should include("""value="true"""")
       }
     }
   }

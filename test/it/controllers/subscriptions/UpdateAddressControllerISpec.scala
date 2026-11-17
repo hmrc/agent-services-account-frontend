@@ -27,11 +27,9 @@ import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.ChangeSubscriptionAd
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.ChangeSubscriptionAddressForm.postcodeKey
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionAddressForm.addressUseAsaDataKey
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.CT
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.SA
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.STT
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
 
 class UpdateAddressControllerISpec
@@ -42,10 +40,9 @@ extends ComponentBaseISpec {
 //  TODO: 12412 Add STT when implemented
   private val agentRegimes = List(CT, PAYE, SA)
 
-//  TODO: 12614 Use msgs here
   private val changeRouteCases = List(
-    ("address-change", "Change your address"),
-    ("address-fix", "Change the address lines that are too long")
+    ("address-change", "change-address.title"),
+    ("address-fix", "change-address.title.invalid")
   )
 
   private val changedAddress = BusinessAddress(
@@ -79,17 +76,8 @@ extends ComponentBaseISpec {
         val result = get(updateAddressPath)
 
         result.status shouldBe OK
-        val expectedTitle: String =
-          (agentRegime: AgentRegime) match {
-//            TODO: 12614 Use msgs here
-            case CT => "What address should we use to send letters about Corporation Tax?"
-            case PAYE => "What address should we use to send letters about PAYE?"
-            case SA => "What address should we use to send letters about Self Assessment?"
-            case STT => "What address should we use to send letters about Securities Transfer Tax?"
-          }
-//        val title = messages(s"${agentRegime.msgPrefix}.phone-number.title")
+        val expectedTitle = messages(s"${agentRegime.msgPrefix}.address.title")
         assertPageHasTitle(expectedTitle)(result)
-
       }
     }
 
@@ -149,8 +137,9 @@ extends ComponentBaseISpec {
       }
     }
 
-    changeRouteCases.foreach { case (routeSuffix, expectedTitle) =>
+    changeRouteCases.foreach { case (routeSuffix, messageKey) =>
       val changeAddressPath = s"$subscriptionStartPath/$agentRegime/$routeSuffix"
+      val expectedTitle = messages(s"${agentRegime.msgPrefix}.$messageKey")
 
       s"GET $changeAddressPath" should {
         s"display the change address page with title '$expectedTitle'" in {

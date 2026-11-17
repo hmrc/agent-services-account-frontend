@@ -185,8 +185,9 @@ with TestConstants {
         private val result = controller.showPage(agentRegime)(FakeRequest()).futureValue
 
         status(result) shouldBe OK
-//        TODO: 12614 Test with messages
-        contentAsString(result) should include("Test Agency")
+        private val content = contentAsString(result)
+        content should include("Test Agency")
+        content should include(messages(s"${agentRegime.msgPrefix}.business-name.title"))
       }
 
       "render pre-filled form when journey has existing answers" in new TestSetup(agentRegime) {
@@ -201,8 +202,9 @@ with TestConstants {
 
         status(result) shouldBe OK
         private val content = contentAsString(result)
-
+        content should include(messages(s"${agentRegime.msgPrefix}.business-name.title"))
         content should include("""value="true"""")
+        content should include(messages(s"${agentRegime.msgPrefix}.business-name.new-input.label"))
         content should include(businessNameNewKey)
       }
     }

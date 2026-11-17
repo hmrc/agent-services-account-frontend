@@ -161,26 +161,27 @@ with MockFactory {
 
         status(result) shouldBe OK
 
-        val body = contentAsString(result)
-//TODO: 12614 Test with messages
+        val content = contentAsString(result)
+        content should include(messages(s"${agentRegime.msgPrefix}.check-your-answers.h1"))
         if (List(PAYE, STT).contains(agentRegime)) {
-          body should include("Contact name")
-          body should include("My Name")
-          body should not include ("Business name")
-          body should not include ("Agency name")
+          content should include(messages(s"${agentRegime.msgPrefix}.check-your-answers.contact-name"))
+          content should include("My Name")
+          content should not include (messages(s"${agentRegime.msgPrefix}.check-your-answers.business-name"))
+          content should not include ("Agency name")
         }
         else {
-          body should include("Business name")
-          body should include("Agency Name")
-          body should not include ("Contact name")
-          body should not include ("My Name")
+          content should include(messages(s"${agentRegime.msgPrefix}.check-your-answers.business-name"))
+          content should include("Agency Name")
+          content should not include (messages(s"${agentRegime.msgPrefix}.check-your-answers.contact-name"))
+          content should not include ("My Name")
         }
-        body should include("Telephone number")
-        body should include("01237654321")
-        body should include("Email address")
-        body should include("joe@bloggs.com")
-        body should include("Address")
-        body should include("25 Any Street")
+        content should include(messages(s"${agentRegime.msgPrefix}.check-your-answers.phone-number"))
+        content should include("01237654321")
+        content should include(messages(s"${agentRegime.msgPrefix}.check-your-answers.email"))
+        content should include("joe@bloggs.com")
+        content should include(messages(s"${agentRegime.msgPrefix}.check-your-answers.address"))
+        content should include("25 Any Street")
+        content should include(messages(s"${agentRegime.msgPrefix}.check-your-answers.submit-button"))
       }
 
       "redirect to homepage when journey data missing" in new TestSetup(agentRegime) {

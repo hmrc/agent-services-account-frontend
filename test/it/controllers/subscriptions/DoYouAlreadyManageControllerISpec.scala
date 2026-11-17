@@ -184,7 +184,7 @@ with TestConstants {
         val result = controller.showPage(regime)(fakeRequest).futureValue
 
         status(result) shouldBe OK
-//        TODO: 12614 Test with messages
+        contentAsString(result) should include(messages(s"${regime.msgPrefix}.do-you-already-manage.title"))
       }
 
       "render pre-filled form when journey has value" in new TestSetup(regime) {
@@ -197,6 +197,7 @@ with TestConstants {
         val result = controller.showPage(regime)(fakeRequest).futureValue
 
         status(result) shouldBe OK
+        contentAsString(result) should include(messages(s"${regime.msgPrefix}.do-you-already-manage.title"))
         contentAsString(result) should include("""value="true"""")
       }
     }
