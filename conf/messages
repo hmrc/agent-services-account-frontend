@@ -497,6 +497,7 @@ asa.agent-regime.stt.contact-name.title=Who should we contact about Securities T
 asa.agent-regime.stt.contact-name.input.heading=Who at {0} should we contact about Securities Transfer Tax?
 asa.agent-regime.stt.contact-name.input.hint=Enter their full name
 asa.agent-regime.stt.contact-name.input.error.empty=Enter the full name of the person we should contact about Securities Transfer Tax
+asa.agent-regime.stt.contact-name.input.error.length=TODO
 asa.agent-regime.stt.contact-name.input.error.invalid=The name of the person can only contain letters and hyphens
 
 # Custom UR banner

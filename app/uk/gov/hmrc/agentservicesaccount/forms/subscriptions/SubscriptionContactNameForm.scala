@@ -37,9 +37,21 @@ object SubscriptionContactNameForm {
       case PAYE => s"^[A-Za-z0-9 .,()@!-]{1,$PAYE_CONTACT_NAME_MAX_LENGTH}$$".r
       case STT => s"^[A-Za-z0-9 .,()@!-]{1,$STT_CONTACT_NAME_MAX_LENGTH}$$".r
 
-  private def contactNameMapping(agentRegime: AgentRegime): Mapping[String] = trimmedAndNormalisedText
-    .verifying(s"${agentRegime.msgPrefix}.contact-name.input.error.empty", _.nonEmpty)
-    .verifying(s"${agentRegime.msgPrefix}.contact-name.input.error.invalid", x => x.isEmpty || contactNameRegex(agentRegime).matches(x))
+  private def contactNameMapping(agentRegime: AgentRegime): Mapping[String] =
+    agentRegime match
+      case PAYE =>
+        trimmedAndNormalisedText
+          .verifying(s"${agentRegime.msgPrefix}.contact-name.input.error.empty", _.nonEmpty)
+          .verifying(s"${agentRegime.msgPrefix}.contact-name.input.error.invalid", x => x.isEmpty || contactNameRegex(agentRegime).matches(x))
+      case STT =>
+        val maxLength = STT_CONTACT_NAME_MAX_LENGTH
+        trimmedAndNormalisedText
+          .verifying(s"${agentRegime.msgPrefix}.contact-name.input.error.empty", _.nonEmpty)
+          .verifying(s"${agentRegime.msgPrefix}.contact-name.input.error.length", _.length <= maxLength)
+          .verifying(
+            s"${agentRegime.msgPrefix}.contact-name.input.error.invalid",
+            x => x.isEmpty || x.length > maxLength || contactNameRegex(agentRegime).matches(x)
+          )
 
   def form(agentRegime: AgentRegime): Form[ContactNameFormValues] = {
     Form(
