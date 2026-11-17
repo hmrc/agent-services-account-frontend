@@ -168,7 +168,7 @@ with TestConstants {
       s"redirect to /subscription/$agentRegime/contact-name" in new TestSetup(agentRegime) {
         cacheJourney(subscriptionBaseJourney)
 
-        private val result = controller.showPage(agentRegime)(FakeRequest()).futureValue
+        private val result = controller.showPage(agentRegime)(fakeRequest).futureValue
 
         status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(subscriptionRoutes.UpdateContactNameController.showPage(agentRegime).url)
@@ -182,12 +182,12 @@ with TestConstants {
       "render empty form on first visit" in new TestSetup(agentRegime) {
         cacheJourney(subscriptionBaseJourney)
 
-        private val result = controller.showPage(agentRegime)(FakeRequest()).futureValue
+        private val result = controller.showPage(agentRegime)(fakeRequest).futureValue
 
         status(result) shouldBe OK
         private val content = contentAsString(result)
-        content should include("Test Agency")
         content should include(messages(s"${agentRegime.msgPrefix}.business-name.title"))
+        content should include(subscriptionAgencyDetails.agencyName.getOrElse(""))
       }
 
       "render pre-filled form when journey has existing answers" in new TestSetup(agentRegime) {
@@ -198,7 +198,7 @@ with TestConstants {
 
         cacheJourney(journey)
 
-        private val result = controller.showPage(agentRegime)(FakeRequest()).futureValue
+        private val result = controller.showPage(agentRegime)(fakeRequest).futureValue
 
         status(result) shouldBe OK
         private val content = contentAsString(result)
@@ -206,6 +206,7 @@ with TestConstants {
         content should include("""value="true"""")
         content should include(messages(s"${agentRegime.msgPrefix}.business-name.new-input.label"))
         content should include(businessNameNewKey)
+        content should include("Custom Name Ltd")
       }
     }
 

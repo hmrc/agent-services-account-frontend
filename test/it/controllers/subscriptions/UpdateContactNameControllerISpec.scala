@@ -181,11 +181,11 @@ with TestConstants {
       "render empty form on first visit" in new TestSetup(agentRegime) {
         cacheJourney(subscriptionBaseJourney)
 
-        private val result = controller.showPage(agentRegime)(FakeRequest()).futureValue
+        private val result = controller.showPage(agentRegime)(fakeRequest).futureValue
 
         status(result) shouldBe OK
         private val content = contentAsString(result)
-        content should include(messages(s"${agentRegime.msgPrefix}.contact-name.input.heading", "Test Agency"))
+        content should include(messages(s"${agentRegime.msgPrefix}.contact-name.input.heading", subscriptionAgencyDetails.agencyName.getOrElse("")))
         content should include(messages(s"${agentRegime.msgPrefix}.contact-name.input.hint"))
       }
 
@@ -196,11 +196,11 @@ with TestConstants {
 
         cacheJourney(journey)
 
-        private val result = controller.showPage(agentRegime)(FakeRequest()).futureValue
+        private val result = controller.showPage(agentRegime)(fakeRequest).futureValue
 
         status(result) shouldBe OK
         private val content = contentAsString(result)
-        content should include(messages(s"${agentRegime.msgPrefix}.contact-name.input.heading", "Test Agency"))
+        content should include(messages(s"${agentRegime.msgPrefix}.contact-name.input.heading", subscriptionAgencyDetails.agencyName.getOrElse("")))
         content should include(messages(s"${agentRegime.msgPrefix}.contact-name.input.hint"))
         content should include(contactNameKey)
       }
