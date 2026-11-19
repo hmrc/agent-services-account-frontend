@@ -497,7 +497,7 @@ asa.agent-regime.stt.contact-name.title=Pwy ddylem gysylltu â nhw ynglŷn â Tr
 asa.agent-regime.stt.contact-name.input.heading=Pwy yn {0} ddylem gysylltu â nhw ynglŷn â Treth ar Drosglwyddo Gwarantau?
 asa.agent-regime.stt.contact-name.input.hint=Nodwch ei enw llawn
 asa.agent-regime.stt.contact-name.input.error.empty=Nodwch enw llawn y person y dylem gysylltu ag ef ynglŷn â Treth ar Drosglwyddo Gwarantau
-asa.agent-regime.stt.contact-name.input.error.length=TODO
+asa.agent-regime.stt.contact-name.input.error.length=Mae’n rhaid i’r enw llawn fod yn 40 o gymeriadau neu lai
 asa.agent-regime.stt.contact-name.input.error.invalid=Gall enw’r person gynnwys llythrennau a cysylltnodau yn unig
 
 # Custom UR banner
