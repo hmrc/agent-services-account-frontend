@@ -34,6 +34,7 @@ import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.CT
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.SA
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.STT
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionCyaData.subscriptionJourneyToCyaData
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.utils.CountryResolver
@@ -137,19 +138,18 @@ with RequestAwareLogging {
     agencyDetailsEmailLength: Option[Int],
     useCustomAddress: Option[Boolean]
   ): Seq[SummaryListData] = {
+    val usesContactName = List(PAYE, STT).contains(agentRegime)
     val nameRowKeyDescriptor =
-      if (agentRegime == PAYE)
+      if (usesContactName)
         "contact"
       else
         "business"
     val nameRowKey = s"${agentRegime.msgPrefix}.check-your-answers.$nameRowKeyDescriptor-name"
     val nameRowLink =
-      if (agentRegime == PAYE) {
-        Some(subscriptionRoutes.PayeUpdateContactNameController.showPage)
-      }
-      else {
+      if (usesContactName)
+        Some(subscriptionRoutes.UpdateContactNameController.showPage(agentRegime))
+      else
         Some(subscriptionRoutes.UpdateBusinessNameController.showPage(agentRegime))
-      }
     val emailAddressLink =
       (agentRegime, agencyDetailsEmailLength) match {
         case (CT | SA, Some(length)) if length > CT_SA_EMAIL_MAX_LENGTH => Some(subscriptionRoutes.UpdateEmailAddressController.showSaCtCustomPage(agentRegime))

@@ -16,8 +16,9 @@
 
 @import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 @import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
-@import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.PayeSubscriptionContactNameForm.contactNameKey
-@import uk.gov.hmrc.agentservicesaccount.models.subscriptions.PayeContactNameFormValues
+@import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionContactNameForm.contactNameKey
+@import uk.gov.hmrc.agentservicesaccount.models.subscriptions.ContactNameFormValues
+@import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 @import uk.gov.hmrc.agentservicesaccount.views.html.main
 @import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
 @import uk.gov.hmrc.govukfrontend.views.html.components._
@@ -31,10 +32,12 @@
     govukErrorSummary: GovukErrorSummary
 )
 
-@(form: Form[PayeContactNameFormValues], asaDetailsAgencyName: String)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
+@(form: Form[ContactNameFormValues], asaDetailsAgencyName: String, agentRegime: AgentRegime)(implicit msgs: Messages, request: RequestHeader, appConfig: AppConfig)
+
+@agentRegimePrefix = @{ agentRegime.msgPrefix }
 
 @main(
-    pageTitle = withErrorPrefix(form.hasErrors, msgs("asa.agent-regime.paye.contact-name.title")),
+    pageTitle = withErrorPrefix(form.hasErrors, msgs(s"$agentRegimePrefix.contact-name.title")),
     mimicBrowserBackLink = true,
     showSecondaryNav = false
 ) {
@@ -43,14 +46,14 @@
         @govukErrorSummary(ErrorSummary().withFormErrorsAsText(form))
     }
 
-    @formWithCSRF(action = subscriptions.routes.PayeUpdateContactNameController.onSubmit) {
+    @formWithCSRF(action = subscriptions.routes.UpdateContactNameController.onSubmit(agentRegime)) {
         @govukInput(Input(
             label = Label(
                 classes = "govuk-label--l",
-                content = HtmlContent(msgs("asa.agent-regime.paye.contact-name.input.heading", asaDetailsAgencyName)),
+                content = HtmlContent(msgs(s"$agentRegimePrefix.contact-name.input.heading", asaDetailsAgencyName)),
                 isPageHeading = true
             ),
-            hint = Some(Hint(content = Text(msgs("asa.agent-regime.paye.contact-name.input.hint"))))
+            hint = Some(Hint(content = Text(msgs(s"$agentRegimePrefix.contact-name.input.hint"))))
         ).withFormField(form(contactNameKey)))
 
         @govukButton(Button(content = Text(msgs("common.continue"))))

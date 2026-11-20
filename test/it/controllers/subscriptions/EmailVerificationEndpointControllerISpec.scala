@@ -29,6 +29,7 @@ import uk.gov.hmrc.agentservicesaccount.models.emailverification.VerificationSta
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.CT
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.SA
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.STT
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
 
 class EmailVerificationEndpointControllerISpec
@@ -36,7 +37,12 @@ extends ComponentBaseISpec {
 
   private val repo = inject[SessionCacheRepository]
 
-  private val agentRegimes = List(CT, PAYE, SA)
+  private val agentRegimes = List(
+    CT,
+    PAYE,
+    SA,
+    STT
+  )
 
   agentRegimes.foreach(agentRegime => {
     val finishEmailVerificationPath = s"$subscriptionStartPath/$agentRegime/email-verification-finish"

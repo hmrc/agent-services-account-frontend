@@ -32,7 +32,7 @@ object NextPageSelector {
   val rootPage = "home"
   val doYouAlreadyManagePage = "doYouAlreadyManage"
   val youMayNotNeedToApplyPage = "youMayNotNeedToApply"
-  val payeUpdateContactNamePage = "payeContactName"
+  val updateContactNamePage = "contactName"
   val updateBusinessNamePage = "businessName"
   val updatePhoneNumberPage = "phoneNumber"
   val updateEmailAddressPage = "emailAddress"
@@ -51,25 +51,24 @@ object NextPageSelector {
     case (_, Some(journey), regime) if journey.isComplete(regime) => subscriptions.routes.CheckYourAnswersController.showPage(regime)
     case (`rootPage`, _, regime) =>
       regime match {
-//        TODO: 12614 After modifying PayeUpdateContactNameController to be non PAYE-specific, modify this route accordingly
-        case STT => subscriptions.routes.PayeUpdateContactNameController.showPage
+        case STT => subscriptions.routes.UpdateContactNameController.showPage(STT)
         case _ => subscriptions.routes.DoYouAlreadyManageController.showPage(regime)
       }
     case (`doYouAlreadyManagePage`, Some(journey), regime) =>
       (journey.doYouAlreadyManage, regime) match {
         case (Some(true), _) => subscriptions.routes.YouMayNotNeedToApplyController.showPage(regime)
-        case (Some(false), PAYE) => subscriptions.routes.PayeUpdateContactNameController.showPage
+        case (Some(false), PAYE) => subscriptions.routes.UpdateContactNameController.showPage(PAYE)
         case (Some(false), _) => subscriptions.routes.UpdateBusinessNameController.showPage(regime)
         case _ => subscriptions.routes.DoYouAlreadyManageController.showPage(regime)
       }
     case (`youMayNotNeedToApplyPage`, Some(journey), regime) =>
       (journey.youMayNotNeedToApply, regime) match {
-        case (Some(true), PAYE) => subscriptions.routes.PayeUpdateContactNameController.showPage
+        case (Some(true), PAYE) => subscriptions.routes.UpdateContactNameController.showPage(PAYE)
         case (Some(true), regime) => subscriptions.routes.UpdateBusinessNameController.showPage(regime)
         case (Some(false), _) => homeRoutes.AgentServicesController.root()
         case _ => subscriptions.routes.YouMayNotNeedToApplyController.showPage(regime)
       }
-    case (`payeUpdateContactNamePage`, _, PAYE) => subscriptions.routes.UpdatePhoneNumberController.showPage(PAYE)
+    case (`updateContactNamePage`, _, regime) => subscriptions.routes.UpdatePhoneNumberController.showPage(regime)
     case (`updateBusinessNamePage`, _, regime) => subscriptions.routes.UpdatePhoneNumberController.showPage(regime)
     case (`updatePhoneNumberPage`, _, regime) => subscriptions.routes.UpdateEmailAddressController.showPage(regime)
     case (`updateEmailAddressPage`, Some(journey), regime) =>

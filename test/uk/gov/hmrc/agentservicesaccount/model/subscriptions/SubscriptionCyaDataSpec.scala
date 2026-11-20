@@ -291,7 +291,7 @@ with OptionValues {
       result.get.agentName shouldBe asaAgencyName
     }
 
-    "use payeContactName as contactName" in {
+    "use contactName as contactName" in {
       val result = exampleGBCyaData.toSubscriptionRequest(
         PAYE,
         false,
@@ -377,7 +377,7 @@ with OptionValues {
           agencyTelephone = Some("999999"),
           agencyAddress = Some(address)
         ),
-        payeContactName = Some("Your Name"),
+        contactName = Some("Your Name"),
         useCustomPhoneNumber = Some(true),
         phoneNumberAnswer = Some("123456"),
         useCustomEmail = Some(true),
@@ -408,7 +408,7 @@ with OptionValues {
           agencyTelephone = Some("999999"),
           agencyAddress = Some(address)
         ),
-        payeContactName = Some("Your Name"),
+        contactName = Some("Your Name"),
         useCustomPhoneNumber = Some(false),
         phoneNumberAnswer = None,
         useCustomEmail = Some(false),
@@ -437,7 +437,7 @@ with OptionValues {
           None,
           None
         ),
-        payeContactName = Some("Paye Contact"),
+        contactName = Some("Paye Contact"),
         useCustomPhoneNumber = Some(true),
         phoneNumberAnswer = None,
         useCustomEmail = Some(true),
@@ -459,7 +459,7 @@ with OptionValues {
           None,
           None
         ),
-        payeContactName = Some("Paye Contact"),
+        contactName = Some("Paye Contact"),
         useCustomPhoneNumber = None,
         phoneNumberAnswer = None,
         useCustomEmail = None,

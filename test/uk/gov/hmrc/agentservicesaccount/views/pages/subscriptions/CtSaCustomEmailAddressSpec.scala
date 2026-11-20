@@ -34,7 +34,7 @@ extends ViewBaseSpec {
   private val view: ctsa_custom_email_address = inject[ctsa_custom_email_address]
   private val asaDetailsAgencyEmail = "joe@bloggs.com"
 
-  private val agentRegime = AgentRegime.PAYE
+  private val agentRegime = AgentRegime.CT
 
   private val agentRegimePrefix = agentRegime.msgPrefix
 

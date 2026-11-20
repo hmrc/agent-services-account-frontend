@@ -33,6 +33,7 @@ import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.CT
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.SA
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.STT
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
 
 import scala.util.Random
@@ -42,6 +43,7 @@ extends ComponentBaseISpec {
 
   private val repo = inject[SessionCacheRepository]
 
+//  TODO: 12412 Add STT when implemented
   private val agentRegimes = List(CT, PAYE, SA)
 
   agentRegimes.foreach(agentRegime => {
@@ -62,22 +64,12 @@ extends ComponentBaseISpec {
         val result = get(updateEmailAddressPath)
 
         result.status shouldBe OK
-        val expectedTitle: String =
-          (agentRegime: AgentRegime) match {
-            case CT => "What email address should we use to contact you about Corporation Tax?"
-            case PAYE => "What email address should we use to contact you about PAYE?"
-            case SA => "What email address should we use to contact you about Self Assessment?"
-          }
+        val expectedTitle = messages(s"${agentRegime.msgPrefix}.email-address.title")
         assertPageHasTitle(expectedTitle)(result)
         val doc = Jsoup.parse(result.body)
         doc.select(".govuk-radios__item").size() shouldBe 2
         doc.select(".govuk-radios__item").get(0).text() shouldBe asaAgencyEmail
-        val expectedFalseText: String =
-          (agentRegime: AgentRegime) match {
-            case CT => "I want to use a different email address for Corporation Tax"
-            case PAYE => "I want to use a different email address for PAYE"
-            case SA => "I want to use a different email address for Self Assessment"
-          }
+        val expectedFalseText = messages(s"${agentRegime.msgPrefix}.email-address.use-asa.false")
         doc.select(".govuk-radios__item").get(1).text() shouldBe expectedFalseText
         val conditional = doc.select(".govuk-radios__conditional").first()
         conditional.hasClass("govuk-radios__conditional--hidden") shouldBe true
@@ -97,12 +89,7 @@ extends ComponentBaseISpec {
         val result = get(updateEmailAddressPath)
 
         result.status shouldBe OK
-        val expectedTitle: String =
-          (agentRegime: AgentRegime) match {
-            case CT => "What email address should we use to contact you about Corporation Tax?"
-            case PAYE => "What email address should we use to contact you about PAYE?"
-            case SA => "What email address should we use to contact you about Self Assessment?"
-          }
+        val expectedTitle = messages(s"${agentRegime.msgPrefix}.email-address.title")
         assertPageHasTitle(expectedTitle)(result)
         val doc = Jsoup.parse(result.body)
         doc.select(".govuk-radios__item").size() shouldBe 0

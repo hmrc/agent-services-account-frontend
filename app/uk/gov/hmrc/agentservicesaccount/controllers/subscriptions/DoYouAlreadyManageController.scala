@@ -25,6 +25,7 @@ import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageS
 import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.DoYouAlreadyManageForm
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.DoYouAlreadyManageFormValues
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.STT
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.do_you_already_manage
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -47,20 +48,24 @@ extends FrontendController(cc)
 with I18nSupport {
 
   def showPage(agentRegime: AgentRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(agentRegime).async { implicit request =>
-    val journey = request.subscriptionJourney
-    val asaDetailsAgencyName = journey.asaDetails.agencyName.getOrElse("")
+    agentRegime match {
+      case STT => Future.successful(Redirect(routes.UpdateContactNameController.showPage(agentRegime)))
+      case _ =>
+        val journey = request.subscriptionJourney
+        val asaDetailsAgencyName = journey.asaDetails.agencyName.getOrElse("")
 
-    val form =
-      journey.doYouAlreadyManage match {
-        case Some(value) => DoYouAlreadyManageForm.form(agentRegime, asaDetailsAgencyName).fill(DoYouAlreadyManageFormValues(value))
-        case None => DoYouAlreadyManageForm.form(agentRegime, asaDetailsAgencyName)
-      }
+        val form =
+          journey.doYouAlreadyManage match {
+            case Some(value) => DoYouAlreadyManageForm.form(agentRegime, asaDetailsAgencyName).fill(DoYouAlreadyManageFormValues(value))
+            case None => DoYouAlreadyManageForm.form(agentRegime, asaDetailsAgencyName)
+          }
 
-    Future.successful(Ok(do_you_already_manage(
-      form,
-      agentRegime,
-      asaDetailsAgencyName
-    )))
+        Future.successful(Ok(do_you_already_manage(
+          form,
+          agentRegime,
+          asaDetailsAgencyName
+        )))
+    }
   }
 
   def onSubmit(agentRegime: AgentRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(agentRegime).async { implicit request =>

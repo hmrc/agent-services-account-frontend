@@ -21,6 +21,7 @@ import uk.gov.hmrc.agentservicesaccount.models.PostCode
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.CT
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.SA
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.STT
 
 case class SubscriptionCyaData(
   name: String,
@@ -65,20 +66,6 @@ case class SubscriptionCyaData(
     )
   }
 
-  private def toPayeSubscriptionRequest(
-    asaAgentName: String,
-    isWelsh: Boolean
-  ): PayeSubscriptionRequest = {
-    PayeSubscriptionRequest(
-      agentName = asaAgentName,
-      contactName = name,
-      phoneNumber = Some(subscriptionRequestPhoneNumber),
-      emailAddress = Some(email),
-      address = toSubscriptionAddress(address),
-      isWelsh = isWelsh
-    )
-  }
-
   private def toSaSubscriptionRequest(
     countryName: String,
     isWelsh: Boolean
@@ -94,6 +81,28 @@ case class SubscriptionCyaData(
     )
   }
 
+  private def toPayeSubscriptionRequest(
+    asaAgentName: String,
+    isWelsh: Boolean
+  ): PayeSubscriptionRequest = {
+    PayeSubscriptionRequest(
+      agentName = asaAgentName,
+      contactName = name,
+      phoneNumber = Some(subscriptionRequestPhoneNumber),
+      emailAddress = Some(email),
+      address = toSubscriptionAddress(address),
+      isWelsh = isWelsh
+    )
+  }
+
+  // TODO: 12412 Implement correctly for STT
+  private def toSttSubscriptionRequest(
+    asaAgentName: String,
+    isWelsh: Boolean
+  ): PayeSubscriptionRequest = {
+    toPayeSubscriptionRequest(asaAgentName, isWelsh)
+  }
+
   def toSubscriptionRequest(
     agentRegime: AgentRegime,
     isWelsh: Boolean,
@@ -102,6 +111,7 @@ case class SubscriptionCyaData(
   ): Option[SubscriptionRequest] = {
     (agentRegime, address.countryCode != "GB", countryNameOpt, asaAgentNameOpt) match {
       case (PAYE, false, None, Some(asaAgentName)) => Some(toPayeSubscriptionRequest(asaAgentName, isWelsh))
+      case (STT, false, None, Some(asaAgentName)) => Some(toSttSubscriptionRequest(asaAgentName, isWelsh))
       case (CT, _, Some(countryName), None) => Some(toCtSubscriptionRequest(countryName, isWelsh))
       case (SA, _, Some(countryName), None) => Some(toSaSubscriptionRequest(countryName, isWelsh))
       case (_, _, _, _) => None
@@ -128,15 +138,14 @@ object SubscriptionCyaData {
     }
     for {
       name <-
-        if (agentRegime == PAYE) {
-          journey.payeContactName
-        }
-        else {
-          getCustomAnswerOrAsaDetailsDefault(
-            journey.useCustomBusinessName,
-            journey.businessNameAnswer,
-            journey.asaDetails.agencyName
-          )
+        agentRegime match {
+          case PAYE | STT => journey.contactName
+          case CT | SA =>
+            getCustomAnswerOrAsaDetailsDefault(
+              journey.useCustomBusinessName,
+              journey.businessNameAnswer,
+              journey.asaDetails.agencyName
+            )
         }
       phoneNumber <- getCustomAnswerOrAsaDetailsDefault(
         journey.useCustomPhoneNumber,

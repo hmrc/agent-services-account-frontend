@@ -17,7 +17,7 @@
 package uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
 
 import play.api.i18n.I18nSupport
-import play.api.mvc._
+import play.api.mvc.*
 import uk.gov.hmrc.agentservicesaccount.actions.Actions
 import uk.gov.hmrc.agentservicesaccount.config.AppConfig
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.updateBusinessNamePage
@@ -26,12 +26,13 @@ import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionBusiness
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.BusinessNameFormValues
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.STT
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.utils.RequestAwareLogging
 import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.update_business_name
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
-import javax.inject._
+import javax.inject.*
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
@@ -51,7 +52,7 @@ with RequestAwareLogging {
 
   def showPage(agentRegime: AgentRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(agentRegime).async { implicit request =>
     agentRegime match {
-      case PAYE => Future.successful(Redirect(routes.PayeUpdateContactNameController.showPage))
+      case PAYE | STT => Future.successful(Redirect(routes.UpdateContactNameController.showPage(agentRegime)))
       case _ =>
         val journey = request.subscriptionJourney
 

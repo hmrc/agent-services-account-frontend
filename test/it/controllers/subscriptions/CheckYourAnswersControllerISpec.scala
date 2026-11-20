@@ -26,23 +26,24 @@ import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import play.api.libs.json.OWrites
-import play.api.mvc._
+import play.api.mvc.*
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
-import stubs.AgentServicesAccountStubs._
+import play.api.test.Helpers.*
+import stubs.AgentServicesAccountStubs.*
 import support.BaseISpec
 import support.UnitSpec
 import uk.gov.hmrc.agentservicesaccount.connectors.AgentServicesAccountConnector
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.CheckYourAnswersController
-import uk.gov.hmrc.agentservicesaccount.models._
+import uk.gov.hmrc.agentservicesaccount.models.*
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.CT
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.SA
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.STT
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionRequest
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
-import uk.gov.hmrc.auth.core._
+import uk.gov.hmrc.auth.core.*
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve.Retrieval
 import uk.gov.hmrc.http.HeaderCarrier
@@ -60,6 +61,7 @@ with ScalaFutures
 with IntegrationPatience
 with MockFactory {
 
+//  TODO: 12412 Add STT when implemented
   private val agentRegimes = List(CT, PAYE, SA)
 
   class TestSetup(agentRegime: AgentRegime) {
@@ -159,26 +161,27 @@ with MockFactory {
 
         status(result) shouldBe OK
 
-        val body = contentAsString(result)
-
-        if (agentRegime == PAYE) {
-          body should include("Contact name")
-          body should include("My Name")
-          body should not include ("Business name")
-          body should not include ("Agency name")
+        val content = contentAsString(result)
+        content should include(messages(s"${agentRegime.msgPrefix}.check-your-answers.h1"))
+        if (List(PAYE, STT).contains(agentRegime)) {
+          content should include(messages(s"${agentRegime.msgPrefix}.check-your-answers.contact-name"))
+          content should include("My Name")
+          content should not include (messages(s"${agentRegime.msgPrefix}.check-your-answers.business-name"))
+          content should not include ("Agency name")
         }
         else {
-          body should include("Business name")
-          body should include("Agency Name")
-          body should not include ("Contact name")
-          body should not include ("My Name")
+          content should include(messages(s"${agentRegime.msgPrefix}.check-your-answers.business-name"))
+          content should include("Agency Name")
+          content should not include (messages(s"${agentRegime.msgPrefix}.check-your-answers.contact-name"))
+          content should not include ("My Name")
         }
-        body should include("Telephone number")
-        body should include("01237654321")
-        body should include("Email address")
-        body should include("joe@bloggs.com")
-        body should include("Address")
-        body should include("25 Any Street")
+        content should include(messages(s"${agentRegime.msgPrefix}.check-your-answers.phone-number"))
+        content should include("01237654321")
+        content should include(messages(s"${agentRegime.msgPrefix}.check-your-answers.email"))
+        content should include("joe@bloggs.com")
+        content should include(messages(s"${agentRegime.msgPrefix}.check-your-answers.address"))
+        content should include("25 Any Street")
+        content should include(messages(s"${agentRegime.msgPrefix}.check-your-answers.submit-button"))
       }
 
       "redirect to homepage when journey data missing" in new TestSetup(agentRegime) {

@@ -30,7 +30,7 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.mvc.RequestHeader
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import support.BaseISpec
 import support.TestConstants
 import support.UnitSpec
@@ -42,6 +42,7 @@ import uk.gov.hmrc.agentservicesaccount.models.AgentDetailsDesResponse
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.CT
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.SA
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.STT
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.SubscriptionJourney
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
@@ -65,7 +66,7 @@ with MockFactory
 with TestConstants {
 
   private val agentRegimes = List(CT, SA, PAYE)
-  val regime = SA
+  private val agentRegimesNotRequiringYouMayNotNeedToApply = List(RegimeWithRedirectLocation(STT, "contact-name"))
 
   class TestSetup(agentRegime: AgentRegime) {
 
@@ -160,6 +161,20 @@ with TestConstants {
 
   }
 
+  agentRegimesNotRequiringYouMayNotNeedToApply.foreach(regimeWithRedirect => {
+    s"GET /subscription/${regimeWithRedirect.agentRegime}/you-may-not-need-to-apply" should {
+
+      s"redirect to /subscription/${regimeWithRedirect.agentRegime}/${regimeWithRedirect.redirectLocation}" in new TestSetup(regimeWithRedirect.agentRegime) {
+        cacheJourney(subscriptionBaseJourney)
+
+        private val result = controller.showPage(regimeWithRedirect.agentRegime)(FakeRequest()).futureValue
+
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result) shouldBe Some(s"/agent-services-account/subscription/${regimeWithRedirect.agentRegime}/${regimeWithRedirect.redirectLocation}")
+      }
+    }
+  })
+
   agentRegimes.foreach { regime =>
     s"GET /subscription/$regime/you-may-not-need-to-apply" should {
 
@@ -169,7 +184,9 @@ with TestConstants {
         val result = controller.showPage(regime)(fakeRequest).futureValue
 
         status(result) shouldBe OK
-        contentAsString(result) should include("You may not need to apply")
+        private val content = contentAsString(result)
+        content should include(messages(s"${regime.msgPrefix}.you-may-not-need-to-apply.title"))
+        content should include(messages(s"${regime.msgPrefix}.you-may-not-need-to-apply.p2"))
       }
 
       "render pre-filled form when journey has value" in new TestSetup(regime) {
@@ -182,7 +199,10 @@ with TestConstants {
         val result = controller.showPage(regime)(fakeRequest).futureValue
 
         status(result) shouldBe OK
-        contentAsString(result) should include("""value="true"""")
+        private val content = contentAsString(result)
+        content should include(messages(s"${regime.msgPrefix}.you-may-not-need-to-apply.title"))
+        content should include(messages(s"${regime.msgPrefix}.you-may-not-need-to-apply.p2"))
+        content should include("""value="true"""")
       }
     }
   }
@@ -215,7 +235,7 @@ with TestConstants {
         status(result) shouldBe SEE_OTHER
         val expectedRedirect =
           regime match {
-            case AgentRegime.PAYE => routes.PayeUpdateContactNameController.showPage.url
+            case PAYE => routes.UpdateContactNameController.showPage(PAYE).url
             case _ => routes.UpdateBusinessNameController.showPage(regime).url
           }
 

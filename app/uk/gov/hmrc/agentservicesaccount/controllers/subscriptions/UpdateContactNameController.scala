@@ -1,0 +1,113 @@
+/*
+ * Copyright 2024 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package uk.gov.hmrc.agentservicesaccount.controllers.subscriptions
+
+import play.api.i18n.I18nSupport
+import play.api.mvc.*
+import uk.gov.hmrc.agentservicesaccount.actions.Actions
+import uk.gov.hmrc.agentservicesaccount.config.AppConfig
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.getNextPage
+import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageSelector.updateContactNamePage
+import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.SubscriptionContactNameForm
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.CT
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.SA
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.ContactNameFormValues
+import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
+import uk.gov.hmrc.agentservicesaccount.utils.RequestAwareLogging
+import uk.gov.hmrc.agentservicesaccount.views.html.pages.subscriptions.update_contact_name
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
+
+import javax.inject.*
+import scala.concurrent.ExecutionContext
+import scala.concurrent.Future
+
+@Singleton
+class UpdateContactNameController @Inject() (
+  actions: Actions,
+  val sessionCacheService: SessionCacheService,
+  update_contact_name: update_contact_name,
+  cc: MessagesControllerComponents
+)(implicit
+  appConfig: AppConfig,
+  val ec: ExecutionContext
+)
+extends FrontendController(cc)
+with I18nSupport
+with RequestAwareLogging {
+
+  def showPage(agentRegime: AgentRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(agentRegime).async { implicit request =>
+    agentRegime match {
+      case CT | SA => Future.successful(Redirect(routes.UpdateBusinessNameController.showPage(agentRegime)))
+      case _ =>
+        val journey = request.subscriptionJourney
+
+        val asaDetailsAgencyName = journey.asaDetails.agencyName.getOrElse("")
+
+        val initialForm = SubscriptionContactNameForm.form(agentRegime)
+        val form =
+          journey.contactName match {
+            case Some(contactName) =>
+              initialForm.fill(
+                ContactNameFormValues(contactName = contactName)
+              )
+            case None => initialForm
+          }
+
+        Future.successful(
+          Ok(update_contact_name(
+            form,
+            asaDetailsAgencyName,
+            agentRegime
+          ))
+        )
+    }
+  }
+
+  def onSubmit(agentRegime: AgentRegime): Action[AnyContent] = actions.authActionWithSubscriptionJourney(agentRegime).async { implicit request =>
+    val journey = request.subscriptionJourney
+
+    SubscriptionContactNameForm.form(agentRegime).bindFromRequest().fold(
+      formWithErrors => {
+        val asaDetailsAgencyName = journey.asaDetails.agencyName.getOrElse("")
+        Future.successful(
+          BadRequest(update_contact_name(
+            formWithErrors,
+            asaDetailsAgencyName,
+            agentRegime
+          ))
+        )
+      },
+      data => {
+        val updatedJourney = journey.copy(
+          contactName = Some(data.contactName)
+        )
+
+        sessionCacheService
+          .put(agentRegime.subscriptionJourneyKey, updatedJourney)
+          .map(_ =>
+            Redirect(getNextPage(
+              updateContactNamePage,
+              Some(updatedJourney),
+              agentRegime
+            ))
+          )
+      }
+    )
+  }
+
+}

@@ -16,14 +16,15 @@
 
 package it.controllers.subscriptions
 
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import support.ComponentBaseISpec
-import uk.gov.hmrc.agentservicesaccount.controllers.{routes => homeRoutes}
+import uk.gov.hmrc.agentservicesaccount.controllers.routes as homeRoutes
 import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.routes
 import stubs.AgentServicesAccountStubs.givenGetAgentRecord
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.CT
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.SA
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.STT
 import uk.gov.hmrc.agentservicesaccount.repository.SessionCacheRepository
 
 class ConfirmationControllerISpec
@@ -31,7 +32,12 @@ extends ComponentBaseISpec {
 
   private val repo = inject[SessionCacheRepository]
 
-  private val agentRegimes = List(CT, PAYE, SA)
+  private val agentRegimes = List(
+    CT,
+    PAYE,
+    SA,
+    STT
+  )
 
   agentRegimes.foreach(agentRegime => {
 
@@ -49,9 +55,11 @@ extends ComponentBaseISpec {
         val result = get(path)
 
         result.status shouldBe OK
-
-        result.body should include("We’re processing your application")
-        result.body should include("You’ll get an agent code within 5 days")
+        result.body should include(messages("asa.agent-regime.confirmation.title"))
+        result.body should include(messages("asa.agent-regime.confirmation.panel.body"))
+        result.body should include(messages("asa.agent-regime.confirmation.p1"))
+        result.body should include(messages("asa.agent-regime.confirmation.p2"))
+        result.body should include(messages("asa.agent-regime.confirmation.p3"))
       }
 
       "redirect to home when user has not submitted their SubscriptionJourney" in {

@@ -140,9 +140,7 @@ class Actions @Inject() (
             CT,
             SA
           ).contains(agentRegime)) ||
-//          TODO: Setting fetch of STT to false until BE is set up correctly. Once set up, it should be replaced with the commented line
-//          (appConfig.enableSttSubscriptionLink && agentRegime == STT)
-          (false && agentRegime == STT)
+          (appConfig.enableSttSubscriptionLink && agentRegime == STT)
         ) {
           sessionCacheService.get[SubscriptionJourney](agentRegime.subscriptionJourneyKey).flatMap {
             case Some(journey) => Future.successful(Right(buildRequest(journey)))

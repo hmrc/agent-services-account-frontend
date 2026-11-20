@@ -98,8 +98,8 @@ POST       /subscription/:regime/do-you-already-manage                    @uk.go
 GET        /subscription/:regime/you-may-not-need-to-apply                @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.YouMayNotNeedToApplyController.showPage(regime: AgentRegime)
 POST       /subscription/:regime/you-may-not-need-to-apply                @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.YouMayNotNeedToApplyController.onSubmit(regime: AgentRegime)
 
-GET        /subscription/PAYE/contact-name                                @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.PayeUpdateContactNameController.showPage
-POST       /subscription/PAYE/contact-name                                @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.PayeUpdateContactNameController.onSubmit
+GET        /subscription/:regime/contact-name                             @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdateContactNameController.showPage(regime: AgentRegime)
+POST       /subscription/:regime/contact-name                             @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdateContactNameController.onSubmit(regime: AgentRegime)
 
 GET        /subscription/:regime/business-name                            @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdateBusinessNameController.showPage(regime: AgentRegime)
 POST       /subscription/:regime/business-name                            @uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.UpdateBusinessNameController.onSubmit(regime: AgentRegime)

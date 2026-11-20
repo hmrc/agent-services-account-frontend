@@ -22,13 +22,15 @@ import uk.gov.hmrc.agentservicesaccount.forms.subscriptions.ChangeSubscriptionAd
 import uk.gov.hmrc.agentservicesaccount.models.AgencyDetails
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.CT
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.SA
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.STT
 
 case class SubscriptionJourney(
   asaDetails: AgencyDetails,
   doYouAlreadyManage: Option[Boolean] = None,
   youMayNotNeedToApply: Option[Boolean] = None,
-  payeContactName: Option[String] = None,
+  contactName: Option[String] = None,
   useCustomBusinessName: Option[Boolean] = None,
   businessNameAnswer: Option[String] = None,
   useCustomPhoneNumber: Option[Boolean] = None,
@@ -54,8 +56,8 @@ case class SubscriptionJourney(
   def isComplete(agentRegime: AgentRegime): Boolean = {
     val nameComplete =
       agentRegime match {
-        case AgentRegime.PAYE => payeContactName.isDefined
-        case _ => answerComplete(useCustomBusinessName, businessNameAnswer)
+        case PAYE | STT => contactName.isDefined
+        case CT | SA => answerComplete(useCustomBusinessName, businessNameAnswer)
       }
     val pnComplete = answerComplete(useCustomPhoneNumber, phoneNumberAnswer)
     val eaComplete = answerComplete(useCustomEmail, emailAnswer)
