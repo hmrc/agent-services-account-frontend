@@ -41,7 +41,7 @@ extends Logging {
     arn: Arn,
     details: BetaInviteDetailsForEmail
   )(implicit rh: RequestHeader): Future[Unit] = sendEmail(
-    Seq("mtdgpvolunteers@hmrc.gov.uk"),
+    Seq("agentservicesaccountsupport@hmrc.gov.uk"),
     arn,
     details,
     "agent_permissions_beta_participant_details"
