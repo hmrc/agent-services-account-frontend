@@ -319,6 +319,7 @@ asa.agent-regime.paye.contact-name.title=Who should we contact about PAYE?
 asa.agent-regime.paye.contact-name.input.heading=Who at {0} should we contact about PAYE?
 asa.agent-regime.paye.contact-name.input.hint=Enter their full name
 asa.agent-regime.paye.contact-name.input.error.empty=Enter the full name of the person we should contact about PAYE
+asa.agent-regime.paye.contact-name.input.error.length=Full name must be 56 characters or less
 asa.agent-regime.paye.contact-name.input.error.invalid=The name of the person can only contain letters and hyphens
 
 asa.agent-regime.paye.phone-number.title=What phone number should we use to call you about PAYE?
