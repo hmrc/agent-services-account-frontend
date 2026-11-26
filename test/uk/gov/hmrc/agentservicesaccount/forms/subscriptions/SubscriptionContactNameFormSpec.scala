@@ -75,7 +75,7 @@ with Matchers {
       val agentRegime = AgentRegime.PAYE
       val validatedForm = form(agentRegime).bind(params)
       validatedForm.hasErrors shouldBe true
-      validatedForm.error(contactNameKey).get.message shouldBe s"${agentRegime.msgPrefix}.contact-name.input.error.invalid"
+      validatedForm.error(contactNameKey).get.message shouldBe s"${agentRegime.msgPrefix}.contact-name.input.error.length"
       validatedForm.errors.length shouldBe 1
     }
 
