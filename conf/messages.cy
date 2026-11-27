@@ -501,6 +501,15 @@ asa.agent-regime.stt.contact-name.input.error.empty=Nodwch enw llawn y person y 
 asa.agent-regime.stt.contact-name.input.error.length=Mae’n rhaid i’r enw llawn fod yn 40 o gymeriadau neu lai
 asa.agent-regime.stt.contact-name.input.error.invalid=Gall enw’r person gynnwys llythrennau a cysylltnodau yn unig
 
+asa.agent-regime.stt.phone-number.title=Pa rif ffôn ddylem ei ddefnyddio i ffonio chi ynglŷn â Treth ar Drosglwyddo Gwarantau?
+asa.agent-regime.stt.phone-number.heading=Pa rif ffôn ddylem ei ddefnyddio i ffonio {0} ynglŷn â Treth ar Drosglwyddo Gwarantau?
+asa.agent-regime.stt.phone-number.use-asa.false=Rwyf am ddefnyddio rhif ffôn gwahanol ar gyfer Treth ar Drosglwyddo Gwarantau
+asa.agent-regime.stt.phone-number.new-input.label=Nodwch rif ffôn
+asa.agent-regime.stt.phone-number.new-input.hint=Ar gyfer rhifau rhyngwladol, dylech gynnwys cod y wlad.
+asa.agent-regime.stt.phone-number.use-asa.error.required=Nodwch y rhif ffôn y dylem ei ddefnyddio i ffonio {0} ynglŷn â Treth ar Drosglwyddo Gwarantau
+asa.agent-regime.stt.phone-number.new-input.error.empty=Nodwch rif ffôn yn y DU
+asa.agent-regime.stt.phone-number.new-input.error.invalid=Nodwch rif ffôn yn y DU, megis 07700 900 982 neu +44 808 157 0192
+
 # Custom UR banner
 banner.heading=Helpwch i wella CThEF
 banner.link1=Rhowch gynnig ar y nodwedd grwpiau mynediad

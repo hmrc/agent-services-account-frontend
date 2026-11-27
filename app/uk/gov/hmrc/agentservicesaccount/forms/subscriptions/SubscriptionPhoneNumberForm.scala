@@ -27,6 +27,9 @@ import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 import uk.gov.voa.play.form.ConditionalMappings.mandatoryIfFalse
 
 object SubscriptionPhoneNumberForm {
+  private[subscriptions] val DEFAULT_PHONE_NUMBER_MAX_LENGTH = 20
+  private[subscriptions] val STT_PHONE_NUMBER_MAX_LENGTH = 24
+
 
   val phoneNumberUseAsaDataKey = "phoneNumberUseAsaData"
   val phoneNumberNewKey = "phoneNumberNew"
@@ -43,14 +46,18 @@ object SubscriptionPhoneNumberForm {
     msgs(s"${agentRegime.msgPrefix}.phone-number.use-asa.error.required", asaDetailsAgencyName)
   )
 
-  def isPhoneNumberValid(x: String): Boolean = {
-    val digits = x.replaceAll("[^0-9]", "")
-    phoneNumberRegex.matches(x) && digits.length <= 20
+  def isPhoneNumberValid(
+    agentRegime: AgentRegime,
+    raw: String
+  ): Boolean = {
+    val digits = raw.replaceAll("[^0-9]", "")
+    val maxSize = if agentRegime == AgentRegime.STT then STT_PHONE_NUMBER_MAX_LENGTH else DEFAULT_PHONE_NUMBER_MAX_LENGTH
+    phoneNumberRegex.matches(raw) && digits.nonEmpty && digits.length <= maxSize
   }
 
   private def phoneNumberNewOptionalMapping(agentRegime: AgentRegime): Mapping[String] = trimmedText
     .verifying(s"${agentRegime.msgPrefix}.phone-number.new-input.error.empty", _.nonEmpty)
-    .verifying(s"${agentRegime.msgPrefix}.phone-number.new-input.error.invalid", x => x.isEmpty || isPhoneNumberValid(x))
+    .verifying(s"${agentRegime.msgPrefix}.phone-number.new-input.error.invalid", x => x.isEmpty || isPhoneNumberValid(agentRegime, x))
 
   def form(
     agentRegime: AgentRegime,
