@@ -346,8 +346,6 @@ asa.agent-regime.paye.address.use-asa.true.hint=Dyma’r cyfeiriad ar eich cyfri
 asa.agent-regime.paye.address.use-asa.false=Rwyf am ddefnyddio cyfeiriad gwahanol ar gyfer TWE
 asa.agent-regime.paye.address.use-asa.error.required=Dewiswch y cyfeiriad y dylem ei ddefnyddio i anfon llythyrau ynglŷn â TWE
 
-asa.agent-regime.paye.alf.country-picker.title=Dewiswch y wlad - Cyfrif gwasanaethau asiant - GOV.UK
-asa.agent-regime.paye.alf.country-picker.heading=Beth yw’r wlad lle mae’r busnes wedi’i leoli?
 asa.agent-regime.paye.alf.lookup.title=Dod o hyd i’r cyfeiriad - Cyfrif gwasanaethau asiant - GOV.UK
 asa.agent-regime.paye.alf.lookup.heading=Dod o hyd i’ch cyfeiriad
 asa.agent-regime.paye.alf.lookup.postcode.label=Cod post

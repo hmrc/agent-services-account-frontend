@@ -346,8 +346,6 @@ asa.agent-regime.paye.address.use-asa.true.hint=This is the address on your agen
 asa.agent-regime.paye.address.use-asa.false=I want to use a different address for PAYE
 asa.agent-regime.paye.address.use-asa.error.required=Select the address we should use to send letters about PAYE
 
-asa.agent-regime.paye.alf.country-picker.title=Select the country - Agent services account - GOV.UK
-asa.agent-regime.paye.alf.country-picker.heading=What is the country where the business is based?
 asa.agent-regime.paye.alf.lookup.title=Find the address - Agent services account - GOV.UK
 asa.agent-regime.paye.alf.lookup.heading=Find your address
 asa.agent-regime.paye.alf.lookup.postcode.label=Postcode
