@@ -36,6 +36,7 @@ case class SubscriptionCyaData(
     address: BusinessAddress,
     countryName: Option[String] = None
   ): SubscriptionAddress = {
+//    TODO: 12792 I think this shows we can just drop addressLine4 from the response rather than merge lines 3 and 4
     val line4: Option[String] =
       (address.countryCode == "GB", countryName.isDefined) match {
         case (false, true) => countryName
