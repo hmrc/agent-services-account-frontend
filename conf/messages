@@ -508,6 +508,20 @@ asa.agent-regime.stt.phone-number.use-asa.error.required=Enter the phone number 
 asa.agent-regime.stt.phone-number.new-input.error.empty=Enter a UK phone number
 asa.agent-regime.stt.phone-number.new-input.error.invalid=Enter a UK phone number, like 07700 900 982 or +44 808 157 0192
 
+asa.agent-regime.stt.address.title=What address should we use to send letters about Securities Transfer Tax?
+asa.agent-regime.stt.address.use-asa.true.hint=This is the address on your agent services account.
+asa.agent-regime.stt.address.use-asa.false=I want to use a different address for Securities Transfer Tax
+asa.agent-regime.stt.address.use-asa.error.required=Select the address we should use to send letters about Securities Transfer Tax
+
+asa.agent-regime.stt.alf.lookup.title=Find the address - Agent services account - GOV.UK
+asa.agent-regime.stt.alf.lookup.heading=Find your address
+asa.agent-regime.stt.alf.lookup.postcode.label=Postcode
+asa.agent-regime.stt.alf.select.title=Select the address - Agent services account - GOV.UK
+asa.agent-regime.stt.alf.edit.title=Enter the address - Agent services account - GOV.UK
+asa.agent-regime.stt.alf.edit.heading=Enter the address
+asa.agent-regime.stt.alf.edit.townLabel=Address line 4
+asa.agent-regime.stt.alf.confirm.title=Review and confirm - Agent services account - GOV.UK
+
 # Custom UR banner
 banner.heading=Help improve HMRC services
 banner.link1=Try out our new access groups feature
