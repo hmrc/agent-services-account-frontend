@@ -29,8 +29,6 @@ import uk.gov.hmrc.agentservicesaccount.controllers.subscriptions.util.NextPageS
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup._
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
-import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.STT
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.utils.RequestAwareLogging
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -117,8 +115,7 @@ with RequestAwareLogging {
       options = JourneyOptions(
         continueUrl = continueUrl,
         manualAddressEntryConfig = Some(manualAddressEntryConfig),
-//        TODO: 12792 Put this check on AgentRegime model - look in SubscriptionRequest for if similar needed 
-        ukMode = Some(List(PAYE, STT).contains(agentRegime))
+        ukMode = Some(agentRegime.ukOnly)
       ),
       version = 2,
       labels = Some(JourneyLabels(
