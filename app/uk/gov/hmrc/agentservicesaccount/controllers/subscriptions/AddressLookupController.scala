@@ -101,8 +101,9 @@ with RequestAwareLogging {
     )
 
     val manualAddressEntryConfig = ManualAddressEntryConfig(
-//      NOTE: 35 is min max length value that you can set with ALF. Our API requires 28 for lines1,2,3 and 18 for town
+//      NOTE: 35 is min max length value that you can set with ALF. Our API for CT/SA requires 28 for lines1,2,3 and 18 for town
 //      TODO: 12792 Check for STT, and what other regimes needed wrt note above
+//      TODO: 12792 Look into what happens if a number less than 35 is passed in??!! That way would be future-proof in case it changes
       line1MaxLength = Some(35),
       line2MaxLength = Some(35),
       line3MaxLength = Some(35),

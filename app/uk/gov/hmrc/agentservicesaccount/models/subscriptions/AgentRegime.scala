@@ -64,27 +64,35 @@ object AgentRegime {
 
   case object PAYE
   extends AgentRegime {
+
     override def msgPrefix: String = s"asa.agent-regime.${PAYE.toString.toLowerCase}"
 
     override def ukOnly: Boolean = true
+
   }
   case object SA
   extends AgentRegime {
+
     override def msgPrefix: String = s"asa.agent-regime.${SA.toString.toLowerCase}"
 
     override def ukOnly: Boolean = false
+
   }
   case object CT
   extends AgentRegime {
+
     override def msgPrefix: String = s"asa.agent-regime.${CT.toString.toLowerCase}"
 
     override def ukOnly: Boolean = false
+
   }
   case object STT
   extends AgentRegime {
+
     override def msgPrefix: String = s"asa.agent-regime.${STT.toString.toLowerCase}"
 
     override def ukOnly: Boolean = true
+
   }
 
   implicit val format: Format[AgentRegime] = Format(

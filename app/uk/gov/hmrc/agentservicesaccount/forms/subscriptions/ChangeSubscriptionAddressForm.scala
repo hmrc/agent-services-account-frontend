@@ -22,6 +22,9 @@ import uk.gov.hmrc.agentservicesaccount.forms.CommonValidators.trimmedText
 import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.PostCode
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.CT
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.SA
 
 //TODO: 12792 Implement for STT
 object ChangeSubscriptionAddressForm {
@@ -39,17 +42,18 @@ object ChangeSubscriptionAddressForm {
     else
       "^[a-zA-Z0-9 ()&‘/,.-]*$"
 
+  private val PAYE_MAX_LINE_LENGTH = 35
+  private val CT_SA_MAX_LINE_LENGTH = 28
+  private val CT_SA_MAX_LINE_4_LENGTH = 18
+
 //  TODO: 12792 See note line 107 in AddressLookupController
   def maxLen(
     agentRegime: AgentRegime,
     row: Int
   ): Int =
-    if (agentRegime == AgentRegime.PAYE)
-      35
-    else if (row == 4)
-      18
-    else
-      28
+    agentRegime match
+      case PAYE => PAYE_MAX_LINE_LENGTH
+      case CT | SA => if (row == 4) CT_SA_MAX_LINE_4_LENGTH else CT_SA_MAX_LINE_LENGTH
 
   private def lineMapping(
     agentRegime: AgentRegime,
