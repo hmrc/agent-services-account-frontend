@@ -501,6 +501,15 @@ asa.agent-regime.stt.contact-name.input.error.empty=Enter the full name of the p
 asa.agent-regime.stt.contact-name.input.error.length=Full name must be 40 characters or less
 asa.agent-regime.stt.contact-name.input.error.invalid=The name of the person can only contain letters and hyphens
 
+asa.agent-regime.stt.phone-number.title=What phone number should we use to call you about Securities Transfer Tax?
+asa.agent-regime.stt.phone-number.heading=What phone number should we use to call {0} about Securities Transfer Tax?
+asa.agent-regime.stt.phone-number.use-asa.false=I want to use a different phone number for Securities Transfer Tax
+asa.agent-regime.stt.phone-number.new-input.label=Enter a phone number
+asa.agent-regime.stt.phone-number.new-input.hint=For international numbers, include the country code.
+asa.agent-regime.stt.phone-number.use-asa.error.required=Enter the phone number we should use to call {0} about Securities Transfer Tax
+asa.agent-regime.stt.phone-number.new-input.error.empty=Enter a UK phone number
+asa.agent-regime.stt.phone-number.new-input.error.invalid=Enter a UK phone number, like 07700 900 982 or +44 808 157 0192
+
 # Custom UR banner
 banner.heading=Help improve HMRC services
 banner.link1=Try out our new access groups feature

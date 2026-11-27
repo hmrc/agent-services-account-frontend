@@ -52,7 +52,7 @@ with RequestAwareLogging {
     val journey = request.subscriptionJourney
 
     val asaDetailsAgencyName = journey.asaDetails.agencyName.getOrElse("")
-    val asaDetailsAgencyTelephone: Option[String] = journey.asaDetails.agencyTelephone.filter(SubscriptionPhoneNumberForm.isPhoneNumberValid)
+    val asaDetailsAgencyTelephone: Option[String] = journey.asaDetails.agencyTelephone.filter(SubscriptionPhoneNumberForm.isPhoneNumberValid(agentRegime, _))
 
     val initialForm = SubscriptionPhoneNumberForm.form(agentRegime, asaDetailsAgencyName)
     val form =
@@ -86,7 +86,8 @@ with RequestAwareLogging {
 
     SubscriptionPhoneNumberForm.form(agentRegime, asaDetailsAgencyName).bindFromRequest().fold(
       formWithErrors => {
-        val asaDetailsAgencyTelephone: Option[String] = journey.asaDetails.agencyTelephone.filter(SubscriptionPhoneNumberForm.isPhoneNumberValid)
+        val asaDetailsAgencyTelephone: Option[String] = journey.asaDetails.agencyTelephone
+          .filter(SubscriptionPhoneNumberForm.isPhoneNumberValid(agentRegime, _))
         Future.successful(
           BadRequest(update_phone_number(
             formWithErrors,

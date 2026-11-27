@@ -116,4 +116,22 @@ with Matchers {
 
   }
 
+  "isPhoneNumberValid" should:
+    "accept digits and user-friendly formatting" in:
+      SubscriptionPhoneNumberForm.isPhoneNumberValid(AgentRegime.PAYE, "+44 (0)20 7946 0958") shouldBe true
+
+    "reject input without digits" in:
+      SubscriptionPhoneNumberForm.isPhoneNumberValid(AgentRegime.PAYE, " + () ") shouldBe false
+
+    "reject characters outside the supported formatting" in:
+      SubscriptionPhoneNumberForm.isPhoneNumberValid(AgentRegime.PAYE, "123abc456") shouldBe false
+
+    "accept a phone number at the regime's digit limit" in:
+      SubscriptionPhoneNumberForm.isPhoneNumberValid(AgentRegime.PAYE, "1" * DEFAULT_PHONE_NUMBER_MAX_LENGTH) shouldBe true
+      SubscriptionPhoneNumberForm.isPhoneNumberValid(AgentRegime.STT, "1" * STT_PHONE_NUMBER_MAX_LENGTH) shouldBe true
+
+    "reject a phone number above the regime's digit limit" in:
+      SubscriptionPhoneNumberForm.isPhoneNumberValid(AgentRegime.PAYE, "1" * (DEFAULT_PHONE_NUMBER_MAX_LENGTH + 1)) shouldBe false
+      SubscriptionPhoneNumberForm.isPhoneNumberValid(AgentRegime.STT, "1" * (STT_PHONE_NUMBER_MAX_LENGTH + 1)) shouldBe false
+
 }
