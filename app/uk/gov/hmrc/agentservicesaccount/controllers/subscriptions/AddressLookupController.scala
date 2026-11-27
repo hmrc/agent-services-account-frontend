@@ -30,6 +30,7 @@ import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.addresslookup._
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.PAYE
+import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime.STT
 import uk.gov.hmrc.agentservicesaccount.services.SessionCacheService
 import uk.gov.hmrc.agentservicesaccount.utils.RequestAwareLogging
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -103,6 +104,7 @@ with RequestAwareLogging {
 
     val manualAddressEntryConfig = ManualAddressEntryConfig(
 //      NOTE: 35 is min max length value that you can set with ALF. Our API requires 28 for lines1,2,3 and 18 for town
+//      TODO: 12792 Check for STT, and what other regimes needed wrt note above
       line1MaxLength = Some(35),
       line2MaxLength = Some(35),
       line3MaxLength = Some(35),
@@ -115,7 +117,8 @@ with RequestAwareLogging {
       options = JourneyOptions(
         continueUrl = continueUrl,
         manualAddressEntryConfig = Some(manualAddressEntryConfig),
-        ukMode = Some(agentRegime == PAYE)
+//        TODO: 12792 Put this check on AgentRegime model - look in SubscriptionRequest for if similar needed 
+        ukMode = Some(List(PAYE, STT).contains(agentRegime))
       ),
       version = 2,
       labels = Some(JourneyLabels(
@@ -140,6 +143,7 @@ with RequestAwareLogging {
       case Some(addressJourneyId) =>
         for {
           confirmedAddressResponse <- alfConnector.getAddress(addressJourneyId)
+//          TODO: 12792 Need to merge line 3 and line 4 for STT
           newBusinessAddress = BusinessAddress(
             addressLine1 = confirmedAddressResponse.address.lines.get.head,
             addressLine2 = confirmedAddressResponse.address.lines.flatMap(_.drop(1).headOption),

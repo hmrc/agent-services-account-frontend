@@ -23,6 +23,7 @@ import uk.gov.hmrc.agentservicesaccount.models.BusinessAddress
 import uk.gov.hmrc.agentservicesaccount.models.PostCode
 import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 
+//TODO: 12792 Implement for STT
 object ChangeSubscriptionAddressForm {
 
   val line1Key = "addressLine1"
@@ -38,6 +39,7 @@ object ChangeSubscriptionAddressForm {
     else
       "^[a-zA-Z0-9 ()&‘/,.-]*$"
 
+//  TODO: 12792 See note line 107 in AddressLookupController
   def maxLen(
     agentRegime: AgentRegime,
     row: Int
