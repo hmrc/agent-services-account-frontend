@@ -65,6 +65,7 @@ case class SubscriptionJourney(
     nameComplete && pnComplete && eaComplete && addressComplete
   }
 
+//  TODO: 12792 Implement for STT and update note
   // This is needed because address validation rules differ between ALF, ASA and the 3 agent regimes,
   // so any selection of address (custom or ALF) must be validated against the regime-specific rules
   def addressValidForRegime(agentRegime: AgentRegime): Boolean = {

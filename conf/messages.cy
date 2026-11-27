@@ -346,8 +346,6 @@ asa.agent-regime.paye.address.use-asa.true.hint=Dyma’r cyfeiriad ar eich cyfri
 asa.agent-regime.paye.address.use-asa.false=Rwyf am ddefnyddio cyfeiriad gwahanol ar gyfer TWE
 asa.agent-regime.paye.address.use-asa.error.required=Dewiswch y cyfeiriad y dylem ei ddefnyddio i anfon llythyrau ynglŷn â TWE
 
-asa.agent-regime.paye.alf.country-picker.title=Dewiswch y wlad - Cyfrif gwasanaethau asiant - GOV.UK
-asa.agent-regime.paye.alf.country-picker.heading=Beth yw’r wlad lle mae’r busnes wedi’i leoli?
 asa.agent-regime.paye.alf.lookup.title=Dod o hyd i’r cyfeiriad - Cyfrif gwasanaethau asiant - GOV.UK
 asa.agent-regime.paye.alf.lookup.heading=Dod o hyd i’ch cyfeiriad
 asa.agent-regime.paye.alf.lookup.postcode.label=Cod post
@@ -509,6 +507,20 @@ asa.agent-regime.stt.phone-number.new-input.hint=Ar gyfer rhifau rhyngwladol, dy
 asa.agent-regime.stt.phone-number.use-asa.error.required=Nodwch y rhif ffôn y dylem ei ddefnyddio i ffonio {0} ynglŷn â Treth ar Drosglwyddo Gwarantau
 asa.agent-regime.stt.phone-number.new-input.error.empty=Nodwch rif ffôn yn y DU
 asa.agent-regime.stt.phone-number.new-input.error.invalid=Nodwch rif ffôn yn y DU, megis 07700 900 982 neu +44 808 157 0192
+
+asa.agent-regime.stt.address.title=Pa gyfeiriad ddylem ei ddefnyddio i anfon llythyrau ynglŷn â Treth ar Drosglwyddo Gwarantau?
+asa.agent-regime.stt.address.use-asa.true.hint=Dyma’r cyfeiriad ar eich cyfrif gwasanaethau asiant.
+asa.agent-regime.stt.address.use-asa.false=Rwyf am ddefnyddio cyfeiriad gwahanol ar gyfer Treth ar Drosglwyddo Gwarantau
+asa.agent-regime.stt.address.use-asa.error.required=Dewiswch y cyfeiriad y dylem ei ddefnyddio i anfon llythyrau ynglŷn â Treth ar Drosglwyddo Gwarantau
+
+asa.agent-regime.stt.alf.lookup.title=Dod o hyd i’r cyfeiriad - Cyfrif gwasanaethau asiant - GOV.UK
+asa.agent-regime.stt.alf.lookup.heading=Dod o hyd i’ch cyfeiriad
+asa.agent-regime.stt.alf.lookup.postcode.label=Cod post
+asa.agent-regime.stt.alf.select.title=Dewiswch y cyfeiriad - Cyfrif gwasanaethau asiant - GOV.UK
+asa.agent-regime.stt.alf.edit.title=Nodwch y cyfeiriad - Cyfrif gwasanaethau asiant - GOV.UK
+asa.agent-regime.stt.alf.edit.heading=Nodwch y cyfeiriad
+asa.agent-regime.stt.alf.edit.townLabel=Cyfeiriad – llinell 4
+asa.agent-regime.stt.alf.confirm.title=Adolygu a chadarnhau - Cyfrif gwasanaethau asiant - GOV.UK
 
 # Custom UR banner
 banner.heading=Helpwch i wella CThEF

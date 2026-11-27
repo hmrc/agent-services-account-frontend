@@ -27,9 +27,9 @@ import uk.gov.hmrc.agentservicesaccount.models.subscriptions.AgentRegime
 import uk.gov.voa.play.form.ConditionalMappings.mandatoryIfFalse
 
 object SubscriptionPhoneNumberForm {
+
   private[subscriptions] val DEFAULT_PHONE_NUMBER_MAX_LENGTH = 20
   private[subscriptions] val STT_PHONE_NUMBER_MAX_LENGTH = 24
-
 
   val phoneNumberUseAsaDataKey = "phoneNumberUseAsaData"
   val phoneNumberNewKey = "phoneNumberNew"
