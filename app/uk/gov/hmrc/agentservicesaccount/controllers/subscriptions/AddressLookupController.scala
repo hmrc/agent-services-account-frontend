@@ -100,14 +100,15 @@ with RequestAwareLogging {
       postcode = None
     )
 
+    val MIN_POSSIBLE_ALF_MAX_LENGTH = 35
+
     val manualAddressEntryConfig = ManualAddressEntryConfig(
 //      NOTE: 35 is min max length value that you can set with ALF. Our API for CT/SA requires 28 for lines1,2,3 and 18 for town
-//      TODO: 12792 Check for STT, and what other regimes needed wrt note above
-//      TODO: 12792 Look into what happens if a number less than 35 is passed in??!! That way would be future-proof in case it changes
-      line1MaxLength = Some(35),
-      line2MaxLength = Some(35),
-      line3MaxLength = Some(35),
-      townMaxLength = Some(35),
+//      TODO: 12792 Check for STT, and what other regimes needed wrt note above. Use maxLen method here from ChangeSubscriptionAddressForm
+      line1MaxLength = Some(Math.max(MIN_POSSIBLE_ALF_MAX_LENGTH, 35)),
+      line2MaxLength = Some(Math.max(MIN_POSSIBLE_ALF_MAX_LENGTH, 35)),
+      line3MaxLength = Some(Math.max(MIN_POSSIBLE_ALF_MAX_LENGTH, 35)),
+      townMaxLength = Some(Math.max(MIN_POSSIBLE_ALF_MAX_LENGTH, 35)),
       mandatoryFields = Some(mandatoryFieldsConfig),
       showOrganisationName = Some(false)
     )
